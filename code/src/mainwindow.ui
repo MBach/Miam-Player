@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Madame MiamMiam's Music Player</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QTabWidget" name="leftTabs">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>4</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tabLibrary">
+        <attribute name="title">
+         <string>Library</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="LibraryFilterLineEdit" name="searchBar">
+           <property name="font">
+            <font>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="inputMask">
+            <string/>
+           </property>
+           <property name="text">
+            <string>Search...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="LibraryTreeView" name="library">
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="expandsOnDoubleClick">
+            <bool>false</bool>
+           </property>
+           <attribute name="headerShowSortIndicator" stdset="0">
+            <bool>true</bool>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="widgetFirstRun" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <widget class="QLabel" name="noLibrarySet">
+              <property name="font">
+               <font>
+                <family>Calibri</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>No library was found!</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCommandLinkButton" name="commandLinkButtonLibrary">
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Click here to start</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabFileExplorer">
+        <attribute name="title">
+         <string>File explorer</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QTreeView" name="filesystem"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>5</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="TabPlaylist" name="tabPlaylists">
+          <property name="currentIndex">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Phonon::SeekSlider" name="seekSlider" native="true"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+          <item>
+           <widget class="MediaButton" name="skipBackwardButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/skipBackward</normaloff>:/player/fairytale/skipBackward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="MediaButton" name="seekBackwardButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/seekBackward</normaloff>:/player/fairytale/seekBackward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="MediaButton" name="playButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="MediaButton" name="stopButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/stop</normaloff>:/player/fairytale/stop</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="MediaButton" name="seekForwardButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/seekForward</normaloff>:/player/fairytale/seekForward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="MediaButton" name="skipForwardButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/skipForward</normaloff>:/player/fairytale/skipForward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>150</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuPlaylist">
+    <property name="title">
+     <string>Playlist</string>
+    </property>
+    <addaction name="actionAddPlaylist"/>
+    <addaction name="actionDeleteCurrentPlaylist"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowLibraryOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuEdition">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionScanLibrary"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowCustomize"/>
+    <addaction name="actionShowOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionShowHelp"/>
+    <addaction name="actionCheckNewRelease"/>
+    <addaction name="separator"/>
+    <addaction name="actionAboutM4P"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
+   <addaction name="menuMenu"/>
+   <addaction name="menuEdition"/>
+   <addaction name="menuPlaylist"/>
+   <addaction name="menuAide"/>
+  </widget>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionAddPlaylist">
+   <property name="text">
+    <string>Add a playlist</string>
+   </property>
+  </action>
+  <action name="actionShowCustomize">
+   <property name="text">
+    <string>Customize appearance...</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt...</string>
+   </property>
+  </action>
+  <action name="actionShowLibraryOptions">
+   <property name="text">
+    <string>Playlist manager...</string>
+   </property>
+  </action>
+  <action name="actionScanLibrary">
+   <property name="text">
+    <string>Rescan library</string>
+   </property>
+  </action>
+  <action name="actionSetLibrary">
+   <property name="text">
+    <string>Customize library...</string>
+   </property>
+  </action>
+  <action name="actionCheckNewRelease">
+   <property name="text">
+    <string>Check for a new version is available</string>
+   </property>
+  </action>
+  <action name="actionShowOptions">
+   <property name="text">
+    <string>Customize general options...</string>
+   </property>
+  </action>
+  <action name="actionAboutM4P">
+   <property name="text">
+    <string>About MmeMiamMiamMusicPlayer...</string>
+   </property>
+  </action>
+  <action name="actionDeleteCurrentPlaylist">
+   <property name="text">
+    <string>Delete current playlist</string>
+   </property>
+  </action>
+  <action name="actionShowHelp">
+   <property name="text">
+    <string>Show help...</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Phonon::VolumeSlider</class>
+   <extends>QWidget</extends>
+   <header>phonon_volumeslider.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Phonon::SeekSlider</class>
+   <extends>QWidget</extends>
+   <header>phonon_seekslider.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TabPlaylist</class>
+   <extends>QTabWidget</extends>
+   <header>tabplaylist.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LibraryTreeView</class>
+   <extends>QTreeView</extends>
+   <header>librarytreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MediaButton</class>
+   <extends>QPushButton</extends>
+   <header>mediabutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LibraryFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>libraryfilterlineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>leftTabs</tabstop>
+  <tabstop>searchBar</tabstop>
+  <tabstop>library</tabstop>
+  <tabstop>skipBackwardButton</tabstop>
+  <tabstop>seekBackwardButton</tabstop>
+  <tabstop>playButton</tabstop>
+  <tabstop>stopButton</tabstop>
+  <tabstop>seekForwardButton</tabstop>
+  <tabstop>skipForwardButton</tabstop>
+  <tabstop>filesystem</tabstop>
+  <tabstop>commandLinkButtonLibrary</tabstop>
+ </tabstops>
+ <resources>
+  <include location="mmmmp.qrc"/>
+ </resources>
+ <connections/>
+</ui>
