@@ -7,13 +7,25 @@
 
 class LibraryModel;
 
+/// Subclass in LibraryTrackItem, LibraryAlbumItem, LibraryArtist
+/// and make this one virtual?
 class LibraryItem : public QStandardItem
 {
 private:
 	void setDisplayedName(const char *name, int size);
 
+	Q_ENUMS(CustomType)
+
 public:
 	LibraryItem(const QString &text="");
+
+	enum CustomType { MEDIA_TYPE		= Qt::UserRole+2,
+					  STAR_RATING		= Qt::UserRole+3,
+					  CHILD_COUNT		= Qt::UserRole+4,
+					  TRACK_NUMBER		= Qt::UserRole+5,
+					  IDX_TO_ABS_PATH	= Qt::UserRole+6,
+					  REL_PATH_TO_MEDIA	= Qt::UserRole+7
+					};
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
@@ -27,6 +39,7 @@ public:
 
 	/** Should only be used for tracks. */
 	void setTrackNumber(int trackNumber);
+	inline int trackNumber() const { return data(TRACK_NUMBER).toInt(); }
 
 	/** Should only be used for albums or artists. */
 	void setChildCount(int children);

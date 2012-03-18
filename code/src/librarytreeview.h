@@ -49,8 +49,6 @@ private slots:
 
 	void readFile(int musicLocationIndex, const QString &qFileName);
 
-	void readCover(const QString &qFileName);
-
 	void endPopulateTree();
 
 	//test

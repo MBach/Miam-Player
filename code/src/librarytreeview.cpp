@@ -27,7 +27,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel = new LibraryFilterProxyModel(this);
 	proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 	proxyModel->setSourceModel(libraryModel);
-	//proxyModel->setFilterRole(Qt::UserRole+1);
 
 	//proxyModel->setHeaderData(0, Qt::Horizontal, QVariant("Artists"));
 	QStringList labels("Artists");
@@ -47,12 +46,14 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	musicSearchEngine = new MusicSearchEngine(this);
 
 	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(beforeSendToPlaylist(const QModelIndex &)));
-	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), this, SLOT(readCover(QString)));
+	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
 	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), this, SLOT(readFile(int, QString)));
 	connect(musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
-	connect(musicSearchEngine, SIGNAL(finished()), this, SLOT(endPopulateTree()));
 
+	// Build a tree directly by scanning the hard drive or from a previously saved file
+	connect(musicSearchEngine, SIGNAL(finished()), this, SLOT(endPopulateTree()));
 	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
+
 	// Tell the view to create specific delegate for the current row
 	connect(libraryModel, SIGNAL(associateNodeWithDelegate(int)), this, SLOT(addNodeToTree(int)));
 
@@ -68,6 +69,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	//TEST
 	connect(proxyModel, SIGNAL(aboutToExpand(QModelIndex)), this, SLOT(expandTreeView(QModelIndex)));
+
+	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
@@ -80,6 +83,7 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 	QTreeView::mouseDoubleClickEvent(event);
 }
 
+/// Move to libraryModel?
 void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 {
 	static LibraryItem *indexArtist = NULL;
@@ -108,34 +112,31 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 		indexArtist = libraryModel->hasArtist(QString(artist.toCString(false)));
 		if (indexArtist == NULL) {
 			indexArtist = libraryModel->insertArtist(QString(artist.toCString(false)));
+			setItemDelegateForRow(indexArtist->row(), new LibraryItemDelegate(this));
 		}
 
 		// Is there is already an album from this artist?
-		indexAlbum = libraryModel->hasAlbum(QString(fileRef.tag()->album().toCString(false)));
+		indexAlbum = libraryModel->hasAlbum(indexArtist, QString(fileRef.tag()->album().toCString(false)));
 		if (indexAlbum == NULL) {
 			// New album to create, only if it's not empty
 			if (fileRef.tag()->album().isEmpty()) {
 				indexAlbum = indexArtist;
 			} else {
 				indexAlbum = libraryModel->insertAlbum(QString(fileRef.tag()->album().toCString(false)), filePath, indexArtist);
+				setItemDelegateForRow(indexAlbum->row(), new LibraryItemDelegate(this));
 			}
 		}
 
 		// In every case, insert a new track
 		QString title(fileRef.tag()->title().toCString(false));
+		if (title.isEmpty()) {
+			title = qFileName.left(qFileName.size() - 4); // 4 == ".mp3"
+			title = title.mid(title.lastIndexOf('/')+1);
+		}
 		LibraryItem *track = libraryModel->insertTrack(musicLocationIndex, qFileName, fileRef.tag()->track(), title, indexAlbum);
-		setItemDelegateForRow(track->row(), new LibraryItemDelegate(this));
-	}
-}
-
-void LibraryTreeView::readCover(const QString &qFileName)
-{
-	LibraryItem *indexAlbum = libraryModel->hasCover(qFileName.left(qFileName.lastIndexOf('/')));
-	if (indexAlbum) {
-		QIcon icon;
-		QSize size(48, 48);
-		icon.addFile(qFileName, size);
-		libraryModel->insertAlbumIcon(icon, indexAlbum);
+		if (track) {
+			setItemDelegateForRow(track->row(), new LibraryItemDelegate(this));
+		}
 	}
 }
 
@@ -150,23 +151,22 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
 	if (delegate) {
-		// If the click from the mouse was on a text label or on a star
-		if (delegate->title()->contains(currentPos)) {
-			QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
-			if (item != NULL) {
-				if (item->hasChildren()) {
-					for (int i=0; i < item->rowCount(); i++) {
-						//recursive call on children
-						beforeSendToPlaylist(index.child(i, 0));
-					}
-				} else {
-					emit sendToPlaylist(QPersistentModelIndex(index));
-				}
+		QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		if (item->hasChildren()) {
+			for (int i=0; i < item->rowCount(); i++) {
+				//recursive call on children
+				beforeSendToPlaylist(index.child(i, 0));
 			}
-		} else if (delegate->stars()->contains(currentPos)) {
-			QStyleOptionViewItem qsovi;
-			QWidget *editor = delegate->createEditor(this, qsovi, index);
-			editor->show();
+		} else {
+			// If the click from the mouse was on a text label or on a star
+			if (delegate->title()->contains(currentPos) ||
+					(delegate->title()->isEmpty() && delegate->stars()->isEmpty())) {
+				emit sendToPlaylist(QPersistentModelIndex(index));
+			} else if (delegate->stars()->contains(currentPos)) {
+				QStyleOptionViewItemV4 qsovi;
+				QWidget *editor = delegate->createEditor(this, qsovi, index);
+				editor->show();
+			}
 		}
 	}
 }
@@ -221,8 +221,6 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
-
-	//libraryModel->
 }
 
 void LibraryTreeView::expandTreeView(const QModelIndex &index)

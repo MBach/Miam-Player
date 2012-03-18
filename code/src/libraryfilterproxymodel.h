@@ -23,7 +23,7 @@ signals:
 	void aboutToExpand(const QModelIndex &) const;
 	
 public slots:
-	
+	void loadCovers(const QModelIndex &index);
 };
 
 #endif // LIBRARYFILTERPROXYMODEL_H

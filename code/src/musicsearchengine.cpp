@@ -59,6 +59,7 @@ void MusicSearchEngine::run()
 				emit progressChanged(percent);
 			}
 		}
+		// After the while loop, it's possible to have one more cover to send
 		if (aCoverWasFound) {
 			emit scannedCover(coverPath);
 			aCoverWasFound = false;

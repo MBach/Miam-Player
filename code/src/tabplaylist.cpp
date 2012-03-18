@@ -1,5 +1,6 @@
 #include "tabplaylist.h"
 #include "settings.h"
+#include "libraryitem.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -52,8 +53,8 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 /** Add a track from the filesystem or the library to the current playlist. */
 QTableWidgetItem * TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary)
 {
-	QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(Qt::UserRole+5).toInt()).toString();
-	QString fileName = itemFromLibrary.data(Qt::UserRole+6).toString();
+	QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
+	QString fileName = itemFromLibrary.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
 	MediaSource source(filePath + fileName);
 	QTableWidgetItem *index = currentPlayList()->append(source);
 	if (currentPlayList()->tracks()->size() == 1) {

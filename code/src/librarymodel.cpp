@@ -1,21 +1,16 @@
-#include <QDebug>
-
 #include "treeitem.h"
 #include "librarymodel.h"
 #include "starrating.h"
-
 #include "settings.h"
-
 #include "libraryitem.h"
+
+#include <QtDebug>
+
 
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(parent)
 {
-	//LibraryItem *header = new LibraryItem("Artists");
 	this->setColumnCount(1);
-	//this->setHeaderData(0, Qt::Horizontal, QVariant("Artists"), Qt::DisplayRole);
-	//this->setHorizontalHeaderItem(0, header);
-	//setHorizontalHeaderLabels(QStringList("Artists"));
 }
 
 /** Removes everything. */
@@ -36,15 +31,9 @@ LibraryItem* LibraryModel::hasArtist(const QString &artist) const
 }
 
 /** Album? */
-LibraryItem* LibraryModel::hasAlbum(const QString &album) const
+LibraryItem* LibraryModel::hasAlbum(LibraryItem* artist, const QString &album) const
 {
-	return albums.value(album);
-}
-
-/** Cover? */
-LibraryItem* LibraryModel::hasCover(const QString &cover) const
-{
-	return covers.value(cover);
+	return albums.value(QPair<LibraryItem*, QString>(artist, album));
 }
 
 /** Insert a new artist in the library. */
@@ -81,36 +70,64 @@ LibraryItem* LibraryModel::insertArtist(const QString &artist)
 LibraryItem* LibraryModel::insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist)
 {
 	LibraryItem *itemAlbum = new LibraryItem(album);
-	covers.insert(path.left(path.lastIndexOf('/')), itemAlbum);
+	QString coverPath = path.left(path.lastIndexOf('/'));
+	covers.insert(coverPath, itemAlbum);
 	itemAlbum->setMediaType(ALBUM);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
-	albums.insert(album, itemAlbum);
+	albums.insert(QPair<LibraryItem *, QString>(parentArtist, album), itemAlbum);
 	return itemAlbum;
 }
 
 /** Insert a new track in the library. */
 LibraryItem* LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent)
 {
-	//QString title = QString("%1. ").arg(fileRef.tag()->track(), (int)2, (int)10, (const QChar)'0');
-	LibraryItem *itemTitle = new LibraryItem(title);
-	itemTitle->setFilePath(musicLocationIndex, fileName);
-	itemTitle->setMediaType(TRACK);
-	itemTitle->setRating(track);
-	itemTitle->setTrackNumber(track);
+	QList<QVariant> musicLocations = Settings::getInstance()->musicLocations();
+	// Check if a track was already inserted
+	// Imagine if a one has added two music folders: ~/music/randomArtist and ~/music/randomArtist/randomAlbum
+	// When iterating over directories and subdirectories, at some time, we will try to add twice the same album called "randomAlbum"
+	// So tracks need to be compared each time, by saving their absolute file path in a non persistent map (tracks)
+	bool isNewTrack = true;
+	if (musicLocations.size() > 1) {
+		for (int i=0; i < musicLocations.size(); i++) {
+			QString musicLocation = musicLocations.at(i).toString();
+			QString file = musicLocation.append(fileName);
+			QStringList previousTrack = tracks.values(parent);
+			if (previousTrack.contains(file)) {
+				isNewTrack = false;
+				break;
+			} else {
+				tracks.insertMulti(parent, file);
+			}
+		}
+	}
 
-	Settings *settings = Settings::getInstance();
-	itemTitle->setFont(settings->font(Settings::LIBRARY));
-
-	parent->setChild(parent->rowCount(), itemTitle);
+	LibraryItem *itemTitle = NULL;
+	if (isNewTrack) {
+		itemTitle = new LibraryItem(title);
+		itemTitle->setFilePath(musicLocationIndex, fileName);
+		itemTitle->setMediaType(TRACK);
+		itemTitle->setRating(track);
+		itemTitle->setTrackNumber(track);
+		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
+		parent->setChild(parent->rowCount(), itemTitle);
+	}
 	return itemTitle;
 }
 
-/** Add an icon to every album, if exists. */
-void LibraryModel::insertAlbumIcon(QIcon &icon, LibraryItem *album)
+/** Add (a path to) an icon to every album. */
+void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 {
-	album->setIcon(icon);
-	// Keep a copy of covers in case of any changes in settings
-	albumsWithCovers.insert(album, icon);
+	LibraryItem *indexAlbum = covers.value(qFileName.left(qFileName.lastIndexOf('/')));
+	if (indexAlbum) {
+
+		Settings *settings = Settings::getInstance();
+		int i = indexAlbum->child(0, 0)->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+		QVariant v = settings->musicLocations().at(i);
+		indexAlbum->setFilePath(i, qFileName.mid(v.toString().size()+1));
+
+		// Keep a copy of covers in case of any changes in settings
+		albumsWithCovers.insert(indexAlbum, indexAlbum->icon());
+	}
 }
 
 /** If True, draws one cover before an album name. */
@@ -178,7 +195,7 @@ void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 {
 	int mediaType = parent->mediaType();
 	if (mediaType == LibraryModel::ARTIST || mediaType == LibraryModel::ALBUM) {
-		int childCount = parent->data(Qt::UserRole+3).toInt();
+		int childCount = parent->data(LibraryItem::CHILD_COUNT).toInt();
 		for (int i=0; i < childCount; i++) {
 			LibraryItem *node = new LibraryItem();
 			node->read(in);

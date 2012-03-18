@@ -15,7 +15,10 @@ class LibraryModel : public QStandardItemModel
 private:
 	QMap<QString, LibraryItem*> alphabeticalSeparators;
 	QMap<QString, LibraryItem*> artists;
-	QMap<QString, LibraryItem*> albums;
+	QMap<QPair<LibraryItem*, QString>, LibraryItem*> albums;
+
+	// An efficient way to tell if a track was already inserted
+	QHash<LibraryItem*, QString> tracks;
 
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
@@ -28,23 +31,24 @@ private:
 public:
 	LibraryModel(QObject *parent = 0);
 
-	enum MediaType { LETTER = 0, ARTIST = 1, ALBUM = 2, TRACK = 3, LENGTH = 4 };
+	enum MediaType { LETTER = 0,
+					 ARTIST = 1,
+					 ALBUM = 2,
+					 TRACK = 3,
+					 LENGTH = 4
+				   };
 
 	/** Removes everything. */
 	void clear();
 
 	/** Artist? Album? */
 	LibraryItem* hasArtist(const QString &artist) const;
-	LibraryItem* hasAlbum(const QString &album) const;
-	LibraryItem* hasCover(const QString &cover) const;
+	LibraryItem* hasAlbum(LibraryItem *artist, const QString &album) const;
 
 	/** Insert a new artist/album/track in the library. */
 	LibraryItem* insertArtist(const QString &artist);
 	LibraryItem* insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist);
 	LibraryItem* insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent);
-
-	/** Add an icon to every album, if exists. */
-	void insertAlbumIcon(QIcon &icon, LibraryItem *album);
 
 	/// TEST
 	//inline QModelIndexList persistentIndexList () const { return QStandardItemModel::persistentIndexList(); }
@@ -61,9 +65,13 @@ signals:
 	/** Tell the view that a new node was created, and needs to be associated with its delegate. */
 	void associateNodeWithDelegate(int);
 
+	/** A flat file on your computer was successfully loaded. */
 	void loadedFromFile();
 
 public slots:
+	/** Add (a path to) an icon to every album. */
+	void addCoverPathToAlbum(const QString &qFileName);
+
 	/** If True, draws one cover before an album name. */
 	void setIcon(bool withCovers);
 

@@ -1,9 +1,12 @@
 #include "libraryfilterproxymodel.h"
 
+#include "libraryitem.h"
 #include "librarymodel.h"
 #include "settings.h"
 
 #include <QtDebug>
+
+#include <QPainter>
 
 LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent)
@@ -72,5 +75,39 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 		return Settings::getInstance()->font(Settings::LIBRARY);
 	} else {
 		return QSortFilterProxyModel::data(index, role);
+	}
+}
+
+void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
+{
+	// (Not very clean code to use UserRole+k)
+	if (index.data(LibraryItem::MEDIA_TYPE) == LibraryModel::ARTIST) {
+
+		Settings *settings = Settings::getInstance();
+		LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
+
+		for (int i=0; i < this->rowCount(index); i++) {
+
+			// Build the path to the cover
+			QModelIndex album = index.child(i, 0);
+			int indexToAbsPath = album.data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+			QString absolutePath = settings->musicLocations().at(indexToAbsPath).toString();
+			QString relativePathToCover = album.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+			QString coverPath = absolutePath + "/" + relativePathToCover;
+
+			// If the cover is still on the disk
+			if (!relativePathToCover.isEmpty() && QFileInfo(coverPath).exists()) {
+
+				QStandardItem *item = model->itemFromIndex(this->mapToSource(album));
+				if (item && item->icon().isNull()) {
+					QSize size(48, 48);	// change to value in settings
+					QPixmap pixmap(size);
+					QPainter painter(&pixmap);
+					QImage image(coverPath);
+					painter.drawImage(QRect(0, 0, size.width(), size.height()), image);
+					item->setIcon(QIcon(pixmap));
+				}
+			}
+		}
 	}
 }
