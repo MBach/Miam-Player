@@ -70,6 +70,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	//TEST
 	connect(proxyModel, SIGNAL(aboutToExpand(QModelIndex)), this, SLOT(expandTreeView(QModelIndex)));
 
+	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
 }
 

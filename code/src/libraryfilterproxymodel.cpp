@@ -78,9 +78,9 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	}
 }
 
+/** Load covers only when an item need to be expanded. */
 void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 {
-	// (Not very clean code to use UserRole+k)
 	if (index.data(LibraryItem::MEDIA_TYPE) == LibraryModel::ARTIST) {
 
 		Settings *settings = Settings::getInstance();
@@ -110,4 +110,27 @@ void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 			}
 		}
 	}
+}
+
+/** Redefined for custom sorting. */
+bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+	bool result;
+	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
+	QStandardItem *qStandardItemLeft = model->itemFromIndex(left);
+
+	LibraryItem *libraryItemLeft = dynamic_cast<LibraryItem *>(qStandardItemLeft);
+	LibraryItem *libraryItemRight = NULL;
+
+	switch (libraryItemLeft->mediaType()) {
+
+	case LibraryModel::TRACK:
+		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
+		break;
+
+	default:
+		result = QSortFilterProxyModel::lessThan(left, right);
+	}
+	return result;
 }

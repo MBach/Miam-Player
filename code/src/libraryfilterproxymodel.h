@@ -15,6 +15,9 @@ protected:
 	/** Redefined from QSortFilterProxyModel. */
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &parent) const;	
 
+	/** Redefined for custom sorting. */
+	bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+
 private:
 	bool filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const;
 	bool hasAcceptedChildren(int sourceRow, const QModelIndex &sourceParent) const;
@@ -23,6 +26,7 @@ signals:
 	void aboutToExpand(const QModelIndex &) const;
 	
 public slots:
+	/** Load covers only when an item need to be expanded. */
 	void loadCovers(const QModelIndex &index);
 };
 
