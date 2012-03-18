@@ -1,7 +1,8 @@
 #include "circleprogressbar.h"
 
 #include <QStylePainter>
-#include <QDebug>
+
+#include <QtDebug>
 
 CircleProgressBar::CircleProgressBar(QWidget *parent) :
 	QProgressBar(parent), transparentCenter(false), startAngle(90.0)

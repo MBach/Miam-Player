@@ -7,7 +7,7 @@
 #include <QDir>
 #include <QFileDialog>
 
-#include <QDebug>
+#include <QtDebug>
 
 CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDialog(parent), musicLocationsChanged(false)

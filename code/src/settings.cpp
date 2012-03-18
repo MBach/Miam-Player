@@ -1,7 +1,5 @@
 #include "settings.h"
 
-#include <QDebug>
-
 Settings* Settings::settings = NULL;
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */

@@ -1,7 +1,5 @@
 #include "mediabutton.h"
 
-#include <QDebug>
-
 #include "mainwindow.h"
 
 MediaButton::MediaButton(QWidget *parent) :

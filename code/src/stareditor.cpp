@@ -43,7 +43,7 @@
 #include "stareditor.h"
 #include "starrating.h"
 
-#include <QDebug>
+#include <QtDebug>
 
 StarEditor::StarEditor(QWidget *parent)
 	: QWidget(parent)

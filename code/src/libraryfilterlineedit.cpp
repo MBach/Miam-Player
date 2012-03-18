@@ -1,6 +1,5 @@
 #include "libraryfilterlineedit.h"
 
-#include <QDebug>
 #include "mainwindow.h"
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
