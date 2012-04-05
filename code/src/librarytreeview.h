@@ -31,7 +31,12 @@ protected:
 signals:
 	/** Add a track to the current playlist. */
 	void sendToPlaylist(const QPersistentModelIndex &);
-	void setIcon(bool value);
+
+	/** (Dis|En)able covers.*/
+	void displayCovers(bool);
+
+	/** When covers are enabled, changes their size. */
+	void sizeOfCoversChanged(int);
 
 public slots:
 	/** Reduce the size of the library when the user is typing text. */
@@ -53,6 +58,11 @@ private slots:
 
 	//test
 	void expandTreeView(const QModelIndex &index);
+
+	/**  Layout the library at runtime when one is changing the size in options. */
+	void setCoverSize(int);
+
+	void activateCovers(bool);
 };
 
 #endif // LIBRARYTREEVIEW_H

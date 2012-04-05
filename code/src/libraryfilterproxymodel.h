@@ -6,6 +6,7 @@
 class LibraryFilterProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT
+
 public:
 	LibraryFilterProxyModel(QObject *parent = 0);
 
@@ -26,7 +27,7 @@ signals:
 	void aboutToExpand(const QModelIndex &) const;
 	
 public slots:
-	/** Load covers only when an item need to be expanded. */
+	/** Load covers only when an item needs to be expanded. */
 	void loadCovers(const QModelIndex &index);
 };
 

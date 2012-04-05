@@ -73,7 +73,7 @@ public slots:
 	void addCoverPathToAlbum(const QString &qFileName);
 
 	/** If True, draws one cover before an album name. */
-	void setIcon(bool withCovers);
+	void displayCovers(bool withCovers);
 
 	/** Save a tree to a flat file on disk. */
 	void saveToFile();

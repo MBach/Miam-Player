@@ -8,8 +8,15 @@
 #include <QtDebug>
 
 LibraryItem::LibraryItem(const QString &text) :
-	QStandardItem(text)
+	QStandardItem(text), libraryItemDelegate(0)
 {}
+
+LibraryItem::~LibraryItem()
+{
+	if (libraryItemDelegate) {
+		delete libraryItemDelegate;
+	}
+}
 
 int LibraryItem::mediaType() const
 {

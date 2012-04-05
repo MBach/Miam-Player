@@ -26,9 +26,6 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 		connect(b, SIGNAL(visibilityChanged(MediaButton*, bool)), settings, SLOT(setVisible(MediaButton*, bool)));
 	}
 
-	// Connect a signal to another signal to reach private field in LibraryTreeView class
-	connect(displayCovers, SIGNAL(toggled(bool)), mainWindow->library, SIGNAL(setIcon(bool)));
-
 	// Fonts
 	connect(fontComboBoxPlaylist, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontFamily(QFont)));
 	connect(fontComboBoxLibrary, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontFamily(QFont)));
@@ -38,6 +35,10 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	connect(spinBoxMenus, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 
 	// Library
+	// Connect a signal to another signal to reach private field in LibraryTreeView class
+	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), mainWindow->library, SIGNAL(displayCovers(bool)));
+	connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SIGNAL(sizeOfCoversChanged(int)));
+	// Toggle alphabetical separators in the library
 	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(toggleSeparators(bool)));
 
 	connect(this, SIGNAL(themeChanged()), this, SLOT(loadTheme()));
@@ -124,5 +125,7 @@ void CustomizeThemeDialog::loadTheme()
 	spinBoxMenus->setValue(settings->fontSize(Settings::MENUS));
 
 	// Library
+	checkBoxDisplayCovers->setChecked(settings->withCovers());
+	spinBoxCoverSize->setValue(settings->coverSize());
 	checkBoxAlphabeticalSeparators->setChecked(settings->toggleSeparators());
 }

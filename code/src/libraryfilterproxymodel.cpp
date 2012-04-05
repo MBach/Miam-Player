@@ -10,9 +10,7 @@
 
 LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent)
-{
-	//this->setHeaderData(0, Qt::Horizontal, QVariant("Artists"), Qt::DisplayRole);
-}
+{}
 
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
@@ -78,34 +76,38 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	}
 }
 
-/** Load covers only when an item need to be expanded. */
+/** Load covers only when an item needs to be expanded. */
 void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 {
 	if (index.data(LibraryItem::MEDIA_TYPE) == LibraryModel::ARTIST) {
 
 		Settings *settings = Settings::getInstance();
-		LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
+		if (settings->withCovers()) {
 
-		for (int i=0; i < this->rowCount(index); i++) {
+			// Load covers in a buffer greater than the real displayed picture
+			int bufferedCoverSize = settings->bufferedCoverSize();
+			QSize size(bufferedCoverSize, bufferedCoverSize);
+			QPixmap pixmap(size);
+			QPainter painter(&pixmap);
 
-			// Build the path to the cover
-			QModelIndex album = index.child(i, 0);
-			int indexToAbsPath = album.data(LibraryItem::IDX_TO_ABS_PATH).toInt();
-			QString absolutePath = settings->musicLocations().at(indexToAbsPath).toString();
-			QString relativePathToCover = album.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-			QString coverPath = absolutePath + "/" + relativePathToCover;
+			QStandardItemModel *model = qobject_cast<QStandardItemModel *>(this->sourceModel());
+			for (int i=0; i < this->rowCount(index); i++) {
 
-			// If the cover is still on the disk
-			if (!relativePathToCover.isEmpty() && QFileInfo(coverPath).exists()) {
+				// Build the path to the cover
+				QModelIndex album = index.child(i, 0);
+				int indexToAbsPath = album.data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+				QString absolutePath = settings->musicLocations().at(indexToAbsPath).toString();
+				QString relativePathToCover = album.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+				QString coverPath = absolutePath + "/" + relativePathToCover;
 
 				QStandardItem *item = model->itemFromIndex(this->mapToSource(album));
-				if (item && item->icon().isNull()) {
-					QSize size(48, 48);	// change to value in settings
-					QPixmap pixmap(size);
-					QPainter painter(&pixmap);
+				// If the cover is still on the disk
+				if (item && !relativePathToCover.isEmpty() && QFile::exists(coverPath)) {
 					QImage image(coverPath);
-					painter.drawImage(QRect(0, 0, size.width(), size.height()), image);
+					painter.drawImage(QRect(0, 0, bufferedCoverSize, bufferedCoverSize), image);
 					item->setIcon(QIcon(pixmap));
+				} else if (item) {
+					item->setIcon(QIcon());
 				}
 			}
 		}

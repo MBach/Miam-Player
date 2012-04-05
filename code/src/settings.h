@@ -65,6 +65,14 @@ public:
 	/** Returns all music locations. */
 	inline QList<QVariant> musicLocations() { return value("musicLocations").toList(); }
 
+	inline bool withCovers() const { return value("covers").toBool(); }
+
+	/** Returns the size of a cover. */
+	int coverSize() const;
+
+	/** Returns the size of the buffer for a cover. */
+	int bufferedCoverSize() const;
+
 signals:
 	void currentFontChanged();
 	
@@ -93,6 +101,12 @@ public slots:
 	}
 
 	inline void setToggleSeparators(bool b) { setValue("alphabeticalSeparators", b); }
+
+	inline void setCovers(bool b) { setValue("covers", b); }
+
+	inline void setCoverSize(int i) { setValue("coverSize", i); }
+
+	inline void setBufferedCoverSize(int i) { setValue("bufferedCoverSize", i); }
 	
 };
 

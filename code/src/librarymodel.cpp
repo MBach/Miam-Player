@@ -21,6 +21,7 @@ void LibraryModel::clear()
 	alphabeticalSeparators.clear();
 	artists.clear();
 	covers.clear();
+	tracks.clear();
 	QStandardItemModel::clear();
 }
 
@@ -131,7 +132,7 @@ void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 }
 
 /** If True, draws one cover before an album name. */
-void LibraryModel::setIcon(bool withCovers)
+void LibraryModel::displayCovers(bool withCovers)
 {
 	foreach (LibraryItem *album, albums.values()) {
 		if (withCovers) {
@@ -140,8 +141,7 @@ void LibraryModel::setIcon(bool withCovers)
 			album->setIcon(QIcon());
 		}
 	}
-	// Notify the view that the model has changed, so it needs to be updated
-	//emit itemChanged(invisibleRootItem());
+	Settings::getInstance()->setCovers(withCovers);
 }
 
 /** Save a tree to a flat file on disk. */

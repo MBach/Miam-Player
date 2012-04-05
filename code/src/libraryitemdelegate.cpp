@@ -7,12 +7,19 @@
 
 #include <QtDebug>
 
+int LibraryItemDelegate::maxStars=5;
+
+
 LibraryItemDelegate::LibraryItemDelegate(QObject *parent) :
 	QStyledItemDelegate(parent)
 {
 	titleRect = new QRect();
 	starsRect = new QRect();
 	starEditor = new StarEditor();
+
+	_stars = 3;
+
+	favIcon.addFile(":/icons/favorite");
 }
 
 LibraryItemDelegate::~LibraryItemDelegate()
@@ -24,21 +31,48 @@ LibraryItemDelegate::~LibraryItemDelegate()
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
+
 		StarRating starRating = qVariantValue<StarRating>(index.data(LibraryItem::STAR_RATING));
 
-		int titleRectWidth = option.rect.width()/2;
-		int starsRectWidth = option.rect.width()/2;
+		int titleRectWidth = option.rect.width();
+		int starsRectWidth = starRating.starCount() * 16;
 		titleRect->setRect(option.rect.x(), option.rect.y(), titleRectWidth, option.rect.height());
-		starsRect->setRect(option.rect.x()+option.rect.width()/2, option.rect.y(), starsRectWidth, option.rect.height());
-
-		painter->save();
-		painter->translate(titleRect->width(), 0);
-		starRating.paint(painter, titleRect, option.palette, StarRating::ReadOnly);
-		painter->restore();
+		//starsRect->setRect(option.rect.x()+option.rect.width()/2, option.rect.y(), starsRectWidth, option.rect.height());
 
 		QStyleOptionViewItemV4 textViewItem(option);
 		textViewItem.rect = *titleRect;
 		QStyledItemDelegate::paint(painter, textViewItem, index);
+
+		painter->save();
+		//painter->translate(titleRect->width(), 0);
+		//starRating.paint(painter, titleRect, option.palette, StarRating::ReadOnly);
+
+		painter->setRenderHint(QPainter::Antialiasing, true);
+		painter->setPen(Qt::NoPen);
+
+		if (ReadOnly == Editable) {
+			//qDebug() << "on est en EditMode !!!";
+			painter->setBrush(option.palette.highlight());
+		} else {
+			painter->setBrush(option.palette.foreground());
+		}
+
+		QRect favIconRect = *titleRect;
+		favIconRect.setHeight(16);
+
+		for (int i=maxStars; i>0; i--) {
+			if (0 < i && i < maxStars) {
+				painter->translate(-1.0 * (favIcon.actualSize(favIconRect.size()).width()+3.0), 0);
+			}
+			if (i > starRating.starCount()) {
+				qDebug() << "painting";
+				favIcon.paint(painter, favIconRect, Qt::AlignRight, QIcon::Disabled);
+			} else {
+				favIcon.paint(painter, favIconRect, Qt::AlignRight, QIcon::Normal);
+			}
+		}
+
+		painter->restore();
 	} else {
 		QStyledItemDelegate::paint(painter, option, index);
 	}

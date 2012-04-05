@@ -100,3 +100,23 @@ void Settings::removeMusicLocation(QString location) {
 		remove("musicLocations");
 	}
 }
+
+/** Returns the size of a cover. */
+int Settings::coverSize() const
+{
+	int size = value("coverSize").toInt();
+	if (size == 0) {
+		size = 48;
+	}
+	return size;
+}
+
+/** Returns the size of the buffer for a cover. */
+int Settings::bufferedCoverSize() const
+{
+	int buffer = value("bufferedCoverSize").toInt();
+	if (buffer == 0) {
+		buffer = 128;
+	}
+	return buffer;
+}

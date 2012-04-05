@@ -34,7 +34,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	this->setModel(proxyModel);
 
 	//QHeaderView *header = new QHeaderView(Qt::Horizontal, this);
-	this->setIconSize(QSize(48, 48));
+	int iconSize = Settings::getInstance()->coverSize();
+	this->setIconSize(QSize(iconSize, iconSize));
 	parent->setWindowOpacity(0.5);
 	//QWidget *centeredOverlay = new QWidget(this);
 	//centeredOverlay->setBaseSize(this->width(), this->height());
@@ -58,7 +59,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(libraryModel, SIGNAL(associateNodeWithDelegate(int)), this, SLOT(addNodeToTree(int)));
 
 	// Forward this signal to the inner model which quickly activates/desactivates icons
-	connect(this, SIGNAL(setIcon(bool)), libraryModel, SLOT(setIcon(bool)));
+	connect(this, SIGNAL(displayCovers(bool)), this, SLOT(activateCovers(bool)));
+	connect(this, SIGNAL(sizeOfCoversChanged(int)), this, SLOT(setCoverSize(int)));
 
 	// TEST : this widget is not repainted when font is changing, only when closing the Dialog :(
 	Settings *settings = Settings::getInstance();
@@ -72,6 +74,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
+
+
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
@@ -113,7 +117,9 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 		indexArtist = libraryModel->hasArtist(QString(artist.toCString(false)));
 		if (indexArtist == NULL) {
 			indexArtist = libraryModel->insertArtist(QString(artist.toCString(false)));
-			setItemDelegateForRow(indexArtist->row(), new LibraryItemDelegate(this));
+			//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+			//indexArtist->setDelegate(libraryItemDelegate);
+			//setItemDelegateForRow(indexArtist->row(), libraryItemDelegate);
 		}
 
 		// Is there is already an album from this artist?
@@ -124,7 +130,9 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 				indexAlbum = indexArtist;
 			} else {
 				indexAlbum = libraryModel->insertAlbum(QString(fileRef.tag()->album().toCString(false)), filePath, indexArtist);
-				setItemDelegateForRow(indexAlbum->row(), new LibraryItemDelegate(this));
+				//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+				//indexAlbum->setDelegate(libraryItemDelegate);
+				//setItemDelegateForRow(indexAlbum->row(), libraryItemDelegate);
 			}
 		}
 
@@ -136,7 +144,9 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 		}
 		LibraryItem *track = libraryModel->insertTrack(musicLocationIndex, qFileName, fileRef.tag()->track(), title, indexAlbum);
 		if (track) {
-			setItemDelegateForRow(track->row(), new LibraryItemDelegate(this));
+			//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+			//track->setDelegate(libraryItemDelegate);
+			//setItemDelegateForRow(track->row(), libraryItemDelegate);
 		}
 	}
 }
@@ -144,7 +154,17 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 /** Tell the view to create specific delegate for the current row. */
 void LibraryTreeView::addNodeToTree(int row)
 {
-	setItemDelegateForRow(row, new LibraryItemDelegate(this));
+	QStandardItem *item = libraryModel->itemFromIndex(libraryModel->index(row, 0));
+	//qDebug() << (item == NULL);
+	if (item) {
+		LibraryItem *libraryItem = dynamic_cast<LibraryItem *>(item);
+		if (libraryItem->itemDelegate()) {
+			delete libraryItem->itemDelegate();
+		}
+		//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+		//libraryItem->setDelegate(libraryItemDelegate);
+		//setItemDelegateForRow(row, libraryItemDelegate);
+	}
 }
 
 /** Check if the current double-clicked item is an Artist, an Album or a Track.*/
@@ -152,7 +172,8 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
 	if (delegate) {
-		QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		QModelIndex sourceIndex = proxyModel->mapToSource(index);
+		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				//recursive call on children
@@ -162,10 +183,10 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 			// If the click from the mouse was on a text label or on a star
 			if (delegate->title()->contains(currentPos) ||
 					(delegate->title()->isEmpty() && delegate->stars()->isEmpty())) {
-				emit sendToPlaylist(QPersistentModelIndex(index));
+				emit sendToPlaylist(QPersistentModelIndex(sourceIndex));
 			} else if (delegate->stars()->contains(currentPos)) {
 				QStyleOptionViewItemV4 qsovi;
-				QWidget *editor = delegate->createEditor(this, qsovi, index);
+				QWidget *editor = delegate->createEditor(this, qsovi, sourceIndex);
 				editor->show();
 			}
 		}
@@ -206,9 +227,7 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 	if (musicLocationHasChanged) {
 		musicSearchEngine->start();
 	} else {
-		QFile mmmmp("library.mmmmp");
-		if (mmmmp.open(QIODevice::ReadOnly)) {
-			mmmmp.close();
+		if (QFile::exists("library.mmmmp")) {
 			libraryModel->loadFromFile();
 		} else {
 			// If the file has been erased from the disk meanwhile
@@ -232,4 +251,49 @@ void LibraryTreeView::expandTreeView(const QModelIndex &index)
 		parent = parent.parent();
 	}
 	expand(parent);
+}
+
+/**  Layout the library at runtime when one is changing the size in options. */
+void LibraryTreeView::setCoverSize(int newSize)
+{
+	Settings *settings = Settings::getInstance();
+	int oldSize = settings->coverSize();
+	int bufferedCoverSize = settings->bufferedCoverSize();
+	settings->setCoverSize(newSize);
+
+	bool coversNeedToBeReloaded = true;
+
+	// Increase buffer or not
+	if (newSize < bufferedCoverSize) {
+		if (newSize + 128 < bufferedCoverSize) {
+			bufferedCoverSize -= 128;
+			settings->setBufferedCoverSize(bufferedCoverSize);
+		} else {
+			coversNeedToBeReloaded = false;
+		}
+	} else if (oldSize <= newSize) {
+		bufferedCoverSize += 128;
+		settings->setBufferedCoverSize(bufferedCoverSize);
+	}
+
+	// Scales covers for every expanded item in the tree
+	if (coversNeedToBeReloaded) {
+		for (int i=0; i<proxyModel->rowCount(rootIndex()); i++) {
+			QModelIndex index = proxyModel->index(i, 0);
+			// It's really slow to reload covers from disk for every changes in the User Interface.
+			// It's more efficient to load icons just for some resolutions, like 128x128 or 512x512.
+			if (isExpanded(index)) {
+				proxyModel->loadCovers(index);
+			}
+		}
+	}
+
+	// Upscaled (or downscale) icons because their inner representation is already greater than what's displayed
+	this->setIconSize(QSize(newSize, newSize));
+}
+
+void LibraryTreeView::activateCovers(bool b)
+{
+	Settings::getInstance()->setCovers(b);
+	repaint();
 }

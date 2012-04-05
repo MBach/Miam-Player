@@ -5,6 +5,8 @@
 
 #include "librarymodel.h"
 
+#include "libraryitemdelegate.h"
+
 class LibraryModel;
 
 /// Subclass in LibraryTrackItem, LibraryAlbumItem, LibraryArtist
@@ -14,10 +16,14 @@ class LibraryItem : public QStandardItem
 private:
 	void setDisplayedName(const char *name, int size);
 
+	LibraryItemDelegate *libraryItemDelegate;
+
 	Q_ENUMS(CustomType)
 
 public:
 	LibraryItem(const QString &text="");
+
+	~LibraryItem();
 
 	enum CustomType { MEDIA_TYPE		= Qt::UserRole+2,
 					  STAR_RATING		= Qt::UserRole+3,
@@ -51,6 +57,10 @@ public:
 
 	/** Write data from this node to the output stream. */
 	void write(QDataStream &out) const;
+
+	inline void setDelegate(LibraryItemDelegate *libraryItemDelegate) { this->libraryItemDelegate = libraryItemDelegate; }
+
+	inline LibraryItemDelegate *itemDelegate() const { return this->libraryItemDelegate; }
 
 protected:
 	inline void setData(const QVariant &value, int role) { QStandardItem::setData(value, role); }

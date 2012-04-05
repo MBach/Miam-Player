@@ -16,7 +16,15 @@ private:
 
 	StarEditor *starEditor;
 
+	static int maxStars;
+
+	QIcon favIcon;
+
+	int _stars;
+
 public:
+	enum EditMode { Editable, ReadOnly };
+
 	LibraryItemDelegate(QObject *parent = 0);
 	~LibraryItemDelegate();
 

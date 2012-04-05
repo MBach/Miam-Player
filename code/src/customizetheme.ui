@@ -658,7 +658,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QCheckBox" name="displayCovers">
+           <widget class="QCheckBox" name="checkBoxDisplayCovers">
             <property name="text">
              <string/>
             </property>
@@ -675,12 +675,12 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QSpinBox" name="coverSize">
+           <widget class="QSpinBox" name="spinBoxCoverSize">
             <property name="minimum">
-             <number>8</number>
+             <number>24</number>
             </property>
             <property name="maximum">
-             <number>96</number>
+             <number>512</number>
             </property>
             <property name="value">
              <number>48</number>
@@ -984,9 +984,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>displayCovers</sender>
+   <sender>checkBoxDisplayCovers</sender>
    <signal>toggled(bool)</signal>
-   <receiver>coverSize</receiver>
+   <receiver>spinBoxCoverSize</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
