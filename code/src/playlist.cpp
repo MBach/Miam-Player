@@ -110,7 +110,7 @@ QTableWidgetItem * Playlist::append(MediaSource m)
 		QTableWidgetItem *trackItem = new QTableWidgetItem(QString::number(f.tag()->track()));
 		QTableWidgetItem *titleItem = new QTableWidgetItem(title);
 		QTableWidgetItem *lengthItem = new QTableWidgetItem(this->convertTrackLength(f.audioProperties()->length()));
-		QTableWidgetItem *albumItem = new QTableWidgetItem(QString::fromUtf8(f.tag()->album().toCString()));
+		QTableWidgetItem *albumItem = new QTableWidgetItem(f.tag()->album().toCString(false));
 		widgetItems << trackItem << titleItem << lengthItem << albumItem;
 
 		int currentRow = tableWidget->rowCount();
@@ -168,8 +168,6 @@ void Playlist::highlightCurrentTrack()
 				itemFont.setBold(true);
 				itemFont.setItalic(true);
 				item->setFont(itemFont);
-				//itemFont.pointSize();
-				//item->setSizeHint();
 			}
 		}
 	}

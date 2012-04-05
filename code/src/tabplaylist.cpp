@@ -43,7 +43,8 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		if (index+1 > count()-2) {
 			setCurrentIndex(index-1);
 		}
-		removeTab(index);
+		this->removeTab(index);
+		delete this->widget(index);
 	} else {
 		// Clear the content of last tab
 		currentPlayList()->clear();
@@ -53,15 +54,23 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 /** Add a track from the filesystem or the library to the current playlist. */
 QTableWidgetItem * TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary)
 {
-	QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
-	QString fileName = itemFromLibrary.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-	MediaSource source(filePath + fileName);
-	QTableWidgetItem *index = currentPlayList()->append(source);
-	if (currentPlayList()->tracks()->size() == 1) {
-		qDebug() << "empty ?";
-		metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(0));
+	if (itemFromLibrary.isValid()) {
+		QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
+		QString fileName = itemFromLibrary.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+		MediaSource source(filePath + fileName);
+		if (source.type() == MediaSource::Invalid) {
+			qDebug() << "wtf?" << filePath.append(fileName);
+		}
+		QTableWidgetItem *index = currentPlayList()->append(source);
+		if (currentPlayList()->tracks()->size() == 1) {
+			qDebug() << "empty ?";
+			metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(0));
+		}
+		return index;
+	} else {
+		qDebug() << "itemFromLibrary is invalid :(";
+		return NULL;
 	}
-	return index;
 }
 
 /** Convenient getter with cast. */
@@ -124,6 +133,7 @@ void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
 	}
 
 	if (metaInformationResolver->currentSource().type() == MediaSource::Invalid) {
+		qDebug() << "wtf";
 		return;
 	}
 
