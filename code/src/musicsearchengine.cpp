@@ -19,7 +19,7 @@ void MusicSearchEngine::run()
 	for(int i=0; i<musicPaths.size(); i++) {
 
 		// QDirIterator class is very fast to scan large directories
-		QDirIterator it(musicPaths.at(i).toString(), QDirIterator::Subdirectories);
+		QDirIterator it(musicPaths.at(i).toString(), QDir::AllDirs | QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			fileNumber++;
@@ -32,7 +32,7 @@ void MusicSearchEngine::run()
 	bool aCoverWasFound = false;
 	QString coverPath;
 	for(int i=0; i<musicPaths.size(); i++) {
-		QDirIterator it2(musicPaths.at(i).toString(), QDirIterator::Subdirectories);
+		QDirIterator it2(musicPaths.at(i).toString(), QDir::AllDirs | QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
 		while (it2.hasNext()) {
 			QFileInfo qFileInfo(it2.next());
 			currentFile++;
