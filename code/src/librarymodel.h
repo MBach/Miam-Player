@@ -63,7 +63,7 @@ private:
 
 signals:
 	/** Tell the view that a new node was created, and needs to be associated with its delegate. */
-	void associateNodeWithDelegate(int);
+	void associateNodeWithDelegate(LibraryItem*);
 
 	/** A flat file on your computer was successfully loaded. */
 	void loadedFromFile();

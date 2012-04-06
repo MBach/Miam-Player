@@ -56,10 +56,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
 
 	// Tell the view to create specific delegate for the current row
-	connect(libraryModel, SIGNAL(associateNodeWithDelegate(int)), this, SLOT(addNodeToTree(int)));
+	connect(libraryModel, SIGNAL(associateNodeWithDelegate(LibraryItem*)), this, SLOT(addNodeToTree(LibraryItem*)));
 
-	// Forward this signal to the inner model which quickly activates/desactivates icons
-	connect(this, SIGNAL(displayCovers(bool)), this, SLOT(activateCovers(bool)));
 	connect(this, SIGNAL(sizeOfCoversChanged(int)), this, SLOT(setCoverSize(int)));
 
 	// TEST : this widget is not repainted when font is changing, only when closing the Dialog :(
@@ -74,8 +72,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
-
-
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
@@ -117,9 +113,9 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 		indexArtist = libraryModel->hasArtist(QString(artist.toCString(false)));
 		if (indexArtist == NULL) {
 			indexArtist = libraryModel->insertArtist(QString(artist.toCString(false)));
-			//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-			//indexArtist->setDelegate(libraryItemDelegate);
-			//setItemDelegateForRow(indexArtist->row(), libraryItemDelegate);
+			LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+			indexArtist->setDelegate(libraryItemDelegate);
+			setItemDelegateForRow(indexArtist->row(), libraryItemDelegate);
 		}
 
 		// Is there is already an album from this artist?
@@ -130,9 +126,9 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 				indexAlbum = indexArtist;
 			} else {
 				indexAlbum = libraryModel->insertAlbum(QString(fileRef.tag()->album().toCString(false)), filePath, indexArtist);
-				//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-				//indexAlbum->setDelegate(libraryItemDelegate);
-				//setItemDelegateForRow(indexAlbum->row(), libraryItemDelegate);
+				LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+				indexAlbum->setDelegate(libraryItemDelegate);
+				setItemDelegateForRow(indexAlbum->row(), libraryItemDelegate);
 			}
 		}
 
@@ -144,27 +140,19 @@ void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
 		}
 		LibraryItem *track = libraryModel->insertTrack(musicLocationIndex, qFileName, fileRef.tag()->track(), title, indexAlbum);
 		if (track) {
-			//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-			//track->setDelegate(libraryItemDelegate);
-			//setItemDelegateForRow(track->row(), libraryItemDelegate);
+			LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+			track->setDelegate(libraryItemDelegate);
+			setItemDelegateForRow(track->row(), libraryItemDelegate);
 		}
 	}
 }
 
 /** Tell the view to create specific delegate for the current row. */
-void LibraryTreeView::addNodeToTree(int row)
+void LibraryTreeView::addNodeToTree(LibraryItem *libraryItem)
 {
-	QStandardItem *item = libraryModel->itemFromIndex(libraryModel->index(row, 0));
-	//qDebug() << (item == NULL);
-	if (item) {
-		LibraryItem *libraryItem = dynamic_cast<LibraryItem *>(item);
-		if (libraryItem->itemDelegate()) {
-			delete libraryItem->itemDelegate();
-		}
-		//LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-		//libraryItem->setDelegate(libraryItemDelegate);
-		//setItemDelegateForRow(row, libraryItemDelegate);
-	}
+	LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+	libraryItem->setDelegate(libraryItemDelegate);
+	setItemDelegateForRow(libraryItem->row(), libraryItemDelegate);
 }
 
 /** Check if the current double-clicked item is an Artist, an Album or a Track.*/
@@ -176,7 +164,7 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
-				//recursive call on children
+				// Recursive call on children
 				beforeSendToPlaylist(index.child(i, 0));
 			}
 		} else {
@@ -223,7 +211,9 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 {
 	circleProgressBar->show();
 	// Clean all before scanning again
+	// Seems difficult to clean efficiently delegates: they are disabled right now.
 	libraryModel->clear();
+	this->reset();
 	if (musicLocationHasChanged) {
 		musicSearchEngine->start();
 	} else {
@@ -288,12 +278,6 @@ void LibraryTreeView::setCoverSize(int newSize)
 		}
 	}
 
-	// Upscaled (or downscale) icons because their inner representation is already greater than what's displayed
+	// Upscale (or downscale) icons because their inner representation is already greater than what's displayed
 	this->setIconSize(QSize(newSize, newSize));
-}
-
-void LibraryTreeView::activateCovers(bool b)
-{
-	Settings::getInstance()->setCovers(b);
-	repaint();
 }

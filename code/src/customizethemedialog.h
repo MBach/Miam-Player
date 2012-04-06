@@ -15,21 +15,29 @@ private:
 
 public:
 	CustomizeThemeDialog(QWidget *parent);
-	
-signals:
-	void themeChanged();
-
-	void libraryNeedToBeRepaint();
 
 private slots:
 	/** Changes the current theme and updates this dialog too. */
-	void setThemeNameAndDialogButtons(QString newTheme);
-	
-public slots:
-	void loadTheme();
-	void toggleSeparators(bool);
+	void setThemeNameAndDialogButtons(QString);
+
+	/** Displays covers or not in the library. */
+	void displayCovers(bool);
+
+	/** Displays alphabecical separators or not in the library. */
+	void displayAlphabeticalSeparators(bool);
+
+	/** Updates the font family of a specific component. */
 	void updateFontFamily(const QFont&);
+
+	/** Updates the font size of a specific component. */
 	void updateFontSize(int);
+
+public slots:
+	/** Load theme at startup. */
+	void loadTheme();
+
+signals:
+	void themeChanged();
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

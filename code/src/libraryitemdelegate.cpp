@@ -26,6 +26,7 @@ LibraryItemDelegate::~LibraryItemDelegate()
 {
 	delete titleRect;
 	delete starsRect;
+	delete starEditor;
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

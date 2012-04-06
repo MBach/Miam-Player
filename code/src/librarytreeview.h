@@ -47,7 +47,7 @@ public slots:
 
 private slots:
 	/** Tell the view to create specific delegate for the current row. */
-	void addNodeToTree(int);
+	void addNodeToTree(LibraryItem *libraryItem);
 
 	/** Check if the current double-clicked item is an Artist, an Album or a Track.*/
 	void beforeSendToPlaylist(const QModelIndex &index);
@@ -61,8 +61,6 @@ private slots:
 
 	/**  Layout the library at runtime when one is changing the size in options. */
 	void setCoverSize(int);
-
-	void activateCovers(bool);
 };
 
 #endif // LIBRARYTREEVIEW_H

@@ -35,11 +35,9 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	connect(spinBoxMenus, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 
 	// Library
-	// Connect a signal to another signal to reach private field in LibraryTreeView class
-	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), mainWindow->library, SIGNAL(displayCovers(bool)));
+	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(displayAlphabeticalSeparators(bool)));
+	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), this, SLOT(displayCovers(bool)));
 	connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SIGNAL(sizeOfCoversChanged(int)));
-	// Toggle alphabetical separators in the library
-	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(toggleSeparators(bool)));
 
 	connect(this, SIGNAL(themeChanged()), this, SLOT(loadTheme()));
 }
@@ -53,12 +51,21 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme) {
 	Settings::getInstance()->setThemeName(newTheme);
 }
 
-void CustomizeThemeDialog::toggleSeparators(bool b)
+/** Displays covers or not in the library. */
+void CustomizeThemeDialog::displayCovers(bool b)
 {
-	Settings::getInstance()->setToggleSeparators(b);
-	emit libraryNeedToBeRepaint();
+	Settings::getInstance()->setCovers(b);
+	mainWindow->library->beginPopulateTree();
 }
 
+/** Displays alphabecical separators or not in the library. */
+void CustomizeThemeDialog::displayAlphabeticalSeparators(bool b)
+{
+	Settings::getInstance()->setToggleSeparators(b);
+	mainWindow->library->beginPopulateTree();
+}
+
+/** Updates the font family of a specific component. */
 void CustomizeThemeDialog::updateFontFamily(const QFont &font) {
 	Settings *settings = Settings::getInstance();
 	if (sender()->objectName().contains("Playlist")) {
@@ -70,6 +77,7 @@ void CustomizeThemeDialog::updateFontFamily(const QFont &font) {
 	}
 }
 
+/** Updates the font size of a specific component. */
 void CustomizeThemeDialog::updateFontSize(int i) {
 	Settings *settings = Settings::getInstance();
 	if (sender()->objectName().contains("Playlist")) {
@@ -81,6 +89,7 @@ void CustomizeThemeDialog::updateFontSize(int i) {
 	}
 }
 
+/** Load theme at startup. */
 void CustomizeThemeDialog::loadTheme()
 {
 	Settings *settings = Settings::getInstance();

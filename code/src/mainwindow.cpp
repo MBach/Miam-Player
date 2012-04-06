@@ -63,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::setupActions()
 {
 	// Load music
-	connect(customizeThemeDialog, SIGNAL(libraryNeedToBeRepaint()), this, SLOT(drawLibrary()));
 	connect(customizeOptionsDialog, SIGNAL(musicLocationsHasChanged(bool)), this, SLOT(drawLibrary(bool)));
 
 	// Link user interface

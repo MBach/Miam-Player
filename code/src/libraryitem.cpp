@@ -183,7 +183,7 @@ void LibraryItem::write(QDataStream &out) const
 		out << rowCount();
 
 		// Save Absolute path + Relative path to picture, if exists
-		// It's useless to store the picture itself, it will be rebuilt later
+		// It's useless to store the picture itself, it will be loaded when expanding items
 		out << data(REL_PATH_TO_MEDIA).toByteArray();
 		if (!data(REL_PATH_TO_MEDIA).toString().isEmpty()) {
 			out << data(IDX_TO_ABS_PATH).toInt();

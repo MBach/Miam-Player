@@ -202,7 +202,7 @@ void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 			parent->appendRow(node);
 
 			// Tell the view that a new node was created, and needs to be associated with its delegate
-			emit associateNodeWithDelegate(node->row());
+			emit associateNodeWithDelegate(node);
 
 			// Then load nodes
 			this->loadNode(in, node);
