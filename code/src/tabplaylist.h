@@ -31,17 +31,26 @@ public:
 	void retranslateUi();
 
 public slots:
+	/** When the user is double clicking on a track in a playlist. */
+	void changeTrack(QTableWidgetItem *);
+
+	/** Change the current track to the previous one. */
+	void skipBackward();
+
+	/** Change the current track to the next one. */
+	void skipForward();
+	//TODO : seekBackward, seekForward,
+
+	void addItemFromLibraryToPlaylist(const QPersistentModelIndex &item);
+
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();
 
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
 
-	void sourceChanged(const Phonon::MediaSource &source);
-
 private slots:
 	void tick(qint64 time);
-	void aboutToFinish();
 	void stateChanged(Phonon::State newState, Phonon::State oldState);
 	void metaStateChanged(Phonon::State newState, Phonon::State oldState);
 };

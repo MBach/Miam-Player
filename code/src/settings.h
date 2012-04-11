@@ -73,6 +73,9 @@ public:
 	/** Returns the size of the buffer for a cover. */
 	int bufferedCoverSize() const;
 
+	/** Returns volume from the slider. */
+	inline qreal volume() { return value("volume").toReal(); }
+
 signals:
 	void currentFontChanged();
 	
@@ -89,6 +92,7 @@ public slots:
 	/** Sets if stars are visible and active. */
 	inline void setDelegates(const bool &value) { setValue("delegates", value); }
 
+	/** Sets the font of the application. */
 	inline void setFont(FontFamily fontFamily, const QFont &font) {
 		setValue(QString(fontFamily), font.family());
 		emit currentFontChanged();
@@ -104,9 +108,14 @@ public slots:
 
 	inline void setCovers(bool b) { setValue("covers", b); }
 
+	/** Sets the size of a cover. */
 	inline void setCoverSize(int i) { setValue("coverSize", i); }
 
+	/** Sets the size of the buffer for a cover. */
 	inline void setBufferedCoverSize(int i) { setValue("bufferedCoverSize", i); }
+
+	/** Sets volume from the slider. */
+	inline void setVolume(qreal v) { setValue("volume", v); }
 	
 };
 

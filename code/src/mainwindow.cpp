@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Init the audio module
 	audioOutput = new AudioOutput(MusicCategory, this);
+	audioOutput->setVolume(Settings::getInstance()->volume());
 	createPath(tabPlaylists->media(), audioOutput);
 	seekSlider->setMediaObject(tabPlaylists->media());
 	volumeSlider->setAudioOutput(audioOutput);
@@ -54,9 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	addPlaylist();
 	setupActions();
-	//showFirstRun();
 	drawLibrary();
-	//library->beginPopulateTree();
 }
 
 /** Set up all actions and behaviour. */
@@ -80,20 +79,18 @@ void MainWindow::setupActions()
 	connect(commandLinkButtonLibrary, SIGNAL(clicked()), customizeOptionsDialog, SLOT(open()));
 
 	// Send music to playlist
-	connect(library, SIGNAL(sendToPlaylist(const QPersistentModelIndex &)), this, SLOT(addItemFromLibraryToPlaylist(const QPersistentModelIndex &)));
+	connect(library, SIGNAL(sendToPlaylist(const QPersistentModelIndex &)), tabPlaylists, SLOT(addItemFromLibraryToPlaylist(const QPersistentModelIndex &)));
 	connect(filesystem, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(addSelectedItemToPlaylist(const QModelIndex &)));
 
 	// Add a new playlist
 	connect(tabPlaylists, SIGNAL(currentChanged(int)), this, SLOT(checkAddPlaylistButton(int)));
 
-	// Change track
-	connect(tabPlaylists->currentPlayList()->table(), SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(changeTrack(QTableWidgetItem*)));
-
 	// Link buttons
 	connect(playButton, SIGNAL(clicked()), this, SLOT(playAndPause()));
 	connect(stopButton, SIGNAL(clicked()), this, SLOT(stop()));
-	connect(skipBackwardButton, SIGNAL(clicked()), this, SLOT(skipBackward()));
-	connect(skipForwardButton, SIGNAL(clicked()), this, SLOT(skipForward()));
+	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
+	connect(skipForwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipForward()));
+	connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), Settings::getInstance(), SLOT(setVolume(qreal)));
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
@@ -162,18 +159,6 @@ void MainWindow::addSelectedItemToPlaylist(const QModelIndex &item)
 	}
 }
 
-void MainWindow::addItemFromLibraryToPlaylist(const QPersistentModelIndex &item)
-{
-	bool isEmpty = tabPlaylists->currentPlayList()->tracks()->isEmpty();
-	QTableWidgetItem *indexInPlaylist = tabPlaylists->addItemToCurrentPlaylist(item);
-	qDebug() << "row: " << indexInPlaylist->row();
-	if (isEmpty) {
-		//tabPlaylists->media()->setCurrentSource();
-		changeTrack(indexInPlaylist);
-	}
-}
-
-
 /** When the user is clicking on the (+) button to add a new playlist. */
 void MainWindow::checkAddPlaylistButton(int i)
 {
@@ -181,19 +166,6 @@ void MainWindow::checkAddPlaylistButton(int i)
 	if (i == tabPlaylists->count()-1) {
 		addPlaylist();
 	}
-}
-
-/** When the user is double clicking on a track in a playlist. */
-void MainWindow::changeTrack(QTableWidgetItem *item)
-{
-	/*tabPlaylists->currentPlayList()->setActiveTrack(track);
-	MediaSource media = tabPlaylists->currentPlayList()->currentTrack();
-	tabPlaylists->sourceChanged(media);*/
-	//tabPlaylists->currentPlayList()->tracks()->at(item->row());
-	MediaSource media = tabPlaylists->currentPlayList()->tracks()->at(item->row());
-	qDebug() << "media.fileName():" << media.fileName();
-	tabPlaylists->sourceChanged(media);
-	playAndPause();
 }
 
 /** This buttons switch the play function with the pause function because they are mutually exclusive. */
@@ -220,32 +192,6 @@ void MainWindow::stop()
 	QString play(":/player/" + settings->theme() + "/play");
 	if (playButton->icon().name() != play) {
 		playButton->setIcon(QIcon(play));
-	}
-}
-
-/** Change the current track to the previous one. */
-void MainWindow::skipBackward()
-{
-	QModelIndex activeTrack = tabPlaylists->currentPlayList()->activeTrack();
-	if (activeTrack.row() > 0) {
-		//changeTrack(activeTrack.sibling(activeTrack.row()-1, 1));
-	}
-}
-
-/** Change the current track to the next one. */
-void MainWindow::skipForward()
-{
-	QModelIndex activeTrack = tabPlaylists->currentPlayList()->activeTrack();
-	int track = -1;
-	if (activeTrack.isValid()) {
-		track = activeTrack.row();
-	} else {
-		qDebug() << "no valid track !";
-		tabPlaylists->currentPlayList()->tracks();
-	}
-	if (track+1 < tabPlaylists->currentPlayList()->tracks()->size()) {
-		qDebug() << "ici";
-		//changeTrack(activeTrack.sibling(track+1, 1));
 	}
 }
 

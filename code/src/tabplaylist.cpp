@@ -18,11 +18,9 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	metaInformationResolver = new MediaObject(this);
 
 	// Link core mp3 actions
-	//connect(mediaObject, SIGNAL(tick(qint64)), this, SLOT(tick(qint64)));
 	connect(mediaObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
 	connect(metaInformationResolver, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(metaStateChanged(Phonon::State, Phonon::State)));
-	connect(mediaObject, SIGNAL(currentSourceChanged(const Phonon::MediaSource &)), this, SLOT(sourceChanged(const Phonon::MediaSource &)));
-	connect(mediaObject, SIGNAL(aboutToFinish()), this, SLOT(aboutToFinish()));
+	connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
 	// Other actions
 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTabFromCloseButton(int)));
@@ -54,23 +52,19 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 /** Add a track from the filesystem or the library to the current playlist. */
 QTableWidgetItem * TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary)
 {
+	QTableWidgetItem *index = NULL;
 	if (itemFromLibrary.isValid()) {
 		QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
 		QString fileName = itemFromLibrary.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
 		MediaSource source(filePath + fileName);
-		if (source.type() == MediaSource::Invalid) {
-			qDebug() << "wtf?" << filePath.append(fileName);
+		if (source.type() != MediaSource::Invalid) {
+			index = currentPlayList()->append(source);
+			if (currentPlayList()->tracks()->size() == 1) {
+				metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(0));
+			}
 		}
-		QTableWidgetItem *index = currentPlayList()->append(source);
-		if (currentPlayList()->tracks()->size() == 1) {
-			qDebug() << "empty ?";
-			metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(0));
-		}
-		return index;
-	} else {
-		qDebug() << "itemFromLibrary is invalid :(";
-		return NULL;
 	}
+	return index;
 }
 
 /** Convenient getter with cast. */
@@ -80,41 +74,66 @@ Playlist * TabPlaylist::currentPlayList() const
 	return p;
 }
 
-
-void TabPlaylist::aboutToFinish()
-{
-	int row = currentPlayList()->activeTrack().row();
-	if (++row > currentPlayList()->table()->rowCount()) {
-		mediaObject->enqueue(currentPlayList()->tracks()->at(row));
-	}
-}
-
-void TabPlaylist::sourceChanged(const MediaSource &source)
-{
-	qDebug() << "state: " << mediaObject->state();
-	if (mediaObject->state() != LoadingState) {
-		mediaObject->setCurrentSource(source);
-		currentPlayList()->highlightCurrentTrack();
-	}
-}
-
-void TabPlaylist::stateChanged(State newState, State /*oldState*/)
+void TabPlaylist::stateChanged(State newState, State oldState)
 {
 	switch (newState) {
-		case ErrorState:
-			if (mediaObject->errorType() == FatalError) {
-				QMessageBox::warning(this, tr("Fatal Error"),
-				mediaObject->errorString());
-			} else {
-				QMessageBox::warning(this, tr("Error"),
-				mediaObject->errorString());
-			}
-			break;
+	case ErrorState:
+		if (mediaObject->errorType() == FatalError) {
+			QMessageBox::warning(this, tr("Fatal Error"),
+			mediaObject->errorString());
+		} else {
+			QMessageBox::warning(this, tr("Error"),
+			mediaObject->errorString());
+		}
+		break;
 
-		case BufferingState:
-				break;
-		default:
-			;
+	case BufferingState:
+		break;
+
+	case StoppedState:
+		if (oldState == LoadingState || oldState == PausedState) {
+			mediaObject->play();
+		}
+		break;
+	default:
+		;
+	}
+}
+
+/** When the user is double clicking on a track in a playlist. */
+void TabPlaylist::changeTrack(QTableWidgetItem *item)
+{
+	MediaSource media = currentPlayList()->tracks()->at(item->row());
+	currentPlayList()->setActiveTrack(item->row());
+	mediaObject->setCurrentSource(media);
+}
+
+/** Change the current track to the previous one. */
+void TabPlaylist::skipBackward()
+{
+	int activeTrack = currentPlayList()->activeTrack();
+	if (activeTrack-- > 0) {
+		QTableWidgetItem *item = currentPlayList()->table()->item(activeTrack, 1);
+		this->changeTrack(item);
+	}
+}
+
+/** Change the current track to the next one. */
+void TabPlaylist::skipForward()
+{
+	int activeTrack = currentPlayList()->activeTrack();
+	if (++activeTrack < currentPlayList()->tracks()->size()) {
+		QTableWidgetItem *item = currentPlayList()->table()->item(activeTrack, 1);
+		this->changeTrack(item);
+	}
+}
+
+void TabPlaylist::addItemFromLibraryToPlaylist(const QPersistentModelIndex &item)
+{
+	bool isEmpty = currentPlayList()->tracks()->isEmpty();
+	QTableWidgetItem *indexInPlaylist = this->addItemToCurrentPlaylist(item);
+	if (isEmpty) {
+		this->changeTrack(indexInPlaylist);
 	}
 }
 
@@ -133,7 +152,6 @@ void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
 	}
 
 	if (metaInformationResolver->currentSource().type() == MediaSource::Invalid) {
-		qDebug() << "wtf";
 		return;
 	}
 
@@ -142,9 +160,10 @@ void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
 		mediaObject->setCurrentSource(metaInformationResolver->currentSource());
 	}
 
-	int index = currentPlayList()->tracks()->indexOf(metaInformationResolver->currentSource()) + 1;
+	/// TODO: code review
+	int index = currentPlayList()->activeTrack();
 	if (currentPlayList()->tracks()->size() > index) {
-		metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(index));
+		//metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(index));
 	} else {
 		currentPlayList()->table()->resizeColumnsToContents();
 		if (currentPlayList()->table()->columnWidth(0) > 300) {

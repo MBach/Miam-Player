@@ -19,21 +19,18 @@ private:
 	QString convertTrackLength(int length);
 
 	/** The current playing track. */
-	QModelIndex track;
+	int track;
 
 public:
 	Playlist(QWidget *parent = 0);
 
 	QList<MediaSource> *tracks() { return &sources; }
 
-	inline QModelIndex activeTrack() const { return track; }
-	inline void setActiveTrack(const QModelIndex &track) { this->track = track; }
+	int activeTrack() { return track; }
+	void setActiveTrack(int t) { track = t; }
 
 	/** Clear the content of playlist. */
 	void clear();
-
-	/** Get the current item in the playlist. */
-	MediaSource currentTrack();
 
 	/** Add a track to this Playlist instance. */
 	QTableWidgetItem *append(MediaSource m);

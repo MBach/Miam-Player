@@ -59,27 +59,15 @@ private slots:
 	/** Add a file from the filesystem to the current playlist. */
 	void addSelectedItemToPlaylist(const QModelIndex &item);
 
-	void addItemFromLibraryToPlaylist(const QPersistentModelIndex &item);
-
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
 
 	/// Media actions
-	/** When the user is double clicking on a track in a playlist. */
-	void changeTrack(QTableWidgetItem *);
-
 	/** This buttons switch the play function with the pause function because they are mutually exclusive. */
 	void playAndPause();
 
 	/** If playing, then stops the track. */
 	void stop();
-
-	/** Change the current track to the previous one. */
-	void skipBackward();
-
-	/** Change the current track to the next one. */
-	void skipForward();
-	//TODO : seekBackward, seekForward,
 
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();

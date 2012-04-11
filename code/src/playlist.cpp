@@ -51,6 +51,10 @@ Playlist::Playlist(QWidget *parent) :
 	// Link this playlist with the Settings instance to change fonts at runtime
 	Settings *settings = Settings::getInstance();
 	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
+
+	// Change track
+	// no need to cast parent as a TabPlaylist instance
+	connect(this->tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), parent, SLOT(changeTrack(QTableWidgetItem*)));
 }
 
 /** Clear the content of playlist. */
@@ -134,15 +138,6 @@ QTableWidgetItem * Playlist::append(MediaSource m)
 	}
 }
 
-MediaSource Playlist::currentTrack()
-{
-	if (track.row() >= 0) {
-		return sources.at(track.row());
-	} else {
-		return MediaSource();
-	}
-}
-
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 void Playlist::highlightCurrentTrack()
 {
@@ -161,7 +156,7 @@ void Playlist::highlightCurrentTrack()
 			}
 		}
 		for (int j=0; j < tableWidget->columnCount(); j++) {
-			item = tableWidget->item(track.row(), j);
+			item = tableWidget->item(track, j);
 			// If there is actually one selected track in the playlist
 			if (item != NULL) {
 				QFont itemFont = font;
