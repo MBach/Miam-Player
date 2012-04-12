@@ -76,6 +76,8 @@ public:
 	/** Returns volume from the slider. */
 	inline qreal volume() { return value("volume").toReal(); }
 
+	bool repeatPlayBack() { return value("repeatPlayBack").toBool(); }
+
 signals:
 	void currentFontChanged();
 	
@@ -116,6 +118,8 @@ public slots:
 
 	/** Sets volume from the slider. */
 	inline void setVolume(qreal v) { setValue("volume", v); }
+
+	inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
 	
 };
 

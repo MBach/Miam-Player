@@ -41,8 +41,11 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		if (index+1 > count()-2) {
 			setCurrentIndex(index-1);
 		}
+		/// FIXME: when closing a tab which is playing
+		/// call mediaObject->clear() [asynchronous ; see how stateChanged() can delete it safely ]
+		Playlist *p = qobject_cast<Playlist *>(this->widget(index));
 		this->removeTab(index);
-		delete this->widget(index);
+		delete p;
 	} else {
 		// Clear the content of last tab
 		currentPlayList()->clear();
@@ -92,7 +95,13 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 
 	case StoppedState:
 		if (oldState == LoadingState || oldState == PausedState) {
-			mediaObject->play();
+			// Play media only if one has not removed the playlist meanwhile, otherwise, delete playlist
+			if (currentPlayList()->tracks()->isEmpty()) {
+				/// todo clear mediaObject!
+				qDebug() << "delete playlist";
+			} else {
+				mediaObject->play();
+			}
 		}
 		break;
 	default:
@@ -121,7 +130,12 @@ void TabPlaylist::skipBackward()
 /** Change the current track to the next one. */
 void TabPlaylist::skipForward()
 {
-	int activeTrack = currentPlayList()->activeTrack();
+	int activeTrack;
+	if (Settings::getInstance()->repeatPlayBack()) {
+		activeTrack = -1;
+	} else {
+		activeTrack = currentPlayList()->activeTrack();
+	}
 	if (++activeTrack < currentPlayList()->tracks()->size()) {
 		QTableWidgetItem *item = currentPlayList()->table()->item(activeTrack, 1);
 		this->changeTrack(item);

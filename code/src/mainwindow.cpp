@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	filesystem->setColumnHidden(3, true);
 
 	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton << seekForwardButton << skipForwardButton;
+	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton << seekForwardButton << skipForwardButton << repeatButton;
 
 	// Order is important?
 	customizeThemeDialog = new CustomizeThemeDialog(this);
@@ -86,11 +86,13 @@ void MainWindow::setupActions()
 	connect(tabPlaylists, SIGNAL(currentChanged(int)), this, SLOT(checkAddPlaylistButton(int)));
 
 	// Link buttons
+	Settings *settings = Settings::getInstance();
 	connect(playButton, SIGNAL(clicked()), this, SLOT(playAndPause()));
 	connect(stopButton, SIGNAL(clicked()), this, SLOT(stop()));
 	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
 	connect(skipForwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipForward()));
-	connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), Settings::getInstance(), SLOT(setVolume(qreal)));
+	connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), settings, SLOT(setVolume(qreal)));
+	connect(repeatButton, SIGNAL(toggled(bool)), settings, SLOT(setRepeatPlayBack(bool)));
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));

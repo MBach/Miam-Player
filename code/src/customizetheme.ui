@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>534</height>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -177,12 +177,44 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Display</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="sizeButtonsLabel">
+            <property name="text">
+             <string>Button size</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="sizeButtonsSpinBox">
+            <property name="minimum">
+             <number>12</number>
+            </property>
+            <property name="maximum">
+             <number>128</number>
+            </property>
+            <property name="singleStep">
+             <number>2</number>
+            </property>
+            <property name="value">
+             <number>20</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="buttonsListBox">
          <property name="title">
           <string>Button list and their associated behaviour</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="1">
+          <item row="0" column="2">
            <widget class="QLabel" name="skipBackwardLabel">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -195,145 +227,38 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="skipBackward">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/fairytale/skipBackward</normaloff>:/player/fairytale/skipBackward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
+          <item row="1" column="2">
            <widget class="QLabel" name="seekBackwardLabel">
             <property name="text">
              <string>Seek backbard</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="seekBackward">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/fairytale/seekBackward</normaloff>:/player/fairytale/seekBackward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QPushButton" name="stop">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/fairytale/stop</normaloff>:/player/fairytale/stop</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QPushButton" name="seekForward">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/fairytale/seekForward</normaloff>:/player/fairytale/seekForward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QPushButton" name="skipForward">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/fairytale/skipForward</normaloff>:/player/fairytale/skipForward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>32</width>
-              <height>32</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
+          <item row="2" column="2">
            <widget class="QLabel" name="playLabel">
             <property name="text">
              <string>Play / Pause</string>
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="3" column="2">
            <widget class="QLabel" name="stopLabel">
             <property name="text">
              <string>Stop</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="4" column="2">
            <widget class="QLabel" name="seekForwardLabel">
             <property name="text">
              <string>Seek forword</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="1">
+          <item row="5" column="2">
            <widget class="QLabel" name="skipForwardLabel">
             <property name="text">
              <string>Skip forward</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="skipBackwardCheckBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -417,6 +342,85 @@
             </property>
            </widget>
           </item>
+          <item row="6" column="2">
+           <widget class="QLabel" name="repeatLabel">
+            <property name="text">
+             <string>Repeat</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QCheckBox" name="repeatCheckBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="skipBackwardCheckBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="skipBackward">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/skipBackward</normaloff>:/player/fairytale/skipBackward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="seekBackward">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/seekBackward</normaloff>:/player/fairytale/seekBackward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
           <item row="2" column="3">
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
@@ -455,35 +459,71 @@
             </item>
            </layout>
           </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string>Display</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="sizeButtonsLabel">
+          <item row="3" column="3">
+           <widget class="QPushButton" name="stop">
             <property name="text">
-             <string>Button size</string>
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/stop</normaloff>:/player/fairytale/stop</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QSpinBox" name="sizeButtonsSpinBox">
-            <property name="minimum">
-             <number>12</number>
+          <item row="4" column="3">
+           <widget class="QPushButton" name="seekForward">
+            <property name="text">
+             <string notr="true"/>
             </property>
-            <property name="maximum">
-             <number>128</number>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/seekForward</normaloff>:/player/fairytale/seekForward</iconset>
             </property>
-            <property name="singleStep">
-             <number>2</number>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
             </property>
-            <property name="value">
-             <number>20</number>
+           </widget>
+          </item>
+          <item row="5" column="3">
+           <widget class="QPushButton" name="skipForward">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/skipForward</normaloff>:/player/fairytale/skipForward</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="3">
+           <widget class="QPushButton" name="repeat">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/repeat</normaloff>:/player/fairytale/repeat</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -996,6 +1036,22 @@
     <hint type="destinationlabel">
      <x>497</x>
      <y>80</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>repeatCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>repeat</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>449</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>449</y>
     </hint>
    </hints>
   </connection>

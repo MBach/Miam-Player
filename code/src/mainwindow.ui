@@ -240,6 +240,26 @@
            </widget>
           </item>
           <item>
+           <widget class="MediaButton" name="repeatButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/oxygen/repeat</normaloff>:/player/oxygen/repeat</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
             <property name="minimumSize">
              <size>
