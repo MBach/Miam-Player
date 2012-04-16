@@ -130,14 +130,14 @@ void TabPlaylist::skipBackward()
 /** Change the current track to the next one. */
 void TabPlaylist::skipForward()
 {
-	int activeTrack;
-	if (Settings::getInstance()->repeatPlayBack()) {
-		activeTrack = -1;
+	int next;
+	if (Settings::getInstance()->repeatPlayBack() && currentPlayList()->activeTrack() == currentPlayList()->tracks()->size()-1) {
+		next = -1;
 	} else {
-		activeTrack = currentPlayList()->activeTrack();
+		next = currentPlayList()->activeTrack();
 	}
-	if (++activeTrack < currentPlayList()->tracks()->size()) {
-		QTableWidgetItem *item = currentPlayList()->table()->item(activeTrack, 1);
+	if (++next < currentPlayList()->tracks()->size()) {
+		QTableWidgetItem *item = currentPlayList()->table()->item(next, 1);
 		this->changeTrack(item);
 	}
 }
