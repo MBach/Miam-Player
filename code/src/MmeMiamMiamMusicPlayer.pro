@@ -28,7 +28,9 @@ SOURCES += \
     starrating.cpp \
     stareditor.cpp \
     libraryitem.cpp \
-    filesystemmodel.cpp
+    filesystemmodel.cpp \
+    shortcutlineedit.cpp \
+    shortcutwidget.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -48,7 +50,9 @@ HEADERS += \
     starrating.h \
     stareditor.h \
     libraryitem.h \
-    filesystemmodel.h
+    filesystemmodel.h \
+    shortcutlineedit.h \
+    shortcutwidget.h
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \

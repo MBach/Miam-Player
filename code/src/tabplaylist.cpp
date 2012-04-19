@@ -115,6 +115,7 @@ void TabPlaylist::changeTrack(QTableWidgetItem *item)
 	MediaSource media = currentPlayList()->tracks()->at(item->row());
 	currentPlayList()->setActiveTrack(item->row());
 	mediaObject->setCurrentSource(media);
+	currentPlayList()->highlightCurrentTrack();
 }
 
 /** Change the current track to the previous one. */

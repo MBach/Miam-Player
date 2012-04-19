@@ -50,6 +50,9 @@ protected:
 signals:
 	void delegateStateChanged();
 
+public slots:
+	void bindShortcut(const QString&, const QKeySequence&);
+
 private slots:
 	/** Add a new playlist tab. */
 	void addPlaylist();
@@ -71,6 +74,8 @@ private slots:
 
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();
+
+	void aboutToOpenOptionsDialog();
 };
 
 #endif // MAINWINDOW_H

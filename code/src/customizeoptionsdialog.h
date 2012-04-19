@@ -30,6 +30,8 @@ protected:
 signals:
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHasChanged(bool);
+
+	void shortcutChanged(QString, QKeySequence);
 	
 public slots:
 	void setDelegates(bool value);

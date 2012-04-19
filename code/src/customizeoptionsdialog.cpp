@@ -9,6 +9,8 @@
 
 #include <QtDebug>
 
+#include "shortcutwidget.h"
+
 CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDialog(parent), musicLocationsChanged(false)
 {
@@ -60,11 +62,13 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(pushButtonAddLocation, SIGNAL(clicked()), this, SLOT(openLibraryDialog()));
 	connect(pushButtonDeleteLocation, SIGNAL(clicked()), this, SLOT(deleteSelectedLocation()));
 
-	// Second panel: language
+	// Second panel: languages
 	connect(listViewLanguages, SIGNAL(clicked(QModelIndex)), this, SLOT(changeLanguage(QModelIndex)));
 
 	// Third panel: shorcuts
-	/// todo
+	foreach(ShortcutWidget *shortcutWidget, scrollAreaShortcuts->findChildren<ShortcutWidget*>()) {
+		connect(shortcutWidget, SIGNAL(shortcutChanged(QString, QKeySequence)), parent, SLOT(bindShortcut(QString, QKeySequence)));
+	}
 }
 
 /** Load the language saved in settings when the app is loading. Called only once per launch. */

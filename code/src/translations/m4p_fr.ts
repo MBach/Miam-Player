@@ -78,10 +78,6 @@
         <translation>Supprimer l&apos;emplacement sélectionné</translation>
     </message>
     <message>
-        <source>Keyboard shortcuts</source>
-        <translation>Raccourcis claviers</translation>
-    </message>
-    <message>
         <source>Add some music locations here</source>
         <translation>Ajoutez votre musique ici</translation>
     </message>
@@ -90,8 +86,72 @@
         <translation>Sélectionner un endroit contenant votre musique</translation>
     </message>
     <message>
-        <source>In a future release</source>
-        <translation>Dans une prochaine version</translation>
+        <source>Action</source>
+        <translation>Action</translation>
+    </message>
+    <message>
+        <source>Modifiers</source>
+        <translation>Modificateurs</translation>
+    </message>
+    <message>
+        <source>Key</source>
+        <translation>Touche</translation>
+    </message>
+    <message>
+        <source>Open a file...</source>
+        <translation>Ouvrir un fichier...</translation>
+    </message>
+    <message>
+        <source>Add selected item(s) to playlist</source>
+        <translation>Ajouter les éléments sélectionnés à la liste de lecture</translation>
+    </message>
+    <message>
+        <source>Playlist</source>
+        <translation>Liste de lecture</translation>
+    </message>
+    <message>
+        <source>Add a new playlist</source>
+        <translation>Ajouter une liste de lecture</translation>
+    </message>
+    <message>
+        <source>Clear current playlist</source>
+        <translation>Effacer la liste de lecture courante</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation>Audio</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <source>Play / Pause</source>
+        <translation>Lecture / Pause</translation>
+    </message>
+    <message>
+        <source>Seek backward</source>
+        <translation>Rechercher en arrière</translation>
+    </message>
+    <message>
+        <source>Skip backward</source>
+        <translation>Piste précédente</translation>
+    </message>
+    <message>
+        <source>Seek forward</source>
+        <translation>Rechercher en avant</translation>
+    </message>
+    <message>
+        <source>Skip forward</source>
+        <translation>Piste suivante</translation>
+    </message>
+    <message>
+        <source>Repeat</source>
+        <translation>Répéter</translation>
+    </message>
+    <message>
+        <source>Delete current playlist</source>
+        <translation>Supprimer la liste de lecture courante</translation>
     </message>
 </context>
 <context>
@@ -236,6 +296,10 @@
         <source>In a future release</source>
         <translation>Dans une prochaine version</translation>
     </message>
+    <message>
+        <source>Repeat</source>
+        <translation>Répéter</translation>
+    </message>
 </context>
 <context>
     <name>LibraryFilterLineEdit</name>
@@ -376,6 +440,76 @@
     <message>
         <source>Length</source>
         <translation>Longueur</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutLineEdit</name>
+    <message>
+        <source>Backspace</source>
+        <translation>Retour Arrière</translation>
+    </message>
+    <message>
+        <source>Return</source>
+        <translation>Entrer</translation>
+    </message>
+    <message>
+        <source>Space</source>
+        <translation>Espace</translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation>Gauche</translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation>Droite</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Haut</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Bas</translation>
+    </message>
+    <message>
+        <source>Home</source>
+        <translation>Début</translation>
+    </message>
+    <message>
+        <source>End</source>
+        <translation>Fin</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Suppr</translation>
+    </message>
+    <message>
+        <source>Page Up</source>
+        <translation>Page préc.</translation>
+    </message>
+    <message>
+        <source>Page Down</source>
+        <translation>Page suiv.</translation>
+    </message>
+    <message>
+        <source>Insert</source>
+        <translation>Inser</translation>
+    </message>
+</context>
+<context>
+    <name>ShortcutWidget</name>
+    <message>
+        <source>Ctrl</source>
+        <translation>Ctrl</translation>
+    </message>
+    <message>
+        <source>Shift</source>
+        <translation>Maj</translation>
+    </message>
+    <message>
+        <source>Alt</source>
+        <translation>Alt</translation>
     </message>
 </context>
 <context>

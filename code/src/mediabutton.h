@@ -8,6 +8,8 @@ class MediaButton : public QPushButton
 	Q_OBJECT
 public:
 	MediaButton(QWidget *parent = 0);
+
+	void setObjectName(const QString &name);
 	
 signals:
 	void visibilityChanged(MediaButton *b, bool visible);

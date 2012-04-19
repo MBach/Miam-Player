@@ -27,3 +27,13 @@ void MediaButton::setVisible(bool visible)
 	emit visibilityChanged(this, visible);
 	QPushButton::setVisible(visible);
 }
+
+
+void MediaButton::setObjectName(const QString &name)
+{
+	QKeySequence shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("Button").size()));
+	if (!shortcut.isEmpty()) {
+		setShortcut(shortcut);
+	}
+	QObject::setObjectName(name);
+}

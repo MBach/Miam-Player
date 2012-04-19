@@ -78,6 +78,10 @@ public:
 
 	bool repeatPlayBack() { return value("repeatPlayBack").toBool(); }
 
+	void setShortcut(const QString &objectName, const QKeySequence &keySequence);
+
+	QKeySequence shortcut(const QString &objectName) const;
+
 signals:
 	void currentFontChanged();
 	
@@ -89,7 +93,7 @@ public slots:
 	inline void setButtonSize(const int &s) { setValue("buttonSize", s); }
 
 	/** Sets if the button in parameter is visible or not. */
-	void setVisible(MediaButton *b, const bool &value) { setValue(b->objectName(), value); }
+	void setVisible(MediaButton *b, const bool &value);
 
 	/** Sets if stars are visible and active. */
 	inline void setDelegates(const bool &value) { setValue("delegates", value); }

@@ -113,6 +113,7 @@ void CustomizeThemeDialog::loadTheme()
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
 		checkBox->setChecked(state);
 	}
+	mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
 
 	// Change the label that talks about star delegates
 	bool starDelegateState = settings->isStarDelegates();

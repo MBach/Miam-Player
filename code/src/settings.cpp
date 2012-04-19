@@ -120,3 +120,22 @@ int Settings::bufferedCoverSize() const
 	}
 	return buffer;
 }
+
+void Settings::setShortcut(const QString &objectName, const QKeySequence &keySequence)
+{
+	setValue(QString("shortcut").append(objectName), keySequence.toString());
+}
+
+QKeySequence Settings::shortcut(const QString &objectName) const
+{
+	return QKeySequence(value(QString("shortcut").append(objectName)).toString());
+}
+
+/** Sets if the button in parameter is visible or not. */
+void Settings::setVisible(MediaButton *b, const bool &value) {
+	setValue(b->objectName(), value);
+	// The only one button which is checkable is the repeat button
+	if (b->isCheckable() && !value) {
+		setRepeatPlayBack(value);
+	}
+}

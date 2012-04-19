@@ -246,7 +246,7 @@
             </property>
             <property name="icon">
              <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/repeat</normaloff>:/player/oxygen/repeat</iconset>
+              <normaloff>:/player/fairytale/repeat</normaloff>:/player/fairytale/repeat</iconset>
             </property>
             <property name="iconSize">
              <size>
