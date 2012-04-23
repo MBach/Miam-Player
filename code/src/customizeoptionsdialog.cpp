@@ -67,7 +67,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	// Third panel: shorcuts
 	foreach(ShortcutWidget *shortcutWidget, scrollAreaShortcuts->findChildren<ShortcutWidget*>()) {
-		connect(shortcutWidget, SIGNAL(shortcutChanged(QString, QKeySequence)), parent, SLOT(bindShortcut(QString, QKeySequence)));
+		connect(shortcutWidget, SIGNAL(shortcutChanged(QString, int)), parent, SLOT(bindShortcut(QString, int)));
 	}
 }
 
@@ -86,6 +86,21 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 			listWidgetMusicLocations->item(0)->text() == "Add some music locations here") {
 		listWidgetMusicLocations->item(0)->setText(QApplication::translate(
 			"CustomizeOptionsDialog", "Add some music locations here", 0, QApplication::UnicodeUTF8));
+	}
+	// Retranslate the key if it's a special key like 'Space', 'Return' and so on...
+	// And the modifiers 'Ctrl', 'Shift' and 'Alt'
+	foreach(ShortcutWidget *shortcutWidget, scrollAreaShortcuts->findChildren<ShortcutWidget*>()) {
+
+		QString translation = shortcutWidget->line()->setKey(shortcutWidget->line()->key());
+		shortcutWidget->line()->setText(translation);
+
+		// Item 0 is empty
+		for (int i=1; i < shortcutWidget->modifiers()->count(); i++) {
+			translation = shortcutWidget->tr(shortcutWidget->modifiers()->itemText(i).toStdString().data());
+			//qDebug() << translation;
+			/// bug with modifiers!
+			shortcutWidget->modifiers()->setItemText(i, translation);
+		}
 	}
 	Ui::CustomizeOptionsDialog::retranslateUi(dialog);
 }
@@ -123,6 +138,24 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 	} else {
 		labelStatusLanguage->setText(tr("No translation is available for this language :("));
 	}
+}
+
+/** Redefined to initialize theme from settings. */
+void CustomizeOptionsDialog::open()
+{
+	Settings *settings = Settings::getInstance();
+	QString theme = settings->theme();
+	foreach(QPushButton *button, audioShortcutsGroupBox->findChildren<QPushButton*>()) {
+		button->setIcon(QIcon(":/player/" + theme.toLower() + "/" + button->objectName()));
+
+		MediaButton *b = parent()->findChild<MediaButton*>(button->objectName() + "Button");
+		if (b) {
+			button->setEnabled(settings->isVisible(b));
+			button->setChecked(b->isChecked());
+		}
+	}
+	retranslateUi(this);
+	QDialog::open();
 }
 
 /** Open a dialog for letting the user to choose a music directory. */

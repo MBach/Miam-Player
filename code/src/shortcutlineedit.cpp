@@ -10,12 +10,11 @@ ShortcutLineEdit::ShortcutLineEdit(QWidget *parent) :
 	connect(this, SIGNAL(textEdited(QString)), this, SLOT(format(QString)));
 }
 
-/** Redefined to enable special keys like Space. */
-void ShortcutLineEdit::keyPressEvent(QKeyEvent *keyEvent)
+QString ShortcutLineEdit::setKey(int key)
 {
 	QString shortcut;
-	typedKey = keyEvent->key();
-	switch(keyEvent->key()) {
+	typedKey = key;
+	switch(typedKey) {
 	case Qt::Key_Backspace:
 		shortcut = tr("Backspace");
 		break;
@@ -56,10 +55,17 @@ void ShortcutLineEdit::keyPressEvent(QKeyEvent *keyEvent)
 		shortcut = tr("Insert");
 		break;
 	/// Todo other keys like F1, ... , F12 ?
-	default:
-		QLineEdit::keyPressEvent(keyEvent);
 	}
-	if (!shortcut.isEmpty()) {
+	return shortcut;
+}
+
+/** Redefined to enable special keys like Space. */
+void ShortcutLineEdit::keyPressEvent(QKeyEvent *keyEvent)
+{
+	QString shortcut = setKey(keyEvent->key());
+	if (shortcut.isEmpty()) {
+		QLineEdit::keyPressEvent(keyEvent);
+	} else {
 		setText(shortcut);
 	}
 	emit editingFinished();
@@ -70,3 +76,4 @@ void ShortcutLineEdit::format(const QString &s)
 {
 	setText(s.right(1).toUpper());
 }
+

@@ -12,6 +12,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 	comboBox = new QComboBox(this);
 	plusLabel = new QLabel(this);
 	lineEdit = new ShortcutLineEdit(this);
+	reset = new QPushButton(this);
 
 	comboBox->addItem(QString(), 0);
 	comboBox->addItem(tr("Ctrl"), Qt::CTRL);
@@ -20,31 +21,44 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 
 	plusLabel->setMinimumWidth(10);
 
+	reset->setFlat(true);
+	QIcon closeButton;
+	closeButton.addFile(":/config/closeButton", QSize(14, 14));
+	reset->setIcon(closeButton);
+	//reset->setMinimumWidth(16);
+	reset->setMinimumSize(20, 20);
+	reset->setMaximumSize(20, 20);
+	reset->hide();
+
 	layout->addWidget(comboBox);
 	layout->addWidget(plusLabel);
 	layout->addWidget(lineEdit);
+	layout->addWidget(reset);
 
 	setLayout(layout);
 
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(showPlusLabel(int)));
 	connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(createKeySequence()));
+	connect(reset, SIGNAL(clicked()), this, SLOT(deleteKeySequence()));
 }
 
 void ShortcutWidget::setObjectName(const QString &name)
 {
-	QKeySequence shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("ShortcutWidget").size()));
-	if (!shortcut.isEmpty()) {
-		QStringList keys = shortcut.toString().split('+');
-		// If we have a modifier like Ctrl
-		/// bug translation
+	int shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("ShortcutWidget").size()));
+	if (shortcut != 0) {
+		QKeySequence keySequence(shortcut);
+		QStringList keys = keySequence.toString().split('+');
+		// If we have a modifier like 'Ctrl'
 		if (keys.size() > 1) {
-			int index = comboBox->findText(tr(keys.first().toStdString().data()));
+			int index = comboBox->findText(keys.first());
 			comboBox->setCurrentIndex(index);
-			lineEdit->setText(tr(keys.last().toStdString().data()));
-		} else {
-			QString translated = tr(shortcut.toString().toStdString().data());
-			lineEdit->setText(translated);
+
+			// Removes the modifier
+			shortcut -= comboBox->itemData(index).toInt();
+			keySequence = QKeySequence(shortcut);
 		}
+		lineEdit->setText(keySequence.toString());
+		lineEdit->setKey(shortcut);
 	}
 	QObject::setObjectName(name);
 }
@@ -54,8 +68,18 @@ void ShortcutWidget::createKeySequence()
 {
 	if (!lineEdit->text().isEmpty()) {
 		int modifier = comboBox->itemData(comboBox->currentIndex()).toInt();
-		emit shortcutChanged(objectName().remove("ShortcutWidget"), QKeySequence(modifier + lineEdit->key()));
+		reset->show();
+		emit shortcutChanged(objectName().remove("ShortcutWidget"), modifier + lineEdit->key());
 	}
+}
+
+/** Delete a QKeySequence. */
+void ShortcutWidget::deleteKeySequence()
+{
+	comboBox->setCurrentIndex(0);
+	lineEdit->clear();
+	reset->hide();
+	emit shortcutChanged(objectName().remove("ShortcutWidget"), 0);
 }
 
 /** Add the '+' symbol when a modifier key is selected. */
@@ -66,6 +90,7 @@ void ShortcutWidget::showPlusLabel(int i)
 	} else {
 		plusLabel->setText("+");
 	}
+	lineEdit->setFocus();
 	if (!lineEdit->text().isEmpty()) {
 		emit createKeySequence();
 	}

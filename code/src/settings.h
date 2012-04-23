@@ -78,9 +78,9 @@ public:
 
 	bool repeatPlayBack() { return value("repeatPlayBack").toBool(); }
 
-	void setShortcut(const QString &objectName, const QKeySequence &keySequence);
+	void setShortcut(const QString &objectName, int keySequence);
 
-	QKeySequence shortcut(const QString &objectName) const;
+	int shortcut(const QString &objectName) const;
 
 signals:
 	void currentFontChanged();

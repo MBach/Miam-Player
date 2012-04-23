@@ -70,7 +70,7 @@ void MainWindow::setupActions()
 	connect(actionAddPlaylist, SIGNAL(triggered()), this, SLOT(addPlaylist()));
 	connect(actionDeleteCurrentPlaylist, SIGNAL(triggered()), tabPlaylists, SLOT(removeCurrentPlaylist()));
 	connect(actionShowCustomize, SIGNAL(triggered()), customizeThemeDialog, SLOT(open()));
-	connect(actionShowOptions, SIGNAL(triggered()), this, SLOT(aboutToOpenOptionsDialog()));
+	connect(actionShowOptions, SIGNAL(triggered()), customizeOptionsDialog, SLOT(open()));
 	connect(actionAboutM4P, SIGNAL(triggered()), this, SLOT(aboutM4P()));
 	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(actionScanLibrary, SIGNAL(triggered()), this, SLOT(drawLibrary()));
@@ -106,18 +106,16 @@ void MainWindow::setupActions()
 	connect(this, SIGNAL(delegateStateChanged()), customizeThemeDialog, SIGNAL(themeChanged()));
 }
 
-void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key)
+void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 {
-	qDebug() << "binding:" << objectName;
-	key.toString();
-	Settings::getInstance()->setShortcut(objectName, key);
+	Settings::getInstance()->setShortcut(objectName, keySequence);
 	MediaButton *button = findChild<MediaButton*>(objectName + "Button");
 	if (button) {
-		button->setShortcut(key);
+		button->setShortcut(QKeySequence(keySequence));
 	} else {
 		QAction *action = findChild<QAction*>(QString("action").append(objectName));
 		if (action) {
-			action->setShortcut(key);
+			action->setShortcut(QKeySequence(keySequence));
 		}
 	}
 }
@@ -229,20 +227,4 @@ void MainWindow::aboutM4P()
 void MainWindow::loadLanguage()
 {
 	customizeOptionsDialog->loadLanguage();
-}
-
-void MainWindow::aboutToOpenOptionsDialog()
-{
-	Settings *settings = Settings::getInstance();
-	QString theme = settings->theme();
-	foreach(QPushButton *button, customizeOptionsDialog->audioShortcutsGroupBox->findChildren<QPushButton*>()) {
-		button->setIcon(QIcon(":/player/" + theme.toLower() + "/" + button->objectName()));
-
-		MediaButton *b = findChild<MediaButton*>(button->objectName() + "Button");
-		if (b) {
-			button->setEnabled(settings->isVisible(b));
-			button->setChecked(b->isChecked());
-		}
-	}
-	customizeOptionsDialog->show();
 }

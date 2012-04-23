@@ -44,13 +44,14 @@
         <file alias="stop">player/tango/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
     </qresource>
-    <qresource prefix="/config">
+    <qresource prefix="/config" lang="close">
         <file alias="fonts">config/fonts.png</file>
         <file alias="music">config/music.png</file>
         <file alias="colors">config/appearance.png</file>
         <file alias="music-library">config/music-library.png</file>
         <file alias="gnome-globe">config/gnome-globe.png</file>
         <file alias="keyboard-shortcuts">config/keyboard-shortcuts.png</file>
+        <file alias="closeButton">config/closeButton.png</file>
     </qresource>
     <qresource prefix="/player/oxygen">
         <file alias="pause">player/oxygen/pause.png</file>

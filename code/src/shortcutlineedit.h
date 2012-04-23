@@ -14,6 +14,8 @@ public:
 
 	inline int key() const { return typedKey; }
 
+	QString setKey(int key);
+
 protected:
 	/** Redefined to enable special keys like Space. */
 	void keyPressEvent(QKeyEvent *key);

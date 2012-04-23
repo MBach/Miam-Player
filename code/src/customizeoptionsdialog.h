@@ -37,6 +37,9 @@ public slots:
 	/** Change language at runtime. */
 	void changeLanguage(QModelIndex);
 
+	/** Redefined to initialize theme from settings. */
+	void open();
+
 private slots:
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();

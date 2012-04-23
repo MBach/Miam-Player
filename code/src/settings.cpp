@@ -121,14 +121,18 @@ int Settings::bufferedCoverSize() const
 	return buffer;
 }
 
-void Settings::setShortcut(const QString &objectName, const QKeySequence &keySequence)
+void Settings::setShortcut(const QString &objectName, int keySequence)
 {
-	setValue(QString("shortcut").append(objectName), keySequence.toString());
+	if (keySequence == 0) {
+		remove(QString("shortcut").append(objectName));
+	} else {
+		setValue(QString("shortcut").append(objectName), keySequence);
+	}
 }
 
-QKeySequence Settings::shortcut(const QString &objectName) const
+int Settings::shortcut(const QString &objectName) const
 {
-	return QKeySequence::fromString(value("shortcut" + objectName).toString());
+	return value("shortcut" + objectName).toInt();
 }
 
 /** Sets if the button in parameter is visible or not. */
