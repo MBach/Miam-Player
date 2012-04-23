@@ -424,6 +424,66 @@
         <source>About Mme MiamMiamMusicPlayer</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Playback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip backward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Seek backward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play / pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Seek forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Repeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shuffle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove selected track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected track up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected track down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease volume</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>

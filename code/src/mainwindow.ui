@@ -301,6 +301,10 @@
     <addaction name="actionAddPlaylist"/>
     <addaction name="actionDeleteCurrentPlaylist"/>
     <addaction name="separator"/>
+    <addaction name="actionRemoveSelectedTrack"/>
+    <addaction name="actionMoveTrackUp"/>
+    <addaction name="actionMoveTrackDown"/>
+    <addaction name="separator"/>
     <addaction name="actionShowLibraryOptions"/>
    </widget>
    <widget class="QMenu" name="menuEdition">
@@ -322,8 +326,26 @@
     <addaction name="actionAboutM4P"/>
     <addaction name="actionAboutQt"/>
    </widget>
+   <widget class="QMenu" name="menuPlayback">
+    <property name="title">
+     <string>Playback</string>
+    </property>
+    <addaction name="actionSkipBackward"/>
+    <addaction name="actionSeekBackward"/>
+    <addaction name="actionPlay"/>
+    <addaction name="actionStop"/>
+    <addaction name="actionSeekForward"/>
+    <addaction name="actionSkipForward"/>
+    <addaction name="actionRepeat"/>
+    <addaction name="actionShuffle"/>
+    <addaction name="separator"/>
+    <addaction name="actionMute"/>
+    <addaction name="actionIncreaseVolume"/>
+    <addaction name="actionDecreaseVolume"/>
+   </widget>
    <addaction name="menuMenu"/>
    <addaction name="menuEdition"/>
+   <addaction name="menuPlayback"/>
    <addaction name="menuPlaylist"/>
    <addaction name="menuAide"/>
   </widget>
@@ -392,6 +414,76 @@
     <string>Show help...</string>
    </property>
   </action>
+  <action name="actionSkipBackward">
+   <property name="text">
+    <string>Skip backward</string>
+   </property>
+  </action>
+  <action name="actionSeekBackward">
+   <property name="text">
+    <string>Seek backward</string>
+   </property>
+  </action>
+  <action name="actionPlay">
+   <property name="text">
+    <string>Play / pause</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
+  <action name="actionSeekForward">
+   <property name="text">
+    <string>Seek forward</string>
+   </property>
+  </action>
+  <action name="actionSkipForward">
+   <property name="text">
+    <string>Skip forward</string>
+   </property>
+  </action>
+  <action name="actionRepeat">
+   <property name="text">
+    <string>Repeat</string>
+   </property>
+  </action>
+  <action name="actionShuffle">
+   <property name="text">
+    <string>Shuffle</string>
+   </property>
+  </action>
+  <action name="actionRemoveSelectedTrack">
+   <property name="text">
+    <string>Remove selected track</string>
+   </property>
+  </action>
+  <action name="actionMoveTrackUp">
+   <property name="text">
+    <string>Move selected track up</string>
+   </property>
+  </action>
+  <action name="actionMoveTrackDown">
+   <property name="text">
+    <string>Move selected track down</string>
+   </property>
+  </action>
+  <action name="actionMute">
+   <property name="text">
+    <string>Mute</string>
+   </property>
+  </action>
+  <action name="actionIncreaseVolume">
+   <property name="text">
+    <string>Increase volume</string>
+   </property>
+  </action>
+  <action name="actionDecreaseVolume">
+   <property name="text">
+    <string>Decrease volume</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -444,5 +536,102 @@
  <resources>
   <include location="mmmmp.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionSkipBackward</sender>
+   <signal>triggered()</signal>
+   <receiver>skipBackwardButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSeekBackward</sender>
+   <signal>triggered()</signal>
+   <receiver>seekBackwardButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>461</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPlay</sender>
+   <signal>triggered()</signal>
+   <receiver>playButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>531</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStop</sender>
+   <signal>triggered()</signal>
+   <receiver>stopButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>602</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSeekForward</sender>
+   <signal>triggered()</signal>
+   <receiver>seekForwardButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>672</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSkipForward</sender>
+   <signal>triggered()</signal>
+   <receiver>skipForwardButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>743</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

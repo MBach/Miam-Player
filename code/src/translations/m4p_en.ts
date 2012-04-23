@@ -425,6 +425,66 @@
         <source>About Mme MiamMiamMusicPlayer</source>
         <translation>About Mme MiamMiamMusicPlayer</translation>
     </message>
+    <message>
+        <source>Playback</source>
+        <translation>Playback</translation>
+    </message>
+    <message>
+        <source>Skip backward</source>
+        <translation>Skip backward</translation>
+    </message>
+    <message>
+        <source>Seek backward</source>
+        <translation>Seek backbard</translation>
+    </message>
+    <message>
+        <source>Play / pause</source>
+        <translation>Play / Pause</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <source>Seek forward</source>
+        <translation>Seek forword</translation>
+    </message>
+    <message>
+        <source>Skip forward</source>
+        <translation>Skip forward</translation>
+    </message>
+    <message>
+        <source>Repeat</source>
+        <translation>Repeat</translation>
+    </message>
+    <message>
+        <source>Shuffle</source>
+        <translation>Shuffle</translation>
+    </message>
+    <message>
+        <source>Remove selected track</source>
+        <translation>Remove selected track</translation>
+    </message>
+    <message>
+        <source>Move selected track up</source>
+        <translation>Move selected track up</translation>
+    </message>
+    <message>
+        <source>Move selected track down</source>
+        <translation>Move selected track down</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation>Mute</translation>
+    </message>
+    <message>
+        <source>Increase volume</source>
+        <translation>Increase volume</translation>
+    </message>
+    <message>
+        <source>Decrease volume</source>
+        <translation>Decrease volume</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>

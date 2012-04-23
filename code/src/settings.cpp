@@ -128,7 +128,7 @@ void Settings::setShortcut(const QString &objectName, const QKeySequence &keySeq
 
 QKeySequence Settings::shortcut(const QString &objectName) const
 {
-	return QKeySequence(value(QString("shortcut").append(objectName)).toString());
+	return QKeySequence::fromString(value("shortcut" + objectName).toString());
 }
 
 /** Sets if the button in parameter is visible or not. */

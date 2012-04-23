@@ -97,16 +97,19 @@ void MainWindow::setupActions()
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
 
+	// Playback
+	connect(actionRemoveSelectedTrack, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTrack()));
+	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
+	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
+
 	// TEST
 	connect(this, SIGNAL(delegateStateChanged()), customizeThemeDialog, SIGNAL(themeChanged()));
-
-	// Bind shortcuts
-	connect(customizeOptionsDialog, SIGNAL(shortcutChanged(QString, QKeySequence)), this, SLOT(bindShortcut(QString, QKeySequence)));
 }
 
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key)
 {
 	qDebug() << "binding:" << objectName;
+	key.toString();
 	Settings::getInstance()->setShortcut(objectName, key);
 	MediaButton *button = findChild<MediaButton*>(objectName + "Button");
 	if (button) {

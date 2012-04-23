@@ -426,6 +426,66 @@
         <source>About Mme MiamMiamMusicPlayer</source>
         <translation>À propos de Mme MiamMiamMusicPlayer</translation>
     </message>
+    <message>
+        <source>Playback</source>
+        <translation>Lecture</translation>
+    </message>
+    <message>
+        <source>Skip backward</source>
+        <translation>Piste précédente</translation>
+    </message>
+    <message>
+        <source>Seek backward</source>
+        <translation>Rechercher en arrière</translation>
+    </message>
+    <message>
+        <source>Play / pause</source>
+        <translation>Lecture / Pause</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stop</translation>
+    </message>
+    <message>
+        <source>Seek forward</source>
+        <translation>Rechercher en avant</translation>
+    </message>
+    <message>
+        <source>Skip forward</source>
+        <translation>Piste suivante</translation>
+    </message>
+    <message>
+        <source>Repeat</source>
+        <translation>Répéter</translation>
+    </message>
+    <message>
+        <source>Shuffle</source>
+        <translation>Aléatoire</translation>
+    </message>
+    <message>
+        <source>Remove selected track</source>
+        <translation>Retirer la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Move selected track up</source>
+        <translation>Déplacer vers le haut la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Move selected track down</source>
+        <translation>Déplacer vers le bas la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation>Muet</translation>
+    </message>
+    <message>
+        <source>Increase volume</source>
+        <translation>Augmenter le volume</translation>
+    </message>
+    <message>
+        <source>Decrease volume</source>
+        <translation>Diminuer le volume</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -450,7 +510,7 @@
     </message>
     <message>
         <source>Return</source>
-        <translation>Entrer</translation>
+        <translation>Entrée</translation>
     </message>
     <message>
         <source>Space</source>
