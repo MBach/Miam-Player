@@ -90,10 +90,6 @@
         <translation>Action</translation>
     </message>
     <message>
-        <source>Modifiers</source>
-        <translation>Modificateurs</translation>
-    </message>
-    <message>
         <source>Key</source>
         <translation>Touche</translation>
     </message>
@@ -116,10 +112,6 @@
     <message>
         <source>Clear current playlist</source>
         <translation>Effacer la liste de lecture courante</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation>Audio</translation>
     </message>
     <message>
         <source>Stop</source>
@@ -152,6 +144,58 @@
     <message>
         <source>Delete current playlist</source>
         <translation>Supprimer la liste de lecture courante</translation>
+    </message>
+    <message>
+        <source>Menus &amp;&amp; Options</source>
+        <translation>Menus &amp;&amp; Options</translation>
+    </message>
+    <message>
+        <source>Modifier</source>
+        <translation>Modificateur</translation>
+    </message>
+    <message>
+        <source>Open general options</source>
+        <translation>Ouvrir les options</translation>
+    </message>
+    <message>
+        <source>Open appearance</source>
+        <translation>Personnaliser l&apos;apparence</translation>
+    </message>
+    <message>
+        <source>Rescan library</source>
+        <translation>Rescanner la bibliothèque</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
+        <source>Playback</source>
+        <translation>Lecture</translation>
+    </message>
+    <message>
+        <source>Show library tab</source>
+        <translation>Montrer l&apos;onglet bibliothèque</translation>
+    </message>
+    <message>
+        <source>Show file explorer tab</source>
+        <translation>Montrer l&apos;onglet explorateur</translation>
+    </message>
+    <message>
+        <source>Remove selected track</source>
+        <translation>Retirer la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Move selected track down</source>
+        <translation>Déplacer vers le bas la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Move selected track up</source>
+        <translation>Déplacer vers le haut la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Open playlist manager...</source>
+        <translation>Ouvrir le gestionnaire de liste de lecture...</translation>
     </message>
 </context>
 <context>
@@ -323,18 +367,6 @@
         <translation>Madame MiamMiam&apos;s Music Player</translation>
     </message>
     <message>
-        <source>Menu</source>
-        <translation>Menu</translation>
-    </message>
-    <message>
-        <source>Playlist</source>
-        <translation>Liste de lecture</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Options</translation>
-    </message>
-    <message>
         <source>Playlist </source>
         <translation>Liste de lecture </translation>
     </message>
@@ -359,60 +391,8 @@
         <translation>Explorateur de fichiers</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Aide</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Quitter</translation>
-    </message>
-    <message>
-        <source>Open...</source>
-        <translation>Ouvrir...</translation>
-    </message>
-    <message>
-        <source>Add a playlist</source>
-        <translation>Ajouter une liste de lecture</translation>
-    </message>
-    <message>
-        <source>Customize appearance...</source>
-        <translation>Personnaliser l&apos;apparence...</translation>
-    </message>
-    <message>
-        <source>About Qt...</source>
-        <translation>À propos de Qt...</translation>
-    </message>
-    <message>
-        <source>Playlist manager...</source>
-        <translation>Gestionnaire de liste de lecture...</translation>
-    </message>
-    <message>
-        <source>Rescan library</source>
-        <translation>Rescanner la bibliothèque</translation>
-    </message>
-    <message>
         <source>Customize library...</source>
         <translation>Personnaliser la bibliothèque...</translation>
-    </message>
-    <message>
-        <source>Check for a new version is available</source>
-        <translation>Vérifier si une nouvelle version est disponible</translation>
-    </message>
-    <message>
-        <source>Customize general options...</source>
-        <translation>Personnaliser les options générales...</translation>
-    </message>
-    <message>
-        <source>About MmeMiamMiamMusicPlayer...</source>
-        <translation>À propos de MmeMiamMiamMusicPlayer...</translation>
-    </message>
-    <message>
-        <source>Delete current playlist</source>
-        <translation>Supprimer la liste de lecture courante</translation>
-    </message>
-    <message>
-        <source>Show help...</source>
-        <translation>Afficher l&apos;aide...</translation>
     </message>
     <message>
         <source>LTR</source>
@@ -427,64 +407,128 @@
         <translation>À propos de Mme MiamMiamMusicPlayer</translation>
     </message>
     <message>
-        <source>Playback</source>
-        <translation>Lecture</translation>
-    </message>
-    <message>
-        <source>Skip backward</source>
-        <translation>Piste précédente</translation>
-    </message>
-    <message>
         <source>Seek backward</source>
         <translation>Rechercher en arrière</translation>
-    </message>
-    <message>
-        <source>Play / pause</source>
-        <translation>Lecture / Pause</translation>
-    </message>
-    <message>
-        <source>Stop</source>
-        <translation>Stop</translation>
     </message>
     <message>
         <source>Seek forward</source>
         <translation>Rechercher en avant</translation>
     </message>
     <message>
-        <source>Skip forward</source>
-        <translation>Piste suivante</translation>
+        <source>&amp;Menu</source>
+        <translation>&amp;Menu</translation>
     </message>
     <message>
-        <source>Repeat</source>
-        <translation>Répéter</translation>
+        <source>Play&amp;list</source>
+        <translation>Li&amp;ste de lecture </translation>
     </message>
     <message>
-        <source>Shuffle</source>
-        <translation>Aléatoire</translation>
+        <source>&amp;Options</source>
+        <translation>&amp;Options</translation>
     </message>
     <message>
-        <source>Remove selected track</source>
-        <translation>Retirer la piste sélectionnée</translation>
+        <source>&amp;Help</source>
+        <translation>&amp;Aide</translation>
     </message>
     <message>
-        <source>Move selected track up</source>
-        <translation>Déplacer vers le haut la piste sélectionnée</translation>
+        <source>&amp;Playback</source>
+        <translation>&amp;Lecture</translation>
     </message>
     <message>
-        <source>Move selected track down</source>
-        <translation>Déplacer vers le bas la piste sélectionnée</translation>
+        <source>E&amp;xit</source>
+        <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <source>Mute</source>
-        <translation>Muet</translation>
+        <source>&amp;Open...</source>
+        <translation>&amp;Ouvrir...</translation>
     </message>
     <message>
-        <source>Increase volume</source>
-        <translation>Augmenter le volume</translation>
+        <source>&amp;Add a playlist</source>
+        <translation>&amp;Ajouter une liste de lecture</translation>
     </message>
     <message>
-        <source>Decrease volume</source>
-        <translation>Diminuer le volume</translation>
+        <source>&amp;Customize appearance...</source>
+        <translation>&amp;Personnaliser l&apos;apparence...</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt...</source>
+        <translation>À propos de &amp;Qt...</translation>
+    </message>
+    <message>
+        <source>&amp;Playlist manager...</source>
+        <translation>&amp;Gestionnaire de liste de lecture...</translation>
+    </message>
+    <message>
+        <source>&amp;Rescan library</source>
+        <translation>&amp;Rescanner la bibliothèque</translation>
+    </message>
+    <message>
+        <source>&amp;Check for a new version is available</source>
+        <translation>&amp;Vérifier si une nouvelle version est disponible</translation>
+    </message>
+    <message>
+        <source>Customize general &amp;options...</source>
+        <translation>Personnaliser les &amp;options générales...</translation>
+    </message>
+    <message>
+        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
+        <translation>&amp;À propos de MmeMiamMiamMusicPlayer...</translation>
+    </message>
+    <message>
+        <source>&amp;Delete current playlist</source>
+        <translation>&amp;Supprimer la liste de lecture courante</translation>
+    </message>
+    <message>
+        <source>Show &amp;help...</source>
+        <translation>&amp;Afficher l&apos;aide...</translation>
+    </message>
+    <message>
+        <source>Skip &amp;backward</source>
+        <translation>Piste &amp;précédente</translation>
+    </message>
+    <message>
+        <source>&amp;Play / pause</source>
+        <translation>&amp;Lecture / Pause</translation>
+    </message>
+    <message>
+        <source>&amp;Stop</source>
+        <translation>&amp;Stop</translation>
+    </message>
+    <message>
+        <source>Skip &amp;forward</source>
+        <translation>Piste sui&amp;vante</translation>
+    </message>
+    <message>
+        <source>&amp;Repeat</source>
+        <translation>&amp;Répéter</translation>
+    </message>
+    <message>
+        <source>S&amp;huffle</source>
+        <translation>Al&amp;éatoire</translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected track</source>
+        <translation>&amp;Retirer la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Move selected track &amp;up</source>
+        <translation>Déplacer vers le &amp;haut la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>Move selected track &amp;down</source>
+        <translation>Déplacer vers le &amp;bas la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>&amp;Mute</source>
+        <translation>&amp;Muet</translation>
+    </message>
+    <message>
+        <source>&amp;Increase volume</source>
+        <translation>&amp;Augmenter le volume</translation>
+    </message>
+    <message>
+        <source>&amp;Decrease volume</source>
+        <translation>&amp;Diminuer le volume</translation>
     </message>
 </context>
 <context>

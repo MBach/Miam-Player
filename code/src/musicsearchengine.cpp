@@ -28,7 +28,6 @@ void MusicSearchEngine::run()
 
 	int currentFile = 0;
 	int percent = 1;
-	bool isFolder = true;
 	bool aCoverWasFound = false;
 	QString coverPath;
 	for(int i=0; i<musicPaths.size(); i++) {
@@ -37,11 +36,9 @@ void MusicSearchEngine::run()
 			QFileInfo qFileInfo(it2.next());
 			currentFile++;
 			if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
-				isFolder = false;
 				coverPath = qFileInfo.absoluteFilePath();
 				aCoverWasFound = true;
 			} else if (qFileInfo.suffix().toLower() == "mp3") {
-				isFolder = false;
 				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(musicPaths.at(i).toString()));
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then
@@ -51,7 +48,6 @@ void MusicSearchEngine::run()
 						emit scannedCover(coverPath);
 						aCoverWasFound = false;
 					}
-					isFolder = true;
 				}
 			}
 			if (currentFile * 100 / fileNumber > percent) {

@@ -66,7 +66,7 @@ void MainWindow::setupActions()
 
 	// Link user interface
 	// Actions from the menu
-	connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
 	connect(actionAddPlaylist, SIGNAL(triggered()), this, SLOT(addPlaylist()));
 	connect(actionDeleteCurrentPlaylist, SIGNAL(triggered()), tabPlaylists, SLOT(removeCurrentPlaylist()));
 	connect(actionShowCustomize, SIGNAL(triggered()), customizeThemeDialog, SLOT(open()));
@@ -102,6 +102,14 @@ void MainWindow::setupActions()
 	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
 	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
 
+	// Init shortcuts
+	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
+	QMapIterator<QString, QVariant> it(shortcutMap);
+	while (it.hasNext()) {
+		it.next();
+		this->bindShortcut(it.key(), it.value().toInt());
+	}
+
 	// TEST
 	connect(this, SIGNAL(delegateStateChanged()), customizeThemeDialog, SIGNAL(themeChanged()));
 }
@@ -109,13 +117,15 @@ void MainWindow::setupActions()
 void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 {
 	Settings::getInstance()->setShortcut(objectName, keySequence);
-	MediaButton *button = findChild<MediaButton*>(objectName + "Button");
-	if (button) {
-		button->setShortcut(QKeySequence(keySequence));
+	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
+	// Connect actions first
+	if (action) {
+		action->setShortcut(QKeySequence(keySequence));
 	} else {
-		QAction *action = findChild<QAction*>(QString("action").append(objectName));
-		if (action) {
-			action->setShortcut(QKeySequence(keySequence));
+		// Is this really necessary? Everything should be in the menu
+		MediaButton *button = findChild<MediaButton*>(objectName + "Button");
+		if (button) {
+			button->setShortcut(QKeySequence(keySequence));
 		}
 	}
 }

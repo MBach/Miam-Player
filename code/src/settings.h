@@ -82,6 +82,8 @@ public:
 
 	int shortcut(const QString &objectName) const;
 
+	QMap<QString, QVariant> shortcuts() const;
+
 signals:
 	void currentFontChanged();
 	

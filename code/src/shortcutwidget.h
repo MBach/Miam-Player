@@ -18,6 +18,7 @@ private:
 	QLabel *plusLabel;
 	ShortcutLineEdit *lineEdit;
 	QPushButton *reset;
+	QIcon *closeButton;
 
 public:
 	ShortcutWidget(QWidget *parent = 0);
@@ -32,7 +33,7 @@ public:
 	inline ShortcutLineEdit *line() { return lineEdit; }
 	
 signals:
-	void shortcutChanged(QString, int);
+	void shortcutChanged(ShortcutWidget *, int=0);
 
 private slots:
 	/** Create a QKeySequence from a combobox and a label. */

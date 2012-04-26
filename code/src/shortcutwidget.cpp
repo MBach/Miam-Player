@@ -22,11 +22,8 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 	plusLabel->setMinimumWidth(10);
 
 	reset->setFlat(true);
-	QIcon closeButton;
-	closeButton.addFile(":/config/closeButton", QSize(14, 14));
-	reset->setIcon(closeButton);
-	//reset->setMinimumWidth(16);
-	reset->setMinimumSize(20, 20);
+	closeButton = new QIcon(":/config/closeButton");
+	reset->setIcon(*closeButton);
 	reset->setMaximumSize(20, 20);
 	reset->hide();
 
@@ -34,7 +31,7 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 	layout->addWidget(plusLabel);
 	layout->addWidget(lineEdit);
 	layout->addWidget(reset);
-
+	layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 	setLayout(layout);
 
 	connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(showPlusLabel(int)));
@@ -44,8 +41,8 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 
 void ShortcutWidget::setObjectName(const QString &name)
 {
-	int shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("ShortcutWidget").size()));
-	if (shortcut != 0) {
+	int shortcut = Settings::getInstance()->shortcut(name);
+	if (shortcut > 0) {
 		QKeySequence keySequence(shortcut);
 		QStringList keys = keySequence.toString().split('+');
 		// If we have a modifier like 'Ctrl'
@@ -57,8 +54,9 @@ void ShortcutWidget::setObjectName(const QString &name)
 			shortcut -= comboBox->itemData(index).toInt();
 			keySequence = QKeySequence(shortcut);
 		}
-		lineEdit->setText(keySequence.toString());
 		lineEdit->setKey(shortcut);
+		reset->setIcon(*closeButton);
+		reset->show();
 	}
 	QObject::setObjectName(name);
 }
@@ -68,8 +66,9 @@ void ShortcutWidget::createKeySequence()
 {
 	if (!lineEdit->text().isEmpty()) {
 		int modifier = comboBox->itemData(comboBox->currentIndex()).toInt();
+		reset->setIcon(*closeButton);
 		reset->show();
-		emit shortcutChanged(objectName().remove("ShortcutWidget"), modifier + lineEdit->key());
+		emit shortcutChanged(this, modifier + lineEdit->key());
 	}
 }
 
@@ -77,9 +76,10 @@ void ShortcutWidget::createKeySequence()
 void ShortcutWidget::deleteKeySequence()
 {
 	comboBox->setCurrentIndex(0);
-	lineEdit->clear();
-	reset->hide();
-	emit shortcutChanged(objectName().remove("ShortcutWidget"), 0);
+	lineEdit->setKey(0);
+	lineEdit->setStyleSheet(QString());
+	reset->setIcon(QIcon());
+	emit shortcutChanged(this);
 }
 
 /** Add the '+' symbol when a modifier key is selected. */

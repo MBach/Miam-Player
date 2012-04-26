@@ -123,16 +123,28 @@ int Settings::bufferedCoverSize() const
 
 void Settings::setShortcut(const QString &objectName, int keySequence)
 {
+	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
 	if (keySequence == 0) {
-		remove(QString("shortcut").append(objectName));
+		shortcuts.remove(objectName);
 	} else {
-		setValue(QString("shortcut").append(objectName), keySequence);
+		shortcuts.insert(objectName, keySequence);
+	}
+	if (shortcuts.isEmpty()) {
+		remove("shortcuts");
+	} else {
+		setValue("shortcuts", shortcuts);
 	}
 }
 
 int Settings::shortcut(const QString &objectName) const
 {
-	return value("shortcut" + objectName).toInt();
+	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
+	return shortcuts.value(objectName).toInt();
+}
+
+QMap<QString, QVariant> Settings::shortcuts() const
+{
+	return value("shortcuts").toMap();
 }
 
 /** Sets if the button in parameter is visible or not. */

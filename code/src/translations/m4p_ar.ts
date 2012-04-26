@@ -89,10 +89,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Modifiers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Key</source>
         <translation type="unfinished"></translation>
     </message>
@@ -114,10 +110,6 @@
     </message>
     <message>
         <source>Clear current playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -150,6 +142,58 @@
     </message>
     <message>
         <source>Delete current playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Menus &amp;&amp; Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Modifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open general options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open appearance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rescan library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show library tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show file explorer tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove selected track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected track down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected track up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open playlist manager...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -341,71 +385,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add a playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Customize appearance...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About Qt...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playlist manager...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rescan library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Customize library...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Check for a new version is available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Customize general options...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About MmeMiamMiamMusicPlayer...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete current playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show help...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -425,23 +405,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playback</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Skip backward</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Seek backward</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Play / pause</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -449,39 +413,119 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Skip forward</source>
+        <source>&amp;Menu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Repeat</source>
+        <source>Play&amp;list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shuffle</source>
+        <source>&amp;Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove selected track</source>
+        <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Move selected track up</source>
+        <source>&amp;Playback</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Move selected track down</source>
+        <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Mute</source>
+        <source>&amp;Open...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Increase volume</source>
+        <source>&amp;Add a playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Decrease volume</source>
+        <source>&amp;Customize appearance...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About &amp;Qt...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Playlist manager...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Rescan library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Check for a new version is available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Customize general &amp;options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Delete current playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show &amp;help...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip &amp;backward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Play / pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip &amp;forward</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Repeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S&amp;huffle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected track &amp;up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected track &amp;down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Mute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Increase volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Decrease volume</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

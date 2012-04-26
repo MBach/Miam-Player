@@ -32,6 +32,8 @@ signals:
 	void musicLocationsHasChanged(bool);
 	
 public slots:
+	void checkShortcut(ShortcutWidget *, int typedKey);
+
 	void setDelegates(bool value);
 
 	/** Change language at runtime. */

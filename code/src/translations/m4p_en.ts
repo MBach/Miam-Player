@@ -90,10 +90,6 @@
         <translation>Action</translation>
     </message>
     <message>
-        <source>Modifiers</source>
-        <translation>Modifiers</translation>
-    </message>
-    <message>
         <source>Key</source>
         <translation>Key</translation>
     </message>
@@ -116,10 +112,6 @@
     <message>
         <source>Clear current playlist</source>
         <translation>Clear current playlist</translation>
-    </message>
-    <message>
-        <source>Audio</source>
-        <translation>Audio</translation>
     </message>
     <message>
         <source>Stop</source>
@@ -152,6 +144,58 @@
     <message>
         <source>Delete current playlist</source>
         <translation>Delete current playlist</translation>
+    </message>
+    <message>
+        <source>Menus &amp;&amp; Options</source>
+        <translation>Menus &amp;&amp; Options</translation>
+    </message>
+    <message>
+        <source>Modifier</source>
+        <translation>Modifier</translation>
+    </message>
+    <message>
+        <source>Open general options</source>
+        <translation>Open general options</translation>
+    </message>
+    <message>
+        <source>Open appearance</source>
+        <translation>Open appearance</translation>
+    </message>
+    <message>
+        <source>Rescan library</source>
+        <translation>Rescan library</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Exit</translation>
+    </message>
+    <message>
+        <source>Playback</source>
+        <translation>Playback</translation>
+    </message>
+    <message>
+        <source>Show library tab</source>
+        <translation>Show library tab</translation>
+    </message>
+    <message>
+        <source>Show file explorer tab</source>
+        <translation>Show file explorer tab</translation>
+    </message>
+    <message>
+        <source>Remove selected track</source>
+        <translation>Remove selected track</translation>
+    </message>
+    <message>
+        <source>Move selected track down</source>
+        <translation>Move selected track down</translation>
+    </message>
+    <message>
+        <source>Move selected track up</source>
+        <translation>Move selected track up</translation>
+    </message>
+    <message>
+        <source>Open playlist manager...</source>
+        <translation>Open playlist manager...</translation>
     </message>
 </context>
 <context>
@@ -322,18 +366,6 @@
         <translation>Madame MiamMiam&apos;s Music Player</translation>
     </message>
     <message>
-        <source>Menu</source>
-        <translation>Menu</translation>
-    </message>
-    <message>
-        <source>Playlist</source>
-        <translation>Playlist</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Options</translation>
-    </message>
-    <message>
         <source>Playlist </source>
         <translation>Playlist </translation>
     </message>
@@ -358,60 +390,8 @@
         <translation>File explorer</translation>
     </message>
     <message>
-        <source>Help</source>
-        <translation>Help</translation>
-    </message>
-    <message>
-        <source>Exit</source>
-        <translation>Exit</translation>
-    </message>
-    <message>
-        <source>Open...</source>
-        <translation>Open...</translation>
-    </message>
-    <message>
-        <source>Add a playlist</source>
-        <translation>Add a playlist</translation>
-    </message>
-    <message>
-        <source>Customize appearance...</source>
-        <translation>Customize appearance...</translation>
-    </message>
-    <message>
-        <source>About Qt...</source>
-        <translation>About Qt...</translation>
-    </message>
-    <message>
-        <source>Playlist manager...</source>
-        <translation>Playlist manager...</translation>
-    </message>
-    <message>
-        <source>Rescan library</source>
-        <translation>Rescan library</translation>
-    </message>
-    <message>
         <source>Customize library...</source>
         <translation>Customize library...</translation>
-    </message>
-    <message>
-        <source>Check for a new version is available</source>
-        <translation>Check for a new version is available</translation>
-    </message>
-    <message>
-        <source>Customize general options...</source>
-        <translation>Customize general options...</translation>
-    </message>
-    <message>
-        <source>About MmeMiamMiamMusicPlayer...</source>
-        <translation>About MmeMiamMiamMusicPlayer...</translation>
-    </message>
-    <message>
-        <source>Delete current playlist</source>
-        <translation>Delete current playlist</translation>
-    </message>
-    <message>
-        <source>Show help...</source>
-        <translation>Show help...</translation>
     </message>
     <message>
         <source>LTR</source>
@@ -426,64 +406,128 @@
         <translation>About Mme MiamMiamMusicPlayer</translation>
     </message>
     <message>
-        <source>Playback</source>
-        <translation>Playback</translation>
-    </message>
-    <message>
-        <source>Skip backward</source>
-        <translation>Skip backward</translation>
-    </message>
-    <message>
         <source>Seek backward</source>
         <translation>Seek backbard</translation>
-    </message>
-    <message>
-        <source>Play / pause</source>
-        <translation>Play / Pause</translation>
-    </message>
-    <message>
-        <source>Stop</source>
-        <translation>Stop</translation>
     </message>
     <message>
         <source>Seek forward</source>
         <translation>Seek forword</translation>
     </message>
     <message>
-        <source>Skip forward</source>
-        <translation>Skip forward</translation>
+        <source>&amp;Menu</source>
+        <translation>&amp;Menu</translation>
     </message>
     <message>
-        <source>Repeat</source>
-        <translation>Repeat</translation>
+        <source>Play&amp;list</source>
+        <translation>Play&amp;list </translation>
     </message>
     <message>
-        <source>Shuffle</source>
-        <translation>Shuffle</translation>
+        <source>&amp;Options</source>
+        <translation>&amp;Options</translation>
     </message>
     <message>
-        <source>Remove selected track</source>
-        <translation>Remove selected track</translation>
+        <source>&amp;Help</source>
+        <translation>&amp;Help</translation>
     </message>
     <message>
-        <source>Move selected track up</source>
-        <translation>Move selected track up</translation>
+        <source>&amp;Playback</source>
+        <translation>&amp;Playback</translation>
     </message>
     <message>
-        <source>Move selected track down</source>
-        <translation>Move selected track down</translation>
+        <source>E&amp;xit</source>
+        <translation>&amp;Exit</translation>
     </message>
     <message>
-        <source>Mute</source>
-        <translation>Mute</translation>
+        <source>&amp;Open...</source>
+        <translation>&amp;Open...</translation>
     </message>
     <message>
-        <source>Increase volume</source>
-        <translation>Increase volume</translation>
+        <source>&amp;Add a playlist</source>
+        <translation>&amp;Add a playlist</translation>
     </message>
     <message>
-        <source>Decrease volume</source>
-        <translation>Decrease volume</translation>
+        <source>&amp;Customize appearance...</source>
+        <translation>&amp;Customize appearance...</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt...</source>
+        <translation>About &amp;Qt...</translation>
+    </message>
+    <message>
+        <source>&amp;Playlist manager...</source>
+        <translation>&amp;Playlist manager...</translation>
+    </message>
+    <message>
+        <source>&amp;Rescan library</source>
+        <translation>&amp;Rescan library</translation>
+    </message>
+    <message>
+        <source>&amp;Check for a new version is available</source>
+        <translation>&amp;Check for a new version is available</translation>
+    </message>
+    <message>
+        <source>Customize general &amp;options...</source>
+        <translation>Customize general &amp;options...</translation>
+    </message>
+    <message>
+        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
+        <translation>&amp;About MmeMiamMiamMusicPlayer...</translation>
+    </message>
+    <message>
+        <source>&amp;Delete current playlist</source>
+        <translation>&amp;Delete current playlist</translation>
+    </message>
+    <message>
+        <source>Show &amp;help...</source>
+        <translation>&amp;Show help...</translation>
+    </message>
+    <message>
+        <source>Skip &amp;backward</source>
+        <translation>Skip &amp;backward</translation>
+    </message>
+    <message>
+        <source>&amp;Play / pause</source>
+        <translation>&amp;Play / Pause</translation>
+    </message>
+    <message>
+        <source>&amp;Stop</source>
+        <translation>&amp;Stop</translation>
+    </message>
+    <message>
+        <source>Skip &amp;forward</source>
+        <translation>Skip &amp;forward</translation>
+    </message>
+    <message>
+        <source>&amp;Repeat</source>
+        <translation>&amp;Repeat</translation>
+    </message>
+    <message>
+        <source>S&amp;huffle</source>
+        <translation>&amp;Shuffle</translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected track</source>
+        <translation>&amp;Remove selected track</translation>
+    </message>
+    <message>
+        <source>Move selected track &amp;up</source>
+        <translation>Move selected track &amp;up</translation>
+    </message>
+    <message>
+        <source>Move selected track &amp;down</source>
+        <translation>Move selected track &amp;down</translation>
+    </message>
+    <message>
+        <source>&amp;Mute</source>
+        <translation>&amp;Mute</translation>
+    </message>
+    <message>
+        <source>&amp;Increase volume</source>
+        <translation>&amp;Increase volume</translation>
+    </message>
+    <message>
+        <source>&amp;Decrease volume</source>
+        <translation>&amp;Decrease volume</translation>
     </message>
 </context>
 <context>

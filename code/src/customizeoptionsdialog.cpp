@@ -66,8 +66,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(listViewLanguages, SIGNAL(clicked(QModelIndex)), this, SLOT(changeLanguage(QModelIndex)));
 
 	// Third panel: shorcuts
-	foreach(ShortcutWidget *shortcutWidget, scrollAreaShortcuts->findChildren<ShortcutWidget*>()) {
-		connect(shortcutWidget, SIGNAL(shortcutChanged(QString, int)), parent, SLOT(bindShortcut(QString, int)));
+	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
+		connect(shortcutWidget, SIGNAL(shortcutChanged(ShortcutWidget *, int)), this, SLOT(checkShortcut(ShortcutWidget *, int)));
 	}
 }
 
@@ -89,15 +89,17 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 	}
 	// Retranslate the key if it's a special key like 'Space', 'Return' and so on...
 	// And the modifiers 'Ctrl', 'Shift' and 'Alt'
-	foreach(ShortcutWidget *shortcutWidget, scrollAreaShortcuts->findChildren<ShortcutWidget*>()) {
+	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
 
-		QString translation = shortcutWidget->line()->setKey(shortcutWidget->line()->key());
+		QString source = QKeySequence(shortcutWidget->line()->key()).toString();
+		QString translation = QApplication::translate("ShortcutLineEdit", source.toStdString().data(), 0, QApplication::UnicodeUTF8);
 		shortcutWidget->line()->setText(translation);
 
 		// Item 0 is empty
 		for (int i=1; i < shortcutWidget->modifiers()->count(); i++) {
-			translation = shortcutWidget->tr(shortcutWidget->modifiers()->itemText(i).toStdString().data());
-			//qDebug() << translation;
+			source = shortcutWidget->modifiers()->itemText(i);
+			translation = QApplication::translate("ShortcutWidget", source.toStdString().data(), 0, QApplication::UnicodeUTF8);
+			//qDebug() << "TR" << translation;
 			/// bug with modifiers!
 			shortcutWidget->modifiers()->setItemText(i, translation);
 		}
@@ -114,6 +116,25 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent * /* event */)
 	if (musicLocationsChanged) {
 		emit musicLocationsHasChanged(true);
 		musicLocationsChanged = false;
+	}
+}
+
+void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
+{
+	Settings *settings = Settings::getInstance();
+	QMap<QString, QVariant> shortcuts = settings->shortcuts();
+	QString actionShortcut = shortcuts.key(typedKey);
+	bool ok = true;
+	foreach(ShortcutWidget *sw, findChildren<ShortcutWidget*>()) {
+		if (!actionShortcut.isEmpty() && newShortcutAction->objectName() == sw->objectName() && newShortcutAction->objectName() != actionShortcut) {
+			sw->line()->setStyleSheet("QLineEdit { color: red }");
+			ok = false;
+		}
+	}
+	if (ok) {
+		newShortcutAction->line()->setStyleSheet(QString());
+		MainWindow *mainWindow = qobject_cast<MainWindow *>(parent());
+		mainWindow->bindShortcut(newShortcutAction->objectName(), typedKey);
 	}
 }
 
@@ -144,12 +165,10 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 void CustomizeOptionsDialog::open()
 {
 	Settings *settings = Settings::getInstance();
-	QString theme = settings->theme();
-	foreach(QPushButton *button, audioShortcutsGroupBox->findChildren<QPushButton*>()) {
-		button->setIcon(QIcon(":/player/" + theme.toLower() + "/" + button->objectName()));
-
-		MediaButton *b = parent()->findChild<MediaButton*>(button->objectName() + "Button");
-		if (b) {
+	foreach(MediaButton *b, parent()->findChildren<MediaButton*>()) {
+		QPushButton *button = findChild<QPushButton*>(b->objectName());
+		if (button) {
+			button->setIcon(b->icon());
 			button->setEnabled(settings->isVisible(b));
 			button->setChecked(b->isChecked());
 		}

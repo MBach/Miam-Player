@@ -181,18 +181,20 @@ void Playlist::removeSelectedTrack()
 /** Move the selected track upward. */
 void Playlist::moveTrackUp()
 {
-	int currentRow = tableWidget->currentItem()->row();
-	if (currentRow > 0) {
-		for (int c=0; c < tableWidget->columnCount(); c++) {
-			QTableWidgetItem *currentItem = tableWidget->takeItem(currentRow, c);
-			QTableWidgetItem *previousItem = tableWidget->takeItem(currentRow-1, c);
-			tableWidget->setItem(currentRow, c, previousItem);
-			tableWidget->setItem(currentRow-1, c, currentItem);
-		}
-		sources.swap(currentRow, currentRow-1);
-		tableWidget->setCurrentIndex(tableWidget->model()->index(currentRow-1, 0));
-		if (currentRow == track) {
-			track--;
+	if (tableWidget->currentItem()) {
+		int currentRow = tableWidget->currentItem()->row();
+		if (currentRow > 0) {
+			for (int c=0; c < tableWidget->columnCount(); c++) {
+				QTableWidgetItem *currentItem = tableWidget->takeItem(currentRow, c);
+				QTableWidgetItem *previousItem = tableWidget->takeItem(currentRow-1, c);
+				tableWidget->setItem(currentRow, c, previousItem);
+				tableWidget->setItem(currentRow-1, c, currentItem);
+			}
+			sources.swap(currentRow, currentRow-1);
+			tableWidget->setCurrentIndex(tableWidget->model()->index(currentRow-1, 0));
+			if (currentRow == track) {
+				track--;
+			}
 		}
 	}
 }
@@ -200,18 +202,20 @@ void Playlist::moveTrackUp()
 /** Move the selected track downward. */
 void Playlist::moveTrackDown()
 {
-	int currentRow = tableWidget->currentItem()->row();
-	if (currentRow < tableWidget->rowCount()-1) {
-		for (int c=0; c < tableWidget->columnCount(); c++) {
-			QTableWidgetItem *currentItem = tableWidget->takeItem(currentRow, c);
-			QTableWidgetItem *nextItem = tableWidget->takeItem(currentRow+1, c);
-			tableWidget->setItem(currentRow, c, nextItem);
-			tableWidget->setItem(currentRow+1, c, currentItem);
-		}
-		sources.swap(currentRow, currentRow+1);
-		tableWidget->setCurrentIndex(tableWidget->model()->index(currentRow+1, 0));
-		if (currentRow == track) {
-			track++;
+	if (tableWidget->currentItem()) {
+		int currentRow = tableWidget->currentItem()->row();
+		if (currentRow < tableWidget->rowCount()-1) {
+			for (int c=0; c < tableWidget->columnCount(); c++) {
+				QTableWidgetItem *currentItem = tableWidget->takeItem(currentRow, c);
+				QTableWidgetItem *nextItem = tableWidget->takeItem(currentRow+1, c);
+				tableWidget->setItem(currentRow, c, nextItem);
+				tableWidget->setItem(currentRow+1, c, currentItem);
+			}
+			sources.swap(currentRow, currentRow+1);
+			tableWidget->setCurrentIndex(tableWidget->model()->index(currentRow+1, 0));
+			if (currentRow == track) {
+				track++;
+			}
 		}
 	}
 }

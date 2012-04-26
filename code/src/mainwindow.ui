@@ -288,15 +288,15 @@
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>Menu</string>
+     <string>&amp;Menu</string>
     </property>
     <addaction name="actionOpen"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuPlaylist">
     <property name="title">
-     <string>Playlist</string>
+     <string>Play&amp;list</string>
     </property>
     <addaction name="actionAddPlaylist"/>
     <addaction name="actionDeleteCurrentPlaylist"/>
@@ -305,11 +305,11 @@
     <addaction name="actionMoveTrackUp"/>
     <addaction name="actionMoveTrackDown"/>
     <addaction name="separator"/>
-    <addaction name="actionShowLibraryOptions"/>
+    <addaction name="actionShowPlaylistManager"/>
    </widget>
    <widget class="QMenu" name="menuEdition">
     <property name="title">
-     <string>Options</string>
+     <string>&amp;Options</string>
     </property>
     <addaction name="actionScanLibrary"/>
     <addaction name="separator"/>
@@ -318,7 +318,7 @@
    </widget>
    <widget class="QMenu" name="menuAide">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionShowHelp"/>
     <addaction name="actionCheckNewRelease"/>
@@ -328,7 +328,7 @@
    </widget>
    <widget class="QMenu" name="menuPlayback">
     <property name="title">
-     <string>Playback</string>
+     <string>&amp;Playback</string>
     </property>
     <addaction name="actionSkipBackward"/>
     <addaction name="actionSeekBackward"/>
@@ -336,6 +336,7 @@
     <addaction name="actionStop"/>
     <addaction name="actionSeekForward"/>
     <addaction name="actionSkipForward"/>
+    <addaction name="separator"/>
     <addaction name="actionRepeat"/>
     <addaction name="actionShuffle"/>
     <addaction name="separator"/>
@@ -349,39 +350,39 @@
    <addaction name="menuPlaylist"/>
    <addaction name="menuAide"/>
   </widget>
-  <action name="actionQuit">
+  <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>E&amp;xit</string>
    </property>
   </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open...</string>
+    <string>&amp;Open...</string>
    </property>
   </action>
   <action name="actionAddPlaylist">
    <property name="text">
-    <string>Add a playlist</string>
+    <string>&amp;Add a playlist</string>
    </property>
   </action>
   <action name="actionShowCustomize">
    <property name="text">
-    <string>Customize appearance...</string>
+    <string>&amp;Customize appearance...</string>
    </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
-    <string>About Qt...</string>
+    <string>About &amp;Qt...</string>
    </property>
   </action>
-  <action name="actionShowLibraryOptions">
+  <action name="actionShowPlaylistManager">
    <property name="text">
-    <string>Playlist manager...</string>
+    <string>&amp;Playlist manager...</string>
    </property>
   </action>
   <action name="actionScanLibrary">
    <property name="text">
-    <string>Rescan library</string>
+    <string>&amp;Rescan library</string>
    </property>
   </action>
   <action name="actionSetLibrary">
@@ -391,32 +392,32 @@
   </action>
   <action name="actionCheckNewRelease">
    <property name="text">
-    <string>Check for a new version is available</string>
+    <string>&amp;Check for a new version is available</string>
    </property>
   </action>
   <action name="actionShowOptions">
    <property name="text">
-    <string>Customize general options...</string>
+    <string>Customize general &amp;options...</string>
    </property>
   </action>
   <action name="actionAboutM4P">
    <property name="text">
-    <string>About MmeMiamMiamMusicPlayer...</string>
+    <string>&amp;About MmeMiamMiamMusicPlayer...</string>
    </property>
   </action>
   <action name="actionDeleteCurrentPlaylist">
    <property name="text">
-    <string>Delete current playlist</string>
+    <string>&amp;Delete current playlist</string>
    </property>
   </action>
   <action name="actionShowHelp">
    <property name="text">
-    <string>Show help...</string>
+    <string>Show &amp;help...</string>
    </property>
   </action>
   <action name="actionSkipBackward">
    <property name="text">
-    <string>Skip backward</string>
+    <string>Skip &amp;backward</string>
    </property>
   </action>
   <action name="actionSeekBackward">
@@ -426,12 +427,12 @@
   </action>
   <action name="actionPlay">
    <property name="text">
-    <string>Play / pause</string>
+    <string>&amp;Play / pause</string>
    </property>
   </action>
   <action name="actionStop">
    <property name="text">
-    <string>Stop</string>
+    <string>&amp;Stop</string>
    </property>
   </action>
   <action name="actionSeekForward">
@@ -441,47 +442,47 @@
   </action>
   <action name="actionSkipForward">
    <property name="text">
-    <string>Skip forward</string>
+    <string>Skip &amp;forward</string>
    </property>
   </action>
   <action name="actionRepeat">
    <property name="text">
-    <string>Repeat</string>
+    <string>&amp;Repeat</string>
    </property>
   </action>
   <action name="actionShuffle">
    <property name="text">
-    <string>Shuffle</string>
+    <string>S&amp;huffle</string>
    </property>
   </action>
   <action name="actionRemoveSelectedTrack">
    <property name="text">
-    <string>Remove selected track</string>
+    <string>&amp;Remove selected track</string>
    </property>
   </action>
   <action name="actionMoveTrackUp">
    <property name="text">
-    <string>Move selected track up</string>
+    <string>Move selected track &amp;up</string>
    </property>
   </action>
   <action name="actionMoveTrackDown">
    <property name="text">
-    <string>Move selected track down</string>
+    <string>Move selected track &amp;down</string>
    </property>
   </action>
   <action name="actionMute">
    <property name="text">
-    <string>Mute</string>
+    <string>&amp;Mute</string>
    </property>
   </action>
   <action name="actionIncreaseVolume">
    <property name="text">
-    <string>Increase volume</string>
+    <string>&amp;Increase volume</string>
    </property>
   </action>
   <action name="actionDecreaseVolume">
    <property name="text">
-    <string>Decrease volume</string>
+    <string>&amp;Decrease volume</string>
    </property>
   </action>
  </widget>
