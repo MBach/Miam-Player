@@ -2,6 +2,7 @@
 #define LIBRARYFILTERLINEEDIT_H
 
 #include <QLineEdit>
+#include <QToolButton>
 
 class LibraryFilterLineEdit : public QLineEdit
 {
@@ -10,17 +11,29 @@ class LibraryFilterLineEdit : public QLineEdit
 private:
 	QString defaultSearchText;
 
+	QToolButton *clearButton;
+
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
 
 protected:
-	void focusInEvent(QFocusEvent *event);
-	void focusOutEvent(QFocusEvent *event);
+	/** Reimplemented from QLineEdit::focusInEvent(). */
+	void focusInEvent(QFocusEvent *);
+
+	/** Reimplemented from QLineEdit::focusOutEvent(). */
+	void focusOutEvent(QFocusEvent *);
+
+	/** Keep the clear button on the right. */
+	void resizeEvent(QResizeEvent *);
 
 signals:
 	
-public slots:
-	
+private slots:
+	/** Redefined to add custom behaviour. */
+	void clear();
+
+	/** Show or hide the clear button. */
+	void updateClearButtonStatus(const QString &text = QString());
 };
 
 #endif // LIBRARYFILTERLINEEDIT_H
