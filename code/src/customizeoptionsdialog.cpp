@@ -121,20 +121,28 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent * /* event */)
 
 void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
 {
-	Settings *settings = Settings::getInstance();
-	QMap<QString, QVariant> shortcuts = settings->shortcuts();
-	QString actionShortcut = shortcuts.key(typedKey);
-	bool ok = true;
+	QMap<int, ShortcutWidget *> inverted;
 	foreach(ShortcutWidget *sw, findChildren<ShortcutWidget*>()) {
-		if (!actionShortcut.isEmpty() && newShortcutAction->objectName() == sw->objectName() && newShortcutAction->objectName() != actionShortcut) {
-			sw->line()->setStyleSheet("QLineEdit { color: red }");
-			ok = false;
-		}
+		inverted.insertMulti(sw->key(), sw);
 	}
-	if (ok) {
-		newShortcutAction->line()->setStyleSheet(QString());
-		MainWindow *mainWindow = qobject_cast<MainWindow *>(parent());
-		mainWindow->bindShortcut(newShortcutAction->objectName(), typedKey);
+	inverted.insertMulti(typedKey, newShortcutAction);
+
+	Settings *settings = Settings::getInstance();
+	MainWindow *mainWindow = qobject_cast<MainWindow *>(parent());
+	QMapIterator<int, ShortcutWidget *> i(inverted);
+	while (i.hasNext()) {
+		i.next();
+		if (i.key() != 0 && inverted.values(i.key()).size() > 2) {
+			qDebug() << "parsing (1):";
+			foreach (ShortcutWidget *sw, inverted.values(i.key())) {
+				qDebug() << sw->objectName();
+				sw->line()->setStyleSheet("QLineEdit { color: red }");
+			}
+		} else {
+			mainWindow->bindShortcut(i.value()->objectName(), i.key());
+			settings->setShortcut(i.value()->objectName(), i.key());
+			inverted.value(i.key())->line()->setStyleSheet(QString());
+		}
 	}
 }
 

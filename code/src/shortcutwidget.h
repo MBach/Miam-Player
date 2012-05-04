@@ -31,6 +31,8 @@ public:
 
 	/** Getter for re-translation. */
 	inline ShortcutLineEdit *line() { return lineEdit; }
+
+	inline int key() const { return comboBox->itemData(comboBox->currentIndex()).toInt() + lineEdit->key(); }
 	
 signals:
 	void shortcutChanged(ShortcutWidget *, int=0);
