@@ -229,14 +229,6 @@
         <translation>Bibliothèque</translation>
     </message>
     <message>
-        <source>Use a theme</source>
-        <translation>Utiliser un thème</translation>
-    </message>
-    <message>
-        <source>Customize every button</source>
-        <translation>Personnaliser chaque bouton</translation>
-    </message>
-    <message>
         <source>Availables themes</source>
         <translation>Thèmes disponibles</translation>
     </message>
@@ -343,6 +335,22 @@
     <message>
         <source>Repeat</source>
         <translation>Répéter</translation>
+    </message>
+    <message>
+        <source>Customize selected theme</source>
+        <translation>Modifier le thème sélectionné</translation>
+    </message>
+    <message>
+        <source>You can customize every icon by clicking on the buttons</source>
+        <translation>Il est possible de modifier chaque icône en cliquant sur les boutons</translation>
+    </message>
+    <message>
+        <source>Choose your custom icon</source>
+        <translation>Choisissez votre icône personnalisée</translation>
+    </message>
+    <message>
+        <source>Pictures (*.jpg *.jpeg *.png)</source>
+        <translation>Images (*.jpg *.jpeg *.png)</translation>
     </message>
 </context>
 <context>

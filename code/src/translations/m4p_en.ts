@@ -229,14 +229,6 @@
         <translation>Library</translation>
     </message>
     <message>
-        <source>Use a theme</source>
-        <translation>Use a theme</translation>
-    </message>
-    <message>
-        <source>Customize every button</source>
-        <translation>Customize every button</translation>
-    </message>
-    <message>
         <source>Availables themes</source>
         <translation>Availables themes</translation>
     </message>
@@ -343,6 +335,22 @@
     <message>
         <source>Repeat</source>
         <translation>Repeat</translation>
+    </message>
+    <message>
+        <source>Customize selected theme</source>
+        <translation>Customize selected theme</translation>
+    </message>
+    <message>
+        <source>You can customize every icon by clicking on the buttons</source>
+        <translation>You can customize every icon by clicking on the buttons</translation>
+    </message>
+    <message>
+        <source>Choose your custom icon</source>
+        <translation>Choose your custom icon</translation>
+    </message>
+    <message>
+        <source>Pictures (*.jpg *.jpeg *.png)</source>
+        <translation>Pictures (*.jpg *.jpeg *.png)</translation>
     </message>
 </context>
 <context>

@@ -220,14 +220,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use a theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Customize every button</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Availables themes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -341,6 +333,22 @@
     </message>
     <message>
         <source>Repeat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Customize selected theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You can customize every icon by clicking on the buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose your custom icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
