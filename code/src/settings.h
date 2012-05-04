@@ -84,6 +84,11 @@ public:
 
 	QMap<QString, QVariant> shortcuts() const;
 
+	/// Custom icons in CustomizeTheme
+	bool hasCustomIcon(MediaButton *) const;
+	void setCustomIcon(MediaButton *, const QString &buttonName);
+	const QString customIcon(MediaButton *) const;
+
 signals:
 	void currentFontChanged();
 	

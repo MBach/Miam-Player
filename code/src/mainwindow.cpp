@@ -37,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	filesystem->setColumnHidden(3, true);
 
 	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton << seekForwardButton << skipForwardButton << repeatButton;
+	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
+				 << stopButton << seekForwardButton << skipForwardButton << repeatButton;
+	pauseButton->hide();
 
 	// Order is important?
 	customizeThemeDialog = new CustomizeThemeDialog(this);
@@ -56,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	addPlaylist();
 	setupActions();
 	drawLibrary();
+	customizeOptionsDialog->loadLanguage();
 }
 
 /** Set up all actions and behaviour. */
@@ -114,21 +117,6 @@ void MainWindow::setupActions()
 	connect(this, SIGNAL(delegateStateChanged()), customizeThemeDialog, SIGNAL(themeChanged()));
 }
 
-void MainWindow::bindShortcut(const QString &objectName, int keySequence)
-{
-	Settings::getInstance()->setShortcut(objectName, keySequence);
-	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
-	// Connect actions first
-	if (action) {
-		action->setShortcut(QKeySequence(keySequence));
-	} else {
-		// Is this really necessary? Everything should be in the menu
-		MediaButton *button = findChild<MediaButton*>(objectName + "Button");
-		if (button) {
-			button->setShortcut(QKeySequence(keySequence));
-		}
-	}
-}
 
 /** Redefined to be able to retransltate User Interface at runtime. */
 void MainWindow::changeEvent(QEvent *event)
@@ -146,6 +134,22 @@ void MainWindow::changeEvent(QEvent *event)
 		}
 	} else {
 		QMainWindow::changeEvent(event);
+	}
+}
+
+void MainWindow::bindShortcut(const QString &objectName, int keySequence)
+{
+	Settings::getInstance()->setShortcut(objectName, keySequence);
+	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
+	// Connect actions first
+	if (action) {
+		action->setShortcut(QKeySequence(keySequence));
+	} else {
+		// Is this really necessary? Everything should be in the menu
+		MediaButton *button = findChild<MediaButton*>(objectName + "Button");
+		if (button) {
+			button->setShortcut(QKeySequence(keySequence));
+		}
 	}
 }
 
@@ -203,16 +207,16 @@ void MainWindow::checkAddPlaylistButton(int i)
 void MainWindow::playAndPause()
 {
 	if (!tabPlaylists->currentPlayList()->tracks()->isEmpty()) {
-		QIcon icon;
-		Settings *settings = Settings::getInstance();
+		MediaButton *b;
 		if (tabPlaylists->media()->state() == Phonon::PlayingState) {
-			icon.addFile(":/player/" + settings->theme() + "/play");
 			tabPlaylists->media()->pause();
+			b = playButton;
 		} else {
-			icon.addFile(":/player/" + settings->theme() + "/pause");
 			tabPlaylists->media()->play();
+			b = pauseButton;
 		}
-		playButton->setIcon(icon);
+		qDebug() << b->objectName();
+		playButton->setIcon(b->icon(), true);
 	}
 }
 
@@ -231,10 +235,4 @@ void MainWindow::aboutM4P()
 {	
 	QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
 	QMessageBox::about(this, tr("About Mme MiamMiamMusicPlayer"), message);
-}
-
-/** Load the user defined language at startup. Called once. */
-void MainWindow::loadLanguage()
-{
-	customizeOptionsDialog->loadLanguage();
 }

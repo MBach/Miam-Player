@@ -39,10 +39,6 @@ private:
 	QAction *actionPause;
 	QAction *actionStop;
 
-public:
-	/** Load the user defined language at startup. Called once. */
-	void loadLanguage();
-
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	void changeEvent(QEvent *event);

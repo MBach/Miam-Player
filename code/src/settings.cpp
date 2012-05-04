@@ -33,6 +33,8 @@ int Settings::buttonSize() const
 	}
 }
 
+#include <QtDebug>
+
 /** Returns true if the button in parameter is visible or not. */
 bool Settings::isVisible(MediaButton *b) const
 {
@@ -41,7 +43,7 @@ bool Settings::isVisible(MediaButton *b) const
 	   return ok.toBool();
    } else {
 	   // For the first run, show buttons anyway
-	   return true;
+	   return (true && b->objectName() != "pauseButton");
    }
 }
 
@@ -154,4 +156,27 @@ void Settings::setVisible(MediaButton *b, const bool &value) {
 	if (b->isCheckable() && !value) {
 		setRepeatPlayBack(value);
 	}
+}
+
+bool Settings::hasCustomIcon(MediaButton *b) const
+{
+	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
+	return customIcons.value(b->objectName()).toBool();
+}
+
+void Settings::setCustomIcon(MediaButton *b, const QString &iconPath)
+{
+	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
+	if (iconPath.isEmpty()) {
+		customIcons.remove(b->objectName());
+	} else {
+		customIcons.insert(b->objectName(), iconPath);
+	}
+	setValue("customIcons", customIcons);
+}
+
+const QString Settings::customIcon(MediaButton *b) const
+{
+	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
+	return customIcons.value(b->objectName()).toString();
 }

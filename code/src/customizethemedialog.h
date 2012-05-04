@@ -17,6 +17,8 @@ public:
 	CustomizeThemeDialog(QWidget *parent);
 
 private slots:
+	void openChooseIconDialog();
+
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);
 

@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
 	app.setApplicationName(SOFT);
 
 	MainWindow *window = new MainWindow();
-	window->loadLanguage();
 	window->show();
 
 	return app.exec();

@@ -1,5 +1,8 @@
 #include "customizethemedialog.h"
 
+#include <QDesktopServices>
+#include <QFileDialog>
+
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent)
 {
@@ -8,9 +11,8 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	mainWindow = qobject_cast<MainWindow *>(parent);
 	buttonsListBox->setVisible(false);
 
-	MediaButton *b;
 	Settings *settings = Settings::getInstance();
-	foreach(b, mainWindow->mediaButtons) {
+	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		connect(themeComboBox, SIGNAL(currentIndexChanged(QString)), b, SLOT(setIconFromTheme(QString)));
 		connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), b, SLOT(setSize(int)));
 	}
@@ -20,10 +22,16 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setButtonSize(int)));
 
 	// Hide buttons or not
-	foreach(b, mainWindow->mediaButtons) {
+	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
-		connect(checkBox, SIGNAL(toggled(bool)), b, SLOT(setVisible(bool)));
-		connect(b, SIGNAL(visibilityChanged(MediaButton*, bool)), settings, SLOT(setVisible(MediaButton*, bool)));
+		if (checkBox) {
+			connect(checkBox, SIGNAL(toggled(bool)), b, SLOT(setVisible(bool)));
+			connect(b, SIGNAL(visibilityChanged(MediaButton*, bool)), settings, SLOT(setVisible(MediaButton*, bool)));
+		}
+
+		// Connect a file dialog to every button if one wants to customize everything
+		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
+		connect(pushButton, SIGNAL(clicked()), this, SLOT(openChooseIconDialog()));
 	}
 
 	// Fonts
@@ -42,11 +50,35 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	connect(this, SIGNAL(themeChanged()), this, SLOT(loadTheme()));
 }
 
+void CustomizeThemeDialog::openChooseIconDialog()
+{
+	QPushButton *button = qobject_cast<QPushButton *>(sender());
+	MediaButton *b = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
+	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QDesktopServices::storageLocation(QDesktopServices::PicturesLocation), tr("Pictures (*.jpg *.jpeg *.png)"));
+
+	Settings *settings = Settings::getInstance();
+	settings->setCustomIcon(b, path);
+	// Reset the custom icon
+	if (path.isEmpty()) {
+		path = ":/player/" + settings->theme() + "/" + button->objectName();
+	}
+	button->setIcon(QIcon(path));
+	b->setIcon(QIcon(path));
+}
+
 /** Changes the current theme and updates this dialog too. */
 void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme) {
 	// Updates dynamically this Dialog
+	Settings *settings = Settings::getInstance();
+	// Check for each button if there is a custom icon
 	foreach(QPushButton *button, buttonsListBox->findChildren<QPushButton*>()) {
-		button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
+		MediaButton *mediaButton = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
+		// Keep the custom icon provided by one
+		if (settings->hasCustomIcon(mediaButton)) {
+			button->setIcon(QIcon(settings->customIcon(mediaButton)));
+		} else {
+			button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
+		}
 	}
 	Settings::getInstance()->setThemeName(newTheme);
 }
@@ -103,15 +135,20 @@ void CustomizeThemeDialog::loadTheme()
 	themeComboBox->setCurrentIndex(i);
 
 	// Buttons
-	MediaButton *b;
-	foreach(b, mainWindow->mediaButtons) {
+	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		// Display or hide buttons in the main window interface
 		bool state = settings->isVisible(b);
 		b->setVisible(state);
 
 		// Check or uncheck checkboxes in this customize interface
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
-		checkBox->setChecked(state);
+		if (checkBox) {
+			checkBox->setChecked(state);
+		}
+
+		// Display customs icons, if any
+		QPushButton *pushButton = findChild<QPushButton *>(b->objectName().remove("Button"));
+		pushButton->setIcon(b->icon());
 	}
 	mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
 

@@ -8,6 +8,40 @@ MediaButton::MediaButton(QWidget *parent) :
 
 }
 
+/** Redefined to load custom icons saved in settings. */
+void MediaButton::setIcon(const QIcon &icon, bool toggled)
+{
+	Settings *settings = Settings::getInstance();
+	QString path;
+
+	// Used only for play/pause behaviour. Getting the custom icon for pause can produce unexpected behaviour
+	// when replacing it by play.
+	if (!toggled) {
+		path = settings->customIcon(this);
+	}
+
+	// If the path to the custom icon has been deleted meanwhile, then delete it from settings too
+	if (path.isEmpty()) {
+		QPushButton::setIcon(icon);
+	} else if (QFile::exists(path)) {
+		QPushButton::setIcon(QIcon(path));
+	} else {
+		settings->setCustomIcon(this, QString());
+		setIconFromTheme(settings->theme());
+	}
+}
+
+/** Redefined to set shortcuts from settings at startup. */
+void MediaButton::setObjectName(const QString &name)
+{
+	QKeySequence shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("Button").size()));
+	if (!shortcut.isEmpty()) {
+		setShortcut(shortcut);
+	}
+	QObject::setObjectName(name);
+}
+
+/** Load an icon from a chosen theme in options. */
 void MediaButton::setIconFromTheme(const QString &theme)
 {
 	// The objectName in the UI file MUST match the alias in the QRC file !
@@ -15,6 +49,7 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	this->setIcon(QIcon(iconFile));
 }
 
+/** Change the size of icons from the options. */
 void MediaButton::setSize(const int &s)
 {
 	this->setIconSize(QSize(s, s));
@@ -29,12 +64,3 @@ void MediaButton::setVisible(bool visible)
 }
 
 
-void MediaButton::setObjectName(const QString &name)
-{
-	QKeySequence shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("Button").size()));
-	//qDebug() << name.left(name.size() - QString("Button").size()) << shortcut.toString();
-	if (!shortcut.isEmpty()) {
-		setShortcut(shortcut);
-	}
-	QObject::setObjectName(name);
-}
