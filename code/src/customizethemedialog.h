@@ -16,6 +16,14 @@ private:
 public:
 	CustomizeThemeDialog(QWidget *parent);
 
+private:
+	/** Load theme at startup. */
+	void loadTheme();
+
+public slots:
+	/** Redefined to initialize favorites from settings. */
+	void open();
+
 private slots:
 	void openChooseIconDialog();
 
@@ -33,13 +41,6 @@ private slots:
 
 	/** Updates the font size of a specific component. */
 	void updateFontSize(int);
-
-public slots:
-	/** Load theme at startup. */
-	void loadTheme();
-
-signals:
-	void themeChanged();
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

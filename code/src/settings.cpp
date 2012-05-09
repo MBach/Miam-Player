@@ -60,7 +60,7 @@ QString Settings::language()
 }
 
 /** Returns the font of the application. */
-QFont Settings::font(FontFamily fontFamily)
+QFont Settings::font(const FontFamily fontFamily)
 {
 	QFont font;
 	switch(fontFamily) {
@@ -74,7 +74,7 @@ QFont Settings::font(FontFamily fontFamily)
 }
 
 /** Sets the font of the application. */
-const int Settings::fontSize(FontFamily fontFamily)
+int Settings::fontSize(const FontFamily fontFamily)
 {
 	fontPointSizeMap = this->value("fontPointSizeMap").toMap();
 	int pointSize = fontPointSizeMap.value(QString(fontFamily)).toInt();
@@ -85,7 +85,7 @@ const int Settings::fontSize(FontFamily fontFamily)
 }
 
 /** Adds a new path in the application. */
-void Settings::addMusicLocation(QString location) {
+void Settings::addMusicLocation(const QString &location) {
 	locations = value("musicLocations").toList();
 	if (!locations.contains(location)) {
 		locations.append(QVariant(location));
@@ -94,7 +94,7 @@ void Settings::addMusicLocation(QString location) {
 }
 
 /** Removes a path in the application. */
-void Settings::removeMusicLocation(QString location) {
+void Settings::removeMusicLocation(const QString &location) {
 	locations = value("musicLocations").toList();
 	locations.removeOne(location);
 	setValue("musicLocations", locations);

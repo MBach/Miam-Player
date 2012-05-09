@@ -18,7 +18,7 @@ using namespace Phonon;
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
 	MainWindow(QWidget *parent = 0);
 
@@ -42,9 +42,6 @@ private:
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	void changeEvent(QEvent *event);
-
-signals:
-	void delegateStateChanged();
 
 public slots:
 	void bindShortcut(const QString&, int keySequence);

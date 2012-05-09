@@ -277,6 +277,26 @@
            </widget>
           </item>
           <item>
+           <widget class="MediaButton" name="shuffleButton">
+            <property name="text">
+             <string notr="true"/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/player/fairytale/shuffle</normaloff>:/player/fairytale/shuffle</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
             <property name="minimumSize">
              <size>
@@ -463,11 +483,17 @@
    </property>
   </action>
   <action name="actionRepeat">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>&amp;Repeat</string>
    </property>
   </action>
   <action name="actionShuffle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>S&amp;huffle</string>
    </property>
@@ -648,6 +674,70 @@
     <hint type="destinationlabel">
      <x>743</x>
      <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRepeat</sender>
+   <signal>triggered()</signal>
+   <receiver>repeatButton</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>817</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShuffle</sender>
+   <signal>triggered()</signal>
+   <receiver>shuffleButton</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>819</x>
+     <y>732</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>repeatButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionRepeat</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>760</x>
+     <y>732</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shuffleButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>actionShuffle</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>819</x>
+     <y>732</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
    </hints>
   </connection>

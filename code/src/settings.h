@@ -43,27 +43,27 @@ public:
 	inline bool isStarDelegates() const { return value("delegates").toBool(); }
 
 	/** Sets the language of the application. */
-	inline void setLanguage(QString lang) { setValue("language", lang); }
+	inline void setLanguage(const QString &lang) { setValue("language", lang); }
 
 	/** Returns the language of the application. */
 	QString language();
 
 	/** Returns the font of the application. */
-	QFont font(FontFamily fontFamily);
+	QFont font(const FontFamily fontFamily);
 
 	/** Sets the font of the application. */
-	const int fontSize(FontFamily fontFamily);
+	int fontSize(const FontFamily fontFamily);
 
 	inline bool toggleSeparators() const { return value("alphabeticalSeparators").toBool(); }
 
 	/** Adds a new path in the application. */
-	void addMusicLocation(QString location);
+	void addMusicLocation(const QString &location);
 
 	/** Removes a path in the application. */
-	void removeMusicLocation(QString location);
+	void removeMusicLocation(const QString &location);
 
 	/** Returns all music locations. */
-	inline QList<QVariant> musicLocations() { return value("musicLocations").toList(); }
+	inline QList<QVariant> musicLocations() const { return value("musicLocations").toList(); }
 
 	inline bool withCovers() const { return value("covers").toBool(); }
 
@@ -74,9 +74,11 @@ public:
 	int bufferedCoverSize() const;
 
 	/** Returns volume from the slider. */
-	inline qreal volume() { return value("volume").toReal(); }
+	inline qreal volume() const { return value("volume").toReal(); }
 
-	bool repeatPlayBack() { return value("repeatPlayBack").toBool(); }
+	bool repeatPlayBack() const { return value("repeatPlayBack").toBool(); }
+
+	bool shufflePlayBack() const { return value("shufflePlayBack").toBool(); }
 
 	void setShortcut(const QString &objectName, int keySequence);
 
@@ -91,7 +93,7 @@ public:
 
 signals:
 	void currentFontChanged();
-	
+
 public slots:
 	/** Sets a new theme. */
 	inline void setThemeName(const QString &theme) { setValue("theme", theme.toLower()); }
@@ -106,12 +108,12 @@ public slots:
 	inline void setDelegates(const bool &value) { setValue("delegates", value); }
 
 	/** Sets the font of the application. */
-	inline void setFont(FontFamily fontFamily, const QFont &font) {
+	inline void setFont(const FontFamily &fontFamily, const QFont &font) {
 		setValue(QString(fontFamily), font.family());
 		emit currentFontChanged();
 	}
 
-	inline void setFontPointSize(FontFamily fontFamily, int i) {
+	inline void setFontPointSize(const FontFamily &fontFamily, int i) {
 		fontPointSizeMap.insert(QString(fontFamily), i);
 		setValue("fontPointSizeMap", fontPointSizeMap);
 		emit currentFontChanged();
@@ -131,7 +133,8 @@ public slots:
 	inline void setVolume(qreal v) { setValue("volume", v); }
 
 	inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
-	
+
+	inline void setShufflePlayBack(bool b) { setValue("shufflePlayBack", b); }
 };
 
 #endif // SETTINGS_H

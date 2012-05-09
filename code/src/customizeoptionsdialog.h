@@ -17,9 +17,6 @@ private:
 public:
 	CustomizeOptionsDialog(QWidget *parent = 0);
 
-	/** Load the language saved in settings when the app is loading. Called only once per launch. */
-	void loadLanguage();
-
 	/** Is it necessary to redefined this from the UI class just for this init label? */
 	void retranslateUi(CustomizeOptionsDialog *dialog);
 
@@ -30,11 +27,9 @@ protected:
 signals:
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHasChanged(bool);
-	
+
 public slots:
 	void checkShortcut(ShortcutWidget *, int typedKey);
-
-	void setDelegates(bool value);
 
 	/** Change language at runtime. */
 	void changeLanguage(QModelIndex);

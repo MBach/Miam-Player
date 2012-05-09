@@ -11,13 +11,13 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	mainWindow = qobject_cast<MainWindow *>(parent);
 	buttonsListBox->setVisible(false);
 
-	Settings *settings = Settings::getInstance();
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		connect(themeComboBox, SIGNAL(currentIndexChanged(QString)), b, SLOT(setIconFromTheme(QString)));
 		connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), b, SLOT(setSize(int)));
 	}
 
 	// Select button theme and size
+	Settings *settings = Settings::getInstance();
 	connect(themeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setThemeNameAndDialogButtons(QString)));
 	connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setButtonSize(int)));
 
@@ -47,7 +47,69 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), this, SLOT(displayCovers(bool)));
 	connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SIGNAL(sizeOfCoversChanged(int)));
 
-	connect(this, SIGNAL(themeChanged()), this, SLOT(loadTheme()));
+	this->loadTheme();
+}
+
+/** Load theme at startup. */
+void CustomizeThemeDialog::loadTheme()
+{
+	Settings *settings = Settings::getInstance();
+	sizeButtonsSpinBox->setValue(settings->buttonSize());
+
+	// Select the right drop-down item according to the theme
+	int i=0;
+	while (settings->theme() != themeComboBox->itemText(i).toLower()) {
+		i++;
+	}
+	themeComboBox->setCurrentIndex(i);
+
+	// Buttons
+	foreach(MediaButton *b, mainWindow->mediaButtons) {
+		// Display or hide buttons in the main window interface
+		bool state = settings->isVisible(b);
+		b->setVisible(state);
+
+		// Check or uncheck checkboxes in this customize interface
+		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
+		if (checkBox) {
+			checkBox->setChecked(state);
+		}
+
+		// Display customs icons, if any
+		QPushButton *pushButton = findChild<QPushButton *>(b->objectName().remove("Button"));
+		pushButton->setIcon(b->icon());
+	}
+	mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
+	mainWindow->shuffleButton->setChecked(settings->shufflePlayBack());
+
+	// Fonts
+	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::PLAYLIST));
+	fontComboBoxLibrary->setCurrentFont(settings->font(Settings::LIBRARY));
+	fontComboBoxMenus->setCurrentFont(settings->font(Settings::MENUS));
+	spinBoxPlaylist->setValue(settings->fontSize(Settings::PLAYLIST));
+	spinBoxLibrary->setValue(settings->fontSize(Settings::LIBRARY));
+	spinBoxMenus->setValue(settings->fontSize(Settings::MENUS));
+
+	// Library
+	checkBoxDisplayCovers->setChecked(settings->withCovers());
+	spinBoxCoverSize->setValue(settings->coverSize());
+	checkBoxAlphabeticalSeparators->setChecked(settings->toggleSeparators());
+}
+
+/** Redefined to initialize favorites from settings. */
+void CustomizeThemeDialog::open()
+{
+	// Change the label that talks about star delegates
+	bool starDelegateState = Settings::getInstance()->isStarDelegates();
+	labelLibraryDelegates->setEnabled(starDelegateState);
+	radioButtonShowNeverScoredTracks->setEnabled(starDelegateState);
+	radioButtonHideNeverScoredTracks->setEnabled(starDelegateState);
+	if (starDelegateState) {
+		labelLibraryDelegatesState->setText(tr("Favorites are currently enabled"));
+	} else {
+		labelLibraryDelegatesState->setText(tr("Favorites are currently disabled"));
+	}
+	QDialog::open();
 }
 
 void CustomizeThemeDialog::openChooseIconDialog()
@@ -80,7 +142,7 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme) {
 			button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
 		}
 	}
-	Settings::getInstance()->setThemeName(newTheme);
+	settings->setThemeName(newTheme);
 }
 
 /** Displays covers or not in the library. */
@@ -119,60 +181,4 @@ void CustomizeThemeDialog::updateFontSize(int i) {
 	} else if (sender()->objectName().contains("Menus")) {
 		settings->setFontPointSize(Settings::MENUS, i);
 	}
-}
-
-/** Load theme at startup. */
-void CustomizeThemeDialog::loadTheme()
-{
-	Settings *settings = Settings::getInstance();
-	sizeButtonsSpinBox->setValue(settings->buttonSize());
-
-	// Select the right drop-down item according to the theme
-	int i=0;
-	while (settings->theme() != themeComboBox->itemText(i).toLower()) {
-		i++;
-	}
-	themeComboBox->setCurrentIndex(i);
-
-	// Buttons
-	foreach(MediaButton *b, mainWindow->mediaButtons) {
-		// Display or hide buttons in the main window interface
-		bool state = settings->isVisible(b);
-		b->setVisible(state);
-
-		// Check or uncheck checkboxes in this customize interface
-		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
-		if (checkBox) {
-			checkBox->setChecked(state);
-		}
-
-		// Display customs icons, if any
-		QPushButton *pushButton = findChild<QPushButton *>(b->objectName().remove("Button"));
-		pushButton->setIcon(b->icon());
-	}
-	mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
-
-	// Change the label that talks about star delegates
-	bool starDelegateState = settings->isStarDelegates();
-	if (starDelegateState) {
-		labelLibraryDelegatesState->setText(tr("Favorites are currently enabled"));
-	} else {
-		labelLibraryDelegatesState->setText(tr("Favorites are currently disabled"));
-	}
-	labelLibraryDelegates->setEnabled(starDelegateState);
-	radioButtonShowNeverScoredTracks->setEnabled(starDelegateState);
-	radioButtonHideNeverScoredTracks->setEnabled(starDelegateState);
-
-	// Fonts
-	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::PLAYLIST));
-	fontComboBoxLibrary->setCurrentFont(settings->font(Settings::LIBRARY));
-	fontComboBoxMenus->setCurrentFont(settings->font(Settings::MENUS));
-	spinBoxPlaylist->setValue(settings->fontSize(Settings::PLAYLIST));
-	spinBoxLibrary->setValue(settings->fontSize(Settings::LIBRARY));
-	spinBoxMenus->setValue(settings->fontSize(Settings::MENUS));
-
-	// Library
-	checkBoxDisplayCovers->setChecked(settings->withCovers());
-	spinBoxCoverSize->setValue(settings->coverSize());
-	checkBoxAlphabeticalSeparators->setChecked(settings->toggleSeparators());
 }

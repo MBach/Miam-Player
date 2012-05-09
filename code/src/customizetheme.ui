@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>605</height>
+    <height>617</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -730,6 +730,82 @@
               </item>
              </layout>
             </item>
+            <item row="7" column="1">
+             <widget class="QLabel" name="shuffleLabel">
+              <property name="text">
+               <string>Shuffle</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="3">
+             <layout class="QHBoxLayout" name="hl_repeat_2">
+              <item>
+               <spacer name="hs_left_shuffle">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="shuffle">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/fairytale/shuffle</normaloff>:/player/fairytale/shuffle</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>32</width>
+                  <height>32</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="hs_right_shuffle">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item row="7" column="0">
+             <widget class="QCheckBox" name="shuffleCheckBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string notr="true"/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
          </layout>
@@ -1241,6 +1317,22 @@
     <hint type="destinationlabel">
      <x>383</x>
      <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shuffleCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>shuffle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>175</x>
+     <y>492</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>528</x>
+     <y>492</y>
     </hint>
    </hints>
   </connection>

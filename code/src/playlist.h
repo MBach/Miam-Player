@@ -2,6 +2,7 @@
 #define PLAYLIST_H
 
 #include <phonon>
+
 #include <QWidget>
 #include <QTableWidget>
 
@@ -9,7 +10,7 @@ using namespace Phonon;
 
 class Playlist : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 private:
 	/** List of tracks to play. */
@@ -26,7 +27,7 @@ public:
 
 	QList<MediaSource> *tracks() { return &sources; }
 
-	int activeTrack() { return track; }
+	int activeTrack() const { return track; }
 	void setActiveTrack(int t) { track = t; }
 
 	/** Clear the content of playlist. */

@@ -13,6 +13,7 @@
         <file alias="skipForward">player/fairytale/skip-forward.png</file>
         <file alias="stop">player/fairytale/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
+        <file alias="shuffle">player/shuffle.png</file>
     </qresource>
     <qresource prefix="/player/gnome">
         <file alias="pause">player/gnome/pause.png</file>
@@ -23,6 +24,7 @@
         <file alias="skipForward">player/gnome/skip-forward.png</file>
         <file alias="stop">player/gnome/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
+        <file alias="shuffle">player/shuffle.png</file>
     </qresource>
     <qresource prefix="/player/nuvola">
         <file alias="pause">player/nuvola/pause.png</file>
@@ -33,6 +35,7 @@
         <file alias="skipForward">player/nuvola/skip-forward.png</file>
         <file alias="stop">player/nuvola/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
+        <file alias="shuffle">player/shuffle.png</file>
     </qresource>
     <qresource prefix="/player/tango">
         <file alias="pause">player/tango/pause.png</file>
@@ -43,6 +46,7 @@
         <file alias="skipForward">player/tango/skip-forward.png</file>
         <file alias="stop">player/tango/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
+        <file alias="shuffle">player/shuffle.png</file>
     </qresource>
     <qresource prefix="/config" lang="close">
         <file alias="fonts">config/fonts.png</file>
@@ -62,6 +66,7 @@
         <file alias="skipForward">player/oxygen/skip-forward.png</file>
         <file alias="stop">player/oxygen/stop.png</file>
         <file alias="repeat">player/oxygen/repeat.png</file>
+        <file alias="shuffle">player/oxygen/shuffle.png</file>
     </qresource>
     <qresource prefix="/languages">
         <file alias="en">language/en.png</file>

@@ -57,8 +57,14 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		pushButtonDeleteLocation->setEnabled(true);
 	}
 
+	if (settings->isStarDelegates()) {
+		radioButtonActivateDelegates->setChecked(true);
+	} else {
+		radioButtonDesactivateDelegates->setChecked(true);
+	}
+
 	// First panel: library
-	connect(radioButtonActivateDelegates, SIGNAL(toggled(bool)), this, SLOT(setDelegates(bool)));
+	connect(radioButtonActivateDelegates, SIGNAL(toggled(bool)), settings, SLOT(setDelegates(bool)));
 	connect(pushButtonAddLocation, SIGNAL(clicked()), this, SLOT(openLibraryDialog()));
 	connect(pushButtonDeleteLocation, SIGNAL(clicked()), this, SLOT(deleteSelectedLocation()));
 
@@ -69,11 +75,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
 		connect(shortcutWidget, SIGNAL(shortcutChanged(ShortcutWidget *, int)), this, SLOT(checkShortcut(ShortcutWidget *, int)));
 	}
-}
 
-/** Load the language saved in settings when the app is loading. Called only once per launch. */
-void CustomizeOptionsDialog::loadLanguage()
-{
+	// Load the language of the application
 	QString lang = languages.value(Settings::getInstance()->language());
 	t.load(lang);
 	QApplication::installTranslator(&t);
@@ -104,6 +107,7 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 			shortcutWidget->modifiers()->setItemText(i, translation);
 		}
 	}
+
 	Ui::CustomizeOptionsDialog::retranslateUi(dialog);
 }
 
@@ -144,14 +148,6 @@ void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, in
 			inverted.value(i.key())->line()->setStyleSheet(QString());
 		}
 	}
-}
-
-void CustomizeOptionsDialog::setDelegates(bool value)
-{
-	Settings *settings = Settings::getInstance();
-	settings->setDelegates(value);
-	//MainWindow *mainWindow = qobject_cast<MainWindow*>(parent);
-	//emit mainWindow->delegateStateChanged();
 }
 
 /** Change language at runtime. */

@@ -38,10 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
-				 << stopButton << seekForwardButton << skipForwardButton << repeatButton;
+				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
 	pauseButton->hide();
 
-	// Order is important?
 	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
@@ -52,13 +51,22 @@ MainWindow::MainWindow(QWidget *parent) :
 	seekSlider->setMediaObject(tabPlaylists->media());
 	volumeSlider->setAudioOutput(audioOutput);
 
-	// Init the theme
-	customizeThemeDialog->loadTheme();
+	// Init shortcuts
+	Settings *settings = Settings::getInstance();
+	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
+	QMapIterator<QString, QVariant> it(shortcutMap);
+	while (it.hasNext()) {
+		it.next();
+		this->bindShortcut(it.key(), it.value().toInt());
+	}
+
+	// Init checkable buttons
+	actionRepeat->setChecked(settings->repeatPlayBack());
+	actionShuffle->setChecked(settings->shufflePlayBack());
 
 	addPlaylist();
 	setupActions();
 	drawLibrary();
-	customizeOptionsDialog->loadLanguage();
 }
 
 /** Set up all actions and behaviour. */
@@ -90,12 +98,15 @@ void MainWindow::setupActions()
 
 	// Link buttons
 	Settings *settings = Settings::getInstance();
+	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
+	connect(seekBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(seekBackward()));
 	connect(playButton, SIGNAL(clicked()), this, SLOT(playAndPause()));
 	connect(stopButton, SIGNAL(clicked()), this, SLOT(stop()));
-	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
+	connect(seekForwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(seekForward()));
 	connect(skipForwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipForward()));
-	connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), settings, SLOT(setVolume(qreal)));
 	connect(repeatButton, SIGNAL(toggled(bool)), settings, SLOT(setRepeatPlayBack(bool)));
+	connect(shuffleButton, SIGNAL(toggled(bool)), settings, SLOT(setShufflePlayBack(bool)));
+	connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), settings, SLOT(setVolume(qreal)));
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
@@ -104,17 +115,6 @@ void MainWindow::setupActions()
 	connect(actionRemoveSelectedTrack, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTrack()));
 	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
 	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
-
-	// Init shortcuts
-	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
-	QMapIterator<QString, QVariant> it(shortcutMap);
-	while (it.hasNext()) {
-		it.next();
-		this->bindShortcut(it.key(), it.value().toInt());
-	}
-
-	// TEST
-	connect(this, SIGNAL(delegateStateChanged()), customizeThemeDialog, SIGNAL(themeChanged()));
 }
 
 
@@ -232,7 +232,7 @@ void MainWindow::stop()
 
 /** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 void MainWindow::aboutM4P()
-{	
+{
 	QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
 	QMessageBox::about(this, tr("About Mme MiamMiamMusicPlayer"), message);
 }
