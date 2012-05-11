@@ -15,24 +15,24 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	if (filterAcceptsRowItself(sourceRow, sourceParent)) {
-		if (!filterRegExp().isEmpty()) {
-			emit aboutToExpand(mapFromSource(sourceParent));
-		}
-		return true;
+	if (!filterRegExp().isEmpty()) {
+		emit aboutToExpand(mapFromSource(sourceParent));
+	}
+	return true;
 	}
 
 	//accept if any of the parents is accepted on it's own merits
 	QModelIndex parent = sourceParent;
 	while (parent.isValid()) {
-		if (filterAcceptsRowItself(parent.row(), parent.parent())) {
-			return true;
-		}
-		parent = parent.parent();
+	if (filterAcceptsRowItself(parent.row(), parent.parent())) {
+		return true;
+	}
+	parent = parent.parent();
 	}
 
 	//accept if any of the children is accepted on it's own merits
 	if (hasAcceptedChildren(sourceRow, sourceParent)) {
-		return true;
+	return true;
 	}
 	return false;
 }
@@ -46,23 +46,23 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 {
 	QModelIndex item = sourceModel()->index(sourceRow, 0, sourceParent);
 	if (!item.isValid()) {
-		return false;
+	return false;
 	}
 
 	//check if there are children
 	int childCount = item.model()->rowCount(item);
 	if (childCount == 0) {
-		return false;
+	return false;
 	}
 
 	for (int i = 0; i < childCount; ++i) {
-		if (filterAcceptsRowItself(i, item)) {
-			return true;
-		}
-		//recursive call
-		if (hasAcceptedChildren(i, item)) {
-			return true;
-		}
+	if (filterAcceptsRowItself(i, item)) {
+		return true;
+	}
+	//recursive call
+	if (hasAcceptedChildren(i, item)) {
+		return true;
+	}
 	}
 	return false;
 }
@@ -70,9 +70,9 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 {
 	if (role == Qt::FontRole) {
-		return Settings::getInstance()->font(Settings::LIBRARY);
+	return Settings::getInstance()->font(Settings::LIBRARY);
 	} else {
-		return QSortFilterProxyModel::data(index, role);
+	return QSortFilterProxyModel::data(index, role);
 	}
 }
 
@@ -106,8 +106,6 @@ void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 					QImage image(coverPath);
 					painter.drawImage(QRect(0, 0, bufferedCoverSize, bufferedCoverSize), image);
 					item->setIcon(QIcon(pixmap));
-				} else if (item) {
-					item->setIcon(QIcon());
 				}
 			}
 		}
@@ -127,12 +125,12 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 	switch (libraryItemLeft->mediaType()) {
 
 	case LibraryModel::TRACK:
-		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
-		result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
-		break;
+	libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+	result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
+	break;
 
 	default:
-		result = QSortFilterProxyModel::lessThan(left, right);
+	result = QSortFilterProxyModel::lessThan(left, right);
 	}
 	return result;
 }

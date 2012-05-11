@@ -352,6 +352,26 @@
         <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation>Images (*.jpg *.jpeg *.png)</translation>
     </message>
+    <message>
+        <source>Shuffle</source>
+        <translation>Aléatoire</translation>
+    </message>
+    <message>
+        <source>About internal covers</source>
+        <translation>À propos des pochettes internes</translation>
+    </message>
+    <message>
+        <source>No, always use external file (if available)</source>
+        <translation>Non, toujours utiliser un fichier externe (s&apos;il existe)</translation>
+    </message>
+    <message>
+        <source>Should I use them?</source>
+        <translation>Devrais-je les utiliser ?</translation>
+    </message>
+    <message>
+        <source>Note : an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
+        <translation>Note : une pochette interne est une image dans votre fichier musical. Vous pouvez parfois l&apos;apercevoir en tant que miniature dans un explorateur de fichiers.</translation>
+    </message>
 </context>
 <context>
     <name>LibraryFilterLineEdit</name>

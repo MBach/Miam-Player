@@ -171,7 +171,7 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 		break;
 
 	case StoppedState:
-		if (oldState == LoadingState || oldState == PausedState) {
+		if (oldState == LoadingState) {
 			// Play media only if one has not removed the playlist meanwhile, otherwise, delete playlist
 			if (currentPlayList() && currentPlayList()->tracks()->isEmpty()) {
 				/// todo clear mediaObject!

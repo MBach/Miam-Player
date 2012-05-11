@@ -169,8 +169,8 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 			}
 		} else {
 			// If the click from the mouse was on a text label or on a star
-			if (delegate->title()->contains(currentPos) ||
-					(delegate->title()->isEmpty() && delegate->stars()->isEmpty())) {
+			if (!Settings::getInstance()->isStarDelegates() ||
+					(delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty()))) {
 				emit sendToPlaylist(QPersistentModelIndex(sourceIndex));
 			} else if (delegate->stars()->contains(currentPos)) {
 				QStyleOptionViewItemV4 qsovi;

@@ -38,7 +38,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		StarRating starRating = qVariantValue<StarRating>(index.data(LibraryItem::STAR_RATING));
 
 		int titleRectWidth = option.rect.width();
-		int starsRectWidth = starRating.starCount() * 16;
+		//int starsRectWidth = starRating.starCount() * 16;
 		titleRect->setRect(option.rect.x(), option.rect.y(), titleRectWidth, option.rect.height());
 		//starsRect->setRect(option.rect.x()+option.rect.width()/2, option.rect.y(), starsRectWidth, option.rect.height());
 
@@ -118,7 +118,16 @@ void LibraryItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mode
 	}
 }
 
-
+/** Redefined to always display the same height for albums, even for those without one. */
+QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+	Settings *settings = Settings::getInstance();
+	if (settings->withCovers() && index.data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::ALBUM) {
+		return QSize(settings->coverSize(), settings->coverSize());
+	} else {
+		return QStyledItemDelegate::sizeHint(option, index);
+	}
+}
 
 void LibraryItemDelegate::commitAndCloseEditor(QWidget */*e*/)
 {

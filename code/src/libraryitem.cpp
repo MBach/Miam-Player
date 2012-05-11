@@ -23,11 +23,6 @@ int LibraryItem::mediaType() const
 	return data(MEDIA_TYPE).toInt();
 }
 
-void LibraryItem::setDisplayedName(const QString &name)
-{
-	setData(QVariant(name), Qt::DisplayRole);
-}
-
 void LibraryItem::setDisplayedName(const char *name, int size)
 {
 	setData(QByteArray(name, size), Qt::DisplayRole);

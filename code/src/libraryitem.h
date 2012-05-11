@@ -35,8 +35,7 @@ public:
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
-	void setDisplayedName(const QString &name);
-	void setFilePath(const QString &filePath);
+    void setFilePath(const QString &filePath);
 	void setFilePath(int musicLocationIndex, const QString &fileName);
 	void setMediaType(LibraryModel::MediaType mediaType);
 

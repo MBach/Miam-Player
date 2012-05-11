@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>617</height>
+    <width>651</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1003,10 +1003,10 @@
           <string>Artist and albums lists</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
-           <widget class="QLabel" name="labelDisplayCovers">
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelCoverSize">
             <property name="text">
-             <string>Show covers</string>
+             <string>Size of covers</string>
             </property>
            </widget>
           </item>
@@ -1017,13 +1017,6 @@
             </property>
             <property name="checked">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="labelCoverSize">
-            <property name="text">
-             <string>Size of covers</string>
             </property>
            </widget>
           </item>
@@ -1053,6 +1046,65 @@
              <string/>
             </property>
             <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelDisplayCovers">
+            <property name="text">
+             <string>Show covers</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>About internal covers</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Should I use them?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QRadioButton" name="radioButtonHideNeverScoredTracks_2">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonShowNeverScoredTracks_2">
+              <property name="text">
+               <string>No, always use external file (if available)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Note : an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</string>
+            </property>
+            <property name="wordWrap">
              <bool>true</bool>
             </property>
            </widget>
