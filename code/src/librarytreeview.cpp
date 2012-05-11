@@ -167,7 +167,7 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 				// Recursive call on children
 				beforeSendToPlaylist(index.child(i, 0));
 			}
-		} else {
+		} else if (item->data(LibraryItem::MEDIA_TYPE).toInt() != LibraryModel::LETTER) {
 			// If the click from the mouse was on a text label or on a star
 			if (!Settings::getInstance()->isStarDelegates() ||
 					(delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty()))) {
