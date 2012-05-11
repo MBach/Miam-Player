@@ -84,6 +84,7 @@ void TabPlaylist::changeTrack(QTableWidgetItem *item, bool autoscroll)
 	if (autoscroll) {
 		currentPlayList()->table()->scrollToItem(item, QAbstractItemView::PositionAtCenter);
 	}
+	mediaObject->play();
 }
 
 /** Action sent from the menu. */
