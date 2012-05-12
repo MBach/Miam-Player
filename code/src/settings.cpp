@@ -175,8 +175,22 @@ void Settings::setCustomIcon(MediaButton *b, const QString &iconPath)
 	setValue("customIcons", customIcons);
 }
 
-const QString Settings::customIcon(MediaButton *b) const
+const QString Settings::customIcon(MediaButton *b, bool toggled) const
 {
 	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
-	return customIcons.value(b->objectName()).toString();
+	if (toggled) {
+		return customIcons.value("pauseButton").toString();
+	} else {
+		return customIcons.value(b->objectName()).toString();
+	}
+}
+
+qint64 Settings::playBackSeekTime() const
+{
+	qint64 t = value("playBackSeekTime").toLongLong();
+	if (t == 0) {
+		return 5000;
+	} else {
+		return t;
+	}
 }

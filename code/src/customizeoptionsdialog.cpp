@@ -76,6 +76,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		connect(shortcutWidget, SIGNAL(shortcutChanged(ShortcutWidget *, int)), this, SLOT(checkShortcut(ShortcutWidget *, int)));
 	}
 
+	// Fourth panel: playback
+	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlayBackSeekTime(int)));
+
 	// Load the language of the application
 	QString lang = languages.value(Settings::getInstance()->language());
 	t.load(lang);

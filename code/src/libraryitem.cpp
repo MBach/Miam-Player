@@ -23,11 +23,6 @@ int LibraryItem::mediaType() const
 	return data(MEDIA_TYPE).toInt();
 }
 
-void LibraryItem::setDisplayedName(const QString &name)
-{
-	setData(QVariant(name), Qt::DisplayRole);
-}
-
 void LibraryItem::setDisplayedName(const char *name, int size)
 {
 	setData(QByteArray(name, size), Qt::DisplayRole);
@@ -53,12 +48,6 @@ void LibraryItem::setMediaType(LibraryModel::MediaType mediaType)
 void LibraryItem::setRating(int rating)
 {
 	setData(qVariantFromValue(StarRating(rating % 6)), STAR_RATING);
-}
-
-/** Should only be used for albums or artists. */
-void LibraryItem::setChildCount(int children)
-{
-	setData(children, CHILD_COUNT);
 }
 
 /** Should only be used for tracks. */

@@ -89,7 +89,10 @@ public:
 	/// Custom icons in CustomizeTheme
 	bool hasCustomIcon(MediaButton *) const;
 	void setCustomIcon(MediaButton *, const QString &buttonName);
-	const QString customIcon(MediaButton *) const;
+	const QString customIcon(MediaButton *, bool toggled = false) const;
+
+	/// PlayBack options
+	qint64 playBackSeekTime() const;
 
 signals:
 	void currentFontChanged();
@@ -135,6 +138,8 @@ public slots:
 	inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
 
 	inline void setShufflePlayBack(bool b) { setValue("shufflePlayBack", b); }
+
+	inline void setPlayBackSeekTime(int t) { setValue("playBackSeekTime", t*1000); }
 };
 
 #endif // SETTINGS_H

@@ -7,6 +7,8 @@
 
 #include "playlist.h"
 
+using namespace Phonon;
+
 class TabPlaylist : public QTabWidget
 {
 	Q_OBJECT
@@ -52,6 +54,9 @@ public slots:
 
 	/** Change the current track to the next one. */
 	void skipForward();
+
+signals:
+	void iconStatusChanged(State);
 
 private slots:
 	void tick(qint64 time);

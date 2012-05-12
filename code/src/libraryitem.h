@@ -35,7 +35,6 @@ public:
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
-	void setDisplayedName(const QString &name);
 	void setFilePath(const QString &filePath);
 	void setFilePath(int musicLocationIndex, const QString &fileName);
 	void setMediaType(LibraryModel::MediaType mediaType);
@@ -46,9 +45,6 @@ public:
 	/** Should only be used for tracks. */
 	void setTrackNumber(int trackNumber);
 	inline int trackNumber() const { return data(TRACK_NUMBER).toInt(); }
-
-	/** Should only be used for albums or artists. */
-	void setChildCount(int children);
 
 	int mediaType() const;
 

@@ -114,12 +114,26 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 
 void TabPlaylist::seekBackward()
 {
-	qDebug() << "here";
+	if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
+		qint64 time = mediaObject->currentTime() - Settings::getInstance()->playBackSeekTime();
+		if (time < 0) {
+			mediaObject->seek(0);
+		} else {
+			mediaObject->seek(time);
+		}
+	}
 }
 
 void TabPlaylist::seekForward()
 {
-	qDebug() << "here";
+	if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
+		qint64 time = mediaObject->currentTime() + Settings::getInstance()->playBackSeekTime();
+		if (time > mediaObject->totalTime()) {
+			skipForward();
+		} else {
+			mediaObject->seek(time);
+		}
+	}
 }
 
 /** Change the current track to the previous one. */
@@ -170,13 +184,19 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 	case BufferingState:
 		break;
 
+	case PlayingState:
+	case PausedState:
+		emit iconStatusChanged(newState);
+		break;
+
 	case StoppedState:
-		if (oldState == LoadingState || oldState == PausedState) {
+		if (oldState == LoadingState) {
 			// Play media only if one has not removed the playlist meanwhile, otherwise, delete playlist
 			if (currentPlayList() && currentPlayList()->tracks()->isEmpty()) {
 				/// todo clear mediaObject!
 				qDebug() << "delete playlist";
 			} else {
+				qDebug() << sender()->objectName();
 				mediaObject->play();
 			}
 		}

@@ -207,16 +207,13 @@ void MainWindow::checkAddPlaylistButton(int i)
 void MainWindow::playAndPause()
 {
 	if (!tabPlaylists->currentPlayList()->tracks()->isEmpty()) {
-		MediaButton *b;
-		if (tabPlaylists->media()->state() == Phonon::PlayingState) {
+		if (tabPlaylists->media()->state() == PlayingState) {
 			tabPlaylists->media()->pause();
-			b = playButton;
+			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);
 		} else {
 			tabPlaylists->media()->play();
-			b = pauseButton;
+			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"), true);
 		}
-		qDebug() << b->objectName();
-		playButton->setIcon(b->icon(), true);
 	}
 }
 

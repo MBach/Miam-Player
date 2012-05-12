@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 
 MediaButton::MediaButton(QWidget *parent) :
-    QPushButton(parent)
+	QPushButton(parent)
 {
 
 }
@@ -16,14 +16,15 @@ void MediaButton::setIcon(const QIcon &icon, bool toggled)
 
 	// Used only for play/pause behaviour. Getting the custom icon for pause can produce unexpected behaviour
 	// when replacing it by play.
-	if (!toggled) {
-		path = settings->customIcon(this);
+	if (toggled) {
+		path = settings->customIcon(this, toggled);
 	}
 
 	// If the path to the custom icon has been deleted meanwhile, then delete it from settings too
 	if (path.isEmpty()) {
 		QPushButton::setIcon(icon);
 	} else if (QFile::exists(path)) {
+		qDebug() << "la";
 		QPushButton::setIcon(QIcon(path));
 	} else {
 		settings->setCustomIcon(this, QString());
@@ -44,7 +45,7 @@ void MediaButton::setObjectName(const QString &name)
 /** Load an icon from a chosen theme in options. */
 void MediaButton::setIconFromTheme(const QString &theme)
 {
-	// The objectName in the UI file MUST match the alias in the QRC file !
+	// The objectName in the UI file MUST match the alias in the QRC file!
 	QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
 	this->setIcon(QIcon(iconFile));
 }

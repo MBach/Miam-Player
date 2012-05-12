@@ -344,7 +344,7 @@
     <addaction name="separator"/>
     <addaction name="actionShowPlaylistManager"/>
    </widget>
-   <widget class="QMenu" name="menuEdition">
+   <widget class="QMenu" name="menuOptions">
     <property name="title">
      <string>&amp;Options</string>
     </property>
@@ -353,7 +353,7 @@
     <addaction name="actionShowCustomize"/>
     <addaction name="actionShowOptions"/>
    </widget>
-   <widget class="QMenu" name="menuAide">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
@@ -382,10 +382,10 @@
     <addaction name="actionDecreaseVolume"/>
    </widget>
    <addaction name="menuMenu"/>
-   <addaction name="menuEdition"/>
+   <addaction name="menuOptions"/>
    <addaction name="menuPlayback"/>
    <addaction name="menuPlaylist"/>
-   <addaction name="menuAide"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionExit">
    <property name="text">
