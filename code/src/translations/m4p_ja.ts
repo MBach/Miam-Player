@@ -351,6 +351,26 @@
         <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Shuffle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About internal covers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, always use external file (if available)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I use them?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note : an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LibraryFilterLineEdit</name>

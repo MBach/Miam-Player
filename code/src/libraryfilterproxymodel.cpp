@@ -106,8 +106,6 @@ void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 					QImage image(coverPath);
 					painter.drawImage(QRect(0, 0, bufferedCoverSize, bufferedCoverSize), image);
 					item->setIcon(QIcon(pixmap));
-				} else if (item) {
-					item->setIcon(QIcon());
 				}
 			}
 		}

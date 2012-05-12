@@ -1,4 +1,3 @@
-#include "treeitem.h"
 #include "librarymodel.h"
 #include "starrating.h"
 #include "settings.h"

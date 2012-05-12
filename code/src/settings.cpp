@@ -152,8 +152,9 @@ QMap<QString, QVariant> Settings::shortcuts() const
 /** Sets if the button in parameter is visible or not. */
 void Settings::setVisible(MediaButton *b, const bool &value) {
 	setValue(b->objectName(), value);
-	// The only one button which is checkable is the repeat button
+	// The only buttons which are checkable are repeat and shuffle buttons
 	if (b->isCheckable() && !value) {
+		/// FIXME
 		setRepeatPlayBack(value);
 	}
 }

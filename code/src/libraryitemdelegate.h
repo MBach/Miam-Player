@@ -38,9 +38,12 @@ public:
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
+	/** Redefined to always display the same height for albums, even for those without one. */
+	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
+
 private slots:
 	void commitAndCloseEditor(QWidget *);
-	
+
 };
 
 #endif // LIBRARYITEMDELEGATE_H
