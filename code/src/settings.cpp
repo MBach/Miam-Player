@@ -186,12 +186,22 @@ const QString Settings::customIcon(MediaButton *b, bool toggled) const
 	}
 }
 
-qint64 Settings::playBackSeekTime() const
+qint64 Settings::playbackSeekTime() const
 {
-	qint64 t = value("playBackSeekTime").toLongLong();
+	qint64 t = value("playbackSeekTime").toLongLong();
 	if (t == 0) {
 		return 5000;
 	} else {
 		return t;
+	}
+}
+
+bool Settings::playbackKeepPlaylists() const
+{
+	QVariant b = value("playbackKeepPlaylists");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
 	}
 }

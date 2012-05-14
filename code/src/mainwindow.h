@@ -47,16 +47,10 @@ public slots:
 	void bindShortcut(const QString&, int keySequence);
 
 private slots:
-	/** Add a new playlist tab. */
-	void addPlaylist();
-
 	void drawLibrary(bool b=false);
 
 	/** Add a file from the filesystem to the current playlist. */
 	void addSelectedItemToPlaylist(const QModelIndex &item);
-
-	/** When the user is clicking on the (+) button to add a new playlist. */
-	void checkAddPlaylistButton(int i);
 
 	/// Media actions
 	/** This buttons switch the play function with the pause function because they are mutually exclusive. */

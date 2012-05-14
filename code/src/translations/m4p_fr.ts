@@ -197,6 +197,22 @@
         <source>Open playlist manager...</source>
         <translation>Ouvrir le gestionnaire de liste de lecture...</translation>
     </message>
+    <message>
+        <source>Playback options</source>
+        <translation>Paramètres de lecture</translation>
+    </message>
+    <message>
+        <source>Seek time (forward or backward)</source>
+        <translation>Durée du saut (en avant ou en arrière)</translation>
+    </message>
+    <message>
+        <source>Playlists</source>
+        <translation>Listes de lecture </translation>
+    </message>
+    <message>
+        <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
+        <translation>Souhaitez-vous conserver vos listes de lecture avant de quitter, puis de les restaurer plus tard ?</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -395,10 +411,6 @@
         <translation>Madame MiamMiam&apos;s Music Player</translation>
     </message>
     <message>
-        <source>Playlist </source>
-        <translation>Liste de lecture </translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Bibliothèque</translation>
     </message>
@@ -571,7 +583,19 @@
     </message>
     <message>
         <source>Length</source>
-        <translation>Longueur</translation>
+        <translation>Durée</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artiste</translation>
+    </message>
+    <message>
+        <source>Rating</source>
+        <translation>Note</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Année</translation>
     </message>
 </context>
 <context>
@@ -657,6 +681,29 @@
     <message>
         <source>Error opening files</source>
         <translation>Error à l&apos;ouverture de fichiers</translation>
+    </message>
+    <message>
+        <source>Playlist </source>
+        <translation>Liste de lecture </translation>
+    </message>
+</context>
+<context>
+    <name>TracksNotFoundMessageBox</name>
+    <message>
+        <source>The following track in your last playlists couldn&apos;t be found. It has probably moved to another location.</source>
+        <translation>La piste suivante dans votre dernière liste de lecture n&apos;a pas été trouvée. Elle a probablement changée d&apos;emplacement.</translation>
+    </message>
+    <message>
+        <source>The following tracks in your last playlists couldn&apos;t be found. They have probably moved to another location.</source>
+        <translation>Les pistes suivantes dans votre dernière liste de lecture n&apos;ont pas été trouvées. Elles ont probablement changées d&apos;emplacement.</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <source>More tracks were not found.</source>
+        <translation>D&apos;autres pistes n&apos;ont pu être trouvées.</translation>
     </message>
 </context>
 </TS>

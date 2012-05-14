@@ -3,12 +3,12 @@
 
 #include <phonon>
 
-#include <QWidget>
+#include <QMenu>
 #include <QTableWidget>
 
 using namespace Phonon;
 
-class Playlist : public QWidget
+class Playlist : public QTableWidget
 {
 	Q_OBJECT
 
@@ -16,35 +16,44 @@ private:
 	/** List of tracks to play. */
 	QList<MediaSource> sources;
 
-	/** Convert seconds into hh:mm:ss format. */
-	QString convertTrackLength(int length);
-
 	/** The current playing track. */
 	int track;
+
+	QMenu *columns;
 
 public:
 	Playlist(QWidget *parent = 0);
 
-	QList<MediaSource> *tracks() { return &sources; }
+	const QList<MediaSource> & tracks() { return sources; }
 
-	int activeTrack() const { return track; }
+	const int & activeTrack() const { return track; }
 	void setActiveTrack(int t) { track = t; }
 
 	/** Clear the content of playlist. */
 	void clear();
 
 	/** Add a track to this Playlist instance. */
-	QTableWidgetItem *append(MediaSource m);
-
-	QTableWidget *table () const { return tableWidget; }
+	void append(MediaSource m);
 
 	/** Retranslate header columns. */
 	void retranslateUi();
 
-private:
-	QTableWidget *tableWidget;
+protected:
+	void resizeEvent(QResizeEvent *event);
 
-signals:
+private:
+	/** Convert time in seconds into "mm:ss" format. */
+	QString convertTrackLength(int length);
+
+private slots:
+	/** Display a context menu with the state of all columns. */
+	void showColumnsMenu(const QPoint &);
+
+	/** Save state when one checks or moves a column. */
+	void saveColumnsState(int column = 0, int oldIndex = 0, int newIndex = 0);
+
+	/** Toggle the selected column from the context menu. */
+	void toggleSelectedColumn(QAction *action);
 
 public slots:
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */

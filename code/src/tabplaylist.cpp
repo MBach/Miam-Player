@@ -1,17 +1,18 @@
 #include "tabplaylist.h"
-#include "settings.h"
 #include "libraryitem.h"
+#include "settings.h"
 
 #include <QApplication>
-#include <QMessageBox>
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent)
 {
+	this->setDocumentMode(true);
 	this->setTabsClosable(true);
 	this->tabBar()->addTab(QIcon(":/icons/plusIcon"), QString());
 	this->tabBar()->setTabButton(count()-1, QTabBar::RightSide, 0);
+	messageBox = new TracksNotFoundMessageBox(this);
 
 	// Init Phonon Module
 	mediaObject = new MediaObject(this);
@@ -22,26 +23,30 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(metaInformationResolver, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(metaStateChanged(Phonon::State, Phonon::State)));
 	connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
+	// Keep playlists in memory before exit
+	connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(savePlaylists()));
+
+	// Add a new playlist
+	connect(this, SIGNAL(currentChanged(int)), this, SLOT(checkAddPlaylistButton(int)));
+
 	// Other actions
 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTabFromCloseButton(int)));
 }
 
 /** Add a track from the filesystem or the library to the current playlist. */
-QTableWidgetItem * TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary)
+void TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary)
 {
-	QTableWidgetItem *index = NULL;
 	if (itemFromLibrary.isValid()) {
 		QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
 		QString fileName = itemFromLibrary.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
 		MediaSource source(filePath + fileName);
 		if (source.type() != MediaSource::Invalid) {
-			index = currentPlayList()->append(source);
-			if (currentPlayList()->tracks()->size() == 1) {
-				metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(0));
+			currentPlayList()->append(source);
+			if (currentPlayList()->tracks().size() == 1) {
+				metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
 			}
 		}
 	}
-	return index;
 }
 
 /** Convenient getter with cast. */
@@ -57,34 +62,61 @@ void TabPlaylist::retranslateUi()
 	// No translation for the (+) tab button
 	for (int i=0; i < count()-1; i++) {
 		Playlist *p = qobject_cast<Playlist *>(widget(i));
-		QString playlist = QApplication::translate("MainWindow", "Playlist ", 0, QApplication::UnicodeUTF8);
+		QString playlist = tr("Playlist ");
 		playlist.append(QString::number(i+1));
 		setTabText(i, playlist);
 		p->retranslateUi();
 	}
 }
 
+/** Add tracks chosen by one from the library into the active playlist. */
 void TabPlaylist::addItemFromLibraryToPlaylist(const QPersistentModelIndex &item)
 {
-	bool isEmpty = currentPlayList()->tracks()->isEmpty();
-	QTableWidgetItem *indexInPlaylist = this->addItemToCurrentPlaylist(item);
+	bool isEmpty = currentPlayList()->tracks().isEmpty();
+	this->addItemToCurrentPlaylist(item);
+	// Automatically plays the first track
 	if (isEmpty) {
-		this->changeTrack(indexInPlaylist);
+		this->skipForward();
 	}
+}
+
+/** Add a new playlist tab. */
+Playlist* TabPlaylist::addPlaylist()
+{
+	// Get the next label for the playlist
+	QString newPlaylistName = QString(tr("Playlist ")).append(QString::number(count()));
+	Playlist *playlist = new Playlist(this);
+
+	// Then append a new empty playlist to the others
+	int i = insertTab(count(), playlist, newPlaylistName);
+
+	// Select the new empty playlist
+	setCurrentIndex(i);
+
+	return playlist;
 }
 
 /** When the user is double clicking on a track in a playlist. */
 void TabPlaylist::changeTrack(QTableWidgetItem *item, bool autoscroll)
 {
-	MediaSource media = currentPlayList()->tracks()->at(item->row());
+	MediaSource media = currentPlayList()->tracks().at(item->row());
 	currentPlayList()->setActiveTrack(item->row());
 	mediaObject->setCurrentSource(media);
 	currentPlayList()->highlightCurrentTrack();
 	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
 	if (autoscroll) {
-		currentPlayList()->table()->scrollToItem(item, QAbstractItemView::PositionAtCenter);
+		currentPlayList()->scrollToItem(item, QAbstractItemView::PositionAtCenter);
 	}
 	mediaObject->play();
+}
+
+/** When the user is clicking on the (+) button to add a new playlist. */
+void TabPlaylist::checkAddPlaylistButton(int i)
+{
+	// The (+) button is the last tab
+	if (i == count()-1) {
+		addPlaylist();
+	}
 }
 
 /** Action sent from the menu. */
@@ -113,10 +145,46 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 	}
 }
 
+/** Restore playlists at startup. */
+void TabPlaylist::restorePlaylists()
+{
+	Settings *settings = Settings::getInstance();
+	if (settings->playbackKeepPlaylists()) {
+		QList<QVariant> playlists = settings->value("playlists").toList();
+		if (!playlists.isEmpty()) {
+			QStringList tracksNotFound;
+			foreach(QVariant playlist, playlists) {
+				Playlist *p = this->addPlaylist();
+
+				QList<QVariant> paths = playlist.toList();
+				foreach(QVariant path, paths) {
+
+					// Check if the file is still on the disk before appending
+					QString track = path.toString();
+					if (QFile::exists(track)) {
+						p->append(MediaSource(track));
+					} else {
+						tracksNotFound << track;
+					}
+				}
+			}
+			// Error handling
+			if (!tracksNotFound.isEmpty()) {
+				messageBox->displayError(TracksNotFoundMessageBox::RESTORE_AT_STARTUP, tracksNotFound);
+			}
+		} else {
+			this->addPlaylist();
+		}
+	} else {
+		this->addPlaylist();
+	}
+}
+
+/** Seek backward in the current playing track for a small amount of time. */
 void TabPlaylist::seekBackward()
 {
 	if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
-		qint64 time = mediaObject->currentTime() - Settings::getInstance()->playBackSeekTime();
+		qint64 time = mediaObject->currentTime() - Settings::getInstance()->playbackSeekTime();
 		if (time < 0) {
 			mediaObject->seek(0);
 		} else {
@@ -125,10 +193,11 @@ void TabPlaylist::seekBackward()
 	}
 }
 
+/** Seek forward in the current playing track for a small amount of time. */
 void TabPlaylist::seekForward()
 {
 	if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
-		qint64 time = mediaObject->currentTime() + Settings::getInstance()->playBackSeekTime();
+		qint64 time = mediaObject->currentTime() + Settings::getInstance()->playbackSeekTime();
 		if (time > mediaObject->totalTime()) {
 			skipForward();
 		} else {
@@ -142,7 +211,7 @@ void TabPlaylist::skipBackward()
 {
 	int activeTrack = currentPlayList()->activeTrack();
 	if (activeTrack-- > 0) {
-		QTableWidgetItem *item = currentPlayList()->table()->item(activeTrack, 1);
+		QTableWidgetItem *item = currentPlayList()->item(activeTrack, 1);
 		this->changeTrack(item, true);
 	}
 }
@@ -151,14 +220,38 @@ void TabPlaylist::skipBackward()
 void TabPlaylist::skipForward()
 {
 	int next;
-	if (Settings::getInstance()->repeatPlayBack() && currentPlayList()->activeTrack() == currentPlayList()->tracks()->size()-1) {
+	if (Settings::getInstance()->repeatPlayBack() && currentPlayList()->activeTrack() == currentPlayList()->tracks().size()-1) {
 		next = -1;
 	} else {
 		next = currentPlayList()->activeTrack();
 	}
-	if (++next < currentPlayList()->tracks()->size()) {
-		QTableWidgetItem *item = currentPlayList()->table()->item(next, 1);
+	if (++next < currentPlayList()->tracks().size()) {
+		QTableWidgetItem *item = currentPlayList()->item(next, 1);
 		this->changeTrack(item, true);
+	}
+}
+
+/** Save playlists before exit. */
+void TabPlaylist::savePlaylists()
+{
+	Settings *settings = Settings::getInstance();
+	if (settings->playbackKeepPlaylists()) {
+		QList<QVariant> vPlaylists;
+		// Iterate on all playlists, except the last one (the (+) button) and empty ones
+		for (int i = 0; i < count() - 1; i++) {
+			Playlist *p = qobject_cast<Playlist*>(widget(i));
+
+			QListIterator<MediaSource> tracks(p->tracks());
+			QList<QVariant> vTracks;
+			while (tracks.hasNext()) {
+				vTracks.append(tracks.next().fileName());
+			}
+			if (!vTracks.isEmpty()) {
+				vPlaylists.append(QVariant(vTracks));
+			}
+		}
+		// Tracks are stored in QList< QList<QVariant> >
+		settings->setValue("playlists", vPlaylists);
 	}
 }
 
@@ -193,7 +286,7 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 	case StoppedState:
 		if (oldState == LoadingState) {
 			// Play media only if one has not removed the playlist meanwhile, otherwise, delete playlist
-			if (currentPlayList() && currentPlayList()->tracks()->isEmpty()) {
+			if (currentPlayList() && currentPlayList()->tracks().isEmpty()) {
 				/// todo clear mediaObject!
 				qDebug() << "delete playlist";
 			} else {
@@ -225,21 +318,19 @@ void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
 		return;
 	}
 
-	if (currentPlayList()->table()->selectedItems().isEmpty()) {
-		currentPlayList()->table()->selectRow(0);
+	if (currentPlayList()->selectedItems().isEmpty()) {
+		currentPlayList()->selectRow(0);
 		mediaObject->setCurrentSource(metaInformationResolver->currentSource());
 	}
 
 	/// TODO: code review
 	int index = currentPlayList()->activeTrack();
-	if (currentPlayList()->tracks()->size() > index) {
-		//metaInformationResolver->setCurrentSource(currentPlayList()->tracks()->at(index));
+	if (currentPlayList()->tracks().size() > index) {
+		//metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(index));
 	} else {
-		currentPlayList()->table()->resizeColumnsToContents();
-		if (currentPlayList()->table()->columnWidth(0) > 300) {
-			currentPlayList()->table()->setColumnWidth(0, 300);
+		currentPlayList()->resizeColumnsToContents();
+		if (currentPlayList()->columnWidth(0) > 300) {
+			currentPlayList()->setColumnWidth(0, 300);
 		}
 	}
 }
-
-

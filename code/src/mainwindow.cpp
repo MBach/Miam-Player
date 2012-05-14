@@ -64,7 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	actionRepeat->setChecked(settings->repeatPlayBack());
 	actionShuffle->setChecked(settings->shufflePlayBack());
 
-	addPlaylist();
+	// Load playlists at startup if any, otherwise just add an empty one
+	tabPlaylists->restorePlaylists();
 	setupActions();
 	drawLibrary();
 }
@@ -78,7 +79,7 @@ void MainWindow::setupActions()
 	// Link user interface
 	// Actions from the menu
 	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
-	connect(actionAddPlaylist, SIGNAL(triggered()), this, SLOT(addPlaylist()));
+	connect(actionAddPlaylist, SIGNAL(triggered()), tabPlaylists, SLOT(addPlaylist()));
 	connect(actionDeleteCurrentPlaylist, SIGNAL(triggered()), tabPlaylists, SLOT(removeCurrentPlaylist()));
 	connect(actionShowCustomize, SIGNAL(triggered()), customizeThemeDialog, SLOT(open()));
 	connect(actionShowOptions, SIGNAL(triggered()), customizeOptionsDialog, SLOT(open()));
@@ -92,9 +93,6 @@ void MainWindow::setupActions()
 	// Send music to playlist
 	connect(library, SIGNAL(sendToPlaylist(const QPersistentModelIndex &)), tabPlaylists, SLOT(addItemFromLibraryToPlaylist(const QPersistentModelIndex &)));
 	connect(filesystem, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(addSelectedItemToPlaylist(const QModelIndex &)));
-
-	// Add a new playlist
-	connect(tabPlaylists, SIGNAL(currentChanged(int)), this, SLOT(checkAddPlaylistButton(int)));
 
 	// Link buttons
 	Settings *settings = Settings::getInstance();
@@ -153,20 +151,6 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 	}
 }
 
-/** Add a new playlist tab. */
-void MainWindow::addPlaylist()
-{
-	// Get the next label for the playlist
-	QString newPlaylistName = QString(tr("Playlist ")).append(QString::number(tabPlaylists->count()));
-	Playlist *playlist = new Playlist(tabPlaylists);
-
-	// Then append a new empty playlist to the others
-	int i = tabPlaylists->insertTab(tabPlaylists->count(), playlist, newPlaylistName);
-
-	// Select the new empty playlist
-	tabPlaylists->setCurrentIndex(i);
-}
-
 /** Draw the library widget by calling subcomponents. */
 void MainWindow::drawLibrary(bool b)
 {
@@ -194,19 +178,10 @@ void MainWindow::addSelectedItemToPlaylist(const QModelIndex &item)
 	}
 }
 
-/** When the user is clicking on the (+) button to add a new playlist. */
-void MainWindow::checkAddPlaylistButton(int i)
-{
-	// The (+) button is the last tab
-	if (i == tabPlaylists->count()-1) {
-		addPlaylist();
-	}
-}
-
 /** This buttons switch the play function with the pause function because they are mutually exclusive. */
 void MainWindow::playAndPause()
 {
-	if (!tabPlaylists->currentPlayList()->tracks()->isEmpty()) {
+	if (!tabPlaylists->currentPlayList()->tracks().isEmpty()) {
 		if (tabPlaylists->media()->state() == PlayingState) {
 			tabPlaylists->media()->pause();
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);

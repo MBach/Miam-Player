@@ -44,7 +44,7 @@
       <enum>QListView::IconMode</enum>
      </property>
      <property name="currentRow">
-      <number>-1</number>
+      <number>0</number>
      </property>
      <item>
       <property name="text">
@@ -128,7 +128,7 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayoutMusicLocation">
             <item>
-             <spacer name="verticalSpacer_3">
+             <spacer name="vs_musicLocations_top">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -158,7 +158,7 @@
              </widget>
             </item>
             <item>
-             <spacer name="verticalSpacer">
+             <spacer name="vs_musicLocations_bottom">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -429,7 +429,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
+        <spacer name="vs_LibraryPage">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -446,7 +446,7 @@
      <widget class="QWidget" name="page_2">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupBoxLanguage">
          <property name="title">
           <string>Language of MmeMiamMiam's Music Player</string>
          </property>
@@ -485,8 +485,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>358</width>
-            <height>166</height>
+            <width>503</width>
+            <height>368</height>
            </rect>
           </property>
           <attribute name="label">
@@ -2142,7 +2142,7 @@
      <widget class="QWidget" name="page_3">
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QGroupBox" name="groupBoxPlaybackOptions">
          <property name="title">
           <string>Playback options</string>
          </property>
@@ -2150,7 +2150,7 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Seek time</string>
+             <string>Seek time (forward or backward)</string>
             </property>
            </widget>
           </item>
@@ -2167,21 +2167,66 @@
             </property>
            </widget>
           </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxPlaylists">
+         <property name="title">
+          <string>Playlists</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelKeepPlaylists">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Would you like to keep your playlists in memory before exiting and restore them later?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
-           <spacer name="verticalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QRadioButton" name="radioButtonKeepPlaylists">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonClearPlaylists">
+              <property name="text">
+               <string>No</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="vs_PlaybackPage">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

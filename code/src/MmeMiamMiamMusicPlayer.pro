@@ -30,7 +30,8 @@ SOURCES += \
     libraryitem.cpp \
     filesystemmodel.cpp \
     shortcutlineedit.cpp \
-    shortcutwidget.cpp
+    shortcutwidget.cpp \
+    tracksnotfoundmessagebox.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -52,7 +53,8 @@ HEADERS += \
     libraryitem.h \
     filesystemmodel.h \
     shortcutlineedit.h \
-    shortcutwidget.h
+    shortcutwidget.h \
+    tracksnotfoundmessagebox.h
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \

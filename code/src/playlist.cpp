@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QTableWidget>
+#include <QTime>
 #include <QWidgetItem>
 
 #include <fileref.h>
@@ -12,93 +13,104 @@
 #include "settings.h"
 
 Playlist::Playlist(QWidget *parent) :
-    QWidget(parent)
+	QTableWidget(parent), track(-1)
 {
-	// Copy the layout from the first playlist, which is always available
-	QLayout *newLayoutPlaylist = new QHBoxLayout(this);
-
-	// Create a new table including track name, length and album
-	tableWidget = new QTableWidget(0, 4, this);
-	tableWidget->verticalHeader()->setVisible(false);
+	QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
+	QStringList untranslatedLabels = (QStringList() << "#" << "Title" << "Album" << "Length" << "Artist" << "Rating" << "Year");
+	this->setColumnCount(labels.size());
+	this->setColumnWidth(0, 30);
+	this->setColumnWidth(1, 150);
+	this->setColumnWidth(2, 150);
+	this->setColumnHidden(5, true);
+	this->setColumnHidden(6, true);
 
 	// Select only one row, not cell by cell
-	tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
-	tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+	this->setSelectionMode(QAbstractItemView::SingleSelection);
+	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-	// Create columns
-	QTableWidgetItem *itemNumber = new QTableWidgetItem("#");
-	QTableWidgetItem *itemTrack = new QTableWidgetItem(tr("Title"));
-	QTableWidgetItem *itemLength = new QTableWidgetItem(tr("Length"));
-	QTableWidgetItem *itemAlbum = new QTableWidgetItem(tr("Album"));
+	verticalHeader()->setVisible(false);
+	horizontalHeader()->setMovable(true);
+	horizontalHeader()->setHighlightSections(false);
+	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 
-	// Stores original text to switch between translations on the fly
-	itemNumber->setData(Qt::UserRole+1, "#");
-	itemTrack->setData(Qt::UserRole+1, "Title");
-	itemLength->setData(Qt::UserRole+1, "Length");
-	itemAlbum->setData(Qt::UserRole+1, "Album");
+	// Context menu on header of columns
+	QList<QAction*> actionColumns;
+	columns = new QMenu(this);
 
-	tableWidget->setHorizontalHeaderItem(0, itemNumber);
-	tableWidget->setHorizontalHeaderItem(1, itemTrack);
-	tableWidget->setHorizontalHeaderItem(2, itemLength);
-	tableWidget->setHorizontalHeaderItem(3, itemAlbum);
+	for (int i = 0; i < labels.size(); i++) {
+		QString label = labels.at(i);
+		QTableWidgetItem *item = new QTableWidgetItem(label);
 
-	tableWidget->setColumnWidth(0, 30);
-	tableWidget->setColumnWidth(1, 150);
-	tableWidget->setColumnWidth(3, 150);
+		// Stores original text to switch between translations on the fly
+		item->setData(Qt::UserRole+1, untranslatedLabels.at(i));
+		this->setHorizontalHeaderItem(i, item);
 
-	newLayoutPlaylist->addWidget(tableWidget);
+		// Match actions with columns using index of labels
+		QAction *actionColumn = new QAction(label, this);
+		actionColumn->setData(i);
+		actionColumn->setEnabled(actionColumn->text() != tr("Title"));
+		actionColumn->setCheckable(true);
+		actionColumn->setChecked(!isColumnHidden(i));
+		actionColumns.append(actionColumn);
+
+		// Then populate the context menu
+		columns->addAction(actionColumn);
+	}
+
+	// Load columns state
+	Settings *settings = Settings::getInstance();
+	QByteArray state = settings->value("playlistColumnsState").toByteArray();
+	if (!state.isEmpty()) {
+		horizontalHeader()->restoreState(state);
+
+		for (int i = 0; i < horizontalHeader()->count(); i++) {
+			bool hidden = horizontalHeader()->isSectionHidden(i);
+			setColumnHidden(i, hidden);
+			columns->actions().at(i)->setChecked(!hidden);
+		}
+	}
 
 	// Link this playlist with the Settings instance to change fonts at runtime
-	Settings *settings = Settings::getInstance();
 	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
 
 	// Change track
 	// no need to cast parent as a TabPlaylist instance
-	connect(this->tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), parent, SLOT(changeTrack(QTableWidgetItem*)));
+	connect(this, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), parent, SLOT(changeTrack(QTableWidgetItem*)));
+
+	// Hide the selected column in context menu
+	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
+	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
+	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
 }
 
 /** Clear the content of playlist. */
 void Playlist::clear()
 {
 	// Iterate on the table and always remove the first item
-	while (tableWidget->rowCount() > 0) {
-		tableWidget->removeRow(0);
+	while (rowCount() > 0) {
+		removeRow(0);
 	}
+	track = -1;
 	sources.clear();
 }
 
-/** Convert time in seconds into "h mm:ss" format. */
+/** Convert time in seconds into "mm:ss" format. */
 QString Playlist::convertTrackLength(int length)
 {
-	int h=length/3600;
-	int m = length/60;
-	int s = length%60;
-	QString time;
-	if (h > 0) {
-		time = QString("%1h %2:%3");
-		if (m < 10) {
-			time.arg(h)
-				.arg(m, (int)2, (int)10, (const QChar)'0')
-				.arg(s, (int)2, (int)10, (const QChar)'0');
-		} else {
-			time.arg(h)
-				.arg(m, (int)0, (int)10, (const QChar)'0')
-				.arg(s, (int)2, (int)10, (const QChar)'0');
-		}
+	QTime time = QTime(0, 0).addSecs(length);
+	QString str;
+	// QTime is not designed to handle minutes > 60
+	if (time.hour() > 0) {
+		str = QString::number(time.hour()*60 + time.minute())
+				.append(":").append(time.toString("ss"));
 	} else {
-		if (m > 0) {
-			time = QString("%1:%2")
-					.arg(m, (int)0, (int)10, (const QChar)'0')
-					.arg(s, (int)2, (int)10, (const QChar)'0');
-		} else {
-			time = QString("%1").arg(s, (int)2, (int)10, (const QChar)'0');
-		}
+		str = time.toString("m:ss");
 	}
-	return time;
+	return str;
 }
 
 /** Add a track to this Playlist instance. */
-QTableWidgetItem * Playlist::append(MediaSource m)
+void Playlist::append(MediaSource m)
 {
 	// Resolve metaDatas from TagLib
 	TagLib::FileRef f(m.fileName().toLocal8Bit().data());
@@ -113,56 +125,78 @@ QTableWidgetItem * Playlist::append(MediaSource m)
 		QList<QTableWidgetItem *> widgetItems;
 		QTableWidgetItem *trackItem = new QTableWidgetItem(QString::number(f.tag()->track()));
 		QTableWidgetItem *titleItem = new QTableWidgetItem(title);
+		QTableWidgetItem *albumItem = new QTableWidgetItem(f.tag()->album().toCString());
 		QTableWidgetItem *lengthItem = new QTableWidgetItem(this->convertTrackLength(f.audioProperties()->length()));
-		QTableWidgetItem *albumItem = new QTableWidgetItem(f.tag()->album().toCString(false));
-		widgetItems << trackItem << titleItem << lengthItem << albumItem;
+		QTableWidgetItem *artistItem = new QTableWidgetItem(f.tag()->artist().toCString());
+		QTableWidgetItem *ratingItem = new QTableWidgetItem("***");
+		QTableWidgetItem *yearItem = new QTableWidgetItem(QString::number(f.tag()->year()));
 
-		int currentRow = tableWidget->rowCount();
-		tableWidget->insertRow(currentRow);
+		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
+
+		int currentRow = rowCount();
+		insertRow(currentRow);
 
 		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
 		for (int i=0; i < widgetItems.length(); i++) {
 			QTableWidgetItem *item = widgetItems.at(i);
 			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			item->setFont(font);
-			tableWidget->setItem(currentRow, i, item);
+			setItem(currentRow, i, item);
 			QFontMetrics fm(font);
-			tableWidget->setRowHeight(currentRow, fm.height());
+			setRowHeight(currentRow, fm.height());
 		}
 
 		trackItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-		return trackItem;
-	} else {
-		return NULL;
+		yearItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignCenter);
 	}
+}
+
+/** Toggle the selected column from the context menu. */
+void Playlist::toggleSelectedColumn(QAction *action)
+{
+	int columnIndex = action->data().toInt();
+	setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
+	this->saveColumnsState();
+}
+
+/** Display a context menu with the state of all columns. */
+void Playlist::showColumnsMenu(const QPoint &pos)
+{
+	columns->exec(mapToGlobal(pos));
+}
+
+/** Save state when one checks or moves a column. */
+void Playlist::saveColumnsState(int /*logicalIndex*/, int /*oldVisualIndex*/, int /*newVisualIndex*/)
+{
+	Settings::getInstance()->setValue("playlistColumnsState", horizontalHeader()->saveState());
 }
 
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 void Playlist::highlightCurrentTrack()
 {
-	QTableWidgetItem *item;
+	QTableWidgetItem *it;
 	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-	if (tableWidget->rowCount() > 0) {
-		for (int i=0; i < tableWidget->rowCount(); i++) {
-			for (int j = 0; j < tableWidget->columnCount(); j++) {
-				item = tableWidget->item(i, j);
+	if (rowCount() > 0) {
+		for (int i=0; i < rowCount(); i++) {
+			for (int j = 0; j < columnCount(); j++) {
+				it = item(i, j);
 				QFont itemFont = font;
 				itemFont.setBold(false);
 				itemFont.setItalic(false);
-				item->setFont(itemFont);
+				it->setFont(itemFont);
 				QFontMetrics fm(itemFont);
-				tableWidget->setRowHeight(i, fm.height());
+				setRowHeight(i, fm.height());
 			}
 		}
-		for (int j=0; j < tableWidget->columnCount(); j++) {
-			item = tableWidget->item(track, j);
+		for (int j=0; j < columnCount(); j++) {
+			it = item(track, j);
 			// If there is actually one selected track in the playlist
-			if (item != NULL) {
+			if (it != NULL) {
 				QFont itemFont = font;
 				itemFont.setBold(true);
 				itemFont.setItalic(true);
-				item->setFont(itemFont);
+				it->setFont(itemFont);
 			}
 		}
 	}
@@ -171,9 +205,9 @@ void Playlist::highlightCurrentTrack()
 /** Remove the selected track from the playlist. */
 void Playlist::removeSelectedTrack()
 {
-	int i = tableWidget->currentIndex().row();
+	int i = currentIndex().row();
 	if (i >= 0) {
-		tableWidget->removeRow(i);
+		removeRow(i);
 		sources.removeAt(i);
 	}
 }
@@ -181,17 +215,17 @@ void Playlist::removeSelectedTrack()
 /** Move the selected track upward. */
 void Playlist::moveTrackUp()
 {
-	if (tableWidget->currentItem()) {
-		int currentRow = tableWidget->currentItem()->row();
+	if (currentItem()) {
+		int currentRow = currentItem()->row();
 		if (currentRow > 0) {
-			for (int c=0; c < tableWidget->columnCount(); c++) {
-				QTableWidgetItem *currentItem = tableWidget->takeItem(currentRow, c);
-				QTableWidgetItem *previousItem = tableWidget->takeItem(currentRow-1, c);
-				tableWidget->setItem(currentRow, c, previousItem);
-				tableWidget->setItem(currentRow-1, c, currentItem);
+			for (int c=0; c < columnCount(); c++) {
+				QTableWidgetItem *currentItem = takeItem(currentRow, c);
+				QTableWidgetItem *previousItem = takeItem(currentRow-1, c);
+				setItem(currentRow, c, previousItem);
+				setItem(currentRow-1, c, currentItem);
 			}
 			sources.swap(currentRow, currentRow-1);
-			tableWidget->setCurrentIndex(tableWidget->model()->index(currentRow-1, 0));
+			setCurrentIndex(model()->index(currentRow-1, 0));
 			if (currentRow == track) {
 				track--;
 			}
@@ -202,17 +236,17 @@ void Playlist::moveTrackUp()
 /** Move the selected track downward. */
 void Playlist::moveTrackDown()
 {
-	if (tableWidget->currentItem()) {
-		int currentRow = tableWidget->currentItem()->row();
-		if (currentRow < tableWidget->rowCount()-1) {
-			for (int c=0; c < tableWidget->columnCount(); c++) {
-				QTableWidgetItem *currentItem = tableWidget->takeItem(currentRow, c);
-				QTableWidgetItem *nextItem = tableWidget->takeItem(currentRow+1, c);
-				tableWidget->setItem(currentRow, c, nextItem);
-				tableWidget->setItem(currentRow+1, c, currentItem);
+	if (currentItem()) {
+		int currentRow = currentItem()->row();
+		if (currentRow < rowCount()-1) {
+			for (int c=0; c < columnCount(); c++) {
+				QTableWidgetItem *currentItem = takeItem(currentRow, c);
+				QTableWidgetItem *nextItem = takeItem(currentRow+1, c);
+				setItem(currentRow, c, nextItem);
+				setItem(currentRow+1, c, currentItem);
 			}
 			sources.swap(currentRow, currentRow+1);
-			tableWidget->setCurrentIndex(tableWidget->model()->index(currentRow+1, 0));
+			setCurrentIndex(model()->index(currentRow+1, 0));
 			if (currentRow == track) {
 				track++;
 			}
@@ -223,8 +257,22 @@ void Playlist::moveTrackDown()
 /** Retranslate header columns. */
 void Playlist::retranslateUi()
 {
-	for (int i=0; i < tableWidget->columnCount(); i++) {
-		QTableWidgetItem *headerItem = tableWidget->horizontalHeaderItem(i);
-		headerItem->setText(tr(headerItem->data(Qt::UserRole+1).toString().toStdString().data()));
+	for (int i=0; i < columnCount(); i++) {
+		QTableWidgetItem *headerItem = horizontalHeaderItem(i);
+		const QString text = tr(headerItem->data(Qt::UserRole+1).toString().toStdString().data());
+		headerItem->setText(text);
+		columns->actions().at(i)->setText(text);
 	}
+}
+
+void Playlist::resizeEvent(QResizeEvent *event)
+{
+	/// TODO auto resize
+	//int width = size().width();
+	//qDebug() << width();
+	//for(int c = 0; c < columnCount(); c++) {
+
+	//}
+	//setColumnWidth(getIndex(COLUMN_TRACK_NUMBER), 200);
+	QTableWidget::resizeEvent(event);
 }

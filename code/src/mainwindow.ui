@@ -126,11 +126,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="TabPlaylist" name="tabPlaylists">
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-         </widget>
+         <widget class="TabPlaylist" name="tabPlaylists"/>
         </item>
         <item>
          <widget class="Phonon::SeekSlider" name="seekSlider" native="true"/>

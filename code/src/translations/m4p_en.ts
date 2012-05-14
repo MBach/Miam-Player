@@ -197,6 +197,22 @@
         <source>Open playlist manager...</source>
         <translation>Open playlist manager...</translation>
     </message>
+    <message>
+        <source>Playback options</source>
+        <translation>Playback options</translation>
+    </message>
+    <message>
+        <source>Seek time (forward or backward)</source>
+        <translation>Seek time (forward or backward)</translation>
+    </message>
+    <message>
+        <source>Playlists</source>
+        <translation>Playlists</translation>
+    </message>
+    <message>
+        <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
+        <translation>Would you like to keep your playlists in memory before exiting and restore them later?</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -394,10 +410,6 @@
         <translation>Madame MiamMiam&apos;s Music Player</translation>
     </message>
     <message>
-        <source>Playlist </source>
-        <translation>Playlist </translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Library</translation>
     </message>
@@ -572,6 +584,18 @@
         <source>Length</source>
         <translation>Length</translation>
     </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artist</translation>
+    </message>
+    <message>
+        <source>Rating</source>
+        <translation>Rating</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Year</translation>
+    </message>
 </context>
 <context>
     <name>ShortcutLineEdit</name>
@@ -656,6 +680,29 @@
     <message>
         <source>Error opening files</source>
         <translation>Error opening files</translation>
+    </message>
+    <message>
+        <source>Playlist </source>
+        <translation>Playlist </translation>
+    </message>
+</context>
+<context>
+    <name>TracksNotFoundMessageBox</name>
+    <message>
+        <source>The following track in your last playlists couldn&apos;t be found. It has probably moved to another location.</source>
+        <translation>The following track in your last playlists couldn&apos;t be found. It has probably moved to another location.</translation>
+    </message>
+    <message>
+        <source>The following tracks in your last playlists couldn&apos;t be found. They have probably moved to another location.</source>
+        <translation>The following tracks in your last playlists couldn&apos;t be found. They have probably moved to another location.</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <source>More tracks were not found.</source>
+        <translation>More tracks were not found.</translation>
     </message>
 </context>
 </TS>

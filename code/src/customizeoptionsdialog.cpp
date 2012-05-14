@@ -15,6 +15,32 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDialog(parent), musicLocationsChanged(false)
 {
 	setupUi(this);
+	Settings *settings = Settings::getInstance();
+
+	// First panel: library
+	connect(radioButtonActivateDelegates, SIGNAL(toggled(bool)), settings, SLOT(setDelegates(bool)));
+	connect(pushButtonAddLocation, SIGNAL(clicked()), this, SLOT(openLibraryDialog()));
+	connect(pushButtonDeleteLocation, SIGNAL(clicked()), this, SLOT(deleteSelectedLocation()));
+
+	if (settings->isStarDelegates()) {
+		radioButtonActivateDelegates->setChecked(true);
+	} else {
+		radioButtonDesactivateDelegates->setChecked(true);
+	}
+
+	QList<QVariant> locations = settings->musicLocations();
+	if (locations.isEmpty()) {
+		listWidgetMusicLocations->addItem(new QListWidgetItem("Add some music locations here"));
+	} else {
+		for (int i=0; i<locations.count(); i++) {
+			QString convertedPath = QDir::toNativeSeparators(locations.at(i).toString());
+			listWidgetMusicLocations->addItem(new QListWidgetItem(convertedPath));
+		}
+		pushButtonDeleteLocation->setEnabled(true);
+	}
+
+	// Second panel: languages
+	connect(listViewLanguages, SIGNAL(clicked(QModelIndex)), this, SLOT(changeLanguage(QModelIndex)));
 
 	QStandardItemModel *languageModel = new QStandardItemModel(this);
 	listViewLanguages->setModel(languageModel);
@@ -24,7 +50,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	QDir dir(":/languages");
 	QStringList fileNames = dir.entryList();
-	Settings *settings = Settings::getInstance();
 	foreach (QString i, fileNames) {
 
 		// If the language is available, then store it
@@ -46,38 +71,21 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		}
 	}
 
-	QList<QVariant> locations = settings->musicLocations();
-	if (locations.isEmpty()) {
-		listWidgetMusicLocations->addItem(new QListWidgetItem("Add some music locations here"));
-	} else {
-		for (int i=0; i<locations.count(); i++) {
-			QString convertedPath = QDir::toNativeSeparators(locations.at(i).toString());
-			listWidgetMusicLocations->addItem(new QListWidgetItem(convertedPath));
-		}
-		pushButtonDeleteLocation->setEnabled(true);
-	}
-
-	if (settings->isStarDelegates()) {
-		radioButtonActivateDelegates->setChecked(true);
-	} else {
-		radioButtonDesactivateDelegates->setChecked(true);
-	}
-
-	// First panel: library
-	connect(radioButtonActivateDelegates, SIGNAL(toggled(bool)), settings, SLOT(setDelegates(bool)));
-	connect(pushButtonAddLocation, SIGNAL(clicked()), this, SLOT(openLibraryDialog()));
-	connect(pushButtonDeleteLocation, SIGNAL(clicked()), this, SLOT(deleteSelectedLocation()));
-
-	// Second panel: languages
-	connect(listViewLanguages, SIGNAL(clicked(QModelIndex)), this, SLOT(changeLanguage(QModelIndex)));
-
 	// Third panel: shorcuts
 	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
 		connect(shortcutWidget, SIGNAL(shortcutChanged(ShortcutWidget *, int)), this, SLOT(checkShortcut(ShortcutWidget *, int)));
 	}
 
 	// Fourth panel: playback
-	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlayBackSeekTime(int)));
+	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
+	connect(radioButtonKeepPlaylists, SIGNAL(toggled(bool)), settings, SLOT(setPlaybackKeepPlaylists(bool)));
+
+	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
+	if (settings->playbackKeepPlaylists()) {
+		radioButtonKeepPlaylists->setChecked(true);
+	} else {
+		radioButtonClearPlaylists->setChecked(true);
+	}
 
 	// Load the language of the application
 	QString lang = languages.value(Settings::getInstance()->language());

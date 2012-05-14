@@ -67,9 +67,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	// When the scan is complete, save the model in the filesystem
 	connect(musicSearchEngine, SIGNAL(finished()), libraryModel, SLOT(saveToFile()));
 
-	//TEST
-	connect(proxyModel, SIGNAL(aboutToExpand(QModelIndex)), this, SLOT(expandTreeView(QModelIndex)));
-
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
 }
@@ -194,11 +191,6 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 			collapseAll();
 			sortByColumn(0, Qt::AscendingOrder);
 		}
-		/*if (filter.length() == 1) {
-			//expandToDepth(0);
-		} else {
-			//expandAll();
-		}*/
 	} else {
 		proxyModel->setFilterRegExp(QRegExp());
 		collapseAll();
@@ -254,15 +246,16 @@ void LibraryTreeView::setCoverSize(int newSize)
 	bool coversNeedToBeReloaded = true;
 
 	// Increase buffer or not
+	static const short buffer = 128;
 	if (newSize < bufferedCoverSize) {
-		if (newSize + 128 < bufferedCoverSize) {
-			bufferedCoverSize -= 128;
+		if (newSize + buffer < bufferedCoverSize) {
+			bufferedCoverSize -= buffer;
 			settings->setBufferedCoverSize(bufferedCoverSize);
 		} else {
 			coversNeedToBeReloaded = false;
 		}
 	} else if (oldSize <= newSize) {
-		bufferedCoverSize += 128;
+		bufferedCoverSize += buffer;
 		settings->setBufferedCoverSize(bufferedCoverSize);
 	}
 

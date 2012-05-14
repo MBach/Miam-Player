@@ -92,7 +92,8 @@ public:
 	const QString customIcon(MediaButton *, bool toggled = false) const;
 
 	/// PlayBack options
-	qint64 playBackSeekTime() const;
+	qint64 playbackSeekTime() const;
+	bool playbackKeepPlaylists() const;
 
 signals:
 	void currentFontChanged();
@@ -139,7 +140,9 @@ public slots:
 
 	inline void setShufflePlayBack(bool b) { setValue("shufflePlayBack", b); }
 
-	inline void setPlayBackSeekTime(int t) { setValue("playBackSeekTime", t*1000); }
+	/// PlayBack options
+	inline void setPlaybackSeekTime(int t) { setValue("playbackSeekTime", t*1000); }
+	inline void setPlaybackKeepPlaylists(bool b) { setValue("playbackKeepPlaylists", b); }
 };
 
 #endif // SETTINGS_H
