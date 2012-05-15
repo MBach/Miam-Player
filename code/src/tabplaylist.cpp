@@ -4,14 +4,14 @@
 
 #include <QApplication>
 
+#include "tabbar.h"
+
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent)
 {
+	this->setTabBar(new TabBar(this));
 	this->setDocumentMode(true);
-	this->setTabsClosable(true);
-	this->tabBar()->addTab(QIcon(":/icons/plusIcon"), QString());
-	this->tabBar()->setTabButton(count()-1, QTabBar::RightSide, 0);
 	messageBox = new TracksNotFoundMessageBox(this);
 
 	// Init Phonon Module

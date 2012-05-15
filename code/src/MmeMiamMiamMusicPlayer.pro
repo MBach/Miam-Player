@@ -31,7 +31,8 @@ SOURCES += \
     filesystemmodel.cpp \
     shortcutlineedit.cpp \
     shortcutwidget.cpp \
-    tracksnotfoundmessagebox.cpp
+    tracksnotfoundmessagebox.cpp \
+    tabbar.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -54,7 +55,8 @@ HEADERS += \
     filesystemmodel.h \
     shortcutlineedit.h \
     shortcutwidget.h \
-    tracksnotfoundmessagebox.h
+    tracksnotfoundmessagebox.h \
+    tabbar.h
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \
