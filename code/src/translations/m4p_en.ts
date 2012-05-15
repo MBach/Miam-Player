@@ -390,13 +390,6 @@
     </message>
 </context>
 <context>
-    <name>LibraryFilterLineEdit</name>
-    <message>
-        <source>Search...</source>
-        <translation>Search...</translation>
-    </message>
-</context>
-<context>
     <name>LibraryModel</name>
     <message>
         <source> Various</source>

@@ -42,13 +42,10 @@
           <widget class="LibraryFilterLineEdit" name="searchBar">
            <property name="font">
             <font>
-             <italic>true</italic>
+             <italic>false</italic>
             </font>
            </property>
-           <property name="inputMask">
-            <string/>
-           </property>
-           <property name="text">
+           <property name="placeholderText">
             <string>Search...</string>
            </property>
           </widget>

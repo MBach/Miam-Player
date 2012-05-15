@@ -3,11 +3,8 @@
 #include "mainwindow.h"
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-    QLineEdit(parent)
+	QLineEdit(parent)
 {
-	defaultSearchText = tr("Search...");
-	setText(defaultSearchText);
-
 	QPixmap pixmap(":/config/closeButton");
 	clearButton = new QToolButton(this);
 	clearButton->setIcon(QIcon(pixmap));
@@ -28,34 +25,6 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	updateClearButtonStatus();
 }
 
-/** Reimplemented from QLineEdit::focusInEvent(). */
-void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)
-{
-	// This block is useful when a new tranlator is installed (= the language is not EN anymore).
-	if (text() == tr(defaultSearchText.toStdString().data())) {
-		defaultSearchText = tr(defaultSearchText.toStdString().data());
-	}
-	if (text() == defaultSearchText) {
-		QLineEdit::clear();
-		QFont oldFont = font();
-		oldFont.setItalic(false);
-		setFont(oldFont);
-	}
-	QLineEdit::focusInEvent(event);
-}
-
-/** Reimplemented from QLineEdit::focusOutEvent(). */
-void LibraryFilterLineEdit::focusOutEvent(QFocusEvent *event)
-{
-	if (text().isEmpty()) {
-		QFont oldFont = font();
-		oldFont.setItalic(true);
-		setFont(oldFont);
-		setText(defaultSearchText);
-	}
-	QLineEdit::focusOutEvent(event);
-}
-
 /** Keep the clear button on the right. */
 void LibraryFilterLineEdit::resizeEvent(QResizeEvent *)
 {
@@ -69,11 +38,6 @@ void LibraryFilterLineEdit::resizeEvent(QResizeEvent *)
 void LibraryFilterLineEdit::clear()
 {
 	QLineEdit::clear();
-	QFont oldFont = font();
-	oldFont.setItalic(true);
-	setFont(oldFont);
-	setText(defaultSearchText);
-
 	// Explicit call to remove filter in the library (not emitted with setText())
 	emit textEdited(0);
 	clearFocus();
@@ -82,5 +46,5 @@ void LibraryFilterLineEdit::clear()
 /** Show or hide the clear button. */
 void LibraryFilterLineEdit::updateClearButtonStatus(const QString& searchText)
 {
-	clearButton->setHidden(searchText.isEmpty() || this->text() == tr("Search..."));
+	clearButton->setHidden(searchText.isEmpty());
 }
