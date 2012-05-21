@@ -35,6 +35,7 @@ Playlist::Playlist(QWidget *parent) :
 	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setMovable(true);
 
+
 	// Context menu on header of columns
 	QList<QAction*> actionColumns;
 	columns = new QMenu(this);
