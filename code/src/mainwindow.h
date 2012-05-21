@@ -6,6 +6,7 @@
 
 #include "ui_mainwindow.h"
 #include "customizeoptionsdialog.h"
+#include "playlistmanager.h"
 #include "librarytreeview.h"
 #include "settings.h"
 #include "mediabutton.h"
@@ -28,6 +29,7 @@ public:
 private:
 	CustomizeThemeDialog *customizeThemeDialog;
 	CustomizeOptionsDialog *customizeOptionsDialog;
+	PlaylistManager *playlistManager;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

@@ -33,7 +33,7 @@ public:
 	void clear();
 
 	/** Add a track to this Playlist instance. */
-	void append(MediaSource m);
+	void append(const MediaSource &m);
 
 	/** Retranslate header columns. */
 	void retranslateUi();
@@ -41,9 +41,13 @@ public:
 protected:
 	void resizeEvent(QResizeEvent *event);
 
+	void showEvent(QShowEvent *event);
+
 private:
 	/** Convert time in seconds into "mm:ss" format. */
 	QString convertTrackLength(int length);
+
+	void resizeColumns();
 
 private slots:
 	/** Display a context menu with the state of all columns. */

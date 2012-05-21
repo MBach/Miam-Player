@@ -1,11 +1,9 @@
 #include "playlist.h"
 
 #include <QApplication>
-#include <QHBoxLayout>
 #include <QHeaderView>
-#include <QTableWidget>
+#include <QScrollBar>
 #include <QTime>
-#include <QWidgetItem>
 
 #include <fileref.h>
 #include <tag.h>
@@ -15,23 +13,27 @@
 Playlist::Playlist(QWidget *parent) :
 	QTableWidget(parent), track(-1)
 {
+	// Initialize values for the Header (label and horizontal resize mode)
 	QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
-	QStringList untranslatedLabels = (QStringList() << "#" << "Title" << "Album" << "Length" << "Artist" << "Rating" << "Year");
+	const QStringList untranslatedLabels = (QStringList() << "#" << "Title" << "Album" << "Length" << "Artist" << "Rating" << "Year");
+	// Test: 0 = Fixed, n>0 = real ratio for each column
+	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+
 	this->setColumnCount(labels.size());
-	this->setColumnWidth(0, 30);
-	this->setColumnWidth(1, 150);
-	this->setColumnWidth(2, 150);
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
+	this->setShowGrid(false);
+	Settings *settings = Settings::getInstance();
+	this->setAlternatingRowColors(settings->colorsAlternateBG());
 
 	// Select only one row, not cell by cell
 	this->setSelectionMode(QAbstractItemView::SingleSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 
 	verticalHeader()->setVisible(false);
-	horizontalHeader()->setMovable(true);
-	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
+	horizontalHeader()->setHighlightSections(false);
+	horizontalHeader()->setMovable(true);
 
 	// Context menu on header of columns
 	QList<QAction*> actionColumns;
@@ -42,7 +44,9 @@ Playlist::Playlist(QWidget *parent) :
 		QTableWidgetItem *item = new QTableWidgetItem(label);
 
 		// Stores original text to switch between translations on the fly
+		// Might evolve latter, start to be "unreadable"
 		item->setData(Qt::UserRole+1, untranslatedLabels.at(i));
+		item->setData(Qt::UserRole+2, ratios.at(i));
 		this->setHorizontalHeaderItem(i, item);
 
 		// Match actions with columns using index of labels
@@ -58,17 +62,16 @@ Playlist::Playlist(QWidget *parent) :
 	}
 
 	// Load columns state
-	Settings *settings = Settings::getInstance();
 	QByteArray state = settings->value("playlistColumnsState").toByteArray();
 	if (!state.isEmpty()) {
 		horizontalHeader()->restoreState(state);
-
 		for (int i = 0; i < horizontalHeader()->count(); i++) {
 			bool hidden = horizontalHeader()->isSectionHidden(i);
 			setColumnHidden(i, hidden);
 			columns->actions().at(i)->setChecked(!hidden);
 		}
 	}
+	//horizontalHeader()->setResizeMode(QHeaderView::Interactive);
 
 	// Link this playlist with the Settings instance to change fonts at runtime
 	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
@@ -109,16 +112,48 @@ QString Playlist::convertTrackLength(int length)
 	return str;
 }
 
+void Playlist::resizeColumns()
+{
+	int visibleRatio = 0;
+	int resizableArea = size().width() - 4;
+	if (verticalScrollBar()->isVisible()) {
+		resizableArea -= verticalScrollBar()->size().width();
+	}
+	// Resize fixed columns first, and then compute the remaining width
+	for (int c = 0; c < columnCount(); c++) {
+		if (!isColumnHidden(c)) {
+			int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
+			// Fixed column
+			if (ratio == 0) {
+				this->resizeColumnToContents(c);
+				resizableArea -= columnWidth(c) - 1;
+			}
+			visibleRatio += ratio;
+		}
+	}
+	for (int c = 0; c < columnCount(); c++) {
+		int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
+		// Resizable column
+		if (ratio != 0) {
+			int s = resizableArea * ratio / visibleRatio ;
+			if (!isColumnHidden(c)) {
+				this->setColumnWidth(c, s);
+			}
+		}
+	}
+}
+
 /** Add a track to this Playlist instance. */
-void Playlist::append(MediaSource m)
+void Playlist::append(const MediaSource &m)
 {
 	// Resolve metaDatas from TagLib
 	TagLib::FileRef f(m.fileName().toLocal8Bit().data());
 	if (!f.isNull()) {
 		sources.append(m);
-		QString title(f.tag()->title().toCString(false));
+		QString title(f.tag()->title().toCString());
 		if (title.isEmpty()) {
-			title = m.fileName();
+			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
+			title = m.fileName().split('/').last();
 		}
 
 		// Then, construct a new row with correct informations
@@ -146,9 +181,10 @@ void Playlist::append(MediaSource m)
 			setRowHeight(currentRow, fm.height());
 		}
 
-		trackItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignCenter);
-		lengthItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignRight);
-		yearItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignCenter);
+		trackItem->setTextAlignment(Qt::AlignCenter);
+		lengthItem->setTextAlignment(Qt::AlignCenter);
+		ratingItem->setTextAlignment(Qt::AlignCenter);
+		yearItem->setTextAlignment(Qt::AlignCenter);
 	}
 }
 
@@ -156,7 +192,8 @@ void Playlist::append(MediaSource m)
 void Playlist::toggleSelectedColumn(QAction *action)
 {
 	int columnIndex = action->data().toInt();
-	setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
+	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
+	this->resizeColumns();
 	this->saveColumnsState();
 }
 
@@ -246,7 +283,7 @@ void Playlist::moveTrackDown()
 				setItem(currentRow+1, c, currentItem);
 			}
 			sources.swap(currentRow, currentRow+1);
-			setCurrentIndex(model()->index(currentRow+1, 0));
+			this->setCurrentIndex(model()->index(currentRow+1, 0));
 			if (currentRow == track) {
 				track++;
 			}
@@ -267,12 +304,12 @@ void Playlist::retranslateUi()
 
 void Playlist::resizeEvent(QResizeEvent *event)
 {
-	/// TODO auto resize
-	//int width = size().width();
-	//qDebug() << width();
-	//for(int c = 0; c < columnCount(); c++) {
-
-	//}
-	//setColumnWidth(getIndex(COLUMN_TRACK_NUMBER), 200);
+	this->resizeColumns();
 	QTableWidget::resizeEvent(event);
+}
+
+void Playlist::showEvent(QShowEvent *event)
+{
+	this->resizeColumns();
+	QTableWidget::showEvent(event);
 }

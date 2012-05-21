@@ -7,7 +7,8 @@ TEMPLATE = app
 FORMS += \
     mainwindow.ui \
     customizetheme.ui \
-    customizeoptionsdialog.ui
+    customizeoptionsdialog.ui \
+    playlistmanager.ui
 
 SOURCES += \
     main.cpp \
@@ -32,7 +33,8 @@ SOURCES += \
     shortcutlineedit.cpp \
     shortcutwidget.cpp \
     tracksnotfoundmessagebox.cpp \
-    tabbar.cpp
+    tabbar.cpp \
+    playlistmanager.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -56,7 +58,8 @@ HEADERS += \
     shortcutlineedit.h \
     shortcutwidget.h \
     tracksnotfoundmessagebox.h \
-    tabbar.h
+    tabbar.h \
+    playlistmanager.h
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \

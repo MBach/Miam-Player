@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
+	playlistManager = new PlaylistManager(tabPlaylists);
 
 	// Init the audio module
 	audioOutput = new AudioOutput(MusicCategory, this);
@@ -113,6 +114,7 @@ void MainWindow::setupActions()
 	connect(actionRemoveSelectedTrack, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTrack()));
 	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
 	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
+	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
 }
 
 
