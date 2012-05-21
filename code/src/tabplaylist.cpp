@@ -49,23 +49,17 @@ void TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFrom
 	}
 }
 
-/** Convenient getter with cast. */
-Playlist * TabPlaylist::currentPlayList() const
-{
-	Playlist *p = qobject_cast<Playlist *>(this->currentWidget());
-	return p;
-}
-
 /** Retranslate tabs' name and all playlists in this widget. */
 void TabPlaylist::retranslateUi()
 {
 	// No translation for the (+) tab button
 	for (int i=0; i < count()-1; i++) {
-		Playlist *p = qobject_cast<Playlist *>(widget(i));
-		QString playlist = tr("Playlist ");
-		playlist.append(QString::number(i+1));
-		setTabText(i, playlist);
-		p->retranslateUi();
+		QString playlistName = tr("Playlist ");
+		playlistName.append(QString::number(i+1));
+		if (tabText(i) == playlistName) {
+			setTabText(i, playlistName);
+		}
+		playlist(i)->retranslateUi();
 	}
 }
 
@@ -81,18 +75,23 @@ void TabPlaylist::addItemFromLibraryToPlaylist(const QPersistentModelIndex &item
 }
 
 /** Add a new playlist tab. */
-Playlist* TabPlaylist::addPlaylist()
+Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 {
 	// Get the next label for the playlist
-	QString newPlaylistName = QString(tr("Playlist ")).append(QString::number(count()));
-	Playlist *playlist = new Playlist(this);
+	QString newPlaylistName;
+	if (playlistName.isEmpty()) {
+		newPlaylistName = QString(tr("Playlist ")).append(QString::number(count()));
+	} else {
+		newPlaylistName = playlistName;
+	}
 
 	// Then append a new empty playlist to the others
+	Playlist *playlist = new Playlist(this);
 	int i = insertTab(count(), playlist, newPlaylistName);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
-
+	emit created();
 	return playlist;
 }
 
@@ -136,9 +135,10 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		}
 		/// FIXME: when closing a tab which is playing
 		/// call mediaObject->clear() [asynchronous ; see how stateChanged() can delete it safely ]
-		Playlist *p = qobject_cast<Playlist *>(this->widget(index));
+		Playlist *p = playlist(index);
 		this->removeTab(index);
 		delete p;
+		emit destroyed(index);
 	} else {
 		// Clear the content of last tab
 		currentPlayList()->clear();
@@ -153,14 +153,17 @@ void TabPlaylist::restorePlaylists()
 		QList<QVariant> playlists = settings->value("playlists").toList();
 		if (!playlists.isEmpty()) {
 			QStringList tracksNotFound;
-			foreach(QVariant playlist, playlists) {
-				Playlist *p = this->addPlaylist();
 
-				QList<QVariant> paths = playlist.toList();
-				foreach(QVariant path, paths) {
+			// For all playlists (stored as a pair of { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] }
+			for (int i = 0; i < playlists.size(); i++) {
+				QList<QVariant> vTracks = playlists.at(i++).toList();
+				Playlist *p = this->addPlaylist(playlists.at(i).toString());
+
+				// For all tracks in one playlist
+				foreach(QVariant vTrack, vTracks) {
 
 					// Check if the file is still on the disk before appending
-					QString track = path.toString();
+					QString track = vTrack.toString();
 					if (QFile::exists(track)) {
 						p->append(MediaSource(track));
 					} else {
@@ -237,10 +240,9 @@ void TabPlaylist::savePlaylists()
 	Settings *settings = Settings::getInstance();
 	if (settings->playbackKeepPlaylists()) {
 		QList<QVariant> vPlaylists;
-		// Iterate on all playlists, except the last one (the (+) button) and empty ones
+		// Iterate on all playlists, except empty ones and the last one (the (+) button)
 		for (int i = 0; i < count() - 1; i++) {
-			Playlist *p = qobject_cast<Playlist*>(widget(i));
-
+			Playlist *p = playlist(i);
 			QListIterator<MediaSource> tracks(p->tracks());
 			QList<QVariant> vTracks;
 			while (tracks.hasNext()) {
@@ -248,6 +250,7 @@ void TabPlaylist::savePlaylists()
 			}
 			if (!vTracks.isEmpty()) {
 				vPlaylists.append(QVariant(vTracks));
+				vPlaylists.append(QVariant(tabBar()->tabText(i)));
 			}
 		}
 		// Tracks are stored in QList< QList<QVariant> >
@@ -285,7 +288,7 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 
 	case StoppedState:
 		if (oldState == LoadingState) {
-			// Play media only if one has not removed the playlist meanwhile, otherwise, delete playlist
+			// Play media only if one has not removed the playlist meanwhile, otherwise,  playlist
 			if (currentPlayList() && currentPlayList()->tracks().isEmpty()) {
 				/// todo clear mediaObject!
 				qDebug() << "delete playlist";

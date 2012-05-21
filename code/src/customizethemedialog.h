@@ -1,10 +1,12 @@
 #ifndef CUSTOMIZETHEMEDIALOG_H
 #define CUSTOMIZETHEMEDIALOG_H
 
+#include <QColorDialog>
 #include <QDialog>
 
 #include "ui_customizetheme.h"
 #include "mainwindow.h"
+
 
 class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 {
@@ -12,6 +14,10 @@ class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 
 private:
 	MainWindow *mainWindow;
+
+	QColorDialog *colorDialog;
+
+	QWidget *targetedColor;
 
 public:
 	CustomizeThemeDialog(QWidget *parent);
@@ -26,6 +32,10 @@ public slots:
 
 private slots:
 	void openChooseIconDialog();
+
+	void showColorDialog();
+
+	void changeColor();
 
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);

@@ -29,17 +29,20 @@ public:
 	/** Add a track from the filesystem (not the library) to the current playlist. */
 	void addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary);
 
+	/** Get the current playlist. */
+	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
+
 	MediaObject *media() const { return this->mediaObject; }
 
-	/** Convenient getter with cast. */
-	Playlist *currentPlayList() const;
+	/** Get the playlist at index. */
+	Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
 
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
 
 public slots:
 	/** Add a new playlist tab. */
-	Playlist* addPlaylist();
+	Playlist* addPlaylist(const QString &playlistName = QString());
 
 	/** Add tracks chosen by one from the library into the active playlist. */
 	void addItemFromLibraryToPlaylist(const QPersistentModelIndex &item);
@@ -73,6 +76,9 @@ public slots:
 
 signals:
 	void iconStatusChanged(State);
+
+	void destroyed(int);
+	void created();
 
 private slots:
 	/** Save playlists before exit. */

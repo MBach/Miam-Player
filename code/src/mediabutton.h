@@ -17,11 +17,11 @@ public:
 
 	/** Redefined to set shortcuts from settings at startup. */
 	void setObjectName(const QString &);
-	
+
 signals:
 	/** Hide or show buttons from options. */
 	void visibilityChanged(MediaButton *b, bool visible);
-	
+
 public slots:
 	/** Load an icon from a chosen theme in options. */
 	void setIconFromTheme(const QString &);
@@ -31,6 +31,9 @@ public slots:
 
 	/** Override the QPushButton slot to add a write/read QSetting system. */
 	void setVisible(bool visible);
+
+	/** "Slot-wrapping" to be able to call the setter. */
+	inline void makeFlat(bool b) { this->setFlat(b); }
 };
 
 #endif // MEDIABUTTON_H

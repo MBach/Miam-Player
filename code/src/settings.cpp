@@ -23,13 +23,23 @@ QString Settings::theme() const
 }
 
 /** Return the actual size of media buttons. */
-int Settings::buttonSize() const
+int Settings::buttonsSize() const
 {
-	int s = value("buttonSize").toInt();
+	int s = value("buttonsSize").toInt();
 	if (s == 0) {
 		return 20;
 	} else {
 		return s;
+	}
+}
+
+bool Settings::buttonsFlat() const
+{
+	QVariant ok = value("buttonsFlat");
+	if (ok.isValid()) {
+		return ok.toBool();
+	} else {
+		return false;
 	}
 }
 
@@ -186,6 +196,7 @@ const QString Settings::customIcon(MediaButton *b, bool toggled) const
 	}
 }
 
+/// PlayBack options
 qint64 Settings::playbackSeekTime() const
 {
 	qint64 t = value("playbackSeekTime").toLongLong();
@@ -199,6 +210,17 @@ qint64 Settings::playbackSeekTime() const
 bool Settings::playbackKeepPlaylists() const
 {
 	QVariant b = value("playbackKeepPlaylists");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
+/// Colors
+bool Settings::colorsAlternateBG() const
+{
+	QVariant b = value("colorsAlternateBG");
 	if (b.isValid()) {
 		return b.toBool();
 	} else {

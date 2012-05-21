@@ -13,7 +13,8 @@ TabBar::TabBar(QWidget *parent) :
 
 	lineEdit = new QLineEdit(this);
 	lineEdit->setVisible(false);
-	lineEdit->setAlignment(Qt::AlignHCenter);
+	lineEdit->setAlignment(Qt::AlignCenter);
+	lineEdit->setFrame(false);
 	lineEdit->installEventFilter(this);
 
 	connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(renameTab()));
@@ -41,8 +42,8 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 	int c = currentIndex();
 	if (-1 < tabIndex && tabIndex < count()-1 && c == tabIndex) {
 		QRect visualRect = tabRect(tabIndex);
-		visualRect.setLeft(visualRect.left() + 10);
-		visualRect.setRight(visualRect.right() - 10);
+		visualRect.setLeft(visualRect.left() + 1);
+		visualRect.setRight(visualRect.right() - 1);
 		visualRect.setTop(visualRect.top() + 1);
 
 		// Disable close buttons in case of unfortunate click
@@ -67,7 +68,7 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 void TabBar::mousePressEvent(QMouseEvent *event)
 {
 	int tabIndex = tabAt(event->pos());
-	if (currentIndex() != tabIndex && lineEdit->isVisible()) {
+	if (lineEdit->isVisible() && ((currentIndex() != tabIndex && lineEdit->isVisible()) || !lineEdit->geometry().contains(event->pos()))) {
 		lineEdit->close();
 	} else {
 		QTabBar::mousePressEvent(event);

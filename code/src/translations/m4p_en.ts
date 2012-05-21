@@ -345,10 +345,6 @@
         <translation>Show alphabetical separators</translation>
     </message>
     <message>
-        <source>In a future release</source>
-        <translation>In a future release</translation>
-    </message>
-    <message>
         <source>Repeat</source>
         <translation>Repeat</translation>
     </message>
@@ -385,8 +381,48 @@
         <translation>Should I use them ?</translation>
     </message>
     <message>
-        <source>Note : an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
-        <translation>Note : an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</translation>
+        <source>Make buttons flat</source>
+        <translation>Make buttons flat</translation>
+    </message>
+    <message>
+        <source>Would you like to alternate colors in playlists?</source>
+        <translation>Would you like to alternate colors in playlists?</translation>
+    </message>
+    <message>
+        <source>Items</source>
+        <translation>Items</translation>
+    </message>
+    <message>
+        <source>Background (primary)</source>
+        <translation>Background (primary)</translation>
+    </message>
+    <message>
+        <source>Group elements</source>
+        <translation>Group elements</translation>
+    </message>
+    <message>
+        <source>Would you like to associate displayed elements as a group ?</source>
+        <translation>Would you like to associate displayed elements as a group ?</translation>
+    </message>
+    <message>
+        <source>It is not possible to customize elements separately in this release</source>
+        <translation>It is not possible to customize elements separately in this release</translation>
+    </message>
+    <message>
+        <source>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</source>
+        <translation>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</translation>
+    </message>
+    <message>
+        <source>Alternative colors</source>
+        <translation>Alternative colors</translation>
+    </message>
+    <message>
+        <source>Background (alternate)</source>
+        <translation>Background (alternate)</translation>
+    </message>
+    <message>
+        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
+        <translation>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</translation>
     </message>
 </context>
 <context>
@@ -588,6 +624,33 @@
     <message>
         <source>Year</source>
         <translation>Year</translation>
+    </message>
+</context>
+<context>
+    <name>PlaylistManager</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation>Playlist Manager</translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation>Unsaved Playlists</translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation>Saved playlists</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation>Load</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Delete</translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation>Preview playlist</translation>
     </message>
 </context>
 <context>

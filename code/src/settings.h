@@ -33,8 +33,10 @@ public:
 	/** Returns the actual theme name. */
 	QString theme() const;
 
+	/// Buttons
 	/** Returns the actual size of media buttons. */
-	int buttonSize() const;
+	int buttonsSize() const;
+	bool buttonsFlat() const;
 
 	/** Returns true if the button in parameter is visible or not. */
 	bool isVisible(MediaButton *b) const;
@@ -95,6 +97,9 @@ public:
 	qint64 playbackSeekTime() const;
 	bool playbackKeepPlaylists() const;
 
+	/// Colors
+	bool colorsAlternateBG() const;
+
 signals:
 	void currentFontChanged();
 
@@ -103,7 +108,8 @@ public slots:
 	inline void setThemeName(const QString &theme) { setValue("theme", theme.toLower()); }
 
 	/** Sets a new button size. */
-	inline void setButtonSize(const int &s) { setValue("buttonSize", s); }
+	inline void setButtonsSize(const int &s) { setValue("buttonsSize", s); }
+	inline void setButtonsFlat(bool b) { setValue("buttonsFlat", b); }
 
 	/** Sets if the button in parameter is visible or not. */
 	void setVisible(MediaButton *b, const bool &value);
@@ -143,6 +149,9 @@ public slots:
 	/// PlayBack options
 	inline void setPlaybackSeekTime(int t) { setValue("playbackSeekTime", t*1000); }
 	inline void setPlaybackKeepPlaylists(bool b) { setValue("playbackKeepPlaylists", b); }
+
+	/// Colors
+	inline void setColorsAlternateBG(bool b) { setValue("colorsAlternateBG", b); }
 };
 
 #endif // SETTINGS_H

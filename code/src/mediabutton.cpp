@@ -5,7 +5,7 @@
 MediaButton::MediaButton(QWidget *parent) :
 	QPushButton(parent)
 {
-
+	this->setFlat(Settings::getInstance()->buttonsFlat());
 }
 
 /** Redefined to load custom icons saved in settings. */

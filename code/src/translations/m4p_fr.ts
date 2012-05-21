@@ -345,10 +345,6 @@
         <translation>Afficher les séparateurs alphabétiques</translation>
     </message>
     <message>
-        <source>In a future release</source>
-        <translation>Dans une prochaine version</translation>
-    </message>
-    <message>
         <source>Repeat</source>
         <translation>Répéter</translation>
     </message>
@@ -385,7 +381,47 @@
         <translation>Devrais-je les utiliser ?</translation>
     </message>
     <message>
-        <source>Note : an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
+        <source>Make buttons flat</source>
+        <translation>Rendre les boutons plats</translation>
+    </message>
+    <message>
+        <source>Would you like to alternate colors in playlists?</source>
+        <translation>Voulez-vous alterner les couleurs dans les listes de lectures ?</translation>
+    </message>
+    <message>
+        <source>Items</source>
+        <translation>Éléments</translation>
+    </message>
+    <message>
+        <source>Background (primary)</source>
+        <translation>Fond (principal)</translation>
+    </message>
+    <message>
+        <source>Group elements</source>
+        <translation>Grouper les éléments</translation>
+    </message>
+    <message>
+        <source>Would you like to associate displayed elements as a group ?</source>
+        <translation>Voulez-vous associer les éléments affichés et ne former qu&apos;un seul groupe ?</translation>
+    </message>
+    <message>
+        <source>It is not possible to customize elements separately in this release</source>
+        <translation>Il n&apos;est pas possible de personnaliser séparément chaque élément dans cette version</translation>
+    </message>
+    <message>
+        <source>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</source>
+        <translation>Note : il est hautement recommandé de garder cette option à &apos;Oui&apos; parce qu&apos;il est très difficile de concevoir un thème attirant et cohérent.</translation>
+    </message>
+    <message>
+        <source>Alternative colors</source>
+        <translation>Couleurs alternées</translation>
+    </message>
+    <message>
+        <source>Background (alternate)</source>
+        <translation>Fond (alterné)</translation>
+    </message>
+    <message>
+        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
         <translation>Note : une pochette interne est une image dans votre fichier musical. Vous pouvez parfois l&apos;apercevoir en tant que miniature dans un explorateur de fichiers.</translation>
     </message>
 </context>
@@ -589,6 +625,33 @@
     <message>
         <source>Year</source>
         <translation>Année</translation>
+    </message>
+</context>
+<context>
+    <name>PlaylistManager</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation>Gestionnaire de liste de lecture</translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation>Listes de lecture non sauvegardées</translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation>Listes de lectures enregistrées</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation>Charger</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation>Aperçu de la liste de lecture</translation>
     </message>
 </context>
 <context>

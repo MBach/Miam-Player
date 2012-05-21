@@ -4,11 +4,13 @@
 #include <QFileDialog>
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
-	QDialog(parent)
+	QDialog(parent), targetedColor(NULL)
 {
 	setupUi(this);
 
 	mainWindow = qobject_cast<MainWindow *>(parent);
+	colorDialog = new QColorDialog(this);
+	colorDialog->setOptions(QColorDialog::ShowAlphaChannel);
 	buttonsListBox->setVisible(false);
 
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
@@ -19,7 +21,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	// Select button theme and size
 	Settings *settings = Settings::getInstance();
 	connect(themeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setThemeNameAndDialogButtons(QString)));
-	connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setButtonSize(int)));
+	connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setButtonsSize(int)));
 
 	// Hide buttons or not
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
@@ -32,7 +34,11 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 		// Connect a file dialog to every button if one wants to customize everything
 		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
 		connect(pushButton, SIGNAL(clicked()), this, SLOT(openChooseIconDialog()));
+
+		connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), b, SLOT(makeFlat(bool)));
 	}
+	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
+
 
 	// Fonts
 	connect(fontComboBoxPlaylist, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontFamily(QFont)));
@@ -42,6 +48,14 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	connect(spinBoxLibrary, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 	connect(spinBoxMenus, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 
+	// Colors
+	connect(enableAlternateBGRadioButton, SIGNAL(toggled(bool)), settings, SLOT(setColorsAlternateBG(bool)));
+	connect(enableAlternateBGRadioButton, SIGNAL(toggled(bool)), this, SLOT(changeColor()));
+	foreach (QToolButton *b, tabWidgetColors->findChildren<QToolButton*>()) {
+		connect(b, SIGNAL(clicked()), this, SLOT(showColorDialog()));
+		connect(colorDialog, SIGNAL(accepted()), this, SLOT(changeColor()));
+	}
+
 	// Library
 	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(displayAlphabeticalSeparators(bool)));
 	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), this, SLOT(displayCovers(bool)));
@@ -50,11 +64,60 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	this->loadTheme();
 }
 
+void CustomizeThemeDialog::showColorDialog()
+{
+	targetedColor = tabWidgetColors->findChild<QWidget*>(sender()->objectName().replace("ToolButton", "Widget"));
+	if (targetedColor) {
+		colorDialog->show();
+		this->hide();
+	}
+}
+
+// Make some sublclasses in a strategy pattern and execute something like this
+// targetedColor->updateAssociatedElements();
+// Below is just the first proof-of-concept working code
+void CustomizeThemeDialog::changeColor()
+{
+	if (targetedColor) {
+		QColor selectedColor = colorDialog->currentColor();
+		targetedColor->setStyleSheet("QWidget{ border: 1px solid black; background-color: " + selectedColor.name() + ";} ");
+		// Playlists
+		if (targetedColor == bgPrimaryColorWidget) {
+			selectedColor = selectedColor.toHsv();
+			QColor alternateColor;
+			if (selectedColor.value() > 9) {
+				alternateColor.setHsv(selectedColor.hue(), selectedColor.saturation(), selectedColor.value() - 9);
+			} else {
+				alternateColor.setHsv(selectedColor.hue(), selectedColor.saturation(), selectedColor.value() + 9);
+			}
+			QList<Playlist*> playlists = mainWindow->findChildren<Playlist*>();
+			QString styleSheet;
+
+			foreach(Playlist *playlist, playlists) {
+				bool b = Settings::getInstance()->colorsAlternateBG();
+				if (b) {
+					styleSheet = "background-color: " + selectedColor.name() + "; alternate-background-color: " + alternateColor.name() + ';';
+				} else {
+					styleSheet = "background-color: " + selectedColor.name() + ';';
+				}
+				playlist->setAlternatingRowColors(b);
+				playlist->setStyleSheet(styleSheet);
+				styleSheet = "::section { background-color: " + selectedColor.name() + "; }";
+				playlist->horizontalHeader()->setStyleSheet(styleSheet);
+			}
+		} else if (targetedColor == itemColorWidget) {
+			qDebug() << "todo";
+		}
+		this->show();
+	}
+}
+
 /** Load theme at startup. */
 void CustomizeThemeDialog::loadTheme()
 {
 	Settings *settings = Settings::getInstance();
-	sizeButtonsSpinBox->setValue(settings->buttonSize());
+	sizeButtonsSpinBox->setValue(settings->buttonsSize());
+	flatButtonsCheckBox->setChecked(settings->buttonsFlat());
 
 	// Select the right drop-down item according to the theme
 	int i=0;
