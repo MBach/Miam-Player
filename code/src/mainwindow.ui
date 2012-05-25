@@ -45,26 +45,29 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="LibraryFilterLineEdit" name="searchBar">
-           <property name="styleSheet">
-            <string notr="true">border: 1px solid #d5d5d5; border-radius: 10px; margin-left: 10px; margin: 10px; padding-left: 10px;</string>
+          <widget class="QWidget" name="widgetSearchBar" native="true">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
            </property>
-           <property name="maxLength">
-            <number>100</number>
-           </property>
-           <property name="frame">
-            <bool>true</bool>
-           </property>
-           <property name="placeholderText">
-            <string>Search...</string>
-           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="LibraryFilterLineEdit" name="searchBar">
+              <property name="maxLength">
+               <number>100</number>
+              </property>
+              <property name="placeholderText">
+               <string>Search...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </item>
          <item>
           <widget class="LibraryTreeView" name="library">
-           <property name="styleSheet">
-            <string notr="true">padding: 1px; margin: 0px -1px -1px -1px;</string>
-           </property>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>

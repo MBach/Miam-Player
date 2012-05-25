@@ -18,19 +18,36 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	this->setupActions();
 	this->loadTheme();
 
+	bgPrimaryColorWidget->setKey(StyleSheetUpdater::BACKGROUND);
+	globalBackgroundColorWidget->setKey(StyleSheetUpdater::GLOBAL_BACKGROUND);
+	itemColorWidget->setKey(StyleSheetUpdater::TEXT);
+
 	// Associate instances of Classes to their "preview pane" to dynamically changes colors
 	for (int i = 0; i < mainWindow->tabPlaylists->count(); i++) {
 		Playlist *p = mainWindow->tabPlaylists->playlist(i);
 		if (p != NULL) {
 			bgPrimaryColorWidget->addInstance(p);
+			itemColorWidget->addInstance(p);
 			QHeaderView *v = p->horizontalHeader();
 			if (v != NULL) {
 				bgPrimaryColorWidget->addInstance(v);
+				itemColorWidget->addInstance(v);
 			}
 		}
 	}
+
+	// Quite redondant, no?
 	bgPrimaryColorWidget->addInstance(mainWindow->tabPlaylists);
 	bgPrimaryColorWidget->addInstance(mainWindow->library);
+	bgPrimaryColorWidget->addInstance(mainWindow->widgetSearchBar);
+	bgPrimaryColorWidget->addInstance(mainWindow->leftTabs);
+
+	globalBackgroundColorWidget->addInstance(mainWindow);
+
+	itemColorWidget->addInstance(mainWindow->tabPlaylists);
+	itemColorWidget->addInstance(mainWindow->library);
+	itemColorWidget->addInstance(mainWindow->widgetSearchBar);
+	itemColorWidget->addInstance(mainWindow->leftTabs);
 }
 
 void CustomizeThemeDialog::setupActions()
@@ -113,9 +130,6 @@ void CustomizeThemeDialog::showColorDialog()
 	}
 }
 
-// Make some sublclasses in a strategy pattern and execute something like this
-// targetedColor->updateAssociatedElements();
-// Below is just the first proof-of-concept working code
 void CustomizeThemeDialog::changeColor(QColor selectedColor)
 {
 	if (!selectedColor.isValid()) {
@@ -126,50 +140,9 @@ void CustomizeThemeDialog::changeColor(QColor selectedColor)
 		}
 	}
 
-	if (targetedColor == NULL) {
-		return;
-	}
-	targetedColor->setStyleSheet("border: 1px solid #707070; background-color: " + selectedColor.name() + ';');
-
-	// Playlists
-	if (targetedColor == bgPrimaryColorWidget) {
-		QColor alternateColor;
-		bool b = Settings::getInstance()->colorsAlternateBG();
-		if (b) {
-			selectedColor = selectedColor.toHsv();
-			if (selectedColor.value() > 9) {
-				alternateColor.setHsv(selectedColor.hue(), selectedColor.saturation(), selectedColor.value() - 9);
-			} else {
-				alternateColor.setHsv(selectedColor.hue(), selectedColor.saturation(), selectedColor.value() + 9);
-			}
-		}
-
-		// TabBar (header)
-		styleSheetUpdater->replace(mainWindow->findChild<TabPlaylist*>(), "background-color", selectedColor);
-
-		// Playlists (content)
-		foreach(Playlist *p, mainWindow->findChildren<Playlist*>()) {
-			styleSheetUpdater->replace(p, "background-color", selectedColor);
-			if (b) {
-				styleSheetUpdater->replace(p, "alternate-background-color", alternateColor);
-			}
-			styleSheetUpdater->replace(p->horizontalHeader(), "background-color", selectedColor);
-		}
-
-		// Special case
-		targetedColor->setStyleSheet(targetedColor->styleSheet() + "border-bottom: 0px");
-		//bgAlternateColorWidget->setStyleSheet();
-
-	// Items
-	} else if (targetedColor == itemColorWidget) {
-		// TabBar (header)
-		styleSheetUpdater->replace(mainWindow->findChild<TabPlaylist*>(), "color", selectedColor);
-
-		// Playlists (content)
-		foreach(Playlist *p, mainWindow->findChildren<Playlist*>()) {
-			styleSheetUpdater->replace(p, "color", selectedColor);
-			styleSheetUpdater->replace(p->horizontalHeader(), "color", selectedColor);
-		}
+	if (targetedColor != NULL) {
+		targetedColor->setStyleSheet("border: 1px solid #707070; background-color: " + selectedColor.name() + ';');
+		styleSheetUpdater->replace(targetedColor->associatedInstances(), targetedColor->key(), selectedColor);
 	}
 }
 

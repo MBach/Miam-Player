@@ -1110,9 +1110,6 @@
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="labelGlobalBackground">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string>Global background</string>
             </property>
@@ -1137,9 +1134,6 @@
           </item>
           <item row="3" column="2">
            <widget class="QToolButton" name="globalBackgroundColorToolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string/>
             </property>

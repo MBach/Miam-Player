@@ -10,14 +10,28 @@ class StyleSheetUpdater : public QObject
 {
 	Q_OBJECT
 private:
-	QMap<QString, QRegExp> regExps;
+	Q_ENUMS(Element)
+
+	QMap<int, QRegExp> regExps;
 
 public:
+	enum Element { BACKGROUND,
+				   GLOBAL_BACKGROUND,
+				   TEXT,
+				   LINEAR_GRADIENT,
+				   ALTERNATE_BACKGROUND,
+				   BORDER_BOTTOM
+				 };
+
 	StyleSheetUpdater(QObject *parent = 0);
 
-	void replace(QWidget *target, const QString &key, const QColor &color);
-
 	QPair<QColor, QColor> makeAlternative(const QColor &color);
+
+	void replace(QList<QWidget*> targets, Element key, const QColor &color);
+
+private:
+	/** Dispatch instances and get their correct stylesheet. */
+	void replace(QWidget *target, Element key, const QColor &color);
 };
 
 #endif // STYLESHEETUPDATER_H

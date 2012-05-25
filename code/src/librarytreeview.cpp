@@ -30,22 +30,20 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	Settings *settings = Settings::getInstance();
 
-	//proxyModel->setHeaderData(0, Qt::Horizontal, QVariant("Artists"));
-	QStringList labels("Artists");
-	libraryModel->setHorizontalHeaderLabels(labels);
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
 
-	//QHeaderView *header = new QHeaderView(Qt::Horizontal, this);
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
 	parent->setWindowOpacity(0.5);
+
 	//QWidget *centeredOverlay = new QWidget(this);
 	//centeredOverlay->setBaseSize(this->width(), this->height());
 	//centeredOverlay->setPalette(QPalette(QPalette::WindowText));
 	//centeredOverlay->setAttribute(Qt::WA_NoSystemBackground, false);
 	//centeredOverlay->setBackgroundRole(QPalette::Window);
 	//circleProgressBar = new CircleProgressBar(centeredOverlay);
+
 	circleProgressBar = new CircleProgressBar(this);
 	musicSearchEngine = new MusicSearchEngine(this);
 

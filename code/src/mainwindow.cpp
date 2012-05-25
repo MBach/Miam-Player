@@ -23,7 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
 	this->filesystem->header()->setResizeMode(QHeaderView::ResizeToContents);
+	this->setStyleSheet(settings->styleSheet(this));
 	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
+	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
 
 	FileSystemModel *fileSystemModel = new FileSystemModel(this);
 	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);

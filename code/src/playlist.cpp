@@ -10,8 +10,6 @@
 
 #include "settings.h"
 
-#include "headerview.h"
-
 Playlist::Playlist(QWidget *parent) :
 	QTableWidget(parent), track(-1)
 {
@@ -33,11 +31,12 @@ Playlist::Playlist(QWidget *parent) :
 	this->setSelectionMode(QAbstractItemView::SingleSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-	//test
+	/// test
 	this->setAcceptDrops(true);
 
 	verticalHeader()->setVisible(false);
-	setHorizontalHeader(new HeaderView(Qt::Horizontal, this));
+	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
+	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setMovable(true);
@@ -326,7 +325,7 @@ void Playlist::retranslateUi()
 
 bool Playlist::eventFilter(QObject *watched, QEvent *event)
 {
-	HeaderView *hv = qobject_cast<HeaderView*>(watched);
+	QHeaderView *hv = qobject_cast<QHeaderView*>(watched);
 	if (hv) {
 		qDebug() << "ici" << event->type();
 	}

@@ -1,6 +1,7 @@
 #include "libraryfilterlineedit.h"
 
 #include "mainwindow.h"
+#include "settings.h"
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	QLineEdit(parent)
@@ -13,7 +14,10 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	clearButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");
 
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-	setStyleSheet(QString("QLineEdit { padding-right: %1px; } ").arg(clearButton->sizeHint().width() + frameWidth + 1));
+	QString styleSheet = Settings::getInstance()->styleSheet(this);
+	styleSheet = styleSheet.arg(clearButton->sizeHint().width() + frameWidth + 1);
+	this->setStyleSheet(styleSheet);
+
 	QSize msz = minimumSizeHint();
 	setMinimumSize(qMax(msz.width(), clearButton->sizeHint().height() + frameWidth * 2 + 2),
 				   qMax(msz.height(), clearButton->sizeHint().height() + frameWidth * 2 + 2));

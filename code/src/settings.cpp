@@ -1,10 +1,12 @@
 #include "settings.h"
 
-#include "headerview.h"
 #include "librarytreeview.h"
+#include "libraryfilterlineedit.h"
+#include "mainwindow.h"
 #include "playlist.h"
 #include "tabplaylist.h"
 
+#include <QHeaderView>
 #include <QTabWidget>
 
 Settings* Settings::settings = NULL;
@@ -240,18 +242,30 @@ QString Settings::styleSheet(QWidget *w) const
 	QString styleSheet;
 	QMap<QString, QVariant> map = value("styleSheet").toMap();
 	if (qobject_cast<Playlist*>(w) != NULL) {
+
 		styleSheet = map.value(Playlist::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "Playlist { border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
+			styleSheet = "Playlist { border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; alternate-background-color: #f6f6f6; }";
 			styleSheet += "Playlist::item:!active { selection-background-color: #ffffff }";
 		}
+
 	} else if (qobject_cast<LibraryTreeView*>(w) != NULL) {
+
 		styleSheet = map.value(LibraryTreeView::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "LibraryTreeView { border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
+			styleSheet = "LibraryTreeView { padding: 1px; margin: 0px -1px -1px -1px; border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
 		}
-	} else if (qobject_cast<TabPlaylist*>(w) != NULL || qobject_cast<QTabWidget*>(w) != NULL) {
-		styleSheet = map.value(TabPlaylist::staticMetaObject.className()).toString();
+
+	} else if (qobject_cast<LibraryFilterLineEdit*>(w) != NULL) {
+
+		styleSheet = map.value(LibraryFilterLineEdit::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "LibraryFilterLineEdit { background-color: #ffffff; border: 1px solid #d5d5d5; border-radius: 10px; padding-right: %1px; }";
+		}
+
+	} else if (qobject_cast<QTabWidget*>(w) != NULL) {
+
+		styleSheet = map.value(QTabWidget::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
 			// The first selected tab has nothing to overlap with on the left
 			styleSheet = "::tab:first:selected { margin-left: 0; } ";
@@ -262,12 +276,29 @@ QString Settings::styleSheet(QWidget *w) const
 			styleSheet += "::tab:selected { padding-top: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-left: -2px; margin-right: -2px; ";
 			styleSheet += "border: 1px solid grey; border-bottom: 0px; color: #000000; background-color: #ffffff; }";
 		}
-	} else if (qobject_cast<HeaderView*>(w) != NULL) {
-		styleSheet = map.value(HeaderView::staticMetaObject.className()).toString();
+
+	} else if (qobject_cast<QHeaderView*>(w) != NULL) {
+
+		styleSheet = map.value(QHeaderView::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
 			styleSheet = "QHeaderView::section { padding-top: 4px; padding-bottom: 4px; border: 0px; border-bottom: 1px solid #d5d5d5; color: #000000; ";
 			styleSheet += "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f0f0f0); }";
 		}
+
+	} else if (qobject_cast<MainWindow*>(w) != NULL) {
+
+		styleSheet = map.value(MainWindow::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "MainWindow { background-color: #f0f0f0; }";
+		}
+
+	} else if (w == NULL) {
+
+		styleSheet = map.value(QWidget::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "QWidget { background-color: #ffffff; }";
+		}
+
 	}
 	return styleSheet;
 }
@@ -276,5 +307,6 @@ void Settings::setCustomStyleSheet(QWidget *w)
 {
 	QMap<QString, QVariant> map = value("styleSheet").toMap();
 	map.insert(w->metaObject()->className(), w->styleSheet());
+	qDebug() << w->styleSheet();
 	this->setValue("styleSheet", map);
 }

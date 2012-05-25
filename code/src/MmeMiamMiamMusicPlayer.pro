@@ -35,7 +35,6 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     tabbar.cpp \
     playlistmanager.cpp \
-    headerview.cpp \
     colordialog.cpp \
     stylesheetupdater.cpp \
     reflector.cpp
@@ -64,7 +63,6 @@ HEADERS += \
     tracksnotfoundmessagebox.h \
     tabbar.h \
     playlistmanager.h \
-    headerview.h \
     colordialog.h \
     stylesheetupdater.h \
     reflector.h
