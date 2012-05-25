@@ -28,10 +28,13 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 	proxyModel->setSourceModel(libraryModel);
 
+	Settings *settings = Settings::getInstance();
+
 	//proxyModel->setHeaderData(0, Qt::Horizontal, QVariant("Artists"));
 	QStringList labels("Artists");
 	libraryModel->setHorizontalHeaderLabels(labels);
 	this->setModel(proxyModel);
+	this->setStyleSheet(settings->styleSheet(this));
 
 	//QHeaderView *header = new QHeaderView(Qt::Horizontal, this);
 	int iconSize = Settings::getInstance()->coverSize();
@@ -61,7 +64,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(this, SIGNAL(sizeOfCoversChanged(int)), this, SLOT(setCoverSize(int)));
 
 	// TEST : this widget is not repainted when font is changing, only when closing the Dialog :(
-	Settings *settings = Settings::getInstance();
 	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(repaint()));
 
 	// When the scan is complete, save the model in the filesystem

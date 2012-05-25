@@ -10,6 +10,8 @@
 
 #include "settings.h"
 
+#include "headerview.h"
+
 Playlist::Playlist(QWidget *parent) :
 	QTableWidget(parent), track(-1)
 {
@@ -24,17 +26,23 @@ Playlist::Playlist(QWidget *parent) :
 	this->setColumnHidden(6, true);
 	this->setShowGrid(false);
 	Settings *settings = Settings::getInstance();
+	this->setStyleSheet(settings->styleSheet(this));
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
 
 	// Select only one row, not cell by cell
 	this->setSelectionMode(QAbstractItemView::SingleSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+	//test
+	this->setAcceptDrops(true);
+
 	verticalHeader()->setVisible(false);
+	setHorizontalHeader(new HeaderView(Qt::Horizontal, this));
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setMovable(true);
 
+	this->installEventFilter(horizontalHeader());
 
 	// Context menu on header of columns
 	QList<QAction*> actionColumns;
@@ -72,7 +80,6 @@ Playlist::Playlist(QWidget *parent) :
 			columns->actions().at(i)->setChecked(!hidden);
 		}
 	}
-	//horizontalHeader()->setResizeMode(QHeaderView::Interactive);
 
 	// Link this playlist with the Settings instance to change fonts at runtime
 	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
@@ -85,6 +92,22 @@ Playlist::Playlist(QWidget *parent) :
 	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
 	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
+}
+
+void Playlist::dropEvent(QDropEvent *event)
+{
+	qDebug() << "dropEvent";
+}
+
+#include <QDragEnterEvent>
+#include <QMimeData>
+
+void Playlist::dragEnterEvent(QDragEnterEvent *event)
+{
+	if (event->mimeData()->hasFormat("application/x-color")) {
+		qDebug() << "dragEnterEvent";
+	}
+	QTableWidget::dragEnterEvent(event);
 }
 
 /** Clear the content of playlist. */
@@ -102,15 +125,12 @@ void Playlist::clear()
 QString Playlist::convertTrackLength(int length)
 {
 	QTime time = QTime(0, 0).addSecs(length);
-	QString str;
 	// QTime is not designed to handle minutes > 60
 	if (time.hour() > 0) {
-		str = QString::number(time.hour()*60 + time.minute())
-				.append(":").append(time.toString("ss"));
+		return QString::number(time.hour()*60 + time.minute()).append(":").append(time.toString("ss"));
 	} else {
-		str = time.toString("m:ss");
+		return time.toString("m:ss");
 	}
-	return str;
 }
 
 void Playlist::resizeColumns()
@@ -207,6 +227,7 @@ void Playlist::showColumnsMenu(const QPoint &pos)
 /** Save state when one checks or moves a column. */
 void Playlist::saveColumnsState(int /*logicalIndex*/, int /*oldVisualIndex*/, int /*newVisualIndex*/)
 {
+	// The pair "playlistColumnsState" is only used in this class, so there's no need to create specific getter and setter
 	Settings::getInstance()->setValue("playlistColumnsState", horizontalHeader()->saveState());
 }
 
@@ -303,11 +324,27 @@ void Playlist::retranslateUi()
 	}
 }
 
+bool Playlist::eventFilter(QObject *watched, QEvent *event)
+{
+	HeaderView *hv = qobject_cast<HeaderView*>(watched);
+	if (hv) {
+		qDebug() << "ici" << event->type();
+	}
+	return QTableWidget::eventFilter(watched, event);
+}
+
+void Playlist::mousePressEvent(QMouseEvent *event)
+{
+	return QTableWidget::mousePressEvent(event);
+}
+
+
 void Playlist::resizeEvent(QResizeEvent *event)
 {
 	this->resizeColumns();
 	QTableWidget::resizeEvent(event);
 }
+
 
 void Playlist::showEvent(QShowEvent *event)
 {

@@ -389,14 +389,6 @@
         <translation>Voulez-vous alterner les couleurs dans les listes de lectures ?</translation>
     </message>
     <message>
-        <source>Items</source>
-        <translation>Éléments</translation>
-    </message>
-    <message>
-        <source>Background (primary)</source>
-        <translation>Fond (principal)</translation>
-    </message>
-    <message>
         <source>Group elements</source>
         <translation>Grouper les éléments</translation>
     </message>
@@ -417,12 +409,24 @@
         <translation>Couleurs alternées</translation>
     </message>
     <message>
-        <source>Background (alternate)</source>
-        <translation>Fond (alterné)</translation>
-    </message>
-    <message>
         <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
         <translation>Note : une pochette interne est une image dans votre fichier musical. Vous pouvez parfois l&apos;apercevoir en tant que miniature dans un explorateur de fichiers.</translation>
+    </message>
+    <message>
+        <source>Global background</source>
+        <translation>Couleur globale du fond</translation>
+    </message>
+    <message>
+        <source>Text of items</source>
+        <translation>Texte des éléments musicaux</translation>
+    </message>
+    <message>
+        <source>Close button of every playlist</source>
+        <translation>Bouton fermer sur chaque liste de lecture</translation>
+    </message>
+    <message>
+        <source>Background for playlists and the library</source>
+        <translation>Couleur du fond des listes de lecture et de la bibliothèque</translation>
     </message>
 </context>
 <context>

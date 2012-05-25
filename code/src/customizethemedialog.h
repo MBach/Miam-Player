@@ -1,12 +1,13 @@
 #ifndef CUSTOMIZETHEMEDIALOG_H
 #define CUSTOMIZETHEMEDIALOG_H
 
-#include <QColorDialog>
+#include "colordialog.h"
 #include <QDialog>
 
 #include "ui_customizetheme.h"
 #include "mainwindow.h"
-
+#include "stylesheetupdater.h"
+#include "reflector.h"
 
 class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 {
@@ -15,12 +16,21 @@ class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 private:
 	MainWindow *mainWindow;
 
-	QColorDialog *colorDialog;
+	ColorDialog *colorDialog;
 
-	QWidget *targetedColor;
+	Reflector *targetedColor;
+
+	StyleSheetUpdater *styleSheetUpdater;
 
 public:
 	CustomizeThemeDialog(QWidget *parent);
+
+private:
+	void setupActions();
+
+protected:
+	/** Automatically centers the parent window when closing this dialog. */
+	void closeEvent(QCloseEvent *e);
 
 private:
 	/** Load theme at startup. */
@@ -33,9 +43,13 @@ public slots:
 private slots:
 	void openChooseIconDialog();
 
+	/** Shows a color dialog and hides this dialog temporarily.
+	 * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 	void showColorDialog();
 
-	void changeColor();
+	void changeColor(QColor selectedColor);
+
+	void toggleAlternativeBackgroundColor(bool);
 
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);

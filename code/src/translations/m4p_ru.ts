@@ -388,14 +388,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Background (primary)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Group elements</source>
         <translation type="unfinished"></translation>
     </message>
@@ -416,11 +408,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Background (alternate)</source>
+        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
+        <source>Global background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text of items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close button of every playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Background for playlists and the library</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

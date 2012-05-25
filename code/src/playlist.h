@@ -38,10 +38,18 @@ public:
 	/** Retranslate header columns. */
 	void retranslateUi();
 
+	bool eventFilter(QObject *watched, QEvent *event);
+
 protected:
+	void mousePressEvent(QMouseEvent *event);
+
 	void resizeEvent(QResizeEvent *event);
 
 	void showEvent(QShowEvent *event);
+
+	void dropEvent(QDropEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event);
+
 
 private:
 	/** Convert time in seconds into "mm:ss" format. */

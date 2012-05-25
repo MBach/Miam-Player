@@ -1,4 +1,5 @@
 #include "tabbar.h"
+#include "settings.h"
 
 #include <QtDebug>
 

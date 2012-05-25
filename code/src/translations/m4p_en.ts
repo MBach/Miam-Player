@@ -389,14 +389,6 @@
         <translation>Would you like to alternate colors in playlists?</translation>
     </message>
     <message>
-        <source>Items</source>
-        <translation>Items</translation>
-    </message>
-    <message>
-        <source>Background (primary)</source>
-        <translation>Background (primary)</translation>
-    </message>
-    <message>
         <source>Group elements</source>
         <translation>Group elements</translation>
     </message>
@@ -417,12 +409,24 @@
         <translation>Alternative colors</translation>
     </message>
     <message>
-        <source>Background (alternate)</source>
-        <translation>Background (alternate)</translation>
-    </message>
-    <message>
         <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
         <translation>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</translation>
+    </message>
+    <message>
+        <source>Global background</source>
+        <translation>Global background</translation>
+    </message>
+    <message>
+        <source>Text of items</source>
+        <translation>Text of items</translation>
+    </message>
+    <message>
+        <source>Close button of every playlist</source>
+        <translation>Close button of every playlist</translation>
+    </message>
+    <message>
+        <source>Background for playlists and the library</source>
+        <translation>Background for playlists and the library</translation>
     </message>
 </context>
 <context>

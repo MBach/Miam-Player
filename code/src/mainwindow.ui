@@ -38,12 +38,22 @@
          <string>Library</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="LibraryFilterLineEdit" name="searchBar">
-           <property name="font">
-            <font>
-             <italic>false</italic>
-            </font>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid #d5d5d5; border-radius: 10px; margin-left: 10px; margin: 10px; padding-left: 10px;</string>
+           </property>
+           <property name="maxLength">
+            <number>100</number>
+           </property>
+           <property name="frame">
+            <bool>true</bool>
            </property>
            <property name="placeholderText">
             <string>Search...</string>
@@ -52,6 +62,9 @@
          </item>
          <item>
           <widget class="LibraryTreeView" name="library">
+           <property name="styleSheet">
+            <string notr="true">padding: 1px; margin: 0px -1px -1px -1px;</string>
+           </property>
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
@@ -108,8 +121,18 @@
          <string>File explorer</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QTreeView" name="filesystem"/>
+          <widget class="QTreeView" name="filesystem">
+           <property name="styleSheet">
+            <string notr="true">margin: -1px;</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -559,8 +582,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>leftTabs</tabstop>
-  <tabstop>searchBar</tabstop>
-  <tabstop>library</tabstop>
   <tabstop>skipBackwardButton</tabstop>
   <tabstop>seekBackwardButton</tabstop>
   <tabstop>playButton</tabstop>

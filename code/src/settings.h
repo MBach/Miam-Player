@@ -4,6 +4,7 @@
 #include <QSettings>
 
 #include "mediabutton.h"
+#include "reflector.h"
 
 class Settings : public QSettings
 {
@@ -100,6 +101,9 @@ public:
 	/// Colors
 	bool colorsAlternateBG() const;
 
+	/// Stylesheet
+	QString styleSheet(QWidget *w) const;
+
 signals:
 	void currentFontChanged();
 
@@ -152,6 +156,9 @@ public slots:
 
 	/// Colors
 	inline void setColorsAlternateBG(bool b) { setValue("colorsAlternateBG", b); }
+
+	/// StyleSheets
+	void setCustomStyleSheet(QWidget *w);
 };
 
 #endif // SETTINGS_H

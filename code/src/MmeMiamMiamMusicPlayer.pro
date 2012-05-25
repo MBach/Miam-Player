@@ -34,7 +34,11 @@ SOURCES += \
     shortcutwidget.cpp \
     tracksnotfoundmessagebox.cpp \
     tabbar.cpp \
-    playlistmanager.cpp
+    playlistmanager.cpp \
+    headerview.cpp \
+    colordialog.cpp \
+    stylesheetupdater.cpp \
+    reflector.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -59,7 +63,11 @@ HEADERS += \
     shortcutwidget.h \
     tracksnotfoundmessagebox.h \
     tabbar.h \
-    playlistmanager.h
+    playlistmanager.h \
+    headerview.h \
+    colordialog.h \
+    stylesheetupdater.h \
+    reflector.h
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \

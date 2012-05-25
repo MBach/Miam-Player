@@ -19,8 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	setupUi(this);
+	Settings *settings = Settings::getInstance();
+
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
 	this->filesystem->header()->setResizeMode(QHeaderView::ResizeToContents);
+	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
 
 	FileSystemModel *fileSystemModel = new FileSystemModel(this);
 	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
@@ -41,10 +44,6 @@ MainWindow::MainWindow(QWidget *parent) :
 				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
 	pauseButton->hide();
 
-	customizeThemeDialog = new CustomizeThemeDialog(this);
-	customizeOptionsDialog = new CustomizeOptionsDialog(this);
-	playlistManager = new PlaylistManager(tabPlaylists);
-
 	// Init the audio module
 	audioOutput = new AudioOutput(MusicCategory, this);
 	audioOutput->setVolume(Settings::getInstance()->volume());
@@ -53,7 +52,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	volumeSlider->setAudioOutput(audioOutput);
 
 	// Init shortcuts
-	Settings *settings = Settings::getInstance();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
 	QMapIterator<QString, QVariant> it(shortcutMap);
 	while (it.hasNext()) {
@@ -67,8 +65,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	tabPlaylists->restorePlaylists();
-	setupActions();
-	drawLibrary();
+
+	customizeThemeDialog = new CustomizeThemeDialog(this);
+	customizeOptionsDialog = new CustomizeOptionsDialog(this);
+	playlistManager = new PlaylistManager(tabPlaylists);
+
+	this->setupActions();
+	this->drawLibrary();
 }
 
 /** Set up all actions and behaviour. */

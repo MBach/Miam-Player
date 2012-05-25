@@ -3,6 +3,7 @@
 #include "settings.h"
 
 #include <QApplication>
+#include <QHeaderView>
 
 #include "tabbar.h"
 
@@ -11,6 +12,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent)
 {
 	this->setTabBar(new TabBar(this));
+	this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
 	messageBox = new TracksNotFoundMessageBox(this);
 
@@ -86,13 +88,20 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 	}
 
 	// Then append a new empty playlist to the others
-	Playlist *playlist = new Playlist(this);
-	int i = insertTab(count(), playlist, newPlaylistName);
+	Playlist *p = new Playlist(this);
+	int i = insertTab(count(), p, newPlaylistName);
+
+	// If there's a custom stylesheet on the playlist, copy it from the previous one
+	if (i > 1) {
+		Playlist *previous = this->playlist(i - 1);
+		p->setStyleSheet(previous->styleSheet());
+		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
+	}
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
 	emit created();
-	return playlist;
+	return p;
 }
 
 /** When the user is double clicking on a track in a playlist. */

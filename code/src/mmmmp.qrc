@@ -48,7 +48,7 @@
         <file alias="repeat">player/repeat.png</file>
         <file alias="shuffle">player/shuffle.png</file>
     </qresource>
-    <qresource prefix="/config" lang="close">
+    <qresource prefix="/config">
         <file alias="fonts">config/fonts.png</file>
         <file alias="music">config/music.png</file>
         <file alias="colors">config/appearance.png</file>
@@ -56,6 +56,7 @@
         <file alias="gnome-globe">config/gnome-globe.png</file>
         <file alias="keyboard-shortcuts">config/keyboard-shortcuts.png</file>
         <file alias="closeButton">config/closeButton.png</file>
+        <file alias="palette">config/palette.png</file>
     </qresource>
     <qresource prefix="/player/oxygen">
         <file alias="pause">player/oxygen/pause.png</file>
