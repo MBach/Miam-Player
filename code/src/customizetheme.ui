@@ -44,7 +44,7 @@
       <enum>QListView::IconMode</enum>
      </property>
      <property name="currentRow">
-      <number>0</number>
+      <number>2</number>
      </property>
      <item>
       <property name="text">
@@ -93,7 +93,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -1091,7 +1091,7 @@
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QWidget{border: 1px solid #707070}</string>
+             <string notr="true">Reflector { border: 1px solid #707070; background-color: #000000; }</string>
             </property>
            </widget>
           </item>
@@ -1104,7 +1104,36 @@
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QWidget{border: 1px solid #707070}</string>
+             <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QWidget" name="closeButtonColorWidget" native="true">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QWidget { border: 1px solid #707070; background-color: #f0f0f0; }</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="Reflector" name="bgPrimaryColorWidget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>14</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
             </property>
            </widget>
           </item>
@@ -1148,39 +1177,6 @@
              </size>
             </property>
            </widget>
-          </item>
-          <item row="1" column="1">
-           <layout class="QVBoxLayout" name="verticalLayout_11">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="Reflector" name="bgPrimaryColorWidget" native="true">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>14</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QWidget{border: 1px solid #707070; border-bottom: 0px; background-color: #FFFFFF}</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="bgAlternateColorWidget" native="true">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>14</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QWidget{border: 1px solid #707070; border-top: 0px; background-color: #F6F6F6}</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="labelItems">
@@ -1230,8 +1226,35 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="Reflector" name="closeButtonColorWidget" native="true">
+          <item row="2" column="2">
+           <widget class="QToolButton" name="closeButtonToolButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>24</width>
+              <height>24</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="labelSelectedItem">
+            <property name="text">
+             <string>Selected item</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="Reflector" name="selectedItemColorWidget" native="true">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -1239,15 +1262,12 @@
              </size>
             </property>
             <property name="styleSheet">
-             <string notr="true">QWidget{border: 1px solid #707070}</string>
+             <string notr="true">Reflector { border: 1px solid #707070; background-color: #d6eefb; }</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
-           <widget class="QToolButton" name="closeButtonToolButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
+          <item row="5" column="2">
+           <widget class="QToolButton" name="selectedItemColorToolButton">
             <property name="text">
              <string/>
             </property>

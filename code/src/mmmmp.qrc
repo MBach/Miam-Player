@@ -3,6 +3,9 @@
         <file alias="plusIcon">plus_icon.png</file>
         <file>mmmmp.ico</file>
         <file alias="favorite">config/favorite.png</file>
+        <file alias="down-arrow">config/down-arrow.png</file>
+        <file alias="up-arrow">config/up-arrow.png</file>
+        <file alias="handle">config/handle.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>
@@ -83,5 +86,8 @@
     <qresource prefix="/translations">
         <file alias="en">translations/m4p_en.qm</file>
         <file alias="fr">translations/m4p_fr.qm</file>
+    </qresource>
+    <qresource prefix="/stylesheet">
+        <file alias="qscrollbar">qscrollbar.qss</file>
     </qresource>
 </RCC>

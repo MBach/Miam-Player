@@ -29,7 +29,6 @@ SOURCES += \
     starrating.cpp \
     stareditor.cpp \
     libraryitem.cpp \
-    filesystemmodel.cpp \
     shortcutlineedit.cpp \
     shortcutwidget.cpp \
     tracksnotfoundmessagebox.cpp \
@@ -57,7 +56,6 @@ HEADERS += \
     starrating.h \
     stareditor.h \
     libraryitem.h \
-    filesystemmodel.h \
     shortcutlineedit.h \
     shortcutwidget.h \
     tracksnotfoundmessagebox.h \
@@ -199,4 +197,5 @@ INCLUDEPATH += $$TagLibDirectory \
     $$TagLibDirectory/taglib/riff/aiff \
     $$TagLibDirectory/taglib/riff/wav
 
-OTHER_FILES +=
+OTHER_FILES += \
+    qscrollbar.qss

@@ -3,16 +3,19 @@
 
 #include <QColorDialog>
 
+#include "reflector.h"
+
 class ColorDialog : public QColorDialog
 {
 	Q_OBJECT
 private:
-	QList<QWidget *> targets;
+	/** Pointer to the item containing all the instances of repaintables elements. */
+	Reflector *reflector;
 
 public:
 	ColorDialog(QWidget *parent);
 
-	void setTargets(QList<QWidget *> t);
+	void setPaintableElements(Reflector *reflector);
 
 protected:
 	void closeEvent(QCloseEvent *);

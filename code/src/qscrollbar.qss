@@ -1,0 +1,52 @@
+QScrollBar:vertical {
+    border: 1px solid #e3e3e3;
+    margin: 22px 0px 22px 0px;
+    width: 20px;
+}
+QScrollBar::handle:vertical {
+    border: 1px solid #979797;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #f5f5f5, stop:0.4 #ebebeb, stop:0.5 #dadada, stop:1 #c0c0c0);
+    border-radius: 2px;
+    min-height: 20px;
+    image: url(:/icons/handle);
+}
+QScrollBar::handle:hover:vertical {
+    border: 1px solid #3c7fb1;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
+}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: #f0f0f0;
+    border: 1px solid #e3e3e3;
+    height: 20px;
+}
+QScrollBar::sub-line:vertical {
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+    margin: 1px 1px 0px 1px;
+    padding: 0px 0px -1px 0px;
+    border-radius: 2px;
+}
+QScrollBar::sub-line:hover:vertical {
+    border: 1px solid #3c7fb1;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
+}
+QScrollBar::add-line:vertical {
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+    margin: 0px 1px 1px 1px;
+    padding: -1px 0px 0px 0px;
+    border-radius: 2px;
+}
+QScrollBar::add-line:hover:vertical {
+    border: 1px solid #3c7fb1;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
+}
+QScrollBar::add-page, QScrollBar::sub-page {
+    background: #f0f0f0;
+}
+QScrollBar::up-arrow:vertical {
+    image: url(:/icons/up-arrow);
+}
+QScrollBar::down-arrow:vertical {
+    image: url(:/icons/down-arrow);
+}

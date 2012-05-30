@@ -26,6 +26,7 @@ public:
 	CustomizeThemeDialog(QWidget *parent);
 
 private:
+	void associatePaintableElements();
 	void setupActions();
 
 protected:

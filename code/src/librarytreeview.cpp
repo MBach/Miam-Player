@@ -7,6 +7,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QScrollBar>
 
 #include <fileref.h>
 #include <id3v2tag.h>
@@ -32,6 +33,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
+	this->header()->setStyleSheet(settings->styleSheet(this->header()));
+	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));

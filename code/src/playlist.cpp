@@ -25,6 +25,7 @@ Playlist::Playlist(QWidget *parent) :
 	this->setShowGrid(false);
 	Settings *settings = Settings::getInstance();
 	this->setStyleSheet(settings->styleSheet(this));
+	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
 
 	// Select only one row, not cell by cell

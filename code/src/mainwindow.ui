@@ -24,14 +24,8 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTabWidget" name="leftTabs">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>4</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="currentIndex">
-        <number>0</number>
+       <property name="documentMode">
+        <bool>true</bool>
        </property>
        <widget class="QWidget" name="tabLibrary">
         <attribute name="title">
@@ -141,12 +135,6 @@
        </widget>
       </widget>
       <widget class="QWidget" name="widget" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-         <horstretch>5</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="TabPlaylist" name="tabPlaylists"/>

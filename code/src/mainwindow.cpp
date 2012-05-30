@@ -5,7 +5,6 @@
 #include <QFileSystemModel>
 
 #include "mainwindow.h"
-#include "filesystemmodel.h"
 #include "customizethemedialog.h"
 #include "playlist.h"
 
@@ -26,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setStyleSheet(settings->styleSheet(this));
 	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
 	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
+	splitter->setStyleSheet(settings->styleSheet(splitter));
 
-	FileSystemModel *fileSystemModel = new FileSystemModel(this);
+	QFileSystemModel *fileSystemModel = new QFileSystemModel(this);
 	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
 	QStringList filters;
@@ -178,7 +178,7 @@ void MainWindow::drawLibrary(bool b)
 /** Add a file from the filesystem to the current playlist. */
 void MainWindow::addSelectedItemToPlaylist(const QModelIndex &item)
 {
-	FileSystemModel *fileSystemModel = qobject_cast<FileSystemModel *>(filesystem->model());
+	QFileSystemModel *fileSystemModel = qobject_cast<QFileSystemModel *>(filesystem->model());
 	// If item is a file
 	if (!fileSystemModel->isDir(item)) {
 		tabPlaylists->addItemToCurrentPlaylist(item);

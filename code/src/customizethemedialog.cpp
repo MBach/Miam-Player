@@ -1,9 +1,9 @@
 #include "customizethemedialog.h"
 
-#include <QApplication>
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include <QScrollBar>
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), targetedColor(NULL)
@@ -16,38 +16,36 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	buttonsListBox->setVisible(false);
 
 	this->setupActions();
+	this->associatePaintableElements();
 	this->loadTheme();
+}
 
-	bgPrimaryColorWidget->setKey(StyleSheetUpdater::BACKGROUND);
-	globalBackgroundColorWidget->setKey(StyleSheetUpdater::GLOBAL_BACKGROUND);
-	itemColorWidget->setKey(StyleSheetUpdater::TEXT);
+void CustomizeThemeDialog::associatePaintableElements()
+{
+	bgPrimaryColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::BACKGROUND);
+	globalBackgroundColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::GLOBAL_BACKGROUND);
+	itemColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::TEXT);
 
-	// Associate instances of Classes to their "preview pane" to dynamically changes colors
+	// Associate instances of Classes to their "preview pane" to dynamically change colors
+	QList<QWidget *> bgElements, itemElements;
 	for (int i = 0; i < mainWindow->tabPlaylists->count(); i++) {
 		Playlist *p = mainWindow->tabPlaylists->playlist(i);
 		if (p != NULL) {
-			bgPrimaryColorWidget->addInstance(p);
-			itemColorWidget->addInstance(p);
-			QHeaderView *v = p->horizontalHeader();
-			if (v != NULL) {
-				bgPrimaryColorWidget->addInstance(v);
-				itemColorWidget->addInstance(v);
-			}
+			itemElements << p;
+			itemElements << p->horizontalHeader();
+			bgElements << p->verticalScrollBar();
 		}
 	}
+	bgElements << mainWindow->library << mainWindow->library->verticalScrollBar() << mainWindow->library->header();
+	itemElements << mainWindow->tabPlaylists << mainWindow->library << mainWindow->widgetSearchBar << mainWindow->leftTabs;
 
-	// Quite redondant, no?
-	bgPrimaryColorWidget->addInstance(mainWindow->tabPlaylists);
-	bgPrimaryColorWidget->addInstance(mainWindow->library);
-	bgPrimaryColorWidget->addInstance(mainWindow->widgetSearchBar);
-	bgPrimaryColorWidget->addInstance(mainWindow->leftTabs);
+	bgPrimaryColorWidget->addInstances(bgElements);
+	bgPrimaryColorWidget->addInstances(itemElements);
 
 	globalBackgroundColorWidget->addInstance(mainWindow);
+	globalBackgroundColorWidget->addInstance(mainWindow->splitter);
 
-	itemColorWidget->addInstance(mainWindow->tabPlaylists);
-	itemColorWidget->addInstance(mainWindow->library);
-	itemColorWidget->addInstance(mainWindow->widgetSearchBar);
-	itemColorWidget->addInstance(mainWindow->leftTabs);
+	itemColorWidget->addInstances(itemElements);
 }
 
 void CustomizeThemeDialog::setupActions()
@@ -102,9 +100,9 @@ void CustomizeThemeDialog::setupActions()
 void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 {
 	if (!parentWidget()->isMaximized()) {
-		int w = qApp->desktop()->availableGeometry().width() / 2;
-		int h = qApp->desktop()->availableGeometry().height() / 2;
-		parentWidget()->move(w - parentWidget()->width() / 2, h - parentWidget()->height() / 2);
+		int w = qApp->desktop()->screenGeometry().width() / 2;
+		int h = qApp->desktop()->screenGeometry().height() / 2;
+		parentWidget()->move(w - parentWidget()->frameGeometry().width() / 2, h - parentWidget()->frameGeometry().height() / 2);
 	}
 	QDialog::closeEvent(e);
 }
@@ -116,7 +114,8 @@ void CustomizeThemeDialog::showColorDialog()
 	targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (targetedColor) {
 		// Very important: gets at runtime the elements that will be repaint by one
-		colorDialog->setTargets(targetedColor->associatedInstances());
+		colorDialog->setPaintableElements(targetedColor);
+		colorDialog->setCurrentColor(targetedColor->color());
 
 		// Moves the color dialog right to the mainWindow
 		if (parentWidget()->width() + 20 + colorDialog->width() < qApp->desktop()->availableGeometry().width()) {
@@ -141,23 +140,14 @@ void CustomizeThemeDialog::changeColor(QColor selectedColor)
 	}
 
 	if (targetedColor != NULL) {
-		targetedColor->setStyleSheet("border: 1px solid #707070; background-color: " + selectedColor.name() + ';');
-		styleSheetUpdater->replace(targetedColor->associatedInstances(), targetedColor->key(), selectedColor);
+		styleSheetUpdater->replace(targetedColor, selectedColor);
 	}
 }
 
 void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 {
 	Settings::getInstance()->setColorsAlternateBG(b);
-	QColor selectedColor = bgPrimaryColorWidget->palette().base().color();
-	QString styleSheet = "QWidget{ border: 1px solid #707070; border-top: 0px; background-color: ";
-	if (b) {
-		styleSheet += styleSheetUpdater->makeAlternative(selectedColor).first.name() + "; } ";
-	} else {
-		styleSheet += selectedColor.name() + "; } ";
-	}
-	bgAlternateColorWidget->setStyleSheet(styleSheet);
-	this->changeColor(selectedColor);
+	//this->changeColor();
 }
 
 /** Load theme at startup. */

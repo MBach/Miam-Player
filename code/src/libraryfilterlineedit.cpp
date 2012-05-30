@@ -11,7 +11,7 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	clearButton->setIcon(QIcon(pixmap));
 	clearButton->setIconSize(pixmap.size());
 	clearButton->setCursor(Qt::ArrowCursor);
-	clearButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");
+	clearButton->setStyleSheet("QToolButton { background: none; border: none; padding: 0px; }");
 
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 	QString styleSheet = Settings::getInstance()->styleSheet(this);

@@ -4,8 +4,6 @@
 
 #include <QtDebug>
 
-#include <QIcon>
-
 ColorDialog::ColorDialog(QWidget *parent) :
 	QColorDialog(parent)
 {
@@ -17,12 +15,13 @@ void ColorDialog::closeEvent(QCloseEvent *event)
 {
 	parentWidget()->show();
 	QColorDialog::closeEvent(event);
-	foreach(QWidget *w, targets) {
+	foreach(QWidget *w, reflector->associatedInstances()) {
 		Settings::getInstance()->setCustomStyleSheet(w);
 	}
 }
 
-void ColorDialog::setTargets(QList<QWidget *> t) {
-	targets = t;
+void ColorDialog::setPaintableElements(Reflector *r)
+{
+	this->reflector = r;
 	this->show();
 }

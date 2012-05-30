@@ -7,6 +7,7 @@
 #include "tabplaylist.h"
 
 #include <QHeaderView>
+#include <QScrollBar>
 #include <QTabWidget>
 
 Settings* Settings::settings = NULL;
@@ -237,6 +238,7 @@ bool Settings::colorsAlternateBG() const
 	}
 }
 
+/** Should move in specific files in .qrc */
 QString Settings::styleSheet(QWidget *w) const
 {
 	QString styleSheet;
@@ -253,14 +255,21 @@ QString Settings::styleSheet(QWidget *w) const
 
 		styleSheet = map.value(LibraryTreeView::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "LibraryTreeView { padding: 1px; margin: 0px -1px -1px -1px; border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
+			styleSheet = "LibraryTreeView { padding: 1px; border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
+		}
+
+	} else if (qobject_cast<QTreeView*>(w) != NULL) {
+
+		styleSheet = map.value(QTreeView::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "QTreeView { padding: 1px; border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
 		}
 
 	} else if (qobject_cast<LibraryFilterLineEdit*>(w) != NULL) {
 
 		styleSheet = map.value(LibraryFilterLineEdit::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "LibraryFilterLineEdit { background-color: #ffffff; border: 1px solid #d5d5d5; border-radius: 10px; padding-right: %1px; }";
+			styleSheet = "LibraryFilterLineEdit { background-color: #ffffff; border: 1px solid #d5d5d5; border-radius: 10px; padding-left: 6px; padding-right: %1px; }";
 		}
 
 	} else if (qobject_cast<QTabWidget*>(w) != NULL) {
@@ -276,7 +285,6 @@ QString Settings::styleSheet(QWidget *w) const
 			styleSheet += "::tab:selected { padding-top: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-left: -2px; margin-right: -2px; ";
 			styleSheet += "border: 1px solid grey; border-bottom: 0px; color: #000000; background-color: #ffffff; }";
 		}
-
 	} else if (qobject_cast<QHeaderView*>(w) != NULL) {
 
 		styleSheet = map.value(QHeaderView::staticMetaObject.className()).toString();
@@ -292,13 +300,40 @@ QString Settings::styleSheet(QWidget *w) const
 			styleSheet = "MainWindow { background-color: #f0f0f0; }";
 		}
 
-	} else if (w == NULL) {
+	} else if (qobject_cast<QScrollBar*>(w) != NULL) {
 
-		styleSheet = map.value(QWidget::staticMetaObject.className()).toString();
+		styleSheet = map.value(QScrollBar::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "QWidget { background-color: #ffffff; }";
+			QFile f(":/stylesheet/qscrollbar");
+			f.open(QFile::ReadOnly);
+			styleSheet = QString(f.readAll());
+			f.close();
 		}
 
+	} else if (qobject_cast<QSplitter*>(w) != NULL) {
+
+		styleSheet = map.value(QSplitter::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "QSplitter { width: 3px; background-color: #f0f0f0; } ";
+			styleSheet += "QSplitter::handle { background-color: #f0f0f0; ";
+			styleSheet += "padding-top: 20px; padding-bottom: 20px; ";
+			styleSheet += "border: 0px; } ";
+		}
+
+	} else if (w == NULL) {
+
+		//if (w->objectName() == "") {
+		styleSheet = map.value(QWidget::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "QWidget { border-left: 1px solid grey; border-right: 1px solid grey; background-color: #ffffff; }";
+		}
+		/*} else {
+			styleSheet = map.value(w->objectName()).toString();
+		}*/
+
+	} else {
+
+		styleSheet = map.value(w->metaObject()->className()).toString();
 	}
 	return styleSheet;
 }
@@ -307,6 +342,5 @@ void Settings::setCustomStyleSheet(QWidget *w)
 {
 	QMap<QString, QVariant> map = value("styleSheet").toMap();
 	map.insert(w->metaObject()->className(), w->styleSheet());
-	qDebug() << w->styleSheet();
 	this->setValue("styleSheet", map);
 }
