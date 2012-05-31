@@ -63,7 +63,8 @@ HEADERS += \
     playlistmanager.h \
     colordialog.h \
     stylesheetupdater.h \
-    reflector.h
+    reflector.h \
+    nofocusitemdelegate.h
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \
@@ -198,4 +199,6 @@ INCLUDEPATH += $$TagLibDirectory \
     $$TagLibDirectory/taglib/riff/wav
 
 OTHER_FILES += \
-    qscrollbar.qss
+    stylesheets/qscrollbar.qss \
+    stylesheets/playlist.qss \
+    stylesheets/librarytreeview.qss

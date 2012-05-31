@@ -10,10 +10,6 @@ QScrollBar::handle:vertical {
     min-height: 20px;
     image: url(:/icons/handle);
 }
-QScrollBar::handle:hover:vertical {
-    border: 1px solid #3c7fb1;
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
-}
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
     background: #f0f0f0;
     border: 1px solid #e3e3e3;
@@ -26,20 +22,12 @@ QScrollBar::sub-line:vertical {
     padding: 0px 0px -1px 0px;
     border-radius: 2px;
 }
-QScrollBar::sub-line:hover:vertical {
-    border: 1px solid #3c7fb1;
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
-}
 QScrollBar::add-line:vertical {
     subcontrol-position: bottom;
     subcontrol-origin: margin;
     margin: 0px 1px 1px 1px;
     padding: -1px 0px 0px 0px;
     border-radius: 2px;
-}
-QScrollBar::add-line:hover:vertical {
-    border: 1px solid #3c7fb1;
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
 }
 QScrollBar::add-page, QScrollBar::sub-page {
     background: #f0f0f0;
@@ -49,4 +37,8 @@ QScrollBar::up-arrow:vertical {
 }
 QScrollBar::down-arrow:vertical {
     image: url(:/icons/down-arrow);
+}
+QScrollBar::handle:hover:vertical, QScrollBar::sub-line:hover:vertical, QScrollBar::add-line:hover:vertical {
+    border: 1px solid #3c7fb1;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e3f4fc, stop:0.4 #d6eefb, stop:0.5 #b2ddf4, stop:1 #9ccae3);
 }

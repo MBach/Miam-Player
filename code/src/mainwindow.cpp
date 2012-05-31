@@ -44,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
 				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
+	foreach (MediaButton *b, mediaButtons) {
+		b->setStyleSheet(settings->styleSheet(b));
+	}
+
 	pauseButton->hide();
 
 	// Init the audio module

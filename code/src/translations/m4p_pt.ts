@@ -420,11 +420,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Close button of every playlist</source>
+        <source>Background for playlists and the library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Background for playlists and the library</source>
+        <source>Selected item</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

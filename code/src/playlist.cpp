@@ -10,6 +10,8 @@
 
 #include "settings.h"
 
+#include "nofocusitemdelegate.h"
+
 Playlist::Playlist(QWidget *parent) :
 	QTableWidget(parent), track(-1)
 {
@@ -31,6 +33,7 @@ Playlist::Playlist(QWidget *parent) :
 	// Select only one row, not cell by cell
 	this->setSelectionMode(QAbstractItemView::SingleSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
+	this->setItemDelegate(new NoFocusItemDelegate(this));
 
 	/// test
 	this->setAcceptDrops(true);

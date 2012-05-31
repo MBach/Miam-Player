@@ -25,7 +25,8 @@ public:
 				   COMPLEX_LINEAR_GRADIENT,
 				   ALTERNATE_BACKGROUND,
 				   BORDER,
-				   BORDER_BOTTOM
+				   BORDER_BOTTOM,
+				   HOVER
 				 };
 
 	StyleSheetUpdater(QObject *parent = 0);
@@ -35,13 +36,8 @@ public:
 	inline const QRegExp regExp(Element key) const { return regExps[key]; }
 
 private:
-	/** Create a complex linear gradient with 4 colors. */
-	QList<QColor> makeComplexLinearGradient(const QColor &color);
-
-	/** Create a simple linear gradient with 2 colors. */
-	QList<QColor> makeSimpleLinearGradient(const QColor &color);
-
-	//QColor makeLighter(const QColor &color);
+	/** Create a linear gradient with 2 or 4 colors. */
+	QList<QColor> makeLinearGradient(Element complexity, const QColor &color);
 
 	/** Dispatch instances and get their correct stylesheet. */
 	void replace(QWidget *target, Element key, const QColor &color);

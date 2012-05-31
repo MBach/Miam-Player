@@ -15,13 +15,15 @@ private:
 	static Settings *settings;
 
 	/** Private constructor. */
-	Settings(const QString &organization = "MmeMiamMiam", const QString & application = "MmeMiamMiamMusicPlayer")
-		: QSettings(organization, application) {}
+	Settings(const QString &organization = "MmeMiamMiam",
+			 const QString & application = "MmeMiamMiamMusicPlayer");
 
 	/** Store the size of each font used in the app. */
 	QMap<QString, QVariant> fontPointSizeMap;
 
 	QList<QVariant> locations;
+
+	QMap<QString, QByteArray> stylesheets;
 
 	Q_ENUMS(FontFamily)
 

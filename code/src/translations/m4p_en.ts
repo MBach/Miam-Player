@@ -421,12 +421,12 @@
         <translation>Text of items</translation>
     </message>
     <message>
-        <source>Close button of every playlist</source>
-        <translation>Close button of every playlist</translation>
-    </message>
-    <message>
         <source>Background for playlists and the library</source>
         <translation>Background for playlists and the library</translation>
+    </message>
+    <message>
+        <source>Selected item</source>
+        <translation>Selected item</translation>
     </message>
 </context>
 <context>

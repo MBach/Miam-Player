@@ -87,7 +87,9 @@
         <file alias="en">translations/m4p_en.qm</file>
         <file alias="fr">translations/m4p_fr.qm</file>
     </qresource>
-    <qresource prefix="/stylesheet">
-        <file alias="qscrollbar">qscrollbar.qss</file>
+    <qresource prefix="/stylesheets">
+        <file alias="playlist">stylesheets/playlist.qss</file>
+        <file alias="qscrollbar">stylesheets/qscrollbar.qss</file>
+        <file alias="librarytreeview">stylesheets/librarytreeview.qss</file>
     </qresource>
 </RCC>

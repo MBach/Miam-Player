@@ -41,6 +41,9 @@ public:
 	/** Redefined to always display the same height for albums, even for those without one. */
 	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
 
+protected:
+	inline void drawFocus(QPainter *, const QStyleOptionViewItem &, const QRect &) const {}
+
 private slots:
 	void commitAndCloseEditor(QWidget *);
 

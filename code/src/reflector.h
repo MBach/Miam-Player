@@ -36,7 +36,7 @@ public:
 	void addInstances(QList<QWidget *> list);
 
 	/** Getter to the group of paintables elements. */
-	inline QList<QWidget *> associatedInstances() { return targets; }
+	inline QList<QWidget *> associatedInstances() {	return targets;	}
 
 	/** Setter to the category of paintables elements. */
 	inline void setStyleSheetUpdater(StyleSheetUpdater *s, StyleSheetUpdater::Element key)

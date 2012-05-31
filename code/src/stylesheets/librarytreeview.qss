@@ -1,0 +1,21 @@
+LibraryTreeView {
+    padding: 1px;
+    border: 1px solid grey;
+    border-top: 0px;
+    color: #000000;
+    background-color: #ffffff;
+}
+LibraryTreeView::item:selected {
+    border: 1px solid #84acdd;
+    border-radius: 2px;
+    padding-left: -1px;
+    color: #000000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop:0 rgba(216,235,255,80), stop:1 rgba(183,215,255,80));
+}
+LibraryTreeView::item:hover {
+    border: 1px solid #b9d7fc;
+    border-radius: 2px;
+    padding-left: -1px;
+    color: #000000;
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop:0 rgba(216,235,255,50), stop:1 rgba(183,215,255,50));
+}

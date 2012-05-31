@@ -421,12 +421,12 @@
         <translation>Texte des éléments musicaux</translation>
     </message>
     <message>
-        <source>Close button of every playlist</source>
-        <translation>Bouton fermer sur chaque liste de lecture</translation>
-    </message>
-    <message>
         <source>Background for playlists and the library</source>
         <translation>Couleur du fond des listes de lecture et de la bibliothèque</translation>
+    </message>
+    <message>
+        <source>Selected item</source>
+        <translation>Élément sélectionné</translation>
     </message>
 </context>
 <context>

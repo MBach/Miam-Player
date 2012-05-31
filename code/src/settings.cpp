@@ -12,6 +12,23 @@
 
 Settings* Settings::settings = NULL;
 
+/** Private constructor. */
+Settings::Settings(const QString &organization, const QString &application)
+	: QSettings(organization, application)
+{
+	QStringList filenames;
+	filenames << ":/stylesheets/playlist";
+	filenames << ":/stylesheets/librarytreeview";
+	filenames << ":/stylesheets/qscrollbar";
+
+	foreach (QString filename, filenames) {
+		QFile f(filename);
+		f.open(QFile::ReadOnly);
+		stylesheets.insert(filename, f.readAll());
+		f.close();
+	}
+}
+
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
 Settings* Settings::getInstance()
 {
@@ -247,15 +264,14 @@ QString Settings::styleSheet(QWidget *w) const
 
 		styleSheet = map.value(Playlist::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "Playlist { border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; alternate-background-color: #f6f6f6; }";
-			styleSheet += "Playlist::item:!active { selection-background-color: #ffffff }";
+			styleSheet = stylesheets[":/stylesheets/playlist"];
 		}
 
 	} else if (qobject_cast<LibraryTreeView*>(w) != NULL) {
 
 		styleSheet = map.value(LibraryTreeView::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			styleSheet = "LibraryTreeView { padding: 1px; border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
+			styleSheet = stylesheets[":/stylesheets/librarytreeview"];
 		}
 
 	} else if (qobject_cast<QTreeView*>(w) != NULL) {
@@ -304,10 +320,7 @@ QString Settings::styleSheet(QWidget *w) const
 
 		styleSheet = map.value(QScrollBar::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
-			QFile f(":/stylesheet/qscrollbar");
-			f.open(QFile::ReadOnly);
-			styleSheet = QString(f.readAll());
-			f.close();
+			styleSheet = stylesheets[":/stylesheets/qscrollbar"];
 		}
 
 	} else if (qobject_cast<QSplitter*>(w) != NULL) {
@@ -320,16 +333,19 @@ QString Settings::styleSheet(QWidget *w) const
 			styleSheet += "border: 0px; } ";
 		}
 
+	} else if (qobject_cast<MediaButton*>(w) != NULL) {
+
+		/*styleSheet = map.value(MediaButton::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = "MediaButton:off { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff0000, stop:1 #00ff00); } ";
+		}*/
+
 	} else if (w == NULL) {
 
-		//if (w->objectName() == "") {
 		styleSheet = map.value(QWidget::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
 			styleSheet = "QWidget { border-left: 1px solid grey; border-right: 1px solid grey; background-color: #ffffff; }";
 		}
-		/*} else {
-			styleSheet = map.value(w->objectName()).toString();
-		}*/
 
 	} else {
 

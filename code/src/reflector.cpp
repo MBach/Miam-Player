@@ -26,8 +26,10 @@ void Reflector::addInstance(QWidget *w, bool append)
 
 			// Finally, find the color
 			int position = w->styleSheet().indexOf(QRegExp("#[0-9a-f]"), index);
-			backgroundColor = QColor(w->styleSheet().mid(position, 7));
-			this->setStyleSheet("Reflector { border: 1px solid #707070; background-color: " + backgroundColor.name() + "; }");
+			if (position != -1) {
+				backgroundColor = QColor(w->styleSheet().mid(position, 7));
+				this->setStyleSheet("Reflector { border: 1px solid #707070; background-color: " + backgroundColor.name() + "; }");
+			}
 		}
 	}
 }

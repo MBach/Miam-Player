@@ -22,30 +22,42 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 
 void CustomizeThemeDialog::associatePaintableElements()
 {
+	// There are 4 kinds of paintables elements
 	bgPrimaryColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::BACKGROUND);
 	globalBackgroundColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::GLOBAL_BACKGROUND);
 	itemColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::TEXT);
+	selectedItemColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::HOVER);
 
 	// Associate instances of Classes to their "preview pane" to dynamically change colors
+	/// FIXME: should be class for Playlist because there are some problems when adding/removing playlists during color change
+	/// I know this is not really the correct way to use the player, but still, there's a fraking crash!
 	QList<QWidget *> bgElements, itemElements;
-	for (int i = 0; i < mainWindow->tabPlaylists->count(); i++) {
+	for (int i = 0; i < mainWindow->tabPlaylists->count() - 1; i++) {
 		Playlist *p = mainWindow->tabPlaylists->playlist(i);
-		if (p != NULL) {
-			itemElements << p;
-			itemElements << p->horizontalHeader();
-			bgElements << p->verticalScrollBar();
-		}
+		itemElements << p;
+		itemElements << p->horizontalHeader();
+		bgElements << p->verticalScrollBar();
 	}
 	bgElements << mainWindow->library << mainWindow->library->verticalScrollBar() << mainWindow->library->header();
 	itemElements << mainWindow->tabPlaylists << mainWindow->library << mainWindow->widgetSearchBar << mainWindow->leftTabs;
 
+	// Background of elements
 	bgPrimaryColorWidget->addInstances(bgElements);
 	bgPrimaryColorWidget->addInstances(itemElements);
 
+	// General background
 	globalBackgroundColorWidget->addInstance(mainWindow);
 	globalBackgroundColorWidget->addInstance(mainWindow->splitter);
 
+	// Text
 	itemColorWidget->addInstances(itemElements);
+
+	// Background of selected elements
+	selectedItemColorWidget->addInstances(bgElements);
+	foreach (MediaButton *b, mainWindow->mediaButtons) {
+		itemElements << b;
+	}
+	selectedItemColorWidget->addInstances(itemElements);
 }
 
 void CustomizeThemeDialog::setupActions()
@@ -131,23 +143,16 @@ void CustomizeThemeDialog::showColorDialog()
 
 void CustomizeThemeDialog::changeColor(QColor selectedColor)
 {
-	if (!selectedColor.isValid()) {
-		if (!colorDialog->currentColor().isValid()) {
-			selectedColor = QColor(Qt::white);
-		} else {
-			selectedColor = colorDialog->currentColor();
-		}
-	}
-
-	if (targetedColor != NULL) {
-		styleSheetUpdater->replace(targetedColor, selectedColor);
-	}
+	styleSheetUpdater->replace(targetedColor, selectedColor);
 }
 
 void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 {
 	Settings::getInstance()->setColorsAlternateBG(b);
-	//this->changeColor();
+	for (int i = 0; i < mainWindow->tabPlaylists->count() - 1; i++) {
+		Playlist *p = mainWindow->tabPlaylists->playlist(i);
+		p->setAlternatingRowColors(b);
+	}
 }
 
 /** Load theme at startup. */

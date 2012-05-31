@@ -573,14 +573,20 @@
  </customwidgets>
  <tabstops>
   <tabstop>leftTabs</tabstop>
+  <tabstop>searchBar</tabstop>
+  <tabstop>library</tabstop>
+  <tabstop>commandLinkButtonLibrary</tabstop>
+  <tabstop>tabPlaylists</tabstop>
   <tabstop>skipBackwardButton</tabstop>
   <tabstop>seekBackwardButton</tabstop>
   <tabstop>playButton</tabstop>
+  <tabstop>pauseButton</tabstop>
   <tabstop>stopButton</tabstop>
   <tabstop>seekForwardButton</tabstop>
   <tabstop>skipForwardButton</tabstop>
+  <tabstop>repeatButton</tabstop>
+  <tabstop>shuffleButton</tabstop>
   <tabstop>filesystem</tabstop>
-  <tabstop>commandLinkButtonLibrary</tabstop>
  </tabstops>
  <resources>
   <include location="mmmmp.qrc"/>
