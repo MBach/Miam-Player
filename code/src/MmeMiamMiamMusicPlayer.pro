@@ -1,6 +1,6 @@
 QT += phonon
 
-TagLibDirectory = C:/dev/lib/taglib-1.7
+TagLibDirectory = /home/julie/lib/taglib-1.7.2
 
 TEMPLATE = app
 
@@ -66,6 +66,12 @@ HEADERS += \
     reflector.h \
     nofocusitemdelegate.h
 
+OTHER_FILES += \
+    stylesheets/qscrollbar.qss \
+    stylesheets/playlist.qss \
+    stylesheets/librarytreeview.qss \
+    stylesheets/qslider.qss
+
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \
     translations/m4p_en.ts \
@@ -80,7 +86,7 @@ RESOURCES += \
     mmmmp.qrc
 
 CONFIG(debug, debug|release) {
-    LIBS += -Ldebug -ltaglib
+    LIBS += -Ldebug -ltag
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -88,7 +94,7 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    LIBS += -Lrelease -ltaglib
+    LIBS += -Lrelease -ltag
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
@@ -197,8 +203,3 @@ INCLUDEPATH += $$TagLibDirectory \
     $$TagLibDirectory/taglib/ogg/vorbis \
     $$TagLibDirectory/taglib/riff/aiff \
     $$TagLibDirectory/taglib/riff/wav
-
-OTHER_FILES += \
-    stylesheets/qscrollbar.qss \
-    stylesheets/playlist.qss \
-    stylesheets/librarytreeview.qss

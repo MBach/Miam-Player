@@ -201,6 +201,17 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 
 			QList<QColor> grad = this->makeLinearGradient(SIMPLE_LINEAR_GRADIENT, color);
 
+		} else if (qobject_cast<SeekSlider*>(target) != NULL || qobject_cast<VolumeSlider*>(target) != NULL) {
+
+			int l = styleSheet.indexOf("QSlider::groove:horizontal {");
+			l = styleSheet.indexOf("stop:0 rgba(", l);
+			int r = styleSheet.indexOf(';', l);
+			QList<QColor> grad = this->makeLinearGradient(SIMPLE_LINEAR_GRADIENT, color);
+			QColor f = grad.at(0), s = grad.at(1).darker(125);
+			QString substring = "stop:0 rgba(" + QString::number(f.red()) + ',' + QString::number(f.green()) + ',' + QString::number(f.blue()) + ",150), ";
+			substring += "stop:1 rgba(" + QString::number(s.red()) + ',' + QString::number(s.green()) + ',' + QString::number(s.blue()) + ",150))";
+			styleSheet = styleSheet.left(l) + substring + styleSheet.mid(r);
+
 		}
 		break;
 	case GLOBAL_BACKGROUND:

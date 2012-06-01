@@ -91,5 +91,6 @@
         <file alias="playlist">stylesheets/playlist.qss</file>
         <file alias="qscrollbar">stylesheets/qscrollbar.qss</file>
         <file alias="librarytreeview">stylesheets/librarytreeview.qss</file>
+        <file alias="qslider">stylesheets/qslider.qss</file>
     </qresource>
 </RCC>

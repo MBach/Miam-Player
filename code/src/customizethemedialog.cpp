@@ -40,6 +40,7 @@ void CustomizeThemeDialog::associatePaintableElements()
 	}
 	bgElements << mainWindow->library << mainWindow->library->verticalScrollBar() << mainWindow->library->header();
 	itemElements << mainWindow->tabPlaylists << mainWindow->library << mainWindow->widgetSearchBar << mainWindow->leftTabs;
+	itemElements << mainWindow->volumeSlider << mainWindow->seekSlider;
 
 	// Background of elements
 	bgPrimaryColorWidget->addInstances(bgElements);

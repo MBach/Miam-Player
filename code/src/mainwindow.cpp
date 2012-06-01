@@ -12,6 +12,8 @@
 #include <QGraphicsProxyWidget>
 #include <QMessageBox>
 
+#define VERSION "0.2.1"
+
 using namespace Phonon;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -26,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
 	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
 	splitter->setStyleSheet(settings->styleSheet(splitter));
+	volumeSlider->setStyleSheet(settings->styleSheet(volumeSlider));
+	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
 
 	QFileSystemModel *fileSystemModel = new QFileSystemModel(this);
 	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
@@ -217,5 +221,5 @@ void MainWindow::stop()
 void MainWindow::aboutM4P()
 {
 	QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
-	QMessageBox::about(this, tr("About Mme MiamMiamMusicPlayer"), message);
+	QMessageBox::about(this, QString("MiamMiamMusicPlayer v").append(VERSION), message);
 }
