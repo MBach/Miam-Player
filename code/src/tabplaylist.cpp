@@ -264,6 +264,7 @@ void TabPlaylist::savePlaylists()
 		}
 		// Tracks are stored in QList< QList<QVariant> >
 		settings->setValue("playlists", vPlaylists);
+		settings->sync();
 	}
 }
 
