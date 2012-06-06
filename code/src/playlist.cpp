@@ -31,7 +31,7 @@ Playlist::Playlist(QWidget *parent) :
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
 
 	// Select only one row, not cell by cell
-	this->setSelectionMode(QAbstractItemView::SingleSelection);
+	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 
@@ -264,13 +264,18 @@ void Playlist::highlightCurrentTrack()
 	}
 }
 
-/** Remove the selected track from the playlist. */
-void Playlist::removeSelectedTrack()
+/** Remove selected tracks from the playlist. */
+void Playlist::removeSelectedTracks()
 {
-	int i = currentIndex().row();
-	if (i >= 0) {
-		removeRow(i);
-		sources.removeAt(i);
+	int r = -1;
+	QList<QTableWidgetItem *> items = selectedItems();
+	for (int i = 0; i < items.size(); i++) {
+		QTableWidgetItem *item = items.at(i);
+		if (item) {
+			r = item->row();
+			sources.removeAt(r);
+			removeRow(r);
+		}
 	}
 }
 

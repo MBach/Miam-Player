@@ -826,8 +826,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>362</width>
-            <height>268</height>
+            <width>503</width>
+            <height>368</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1482,8 +1482,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>384</width>
-            <height>216</height>
+            <width>503</width>
+            <height>368</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1649,9 +1649,9 @@
               </widget>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="labelRemoveSelectedTrack">
+              <widget class="QLabel" name="labelRemoveSelectedTracks">
                <property name="text">
-                <string>Remove selected track</string>
+                <string>Remove selected track(s)</string>
                </property>
               </widget>
              </item>
@@ -1711,7 +1711,7 @@
               </widget>
              </item>
              <item row="3" column="2">
-              <widget class="ShortcutWidget" name="removeSelectedTrack" native="true">
+              <widget class="ShortcutWidget" name="removeSelectedTracks" native="true">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
                  <horstretch>0</horstretch>

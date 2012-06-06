@@ -52,6 +52,7 @@ LibraryItem* LibraryModel::insertArtist(const QString &artist)
 		if (!alphabeticalSeparators.contains(letter)) {
 			LibraryItem *separator = new LibraryItem(letter);
 			separator->setMediaType(LETTER);
+			separator->setDelegate(new LibraryItemDelegate(this));
 			alphabeticalSeparators.insert(letter, separator);
 			this->appendRow(separator);
 		}

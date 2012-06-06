@@ -301,9 +301,7 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 			// Play media only if one has not removed the playlist meanwhile, otherwise,  playlist
 			if (currentPlayList() && currentPlayList()->tracks().isEmpty()) {
 				/// todo clear mediaObject!
-				qDebug() << "delete playlist";
 			} else {
-				qDebug() << sender()->objectName();
 				mediaObject->play();
 			}
 		}
