@@ -63,6 +63,8 @@ private slots:
 
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();
+
+	void toggleTagEditor(bool b);
 };
 
 #endif // MAINWINDOW_H

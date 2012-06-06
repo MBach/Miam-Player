@@ -31,6 +31,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	Settings *settings = Settings::getInstance();
 
+	this->setContextMenuPolicy(Qt::CustomContextMenu);
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
 	this->header()->setStyleSheet(settings->styleSheet(this->header()));
@@ -50,7 +51,18 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	circleProgressBar = new CircleProgressBar(this);
 	musicSearchEngine = new MusicSearchEngine(this);
 
-	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(beforeSendToPlaylist(const QModelIndex &)));
+	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
+	QAction *actionOpenStarEditor = new QAction(tr("Ratings: *****"), this);
+	QAction *actionOpenTagEditor = new QAction(tr("Properties"), this);
+	properties = new QMenu(this);
+	properties->addAction(actionSendToCurrentPlaylist);
+	properties->addAction(actionOpenStarEditor);
+	properties->addSeparator();
+	properties->addAction(actionOpenTagEditor);
+
+	connect(actionOpenTagEditor, SIGNAL(triggered()), this, SLOT(openTagEditor()));
+
+	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(findAllAndDispatch(const QModelIndex &)));
 	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
 	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), this, SLOT(readFile(int, QString)));
 	connect(musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
@@ -72,6 +84,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
+
+	// Context menu
+	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
+	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToCurrentPlaylist()));
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
@@ -155,8 +171,8 @@ void LibraryTreeView::addNodeToTree(LibraryItem *libraryItem)
 	setItemDelegateForRow(libraryItem->row(), libraryItemDelegate);
 }
 
-/** Check if the current double-clicked item is an Artist, an Album or a Track.*/
-void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
+/** Recursively scan one node and its subitems before dispatching tracks to a specific widget (playlist or tageditor).*/
+void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlaylist)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
 	if (delegate) {
@@ -165,13 +181,19 @@ void LibraryTreeView::beforeSendToPlaylist(const QModelIndex &index)
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
-				beforeSendToPlaylist(index.child(i, 0));
+				findAllAndDispatch(index.child(i, 0), toPlaylist);
 			}
 		} else if (item->data(LibraryItem::MEDIA_TYPE).toInt() != LibraryModel::LETTER) {
 			// If the click from the mouse was on a text label or on a star
 			if (!Settings::getInstance()->isStarDelegates() ||
 					(delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty()))) {
-				emit sendToPlaylist(QPersistentModelIndex(sourceIndex));
+
+				// Dispatch items
+				if (toPlaylist) {
+					emit sendToPlaylist(QPersistentModelIndex(sourceIndex));
+				} else {
+					emit sendToTagEditor(QPersistentModelIndex(sourceIndex));
+				}
 			} else if (delegate->stars()->contains(currentPos)) {
 				QStyleOptionViewItemV4 qsovi;
 				QWidget *editor = delegate->createEditor(this, qsovi, sourceIndex);
@@ -276,4 +298,35 @@ void LibraryTreeView::setCoverSize(int newSize)
 
 	// Upscale (or downscale) icons because their inner representation is already greater than what's displayed
 	this->setIconSize(QSize(newSize, newSize));
+}
+
+/// TEST
+void LibraryTreeView::openTagEditor()
+{
+	emit setTagEditorVisible(true);
+
+	// Feed with new indexes
+	QModelIndexList indexes = this->selectedIndexes();
+	foreach (QModelIndex index, indexes) {
+		this->findAllAndDispatch(index, false);
+	}
+}
+
+/// TEST
+void LibraryTreeView::sendToCurrentPlaylist()
+{
+	foreach(QModelIndex index, selectedIndexes()) {
+		this->findAllAndDispatch(index);
+	}
+}
+
+/// TEST
+void LibraryTreeView::showContextMenu(QPoint point)
+{
+	QModelIndex index = this->indexAt(point);
+	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+	LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
+	if (!(libraryItem && libraryItem->mediaType() == LibraryModel::LETTER)) {
+		properties->exec(mapToGlobal(point));
+	}
 }

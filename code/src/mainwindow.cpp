@@ -12,7 +12,7 @@
 #include <QGraphicsProxyWidget>
 #include <QMessageBox>
 
-#define VERSION "0.2.1"
+#define VERSION "0.2.2"
 
 using namespace Phonon;
 
@@ -80,6 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 	playlistManager = new PlaylistManager(tabPlaylists);
 
+	// Tag Editor
+	tagEditor->hide();
+
 	this->setupActions();
 	this->drawLibrary();
 }
@@ -104,9 +107,14 @@ void MainWindow::setupActions()
 	// When no library is set
 	connect(commandLinkButtonLibrary, SIGNAL(clicked()), customizeOptionsDialog, SLOT(open()));
 
-	// Send music to playlist
+	// Send music to the current playlist
 	connect(library, SIGNAL(sendToPlaylist(const QPersistentModelIndex &)), tabPlaylists, SLOT(addItemFromLibraryToPlaylist(const QPersistentModelIndex &)));
-	connect(filesystem, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(addSelectedItemToPlaylist(const QModelIndex &)));
+	connect(filesystem, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(addSelectedItemToPlaylist(QModelIndex)));
+
+	// Send music to the tag editor
+	connect(library, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
+	connect(tagEditor, SIGNAL(closeTagEditor(bool)), this, SLOT(toggleTagEditor(bool)));
+	connect(library, SIGNAL(sendToTagEditor(const QPersistentModelIndex &)), tagEditor->tagEditorWidget, SLOT(addItemFromLibrary(const QPersistentModelIndex &)));
 
 	// Link buttons
 	Settings *settings = Settings::getInstance();
@@ -124,10 +132,11 @@ void MainWindow::setupActions()
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
 
 	// Playback
-	connect(actionRemoveSelectedTrack, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTrack()));
+	connect(actionRemoveSelectedTracks, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTracks()));
 	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
 	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
 	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
+
 }
 
 
@@ -222,4 +231,14 @@ void MainWindow::aboutM4P()
 {
 	QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
 	QMessageBox::about(this, QString("MiamMiamMusicPlayer v").append(VERSION), message);
+}
+
+void MainWindow::toggleTagEditor(bool b)
+{
+	if (b) {
+		tagEditor->clear();
+	}
+	tagEditor->setVisible(b);
+	seekSlider->setVisible(!b);
+	tabPlaylists->setVisible(!b);
 }

@@ -1,6 +1,6 @@
 QT += phonon
 
-TagLibDirectory = /home/julie/lib/taglib-1.7.2
+TagLibDirectory = C:/dev/lib/taglib-1.7
 
 TEMPLATE = app
 
@@ -8,7 +8,8 @@ FORMS += \
     mainwindow.ui \
     customizetheme.ui \
     customizeoptionsdialog.ui \
-    playlistmanager.ui
+    playlistmanager.ui \
+    tageditor.ui
 
 SOURCES += \
     main.cpp \
@@ -36,7 +37,9 @@ SOURCES += \
     playlistmanager.cpp \
     colordialog.cpp \
     stylesheetupdater.cpp \
-    reflector.cpp
+    reflector.cpp \
+    tageditor.cpp \
+    tageditortablewidget.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -64,7 +67,9 @@ HEADERS += \
     colordialog.h \
     stylesheetupdater.h \
     reflector.h \
-    nofocusitemdelegate.h
+    nofocusitemdelegate.h \
+    tageditor.h \
+    tageditortablewidget.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
@@ -86,7 +91,7 @@ RESOURCES += \
     mmmmp.qrc
 
 CONFIG(debug, debug|release) {
-    LIBS += -Ldebug -ltag
+    LIBS += -Ldebug -ltaglib
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -94,7 +99,7 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    LIBS += -Lrelease -ltag
+    LIBS += -Lrelease -ltaglib
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc

@@ -30,6 +30,8 @@ LibraryItemDelegate::~LibraryItemDelegate()
 	delete starEditor;
 }
 
+#include <QStylePainter>
+
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
@@ -75,8 +77,21 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 			}
 			painter->restore();
 		}
+	} else if (index.data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::LETTER) {
+		QStyleOptionViewItemV4 o = option;
+		o.state = QStyle::State_None;
+		o.font.setBold(true);
+		QPointF p1 = o.rect.bottomLeft(), p2 = o.rect.bottomRight();
+		p1.setX(p1.x() + 2);
+		p2.setX(p2.x() - 2);
+		painter->setPen(Qt::gray);
+		painter->drawLine(p1, p2);
+		QStyledItemDelegate::paint(painter, o, index);
 	} else {
-		QStyledItemDelegate::paint(painter, option, index);
+		// Remove the dotted rectangle from the item that has focus
+		QStyleOptionViewItemV4 o = option;
+		o.state &= ~QStyle::State_HasFocus;
+		QStyledItemDelegate::paint(painter, o, index);
 	}
 }
 
@@ -122,7 +137,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 {
 	Settings *settings = Settings::getInstance();
 	if (settings->withCovers() && index.data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::ALBUM) {
-		return QSize(settings->coverSize(), settings->coverSize());
+		return QSize(settings->coverSize(), settings->coverSize() + 2);
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
