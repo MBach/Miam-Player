@@ -65,6 +65,9 @@
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
            <property name="sortingEnabled">
             <bool>true</bool>
            </property>
@@ -134,8 +137,18 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="widget" native="true">
+      <widget class="QWidget" name="widgetMediaObjects" native="true">
        <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="TagEditor" name="tagEditor" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="TabPlaylist" name="tabPlaylists"/>
         </item>
@@ -345,7 +358,7 @@
     <addaction name="actionAddPlaylist"/>
     <addaction name="actionDeleteCurrentPlaylist"/>
     <addaction name="separator"/>
-    <addaction name="actionRemoveSelectedTrack"/>
+    <addaction name="actionRemoveSelectedTracks"/>
     <addaction name="actionMoveTrackUp"/>
     <addaction name="actionMoveTrackDown"/>
     <addaction name="separator"/>
@@ -505,9 +518,9 @@
     <string>S&amp;huffle</string>
    </property>
   </action>
-  <action name="actionRemoveSelectedTrack">
+  <action name="actionRemoveSelectedTracks">
    <property name="text">
-    <string>&amp;Remove selected track</string>
+    <string>&amp;Remove selected track(s)</string>
    </property>
   </action>
   <action name="actionMoveTrackUp">
@@ -569,6 +582,12 @@
    <class>LibraryFilterLineEdit</class>
    <extends>QLineEdit</extends>
    <header>libraryfilterlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TagEditor</class>
+   <extends>QWidget</extends>
+   <header>tageditor.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

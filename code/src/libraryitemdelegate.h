@@ -46,7 +46,6 @@ protected:
 
 private slots:
 	void commitAndCloseEditor(QWidget *);
-
 };
 
 #endif // LIBRARYITEMDELEGATE_H

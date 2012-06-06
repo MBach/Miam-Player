@@ -1,6 +1,7 @@
 #ifndef LIBRARYTREEVIEW_H
 #define LIBRARYTREEVIEW_H
 
+#include <QMenu>
 #include <QTreeView>
 #include <QSortFilterProxyModel>
 
@@ -20,6 +21,7 @@ private:
 	QModelIndexList savedStateModelIndexList;
 	MusicSearchEngine *musicSearchEngine;
 	QPoint currentPos;
+	QMenu *properties;
 
 public:
 	LibraryTreeView(QWidget *parent = 0);
@@ -27,16 +29,20 @@ public:
 protected:
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	void mouseDoubleClickEvent(QMouseEvent *event);
-	
+
 signals:
 	/** Add a track to the current playlist. */
 	void sendToPlaylist(const QPersistentModelIndex &);
+
+	void sendToTagEditor(const QPersistentModelIndex &);
 
 	/** (Dis|En)able covers.*/
 	void displayCovers(bool);
 
 	/** When covers are enabled, changes their size. */
 	void sizeOfCoversChanged(int);
+
+	void setTagEditorVisible(bool);
 
 public slots:
 	/** Reduce the size of the library when the user is typing text. */
@@ -49,8 +55,8 @@ private slots:
 	/** Tell the view to create specific delegate for the current row. */
 	void addNodeToTree(LibraryItem *libraryItem);
 
-	/** Check if the current double-clicked item is an Artist, an Album or a Track.*/
-	void beforeSendToPlaylist(const QModelIndex &index);
+	/** Recursively scan one node and its subitems before dispatching tracks to a specific widget (playlist or tageditor).*/
+	void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true);
 
 	void readFile(int musicLocationIndex, const QString &qFileName);
 
@@ -61,6 +67,11 @@ private slots:
 
 	/**  Layout the library at runtime when one is changing the size in options. */
 	void setCoverSize(int);
+
+	void openTagEditor();
+
+	void sendToCurrentPlaylist();
+	void showContextMenu(QPoint point);
 };
 
 #endif // LIBRARYTREEVIEW_H
