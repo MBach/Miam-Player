@@ -71,8 +71,8 @@ public slots:
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 	void highlightCurrentTrack();
 
-	/** Remove the selected track from the playlist. */
-	void removeSelectedTrack();
+	/** Remove selected tracks from the playlist. */
+	void removeSelectedTracks();
 
 	/** Move the selected track upward. */
 	void moveTrackUp();
