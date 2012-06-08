@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
-    <height>480</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,77 @@
     <number>0</number>
    </property>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="closeTagEditorButton">
+       <property name="text">
+        <string>Close Editor</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="spacer_tagEditor">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="convertPushButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Converter</string>
+       </property>
+       <property name="icon">
+        <iconset resource="mmmmp.qrc">
+         <normaloff>:/icons/rename</normaloff>:/icons/rename</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveChangesButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Save changes</string>
+       </property>
+       <property name="icon">
+        <iconset resource="mmmmp.qrc">
+         <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="TagEditorTableWidget" name="tagEditorWidget">
      <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
      </property>
      <property name="showGrid">
       <bool>false</bool>
@@ -72,6 +140,11 @@
      </column>
      <column>
       <property name="text">
+       <string>Track</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
        <string>Disc</string>
       </property>
      </column>
@@ -93,46 +166,210 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QPushButton" name="closeTagEditorButton">
-       <property name="text">
-        <string>Close Editor</string>
+      <widget class="QLabel" name="labelCover">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="spacer_tagEditor">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
+       <property name="minimumSize">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>100</width>
+         <height>100</height>
         </size>
        </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="saveChangesButton">
-       <property name="enabled">
-        <bool>false</bool>
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>100</height>
+        </size>
        </property>
        <property name="text">
-        <string>Save changes</string>
+        <string notr="true"/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="mmmmp.qrc">:/icons/disc</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="cancelButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
-       <property name="text">
-        <string>Cancel</string>
-       </property>
-      </widget>
+      <layout class="QGridLayout" name="gridLayout" columnstretch="1,2,1,6">
+       <item row="1" column="2" alignment="Qt::AlignRight">
+        <widget class="QLabel" name="labelDisc">
+         <property name="text">
+          <string>Disc: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3" alignment="Qt::AlignTop">
+        <widget class="QComboBox" name="commentComboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertAlphabetically</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="artistComboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertAlphabetically</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" alignment="Qt::AlignRight">
+        <widget class="QLabel" name="labelArtist">
+         <property name="text">
+          <string>Artist: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" alignment="Qt::AlignRight">
+        <widget class="QLabel" name="labelTrack">
+         <property name="text">
+          <string>Track: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2" alignment="Qt::AlignRight|Qt::AlignTop">
+        <widget class="QLabel" name="labelComment">
+         <property name="text">
+          <string>Comment: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QComboBox" name="trackComboBox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignRight">
+          <widget class="QLabel" name="labelYear">
+           <property name="text">
+            <string>Year: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="yearComboBox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="0" alignment="Qt::AlignRight">
+        <widget class="QLabel" name="labelTitle">
+         <property name="text">
+          <string>Title: </string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item alignment="Qt::AlignRight">
+          <widget class="QLabel" name="labelArtistAlbum">
+           <property name="text">
+            <string>Artist Album: </string>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignRight">
+          <widget class="QLabel" name="labelAlbum">
+           <property name="text">
+            <string>Album: </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QComboBox" name="artistAlbumComboBox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="albumComboBox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="titleComboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertAlphabetically</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QComboBox" name="discComboBox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignRight">
+          <widget class="QLabel" name="labelGenre">
+           <property name="text">
+            <string>Genre: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="genreComboBox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <property name="insertPolicy">
+            <enum>QComboBox::InsertAlphabetically</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -142,9 +379,27 @@
   <customwidget>
    <class>TagEditorTableWidget</class>
    <extends>QTableWidget</extends>
-   <header>tageditortablewidget.h</header>
+   <header>tageditor/tageditortablewidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <tabstops>
+  <tabstop>closeTagEditorButton</tabstop>
+  <tabstop>convertPushButton</tabstop>
+  <tabstop>saveChangesButton</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>tagEditorWidget</tabstop>
+  <tabstop>titleComboBox</tabstop>
+  <tabstop>artistComboBox</tabstop>
+  <tabstop>artistAlbumComboBox</tabstop>
+  <tabstop>albumComboBox</tabstop>
+  <tabstop>trackComboBox</tabstop>
+  <tabstop>discComboBox</tabstop>
+  <tabstop>yearComboBox</tabstop>
+  <tabstop>genreComboBox</tabstop>
+  <tabstop>commentComboBox</tabstop>
+ </tabstops>
+ <resources>
+  <include location="mmmmp.qrc"/>
+ </resources>
  <connections/>
 </ui>

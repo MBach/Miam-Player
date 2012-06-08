@@ -181,10 +181,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Remove selected track</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Move selected track down</source>
         <translation type="unfinished"></translation>
     </message>
@@ -210,6 +206,10 @@
     </message>
     <message>
         <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove selected track(s)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -436,6 +436,17 @@
     </message>
 </context>
 <context>
+    <name>LibraryTreeView</name>
+    <message>
+        <source>Send to the current playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Madame MiamMiam&apos;s Music Player</source>
@@ -471,10 +482,6 @@
     </message>
     <message>
         <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About Mme MiamMiamMusicPlayer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -578,10 +585,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Remove selected track</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Move selected track &amp;up</source>
         <translation type="unfinished"></translation>
     </message>
@@ -599,6 +602,10 @@
     </message>
     <message>
         <source>&amp;Decrease volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected track(s)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -742,6 +749,132 @@
     </message>
     <message>
         <source>Playlist </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TagConverter</name>
+    <message>
+        <source>From Tag to File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TagEditor</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filename</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Genre</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Track: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Genre: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Comment: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist Album: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(Keep)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>(Delete)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -5,9 +5,9 @@
 #include <phonon>
 
 #include "ui_mainwindow.h"
-#include "customizeoptionsdialog.h"
-#include "playlistmanager.h"
-#include "librarytreeview.h"
+#include "dialogs/customizeoptionsdialog.h"
+#include "dialogs/playlistmanager.h"
+#include "library/librarytreeview.h"
 #include "settings.h"
 #include "mediabutton.h"
 

@@ -182,10 +182,6 @@
         <translation>Montrer l&apos;onglet explorateur</translation>
     </message>
     <message>
-        <source>Remove selected track</source>
-        <translation>Retirer la piste sélectionnée</translation>
-    </message>
-    <message>
         <source>Move selected track down</source>
         <translation>Déplacer vers le bas la piste sélectionnée</translation>
     </message>
@@ -212,6 +208,10 @@
     <message>
         <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
         <translation>Souhaitez-vous conserver vos listes de lecture avant de quitter, puis de les restaurer plus tard ?</translation>
+    </message>
+    <message>
+        <source>Remove selected track(s)</source>
+        <translation>Retirer les pistes sélectionnées</translation>
     </message>
 </context>
 <context>
@@ -437,6 +437,17 @@
     </message>
 </context>
 <context>
+    <name>LibraryTreeView</name>
+    <message>
+        <source>Send to the current playlist</source>
+        <translation>Envoyer à la liste de lecture courante</translation>
+    </message>
+    <message>
+        <source>Properties</source>
+        <translation>Propriétés</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>Madame MiamMiam&apos;s Music Player</source>
@@ -474,10 +485,6 @@
     <message>
         <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
         <translation>Ce logiciel est un lecteur de musique MP3 destiné à être très simple d&apos;utilisation.&lt;br&gt;&lt;br&gt;Il n&apos;intègre pas de fonctionnalité étendues comme l&apos;accès aux paroles, ou à être interconnecté avec divers services web. Il propose un paramétrage avancé de l&apos;interface et autorise la gestion des pistes favorites.</translation>
-    </message>
-    <message>
-        <source>About Mme MiamMiamMusicPlayer</source>
-        <translation>À propos de Mme MiamMiamMusicPlayer</translation>
     </message>
     <message>
         <source>Seek backward</source>
@@ -580,10 +587,6 @@
         <translation>Al&amp;éatoire</translation>
     </message>
     <message>
-        <source>&amp;Remove selected track</source>
-        <translation>&amp;Retirer la piste sélectionnée</translation>
-    </message>
-    <message>
         <source>Move selected track &amp;up</source>
         <translation>Déplacer vers le &amp;haut la piste sélectionnée</translation>
     </message>
@@ -602,6 +605,10 @@
     <message>
         <source>&amp;Decrease volume</source>
         <translation>&amp;Diminuer le volume</translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected track(s)</source>
+        <translation>&amp;Retirer les pistes sélectionnées</translation>
     </message>
 </context>
 <context>
@@ -745,6 +752,132 @@
     <message>
         <source>Playlist </source>
         <translation>Liste de lecture </translation>
+    </message>
+</context>
+<context>
+    <name>TagConverter</name>
+    <message>
+        <source>From Tag to File</source>
+        <translation>Du Tag vers le Fichier</translation>
+    </message>
+    <message>
+        <source>Preview</source>
+        <translation>Prévisualiser</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Appliquer</translation>
+    </message>
+</context>
+<context>
+    <name>TagEditor</name>
+    <message>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <source>Close Editor</source>
+        <translation>Fermer l&apos;Éditeur</translation>
+    </message>
+    <message>
+        <source>Converter</source>
+        <translation>Convertisseur</translation>
+    </message>
+    <message>
+        <source>Save changes</source>
+        <translation>Sauvegarder les modifications</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Filename</source>
+        <translation>Nom de fichier</translation>
+    </message>
+    <message>
+        <source>Path</source>
+        <translation>Chemin</translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation>Titre</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artiste</translation>
+    </message>
+    <message>
+        <source>Artist Album</source>
+        <translation>Artiste de l&apos;album</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation>Album</translation>
+    </message>
+    <message>
+        <source>Track</source>
+        <translation>Piste</translation>
+    </message>
+    <message>
+        <source>Disc</source>
+        <translation>Disque</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Année</translation>
+    </message>
+    <message>
+        <source>Genre</source>
+        <translation>Genre</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Commentaire</translation>
+    </message>
+    <message>
+        <source>Track: </source>
+        <translation>Piste : </translation>
+    </message>
+    <message>
+        <source>Genre: </source>
+        <translation>Genre : </translation>
+    </message>
+    <message>
+        <source>Comment: </source>
+        <translation>Commentaire : </translation>
+    </message>
+    <message>
+        <source>Year: </source>
+        <translation>Année : </translation>
+    </message>
+    <message>
+        <source>Disc: </source>
+        <translation>Disque : </translation>
+    </message>
+    <message>
+        <source>Title: </source>
+        <translation>Titre : </translation>
+    </message>
+    <message>
+        <source>Artist Album: </source>
+        <translation>Artiste de l&apos;album : </translation>
+    </message>
+    <message>
+        <source>Album: </source>
+        <translation>Album : </translation>
+    </message>
+    <message>
+        <source>Artist: </source>
+        <translation>Artiste : </translation>
+    </message>
+    <message>
+        <source>(Keep)</source>
+        <translation>(Conserver)</translation>
+    </message>
+    <message>
+        <source>(Delete)</source>
+        <translation>(Supprimer)</translation>
     </message>
 </context>
 <context>

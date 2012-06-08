@@ -6,6 +6,9 @@
         <file alias="down-arrow">config/down-arrow.png</file>
         <file alias="up-arrow">config/up-arrow.png</file>
         <file alias="handle">config/handle.png</file>
+        <file alias="rename">config/rename.png</file>
+        <file alias="save">config/save.png</file>
+        <file alias="disc">config/disc.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

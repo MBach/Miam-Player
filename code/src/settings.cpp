@@ -1,7 +1,7 @@
 #include "settings.h"
 
-#include "librarytreeview.h"
-#include "libraryfilterlineedit.h"
+#include "library/librarytreeview.h"
+#include "library/libraryfilterlineedit.h"
 #include "mainwindow.h"
 #include "playlist.h"
 #include "tabplaylist.h"

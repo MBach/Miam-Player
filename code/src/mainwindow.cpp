@@ -5,14 +5,14 @@
 #include <QFileSystemModel>
 
 #include "mainwindow.h"
-#include "customizethemedialog.h"
+#include "dialogs/customizethemedialog.h"
 #include "playlist.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QMessageBox>
 
-#define VERSION "0.2.2"
+#define VERSION "0.2.3"
 
 using namespace Phonon;
 
@@ -114,7 +114,9 @@ void MainWindow::setupActions()
 	// Send music to the tag editor
 	connect(library, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
 	connect(tagEditor, SIGNAL(closeTagEditor(bool)), this, SLOT(toggleTagEditor(bool)));
+	connect(library, SIGNAL(aboutToBeSent()), tagEditor, SLOT(beforeAddingItems()));
 	connect(library, SIGNAL(sendToTagEditor(const QPersistentModelIndex &)), tagEditor->tagEditorWidget, SLOT(addItemFromLibrary(const QPersistentModelIndex &)));
+	connect(library, SIGNAL(finishedToBeSent()), tagEditor, SLOT(afterAddingItems()));
 
 	// Link buttons
 	Settings *settings = Settings::getInstance();
@@ -136,7 +138,6 @@ void MainWindow::setupActions()
 	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
 	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
 	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
-
 }
 
 
@@ -149,6 +150,8 @@ void MainWindow::changeEvent(QEvent *event)
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
 		// Also retranslate each playlist which includes columns like "album", "length", ...
 		tabPlaylists->retranslateUi();
+		library->retranslateUi();
+		tagEditor->retranslateUi(tagEditor);
 
 		// (need to tested with Arabic language)
 		if (tr("LTR") == "RTL") {

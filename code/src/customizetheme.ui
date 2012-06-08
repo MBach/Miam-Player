@@ -1456,7 +1456,7 @@
   <customwidget>
    <class>Reflector</class>
    <extends>QWidget</extends>
-   <header>reflector.h</header>
+   <header>dialogs/reflector.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

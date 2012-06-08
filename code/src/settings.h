@@ -4,7 +4,7 @@
 #include <QSettings>
 
 #include "mediabutton.h"
-#include "reflector.h"
+#include "dialogs/reflector.h"
 
 class Settings : public QSettings
 {
@@ -16,7 +16,7 @@ private:
 
 	/** Private constructor. */
 	Settings(const QString &organization = "MmeMiamMiam",
-			 const QString & application = "MmeMiamMiamMusicPlayer");
+			 const QString &application = "MmeMiamMiamMusicPlayer");
 
 	/** Store the size of each font used in the app. */
 	QMap<QString, QVariant> fontPointSizeMap;

@@ -1,5 +1,5 @@
 #include "tabplaylist.h"
-#include "libraryitem.h"
+#include "library/libraryitem.h"
 #include "settings.h"
 
 #include <QApplication>
@@ -69,6 +69,7 @@ void TabPlaylist::retranslateUi()
 void TabPlaylist::addItemFromLibraryToPlaylist(const QPersistentModelIndex &item)
 {
 	bool isEmpty = currentPlayList()->tracks().isEmpty();
+	currentPlayList();
 	this->addItemToCurrentPlaylist(item);
 	// Automatically plays the first track
 	if (isEmpty) {

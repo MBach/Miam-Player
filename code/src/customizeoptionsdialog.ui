@@ -1902,8 +1902,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>462</width>
-            <height>124</height>
+            <width>503</width>
+            <height>368</height>
            </rect>
           </property>
           <attribute name="label">
@@ -2238,7 +2238,7 @@
   <customwidget>
    <class>ShortcutWidget</class>
    <extends>QWidget</extends>
-   <header>shortcutwidget.h</header>
+   <header>dialogs/shortcutwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

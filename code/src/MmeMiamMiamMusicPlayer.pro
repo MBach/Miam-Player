@@ -1,75 +1,78 @@
 QT += phonon
 
-TagLibDirectory = C:/dev/lib/taglib-1.7
+TagLibDirectory = C:/dev/lib/taglib-1.7.2
 
 TEMPLATE = app
 
 FORMS += \
-    mainwindow.ui \
-    customizetheme.ui \
     customizeoptionsdialog.ui \
+    customizetheme.ui \
+    mainwindow.ui \
     playlistmanager.ui \
+    tagconverter.ui \
     tageditor.ui
 
 SOURCES += \
-    main.cpp \
+    dialogs/colordialog.cpp \
+    dialogs/customizethemedialog.cpp \
+    dialogs/customizeoptionsdialog.cpp \
+    dialogs/playlistmanager.cpp \
+    dialogs/reflector.cpp \
+    dialogs/shortcutlineedit.cpp \
+    dialogs/shortcutwidget.cpp \
+    dialogs/stylesheetupdater.cpp \
+    library/libraryfilterlineedit.cpp \
+    library/libraryfilterproxymodel.cpp \
+    library/libraryitem.cpp \
+    library/libraryitemdelegate.cpp \
+    library/librarymodel.cpp \
+    library/librarytreeview.cpp \
+    tageditor/tagconverter.cpp \
+    tageditor/tageditor.cpp \
+    tageditor/tageditortablewidget.cpp \
     circleprogressbar.cpp \
-    libraryfilterlineedit.cpp \
-    libraryfilterproxymodel.cpp \
-    librarymodel.cpp \
-    librarytreeview.cpp \
+    main.cpp \
     mainwindow.cpp \
     mediabutton.cpp \
     musicsearchengine.cpp \
     playlist.cpp \
     settings.cpp \
-    tabplaylist.cpp \
-    customizethemedialog.cpp \
-    customizeoptionsdialog.cpp \
-    libraryitemdelegate.cpp \
-    starrating.cpp \
     stareditor.cpp \
-    libraryitem.cpp \
-    shortcutlineedit.cpp \
-    shortcutwidget.cpp \
-    tracksnotfoundmessagebox.cpp \
+    starrating.cpp \
     tabbar.cpp \
-    playlistmanager.cpp \
-    colordialog.cpp \
-    stylesheetupdater.cpp \
-    reflector.cpp \
-    tageditor.cpp \
-    tageditortablewidget.cpp
+    tabplaylist.cpp \
+    tracksnotfoundmessagebox.cpp
 
 HEADERS += \
-    mainwindow.h \
     circleprogressbar.h \
-    libraryfilterlineedit.h \
-    libraryfilterproxymodel.h \
-    librarymodel.h \
-    librarytreeview.h \
+    dialogs/colordialog.h \
+    dialogs/customizethemedialog.h \
+    dialogs/customizeoptionsdialog.h \
+    dialogs/playlistmanager.h \
+    dialogs/reflector.h \
+    dialogs/shortcutlineedit.h \
+    dialogs/shortcutwidget.h \
+    library/libraryfilterlineedit.h \
+    library/libraryfilterproxymodel.h \
+    library/libraryitem.h \
+    library/libraryitemdelegate.h \
+    library/librarymodel.h \
+    library/librarytreeview.h \
+    tageditor/tagconverter.h \
+    tageditor/tageditor.h \
+    tageditor/tageditortablewidget.h \
+    dialogs/stylesheetupdater.h \
+    mainwindow.h \
     mediabutton.h \
     musicsearchengine.h \
+    nofocusitemdelegate.h \
     playlist.h \
     settings.h \
-    tabplaylist.h \
-    customizethemedialog.h \
-    customizeoptionsdialog.h \
-    libraryitemdelegate.h \
     starrating.h \
     stareditor.h \
-    libraryitem.h \
-    shortcutlineedit.h \
-    shortcutwidget.h \
-    tracksnotfoundmessagebox.h \
     tabbar.h \
-    playlistmanager.h \
-    colordialog.h \
-    stylesheetupdater.h \
-    reflector.h \
-    nofocusitemdelegate.h \
-    tageditor.h \
-    tageditortablewidget.h
+    tabplaylist.h \
+    tracksnotfoundmessagebox.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
@@ -91,7 +94,7 @@ RESOURCES += \
     mmmmp.qrc
 
 CONFIG(debug, debug|release) {
-    LIBS += -Ldebug -ltaglib
+    LIBS += -Ldebug -llibtag
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -99,7 +102,7 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    LIBS += -Lrelease -ltaglib
+    LIBS += -Lrelease -llibtag
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
