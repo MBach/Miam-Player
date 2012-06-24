@@ -2,6 +2,8 @@
 #include "settings.h"
 #include "library/libraryitem.h"
 
+#include <QScrollBar>
+
 #include <fileref.h>
 #include <id3v2tag.h>
 #include <mpegfile.h>
@@ -13,13 +15,20 @@
 
 #include <QtDebug>
 
+#include <QApplication>
+
 using namespace Phonon;
 
 using namespace TagLib;
 
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
-{}
+{
+	Settings *settings = Settings::getInstance();
+	this->setStyleSheet(settings->styleSheet(this));
+	this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
+	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
+}
 
 void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
 {
@@ -47,6 +56,7 @@ void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index
 
 		QTableWidgetItem *fileName = new QTableWidgetItem(fileInfo.fileName());
 		QTableWidgetItem *absPath = new QTableWidgetItem(fileInfo.absolutePath());
+		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
 		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
 		QTableWidgetItem *artistAlbum = new QTableWidgetItem(artAlb.toCString());

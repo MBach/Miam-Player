@@ -27,6 +27,7 @@ SOURCES += \
     library/libraryitemdelegate.cpp \
     library/librarymodel.cpp \
     library/librarytreeview.cpp \
+    library/musicsearchengine.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
@@ -34,7 +35,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mediabutton.cpp \
-    musicsearchengine.cpp \
     playlist.cpp \
     settings.cpp \
     stareditor.cpp \
@@ -58,13 +58,13 @@ HEADERS += \
     library/libraryitemdelegate.h \
     library/librarymodel.h \
     library/librarytreeview.h \
+    library/musicsearchengine.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
     dialogs/stylesheetupdater.h \
     mainwindow.h \
     mediabutton.h \
-    musicsearchengine.h \
     nofocusitemdelegate.h \
     playlist.h \
     settings.h \
@@ -76,9 +76,10 @@ HEADERS += \
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
-    stylesheets/playlist.qss \
     stylesheets/librarytreeview.qss \
-    stylesheets/qslider.qss
+    stylesheets/qslider.qss \
+    stylesheets/tageditor.qss \
+    stylesheets/playlist.qss
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \

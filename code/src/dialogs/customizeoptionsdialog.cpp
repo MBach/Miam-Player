@@ -129,7 +129,7 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent * /* event */)
 		QFile::remove("library.mmmmp");
 	}
 	if (musicLocationsChanged) {
-		emit musicLocationsHasChanged(true);
+		emit musicLocationsHaveChanged(true);
 		musicLocationsChanged = false;
 	}
 }

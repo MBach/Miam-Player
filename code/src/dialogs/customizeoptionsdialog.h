@@ -26,7 +26,7 @@ protected:
 
 signals:
 	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHasChanged(bool);
+	void musicLocationsHaveChanged(bool);
 
 public slots:
 	void checkShortcut(ShortcutWidget *, int typedKey);

@@ -12,7 +12,7 @@ LibraryTreeView::item:selected {
     color: #000000;
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop:0 rgba(216,235,255,80), stop:1 rgba(183,215,255,80));
 }
-LibraryTreeView::item:hover {
+LibraryTreeView::item:hover:!selected {
     border: 1px solid #b9d7fc;
     border-radius: 2px;
     padding-left: -1px;

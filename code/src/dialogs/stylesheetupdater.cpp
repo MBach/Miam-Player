@@ -10,6 +10,7 @@
 #include "playlist.h"
 #include "settings.h"
 #include "tabplaylist.h"
+#include "tageditor/tageditor.h"
 
 #include "reflector.h"
 
@@ -101,6 +102,13 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 				QList<QColor> grad = this->makeLinearGradient(COMPLEX_LINEAR_GRADIENT, color);
 				styleSheet.replace(regExps[ALTERNATE_BACKGROUND], "\\1" + grad.at(1).name());
 			}
+
+		} else if (qobject_cast<TagEditorTableWidget*>(target) != NULL) {
+
+			QList<QColor> grad = this->makeLinearGradient(COMPLEX_LINEAR_GRADIENT, color);
+			styleSheet.replace(regExps[key], "\\1" + color.name());
+			styleSheet.replace(regExps[ALTERNATE_BACKGROUND], "\\1" + grad.at(1).name());
+
 		} else if (qobject_cast<QScrollBar*>(target) != NULL) {
 
 			// In a complex stylesheet, there are multiples occurrences of qlineargradient.
@@ -135,6 +143,9 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 			substring = styleSheet.mid(l, r - l);
 			substring.replace(regExps[key], "\\1" + color.lighter(110).name());
 			styleSheet = styleSheet.left(l) + substring + styleSheet.mid(r);
+
+			qDebug() << styleSheet << target->parent()->parent()->objectName();
+
 
 		} else {
 			styleSheet.replace(regExps[key], "\\1" + color.name());
@@ -184,7 +195,7 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 			styleSheet = styleSheet.left(l) + substring + styleSheet.mid(r);
 
 			// Border (when hovered)
-			l = styleSheet.indexOf("LibraryTreeView::item:hover {");
+			l = styleSheet.indexOf("LibraryTreeView::item:hover:!selected {");
 			r = styleSheet.indexOf('}', l);
 			substring = styleSheet.mid(l, r - l);
 			substring.replace(regExps[BORDER], "\\1" + s.lighter(150).name());
@@ -199,6 +210,7 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 
 		} else if (qobject_cast<MediaButton*>(target) != NULL) {
 
+			/// FIXME
 			QList<QColor> grad = this->makeLinearGradient(SIMPLE_LINEAR_GRADIENT, color);
 
 		} else if (qobject_cast<SeekSlider*>(target) != NULL || qobject_cast<VolumeSlider*>(target) != NULL) {

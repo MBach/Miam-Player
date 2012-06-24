@@ -14,6 +14,10 @@ class TagEditor : public QWidget, public Ui::TagEditor
 private:
 	QMap<int, QComboBox*> combos;
 
+	QMap<int, bool> filenames;
+	QMap<int, bool> tags;
+	QMap<int, QPersistentModelIndex> tracks;
+
 	bool atLeastOneItemChanged;
 
 	TagConverter *tagConverter;
@@ -24,11 +28,15 @@ public:
 signals:
 	void closeTagEditor(bool);
 
+	void tracksRenamed();
+
 public slots:
 	/** Delete all rows. */
 	void clear();
 
 	void beforeAddingItems();
+
+	void addItemFromLibrary(const QPersistentModelIndex &index);
 
 	void afterAddingItems();
 

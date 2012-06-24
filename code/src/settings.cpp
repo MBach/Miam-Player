@@ -19,6 +19,7 @@ Settings::Settings(const QString &organization, const QString &application)
 	QStringList filenames;
 	filenames << ":/stylesheets/playlist";
 	filenames << ":/stylesheets/librarytreeview";
+	filenames << ":/stylesheets/tageditor";
 	filenames << ":/stylesheets/qscrollbar";
 	filenames << ":/stylesheets/qslider";
 
@@ -266,6 +267,13 @@ QString Settings::styleSheet(QWidget *w) const
 		styleSheet = map.value(Playlist::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
 			styleSheet = stylesheets[":/stylesheets/playlist"];
+		}
+
+	} else if (qobject_cast<TagEditorTableWidget*>(w) != NULL) {
+
+		styleSheet = map.value(TagEditorTableWidget::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = stylesheets[":/stylesheets/tageditor"];
 		}
 
 	} else if (qobject_cast<LibraryTreeView*>(w) != NULL) {

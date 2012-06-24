@@ -29,13 +29,12 @@ private:
 	void associatePaintableElements();
 	void setupActions();
 
+	/** Load theme at startup. */
+	void loadTheme();
+
 protected:
 	/** Automatically centers the parent window when closing this dialog. */
 	void closeEvent(QCloseEvent *e);
-
-private:
-	/** Load theme at startup. */
-	void loadTheme();
 
 public slots:
 	/** Redefined to initialize favorites from settings. */

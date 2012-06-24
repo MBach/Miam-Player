@@ -12,8 +12,6 @@
 #include <QGraphicsProxyWidget>
 #include <QMessageBox>
 
-#define VERSION "0.2.3"
-
 using namespace Phonon;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -91,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::setupActions()
 {
 	// Load music
-	connect(customizeOptionsDialog, SIGNAL(musicLocationsHasChanged(bool)), this, SLOT(drawLibrary(bool)));
+	connect(customizeOptionsDialog, SIGNAL(musicLocationsHaveChanged(bool)), this, SLOT(drawLibrary(bool)));
 
 	// Link user interface
 	// Actions from the menu
@@ -115,7 +113,7 @@ void MainWindow::setupActions()
 	connect(library, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
 	connect(tagEditor, SIGNAL(closeTagEditor(bool)), this, SLOT(toggleTagEditor(bool)));
 	connect(library, SIGNAL(aboutToBeSent()), tagEditor, SLOT(beforeAddingItems()));
-	connect(library, SIGNAL(sendToTagEditor(const QPersistentModelIndex &)), tagEditor->tagEditorWidget, SLOT(addItemFromLibrary(const QPersistentModelIndex &)));
+	connect(library, SIGNAL(sendToTagEditor(const QPersistentModelIndex &)), tagEditor, SLOT(addItemFromLibrary(const QPersistentModelIndex &)));
 	connect(library, SIGNAL(finishedToBeSent()), tagEditor, SLOT(afterAddingItems()));
 
 	// Link buttons
@@ -233,7 +231,7 @@ void MainWindow::stop()
 void MainWindow::aboutM4P()
 {
 	QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
-	QMessageBox::about(this, QString("MiamMiamMusicPlayer v").append(VERSION), message);
+	QMessageBox::about(this, QString("Madame MiamMiam's Music Player v").append(qApp->applicationVersion()), message);
 }
 
 void MainWindow::toggleTagEditor(bool b)

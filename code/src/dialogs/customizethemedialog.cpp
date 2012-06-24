@@ -39,6 +39,8 @@ void CustomizeThemeDialog::associatePaintableElements()
 		bgElements << p->verticalScrollBar();
 	}
 	bgElements << mainWindow->library << mainWindow->library->verticalScrollBar() << mainWindow->library->header();
+	bgElements << mainWindow->tagEditor->tagEditorWidget << mainWindow->tagEditor->tagEditorWidget->horizontalHeader();
+	//bgElements << mainWindow->tagEditor->tagEditorWidget->horizontalScrollBar() << mainWindow->tagEditor->tagEditorWidget->verticalScrollBar();
 	itemElements << mainWindow->tabPlaylists << mainWindow->library << mainWindow->widgetSearchBar << mainWindow->leftTabs;
 	itemElements << mainWindow->volumeSlider << mainWindow->seekSlider;
 

@@ -1,7 +1,10 @@
 #include "tageditor.h"
+#include "library/libraryitem.h"
+#include "settings.h"
 
 #include <QtDebug>
 
+#include <QFile>
 #include <QGraphicsPixmapItem>
 
 TagEditor::TagEditor(QWidget *parent) :
@@ -57,6 +60,15 @@ void TagEditor::beforeAddingItems()
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
 }
 
+void TagEditor::addItemFromLibrary(const QPersistentModelIndex &index)
+{
+	tagEditorWidget->addItemFromLibrary(index);
+	// Test
+	tracks.insert(tagEditorWidget->rowCount() - 1, index);
+	filenames.insert(tagEditorWidget->rowCount() - 1, false);
+	tags.insert(tagEditorWidget->rowCount() - 1, false);
+}
+
 void TagEditor::afterAddingItems()
 {
 	// It's possible to edit single items by double-clicking in the table
@@ -71,12 +83,45 @@ void TagEditor::close()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 	atLeastOneItemChanged = false;
+	tracks.clear();
+	filenames.clear();
+	tags.clear();
 	QWidget::close();
 }
 
 void TagEditor::commitChanges()
 {
-	qDebug() << "TODO commitChanges";
+	QMapIterator<int, bool> t(tags), f(filenames);
+	// Apply tags first
+	while (t.hasNext()) {
+		t.next();
+		if (t.value()) {
+			qDebug() << "TODO write tags onto the hdd";
+		}
+	}
+
+	// Apply new filenames
+	while (f.hasNext()) {
+		f.next();
+		if (f.value()) {
+			int row = f.key();
+			/// XXX: Settings::getInstance()->absoluteFilePath(QModelIndex);
+			QPersistentModelIndex index = tracks.value(row);
+			QString filePath = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
+			QString fileName = index.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+			if (QFile::exists(filePath + fileName)) {
+				//QTableWidgetItem *newFilename = tagEditorWidget->item(row, 0);
+				//QTableWidgetItem *path = tagEditorWidget->item(row, 1);
+				QFile file(filePath + fileName);
+				//file.rename(path->data(Qt::DisplayRole).toString() + '/' + newFilename->data(Qt::DisplayRole).toString());
+				file.close();
+				//qDebug() << (filePath + fileName) << "was successfully renamed to" << newAbsFilepath;
+			}
+		}
+	}
+	if (!filenames.isEmpty()) {
+		emit tracksRenamed();
+	}
 }
 
 void TagEditor::rollbackChanges()
@@ -136,6 +181,20 @@ void TagEditor::recordChanges(QTableWidgetItem *item)
 		atLeastOneItemChanged = true;
 		saveChangesButton->setEnabled(true);
 		cancelButton->setEnabled(true);
+	}
+	if (item->column() == 0) {
+		// Filenames
+		//bool b = filenames.value(item->row());
+		//if (!b) {
+		filenames.insert(item->row(), true);
+		//}
+	} else {
+		// Tags
+		//for (int i = 1; i < tagEditorWidget->columnCount(); i++) {
+		//	QTableWidgetItem *i = tagEditorWidget->item(i, item->column());
+		//
+		//}
+		tags.insert(item->row(), true);
 	}
 }
 
