@@ -605,7 +605,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Remove selected track(s)</source>
+        <source>&amp;Remove selected track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected tracks &amp;up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move selected tracks &amp;down</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

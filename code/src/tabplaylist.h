@@ -80,6 +80,9 @@ signals:
 	void destroyed(int);
 	void created();
 
+	/** Forward the signal. */
+	void aboutToChangeMenuLabels(int);
+
 private slots:
 	/** Save playlists before exit. */
 	void savePlaylists();

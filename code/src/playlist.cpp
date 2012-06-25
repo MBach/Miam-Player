@@ -95,6 +95,13 @@ Playlist::Playlist(QWidget *parent) :
 	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
 	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
+
+	connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(countSelectedItems()));
+}
+
+void Playlist::countSelectedItems()
+{
+	emit selectedTracks(selectionModel()->selectedRows().count());
 }
 
 void Playlist::dropEvent(QDropEvent *event)

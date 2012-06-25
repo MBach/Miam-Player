@@ -519,16 +519,25 @@
    </property>
   </action>
   <action name="actionRemoveSelectedTracks">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>&amp;Remove selected track(s)</string>
+    <string>&amp;Remove selected track</string>
    </property>
   </action>
   <action name="actionMoveTrackUp">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Move selected track &amp;up</string>
    </property>
   </action>
   <action name="actionMoveTrackDown">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Move selected track &amp;down</string>
    </property>

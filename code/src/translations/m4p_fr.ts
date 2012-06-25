@@ -607,8 +607,20 @@
         <translation>&amp;Diminuer le volume</translation>
     </message>
     <message>
-        <source>&amp;Remove selected track(s)</source>
+        <source>&amp;Remove selected track</source>
+        <translation>&amp;Retirer la piste sélectionnée</translation>
+    </message>
+    <message>
+        <source>&amp;Remove selected tracks</source>
         <translation>&amp;Retirer les pistes sélectionnées</translation>
+    </message>
+    <message>
+        <source>Move selected tracks &amp;up</source>
+        <translation>Déplacer vers le &amp;haut les pistes sélectionnées</translation>
+    </message>
+    <message>
+        <source>Move selected tracks &amp;down</source>
+        <translation>Déplacer vers le &amp;bas les pistes sélectionnées</translation>
     </message>
 </context>
 <context>

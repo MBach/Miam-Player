@@ -98,6 +98,8 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 		p->setStyleSheet(previous->styleSheet());
 		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
 	}
+	// Forward this signal to the MainWindow instance
+	connect(p, SIGNAL(selectedTracks(int)), this, SIGNAL(aboutToChangeMenuLabels(int)));
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
@@ -125,6 +127,8 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 	// The (+) button is the last tab
 	if (i == count()-1) {
 		addPlaylist();
+	} else {
+		currentPlayList()->countSelectedItems();
 	}
 }
 

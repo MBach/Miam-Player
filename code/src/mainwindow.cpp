@@ -136,6 +136,8 @@ void MainWindow::setupActions()
 	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
 	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
 	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
+
+	connect(tabPlaylists, SIGNAL(aboutToChangeMenuLabels(int)), this, SLOT(changeMenuLabels(int)));
 }
 
 
@@ -203,7 +205,26 @@ void MainWindow::addSelectedItemToPlaylist(const QModelIndex &item)
 	}
 }
 
-/** This buttons switch the play function with the pause function because they are mutually exclusive. */
+/** Change the labels like "Remove selected track(s)" depending of the number of selected elements in the current playlist. */
+void MainWindow::changeMenuLabels(int itemCount)
+{
+	bool b = (itemCount > 0);
+	actionRemoveSelectedTracks->setEnabled(b);
+	actionMoveTrackUp->setEnabled(b);
+	actionMoveTrackDown->setEnabled(b);
+
+	if (itemCount <= 1) {
+		actionRemoveSelectedTracks->setText(tr("&Remove selected track"));
+		actionMoveTrackUp->setText(tr("Move selected track &up"));
+		actionMoveTrackDown->setText(tr("Move selected track &down"));
+	} else {
+		actionRemoveSelectedTracks->setText(tr("&Remove selected tracks"));
+		actionMoveTrackUp->setText(tr("Move selected tracks &up"));
+		actionMoveTrackDown->setText(tr("Move selected tracks &down"));
+	}
+}
+
+/** These buttons switch the play function with the pause function because they are mutually exclusive. */
 void MainWindow::playAndPause()
 {
 	if (!tabPlaylists->currentPlayList()->tracks().isEmpty()) {

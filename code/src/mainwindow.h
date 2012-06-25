@@ -54,8 +54,11 @@ private slots:
 	/** Add a file from the filesystem to the current playlist. */
 	void addSelectedItemToPlaylist(const QModelIndex &item);
 
+	/** Change the labels like "Remove selected track(s)" depending of the number of selected elements in the current playlist. */
+	void changeMenuLabels(int);
+
 	/// Media actions
-	/** This buttons switch the play function with the pause function because they are mutually exclusive. */
+	/** These buttons switch the play function with the pause function because they are mutually exclusive. */
 	void playAndPause();
 
 	/** If playing, then stops the track. */

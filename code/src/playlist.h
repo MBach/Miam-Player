@@ -50,7 +50,6 @@ protected:
 	void dropEvent(QDropEvent *event);
 	void dragEnterEvent(QDragEnterEvent *event);
 
-
 private:
 	/** Convert time in seconds into "mm:ss" format. */
 	QString convertTrackLength(int length);
@@ -67,7 +66,12 @@ private slots:
 	/** Toggle the selected column from the context menu. */
 	void toggleSelectedColumn(QAction *action);
 
+signals:
+	void selectedTracks(int);
+
 public slots:
+	void countSelectedItems();
+
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 	void highlightCurrentTrack();
 
