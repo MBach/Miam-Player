@@ -18,7 +18,8 @@ LibraryItem::~LibraryItem()
 	}
 }
 
-int LibraryItem::mediaType() const
+/** Redefined for custom types (greater than Qt::UserRole). */
+int LibraryItem::type() const
 {
 	return data(MEDIA_TYPE).toInt();
 }
@@ -162,7 +163,7 @@ void LibraryItem::read(QDataStream &in)
 /** Write data from this node to the output stream. */
 void LibraryItem::write(QDataStream &out) const
 {
-	int type = this->mediaType();
+	int type = this->type();
 	out << type;
 	StarRating starRating;
 

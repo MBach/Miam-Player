@@ -122,7 +122,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 	LibraryItem *libraryItemLeft = dynamic_cast<LibraryItem *>(qStandardItemLeft);
 	LibraryItem *libraryItemRight = NULL;
 
-	switch (libraryItemLeft->mediaType()) {
+	switch (libraryItemLeft->type()) {
 
 	case LibraryModel::TRACK:
 		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));

@@ -10,17 +10,7 @@
 #include <QMouseEvent>
 #include <QScrollBar>
 
-#include <fileref.h>
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <tag.h>
-#include <tlist.h>
-#include <textidentificationframe.h>
-#include <tstring.h>
-
 #include <QtDebug>
-
-using namespace TagLib;
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	QTreeView(parent)
@@ -65,7 +55,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(findAllAndDispatch(const QModelIndex &)));
 	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
-	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), this, SLOT(readFile(int, QString)));
+	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), libraryModel, SLOT(readFile(int, QString)));
 	connect(musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
@@ -107,69 +97,6 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 	// - edit stars to the current track
 	currentPos = event->pos();
 	QTreeView::mouseDoubleClickEvent(event);
-}
-
-/// Move to libraryModel?
-void LibraryTreeView::readFile(int musicLocationIndex, const QString &qFileName)
-{
-	static LibraryItem *indexArtist = NULL;
-	static LibraryItem *indexAlbum = NULL;
-	Settings *settings = Settings::getInstance();
-	settings->musicLocations().at(musicLocationIndex).toString();
-	QString filePath = settings->musicLocations().at(musicLocationIndex).toString() + qFileName;
-	MPEG::File fileRef(filePath.toLocal8Bit().data(), true, AudioProperties::Average);
-	if (fileRef.isValid() && fileRef.tag()) {
-		// For albums with multiple Artists, like OST, the "TPE2" value is commonly used for the tag "Album Artist"
-		// It is used in Windows 7, foobar2000, etc
-		ID3v2::Tag *tag = fileRef.ID3v2Tag();
-		String artist;
-		if (tag) {
-			ID3v2::FrameList l = tag->frameListMap()["TPE2"];
-			if (l.isEmpty()) {
-				artist = fileRef.tag()->artist();
-			} else {
-				artist = l.front()->toString();
-			}
-		} else {
-			artist = fileRef.tag()->artist();
-		}
-
-		// Is there is already this artist in the library?
-		indexArtist = libraryModel->hasArtist(QString(artist.toCString(false)));
-		if (indexArtist == NULL) {
-			indexArtist = libraryModel->insertArtist(QString(artist.toCString(false)));
-			LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-			indexArtist->setDelegate(libraryItemDelegate);
-			setItemDelegateForRow(indexArtist->row(), libraryItemDelegate);
-		}
-
-		// Is there is already an album from this artist?
-		indexAlbum = libraryModel->hasAlbum(indexArtist, QString(fileRef.tag()->album().toCString(false)));
-		if (indexAlbum == NULL) {
-			// New album to create, only if it's not empty
-			if (fileRef.tag()->album().isEmpty()) {
-				indexAlbum = indexArtist;
-			} else {
-				indexAlbum = libraryModel->insertAlbum(QString(fileRef.tag()->album().toCString(false)), filePath, indexArtist);
-				LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-				indexAlbum->setDelegate(libraryItemDelegate);
-				setItemDelegateForRow(indexAlbum->row(), libraryItemDelegate);
-			}
-		}
-
-		// In every case, insert a new track
-		QString title(fileRef.tag()->title().toCString(false));
-		if (title.isEmpty()) {
-			title = qFileName.left(qFileName.size() - 4); // 4 == ".mp3"
-			title = title.mid(title.lastIndexOf('/')+1);
-		}
-		LibraryItem *track = libraryModel->insertTrack(musicLocationIndex, qFileName, fileRef.tag()->track(), title, indexAlbum);
-		if (track) {
-			LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-			track->setDelegate(libraryItemDelegate);
-			setItemDelegateForRow(track->row(), libraryItemDelegate);
-		}
-	}
 }
 
 /** Tell the view to create specific delegate for the current row. */
@@ -341,7 +268,7 @@ void LibraryTreeView::showContextMenu(QPoint point)
 	QModelIndex index = this->indexAt(point);
 	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 	LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
-	if (!(libraryItem && libraryItem->mediaType() == LibraryModel::LETTER)) {
+	if (!(libraryItem && libraryItem->type() == LibraryModel::LETTER)) {
 		properties->exec(mapToGlobal(point));
 	}
 }

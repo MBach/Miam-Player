@@ -66,8 +66,6 @@ private slots:
 	/** Recursively scan one node and its subitems before dispatching tracks to a specific widget (playlist or tageditor).*/
 	void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true);
 
-	void readFile(int musicLocationIndex, const QString &qFileName);
-
 	void endPopulateTree();
 
 	//test

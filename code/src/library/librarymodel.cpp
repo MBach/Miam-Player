@@ -3,8 +3,17 @@
 #include "settings.h"
 #include "libraryitem.h"
 
+#include <fileref.h>
+#include <id3v2tag.h>
+#include <mpegfile.h>
+#include <tag.h>
+#include <tlist.h>
+#include <textidentificationframe.h>
+#include <tstring.h>
+
 #include <QtDebug>
 
+using namespace TagLib;
 
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(parent)
@@ -64,6 +73,7 @@ LibraryItem* LibraryModel::insertArtist(const QString &artist)
 	itemArtist->setMediaType(ARTIST);
 	artists.insert(artist, itemArtist);
 	this->appendRow(itemArtist);
+	emit associateNodeWithDelegate(itemArtist);
 	return itemArtist;
 }
 
@@ -76,11 +86,12 @@ LibraryItem* LibraryModel::insertAlbum(const QString &album, const QString &path
 	itemAlbum->setMediaType(ALBUM);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
 	albums.insert(QPair<LibraryItem *, QString>(parentArtist, album), itemAlbum);
+	emit associateNodeWithDelegate(itemAlbum);
 	return itemAlbum;
 }
 
 /** Insert a new track in the library. */
-LibraryItem* LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent)
+void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, unsigned int track, QString &title, LibraryItem *parent)
 {
 	QList<QVariant> musicLocations = Settings::getInstance()->musicLocations();
 	// Check if a track was already inserted
@@ -111,8 +122,8 @@ LibraryItem* LibraryModel::insertTrack(int musicLocationIndex, const QString &fi
 		itemTitle->setTrackNumber(track);
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
 		parent->setChild(parent->rowCount(), itemTitle);
+		emit associateNodeWithDelegate(itemTitle);
 	}
-	return itemTitle;
 }
 
 /** Add (a path to) an icon to every album. */
@@ -144,6 +155,86 @@ void LibraryModel::displayCovers(bool withCovers)
 	Settings::getInstance()->setCovers(withCovers);
 }
 
+/** Build a tree from a flat file saved on disk. */
+void LibraryModel::loadFromFile()
+{
+	QFile mmmmp("library.mmmmp");
+	if (mmmmp.open(QIODevice::ReadOnly)) {
+		QByteArray input = qUncompress(mmmmp.readAll());
+		QDataStream dataStream(&input, QIODevice::ReadOnly);
+
+		// To build the first item, just read how many children the root has
+		quint32 rootChildren;
+		dataStream >> rootChildren;
+		bool separators = Settings::getInstance()->toggleSeparators();
+		for (quint32 i=0; i < rootChildren; i++) {
+			LibraryItem *libraryItem = new LibraryItem();
+			libraryItem->read(dataStream);
+			if (separators || libraryItem->type() != LETTER) {
+				this->appendRow(libraryItem);
+			}
+
+			// Then build nodes
+			this->loadNode(dataStream, libraryItem);
+		}
+		mmmmp.close();
+		qDebug() << alphabeticalSeparators.count();
+		emit loadedFromFile();
+	}
+}
+
+/** Read a file from the filesystem and adds it into the library. */
+void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
+{
+	static LibraryItem *indexArtist = NULL;
+	static LibraryItem *indexAlbum = NULL;
+	Settings *settings = Settings::getInstance();
+	settings->musicLocations().at(musicLocationIndex).toString();
+	QString filePath = settings->musicLocations().at(musicLocationIndex).toString() + qFileName;
+	MPEG::File fileRef(filePath.toLocal8Bit().data(), true, AudioProperties::Average);
+	if (fileRef.isValid() && fileRef.tag()) {
+		// For albums with multiple Artists, like OST, the "TPE2" value is commonly used for the tag "Album Artist"
+		// It is used in Windows 7, foobar2000, etc
+		ID3v2::Tag *tag = fileRef.ID3v2Tag();
+		String artist;
+		if (tag) {
+			ID3v2::FrameList l = tag->frameListMap()["TPE2"];
+			if (l.isEmpty()) {
+				artist = fileRef.tag()->artist();
+			} else {
+				artist = l.front()->toString();
+			}
+		} else {
+			artist = fileRef.tag()->artist();
+		}
+
+		// Is there is already this artist in the library?
+		indexArtist = hasArtist(QString(artist.toCString(false)));
+		if (indexArtist == NULL) {
+			indexArtist = insertArtist(QString(artist.toCString(false)));
+		}
+
+		// Is there is already an album from this artist?
+		indexAlbum = hasAlbum(indexArtist, QString(fileRef.tag()->album().toCString(false)));
+		if (indexAlbum == NULL) {
+			// New album to create, only if it's not empty
+			if (fileRef.tag()->album().isEmpty()) {
+				indexAlbum = indexArtist;
+			} else {
+				indexAlbum = insertAlbum(QString(fileRef.tag()->album().toCString(false)), filePath, indexArtist);
+			}
+		}
+
+		// In every case, insert a new track
+		QString title(fileRef.tag()->title().toCString(false));
+		if (title.isEmpty()) {
+			title = qFileName.left(qFileName.size() - 4); // 4 == ".mp3"
+			title = title.mid(title.lastIndexOf('/')+1);
+		}
+		this->insertTrack(musicLocationIndex, qFileName, fileRef.tag()->track(), title, indexAlbum);
+	}
+}
+
 /** Save a tree to a flat file on disk. */
 void LibraryModel::saveToFile()
 {
@@ -163,38 +254,11 @@ void LibraryModel::saveToFile()
 	}
 }
 
-/** Build a tree from a flat file saved on disk. */
-void LibraryModel::loadFromFile()
-{
-	QFile mmmmp("library.mmmmp");
-	if (mmmmp.open(QIODevice::ReadOnly)) {
-		QByteArray input = qUncompress(mmmmp.readAll());
-		QDataStream dataStream(&input, QIODevice::ReadOnly);
-
-		// To build the first item, just read how many children the root has
-		quint32 rootChildren;
-		dataStream >> rootChildren;
-		bool separators = Settings::getInstance()->toggleSeparators();
-		for (quint32 i=0; i < rootChildren; i++) {
-			LibraryItem *libraryItem = new LibraryItem();
-			libraryItem->read(dataStream);
-			if (separators || libraryItem->mediaType() != LETTER) {
-				appendRow(libraryItem);
-			}
-
-			// Then build nodes
-			this->loadNode(dataStream, libraryItem);
-		}
-		mmmmp.close();
-		emit loadedFromFile();
-	}
-}
-
 /** Recursively reads the input stream to build nodes and append them to its parent. */
 void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 {
-	int mediaType = parent->mediaType();
-	if (mediaType == LibraryModel::ARTIST || mediaType == LibraryModel::ALBUM) {
+	int type = parent->type();
+	if (type == LibraryModel::ARTIST || type == LibraryModel::ALBUM) {
 		int childCount = parent->data(LibraryItem::CHILD_COUNT).toInt();
 		for (int i=0; i < childCount; i++) {
 			LibraryItem *node = new LibraryItem();
@@ -202,7 +266,9 @@ void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 			parent->appendRow(node);
 
 			// Tell the view that a new node was created, and needs to be associated with its delegate
-			emit associateNodeWithDelegate(node);
+			if (node->type() != LibraryModel::LETTER) {
+				emit associateNodeWithDelegate(node);
+			}
 
 			// Then load nodes
 			this->loadNode(in, node);
@@ -224,6 +290,8 @@ void LibraryModel::writeNode(QDataStream &dataStream, LibraryItem *parent)
 		}
 	} else {
 		// A track needs to be saved
-		parent->write(dataStream);
+		//if (parent->type() == LibraryModel::TRACK) {
+			parent->write(dataStream);
+		//}
 	}
 }

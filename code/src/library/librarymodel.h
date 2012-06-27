@@ -31,11 +31,10 @@ private:
 public:
 	LibraryModel(QObject *parent = 0);
 
-	enum MediaType { LETTER = 0,
-					 ARTIST = 1,
-					 ALBUM = 2,
-					 TRACK = 3,
-					 LENGTH = 4
+	enum MediaType { LETTER	= Qt::UserRole+1,
+					 ARTIST	= Qt::UserRole+2,
+					 ALBUM	= Qt::UserRole+3,
+					 TRACK	= Qt::UserRole+4
 				   };
 
 	/** Removes everything. */
@@ -48,7 +47,7 @@ public:
 	/** Insert a new artist/album/track in the library. */
 	LibraryItem* insertArtist(const QString &artist);
 	LibraryItem* insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist);
-	LibraryItem* insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent);
+	void insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent);
 
 	/// TEST
 	//inline QModelIndexList persistentIndexList () const { return QStandardItemModel::persistentIndexList(); }
@@ -75,11 +74,14 @@ public slots:
 	/** If True, draws one cover before an album name. */
 	void displayCovers(bool withCovers);
 
-	/** Save a tree to a flat file on disk. */
-	void saveToFile();
-
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();
+
+	/** Read a file from the filesystem and adds it into the library. */
+	void readFile(int musicLocationIndex, const QString &qFileName);
+
+	/** Save a tree to a flat file on disk. */
+	void saveToFile();
 };
 
 #endif // LIBRARYMODEL_H

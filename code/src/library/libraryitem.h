@@ -46,7 +46,8 @@ public:
 	void setTrackNumber(int trackNumber);
 	inline int trackNumber() const { return data(TRACK_NUMBER).toInt(); }
 
-	int mediaType() const;
+	/** Redefined for custom types (greater than Qt::UserRole). */
+	int type() const;
 
 	/** Reads data from the input stream and fills informations in this new node. */
 	void read(QDataStream &in);
