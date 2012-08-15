@@ -8,13 +8,22 @@ class CircleProgressBar : public QProgressBar
 	Q_OBJECT
 
 private:
-	bool transparentCenter;
+	bool isTransparentCenter;
 	qreal startAngle;
+
+	QRectF innerRect;
+	QRectF outerRect;
+
+	// The gray background on Windows 7
+	QRadialGradient grayRadialGradient;
+
+	// The green groove on Windows 7
+	QRadialGradient grooveRadialGradient;
 
 public:
 	CircleProgressBar(QWidget *parent = 0);
 
-	inline void setTransparentCenter(bool value) { transparentCenter = value; }
+	inline void setTransparentCenter(bool value) { isTransparentCenter = value; }
 	inline void setStartAngle(qreal startAngle) { this->startAngle = startAngle; }
 
 protected:

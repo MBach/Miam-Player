@@ -1,72 +1,93 @@
 #include "circleprogressbar.h"
 
 #include <QStylePainter>
-
-#include <QtDebug>
+#include <QDebug>
 
 CircleProgressBar::CircleProgressBar(QWidget *parent) :
-	QProgressBar(parent), transparentCenter(false), startAngle(90.0)
+	QProgressBar(parent), isTransparentCenter(true), startAngle(90.0)
 {
-	this->setMinimumWidth(300);
-	this->setMinimumHeight(300);
-	setValue(0);
+	const int size = 400;
+	this->setMinimumWidth(size);
+	this->setMinimumHeight(size);
+	this->setMaximumWidth(size);
+	this->setMaximumHeight(size);
+
+	static double coefOuter = 0.6;
+	static double coefInner = 0.47;
+	outerRect = QRectF(rect().x()*coefOuter, rect().y()*coefOuter, rect().width()*coefOuter, rect().height()*coefOuter);
+	innerRect = QRectF(rect().x()*coefInner, rect().y()*coefInner, rect().width()*coefInner, rect().height()*coefInner);
+	outerRect.moveCenter(rect().center());
+	innerRect.moveCenter(rect().center());
+
+	// The gray background on Windows 7
+	grayRadialGradient = QRadialGradient(outerRect.center(), outerRect.width()/2, outerRect.center());
+	grayRadialGradient.setSpread(QGradient::RepeatSpread);
+	grayRadialGradient.setColorAt(0.0, Qt::transparent);
+	grayRadialGradient.setColorAt(0.78, Qt::transparent);
+	grayRadialGradient.setColorAt(0.79, QColor(213, 213, 213));
+	grayRadialGradient.setColorAt(0.93, QColor(201, 201, 201));
+	grayRadialGradient.setColorAt(0.95, QColor(218, 218, 218));
+	grayRadialGradient.setColorAt(1.0, QColor(252, 252, 252));
+
+	// The green groove on Windows 7
+	grooveRadialGradient = QRadialGradient(outerRect.center(), outerRect.width()/2, outerRect.center());
+	grooveRadialGradient.setSpread(QGradient::RepeatSpread);
+	grooveRadialGradient.setColorAt(0.0, Qt::transparent);
+	grooveRadialGradient.setColorAt(0.78, Qt::transparent);
+	grooveRadialGradient.setColorAt(0.79, QColor(28, 226, 51));
+	grooveRadialGradient.setColorAt(0.93, QColor(0, 211, 40));
+	grooveRadialGradient.setColorAt(0.95, QColor(156, 238, 172));
+	grooveRadialGradient.setColorAt(1.0, QColor(205, 255, 205));
 }
 
 void CircleProgressBar::paintEvent(QPaintEvent * /*event*/)
 {
-	//TODO
-	static double coefOuter = 0.6;
-	static double coefInner = 0.4;
+
 	static double penSize = 1.0;
 	static QColor borderColor(178, 178, 178);
-	static QColor grooveColor(202, 202, 202);
-	static QColor chunkColor(0, 211, 40);
 
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::Antialiasing);
 
-	QRectF outerRect(rect().x()*coefOuter, rect().y()*coefOuter, rect().width()*coefOuter, rect().height()*coefOuter);
-	QRectF innerRect(rect().x()*coefInner, rect().y()*coefInner, rect().width()*coefInner, rect().height()*coefInner);
-	outerRect.moveCenter(rect().center());
-	innerRect.moveCenter(rect().center());
+	QPen borderPen(borderColor, penSize);
 
-	if (isTextVisible()) {
-		painter.save();
+	if (!isTransparentCenter) {
+		painter.setPen(Qt::NoPen);
+		painter.setBrush(Qt::white);
+		painter.drawEllipse(innerRect);
 	}
 
-	QPainterPath borderInAndOut;
-	borderInAndOut.addEllipse(rect().center(), rect().width()/2*coefOuter, rect().height()/2*coefOuter);
-	borderInAndOut.addEllipse(rect().center(), rect().width()/2*coefInner, rect().height()/2*coefInner);
-
-	QPen borderPen(borderColor, penSize);
-	painter.setPen(borderPen);
-	painter.setBrush(grooveColor);
-	painter.drawPath(borderInAndOut);
+	// Draw the background (complete gray circle)
+	painter.setPen(Qt::NoPen);
+	painter.setBrush(grayRadialGradient);
+	painter.drawPie(outerRect, startAngle * 16, (startAngle + 360) * 16);
 
 	if (value() > 0) {
-		QPainterPath groovePath(rect().center());
-		qreal converterAngle = 3.6*value();
-		groovePath.arcTo(outerRect, startAngle, -converterAngle);
-		groovePath.moveTo(rect().center());
-		groovePath.arcTo(innerRect, startAngle, -converterAngle);
-		groovePath = groovePath.simplified();
+		// Draw the groove
+		qreal convertedAngle = 3.6*value();
 		painter.setPen(Qt::NoPen);
-		painter.setBrush(chunkColor);
-		painter.drawPath(groovePath);
+		painter.setBrush(grooveRadialGradient);
+		painter.drawPie(outerRect, startAngle * 16, -convertedAngle * 16);
+
+		if (value() < maximum()) {
+			QLineF innerOuterLine(innerRect.x() + innerRect.width() / 2.0, innerRect.y(),
+								  outerRect.x() + outerRect.width() / 2.0, outerRect.y());
+			painter.save();
+			painter.setPen(borderPen);
+			painter.drawLine(innerOuterLine);
+			painter.restore();
+		}
 	}
 
-	if (!transparentCenter) {
-		QPainterPath painterPathCenter;
-		painterPathCenter.addEllipse(rect().center(), rect().width()/2*coefInner - penSize/2, rect().height()/2*coefInner - penSize/2);
-		painter.setPen(Qt::NoPen);
-		painter.setBrush(QColor(Qt::white));
-		painter.drawPath(painterPathCenter);
-	}
+	// Draw 2 complete circles
+	painter.setPen(borderPen);
+	painter.drawArc(outerRect, startAngle * 16, (startAngle + 360) * 16);
+	painter.drawArc(innerRect, startAngle * 16, (startAngle + 360) * 16);
 
+	// Finally, draw the progress number
 	if (isTextVisible()) {
-		painter.restore();
+		painter.setPen(Qt::black);
 		QString val = QString::number(value()).append("%");
 		style()->drawItemText(&painter, rect(), Qt::AlignCenter, palette(), true, val);
 	}
 }
-
