@@ -1,6 +1,6 @@
 QT += phonon
 
-TagLibDirectory = C:/dev/lib/taglib-1.7.2
+TagLibDirectory = C:/dev/lib/taglib-1.8beta
 
 TEMPLATE = app
 

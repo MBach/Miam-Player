@@ -61,6 +61,8 @@ void CustomizeThemeDialog::associatePaintableElements()
 		itemElements << b;
 	}
 	selectedItemColorWidget->addInstances(itemElements);
+
+	qDebug() << mainWindow->library->verticalScrollBar()->styleSheet();
 }
 
 void CustomizeThemeDialog::setupActions()

@@ -13,7 +13,7 @@ class LibraryModel : public QStandardItemModel
 	Q_OBJECT
 
 private:
-	QMap<QString, LibraryItem*> alphabeticalSeparators;
+	QMap<QString, QStandardItem*> alphabeticalSeparators;
 	QMap<QString, LibraryItem*> artists;
 	QMap<QPair<LibraryItem*, QString>, LibraryItem*> albums;
 
@@ -48,6 +48,8 @@ public:
 	LibraryItem* insertArtist(const QString &artist);
 	LibraryItem* insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist);
 	void insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent);
+
+	void makeSeparators();
 
 	/// TEST
 	//inline QModelIndexList persistentIndexList () const { return QStandardItemModel::persistentIndexList(); }

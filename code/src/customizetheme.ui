@@ -44,7 +44,7 @@
       <enum>QListView::IconMode</enum>
      </property>
      <property name="currentRow">
-      <number>2</number>
+      <number>0</number>
      </property>
      <item>
       <property name="text">
@@ -93,7 +93,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page">
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -1321,13 +1321,65 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupBoxSortingLibrary">
+         <property name="title">
+          <string>Sorting the library</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QLabel" name="labelIgnorePronouns">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Should I ignore the grammatical pronouns found in the names of artists?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QRadioButton" name="radioButtonDesactivatePronouns">
+              <property name="toolTip">
+               <string>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be displayed &quot;Beatles, the&quot;</string>
+              </property>
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonActivatePronouns">
+              <property name="text">
+               <string>No</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEditFilterPronouns">
+            <property name="text">
+             <string>the, le, la, les</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxInternalCovers">
          <property name="title">
           <string>About internal covers</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="labelInternateCovers">
             <property name="font">
              <font>
               <italic>true</italic>
@@ -1341,7 +1393,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QRadioButton" name="radioButtonHideNeverScoredTracks_2">
+             <widget class="QRadioButton" name="radioButtonActivateIntCovers">
               <property name="text">
                <string>Yes</string>
               </property>
@@ -1351,7 +1403,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButtonShowNeverScoredTracks_2">
+             <widget class="QRadioButton" name="radioButtonDesactivateIntCovers">
               <property name="text">
                <string>No, always use external file (if available)</string>
               </property>
@@ -1653,6 +1705,22 @@
     <hint type="destinationlabel">
      <x>528</x>
      <y>492</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonDesactivatePronouns</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineEditFilterPronouns</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>393</x>
+     <y>222</y>
     </hint>
    </hints>
   </connection>

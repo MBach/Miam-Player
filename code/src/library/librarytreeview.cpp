@@ -40,6 +40,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	//circleProgressBar = new CircleProgressBar(centeredOverlay);
 
 	circleProgressBar = new CircleProgressBar(this);
+	circleProgressBar->setTransparentCenter(true);
 	musicSearchEngine = new MusicSearchEngine(this);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
@@ -181,6 +182,9 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 
 void LibraryTreeView::endPopulateTree()
 {
+	//if (Settings::getInstance()->toggleSeparators()) {
+		libraryModel->makeSeparators();
+	//}
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);

@@ -48,25 +48,6 @@ LibraryItem* LibraryModel::hasAlbum(LibraryItem* artist, const QString &album) c
 /** Insert a new artist in the library. */
 LibraryItem* LibraryModel::insertArtist(const QString &artist)
 {
-	// Check if the first letter of the artist is a known new letter
-	if (!artist.isEmpty()) {
-		QString c = artist.left(1).toUpper();
-		QString letter;
-		if (c.contains(QRegExp("\\w"))) {
-			letter = c;
-		} else {
-			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
-			letter = tr(" Various");
-		}
-		if (!alphabeticalSeparators.contains(letter)) {
-			LibraryItem *separator = new LibraryItem(letter);
-			separator->setMediaType(LETTER);
-			separator->setDelegate(new LibraryItemDelegate(this));
-			alphabeticalSeparators.insert(letter, separator);
-			this->appendRow(separator);
-		}
-	}
-
 	// Create the artist
 	LibraryItem *itemArtist = new LibraryItem(artist);
 	itemArtist->setFilePath(artist);
@@ -126,6 +107,33 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 	}
 }
 
+void LibraryModel::makeSeparators()
+{
+	QStandardItem *root = invisibleRootItem();
+	for (int i = 0; i < root->rowCount(); i++) {
+		QString artist = root->child(i)->data(Qt::DisplayRole).toString();
+
+		// Check if the first letter of the artist is a known new letter
+		if (!artist.isEmpty()) {
+			QString c = artist.left(1).toUpper();
+			QString letter;
+			if (c.contains(QRegExp("\\w"))) {
+				letter = c;
+			} else {
+				/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
+				letter = tr(" Various");
+			}
+			if (!alphabeticalSeparators.contains(letter)) {
+				LibraryItem *separator = new LibraryItem(letter);
+				separator->setMediaType(LETTER);
+				separator->setDelegate(new LibraryItemDelegate(this));
+				alphabeticalSeparators.insert(letter, separator);
+			}
+		}
+	}
+	root->appendRows(alphabeticalSeparators.values());
+}
+
 /** Add (a path to) an icon to every album. */
 void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 {
@@ -167,18 +175,19 @@ void LibraryModel::loadFromFile()
 		quint32 rootChildren;
 		dataStream >> rootChildren;
 		bool separators = Settings::getInstance()->toggleSeparators();
+		QStandardItem *root = invisibleRootItem();
+
 		for (quint32 i=0; i < rootChildren; i++) {
 			LibraryItem *libraryItem = new LibraryItem();
 			libraryItem->read(dataStream);
 			if (separators || libraryItem->type() != LETTER) {
-				this->appendRow(libraryItem);
+				root->appendRow(libraryItem);
 			}
 
 			// Then build nodes
 			this->loadNode(dataStream, libraryItem);
 		}
 		mmmmp.close();
-		qDebug() << alphabeticalSeparators.count();
 		emit loadedFromFile();
 	}
 }
@@ -241,12 +250,22 @@ void LibraryModel::saveToFile()
 	QFile mmmmp("library.mmmmp");
 	if (mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		QByteArray output;
-		QDataStream dataStream(&output, QIODevice::ReadWrite);
+
+		// No need to store separators, they will be rebuilt at runtime.
+		QStandardItem *item = invisibleRootItem();
+		int separators = 0;
+		if (Settings::getInstance()->toggleSeparators()) {
+			for (int i = 0; i < item->rowCount(); i++) {
+				if (item->child(i)->data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::LETTER) {
+					++separators;
+				}
+			}
+		}
 
 		// Write the root first, which is not a LibraryItem instance
-		QStandardItem *item = invisibleRootItem();
-		dataStream << item->rowCount();
-		for (int i=0; i<item->rowCount(); i++) {
+		QDataStream dataStream(&output, QIODevice::ReadWrite);
+		dataStream << item->rowCount() - separators;
+		for (int i = 0; i < item->rowCount() - separators; i++) {
 			this->writeNode(dataStream, dynamic_cast<LibraryItem *>(item->child(i, 0)));
 		}
 		mmmmp.write(qCompress(output, 9));
@@ -260,17 +279,17 @@ void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 	int type = parent->type();
 	if (type == LibraryModel::ARTIST || type == LibraryModel::ALBUM) {
 		int childCount = parent->data(LibraryItem::CHILD_COUNT).toInt();
-		for (int i=0; i < childCount; i++) {
+		for (int i = 0; i < childCount; i++) {
 			LibraryItem *node = new LibraryItem();
 			node->read(in);
 			parent->appendRow(node);
 
 			// Tell the view that a new node was created, and needs to be associated with its delegate
-			if (node->type() != LibraryModel::LETTER) {
-				emit associateNodeWithDelegate(node);
-			}
+			//if (node->type() != LibraryModel::LETTER) {
+			emit associateNodeWithDelegate(node);
+			//}
 
-			// Then load nodes
+			// Then load nodes recursively
 			this->loadNode(in, node);
 		}
 	}
@@ -290,8 +309,8 @@ void LibraryModel::writeNode(QDataStream &dataStream, LibraryItem *parent)
 		}
 	} else {
 		// A track needs to be saved
-		//if (parent->type() == LibraryModel::TRACK) {
+		if (parent->type() == LibraryModel::TRACK) {
 			parent->write(dataStream);
-		//}
+		}
 	}
 }

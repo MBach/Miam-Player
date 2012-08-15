@@ -7,6 +7,11 @@
 #include <QFile>
 #include <QGraphicsPixmapItem>
 
+#include <fileref.h>
+#include <tag.h>
+
+using namespace TagLib;
+
 TagEditor::TagEditor(QWidget *parent) :
 	QWidget(parent), atLeastOneItemChanged(false)
 {
@@ -29,6 +34,8 @@ TagEditor::TagEditor(QWidget *parent) :
 		combo->addItem(tr("(Keep)"));
 		combo->addItem(tr("(Delete)"));
 		combo->setCurrentIndex(-1);
+		//connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(activateSaveButton(QString)));
+		connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateTable(QString)));
 	}
 
 	// Quit this widget when a request was send from this button
@@ -76,6 +83,13 @@ void TagEditor::afterAddingItems()
 	tagEditorWidget->resizeColumnsToContents();
 }
 
+void TagEditor::activateSaveButton(QString)
+{
+	// Compare the tag temporarily stored in memory with the new input
+
+	saveChangesButton->setEnabled(true);
+}
+
 /** Close this Widget and tells its parent to switch views. */
 void TagEditor::close()
 {
@@ -97,6 +111,13 @@ void TagEditor::commitChanges()
 		t.next();
 		if (t.value()) {
 			qDebug() << "TODO write tags onto the hdd";
+			int row = t.key();
+			QPersistentModelIndex index = tracks.value(row);
+			QString filePath = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
+			QString fileName = index.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+			if (QFile::exists(filePath + fileName)) {
+
+			}
 		}
 	}
 
@@ -127,6 +148,11 @@ void TagEditor::commitChanges()
 void TagEditor::rollbackChanges()
 {
 	qDebug() << "rollbackChanges necessary?";
+}
+
+void TagEditor::updateTable(QString text)
+{
+	qDebug() << sender()->objectName() << "is sending" << text;
 }
 
 /** Display tags in separate QComboBoxes. */

@@ -148,7 +148,7 @@ void LibraryItem::read(QDataStream &in)
 		setTrackNumber(dataLength);
 		break;
 
-	case LibraryModel::LETTER:
+	/*case LibraryModel::LETTER:
 		setMediaType(LibraryModel::LETTER);
 		in >> dataLength;
 
@@ -156,7 +156,7 @@ void LibraryItem::read(QDataStream &in)
 		in.readRawData(s1, dataLength);
 		setDisplayedName(s1, dataLength);
 		delete[] s1;
-		break;
+		break;*/
 	}
 }
 
@@ -164,11 +164,11 @@ void LibraryItem::read(QDataStream &in)
 void LibraryItem::write(QDataStream &out) const
 {
 	int type = this->type();
-	out << type;
 	StarRating starRating;
 
 	switch (type) {
 	case LibraryModel::ALBUM:
+		out << type;
 		out << data(Qt::DisplayRole).toByteArray();
 		out << rowCount();
 
@@ -181,11 +181,13 @@ void LibraryItem::write(QDataStream &out) const
 		break;
 
 	case LibraryModel::ARTIST:
+		out << type;
 		out << data(Qt::DisplayRole).toByteArray();
 		out << rowCount();
 		break;
 
 	case LibraryModel::TRACK:
+		out << type;
 		out << data(Qt::DisplayRole).toByteArray();
 		out << data(IDX_TO_ABS_PATH).toInt();
 		out << data(REL_PATH_TO_MEDIA).toByteArray();
@@ -194,8 +196,8 @@ void LibraryItem::write(QDataStream &out) const
 		out << trackNumber();
 		break;
 
-	case LibraryModel::LETTER:
+	/*case LibraryModel::LETTER:
 		out << data(Qt::DisplayRole).toByteArray();
-		break;
+		break;*/
 	}
 }
