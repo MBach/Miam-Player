@@ -45,6 +45,8 @@ protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	void changeEvent(QEvent *event);
 
+	void closeEvent(QCloseEvent *event);
+
 public slots:
 	void bindShortcut(const QString&, int keySequence);
 

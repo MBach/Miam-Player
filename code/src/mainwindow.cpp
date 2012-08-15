@@ -83,6 +83,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->setupActions();
 	this->drawLibrary();
+	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
+	splitter->restoreState(settings->value("splitterState").toByteArray());
 }
 
 /** Set up all actions and behaviour. */
@@ -160,6 +162,14 @@ void MainWindow::changeEvent(QEvent *event)
 	} else {
 		QMainWindow::changeEvent(event);
 	}
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	Settings *settings = Settings::getInstance();
+	settings->setValue("mainWindowGeometry", saveGeometry());
+	settings->setValue("splitterState", splitter->saveState());
+	Settings::getInstance()->sync();
 }
 
 void MainWindow::bindShortcut(const QString &objectName, int keySequence)
