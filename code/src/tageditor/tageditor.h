@@ -32,6 +32,8 @@ public:
 signals:
 	void closeTagEditor(bool);
 
+	void comboBoxChanged(QComboBox*);
+
 	void tracksRenamed();
 
 public slots:
@@ -45,8 +47,6 @@ public slots:
 	void afterAddingItems();
 
 private slots:
-	void activateSaveButton(QString);
-
 	/** Close this Widget and tells its parent to switch views. */
 	void close();
 

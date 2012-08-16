@@ -30,6 +30,16 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 }
 
+void TagEditorTableWidget::updateColumnData(int column, QString text)
+{
+	QList<QTableWidgetItem*> items = selectedItems();
+	foreach (QTableWidgetItem *item, items) {
+		if (item->column() == column && item->row()) {
+			item->setText(text);
+		}
+	}
+}
+
 void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
 {
 	QString path = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();

@@ -34,10 +34,8 @@ TagEditor::TagEditor(QWidget *parent) :
 		combo->addItem(tr("(Keep)"));
 		combo->addItem(tr("(Delete)"));
 		combo->setCurrentIndex(-1);
-		//connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(activateSaveButton(QString)));
 		connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateTable(QString)));
 	}
-
 	// Quit this widget when a request was send from this button
 	connect(closeTagEditorButton, SIGNAL(clicked()), this, SLOT(close()));
 
@@ -81,13 +79,6 @@ void TagEditor::afterAddingItems()
 	// It's possible to edit single items by double-clicking in the table
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
 	tagEditorWidget->resizeColumnsToContents();
-}
-
-void TagEditor::activateSaveButton(QString)
-{
-	// Compare the tag temporarily stored in memory with the new input
-
-	saveChangesButton->setEnabled(true);
 }
 
 /** Close this Widget and tells its parent to switch views. */
@@ -150,14 +141,39 @@ void TagEditor::rollbackChanges()
 	qDebug() << "rollbackChanges necessary?";
 }
 
+/** When one is changing a field, updates all rows in the table (the Artist for example). */
 void TagEditor::updateTable(QString text)
 {
-	qDebug() << sender()->objectName() << "is sending" << text;
+	QComboBox *combo = findChild<QComboBox*>(sender()->objectName());
+	QVariant v = combo->itemData(0, Qt::UserRole+1);
+	int idxColumnInTable = v.toInt();
+	qDebug() << sender()->objectName() << "is sending" << text << "for column" << idxColumnInTable << "in table";
+
+	// Special behaviour for "Keep" and "Delete" items
+	// Keep
+	if (combo->currentIndex() == 0) {
+
+		disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateTable(QString)));
+		QModelIndexList list = tagEditorWidget->selectionModel()->selectedRows(idxColumnInTable);
+		for (int i = 0; i < list.size(); i++) {
+			QModelIndex index = list.at(i);
+			tagEditorWidget->item(index.row(), idxColumnInTable)->setText(combo->itemText(2 + i));
+		}
+		connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateTable(QString)));
+
+	// Delete
+	} else if (combo->currentIndex() == 1) {
+		tagEditorWidget->updateColumnData(idxColumnInTable, "");
+	// A regular item
+	} else {
+		tagEditorWidget->updateColumnData(idxColumnInTable, text);
+	}
 }
 
 /** Display tags in separate QComboBoxes. */
 void TagEditor::displayTags()
 {
+	// Can be multiples rows
 	QList<QTableWidgetItem*> items = tagEditorWidget->selectedItems();
 
 	// Information in the table is split into columns, using column index
@@ -176,15 +192,22 @@ void TagEditor::displayTags()
 		it.next();
 		QStringList stringList = datas.value(it.key());
 		stringList.removeDuplicates();
-		stringList.sort();
+		//stringList.sort();
 
 		// Beware: there are no comboBox for every column in the edit area below the table
 		QComboBox *combo = combos.value(it.key());
 		if (combo) {
+			disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateTable(QString)));
 			combo->clear();
 			combo->addItem(tr("(Keep)"));
+			// Map the combobox object with the number of the column in the table to dynamically reflect changes
+			combo->setItemData(0, combos.key(combo), Qt::UserRole+1);
 			combo->addItem(tr("(Delete)"));
+			//for (int i = 0; i < 10; i++) {
+			//	combo->addItem(stringList.at(i), QVariant(items));
+			//}
 			combo->addItems(stringList);
+			connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateTable(QString)));
 
 			// No item: nothing is selected
 			// 1 item: select this item
@@ -202,7 +225,6 @@ void TagEditor::displayTags()
 
 void TagEditor::recordChanges(QTableWidgetItem *item)
 {
-	qDebug() << item->data(Qt::DisplayRole);
 	if (!atLeastOneItemChanged) {
 		atLeastOneItemChanged = true;
 		saveChangesButton->setEnabled(true);

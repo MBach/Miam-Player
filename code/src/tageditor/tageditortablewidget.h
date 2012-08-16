@@ -9,6 +9,8 @@ class TagEditorTableWidget : public QTableWidget
 public:
 	TagEditorTableWidget(QWidget *parent = 0);
 
+	void updateColumnData(int column, QString text);
+
 public slots:
 	void addItemFromLibrary(const QPersistentModelIndex &index);
 };
