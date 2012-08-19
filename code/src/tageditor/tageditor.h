@@ -54,7 +54,8 @@ private slots:
 
 	void rollbackChanges();
 
-	void updateTable(QString text);
+	void replaceCells(QString text);
+	void updateCells(QString text);
 
 	/** Display tags in separate QComboBoxes. */
 	void displayTags();
