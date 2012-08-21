@@ -15,6 +15,7 @@
 #include <QtDebug>
 
 #include <QApplication>
+#include <QHeaderView>
 
 using namespace Phonon;
 
@@ -29,12 +30,28 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 }
 
+void TagEditorTableWidget::init()
+{
+	// Always keep the same number of columns with this taglist
+	QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM");
+	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT";
+	for (int column = 0; column < this->columnCount(); column++) {
+		QTableWidgetItem *header = this->horizontalHeaderItem(column);
+		if (!header) {
+			header = new QTableWidgetItem(0);
+			this->setHorizontalHeaderItem(column, header);
+		}
+		header->setData(KEY, keys.at(column));
+	}
+}
+
 void TagEditorTableWidget::updateColumnData(int column, QString text)
 {
 	QList<QTableWidgetItem*> items = selectedItems();
 	foreach (QTableWidgetItem *item, items) {
 		if (item->column() == column && item->row()) {
 			item->setText(text);
+			item->setData(MODIFIED, true);
 		}
 	}
 }
@@ -73,11 +90,10 @@ void TagEditorTableWidget::fillTable(const QFileInfo fileInfo, const TagLib::Fil
 	items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
 
 	// Create a new row with right data
-	int r = rowCount();
-	this->insertRow(r);
+	int row = rowCount();
+	this->insertRow(row);
 	for (int column = 0; column < items.size(); column++) {
-		QTableWidgetItem *item = items.at(column);
-		this->setItem(r, column, item);
+		this->setItem(row, column, items.at(column));
 	}
 }
 

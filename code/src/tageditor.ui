@@ -384,7 +384,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>closeTagEditorButton</tabstop>
-  <tabstop>convertPushButton</tabstop>
   <tabstop>saveChangesButton</tabstop>
   <tabstop>cancelButton</tabstop>
   <tabstop>tagEditorWidget</tabstop>

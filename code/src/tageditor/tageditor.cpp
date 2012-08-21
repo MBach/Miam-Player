@@ -9,6 +9,7 @@
 
 #include <fileref.h>
 #include <tag.h>
+#include <tpropertymap.h>
 
 using namespace TagLib;
 
@@ -16,6 +17,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	QWidget(parent), atLeastOneItemChanged(false)
 {
 	setupUi(this);
+	tagEditorWidget->init();
 
 	tagConverter = new TagConverter(this);
 
@@ -70,7 +72,7 @@ void TagEditor::addItemFromLibrary(const QPersistentModelIndex &index)
 	// Test
 	tracks.insert(tagEditorWidget->rowCount() - 1, index);
 	filenames.insert(tagEditorWidget->rowCount() - 1, false);
-	tags.insert(tagEditorWidget->rowCount() - 1, false);
+	//tags.insert(tagEditorWidget->rowCount() - 1, false);
 }
 
 void TagEditor::afterAddingItems()
@@ -89,30 +91,52 @@ void TagEditor::close()
 	atLeastOneItemChanged = false;
 	tracks.clear();
 	filenames.clear();
-	tags.clear();
 	QWidget::close();
 }
 
 void TagEditor::commitChanges()
 {
-	QMapIterator<int, bool> t(tags), f(filenames);
-	// Apply tags first
-	while (t.hasNext()) {
-		t.next();
-		if (t.value()) {
-			qDebug() << "TODO write tags onto the hdd";
-			int row = t.key();
-			QPersistentModelIndex index = tracks.value(row);
-			QString filePath = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
-			QString fileName = index.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-			if (QFile::exists(filePath + fileName)) {
+	//bool libraryNodesNeedToBeRebuild = false;
 
+	// Detect changes
+	for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
+		// A physical file per row
+		FileRef fileRef = tagEditorWidget->trackList().at(i);
+		bool trackWasModified = false;
+		for (int j = 0; j < tagEditorWidget->columnCount(); j++) {
+
+			// Check for every field if we have any changes
+			QTableWidgetItem *item = tagEditorWidget->item(i, j);
+			if (item->data(TagEditorTableWidget::MODIFIED).toBool()) {
+
+				// Replace the field by using a key stored in the header (one key per column)
+				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
+				PropertyMap pm = fileRef.tag()->properties();
+				/// XXX: warning !
+				/// Detect when one in changing ARTIST or ALBUM tag to rebuild the tree on the left!
+				if (key == "ALBUM" || "ARTIST") {
+					//libraryNodesNeedToBeRebuild = true;
+				}
+				bool b = pm.replace(String(key.toStdString()), String(item->text().toStdString()));
+				if (b) {
+					fileRef.tag()->setProperties(pm);
+					trackWasModified = true;
+				}
 			}
 		}
+		// Save changes if at least one field was modified
+		if (trackWasModified) {
+			fileRef.save();
+		}
 	}
+	/*if (libraryNodesNeedToBeRebuild) {
+		emit rebuildNodes();
+	}*/
 
+	//QMapIterator<int, bool> f(filenames);
 	// Apply new filenames
-	while (f.hasNext()) {
+	/// TODO
+	/*while (f.hasNext()) {
 		f.next();
 		if (f.value()) {
 			int row = f.key();
@@ -132,83 +156,10 @@ void TagEditor::commitChanges()
 	}
 	if (!filenames.isEmpty()) {
 		emit tracksRenamed();
-	}
-}
+	}*/
 
-void TagEditor::rollbackChanges()
-{
-	tagEditorWidget->resetTable();
-}
-
-/** When one is typing in a field, replace the text in the table. */
-void TagEditor::replaceCells(QString text)
-{
-	QComboBox *combo = findChild<QComboBox*>(sender()->objectName());
-	//QVariant v = combo->itemData(0, Qt::UserRole+1);
-	//int idxColumnInTable = v.toInt();
-
-	disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(replaceCells(QString)));
-	disconnect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateCells(QString)));
-
-	// Special behaviour for "Keep" and "Delete" items
-	// Keep or Delete
-	if (combo->currentIndex() <= 1) {
-
-
-
-		//qDebug() << "here";
-		combo->addItem(text);
-
-
-	// A regular item
-	} else {
-
-	}
-
-	connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(replaceCells(QString)));
-	connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateCells(QString)));
-}
-
-/** When one is changing a field, updates all rows in the table (the Artist for example). */
-void TagEditor::updateCells(QString text)
-{
-	QComboBox *combo = findChild<QComboBox*>(sender()->objectName());
-	QVariant v = combo->itemData(0, Qt::UserRole+1);
-	int idxColumnInTable = v.toInt();
-	qDebug() << sender()->objectName() << "is sending" << text << "for column" << idxColumnInTable << "in table";
-
-	disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(replaceCells(QString)));
-	disconnect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateCells(QString)));
-
-	// Special behaviour for "Keep" and "Delete" items
-	// Keep
-	if (combo->currentIndex() == 0) {
-
-
-		QModelIndexList list = tagEditorWidget->selectionModel()->selectedRows(idxColumnInTable);
-		for (int i = 0; i < list.size(); i++) {
-			QModelIndex index = list.at(i);
-			// Fill the table with one item per combobox
-			if (combo == titleComboBox || combo == trackComboBox) {
-				tagEditorWidget->item(index.row(), idxColumnInTable)->setText(combo->itemText(2 + i));
-			// For unique attribute like "Artist" or "year" copy-paste this item to every cells in the table
-			} else if (combo == artistComboBox || combo == artistAlbumComboBox || combo == albumComboBox || combo == yearComboBox
-					   || combo == discComboBox || combo == genreComboBox || combo == commentComboBox) {
-				tagEditorWidget->item(index.row(), idxColumnInTable)->setText(combo->itemText(2));
-			}
-
-		}
-
-	// Delete
-	} else if (combo->currentIndex() == 1) {
-		tagEditorWidget->updateColumnData(idxColumnInTable, "");
-	// A regular item
-	} else {
-		tagEditorWidget->updateColumnData(idxColumnInTable, text);
-	}
-
-	connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(replaceCells(QString)));
-	connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateCells(QString)));
+	saveChangesButton->setEnabled(false);
+	cancelButton->setEnabled(false);
 }
 
 /** Display tags in separate QComboBoxes. */
@@ -233,23 +184,18 @@ void TagEditor::displayTags()
 		it.next();
 		QStringList stringList = datas.value(it.key());
 		stringList.removeDuplicates();
-		//stringList.sort();
 
 		// Beware: there are no comboBox for every column in the edit area below the table
 		QComboBox *combo = combos.value(it.key());
 		if (combo) {
 
-			disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(replaceCells(QString)));
-			disconnect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateCells(QString)));
-
+			disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
 			combo->clear();
 			combo->addItem(tr("(Keep)"));
 			// Map the combobox object with the number of the column in the table to dynamically reflect changes
+			// Arbitrarily adds the column number to the first item (Keep)
 			combo->setItemData(0, combos.key(combo), Qt::UserRole+1);
 			combo->addItem(tr("(Delete)"));
-			//for (int i = 0; i < 10; i++) {
-			//	combo->addItem(stringList.at(i), QVariant(items));
-			//}
 			combo->addItems(stringList);
 
 			// No item: nothing is selected
@@ -262,9 +208,7 @@ void TagEditor::displayTags()
 			} else {
 				combo->setCurrentIndex(0);
 			}
-
-			connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(replaceCells(QString)));
-			connect(combo, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateCells(QString)));
+			connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
 		}
 	}
 }
@@ -278,18 +222,19 @@ void TagEditor::recordChanges(QTableWidgetItem *item)
 	}
 	if (item->column() == 0) {
 		// Filenames
-		//bool b = filenames.value(item->row());
-		//if (!b) {
 		filenames.insert(item->row(), true);
-		//}
 	} else {
 		// Tags
-		//for (int i = 1; i < tagEditorWidget->columnCount(); i++) {
-		//	QTableWidgetItem *i = tagEditorWidget->item(i, item->column());
-		//
-		//}
-		tags.insert(item->row(), true);
+		//tags.insert(item->row(), true);
 	}
+}
+
+void TagEditor::rollbackChanges()
+{
+	tagEditorWidget->resetTable();
+	saveChangesButton->setEnabled(false);
+	cancelButton->setEnabled(false);
+	atLeastOneItemChanged = false;
 }
 
 void TagEditor::toggleTagConverter(bool b)
@@ -299,4 +244,42 @@ void TagEditor::toggleTagConverter(bool b)
 	p.setY(p.y() + convertPushButton->height() + 5);
 	tagConverter->move(p);
 	tagConverter->setVisible(b);
+}
+
+/** When one is changing a field, updates all rows in the table (the Artist for example). */
+void TagEditor::updateCells(QString text)
+{
+	QComboBox *combo = findChild<QComboBox*>(sender()->objectName());
+	QVariant v = combo->itemData(0, Qt::UserRole+1);
+	int idxColumnInTable = v.toInt();
+
+	disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
+
+	// Special behaviour for "Keep" and "Delete" items
+	// Keep
+	if (combo->currentIndex() == 0) {
+
+		QModelIndexList list = tagEditorWidget->selectionModel()->selectedRows(idxColumnInTable);
+		for (int i = 0; i < list.size(); i++) {
+			QModelIndex index = list.at(i);
+			// Fill the table with one item per combobox
+			if (combo == titleComboBox || combo == trackComboBox) {
+				tagEditorWidget->item(index.row(), idxColumnInTable)->setText(combo->itemText(2 + i));
+			// For unique attribute like "Artist" or "year" copy-paste this item to every cells in the table
+			} else if (combo == artistComboBox || combo == artistAlbumComboBox || combo == albumComboBox || combo == yearComboBox
+					   || combo == discComboBox || combo == genreComboBox || combo == commentComboBox) {
+				tagEditorWidget->item(index.row(), idxColumnInTable)->setText(combo->itemText(2));
+			}
+			tagEditorWidget->item(index.row(), idxColumnInTable)->setData(TagEditorTableWidget::MODIFIED, true);
+		}
+
+	// Delete
+	} else if (combo->currentIndex() == 1) {
+		tagEditorWidget->updateColumnData(idxColumnInTable, "");
+	// A regular item
+	} else {
+		tagEditorWidget->updateColumnData(idxColumnInTable, text);
+	}
+
+	connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
 }

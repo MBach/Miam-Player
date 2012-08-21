@@ -17,6 +17,15 @@ private:
 public:
 	TagEditorTableWidget(QWidget *parent = 0);
 
+	void init();
+
+	enum DataUserRole { MODIFIED	= Qt::UserRole+1,
+						KEY			= Qt::UserRole+2
+					  };
+
+	inline QList<QFileInfo> fileList() const { return files; }
+	inline QList<TagLib::FileRef> trackList() const { return tracks; }
+
 	void updateColumnData(int column, QString text);
 
 	void resetTable();

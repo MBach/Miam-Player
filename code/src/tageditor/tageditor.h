@@ -19,7 +19,7 @@ private:
 
 	/// The value is true when a filename or a tag was changed
 	QMap<int, bool> filenames;
-	QMap<int, bool> tags;
+	//QMap<int, bool> tags;
 
 	bool atLeastOneItemChanged;
 
@@ -52,17 +52,16 @@ private slots:
 
 	void commitChanges();
 
-	void rollbackChanges();
-
-	void replaceCells(QString text);
-	void updateCells(QString text);
-
 	/** Display tags in separate QComboBoxes. */
 	void displayTags();
 
 	void recordChanges(QTableWidgetItem *item);
 
+	void rollbackChanges();
+
 	void toggleTagConverter(bool);
+
+	void updateCells(QString text);
 };
 
 #endif // TAGEDITOR_H
