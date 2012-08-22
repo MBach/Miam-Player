@@ -13,6 +13,17 @@
 
 using namespace TagLib;
 
+QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "Country" << "Dance" << "Disco" << "Funk" << "Grunge" << "Hip-Hop" << "Jazz"
+	<< "Metal" << "New Age" << "Oldies" << "Other" << "Pop" << "R&B" << "Rap" << "Reggae" << "Rock" << "Techno"
+	<< "Industrial" << "Alternative" << "Ska" << "Death Metal" << "Pranks" << "Soundtrack" << "Euro-Techno" << "Ambient"
+	<< "Trip-Hop" << "Vocal" << "Jazz+Funk" << "Fusion" << "Trance" << "Classical" << "Instrumental" << "Acid" << "House"
+	<< "Game" << "Sound Clip" << "Gospel" << "Noise" << "AlternRock" << "Bass" << "Soul" << "Punk" << "Space" << "Meditative"
+	<< "Instrumental Pop" << "Instrumental Rock" << "Ethnic" << "Gothic" << "Darkwave" << "Techno-Industrial" << "Electronic"
+	<< "Pop-Folk" << "Eurodance" << "Dream" << "Southern Rock" << "Comedy" << "Cult" << "Gangsta" << "Top 40"
+	<< "Christian Rap" << "Pop/Funk" << "Jungle" << "Native American" << "Cabaret" << "New Wave" << "Psychadelic" << "Rave"
+	<< "Showtunes" << "Trailer" << "Lo-Fi" << "Tribal" << "Acid Punk" << "Acid Jazz" << "Polka" << "Retro" << "Musical"
+	<< "Rock & Roll" << "Hard Rock");
+
 TagEditor::TagEditor(QWidget *parent) :
 	QWidget(parent), atLeastOneItemChanged(false)
 {
@@ -96,7 +107,7 @@ void TagEditor::close()
 
 void TagEditor::commitChanges()
 {
-	//bool libraryNodesNeedToBeRebuild = false;
+	QList<QPersistentModelIndex> tracksToRescan;
 
 	// Detect changes
 	for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
@@ -112,11 +123,8 @@ void TagEditor::commitChanges()
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
 				PropertyMap pm = fileRef.tag()->properties();
-				/// XXX: warning !
-				/// Detect when one in changing ARTIST or ALBUM tag to rebuild the tree on the left!
-				if (key == "ALBUM" || "ARTIST") {
-					//libraryNodesNeedToBeRebuild = true;
-				}
+				//if (key == "ALBUM" || "ARTIST") {
+				//}
 				bool b = pm.replace(String(key.toStdString()), String(item->text().toStdString()));
 				if (b) {
 					fileRef.tag()->setProperties(pm);
@@ -125,13 +133,15 @@ void TagEditor::commitChanges()
 			}
 		}
 		// Save changes if at least one field was modified
+		// Also, tell the model to rescan the file because the artist or the album might have changed
 		if (trackWasModified) {
-			fileRef.save();
+			bool b = fileRef.save();
+			if (!b) {
+				qDebug() << "tag wasn't saved :(";
+			}
+			tracksToRescan.append(tagEditorWidget->indexList().at(i));
 		}
 	}
-	/*if (libraryNodesNeedToBeRebuild) {
-		emit rebuildNodes();
-	}*/
 
 	//QMapIterator<int, bool> f(filenames);
 	// Apply new filenames
@@ -158,9 +168,15 @@ void TagEditor::commitChanges()
 		emit tracksRenamed();
 	}*/
 
+	if (!tracksToRescan.isEmpty()) {
+		emit rebuildTreeView(tracksToRescan);
+	}
+
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 }
+
+#include <id3v2header.h>
 
 /** Display tags in separate QComboBoxes. */
 void TagEditor::displayTags()
@@ -191,12 +207,26 @@ void TagEditor::displayTags()
 
 			disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
 			combo->clear();
-			combo->addItem(tr("(Keep)"));
+
+
+			combo->insertItem(0, tr("(Keep)"));
 			// Map the combobox object with the number of the column in the table to dynamically reflect changes
 			// Arbitrarily adds the column number to the first item (Keep)
 			combo->setItemData(0, combos.key(combo), Qt::UserRole+1);
-			combo->addItem(tr("(Delete)"));
-			combo->addItems(stringList);
+			combo->insertItem(1, tr("(Delete)"));
+
+			// Special case for Genre, it's better to have them all in the combobox
+			if (combo == genreComboBox) {
+				combo->addItems(genres);
+				foreach (QString genre, stringList) {
+					if (!genres.contains(genre)) {
+						combo->addItem(genre);
+					}
+				}
+				combo->model()->sort(0);
+			} else {
+				combo->addItems(stringList);
+			}
 
 			// No item: nothing is selected
 			// 1 item: select this item
@@ -204,7 +234,12 @@ void TagEditor::displayTags()
 			if (stringList.isEmpty()) {
 				combo->setCurrentIndex(-1);
 			} else if (stringList.count() == 1) {
-				combo->setCurrentIndex(2);
+				if (combo == genreComboBox) {
+					int result = combo->findText(stringList.first());
+					combo->setCurrentIndex(result);
+				} else {
+					combo->setCurrentIndex(2);
+				}
 			} else {
 				combo->setCurrentIndex(0);
 			}
@@ -280,6 +315,8 @@ void TagEditor::updateCells(QString text)
 	} else {
 		tagEditorWidget->updateColumnData(idxColumnInTable, text);
 	}
+	saveChangesButton->setEnabled(true);
+	cancelButton->setEnabled(true);
 
 	connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
 }

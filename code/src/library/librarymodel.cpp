@@ -107,6 +107,21 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 	}
 }
 
+void LibraryModel::removeArtist(const QString &artist)
+{
+	//artists.remove(artist);
+}
+
+void LibraryModel::removeAlbum(const QString &album)
+{
+	//albums.remove(album);
+}
+
+void LibraryModel::removeTrack(const QString &track)
+{
+	//tracks.remove(track);
+}
+
 void LibraryModel::makeSeparators()
 {
 	QStandardItem *root = invisibleRootItem();

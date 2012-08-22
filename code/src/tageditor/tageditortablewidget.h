@@ -13,6 +13,7 @@ class TagEditorTableWidget : public QTableWidget
 private:
 	QList<QFileInfo> files;
 	QList<TagLib::FileRef> tracks;
+	QList<QPersistentModelIndex> indexes;
 
 public:
 	TagEditorTableWidget(QWidget *parent = 0);
@@ -25,6 +26,7 @@ public:
 
 	inline QList<QFileInfo> fileList() const { return files; }
 	inline QList<TagLib::FileRef> trackList() const { return tracks; }
+	inline QList<QPersistentModelIndex> indexList() const { return indexes; }
 
 	void updateColumnData(int column, QString text);
 

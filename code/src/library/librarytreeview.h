@@ -33,6 +33,9 @@ protected:
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
+private:
+	void removeNode(QModelIndex index);
+
 signals:
 	/** Tracks are about to be sent to a playlist or a tag editor. */
 	void aboutToBeSent();
@@ -58,6 +61,9 @@ public slots:
 
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
 	void beginPopulateTree(bool = false);
+
+	/** Rebuild a subset of the tree. */
+	void rebuild(QList<QPersistentModelIndex>);
 
 private slots:
 	/** Tell the view to create specific delegate for the current row. */

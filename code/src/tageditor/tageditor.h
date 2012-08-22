@@ -26,6 +26,8 @@ private:
 	/// An automatic helper for writing tags following regExp
 	TagConverter *tagConverter;
 
+	static QStringList genres;
+
 public:
 	TagEditor(QWidget *parent = 0);
 
@@ -34,7 +36,7 @@ signals:
 
 	void comboBoxChanged(QComboBox*);
 
-	void tracksRenamed();
+	void rebuildTreeView(QList<QPersistentModelIndex>);
 
 public slots:
 	/** Delete all rows. */

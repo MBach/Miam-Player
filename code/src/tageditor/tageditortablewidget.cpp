@@ -47,12 +47,10 @@ void TagEditorTableWidget::init()
 
 void TagEditorTableWidget::updateColumnData(int column, QString text)
 {
-	QList<QTableWidgetItem*> items = selectedItems();
-	foreach (QTableWidgetItem *item, items) {
-		if (item->column() == column && item->row()) {
-			item->setText(text);
-			item->setData(MODIFIED, true);
-		}
+	foreach (QModelIndex index, selectionModel()->selectedRows(column)) {
+		QTableWidgetItem *item = itemFromIndex(index);
+		item->setText(text);
+		item->setData(MODIFIED, true);
 	}
 }
 
@@ -114,7 +112,6 @@ void TagEditorTableWidget::resetTable()
 
 void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
 {
-
 	QString path = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
 	QString name = index.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
 	QFileInfo fileInfo(path + name);
@@ -122,8 +119,10 @@ void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index
 
 	if (source.type() != MediaSource::Invalid) {
 		TagLib::FileRef f(source.fileName().toLocal8Bit().data());
+		// Wow, some code cleanup should really be done here...
 		files.append(fileInfo);
 		tracks.append(f);
+		indexes.append(index);
 		this->fillTable(fileInfo, f);
 	}
 

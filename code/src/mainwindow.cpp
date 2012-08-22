@@ -118,6 +118,9 @@ void MainWindow::setupActions()
 	connect(library, SIGNAL(sendToTagEditor(const QPersistentModelIndex &)), tagEditor, SLOT(addItemFromLibrary(const QPersistentModelIndex &)));
 	connect(library, SIGNAL(finishedToBeSent()), tagEditor, SLOT(afterAddingItems()));
 
+	// Rebuild the treeview when tracks have changed using the tag editor
+	connect(tagEditor, SIGNAL(rebuildTreeView(QList<QPersistentModelIndex>)), library, SLOT(rebuild(QList<QPersistentModelIndex>)));
+
 	// Link buttons
 	Settings *settings = Settings::getInstance();
 	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
@@ -195,6 +198,7 @@ void MainWindow::drawLibrary(bool b)
 	widgetFirstRun->setVisible(isEmpty);
 	library->setVisible(!isEmpty);
 	actionScanLibrary->setEnabled(!isEmpty);
+	this->toggleTagEditor(false);
 	if (!isEmpty) {
 		// Warning: This function violates the object-oriented principle of modularity.
 		// However, getting access to the sender might be useful when many signals are connected to a single slot.

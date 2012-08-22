@@ -180,6 +180,42 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 	}
 }
 
+/** Rebuild a subset of the tree. */
+void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
+{
+	// Parse once again those items
+	foreach (QPersistentModelIndex index, indexes) {
+		QStandardItem *item = libraryModel->itemFromIndex(index);
+		if (item) {
+			LibraryItem *libraryItem = dynamic_cast<LibraryItem*>(item);
+			if (libraryItem) {
+				int i = libraryItem->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+				QString file = libraryItem->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+				libraryModel->readFile(i, file);
+			}
+		}
+	}
+	// Remove items that were tagged as modified
+	foreach (QPersistentModelIndex index, indexes) {
+		this->removeNode(index);
+	}
+	sortByColumn(0, Qt::AscendingOrder);
+	libraryModel->saveToFile();
+}
+
+/** Recursively remove a leaf and its parents if the leaf is a "one node" branch. */
+void LibraryTreeView::removeNode(QModelIndex index)
+{
+	QModelIndex parent;
+	if (libraryModel->rowCount(index.parent()) == 1) {
+		parent = index.parent();
+	}
+	libraryModel->removeRow(index.row(), index.parent());
+	if (parent.isValid()) {
+		this->removeNode(parent);
+	}
+}
+
 void LibraryTreeView::endPopulateTree()
 {
 	//if (Settings::getInstance()->toggleSeparators()) {
