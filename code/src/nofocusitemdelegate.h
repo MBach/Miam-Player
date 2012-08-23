@@ -4,6 +4,10 @@
 #include <QItemDelegate>
 #include <QPainter>
 
+/**
+ * This class does only one thing: ignore the "focus dotted rectangle"
+ * when a cell (or a row) is selected in a view.
+ */
 class NoFocusItemDelegate : public QItemDelegate
 {
 	Q_OBJECT

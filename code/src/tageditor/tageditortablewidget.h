@@ -11,9 +11,8 @@ class TagEditorTableWidget : public QTableWidget
 	Q_OBJECT
 
 private:
-	QList<QFileInfo> files;
-	QList<TagLib::FileRef> tracks;
-	QList<QPersistentModelIndex> indexes;
+	/// An absolute file path is mapped with an item in the library. It's used to detect changes in tags.
+	QMap<QString, QPersistentModelIndex> indexes;
 
 public:
 	TagEditorTableWidget(QWidget *parent = 0);
@@ -24,9 +23,7 @@ public:
 						KEY			= Qt::UserRole+2
 					  };
 
-	inline QList<QFileInfo> fileList() const { return files; }
-	inline QList<TagLib::FileRef> trackList() const { return tracks; }
-	inline QList<QPersistentModelIndex> indexList() const { return indexes; }
+	inline QPersistentModelIndex index(const QString &absFilePath) const { return indexes.value(absFilePath); }
 
 	void updateColumnData(int column, QString text);
 
@@ -37,6 +34,9 @@ private:
 
 public slots:
 	void addItemFromLibrary(const QPersistentModelIndex &index);
+
+	/** Redefined. */
+	void clear();
 };
 
 #endif // TAGEDITORTABLEWIDGET_H

@@ -14,13 +14,6 @@ class TagEditor : public QWidget, public Ui::TagEditor
 private:
 	QMap<int, QComboBox*> combos;
 
-	/// Tracks to be renamed or retagged (identified by their row)
-	QMap<int, QPersistentModelIndex> tracks;
-
-	/// The value is true when a filename or a tag was changed
-	QMap<int, bool> filenames;
-	//QMap<int, bool> tags;
-
 	bool atLeastOneItemChanged;
 
 	/// An automatic helper for writing tags following regExp
@@ -52,6 +45,7 @@ private slots:
 	/** Close this Widget and tells its parent to switch views. */
 	void close();
 
+	/** Save all fields in the media. */
 	void commitChanges();
 
 	/** Display tags in separate QComboBoxes. */
@@ -59,6 +53,7 @@ private slots:
 
 	void recordChanges(QTableWidgetItem *item);
 
+	/** Cancel all changes made by the user. */
 	void rollbackChanges();
 
 	void toggleTagConverter(bool);

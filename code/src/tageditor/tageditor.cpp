@@ -61,35 +61,36 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
 }
 
-/** Delete all rows. */
+/** Clear all rows and comboboxes. */
 void TagEditor::clear()
 {
-	// QTableWidget::clear is not deleting rows? Need to be done manually
-	while (tagEditorWidget->rowCount() > 0) {
-		tagEditorWidget->removeRow(0);
+	// Delete text contents
+	foreach (QComboBox *combo, combos.values()) {
+		combo->clear();
 	}
+	tagEditorWidget->clear();
 }
 
 void TagEditor::beforeAddingItems()
 {
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
+	this->clear();
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
 }
 
 void TagEditor::addItemFromLibrary(const QPersistentModelIndex &index)
 {
 	tagEditorWidget->addItemFromLibrary(index);
-	// Test
-	tracks.insert(tagEditorWidget->rowCount() - 1, index);
-	filenames.insert(tagEditorWidget->rowCount() - 1, false);
-	//tags.insert(tagEditorWidget->rowCount() - 1, false);
 }
 
 void TagEditor::afterAddingItems()
 {
 	// It's possible to edit single items by double-clicking in the table
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
+	tagEditorWidget->setSortingEnabled(true);
+	// Sort by path
+	tagEditorWidget->sortItems(1);
 	tagEditorWidget->resizeColumnsToContents();
 }
 
@@ -100,11 +101,11 @@ void TagEditor::close()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 	atLeastOneItemChanged = false;
-	tracks.clear();
-	filenames.clear();
+	this->clear();
 	QWidget::close();
 }
 
+/** Save all fields in the media. */
 void TagEditor::commitChanges()
 {
 	QList<QPersistentModelIndex> tracksToRescan;
@@ -112,9 +113,12 @@ void TagEditor::commitChanges()
 	// Detect changes
 	for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
 		// A physical file per row
-		FileRef fileRef = tagEditorWidget->trackList().at(i);
+		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
+		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
+		QString absPath(itemPath->text() + '/' + itemFileName->text());
+		FileRef fileRef(absPath.toStdString().data());
 		bool trackWasModified = false;
-		for (int j = 0; j < tagEditorWidget->columnCount(); j++) {
+		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
 
 			// Check for every field if we have any changes
 			QTableWidgetItem *item = tagEditorWidget->item(i, j);
@@ -123,8 +127,6 @@ void TagEditor::commitChanges()
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
 				PropertyMap pm = fileRef.tag()->properties();
-				//if (key == "ALBUM" || "ARTIST") {
-				//}
 				bool b = pm.replace(String(key.toStdString()), String(item->text().toStdString()));
 				if (b) {
 					fileRef.tag()->setProperties(pm);
@@ -139,34 +141,9 @@ void TagEditor::commitChanges()
 			if (!b) {
 				qDebug() << "tag wasn't saved :(";
 			}
-			tracksToRescan.append(tagEditorWidget->indexList().at(i));
+			tracksToRescan.append(tagEditorWidget->index(absPath));
 		}
 	}
-
-	//QMapIterator<int, bool> f(filenames);
-	// Apply new filenames
-	/// TODO
-	/*while (f.hasNext()) {
-		f.next();
-		if (f.value()) {
-			int row = f.key();
-			/// XXX: Settings::getInstance()->absoluteFilePath(QModelIndex);
-			QPersistentModelIndex index = tracks.value(row);
-			QString filePath = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
-			QString fileName = index.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-			if (QFile::exists(filePath + fileName)) {
-				//QTableWidgetItem *newFilename = tagEditorWidget->item(row, 0);
-				//QTableWidgetItem *path = tagEditorWidget->item(row, 1);
-				QFile file(filePath + fileName);
-				//file.rename(path->data(Qt::DisplayRole).toString() + '/' + newFilename->data(Qt::DisplayRole).toString());
-				file.close();
-				//qDebug() << (filePath + fileName) << "was successfully renamed to" << newAbsFilepath;
-			}
-		}
-	}
-	if (!filenames.isEmpty()) {
-		emit tracksRenamed();
-	}*/
 
 	if (!tracksToRescan.isEmpty()) {
 		emit rebuildTreeView(tracksToRescan);
@@ -174,9 +151,8 @@ void TagEditor::commitChanges()
 
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
+	atLeastOneItemChanged = false;
 }
-
-#include <id3v2header.h>
 
 /** Display tags in separate QComboBoxes. */
 void TagEditor::displayTags()
@@ -207,8 +183,6 @@ void TagEditor::displayTags()
 
 			disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
 			combo->clear();
-
-
 			combo->insertItem(0, tr("(Keep)"));
 			// Map the combobox object with the number of the column in the table to dynamically reflect changes
 			// Arbitrarily adds the column number to the first item (Keep)
@@ -250,20 +224,12 @@ void TagEditor::displayTags()
 
 void TagEditor::recordChanges(QTableWidgetItem *item)
 {
-	if (!atLeastOneItemChanged) {
-		atLeastOneItemChanged = true;
-		saveChangesButton->setEnabled(true);
-		cancelButton->setEnabled(true);
-	}
-	if (item->column() == 0) {
-		// Filenames
-		filenames.insert(item->row(), true);
-	} else {
-		// Tags
-		//tags.insert(item->row(), true);
-	}
+	saveChangesButton->setEnabled(true);
+	cancelButton->setEnabled(true);
+	item->setData(TagEditorTableWidget::MODIFIED, true);
 }
 
+/** Cancel all changes made by the user. */
 void TagEditor::rollbackChanges()
 {
 	tagEditorWidget->resetTable();

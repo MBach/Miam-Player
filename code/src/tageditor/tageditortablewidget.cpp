@@ -1,6 +1,7 @@
 #include "tageditortablewidget.h"
 #include "settings.h"
 #include "library/libraryitem.h"
+#include "nofocusitemdelegate.h"
 
 #include <QScrollBar>
 
@@ -14,9 +15,6 @@
 
 #include <QtDebug>
 
-#include <QApplication>
-#include <QHeaderView>
-
 using namespace Phonon;
 
 using namespace TagLib;
@@ -28,6 +26,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	this->setStyleSheet(settings->styleSheet(this));
 	this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
+	this->setItemDelegate(new NoFocusItemDelegate(this));
 }
 
 void TagEditorTableWidget::init()
@@ -54,6 +53,61 @@ void TagEditorTableWidget::updateColumnData(int column, QString text)
 	}
 }
 
+void TagEditorTableWidget::resetTable()
+{
+	this->setSortingEnabled(false);
+
+	QMapIterator<QString, QPersistentModelIndex> it(indexes);
+	int row = 0;
+	while (it.hasNext()) {
+		it.next();
+		QFileInfo fileInfo(it.key());
+		MediaSource source(fileInfo.absoluteFilePath());
+		if (source.type() != MediaSource::Invalid) {
+			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
+
+			// Extract relevant fields
+			String artAlb, discNumber;
+			// If the file is a MP3
+			if (TagLib::MPEG::File* file = dynamic_cast<TagLib::MPEG::File*>(f.file())) {
+				if (file->ID3v2Tag()) {
+					if (!file->ID3v2Tag()->frameListMap()["TPE2"].isEmpty()) {
+						artAlb = file->ID3v2Tag()->frameListMap()["TPE2"].front()->toString();
+					}
+					if (!file->ID3v2Tag()->frameListMap()["TPOS"].isEmpty()) {
+						discNumber = file->ID3v2Tag()->frameListMap()["TPOS"].front()->toString();
+					}
+				}
+			}
+
+			// Reload info
+			int column = 1;
+			QTableWidgetItem *title = this->item(row, ++column);
+			QTableWidgetItem *artist = this->item(row, ++column);
+			QTableWidgetItem *artistAlbum = this->item(row, ++column);
+			QTableWidgetItem *album = this->item(row, ++column);
+			QTableWidgetItem *trackNumber = this->item(row, ++column);
+			QTableWidgetItem *disc = this->item(row, ++column);
+			QTableWidgetItem *year = this->item(row, ++column);
+			QTableWidgetItem *genre = this->item(row, ++column);
+			QTableWidgetItem *comment = this->item(row, ++column);
+
+			title->setText(f.tag()->title().toCString());
+			artist->setText(f.tag()->artist().toCString());
+			artistAlbum->setText(artAlb.toCString());
+			album->setText(f.tag()->album().toCString());
+			trackNumber->setText(QString::number(f.tag()->track()));
+			disc->setText(discNumber.toCString());
+			year->setText(QString::number(f.tag()->year()));
+			genre->setText(f.tag()->genre().toCString());
+			comment->setText(f.tag()->comment().toCString());
+		}
+		row++;
+	}
+	this->setSortingEnabled(true);
+	this->sortItems(1);
+}
+
 void TagEditorTableWidget::fillTable(const QFileInfo fileInfo, const TagLib::FileRef f)
 {
 	// Extract relevant fields
@@ -70,9 +124,13 @@ void TagEditorTableWidget::fillTable(const QFileInfo fileInfo, const TagLib::Fil
 		}
 	}
 
+	// The first two columns are not editable
+	// It may changes in the future for the first one (the filename)
 	QTableWidgetItem *fileName = new QTableWidgetItem(fileInfo.fileName());
+	fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 	QTableWidgetItem *absPath = new QTableWidgetItem(fileInfo.absolutePath());
 	absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+
 	QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
 	QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
 	QTableWidgetItem *artistAlbum = new QTableWidgetItem(artAlb.toCString());
@@ -95,21 +153,6 @@ void TagEditorTableWidget::fillTable(const QFileInfo fileInfo, const TagLib::Fil
 	}
 }
 
-void TagEditorTableWidget::resetTable()
-{
-	// Delete items
-	/// XXX: is it really necessary to delete-rebuild every time?
-	/// It might be better to use a clear-populate mechanism, therefore we can keep the selection model
-	for (int i = 0; i < tracks.size(); i++) {
-		this->removeRow(0);
-	}
-
-	// Reload info from the list
-	for (int i = 0; i < tracks.size(); i++) {
-		this->fillTable(files.at(i), tracks.at(i));
-	}
-}
-
 void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
 {
 	QString path = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
@@ -119,11 +162,17 @@ void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index
 
 	if (source.type() != MediaSource::Invalid) {
 		TagLib::FileRef f(source.fileName().toLocal8Bit().data());
-		// Wow, some code cleanup should really be done here...
-		files.append(fileInfo);
-		tracks.append(f);
-		indexes.append(index);
+		indexes.insert(fileInfo.absoluteFilePath(), index);
 		this->fillTable(fileInfo, f);
 	}
+}
 
+/** Redefined. */
+void TagEditorTableWidget::clear()
+{
+	while (rowCount() > 0) {
+		this->removeRow(0);
+	}
+	indexes.clear();
+	this->setSortingEnabled(false);
 }
