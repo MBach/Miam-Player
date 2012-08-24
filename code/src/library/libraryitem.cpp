@@ -7,9 +7,11 @@
 
 #include <QtDebug>
 
-LibraryItem::LibraryItem(const QString &text) :
+LibraryItem::LibraryItem(const QString &text, int type) :
 	QStandardItem(text), libraryItemDelegate(0)
-{}
+{
+	setData(type, SUFFIX);
+}
 
 LibraryItem::~LibraryItem()
 {

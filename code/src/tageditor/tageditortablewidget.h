@@ -29,9 +29,6 @@ public:
 
 	void resetTable();
 
-private:
-	void fillTable(const QFileInfo fileInfo, const TagLib::FileRef f);
-
 public slots:
 	void addItemFromLibrary(const QPersistentModelIndex &index);
 

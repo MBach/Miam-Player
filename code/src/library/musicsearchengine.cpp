@@ -1,5 +1,5 @@
 #include "musicsearchengine.h"
-
+#include "filehelper.h"
 #include "settings.h"
 
 #include <QDirIterator>
@@ -7,7 +7,7 @@
 #include <QMetaType>
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-    QThread(parent)
+	QThread(parent)
 {
 	qRegisterMetaType<QFileInfo>("QFileInfo");
 }
@@ -38,7 +38,7 @@ void MusicSearchEngine::run()
 			if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
 				coverPath = qFileInfo.absoluteFilePath();
 				aCoverWasFound = true;
-			} else if (qFileInfo.suffix().toLower() == "mp3") {
+			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
 				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(musicPaths.at(i).toString()));
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then

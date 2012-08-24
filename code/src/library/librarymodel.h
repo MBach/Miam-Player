@@ -4,6 +4,15 @@
 #include <QFileInfo>
 #include <QMap>
 
+#include <fileref.h>
+#include <id3v2tag.h>
+#include <tag.h>
+#include <tlist.h>
+#include <textidentificationframe.h>
+#include <tstring.h>
+
+#include "filehelper.h"
+
 class LibraryItem;
 
 #include <QStandardItemModel>
@@ -47,17 +56,13 @@ public:
 	/** Insert a new artist/album/track in the library. */
 	LibraryItem* insertArtist(const QString &artist);
 	LibraryItem* insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist);
-	void insertTrack(int musicLocationIndex, const QString &fileName, uint track, QString &title, LibraryItem *parent);
+	void insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItem *parent);
 
 	void removeArtist(const QString &artist);
 	void removeAlbum(const QString &album);
 	void removeTrack(const QString &track);
 
 	void makeSeparators();
-
-	/// TEST
-	//inline QModelIndexList persistentIndexList () const { return QStandardItemModel::persistentIndexList(); }
-	//inline void changePersistentIndexList(const QModelIndexList & from, const QModelIndexList & to ) { QStandardItemModel::changePersistentIndexList(from, to); }
 
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */

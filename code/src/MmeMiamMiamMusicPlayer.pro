@@ -41,7 +41,8 @@ SOURCES += \
     starrating.cpp \
     tabbar.cpp \
     tabplaylist.cpp \
-    tracksnotfoundmessagebox.cpp
+    tracksnotfoundmessagebox.cpp \
+    filehelper.cpp
 
 HEADERS += \
     circleprogressbar.h \
@@ -72,7 +73,8 @@ HEADERS += \
     stareditor.h \
     tabbar.h \
     tabplaylist.h \
-    tracksnotfoundmessagebox.h
+    tracksnotfoundmessagebox.h \
+    filehelper.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

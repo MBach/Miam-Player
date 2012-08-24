@@ -1,6 +1,7 @@
 #include "tageditor.h"
 #include "library/libraryitem.h"
 #include "settings.h"
+#include "filehelper.h"
 
 #include <QtDebug>
 
@@ -90,6 +91,7 @@ void TagEditor::afterAddingItems()
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
 	tagEditorWidget->setSortingEnabled(true);
 	// Sort by path
+	tagEditorWidget->sortItems(0);
 	tagEditorWidget->sortItems(1);
 	tagEditorWidget->resizeColumnsToContents();
 }
@@ -105,6 +107,9 @@ void TagEditor::close()
 	QWidget::close();
 }
 
+#include <tpropertymap.h>
+#include <tmap.h>
+
 /** Save all fields in the media. */
 void TagEditor::commitChanges()
 {
@@ -116,7 +121,9 @@ void TagEditor::commitChanges()
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
 		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
 		QString absPath(itemPath->text() + '/' + itemFileName->text());
-		FileRef fileRef(absPath.toStdString().data());
+		FileRef file(absPath.toStdString().data());
+		/// FIXME
+		FileHelper fh(file, itemFileName->data(LibraryItem::SUFFIX).toInt());
 		bool trackWasModified = false;
 		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
 
@@ -126,18 +133,33 @@ void TagEditor::commitChanges()
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
-				PropertyMap pm = fileRef.tag()->properties();
-				bool b = pm.replace(String(key.toStdString()), String(item->text().toStdString()));
-				if (b) {
-					fileRef.tag()->setProperties(pm);
-					trackWasModified = true;
+				PropertyMap pm = file.tag()->properties();
+
+				if (pm.contains(key.toStdString())) {
+					qDebug() << "PropertyMap contains" << key;
+					bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
+					if (b) {
+						file.tag()->setProperties(pm);
+						if (file.tag()) {
+							trackWasModified = true;
+						}
+					}
+				} else {
+					qDebug() << "PropertyMap doesn't contain" << key;
+					trackWasModified = fh.insert(key, item->text());
 				}
+
+				/*PropertyMap::Iterator it;
+				for(it = pm.begin(); it != pm.end(); ++it) {
+					std::pair<String, StringList> s = static_cast<std::pair<String, StringList> >(*it);
+					qDebug() << s.first.toCString(false) << s.second.toString(',').toCString(false);
+				}*/
 			}
 		}
 		// Save changes if at least one field was modified
 		// Also, tell the model to rescan the file because the artist or the album might have changed
 		if (trackWasModified) {
-			bool b = fileRef.save();
+			bool b = fh.save();
 			if (!b) {
 				qDebug() << "tag wasn't saved :(";
 			}
@@ -197,9 +219,13 @@ void TagEditor::displayTags()
 						combo->addItem(genre);
 					}
 				}
-				combo->model()->sort(0);
 			} else {
 				combo->addItems(stringList);
+			}
+
+			// Special case for Tracknumber and Year: it's better to have a chronological order
+			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
+				combo->model()->sort(0);
 			}
 
 			// No item: nothing is selected
@@ -208,7 +234,7 @@ void TagEditor::displayTags()
 			if (stringList.isEmpty()) {
 				combo->setCurrentIndex(-1);
 			} else if (stringList.count() == 1) {
-				if (combo == genreComboBox) {
+				if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
 					int result = combo->findText(stringList.first());
 					combo->setCurrentIndex(result);
 				} else {

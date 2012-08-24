@@ -21,7 +21,8 @@ private:
 	Q_ENUMS(CustomType)
 
 public:
-	LibraryItem(const QString &text="");
+	/// Constructor with a title and a filetype.
+	LibraryItem(const QString &text="", int type=-1);
 
 	~LibraryItem();
 
@@ -30,7 +31,8 @@ public:
 					  CHILD_COUNT		= Qt::UserRole+4,
 					  TRACK_NUMBER		= Qt::UserRole+5,
 					  IDX_TO_ABS_PATH	= Qt::UserRole+6,
-					  REL_PATH_TO_MEDIA	= Qt::UserRole+7
+					  REL_PATH_TO_MEDIA	= Qt::UserRole+7,
+					  SUFFIX			= Qt::UserRole+8
 					};
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }

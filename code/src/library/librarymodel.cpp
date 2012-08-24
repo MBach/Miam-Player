@@ -3,14 +3,6 @@
 #include "settings.h"
 #include "libraryitem.h"
 
-#include <fileref.h>
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <tag.h>
-#include <tlist.h>
-#include <textidentificationframe.h>
-#include <tstring.h>
-
 #include <QtDebug>
 
 using namespace TagLib;
@@ -72,7 +64,7 @@ LibraryItem* LibraryModel::insertAlbum(const QString &album, const QString &path
 }
 
 /** Insert a new track in the library. */
-void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, unsigned int track, QString &title, LibraryItem *parent)
+void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItem *parent)
 {
 	QList<QVariant> musicLocations = Settings::getInstance()->musicLocations();
 	// Check if a track was already inserted
@@ -96,11 +88,15 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 
 	LibraryItem *itemTitle = NULL;
 	if (isNewTrack) {
-		itemTitle = new LibraryItem(title);
+		QString title(fileHelper.file()->tag()->title().toCString(false));
+		if (title.isEmpty()) {
+			title = QFileInfo(fileName).baseName();
+		}
+		itemTitle = new LibraryItem(title, fileHelper.type());
 		itemTitle->setFilePath(musicLocationIndex, fileName);
 		itemTitle->setMediaType(TRACK);
-		itemTitle->setRating(track);
-		itemTitle->setTrackNumber(track);
+		itemTitle->setRating(fileHelper.file()->tag()->track());
+		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
 		parent->setChild(parent->rowCount(), itemTitle);
 		emit associateNodeWithDelegate(itemTitle);
@@ -215,21 +211,18 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 	Settings *settings = Settings::getInstance();
 	settings->musicLocations().at(musicLocationIndex).toString();
 	QString filePath = settings->musicLocations().at(musicLocationIndex).toString() + qFileName;
-	MPEG::File fileRef(filePath.toLocal8Bit().data(), true, AudioProperties::Average);
-	if (fileRef.isValid() && fileRef.tag()) {
-		// For albums with multiple Artists, like OST, the "TPE2" value is commonly used for the tag "Album Artist"
-		// It is used in Windows 7, foobar2000, etc
-		ID3v2::Tag *tag = fileRef.ID3v2Tag();
+
+	FileHelper fh(filePath);
+	File *f = fh.file();
+
+	if (f->isValid() && f->tag()) {
+
 		String artist;
-		if (tag) {
-			ID3v2::FrameList l = tag->frameListMap()["TPE2"];
-			if (l.isEmpty()) {
-				artist = fileRef.tag()->artist();
-			} else {
-				artist = l.front()->toString();
-			}
+		String artistAlbum = fh.artistAlbum();
+		if (artistAlbum.isEmpty()) {
+			artist = f->tag()->artist();
 		} else {
-			artist = fileRef.tag()->artist();
+			artist = artistAlbum;
 		}
 
 		// Is there is already this artist in the library?
@@ -239,23 +232,16 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 		}
 
 		// Is there is already an album from this artist?
-		indexAlbum = hasAlbum(indexArtist, QString(fileRef.tag()->album().toCString(false)));
+		indexAlbum = hasAlbum(indexArtist, QString(f->tag()->album().toCString(false)));
 		if (indexAlbum == NULL) {
 			// New album to create, only if it's not empty
-			if (fileRef.tag()->album().isEmpty()) {
+			if (f->tag()->album().isEmpty()) {
 				indexAlbum = indexArtist;
 			} else {
-				indexAlbum = insertAlbum(QString(fileRef.tag()->album().toCString(false)), filePath, indexArtist);
+				indexAlbum = insertAlbum(QString(f->tag()->album().toCString(false)), filePath, indexArtist);
 			}
 		}
-
-		// In every case, insert a new track
-		QString title(fileRef.tag()->title().toCString(false));
-		if (title.isEmpty()) {
-			title = qFileName.left(qFileName.size() - 4); // 4 == ".mp3"
-			title = title.mid(title.lastIndexOf('/')+1);
-		}
-		this->insertTrack(musicLocationIndex, qFileName, fileRef.tag()->track(), title, indexAlbum);
+		this->insertTrack(musicLocationIndex, qFileName, fh, indexAlbum);
 	}
 }
 

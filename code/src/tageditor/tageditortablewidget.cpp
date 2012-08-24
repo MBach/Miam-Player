@@ -105,53 +105,11 @@ void TagEditorTableWidget::resetTable()
 		row++;
 	}
 	this->setSortingEnabled(true);
+	this->sortItems(0);
 	this->sortItems(1);
 }
 
-void TagEditorTableWidget::fillTable(const QFileInfo fileInfo, const TagLib::FileRef f)
-{
-	// Extract relevant fields
-	String artAlb, discNumber;
-	// If the file is a MP3
-	if (TagLib::MPEG::File* file = dynamic_cast<TagLib::MPEG::File*>(f.file())) {
-		if (file->ID3v2Tag()) {
-			if (!file->ID3v2Tag()->frameListMap()["TPE2"].isEmpty()) {
-				artAlb = file->ID3v2Tag()->frameListMap()["TPE2"].front()->toString();
-			}
-			if (!file->ID3v2Tag()->frameListMap()["TPOS"].isEmpty()) {
-				discNumber = file->ID3v2Tag()->frameListMap()["TPOS"].front()->toString();
-			}
-		}
-	}
-
-	// The first two columns are not editable
-	// It may changes in the future for the first one (the filename)
-	QTableWidgetItem *fileName = new QTableWidgetItem(fileInfo.fileName());
-	fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-	QTableWidgetItem *absPath = new QTableWidgetItem(fileInfo.absolutePath());
-	absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-
-	QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
-	QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
-	QTableWidgetItem *artistAlbum = new QTableWidgetItem(artAlb.toCString());
-	QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
-	/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-	QTableWidgetItem *trackNumber = new QTableWidgetItem(QString::number(f.tag()->track()));
-	QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
-	QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
-	QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
-	QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
-
-	QList<QTableWidgetItem*> items;
-	items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
-
-	// Create a new row with right data
-	int row = rowCount();
-	this->insertRow(row);
-	for (int column = 0; column < items.size(); column++) {
-		this->setItem(row, column, items.at(column));
-	}
-}
+#include "filehelper.h"
 
 void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
 {
@@ -163,7 +121,37 @@ void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index
 	if (source.type() != MediaSource::Invalid) {
 		TagLib::FileRef f(source.fileName().toLocal8Bit().data());
 		indexes.insert(fileInfo.absoluteFilePath(), index);
-		this->fillTable(fileInfo, f);
+
+		FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
+
+		// The first two columns are not editable
+		// It may changes in the future for the first one (the filename)
+		QTableWidgetItem *fileName = new QTableWidgetItem(fileInfo.fileName());
+		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+		QTableWidgetItem *absPath = new QTableWidgetItem(fileInfo.absolutePath());
+		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+
+		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
+		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
+		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
+		QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
+		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
+		QTableWidgetItem *trackNumber = new QTableWidgetItem(QString::number(f.tag()->track()));
+		//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
+		QTableWidgetItem *disc = new QTableWidgetItem("");
+		QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
+		QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
+		QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
+
+		QList<QTableWidgetItem*> items;
+		items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
+
+		// Create a new row with right data
+		int row = rowCount();
+		this->insertRow(row);
+		for (int column = 0; column < items.size(); column++) {
+			this->setItem(row, column, items.at(column));
+		}
 	}
 }
 
