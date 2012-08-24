@@ -115,6 +115,7 @@ void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlayli
 	if (delegate) {
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
 		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
+		qDebug() << item->data(LibraryItem::SUFFIX).toInt() << sourceIndex.data(LibraryItem::SUFFIX).toInt();
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children

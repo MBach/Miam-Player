@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/icons">
         <file alias="plusIcon">plus_icon.png</file>
-        <file>mmmmp.ico</file>
+        <file alias="mmmmp">mmmmp.ico</file>
         <file alias="favorite">config/favorite.png</file>
         <file alias="down-arrow">config/down-arrow.png</file>
         <file alias="up-arrow">config/up-arrow.png</file>

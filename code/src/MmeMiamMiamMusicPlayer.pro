@@ -83,6 +83,7 @@ OTHER_FILES += \
     stylesheets/tageditor.qss \
     stylesheets/playlist.qss
 
+
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \
     translations/m4p_en.ts \
@@ -95,6 +96,9 @@ TRANSLATIONS = translations/m4p_ar.ts \
 
 RESOURCES += \
     mmmmp.qrc
+
+win32:RC_FILE += config/mmmmp.rc
+win32:OTHER_FILES += config/mmmmp.rc
 
 CONFIG(debug, debug|release) {
     LIBS += -Ldebug -llibtag

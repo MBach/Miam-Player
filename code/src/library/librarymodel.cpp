@@ -93,6 +93,7 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 			title = QFileInfo(fileName).baseName();
 		}
 		itemTitle = new LibraryItem(title, fileHelper.type());
+		qDebug() << fileHelper.type();
 		itemTitle->setFilePath(musicLocationIndex, fileName);
 		itemTitle->setMediaType(TRACK);
 		itemTitle->setRating(fileHelper.file()->tag()->track());
@@ -243,6 +244,7 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 		}
 		this->insertTrack(musicLocationIndex, qFileName, fh, indexAlbum);
 	}
+	delete f;
 }
 
 /** Save a tree to a flat file on disk. */
