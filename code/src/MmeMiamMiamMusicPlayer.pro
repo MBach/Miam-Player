@@ -97,15 +97,16 @@ TRANSLATIONS = translations/m4p_ar.ts \
 RESOURCES += \
     mmmmp.qrc
 
-win32:RC_FILE += config/mmmmp.rc
-win32:OTHER_FILES += config/mmmmp.rc
+win32 {
+    RC_FILE += config/mmmmp.rc
+    OTHER_FILES += config/mmmmp.rc
+}
 
 CONFIG(debug, debug|release) {
     LIBS += -Ldebug -llibtag
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
-    #UI_DIR += debug/.ui
 }
 
 CONFIG(release, debug|release) {
@@ -113,7 +114,6 @@ CONFIG(release, debug|release) {
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
-    #UI_DIR += release/.ui
 }
 
 HEADERS += $$TagLibDirectory/include/taglib/audioproperties.h \
