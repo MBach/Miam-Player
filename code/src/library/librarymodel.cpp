@@ -93,7 +93,6 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 			title = QFileInfo(fileName).baseName();
 		}
 		itemTitle = new LibraryItem(title, fileHelper.type());
-		qDebug() << fileHelper.type();
 		itemTitle->setFilePath(musicLocationIndex, fileName);
 		itemTitle->setMediaType(TRACK);
 		itemTitle->setRating(fileHelper.file()->tag()->track());

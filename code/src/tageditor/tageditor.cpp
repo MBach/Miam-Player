@@ -136,7 +136,6 @@ void TagEditor::commitChanges()
 				PropertyMap pm = file.tag()->properties();
 
 				if (pm.contains(key.toStdString())) {
-					qDebug() << "PropertyMap contains" << key;
 					bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
 					if (b) {
 						file.tag()->setProperties(pm);
@@ -145,7 +144,6 @@ void TagEditor::commitChanges()
 						}
 					}
 				} else {
-					qDebug() << "PropertyMap doesn't contain" << key;
 					trackWasModified = fh.insert(key, item->text());
 				}
 

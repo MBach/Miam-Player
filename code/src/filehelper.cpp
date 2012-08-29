@@ -183,15 +183,13 @@ bool FileHelper::insert(QString key, QString value)
 			if (mpegFile->ID3v2Tag()) {
 				ID3v2::Tag *tag = mpegFile->ID3v2Tag();
 				if (tag) {
-					const char *s = this->convertKeyToID3v2Key(key);
-					ID3v2::FrameList l = tag->frameListMap()[s];
+					QString convertedKey = this->convertKeyToID3v2Key(key);
+					ID3v2::FrameList l = tag->frameListMap()[convertedKey.toStdString().data()];
 					if (!l.isEmpty()) {
-						qDebug() << l.front()->toString().toCString(false);
 						tag->removeFrame(l.front());
-					} else {
-						qDebug() << "framelist is empty";
 					}
-					ID3v2::TextIdentificationFrame *tif = new ID3v2::TextIdentificationFrame(ByteVector(value.toStdString().data()));
+					ID3v2::TextIdentificationFrame *tif = new ID3v2::TextIdentificationFrame(ByteVector(convertedKey.toStdString().data()));
+					tif->setText(value.toStdString().data());
 					tag->addFrame(tif);
 				}
 			} else if (mpegFile->ID3v1Tag()) {
@@ -215,11 +213,11 @@ bool FileHelper::insert(QString key, QString value)
 	return true;
 }
 
-const char*  FileHelper::convertKeyToID3v2Key(QString key)
+QString FileHelper::convertKeyToID3v2Key(QString key)
 {
 	/// TODO other relevant keys
-	if (key == "ARTISTALBUM") {
-		return std::string("TPE2").data();
+	if (key.compare("ARTISTALBUM") == 0) {
+		return "TPE2";
 	} else {
 		return "";
 	}

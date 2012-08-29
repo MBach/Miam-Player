@@ -123,12 +123,12 @@ void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index
 		indexes.insert(fileInfo.absoluteFilePath(), index);
 
 		FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
-		qDebug() << index.data(LibraryItem::SUFFIX).toInt();
 
 		// The first two columns are not editable
 		// It may changes in the future for the first one (the filename)
 		QTableWidgetItem *fileName = new QTableWidgetItem(fileInfo.fileName());
 		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+		fileName->setData(LibraryItem::SUFFIX, fh.type());
 		QTableWidgetItem *absPath = new QTableWidgetItem(fileInfo.absolutePath());
 		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 

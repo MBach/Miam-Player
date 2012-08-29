@@ -34,7 +34,7 @@ public:
 	inline static QStringList suffixes() { return suff; }
 
 private:
-	const char *convertKeyToID3v2Key(QString key);
+	QString convertKeyToID3v2Key(QString key);
 };
 
 #endif // FILEHELPER_H
