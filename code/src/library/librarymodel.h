@@ -58,11 +58,9 @@ public:
 	LibraryItem* insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist);
 	void insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItem *parent);
 
-	void removeArtist(const QString &artist);
-	void removeAlbum(const QString &album);
-	void removeTrack(const QString &track);
-
 	void makeSeparators();
+
+	void removeNode(QModelIndex index);
 
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */

@@ -30,14 +30,20 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
-	parent->setWindowOpacity(0.5);
 
+	//QHBoxLayout *vLayout = new QHBoxLayout();
+	//this->setLayout(vLayout);
 	//QWidget *centeredOverlay = new QWidget(this);
+	//qDebug() << this->width() << this->height();
 	//centeredOverlay->setBaseSize(this->width(), this->height());
-	//centeredOverlay->setPalette(QPalette(QPalette::WindowText));
+	//QPalette pal;
+	//pal.setColor(QPalette::Window, Qt::black);
+	//centeredOverlay->setPalette(pal);
 	//centeredOverlay->setAttribute(Qt::WA_NoSystemBackground, false);
-	//centeredOverlay->setBackgroundRole(QPalette::Window);
 	//circleProgressBar = new CircleProgressBar(centeredOverlay);
+	//QGraphicsOpacityEffect *goe = new QGraphicsOpacityEffect(circleProgressBar);
+	//goe->setOpacity(0.5);
+	//circleProgressBar->setGraphicsEffect(goe);
 
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
@@ -197,23 +203,11 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 	}
 	// Remove items that were tagged as modified
 	foreach (QPersistentModelIndex index, indexes) {
-		this->removeNode(index);
+		libraryModel->removeNode(index);
 	}
+	libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
 	libraryModel->saveToFile();
-}
-
-/** Recursively remove a leaf and its parents if the leaf is a "one node" branch. */
-void LibraryTreeView::removeNode(QModelIndex index)
-{
-	QModelIndex parent;
-	if (libraryModel->rowCount(index.parent()) == 1) {
-		parent = index.parent();
-	}
-	libraryModel->removeRow(index.row(), index.parent());
-	if (parent.isValid()) {
-		this->removeNode(parent);
-	}
 }
 
 void LibraryTreeView::endPopulateTree()

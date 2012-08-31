@@ -103,23 +103,20 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 	}
 }
 
-void LibraryModel::removeArtist(const QString &artist)
-{
-	//artists.remove(artist);
-}
-
-void LibraryModel::removeAlbum(const QString &album)
-{
-	//albums.remove(album);
-}
-
-void LibraryModel::removeTrack(const QString &track)
-{
-	//tracks.remove(track);
-}
-
 void LibraryModel::makeSeparators()
 {
+	// Removing previous separators
+	QMapIterator<QString, QStandardItem*> mapIterator(alphabeticalSeparators);
+	while (mapIterator.hasNext()) {
+		mapIterator.next();
+		LibraryItem *libraryItem = static_cast<LibraryItem*>(mapIterator.value());
+		if (libraryItem) {
+			this->removeRow(libraryItem->row(), libraryItem->index().parent());
+		}
+	}
+	alphabeticalSeparators.clear();
+
+	// Builing new separators
 	QStandardItem *root = invisibleRootItem();
 	for (int i = 0; i < root->rowCount(); i++) {
 		QString artist = root->child(i)->data(Qt::DisplayRole).toString();
@@ -273,6 +270,46 @@ void LibraryModel::saveToFile()
 		mmmmp.write(qCompress(output, 9));
 		mmmmp.close();
 	}
+}
+
+/** Recursively remove a leaf and its parents if the leaf is a "one node" branch. */
+void LibraryModel::removeNode(QModelIndex index)
+{
+	QModelIndex parent;
+	if (this->rowCount(index.parent()) == 1) {
+		parent = index.parent();
+	}
+	QStandardItem *qStandardItem = itemFromIndex(index);
+	if (qStandardItem) {
+		LibraryItem *libraryItem = static_cast<LibraryItem*>(qStandardItem);
+		QPair<LibraryItem*, QString> pair;
+		//QString albumPath;
+		if (libraryItem) {
+			switch (libraryItem->type()) {
+			case TRACK:
+				tracks.remove(libraryItem);
+				break;
+			case ALBUM:
+				/// FIXME
+				//albumPath = covers.key(libraryItem);
+				//qDebug() << albumPath << covers.remove(albumPath);
+				pair = albums.key(libraryItem);
+				albums.remove(pair);
+				albumsWithCovers.remove(libraryItem);
+				break;
+			case ARTIST:
+				QString artist = artists.key(libraryItem);
+				artists.remove(artist);
+				break;
+			}
+			delete libraryItem;
+		}
+	}
+	this->removeRow(index.row(), index.parent());
+	if (parent.isValid()) {
+		this->removeNode(parent);
+	}
+	qDebug() << covers.size();
 }
 
 /** Recursively reads the input stream to build nodes and append them to its parent. */

@@ -27,8 +27,6 @@ public:
 signals:
 	void closeTagEditor(bool);
 
-	void comboBoxChanged(QComboBox*);
-
 	void rebuildTreeView(QList<QPersistentModelIndex>);
 
 public slots:
@@ -51,7 +49,7 @@ private slots:
 	/** Display tags in separate QComboBoxes. */
 	void displayTags();
 
-	void recordChanges(QTableWidgetItem *item);
+	void recordSingleItemChange(QTableWidgetItem *item);
 
 	/** Cancel all changes made by the user. */
 	void rollbackChanges();

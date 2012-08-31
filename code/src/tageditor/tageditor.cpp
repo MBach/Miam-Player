@@ -1,16 +1,11 @@
 #include "tageditor.h"
+#include "filehelper.h"
 #include "library/libraryitem.h"
 #include "settings.h"
-#include "filehelper.h"
+
+#include <tpropertymap.h>
 
 #include <QtDebug>
-
-#include <QFile>
-#include <QGraphicsPixmapItem>
-
-#include <fileref.h>
-#include <tag.h>
-#include <tpropertymap.h>
 
 using namespace TagLib;
 
@@ -65,7 +60,7 @@ TagEditor::TagEditor(QWidget *parent) :
 /** Clear all rows and comboboxes. */
 void TagEditor::clear()
 {
-	// Delete text contents
+	// Delete text contents, not the combobox itself
 	foreach (QComboBox *combo, combos.values()) {
 		combo->clear();
 	}
@@ -77,7 +72,7 @@ void TagEditor::beforeAddingItems()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 	this->clear();
-	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
+	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 }
 
 void TagEditor::addItemFromLibrary(const QPersistentModelIndex &index)
@@ -88,7 +83,7 @@ void TagEditor::addItemFromLibrary(const QPersistentModelIndex &index)
 void TagEditor::afterAddingItems()
 {
 	// It's possible to edit single items by double-clicking in the table
-	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordChanges(QTableWidgetItem*)));
+	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 	tagEditorWidget->setSortingEnabled(true);
 	// Sort by path
 	tagEditorWidget->sortItems(0);
@@ -107,22 +102,19 @@ void TagEditor::close()
 	QWidget::close();
 }
 
-#include <tpropertymap.h>
-#include <tmap.h>
-
 /** Save all fields in the media. */
 void TagEditor::commitChanges()
 {
+	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
 	QList<QPersistentModelIndex> tracksToRescan;
 
 	// Detect changes
 	for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
-		// A physical file per row
+		// A physical and unique file per row
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
 		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
 		QString absPath(itemPath->text() + '/' + itemFileName->text());
 		FileRef file(absPath.toStdString().data());
-		/// FIXME
 		FileHelper fh(file, itemFileName->data(LibraryItem::SUFFIX).toInt());
 		bool trackWasModified = false;
 		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
@@ -135,6 +127,7 @@ void TagEditor::commitChanges()
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
 				PropertyMap pm = file.tag()->properties();
 
+				// The map doesn't always contains all keys, like ArtistAlbum (not standard)
 				if (pm.contains(key.toStdString())) {
 					bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
 					if (b) {
@@ -146,16 +139,11 @@ void TagEditor::commitChanges()
 				} else {
 					trackWasModified = fh.insert(key, item->text());
 				}
-
-				/*PropertyMap::Iterator it;
-				for(it = pm.begin(); it != pm.end(); ++it) {
-					std::pair<String, StringList> s = static_cast<std::pair<String, StringList> >(*it);
-					qDebug() << s.first.toCString(false) << s.second.toString(',').toCString(false);
-				}*/
 			}
 		}
 		// Save changes if at least one field was modified
-		// Also, tell the model to rescan the file because the artist or the album might have changed
+		// Also, tell the model to rescan the file because the artist or the album might have changed:
+		// The Tree structure could be modified
 		if (trackWasModified) {
 			bool b = fh.save();
 			if (!b) {
@@ -246,7 +234,7 @@ void TagEditor::displayTags()
 	}
 }
 
-void TagEditor::recordChanges(QTableWidgetItem *item)
+void TagEditor::recordSingleItemChange(QTableWidgetItem *item)
 {
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);

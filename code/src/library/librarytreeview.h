@@ -18,7 +18,6 @@ private:
 	LibraryModel *libraryModel;
 	LibraryFilterProxyModel *proxyModel;
 	CircleProgressBar *circleProgressBar;
-	QModelIndexList savedStateModelIndexList;
 	MusicSearchEngine *musicSearchEngine;
 	QPoint currentPos;
 	QMenu *properties;
@@ -32,9 +31,6 @@ public:
 protected:
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	void mouseDoubleClickEvent(QMouseEvent *event);
-
-private:
-	void removeNode(QModelIndex index);
 
 signals:
 	/** Tracks are about to be sent to a playlist or a tag editor. */

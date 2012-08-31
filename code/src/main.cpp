@@ -4,7 +4,7 @@
 
 #define SOFT "MmeMiamMiamMusicPlayer"
 #define COMPANY "MmeMiamMiam"
-#define VERSION "0.2.6"
+#define VERSION "0.2.8"
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +13,12 @@ int main(int argc, char *argv[])
 	app.setApplicationVersion(VERSION);
 
 	MainWindow *window = new MainWindow();
+#ifdef Q_OS_DARWIN
+	window->setWindowIcon(QIcon(":/icons/mmmmp_osx"));
+#endif
+#ifdef Q_OS_WIN32
+	window->setWindowIcon(QIcon(":/icons/mmmmp_win32"));
+#endif
 	window->show();
 
 	return app.exec();

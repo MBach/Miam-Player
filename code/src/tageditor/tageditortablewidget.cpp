@@ -1,23 +1,16 @@
 #include "tageditortablewidget.h"
-#include "settings.h"
+
+#include "filehelper.h"
 #include "library/libraryitem.h"
 #include "nofocusitemdelegate.h"
+#include "settings.h"
 
 #include <QScrollBar>
-
-#include <id3v2tag.h>
-#include <mpegfile.h>
-#include <tag.h>
-#include <tlist.h>
-#include <textidentificationframe.h>
-#include <tstring.h>
 #include <phonon>
 
 #include <QtDebug>
 
 using namespace Phonon;
-
-using namespace TagLib;
 
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
@@ -66,19 +59,7 @@ void TagEditorTableWidget::resetTable()
 		if (source.type() != MediaSource::Invalid) {
 			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
 
-			// Extract relevant fields
-			String artAlb, discNumber;
-			// If the file is a MP3
-			if (TagLib::MPEG::File* file = dynamic_cast<TagLib::MPEG::File*>(f.file())) {
-				if (file->ID3v2Tag()) {
-					if (!file->ID3v2Tag()->frameListMap()["TPE2"].isEmpty()) {
-						artAlb = file->ID3v2Tag()->frameListMap()["TPE2"].front()->toString();
-					}
-					if (!file->ID3v2Tag()->frameListMap()["TPOS"].isEmpty()) {
-						discNumber = file->ID3v2Tag()->frameListMap()["TPOS"].front()->toString();
-					}
-				}
-			}
+			FileHelper fh(f, it.value().data(LibraryItem::SUFFIX).toInt());
 
 			// Reload info
 			int column = 1;
@@ -87,17 +68,17 @@ void TagEditorTableWidget::resetTable()
 			QTableWidgetItem *artistAlbum = this->item(row, ++column);
 			QTableWidgetItem *album = this->item(row, ++column);
 			QTableWidgetItem *trackNumber = this->item(row, ++column);
-			QTableWidgetItem *disc = this->item(row, ++column);
+			//QTableWidgetItem *disc = this->item(row, ++column);
 			QTableWidgetItem *year = this->item(row, ++column);
 			QTableWidgetItem *genre = this->item(row, ++column);
 			QTableWidgetItem *comment = this->item(row, ++column);
 
 			title->setText(f.tag()->title().toCString());
 			artist->setText(f.tag()->artist().toCString());
-			artistAlbum->setText(artAlb.toCString());
+			artistAlbum->setText(fh.artistAlbum().toCString());
 			album->setText(f.tag()->album().toCString());
 			trackNumber->setText(QString::number(f.tag()->track()));
-			disc->setText(discNumber.toCString());
+			//disc->setText(discNumber.toCString());
 			year->setText(QString::number(f.tag()->year()));
 			genre->setText(f.tag()->genre().toCString());
 			comment->setText(f.tag()->comment().toCString());
@@ -108,8 +89,6 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(0);
 	this->sortItems(1);
 }
-
-#include "filehelper.h"
 
 void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
 {

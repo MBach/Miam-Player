@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/icons">
         <file alias="plusIcon">plus_icon.png</file>
-        <file alias="mmmmp">mmmmp.ico</file>
+        <file alias="mmmmp_win32">mmmmp.ico</file>
         <file alias="favorite">config/favorite.png</file>
         <file alias="down-arrow">config/down-arrow.png</file>
         <file alias="up-arrow">config/up-arrow.png</file>
@@ -11,6 +11,7 @@
         <file alias="disc">config/disc.png</file>
         <file alias="left-arrow">config/left-arrow.png</file>
         <file alias="right-arrow">config/right-arrow.png</file>
+        <file alias="mmmmp_osx">mmmmp.icns</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

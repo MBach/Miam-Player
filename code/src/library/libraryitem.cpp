@@ -123,6 +123,10 @@ void LibraryItem::read(QDataStream &in)
 
 	case LibraryModel::TRACK:
 		setMediaType(LibraryModel::TRACK);
+
+		in >> dataLength;
+		setData(QVariant(dataLength), SUFFIX);
+
 		in >> dataLength;
 
 		// If we have saved an empty track, then the byte array is null (see Serializing Qt Data Types)
@@ -149,16 +153,6 @@ void LibraryItem::read(QDataStream &in)
 		in >> dataLength;
 		setTrackNumber(dataLength);
 		break;
-
-	/*case LibraryModel::LETTER:
-		setMediaType(LibraryModel::LETTER);
-		in >> dataLength;
-
-		s1 = new char[dataLength];
-		in.readRawData(s1, dataLength);
-		setDisplayedName(s1, dataLength);
-		delete[] s1;
-		break;*/
 	}
 }
 
@@ -190,6 +184,7 @@ void LibraryItem::write(QDataStream &out) const
 
 	case LibraryModel::TRACK:
 		out << type;
+		out << data(SUFFIX).toInt();
 		out << data(Qt::DisplayRole).toByteArray();
 		out << data(IDX_TO_ABS_PATH).toInt();
 		out << data(REL_PATH_TO_MEDIA).toByteArray();
@@ -197,9 +192,5 @@ void LibraryItem::write(QDataStream &out) const
 		out << starRating.starCount();
 		out << trackNumber();
 		break;
-
-	/*case LibraryModel::LETTER:
-		out << data(Qt::DisplayRole).toByteArray();
-		break;*/
 	}
 }
