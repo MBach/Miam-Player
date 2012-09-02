@@ -427,6 +427,29 @@
         <source>Selected item</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Sorting the library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I ignore the grammatical pronouns found in the names of artists?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FileSystemTreeView</name>
+    <message>
+        <source>Add &quot;%1&quot; to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add &quot;%1&quot; to library</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LibraryModel</name>
@@ -776,6 +799,14 @@
     </message>
     <message>
         <source>Apply</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>#Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

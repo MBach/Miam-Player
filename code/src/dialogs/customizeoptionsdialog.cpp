@@ -134,6 +134,32 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent * /* event */)
 	}
 }
 
+void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
+{
+	bool existingItem = false;
+	for (int i=0; i<listWidgetMusicLocations->count(); i++) {
+		QListWidgetItem *item = listWidgetMusicLocations->item(i);
+		if (item->text() == QDir::toNativeSeparators(musicLocation)) {
+			existingItem = true;
+			break;
+		}
+	}
+
+	if (!existingItem) {
+		listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation)));
+		pushButtonDeleteLocation->setEnabled(true);
+
+		Settings *settings = Settings::getInstance();
+		if (settings->musicLocations().isEmpty()) {
+			delete listWidgetMusicLocations->takeItem(0);
+		}
+		settings->addMusicLocation(QDir::fromNativeSeparators(musicLocation));
+
+		// Scan the hard-drive once again
+		musicLocationsChanged = true;
+	}
+}
+
 void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
 {
 	QMap<int, ShortcutWidget *> inverted;
@@ -198,29 +224,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 	QString libraryPath = QFileDialog::getExistingDirectory(this, tr("Select a location of your music"),
 		QDesktopServices::storageLocation(QDesktopServices::MusicLocation), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
-		bool existingItem = false;
-
-		for (int i=0; i<listWidgetMusicLocations->count(); i++) {
-			QListWidgetItem *item = listWidgetMusicLocations->item(i);
-			if (item->text() == libraryPath) {
-				existingItem = true;
-				break;
-			}
-		}
-
-		if (!existingItem) {
-			listWidgetMusicLocations->addItem(new QListWidgetItem(libraryPath));
-			pushButtonDeleteLocation->setEnabled(true);
-
-			Settings *settings = Settings::getInstance();
-			if (settings->musicLocations().isEmpty()) {
-				delete listWidgetMusicLocations->takeItem(0);
-			}
-			settings->addMusicLocation(QDir::fromNativeSeparators(libraryPath));
-
-			// Scan the hard-drive once again
-			musicLocationsChanged = true;
-		}
+		this->addMusicLocation(libraryPath);
 	}
 }
 

@@ -3,6 +3,7 @@
 #include "settings.h"
 
 #include <QApplication>
+#include <QFileSystemModel>
 #include <QHeaderView>
 
 #include "tabbar.h"
@@ -36,12 +37,20 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 }
 
 /** Add a track from the filesystem or the library to the current playlist. */
-void TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary)
+void TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &item)
 {
-	if (itemFromLibrary.isValid()) {
-		QString filePath = Settings::getInstance()->musicLocations().at(itemFromLibrary.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
-		QString fileName = itemFromLibrary.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-		MediaSource source(filePath + fileName);
+	if (item.isValid()) {
+		const QFileSystemModel *fileSystemModel = static_cast<const QFileSystemModel*>(item.model());
+		QString absFilePath;
+		// If the cast was successful then the user has double-clicked from the second tab
+		if (fileSystemModel) {
+			absFilePath = fileSystemModel->fileInfo(item).absoluteFilePath();
+		} else {
+			QString filePath = Settings::getInstance()->musicLocations().at(item.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
+			QString fileName = item.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+			absFilePath = filePath + fileName;
+		}
+		MediaSource source(absFilePath);
 		if (source.type() != MediaSource::Invalid) {
 			currentPlayList()->append(source);
 			if (currentPlayList()->tracks().size() == 1) {

@@ -29,6 +29,9 @@ public:
 	void retranslateUi();
 
 protected:
+	/** Redefined to display a small context menu in the view. */
+	void contextMenuEvent(QContextMenuEvent *event);
+
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
@@ -79,7 +82,6 @@ private slots:
 	void openTagEditor();
 
 	void sendToCurrentPlaylist();
-	void showContextMenu(QPoint point);
 };
 
 #endif // LIBRARYTREEVIEW_H

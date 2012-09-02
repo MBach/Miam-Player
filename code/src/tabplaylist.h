@@ -27,7 +27,7 @@ public:
 	TabPlaylist(QWidget *parent = 0);
 
 	/** Add a track from the filesystem (not the library) to the current playlist. */
-	void addItemToCurrentPlaylist(const QPersistentModelIndex &itemFromLibrary);
+	void addItemToCurrentPlaylist(const QPersistentModelIndex &item);
 
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }

@@ -21,27 +21,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
-	this->filesystem->header()->setResizeMode(QHeaderView::ResizeToContents);
 	this->setStyleSheet(settings->styleSheet(this));
 	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
 	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
 	splitter->setStyleSheet(settings->styleSheet(splitter));
 	volumeSlider->setStyleSheet(settings->styleSheet(volumeSlider));
 	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
-
-	QFileSystemModel *fileSystemModel = new QFileSystemModel(this);
-	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-
-	QStringList filters;
-	filters << "*.mp3";
-	fileSystemModel->setNameFilters(filters);
-
-	filesystem->setModel(fileSystemModel);
-	filesystem->setRootIndex(fileSystemModel->setRootPath(QDesktopServices::storageLocation(QDesktopServices::MusicLocation)));
-
-	// Hide columns "size" and "date modified" columns, useless for almost everyone
-	filesystem->setColumnHidden(1, true);
-	filesystem->setColumnHidden(3, true);
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
@@ -110,6 +95,9 @@ void MainWindow::setupActions()
 	// Send music to the current playlist
 	connect(library, SIGNAL(sendToPlaylist(const QPersistentModelIndex &)), tabPlaylists, SLOT(addItemFromLibraryToPlaylist(const QPersistentModelIndex &)));
 	connect(filesystem, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(addSelectedItemToPlaylist(QModelIndex)));
+
+	// Send one folder to the music locations
+	connect(filesystem, SIGNAL(aboutToAddMusicLocation(QString)), customizeOptionsDialog, SLOT(addMusicLocation(QString)));
 
 	// Send music to the tag editor
 	connect(library, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
@@ -198,6 +186,7 @@ void MainWindow::drawLibrary(bool b)
 	widgetFirstRun->setVisible(isEmpty);
 	library->setVisible(!isEmpty);
 	actionScanLibrary->setEnabled(!isEmpty);
+	widgetSearchBar->setVisible(!isEmpty);
 	this->toggleTagEditor(false);
 	if (!isEmpty) {
 		// Warning: This function violates the object-oriented principle of modularity.

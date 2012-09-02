@@ -42,7 +42,8 @@ SOURCES += \
     tabbar.cpp \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
-    filehelper.cpp
+    filehelper.cpp \
+    filesystemtreeview.cpp
 
 HEADERS += \
     circleprogressbar.h \
@@ -74,7 +75,8 @@ HEADERS += \
     tabbar.h \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
-    filehelper.h
+    filehelper.h \
+    filesystemtreeview.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

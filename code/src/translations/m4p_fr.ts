@@ -428,6 +428,29 @@
         <source>Selected item</source>
         <translation>Élément sélectionné</translation>
     </message>
+    <message>
+        <source>Sorting the library</source>
+        <translation>Tri de la bibliothèque</translation>
+    </message>
+    <message>
+        <source>Should I ignore the grammatical pronouns found in the names of artists?</source>
+        <translation>Devrais-je ignorer les pronons grammaticaux que l&apos;on trouve dans le nom des artistes ?</translation>
+    </message>
+    <message>
+        <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
+        <translation>Cette option va filtrer les pronoms grammaticaux. Par exemple, &quot;The Beatles&quot; sera considéré comme &quot;Beatles, the&quot;</translation>
+    </message>
+</context>
+<context>
+    <name>FileSystemTreeView</name>
+    <message>
+        <source>Add &quot;%1&quot; to playlist</source>
+        <translation>Ajouter &quot;%1&quot; à la liste de lecture</translation>
+    </message>
+    <message>
+        <source>Add &quot;%1&quot; to library</source>
+        <translation>Ajouter &quot;%1&quot; à la bibliothèque</translation>
+    </message>
 </context>
 <context>
     <name>LibraryModel</name>
@@ -779,6 +802,14 @@
     <message>
         <source>Apply</source>
         <translation>Appliquer</translation>
+    </message>
+    <message>
+        <source>#Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title</source>
+        <translation type="unfinished">Titre</translation>
     </message>
 </context>
 <context>

@@ -1343,7 +1343,7 @@
             <item>
              <widget class="QRadioButton" name="radioButtonDesactivatePronouns">
               <property name="toolTip">
-               <string>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be displayed &quot;Beatles, the&quot;</string>
+               <string>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</string>
               </property>
               <property name="text">
                <string>Yes</string>
@@ -1365,7 +1365,7 @@
           <item>
            <widget class="QLineEdit" name="lineEditFilterPronouns">
             <property name="text">
-             <string>the, le, la, les</string>
+             <string notr="true">the, le, la, les</string>
             </property>
            </widget>
           </item>

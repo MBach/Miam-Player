@@ -22,7 +22,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	Settings *settings = Settings::getInstance();
 
-	this->setContextMenuPolicy(Qt::CustomContextMenu);
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
 	this->header()->setStyleSheet(settings->styleSheet(this->header()));
@@ -82,9 +81,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
-
-	// Context menu
-	connect(this, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToCurrentPlaylist()));
 }
 
@@ -93,6 +89,22 @@ void LibraryTreeView::retranslateUi()
 {
 	foreach (QAction *action, properties->actions()) {
 		action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data(), 0, QApplication::UnicodeUTF8));
+	}
+}
+
+
+/** Redefined to display a small context menu in the view. */
+void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
+{
+	QModelIndex index = this->indexAt(event->pos());
+	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+	if (item) {
+		LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
+		if (!(libraryItem && libraryItem->type() == LibraryModel::LETTER)) {
+			properties->exec(event->globalPos());
+		}
+	} else {
+		qDebug() << "cast failed?";
 	}
 }
 
@@ -293,16 +305,5 @@ void LibraryTreeView::sendToCurrentPlaylist()
 	/// But the previously written findAllAndDispatch recursively send items to the playlist, and does not filter
 	foreach(QModelIndex index, selectedIndexes()) {
 		this->findAllAndDispatch(index);
-	}
-}
-
-/// TEST
-void LibraryTreeView::showContextMenu(QPoint point)
-{
-	QModelIndex index = this->indexAt(point);
-	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
-	LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
-	if (!(libraryItem && libraryItem->type() == LibraryModel::LETTER)) {
-		properties->exec(mapToGlobal(point));
 	}
 }

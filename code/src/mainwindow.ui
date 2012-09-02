@@ -24,6 +24,9 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QTabWidget" name="leftTabs">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
        <property name="documentMode">
         <bool>true</bool>
        </property>
@@ -120,7 +123,7 @@
         <attribute name="title">
          <string>File explorer</string>
         </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <property name="spacing">
           <number>0</number>
          </property>
@@ -128,7 +131,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QTreeView" name="filesystem">
+          <widget class="FileSystemTreeView" name="filesystem">
            <property name="styleSheet">
             <string notr="true">margin: -1px;</string>
            </property>
@@ -597,6 +600,11 @@
    <extends>QWidget</extends>
    <header>tageditor/tageditor.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FileSystemTreeView</class>
+   <extends>QTreeView</extends>
+   <header>filesystemtreeview.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

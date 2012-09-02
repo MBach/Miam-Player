@@ -29,6 +29,8 @@ signals:
 	void musicLocationsHaveChanged(bool);
 
 public slots:
+	void addMusicLocation(const QString &musicLocation);
+
 	void checkShortcut(ShortcutWidget *, int typedKey);
 
 	/** Change language at runtime. */
