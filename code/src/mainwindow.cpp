@@ -92,19 +92,20 @@ void MainWindow::setupActions()
 	// When no library is set
 	connect(commandLinkButtonLibrary, SIGNAL(clicked()), customizeOptionsDialog, SLOT(open()));
 
-	// Send music to the current playlist
-	connect(library, SIGNAL(sendToPlaylist(const QPersistentModelIndex &)), tabPlaylists, SLOT(addItemFromLibraryToPlaylist(const QPersistentModelIndex &)));
-	connect(filesystem, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(addSelectedItemToPlaylist(QModelIndex)));
+	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
+		connect(tab, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
+		connect(tab, SIGNAL(aboutToBeSent()), tagEditor, SLOT(beforeAddingItems()));
+		connect(tab, SIGNAL(sendToPlaylist(QModelIndex)), tabPlaylists, SLOT(addItemToPlaylist(QModelIndex)));
+		connect(tab, SIGNAL(sendToTagEditor(QModelIndex)), tagEditor, SLOT(addItemToEditor(QModelIndex)));
+		connect(tab, SIGNAL(finishedToBeSent()), tagEditor, SLOT(afterAddingItems()));
+	}
 
 	// Send one folder to the music locations
 	connect(filesystem, SIGNAL(aboutToAddMusicLocation(QString)), customizeOptionsDialog, SLOT(addMusicLocation(QString)));
+	connect(filesystem, SIGNAL(doubleClicked(QModelIndex)), tabPlaylists, SLOT(addItemToPlaylist(QModelIndex)));
 
 	// Send music to the tag editor
-	connect(library, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
 	connect(tagEditor, SIGNAL(closeTagEditor(bool)), this, SLOT(toggleTagEditor(bool)));
-	connect(library, SIGNAL(aboutToBeSent()), tagEditor, SLOT(beforeAddingItems()));
-	connect(library, SIGNAL(sendToTagEditor(const QPersistentModelIndex &)), tagEditor, SLOT(addItemFromLibrary(const QPersistentModelIndex &)));
-	connect(library, SIGNAL(finishedToBeSent()), tagEditor, SLOT(afterAddingItems()));
 
 	// Rebuild the treeview when tracks have changed using the tag editor
 	connect(tagEditor, SIGNAL(rebuildTreeView(QList<QPersistentModelIndex>)), library, SLOT(rebuild(QList<QPersistentModelIndex>)));
@@ -195,16 +196,6 @@ void MainWindow::drawLibrary(bool b)
 			b = true;
 		}
 		library->beginPopulateTree(b);
-	}
-}
-
-/** Add a file from the filesystem to the current playlist. */
-void MainWindow::addSelectedItemToPlaylist(const QModelIndex &item)
-{
-	QFileSystemModel *fileSystemModel = qobject_cast<QFileSystemModel *>(filesystem->model());
-	// If item is a file
-	if (!fileSystemModel->isDir(item)) {
-		tabPlaylists->addItemToCurrentPlaylist(item);
 	}
 }
 

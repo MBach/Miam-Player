@@ -13,7 +13,7 @@
 #include <QtDebug>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	QTreeView(parent)
+	TreeView(parent)
 {
 	libraryModel = new LibraryModel(this);
 	proxyModel = new LibraryFilterProxyModel(this);
@@ -126,7 +126,7 @@ void LibraryTreeView::addNodeToTree(LibraryItem *libraryItem)
 	setItemDelegateForRow(libraryItem->row(), libraryItemDelegate);
 }
 
-/** Recursively scan one node and its subitems before dispatching tracks to a specific widget (playlist or tageditor).*/
+/** Reimplemented. */
 void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlaylist)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
@@ -136,7 +136,7 @@ void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlayli
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
-				findAllAndDispatch(index.child(i, 0), toPlaylist);
+				this->findAllAndDispatch(index.child(i, 0), toPlaylist);
 			}
 		} else if (item->data(LibraryItem::MEDIA_TYPE).toInt() != LibraryModel::LETTER) {
 			// If the click from the mouse was on a text label or on a star
@@ -147,7 +147,7 @@ void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlayli
 				if (toPlaylist) {
 					emit sendToPlaylist(QPersistentModelIndex(sourceIndex));
 				} else {
-					emit sendToTagEditor(QPersistentModelIndex(sourceIndex));
+					emit sendToTagEditor(sourceIndex);
 				}
 			} else if (delegate->stars()->contains(currentPos)) {
 				QStyleOptionViewItemV4 qsovi;
@@ -280,21 +280,6 @@ void LibraryTreeView::setCoverSize(int newSize)
 
 	// Upscale (or downscale) icons because their inner representation is already greater than what's displayed
 	this->setIconSize(QSize(newSize, newSize));
-}
-
-/// TEST
-void LibraryTreeView::openTagEditor()
-{
-	/// Can those signals be factorised?
-	emit setTagEditorVisible(true);
-	emit aboutToBeSent();
-
-	// Feed with new indexes
-	QModelIndexList indexes = this->selectedIndexes();
-	foreach (QModelIndex index, indexes) {
-		this->findAllAndDispatch(index, false);
-	}
-	emit finishedToBeSent();
 }
 
 /// TEST

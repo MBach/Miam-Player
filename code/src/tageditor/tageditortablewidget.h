@@ -30,7 +30,7 @@ public:
 	void resetTable();
 
 public slots:
-	void addItemFromLibrary(const QPersistentModelIndex &index);
+	void addItemToEditor(const QPersistentModelIndex &index);
 
 	/** Redefined. */
 	void clear();

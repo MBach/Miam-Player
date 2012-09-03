@@ -1,17 +1,22 @@
 #ifndef FILESYSTEMTREEVIEW_H
 #define FILESYSTEMTREEVIEW_H
 
-#include <QContextMenuEvent>
-#include <QMenu>
-#include <QTreeView>
+#include "treeview.h"
 
-class FileSystemTreeView : public QTreeView
+#include <QContextMenuEvent>
+#include <QFileSystemModel>
+#include <QMenu>
+
+class FileSystemTreeView : public TreeView
 {
 	Q_OBJECT
 private:
-	QString addToLibrary;
-	QString addToPlaylist;
+	QString toLibrary;
+	QString toPlaylist;
+	QString toTagEditor;
 	QMenu *properties;
+	QModelIndex theIndex;
+	QFileSystemModel *fileSystemModel;
 
 public:
 	FileSystemTreeView(QWidget *parent = 0);
@@ -19,13 +24,19 @@ public:
 protected:
 	void contextMenuEvent(QContextMenuEvent *event);
 
+private:
+	/** Reimplemented with a QDirIterator to gather informations about tracks. */
+	void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true);
+
 private slots:
 	/** Send one folder to the existing music locations. */
 	void addFolderToLibrary();
 
-	void addToPlayList();
+	/** Send folders or tracks to the current playlist. */
+	void addItemsToPlayList();
 
 signals:
+	/** Append the selected folder to the existing music locations. */
 	void aboutToAddMusicLocation(const QString &);
 };
 

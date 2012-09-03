@@ -53,9 +53,6 @@ public slots:
 private slots:
 	void drawLibrary(bool b=false);
 
-	/** Add a file from the filesystem to the current playlist. */
-	void addSelectedItemToPlaylist(const QModelIndex &item);
-
 	/** Change the labels like "Remove selected track(s)" depending of the number of selected elements in the current playlist. */
 	void changeMenuLabels(int);
 

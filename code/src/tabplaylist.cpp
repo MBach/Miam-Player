@@ -7,6 +7,7 @@
 #include <QHeaderView>
 
 #include "tabbar.h"
+#include "treeview.h"
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
@@ -36,30 +37,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTabFromCloseButton(int)));
 }
 
-/** Add a track from the filesystem or the library to the current playlist. */
-void TabPlaylist::addItemToCurrentPlaylist(const QPersistentModelIndex &item)
-{
-	if (item.isValid()) {
-		const QFileSystemModel *fileSystemModel = static_cast<const QFileSystemModel*>(item.model());
-		QString absFilePath;
-		// If the cast was successful then the user has double-clicked from the second tab
-		if (fileSystemModel) {
-			absFilePath = fileSystemModel->fileInfo(item).absoluteFilePath();
-		} else {
-			QString filePath = Settings::getInstance()->musicLocations().at(item.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
-			QString fileName = item.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-			absFilePath = filePath + fileName;
-		}
-		MediaSource source(absFilePath);
-		if (source.type() != MediaSource::Invalid) {
-			currentPlayList()->append(source);
-			if (currentPlayList()->tracks().size() == 1) {
-				metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
-			}
-		}
-	}
-}
-
 /** Retranslate tabs' name and all playlists in this widget. */
 void TabPlaylist::retranslateUi()
 {
@@ -75,11 +52,18 @@ void TabPlaylist::retranslateUi()
 }
 
 /** Add tracks chosen by one from the library into the active playlist. */
-void TabPlaylist::addItemFromLibraryToPlaylist(const QPersistentModelIndex &item)
+void TabPlaylist::addItemToPlaylist(const QModelIndex &item)
 {
 	bool isEmpty = currentPlayList()->tracks().isEmpty();
-	currentPlayList();
-	this->addItemToCurrentPlaylist(item);
+	if (item.isValid()) {
+		MediaSource source(TreeView::absFilePath(item));
+		if (source.type() != MediaSource::Invalid) {
+			currentPlayList()->append(source);
+			if (currentPlayList()->tracks().size() == 1) {
+				metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
+			}
+		}
+	}
 	// Automatically plays the first track
 	if (isEmpty) {
 		this->skipForward();

@@ -4,6 +4,7 @@
 #include "library/libraryitem.h"
 #include "nofocusitemdelegate.h"
 #include "settings.h"
+#include "treeview.h"
 
 #include <QScrollBar>
 #include <phonon>
@@ -90,25 +91,23 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
-void TagEditorTableWidget::addItemFromLibrary(const QPersistentModelIndex &index)
+void TagEditorTableWidget::addItemToEditor(const QPersistentModelIndex &index)
 {
-	QString path = Settings::getInstance()->musicLocations().at(index.data(LibraryItem::IDX_TO_ABS_PATH).toInt()).toString();
-	QString name = index.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-	QFileInfo fileInfo(path + name);
-	MediaSource source(fileInfo.absoluteFilePath());
+	QString absFilePath = TreeView::absFilePath(index);
+	MediaSource source(absFilePath);
 
 	if (source.type() != MediaSource::Invalid) {
 		TagLib::FileRef f(source.fileName().toLocal8Bit().data());
-		indexes.insert(fileInfo.absoluteFilePath(), index);
+		indexes.insert(absFilePath, index);
 
 		FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
 
 		// The first two columns are not editable
 		// It may changes in the future for the first one (the filename)
-		QTableWidgetItem *fileName = new QTableWidgetItem(fileInfo.fileName());
+		QTableWidgetItem *fileName = new QTableWidgetItem(QFileInfo(absFilePath).baseName());
 		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 		fileName->setData(LibraryItem::SUFFIX, fh.type());
-		QTableWidgetItem *absPath = new QTableWidgetItem(fileInfo.absolutePath());
+		QTableWidgetItem *absPath = new QTableWidgetItem(absFilePath);
 		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
 		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());

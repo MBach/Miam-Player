@@ -2,15 +2,15 @@
 #define LIBRARYTREEVIEW_H
 
 #include <QMenu>
-#include <QTreeView>
 #include <QSortFilterProxyModel>
 
 #include "librarymodel.h"
 #include "circleprogressbar.h"
 #include "musicsearchengine.h"
 #include "libraryfilterproxymodel.h"
+#include "treeview.h"
 
-class LibraryTreeView : public QTreeView
+class LibraryTreeView : public TreeView
 {
 	Q_OBJECT
 
@@ -36,23 +36,11 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
 signals:
-	/** Tracks are about to be sent to a playlist or a tag editor. */
-	void aboutToBeSent();
-
-	/** Tracks are completely sent to a playlist or a tag editor. */
-	void finishedToBeSent();
-
-	/** Add a track to the current playlist. */
-	void sendToPlaylist(const QPersistentModelIndex &);
-	void sendToTagEditor(const QPersistentModelIndex &);
-
 	/** (Dis|En)able covers.*/
 	void displayCovers(bool);
 
 	/** When covers are enabled, changes their size. */
 	void sizeOfCoversChanged(int);
-
-	void setTagEditorVisible(bool);
 
 public slots:
 	/** Reduce the size of the library when the user is typing text. */
@@ -68,7 +56,7 @@ private slots:
 	/** Tell the view to create specific delegate for the current row. */
 	void addNodeToTree(LibraryItem *libraryItem);
 
-	/** Recursively scan one node and its subitems before dispatching tracks to a specific widget (playlist or tageditor).*/
+	/** Reimplemented. */
 	void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true);
 
 	void endPopulateTree();
@@ -78,8 +66,6 @@ private slots:
 
 	/**  Layout the library at runtime when one is changing the size in options. */
 	void setCoverSize(int);
-
-	void openTagEditor();
 
 	void sendToCurrentPlaylist();
 };

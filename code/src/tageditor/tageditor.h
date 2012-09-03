@@ -35,7 +35,7 @@ public slots:
 
 	void beforeAddingItems();
 
-	void addItemFromLibrary(const QPersistentModelIndex &index);
+	void addItemToEditor(const QModelIndex &index);
 
 	void afterAddingItems();
 

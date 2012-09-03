@@ -75,9 +75,9 @@ void TagEditor::beforeAddingItems()
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 }
 
-void TagEditor::addItemFromLibrary(const QPersistentModelIndex &index)
+void TagEditor::addItemToEditor(const QModelIndex &index)
 {
-	tagEditorWidget->addItemFromLibrary(index);
+	tagEditorWidget->addItemToEditor(index);
 }
 
 void TagEditor::afterAddingItems()

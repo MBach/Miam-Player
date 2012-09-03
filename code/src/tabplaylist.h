@@ -26,9 +26,6 @@ public:
 	/** Default constructor. */
 	TabPlaylist(QWidget *parent = 0);
 
-	/** Add a track from the filesystem (not the library) to the current playlist. */
-	void addItemToCurrentPlaylist(const QPersistentModelIndex &item);
-
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
 
@@ -44,8 +41,8 @@ public slots:
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist(const QString &playlistName = QString());
 
-	/** Add tracks chosen by one from the library into the active playlist. */
-	void addItemFromLibraryToPlaylist(const QPersistentModelIndex &item);
+	/** Add tracks chosen by one from the library or the filesystem into the active playlist. */
+	void addItemToPlaylist(const QModelIndex &item);
 
 	/** When the user is double clicking on a track in a playlist. */
 	void changeTrack(QTableWidgetItem *, bool autoscroll = false);
