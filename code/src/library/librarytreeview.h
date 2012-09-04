@@ -35,29 +35,31 @@ protected:
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
-signals:
-	/** (Dis|En)able covers.*/
-	void displayCovers(bool);
+private:
+	/** Recursive count for leaves only. */
+	int count(const QModelIndex &index) const;
 
-	/** When covers are enabled, changes their size. */
-	void sizeOfCoversChanged(int);
+	/** Reimplemented. */
+	int countAll(const QModelIndexList &indexes) const;
+
+	/** Reimplemented. */
+	void findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes);
 
 public slots:
-	/** Reduce the size of the library when the user is typing text. */
-	void filterLibrary(const QString &filter);
-
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
 	void beginPopulateTree(bool = false);
+
+	/** Reduce the size of the library when the user is typing text. */
+	void filterLibrary(const QString &filter);
 
 	/** Rebuild a subset of the tree. */
 	void rebuild(QList<QPersistentModelIndex>);
 
+	void sendSingleItemToPlaylist(const QModelIndex &/*index*/);
+
 private slots:
 	/** Tell the view to create specific delegate for the current row. */
 	void addNodeToTree(LibraryItem *libraryItem);
-
-	/** Reimplemented. */
-	void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true);
 
 	void endPopulateTree();
 
@@ -67,7 +69,12 @@ private slots:
 	/**  Layout the library at runtime when one is changing the size in options. */
 	void setCoverSize(int);
 
-	void sendToCurrentPlaylist();
+signals:
+	/** (Dis|En)able covers.*/
+	void displayCovers(bool);
+
+	/** When covers are enabled, changes their size. */
+	void sizeOfCoversChanged(int);
 };
 
 #endif // LIBRARYTREEVIEW_H

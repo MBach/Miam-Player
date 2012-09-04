@@ -309,7 +309,6 @@ void LibraryModel::removeNode(QModelIndex index)
 	if (parent.isValid()) {
 		this->removeNode(parent);
 	}
-	qDebug() << covers.size();
 }
 
 /** Recursively reads the input stream to build nodes and append them to its parent. */

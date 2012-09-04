@@ -52,22 +52,33 @@ void TabPlaylist::retranslateUi()
 }
 
 /** Add tracks chosen by one from the library into the active playlist. */
-void TabPlaylist::addItemToPlaylist(const QModelIndex &item)
+void TabPlaylist::addItemsToPlaylist(const QModelIndexList &indexes)
 {
 	bool isEmpty = currentPlayList()->tracks().isEmpty();
-	if (item.isValid()) {
-		MediaSource source(TreeView::absFilePath(item));
-		if (source.type() != MediaSource::Invalid) {
-			currentPlayList()->append(source);
-			if (currentPlayList()->tracks().size() == 1) {
-				metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
+	foreach (QModelIndex index, indexes) {
+		if (index.isValid()) {
+			MediaSource source(TreeView::absFilePath(index));
+			if (source.type() != MediaSource::Invalid) {
+				currentPlayList()->append(source);
+				if (currentPlayList()->tracks().size() == 1) {
+					metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
+				}
 			}
 		}
 	}
+
 	// Automatically plays the first track
 	if (isEmpty) {
 		this->skipForward();
 	}
+}
+
+/** Add tracks chosen by one from the library into the active playlist. */
+void TabPlaylist::addItemToPlaylist(const QModelIndex &index)
+{
+	QModelIndexList indexes;
+	indexes.append(index);
+	this->addItemsToPlaylist(indexes);
 }
 
 /** Add a new playlist tab. */

@@ -41,8 +41,10 @@ public slots:
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist(const QString &playlistName = QString());
 
+	void addItemsToPlaylist(const QModelIndexList &indexes);
+
 	/** Add tracks chosen by one from the library or the filesystem into the active playlist. */
-	void addItemToPlaylist(const QModelIndex &item);
+	void addItemToPlaylist(const QModelIndex &index);
 
 	/** When the user is double clicking on a track in a playlist. */
 	void changeTrack(QTableWidgetItem *, bool autoscroll = false);

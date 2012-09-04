@@ -67,25 +67,19 @@ void TagEditor::clear()
 	tagEditorWidget->clear();
 }
 
-void TagEditor::beforeAddingItems()
+void TagEditor::addItemsToEditor(const QModelIndexList &indexes)
 {
+	this->clear();
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
-	this->clear();
-	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
-}
 
-void TagEditor::addItemToEditor(const QModelIndex &index)
-{
-	tagEditorWidget->addItemToEditor(index);
-}
-
-void TagEditor::afterAddingItems()
-{
 	// It's possible to edit single items by double-clicking in the table
+	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
+	tagEditorWidget->addItemsToEditor(indexes);
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
-	tagEditorWidget->setSortingEnabled(true);
+
 	// Sort by path
+	tagEditorWidget->setSortingEnabled(true);
 	tagEditorWidget->sortItems(0);
 	tagEditorWidget->sortItems(1);
 	tagEditorWidget->resizeColumnsToContents();

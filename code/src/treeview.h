@@ -11,26 +11,31 @@ class TreeView : public QTreeView
 public:
 	explicit TreeView(QWidget *parent = 0);
 
-	static QString absFilePath(const QPersistentModelIndex &index);
+	static QString absFilePath(const QModelIndex &index);
+
+protected:
+	/** Explore items to count leaves (tracks). */
+	virtual int countAll(const QModelIndexList &indexes) const = 0;
+
+	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
+	virtual void findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes) = 0;
+
+private:
+	int beforeSending(const QString &target, QMap<QString, QModelIndex> &indexes);
 
 protected slots:
-	/** Recursively scan one node and its subitems before dispatching tracks to a specific widget (playlist or tageditor).*/
-	virtual void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true) = 0;
-
+	/** Send folders or tracks to the tag editor. */
 	void openTagEditor();
 
+	/** Send folders or tracks to the current playlist. */
+	void sendToCurrentPlaylist();
+
 signals:
-	/** Tracks are about to be sent to a playlist or a tag editor. */
-	void aboutToBeSent();
-
-	/** Tracks are completely sent to a playlist or a tag editor. */
-	void finishedToBeSent();
-
 	/** Add a track to the current playlist. */
-	void sendToPlaylist(QModelIndex);
+	void sendToPlaylist(QModelIndexList);
 
 	/** Add a track to the tag editor. */
-	void sendToTagEditor(QModelIndex);
+	void sendToTagEditor(QModelIndexList);
 
 	void setTagEditorVisible(bool);
 };

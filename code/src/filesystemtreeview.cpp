@@ -3,7 +3,6 @@
 #include <QDesktopServices>
 #include <QFileSystemModel>
 #include <QHeaderView>
-#include <QMessageBox>
 #include <QStandardItemModel>
 
 #include "filehelper.h"
@@ -44,9 +43,9 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 	properties->clear();
 
 	// Always add the possibility for one to send a folder or a track to the current playlist
-	QAction *actionAddToPlayList = new QAction(toPlaylist.arg(fileInfo.baseName()), properties);
-	connect(actionAddToPlayList, SIGNAL(triggered()), this, SLOT(addItemsToPlayList()));
-	properties->addAction(actionAddToPlayList);
+	QAction *actionSendToCurrentPlaylist = new QAction(toPlaylist.arg(fileInfo.baseName()), properties);
+	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToCurrentPlaylist()));
+	properties->addAction(actionSendToCurrentPlaylist);
 
 	// Same thing for the tag editor
 	QAction *actionSendToTagEditor = new QAction(toTagEditor.arg(fileInfo.baseName()), properties);
@@ -62,46 +61,30 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 	properties->exec(event->globalPos());
 }
 
-/** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlaylist)
+/** Reimplemented with a QDirIterator to quick count tracks. */
+int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 {
-	QDirIterator dirIterator(fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
 	int files = 0;
-	while (dirIterator.hasNext()) {
-		dirIterator.next();
-		files++;
-	}
-
-	int ret = QMessageBox::Ok;
-	if (files > 300) {
-		QMessageBox msgBox;
-		QString totalFiles = tr("There are more than 300 files to add to the playlist (%1 to add).");
-		msgBox.setText(totalFiles.arg(files));
-		msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
-		msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-		msgBox.setDefaultButton(QMessageBox::Ok);
-		ret = msgBox.exec();
-	}
-	if (ret == QMessageBox::Ok) {
-		QDirIterator dirIteratorOK(fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
-		if (!toPlaylist) {
-			emit setTagEditorVisible(true);
-			emit aboutToBeSent();
-		}
-		while (dirIteratorOK.hasNext()) {
-			QString entry = dirIteratorOK.next();
-			QFileInfo fileInfo(entry);
-			if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
-				// Dispatch items
-				if (toPlaylist) {
-					emit sendToPlaylist(QPersistentModelIndex(fileSystemModel->index(entry)));
-				} else {
-					emit sendToTagEditor(QPersistentModelIndex(fileSystemModel->index(entry)));
-				}
+	foreach (QModelIndex index, indexes) {
+		QDirIterator dirIterator(fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
+		while (dirIterator.hasNext()) {
+			if (QFileInfo(dirIterator.next()).isFile()) {
+				files++;
 			}
 		}
-		if (!toPlaylist) {
-			emit finishedToBeSent();
+	}
+	return files;
+}
+
+/** Reimplemented with a QDirIterator to gather informations about tracks. */
+void FileSystemTreeView::findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes)
+{
+	QDirIterator dirIterator(fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
+	while (dirIterator.hasNext()) {
+		QString entry = dirIterator.next();
+		QFileInfo fileInfo(entry);
+		if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
+			indexes.insert(fileInfo.absoluteFilePath(), fileSystemModel->index(entry));
 		}
 	}
 }
@@ -112,10 +95,4 @@ void FileSystemTreeView::addFolderToLibrary()
 	QFileSystemModel *standardItemModel = qobject_cast<QFileSystemModel*>(model());
 	QString absFilePath = standardItemModel->fileInfo(this->currentIndex()).absoluteFilePath();
 	emit aboutToAddMusicLocation(absFilePath);
-}
-
-/** Send folders or tracks to the current playlist. */
-void FileSystemTreeView::addItemsToPlayList()
-{
-	this->findAllAndDispatch(this->currentIndex(), true);
 }

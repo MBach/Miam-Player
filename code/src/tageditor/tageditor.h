@@ -33,11 +33,7 @@ public slots:
 	/** Delete all rows. */
 	void clear();
 
-	void beforeAddingItems();
-
-	void addItemToEditor(const QModelIndex &index);
-
-	void afterAddingItems();
+	void addItemsToEditor(const QModelIndexList &indexes);
 
 private slots:
 	/** Close this Widget and tells its parent to switch views. */

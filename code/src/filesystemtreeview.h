@@ -19,21 +19,21 @@ private:
 	QFileSystemModel *fileSystemModel;
 
 public:
-	FileSystemTreeView(QWidget *parent = 0);
+	explicit FileSystemTreeView(QWidget *parent = 0);
 
 protected:
 	void contextMenuEvent(QContextMenuEvent *event);
 
 private:
+	/** Reimplemented with a QDirIterator to quick count tracks. */
+	int countAll(const QModelIndexList &indexes) const;
+
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	void findAllAndDispatch(const QModelIndex &index, bool toPlaylist = true);
+	void findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes);
 
 private slots:
 	/** Send one folder to the existing music locations. */
 	void addFolderToLibrary();
-
-	/** Send folders or tracks to the current playlist. */
-	void addItemsToPlayList();
 
 signals:
 	/** Append the selected folder to the existing music locations. */

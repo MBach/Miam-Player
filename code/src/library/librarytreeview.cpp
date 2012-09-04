@@ -57,9 +57,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addSeparator();
 	properties->addAction(actionOpenTagEditor);
 
-	connect(actionOpenTagEditor, SIGNAL(triggered()), this, SLOT(openTagEditor()));
-
-	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(findAllAndDispatch(const QModelIndex &)));
+	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(sendSingleItemToPlaylist(const QModelIndex &)));
 	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
 	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), libraryModel, SLOT(readFile(int, QString)));
 	connect(musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
@@ -81,7 +79,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
+
+	// Context menu
 	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToCurrentPlaylist()));
+	connect(actionOpenTagEditor, SIGNAL(triggered()), this, SLOT(openTagEditor()));
 }
 
 /** Small function for translating the QMenu exclusively. */
@@ -118,16 +119,34 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 	QTreeView::mouseDoubleClickEvent(event);
 }
 
-/** Tell the view to create specific delegate for the current row. */
-void LibraryTreeView::addNodeToTree(LibraryItem *libraryItem)
+/** Recursive count for leaves only. */
+int LibraryTreeView::count(const QModelIndex &index) const
 {
-	LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-	libraryItem->setDelegate(libraryItemDelegate);
-	setItemDelegateForRow(libraryItem->row(), libraryItemDelegate);
+	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
+	if (delegate) {
+		QModelIndex sourceIndex = proxyModel->mapToSource(index);
+		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
+		int tmp = 0;
+		for (int i=0; i < item->rowCount(); i++) {
+			tmp += count(index.child(i, 0));
+		}
+		return (tmp == 0) ? 1:tmp;
+	}
+	return 0;
 }
 
 /** Reimplemented. */
-void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlaylist)
+int LibraryTreeView::countAll(const QModelIndexList &indexes) const
+{
+	int c = 0;
+	foreach (QModelIndex index, indexes) {
+		c += this->count(index);
+	}
+	return c;
+}
+
+/** Reimplemented. */
+void LibraryTreeView::findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
 	if (delegate) {
@@ -136,24 +155,38 @@ void LibraryTreeView::findAllAndDispatch(const QModelIndex &index, bool toPlayli
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
-				this->findAllAndDispatch(index.child(i, 0), toPlaylist);
+				this->findAll(index.child(i, 0), indexes);
 			}
 		} else if (item->data(LibraryItem::MEDIA_TYPE).toInt() != LibraryModel::LETTER) {
 			// If the click from the mouse was on a text label or on a star
 			if (!Settings::getInstance()->isStarDelegates() ||
 					(delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty()))) {
-
-				// Dispatch items
-				if (toPlaylist) {
-					emit sendToPlaylist(QPersistentModelIndex(sourceIndex));
-				} else {
-					emit sendToTagEditor(sourceIndex);
-				}
+				indexes.insert(TreeView::absFilePath(index), index);
 			} else if (delegate->stars()->contains(currentPos)) {
 				QStyleOptionViewItemV4 qsovi;
 				QWidget *editor = delegate->createEditor(this, qsovi, sourceIndex);
 				editor->show();
 			}
+		}
+	}
+}
+
+/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
+void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
+{
+	circleProgressBar->show();
+	// Clean all before scanning again
+	// Seems difficult to clean efficiently delegates: they are disabled right now.
+	libraryModel->clear();
+	this->reset();
+	if (musicLocationHasChanged) {
+		musicSearchEngine->start();
+	} else {
+		if (QFile::exists("library.mmmmp")) {
+			libraryModel->loadFromFile();
+		} else {
+			// If the file has been erased from the disk meanwhile
+			this->beginPopulateTree(true);
 		}
 	}
 }
@@ -175,26 +208,6 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 		proxyModel->setFilterRegExp(QRegExp());
 		collapseAll();
 		sortByColumn(0, Qt::AscendingOrder);
-	}
-}
-
-/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
-void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
-{
-	circleProgressBar->show();
-	// Clean all before scanning again
-	// Seems difficult to clean efficiently delegates: they are disabled right now.
-	libraryModel->clear();
-	this->reset();
-	if (musicLocationHasChanged) {
-		musicSearchEngine->start();
-	} else {
-		if (QFile::exists("library.mmmmp")) {
-			libraryModel->loadFromFile();
-		} else {
-			// If the file has been erased from the disk meanwhile
-			this->beginPopulateTree(true);
-		}
 	}
 }
 
@@ -222,11 +235,24 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 	libraryModel->saveToFile();
 }
 
+void LibraryTreeView::sendSingleItemToPlaylist(const QModelIndex &/*index*/)
+{
+	sendToCurrentPlaylist();
+}
+
+/** Tell the view to create specific delegate for the current row. */
+void LibraryTreeView::addNodeToTree(LibraryItem *libraryItem)
+{
+	LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
+	libraryItem->setDelegate(libraryItemDelegate);
+	setItemDelegateForRow(libraryItem->row(), libraryItemDelegate);
+}
+
 void LibraryTreeView::endPopulateTree()
 {
-	//if (Settings::getInstance()->toggleSeparators()) {
+	if (Settings::getInstance()->toggleSeparators()) {
 		libraryModel->makeSeparators();
-	//}
+	}
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
@@ -280,15 +306,4 @@ void LibraryTreeView::setCoverSize(int newSize)
 
 	// Upscale (or downscale) icons because their inner representation is already greater than what's displayed
 	this->setIconSize(QSize(newSize, newSize));
-}
-
-/// TEST
-void LibraryTreeView::sendToCurrentPlaylist()
-{
-	/// FIXME: one can expand Artist \ Album \ tracks, select track #1 and album #1 and artist,
-	/// so track #1 will be include 3 times, and album #1 2 times!
-	/// But the previously written findAllAndDispatch recursively send items to the playlist, and does not filter
-	foreach(QModelIndex index, selectedIndexes()) {
-		this->findAllAndDispatch(index);
-	}
 }

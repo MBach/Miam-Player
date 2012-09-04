@@ -91,45 +91,47 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
-void TagEditorTableWidget::addItemToEditor(const QPersistentModelIndex &index)
+void TagEditorTableWidget::addItemsToEditor(const QModelIndexList &indexList)
 {
-	QString absFilePath = TreeView::absFilePath(index);
-	MediaSource source(absFilePath);
+	foreach (QModelIndex index, indexList) {
+		QString absFilePath = TreeView::absFilePath(index);
+		MediaSource source(absFilePath);
 
-	if (source.type() != MediaSource::Invalid) {
-		TagLib::FileRef f(source.fileName().toLocal8Bit().data());
-		indexes.insert(absFilePath, index);
+		if (source.type() != MediaSource::Invalid) {
+			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
+			indexes.insert(absFilePath, index);
 
-		FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
+			FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
 
-		// The first two columns are not editable
-		// It may changes in the future for the first one (the filename)
-		QTableWidgetItem *fileName = new QTableWidgetItem(QFileInfo(absFilePath).baseName());
-		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-		fileName->setData(LibraryItem::SUFFIX, fh.type());
-		QTableWidgetItem *absPath = new QTableWidgetItem(absFilePath);
-		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+			// The first two columns are not editable
+			// It may changes in the future for the first one (the filename)
+			QTableWidgetItem *fileName = new QTableWidgetItem(QFileInfo(absFilePath).baseName());
+			fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+			fileName->setData(LibraryItem::SUFFIX, fh.type());
+			QTableWidgetItem *absPath = new QTableWidgetItem(absFilePath);
+			absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
-		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
-		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
-		QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
-		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-		QTableWidgetItem *trackNumber = new QTableWidgetItem(QString::number(f.tag()->track()));
-		//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
-		QTableWidgetItem *disc = new QTableWidgetItem("");
-		QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
-		QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
-		QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
+			QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
+			QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
+			QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
+			QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
+			/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
+			QTableWidgetItem *trackNumber = new QTableWidgetItem(QString::number(f.tag()->track()));
+			//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
+			QTableWidgetItem *disc = new QTableWidgetItem("");
+			QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
+			QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
+			QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
 
-		QList<QTableWidgetItem*> items;
-		items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
+			QList<QTableWidgetItem*> items;
+			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
 
-		// Create a new row with right data
-		int row = rowCount();
-		this->insertRow(row);
-		for (int column = 0; column < items.size(); column++) {
-			this->setItem(row, column, items.at(column));
+			// Create a new row with right data
+			int row = rowCount();
+			this->insertRow(row);
+			for (int column = 0; column < items.size(); column++) {
+				this->setItem(row, column, items.at(column));
+			}
 		}
 	}
 }
