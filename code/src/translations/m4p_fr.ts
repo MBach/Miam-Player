@@ -451,6 +451,10 @@
         <source>Add &quot;%1&quot; to library</source>
         <translation>Ajouter &quot;%1&quot; à la bibliothèque</translation>
     </message>
+    <message>
+        <source>Send &quot;%1&quot; to the tag editor</source>
+        <translation>Envoyer &quot;%1&quot; à l&apos;éditeur de tags</translation>
+    </message>
 </context>
 <context>
     <name>LibraryModel</name>
@@ -940,6 +944,25 @@
     <message>
         <source>More tracks were not found.</source>
         <translation>D&apos;autres pistes n&apos;ont pu être trouvées.</translation>
+    </message>
+</context>
+<context>
+    <name>TreeView</name>
+    <message>
+        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
+        <translation>Il y a plus de 300 fichiers à ajouter à %1 (%2 à ajouter).</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to continue? This might take some time.</source>
+        <translation>Êtes-vous sûr de vouloir continuer ? Cela risque de prendre un peu de temps.</translation>
+    </message>
+    <message>
+        <source>tag editor</source>
+        <translation>l&apos;éditeur de tags</translation>
+    </message>
+    <message>
+        <source>playlist</source>
+        <translation>la liste de lecture</translation>
     </message>
 </context>
 </TS>
