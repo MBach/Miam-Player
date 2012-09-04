@@ -273,7 +273,7 @@ void LibraryModel::saveToFile()
 }
 
 /** Recursively remove a leaf and its parents if the leaf is a "one node" branch. */
-void LibraryModel::removeNode(QModelIndex index)
+void LibraryModel::removeNode(const QModelIndex &index)
 {
 	QModelIndex parent;
 	if (this->rowCount(index.parent()) == 1) {

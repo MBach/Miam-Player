@@ -94,8 +94,8 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
-		connect(tab, SIGNAL(sendToPlaylist(QModelIndexList)), tabPlaylists, SLOT(addItemsToPlaylist(QModelIndexList)));
-		connect(tab, SIGNAL(sendToTagEditor(QModelIndexList)), tagEditor, SLOT(addItemsToEditor(QModelIndexList)));
+		connect(tab, SIGNAL(sendToPlaylist(QList<QPersistentModelIndex>)), tabPlaylists, SLOT(addItemsToPlaylist(QList<QPersistentModelIndex>)));
+		connect(tab, SIGNAL(sendToTagEditor(QList<QPersistentModelIndex>)), tagEditor, SLOT(addItemsToEditor(QList<QPersistentModelIndex>)));
 	}
 
 	// Send one folder to the music locations

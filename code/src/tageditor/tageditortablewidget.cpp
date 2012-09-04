@@ -91,9 +91,9 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
-void TagEditorTableWidget::addItemsToEditor(const QModelIndexList &indexList)
+void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList)
 {
-	foreach (QModelIndex index, indexList) {
+	foreach (QPersistentModelIndex index, indexList) {
 		QString absFilePath = TreeView::absFilePath(index);
 		MediaSource source(absFilePath);
 
@@ -105,10 +105,11 @@ void TagEditorTableWidget::addItemsToEditor(const QModelIndexList &indexList)
 
 			// The first two columns are not editable
 			// It may changes in the future for the first one (the filename)
-			QTableWidgetItem *fileName = new QTableWidgetItem(QFileInfo(absFilePath).baseName());
+			QFileInfo qFileInfo(absFilePath);
+			QTableWidgetItem *fileName = new QTableWidgetItem(qFileInfo.fileName());
 			fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 			fileName->setData(LibraryItem::SUFFIX, fh.type());
-			QTableWidgetItem *absPath = new QTableWidgetItem(absFilePath);
+			QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
 			absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
 			QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());

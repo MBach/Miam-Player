@@ -146,7 +146,7 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 }
 
 /** Reimplemented. */
-void LibraryTreeView::findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes)
+void LibraryTreeView::findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
 	if (delegate) {
@@ -161,7 +161,7 @@ void LibraryTreeView::findAll(const QModelIndex &index, QMap<QString, QModelInde
 			// If the click from the mouse was on a text label or on a star
 			if (!Settings::getInstance()->isStarDelegates() ||
 					(delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty()))) {
-				indexes.insert(TreeView::absFilePath(index), index);
+				indexes.insert(TreeView::absFilePath(index), sourceIndex);
 			} else if (delegate->stars()->contains(currentPos)) {
 				QStyleOptionViewItemV4 qsovi;
 				QWidget *editor = delegate->createEditor(this, qsovi, sourceIndex);

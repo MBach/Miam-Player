@@ -18,10 +18,10 @@ protected:
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
 
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
-	virtual void findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes) = 0;
+	virtual void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes) = 0;
 
 private:
-	int beforeSending(const QString &target, QMap<QString, QModelIndex> &indexes);
+	int beforeSending(const QString &target, QMap<QString, QPersistentModelIndex> &indexes);
 
 protected slots:
 	/** Send folders or tracks to the tag editor. */
@@ -32,10 +32,10 @@ protected slots:
 
 signals:
 	/** Add a track to the current playlist. */
-	void sendToPlaylist(QModelIndexList);
+	void sendToPlaylist(const QList<QPersistentModelIndex> &);
 
 	/** Add a track to the tag editor. */
-	void sendToTagEditor(QModelIndexList);
+	void sendToTagEditor(QList<QPersistentModelIndex>);
 
 	void setTagEditorVisible(bool);
 };

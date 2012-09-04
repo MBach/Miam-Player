@@ -24,7 +24,7 @@ QString TreeView::absFilePath(const QModelIndex &index)
 	}
 }
 
-int TreeView::beforeSending(const QString &target, QMap<QString, QModelIndex> &indexes)
+int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentModelIndex> &indexes)
 {
 	// Quick count tracks before anything else
 	int count = this->countAll(selectedIndexes());
@@ -42,7 +42,7 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QModelIndex> &i
 
 	if (ret == QMessageBox::Ok) {
 		// Gather all items (pure virtual call reimplemented in subclasses)
-		foreach (QModelIndex index, selectedIndexes()) {
+		foreach (QPersistentModelIndex index, selectedIndexes()) {
 			this->findAll(index, indexes);
 		}
 	}
@@ -52,7 +52,7 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QModelIndex> &i
 /** Send folders or tracks to the tag editor. */
 void TreeView::openTagEditor()
 {
-	QMap<QString, QModelIndex> indexes;
+	QMap<QString, QPersistentModelIndex> indexes;
 	if (this->beforeSending(tr("tag editor"), indexes) == QMessageBox::Ok) {
 		emit setTagEditorVisible(true);
 		emit sendToTagEditor(indexes.values());
@@ -62,7 +62,7 @@ void TreeView::openTagEditor()
 /** Send folders or tracks to the current playlist. */
 void TreeView::sendToCurrentPlaylist()
 {
-	QMap<QString, QModelIndex> indexes;
+	QMap<QString, QPersistentModelIndex> indexes;
 	if (this->beforeSending(tr("playlist"), indexes) == QMessageBox::Ok) {
 		emit sendToPlaylist(indexes.values());
 	}

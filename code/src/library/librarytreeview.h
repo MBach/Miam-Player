@@ -43,7 +43,7 @@ private:
 	int countAll(const QModelIndexList &indexes) const;
 
 	/** Reimplemented. */
-	void findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes);
+	void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes);
 
 public slots:
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
@@ -53,7 +53,7 @@ public slots:
 	void filterLibrary(const QString &filter);
 
 	/** Rebuild a subset of the tree. */
-	void rebuild(QList<QPersistentModelIndex>);
+	void rebuild(QList<QPersistentModelIndex> indexes);
 
 	void sendSingleItemToPlaylist(const QModelIndex &/*index*/);
 

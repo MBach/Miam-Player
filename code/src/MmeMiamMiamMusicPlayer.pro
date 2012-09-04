@@ -32,6 +32,8 @@ SOURCES += \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
     circleprogressbar.cpp \
+    filehelper.cpp \
+    filesystemtreeview.cpp \
     main.cpp \
     mainwindow.cpp \
     mediabutton.cpp \
@@ -42,8 +44,6 @@ SOURCES += \
     tabbar.cpp \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
-    filehelper.cpp \
-    filesystemtreeview.cpp \
     treeview.cpp
 
 HEADERS += \
@@ -55,6 +55,7 @@ HEADERS += \
     dialogs/reflector.h \
     dialogs/shortcutlineedit.h \
     dialogs/shortcutwidget.h \
+    dialogs/stylesheetupdater.h \
     library/libraryfilterlineedit.h \
     library/libraryfilterproxymodel.h \
     library/libraryitem.h \
@@ -65,7 +66,8 @@ HEADERS += \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
-    dialogs/stylesheetupdater.h \
+    filehelper.h \
+    filesystemtreeview.h \
     mainwindow.h \
     mediabutton.h \
     nofocusitemdelegate.h \
@@ -76,8 +78,6 @@ HEADERS += \
     tabbar.h \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
-    filehelper.h \
-    filesystemtreeview.h \
     treeview.h
 
 OTHER_FILES += \

@@ -60,7 +60,7 @@ public:
 
 	void makeSeparators();
 
-	void removeNode(QModelIndex index);
+	void removeNode(const QModelIndex &index);
 
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */

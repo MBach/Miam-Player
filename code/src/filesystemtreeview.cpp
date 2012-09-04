@@ -77,7 +77,7 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 }
 
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes)
+void FileSystemTreeView::findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes)
 {
 	QDirIterator dirIterator(fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
 	while (dirIterator.hasNext()) {

@@ -29,7 +29,7 @@ private:
 	int countAll(const QModelIndexList &indexes) const;
 
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	void findAll(const QModelIndex &index, QMap<QString, QModelIndex> &indexes);
+	void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes);
 
 private slots:
 	/** Send one folder to the existing music locations. */

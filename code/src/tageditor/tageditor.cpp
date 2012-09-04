@@ -67,7 +67,8 @@ void TagEditor::clear()
 	tagEditorWidget->clear();
 }
 
-void TagEditor::addItemsToEditor(const QModelIndexList &indexes)
+/** Split tracks into columns to be able to edit metadatas. */
+void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 {
 	this->clear();
 	saveChangesButton->setEnabled(false);
@@ -120,7 +121,6 @@ void TagEditor::commitChanges()
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
 				PropertyMap pm = file.tag()->properties();
-
 				// The map doesn't always contains all keys, like ArtistAlbum (not standard)
 				if (pm.contains(key.toStdString())) {
 					bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
@@ -203,7 +203,7 @@ void TagEditor::displayTags()
 				combo->addItems(stringList);
 			}
 
-			// Special case for Tracknumber and Year: it's better to have a chronological order
+			// Special case for Tracknumber and Year: it's better to have a numerical order
 			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
 				combo->model()->sort(0);
 			}

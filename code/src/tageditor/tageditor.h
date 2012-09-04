@@ -33,7 +33,8 @@ public slots:
 	/** Delete all rows. */
 	void clear();
 
-	void addItemsToEditor(const QModelIndexList &indexes);
+	/** Split tracks into columns to be able to edit metadatas. */
+	void addItemsToEditor(const QList<QPersistentModelIndex> &indexes);
 
 private slots:
 	/** Close this Widget and tells its parent to switch views. */
