@@ -31,13 +31,21 @@ private:
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
 	void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes);
 
+public slots:
+	/** Reload tree when the path has changed in the address bar. */
+	void reloadWithNewPath(const QString &path);
+
 private slots:
 	/** Send one folder to the existing music locations. */
 	void addFolderToLibrary();
 
+	void convertToFolder(const QModelIndex &index);
+
 signals:
 	/** Append the selected folder to the existing music locations. */
 	void aboutToAddMusicLocation(const QString &);
+
+	void folderChanged(const QString &);
 };
 
 #endif // FILESYSTEMTREEVIEW_H

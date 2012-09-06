@@ -16,8 +16,20 @@ private:
 
 	static QStringList suff;
 
+	Q_ENUMS(extension)
+
 public:
 	FileHelper(TagLib::FileRef &fileRef, QVariant v);
+
+	enum extension {
+		APE		= 0,
+		ASF		= 1,
+		FLAC	= 2,
+		MP4		= 4,
+		MPC		= 5,
+		MP3		= 6,
+		OGG		= 7
+	};
 
 	FileHelper(const QString &filePath);
 

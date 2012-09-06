@@ -25,7 +25,7 @@
       </property>
       <widget class="QTabWidget" name="leftTabs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="documentMode">
         <bool>true</bool>
@@ -130,6 +130,9 @@
          <property name="margin">
           <number>0</number>
          </property>
+         <item>
+          <widget class="AddressBar" name="addressBar" native="true"/>
+         </item>
          <item>
           <widget class="FileSystemTreeView" name="filesystem">
            <property name="styleSheet">
@@ -602,9 +605,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+   <class>AddressBar</class>
+   <extends>QWidget</extends>
+   <header>filesystem/addressbar.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>FileSystemTreeView</class>
    <extends>QTreeView</extends>
-   <header>filesystemtreeview.h</header>
+   <header>filesystem/filesystemtreeview.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

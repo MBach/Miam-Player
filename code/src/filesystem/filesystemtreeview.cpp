@@ -34,6 +34,8 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	toPlaylist = tr("Add \"%1\" to playlist");
 	toLibrary = tr("Add \"%1\" to library");
 	toTagEditor = tr("Send \"%1\" to the tag editor");
+
+	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(convertToFolder(QModelIndex)));
 }
 
 void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
@@ -89,10 +91,27 @@ void FileSystemTreeView::findAll(const QPersistentModelIndex &index, QMap<QStrin
 	}
 }
 
+/** Reload tree when the path has changed in the address bar. */
+void FileSystemTreeView::reloadWithNewPath(const QString &path)
+{
+	theIndex = fileSystemModel->setRootPath(path);
+	this->setRootIndex(theIndex);
+	this->collapseAll();
+	this->update(theIndex);
+}
+
 /** Send one folder to the existing music locations. */
 void FileSystemTreeView::addFolderToLibrary()
 {
 	QFileSystemModel *standardItemModel = qobject_cast<QFileSystemModel*>(model());
 	QString absFilePath = standardItemModel->fileInfo(this->currentIndex()).absoluteFilePath();
 	emit aboutToAddMusicLocation(absFilePath);
+}
+
+void FileSystemTreeView::convertToFolder(const QModelIndex &index)
+{
+	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
+	if (fileInfo.isDir()) {
+		emit folderChanged(fileInfo.absolutePath());
+	}
 }

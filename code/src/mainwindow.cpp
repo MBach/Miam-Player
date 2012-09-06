@@ -66,6 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Tag Editor
 	tagEditor->hide();
 
+	// Init the address bar
+	addressBar->init(QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+
 	this->setupActions();
 	this->drawLibrary();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
@@ -130,8 +133,10 @@ void MainWindow::setupActions()
 	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
 
 	connect(tabPlaylists, SIGNAL(aboutToChangeMenuLabels(int)), this, SLOT(changeMenuLabels(int)));
-}
 
+	connect(filesystem, SIGNAL(folderChanged(QString)), addressBar, SLOT(updateWithNewFolder(QString)));
+	connect(addressBar, SIGNAL(pathChanged(const QString &)), filesystem, SLOT(reloadWithNewPath(const QString &)));
+}
 
 /** Redefined to be able to retransltate User Interface at runtime. */
 void MainWindow::changeEvent(QEvent *event)

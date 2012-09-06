@@ -21,6 +21,9 @@ SOURCES += \
     dialogs/shortcutlineedit.cpp \
     dialogs/shortcutwidget.cpp \
     dialogs/stylesheetupdater.cpp \
+    filesystem/addressbar.cpp \
+    filesystem/addressbarbutton.cpp \
+    filesystem/filesystemtreeview.cpp \
     library/libraryfilterlineedit.cpp \
     library/libraryfilterproxymodel.cpp \
     library/libraryitem.cpp \
@@ -33,7 +36,6 @@ SOURCES += \
     tageditor/tageditortablewidget.cpp \
     circleprogressbar.cpp \
     filehelper.cpp \
-    filesystemtreeview.cpp \
     main.cpp \
     mainwindow.cpp \
     mediabutton.cpp \
@@ -47,7 +49,6 @@ SOURCES += \
     treeview.cpp
 
 HEADERS += \
-    circleprogressbar.h \
     dialogs/colordialog.h \
     dialogs/customizethemedialog.h \
     dialogs/customizeoptionsdialog.h \
@@ -56,6 +57,9 @@ HEADERS += \
     dialogs/shortcutlineedit.h \
     dialogs/shortcutwidget.h \
     dialogs/stylesheetupdater.h \
+    filesystem/addressbar.h \
+    filesystem/addressbarbutton.h \
+    filesystem/filesystemtreeview.h \
     library/libraryfilterlineedit.h \
     library/libraryfilterproxymodel.h \
     library/libraryitem.h \
@@ -66,8 +70,8 @@ HEADERS += \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
+    circleprogressbar.h \
     filehelper.h \
-    filesystemtreeview.h \
     mainwindow.h \
     mediabutton.h \
     nofocusitemdelegate.h \
