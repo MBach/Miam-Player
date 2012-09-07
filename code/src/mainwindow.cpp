@@ -66,13 +66,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Tag Editor
 	tagEditor->hide();
 
-	// Init the address bar
-	addressBar->init(QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
-
 	this->setupActions();
 	this->drawLibrary();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	splitter->restoreState(settings->value("splitterState").toByteArray());
+
+	// Init the address bar
+	addressBar->init(QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
 }
 
 /** Set up all actions and behaviour. */
@@ -134,8 +134,8 @@ void MainWindow::setupActions()
 
 	connect(tabPlaylists, SIGNAL(aboutToChangeMenuLabels(int)), this, SLOT(changeMenuLabels(int)));
 
-	connect(filesystem, SIGNAL(folderChanged(QString)), addressBar, SLOT(updateWithNewFolder(QString)));
-	connect(addressBar, SIGNAL(pathChanged(const QString &)), filesystem, SLOT(reloadWithNewPath(const QString &)));
+	connect(filesystem, SIGNAL(folderChanged(QString)), addressBar, SLOT(init(QString)));
+	connect(addressBar, SIGNAL(pathChanged(QString)), filesystem, SLOT(reloadWithNewPath(QString)));
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */

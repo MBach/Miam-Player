@@ -15,31 +15,35 @@ private:
 	QHBoxLayout *hBoxLayout;
 	QMenu *menu;
 
-	QString styleSheetDir;
-	QString styleSheetArrow;
-
 public:
 	explicit AddressBar(QWidget *parent = 0);
 
-	/** Init with an absolute path. */
-	void init(const QString &initPath);
-
 private:
+	/** Create a special root arrow button.*/
+	void createRoot();
+
 	/** Append 2 buttons to the address bar to navigate through the filesystem. */
 	void createSubDirButtons(const QDir &path, bool insertFirst = false);
 
 public slots:
-	void updateWithNewFolder(const QString &path);
+	/** Init with an absolute path. Also used as a callback to a view. */
+	void init(const QString &initPath);
 
 private slots:
 	/** Change the selected path then create subdirectories. */
 	void appendSubDir(QAction *action);
 
+	/** Delete subdirectories located after the arrow button. */
+	void deleteFromArrowFolder(int after);
+
 	/** Delete subdirectories when one clicks in the middle of this address bar. */
-	void deleteSubDir(int after = -1);
+	void deleteFromNamedFolder();
 
 	/** Show a popup menu with the content of the selected directory. */
 	void showSubDirMenu();
+
+	/** Show logical drives (on Windows) or root item (on Unix). */
+	void showDrives();
 
 signals:
 	void pathChanged(const QString &);

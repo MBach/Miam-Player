@@ -9,10 +9,16 @@ class AddressBarButton : public QPushButton
 private:
 	QString path;
 
-public:
-	explicit AddressBarButton(const QString &newPath, QWidget *parent = 0);
+	int idx;
 
-	QString currentPath() const { return path; }
+public:
+	explicit AddressBarButton(const QString &newPath, int index = -1, QWidget *parent = 0);
+
+	QString currentPath() const;
+
+	inline int index() const { return idx; }
+
+	inline void setIndex(const int &index) { idx = index; }
 };
 
 #endif // ADDRESSBARBUTTON_H

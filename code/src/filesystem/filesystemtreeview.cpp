@@ -20,10 +20,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 		filters.append("*." + suffix);
 	}
 	fileSystemModel->setNameFilters(filters);
-
 	this->setModel(fileSystemModel);
-	theIndex = fileSystemModel->setRootPath(QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
-	this->setRootIndex(theIndex);
 
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
 	this->setColumnHidden(1, true);
@@ -38,6 +35,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(convertToFolder(QModelIndex)));
 }
 
+/** Reimplemented to display up to 3 actions. */
 void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QModelIndex index = this->indexAt(event->pos());
@@ -108,10 +106,11 @@ void FileSystemTreeView::addFolderToLibrary()
 	emit aboutToAddMusicLocation(absFilePath);
 }
 
+/** Get the folder which is the target of one's double-click. */
 void FileSystemTreeView::convertToFolder(const QModelIndex &index)
 {
 	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
 	if (fileInfo.isDir()) {
-		emit folderChanged(fileInfo.absolutePath());
+		emit folderChanged(fileSystemModel->filePath(index));
 	}
 }

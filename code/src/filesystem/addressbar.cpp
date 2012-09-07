@@ -12,57 +12,32 @@ AddressBar::AddressBar(QWidget *parent) :
 	hBoxLayout = new QHBoxLayout(this);
 	hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	hBoxLayout->setSpacing(0);
-	hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
 
 	this->setLayout(hBoxLayout);
 	this->setMinimumHeight(30);
 
-	styleSheetDir = "QPushButton {";
-	styleSheetDir += " border: 0; border-radius: 0px; ";
-	styleSheetDir += " height: 20px; ";
-	styleSheetDir += " margin-left: 0px; margin-right: 0px; ";
-	styleSheetDir += " padding-left: 2px; padding-right: 2px; ";
-	styleSheetDir += "}";
-
-	styleSheetDir += "QPushButton:hover {";
-	styleSheetDir += " border: 1px solid #3c7fb1;";
-	styleSheetDir += " border-radius: 0px;";
-	styleSheetDir += " subcontrol-position: right; ";
-	styleSheetDir += " background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eaf6fd, stop: 0.4 #d7effc, stop: 0.41 #bde6fd, stop: 1.0 #a6d9f4);";
-	styleSheetDir += "}";
-
-	styleSheetDir += "QPushButton::menu-indicator:hover {";
-	styleSheetDir += " border-left: 1px solid #3c7fb1; ";
-	styleSheetDir += "}";
-
-	styleSheetArrow = "QPushButton { border: 0; border-radius: 0px; height: 20px; padding-left: 2px; padding-right: 2px; } ";
-	styleSheetArrow += "QPushButton:hover {";
-	styleSheetArrow += " min-width: 17px; max-width: 17px; width: 17px;";
-	styleSheetArrow += " border: 1px solid #3c7fb1;";
-	styleSheetArrow += " border-radius: 0px;";
-	styleSheetArrow += " background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eaf6fd, stop: 0.4 #d7effc, stop: 0.41 #bde6fd, stop: 1.0 #a6d9f4);";
-	styleSheetArrow += "}";
+	hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
+	this->createRoot();
 
 	menu = new QMenu(this);
 	connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(appendSubDir(QAction*)));
 }
 
-/** Init with an absolute path. */
-void AddressBar::init(const QString &initPath)
+/** Create a special root arrow button.*/
+void AddressBar::createRoot()
 {
-	QDir dir(initPath);
-	while (!dir.isRoot()) {
-		this->createSubDirButtons(dir, true);
-		dir.cdUp();
-	}
-	this->createSubDirButtons(dir, true);
+	AddressBarButton *buttonArrow = new AddressBarButton("/", -1, this);
+	buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
+	buttonArrow->setIconSize(QSize(17, 7));
+	connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showDrives()));
+	hBoxLayout->insertWidget(0, buttonArrow);
 }
 
 /** Append 2 buttons to the address bar to navigate through the filesystem. */
 void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 {
-	AddressBarButton *buttonDir = new AddressBarButton(path.absolutePath(), this);
-	buttonDir->setStyleSheet(styleSheetDir);
+	AddressBarButton *buttonDir = new AddressBarButton(path.absolutePath(), hBoxLayout->count() - 1, this);
+	buttonDir->setFlat(true);
 	buttonDir->setIcon(QFileIconProvider().icon(QFileInfo(path.absolutePath())));
 	// Special case for the root directory
 	if (path.isRoot()) {
@@ -74,36 +49,46 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 	} else {
 		buttonDir->setText(path.dirName());
 	}
-	connect(buttonDir, SIGNAL(clicked()), this, SLOT(deleteSubDir()));
+	connect(buttonDir, SIGNAL(clicked()), this, SLOT(deleteFromNamedFolder()));
 
-	// The horizontal spacer is always the last widget
-	QSpacerItem *spacer = hBoxLayout->takeAt(hBoxLayout->count() - 1)->spacerItem();
 	if (insertFirst) {
-		hBoxLayout->insertWidget(0, buttonDir);
+		hBoxLayout->insertWidget(1, buttonDir);
 	} else {
-		hBoxLayout->addWidget(buttonDir);
+		hBoxLayout->insertWidget(hBoxLayout->count() - 1, buttonDir);
 	}
 
 	// Create an arrow only if there's at least one subfolder
 	if (!path.entryInfoList(QStringList(), QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks).isEmpty()) {
-		AddressBarButton *buttonArrow = new AddressBarButton(path.absolutePath(), this);
-		buttonArrow->setStyleSheet(styleSheetArrow);
+		AddressBarButton *buttonArrow = new AddressBarButton(path.absolutePath(), hBoxLayout->count() - 1, this);
 		buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
 		buttonArrow->setIconSize(QSize(17, 7));
+		buttonArrow->setFlat(true);
 		connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showSubDirMenu()));
 		if (insertFirst) {
-			hBoxLayout->insertWidget(1, buttonArrow);
+			hBoxLayout->insertWidget(2, buttonArrow);
 		} else {
-			hBoxLayout->addWidget(buttonArrow);
+			hBoxLayout->insertWidget(hBoxLayout->count() - 1, buttonArrow);
 		}
 	}
-	// Moves this spacer to the end
-	hBoxLayout->addSpacerItem(spacer);
 }
 
-void AddressBar::updateWithNewFolder(const QString &path)
+/** Init with an absolute path. Also used as a callback to a view. */
+void AddressBar::init(const QString &initPath)
 {
-	this->createSubDirButtons(QDir(path));
+	this->deleteFromArrowFolder(0);
+	QDir dir(initPath);
+	while (!dir.isRoot()) {
+		this->createSubDirButtons(dir, true);
+		dir.cdUp();
+	}
+	this->createSubDirButtons(dir, true);
+
+	// Re-order index buttons because they were inserted backward (/path/to/music, /path/to, /path, /)
+	for (int i = 0; i < hBoxLayout->count() - 1; i++) {
+		AddressBarButton *b = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i)->widget());
+		b->setIndex(i);
+	}
+	emit pathChanged(initPath);
 }
 
 /** Change the selected path then create subdirectories. */
@@ -112,6 +97,7 @@ void AddressBar::appendSubDir(QAction *action)
 	QList<QWidget*> widgets = action->associatedWidgets();
 	if (!widgets.isEmpty()) {
 		AddressBarButton *button = NULL;
+		// We are sure that there's a not null button
 		foreach (QWidget *w, widgets) {
 			button = qobject_cast<AddressBarButton*>(w);
 			if (button) {
@@ -119,51 +105,80 @@ void AddressBar::appendSubDir(QAction *action)
 			}
 		}
 
-		int idxButton = -1;
-		for (int i = 1; i < hBoxLayout->count() - 1; i++) {
-			if (hBoxLayout->itemAt(i)->widget() == button) {
-				idxButton = i;
-				break;
-			}
+		// If the sender was the root item
+		QDir subDir;
+		if (button->index() == 0) {
+			subDir.setPath(action->text() + QDir::separator());
+		} else {
+			subDir.setPath(button->currentPath());
 		}
-
-		QDir subDir(button->currentPath());
-		subDir.cd(action->text());
-		this->deleteSubDir(idxButton);
+		subDir.cd(action->text() + QDir::separator());
+		this->deleteFromArrowFolder(button->index());
 		this->createSubDirButtons(subDir);
 		emit pathChanged(subDir.absolutePath());
 	}
 }
 
-/** Delete subdirectories when one clicks in the middle of this address bar. */
-void AddressBar::deleteSubDir(int after)
+/** Delete subdirectories located after the arrow button. */
+void AddressBar::deleteFromArrowFolder(int after)
 {
-	int idxPushButton = -1;
-
-	// If the origin of the click is a folder or the arrow button just after
-	if (after != idxPushButton) {
-		idxPushButton = after - 1;
-	} else {
-		for (int i = 0; i < hBoxLayout->count() - 1; i++) {
-			if (hBoxLayout->itemAt(i)->widget() == sender()) {
-				idxPushButton = i;
-				break;
-			}
-		}
-	}
-
 	// If we have something to delete after
-	if (hBoxLayout->count() - 2 > idxPushButton) {
+	if (hBoxLayout->count() - 2 > after) {
 		// Delete items from the end (excluding the spacer)
-		for (int i = hBoxLayout->count() - 2; i > idxPushButton + 1; i--) {
+		for (int i = hBoxLayout->count() - 2; i > after; i--) {
 			QLayoutItem *item = hBoxLayout->takeAt(i);
 			delete item->widget();
 			delete item;
 		}
 
-		AddressBarButton *addressBarButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(idxPushButton+1)->widget());
+		// Special case for the root button
+		if (after == 0) {
+			after++;
+		}
+		AddressBarButton *addressBarButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(after - 1)->widget());
 		emit pathChanged(addressBarButton->currentPath());
 	}
+}
+
+/** Delete subdirectories when one clicks in the middle of this address bar. */
+void AddressBar::deleteFromNamedFolder()
+{
+	// The origin of the click can be a folder or the arrow button just after or a callback function
+	AddressBarButton *addressBarButton = qobject_cast<AddressBarButton*>(sender());
+	if (addressBarButton) {
+		int after = addressBarButton->index() + 1;
+		this->deleteFromArrowFolder(after);
+	}
+}
+
+/** Show logical drives (on Windows) or root item (on Unix). */
+void AddressBar::showDrives()
+{
+	// Delete existing entries
+	menu->clear();
+
+	AddressBarButton *firstButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(0)->widget());
+	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(1)->widget());
+
+	foreach (QFileInfo drive, QDir::drives()) {
+		QString driveName = drive.absoluteFilePath();
+		if (driveName.length() > 1) {
+			driveName.remove('/');
+		}
+		QAction *action = new QAction(QFileIconProvider().icon(drive), driveName, menu);
+		// Check if the new submenu has one of its items already displayed, then make it bold
+		if (nextButton != NULL && action->text() == nextButton->text()) {
+			QFont font = action->font();
+			font.setBold(true);
+			action->setFont(font);
+		}
+		menu->addAction(action);
+		firstButton->addAction(action);
+	}
+
+	// Then display the menu
+	QPoint p(firstButton->geometry().x() - 20, firstButton->geometry().y() + firstButton->geometry().height() - 1);
+	menu->exec(mapToGlobal(p));
 }
 
 /** Show a popup menu with the content of the selected directory. */
@@ -174,9 +189,18 @@ void AddressBar::showSubDirMenu()
 
 	// Create new entries
 	AddressBarButton *button = qobject_cast<AddressBarButton*>(sender());
+	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(button->index() + 1)->widget());
+
 	QDir d(button->currentPath());
 	foreach (QFileInfo folder, d.entryInfoList(QStringList(), QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks)) {
+
 		QAction *action = new QAction(QFileIconProvider().icon(folder), folder.fileName(), menu);
+		// Check if the new submenu has one of its items already displayed, then make it bold
+		if (nextButton != NULL && action->text() == nextButton->text()) {
+			QFont font = action->font();
+			font.setBold(true);
+			action->setFont(font);
+		}
 		menu->addAction(action);
 		button->addAction(action);
 	}

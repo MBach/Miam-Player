@@ -22,6 +22,7 @@ public:
 	explicit FileSystemTreeView(QWidget *parent = 0);
 
 protected:
+	/** Reimplemented to display up to 3 actions. */
 	void contextMenuEvent(QContextMenuEvent *event);
 
 private:
@@ -39,6 +40,7 @@ private slots:
 	/** Send one folder to the existing music locations. */
 	void addFolderToLibrary();
 
+	/** Get the folder which is the target of one's double-click. */
 	void convertToFolder(const QModelIndex &index);
 
 signals:
