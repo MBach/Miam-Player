@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->drawLibrary();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	splitter->restoreState(settings->value("splitterState").toByteArray());
+	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	// Init the address bar
 	addressBar->init(QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
@@ -164,6 +165,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	Settings *settings = Settings::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
 	settings->setValue("splitterState", splitter->saveState());
+	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 	Settings::getInstance()->sync();
 }
 

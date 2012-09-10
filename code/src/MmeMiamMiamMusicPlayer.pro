@@ -1,6 +1,6 @@
 QT += phonon
 
-TagLibDirectory = C:/dev/lib/taglib-1.8beta
+TagLibDirectory = C:/dev/lib/taglib-1.8
 
 TEMPLATE = app
 
@@ -46,7 +46,8 @@ SOURCES += \
     tabbar.cpp \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
-    treeview.cpp
+    treeview.cpp \
+    filesystem/addressbarmenu.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -82,7 +83,8 @@ HEADERS += \
     tabbar.h \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
-    treeview.h
+    treeview.h \
+    filesystem/addressbarmenu.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

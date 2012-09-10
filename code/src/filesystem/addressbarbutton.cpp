@@ -17,7 +17,7 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 	styleSheet += " border: 1px solid #3c7fb1;";
 	styleSheet += " border-radius: 0px;";
 	styleSheet += " subcontrol-position: right; ";
-	styleSheet += " background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eaf6fd, stop: 0.4 #d7effc, stop: 0.41 #bde6fd, stop: 1.0 #a6d9f4);";
+	styleSheet += " background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eaf6fd, stop: 0.4 #d7effc, stop: 0.41 #bde6fd, stop: 1.0 #a6d9f4);";
 	styleSheet += "}";
 
 	styleSheet += "QPushButton::menu-indicator:hover {";
@@ -28,7 +28,7 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 	styleSheet += " min-width: 17px; max-width: 17px; width: 17px;";
 	styleSheet += " border: 1px solid #3c7fb1;";
 	styleSheet += " border-radius: 0px;";
-	styleSheet += " background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eaf6fd, stop: 0.4 #d7effc, stop: 0.41 #bde6fd, stop: 1.0 #a6d9f4);";
+	styleSheet += " background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eaf6fd, stop: 0.4 #d7effc, stop: 0.41 #bde6fd, stop: 1.0 #a6d9f4);";
 	styleSheet += "}";
 
 	if (path.right(1) != QDir::separator()) {

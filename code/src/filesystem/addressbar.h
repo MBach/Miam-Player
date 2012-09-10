@@ -7,13 +7,14 @@
 #include <QWidget>
 
 #include "addressbarbutton.h"
+#include "addressbarmenu.h"
 
 class AddressBar : public QWidget
 {
 	Q_OBJECT
 private:
 	QHBoxLayout *hBoxLayout;
-	QMenu *menu;
+	AddressBarMenu *menu;
 
 public:
 	explicit AddressBar(QWidget *parent = 0);
@@ -24,6 +25,10 @@ private:
 
 	/** Append 2 buttons to the address bar to navigate through the filesystem. */
 	void createSubDirButtons(const QDir &path, bool insertFirst = false);
+
+	void hideFirstButtons(AddressBarButton *buttonDir);
+
+	void showFirstButtons(AddressBarButton *buttonDir);
 
 public slots:
 	/** Init with an absolute path. Also used as a callback to a view. */
@@ -42,8 +47,8 @@ private slots:
 	/** Show a popup menu with the content of the selected directory. */
 	void showSubDirMenu();
 
-	/** Show logical drives (on Windows) or root item (on Unix). */
-	void showDrives();
+	/** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */
+	void showDrivesAndPreviousFolders();
 
 signals:
 	void pathChanged(const QString &);

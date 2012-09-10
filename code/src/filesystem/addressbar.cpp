@@ -19,7 +19,7 @@ AddressBar::AddressBar(QWidget *parent) :
 	hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
 	this->createRoot();
 
-	menu = new QMenu(this);
+	menu = new AddressBarMenu(this);
 	connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(appendSubDir(QAction*)));
 }
 
@@ -29,7 +29,7 @@ void AddressBar::createRoot()
 	AddressBarButton *buttonArrow = new AddressBarButton("/", -1, this);
 	buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
 	buttonArrow->setIconSize(QSize(17, 7));
-	connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showDrives()));
+	connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showDrivesAndPreviousFolders()));
 	hBoxLayout->insertWidget(0, buttonArrow);
 }
 
@@ -54,6 +54,7 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 	if (insertFirst) {
 		hBoxLayout->insertWidget(1, buttonDir);
 	} else {
+		this->hideFirstButtons(buttonDir);
 		hBoxLayout->insertWidget(hBoxLayout->count() - 1, buttonDir);
 	}
 
@@ -68,6 +69,67 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 			hBoxLayout->insertWidget(2, buttonArrow);
 		} else {
 			hBoxLayout->insertWidget(hBoxLayout->count() - 1, buttonArrow);
+		}
+	}
+}
+
+void AddressBar::hideFirstButtons(AddressBarButton *buttonDir)
+{
+	// Compute the width of the new address bar button before adding
+	QFontMetrics fm(buttonDir->font());
+	int newButtonWidth = buttonDir->iconSize().width() + 5 + fm.boundingRect(buttonDir->text()).width();
+	int spacerWidth = hBoxLayout->itemAt(hBoxLayout->count() - 1)->spacerItem()->geometry().width();
+
+	// If the layout needs to be expanded, then hide first items
+	// It can be more than one folder. Furthermore, hide the arrow button
+	while (newButtonWidth > spacerWidth) {
+		for (int i = 1; i < hBoxLayout->count() - 1; i++) {
+			// Hide the folder and its associated button
+			if (hBoxLayout->itemAt(i)->widget()->isVisible()) {
+				AddressBarButton *previousButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i)->widget());
+				menu->appendSubfolder(previousButton);
+				previousButton->hide();
+				hBoxLayout->itemAt(++i)->widget()->hide();
+				break;
+			}
+		}
+		spacerWidth = hBoxLayout->itemAt(hBoxLayout->count() - 1)->spacerItem()->geometry().width();
+		hBoxLayout->activate();
+	}
+}
+
+void AddressBar::showFirstButtons(AddressBarButton *buttonDir)
+{
+	// Compute the width of the new address bar button before adding
+	QFontMetrics fm(buttonDir->font());
+	int newButtonWidth = buttonDir->iconSize().width() + 5 + fm.boundingRect(buttonDir->text()).width();
+	int spacerWidth = hBoxLayout->itemAt(hBoxLayout->count() - 1)->spacerItem()->geometry().width();
+
+	// If the layout can be expanded, then show first items (if hidden)
+	while (newButtonWidth <= spacerWidth) {
+		for (int i = hBoxLayout->count() - 2; i > 1; i--) {
+			// Hide the folder and its associated button
+			if (!hBoxLayout->itemAt(i)->widget()->isVisible()) {
+				AddressBarButton *previousButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i)->widget());
+				menu->removeSubfolder(previousButton);
+				previousButton->show();
+				hBoxLayout->itemAt(--i)->widget()->show();
+				break;
+			}
+		}
+		spacerWidth = hBoxLayout->itemAt(hBoxLayout->count() - 1)->spacerItem()->geometry().width();
+		hBoxLayout->activate();
+
+		// Stop the loop if all widgets are visible
+		int maxVisibleWidgets = 0;
+		for (int i = 0; i < hBoxLayout->count() - 2; i++) {
+			if (hBoxLayout->itemAt(i)->widget()->isVisible()) {
+				maxVisibleWidgets++;
+			}
+		}
+		if (maxVisibleWidgets == hBoxLayout->count() - 2) {
+			//qDebug() << "stop the loop";
+			break;
 		}
 	}
 }
@@ -144,15 +206,14 @@ void AddressBar::deleteFromArrowFolder(int after)
 void AddressBar::deleteFromNamedFolder()
 {
 	// The origin of the click can be a folder or the arrow button just after or a callback function
-	AddressBarButton *addressBarButton = qobject_cast<AddressBarButton*>(sender());
-	if (addressBarButton) {
-		int after = addressBarButton->index() + 1;
-		this->deleteFromArrowFolder(after);
+	if (AddressBarButton *addressBarButton = qobject_cast<AddressBarButton*>(sender())) {
+		this->deleteFromArrowFolder(addressBarButton->index() + 1);
+		this->showFirstButtons(addressBarButton);
 	}
 }
 
-/** Show logical drives (on Windows) or root item (on Unix). */
-void AddressBar::showDrives()
+/** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */
+void AddressBar::showDrivesAndPreviousFolders()
 {
 	// Delete existing entries
 	menu->clear();
@@ -161,9 +222,9 @@ void AddressBar::showDrives()
 	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(1)->widget());
 
 	foreach (QFileInfo drive, QDir::drives()) {
-		QString driveName = drive.absoluteFilePath();
+		QString driveName = QDir::toNativeSeparators(drive.absoluteFilePath());
 		if (driveName.length() > 1) {
-			driveName.remove('/');
+			driveName.remove(QDir::separator());
 		}
 		QAction *action = new QAction(QFileIconProvider().icon(drive), driveName, menu);
 		// Check if the new submenu has one of its items already displayed, then make it bold
@@ -176,9 +237,9 @@ void AddressBar::showDrives()
 		firstButton->addAction(action);
 	}
 
-	// Then display the menu
+	// Then display the menu and the possibly empty list of folders before the first visible folder
 	QPoint p(firstButton->geometry().x() - 20, firstButton->geometry().y() + firstButton->geometry().height() - 1);
-	menu->exec(mapToGlobal(p));
+	menu->exec(mapToGlobal(p), firstButton->index() == 0);
 }
 
 /** Show a popup menu with the content of the selected directory. */
@@ -207,5 +268,5 @@ void AddressBar::showSubDirMenu()
 
 	// Then display the menu
 	QPoint p(button->geometry().x() - 20, button->geometry().y() + button->geometry().height() - 1);
-	menu->exec(mapToGlobal(p));
+	menu->exec(mapToGlobal(p), 0);
 }
