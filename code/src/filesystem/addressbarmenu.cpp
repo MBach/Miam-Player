@@ -21,12 +21,19 @@ void AddressBarMenu::appendSubfolder(AddressBarButton *button)
 
 void AddressBarMenu::removeSubfolder(AddressBarButton *button)
 {
-	/// FIXME: what about separators?
 	for (int i = 0; i < subfolders.length(); i++) {
-		if (button->text() == subfolders.at(i)->text()) {
+		if (button->currentPath() == subfolders.at(i)->currentPath()) {
 			subfolders.removeAt(i);
-			qDebug() << button->text() << "was successfully removed";
 			break;
+		}
+	}
+	// Remove the separator
+	if (subfolders.isEmpty()) {
+		foreach (QAction *action, actions()) {
+			if (action->isSeparator()) {
+				delete action;
+				break;
+			}
 		}
 	}
 }

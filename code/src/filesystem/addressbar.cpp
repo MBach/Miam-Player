@@ -106,7 +106,7 @@ void AddressBar::showFirstButtons(AddressBarButton *buttonDir)
 	int spacerWidth = hBoxLayout->itemAt(hBoxLayout->count() - 1)->spacerItem()->geometry().width();
 
 	// If the layout can be expanded, then show first items (if hidden)
-	while (newButtonWidth <= spacerWidth) {
+	while (newButtonWidth < spacerWidth) {
 		for (int i = hBoxLayout->count() - 2; i > 1; i--) {
 			// Hide the folder and its associated button
 			if (!hBoxLayout->itemAt(i)->widget()->isVisible()) {
@@ -118,7 +118,7 @@ void AddressBar::showFirstButtons(AddressBarButton *buttonDir)
 			}
 		}
 		spacerWidth = hBoxLayout->itemAt(hBoxLayout->count() - 1)->spacerItem()->geometry().width();
-		hBoxLayout->activate();
+		hBoxLayout->invalidate();
 
 		// Stop the loop if all widgets are visible
 		int maxVisibleWidgets = 0;
@@ -128,7 +128,6 @@ void AddressBar::showFirstButtons(AddressBarButton *buttonDir)
 			}
 		}
 		if (maxVisibleWidgets == hBoxLayout->count() - 2) {
-			//qDebug() << "stop the loop";
 			break;
 		}
 	}
