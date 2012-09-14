@@ -76,13 +76,20 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		for (int i=0; i < musicLocations.size(); i++) {
 			QString musicLocation = musicLocations.at(i).toString();
 			QString file = musicLocation.append(fileName);
-			QStringList previousTrack = tracks.values(parent);
+			if (tracks.contains(file)) {
+				isNewTrack = false;
+				break;
+			} else {
+				qDebug() << "inserting:" << file;
+				tracks.insert(file, parent);
+			}
+			/*QStringList previousTrack = tracks.key(parent);
 			if (previousTrack.contains(file)) {
 				isNewTrack = false;
 				break;
 			} else {
-				tracks.insertMulti(parent, file);
-			}
+				tracks.insertMulti(file, parent);
+			}*/
 		}
 	}
 
@@ -285,9 +292,11 @@ void LibraryModel::removeNode(const QModelIndex &index)
 		QPair<LibraryItem*, QString> pair;
 		//QString albumPath;
 		if (libraryItem) {
+			QString key;
 			switch (libraryItem->type()) {
 			case TRACK:
-				tracks.remove(libraryItem);
+				key = tracks.key(libraryItem);
+				tracks.remove(key);
 				break;
 			case ALBUM:
 				/// FIXME

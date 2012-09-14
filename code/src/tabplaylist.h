@@ -42,7 +42,7 @@ public slots:
 	Playlist* addPlaylist(const QString &playlistName = QString());
 
 	/** Add multiple tracks chosen by one from the library or the filesystem into the active playlist. */
-	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes);
+	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, int row = -1);
 
 	/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
 	void addItemToPlaylist(const QModelIndex &index);
@@ -82,6 +82,8 @@ signals:
 
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
+
+	void sendToTagEditor(const QList<QPersistentModelIndex> &);
 
 private slots:
 	/** Save playlists before exit. */

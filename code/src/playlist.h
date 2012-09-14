@@ -21,6 +21,8 @@ private:
 
 	QMenu *columns;
 
+	QMenu *trackProperties;
+
 public:
 	Playlist(QWidget *parent = 0);
 
@@ -33,7 +35,7 @@ public:
 	void clear();
 
 	/** Add a track to this Playlist instance. */
-	void append(const MediaSource &m);
+	void append(const MediaSource &m, int row = -1);
 
 	/** Retranslate header columns. */
 	void retranslateUi();
@@ -41,6 +43,9 @@ public:
 	bool eventFilter(QObject *watched, QEvent *event);
 
 protected:
+	/** Redefined to display a small context menu in the view. */
+	void contextMenuEvent(QContextMenuEvent *event);
+
 	void mousePressEvent(QMouseEvent *event);
 
 	void resizeEvent(QResizeEvent *event);

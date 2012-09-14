@@ -49,6 +49,15 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 	return ret;
 }
 
+/** Send folders or tracks to the current playlist. */
+void TreeView::sendToCurrentPlaylist(int row)
+{
+	QMap<QString, QPersistentModelIndex> indexes;
+	if (this->beforeSending(tr("playlist"), indexes) == QMessageBox::Ok) {
+		emit sendToPlaylist(indexes.values(), row);
+	}
+}
+
 /** Send folders or tracks to the tag editor. */
 void TreeView::openTagEditor()
 {
@@ -56,14 +65,5 @@ void TreeView::openTagEditor()
 	if (this->beforeSending(tr("tag editor"), indexes) == QMessageBox::Ok) {
 		emit setTagEditorVisible(true);
 		emit sendToTagEditor(indexes.values());
-	}
-}
-
-/** Send folders or tracks to the current playlist. */
-void TreeView::sendToCurrentPlaylist()
-{
-	QMap<QString, QPersistentModelIndex> indexes;
-	if (this->beforeSending(tr("playlist"), indexes) == QMessageBox::Ok) {
-		emit sendToPlaylist(indexes.values());
 	}
 }

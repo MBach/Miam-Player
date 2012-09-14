@@ -7,6 +7,8 @@
 
 #include "ui_tageditor.h"
 
+using namespace Phonon;
+
 class TagEditor : public QWidget, public Ui::TagEditor
 {
 	Q_OBJECT
@@ -23,11 +25,6 @@ private:
 
 public:
 	TagEditor(QWidget *parent = 0);
-
-signals:
-	void closeTagEditor(bool);
-
-	void rebuildTreeView(QList<QPersistentModelIndex>);
 
 public slots:
 	/** Delete all rows. */
@@ -54,6 +51,11 @@ private slots:
 	void toggleTagConverter(bool);
 
 	void updateCells(QString text);
+
+signals:
+	void closeTagEditor(bool);
+
+	void rebuildTreeView(QList<QPersistentModelIndex>);
 };
 
 #endif // TAGEDITOR_H

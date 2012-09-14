@@ -4,6 +4,7 @@
 #include "settings.h"
 
 #include <tpropertymap.h>
+#include <MediaSource>
 
 #include <QtDebug>
 

@@ -52,14 +52,17 @@ void TabPlaylist::retranslateUi()
 }
 
 /** Add multiple tracks chosen by one from the library or the filesystem into the active playlist. */
-void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes)
+void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, int row)
 {
 	bool isEmpty = currentPlayList()->tracks().isEmpty();
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
 			MediaSource source(TreeView::absFilePath(index));
 			if (source.type() != MediaSource::Invalid) {
-				currentPlayList()->append(source);
+				if (row != -1) {
+					row++;
+				}
+				currentPlayList()->append(source, row);
 				if (currentPlayList()->tracks().size() == 1) {
 					metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
 				}

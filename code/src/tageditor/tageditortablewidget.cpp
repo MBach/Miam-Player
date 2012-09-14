@@ -1,13 +1,11 @@
 #include "tageditortablewidget.h"
 
-#include "filehelper.h"
 #include "library/libraryitem.h"
 #include "nofocusitemdelegate.h"
 #include "settings.h"
 #include "treeview.h"
 
 #include <QScrollBar>
-#include <phonon>
 
 #include <QtDebug>
 
@@ -96,7 +94,6 @@ void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 	foreach (QPersistentModelIndex index, indexList) {
 		QString absFilePath = TreeView::absFilePath(index);
 		MediaSource source(absFilePath);
-
 		if (source.type() != MediaSource::Invalid) {
 			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
 			indexes.insert(absFilePath, index);

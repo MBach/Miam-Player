@@ -1,6 +1,7 @@
 #include "playlist.h"
 
 #include <QApplication>
+#include <QDropEvent>
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QTime>
@@ -9,8 +10,8 @@
 #include <tag.h>
 
 #include "settings.h"
-
 #include "nofocusitemdelegate.h"
+#include "library/librarytreeview.h"
 
 Playlist::Playlist(QWidget *parent) :
 	QTableWidget(parent), track(-1)
@@ -21,6 +22,7 @@ Playlist::Playlist(QWidget *parent) :
 	// Test: 0 = Fixed, n>0 = real ratio for each column
 	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
 
+	this->setAcceptDrops(true);
 	this->setColumnCount(labels.size());
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
@@ -34,9 +36,6 @@ Playlist::Playlist(QWidget *parent) :
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
-
-	/// test
-	this->setAcceptDrops(true);
 
 	verticalHeader()->setVisible(false);
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
@@ -73,6 +72,11 @@ Playlist::Playlist(QWidget *parent) :
 		columns->addAction(actionColumn);
 	}
 
+	// Context menu on tracks
+	trackProperties = new QMenu(this);
+	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from current playlist"));
+	connect(removeFromCurrentPlaylist, SIGNAL(triggered()), this, SLOT(removeSelectedTracks()));
+
 	// Load columns state
 	QByteArray state = settings->value("playlistColumnsState").toByteArray();
 	if (!state.isEmpty()) {
@@ -106,7 +110,11 @@ void Playlist::countSelectedItems()
 
 void Playlist::dropEvent(QDropEvent *event)
 {
-	qDebug() << "dropEvent";
+	QWidget *source = event->source();
+	if (LibraryTreeView *view = qobject_cast<LibraryTreeView*>(source)) {
+		int row = this->indexAt(event->pos()).row();
+		view->sendToCurrentPlaylist(row-1);
+	}
 }
 
 #include <QDragEnterEvent>
@@ -175,12 +183,18 @@ void Playlist::resizeColumns()
 }
 
 /** Add a track to this Playlist instance. */
-void Playlist::append(const MediaSource &m)
+void Playlist::append(const MediaSource &m, int row)
 {
 	// Resolve metaDatas from TagLib
 	TagLib::FileRef f(m.fileName().toLocal8Bit().data());
 	if (!f.isNull()) {
-		sources.append(m);
+		int currentRow;
+		if (row == -1) {
+			currentRow = rowCount();
+		} else {
+			currentRow = row;
+		}
+		sources.insert(currentRow, m);
 		QString title(f.tag()->title().toCString());
 		if (title.isEmpty()) {
 			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
@@ -199,8 +213,7 @@ void Playlist::append(const MediaSource &m)
 
 		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
 
-		int currentRow = rowCount();
-		insertRow(currentRow);
+		this->insertRow(currentRow);
 
 		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
 		for (int i=0; i < widgetItems.length(); i++) {
@@ -275,13 +288,13 @@ void Playlist::highlightCurrentTrack()
 void Playlist::removeSelectedTracks()
 {
 	int r = -1;
-	QList<QTableWidgetItem *> items = selectedItems();
-	for (int i = 0; i < items.size(); i++) {
+	QList<QTableWidgetItem *> items = this->selectedItems();
+	for (int i = items.size() - 1; i > 0; i--) {
 		QTableWidgetItem *item = items.at(i);
 		if (item) {
 			r = item->row();
 			sources.removeAt(r);
-			removeRow(r);
+			this->removeRow(r);
 		}
 	}
 }
@@ -346,6 +359,16 @@ bool Playlist::eventFilter(QObject *watched, QEvent *event)
 		qDebug() << "ici" << event->type();
 	}
 	return QTableWidget::eventFilter(watched, event);
+}
+
+/** Redefined to display a small context menu in the view. */
+void Playlist::contextMenuEvent(QContextMenuEvent *event)
+{
+	QModelIndex index = this->indexAt(event->pos());
+	QTableWidgetItem *item = this->itemFromIndex(index);
+	if (item != NULL) {
+		trackProperties->exec(event->globalPos());
+	}
 }
 
 void Playlist::mousePressEvent(QMouseEvent *event)

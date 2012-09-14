@@ -98,7 +98,7 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
-		connect(tab, SIGNAL(sendToPlaylist(QList<QPersistentModelIndex>)), tabPlaylists, SLOT(addItemsToPlaylist(QList<QPersistentModelIndex>)));
+		connect(tab, SIGNAL(sendToPlaylist(QList<QPersistentModelIndex>, int)), tabPlaylists, SLOT(addItemsToPlaylist(QList<QPersistentModelIndex>, int)));
 		connect(tab, SIGNAL(sendToTagEditor(QList<QPersistentModelIndex>)), tagEditor, SLOT(addItemsToEditor(QList<QPersistentModelIndex>)));
 	}
 

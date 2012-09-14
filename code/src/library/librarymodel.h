@@ -27,7 +27,7 @@ private:
 	QMap<QPair<LibraryItem*, QString>, LibraryItem*> albums;
 
 	// An efficient way to tell if a track was already inserted
-	QHash<LibraryItem*, QString> tracks;
+	QHash<QString, LibraryItem*> tracks;
 
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
