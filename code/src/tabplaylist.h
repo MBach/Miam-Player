@@ -1,8 +1,8 @@
 #ifndef TABPLAYLIST_H
 #define TABPLAYLIST_H
 
+#include <QDir>
 #include <QTabWidget>
-
 #include <QMouseEvent>
 
 #include "playlist.h"
@@ -41,8 +41,11 @@ public slots:
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist(const QString &playlistName = QString());
 
-	/** Add multiple tracks chosen by one from the library or the filesystem into the active playlist. */
-	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, int row = -1);
+	/** Add external folders (from a drag and drop) to the current playlist. */
+	void addExtFolders(const QList<QDir> &folders);
+
+	/** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
+	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, Playlist *playlist, int row = -1);
 
 	/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
 	void addItemToPlaylist(const QModelIndex &index);

@@ -1,16 +1,18 @@
 #include "tabbar.h"
 #include "settings.h"
+#include "playlist.h"
 
 #include <QtDebug>
 
 #include <QIcon>
 
-TabBar::TabBar(QWidget *parent) :
-	QTabBar(parent)
+TabBar::TabBar(TabPlaylist *parent) :
+	QTabBar(parent), tabPlaylist(parent)
 {
 	this->setTabsClosable(true);
 	this->addTab(QIcon(":/icons/plusIcon"), QString());
 	this->setTabButton(count()-1, QTabBar::RightSide, 0);
+	this->setAcceptDrops(true);
 
 	lineEdit = new QLineEdit(this);
 	lineEdit->setVisible(false);
@@ -35,6 +37,56 @@ bool TabBar::eventFilter(QObject *obj, QEvent *event)
 	}
 	return false;
 }
+
+#include "library/librarytreeview.h"
+
+#include <QCoreApplication>
+
+void TabBar::dropEvent(QDropEvent *event)
+{
+	int tab = this->tabAt(event->pos());
+	if (Playlist *origin = qobject_cast<Playlist*>(event->source())) {
+
+		if (tab == this->currentIndex()) {
+			/// What to do when it's the same tab? Currently: nothing
+			/// XXX: It would be great to dynamically disable the drop indicator for the current playlist
+		} else {
+			Playlist *target;
+			// Tracks were dropped on the (+) button
+			if (tab == this->count() - 1) {
+				target = tabPlaylist->addPlaylist();
+			} else {
+				target = tabPlaylist->playlist(tab);
+			}
+
+			// Copy tracks in the target
+			foreach (QModelIndex index,  origin->selectionModel()->selectedRows()) {
+				target->append(origin->tracks().at(index.row()));
+			}
+
+			// Remove tracks from the current playlist if necessary
+			if (!Settings::getInstance()->copyTracksFromPlaylist()) {
+				origin->removeSelectedTracks();
+			}
+		}
+	} else if (LibraryTreeView *origin = qobject_cast<LibraryTreeView*>(event->source())) {
+		Playlist *target;
+		// Tracks were dropped on the (+) button
+		if (tab == this->count() - 1) {
+			target = tabPlaylist->addPlaylist();
+		} else {
+			target = tabPlaylist->playlist(tab);
+		}
+		origin->sendToPlaylist(target);
+	}
+}
+
+void TabBar::dragEnterEvent(QDragEnterEvent *event)
+ {
+	 if (event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+		 event->acceptProposedAction();
+	 }
+ }
 
 /** Redefined to display an editable area. */
 void TabBar::mouseDoubleClickEvent(QMouseEvent *event)

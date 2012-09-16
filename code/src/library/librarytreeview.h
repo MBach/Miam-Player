@@ -28,6 +28,8 @@ public:
 	/** Small function for translating the QMenu exclusively. */
 	void retranslateUi();
 
+	inline MusicSearchEngine * searchEngine() { return musicSearchEngine; }
+
 protected:
 	/** Redefined to display a small context menu in the view. */
 	void contextMenuEvent(QContextMenuEvent *event);

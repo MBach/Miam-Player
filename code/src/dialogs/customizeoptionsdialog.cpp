@@ -79,12 +79,29 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	// Fourth panel: playback
 	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
 	connect(radioButtonKeepPlaylists, SIGNAL(toggled(bool)), settings, SLOT(setPlaybackKeepPlaylists(bool)));
+	connect(radioButtonDDCopyPlaylistTracks, SIGNAL(toggled(bool)), settings, SLOT(setCopyTracksFromPlaylist(bool)));
 
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
 	if (settings->playbackKeepPlaylists()) {
 		radioButtonKeepPlaylists->setChecked(true);
 	} else {
 		radioButtonClearPlaylists->setChecked(true);
+	}
+
+	if (settings->copyTracksFromPlaylist()) {
+		radioButtonDDCopyPlaylistTracks->setChecked(true);
+	} else {
+		radioButtonDDMovePlaylistTracks->setChecked(true);
+	}
+
+	// Fifth panel: drag and drop
+	connect(radioButtonDDOpenPopup, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
+	connect(radioButtonDDAddToLibrary, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
+	connect(radioButtonDDAddToPlaylist, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
+
+	QRadioButton *radioButtonDD = this->findChild<QRadioButton*>(settings->dragAndDropBehaviour());
+	if (radioButtonDD) {
+		radioButtonDD->setChecked(true);
 	}
 
 	// Load the language of the application

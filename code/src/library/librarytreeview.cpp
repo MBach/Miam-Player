@@ -81,7 +81,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
 
 	// Context menu
-	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToCurrentPlaylist()));
+	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToPlaylist()));
 	connect(actionOpenTagEditor, SIGNAL(triggered()), this, SLOT(openTagEditor()));
 }
 
@@ -237,7 +237,7 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 
 void LibraryTreeView::sendSingleItemToPlaylist(const QModelIndex &/*index*/)
 {
-	sendToCurrentPlaylist();
+	sendToPlaylist();
 }
 
 /** Tell the view to create specific delegate for the current row. */
@@ -256,6 +256,7 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
+	qDebug() << "ici";
 }
 
 void LibraryTreeView::expandTreeView(const QModelIndex &index)

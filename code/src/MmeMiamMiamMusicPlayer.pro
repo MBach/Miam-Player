@@ -10,12 +10,14 @@ FORMS += \
     mainwindow.ui \
     playlistmanager.ui \
     tagconverter.ui \
-    tageditor.ui
+    tageditor.ui \
+    dragdroppopup.ui
 
 SOURCES += \
     dialogs/colordialog.cpp \
     dialogs/customizethemedialog.cpp \
     dialogs/customizeoptionsdialog.cpp \
+    dialogs/dragdropdialog.cpp \
     dialogs/playlistmanager.cpp \
     dialogs/reflector.cpp \
     dialogs/shortcutlineedit.cpp \
@@ -23,6 +25,7 @@ SOURCES += \
     dialogs/stylesheetupdater.cpp \
     filesystem/addressbar.cpp \
     filesystem/addressbarbutton.cpp \
+    filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
     library/libraryfilterlineedit.cpp \
     library/libraryfilterproxymodel.cpp \
@@ -46,13 +49,13 @@ SOURCES += \
     tabbar.cpp \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
-    treeview.cpp \
-    filesystem/addressbarmenu.cpp
+    treeview.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
     dialogs/customizethemedialog.h \
     dialogs/customizeoptionsdialog.h \
+    dialogs/dragdropdialog.h \
     dialogs/playlistmanager.h \
     dialogs/reflector.h \
     dialogs/shortcutlineedit.h \
@@ -60,6 +63,7 @@ HEADERS += \
     dialogs/stylesheetupdater.h \
     filesystem/addressbar.h \
     filesystem/addressbarbutton.h \
+    filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
     library/libraryfilterlineedit.h \
     library/libraryfilterproxymodel.h \
@@ -83,8 +87,7 @@ HEADERS += \
     tabbar.h \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
-    treeview.h \
-    filesystem/addressbarmenu.h
+    treeview.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

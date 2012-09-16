@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>680</width>
-    <height>532</height>
+    <height>642</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
       <enum>QListView::IconMode</enum>
      </property>
      <property name="currentRow">
-      <number>0</number>
+      <number>-1</number>
      </property>
      <item>
       <property name="text">
@@ -80,6 +80,15 @@
       <property name="icon">
        <iconset resource="mmmmp.qrc">
         <normaloff>:/config/music</normaloff>:/config/music</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Drag &amp; Drop</string>
+      </property>
+      <property name="icon">
+       <iconset resource="mmmmp.qrc">
+        <normaloff>:/icons/drop-arrow</normaloff>:/icons/drop-arrow</iconset>
       </property>
      </item>
     </widget>
@@ -485,8 +494,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>503</width>
-            <height>368</height>
+            <width>358</width>
+            <height>166</height>
            </rect>
           </property>
           <attribute name="label">
@@ -826,8 +835,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>503</width>
-            <height>368</height>
+            <width>362</width>
+            <height>268</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1482,8 +1491,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>503</width>
-            <height>368</height>
+            <width>384</width>
+            <height>216</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1902,8 +1911,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>503</width>
-            <height>368</height>
+            <width>462</width>
+            <height>124</height>
            </rect>
           </property>
           <attribute name="label">
@@ -2192,7 +2201,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <layout class="QHBoxLayout" name="horizontalLayoutKeepPlaylists">
             <item>
              <widget class="QRadioButton" name="radioButtonKeepPlaylists">
               <property name="text">
@@ -2217,6 +2226,123 @@
        </item>
        <item>
         <spacer name="vs_PlaybackPage">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_5">
+      <layout class="QVBoxLayout" name="verticalLayout_10">
+       <item>
+        <widget class="QGroupBox" name="groupBoxDDFromExternalPlaces">
+         <property name="title">
+          <string>Drag and drop from external places</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QLabel" name="labelDDFromOtherPlaces">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>What should I do when you're dropping here items from another application?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonDDOpenPopup">
+            <property name="text">
+             <string>Open a Popup and ask how to proceed</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonDDAddToLibrary">
+            <property name="text">
+             <string>Add folders to the library</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonDDAddToPlaylist">
+            <property name="text">
+             <string>Add folders to the current playlist</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelDDNoteTracks">
+            <property name="text">
+             <string>Note: tracks are automatically sent to the current playlist</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxDDBetweenPlaylists">
+         <property name="title">
+          <string>Drag and drop between two playlists</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_9">
+          <item>
+           <widget class="QLabel" name="labelDDBetweenPlaylists">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>What should I do when you're dragging tracks into another playlist?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="hl_DDCopyToAnotherPlaylist">
+            <item>
+             <widget class="QRadioButton" name="radioButtonDDMovePlaylistTracks">
+              <property name="text">
+               <string>Just move them</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonDDCopyPlaylistTracks">
+              <property name="text">
+               <string>Copy tracks in the new playlist</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>

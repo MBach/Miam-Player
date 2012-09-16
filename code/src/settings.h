@@ -106,6 +106,10 @@ public:
 	/// Stylesheet
 	QString styleSheet(QWidget *w) const;
 
+	bool copyTracksFromPlaylist() const { return value("copyTracksFromPlaylist").toBool(); }
+
+	QString dragAndDropBehaviour() const { return value("dragAndDropBehaviour").toString(); }
+
 signals:
 	void currentFontChanged();
 
@@ -161,6 +165,11 @@ public slots:
 
 	/// StyleSheets
 	void setCustomStyleSheet(QWidget *w);
+
+	void setCopyTracksFromPlaylist(bool b) { setValue("copyTracksFromPlaylist", b); }
+
+	void setDragAndDropBehaviour() { setValue("dragAndDropBehaviour", sender()->objectName()); }
+
 };
 
 #endif // SETTINGS_H

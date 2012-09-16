@@ -80,16 +80,9 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 				isNewTrack = false;
 				break;
 			} else {
-				qDebug() << "inserting:" << file;
+				//qDebug() << "inserting:" << file;
 				tracks.insert(file, parent);
 			}
-			/*QStringList previousTrack = tracks.key(parent);
-			if (previousTrack.contains(file)) {
-				isNewTrack = false;
-				break;
-			} else {
-				tracks.insertMulti(file, parent);
-			}*/
 		}
 	}
 

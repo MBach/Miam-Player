@@ -6,22 +6,32 @@
 #include <QFileInfo>
 #include <QMetaType>
 
+#include <QtDebug>
+
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 	QThread(parent)
 {
 	qRegisterMetaType<QFileInfo>("QFileInfo");
 }
 
-#include <QtDebug>
-
 void MusicSearchEngine::run()
 {
-	QList<QVariant> musicPaths = Settings::getInstance()->musicLocations();
+	if (savedLocations.isEmpty()) {
+		foreach (QVariant musicPath, Settings::getInstance()->musicLocations()) {
+			QDir location(musicPath.toString());
+			location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden);
+			savedLocations.append(location);
+		}
+	} else {
+		foreach (QDir d, savedLocations) {
+			qDebug() << d.absolutePath();
+		}
+	}
 	int fileNumber = 0;
-	for(int i=0; i<musicPaths.size(); i++) {
+	for(int i=0; i<savedLocations.size(); i++) {
 
 		// QDirIterator class is very fast to scan large directories
-		QDirIterator it(musicPaths.at(i).toString(), QDir::AllDirs | QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
+		QDirIterator it(savedLocations.at(i), QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			fileNumber++;
@@ -32,8 +42,9 @@ void MusicSearchEngine::run()
 	int percent = 1;
 	bool aCoverWasFound = false;
 	QString coverPath;
-	for(int i=0; i<musicPaths.size(); i++) {
-		QDirIterator it2(musicPaths.at(i).toString(), QDir::AllDirs | QDir::Files | QDir::Hidden, QDirIterator::Subdirectories);
+	/// FIXME : bug when iterating with |savedLocations| >1 : absolute file path are mixed with savedLocations
+	for(int i=0; i<savedLocations.size(); i++) {
+		QDirIterator it2(savedLocations.at(i), QDirIterator::Subdirectories);
 		while (it2.hasNext()) {
 			QFileInfo qFileInfo(it2.next());
 			currentFile++;
@@ -41,8 +52,8 @@ void MusicSearchEngine::run()
 				coverPath = qFileInfo.absoluteFilePath();
 				aCoverWasFound = true;
 			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
-				//qDebug() << qFileInfo.absoluteFilePath();
-				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(musicPaths.at(i).toString()));
+				qDebug() << qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath());
+				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath()));
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then
 				// we have to be sure that a we have found a cover before scanning a new directory
@@ -64,4 +75,10 @@ void MusicSearchEngine::run()
 			aCoverWasFound = false;
 		}
 	}
+}
+
+void MusicSearchEngine::setLocations(const QList<QDir> &locations)
+{
+	savedLocations = locations;
+	this->run();
 }

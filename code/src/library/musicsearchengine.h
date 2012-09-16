@@ -4,12 +4,20 @@
 #include <QFileInfo>
 #include <QThread>
 
+#include <QDir>
+
 class MusicSearchEngine : public QThread
 {
 	Q_OBJECT
 
+private:
+	QList<QDir> savedLocations;
+
 public:
 	MusicSearchEngine(QObject *parent = 0);
+
+public slots:
+	void setLocations(const QList<QDir> &locations);
 
 protected:
 	void run();

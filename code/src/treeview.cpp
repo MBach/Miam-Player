@@ -41,7 +41,7 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 	}
 
 	if (ret == QMessageBox::Ok) {
-		// Gather all items (pure virtual call reimplemented in subclasses)
+		// Gather all items (pure virtual call reimplemented function in subclasses)
 		foreach (QPersistentModelIndex index, selectedIndexes()) {
 			this->findAll(index, indexes);
 		}
@@ -49,12 +49,12 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 	return ret;
 }
 
-/** Send folders or tracks to the current playlist. */
-void TreeView::sendToCurrentPlaylist(int row)
+/** Send folders or tracks to a playlist. */
+void TreeView::sendToPlaylist(Playlist *playlist, int row)
 {
 	QMap<QString, QPersistentModelIndex> indexes;
 	if (this->beforeSending(tr("playlist"), indexes) == QMessageBox::Ok) {
-		emit sendToPlaylist(indexes.values(), row);
+		emit aboutToSendToPlaylist(indexes.values(), playlist, row);
 	}
 }
 

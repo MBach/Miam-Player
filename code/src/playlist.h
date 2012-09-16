@@ -23,13 +23,15 @@ private:
 
 	QMenu *trackProperties;
 
+	bool _selected;
+
 public:
 	Playlist(QWidget *parent = 0);
 
 	const QList<MediaSource> & tracks() { return sources; }
 
-	const int & activeTrack() const { return track; }
-	void setActiveTrack(int t) { track = t; }
+	inline const int & activeTrack() const { return track; }
+	inline void setActiveTrack(int t) { track = t; }
 
 	/** Clear the content of playlist. */
 	void clear();
@@ -40,26 +42,38 @@ public:
 	/** Retranslate header columns. */
 	void retranslateUi();
 
-	bool eventFilter(QObject *watched, QEvent *event);
-
 protected:
 	/** Redefined to display a small context menu in the view. */
 	void contextMenuEvent(QContextMenuEvent *event);
 
-	void mousePressEvent(QMouseEvent *event);
-
-	void resizeEvent(QResizeEvent *event);
-
-	void showEvent(QShowEvent *event);
-
 	void dropEvent(QDropEvent *event);
+
 	void dragEnterEvent(QDragEnterEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event);
+
+	void mousePressEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
 
 private:
 	/** Convert time in seconds into "mm:ss" format. */
 	QString convertTrackLength(int length);
 
 	void resizeColumns();
+
+public slots:
+	void countSelectedItems();
+
+	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
+	void highlightCurrentTrack();
+
+	/** Move the selected track downward. */
+	void moveTrackDown();
+
+	/** Move the selected track upward. */
+	void moveTrackUp();
+
+	/** Remove selected tracks from the playlist. */
+	void removeSelectedTracks();
 
 private slots:
 	/** Display a context menu with the state of all columns. */
@@ -73,21 +87,6 @@ private slots:
 
 signals:
 	void selectedTracks(int);
-
-public slots:
-	void countSelectedItems();
-
-	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
-	void highlightCurrentTrack();
-
-	/** Remove selected tracks from the playlist. */
-	void removeSelectedTracks();
-
-	/** Move the selected track upward. */
-	void moveTrackUp();
-
-	/** Move the selected track downward. */
-	void moveTrackDown();
 };
 
 #endif // PLAYLIST_H

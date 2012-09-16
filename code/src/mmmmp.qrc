@@ -12,6 +12,7 @@
         <file alias="left-arrow">config/left-arrow.png</file>
         <file alias="right-arrow">config/right-arrow.png</file>
         <file alias="mmmmp_osx">mmmmp.icns</file>
+        <file alias="drop-arrow">config/drop-arrow.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

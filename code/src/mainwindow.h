@@ -47,6 +47,10 @@ protected:
 
 	void closeEvent(QCloseEvent *event);
 
+	void dropEvent(QDropEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event);
+
 public slots:
 	void bindShortcut(const QString&, int keySequence);
 

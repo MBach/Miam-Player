@@ -5,6 +5,7 @@
 #include <QFileSystemModel>
 
 #include "mainwindow.h"
+#include "dialogs/dragdropdialog.h"
 #include "dialogs/customizethemedialog.h"
 #include "playlist.h"
 
@@ -19,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	setupUi(this);
 	Settings *settings = Settings::getInstance();
+
+	this->setAcceptDrops(true);
 
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
 	this->setStyleSheet(settings->styleSheet(this));
@@ -98,7 +101,7 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
-		connect(tab, SIGNAL(sendToPlaylist(QList<QPersistentModelIndex>, int)), tabPlaylists, SLOT(addItemsToPlaylist(QList<QPersistentModelIndex>, int)));
+		connect(tab, SIGNAL(aboutToSendToPlaylist(QList<QPersistentModelIndex>, Playlist*, int)), tabPlaylists, SLOT(addItemsToPlaylist(QList<QPersistentModelIndex>, Playlist*, int)));
 		connect(tab, SIGNAL(sendToTagEditor(QList<QPersistentModelIndex>)), tagEditor, SLOT(addItemsToEditor(QList<QPersistentModelIndex>)));
 	}
 
@@ -112,7 +115,7 @@ void MainWindow::setupActions()
 	// Rebuild the treeview when tracks have changed using the tag editor
 	connect(tagEditor, SIGNAL(rebuildTreeView(QList<QPersistentModelIndex>)), library, SLOT(rebuild(QList<QPersistentModelIndex>)));
 
-	// Link buttons
+	// Link media buttons
 	Settings *settings = Settings::getInstance();
 	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
 	connect(seekBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(seekBackward()));
@@ -167,6 +170,36 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 	Settings::getInstance()->sync();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+	DragDropDialog *dialog = new DragDropDialog(this);
+	dialog->setMimeData(event->mimeData());
+
+	QRadioButton *radioButtonDD = customizeOptionsDialog->findChild<QRadioButton*>(Settings::getInstance()->dragAndDropBehaviour());
+	if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToLibrary) {
+		// TODO
+	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToPlaylist) {
+		tabPlaylists->addExtFolders(dialog->externalLocations());
+	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDOpenPopup) {
+		dialog->show();
+	}
+
+	/// FIXME
+	//connect(dialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
+	//connect(dialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
+	connect(dialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+	event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *event)
+{
+	event->acceptProposedAction();
 }
 
 void MainWindow::bindShortcut(const QString &objectName, int keySequence)

@@ -5,19 +5,28 @@
 #include <QMouseEvent>
 #include <QTabBar>
 
+#include "playlist.h"
+#include "tabplaylist.h"
+
 class TabBar : public QTabBar
 {
 	Q_OBJECT
 private:
 	QLineEdit *lineEdit;
 
+	TabPlaylist *tabPlaylist;
+
 public:
-	TabBar(QWidget *parent = 0);
+	TabBar(TabPlaylist *parent);
 
 	/** Redefined to validate new tab name if the focus is lost. */
 	bool eventFilter(QObject *, QEvent *);
 
 protected:
+	void dropEvent(QDropEvent *event);
+
+	void dragEnterEvent(QDragEnterEvent *event);
+
 	/** Redefined to display an editable area. */
 	void mouseDoubleClickEvent(QMouseEvent *);
 

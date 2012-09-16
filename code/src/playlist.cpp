@@ -22,29 +22,30 @@ Playlist::Playlist(QWidget *parent) :
 	// Test: 0 = Fixed, n>0 = real ratio for each column
 	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
 
+	Settings *settings = Settings::getInstance();
+	// Init direct members
 	this->setAcceptDrops(true);
+	this->setAlternatingRowColors(settings->colorsAlternateBG());
 	this->setColumnCount(labels.size());
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
-	this->setShowGrid(false);
-	Settings *settings = Settings::getInstance();
-	this->setStyleSheet(settings->styleSheet(this));
-	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
-	this->setAlternatingRowColors(settings->colorsAlternateBG());
-
-	// Select only one row, not cell by cell
-	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	this->setSelectionBehavior(QAbstractItemView::SelectRows);
+	this->setDragEnabled(true);
+	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
-
-	verticalHeader()->setVisible(false);
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
+	// Select only one row, not cell by cell
+	this->setSelectionBehavior(QAbstractItemView::SelectRows);
+	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	this->setShowGrid(false);
+	this->setStyleSheet(settings->styleSheet(this));
+
+	// Init child members
+	verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
+	verticalHeader()->setVisible(false);
 	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setMovable(true);
-
-	this->installEventFilter(horizontalHeader());
 
 	// Context menu on header of columns
 	QList<QAction*> actionColumns;
@@ -74,7 +75,7 @@ Playlist::Playlist(QWidget *parent) :
 
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
-	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from current playlist"));
+	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
 	connect(removeFromCurrentPlaylist, SIGNAL(triggered()), this, SLOT(removeSelectedTracks()));
 
 	// Load columns state
@@ -108,25 +109,61 @@ void Playlist::countSelectedItems()
 	emit selectedTracks(selectionModel()->selectedRows().count());
 }
 
+#include <QUrl>
+
 void Playlist::dropEvent(QDropEvent *event)
 {
 	QWidget *source = event->source();
 	if (LibraryTreeView *view = qobject_cast<LibraryTreeView*>(source)) {
 		int row = this->indexAt(event->pos()).row();
-		view->sendToCurrentPlaylist(row-1);
+		view->sendToPlaylist(this, row-1);
+	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
+		if (currentPlaylist == this) {
+			//qDebug() << "internal move";
+			/// So, what?
+		}
+	} else {
+		const QMimeData *mimeData = event->mimeData();
+		if (mimeData->hasUrls()) {
+			QList<QUrl> urlList = mimeData->urls();
+			for (int i = 0; i < urlList.size() && i < 32; ++i) {
+				qDebug() << urlList.at(i);
+			}
+		}
+		event->ignore();
 	}
 }
-
-#include <QDragEnterEvent>
-#include <QMimeData>
 
 void Playlist::dragEnterEvent(QDragEnterEvent *event)
 {
-	if (event->mimeData()->hasFormat("application/x-color")) {
-		qDebug() << "dragEnterEvent";
+	// If the source of the drag and drop is another application
+	if (event->source() == NULL) {
+		event->ignore();
+	} else {
+		event->acceptProposedAction();
 	}
-	QTableWidget::dragEnterEvent(event);
 }
+
+void Playlist::dragMoveEvent(QDragMoveEvent *event)
+{
+	event->acceptProposedAction();
+}
+
+void Playlist::mousePressEvent(QMouseEvent *event)
+{
+	QModelIndex index = indexAt(event->pos());
+	_selected = selectionModel()->isSelected(index);
+	QTableWidget::mousePressEvent(event);
+}
+
+void Playlist::mouseMoveEvent(QMouseEvent *event)
+{
+	if (!_selected && state() == NoState) {
+		this->setState(DragSelectingState);
+	}
+	QTableWidget::mouseMoveEvent(event);
+}
+
 
 /** Clear the content of playlist. */
 void Playlist::clear()
@@ -218,7 +255,7 @@ void Playlist::append(const MediaSource &m, int row)
 		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
 		for (int i=0; i < widgetItems.length(); i++) {
 			QTableWidgetItem *item = widgetItems.at(i);
-			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
 			item->setFont(font);
 			setItem(currentRow, i, item);
 			QFontMetrics fm(font);
@@ -352,15 +389,6 @@ void Playlist::retranslateUi()
 	}
 }
 
-bool Playlist::eventFilter(QObject *watched, QEvent *event)
-{
-	QHeaderView *hv = qobject_cast<QHeaderView*>(watched);
-	if (hv) {
-		qDebug() << "ici" << event->type();
-	}
-	return QTableWidget::eventFilter(watched, event);
-}
-
 /** Redefined to display a small context menu in the view. */
 void Playlist::contextMenuEvent(QContextMenuEvent *event)
 {
@@ -369,23 +397,4 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 	if (item != NULL) {
 		trackProperties->exec(event->globalPos());
 	}
-}
-
-void Playlist::mousePressEvent(QMouseEvent *event)
-{
-	return QTableWidget::mousePressEvent(event);
-}
-
-
-void Playlist::resizeEvent(QResizeEvent *event)
-{
-	this->resizeColumns();
-	QTableWidget::resizeEvent(event);
-}
-
-
-void Playlist::showEvent(QShowEvent *event)
-{
-	this->resizeColumns();
-	QTableWidget::showEvent(event);
 }

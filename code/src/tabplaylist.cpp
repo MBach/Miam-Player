@@ -13,7 +13,8 @@
 TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent)
 {
-	this->setTabBar(new TabBar(this));
+	TabBar *tabBar = new TabBar(this);
+	this->setTabBar(tabBar);
 	this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
 	messageBox = new TracksNotFoundMessageBox(this);
@@ -51,10 +52,33 @@ void TabPlaylist::retranslateUi()
 	}
 }
 
-/** Add multiple tracks chosen by one from the library or the filesystem into the active playlist. */
-void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, int row)
+/** Add external folders (from a drag and drop) to the current playlist. */
+void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
-	bool isEmpty = currentPlayList()->tracks().isEmpty();
+	bool isEmpty = this->currentPlayList()->tracks().isEmpty();
+	foreach (QDir folder, folders) {
+		QDirIterator it(folder, QDirIterator::Subdirectories);
+		while (it.hasNext()) {
+			this->currentPlayList()->append(MediaSource(it.next()));
+		}
+	}
+	// Automatically plays the first track
+	if (isEmpty) {
+		this->skipForward();
+	}
+}
+
+/** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
+void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, Playlist *playlist, int row)
+{
+	// Select the playlist
+	if (playlist == NULL) {
+		playlist = this->currentPlayList();
+	} else {
+		this->setCurrentWidget(playlist);
+	}
+	bool isEmpty = playlist->tracks().isEmpty();
+	// Append tracks
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
 			MediaSource source(TreeView::absFilePath(index));
@@ -62,9 +86,9 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 				if (row != -1) {
 					row++;
 				}
-				currentPlayList()->append(source, row);
-				if (currentPlayList()->tracks().size() == 1) {
-					metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(0));
+				playlist->append(source, row);
+				if (playlist->tracks().size() == 1) {
+					metaInformationResolver->setCurrentSource(playlist->tracks().at(0));
 				}
 			}
 		}
@@ -81,7 +105,7 @@ void TabPlaylist::addItemToPlaylist(const QModelIndex &index)
 {
 	QList<QPersistentModelIndex> indexes;
 	indexes.append(index);
-	this->addItemsToPlaylist(indexes);
+	this->addItemsToPlaylist(indexes, currentPlayList());
 }
 
 /** Add a new playlist tab. */
