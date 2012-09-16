@@ -324,15 +324,10 @@ void Playlist::highlightCurrentTrack()
 /** Remove selected tracks from the playlist. */
 void Playlist::removeSelectedTracks()
 {
-	int r = -1;
-	QList<QTableWidgetItem *> items = this->selectedItems();
-	for (int i = items.size() - 1; i > 0; i--) {
-		QTableWidgetItem *item = items.at(i);
-		if (item) {
-			r = item->row();
-			sources.removeAt(r);
-			this->removeRow(r);
-		}
+	QModelIndexList indexes = this->selectionModel()->selectedRows();
+	for (int i = indexes.size() - 1; i >= 0; i--) {
+		sources.removeAt(indexes.at(i).row());
+		this->removeRow(indexes.at(i).row());
 	}
 }
 
