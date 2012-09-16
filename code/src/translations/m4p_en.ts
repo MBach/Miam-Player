@@ -213,6 +213,50 @@
         <source>Remove selected track(s)</source>
         <translation>Remove selected track(s)</translation>
     </message>
+    <message>
+        <source>Drag &amp; Drop</source>
+        <translation>Drag &amp; Drop</translation>
+    </message>
+    <message>
+        <source>Open a Popup and ask how to proceed</source>
+        <translation>Open a Popup and ask how to proceed</translation>
+    </message>
+    <message>
+        <source>Add folders to the library</source>
+        <translation>Add folders to the library</translation>
+    </message>
+    <message>
+        <source>Add folders to the current playlist</source>
+        <translation>Add folders to the current playlist</translation>
+    </message>
+    <message>
+        <source>Note: tracks are automatically sent to the current playlist</source>
+        <translation>Note: tracks are automatically sent to the current playlist</translation>
+    </message>
+    <message>
+        <source>Drag and drop between two playlists</source>
+        <translation>Drag and drop between two playlists</translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re dragging tracks into another playlist?</source>
+        <translation>What should I do when you&apos;re dragging tracks into another playlist?</translation>
+    </message>
+    <message>
+        <source>Just move them</source>
+        <translation>Just move them</translation>
+    </message>
+    <message>
+        <source>Copy tracks in the new playlist</source>
+        <translation>Copy tracks in the new playlist</translation>
+    </message>
+    <message>
+        <source>Drag and drop from external places</source>
+        <translation>Drag and drop from external places</translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re dropping here items from another application?</source>
+        <translation>What should I do when you&apos;re dropping here items from another application?</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -439,6 +483,29 @@
     <message>
         <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
         <translation>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</translation>
+    </message>
+</context>
+<context>
+    <name>DragDropDialog</name>
+    <message>
+        <source>Your attention is required</source>
+        <translation>Your attention is required</translation>
+    </message>
+    <message>
+        <source>What would you like to do with %1?</source>
+        <translation>What would you like to do with %1?</translation>
+    </message>
+    <message>
+        <source>Add to library</source>
+        <translation>Add to library</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation>Add to playlist</translation>
+    </message>
+    <message>
+        <source>Remember my choice in the future</source>
+        <translation>Remember my choice in the future</translation>
     </message>
 </context>
 <context>
@@ -674,6 +741,10 @@
     <message>
         <source>Year</source>
         <translation>Year</translation>
+    </message>
+    <message>
+        <source>Remove from playlist</source>
+        <translation>Remove from playlist</translation>
     </message>
 </context>
 <context>

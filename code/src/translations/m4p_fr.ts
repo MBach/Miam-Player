@@ -213,6 +213,50 @@
         <source>Remove selected track(s)</source>
         <translation>Retirer les pistes sélectionnées</translation>
     </message>
+    <message>
+        <source>Drag &amp; Drop</source>
+        <translation>Glisser-déposer</translation>
+    </message>
+    <message>
+        <source>Open a Popup and ask how to proceed</source>
+        <translation>Ouvrir une boîte de dialogue et demander comment procéder</translation>
+    </message>
+    <message>
+        <source>Add folders to the library</source>
+        <translation>Ajouter des dossiers à la bibliothèque</translation>
+    </message>
+    <message>
+        <source>Add folders to the current playlist</source>
+        <translation>Ajouter des dossiers à la liste de lecture courante</translation>
+    </message>
+    <message>
+        <source>Note: tracks are automatically sent to the current playlist</source>
+        <translation>Note : les pistes sont automatiquement ajoutées à la liste de lecture</translation>
+    </message>
+    <message>
+        <source>Drag and drop between two playlists</source>
+        <translation>Glisser-déposer entre deux listes de lecture</translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re dragging tracks into another playlist?</source>
+        <translation>Que devrais-je faire lorsque vous déplacez des pistes d&apos;une liste à une autre ?</translation>
+    </message>
+    <message>
+        <source>Just move them</source>
+        <translation>Les déplacer uniquement</translation>
+    </message>
+    <message>
+        <source>Copy tracks in the new playlist</source>
+        <translation>Copier les pistes dans la nouvelle liste de lecture</translation>
+    </message>
+    <message>
+        <source>Drag and drop from external places</source>
+        <translation>Glisser-déposer à partir d&apos;applications externes</translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re dropping here items from another application?</source>
+        <translation>Que devrais-je faire lorsque vous déposez ici des éléments provenant d&apos;une autre application ?</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -439,6 +483,29 @@
     <message>
         <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
         <translation>Cette option va filtrer les pronoms grammaticaux. Par exemple, &quot;The Beatles&quot; sera considéré comme &quot;Beatles, the&quot;</translation>
+    </message>
+</context>
+<context>
+    <name>DragDropDialog</name>
+    <message>
+        <source>Your attention is required</source>
+        <translation>Votre attention est requise</translation>
+    </message>
+    <message>
+        <source>What would you like to do with %1?</source>
+        <translation>Que souhaitez-vous faire de : %1 ?</translation>
+    </message>
+    <message>
+        <source>Add to library</source>
+        <translation>Ajouter à la bibliothèque</translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation>Ajouter à la liste de lecture</translation>
+    </message>
+    <message>
+        <source>Remember my choice in the future</source>
+        <translation>Se souvenir de mon choix à l&apos;avenir</translation>
     </message>
 </context>
 <context>
@@ -675,6 +742,10 @@
     <message>
         <source>Year</source>
         <translation>Année</translation>
+    </message>
+    <message>
+        <source>Remove from playlist</source>
+        <translation>Retirer de la liste de lecture</translation>
     </message>
 </context>
 <context>

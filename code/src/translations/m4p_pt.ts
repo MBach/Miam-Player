@@ -212,6 +212,50 @@
         <source>Remove selected track(s)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Drag &amp; Drop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open a Popup and ask how to proceed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add folders to the library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add folders to the current playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: tracks are automatically sent to the current playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drag and drop between two playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re dragging tracks into another playlist?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Just move them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy tracks in the new playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drag and drop from external places</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re dropping here items from another application?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -437,6 +481,29 @@
     </message>
     <message>
         <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DragDropDialog</name>
+    <message>
+        <source>Your attention is required</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What would you like to do with %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember my choice in the future</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -672,6 +739,10 @@
     </message>
     <message>
         <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove from playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
