@@ -79,7 +79,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	// Fourth panel: playback
 	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
 	connect(radioButtonKeepPlaylists, SIGNAL(toggled(bool)), settings, SLOT(setPlaybackKeepPlaylists(bool)));
-	connect(radioButtonDDCopyPlaylistTracks, SIGNAL(toggled(bool)), settings, SLOT(setCopyTracksFromPlaylist(bool)));
 
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
 	if (settings->playbackKeepPlaylists()) {
@@ -98,6 +97,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(radioButtonDDOpenPopup, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
 	connect(radioButtonDDAddToLibrary, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
 	connect(radioButtonDDAddToPlaylist, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
+	connect(radioButtonDDCopyPlaylistTracks, SIGNAL(toggled(bool)), settings, SLOT(setCopyTracksFromPlaylist(bool)));
 
 	QRadioButton *radioButtonDD = this->findChild<QRadioButton*>(settings->dragAndDropBehaviour());
 	if (radioButtonDD) {
