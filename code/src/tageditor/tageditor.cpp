@@ -5,6 +5,7 @@
 
 #include <tpropertymap.h>
 #include <MediaSource>
+#include <QDir>
 
 #include <QtDebug>
 
@@ -109,30 +110,36 @@ void TagEditor::commitChanges()
 		// A physical and unique file per row
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
 		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
-		QString absPath(itemPath->text() + '/' + itemFileName->text());
-		FileRef file(absPath.toStdString().data());
+		QString absPath(itemPath->text() + QDir::separator() + itemFileName->text());
+		FileRef file(QFile::encodeName(absPath).data());
 		FileHelper fh(file, itemFileName->data(LibraryItem::SUFFIX).toInt());
 		bool trackWasModified = false;
 		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
 
 			// Check for every field if we have any changes
 			QTableWidgetItem *item = tagEditorWidget->item(i, j);
-			if (item->data(TagEditorTableWidget::MODIFIED).toBool()) {
+
+			if (item && item->data(TagEditorTableWidget::MODIFIED).toBool()) {
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
-				PropertyMap pm = file.tag()->properties();
-				// The map doesn't always contains all keys, like ArtistAlbum (not standard)
-				if (pm.contains(key.toStdString())) {
-					bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
-					if (b) {
-						file.tag()->setProperties(pm);
-						if (file.tag()) {
-							trackWasModified = true;
+				if (file.tag()) {
+					PropertyMap pm = file.tag()->properties();
+
+					// The map doesn't always contains all keys, like ArtistAlbum (not standard)
+					if (pm.contains(key.toStdString())) {
+						bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
+						if (b) {
+							file.tag()->setProperties(pm);
+							if (file.tag()) {
+								trackWasModified = true;
+							}
 						}
+					} else {
+						trackWasModified = fh.insert(key, item->text());
 					}
 				} else {
-					trackWasModified = fh.insert(key, item->text());
+					qDebug() << "no valid tag for this file";
 				}
 			}
 		}

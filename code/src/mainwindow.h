@@ -6,6 +6,7 @@
 
 #include "ui_mainwindow.h"
 #include "dialogs/customizeoptionsdialog.h"
+#include "dialogs/dragdropdialog.h"
 #include "dialogs/playlistmanager.h"
 #include "library/librarytreeview.h"
 #include "settings.h"
@@ -30,6 +31,7 @@ private:
 	CustomizeThemeDialog *customizeThemeDialog;
 	CustomizeOptionsDialog *customizeOptionsDialog;
 	PlaylistManager *playlistManager;
+	DragDropDialog *dragDropDialog;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

@@ -104,121 +104,6 @@ Playlist::Playlist(QWidget *parent) :
 	connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(countSelectedItems()));
 }
 
-void Playlist::countSelectedItems()
-{
-	emit selectedTracks(selectionModel()->selectedRows().count());
-}
-
-#include <QUrl>
-
-void Playlist::dropEvent(QDropEvent *event)
-{
-	QWidget *source = event->source();
-	if (LibraryTreeView *view = qobject_cast<LibraryTreeView*>(source)) {
-		int row = this->indexAt(event->pos()).row();
-		view->sendToPlaylist(this, row-1);
-	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
-		if (currentPlaylist == this) {
-			//qDebug() << "internal move";
-			/// So, what?
-		}
-	} else {
-		const QMimeData *mimeData = event->mimeData();
-		if (mimeData->hasUrls()) {
-			QList<QUrl> urlList = mimeData->urls();
-			for (int i = 0; i < urlList.size() && i < 32; ++i) {
-				qDebug() << urlList.at(i);
-			}
-		}
-		event->ignore();
-	}
-}
-
-void Playlist::dragEnterEvent(QDragEnterEvent *event)
-{
-	// If the source of the drag and drop is another application
-	if (event->source() == NULL) {
-		event->ignore();
-	} else {
-		event->acceptProposedAction();
-	}
-}
-
-void Playlist::dragMoveEvent(QDragMoveEvent *event)
-{
-	event->acceptProposedAction();
-}
-
-void Playlist::mousePressEvent(QMouseEvent *event)
-{
-	QModelIndex index = indexAt(event->pos());
-	_selected = selectionModel()->isSelected(index);
-	QTableWidget::mousePressEvent(event);
-}
-
-void Playlist::mouseMoveEvent(QMouseEvent *event)
-{
-	if (!_selected && state() == NoState) {
-		this->setState(DragSelectingState);
-	}
-	QTableWidget::mouseMoveEvent(event);
-}
-
-
-/** Clear the content of playlist. */
-void Playlist::clear()
-{
-	// Iterate on the table and always remove the first item
-	while (rowCount() > 0) {
-		removeRow(0);
-	}
-	track = -1;
-	sources.clear();
-}
-
-/** Convert time in seconds into "mm:ss" format. */
-QString Playlist::convertTrackLength(int length)
-{
-	QTime time = QTime(0, 0).addSecs(length);
-	// QTime is not designed to handle minutes > 60
-	if (time.hour() > 0) {
-		return QString::number(time.hour()*60 + time.minute()).append(":").append(time.toString("ss"));
-	} else {
-		return time.toString("m:ss");
-	}
-}
-
-void Playlist::resizeColumns()
-{
-	int visibleRatio = 0;
-	int resizableArea = size().width() - 4;
-	if (verticalScrollBar()->isVisible()) {
-		resizableArea -= verticalScrollBar()->size().width();
-	}
-	// Resize fixed columns first, and then compute the remaining width
-	for (int c = 0; c < columnCount(); c++) {
-		if (!isColumnHidden(c)) {
-			int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
-			// Fixed column
-			if (ratio == 0) {
-				this->resizeColumnToContents(c);
-				resizableArea -= columnWidth(c) - 1;
-			}
-			visibleRatio += ratio;
-		}
-	}
-	for (int c = 0; c < columnCount(); c++) {
-		int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
-		// Resizable column
-		if (ratio != 0) {
-			int s = resizableArea * ratio / visibleRatio ;
-			if (!isColumnHidden(c)) {
-				this->setColumnWidth(c, s);
-			}
-		}
-	}
-}
-
 /** Add a track to this Playlist instance. */
 void Playlist::append(const MediaSource &m, int row)
 {
@@ -269,26 +154,127 @@ void Playlist::append(const MediaSource &m, int row)
 	}
 }
 
-/** Toggle the selected column from the context menu. */
-void Playlist::toggleSelectedColumn(QAction *action)
+/** Clear the content of playlist. */
+void Playlist::clear()
 {
-	int columnIndex = action->data().toInt();
-	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
-	this->resizeColumns();
-	this->saveColumnsState();
+	// Iterate on the table and always remove the first item
+	while (rowCount() > 0) {
+		removeRow(0);
+	}
+	track = -1;
+	sources.clear();
 }
 
-/** Display a context menu with the state of all columns. */
-void Playlist::showColumnsMenu(const QPoint &pos)
+/** Retranslate header columns. */
+void Playlist::retranslateUi()
 {
-	columns->exec(mapToGlobal(pos));
+	for (int i=0; i < columnCount(); i++) {
+		QTableWidgetItem *headerItem = horizontalHeaderItem(i);
+		const QString text = tr(headerItem->data(Qt::UserRole+1).toString().toStdString().data());
+		headerItem->setText(text);
+		columns->actions().at(i)->setText(text);
+	}
 }
 
-/** Save state when one checks or moves a column. */
-void Playlist::saveColumnsState(int /*logicalIndex*/, int /*oldVisualIndex*/, int /*newVisualIndex*/)
+/** Redefined to display a small context menu in the view. */
+void Playlist::contextMenuEvent(QContextMenuEvent *event)
 {
-	// The pair "playlistColumnsState" is only used in this class, so there's no need to create specific getter and setter
-	Settings::getInstance()->setValue("playlistColumnsState", horizontalHeader()->saveState());
+	QModelIndex index = this->indexAt(event->pos());
+	QTableWidgetItem *item = this->itemFromIndex(index);
+	if (item != NULL) {
+		trackProperties->exec(event->globalPos());
+	}
+}
+
+void Playlist::dragEnterEvent(QDragEnterEvent *event)
+{
+	// If the source of the drag and drop is another application
+	if (event->source() == NULL) {
+		event->ignore();
+	} else {
+		event->acceptProposedAction();
+	}
+}
+
+void Playlist::dragMoveEvent(QDragMoveEvent *event)
+{
+	event->acceptProposedAction();
+}
+
+void Playlist::dropEvent(QDropEvent *event)
+{
+	QWidget *source = event->source();
+	if (LibraryTreeView *view = qobject_cast<LibraryTreeView*>(source)) {
+		int row = this->indexAt(event->pos()).row();
+		view->sendToPlaylist(this, row-1);
+	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
+		if (currentPlaylist == this) {
+			qDebug() << "internal move";
+		}
+	}
+}
+
+void Playlist::mouseMoveEvent(QMouseEvent *event)
+{
+	if (!_selected && state() == NoState) {
+		this->setState(DragSelectingState);
+	}
+	QTableWidget::mouseMoveEvent(event);
+}
+
+void Playlist::mousePressEvent(QMouseEvent *event)
+{
+	QModelIndex index = indexAt(event->pos());
+	_selected = selectionModel()->isSelected(index);
+	QTableWidget::mousePressEvent(event);
+}
+
+/** Convert time in seconds into "mm:ss" format. */
+QString Playlist::convertTrackLength(int length)
+{
+	QTime time = QTime(0, 0).addSecs(length);
+	// QTime is not designed to handle minutes > 60
+	if (time.hour() > 0) {
+		return QString::number(time.hour()*60 + time.minute()).append(":").append(time.toString("ss"));
+	} else {
+		return time.toString("m:ss");
+	}
+}
+
+void Playlist::resizeColumns()
+{
+	int visibleRatio = 0;
+	int resizableArea = size().width() - 4;
+	if (verticalScrollBar()->isVisible()) {
+		resizableArea -= verticalScrollBar()->size().width();
+	}
+	// Resize fixed columns first, and then compute the remaining width
+	for (int c = 0; c < columnCount(); c++) {
+		if (!isColumnHidden(c)) {
+			int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
+			// Fixed column
+			if (ratio == 0) {
+				this->resizeColumnToContents(c);
+				resizableArea -= columnWidth(c) - 1;
+			}
+			visibleRatio += ratio;
+		}
+	}
+	for (int c = 0; c < columnCount(); c++) {
+		int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
+		// Resizable column
+		if (ratio != 0) {
+			int s = resizableArea * ratio / visibleRatio ;
+			if (!isColumnHidden(c)) {
+				this->setColumnWidth(c, s);
+			}
+		}
+	}
+}
+
+void Playlist::countSelectedItems()
+{
+	emit selectedTracks(selectionModel()->selectedRows().count());
 }
 
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
@@ -321,39 +307,30 @@ void Playlist::highlightCurrentTrack()
 	}
 }
 
-/** Remove selected tracks from the playlist. */
-void Playlist::removeSelectedTracks()
+/** Toggle the selected column from the context menu. */
+void Playlist::toggleSelectedColumn(QAction *action)
 {
-	QModelIndexList indexes = this->selectionModel()->selectedRows();
-	for (int i = indexes.size() - 1; i >= 0; i--) {
-		sources.removeAt(indexes.at(i).row());
-		this->removeRow(indexes.at(i).row());
-	}
+	int columnIndex = action->data().toInt();
+	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
+	this->resizeColumns();
+	this->saveColumnsState();
 }
 
-/** Move the selected track upward. */
-void Playlist::moveTrackUp()
+/** Display a context menu with the state of all columns. */
+void Playlist::showColumnsMenu(const QPoint &pos)
 {
-	if (currentItem()) {
-		int currentRow = currentItem()->row();
-		if (currentRow > 0) {
-			for (int c=0; c < columnCount(); c++) {
-				QTableWidgetItem *currentItem = takeItem(currentRow, c);
-				QTableWidgetItem *previousItem = takeItem(currentRow-1, c);
-				setItem(currentRow, c, previousItem);
-				setItem(currentRow-1, c, currentItem);
-			}
-			sources.swap(currentRow, currentRow-1);
-			setCurrentIndex(model()->index(currentRow-1, 0));
-			if (currentRow == track) {
-				track--;
-			}
-		}
-	}
+	columns->exec(mapToGlobal(pos));
 }
 
-/** Move the selected track downward. */
-void Playlist::moveTrackDown()
+/** Save state when one checks or moves a column. */
+void Playlist::saveColumnsState(int /*logicalIndex*/, int /*oldVisualIndex*/, int /*newVisualIndex*/)
+{
+	// The pair "playlistColumnsState" is only used in this class, so there's no need to create specific getter and setter
+	Settings::getInstance()->setValue("playlistColumnsState", horizontalHeader()->saveState());
+}
+
+/** Move selected tracks downward. */
+void Playlist::moveTracksDown()
 {
 	if (currentItem()) {
 		int currentRow = currentItem()->row();
@@ -373,23 +350,46 @@ void Playlist::moveTrackDown()
 	}
 }
 
-/** Retranslate header columns. */
-void Playlist::retranslateUi()
+/** Move selected tracks upward. */
+void Playlist::moveTracksUp()
 {
-	for (int i=0; i < columnCount(); i++) {
-		QTableWidgetItem *headerItem = horizontalHeaderItem(i);
-		const QString text = tr(headerItem->data(Qt::UserRole+1).toString().toStdString().data());
-		headerItem->setText(text);
-		columns->actions().at(i)->setText(text);
+	/*QList<QTableWidgetItem *> selection = selectedItems();
+	int prev = -1;
+	for (int i = selection.length() - 1; i >= 0; i--) {
+		int current = selection.at(i)->row();
+		if (current != prev) {
+			QTableWidgetItem *item = takeItem(current, 0);
+			QTableWidgetItem *itemBelow = takeItem(current+1, 0);
+			setItem(current, 0, itemBelow);
+			setItem(current+1, 0, item);
+			prev = current;
+		}
+	}*/
+	if (this->selectionModel()->hasSelection()) {
+		//this->selectionModel()->selectedRows(0);
+		int currentRow = currentItem()->row();
+		if (currentRow > 0) {
+			for (int c=0; c < columnCount(); c++) {
+				QTableWidgetItem *currentItem = takeItem(currentRow, c);
+				QTableWidgetItem *previousItem = takeItem(currentRow-1, c);
+				setItem(currentRow, c, previousItem);
+				setItem(currentRow-1, c, currentItem);
+			}
+			sources.swap(currentRow, currentRow-1);
+			setCurrentIndex(model()->index(currentRow-1, 0));
+			if (currentRow == track) {
+				track--;
+			}
+		}
 	}
 }
 
-/** Redefined to display a small context menu in the view. */
-void Playlist::contextMenuEvent(QContextMenuEvent *event)
+/** Remove selected tracks from the playlist. */
+void Playlist::removeSelectedTracks()
 {
-	QModelIndex index = this->indexAt(event->pos());
-	QTableWidgetItem *item = this->itemFromIndex(index);
-	if (item != NULL) {
-		trackProperties->exec(event->globalPos());
+	QModelIndexList indexes = this->selectionModel()->selectedRows();
+	for (int i = indexes.size() - 1; i >= 0; i--) {
+		sources.removeAt(indexes.at(i).row());
+		this->removeRow(indexes.at(i).row());
 	}
 }

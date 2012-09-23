@@ -33,11 +33,11 @@ public:
 	inline const int & activeTrack() const { return track; }
 	inline void setActiveTrack(int t) { track = t; }
 
-	/** Clear the content of playlist. */
-	void clear();
-
 	/** Add a track to this Playlist instance. */
 	void append(const MediaSource &m, int row = -1);
+
+	/** Clear the content of playlist. */
+	void clear();
 
 	/** Retranslate header columns. */
 	void retranslateUi();
@@ -46,13 +46,11 @@ protected:
 	/** Redefined to display a small context menu in the view. */
 	void contextMenuEvent(QContextMenuEvent *event);
 
-	void dropEvent(QDropEvent *event);
-
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dragMoveEvent(QDragMoveEvent *event);
-
-	void mousePressEvent(QMouseEvent *event);
+	void dropEvent(QDropEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
+	void mousePressEvent(QMouseEvent *event);
 
 private:
 	/** Convert time in seconds into "mm:ss" format. */
@@ -66,11 +64,11 @@ public slots:
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 	void highlightCurrentTrack();
 
-	/** Move the selected track downward. */
-	void moveTrackDown();
+	/** Move selected tracks downward. */
+	void moveTracksDown();
 
-	/** Move the selected track upward. */
-	void moveTrackUp();
+	/** Move selected tracks upward. */
+	void moveTracksUp();
 
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();

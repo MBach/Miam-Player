@@ -13,6 +13,7 @@ class DragDropDialog : public QDialog, public Ui::DragDropDialog
 	Q_OBJECT
 private:
 	QList<QDir> _externalLocations;
+	QString originalLabel;
 
 public:
 	explicit DragDropDialog(QWidget *parent = 0);
@@ -28,6 +29,8 @@ private slots:
 signals:
 	void aboutToAddExtFoldersToLibrary(const QList<QDir> &);
 	void aboutToAddExtFoldersToPlaylist(const QList<QDir> &);
+
+	void rememberDragDrop(QToolButton*);
 };
 
 #endif // DRAGDROPDIALOG_H

@@ -1,6 +1,7 @@
 #include "dragdropdialog.h"
 
 #include <QFileInfo>
+#include <QRadioButton>
 
 #include "settings.h"
 
@@ -13,6 +14,8 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 
 	connect(toolButtonLibrary, SIGNAL(clicked()), this, SLOT(addExternalFoldersToLibrary()));
 	connect(toolButtonPlaylist, SIGNAL(clicked()), this, SLOT(addExternalFoldersToPlaylist()));
+
+	originalLabel = labelHowToProceed->text();
 }
 
 void DragDropDialog::setMimeData(const QMimeData *mimeData)
@@ -22,6 +25,9 @@ void DragDropDialog::setMimeData(const QMimeData *mimeData)
 		QString newLabel;
 		int folders = 0;
 		int maxDisplayedInLabel = 3;
+
+		_externalLocations.clear();
+		labelHowToProceed->setText(originalLabel);
 
 		for (int i = 0; i < urlList.size(); i++) {
 			QFileInfo fileInfo = urlList.at(i).toLocalFile();
@@ -46,6 +52,9 @@ void DragDropDialog::setMimeData(const QMimeData *mimeData)
 
 void DragDropDialog::addExternalFoldersToLibrary()
 {
+	if (checkBoxRememberChoice->isChecked()) {
+		emit rememberDragDrop(toolButtonLibrary);
+	}
 	emit aboutToAddExtFoldersToLibrary(_externalLocations);
 	this->accept();
 }
@@ -53,9 +62,9 @@ void DragDropDialog::addExternalFoldersToLibrary()
 void DragDropDialog::addExternalFoldersToPlaylist()
 {
 	if (checkBoxRememberChoice->isChecked()) {
-		qDebug() << "remember my choice";
-		//Settings::getInstance()->setValue();
+		emit rememberDragDrop(toolButtonPlaylist);
 	}
+	qDebug() << _externalLocations.size();
 	emit aboutToAddExtFoldersToPlaylist(_externalLocations);
 	this->accept();
 }

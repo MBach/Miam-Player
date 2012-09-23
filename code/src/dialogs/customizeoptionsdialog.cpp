@@ -235,6 +235,15 @@ void CustomizeOptionsDialog::open()
 	QDialog::open();
 }
 
+void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButton)
+{
+	if (toolButton->objectName().toLower().contains("library")) {
+		radioButtonDDAddToLibrary->toggle();
+	} else {
+		radioButtonDDAddToPlaylist->toggle();
+	}
+}
+
 /** Open a dialog for letting the user to choose a music directory. */
 void CustomizeOptionsDialog::openLibraryDialog()
 {

@@ -2,6 +2,7 @@
 #define CUSTOMIZEOPTIONSDIALOG_H
 
 #include <QDialog>
+#include <QToolButton>
 #include <QTranslator>
 
 #include "ui_customizeoptionsdialog.h"
@@ -38,6 +39,8 @@ public slots:
 
 	/** Redefined to initialize theme from settings. */
 	void open();
+
+	void setExternalDragDropPreference(QToolButton *toolButton);
 
 private slots:
 	/** Open a dialog for letting the user to choose a music directory. */

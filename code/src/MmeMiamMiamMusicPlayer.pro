@@ -49,7 +49,8 @@ SOURCES += \
     tabbar.cpp \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
-    treeview.cpp
+    treeview.cpp \
+    playlistmodel.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -87,7 +88,8 @@ HEADERS += \
     tabbar.h \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
-    treeview.h
+    treeview.h \
+    playlistmodel.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

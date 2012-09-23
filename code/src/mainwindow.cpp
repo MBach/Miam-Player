@@ -5,7 +5,6 @@
 #include <QFileSystemModel>
 
 #include "mainwindow.h"
-#include "dialogs/dragdropdialog.h"
 #include "dialogs/customizethemedialog.h"
 #include "playlist.h"
 
@@ -62,9 +61,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Load playlists at startup if any, otherwise just add an empty one
 	tabPlaylists->restorePlaylists();
 
+	// Instantiate dialogs
 	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 	playlistManager = new PlaylistManager(tabPlaylists);
+	dragDropDialog = new DragDropDialog(this);
 
 	// Tag Editor
 	tagEditor->hide();
@@ -132,14 +133,21 @@ void MainWindow::setupActions()
 
 	// Playback
 	connect(actionRemoveSelectedTracks, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTracks()));
-	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackUp()));
-	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTrackDown()));
+	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTracksUp()));
+	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTracksDown()));
 	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
 
 	connect(tabPlaylists, SIGNAL(aboutToChangeMenuLabels(int)), this, SLOT(changeMenuLabels(int)));
 
 	connect(filesystem, SIGNAL(folderChanged(QString)), addressBar, SLOT(init(QString)));
 	connect(addressBar, SIGNAL(pathChanged(QString)), filesystem, SLOT(reloadWithNewPath(QString)));
+
+	// Drag & Drop actions
+	connect(dragDropDialog, SIGNAL(rememberDragDrop(QToolButton*)), customizeOptionsDialog, SLOT(setExternalDragDropPreference(QToolButton*)));
+	/// FIXME
+	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
+	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
+	connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -174,22 +182,20 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-	DragDropDialog *dialog = new DragDropDialog(this);
-	dialog->setMimeData(event->mimeData());
+	// Ignore Drag & Drop if the source is a part of this player
+	if (event->source() != NULL) {
+		return;
+	}
+	dragDropDialog->setMimeData(event->mimeData());
 
 	QRadioButton *radioButtonDD = customizeOptionsDialog->findChild<QRadioButton*>(Settings::getInstance()->dragAndDropBehaviour());
 	if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToLibrary) {
 		// TODO
 	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToPlaylist) {
-		tabPlaylists->addExtFolders(dialog->externalLocations());
+		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
 	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDOpenPopup) {
-		dialog->show();
+		dragDropDialog->show();
 	}
-
-	/// FIXME
-	//connect(dialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
-	//connect(dialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
-	connect(dialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
