@@ -18,7 +18,7 @@ private:
 	LibraryModel *libraryModel;
 	LibraryFilterProxyModel *proxyModel;
 	CircleProgressBar *circleProgressBar;
-	MusicSearchEngine *musicSearchEngine;
+	MusicSearchEngine musicSearchEngine;
 	QPoint currentPos;
 	QMenu *properties;
 
@@ -28,7 +28,7 @@ public:
 	/** Small function for translating the QMenu exclusively. */
 	void retranslateUi();
 
-	inline MusicSearchEngine * searchEngine() { return musicSearchEngine; }
+	//inline MusicSearchEngine * searchEngine() { return musicSearchEngine; }
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -77,6 +77,8 @@ signals:
 
 	/** When covers are enabled, changes their size. */
 	void sizeOfCoversChanged(int);
+
+	void searchMusic();
 };
 
 #endif // LIBRARYTREEVIEW_H

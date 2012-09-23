@@ -1,6 +1,7 @@
 #include "tabbar.h"
 #include "settings.h"
 #include "playlist.h"
+#include "treeview.h"
 
 #include <QtDebug>
 
@@ -38,15 +39,10 @@ bool TabBar::eventFilter(QObject *obj, QEvent *event)
 	return false;
 }
 
-#include "library/librarytreeview.h"
-
-#include <QCoreApplication>
-
 void TabBar::dropEvent(QDropEvent *event)
 {
 	int tab = this->tabAt(event->pos());
 	if (Playlist *origin = qobject_cast<Playlist*>(event->source())) {
-
 		if (tab == this->currentIndex()) {
 			/// What to do when it's the same tab? Currently: nothing
 			/// XXX: It would be great to dynamically disable the drop indicator for the current playlist
@@ -69,7 +65,7 @@ void TabBar::dropEvent(QDropEvent *event)
 				origin->removeSelectedTracks();
 			}
 		}
-	} else if (LibraryTreeView *origin = qobject_cast<LibraryTreeView*>(event->source())) {
+	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
 		Playlist *target;
 		// Tracks were dropped on the (+) button
 		if (tab == this->count() - 1) {
@@ -82,11 +78,22 @@ void TabBar::dropEvent(QDropEvent *event)
 }
 
 void TabBar::dragEnterEvent(QDragEnterEvent *event)
- {
-	 if (event->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
-		 event->acceptProposedAction();
-	 }
- }
+{
+	if (!event->source()) {
+		event->ignore();
+	} else {
+		event->acceptProposedAction();
+	}
+}
+
+void TabBar::dragMoveEvent(QDragMoveEvent *event)
+{
+	if (!event->source()) {
+		event->ignore();
+	} else {
+		event->acceptProposedAction();
+	}
+}
 
 /** Redefined to display an editable area. */
 void TabBar::mouseDoubleClickEvent(QMouseEvent *event)

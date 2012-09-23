@@ -27,6 +27,8 @@ protected:
 
 	void dragEnterEvent(QDragEnterEvent *event);
 
+	void dragMoveEvent(QDragMoveEvent *event);
+
 	/** Redefined to display an editable area. */
 	void mouseDoubleClickEvent(QMouseEvent *);
 

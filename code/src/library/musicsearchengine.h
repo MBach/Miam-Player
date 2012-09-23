@@ -6,7 +6,8 @@
 
 #include <QDir>
 
-class MusicSearchEngine : public QThread
+/*class MusicSearchEngine : public QThread*/
+class MusicSearchEngine : public QObject
 {
 	Q_OBJECT
 
@@ -20,7 +21,10 @@ public slots:
 	void setLocations(const QList<QDir> &locations);
 
 protected:
-	void run();
+	//void run();
+
+public slots:
+	void doSearch();
 
 signals:
 	void scannedCover(const QString &);
@@ -29,8 +33,7 @@ signals:
 
 	void progressChanged(const int &);
 
-public slots:
-
+	void endSearch();
 };
 
 #endif // MUSICSEARCHENGINE_H

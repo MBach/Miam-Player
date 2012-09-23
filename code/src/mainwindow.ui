@@ -68,6 +68,9 @@
            <property name="editTriggers">
             <set>QAbstractItemView::NoEditTriggers</set>
            </property>
+           <property name="dragEnabled">
+            <bool>true</bool>
+           </property>
            <property name="dragDropMode">
             <enum>QAbstractItemView::DragOnly</enum>
            </property>
@@ -140,6 +143,12 @@
           <widget class="FileSystemTreeView" name="filesystem">
            <property name="styleSheet">
             <string notr="true">margin: -1px;</string>
+           </property>
+           <property name="dragEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="dragDropMode">
+            <enum>QAbstractItemView::DragOnly</enum>
            </property>
           </widget>
          </item>

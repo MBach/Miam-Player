@@ -9,12 +9,12 @@
 #include <QtDebug>
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-	QThread(parent)
+	QObject(parent)
 {
 	qRegisterMetaType<QFileInfo>("QFileInfo");
 }
 
-void MusicSearchEngine::run()
+void MusicSearchEngine::doSearch()
 {
 	if (savedLocations.isEmpty()) {
 		foreach (QVariant musicPath, Settings::getInstance()->musicLocations()) {
@@ -52,7 +52,7 @@ void MusicSearchEngine::run()
 				coverPath = qFileInfo.absoluteFilePath();
 				aCoverWasFound = true;
 			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
-				qDebug() << qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath());
+				//qDebug() << qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath());
 				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath()));
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then
@@ -75,10 +75,11 @@ void MusicSearchEngine::run()
 			aCoverWasFound = false;
 		}
 	}
+	emit endSearch();
 }
 
 void MusicSearchEngine::setLocations(const QList<QDir> &locations)
 {
 	savedLocations = locations;
-	this->run();
+	//this->run();
 }
