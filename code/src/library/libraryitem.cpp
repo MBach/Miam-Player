@@ -8,16 +8,9 @@
 #include <QtDebug>
 
 LibraryItem::LibraryItem(const QString &text, int type) :
-	QStandardItem(text), libraryItemDelegate(0)
+	QStandardItem(text)
 {
 	setData(type, SUFFIX);
-}
-
-LibraryItem::~LibraryItem()
-{
-	if (libraryItemDelegate) {
-		delete libraryItemDelegate;
-	}
 }
 
 /** Redefined for custom types (greater than Qt::UserRole). */

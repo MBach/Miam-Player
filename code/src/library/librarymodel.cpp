@@ -28,7 +28,7 @@ void LibraryModel::clear()
 /** Artist? */
 LibraryItem* LibraryModel::hasArtist(const QString &artist) const
 {
-	return artists.value(artist);
+	return artists.value(artist.toLower());
 }
 
 /** Album? */
@@ -44,9 +44,8 @@ LibraryItem* LibraryModel::insertArtist(const QString &artist)
 	LibraryItem *itemArtist = new LibraryItem(artist);
 	itemArtist->setFilePath(artist);
 	itemArtist->setMediaType(ARTIST);
-	artists.insert(artist, itemArtist);
+	artists.insert(artist.toLower(), itemArtist);
 	this->appendRow(itemArtist);
-	emit associateNodeWithDelegate(itemArtist);
 	return itemArtist;
 }
 
@@ -59,7 +58,6 @@ LibraryItem* LibraryModel::insertAlbum(const QString &album, const QString &path
 	itemAlbum->setMediaType(ALBUM);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
 	albums.insert(QPair<LibraryItem *, QString>(parentArtist, album), itemAlbum);
-	emit associateNodeWithDelegate(itemAlbum);
 	return itemAlbum;
 }
 
@@ -99,7 +97,6 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
 		parent->setChild(parent->rowCount(), itemTitle);
-		emit associateNodeWithDelegate(itemTitle);
 	}
 }
 
@@ -134,7 +131,6 @@ void LibraryModel::makeSeparators()
 			if (!alphabeticalSeparators.contains(letter)) {
 				LibraryItem *separator = new LibraryItem(letter);
 				separator->setMediaType(LETTER);
-				separator->setDelegate(new LibraryItemDelegate(this));
 				alphabeticalSeparators.insert(letter, separator);
 			}
 		}
@@ -323,11 +319,6 @@ void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 			LibraryItem *node = new LibraryItem();
 			node->read(in);
 			parent->appendRow(node);
-
-			// Tell the view that a new node was created, and needs to be associated with its delegate
-			//if (node->type() != LibraryModel::LETTER) {
-			emit associateNodeWithDelegate(node);
-			//}
 
 			// Then load nodes recursively
 			this->loadNode(in, node);

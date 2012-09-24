@@ -34,13 +34,18 @@ LibraryItemDelegate::~LibraryItemDelegate()
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
+	/// FIXME: when creating star editor, do a big code review
+	/*if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
 
 		StarRating starRating = qVariantValue<StarRating>(index.data(LibraryItem::STAR_RATING));
 
 		int titleRectWidth = option.rect.width();
 		//int starsRectWidth = starRating.starCount() * 16;
-		titleRect->setRect(option.rect.x(), option.rect.y(), titleRectWidth, option.rect.height());
+		const QStandardItemModel *m = qobject_cast<const QStandardItemModel *>(index.model());
+		QStandardItem *item = m->itemFromIndex(index);
+		QFontMetrics fm(item->font());
+		qDebug() << fm.height();
+		titleRect->setRect(option.rect.x(), option.rect.y(), titleRectWidth, fm.height());
 		//starsRect->setRect(option.rect.x()+option.rect.width()/2, option.rect.y(), starsRectWidth, option.rect.height());
 
 		QStyleOptionViewItemV4 textViewItem(option);
@@ -77,7 +82,8 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 			}
 			painter->restore();
 		}
-	} else if (index.data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::LETTER) {
+	} else*/
+	if (index.data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::LETTER) {
 		QStyleOptionViewItemV4 o = option;
 		o.state = QStyle::State_None;
 		o.font.setBold(true);

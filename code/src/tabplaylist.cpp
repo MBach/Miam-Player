@@ -114,7 +114,7 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 	// Get the next label for the playlist
 	QString newPlaylistName;
 	if (playlistName.isEmpty()) {
-		newPlaylistName = QString(tr("Playlist ")).append(QString::number(count()));
+		newPlaylistName = tr("Playlist ").append(QString::number(count()));
 	} else {
 		newPlaylistName = playlistName;
 	}

@@ -30,6 +30,8 @@ public:
 
 	//inline MusicSearchEngine * searchEngine() { return musicSearchEngine; }
 
+	QSize sizeInt() const;
+
 protected:
 	/** Redefined to display a small context menu in the view. */
 	void contextMenuEvent(QContextMenuEvent *event);
@@ -60,9 +62,6 @@ public slots:
 	void sendSingleItemToPlaylist(const QModelIndex &/*index*/);
 
 private slots:
-	/** Tell the view to create specific delegate for the current row. */
-	void addNodeToTree(LibraryItem *libraryItem);
-
 	void endPopulateTree();
 
 	//test

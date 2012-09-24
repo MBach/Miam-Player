@@ -29,6 +29,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
+	this->setItemDelegate(new LibraryItemDelegate(this));
 
 	//QHBoxLayout *vLayout = new QHBoxLayout();
 	//this->setLayout(vLayout);
@@ -71,13 +72,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(&musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
 	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
 
-	// Tell the view to create specific delegate for the current row
-	connect(libraryModel, SIGNAL(associateNodeWithDelegate(LibraryItem*)), this, SLOT(addNodeToTree(LibraryItem*)));
-
 	connect(this, SIGNAL(sizeOfCoversChanged(int)), this, SLOT(setCoverSize(int)));
-
-	// TEST : this widget is not repainted when font is changing, only when closing the Dialog :(
-	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(repaint()));
+	connect(settings, SIGNAL(currentFontChanged()), libraryModel, SIGNAL(layoutChanged()));
 
 	// When the scan is complete, save the model in the filesystem
 	connect(&musicSearchEngine, SIGNAL(endSearch()), libraryModel, SLOT(saveToFile()));
@@ -96,6 +92,11 @@ void LibraryTreeView::retranslateUi()
 	foreach (QAction *action, properties->actions()) {
 		action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data(), 0, QApplication::UnicodeUTF8));
 	}
+}
+
+QSize LibraryTreeView::sizeInt() const
+{
+	return QSize();
 }
 
 
@@ -127,7 +128,7 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 /** Recursive count for leaves only. */
 int LibraryTreeView::count(const QModelIndex &index) const
 {
-	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
+	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
 		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
@@ -153,7 +154,7 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 /** Reimplemented. */
 void LibraryTreeView::findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes)
 {
-	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegateForRow(index.row()));
+	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
 		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
@@ -245,14 +246,6 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 void LibraryTreeView::sendSingleItemToPlaylist(const QModelIndex &/*index*/)
 {
 	sendToPlaylist();
-}
-
-/** Tell the view to create specific delegate for the current row. */
-void LibraryTreeView::addNodeToTree(LibraryItem *libraryItem)
-{
-	LibraryItemDelegate *libraryItemDelegate = new LibraryItemDelegate(this);
-	libraryItem->setDelegate(libraryItemDelegate);
-	setItemDelegateForRow(libraryItem->row(), libraryItemDelegate);
 }
 
 void LibraryTreeView::endPopulateTree()
