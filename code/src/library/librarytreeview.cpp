@@ -17,7 +17,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 {
 	libraryModel = new LibraryModel(this);
 	proxyModel = new LibraryFilterProxyModel(this);
-	proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 	proxyModel->setSourceModel(libraryModel);
 
 	Settings *settings = Settings::getInstance();
@@ -30,6 +29,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
 	this->setItemDelegate(new LibraryItemDelegate(this));
+
+	//QHeaderView *hv = this->header();
+	//qDebug() << hv->count();
 
 	//QHBoxLayout *vLayout = new QHBoxLayout();
 	//this->setLayout(vLayout);
@@ -48,11 +50,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
 
-	QThread *thread = new QThread(this);
-	musicSearchEngine.moveToThread(thread);
-	thread->start();
-
-	connect(this, SIGNAL(searchMusic()), &musicSearchEngine, SLOT(doSearch()));
+	musicSearchEngine = new MusicSearchEngine();
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	//QAction *actionOpenStarEditor = new QAction(tr("Ratings: *****"), this);
@@ -64,19 +62,19 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(sendSingleItemToPlaylist(const QModelIndex &)));
-	connect(&musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
-	connect(&musicSearchEngine, SIGNAL(scannedFile(int, QString)), libraryModel, SLOT(readFile(int, QString)));
-	connect(&musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
+	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
+	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), libraryModel, SLOT(readFile(int, QString)));
+	connect(musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(&musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
+	connect(musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
 	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
 
 	connect(this, SIGNAL(sizeOfCoversChanged(int)), this, SLOT(setCoverSize(int)));
 	connect(settings, SIGNAL(currentFontChanged()), libraryModel, SIGNAL(layoutChanged()));
 
 	// When the scan is complete, save the model in the filesystem
-	connect(&musicSearchEngine, SIGNAL(endSearch()), libraryModel, SLOT(saveToFile()));
+	connect(musicSearchEngine, SIGNAL(endSearch()), libraryModel, SLOT(saveToFile()));
 
 	// Load covers only when an item need to be expanded
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
@@ -187,7 +185,8 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 	this->reset();
 	if (musicLocationHasChanged) {
 
-		emit searchMusic();
+		//emit searchMusic();
+		musicSearchEngine->doSearch();
 
 	} else {
 		if (QFile::exists("library.mmmmp")) {

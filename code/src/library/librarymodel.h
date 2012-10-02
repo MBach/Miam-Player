@@ -62,6 +62,8 @@ public:
 
 	void removeNode(const QModelIndex &index);
 
+	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */
 	void loadNode(QDataStream &in, LibraryItem *parent);

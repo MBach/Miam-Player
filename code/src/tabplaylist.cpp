@@ -55,11 +55,12 @@ void TabPlaylist::retranslateUi()
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
-	bool isEmpty = this->currentPlayList()->tracks().isEmpty();
+	//bool isEmpty = this->currentPlayList()->playlistModel()->tracks().isEmpty();
+	bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
-			this->currentPlayList()->append(MediaSource(it.next()));
+			this->currentPlayList()->playlistModel()->append(MediaSource(it.next()));
 		}
 	}
 	// Automatically plays the first track
@@ -77,7 +78,7 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 	} else {
 		this->setCurrentWidget(playlist);
 	}
-	bool isEmpty = playlist->tracks().isEmpty();
+	bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
 	// Append tracks
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
@@ -86,9 +87,9 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 				if (row != -1) {
 					row++;
 				}
-				playlist->append(source, row);
-				if (playlist->tracks().size() == 1) {
-					metaInformationResolver->setCurrentSource(playlist->tracks().at(0));
+				playlist->playlistModel()->append(source, row);
+				if (this->currentPlayList()->playlistModel()->rowCount() == 1) {
+					metaInformationResolver->setCurrentSource(playlist->track(0));
 				}
 			}
 		}
@@ -121,6 +122,7 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 
 	// Then append a new empty playlist to the others
 	Playlist *p = new Playlist(this);
+	p->init();
 	int i = insertTab(count(), p, newPlaylistName);
 
 	// If there's a custom stylesheet on the playlist, copy it from the previous one
@@ -139,15 +141,15 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 }
 
 /** When the user is double clicking on a track in a playlist. */
-void TabPlaylist::changeTrack(QTableWidgetItem *item, bool autoscroll)
+void TabPlaylist::changeTrack(const QModelIndex &item, bool autoscroll)
 {
-	MediaSource media = currentPlayList()->tracks().at(item->row());
-	currentPlayList()->setActiveTrack(item->row());
+	MediaSource media = currentPlayList()->track(item.row());
+	currentPlayList()->playlistModel()->setActiveTrack(item.row());
 	mediaObject->setCurrentSource(media);
 	currentPlayList()->highlightCurrentTrack();
 	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
 	if (autoscroll) {
-		currentPlayList()->scrollToItem(item, QAbstractItemView::PositionAtCenter);
+		currentPlayList()->scrollTo(item, QAbstractItemView::PositionAtCenter);
 	}
 	mediaObject->play();
 }
@@ -186,7 +188,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		emit destroyed(index);
 	} else {
 		// Clear the content of last tab
-		currentPlayList()->clear();
+		currentPlayList()->playlistModel()->clear();
 	}
 }
 
@@ -210,7 +212,7 @@ void TabPlaylist::restorePlaylists()
 					// Check if the file is still on the disk before appending
 					QString track = vTrack.toString();
 					if (QFile::exists(track)) {
-						p->append(MediaSource(track));
+						p->playlistModel()->append(MediaSource(track));
 					} else {
 						tracksNotFound << track;
 					}
@@ -257,10 +259,10 @@ void TabPlaylist::seekForward()
 /** Change the current track to the previous one. */
 void TabPlaylist::skipBackward()
 {
-	int activeTrack = currentPlayList()->activeTrack();
+	int activeTrack = currentPlayList()->playlistModel()->activeTrack();
 	if (activeTrack-- > 0) {
-		QTableWidgetItem *item = currentPlayList()->item(activeTrack, 1);
-		this->changeTrack(item, true);
+		QStandardItem *item = currentPlayList()->playlistModel()->item(activeTrack, 1);
+		this->changeTrack(item->index(), true);
 	}
 }
 
@@ -268,14 +270,15 @@ void TabPlaylist::skipBackward()
 void TabPlaylist::skipForward()
 {
 	int next;
-	if (Settings::getInstance()->repeatPlayBack() && currentPlayList()->activeTrack() == currentPlayList()->tracks().size()-1) {
+	if (Settings::getInstance()->repeatPlayBack() &&
+			currentPlayList()->playlistModel()->activeTrack() == this->currentPlayList()->playlistModel()->rowCount() - 1) {
 		next = -1;
 	} else {
-		next = currentPlayList()->activeTrack();
+		next = currentPlayList()->playlistModel()->activeTrack();
 	}
-	if (++next < currentPlayList()->tracks().size()) {
-		QTableWidgetItem *item = currentPlayList()->item(next, 1);
-		this->changeTrack(item, true);
+	if (++next < currentPlayList()->playlistModel()->rowCount()) {
+		QStandardItem *item = currentPlayList()->playlistModel()->item(next, 1);
+		this->changeTrack(item->index(), true);
 	}
 }
 
@@ -288,7 +291,12 @@ void TabPlaylist::savePlaylists()
 		// Iterate on all playlists, except empty ones and the last one (the (+) button)
 		for (int i = 0; i < count() - 1; i++) {
 			Playlist *p = playlist(i);
-			QListIterator<MediaSource> tracks(p->tracks());
+			QList<MediaSource> t;
+			for (int j = 0; j < p->playlistModel()->rowCount(); j++) {
+				t.append(p->track(j));
+			}
+			//QListIterator<MediaSource> tracks(p->playlistModel()->tracks());
+			QListIterator<MediaSource> tracks(t);
 			QList<QVariant> vTracks;
 			while (tracks.hasNext()) {
 				vTracks.append(tracks.next().fileName());
@@ -335,7 +343,7 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 	case StoppedState:
 		if (oldState == LoadingState) {
 			// Play media only if one has not removed the playlist meanwhile, otherwise,  playlist
-			if (currentPlayList() && currentPlayList()->tracks().isEmpty()) {
+			if (currentPlayList() && currentPlayList()->playlistModel()->rowCount() == 0) {
 				/// todo clear mediaObject!
 			} else {
 				mediaObject->play();
@@ -365,14 +373,14 @@ void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
 		return;
 	}
 
-	if (currentPlayList()->selectedItems().isEmpty()) {
+	if (!currentPlayList()->selectionModel()->hasSelection()) {
 		currentPlayList()->selectRow(0);
 		mediaObject->setCurrentSource(metaInformationResolver->currentSource());
 	}
 
 	/// TODO: code review
-	int index = currentPlayList()->activeTrack();
-	if (currentPlayList()->tracks().size() > index) {
+	int index = currentPlayList()->playlistModel()->activeTrack();
+	if (currentPlayList()->playlistModel()->rowCount() > index) {
 		//metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(index));
 	} else {
 		currentPlayList()->resizeColumnsToContents();

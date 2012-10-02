@@ -265,7 +265,7 @@ void MainWindow::changeMenuLabels(int itemCount)
 /** These buttons switch the play function with the pause function because they are mutually exclusive. */
 void MainWindow::playAndPause()
 {
-	if (!tabPlaylists->currentPlayList()->tracks().isEmpty()) {
+	if (!tabPlaylists->currentPlayList()->playlistModel()->rowCount() == 0) {
 		if (tabPlaylists->media()->state() == PlayingState) {
 			tabPlaylists->media()->pause();
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);

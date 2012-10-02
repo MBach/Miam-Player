@@ -4,43 +4,39 @@
 #include <phonon>
 
 #include <QMenu>
-#include <QTableWidget>
+#include <QTableView>
+
+#include "playlistmodel.h"
 
 using namespace Phonon;
 
-class Playlist : public QTableWidget
+class Playlist : public QTableView
 {
 	Q_OBJECT
 
 private:
-	/** List of tracks to play. */
-	QList<MediaSource> sources;
-
-	/** The current playing track. */
-	int track;
-
 	QMenu *columns;
-
 	QMenu *trackProperties;
 
 	bool _selected;
 
+	PlaylistModel *_playlistModel;
+
 public:
 	Playlist(QWidget *parent = 0);
 
-	const QList<MediaSource> & tracks() { return sources; }
+	MediaSource track(int i) {
+		//return _playlistModel->tracks().at(i);
+		QStandardItem *item = this->playlistModel()->item(i);
+		return MediaSource(item->data().toString());
+	}
 
-	inline const int & activeTrack() const { return track; }
-	inline void setActiveTrack(int t) { track = t; }
-
-	/** Add a track to this Playlist instance. */
-	void append(const MediaSource &m, int row = -1);
-
-	/** Clear the content of playlist. */
-	void clear();
+	PlaylistModel *playlistModel() { return _playlistModel; }
 
 	/** Retranslate header columns. */
 	void retranslateUi();
+
+	void init();
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -52,28 +48,28 @@ protected:
 	void mouseMoveEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 
-private:
-	/** Convert time in seconds into "mm:ss" format. */
-	QString convertTrackLength(int length);
-
-	void resizeColumns();
+	void resizeEvent(QResizeEvent *event);
 
 public slots:
-	void countSelectedItems();
+	void countSelectedItems(const QItemSelection &, const QItemSelection &);
 
-	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
-	void highlightCurrentTrack();
+	void countSelectedItems();
 
 	/** Move selected tracks downward. */
 	void moveTracksDown();
 
 	/** Move selected tracks upward. */
-	void moveTracksUp();
+	void moveTracksUp(int i = 1);
 
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();
 
+	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
+	void highlightCurrentTrack();
+
 private slots:
+	void resizeColumns();
+
 	/** Display a context menu with the state of all columns. */
 	void showColumnsMenu(const QPoint &);
 

@@ -14,19 +14,16 @@
 #include "library/librarytreeview.h"
 
 Playlist::Playlist(QWidget *parent) :
-	QTableWidget(parent), track(-1)
+	QTableView(parent)
 {
-	// Initialize values for the Header (label and horizontal resize mode)
-	QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
-	const QStringList untranslatedLabels = (QStringList() << "#" << "Title" << "Album" << "Length" << "Artist" << "Rating" << "Year");
-	// Test: 0 = Fixed, n>0 = real ratio for each column
-	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+	_playlistModel = new PlaylistModel(this);
+	this->setModel(_playlistModel);
 
 	Settings *settings = Settings::getInstance();
 	// Init direct members
 	this->setAcceptDrops(true);
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
-	this->setColumnCount(labels.size());
+
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
 	this->setDragEnabled(true);
@@ -46,20 +43,44 @@ Playlist::Playlist(QWidget *parent) :
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setMovable(true);
+	horizontalHeader()->setResizeMode(QHeaderView::Fixed);
+
+	// Context menu on tracks
+	trackProperties = new QMenu(this);
+	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
+	connect(removeFromCurrentPlaylist, SIGNAL(triggered()), this, SLOT(removeSelectedTracks()));
 
 	// Context menu on header of columns
-	QList<QAction*> actionColumns;
 	columns = new QMenu(this);
 
-	for (int i = 0; i < labels.size(); i++) {
-		QString label = labels.at(i);
-		QTableWidgetItem *item = new QTableWidgetItem(label);
+	// Change track
+	// no need to cast parent as a TabPlaylist instance
+	connect(this, SIGNAL(doubleClicked(QModelIndex)), parent, SLOT(changeTrack(QModelIndex)));
+	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 
-		// Stores original text to switch between translations on the fly
-		// Might evolve latter, start to be "unreadable"
-		item->setData(Qt::UserRole+1, untranslatedLabels.at(i));
-		item->setData(Qt::UserRole+2, ratios.at(i));
-		this->setHorizontalHeaderItem(i, item);
+	// Link this playlist with the Settings instance to change fonts at runtime
+	connect(Settings::getInstance(), SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
+
+	// Hide the selected column in context menu
+	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
+	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
+
+	connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
+}
+
+void Playlist::init()
+{
+	QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
+
+	playlistModel()->setColumnCount(labels.count());
+
+	// Initialize values for the Header (label and horizontal resize mode)
+	for (int i = 0; i < labels.size(); i++) {
+		playlistModel()->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
+	}
+
+	for (int i = 0; i < playlistModel()->columnCount(); i++) {
+		QString label = labels.at(i);
 
 		// Match actions with columns using index of labels
 		QAction *actionColumn = new QAction(label, this);
@@ -67,112 +88,35 @@ Playlist::Playlist(QWidget *parent) :
 		actionColumn->setEnabled(actionColumn->text() != tr("Title"));
 		actionColumn->setCheckable(true);
 		actionColumn->setChecked(!isColumnHidden(i));
-		actionColumns.append(actionColumn);
 
 		// Then populate the context menu
 		columns->addAction(actionColumn);
 	}
 
-	// Context menu on tracks
-	trackProperties = new QMenu(this);
-	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
-	connect(removeFromCurrentPlaylist, SIGNAL(triggered()), this, SLOT(removeSelectedTracks()));
-
 	// Load columns state
-	QByteArray state = settings->value("playlistColumnsState").toByteArray();
-	if (!state.isEmpty()) {
-		horizontalHeader()->restoreState(state);
-		for (int i = 0; i < horizontalHeader()->count(); i++) {
-			bool hidden = horizontalHeader()->isSectionHidden(i);
-			setColumnHidden(i, hidden);
-			columns->actions().at(i)->setChecked(!hidden);
-		}
-	}
-
-	// Link this playlist with the Settings instance to change fonts at runtime
-	connect(settings, SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
-
-	// Change track
-	// no need to cast parent as a TabPlaylist instance
-	connect(this, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), parent, SLOT(changeTrack(QTableWidgetItem*)));
-
-	// Hide the selected column in context menu
-	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
-	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
-	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
-
-	connect(this, SIGNAL(itemSelectionChanged()), this, SLOT(countSelectedItems()));
-}
-
-/** Add a track to this Playlist instance. */
-void Playlist::append(const MediaSource &m, int row)
-{
-	// Resolve metaDatas from TagLib
-	TagLib::FileRef f(m.fileName().toLocal8Bit().data());
-	if (!f.isNull()) {
-		int currentRow;
-		if (row == -1) {
-			currentRow = rowCount();
-		} else {
-			currentRow = row;
-		}
-		sources.insert(currentRow, m);
-		QString title(f.tag()->title().toCString());
-		if (title.isEmpty()) {
-			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
-			title = m.fileName().split('/').last();
-		}
-
-		// Then, construct a new row with correct informations
-		QList<QTableWidgetItem *> widgetItems;
-		QTableWidgetItem *trackItem = new QTableWidgetItem(QString::number(f.tag()->track()));
-		QTableWidgetItem *titleItem = new QTableWidgetItem(title);
-		QTableWidgetItem *albumItem = new QTableWidgetItem(f.tag()->album().toCString());
-		QTableWidgetItem *lengthItem = new QTableWidgetItem(this->convertTrackLength(f.audioProperties()->length()));
-		QTableWidgetItem *artistItem = new QTableWidgetItem(f.tag()->artist().toCString());
-		QTableWidgetItem *ratingItem = new QTableWidgetItem("***");
-		QTableWidgetItem *yearItem = new QTableWidgetItem(QString::number(f.tag()->year()));
-
-		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
-
-		this->insertRow(currentRow);
-
-		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-		for (int i=0; i < widgetItems.length(); i++) {
-			QTableWidgetItem *item = widgetItems.at(i);
-			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
-			item->setFont(font);
-			setItem(currentRow, i, item);
-			QFontMetrics fm(font);
-			setRowHeight(currentRow, fm.height());
-		}
-
-		trackItem->setTextAlignment(Qt::AlignCenter);
-		lengthItem->setTextAlignment(Qt::AlignCenter);
-		ratingItem->setTextAlignment(Qt::AlignCenter);
-		yearItem->setTextAlignment(Qt::AlignCenter);
+	horizontalHeader()->restoreState(Settings::getInstance()->value("playlistColumnsState").toByteArray());
+	for (int i = 0; i < horizontalHeader()->count(); i++) {
+		bool hidden = horizontalHeader()->isSectionHidden(i);
+		setColumnHidden(i, hidden);
+		columns->actions().at(i)->setChecked(!hidden);
 	}
 }
 
-/** Clear the content of playlist. */
-void Playlist::clear()
+/** Display a context menu with the state of all columns. */
+void Playlist::showColumnsMenu(const QPoint &pos)
 {
-	// Iterate on the table and always remove the first item
-	while (rowCount() > 0) {
-		removeRow(0);
-	}
-	track = -1;
-	sources.clear();
+	columns->exec(mapToGlobal(pos));
 }
 
 /** Retranslate header columns. */
 void Playlist::retranslateUi()
 {
-	for (int i=0; i < columnCount(); i++) {
-		QTableWidgetItem *headerItem = horizontalHeaderItem(i);
-		const QString text = tr(headerItem->data(Qt::UserRole+1).toString().toStdString().data());
-		headerItem->setText(text);
-		columns->actions().at(i)->setText(text);
+	const QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
+
+	// Initialize values for the Header (label and horizontal resize mode)
+	for (int i = 0; i < labels.size(); i++) {
+		playlistModel()->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
+		columns->actions().at(i)->setText(labels.at(i));
 	}
 }
 
@@ -180,7 +124,7 @@ void Playlist::retranslateUi()
 void Playlist::contextMenuEvent(QContextMenuEvent *event)
 {
 	QModelIndex index = this->indexAt(event->pos());
-	QTableWidgetItem *item = this->itemFromIndex(index);
+	QStandardItem *item = this->playlistModel()->itemFromIndex(index);
 	if (item != NULL) {
 		trackProperties->exec(event->globalPos());
 	}
@@ -210,6 +154,14 @@ void Playlist::dropEvent(QDropEvent *event)
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
 			qDebug() << "internal move";
+			//QModelIndexList list = this->selectionModel()->selectedRows();
+			//int destChild = this->indexAt(event->pos()).row();
+			//qDebug() << "rootIndex().isValid()" << rootIndex().isValid();
+			//QModelIndex root;
+			//setRootIndex(root);
+			//qDebug() << "rootIndex().isValid()" << rootIndex().isValid();
+
+			//this->playlistModel()->move(list, destChild);
 		}
 	}
 }
@@ -219,26 +171,20 @@ void Playlist::mouseMoveEvent(QMouseEvent *event)
 	if (!_selected && state() == NoState) {
 		this->setState(DragSelectingState);
 	}
-	QTableWidget::mouseMoveEvent(event);
+	QTableView::mouseMoveEvent(event);
 }
 
 void Playlist::mousePressEvent(QMouseEvent *event)
 {
 	QModelIndex index = indexAt(event->pos());
 	_selected = selectionModel()->isSelected(index);
-	QTableWidget::mousePressEvent(event);
+	QTableView::mousePressEvent(event);
 }
 
-/** Convert time in seconds into "mm:ss" format. */
-QString Playlist::convertTrackLength(int length)
+void Playlist::resizeEvent(QResizeEvent *)
 {
-	QTime time = QTime(0, 0).addSecs(length);
-	// QTime is not designed to handle minutes > 60
-	if (time.hour() > 0) {
-		return QString::number(time.hour()*60 + time.minute()).append(":").append(time.toString("ss"));
-	} else {
-		return time.toString("m:ss");
-	}
+	/// XXX: need to be improved to avoid flickering
+	this->resizeColumns();
 }
 
 void Playlist::resizeColumns()
@@ -248,10 +194,14 @@ void Playlist::resizeColumns()
 	if (verticalScrollBar()->isVisible()) {
 		resizableArea -= verticalScrollBar()->size().width();
 	}
+
+	// Test: 0 = Fixed, n>0 = real ratio for each column
+	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+
 	// Resize fixed columns first, and then compute the remaining width
-	for (int c = 0; c < columnCount(); c++) {
+	for (int c = 0; c < playlistModel()->columnCount(); c++) {
 		if (!isColumnHidden(c)) {
-			int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
+			int ratio = ratios.at(c);
 			// Fixed column
 			if (ratio == 0) {
 				this->resizeColumnToContents(c);
@@ -260,8 +210,8 @@ void Playlist::resizeColumns()
 			visibleRatio += ratio;
 		}
 	}
-	for (int c = 0; c < columnCount(); c++) {
-		int ratio = horizontalHeaderItem(c)->data(Qt::UserRole+2).toInt();
+	for (int c = 0; c < playlistModel()->columnCount(); c++) {
+		int ratio = ratios.at(c);
 		// Resizable column
 		if (ratio != 0) {
 			int s = resizableArea * ratio / visibleRatio ;
@@ -272,39 +222,14 @@ void Playlist::resizeColumns()
 	}
 }
 
-void Playlist::countSelectedItems()
+void Playlist::countSelectedItems(const QItemSelection &, const QItemSelection &)
 {
-	emit selectedTracks(selectionModel()->selectedRows().count());
+	this->countSelectedItems();
 }
 
-/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
-void Playlist::highlightCurrentTrack()
+void Playlist::countSelectedItems()
 {
-	QTableWidgetItem *it;
-	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-	if (rowCount() > 0) {
-		for (int i=0; i < rowCount(); i++) {
-			for (int j = 0; j < columnCount(); j++) {
-				it = item(i, j);
-				QFont itemFont = font;
-				itemFont.setBold(false);
-				itemFont.setItalic(false);
-				it->setFont(itemFont);
-				QFontMetrics fm(itemFont);
-				setRowHeight(i, fm.height());
-			}
-		}
-		for (int j=0; j < columnCount(); j++) {
-			it = item(track, j);
-			// If there is actually one selected track in the playlist
-			if (it != NULL) {
-				QFont itemFont = font;
-				itemFont.setBold(true);
-				itemFont.setItalic(true);
-				it->setFont(itemFont);
-			}
-		}
-	}
+	emit selectedTracks(this->selectionModel()->selectedRows().size());
 }
 
 /** Toggle the selected column from the context menu. */
@@ -314,12 +239,6 @@ void Playlist::toggleSelectedColumn(QAction *action)
 	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
 	this->resizeColumns();
 	this->saveColumnsState();
-}
-
-/** Display a context menu with the state of all columns. */
-void Playlist::showColumnsMenu(const QPoint &pos)
-{
-	columns->exec(mapToGlobal(pos));
 }
 
 /** Save state when one checks or moves a column. */
@@ -332,7 +251,7 @@ void Playlist::saveColumnsState(int /*logicalIndex*/, int /*oldVisualIndex*/, in
 /** Move selected tracks downward. */
 void Playlist::moveTracksDown()
 {
-	if (currentItem()) {
+	/*if (currentItem()) {
 		int currentRow = currentItem()->row();
 		if (currentRow < rowCount()-1) {
 			for (int c=0; c < columnCount(); c++) {
@@ -342,21 +261,21 @@ void Playlist::moveTracksDown()
 				setItem(currentRow+1, c, currentItem);
 			}
 			sources.swap(currentRow, currentRow+1);
-			this->setCurrentIndex(model()->index(currentRow+1, 0));
+			this->setCurrentIndex(_playlistModel()->index(currentRow+1, 0));
 			if (currentRow == track) {
 				track++;
 			}
 		}
-	}
+	}*/
 }
 
 /** Move selected tracks upward. */
-void Playlist::moveTracksUp()
+void Playlist::moveTracksUp(int i)
 {
 	/*QList<QTableWidgetItem *> selection = selectedItems();
 	int prev = -1;
-	for (int i = selection.length() - 1; i >= 0; i--) {
-		int current = selection.at(i)->row();
+	for (int k = selection.length() - 1; k >= 0; k--) {
+		int current = selection.at(k)->row();
 		if (current != prev) {
 			QTableWidgetItem *item = takeItem(current, 0);
 			QTableWidgetItem *itemBelow = takeItem(current+1, 0);
@@ -365,8 +284,8 @@ void Playlist::moveTracksUp()
 			prev = current;
 		}
 	}*/
-	if (this->selectionModel()->hasSelection()) {
-		//this->selectionModel()->selectedRows(0);
+
+	/*if (this->selectionModel()->hasSelection()) {
 		int currentRow = currentItem()->row();
 		if (currentRow > 0) {
 			for (int c=0; c < columnCount(); c++) {
@@ -376,12 +295,12 @@ void Playlist::moveTracksUp()
 				setItem(currentRow-1, c, currentItem);
 			}
 			sources.swap(currentRow, currentRow-1);
-			setCurrentIndex(model()->index(currentRow-1, 0));
+			setCurrentIndex(_playlistModel()->index(currentRow-1, 0));
 			if (currentRow == track) {
 				track--;
 			}
 		}
-	}
+	}*/
 }
 
 /** Remove selected tracks from the playlist. */
@@ -389,7 +308,36 @@ void Playlist::removeSelectedTracks()
 {
 	QModelIndexList indexes = this->selectionModel()->selectedRows();
 	for (int i = indexes.size() - 1; i >= 0; i--) {
-		sources.removeAt(indexes.at(i).row());
-		this->removeRow(indexes.at(i).row());
+		playlistModel()->removeRow(indexes.at(i).row());
+	}
+}
+
+/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
+void Playlist::highlightCurrentTrack()
+{
+	QStandardItem *it;
+	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	if (playlistModel()->rowCount() > 0) {
+		for (int i=0; i < playlistModel()->rowCount(); i++) {
+			for (int j = 0; j < playlistModel()->columnCount(); j++) {
+				it = playlistModel()->item(i, j);
+				QFont itemFont = font;
+				itemFont.setBold(false);
+				itemFont.setItalic(false);
+				it->setFont(itemFont);
+				QFontMetrics fm(itemFont);
+				this->setRowHeight(i, fm.height());
+			}
+		}
+		for (int j=0; j < playlistModel()->columnCount(); j++) {
+			it = playlistModel()->item(playlistModel()->activeTrack(), j);
+			// If there is actually one selected track in the playlist
+			if (it != NULL) {
+				QFont itemFont = font;
+				itemFont.setBold(true);
+				itemFont.setItalic(true);
+				it->setFont(itemFont);
+			}
+		}
 	}
 }

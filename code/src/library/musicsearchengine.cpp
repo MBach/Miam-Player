@@ -4,17 +4,25 @@
 
 #include <QDirIterator>
 #include <QFileInfo>
-#include <QMetaType>
 
 #include <QtDebug>
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-	QObject(parent)
-{
-	qRegisterMetaType<QFileInfo>("QFileInfo");
-}
+	QThread(parent)
+{}
 
 void MusicSearchEngine::doSearch()
+{
+	this->start();
+}
+
+void MusicSearchEngine::setLocations(const QList<QDir> &locations)
+{
+	savedLocations = locations;
+	this->start();
+}
+
+void MusicSearchEngine::run()
 {
 	if (savedLocations.isEmpty()) {
 		foreach (QVariant musicPath, Settings::getInstance()->musicLocations()) {
@@ -61,6 +69,7 @@ void MusicSearchEngine::doSearch()
 					if (aCoverWasFound) {
 						emit scannedCover(coverPath);
 						aCoverWasFound = false;
+						msleep(10);
 					}
 				}
 			}
@@ -76,10 +85,4 @@ void MusicSearchEngine::doSearch()
 		}
 	}
 	emit endSearch();
-}
-
-void MusicSearchEngine::setLocations(const QList<QDir> &locations)
-{
-	savedLocations = locations;
-	//this->run();
 }

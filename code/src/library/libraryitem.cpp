@@ -7,10 +7,22 @@
 
 #include <QtDebug>
 
-LibraryItem::LibraryItem(const QString &text, int type) :
+LibraryItem::LibraryItem(const QString &text, LibraryModel::MediaType mediaType, int type) :
 	QStandardItem(text)
 {
-	setData(type, SUFFIX);
+	this->setData(type, SUFFIX);
+	this->setMediaType(mediaType);
+	if (text == "Bénabar") {
+		this->setData("aaaa", INTERNAL_NAME);
+	} else {
+		this->setData(text, INTERNAL_NAME);
+	}
+}
+
+LibraryItem::LibraryItem() :
+	QStandardItem()
+{
+	this->setData(-1, SUFFIX);
 }
 
 /** Redefined for custom types (greater than Qt::UserRole). */
@@ -21,7 +33,10 @@ int LibraryItem::type() const
 
 void LibraryItem::setDisplayedName(const char *name, int size)
 {
-	setData(QByteArray(name, size), Qt::DisplayRole);
+	QByteArray byteArray(name, size);
+	QVariant v(byteArray);
+	setData(v.toString(), Qt::DisplayRole);
+	setData(v.toString(), INTERNAL_NAME);
 }
 
 void LibraryItem::setFilePath(const QString &filePath)
@@ -33,11 +48,6 @@ void LibraryItem::setFilePath(int musicLocationIndex, const QString &fileName)
 {
 	setData(QVariant(musicLocationIndex), IDX_TO_ABS_PATH);
 	setData(QVariant(fileName), REL_PATH_TO_MEDIA);
-}
-
-void LibraryItem::setMediaType(LibraryModel::MediaType mediaType)
-{
-	setData(QVariant(mediaType), MEDIA_TYPE);
 }
 
 /** Should only be used for tracks. */
@@ -74,6 +84,7 @@ void LibraryItem::read(QDataStream &in)
 			char *s = new char[dataLength];
 			in.readRawData(s, dataLength);
 			setDisplayedName(s, dataLength);
+			setData("abenabar", INTERNAL_NAME);
 			delete[] s;
 		}
 
@@ -186,4 +197,10 @@ void LibraryItem::write(QDataStream &out) const
 		out << trackNumber();
 		break;
 	}
+}
+
+
+void LibraryItem::setMediaType(LibraryModel::MediaType mediaType)
+{
+	setData(QVariant(mediaType), MEDIA_TYPE);
 }

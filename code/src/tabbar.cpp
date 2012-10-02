@@ -57,7 +57,7 @@ void TabBar::dropEvent(QDropEvent *event)
 
 			// Copy tracks in the target
 			foreach (QModelIndex index,  origin->selectionModel()->selectedRows()) {
-				target->append(origin->tracks().at(index.row()));
+				target->playlistModel()->append(origin->track(index.row()));
 			}
 
 			// Remove tracks from the current playlist if necessary

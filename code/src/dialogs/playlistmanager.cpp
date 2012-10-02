@@ -106,8 +106,8 @@ void PlaylistManager::loadPreviewPlaylist(QListView *list)
 	QStandardItemModel *m = qobject_cast<QStandardItemModel*>(list->model());
 	int index = map.key(m->itemFromIndex(modelIndex));
 	Playlist *p = playlists->playlist(index);
-	for (int i = 0; i < p->tracks().size(); i++) {
-		TagLib::FileRef f(p->tracks().at(i).fileName().toLocal8Bit().data());
+	for (int i = 0; i < p->model()->rowCount(); i++) {
+		TagLib::FileRef f(p->track(i).fileName().toLocal8Bit().data());
 
 		// Build the item: "title (artist - album)"
 		QString text = f.tag()->title().toCString();

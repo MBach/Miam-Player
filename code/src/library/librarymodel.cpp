@@ -11,6 +11,7 @@ LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(parent)
 {
 	this->setColumnCount(1);
+	//this->setSortRole(LibraryItem::INTERNAL_NAME);
 }
 
 /** Removes everything. */
@@ -41,9 +42,8 @@ LibraryItem* LibraryModel::hasAlbum(LibraryItem* artist, const QString &album) c
 LibraryItem* LibraryModel::insertArtist(const QString &artist)
 {
 	// Create the artist
-	LibraryItem *itemArtist = new LibraryItem(artist);
+	LibraryItem *itemArtist = new LibraryItem(artist, ARTIST);
 	itemArtist->setFilePath(artist);
-	itemArtist->setMediaType(ARTIST);
 	artists.insert(artist.toLower(), itemArtist);
 	this->appendRow(itemArtist);
 	return itemArtist;
@@ -52,10 +52,9 @@ LibraryItem* LibraryModel::insertArtist(const QString &artist)
 /** Insert a new album in the library. */
 LibraryItem* LibraryModel::insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist)
 {
-	LibraryItem *itemAlbum = new LibraryItem(album);
+	LibraryItem *itemAlbum = new LibraryItem(album, ALBUM);
 	QString coverPath = path.left(path.lastIndexOf('/'));
 	covers.insert(coverPath, itemAlbum);
-	itemAlbum->setMediaType(ALBUM);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
 	albums.insert(QPair<LibraryItem *, QString>(parentArtist, album), itemAlbum);
 	return itemAlbum;
@@ -78,7 +77,6 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 				isNewTrack = false;
 				break;
 			} else {
-				//qDebug() << "inserting:" << file;
 				tracks.insert(file, parent);
 			}
 		}
@@ -90,9 +88,8 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		if (title.isEmpty()) {
 			title = QFileInfo(fileName).baseName();
 		}
-		itemTitle = new LibraryItem(title, fileHelper.type());
+		itemTitle = new LibraryItem(title, TRACK, fileHelper.type());
 		itemTitle->setFilePath(musicLocationIndex, fileName);
-		itemTitle->setMediaType(TRACK);
 		itemTitle->setRating(fileHelper.file()->tag()->track());
 		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
@@ -129,8 +126,7 @@ void LibraryModel::makeSeparators()
 				letter = tr(" Various");
 			}
 			if (!alphabeticalSeparators.contains(letter)) {
-				LibraryItem *separator = new LibraryItem(letter);
-				separator->setMediaType(LETTER);
+				LibraryItem *separator = new LibraryItem(letter, LETTER);
 				alphabeticalSeparators.insert(letter, separator);
 			}
 		}
@@ -192,6 +188,8 @@ void LibraryModel::loadFromFile()
 			this->loadNode(dataStream, libraryItem);
 		}
 		mmmmp.close();
+		/// FIXME
+		qDebug() << "loadFromFile" << artists.count();
 		emit loadedFromFile();
 	}
 }
@@ -307,6 +305,25 @@ void LibraryModel::removeNode(const QModelIndex &index)
 	if (parent.isValid()) {
 		this->removeNode(parent);
 	}
+}
+
+QVariant LibraryModel::data(const QModelIndex &index, int role) const
+{
+	QVariant d;
+	switch (role) {
+	case LibraryItem::INTERNAL_NAME:
+		if (index.isValid()) {
+			qDebug() << "INTERNAL_NAME" << index.data(LibraryItem::INTERNAL_NAME);
+
+		}
+		d = QStandardItemModel::data(index, role);
+		break;
+	default:
+		//qDebug() << "default";
+		d = QStandardItemModel::data(index, role);
+		break;
+	}
+	return d;
 }
 
 /** Recursively reads the input stream to build nodes and append them to its parent. */

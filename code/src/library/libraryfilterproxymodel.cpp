@@ -10,7 +10,23 @@
 
 LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent)
-{}
+{
+	this->setSortCaseSensitivity(Qt::CaseInsensitive);
+	//this->setSortLocaleAware(true);
+	//this->setSortRole(LibraryItem::INTERNAL_NAME);
+}
+
+QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
+{
+	if (role == Qt::FontRole) {
+		return Settings::getInstance()->font(Settings::LIBRARY);
+	} else {
+		/*if (role == LibraryItem::INTERNAL_NAME) {
+			qDebug() << index.data(LibraryItem::INTERNAL_NAME).toString() << index.data().toString();
+		}*/
+		return QSortFilterProxyModel::data(index, role);
+	}
+}
 
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
@@ -21,7 +37,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 		return true;
 	}
 
-	//accept if any of the parents is accepted on it's own merits
+	// Accept if any of the parents is accepted on it's own merits
 	QModelIndex parent = sourceParent;
 	while (parent.isValid()) {
 		if (filterAcceptsRowItself(parent.row(), parent.parent())) {
@@ -30,11 +46,57 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 		parent = parent.parent();
 	}
 
-	//accept if any of the children is accepted on it's own merits
+	// Accept if any of the children is accepted on it's own merits
 	if (hasAcceptedChildren(sourceRow, sourceParent)) {
 		return true;
 	}
 	return false;
+}
+
+/** Redefined for custom sorting. */
+bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+	bool result;
+	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
+	QStandardItem *qStandardItemLeft = model->itemFromIndex(left);
+
+	LibraryItem *libraryItemLeft = dynamic_cast<LibraryItem *>(qStandardItemLeft);
+	LibraryItem *libraryItemRight = NULL;
+
+	switch (libraryItemLeft->type()) {
+
+	case LibraryModel::ARTIST:
+		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		//if (libraryItemRight->type() == LibraryModel::ARTIST) {
+		//qDebug() << libraryItemLeft->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemLeft->text();
+		//qDebug() << libraryItemRight->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemRight->text();
+		//}
+		result = QSortFilterProxyModel::lessThan(left, right);
+		break;
+
+
+	case LibraryModel::LETTER:
+		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		// Special case if an artist's name has only one character, be sure to put it after the separator
+		// Example: M (or -M-, or Mathieu Chedid)
+		if (libraryItemRight && libraryItemRight->type() == LibraryModel::ARTIST && libraryItemLeft->text().compare(libraryItemRight->text()) == 0) {
+			result = true;
+		} else {
+			result = QSortFilterProxyModel::lessThan(left, right);
+		}
+		break;
+
+	// Sort tracks by their numbers
+	case LibraryModel::TRACK:
+		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
+		break;
+
+	default:
+		//qDebug() << libraryItemLeft->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemLeft->text();
+		result = QSortFilterProxyModel::lessThan(left, right);
+	}
+	return result;
 }
 
 bool LibraryFilterProxyModel::filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const
@@ -49,7 +111,7 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 		return false;
 	}
 
-	//check if there are children
+	// Check if there are children
 	int childCount = item.model()->rowCount(item);
 	if (childCount == 0) {
 		return false;
@@ -59,21 +121,12 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 		if (filterAcceptsRowItself(i, item)) {
 			return true;
 		}
-		//recursive call
+		// Recursive call
 		if (hasAcceptedChildren(i, item)) {
 			return true;
 		}
 	}
 	return false;
-}
-
-QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
-{
-	if (role == Qt::FontRole) {
-		return Settings::getInstance()->font(Settings::LIBRARY);
-	} else {
-		return QSortFilterProxyModel::data(index, role);
-	}
 }
 
 /** Load covers only when an item needs to be expanded. */
@@ -110,27 +163,4 @@ void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 			}
 		}
 	}
-}
-
-/** Redefined for custom sorting. */
-bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
-{
-	bool result;
-	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
-	QStandardItem *qStandardItemLeft = model->itemFromIndex(left);
-
-	LibraryItem *libraryItemLeft = dynamic_cast<LibraryItem *>(qStandardItemLeft);
-	LibraryItem *libraryItemRight = NULL;
-
-	switch (libraryItemLeft->type()) {
-
-	case LibraryModel::TRACK:
-		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
-		result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
-		break;
-
-	default:
-		result = QSortFilterProxyModel::lessThan(left, right);
-	}
-	return result;
 }

@@ -18,9 +18,12 @@ private:
 
 public:
 	/// Constructor with a title and a filetype.
-	LibraryItem(const QString &text="", int type=-1);
+	LibraryItem(const QString &text, LibraryModel::MediaType mediaType, int type=-1);
 
-	enum CustomType { MEDIA_TYPE		= Qt::UserRole+2,
+	LibraryItem();
+
+	enum CustomType { INTERNAL_NAME		= Qt::UserRole+1,
+					  MEDIA_TYPE		= Qt::UserRole+2,
 					  STAR_RATING		= Qt::UserRole+3,
 					  CHILD_COUNT		= Qt::UserRole+4,
 					  TRACK_NUMBER		= Qt::UserRole+5,
@@ -33,7 +36,6 @@ public:
 
 	void setFilePath(const QString &filePath);
 	void setFilePath(int musicLocationIndex, const QString &fileName);
-	void setMediaType(LibraryModel::MediaType mediaType);
 
 	/** Should only be used for tracks. */
 	void setRating(int rating);
@@ -51,8 +53,11 @@ public:
 	/** Write data from this node to the output stream. */
 	void write(QDataStream &out) const;
 
-protected:
-	inline void setData(const QVariant &value, int role) { QStandardItem::setData(value, role); }
+private:
+	void setMediaType(LibraryModel::MediaType mediaType);
+
+//protected:
+	//inline void setData(const QVariant &value, int role) { QStandardItem::setData(value, role); }
 };
 
 #endif // LIBRARYITEM_H

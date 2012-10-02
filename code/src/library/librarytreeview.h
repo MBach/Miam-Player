@@ -18,7 +18,7 @@ private:
 	LibraryModel *libraryModel;
 	LibraryFilterProxyModel *proxyModel;
 	CircleProgressBar *circleProgressBar;
-	MusicSearchEngine musicSearchEngine;
+	MusicSearchEngine *musicSearchEngine;
 	QPoint currentPos;
 	QMenu *properties;
 

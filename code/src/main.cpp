@@ -4,7 +4,7 @@
 
 #define SOFT "MmeMiamMiamMusicPlayer"
 #define COMPANY "MmeMiamMiam"
-#define VERSION "0.3.6"
+#define VERSION "0.3.7"
 
 int main(int argc, char *argv[])
 {
