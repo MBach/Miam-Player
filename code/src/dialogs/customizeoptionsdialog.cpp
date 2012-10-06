@@ -44,9 +44,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	QStandardItemModel *languageModel = new QStandardItemModel(this);
 	listViewLanguages->setModel(languageModel);
-	listViewLanguages->setViewMode(QListView::IconMode);
-	listViewLanguages->setDragDropMode(QAbstractItemView::NoDragDrop);
-	listViewLanguages->setGridSize(QSize(168, 64));
+	listViewLanguages->setGridSize(QSize(150, 64));
+	listViewLanguages->setUniformItemSizes(true);
 
 	QDir dir(":/languages");
 	QStringList fileNames = dir.entryList();

@@ -102,6 +102,7 @@ public:
 
 	/// Colors
 	bool colorsAlternateBG() const;
+	bool customColors() const;
 
 	/// Stylesheet
 	QString styleSheet(QWidget *w) const;
@@ -162,6 +163,7 @@ public slots:
 
 	/// Colors
 	inline void setColorsAlternateBG(bool b) { setValue("colorsAlternateBG", b); }
+	inline void setCustomColors(bool b) { setValue("customColors", b); }
 
 	/// StyleSheets
 	void setCustomStyleSheet(QWidget *w);

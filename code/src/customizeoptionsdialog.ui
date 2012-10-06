@@ -468,6 +468,15 @@
             <property name="showDropIndicator" stdset="0">
              <bool>false</bool>
             </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::NoDragDrop</enum>
+            </property>
+            <property name="movement">
+             <enum>QListView::Static</enum>
+            </property>
+            <property name="viewMode">
+             <enum>QListView::IconMode</enum>
+            </property>
            </widget>
           </item>
           <item>
@@ -494,8 +503,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>358</width>
-            <height>166</height>
+            <width>503</width>
+            <height>478</height>
            </rect>
           </property>
           <attribute name="label">

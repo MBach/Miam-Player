@@ -257,6 +257,16 @@ bool Settings::colorsAlternateBG() const
 	}
 }
 
+bool Settings::customColors() const
+{
+	QVariant b = value("customColors");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
 /** Should move in specific files in .qrc */
 QString Settings::styleSheet(QWidget *w) const
 {

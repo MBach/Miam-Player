@@ -50,6 +50,7 @@ private slots:
 	void changeColor(QColor selectedColor);
 
 	void toggleAlternativeBackgroundColor(bool);
+	void toggleCustomColors(bool);
 
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);

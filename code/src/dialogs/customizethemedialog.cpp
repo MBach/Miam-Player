@@ -101,6 +101,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(spinBoxMenus, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 
 	// Colors
+	connect(enableCustomColorsRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleCustomColors(bool)));
 	connect(enableAlternateBGRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleAlternativeBackgroundColor(bool)));
 	foreach (QToolButton *b, findChildren<QToolButton*>()) {
 		connect(b, SIGNAL(clicked()), this, SLOT(showColorDialog()));
@@ -160,6 +161,19 @@ void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 	}
 }
 
+void CustomizeThemeDialog::toggleCustomColors(bool b)
+{
+	Settings::getInstance()->setCustomColors(b);
+	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
+		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
+			QLayoutItem *item = customColorsGridLayout->itemAtPosition(i, j);
+			if (item->widget()) {
+				item->widget()->setEnabled(b);
+			}
+		}
+	}
+}
+
 /** Load theme at startup. */
 void CustomizeThemeDialog::loadTheme()
 {
@@ -205,6 +219,19 @@ void CustomizeThemeDialog::loadTheme()
 	checkBoxDisplayCovers->setChecked(settings->withCovers());
 	spinBoxCoverSize->setValue(settings->coverSize());
 	checkBoxAlphabeticalSeparators->setChecked(settings->toggleSeparators());
+
+	// Colors
+	if (settings->colorsAlternateBG()) {
+		enableAlternateBGRadioButton->setChecked(true);
+	} else {
+		disableAlternateBGRadioButton->setChecked(true);
+	}
+
+	if (settings->customColors()) {
+		enableCustomColorsRadioButton->setChecked(true);
+	} else {
+		disableCustomColorsRadioButton->setChecked(true);
+	}
 }
 
 /** Redefined to initialize favorites from settings. */

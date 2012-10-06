@@ -984,62 +984,6 @@
      <widget class="QWidget" name="page_3">
       <layout class="QVBoxLayout" name="verticalLayout_12">
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>Group elements</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item>
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Would you like to associate displayed elements as a group ?</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
-            <item>
-             <widget class="QRadioButton" name="enableGroupElements">
-              <property name="toolTip">
-               <string>It is not possible to customize elements separately in this release</string>
-              </property>
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="disableGroupElements">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="toolTip">
-               <string>It is not possible to customize elements separately in this release</string>
-              </property>
-              <property name="text">
-               <string>No</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Note: it is highly recommended to keep this option on 'Yes' because it's really difficult to make an attractive and consistent theme.</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBox_4">
          <property name="title">
           <string>Alternative colors</string>
@@ -1047,6 +991,11 @@
          <layout class="QVBoxLayout" name="verticalLayout_9">
           <item>
            <widget class="QLabel" name="label_2">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
             <property name="text">
              <string>Would you like to alternate colors in playlists?</string>
             </property>
@@ -1079,90 +1028,58 @@
        <item>
         <widget class="QGroupBox" name="groupBox_5">
          <property name="title">
-          <string/>
+          <string>Custom colors</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <item row="3" column="1">
-           <widget class="Reflector" name="itemColorWidget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
             </property>
-            <property name="styleSheet">
-             <string notr="true">Reflector { border: 1px solid #707070; background-color: #000000; }</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="labelGlobalBackground">
             <property name="text">
-             <string>Global background</string>
+             <string>Would you like to customize the colors of the player?</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QToolButton" name="bgPrimaryColorToolButton">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QToolButton" name="globalBackgroundColorToolButton">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="labelItems">
-            <property name="text">
-             <string>Text of items</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QToolButton" name="itemColorToolButton">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <layout class="QVBoxLayout" name="verticalLayout_10">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
+             <widget class="QRadioButton" name="enableCustomColorsRadioButton">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="disableCustomColorsRadioButton">
+              <property name="text">
+               <string>No, keep the colors provided by my Operating System</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="customColorsGridLayout">
+            <item row="0" column="1">
+             <widget class="Reflector" name="bgPrimaryColorWidget" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>14</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
              <widget class="QLabel" name="labelBackgroundPrimary">
               <property name="text">
                <string>Background for playlists and the library</string>
@@ -1172,70 +1089,135 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="labelGlobalBackground">
+              <property name="text">
+               <string>Global background</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QToolButton" name="bgPrimaryColorToolButton">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="labelItems">
+              <property name="text">
+               <string>Text of items</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="labelSelectedItem">
+              <property name="text">
+               <string>Selected item</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="Reflector" name="globalBackgroundColorWidget" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="Reflector" name="itemColorWidget" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">Reflector { border: 1px solid #707070; background-color: #000000; }</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="Reflector" name="selectedItemColorWidget" native="true">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">Reflector { border: 1px solid #707070; background-color: #d6eefb; }</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QToolButton" name="globalBackgroundColorToolButton">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QToolButton" name="itemColorToolButton">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QToolButton" name="selectedItemColorToolButton">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+             </widget>
+            </item>
            </layout>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="labelSelectedItem">
-            <property name="text">
-             <string>Selected item</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QToolButton" name="selectedItemColorToolButton">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="Reflector" name="globalBackgroundColorWidget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="Reflector" name="bgPrimaryColorWidget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>14</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="Reflector" name="selectedItemColorWidget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>30</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">Reflector { border: 1px solid #707070; background-color: #d6eefb; }</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
