@@ -104,9 +104,13 @@ TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_en.ts \
     translations/m4p_es.ts \
     translations/m4p_fr.ts \
+    translations/m4p_it.ts \
     translations/m4p_ja.ts \
+    translations/m4p_kr.ts \
     translations/m4p_pt.ts \
     translations/m4p_ru.ts \
+    translations/m4p_th.ts \
+    translations/m4p_vn.ts \
     translations/m4p_zh.ts
 
 RESOURCES += \

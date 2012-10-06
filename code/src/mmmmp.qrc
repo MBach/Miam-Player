@@ -89,6 +89,10 @@
         <file alias="ru">language/ru.png</file>
         <file alias="ja">language/ja.png</file>
         <file alias="zh">language/zh.png</file>
+        <file alias="it">language/it.png</file>
+        <file alias="kr">language/kr.png</file>
+        <file alias="th">language/th.png</file>
+        <file alias="vn">language/vn.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="en">translations/m4p_en.qm</file>
