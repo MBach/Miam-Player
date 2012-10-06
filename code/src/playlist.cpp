@@ -66,6 +66,7 @@ Playlist::Playlist(QWidget *parent) :
 	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
 
 	connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
+	connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
 }
 
 void Playlist::init()
@@ -154,14 +155,9 @@ void Playlist::dropEvent(QDropEvent *event)
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
 			qDebug() << "internal move";
-			//QModelIndexList list = this->selectionModel()->selectedRows();
-			//int destChild = this->indexAt(event->pos()).row();
-			//qDebug() << "rootIndex().isValid()" << rootIndex().isValid();
-			//QModelIndex root;
-			//setRootIndex(root);
-			//qDebug() << "rootIndex().isValid()" << rootIndex().isValid();
-
-			//this->playlistModel()->move(list, destChild);
+			QModelIndexList list = this->selectionModel()->selectedRows();
+			int destChild = this->indexAt(event->pos()).row();
+			this->playlistModel()->move(list, destChild);
 		}
 	}
 }

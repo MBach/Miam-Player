@@ -89,17 +89,19 @@ void PlaylistModel::clear()
 
 void PlaylistModel::move(const QModelIndexList &rows, int destChild)
 {
-	/*QModelIndex srcParent = rows.first();
+	QModelIndex srcParent = rows.first();
 	int srcFirst = rows.first().row();
 	int srcLast = rows.last().row();
-	qDebug() << srcParent << srcFirst << srcLast << destChild;
+	QModelIndex parent = rows.first().parent();
+	QModelIndex root = invisibleRootItem()->index();
+	qDebug() << root << srcFirst << srcLast << destChild;
 	// Moving up and down conditions
 	if (destChild < srcFirst || destChild > srcLast) {
-		QModelIndex invalid;
-		bool b = this->beginMoveRows(invalid, srcFirst, srcLast, invalid, destChild);
+
+		bool b = this->beginMoveRows(QModelIndex(), srcFirst, srcLast, QModelIndex(), destChild);
 		qDebug() << "success ?" << b;
-		if (!b) {
+		if (b) {
 			this->endMoveRows();
 		}
-	}*/
+	}
 }
