@@ -97,6 +97,7 @@
     <qresource prefix="/translations">
         <file alias="en">translations/m4p_en.qm</file>
         <file alias="fr">translations/m4p_fr.qm</file>
+        <file alias="ar">translations/m4p_ar.qm</file>
     </qresource>
     <qresource prefix="/stylesheets">
         <file alias="qscrollbar">stylesheets/qscrollbar.qss</file>

@@ -77,6 +77,7 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	cancelButton->setEnabled(false);
 
 	// It's possible to edit single items by double-clicking in the table
+	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 	tagEditorWidget->addItemsToEditor(indexes);
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
@@ -172,12 +173,21 @@ void TagEditor::displayTags()
 
 	// Information in the table is split into columns, using column index
 	QMap<int, QStringList> datas;
+	//int lastCol = tagEditorWidget->columnCount() - 1;
 	foreach (QTableWidgetItem *item, items) {
 
 		// Load, feed and replace mechanism
+		// For the last column (which is the cover), use QPixmap instead
+		//if (item->column() == lastCol) {
+
+		//} else {
 		QStringList stringList = datas.value(item->column());
 		stringList << item->text();
 		datas.insert(item->column(), stringList);
+		//}
+
+		//int r = item->row();
+		//rows.add(r);
 	}
 
 	// To avoid redondancy

@@ -60,13 +60,13 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
 	QStandardItem *qStandardItemLeft = model->itemFromIndex(left);
 
-	LibraryItem *libraryItemLeft = dynamic_cast<LibraryItem *>(qStandardItemLeft);
+	LibraryItem *libraryItemLeft = static_cast<LibraryItem *>(qStandardItemLeft);
 	LibraryItem *libraryItemRight = NULL;
 
 	switch (libraryItemLeft->type()) {
 
 	case LibraryModel::ARTIST:
-		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
 		//if (libraryItemRight->type() == LibraryModel::ARTIST) {
 		//qDebug() << libraryItemLeft->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemLeft->text();
 		//qDebug() << libraryItemRight->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemRight->text();
@@ -76,7 +76,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 
 
 	case LibraryModel::LETTER:
-		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
 		if (libraryItemRight && libraryItemRight->type() == LibraryModel::ARTIST && libraryItemLeft->text().compare(libraryItemRight->text()) == 0) {
@@ -88,7 +88,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 
 	// Sort tracks by their numbers
 	case LibraryModel::TRACK:
-		libraryItemRight = dynamic_cast<LibraryItem *>(model->itemFromIndex(right));
+		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
 		result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
 		break;
 

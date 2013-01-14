@@ -81,9 +81,6 @@
    </item>
    <item>
     <widget class="TagEditorTableWidget" name="tagEditorWidget">
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOn</enum>
-     </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
@@ -171,7 +168,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="labelCover">
+      <widget class="AlbumCover" name="labelCover">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -383,6 +380,11 @@
    <class>TagEditorTableWidget</class>
    <extends>QTableWidget</extends>
    <header>tageditor/tageditortablewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AlbumCover</class>
+   <extends>QLabel</extends>
+   <header>tageditor/albumcover.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -4,7 +4,9 @@
 
 #define SOFT "MmeMiamMiamMusicPlayer"
 #define COMPANY "MmeMiamMiam"
-#define VERSION "0.3.7"
+#define VERSION "0.3.8"
+
+#include <QtDebug>
 
 int main(int argc, char *argv[])
 {
@@ -22,4 +24,5 @@ int main(int argc, char *argv[])
 	window->show();
 
 	return app.exec();
+	//return 0;
 }

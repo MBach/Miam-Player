@@ -9,6 +9,9 @@
 
 #include "filehelper.h"
 
+/**
+ * @brief The TagEditorTableWidget class is a table where one can select lines.
+ */
 class TagEditorTableWidget : public QTableWidget
 {
 	Q_OBJECT
@@ -33,6 +36,7 @@ public:
 	void resetTable();
 
 public slots:
+	/** Add items to the table in order to edit them. */
 	void addItemsToEditor(const QList<QPersistentModelIndex> &indexList);
 
 	/** Redefined. */

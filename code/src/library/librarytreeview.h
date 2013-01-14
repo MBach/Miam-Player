@@ -10,6 +10,9 @@
 #include "libraryfilterproxymodel.h"
 #include "treeview.h"
 
+/**
+ * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
+ */
 class LibraryTreeView : public TreeView
 {
 	Q_OBJECT

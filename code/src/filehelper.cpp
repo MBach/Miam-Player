@@ -77,31 +77,31 @@ String FileHelper::artistAlbum() const
 
 	switch (fileType) {
 	case APE:
-		apeFile = dynamic_cast<APE::File*>(f);
+		apeFile = static_cast<APE::File*>(f);
 		//artAlb = "not yet for ape";
 		break;
 	case ASF:
-		asfFile = dynamic_cast<ASF::File*>(f);
+		asfFile = static_cast<ASF::File*>(f);
 		//artAlb = "not yet for asf";
 		break;
 	case FLAC:
-		flacFile = dynamic_cast<FLAC::File*>(f);
+		flacFile = static_cast<FLAC::File*>(f);
 		//artAlb = "not yet for flac";
 		break;
 	case 3:
 		break;
 	case MP4:
-		mp4File = dynamic_cast<MP4::File*>(f);
+		mp4File = static_cast<MP4::File*>(f);
 		//artAlb = "not yet for mp4";
 		break;
 	case MPC:
-		mpcFile = dynamic_cast<MPC::File*>(f);
+		mpcFile = static_cast<MPC::File*>(f);
 		//artAlb = "not yet for mpc";
 		break;
 	case MP3:
 		// For albums with multiple Artists, like OST, the "TPE2" value is commonly used for the tag "Album Artist"
 		// It is used in Windows 7, foobar2000, etc
-		mpegFile = dynamic_cast<MPEG::File*>(f);
+		mpegFile = static_cast<MPEG::File*>(f);
 		if (mpegFile->ID3v2Tag()) {
 			ID3v2::Tag *tag = mpegFile->ID3v2Tag();
 			if (tag) {
@@ -115,7 +115,7 @@ String FileHelper::artistAlbum() const
 		}
 		break;
 	case OGG:
-		oggFile = dynamic_cast<Ogg::File*>(f);
+		oggFile = static_cast<Ogg::File*>(f);
 		break;
 	case 8:
 		break;
@@ -156,30 +156,30 @@ bool FileHelper::insert(QString key, QString value)
 
 		switch (fileType) {
 		case APE:
-			apeFile = dynamic_cast<APE::File*>(f);
+			apeFile = static_cast<APE::File*>(f);
 			qDebug() << "APE file";
 			break;
 		case ASF:
-			asfFile = dynamic_cast<ASF::File*>(f);
+			asfFile = static_cast<ASF::File*>(f);
 			qDebug() << "ASF file";
 			break;
 		case FLAC:
-			flacFile = dynamic_cast<FLAC::File*>(f);
+			flacFile = static_cast<FLAC::File*>(f);
 			qDebug() << "FLAC file";
 			break;
 		case 3:
 			qDebug() << "Mod file";
 			break;
 		case MP4:
-			mp4File = dynamic_cast<MP4::File*>(f);
+			mp4File = static_cast<MP4::File*>(f);
 			qDebug() << "MP4 file";
 			break;
 		case MPC:
-			mpcFile = dynamic_cast<MPC::File*>(f);
+			mpcFile = static_cast<MPC::File*>(f);
 			qDebug() << "MPC file";
 			break;
 		case MP3:
-			mpegFile = dynamic_cast<MPEG::File*>(f);
+			mpegFile = static_cast<MPEG::File*>(f);
 			if (mpegFile->ID3v2Tag()) {
 				ID3v2::Tag *tag = mpegFile->ID3v2Tag();
 				if (tag) {

@@ -259,7 +259,7 @@ void LibraryModel::saveToFile()
 		QDataStream dataStream(&output, QIODevice::ReadWrite);
 		dataStream << item->rowCount() - separators;
 		for (int i = 0; i < item->rowCount() - separators; i++) {
-			this->writeNode(dataStream, dynamic_cast<LibraryItem *>(item->child(i, 0)));
+			this->writeNode(dataStream, static_cast<LibraryItem *>(item->child(i, 0)));
 		}
 		mmmmp.write(qCompress(output, 9));
 		mmmmp.close();

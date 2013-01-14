@@ -6,6 +6,9 @@
 #include "library/libraryitem.h"
 #include "playlist.h"
 
+/**
+ * @brief The TreeView class is the base class for displaying trees in the player.
+ */
 class TreeView : public QTreeView
 {
 	Q_OBJECT
@@ -33,10 +36,10 @@ protected slots:
 	void openTagEditor();
 
 signals:
-	/** Add a track to the a playlist. */
+	/** Add tracks to the a playlist. */
 	void aboutToSendToPlaylist(const QList<QPersistentModelIndex> &, Playlist*, int);
 
-	/** Add a track to the tag editor. */
+	/** Add tracks to the tag editor. */
 	void sendToTagEditor(QList<QPersistentModelIndex>);
 
 	void setTagEditorVisible(bool);

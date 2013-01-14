@@ -16,7 +16,8 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 {
 	Settings *settings = Settings::getInstance();
 	this->setStyleSheet(settings->styleSheet(this));
-	this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
+	/// FIXME
+    //this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 }
@@ -34,6 +35,7 @@ void TagEditorTableWidget::init()
 		}
 		header->setData(KEY, keys.at(column));
 	}
+	//setColumnHidden(this->columnCount() - 1, true);
 }
 
 void TagEditorTableWidget::updateColumnData(int column, QString text)
@@ -89,10 +91,21 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
+/** Add items to the table in order to edit them. */
 void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList)
 {
 	foreach (QPersistentModelIndex index, indexList) {
 		QString absFilePath = TreeView::absFilePath(index);
+
+		// Find the cover: in the directory where the track is, or inside the track itself, but
+		// this is not working for every format or tracks
+		//const LibraryModel *model = qobject_cast<const LibraryModel*>(index.model());
+		//qDebug() << (model == NULL);
+		//QString pathToCover = model->coverPathFromTrack(absFilePath);
+		//if (pathToCover.isEmpty()) {
+		//	QPixmap cover = model->coverImageFromTrack(track);
+		//}
+
 		MediaSource source(absFilePath);
 		if (source.type() != MediaSource::Invalid) {
 			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
@@ -114,7 +127,8 @@ void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
 			QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
 			/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-			QTableWidgetItem *trackNumber = new QTableWidgetItem(QString::number(f.tag()->track()));
+			QString t = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
+			QTableWidgetItem *trackNumber = new QTableWidgetItem("t");
 			//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
 			QTableWidgetItem *disc = new QTableWidgetItem("");
 			QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));

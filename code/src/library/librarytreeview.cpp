@@ -131,10 +131,10 @@ int LibraryTreeView::count(const QModelIndex &index) const
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
 		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
 		int tmp = 0;
-		for (int i=0; i < item->rowCount(); i++) {
+		for (int i = 0; i < item->rowCount(); i++) {
 			tmp += count(index.child(i, 0));
 		}
-		return (tmp == 0) ? 1:tmp;
+		return (tmp == 0) ? 1 : tmp;
 	}
 	return 0;
 }
@@ -225,7 +225,7 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 	foreach (QPersistentModelIndex index, indexes) {
 		QStandardItem *item = libraryModel->itemFromIndex(index);
 		if (item) {
-			LibraryItem *libraryItem = dynamic_cast<LibraryItem*>(item);
+			LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
 			if (libraryItem) {
 				int i = libraryItem->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
 				QString file = libraryItem->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
@@ -255,7 +255,6 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
-	qDebug() << "ici";
 }
 
 void LibraryTreeView::expandTreeView(const QModelIndex &index)
