@@ -45,6 +45,8 @@ public:
 
 	inline static QStringList suffixes() { return suff; }
 
+	QByteArray extractCover();
+
 private:
 	QString convertKeyToID3v2Key(QString key);
 };

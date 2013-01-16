@@ -36,6 +36,18 @@ void AlbumCover::createPixmapFromFile(const QString &fileName)
 	}
 }
 
+void AlbumCover::displayFromAttachedPicture(const QVariant &cover)
+{
+	QPixmap p;
+	QByteArray coverByteArray = cover.toByteArray();
+	qDebug() << "Converted cover in QByteArray (size):" << coverByteArray.size();
+	//bool loaded = p.loadFromData(coverByteArray, "JPG");
+	//if (loaded) {
+	//	this->setPixmap(p);
+	//}
+	//qDebug() << "loaded:" << loaded << ", null:" << p.isNull();
+}
+
 /** Redefined to display a small context menu in the view. */
 void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 {

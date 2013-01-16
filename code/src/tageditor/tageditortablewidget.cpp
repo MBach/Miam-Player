@@ -16,17 +16,18 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 {
 	Settings *settings = Settings::getInstance();
 	this->setStyleSheet(settings->styleSheet(this));
-	/// FIXME
+	/// FIXME: not displayed using styleSheet...
     //this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 }
 
+/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
 void TagEditorTableWidget::init()
 {
 	// Always keep the same number of columns with this taglist
 	QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM");
-	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT";
+	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = this->horizontalHeaderItem(column);
 		if (!header) {
@@ -35,7 +36,10 @@ void TagEditorTableWidget::init()
 		}
 		header->setData(KEY, keys.at(column));
 	}
-	//setColumnHidden(this->columnCount() - 1, true);
+
+	// Hide the cover column.
+	// It is not displayed in the table, only when one clicks on an item, before the comboboxes.
+	this->setColumnHidden(this->columnCount() - 1, true);
 }
 
 void TagEditorTableWidget::updateColumnData(int column, QString text)
@@ -91,6 +95,8 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
+#include <QBuffer>
+
 /** Add items to the table in order to edit them. */
 void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList)
 {
@@ -127,16 +133,18 @@ void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
 			QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
 			/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-			QString t = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
-			QTableWidgetItem *trackNumber = new QTableWidgetItem("t");
+			QString track = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
+			QTableWidgetItem *trackNumber = new QTableWidgetItem(track);
 			//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
 			QTableWidgetItem *disc = new QTableWidgetItem("");
 			QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
 			QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
 			QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
+			QTableWidgetItem *cover = new QTableWidgetItem(QTableWidgetItem::Type);
+			cover->setData(Qt::EditRole, fh.extractCover());
 
 			QList<QTableWidgetItem*> items;
-			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
+			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment << cover;
 
 			// Create a new row with right data
 			int row = rowCount();

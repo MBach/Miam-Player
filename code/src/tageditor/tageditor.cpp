@@ -168,29 +168,36 @@ void TagEditor::commitChanges()
 /** Display tags in separate QComboBoxes. */
 void TagEditor::displayTags()
 {
-	// Can be multiples rows
-	QList<QTableWidgetItem*> items = tagEditorWidget->selectedItems();
-
 	// Information in the table is split into columns, using column index
 	QMap<int, QStringList> datas;
-	//int lastCol = tagEditorWidget->columnCount() - 1;
-	foreach (QTableWidgetItem *item, items) {
+	QMap<int, QVariant> covers;
 
+	int lastCol = tagEditorWidget->columnCount() - 1;
+
+	// Can be multiples rows
+	QModelIndexList items = tagEditorWidget->selectionModel()->selectedIndexes();
+	foreach (QModelIndex item, items) {
 		// Load, feed and replace mechanism
 		// For the last column (which is the cover), use QPixmap instead
-		//if (item->column() == lastCol) {
-
-		//} else {
-		QStringList stringList = datas.value(item->column());
-		stringList << item->text();
-		datas.insert(item->column(), stringList);
-		//}
-
-		//int r = item->row();
-		//rows.add(r);
+		if (item.column() == lastCol) {
+			covers.insert(item.row(), item.data(Qt::EditRole));
+		} else {
+			QStringList stringList = datas.value(item.column());
+			stringList << item.data().toString();
+			datas.insert(item.column(), stringList);
+		}
 	}
 
-	// To avoid redondancy
+	/// XXX
+	if (covers.size() == 1) {
+		QMapIterator<int, QVariant> it(covers);
+		while (it.hasNext()) {
+			it.next();
+			labelCover->displayFromAttachedPicture(it.value());
+		}
+	}
+
+	// To avoid redondancy, overwrite data for the same key
 	QMapIterator<int, QStringList> it(datas);
 	while (it.hasNext()) {
 		it.next();

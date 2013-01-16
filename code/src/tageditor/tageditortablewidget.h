@@ -23,6 +23,7 @@ private:
 public:
 	TagEditorTableWidget(QWidget *parent = 0);
 
+	/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
 	void init();
 
 	enum DataUserRole { MODIFIED	= Qt::UserRole+1,

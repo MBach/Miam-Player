@@ -12,13 +12,14 @@
 
 #include <id3v2tag.h>
 #include <id3v2frame.h>
+#include <attachedPictureFrame.h>
 
-#include <id3v2tag.h>
 #include <tag.h>
 #include <tlist.h>
 #include <textidentificationframe.h>
 #include <tstring.h>
 
+#include <QImage>
 #include <QtDebug>
 
 using namespace TagLib;
@@ -226,4 +227,34 @@ QString FileHelper::convertKeyToID3v2Key(QString key)
 bool FileHelper::save()
 {
 	return f->save();
+}
+
+QByteArray FileHelper::extractCover()
+{
+	ID3v2::FrameList listOfMp3Frames;
+	ID3v2::Tag *id3v2Tag = NULL;
+	MPEG::File *mpegFile = NULL;
+	QByteArray byteArray;
+	switch (fileType) {
+	case MP3:
+		mpegFile = static_cast<MPEG::File*>(f);
+		if (mpegFile->ID3v2Tag()) {
+			id3v2Tag = mpegFile->ID3v2Tag();
+			// Look for picture frames only
+			listOfMp3Frames = id3v2Tag->frameListMap()["APIC"];
+			if (!listOfMp3Frames.isEmpty()) {
+				for(ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
+					// Cast a Frame* to AttachedPictureFrame*
+					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
+					byteArray.setRawData(pictureFrame->picture().data(), pictureFrame->picture().size());
+				}
+			}
+		} else if (mpegFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::extractCover: Not implemented for ID3v1Tag";
+		}
+		break;
+	default:
+		break;
+	}
+	return byteArray;
 }

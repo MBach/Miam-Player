@@ -15,6 +15,8 @@ public:
 
 	void createPixmapFromFile(const QString &fileName);
 
+	void displayFromAttachedPicture(const QVariant &cover);
+
 protected:
 	void contextMenuEvent(QContextMenuEvent *event);
 	void dragEnterEvent(QDragEnterEvent *event);
