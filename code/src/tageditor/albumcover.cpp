@@ -23,11 +23,9 @@ AlbumCover::AlbumCover(QWidget *parent) :
 
 void AlbumCover::createPixmapFromFile(const QString &fileName)
 {
-	bool isImage = false;
 	QImageReader imageReader(fileName);
 	imageReader.setDecideFormatFromContent(true);
 	if (imageReader.canRead()) {
-		isImage = true;
 		QPixmap pixmap(fileName);
 		if (!pixmap.isNull()) {
 			this->setPixmap(pixmap);
@@ -40,12 +38,10 @@ void AlbumCover::displayFromAttachedPicture(const QVariant &cover)
 {
 	QPixmap p;
 	QByteArray coverByteArray = cover.toByteArray();
-	qDebug() << "Converted cover in QByteArray (size):" << coverByteArray.size();
-	//bool loaded = p.loadFromData(coverByteArray, "JPG");
-	//if (loaded) {
-	//	this->setPixmap(p);
-	//}
-	//qDebug() << "loaded:" << loaded << ", null:" << p.isNull();
+	bool loaded = p.loadFromData(coverByteArray);
+	if (loaded) {
+		this->setPixmap(p);
+	}
 }
 
 /** Redefined to display a small context menu in the view. */

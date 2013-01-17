@@ -231,22 +231,21 @@ bool FileHelper::save()
 
 QByteArray FileHelper::extractCover()
 {
-	ID3v2::FrameList listOfMp3Frames;
-	ID3v2::Tag *id3v2Tag = NULL;
 	MPEG::File *mpegFile = NULL;
 	QByteArray byteArray;
 	switch (fileType) {
 	case MP3:
 		mpegFile = static_cast<MPEG::File*>(f);
 		if (mpegFile->ID3v2Tag()) {
-			id3v2Tag = mpegFile->ID3v2Tag();
 			// Look for picture frames only
-			listOfMp3Frames = id3v2Tag->frameListMap()["APIC"];
+			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
 			if (!listOfMp3Frames.isEmpty()) {
-				for(ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
+				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
 					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
-					byteArray.setRawData(pictureFrame->picture().data(), pictureFrame->picture().size());
+					// Performs a deep copy of the cover
+					QByteArray b(pictureFrame->picture().data(), pictureFrame->picture().size());
+					byteArray = b;
 				}
 			}
 		} else if (mpegFile->ID3v1Tag()) {
