@@ -57,16 +57,8 @@ TagEditor::TagEditor(QWidget *parent) :
 
 	// Open the TagConverter to help tagging from Tag to File, or vice-versa
 	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
-}
 
-/** Clear all rows and comboboxes. */
-void TagEditor::clear()
-{
-	// Delete text contents, not the combobox itself
-	foreach (QComboBox *combo, combos.values()) {
-		combo->clear();
-	}
-	tagEditorWidget->clear();
+	connect(labelCover, SIGNAL(aboutToRemoveCoverFromTag()), this, SLOT(removeCoverFromTag()));
 }
 
 /** Split tracks into columns to be able to edit metadatas. */
@@ -89,7 +81,34 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	tagEditorWidget->resizeColumnsToContents();
 }
 
-/** Close this Widget and tells its parent to switch views. */
+/** Clears all rows and comboboxes. */
+void TagEditor::clear()
+{
+	// Reset the cover
+	labelCover->removeCover();
+
+	// Delete text contents, not the combobox itself
+	foreach (QComboBox *combo, combos.values()) {
+		combo->clear();
+	}
+	tagEditorWidget->clear();
+}
+
+void TagEditor::removeCoverFromTag()
+{
+	saveChangesButton->setEnabled(true);
+	QModelIndexList items = tagEditorWidget->selectionModel()->selectedIndexes();
+
+	int lastCol = tagEditorWidget->columnCount() - 1;
+	foreach (QModelIndex item, items) {
+		if (item.column() == lastCol) {
+			QTableWidgetItem *hiddenCoverItem = tagEditorWidget->item(item.row(), lastCol);
+			hiddenCoverItem->setData(Qt::EditRole, QVariant());
+		}
+	}
+}
+
+/** Closes this Widget and tells its parent to switch views. */
 void TagEditor::close()
 {
 	emit closeTagEditor(false);
@@ -100,7 +119,7 @@ void TagEditor::close()
 	QWidget::close();
 }
 
-/** Save all fields in the media. */
+/** Saves all fields in the media. */
 void TagEditor::commitChanges()
 {
 	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
@@ -165,7 +184,7 @@ void TagEditor::commitChanges()
 	atLeastOneItemChanged = false;
 }
 
-/** Display tags in separate QComboBoxes. */
+/** Displays tags in separate QComboBoxes. */
 void TagEditor::displayTags()
 {
 	// Information in the table is split into columns, using column index
@@ -195,6 +214,8 @@ void TagEditor::displayTags()
 			it.next();
 			labelCover->displayFromAttachedPicture(it.value());
 		}
+	} else {
+		labelCover->removeCover();
 	}
 
 	// To avoid redondancy, overwrite data for the same key
@@ -260,7 +281,7 @@ void TagEditor::recordSingleItemChange(QTableWidgetItem *item)
 	item->setData(TagEditorTableWidget::MODIFIED, true);
 }
 
-/** Cancel all changes made by the user. */
+/** Cancels all changes made by the user. */
 void TagEditor::rollbackChanges()
 {
 	tagEditorWidget->resetTable();

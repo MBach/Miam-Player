@@ -1,5 +1,6 @@
 #include "albumcover.h"
 
+#include <QDesktopServices>
 #include <QDragEnterEvent>
 #include <QFileDialog>
 #include <QImageReader>
@@ -13,14 +14,38 @@ AlbumCover::AlbumCover(QWidget *parent) :
 {
 	setAcceptDrops(true);
 
-	// Context menu
+	// Context menu...
 	imageMenu = new QMenu(this);
-	QAction *resetCoverAction = imageMenu->addAction(tr("Remove cover"));
-	QAction *loadCoverAction = imageMenu->addAction(tr("Load a new cover"));
-	connect(resetCoverAction, SIGNAL(triggered()), this, SLOT(resetCover()));
+	loadCoverAction = imageMenu->addAction(tr("Load a new cover..."));
+	extractCoverAction = imageMenu->addAction(tr("Extract current cover..."));
+	removeCoverAction = imageMenu->addAction(tr("Remove cover"));
+
+	// ...with a submenu
+	subMenuApplyTo = imageMenu->addMenu(tr("Apply cover"));
+	applyCoverToAllAction = subMenuApplyTo->addAction(tr("to every tracks"));
+	applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to this album only"));
+
 	connect(loadCoverAction, SIGNAL(triggered()), this, SLOT(loadCover()));
+	connect(extractCoverAction, SIGNAL(triggered()), this, SLOT(extractCover()));
+	connect(removeCoverAction, SIGNAL(triggered()), this, SLOT(removeCover()));
+	connect(applyCoverToAllAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
+	connect(applyCoverToAlbumOnlyAction, SIGNAL(triggered()), this, SLOT(applyCoverToAlbumOnly()));
+
+	defaultPixmap = QPixmap(QString::fromUtf8(":/icons/disc"));
 }
 
+/** Displays a cover in the tag editor. */
+void AlbumCover::displayFromAttachedPicture(const QVariant &cover)
+{
+	QPixmap p;
+	if (p.loadFromData(cover.toByteArray())) {
+		this->setPixmap(p);
+	} else {
+		this->setPixmap(defaultPixmap);
+	}
+}
+
+/** Creates a picture after one has chosen a picture on it's filesystem. */
 void AlbumCover::createPixmapFromFile(const QString &fileName)
 {
 	QImageReader imageReader(fileName);
@@ -29,24 +54,17 @@ void AlbumCover::createPixmapFromFile(const QString &fileName)
 		QPixmap pixmap(fileName);
 		if (!pixmap.isNull()) {
 			this->setPixmap(pixmap);
-			emit coverHasChanged();
 		}
-	}
-}
-
-void AlbumCover::displayFromAttachedPicture(const QVariant &cover)
-{
-	QPixmap p;
-	QByteArray coverByteArray = cover.toByteArray();
-	bool loaded = p.loadFromData(coverByteArray);
-	if (loaded) {
-		this->setPixmap(p);
 	}
 }
 
 /** Redefined to display a small context menu in the view. */
 void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 {
+	bool pixmapsAreEquals = (pixmap()->toImage() == defaultPixmap.toImage());
+	removeCoverAction->setDisabled(pixmapsAreEquals);
+	extractCoverAction->setDisabled(pixmapsAreEquals);
+	subMenuApplyTo->setDisabled(pixmapsAreEquals);
 	imageMenu->exec(event->globalPos());
 }
 
@@ -71,17 +89,48 @@ void AlbumCover::dropEvent(QDropEvent *event)
 	}
 }
 
-void AlbumCover::resetCover()
+/** Removes the current cover (puts a default picture instead). */
+void AlbumCover::removeCover()
 {
-	this->setPixmap(QPixmap(":/icons/disc"));
-	emit coverHasChanged();
+	this->setPixmap(defaultPixmap);
+	// Do not send a signal when it was not explicitly asked by one, like deselecting a track,
+	// or loading new tracks in the tag editor
+	if (sender() == removeCoverAction) {
+		emit aboutToRemoveCoverFromTag();
+	}
 }
 
+/** Loads a file from the filesystem. */
 void AlbumCover::loadCover()
 {
-	qDebug() << "todo loadCover";
-	QString newCover = QFileDialog::getOpenFileName(this, tr("Load a new cover"));
+	QString newCover = QFileDialog::getOpenFileName(this, tr("Load a new cover"),
+		QDesktopServices::storageLocation(QDesktopServices::MusicLocation), tr("Images (*.png, *.jpg)"));
 	if (!newCover.isEmpty()) {
 		this->createPixmapFromFile(newCover);
 	}
+}
+
+/** Allows one to save the current cover to it's filesystem. */
+void AlbumCover::extractCover()
+{
+	QString imageName = QFileDialog::getSaveFileName(this, tr("Save a cover"),
+		QDesktopServices::storageLocation(QDesktopServices::MusicLocation),	tr("Image (*.jpg)"));
+	if (!imageName.isEmpty()) {
+		QFile image(imageName);
+		if (image.open(QIODevice::WriteOnly) && pixmap()->save(&image)) {
+			image.close();
+		}
+	}
+}
+
+/** Apply the current cover to every tracks in the tag editor. */
+void AlbumCover::applyCoverToAll()
+{
+	qDebug() << "AlbumCover::applyCoverToAll() not yet implemented";
+}
+
+/** Apply the current cover to related tracks. */
+void AlbumCover::applyCoverToAlbumOnly()
+{
+	qDebug() << "AlbumCover::applyCoverToAlbumOnly() not yet implemented";
 }

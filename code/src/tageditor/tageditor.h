@@ -27,25 +27,27 @@ public:
 	TagEditor(QWidget *parent = 0);
 
 public slots:
-	/** Delete all rows. */
-	void clear();
-
 	/** Split tracks into columns to be able to edit metadatas. */
 	void addItemsToEditor(const QList<QPersistentModelIndex> &indexes);
 
+	/** Clears all rows and comboboxes. */
+	void clear();
+
+	void removeCoverFromTag();
+
 private slots:
-	/** Close this Widget and tells its parent to switch views. */
+	/** Closes this Widget and tells its parent to switch views. */
 	void close();
 
-	/** Save all fields in the media. */
+	/** Saves all fields in the media. */
 	void commitChanges();
 
-	/** Display tags in separate QComboBoxes. */
+	/** Displays tags in separate QComboBoxes. */
 	void displayTags();
 
 	void recordSingleItemChange(QTableWidgetItem *item);
 
-	/** Cancel all changes made by the user. */
+	/** Cancels all changes made by the user. */
 	void rollbackChanges();
 
 	void toggleTagConverter(bool);

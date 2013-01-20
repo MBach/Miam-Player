@@ -77,6 +77,7 @@ void TagEditorTableWidget::resetTable()
 			QTableWidgetItem *year = this->item(row, ++column);
 			QTableWidgetItem *genre = this->item(row, ++column);
 			QTableWidgetItem *comment = this->item(row, ++column);
+			QTableWidgetItem *cover = this->item(row, ++column);
 
 			title->setText(f.tag()->title().toCString());
 			artist->setText(f.tag()->artist().toCString());
@@ -87,6 +88,7 @@ void TagEditorTableWidget::resetTable()
 			year->setText(QString::number(f.tag()->year()));
 			genre->setText(f.tag()->genre().toCString());
 			comment->setText(f.tag()->comment().toCString());
+			cover->setData(Qt::EditRole, fh.extractCover());
 		}
 		row++;
 	}
