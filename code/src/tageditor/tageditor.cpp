@@ -58,10 +58,23 @@ TagEditor::TagEditor(QWidget *parent) :
 	// Open the TagConverter to help tagging from Tag to File, or vice-versa
 	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
 
-	connect(labelCover, SIGNAL(aboutToRemoveCoverFromTag()), this, SLOT(removeCoverFromTag()));
+	connect(albumCover, SIGNAL(aboutToRemoveCoverFromTag()), this, SLOT(removeCoverFromTag()));
+	connect(albumCover, SIGNAL(aboutToApplyCoverToAll(bool)), this, SLOT(applyCoverToAll(bool)));
+
+	albumCover->installEventFilter(this);
 }
 
-/** Split tracks into columns to be able to edit metadatas. */
+/** Redefined to filter context menu event for the cover album object. */
+bool TagEditor::eventFilter(QObject *obj, QEvent *event)
+{
+	if (obj == albumCover && event->type() == QEvent::ContextMenu) {
+		return tagEditorWidget->selectedItems().isEmpty();
+	} else {
+		return QWidget::eventFilter(obj, event);
+	}
+}
+
+/** Splits tracks into columns to be able to edit metadatas. */
 void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 {
 	this->clear();
@@ -71,7 +84,8 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
-	tagEditorWidget->addItemsToEditor(indexes);
+	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(indexes);
+	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 
 	// Sort by path
@@ -85,7 +99,7 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 void TagEditor::clear()
 {
 	// Reset the cover
-	labelCover->removeCover();
+	albumCover->removeCover();
 
 	// Delete text contents, not the combobox itself
 	foreach (QComboBox *combo, combos.values()) {
@@ -97,15 +111,34 @@ void TagEditor::clear()
 void TagEditor::removeCoverFromTag()
 {
 	saveChangesButton->setEnabled(true);
-	QModelIndexList items = tagEditorWidget->selectionModel()->selectedIndexes();
-
-	int lastCol = tagEditorWidget->columnCount() - 1;
-	foreach (QModelIndex item, items) {
-		if (item.column() == lastCol) {
-			QTableWidgetItem *hiddenCoverItem = tagEditorWidget->item(item.row(), lastCol);
-			hiddenCoverItem->setData(Qt::EditRole, QVariant());
+	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedIndexes()) {
+		if (item.column() == TagEditorTableWidget::COVER_COL) {
+			tagEditorWidget->item(item.row(), item.column())->setData(Qt::EditRole, QVariant());
 		}
 	}
+}
+
+void TagEditor::applyCoverToAll(bool isAll)
+{
+	//QModelIndexList items = tagEditorWidget->selectionModel()->selectedRows();
+	//foreach (QModelIndex item, items) {
+
+	//	item.column() == tagEditorWidget->column(TagEditorTableWidget::ALBUM_COL);
+	//}
+
+	// Checks if there's only one album selected by the user
+	QList<QTableWidgetItem*> list = tagEditorWidget->selectedItems();
+	QSet<QString> albums;
+	foreach (QTableWidgetItem *item, list) {
+		if (item->column() == TagEditorTableWidget::ALBUM_COL) {
+			albums.insert(item->text());
+		}
+	}
+	if (albums.size() != 1) {
+
+	}
+
+	qDebug() << "applyCoverToAll" << isAll;
 }
 
 /** Closes this Widget and tells its parent to switch views. */
@@ -191,14 +224,12 @@ void TagEditor::displayTags()
 	QMap<int, QStringList> datas;
 	QMap<int, QVariant> covers;
 
-	int lastCol = tagEditorWidget->columnCount() - 1;
-
 	// Can be multiples rows
 	QModelIndexList items = tagEditorWidget->selectionModel()->selectedIndexes();
 	foreach (QModelIndex item, items) {
 		// Load, feed and replace mechanism
 		// For the last column (which is the cover), use QPixmap instead
-		if (item.column() == lastCol) {
+		if (item.column() == TagEditorTableWidget::COVER_COL) {
 			covers.insert(item.row(), item.data(Qt::EditRole));
 		} else {
 			QStringList stringList = datas.value(item.column());
@@ -212,10 +243,10 @@ void TagEditor::displayTags()
 		QMapIterator<int, QVariant> it(covers);
 		while (it.hasNext()) {
 			it.next();
-			labelCover->displayFromAttachedPicture(it.value());
+			albumCover->displayFromAttachedPicture(it.value());
 		}
 	} else {
-		labelCover->removeCover();
+		albumCover->removeCover();
 	}
 
 	// To avoid redondancy, overwrite data for the same key

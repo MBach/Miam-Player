@@ -26,8 +26,12 @@ private:
 public:
 	TagEditor(QWidget *parent = 0);
 
+protected:
+	/** Redefined to filter context menu event for the cover album object. */
+	bool eventFilter(QObject *obj, QEvent *event);
+
 public slots:
-	/** Split tracks into columns to be able to edit metadatas. */
+	/** Splits tracks into columns to be able to edit metadatas. */
 	void addItemsToEditor(const QList<QPersistentModelIndex> &indexes);
 
 	/** Clears all rows and comboboxes. */
@@ -36,6 +40,8 @@ public slots:
 	void removeCoverFromTag();
 
 private slots:
+	void applyCoverToAll(bool isAll);
+
 	/** Closes this Widget and tells its parent to switch views. */
 	void close();
 

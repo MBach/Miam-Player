@@ -97,23 +97,12 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
-#include <QBuffer>
-
 /** Add items to the table in order to edit them. */
-void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList)
+bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList)
 {
+	QSet<QPair<QString, QString> > artistAlbumSet;
 	foreach (QPersistentModelIndex index, indexList) {
 		QString absFilePath = TreeView::absFilePath(index);
-
-		// Find the cover: in the directory where the track is, or inside the track itself, but
-		// this is not working for every format or tracks
-		//const LibraryModel *model = qobject_cast<const LibraryModel*>(index.model());
-		//qDebug() << (model == NULL);
-		//QString pathToCover = model->coverPathFromTrack(absFilePath);
-		//if (pathToCover.isEmpty()) {
-		//	QPixmap cover = model->coverImageFromTrack(track);
-		//}
-
 		MediaSource source(absFilePath);
 		if (source.type() != MediaSource::Invalid) {
 			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
@@ -148,6 +137,9 @@ void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			QList<QTableWidgetItem*> items;
 			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment << cover;
 
+			// Check if there's only one album in the list, used for the context menu of the cover
+			artistAlbumSet.insert(qMakePair(artist->text(), album->text()));
+
 			// Create a new row with right data
 			int row = rowCount();
 			this->insertRow(row);
@@ -156,6 +148,7 @@ void TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			}
 		}
 	}
+	return (artistAlbumSet.size() == 1);
 }
 
 /** Redefined. */

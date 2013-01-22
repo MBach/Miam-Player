@@ -12,11 +12,11 @@ LibraryItem::LibraryItem(const QString &text, LibraryModel::MediaType mediaType,
 {
 	this->setData(type, SUFFIX);
 	this->setMediaType(mediaType);
-	if (text == "Bénabar") {
-		this->setData("aaaa", INTERNAL_NAME);
-	} else {
-		this->setData(text, INTERNAL_NAME);
-	}
+	//if (text == "Benabar") {
+	//	this->setData("aaaa", INTERNAL_NAME);
+	//} else {
+	this->setData(text, INTERNAL_NAME);
+	//}
 }
 
 LibraryItem::LibraryItem() :

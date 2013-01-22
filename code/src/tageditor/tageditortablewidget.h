@@ -21,6 +21,9 @@ private:
 	QMap<QString, QPersistentModelIndex> indexes;
 
 public:
+	enum Columns { ALBUM_COL = 3,
+				   COVER_COL = 11};
+
 	TagEditorTableWidget(QWidget *parent = 0);
 
 	/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
@@ -38,7 +41,7 @@ public:
 
 public slots:
 	/** Add items to the table in order to edit them. */
-	void addItemsToEditor(const QList<QPersistentModelIndex> &indexList);
+	bool addItemsToEditor(const QList<QPersistentModelIndex> &indexList);
 
 	/** Redefined. */
 	void clear();
