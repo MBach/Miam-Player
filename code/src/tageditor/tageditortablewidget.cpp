@@ -11,8 +11,11 @@
 
 using namespace Phonon;
 
+QStringList TagEditorTableWidget::keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM"
+	<< "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER");
+
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
-	QTableWidget(parent)
+	QTableWidget(0, keys.count(), parent)
 {
 	Settings *settings = Settings::getInstance();
 	this->setStyleSheet(settings->styleSheet(this));
@@ -20,14 +23,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
     //this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 	this->setItemDelegate(new NoFocusItemDelegate(this));
-}
 
-/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
-void TagEditorTableWidget::init()
-{
-	// Always keep the same number of columns with this taglist
-	QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM");
-	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = this->horizontalHeaderItem(column);
 		if (!header) {
@@ -42,7 +38,7 @@ void TagEditorTableWidget::init()
 	this->setColumnHidden(this->columnCount() - 1, true);
 }
 
-void TagEditorTableWidget::updateColumnData(int column, QString text)
+void TagEditorTableWidget::updateColumnData(int column, const QString &text)
 {
 	foreach (QModelIndex index, selectionModel()->selectedRows(column)) {
 		QTableWidgetItem *item = itemFromIndex(index);
@@ -73,7 +69,7 @@ void TagEditorTableWidget::resetTable()
 			QTableWidgetItem *artistAlbum = this->item(row, ++column);
 			QTableWidgetItem *album = this->item(row, ++column);
 			QTableWidgetItem *trackNumber = this->item(row, ++column);
-			//QTableWidgetItem *disc = this->item(row, ++column);
+			QTableWidgetItem *disc = this->item(row, ++column);
 			QTableWidgetItem *year = this->item(row, ++column);
 			QTableWidgetItem *genre = this->item(row, ++column);
 			QTableWidgetItem *comment = this->item(row, ++column);
@@ -84,7 +80,7 @@ void TagEditorTableWidget::resetTable()
 			artistAlbum->setText(fh.artistAlbum().toCString());
 			album->setText(f.tag()->album().toCString());
 			trackNumber->setText(QString::number(f.tag()->track()));
-			//disc->setText(discNumber.toCString());
+			disc->setText(QString());
 			year->setText(QString::number(f.tag()->year()));
 			genre->setText(f.tag()->genre().toCString());
 			comment->setText(f.tag()->comment().toCString());

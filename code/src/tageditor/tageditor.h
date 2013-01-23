@@ -30,6 +30,10 @@ protected:
 	/** Redefined to filter context menu event for the cover album object. */
 	bool eventFilter(QObject *obj, QEvent *event);
 
+private:
+	/** Display a cover only if the selected items have exactly the same cover. */
+	void displayCover();
+
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
 	void addItemsToEditor(const QList<QPersistentModelIndex> &indexes);
@@ -49,7 +53,7 @@ private slots:
 	void commitChanges();
 
 	/** Displays tags in separate QComboBoxes. */
-	void displayTags();
+	void displayTagsAndCover();
 
 	void recordSingleItemChange(QTableWidgetItem *item);
 

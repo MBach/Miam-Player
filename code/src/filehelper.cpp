@@ -128,10 +128,10 @@ String FileHelper::artistAlbum() const
 	return artAlb;
 }
 
-bool FileHelper::insert(QString key, QString value)
+bool FileHelper::insert(QString key, const QVariant &value)
 {
 	// Standard tags
-	String v = value.toStdString();
+	String v = value.toString().toStdString();
 	if (key == "ALBUM") {
 		f->tag()->setAlbum(v);
 	} else if (key == "ARTIST") {
@@ -146,6 +146,8 @@ bool FileHelper::insert(QString key, QString value)
 		f->tag()->setTrack(value.toInt());
 	} else if (key == "YEAR") {
 		f->tag()->setYear(value.toInt());
+	} else if (key == "COVER") {
+		this->replaceCover(value);
 	} else {
 		// Other non generic tags, like Artist Album
 		APE::File *apeFile = NULL;
@@ -190,7 +192,7 @@ bool FileHelper::insert(QString key, QString value)
 						tag->removeFrame(l.front());
 					}
 					ID3v2::TextIdentificationFrame *tif = new ID3v2::TextIdentificationFrame(ByteVector(convertedKey.toStdString().data()));
-					tif->setText(value.toStdString().data());
+					tif->setText(value.toString().toStdString().data());
 					tag->addFrame(tif);
 				}
 			} else if (mpegFile->ID3v1Tag()) {
@@ -256,4 +258,9 @@ QByteArray FileHelper::extractCover()
 		break;
 	}
 	return byteArray;
+}
+
+void FileHelper::replaceCover(const QVariant &value)
+{
+	qDebug() << "FileHelper::replaceCover() not yet implemented";
 }

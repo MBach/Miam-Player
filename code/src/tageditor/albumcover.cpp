@@ -18,7 +18,7 @@ AlbumCover::AlbumCover(QWidget *parent) :
 }
 
 /** Displays a cover in the tag editor. */
-void AlbumCover::displayFromAttachedPicture(const QVariant &cover)
+void AlbumCover::displayFromAttachedPicture(const QVariant &cover, const QString &albumName)
 {
 	QPixmap p;
 	if (p.loadFromData(cover.toByteArray())) {
@@ -26,6 +26,13 @@ void AlbumCover::displayFromAttachedPicture(const QVariant &cover)
 	} else {
 		this->setPixmap(defaultPixmap);
 	}
+	album = albumName;
+}
+
+/** Puts a default picture in this widget. */
+void AlbumCover::resetCover()
+{
+	this->setPixmap(defaultPixmap);
 }
 
 /** Creates a picture after one has chosen a picture on it's filesystem. */
@@ -59,16 +66,14 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	removeCoverAction->setEnabled(isCustomPixmap);
 	extractCoverAction->setEnabled(isCustomPixmap);
 
-	/// TEST
-	QString albumName = "test album";
 	if (isCoverForUniqueAlbum) {
-		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(albumName));
+		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(album));
 		applyCoverToCurrentAlbumAction->setEnabled(isCustomPixmap);
 
 		connect(applyCoverToCurrentAlbumAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
 	} else {
 		QMenu *subMenuApplyTo = imageMenu->addMenu(tr("Apply cover"));
-		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(albumName));
+		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(album));
 		QAction *applyCoverToAllAction = subMenuApplyTo->addAction(tr("to every tracks"));
 		subMenuApplyTo->setEnabled(isCustomPixmap);
 
@@ -78,6 +83,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	imageMenu->exec(event->globalPos());
 }
 
+/** Redefined. */
 void AlbumCover::dragEnterEvent(QDragEnterEvent *event)
 {
 	// If the source of the drag and drop is another application
@@ -86,6 +92,7 @@ void AlbumCover::dragEnterEvent(QDragEnterEvent *event)
 	}
 }
 
+/** Redefined. */
 void AlbumCover::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
@@ -100,22 +107,18 @@ void AlbumCover::dropEvent(QDropEvent *event)
 	}
 }
 
-/** Removes the current cover (puts a default picture instead). */
+/** Removes the current cover from this object, and in the table. */
 void AlbumCover::removeCover()
 {
-	this->setPixmap(defaultPixmap);
-	// Do not send a signal when it was not explicitly asked by one, like deselecting a track,
-	// or loading new tracks in the tag editor
-	//if (sender() == removeCoverAction) {
-	//	emit aboutToRemoveCoverFromTag();
-	//}
+	this->resetCover();
+	emit aboutToRemoveCoverFromTag();
 }
 
 /** Loads a file from the filesystem. */
 void AlbumCover::loadCover()
 {
 	QString newCover = QFileDialog::getOpenFileName(this, tr("Load a new cover"),
-		QDesktopServices::storageLocation(QDesktopServices::MusicLocation), tr("Images (*.png, *.jpg)"));
+		QDesktopServices::storageLocation(QDesktopServices::MusicLocation), tr("Images (*.png *.jpg)"));
 	if (!newCover.isEmpty()) {
 		this->createPixmapFromFile(newCover);
 	}

@@ -35,7 +35,7 @@ public:
 
 	TagLib::String artistAlbum() const;
 
-	bool insert(QString key, QString value);
+	bool insert(QString key, const QVariant &value);
 
 	bool save();
 
@@ -46,6 +46,8 @@ public:
 	inline static QStringList suffixes() { return suff; }
 
 	QByteArray extractCover();
+
+	void replaceCover(const QVariant &value);
 
 private:
 	QString convertKeyToID3v2Key(QString key);
