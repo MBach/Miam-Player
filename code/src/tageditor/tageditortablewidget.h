@@ -17,10 +17,7 @@ class TagEditorTableWidget : public QTableWidget
 	Q_OBJECT
 
 private:
-	/** Used for inserting, updating, etc. */
-	static QStringList keys;
-
-	/// An absolute file path is mapped with an item in the library. It's used to detect changes in tags.
+	/** An absolute file path is mapped with an item in the library. It's used to detect changes in tags. */
 	QMap<QString, QPersistentModelIndex> indexes;
 
 public:
@@ -28,6 +25,9 @@ public:
 				   COVER_COL = 11};
 
 	TagEditorTableWidget(QWidget *parent = 0);
+
+	/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
+	void init();
 
 	enum DataUserRole { MODIFIED	= Qt::UserRole+1,
 						KEY			= Qt::UserRole+2

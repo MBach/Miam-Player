@@ -28,6 +28,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	setupUi(this);
 
 	tagConverter = new TagConverter(this);
+	tagEditorWidget->init();
 
 	int i = 1;
 	combos.insert(++i, titleComboBox);
@@ -52,13 +53,15 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(rollbackChanges()));
 
 	// General case: when one is selecting multiple items
-	connect(tagEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(displayTagsAndCover()));
+	connect(tagEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(displayCover()));
+	connect(tagEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(displayTags()));
 
 	// Open the TagConverter to help tagging from Tag to File, or vice-versa
 	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
 
 	connect(albumCover, SIGNAL(aboutToRemoveCoverFromTag()), this, SLOT(removeCoverFromTag()));
 	connect(albumCover, SIGNAL(aboutToApplyCoverToAll(bool)), this, SLOT(applyCoverToAll(bool)));
+	connect(albumCover, SIGNAL(coverHasChanged()), this, SLOT(updateCover()));
 
 	albumCover->installEventFilter(this);
 }
@@ -71,6 +74,17 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	} else {
 		return QWidget::eventFilter(obj, event);
 	}
+}
+
+void TagEditor::replaceCover(const QVariant &cover)
+{
+	qDebug() << "TagEditor::replaceCover(): cover length:" << cover.toByteArray().length();
+	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COVER_COL)) {
+		QTableWidgetItem *item = tagEditorWidget->item(index.row(), index.column());
+		item->setData(Qt::EditRole, cover);
+		item->setData(TagEditorTableWidget::MODIFIED, true);
+	}
+	saveChangesButton->setEnabled(true);
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
@@ -109,14 +123,12 @@ void TagEditor::clear()
 
 void TagEditor::removeCoverFromTag()
 {
-	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedIndexes()) {
-		if (index.column() == TagEditorTableWidget::COVER_COL) {
-			QTableWidgetItem *item = tagEditorWidget->item(index.row(), index.column());
-			item->setData(Qt::EditRole, QVariant());
-			item->setData(TagEditorTableWidget::MODIFIED, true);
-		}
-	}
-	saveChangesButton->setEnabled(true);
+	this->replaceCover(QVariant());
+}
+
+void TagEditor::updateCover()
+{
+	this->replaceCover(albumCover->coverData());
 }
 
 void TagEditor::applyCoverToAll(bool isAll)
@@ -165,12 +177,10 @@ void TagEditor::commitChanges()
 
 			// Check for every field if we have any changes
 			QTableWidgetItem *item = tagEditorWidget->item(i, j);
-
 			if (item && item->data(TagEditorTableWidget::MODIFIED).toBool()) {
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
-				//qDebug() << key;
 				if (file.tag()) {
 					PropertyMap pm = file.tag()->properties();
 
@@ -184,8 +194,11 @@ void TagEditor::commitChanges()
 							}
 						}
 					} else {
-						qDebug() << key << item->text();
-						trackWasModified = fh.insert(key, item->text());
+						if (item->data(Qt::EditRole).isNull()) {
+							trackWasModified = fh.insert(key, item->text());
+						} else {
+							trackWasModified = fh.insert(key, item->data(Qt::EditRole));
+						}
 					}
 				} else {
 					qDebug() << "no valid tag for this file";
@@ -214,7 +227,7 @@ void TagEditor::commitChanges()
 	atLeastOneItemChanged = false;
 }
 
-/** Display a cover only if the selected items have exactly the same cover. */
+/** Displays a cover only if the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
 	QMap<QByteArray, QString> covers;
@@ -227,20 +240,18 @@ void TagEditor::displayCover()
 		}
 	}
 
-	// Void items are excluded, so it will display something (if a cover is missing, for example).
+	// Void items are excluded, so it will display something (e.g. if a cover is missing for one track but the whole album is selected).
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
 	if (covers.size() == 1) {
-		albumCover->displayFromAttachedPicture(covers.keys().first(), covers.values().first());
+		albumCover->setImageData(covers.keys().first(), covers.values().first());
 	} else {
 		albumCover->resetCover();
 	}
 }
 
 /** Displays tags in separate QComboBoxes. */
-void TagEditor::displayTagsAndCover()
+void TagEditor::displayTags()
 {
-	this->displayCover();
-
 	// Information in the table is split into columns, using column index
 	QMap<int, QStringList> datas;
 	foreach (QTableWidgetItem *item, tagEditorWidget->selectedItems()) {
@@ -321,7 +332,7 @@ void TagEditor::rollbackChanges()
 	atLeastOneItemChanged = false;
 
 	// Then, reload info a second time
-	this->displayTagsAndCover();
+	this->displayTags();
 }
 
 void TagEditor::toggleTagConverter(bool b)

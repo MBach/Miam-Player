@@ -1,19 +1,19 @@
 #ifndef ALBUMCOVER_H
 #define ALBUMCOVER_H
 
-#include <QLabel>
 #include <QMenu>
 
 /**
  * @brief The AlbumCover class is used to manipulate cover albums inside music files.
  */
-class AlbumCover : public QLabel
+class AlbumCover : public QWidget
 {
     Q_OBJECT
 private:
 	QMenu *imageMenu;
 
 	QPixmap defaultPixmap;
+	QPixmap pixmap;
 
 	bool isCoverForUniqueAlbum;
 	QString album;
@@ -22,12 +22,14 @@ public:
 	AlbumCover(QWidget *parent = 0);
 
 	/** Displays a cover in the tag editor. */
-	void displayFromAttachedPicture(const QVariant &cover, const QString &albumName);
+	void setImageData(const QVariant &cover, const QString &albumName);
 
 	void setCoverForUniqueAlbum(bool isUnique) { isCoverForUniqueAlbum = isUnique; }
 
 	/** Puts a default picture in this widget. */
 	void resetCover();
+
+	QVariant coverData() const;
 
 private:
 	/** Creates a picture after one has chosen a picture on it's filesystem. */
@@ -45,6 +47,9 @@ protected:
 
 	/** Allows one to drag & drop pictures from external software. */
 	void dropEvent(QDropEvent *event);
+
+	/** Redefined to switch between images very quickly. */
+	void paintEvent(QPaintEvent *);
 
 private slots:
 
@@ -69,6 +74,8 @@ signals:
 
 	/** This signal is sent to the TagEditorTableWidget class to remove the cover. */
 	void aboutToRemoveCoverFromTag();
+
+	void coverHasChanged();
 };
 
 #endif // ALBUMCOVER_H

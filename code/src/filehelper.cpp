@@ -132,6 +132,8 @@ bool FileHelper::insert(QString key, const QVariant &value)
 {
 	// Standard tags
 	String v = value.toString().toStdString();
+
+	/// XXX Create an enumeration somewhere
 	if (key == "ALBUM") {
 		f->tag()->setAlbum(v);
 	} else if (key == "ARTIST") {
@@ -241,13 +243,13 @@ QByteArray FileHelper::extractCover()
 		if (mpegFile->ID3v2Tag()) {
 			// Look for picture frames only
 			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			// It's possible to have more than one picture per file!
 			if (!listOfMp3Frames.isEmpty()) {
 				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
 					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
 					// Performs a deep copy of the cover
-					QByteArray b(pictureFrame->picture().data(), pictureFrame->picture().size());
-					byteArray = b;
+					byteArray = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
 				}
 			}
 		} else if (mpegFile->ID3v1Tag()) {
@@ -262,5 +264,36 @@ QByteArray FileHelper::extractCover()
 
 void FileHelper::replaceCover(const QVariant &value)
 {
-	qDebug() << "FileHelper::replaceCover() not yet implemented";
+	MPEG::File *mpegFile = NULL;
+	switch (fileType) {
+	case MP3:
+		mpegFile = static_cast<MPEG::File*>(f);
+		if (mpegFile->ID3v2Tag()) {
+			// Look for picture frames only
+			ID3v2::FrameList mp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			if (!mp3Frames.isEmpty()) {
+				for (ID3v2::FrameList::Iterator it = mp3Frames.begin(); it != mp3Frames.end() ; it++) {
+					// Removing a frame will invalidate any pointers on the list
+					mpegFile->ID3v2Tag()->removeFrame(*it);
+					break;
+				}
+			}
+			QByteArray b = value.toByteArray();
+			if (!b.isEmpty()) {
+				unsigned int l = (unsigned int)b.length();
+				ByteVector bv(b.data(), l);
+				qDebug() << "b.isEmpty()" << b.isEmpty() << b.size();
+				qDebug() << "bv.isEmpty()" << bv.isEmpty() << bv.size();
+				ID3v2::AttachedPictureFrame *pictureFrame = new ID3v2::AttachedPictureFrame();
+				pictureFrame->setMimeType("image/jpeg");
+				pictureFrame->setPicture(bv);
+				mpegFile->ID3v2Tag()->addFrame(pictureFrame);
+			}
+		} else if (mpegFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::replaceCover: Not implemented for ID3v1Tag";
+		}
+		break;
+	default:
+		break;
+	}
 }

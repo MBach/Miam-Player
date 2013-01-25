@@ -11,11 +11,8 @@
 
 using namespace Phonon;
 
-QStringList TagEditorTableWidget::keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM"
-	<< "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER");
-
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
-	QTableWidget(0, keys.count(), parent)
+	QTableWidget(parent)
 {
 	Settings *settings = Settings::getInstance();
 	this->setStyleSheet(settings->styleSheet(this));
@@ -23,18 +20,19 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
     //this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 	this->setItemDelegate(new NoFocusItemDelegate(this));
+}
 
+/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
+void TagEditorTableWidget::init()
+{
+	// Always keep the same number of columns with this taglist
+	QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM");
+	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
 	for (int column = 0; column < this->columnCount(); column++) {
-		QTableWidgetItem *header = this->horizontalHeaderItem(column);
-		if (!header) {
-			header = new QTableWidgetItem(0);
-			this->setHorizontalHeaderItem(column, header);
-		}
+		QTableWidgetItem *header = new QTableWidgetItem();
 		header->setData(KEY, keys.at(column));
+		this->setHorizontalHeaderItem(column, header);
 	}
-
-	// Hide the cover column.
-	// It is not displayed in the table, only when one clicks on an item, before the comboboxes.
 	this->setColumnHidden(this->columnCount() - 1, true);
 }
 
@@ -127,7 +125,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
 			QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
 			QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
-			QTableWidgetItem *cover = new QTableWidgetItem(QTableWidgetItem::Type);
+			QTableWidgetItem *cover = new QTableWidgetItem();
 			cover->setData(Qt::EditRole, fh.extractCover());
 
 			QList<QTableWidgetItem*> items;

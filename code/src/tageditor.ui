@@ -173,7 +173,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="AlbumCover" name="albumCover">
+      <widget class="AlbumCover" name="albumCover" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -192,13 +192,13 @@
          <height>100</height>
         </size>
        </property>
-       <property name="text">
+       <property name="text" stdset="0">
         <string notr="true"/>
        </property>
-       <property name="pixmap">
+       <property name="pixmap" stdset="0">
         <pixmap resource="mmmmp.qrc">:/icons/disc</pixmap>
        </property>
-       <property name="scaledContents">
+       <property name="scaledContents" stdset="0">
         <bool>true</bool>
        </property>
       </widget>
@@ -388,8 +388,9 @@
   </customwidget>
   <customwidget>
    <class>AlbumCover</class>
-   <extends>QLabel</extends>
+   <extends>QWidget</extends>
    <header>tageditor/albumcover.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -31,8 +31,7 @@ protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 
 private:
-	/** Display a cover only if the selected items have exactly the same cover. */
-	void displayCover();
+	void replaceCover(const QVariant &cover);
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
@@ -53,7 +52,10 @@ private slots:
 	void commitChanges();
 
 	/** Displays tags in separate QComboBoxes. */
-	void displayTagsAndCover();
+	void displayTags();
+
+	/** Displays a cover only if the selected items have exactly the same cover. */
+	void displayCover();
 
 	void recordSingleItemChange(QTableWidgetItem *item);
 
@@ -63,6 +65,8 @@ private slots:
 	void toggleTagConverter(bool);
 
 	void updateCells(QString text);
+
+	void updateCover();
 
 signals:
 	void closeTagEditor(bool);
