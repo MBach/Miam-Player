@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+#include "cover.h"
 #include "tagconverter.h"
 
 #include "ui_tageditor.h"
@@ -23,6 +24,8 @@ private:
 
 	static QStringList genres;
 
+	QMap<int, Cover> covers;
+
 public:
 	TagEditor(QWidget *parent = 0);
 
@@ -31,7 +34,7 @@ protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 
 private:
-	void replaceCover(const QVariant &cover);
+	void replaceCover(const Cover &cover);
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */

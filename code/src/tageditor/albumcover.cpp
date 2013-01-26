@@ -1,5 +1,6 @@
 #include "albumcover.h"
 
+#include <QBuffer>
 #include <QDesktopServices>
 #include <QDragEnterEvent>
 #include <QFileDialog>
@@ -14,43 +15,28 @@ AlbumCover::AlbumCover(QWidget *parent) :
 {
 	setAcceptDrops(true);
 	imageMenu = new QMenu(this);
-	defaultPixmap = QPixmap(":/icons/disc");
 }
 
 /** Displays a cover in the tag editor. */
-void AlbumCover::setImageData(const QVariant &cover, const QString &albumName)
+void AlbumCover::setCover(const Cover &cover)
 {
-	pixmap.loadFromData(cover.toByteArray());
-	album = albumName;
+	_cover = cover;
 	repaint();
 }
 
 /** Puts a default picture in this widget. */
 void AlbumCover::resetCover()
 {
-	pixmap = defaultPixmap.copy();
+	//_cover.load(":/icons/disc");
 	repaint();
-}
-
-#include <QBuffer>
-
-QVariant AlbumCover::coverData() const
-{
-	QByteArray byteArray;
-	QBuffer buffer(&byteArray);
-	buffer.open(QIODevice::WriteOnly);
-	bool b = pixmap.save(&buffer, "JPG");
-	qDebug() << "AlbumCover::coverData() length?" << byteArray.length();
-	return QVariant(byteArray);
 }
 
 /** Creates a picture after one has chosen a picture on it's filesystem. */
 void AlbumCover::createPixmapFromFile(const QString &fileName)
 {
-	pixmap = QPixmap(fileName);
-	if (!pixmap.isNull()) {
+	/*if (_cover.load(fileName)) {
 		emit coverHasChanged();
-	}
+	}*/
 	repaint();
 }
 
@@ -69,19 +55,21 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	connect(extractCoverAction, SIGNAL(triggered()), this, SLOT(extractCover()));
 	connect(removeCoverAction, SIGNAL(triggered()), this, SLOT(removeCover()));
 
-	bool isCustomPixmap = (pixmap.toImage() != defaultPixmap.toImage());
+	/// FIXME
+	//bool isCustomPixmap = (_cover.byteArray() != defaultCover.byteArray());
+	bool isCustomPixmap = true;
 	removeCoverAction->setEnabled(isCustomPixmap);
 	extractCoverAction->setEnabled(isCustomPixmap);
 
 	// Adapt the context menu to the content of the table
 	if (isCoverForUniqueAlbum) {
-		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(album));
+		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(_cover.album()));
 		applyCoverToCurrentAlbumAction->setEnabled(isCustomPixmap);
 
 		connect(applyCoverToCurrentAlbumAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
 	} else {
 		QMenu *subMenuApplyTo = imageMenu->addMenu(tr("Apply cover"));
-		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(album));
+		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(_cover.album()));
 		QAction *applyCoverToAllAction = subMenuApplyTo->addAction(tr("to every tracks"));
 		subMenuApplyTo->setEnabled(isCustomPixmap);
 
@@ -119,7 +107,13 @@ void AlbumCover::dropEvent(QDropEvent *event)
 void AlbumCover::paintEvent(QPaintEvent */*event*/)
 {
 	QPainter painter(this);
-	painter.drawPixmap(rect(), pixmap);
+	if (_cover.byteArray().isNull()) {
+		painter.drawPixmap(rect(), QPixmap(":/icons/disc"));
+	} else {
+		QPixmap p;
+		p.loadFromData(_cover.byteArray(), _cover.format());
+		painter.drawPixmap(rect(), p);
+	}
 }
 
 /** Removes the current cover from this object, and in the table. */
@@ -146,9 +140,9 @@ void AlbumCover::extractCover()
 		QDesktopServices::storageLocation(QDesktopServices::MusicLocation),	tr("Image (*.jpg)"));
 	if (!imageName.isEmpty()) {
 		QFile image(imageName);
-		if (image.open(QIODevice::WriteOnly) && pixmap.save(&image)) {
+		/*if (image.open(QIODevice::WriteOnly) && _cover.save(&image)) {
 			image.close();
-		}
+		}*/
 	}
 }
 

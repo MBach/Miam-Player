@@ -27,13 +27,13 @@ void TagEditorTableWidget::init()
 {
 	// Always keep the same number of columns with this taglist
 	QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM");
-	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
+	//keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
+	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT";
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = new QTableWidgetItem();
 		header->setData(KEY, keys.at(column));
 		this->setHorizontalHeaderItem(column, header);
 	}
-	this->setColumnHidden(this->columnCount() - 1, true);
 }
 
 void TagEditorTableWidget::updateColumnData(int column, const QString &text)
@@ -71,7 +71,6 @@ void TagEditorTableWidget::resetTable()
 			QTableWidgetItem *year = this->item(row, ++column);
 			QTableWidgetItem *genre = this->item(row, ++column);
 			QTableWidgetItem *comment = this->item(row, ++column);
-			QTableWidgetItem *cover = this->item(row, ++column);
 
 			title->setText(f.tag()->title().toCString());
 			artist->setText(f.tag()->artist().toCString());
@@ -82,7 +81,6 @@ void TagEditorTableWidget::resetTable()
 			year->setText(QString::number(f.tag()->year()));
 			genre->setText(f.tag()->genre().toCString());
 			comment->setText(f.tag()->comment().toCString());
-			cover->setData(Qt::EditRole, fh.extractCover());
 		}
 		row++;
 	}
@@ -92,7 +90,7 @@ void TagEditorTableWidget::resetTable()
 }
 
 /** Add items to the table in order to edit them. */
-bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList)
+bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList, QMap<int, Cover> &covers)
 {
 	QSet<QPair<QString, QString> > artistAlbumSet;
 	foreach (QPersistentModelIndex index, indexList) {
@@ -125,11 +123,9 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
 			QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
 			QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
-			QTableWidgetItem *cover = new QTableWidgetItem();
-			cover->setData(Qt::EditRole, fh.extractCover());
 
 			QList<QTableWidgetItem*> items;
-			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment << cover;
+			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
 
 			// Check if there's only one album in the list, used for the context menu of the cover
 			artistAlbumSet.insert(qMakePair(artist->text(), album->text()));
@@ -139,6 +135,15 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			this->insertRow(row);
 			for (int column = 0; column < items.size(); column++) {
 				this->setItem(row, column, items.at(column));
+			}
+
+			/// XXX is it really necessary to extract cover in this class?
+			/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
+			/// One in this class, one in TagEditor class ? But here is quite easy!
+			Cover cover = fh.extractCover();
+			if (!cover.byteArray().isNull()) {
+				cover.setAlbum(album->text());
+				covers.insert(row, cover);
 			}
 		}
 	}

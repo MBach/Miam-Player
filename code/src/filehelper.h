@@ -1,6 +1,8 @@
 #ifndef FILEHELPER_H
 #define FILEHELPER_H
 
+#include "cover.h"
+
 #include <QStringList>
 #include <QVariant>
 
@@ -35,19 +37,19 @@ public:
 
 	TagLib::String artistAlbum() const;
 
-	bool insert(QString key, const QVariant &value);
-
-	bool save();
+	Cover extractCover();
 
 	inline TagLib::File *file() const { return f; }
 
-	inline int type() const { return fileType; }
+	bool insert(QString key, const QVariant &value);
+
+	inline bool save() { return f->save(); }
+
+	void setCover(const Cover &cover);
 
 	inline static QStringList suffixes() { return suff; }
 
-	QByteArray extractCover();
-
-	void replaceCover(const QVariant &value);
+	inline int type() const { return fileType; }
 
 private:
 	QString convertKeyToID3v2Key(QString key);

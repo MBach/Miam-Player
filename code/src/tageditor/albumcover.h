@@ -3,6 +3,8 @@
 
 #include <QMenu>
 
+#include "cover.h"
+
 /**
  * @brief The AlbumCover class is used to manipulate cover albums inside music files.
  */
@@ -12,24 +14,22 @@ class AlbumCover : public QWidget
 private:
 	QMenu *imageMenu;
 
-	QPixmap defaultPixmap;
-	QPixmap pixmap;
-
 	bool isCoverForUniqueAlbum;
-	QString album;
+
+	Cover _cover;
 
 public:
 	AlbumCover(QWidget *parent = 0);
 
 	/** Displays a cover in the tag editor. */
-	void setImageData(const QVariant &cover, const QString &albumName);
+	void setCover(const Cover &cover);
 
 	void setCoverForUniqueAlbum(bool isUnique) { isCoverForUniqueAlbum = isUnique; }
 
 	/** Puts a default picture in this widget. */
 	void resetCover();
 
-	QVariant coverData() const;
+	Cover cover() const { return _cover; }
 
 private:
 	/** Creates a picture after one has chosen a picture on it's filesystem. */

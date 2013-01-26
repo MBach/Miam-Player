@@ -10,19 +10,19 @@
 #include "filehelper.h"
 
 /**
- * @brief The TagEditorTableWidget class is a table where one can select lines.
+ * @brief The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
  */
 class TagEditorTableWidget : public QTableWidget
 {
 	Q_OBJECT
-
 private:
 	/** An absolute file path is mapped with an item in the library. It's used to detect changes in tags. */
 	QMap<QString, QPersistentModelIndex> indexes;
 
 public:
-	enum Columns { ALBUM_COL = 5,
-				   COVER_COL = 11};
+	//enum Columns { ALBUM_COL = 5,
+	//			   COVER_COL = 11};
+	enum Columns { ALBUM_COL = 5 };
 
 	TagEditorTableWidget(QWidget *parent = 0);
 
@@ -41,7 +41,7 @@ public:
 
 public slots:
 	/** Add items to the table in order to edit them. */
-	bool addItemsToEditor(const QList<QPersistentModelIndex> &indexList);
+	bool addItemsToEditor(const QList<QPersistentModelIndex> &indexList, QMap<int, Cover> &covers);
 
 	/** Redefined. */
 	void clear();

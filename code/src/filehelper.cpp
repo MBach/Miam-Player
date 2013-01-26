@@ -128,6 +128,36 @@ String FileHelper::artistAlbum() const
 	return artAlb;
 }
 
+Cover FileHelper::extractCover()
+{
+	MPEG::File *mpegFile = NULL;
+	Cover cover;
+	switch (fileType) {
+	case MP3:
+		mpegFile = static_cast<MPEG::File*>(f);
+		if (mpegFile->ID3v2Tag()) {
+			// Look for picture frames only
+			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			// It's possible to have more than one picture per file!
+			if (!listOfMp3Frames.isEmpty()) {
+				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
+					// Cast a Frame* to AttachedPictureFrame*
+					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
+					// Performs a deep copy of the cover
+					QByteArray b = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
+					cover = Cover(b, pictureFrame->mimeType().toCString());
+				}
+			}
+		} else if (mpegFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::extractCover: Not implemented for ID3v1Tag";
+		}
+		break;
+	default:
+		break;
+	}
+	return cover;
+}
+
 bool FileHelper::insert(QString key, const QVariant &value)
 {
 	// Standard tags
@@ -148,8 +178,6 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		f->tag()->setTrack(value.toInt());
 	} else if (key == "YEAR") {
 		f->tag()->setYear(value.toInt());
-	} else if (key == "COVER") {
-		this->replaceCover(value);
 	} else {
 		// Other non generic tags, like Artist Album
 		APE::File *apeFile = NULL;
@@ -218,51 +246,7 @@ bool FileHelper::insert(QString key, const QVariant &value)
 	return true;
 }
 
-QString FileHelper::convertKeyToID3v2Key(QString key)
-{
-	/// TODO other relevant keys
-	if (key.compare("ARTISTALBUM") == 0) {
-		return "TPE2";
-	} else {
-		return "";
-	}
-}
-
-bool FileHelper::save()
-{
-	return f->save();
-}
-
-QByteArray FileHelper::extractCover()
-{
-	MPEG::File *mpegFile = NULL;
-	QByteArray byteArray;
-	switch (fileType) {
-	case MP3:
-		mpegFile = static_cast<MPEG::File*>(f);
-		if (mpegFile->ID3v2Tag()) {
-			// Look for picture frames only
-			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
-			// It's possible to have more than one picture per file!
-			if (!listOfMp3Frames.isEmpty()) {
-				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
-					// Cast a Frame* to AttachedPictureFrame*
-					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
-					// Performs a deep copy of the cover
-					byteArray = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
-				}
-			}
-		} else if (mpegFile->ID3v1Tag()) {
-			qDebug() << "FileHelper::extractCover: Not implemented for ID3v1Tag";
-		}
-		break;
-	default:
-		break;
-	}
-	return byteArray;
-}
-
-void FileHelper::replaceCover(const QVariant &value)
+void FileHelper::setCover(const Cover &cover)
 {
 	MPEG::File *mpegFile = NULL;
 	switch (fileType) {
@@ -278,22 +262,30 @@ void FileHelper::replaceCover(const QVariant &value)
 					break;
 				}
 			}
-			QByteArray b = value.toByteArray();
-			if (!b.isEmpty()) {
-				unsigned int l = (unsigned int)b.length();
-				ByteVector bv(b.data(), l);
-				qDebug() << "b.isEmpty()" << b.isEmpty() << b.size();
+			if (!cover.byteArray().isNull()) {
+				ByteVector bv(cover.byteArray().data(), cover.byteArray().length());
 				qDebug() << "bv.isEmpty()" << bv.isEmpty() << bv.size();
 				ID3v2::AttachedPictureFrame *pictureFrame = new ID3v2::AttachedPictureFrame();
-				pictureFrame->setMimeType("image/jpeg");
+				qDebug() << "cover.mimeType()" << cover.mimeType();
+				pictureFrame->setMimeType(cover.mimeType());
 				pictureFrame->setPicture(bv);
 				mpegFile->ID3v2Tag()->addFrame(pictureFrame);
 			}
 		} else if (mpegFile->ID3v1Tag()) {
-			qDebug() << "FileHelper::replaceCover: Not implemented for ID3v1Tag";
+			qDebug() << "FileHelper::setCover: Not implemented for ID3v1Tag";
 		}
 		break;
 	default:
 		break;
+	}
+}
+
+QString FileHelper::convertKeyToID3v2Key(QString key)
+{
+	/// TODO other relevant keys
+	if (key.compare("ARTISTALBUM") == 0) {
+		return "TPE2";
+	} else {
+		return "";
 	}
 }

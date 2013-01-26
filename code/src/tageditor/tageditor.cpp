@@ -76,13 +76,10 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
-void TagEditor::replaceCover(const QVariant &cover)
+void TagEditor::replaceCover(const Cover &cover)
 {
-	qDebug() << "TagEditor::replaceCover(): cover length:" << cover.toByteArray().length();
-	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COVER_COL)) {
-		QTableWidgetItem *item = tagEditorWidget->item(index.row(), index.column());
-		item->setData(Qt::EditRole, cover);
-		item->setData(TagEditorTableWidget::MODIFIED, true);
+	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows()) {
+		covers.insert(index.row(), cover);
 	}
 	saveChangesButton->setEnabled(true);
 }
@@ -97,7 +94,7 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
-	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(indexes);
+	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(indexes, covers);
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 
@@ -107,6 +104,8 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	tagEditorWidget->sortItems(1);
 	tagEditorWidget->resizeColumnsToContents();
 }
+
+//void TagEditor
 
 /** Clears all rows and comboboxes. */
 void TagEditor::clear()
@@ -119,16 +118,17 @@ void TagEditor::clear()
 		combo->clear();
 	}
 	tagEditorWidget->clear();
+	covers.clear();
 }
 
 void TagEditor::removeCoverFromTag()
 {
-	this->replaceCover(QVariant());
+	this->replaceCover(Cover());
 }
 
 void TagEditor::updateCover()
 {
-	this->replaceCover(albumCover->coverData());
+	this->replaceCover(albumCover->cover());
 }
 
 void TagEditor::applyCoverToAll(bool isAll)
@@ -194,17 +194,19 @@ void TagEditor::commitChanges()
 							}
 						}
 					} else {
-						if (item->data(Qt::EditRole).isNull()) {
-							trackWasModified = fh.insert(key, item->text());
-						} else {
-							trackWasModified = fh.insert(key, item->data(Qt::EditRole));
-						}
+						trackWasModified = fh.insert(key, item->text());
 					}
 				} else {
 					qDebug() << "no valid tag for this file";
 				}
 			}
 		}
+
+		Cover cover = covers.value(i);
+		if (!cover.byteArray().isNull()) {
+			fh.setCover(cover);
+		}
+
 		// Save changes if at least one field was modified
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
 		// The Tree structure could be modified
@@ -230,20 +232,19 @@ void TagEditor::commitChanges()
 /** Displays a cover only if the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
-	QMap<QByteArray, QString> covers;
-	// The last column is hidden, so we have to go through the selectionModel().
-	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COVER_COL)) {
-		// For the last column, use QPixmap
-		if (!item.data(Qt::EditRole).toByteArray().isEmpty()) {
-			covers.insert(item.data(Qt::EditRole).toByteArray(),
-						  tagEditorWidget->item(item.row(), TagEditorTableWidget::ALBUM_COL)->text());
+	QMap<int, Cover> selectedCover;
+	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows()) {
+		Cover cover = covers.value(item.row());
+		// Void items are excluded, so it will try display to something.
+		// E.g.: if a cover is missing for one track but the whole album is selected.
+		if (!cover.byteArray().isNull()) {
+			selectedCover.insert(item.row(), cover);
 		}
 	}
 
-	// Void items are excluded, so it will display something (e.g. if a cover is missing for one track but the whole album is selected).
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
-	if (covers.size() == 1) {
-		albumCover->setImageData(covers.keys().first(), covers.values().first());
+	if (selectedCover.size() == 1) {
+		albumCover->setCover(selectedCover.values().first());
 	} else {
 		albumCover->resetCover();
 	}

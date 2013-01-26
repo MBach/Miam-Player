@@ -34,6 +34,8 @@ SOURCES += \
     library/librarymodel.cpp \
     library/librarytreeview.cpp \
     library/musicsearchengine.cpp \
+    tageditor/albumcover.cpp \
+    tageditor/cover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
@@ -50,8 +52,7 @@ SOURCES += \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    playlistmodel.cpp \
-    tageditor/albumcover.cpp
+    playlistmodel.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -74,6 +75,8 @@ HEADERS += \
     library/librarymodel.h \
     library/librarytreeview.h \
     library/musicsearchengine.h \
+    tageditor/albumcover.h \
+    tageditor/cover.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
@@ -90,8 +93,7 @@ HEADERS += \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    playlistmodel.h \
-    tageditor/albumcover.h
+    playlistmodel.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
