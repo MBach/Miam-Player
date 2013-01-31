@@ -296,7 +296,8 @@ void MainWindow::aboutM4P()
 void MainWindow::toggleTagEditor(bool b)
 {
 	if (b) {
-		tagEditor->clear();
+		//qDebug() << "MainWindow::toggleTagEditor";
+		//tagEditor->clear();
 	}
 	tagEditor->setVisible(b);
 	seekSlider->setVisible(!b);

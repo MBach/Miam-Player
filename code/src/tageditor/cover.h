@@ -6,25 +6,31 @@
 class Cover
 {
 private:
-	const char* _mimeType;
-	const char* _format;
-	QString _album;
+	/** Like "image/jpeg" (for TagLib). */
+	QString _mimeType;
+
+	/** Like "JPG" (for QClasses). */
+	QString _format;
+
 	QByteArray _data;
 
+	bool _hasChanged;
+
 public:
-	Cover();
+	Cover(const QByteArray &byteArray, const QString &mimeType);
 
-	Cover(const QByteArray &byteArray, const char* mimeType);
+	/** Constructor used when loading pictures directly from the filesystem (drag & drop or with the context menu). */
+	Cover(const QString &fileName = QString());
 
-	const char* mimeType() const { return _mimeType; }
+	const char* mimeType() const { return _mimeType.toStdString().data(); }
 
-	QByteArray byteArray() const { return _data; }
+	const QByteArray byteArray() const { return _data; }
 
-	void setAlbum(const QString &album) { _album = album; }
+	const char* format() { return _format.toStdString().data(); }
 
-	QString album() const { return _album; }
+	bool hasChanged() const { return _hasChanged && !_data.isEmpty(); }
 
-	const char* format() { return _format; }
+	void setChanged(bool changed) { this->_hasChanged = changed; }
 };
 
 #endif // COVER_H

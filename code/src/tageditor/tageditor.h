@@ -17,14 +17,12 @@ class TagEditor : public QWidget, public Ui::TagEditor
 private:
 	QMap<int, QComboBox*> combos;
 
-	bool atLeastOneItemChanged;
-
 	/// An automatic helper for writing tags following regExp
 	TagConverter *tagConverter;
 
 	static QStringList genres;
 
-	QMap<int, Cover> covers;
+	QMap<int, Cover*> covers;
 
 public:
 	TagEditor(QWidget *parent = 0);
@@ -34,7 +32,7 @@ protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 
 private:
-	void replaceCover(const Cover &cover);
+	void replaceCover(Cover *newCover);
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
@@ -46,7 +44,7 @@ public slots:
 	void removeCoverFromTag();
 
 private slots:
-	void applyCoverToAll(bool isAll);
+	void applyCoverToAll(bool isForAll, Cover *cover);
 
 	/** Closes this Widget and tells its parent to switch views. */
 	void close();

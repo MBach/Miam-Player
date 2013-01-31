@@ -90,7 +90,7 @@ void TagEditorTableWidget::resetTable()
 }
 
 /** Add items to the table in order to edit them. */
-bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList, QMap<int, Cover> &covers)
+bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList, QMap<int, Cover*> &covers)
 {
 	QSet<QPair<QString, QString> > artistAlbumSet;
 	foreach (QPersistentModelIndex index, indexList) {
@@ -140,9 +140,8 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 			/// XXX is it really necessary to extract cover in this class?
 			/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
 			/// One in this class, one in TagEditor class ? But here is quite easy!
-			Cover cover = fh.extractCover();
-			if (!cover.byteArray().isNull()) {
-				cover.setAlbum(album->text());
+			Cover *cover = fh.extractCover();
+			if (cover != NULL && !cover->byteArray().isEmpty()) {
 				covers.insert(row, cover);
 			}
 		}
@@ -153,9 +152,12 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 /** Redefined. */
 void TagEditorTableWidget::clear()
 {
+	qDebug() << "TagEditorTableWidget::clear() 2";
 	while (rowCount() > 0) {
 		this->removeRow(0);
 	}
+	qDebug() << "TagEditorTableWidget::clear() 3";
 	indexes.clear();
+	qDebug() << "TagEditorTableWidget::clear() 4";
 	this->setSortingEnabled(false);
 }

@@ -23,7 +23,7 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 	<< "Rock & Roll" << "Hard Rock");
 
 TagEditor::TagEditor(QWidget *parent) :
-	QWidget(parent), atLeastOneItemChanged(false)
+	QWidget(parent)
 {
 	setupUi(this);
 
@@ -60,7 +60,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
 
 	connect(albumCover, SIGNAL(aboutToRemoveCoverFromTag()), this, SLOT(removeCoverFromTag()));
-	connect(albumCover, SIGNAL(aboutToApplyCoverToAll(bool)), this, SLOT(applyCoverToAll(bool)));
+	connect(albumCover, SIGNAL(aboutToApplyCoverToAll(bool, Cover*)), this, SLOT(applyCoverToAll(bool, Cover*)));
 	connect(albumCover, SIGNAL(coverHasChanged()), this, SLOT(updateCover()));
 
 	albumCover->installEventFilter(this);
@@ -76,12 +76,19 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
-void TagEditor::replaceCover(const Cover &cover)
+void TagEditor::replaceCover(Cover *newCover)
 {
 	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows()) {
-		covers.insert(index.row(), cover);
+		Cover *previousCover = covers.value(index.row());
+		// It is sure that covers are different
+		if (!(previousCover == NULL || newCover == NULL || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
+			newCover->setChanged(true);
+			delete previousCover;
+		}
+		covers.insert(index.row(), newCover);
 	}
 	saveChangesButton->setEnabled(true);
+	cancelButton->setEnabled(true);
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
@@ -105,25 +112,31 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	tagEditorWidget->resizeColumnsToContents();
 }
 
-//void TagEditor
-
 /** Clears all rows and comboboxes. */
 void TagEditor::clear()
 {
 	// Reset the cover
-	albumCover->resetCover();
+	if (!covers.isEmpty()) {
+		albumCover->resetCover();
+		QMutableMapIterator<int, Cover*> iterator(covers);
+		while (iterator.hasNext()) {
+			iterator.next();
+			if (iterator.value() != NULL) {
+				delete iterator.value();
+			}
+		}
+	}
 
 	// Delete text contents, not the combobox itself
 	foreach (QComboBox *combo, combos.values()) {
 		combo->clear();
 	}
 	tagEditorWidget->clear();
-	covers.clear();
 }
 
 void TagEditor::removeCoverFromTag()
 {
-	this->replaceCover(Cover());
+	this->replaceCover(NULL);
 }
 
 void TagEditor::updateCover()
@@ -131,20 +144,18 @@ void TagEditor::updateCover()
 	this->replaceCover(albumCover->cover());
 }
 
-void TagEditor::applyCoverToAll(bool isAll)
+void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 {
-	// Checks if there's only one album selected by the user
-	QList<QTableWidgetItem*> list = tagEditorWidget->selectedItems();
-	QSet<QString> albums;
-	foreach (QTableWidgetItem *item, list) {
-		if (item->column() == TagEditorTableWidget::ALBUM_COL) {
-			albums.insert(item->text());
-		}
+	if (isForAll) {
+		Q_UNUSED(cover)
+		/// FIXME: for every item in table, not only existing covers!
+		//foreach (Cover *current, covers.values()) {
+		//	*current = *cover;
+		//}
 	}
-	if (albums.size() != 1) {
-
-	}
-	qDebug() << "applyCoverToAll" << isAll;
+	//saveChangesButton->setEnabled(true);
+	cancelButton->setEnabled(true);
+	qDebug() << "applyCoverToAll" << isForAll;
 }
 
 /** Closes this Widget and tells its parent to switch views. */
@@ -153,7 +164,6 @@ void TagEditor::close()
 	emit closeTagEditor(false);
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
-	atLeastOneItemChanged = false;
 	this->clear();
 	QWidget::close();
 }
@@ -202,9 +212,10 @@ void TagEditor::commitChanges()
 			}
 		}
 
-		Cover cover = covers.value(i);
-		if (!cover.byteArray().isNull()) {
+		Cover *cover = covers.value(i);
+		if (cover == NULL || (cover != NULL && cover->hasChanged())) {
 			fh.setCover(cover);
+			trackWasModified = true;
 		}
 
 		// Save changes if at least one field was modified
@@ -226,27 +237,32 @@ void TagEditor::commitChanges()
 	// Reset buttons state
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
-	atLeastOneItemChanged = false;
 }
 
 /** Displays a cover only if the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
-	QMap<int, Cover> selectedCover;
-	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows()) {
-		Cover cover = covers.value(item.row());
+	QMap<int, Cover*> selectedCovers;
+	QMap<int, QString> selectedAlbums;
+	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
+	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::ALBUM_COL)) {
+		Cover *cover = covers.value(item.row());
 		// Void items are excluded, so it will try display to something.
 		// E.g.: if a cover is missing for one track but the whole album is selected.
-		if (!cover.byteArray().isNull()) {
-			selectedCover.insert(item.row(), cover);
+		if (cover != NULL && !cover->byteArray().isEmpty()) {
+			selectedCovers.insert(item.row(), cover);
 		}
+		selectedAlbums.insert(item.row(), item.data().toString());
 	}
 
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
-	if (selectedCover.size() == 1) {
-		albumCover->setCover(selectedCover.values().first());
+	if (selectedCovers.size() == 1) {
+		albumCover->setCover(selectedCovers.values().first());
 	} else {
 		albumCover->resetCover();
+	}
+	if (selectedAlbums.size() == 1) {
+		albumCover->setAlbum(selectedAlbums.values().first());
 	}
 }
 
@@ -330,9 +346,10 @@ void TagEditor::rollbackChanges()
 	tagEditorWidget->resetTable();
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
-	atLeastOneItemChanged = false;
 
 	// Then, reload info a second time
+	//this->clear();
+	this->displayCover();
 	this->displayTags();
 }
 

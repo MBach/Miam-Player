@@ -16,20 +16,25 @@ private:
 
 	bool isCoverForUniqueAlbum;
 
-	Cover _cover;
+	Cover *_cover;
+	QString _album;
 
 public:
 	AlbumCover(QWidget *parent = 0);
 
 	/** Displays a cover in the tag editor. */
-	void setCover(const Cover &cover);
+	void setCover(Cover *cover);
 
 	void setCoverForUniqueAlbum(bool isUnique) { isCoverForUniqueAlbum = isUnique; }
 
 	/** Puts a default picture in this widget. */
 	void resetCover();
 
-	Cover cover() const { return _cover; }
+	Cover* cover() const { return _cover; }
+
+	void setAlbum(const QString &album) { _album = album; }
+
+	QString album() const { return _album; }
 
 private:
 	/** Creates a picture after one has chosen a picture on it's filesystem. */
@@ -70,7 +75,7 @@ private slots:
 
 signals:
 	/** This signal is sent to the TagEditorTableWidget class to apply the selected cover to the album only or to everything. */
-	void aboutToApplyCoverToAll(bool);
+	void aboutToApplyCoverToAll(bool, Cover*);
 
 	/** This signal is sent to the TagEditorTableWidget class to remove the cover. */
 	void aboutToRemoveCoverFromTag();

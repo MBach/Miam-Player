@@ -1,7 +1,7 @@
 #ifndef FILEHELPER_H
 #define FILEHELPER_H
 
-#include "cover.h"
+#include "tageditor/cover.h"
 
 #include <QStringList>
 #include <QVariant>
@@ -37,7 +37,7 @@ public:
 
 	TagLib::String artistAlbum() const;
 
-	Cover extractCover();
+	Cover* extractCover();
 
 	inline TagLib::File *file() const { return f; }
 
@@ -45,7 +45,7 @@ public:
 
 	inline bool save() { return f->save(); }
 
-	void setCover(const Cover &cover);
+	void setCover(Cover *cover);
 
 	inline static QStringList suffixes() { return suff; }
 

@@ -11,14 +11,14 @@
 #include <QtDebug>
 
 AlbumCover::AlbumCover(QWidget *parent) :
-	QWidget(parent)
+	QWidget(parent), _cover(NULL)
 {
 	setAcceptDrops(true);
 	imageMenu = new QMenu(this);
 }
 
 /** Displays a cover in the tag editor. */
-void AlbumCover::setCover(const Cover &cover)
+void AlbumCover::setCover(Cover *cover)
 {
 	_cover = cover;
 	repaint();
@@ -27,16 +27,21 @@ void AlbumCover::setCover(const Cover &cover)
 /** Puts a default picture in this widget. */
 void AlbumCover::resetCover()
 {
-	//_cover.load(":/icons/disc");
+	_cover = NULL;
 	repaint();
 }
 
 /** Creates a picture after one has chosen a picture on it's filesystem. */
 void AlbumCover::createPixmapFromFile(const QString &fileName)
 {
-	/*if (_cover.load(fileName)) {
+	/// XXX
+	if (_cover != NULL) {
+		delete _cover;
+	}
+	_cover = new Cover(fileName);
+	if (!_cover->byteArray().isEmpty()) {
 		emit coverHasChanged();
-	}*/
+	}
 	repaint();
 }
 
@@ -55,23 +60,21 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	connect(extractCoverAction, SIGNAL(triggered()), this, SLOT(extractCover()));
 	connect(removeCoverAction, SIGNAL(triggered()), this, SLOT(removeCover()));
 
-	/// FIXME
-	//bool isCustomPixmap = (_cover.byteArray() != defaultCover.byteArray());
-	bool isCustomPixmap = true;
-	removeCoverAction->setEnabled(isCustomPixmap);
-	extractCoverAction->setEnabled(isCustomPixmap);
+	bool isDefaultCover = (_cover == NULL);
+	removeCoverAction->setDisabled(isDefaultCover);
+	extractCoverAction->setDisabled(isDefaultCover);
 
 	// Adapt the context menu to the content of the table
 	if (isCoverForUniqueAlbum) {
-		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(_cover.album()));
-		applyCoverToCurrentAlbumAction->setEnabled(isCustomPixmap);
+		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(_album));
+		applyCoverToCurrentAlbumAction->setDisabled(isDefaultCover);
 
 		connect(applyCoverToCurrentAlbumAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
 	} else {
 		QMenu *subMenuApplyTo = imageMenu->addMenu(tr("Apply cover"));
-		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(_cover.album()));
+		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(_album));
 		QAction *applyCoverToAllAction = subMenuApplyTo->addAction(tr("to every tracks"));
-		subMenuApplyTo->setEnabled(isCustomPixmap);
+		subMenuApplyTo->setDisabled(isDefaultCover);
 
 		connect(applyCoverToAllAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
 		connect(applyCoverToAlbumOnlyAction, SIGNAL(triggered()), this, SLOT(applyCoverToAlbumOnly()));
@@ -107,20 +110,25 @@ void AlbumCover::dropEvent(QDropEvent *event)
 void AlbumCover::paintEvent(QPaintEvent */*event*/)
 {
 	QPainter painter(this);
-	if (_cover.byteArray().isNull()) {
+	if (_cover == NULL || _cover->byteArray().isEmpty()) {
 		painter.drawPixmap(rect(), QPixmap(":/icons/disc"));
 	} else {
 		QPixmap p;
-		p.loadFromData(_cover.byteArray(), _cover.format());
-		painter.drawPixmap(rect(), p);
+		if (p.loadFromData(_cover->byteArray(), _cover->format())) {
+			painter.drawPixmap(rect(), p);
+		} else {
+			// Couldn't load the cover, using default one
+			painter.drawPixmap(rect(), QPixmap(":/icons/disc"));
+		}
 	}
 }
 
 /** Removes the current cover from this object, and in the table. */
 void AlbumCover::removeCover()
 {
-	this->resetCover();
+	_cover = NULL;
 	emit aboutToRemoveCoverFromTag();
+	repaint();
 }
 
 /** Loads a file from the filesystem. */
@@ -140,20 +148,21 @@ void AlbumCover::extractCover()
 		QDesktopServices::storageLocation(QDesktopServices::MusicLocation),	tr("Image (*.jpg)"));
 	if (!imageName.isEmpty()) {
 		QFile image(imageName);
-		/*if (image.open(QIODevice::WriteOnly) && _cover.save(&image)) {
+		if (image.open(QIODevice::WriteOnly)) {
+			image.write(_cover->byteArray());
 			image.close();
-		}*/
+		}
 	}
 }
 
 /** Apply the current cover to every tracks in the tag editor. */
 void AlbumCover::applyCoverToAll()
 {
-	emit aboutToApplyCoverToAll(true);
+	emit aboutToApplyCoverToAll(true, _cover);
 }
 
 /** Apply the current cover to related tracks. */
 void AlbumCover::applyCoverToAlbumOnly()
 {
-	emit aboutToApplyCoverToAll(false);
+	emit aboutToApplyCoverToAll(false, _cover);
 }
