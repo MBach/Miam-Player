@@ -59,9 +59,8 @@ TagEditor::TagEditor(QWidget *parent) :
 	// Open the TagConverter to help tagging from Tag to File, or vice-versa
 	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
 
-	connect(albumCover, SIGNAL(aboutToRemoveCoverFromTag()), this, SLOT(removeCoverFromTag()));
+	connect(albumCover, SIGNAL(coverHasChanged(Cover*)), this, SLOT(replaceCover(Cover*)));
 	connect(albumCover, SIGNAL(aboutToApplyCoverToAll(bool, Cover*)), this, SLOT(applyCoverToAll(bool, Cover*)));
-	connect(albumCover, SIGNAL(coverHasChanged()), this, SLOT(updateCover()));
 
 	albumCover->installEventFilter(this);
 }
@@ -76,6 +75,19 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
+void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
+{
+	QMutableMapIterator<int, Cover*> iterator(coversToRemove);
+	while (iterator.hasNext()) {
+		iterator.next();
+		qDebug() << iterator.key() << (iterator.value() == NULL);
+		if (iterator.value() != NULL) {
+			delete iterator.value();
+		}
+	}
+	coversToRemove.clear();
+}
+
 void TagEditor::replaceCover(Cover *newCover)
 {
 	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows()) {
@@ -85,7 +97,7 @@ void TagEditor::replaceCover(Cover *newCover)
 			newCover->setChanged(true);
 			delete previousCover;
 		}
-		covers.insert(index.row(), newCover);
+		unsavedCovers.insert(index.row(), newCover);
 	}
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
@@ -115,17 +127,10 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 /** Clears all rows and comboboxes. */
 void TagEditor::clear()
 {
-	// Reset the cover
-	if (!covers.isEmpty()) {
-		albumCover->resetCover();
-		QMutableMapIterator<int, Cover*> iterator(covers);
-		while (iterator.hasNext()) {
-			iterator.next();
-			if (iterator.value() != NULL) {
-				delete iterator.value();
-			}
-		}
-	}
+	this->clearCovers(covers);
+	this->clearCovers(unsavedCovers);
+
+	albumCover->resetCover();
 
 	// Delete text contents, not the combobox itself
 	foreach (QComboBox *combo, combos.values()) {
@@ -134,25 +139,24 @@ void TagEditor::clear()
 	tagEditorWidget->clear();
 }
 
-void TagEditor::removeCoverFromTag()
-{
-	this->replaceCover(NULL);
-}
-
-void TagEditor::updateCover()
-{
-	this->replaceCover(albumCover->cover());
-}
-
 void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 {
 	if (isForAll) {
-		Q_UNUSED(cover)
-		/// FIXME: for every item in table, not only existing covers!
-		//foreach (Cover *current, covers.values()) {
-		//	*current = *cover;
-		//}
+		for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
+			Cover *c = covers.value(i);
+			if (c == NULL) {
+				qDebug() << "no cover for row" << i;
+				unsavedCovers.insert(i, new Cover(cover->byteArray(), cover->mimeType()));
+			} else {
+				qDebug() << "replace cover";
+				// Do not replace the cover for the caller
+				if (c != cover) {
+					unsavedCovers.insert(i, cover);
+				}
+			}
+		}
 	}
+
 	//saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
 	qDebug() << "applyCoverToAll" << isForAll;
@@ -212,8 +216,9 @@ void TagEditor::commitChanges()
 			}
 		}
 
-		Cover *cover = covers.value(i);
+		Cover *cover = unsavedCovers.value(i);
 		if (cover == NULL || (cover != NULL && cover->hasChanged())) {
+			qDebug() << "setCover(" << i << ")";
 			fh.setCover(cover);
 			trackWasModified = true;
 		}
@@ -239,14 +244,21 @@ void TagEditor::commitChanges()
 	cancelButton->setEnabled(false);
 }
 
-/** Displays a cover only if the selected items have exactly the same cover. */
+/** Displays a cover only if all the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
 	QMap<int, Cover*> selectedCovers;
 	QMap<int, QString> selectedAlbums;
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
 	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::ALBUM_COL)) {
-		Cover *cover = covers.value(item.row());
+		Cover *cover = NULL;
+		// Check if there's a cover in a temporary state (to allow rollback action)
+		if (unsavedCovers.value(item.row()) != NULL) {
+			cover = unsavedCovers.value(item.row());
+		} else {
+			cover = covers.value(item.row());
+		}
+
 		// Void items are excluded, so it will try display to something.
 		// E.g.: if a cover is missing for one track but the whole album is selected.
 		if (cover != NULL && !cover->byteArray().isEmpty()) {
@@ -347,10 +359,12 @@ void TagEditor::rollbackChanges()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 
+	// Reset the unsaved cover list only
+	this->clearCovers(unsavedCovers);
+
 	// Then, reload info a second time
-	//this->clear();
-	this->displayCover();
-	this->displayTags();
+	//this->displayCover();
+	//this->displayTags();
 }
 
 void TagEditor::toggleTagConverter(bool b)

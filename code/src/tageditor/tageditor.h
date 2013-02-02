@@ -23,6 +23,7 @@ private:
 	static QStringList genres;
 
 	QMap<int, Cover*> covers;
+	QMap<int, Cover*> unsavedCovers;
 
 public:
 	TagEditor(QWidget *parent = 0);
@@ -32,7 +33,7 @@ protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 
 private:
-	void replaceCover(Cover *newCover);
+	void clearCovers(QMap<int, Cover *> &coversToRemove);
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
@@ -40,8 +41,6 @@ public slots:
 
 	/** Clears all rows and comboboxes. */
 	void clear();
-
-	void removeCoverFromTag();
 
 private slots:
 	void applyCoverToAll(bool isForAll, Cover *cover);
@@ -55,10 +54,12 @@ private slots:
 	/** Displays tags in separate QComboBoxes. */
 	void displayTags();
 
-	/** Displays a cover only if the selected items have exactly the same cover. */
+	/** Displays a cover only if all the selected items have exactly the same cover. */
 	void displayCover();
 
 	void recordSingleItemChange(QTableWidgetItem *item);
+
+	void replaceCover(Cover *newCover);
 
 	/** Cancels all changes made by the user. */
 	void rollbackChanges();
@@ -66,8 +67,6 @@ private slots:
 	void toggleTagConverter(bool);
 
 	void updateCells(QString text);
-
-	void updateCover();
 
 signals:
 	void closeTagEditor(bool);

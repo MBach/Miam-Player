@@ -40,7 +40,7 @@ void AlbumCover::createPixmapFromFile(const QString &fileName)
 	}
 	_cover = new Cover(fileName);
 	if (!_cover->byteArray().isEmpty()) {
-		emit coverHasChanged();
+		emit coverHasChanged(_cover);
 	}
 	repaint();
 }
@@ -127,7 +127,7 @@ void AlbumCover::paintEvent(QPaintEvent */*event*/)
 void AlbumCover::removeCover()
 {
 	_cover = NULL;
-	emit aboutToRemoveCoverFromTag();
+	emit coverHasChanged(_cover);
 	repaint();
 }
 

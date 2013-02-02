@@ -248,7 +248,7 @@ bool FileHelper::insert(QString key, const QVariant &value)
 
 void FileHelper::setCover(Cover *cover)
 {
-	qDebug() << "FileHelper::setCover";
+	qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);
 	MPEG::File *mpegFile = NULL;
 	switch (fileType) {
 	case MP3:

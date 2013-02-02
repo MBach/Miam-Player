@@ -30,7 +30,7 @@ public:
 	/** Puts a default picture in this widget. */
 	void resetCover();
 
-	Cover* cover() const { return _cover; }
+	//Cover* cover() const { return _cover; }
 
 	void setAlbum(const QString &album) { _album = album; }
 
@@ -77,10 +77,7 @@ signals:
 	/** This signal is sent to the TagEditorTableWidget class to apply the selected cover to the album only or to everything. */
 	void aboutToApplyCoverToAll(bool, Cover*);
 
-	/** This signal is sent to the TagEditorTableWidget class to remove the cover. */
-	void aboutToRemoveCoverFromTag();
-
-	void coverHasChanged();
+	void coverHasChanged(Cover*);
 };
 
 #endif // ALBUMCOVER_H

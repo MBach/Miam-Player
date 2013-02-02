@@ -24,7 +24,6 @@ Cover::Cover(const QByteArray &byteArray, const QString &mimeType)
 
 /** Constructor used when loading pictures directly from the filesystem (drag & drop or with the context menu). */
 Cover::Cover(const QString &fileName)
-	: _hasChanged(false)
 {
 	if (!fileName.isEmpty()) {
 		// QImage is faster than QPixmap for I/O ops
@@ -41,6 +40,7 @@ Cover::Cover(const QString &fileName)
 						_format = "PNG";
 						_mimeType = "image/png";
 					}
+					_hasChanged = true;
 				}
 				buffer.close();
 			}
