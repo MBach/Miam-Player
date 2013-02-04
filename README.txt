@@ -13,3 +13,6 @@ What is NOT inside?
 * Well, it's just reading MP3, but it's doing it well!
 
 This software was developped using Qt, Phonon and Taglib
+
+To download it: https://sourceforge.net/projects/miammusicplayer/files/
+Project page: https://sourceforge.net/projects/miammusicplayer/
