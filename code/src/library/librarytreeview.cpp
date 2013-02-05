@@ -88,7 +88,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 void LibraryTreeView::retranslateUi()
 {
 	foreach (QAction *action, properties->actions()) {
-		action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data(), 0, QApplication::UnicodeUTF8));
+		action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 	}
 }
 

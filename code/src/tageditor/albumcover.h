@@ -30,8 +30,6 @@ public:
 	/** Puts a default picture in this widget. */
 	void resetCover();
 
-	//Cover* cover() const { return _cover; }
-
 	void setAlbum(const QString &album) { _album = album; }
 
 	QString album() const { return _album; }

@@ -1,9 +1,9 @@
 #include "customizethemedialog.h"
 
 #include <QDesktopWidget>
-#include <QDesktopServices>
 #include <QFileDialog>
 #include <QScrollBar>
+#include <QStandardPaths>
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), targetedColor(NULL)
@@ -254,7 +254,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 {
 	QPushButton *button = qobject_cast<QPushButton *>(sender());
 	MediaButton *b = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
-	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QDesktopServices::storageLocation(QDesktopServices::PicturesLocation), tr("Pictures (*.jpg *.jpeg *.png)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QStandardPaths::displayName(QStandardPaths::PicturesLocation), tr("Pictures (*.jpg *.jpeg *.png)"));
 
 	Settings *settings = Settings::getInstance();
 	settings->setCustomIcon(b, path);

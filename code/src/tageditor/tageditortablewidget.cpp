@@ -9,8 +9,6 @@
 
 #include <QtDebug>
 
-using namespace Phonon;
-
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
 {
@@ -54,34 +52,36 @@ void TagEditorTableWidget::resetTable()
 	while (it.hasNext()) {
 		it.next();
 		QFileInfo fileInfo(it.key());
-		MediaSource source(fileInfo.absoluteFilePath());
-		if (source.type() != MediaSource::Invalid) {
-			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
+		/// FIXME Qt5
+		//MediaSource source(fileInfo.absoluteFilePath());
+		//if (source.type() != MediaSource::Invalid) {
+		//TagLib::FileRef f(source.fileName().toLocal8Bit().data());
+		TagLib::FileRef f(fileInfo.absoluteFilePath().toLocal8Bit().data());
 
-			FileHelper fh(f, it.value().data(LibraryItem::SUFFIX).toInt());
+		FileHelper fh(f, it.value().data(LibraryItem::SUFFIX).toInt());
 
-			// Reload info
-			int column = 1;
-			QTableWidgetItem *title = this->item(row, ++column);
-			QTableWidgetItem *artist = this->item(row, ++column);
-			QTableWidgetItem *artistAlbum = this->item(row, ++column);
-			QTableWidgetItem *album = this->item(row, ++column);
-			QTableWidgetItem *trackNumber = this->item(row, ++column);
-			QTableWidgetItem *disc = this->item(row, ++column);
-			QTableWidgetItem *year = this->item(row, ++column);
-			QTableWidgetItem *genre = this->item(row, ++column);
-			QTableWidgetItem *comment = this->item(row, ++column);
+		// Reload info
+		int column = 1;
+		QTableWidgetItem *title = this->item(row, ++column);
+		QTableWidgetItem *artist = this->item(row, ++column);
+		QTableWidgetItem *artistAlbum = this->item(row, ++column);
+		QTableWidgetItem *album = this->item(row, ++column);
+		QTableWidgetItem *trackNumber = this->item(row, ++column);
+		QTableWidgetItem *disc = this->item(row, ++column);
+		QTableWidgetItem *year = this->item(row, ++column);
+		QTableWidgetItem *genre = this->item(row, ++column);
+		QTableWidgetItem *comment = this->item(row, ++column);
 
-			title->setText(f.tag()->title().toCString());
-			artist->setText(f.tag()->artist().toCString());
-			artistAlbum->setText(fh.artistAlbum().toCString());
-			album->setText(f.tag()->album().toCString());
-			trackNumber->setText(QString::number(f.tag()->track()));
-			disc->setText(QString());
-			year->setText(QString::number(f.tag()->year()));
-			genre->setText(f.tag()->genre().toCString());
-			comment->setText(f.tag()->comment().toCString());
-		}
+		title->setText(f.tag()->title().toCString());
+		artist->setText(f.tag()->artist().toCString());
+		artistAlbum->setText(fh.artistAlbum().toCString());
+		album->setText(f.tag()->album().toCString());
+		trackNumber->setText(QString::number(f.tag()->track()));
+		disc->setText(QString());
+		year->setText(QString::number(f.tag()->year()));
+		genre->setText(f.tag()->genre().toCString());
+		comment->setText(f.tag()->comment().toCString());
+		//}
 		row++;
 	}
 	this->setSortingEnabled(true);
@@ -95,56 +95,57 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 	QSet<QPair<QString, QString> > artistAlbumSet;
 	foreach (QPersistentModelIndex index, indexList) {
 		QString absFilePath = TreeView::absFilePath(index);
-		MediaSource source(absFilePath);
-		if (source.type() != MediaSource::Invalid) {
-			TagLib::FileRef f(source.fileName().toLocal8Bit().data());
-			indexes.insert(absFilePath, index);
+		/// FIXME Qt5
+		//MediaSource source(absFilePath);
+		//if (source.type() != MediaSource::Invalid) {
+		TagLib::FileRef f(absFilePath.toLocal8Bit().data());
+		indexes.insert(absFilePath, index);
 
-			FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
+		FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
 
-			// The first two columns are not editable
-			// It may changes in the future for the first one (the filename)
-			QFileInfo qFileInfo(absFilePath);
-			QTableWidgetItem *fileName = new QTableWidgetItem(qFileInfo.fileName());
-			fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-			fileName->setData(LibraryItem::SUFFIX, fh.type());
-			QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
-			absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+		// The first two columns are not editable
+		// It may changes in the future for the first one (the filename)
+		QFileInfo qFileInfo(absFilePath);
+		QTableWidgetItem *fileName = new QTableWidgetItem(qFileInfo.fileName());
+		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+		fileName->setData(LibraryItem::SUFFIX, fh.type());
+		QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
+		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-			QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
-			QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
-			QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
-			QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
-			/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-			QString track = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
-			QTableWidgetItem *trackNumber = new QTableWidgetItem(track);
-			//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
-			QTableWidgetItem *disc = new QTableWidgetItem("");
-			QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
-			QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
-			QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
+		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
+		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
+		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
+		QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
+		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
+		QString track = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
+		QTableWidgetItem *trackNumber = new QTableWidgetItem(track);
+		//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
+		QTableWidgetItem *disc = new QTableWidgetItem("");
+		QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
+		QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
+		QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
 
-			QList<QTableWidgetItem*> items;
-			items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
+		QList<QTableWidgetItem*> items;
+		items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
 
-			// Check if there's only one album in the list, used for the context menu of the cover
-			artistAlbumSet.insert(qMakePair(artist->text(), album->text()));
+		// Check if there's only one album in the list, used for the context menu of the cover
+		artistAlbumSet.insert(qMakePair(artist->text(), album->text()));
 
-			// Create a new row with right data
-			int row = rowCount();
-			this->insertRow(row);
-			for (int column = 0; column < items.size(); column++) {
-				this->setItem(row, column, items.at(column));
-			}
-
-			/// XXX is it really necessary to extract cover in this class?
-			/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
-			/// One in this class, one in TagEditor class ? But here is quite easy!
-			Cover *cover = fh.extractCover();
-			if (cover != NULL && !cover->byteArray().isEmpty()) {
-				covers.insert(row, cover);
-			}
+		// Create a new row with right data
+		int row = rowCount();
+		this->insertRow(row);
+		for (int column = 0; column < items.size(); column++) {
+			this->setItem(row, column, items.at(column));
 		}
+
+		/// XXX is it really necessary to extract cover in this class?
+		/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
+		/// One in this class, one in TagEditor class ? But here is quite easy!
+		Cover *cover = fh.extractCover();
+		if (cover != NULL && !cover->byteArray().isEmpty()) {
+			covers.insert(row, cover);
+		}
+		//}
 	}
 	return (artistAlbumSet.size() == 1);
 }

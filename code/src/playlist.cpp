@@ -13,6 +13,8 @@
 #include "nofocusitemdelegate.h"
 #include "library/librarytreeview.h"
 
+#include <QtDebug>
+
 Playlist::Playlist(QWidget *parent) :
 	QTableView(parent)
 {
@@ -42,8 +44,9 @@ Playlist::Playlist(QWidget *parent) :
 	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
-	horizontalHeader()->setMovable(true);
-	horizontalHeader()->setResizeMode(QHeaderView::Fixed);
+	/// FIXME Qt5
+	//horizontalHeader()->setMovable(true);
+	//horizontalHeader()->setResizeMode(QHeaderView::Fixed);
 
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
@@ -148,7 +151,7 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 
 void Playlist::dropEvent(QDropEvent *event)
 {
-	QWidget *source = event->source();
+	QObject *source = event->source();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
 		int row = this->indexAt(event->pos()).row();
 		view->sendToPlaylist(this, row-1);

@@ -2,6 +2,7 @@
 #include "library/libraryitem.h"
 #include "settings.h"
 
+#include <QAudio>
 #include <QApplication>
 #include <QFileSystemModel>
 #include <QHeaderView>
@@ -20,12 +21,13 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	messageBox = new TracksNotFoundMessageBox(this);
 
 	// Init Phonon Module
-	mediaObject = new MediaObject(this);
-	metaInformationResolver = new MediaObject(this);
+	mediaObject = new QMediaPlayer(this);
+	//metaInformationResolver = new MediaObject(this);
 
 	// Link core mp3 actions
-	connect(mediaObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(stateChanged(Phonon::State, Phonon::State)));
-	connect(metaInformationResolver, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this, SLOT(metaStateChanged(Phonon::State, Phonon::State)));
+	/// FIXME Qt5
+	connect(mediaObject, &QMediaPlayer::stateChanged, this, &TabPlaylist::stateChanged);
+	//connect(metaInformationResolver, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(metaStateChanged(QMediaPlayer::State)));
 	connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
 	// Keep playlists in memory before exit
@@ -60,7 +62,8 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
-			this->currentPlayList()->playlistModel()->append(MediaSource(it.next()));
+			/// FIXME Qt5
+			//this->currentPlayList()->playlistModel()->append(MediaSource(it.next()));
 		}
 	}
 	// Automatically plays the first track
@@ -82,7 +85,8 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 	// Append tracks
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
-			MediaSource source(TreeView::absFilePath(index));
+			/// FIXME Qt5
+			/*MediaSource source(TreeView::absFilePath(index));
 			if (source.type() != MediaSource::Invalid) {
 				if (row != -1) {
 					row++;
@@ -91,7 +95,7 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 				if (this->currentPlayList()->playlistModel()->rowCount() == 1) {
 					metaInformationResolver->setCurrentSource(playlist->track(0));
 				}
-			}
+			}*/
 		}
 	}
 
@@ -143,9 +147,10 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 /** When the user is double clicking on a track in a playlist. */
 void TabPlaylist::changeTrack(const QModelIndex &item, bool autoscroll)
 {
-	MediaSource media = currentPlayList()->track(item.row());
+	/// FIXME Qt5
+	//MediaSource media = currentPlayList()->track(item.row());
 	currentPlayList()->playlistModel()->setActiveTrack(item.row());
-	mediaObject->setCurrentSource(media);
+	//mediaObject->setCurrentSource(media);
 	currentPlayList()->highlightCurrentTrack();
 	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
 	if (autoscroll) {
@@ -212,7 +217,8 @@ void TabPlaylist::restorePlaylists()
 					// Check if the file is still on the disk before appending
 					QString track = vTrack.toString();
 					if (QFile::exists(track)) {
-						p->playlistModel()->append(MediaSource(track));
+						/// FIXME Qt5
+						//p->playlistModel()->append(MediaSource(track));
 					} else {
 						tracksNotFound << track;
 					}
@@ -233,27 +239,27 @@ void TabPlaylist::restorePlaylists()
 /** Seek backward in the current playing track for a small amount of time. */
 void TabPlaylist::seekBackward()
 {
-	if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
+	/*if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
 		qint64 time = mediaObject->currentTime() - Settings::getInstance()->playbackSeekTime();
 		if (time < 0) {
 			mediaObject->seek(0);
 		} else {
 			mediaObject->seek(time);
 		}
-	}
+	}*/
 }
 
 /** Seek forward in the current playing track for a small amount of time. */
 void TabPlaylist::seekForward()
 {
-	if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
+	/*if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
 		qint64 time = mediaObject->currentTime() + Settings::getInstance()->playbackSeekTime();
 		if (time > mediaObject->totalTime()) {
 			skipForward();
 		} else {
 			mediaObject->seek(time);
 		}
-	}
+	}*/
 }
 
 /** Change the current track to the previous one. */
@@ -291,7 +297,8 @@ void TabPlaylist::savePlaylists()
 		// Iterate on all playlists, except empty ones and the last one (the (+) button)
 		for (int i = 0; i < count() - 1; i++) {
 			Playlist *p = playlist(i);
-			QList<MediaSource> t;
+			/// FIXME Qt5
+			/*QList<MediaSource> t;
 			for (int j = 0; j < p->playlistModel()->rowCount(); j++) {
 				t.append(p->track(j));
 			}
@@ -304,7 +311,7 @@ void TabPlaylist::savePlaylists()
 			if (!vTracks.isEmpty()) {
 				vPlaylists.append(QVariant(vTracks));
 				vPlaylists.append(QVariant(tabBar()->tabText(i)));
-			}
+			}*/
 		}
 		// Tracks are stored in QList< QList<QVariant> >
 		settings->setValue("playlists", vPlaylists);
@@ -319,9 +326,9 @@ void TabPlaylist::tick(qint64 time)
 	//timeLcd->display(displayTime.toString("mm:ss"));
 }
 
-void TabPlaylist::stateChanged(State newState, State oldState)
+void TabPlaylist::stateChanged(QMediaPlayer::State newState)
 {
-	switch (newState) {
+	/*switch (newState) {
 	case ErrorState:
 		if (mediaObject->errorType() == FatalError) {
 			QMessageBox::warning(this, tr("Fatal Error"),
@@ -352,16 +359,16 @@ void TabPlaylist::stateChanged(State newState, State oldState)
 		break;
 	default:
 		;
-	}
+	}*/
 }
 
-void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
+void TabPlaylist::metaStateChanged(QMediaPlayer::State newState)
 {
-	if (newState == ErrorState) {
+	/*if (newState == ErrorState) {
 		QMessageBox::warning(this, tr("Error opening files"), metaInformationResolver->errorString());
 		//while (!sources.isEmpty() && !(sources.takeLast() == metaInformationResolver->currentSource())) {
 		// TODO
-		//}  /* loop */;
+		//};
 		return;
 	}
 
@@ -387,5 +394,5 @@ void TabPlaylist::metaStateChanged(State newState, State /* oldState */)
 		if (currentPlayList()->columnWidth(0) > 300) {
 			currentPlayList()->setColumnWidth(0, 300);
 		}
-	}
+	}*/
 }

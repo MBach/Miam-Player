@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <phonon>
+#include <QtMultimedia/QAudioOutput>
 
 #include "ui_mainwindow.h"
 #include "dialogs/customizeoptionsdialog.h"
@@ -14,9 +14,6 @@
 
 /// Need to use this forward declaration (circular inclusion)
 class CustomizeThemeDialog;
-
-
-using namespace Phonon;
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
@@ -36,7 +33,7 @@ private:
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
-	AudioOutput *audioOutput;
+	QAudioOutput *audioOutput;
 
 	// MP3 actions
 	QAction *actionPlay;

@@ -103,7 +103,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 QWidget* LibraryItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
+	if (index.data(LibraryItem::STAR_RATING).canConvert<StarRating>()) {
 		starEditor->setMinimumHeight(20);
 		starEditor->move(QPoint(100, 100));
 		connect(starEditor, SIGNAL(editingFinished(QWidget *)), this, SLOT(commitAndCloseEditor(QWidget *)));
@@ -117,8 +117,8 @@ QWidget* LibraryItemDelegate::createEditor(QWidget *parent, const QStyleOptionVi
 void LibraryItemDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
 	qDebug() << "setEditorData()";
-	if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
-		StarRating starRating = qVariantValue<StarRating>(index.data(LibraryItem::STAR_RATING));
+	if (index.data(LibraryItem::STAR_RATING).canConvert<StarRating>()) {
+		StarRating starRating = index.data(LibraryItem::STAR_RATING).value<StarRating>();
 		//StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
 		starEditor->setStarRating(starRating);
 	} else {
@@ -129,8 +129,7 @@ void LibraryItemDelegate::setEditorData(QWidget *editor, const QModelIndex &inde
 void LibraryItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
 	qDebug() << "setModelData()";
-	if (qVariantCanConvert<StarRating>(index.data(LibraryItem::STAR_RATING))) {
-		//StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+	if (index.data(LibraryItem::STAR_RATING).canConvert<StarRating>()) {
 		model->setData(index, qVariantFromValue(starEditor->starRating()), LibraryItem::STAR_RATING);
 		qDebug() << "maj model ?" << model->data(index, LibraryItem::STAR_RATING).toInt();
 	} else {

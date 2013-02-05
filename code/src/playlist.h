@@ -1,14 +1,10 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <phonon>
-
 #include <QMenu>
 #include <QTableView>
 
 #include "playlistmodel.h"
-
-using namespace Phonon;
 
 class Playlist : public QTableView
 {
@@ -25,11 +21,11 @@ private:
 public:
 	Playlist(QWidget *parent = 0);
 
-	MediaSource track(int i) {
+	/*MediaSource track(int i) {
 		//return _playlistModel->tracks().at(i);
 		QStandardItem *item = this->playlistModel()->item(i);
 		return MediaSource(item->data().toString());
-	}
+	}*/
 
 	PlaylistModel *playlistModel() { return _playlistModel; }
 

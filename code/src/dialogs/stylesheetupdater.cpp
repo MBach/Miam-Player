@@ -213,7 +213,8 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 			/// FIXME
 			QList<QColor> grad = this->makeLinearGradient(SIMPLE_LINEAR_GRADIENT, color);
 
-		} else if (qobject_cast<SeekSlider*>(target) != NULL || qobject_cast<VolumeSlider*>(target) != NULL) {
+		//} else if (qobject_cast<SeekSlider*>(target) != NULL || qobject_cast<VolumeSlider*>(target) != NULL) {
+		} else if (qobject_cast<QSlider*>(target) != NULL) {
 
 			int l = styleSheet.indexOf("QSlider::groove:horizontal {");
 			l = styleSheet.indexOf("stop:0 rgba(", l);

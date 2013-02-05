@@ -1,11 +1,12 @@
 #include "albumcover.h"
 
 #include <QBuffer>
-#include <QDesktopServices>
 #include <QDragEnterEvent>
 #include <QFileDialog>
+#include <QMimeData>
 #include <QPainter>
 #include <QPixmap>
+#include <QStandardPaths>
 #include <QUrl>
 
 #include <QtDebug>
@@ -21,14 +22,14 @@ AlbumCover::AlbumCover(QWidget *parent) :
 void AlbumCover::setCover(Cover *cover)
 {
 	_cover = cover;
-	repaint();
+	update();
 }
 
 /** Puts a default picture in this widget. */
 void AlbumCover::resetCover()
 {
 	_cover = NULL;
-	repaint();
+	update();
 }
 
 /** Creates a picture after one has chosen a picture on it's filesystem. */
@@ -42,7 +43,7 @@ void AlbumCover::createPixmapFromFile(const QString &fileName)
 	if (!_cover->byteArray().isEmpty()) {
 		emit coverHasChanged(_cover);
 	}
-	repaint();
+	update();
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -135,7 +136,7 @@ void AlbumCover::removeCover()
 void AlbumCover::loadCover()
 {
 	QString newCover = QFileDialog::getOpenFileName(this, tr("Load a new cover"),
-		QDesktopServices::storageLocation(QDesktopServices::MusicLocation), tr("Images (*.png *.jpg)"));
+		QStandardPaths::displayName(QStandardPaths::MusicLocation), tr("Images (*.png *.jpg)"));
 	if (!newCover.isEmpty()) {
 		this->createPixmapFromFile(newCover);
 	}
@@ -145,7 +146,7 @@ void AlbumCover::loadCover()
 void AlbumCover::extractCover()
 {
 	QString imageName = QFileDialog::getSaveFileName(this, tr("Save a cover"),
-		QDesktopServices::storageLocation(QDesktopServices::MusicLocation),	tr("Image (*.jpg)"));
+		QStandardPaths::displayName(QStandardPaths::MusicLocation),	tr("Image (*.jpg)"));
 	if (!imageName.isEmpty()) {
 		QFile image(imageName);
 		if (image.open(QIODevice::WriteOnly)) {

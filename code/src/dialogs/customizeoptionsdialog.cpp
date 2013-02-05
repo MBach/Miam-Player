@@ -3,9 +3,9 @@
 #include "mainwindow.h"
 #include "settings.h"
 
-#include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
+#include <QStandardPaths>
 
 #include <QtDebug>
 
@@ -115,21 +115,20 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 	if (listWidgetMusicLocations->count() > 0 &&
 			listWidgetMusicLocations->item(0)->text() == "Add some music locations here") {
 		listWidgetMusicLocations->item(0)->setText(QApplication::translate(
-			"CustomizeOptionsDialog", "Add some music locations here", 0, QApplication::UnicodeUTF8));
+			"CustomizeOptionsDialog", "Add some music locations here"));
 	}
 	// Retranslate the key if it's a special key like 'Space', 'Return' and so on...
 	// And the modifiers 'Ctrl', 'Shift' and 'Alt'
 	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
 
 		QString source = QKeySequence(shortcutWidget->line()->key()).toString();
-		QString translation = QApplication::translate("ShortcutLineEdit", source.toStdString().data(), 0, QApplication::UnicodeUTF8);
+		QString translation = QApplication::translate("ShortcutLineEdit", source.toStdString().data());
 		shortcutWidget->line()->setText(translation);
 
 		// Item 0 is empty
 		for (int i=1; i < shortcutWidget->modifiers()->count(); i++) {
 			source = shortcutWidget->modifiers()->itemText(i);
-			translation = QApplication::translate("ShortcutWidget", source.toStdString().data(), 0, QApplication::UnicodeUTF8);
-			//qDebug() << "TR" << translation;
+			translation = QApplication::translate("ShortcutWidget", source.toStdString().data());
 			/// bug with modifiers!
 			shortcutWidget->modifiers()->setItemText(i, translation);
 		}
@@ -247,7 +246,7 @@ void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButt
 void CustomizeOptionsDialog::openLibraryDialog()
 {
 	QString libraryPath = QFileDialog::getExistingDirectory(this, tr("Select a location of your music"),
-		QDesktopServices::storageLocation(QDesktopServices::MusicLocation), QFileDialog::ShowDirsOnly);
+		QStandardPaths::displayName(QStandardPaths::MusicLocation), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
 		this->addMusicLocation(libraryPath);
 	}

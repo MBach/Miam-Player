@@ -1,18 +1,17 @@
 #include <QtDebug>
 
-#include <QDesktopServices>
 #include <QDirIterator>
 #include <QFileSystemModel>
+#include <QStandardPaths>
 
 #include "mainwindow.h"
 #include "dialogs/customizethemedialog.h"
 #include "playlist.h"
 
+#include <QtMultimedia/QAudioDeviceInfo>
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
 #include <QMessageBox>
-
-using namespace Phonon;
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
@@ -39,12 +38,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	pauseButton->hide();
 
+	/// FIXME Qt5
 	// Init the audio module
-	audioOutput = new AudioOutput(MusicCategory, this);
+	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
 	audioOutput->setVolume(Settings::getInstance()->volume());
-	createPath(tabPlaylists->media(), audioOutput);
-	seekSlider->setMediaObject(tabPlaylists->media());
-	volumeSlider->setAudioOutput(audioOutput);
+	//createPath(tabPlaylists->media(), audioOutput);
+	//seekSlider->setMediaObject(tabPlaylists->media());
+	//volumeSlider->setAudioOutput(audioOutput);
 
 	// Init shortcuts
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	// Init the address bar
-	addressBar->init(QDesktopServices::storageLocation(QDesktopServices::MusicLocation));
+	addressBar->init(QStandardPaths::displayName(QStandardPaths::MusicLocation));
 }
 
 /** Set up all actions and behaviour. */
@@ -89,58 +89,60 @@ void MainWindow::setupActions()
 	// Link user interface
 	// Actions from the menu
 	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
-	connect(actionAddPlaylist, SIGNAL(triggered()), tabPlaylists, SLOT(addPlaylist()));
-	connect(actionDeleteCurrentPlaylist, SIGNAL(triggered()), tabPlaylists, SLOT(removeCurrentPlaylist()));
-	connect(actionShowCustomize, SIGNAL(triggered()), customizeThemeDialog, SLOT(open()));
-	connect(actionShowOptions, SIGNAL(triggered()), customizeOptionsDialog, SLOT(open()));
-	connect(actionAboutM4P, SIGNAL(triggered()), this, SLOT(aboutM4P()));
+	/// FIXME Qt5
+	//connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
+	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
+	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &QDialog::open);
+	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &QDialog::open);
+	connect(actionAboutM4P, &QAction::triggered, this, &MainWindow::aboutM4P);
 	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-	connect(actionScanLibrary, SIGNAL(triggered()), this, SLOT(drawLibrary()));
+	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
 
 	// When no library is set
-	connect(commandLinkButtonLibrary, SIGNAL(clicked()), customizeOptionsDialog, SLOT(open()));
+	connect(commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &QDialog::open);
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
-		connect(tab, SIGNAL(setTagEditorVisible(bool)), this, SLOT(toggleTagEditor(bool)));
-		connect(tab, SIGNAL(aboutToSendToPlaylist(QList<QPersistentModelIndex>, Playlist*, int)), tabPlaylists, SLOT(addItemsToPlaylist(QList<QPersistentModelIndex>, Playlist*, int)));
-		connect(tab, SIGNAL(sendToTagEditor(QList<QPersistentModelIndex>)), tagEditor, SLOT(addItemsToEditor(QList<QPersistentModelIndex>)));
+		connect(tab, &TreeView::setTagEditorVisible, this, &MainWindow::toggleTagEditor);
+		connect(tab, &TreeView::aboutToSendToPlaylist, tabPlaylists, &TabPlaylist::addItemsToPlaylist);
+		connect(tab, &TreeView::sendToTagEditor, tagEditor, &TagEditor::addItemsToEditor);
 	}
 
 	// Send one folder to the music locations
-	connect(filesystem, SIGNAL(aboutToAddMusicLocation(QString)), customizeOptionsDialog, SLOT(addMusicLocation(QString)));
-	connect(filesystem, SIGNAL(doubleClicked(QModelIndex)), tabPlaylists, SLOT(addItemToPlaylist(QModelIndex)));
+	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocation, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocation);
+	connect(filesystem, &QAbstractItemView::doubleClicked, tabPlaylists, &TabPlaylist::addItemToPlaylist);
 
 	// Send music to the tag editor
-	connect(tagEditor, SIGNAL(closeTagEditor(bool)), this, SLOT(toggleTagEditor(bool)));
+	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
 
 	// Rebuild the treeview when tracks have changed using the tag editor
-	connect(tagEditor, SIGNAL(rebuildTreeView(QList<QPersistentModelIndex>)), library, SLOT(rebuild(QList<QPersistentModelIndex>)));
+	connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
 
 	// Link media buttons
 	Settings *settings = Settings::getInstance();
-	connect(skipBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipBackward()));
-	connect(seekBackwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(seekBackward()));
-	connect(playButton, SIGNAL(clicked()), this, SLOT(playAndPause()));
-	connect(stopButton, SIGNAL(clicked()), this, SLOT(stop()));
-	connect(seekForwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(seekForward()));
-	connect(skipForwardButton, SIGNAL(clicked()), tabPlaylists, SLOT(skipForward()));
-	connect(repeatButton, SIGNAL(toggled(bool)), settings, SLOT(setRepeatPlayBack(bool)));
-	connect(shuffleButton, SIGNAL(toggled(bool)), settings, SLOT(setShufflePlayBack(bool)));
-	connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), settings, SLOT(setVolume(qreal)));
+	connect(skipBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipBackward);
+	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);
+	connect(playButton, &QAbstractButton::clicked, this, &MainWindow::playAndPause);
+	connect(stopButton, &QAbstractButton::clicked, this, &MainWindow::stop);
+	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipForward);
+	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
+	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
+	/// FIXME Qt5
+	//connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), settings, SLOT(setVolume(qreal)));
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
 
 	// Playback
-	connect(actionRemoveSelectedTracks, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(removeSelectedTracks()));
-	connect(actionMoveTrackUp, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTracksUp()));
-	connect(actionMoveTrackDown, SIGNAL(triggered()), tabPlaylists->currentPlayList(), SLOT(moveTracksDown()));
-	connect(actionShowPlaylistManager, SIGNAL(triggered()), playlistManager, SLOT(open()));
+	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::removeSelectedTracks);
+	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksUp);
+	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksDown);
+	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &QDialog::open);
 
-	connect(tabPlaylists, SIGNAL(aboutToChangeMenuLabels(int)), this, SLOT(changeMenuLabels(int)));
+	connect(tabPlaylists, &TabPlaylist::aboutToChangeMenuLabels, this, &MainWindow::changeMenuLabels);
 
-	connect(filesystem, SIGNAL(folderChanged(QString)), addressBar, SLOT(init(QString)));
-	connect(addressBar, SIGNAL(pathChanged(QString)), filesystem, SLOT(reloadWithNewPath(QString)));
+	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
+	connect(addressBar, &AddressBar::pathChanged, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
 	// Drag & Drop actions
 	connect(dragDropDialog, SIGNAL(rememberDragDrop(QToolButton*)), customizeOptionsDialog, SLOT(setExternalDragDropPreference(QToolButton*)));
@@ -171,7 +173,7 @@ void MainWindow::changeEvent(QEvent *event)
 	}
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent */*event*/)
 {
 	Settings *settings = Settings::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
@@ -266,19 +268,20 @@ void MainWindow::changeMenuLabels(int itemCount)
 void MainWindow::playAndPause()
 {
 	if (!tabPlaylists->currentPlayList()->playlistModel()->rowCount() == 0) {
-		if (tabPlaylists->media()->state() == PlayingState) {
+		/// FIXME Qt5
+		/*if (tabPlaylists->media()->state() == PlayingState) {
 			tabPlaylists->media()->pause();
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);
 		} else {
 			tabPlaylists->media()->play();
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"), true);
-		}
+		}*/
 	}
 }
 
 void MainWindow::stop()
 {
-	tabPlaylists->media()->stop();
+	//tabPlaylists->media()->stop();
 	Settings *settings = Settings::getInstance();
 	QString play(":/player/" + settings->theme() + "/play");
 	if (playButton->icon().name() != play) {

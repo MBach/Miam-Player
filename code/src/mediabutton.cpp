@@ -2,6 +2,8 @@
 
 #include "mainwindow.h"
 
+#include <QtDebug>
+
 MediaButton::MediaButton(QWidget *parent) :
 	QPushButton(parent)
 {

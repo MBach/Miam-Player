@@ -4,11 +4,10 @@
 #include <QDir>
 #include <QTabWidget>
 #include <QMouseEvent>
+#include <QtMultimedia/QMediaPlayer>
 
 #include "playlist.h"
 #include "tracksnotfoundmessagebox.h"
-
-using namespace Phonon;
 
 class TabPlaylist : public QTabWidget
 {
@@ -16,8 +15,8 @@ class TabPlaylist : public QTabWidget
 
 private:
 	// Mp3 module
-	MediaObject *mediaObject;
-	MediaObject *metaInformationResolver;
+	QMediaPlayer *mediaObject;
+	QMediaObject *metaInformationResolver;
 
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
@@ -29,7 +28,7 @@ public:
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
 
-	MediaObject *media() const { return this->mediaObject; }
+	QMediaPlayer *media() const { return this->mediaObject; }
 
 	/** Get the playlist at index. */
 	Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
@@ -78,7 +77,7 @@ public slots:
 	void skipForward();
 
 signals:
-	void iconStatusChanged(State);
+	//void iconStatusChanged(State);
 
 	void destroyed(int);
 	void created();
@@ -93,8 +92,8 @@ private slots:
 	void savePlaylists();
 
 	void tick(qint64 time);
-	void stateChanged(Phonon::State newState, Phonon::State oldState);
-	void metaStateChanged(Phonon::State newState, Phonon::State oldState);
+	void stateChanged(QMediaPlayer::State newState);
+	void metaStateChanged(QMediaPlayer::State newState);
 };
 
 #endif // TABPLAYLIST_H

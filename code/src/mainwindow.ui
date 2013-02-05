@@ -38,7 +38,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -133,7 +142,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -171,7 +189,7 @@
          <widget class="TabPlaylist" name="tabPlaylists"/>
         </item>
         <item>
-         <widget class="Phonon::SeekSlider" name="seekSlider" native="true"/>
+         <widget class="QWidget" name="seekSlider" native="true"/>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_buttons">
@@ -335,7 +353,7 @@
            </widget>
           </item>
           <item>
-           <widget class="Phonon::VolumeSlider" name="volumeSlider" native="true">
+           <widget class="QWidget" name="volumeSlider" native="true">
             <property name="minimumSize">
              <size>
               <width>150</width>
@@ -577,18 +595,6 @@
   </action>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>Phonon::VolumeSlider</class>
-   <extends>QWidget</extends>
-   <header>phonon_volumeslider.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>Phonon::SeekSlider</class>
-   <extends>QWidget</extends>
-   <header>phonon_seekslider.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>TabPlaylist</class>
    <extends>QTabWidget</extends>

@@ -4,7 +4,6 @@
 #include "settings.h"
 
 #include <tpropertymap.h>
-#include <MediaSource>
 #include <QDir>
 
 #include <QtDebug>
@@ -80,9 +79,10 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 	QMutableMapIterator<int, Cover*> iterator(coversToRemove);
 	while (iterator.hasNext()) {
 		iterator.next();
-		qDebug() << iterator.key() << (iterator.value() == NULL);
+		qDebug() << "clearCovers" << iterator.key() << (iterator.value() == NULL);
 		if (iterator.value() != NULL) {
 			delete iterator.value();
+			iterator.value() = NULL;
 		}
 	}
 	coversToRemove.clear();
@@ -95,6 +95,7 @@ void TagEditor::replaceCover(Cover *newCover)
 		// It is sure that covers are different
 		if (!(previousCover == NULL || newCover == NULL || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
 			newCover->setChanged(true);
+			qDebug() << "TagEditor::replaceCover DELETE";
 			delete previousCover;
 		}
 		unsavedCovers.insert(index.row(), newCover);
@@ -142,16 +143,14 @@ void TagEditor::clear()
 void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 {
 	if (isForAll) {
-		for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
-			Cover *c = covers.value(i);
+		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
+			Cover *c = covers.value(row);
 			if (c == NULL) {
-				qDebug() << "no cover for row" << i;
-				unsavedCovers.insert(i, new Cover(cover->byteArray(), cover->mimeType()));
+				unsavedCovers.insert(row, new Cover(cover->byteArray(), cover->mimeType()));
 			} else {
-				qDebug() << "replace cover";
 				// Do not replace the cover for the caller
 				if (c != cover) {
-					unsavedCovers.insert(i, cover);
+					unsavedCovers.insert(row, cover);
 				}
 			}
 		}
@@ -359,8 +358,15 @@ void TagEditor::rollbackChanges()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 
+	qDebug() << "rollbackChanges";
+	tagEditorWidget->blockSignals(true);
+	this->replaceCover(NULL);
+
 	// Reset the unsaved cover list only
 	this->clearCovers(unsavedCovers);
+
+	tagEditorWidget->blockSignals(false);
+	qDebug() << "rollbackChanges";
 
 	// Then, reload info a second time
 	//this->displayCover();
@@ -383,7 +389,7 @@ void TagEditor::updateCells(QString text)
 	QVariant v = combo->itemData(0, Qt::UserRole+1);
 	int idxColumnInTable = v.toInt();
 
-	disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
+	combo->blockSignals(true);
 
 	// Special behaviour for "Keep" and "Delete" items
 	// Keep
@@ -413,5 +419,5 @@ void TagEditor::updateCells(QString text)
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
 
-	connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
+	combo->blockSignals(false);
 }

@@ -1,4 +1,4 @@
-QT += phonon
+QT += widgets multimedia
 
 TagLibDirectory = ./3rdparty/taglib
 

@@ -25,7 +25,8 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
 	this->setColumnHidden(1, true);
 	this->setColumnHidden(3, true);
-	this->header()->setResizeMode(QHeaderView::ResizeToContents);
+	/// FIXME Qt5
+	//this->header()->setResizeMode(QHeaderView::ResizeToContents);
 
 	properties = new QMenu(this);
 	toPlaylist = tr("Add \"%1\" to playlist");

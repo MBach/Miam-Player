@@ -26,7 +26,8 @@ QString PlaylistModel::convertTrackLength(int length)
 }
 
 /** Add a track to this Playlist instance. */
-void PlaylistModel::append(const MediaSource &m, int row)
+/// FIXME Qt5
+/*void PlaylistModel::append(const MediaSource &m, int row)
 {
 	// Resolve metaDatas from TagLib
 	TagLib::FileRef f(m.fileName().toLocal8Bit().data());
@@ -75,7 +76,7 @@ void PlaylistModel::append(const MediaSource &m, int row)
 		ratingItem->setTextAlignment(Qt::AlignCenter);
 		yearItem->setTextAlignment(Qt::AlignCenter);
 	}
-}
+}*/
 
 /** Clear the content of playlist. */
 void PlaylistModel::clear()

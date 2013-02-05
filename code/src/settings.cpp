@@ -359,7 +359,7 @@ QString Settings::styleSheet(QWidget *w) const
 			styleSheet = "MediaButton:off { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff0000, stop:1 #00ff00); } ";
 		}*/
 
-	} else if (qobject_cast<SeekSlider*>(w) != NULL) {
+	/*} else if (qobject_cast<SeekSlider*>(w) != NULL) {
 
 		styleSheet = map.value(SeekSlider::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
@@ -369,6 +369,14 @@ QString Settings::styleSheet(QWidget *w) const
 	} else if (qobject_cast<VolumeSlider*>(w) != NULL) {
 
 		styleSheet = map.value(VolumeSlider::staticMetaObject.className()).toString();
+		if (styleSheet.isEmpty()) {
+			styleSheet = stylesheets[":/stylesheets/qslider"];
+		}
+
+	*/
+	} else if (qobject_cast<QSlider*>(w) != NULL) {
+
+		styleSheet = map.value(QSlider::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
 			styleSheet = stylesheets[":/stylesheets/qslider"];
 		}

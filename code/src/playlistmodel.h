@@ -4,10 +4,6 @@
 #include <QMenu>
 #include <QStandardItemModel>
 
-#include <phonon>
-
-using namespace Phonon;
-
 class PlaylistModel : public QStandardItemModel
 {
 	Q_OBJECT
@@ -22,7 +18,8 @@ public:
 	inline void setActiveTrack(int t) { track = t; }
 
 	/** Add a track to this Playlist instance. */
-	void append(const MediaSource &m, int row = -1);
+	/// FIXME Qt5
+	//void append(const MediaSource &m, int row = -1);
 
 	/** Clear the content of playlist. */
 	void clear();

@@ -4,7 +4,6 @@
 #include <QFileInfo>
 #include <QTableWidget>
 
-#include <phonon>
 #include <fileref.h>
 
 #include "filehelper.h"

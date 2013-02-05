@@ -8,8 +8,6 @@
 
 #include "ui_tageditor.h"
 
-using namespace Phonon;
-
 class TagEditor : public QWidget, public Ui::TagEditor
 {
 	Q_OBJECT
