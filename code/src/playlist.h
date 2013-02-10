@@ -1,6 +1,7 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
+#include <QMediaPlaylist>
 #include <QMenu>
 #include <QTableView>
 
@@ -18,6 +19,8 @@ private:
 
 	PlaylistModel *_playlistModel;
 
+	QMediaPlaylist *qMediaPlaylist;
+
 public:
 	Playlist(QWidget *parent = 0);
 
@@ -27,7 +30,9 @@ public:
 		return MediaSource(item->data().toString());
 	}*/
 
-	PlaylistModel *playlistModel() { return _playlistModel; }
+	//PlaylistModel *playlistModel() { return _playlistModel; }
+
+	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
 
 	/** Retranslate header columns. */
 	void retranslateUi();

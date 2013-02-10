@@ -4,6 +4,12 @@
 #include <QMenu>
 #include <QStandardItemModel>
 
+#include <QMediaPlaylist>
+
+/**
+ * @deprecated since Qt5
+ * @brief The PlaylistModel class
+ */
 class PlaylistModel : public QStandardItemModel
 {
 	Q_OBJECT
@@ -11,8 +17,10 @@ private:
 	/** The current playing track. */
 	int track;
 
+	QMediaPlaylist *qMediaPlaylist;
+
 public:
-	explicit PlaylistModel(QObject *parent = 0);
+	explicit PlaylistModel(QMediaPlaylist *mediaPlaylist);
 
 	inline const int & activeTrack() const { return track; }
 	inline void setActiveTrack(int t) { track = t; }
@@ -29,6 +37,9 @@ public:
 private:
 	/** Convert time in seconds into "mm:ss" format. */
 	QString static convertTrackLength(int length);
+
+public slots:
+	void insertMedia(int start, int end);
 };
 
 #endif // PLAYLISTMODEL_H

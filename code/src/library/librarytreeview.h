@@ -62,8 +62,6 @@ public slots:
 	/** Rebuild a subset of the tree. */
 	void rebuild(QList<QPersistentModelIndex> indexes);
 
-	void sendSingleItemToPlaylist(const QModelIndex &/*index*/);
-
 private slots:
 	void endPopulateTree();
 

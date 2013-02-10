@@ -4,6 +4,8 @@ TagLibDirectory = ./3rdparty/taglib
 
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++11
+
 FORMS += \
     customizeoptionsdialog.ui \
     customizetheme.ui \

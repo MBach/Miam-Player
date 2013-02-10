@@ -28,7 +28,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	/// FIXME Qt5
 	connect(mediaObject, &QMediaPlayer::stateChanged, this, &TabPlaylist::stateChanged);
 	//connect(metaInformationResolver, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(metaStateChanged(QMediaPlayer::State)));
-	connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
+	//connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
 	// Keep playlists in memory before exit
 	connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(savePlaylists()));
@@ -57,19 +57,19 @@ void TabPlaylist::retranslateUi()
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
+	/// FIXME Qt5
 	//bool isEmpty = this->currentPlayList()->playlistModel()->tracks().isEmpty();
-	bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
+	/*bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
-			/// FIXME Qt5
 			//this->currentPlayList()->playlistModel()->append(MediaSource(it.next()));
 		}
 	}
 	// Automatically plays the first track
 	if (isEmpty) {
 		this->skipForward();
-	}
+	}*/
 }
 
 /** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
@@ -81,21 +81,18 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 	} else {
 		this->setCurrentWidget(playlist);
 	}
-	bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
+	/// FIXME Qt5
+	//bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
+	bool isEmpty = true;
 	// Append tracks
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
 			/// FIXME Qt5
-			/*MediaSource source(TreeView::absFilePath(index));
-			if (source.type() != MediaSource::Invalid) {
-				if (row != -1) {
-					row++;
-				}
-				playlist->playlistModel()->append(source, row);
-				if (this->currentPlayList()->playlistModel()->rowCount() == 1) {
-					metaInformationResolver->setCurrentSource(playlist->track(0));
-				}
-			}*/
+			QMediaContent source(QUrl(TreeView::absFilePath(index)));
+			if (row != -1) {
+				row++;
+			}
+			playlist->mediaPlaylist()->insertMedia(row, source);
 		}
 	}
 
@@ -149,7 +146,7 @@ void TabPlaylist::changeTrack(const QModelIndex &item, bool autoscroll)
 {
 	/// FIXME Qt5
 	//MediaSource media = currentPlayList()->track(item.row());
-	currentPlayList()->playlistModel()->setActiveTrack(item.row());
+	//currentPlayList()->playlistModel()->setActiveTrack(item.row());
 	//mediaObject->setCurrentSource(media);
 	currentPlayList()->highlightCurrentTrack();
 	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
@@ -193,7 +190,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		emit destroyed(index);
 	} else {
 		// Clear the content of last tab
-		currentPlayList()->playlistModel()->clear();
+		//currentPlayList()->playlistModel()->clear();
 	}
 }
 
@@ -209,7 +206,7 @@ void TabPlaylist::restorePlaylists()
 			// For all playlists (stored as a pair of { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] }
 			for (int i = 0; i < playlists.size(); i++) {
 				QList<QVariant> vTracks = playlists.at(i++).toList();
-				Playlist *p = this->addPlaylist(playlists.at(i).toString());
+				//Playlist *p = this->addPlaylist(playlists.at(i).toString());
 
 				// For all tracks in one playlist
 				foreach(QVariant vTrack, vTracks) {
@@ -265,17 +262,17 @@ void TabPlaylist::seekForward()
 /** Change the current track to the previous one. */
 void TabPlaylist::skipBackward()
 {
-	int activeTrack = currentPlayList()->playlistModel()->activeTrack();
+	/*int activeTrack = currentPlayList()->playlistModel()->activeTrack();
 	if (activeTrack-- > 0) {
 		QStandardItem *item = currentPlayList()->playlistModel()->item(activeTrack, 1);
 		this->changeTrack(item->index(), true);
-	}
+	}*/
 }
 
 /** Change the current track to the next one. */
 void TabPlaylist::skipForward()
 {
-	int next;
+	/*int next;
 	if (Settings::getInstance()->repeatPlayBack() &&
 			currentPlayList()->playlistModel()->activeTrack() == this->currentPlayList()->playlistModel()->rowCount() - 1) {
 		next = -1;
@@ -285,7 +282,7 @@ void TabPlaylist::skipForward()
 	if (++next < currentPlayList()->playlistModel()->rowCount()) {
 		QStandardItem *item = currentPlayList()->playlistModel()->item(next, 1);
 		this->changeTrack(item->index(), true);
-	}
+	}*/
 }
 
 /** Save playlists before exit. */

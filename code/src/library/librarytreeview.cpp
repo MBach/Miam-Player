@@ -61,10 +61,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addSeparator();
 	properties->addAction(actionOpenTagEditor);
 
-	connect(this, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(sendSingleItemToPlaylist(const QModelIndex &)));
-	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
-	connect(musicSearchEngine, SIGNAL(scannedFile(int, QString)), libraryModel, SLOT(readFile(int, QString)));
-	connect(musicSearchEngine, SIGNAL(progressChanged(const int &)), circleProgressBar, SLOT(setValue(const int &)));
+	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { sendToPlaylist(); });
+	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
+	connect(musicSearchEngine, &MusicSearchEngine::scannedFile, libraryModel, &LibraryModel::readFile);
+	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
 	connect(musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
@@ -240,11 +240,6 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 	libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
 	libraryModel->saveToFile();
-}
-
-void LibraryTreeView::sendSingleItemToPlaylist(const QModelIndex &/*index*/)
-{
-	sendToPlaylist();
 }
 
 void LibraryTreeView::endPopulateTree()

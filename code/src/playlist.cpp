@@ -18,7 +18,9 @@
 Playlist::Playlist(QWidget *parent) :
 	QTableView(parent)
 {
-	_playlistModel = new PlaylistModel(this);
+	qMediaPlaylist = new QMediaPlaylist(this);
+	_playlistModel = new PlaylistModel(qMediaPlaylist);
+
 	this->setModel(_playlistModel);
 
 	Settings *settings = Settings::getInstance();
@@ -68,22 +70,24 @@ Playlist::Playlist(QWidget *parent) :
 	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
 	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
 
-	connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
-	connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
+	//connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
+	//connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
+
+	connect(qMediaPlaylist, &QMediaPlaylist::mediaInserted, _playlistModel, &PlaylistModel::insertMedia);
 }
 
 void Playlist::init()
 {
 	QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
 
-	playlistModel()->setColumnCount(labels.count());
+	_playlistModel->setColumnCount(labels.count());
 
 	// Initialize values for the Header (label and horizontal resize mode)
 	for (int i = 0; i < labels.size(); i++) {
-		playlistModel()->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
+		_playlistModel->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
 	}
 
-	for (int i = 0; i < playlistModel()->columnCount(); i++) {
+	for (int i = 0; i < _playlistModel->columnCount(); i++) {
 		QString label = labels.at(i);
 
 		// Match actions with columns using index of labels
@@ -119,7 +123,7 @@ void Playlist::retranslateUi()
 
 	// Initialize values for the Header (label and horizontal resize mode)
 	for (int i = 0; i < labels.size(); i++) {
-		playlistModel()->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
+		_playlistModel->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
 		columns->actions().at(i)->setText(labels.at(i));
 	}
 }
@@ -128,7 +132,7 @@ void Playlist::retranslateUi()
 void Playlist::contextMenuEvent(QContextMenuEvent *event)
 {
 	QModelIndex index = this->indexAt(event->pos());
-	QStandardItem *item = this->playlistModel()->itemFromIndex(index);
+	QStandardItem *item = _playlistModel->itemFromIndex(index);
 	if (item != NULL) {
 		trackProperties->exec(event->globalPos());
 	}
@@ -160,7 +164,7 @@ void Playlist::dropEvent(QDropEvent *event)
 			qDebug() << "internal move";
 			QModelIndexList list = this->selectionModel()->selectedRows();
 			int destChild = this->indexAt(event->pos()).row();
-			this->playlistModel()->move(list, destChild);
+			//this->playlistModel()->move(list, destChild);
 		}
 	}
 }
@@ -176,7 +180,7 @@ void Playlist::mouseMoveEvent(QMouseEvent *event)
 void Playlist::mousePressEvent(QMouseEvent *event)
 {
 	QModelIndex index = indexAt(event->pos());
-	_selected = selectionModel()->isSelected(index);
+	//_selected = selectionModel()->isSelected(index);
 	QTableView::mousePressEvent(event);
 }
 
@@ -198,7 +202,7 @@ void Playlist::resizeColumns()
 	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
 
 	// Resize fixed columns first, and then compute the remaining width
-	for (int c = 0; c < playlistModel()->columnCount(); c++) {
+	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		if (!isColumnHidden(c)) {
 			int ratio = ratios.at(c);
 			// Fixed column
@@ -209,7 +213,7 @@ void Playlist::resizeColumns()
 			visibleRatio += ratio;
 		}
 	}
-	for (int c = 0; c < playlistModel()->columnCount(); c++) {
+	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		int ratio = ratios.at(c);
 		// Resizable column
 		if (ratio != 0) {
@@ -228,7 +232,7 @@ void Playlist::countSelectedItems(const QItemSelection &, const QItemSelection &
 
 void Playlist::countSelectedItems()
 {
-	emit selectedTracks(this->selectionModel()->selectedRows().size());
+	//emit selectedTracks(this->selectionModel()->selectedRows().size());
 }
 
 /** Toggle the selected column from the context menu. */
@@ -307,7 +311,7 @@ void Playlist::removeSelectedTracks()
 {
 	QModelIndexList indexes = this->selectionModel()->selectedRows();
 	for (int i = indexes.size() - 1; i >= 0; i--) {
-		playlistModel()->removeRow(indexes.at(i).row());
+		//playlistModel()->removeRow(indexes.at(i).row());
 	}
 }
 
@@ -316,7 +320,7 @@ void Playlist::highlightCurrentTrack()
 {
 	QStandardItem *it;
 	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-	if (playlistModel()->rowCount() > 0) {
+	/*if (playlistModel()->rowCount() > 0) {
 		for (int i=0; i < playlistModel()->rowCount(); i++) {
 			for (int j = 0; j < playlistModel()->columnCount(); j++) {
 				it = playlistModel()->item(i, j);
@@ -338,5 +342,5 @@ void Playlist::highlightCurrentTrack()
 				it->setFont(itemFont);
 			}
 		}
-	}
+	}*/
 }

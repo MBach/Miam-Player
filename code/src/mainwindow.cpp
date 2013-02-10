@@ -267,16 +267,16 @@ void MainWindow::changeMenuLabels(int itemCount)
 /** These buttons switch the play function with the pause function because they are mutually exclusive. */
 void MainWindow::playAndPause()
 {
-	if (!tabPlaylists->currentPlayList()->playlistModel()->rowCount() == 0) {
-		/// FIXME Qt5
-		/*if (tabPlaylists->media()->state() == PlayingState) {
+	/// FIXME Qt5
+	/*if (!tabPlaylists->currentPlayList()->playlistModel()->rowCount() == 0) {
+		if (tabPlaylists->media()->state() == PlayingState) {
 			tabPlaylists->media()->pause();
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);
 		} else {
 			tabPlaylists->media()->play();
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"), true);
-		}*/
-	}
+		}
+	}*/
 }
 
 void MainWindow::stop()

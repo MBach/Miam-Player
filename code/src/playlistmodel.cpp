@@ -9,8 +9,8 @@
 
 #include <QtDebug>
 
-PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(parent), track(-1)
+PlaylistModel::PlaylistModel(QMediaPlaylist *mediaPlaylist) :
+	QStandardItemModel(mediaPlaylist), track(-1), qMediaPlaylist(mediaPlaylist)
 {}
 
 /** Convert time in seconds into "mm:ss" format. */
@@ -24,59 +24,6 @@ QString PlaylistModel::convertTrackLength(int length)
 		return time.toString("m:ss");
 	}
 }
-
-/** Add a track to this Playlist instance. */
-/// FIXME Qt5
-/*void PlaylistModel::append(const MediaSource &m, int row)
-{
-	// Resolve metaDatas from TagLib
-	TagLib::FileRef f(m.fileName().toLocal8Bit().data());
-	if (!f.isNull()) {
-		int currentRow;
-		if (row == -1) {
-			currentRow = rowCount();
-		} else {
-			currentRow = row;
-		}
-
-		QString title(f.tag()->title().toCString());
-		if (title.isEmpty()) {
-			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
-			title = m.fileName().split('/').last();
-		}
-
-		// Then, construct a new row with correct informations
-		QList<QStandardItem *> widgetItems;
-		QStandardItem *trackItem = new QStandardItem(QString::number(f.tag()->track()));
-		QStandardItem *titleItem = new QStandardItem(title);
-		QStandardItem *albumItem = new QStandardItem(f.tag()->album().toCString());
-		QStandardItem *lengthItem = new QStandardItem(PlaylistModel::convertTrackLength(f.audioProperties()->length()));
-		QStandardItem *artistItem = new QStandardItem(f.tag()->artist().toCString());
-		QStandardItem *ratingItem = new QStandardItem("***");
-		QStandardItem *yearItem = new QStandardItem(QString::number(f.tag()->year()));
-
-		trackItem->setData(m.fileName());
-
-		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
-
-		this->insertRow(currentRow);
-
-		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-		for (int i=0; i < widgetItems.length(); i++) {
-			QStandardItem *item = widgetItems.at(i);
-			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
-			item->setFont(font);
-			setItem(currentRow, i, item);
-			QFontMetrics fm(font);
-			//setRowHeight(currentRow, fm.height());
-		}
-
-		trackItem->setTextAlignment(Qt::AlignCenter);
-		lengthItem->setTextAlignment(Qt::AlignCenter);
-		ratingItem->setTextAlignment(Qt::AlignCenter);
-		yearItem->setTextAlignment(Qt::AlignCenter);
-	}
-}*/
 
 /** Clear the content of playlist. */
 void PlaylistModel::clear()
@@ -104,5 +51,61 @@ void PlaylistModel::move(const QModelIndexList &rows, int destChild)
 		if (b) {
 			this->endMoveRows();
 		}
+	}
+}
+
+#include <QUrl>
+
+/** Add a track to this Playlist instance. */
+void PlaylistModel::insertMedia(int start, int end)
+{
+
+	// Resolve metaDatas from TagLib
+	TagLib::FileRef f(qMediaPlaylist->currentMedia().canonicalUrl().toLocalFile().toStdString().data());
+	qDebug() << qMediaPlaylist->currentMedia().canonicalUrl() << qMediaPlaylist->currentMedia().canonicalUrl().isLocalFile();
+	if (!f.isNull()) {
+		int currentRow;
+		if (start == -1) {
+			currentRow = rowCount();
+		} else {
+			currentRow = start;
+		}
+
+		QString title(f.tag()->title().toCString());
+		if (title.isEmpty()) {
+			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
+			//title = m.fileName().split('/').last();
+		}
+
+		// Then, construct a new row with correct informations
+		QList<QStandardItem *> widgetItems;
+		QStandardItem *trackItem = new QStandardItem(QString::number(f.tag()->track()));
+		QStandardItem *titleItem = new QStandardItem(title);
+		QStandardItem *albumItem = new QStandardItem(f.tag()->album().toCString());
+		QStandardItem *lengthItem = new QStandardItem(PlaylistModel::convertTrackLength(f.audioProperties()->length()));
+		QStandardItem *artistItem = new QStandardItem(f.tag()->artist().toCString());
+		QStandardItem *ratingItem = new QStandardItem("***");
+		QStandardItem *yearItem = new QStandardItem(QString::number(f.tag()->year()));
+
+		trackItem->setData(qMediaPlaylist->currentMedia().canonicalUrl());
+
+		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
+
+		this->insertRow(currentRow);
+
+		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+		for (int i=0; i < widgetItems.length(); i++) {
+			QStandardItem *item = widgetItems.at(i);
+			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
+			item->setFont(font);
+			setItem(currentRow, i, item);
+			QFontMetrics fm(font);
+			//setRowHeight(currentRow, fm.height());
+		}
+
+		trackItem->setTextAlignment(Qt::AlignCenter);
+		lengthItem->setTextAlignment(Qt::AlignCenter);
+		ratingItem->setTextAlignment(Qt::AlignCenter);
+		yearItem->setTextAlignment(Qt::AlignCenter);
 	}
 }
