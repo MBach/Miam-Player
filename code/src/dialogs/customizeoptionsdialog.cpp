@@ -18,9 +18,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	// First panel: library
-	connect(radioButtonActivateDelegates, SIGNAL(toggled(bool)), settings, SLOT(setDelegates(bool)));
-	connect(pushButtonAddLocation, SIGNAL(clicked()), this, SLOT(openLibraryDialog()));
-	connect(pushButtonDeleteLocation, SIGNAL(clicked()), this, SLOT(deleteSelectedLocation()));
+	connect(radioButtonActivateDelegates, &QRadioButton::toggled, settings, &Settings::setDelegates);
+	connect(pushButtonAddLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::openLibraryDialog);
+	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteSelectedLocation);
 
 	if (settings->isStarDelegates()) {
 		radioButtonActivateDelegates->setChecked(true);
@@ -40,7 +40,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	}
 
 	// Second panel: languages
-	connect(listViewLanguages, SIGNAL(clicked(QModelIndex)), this, SLOT(changeLanguage(QModelIndex)));
+	connect(listViewLanguages, &QAbstractItemView::clicked, this, &CustomizeOptionsDialog::changeLanguage);
 
 	QStandardItemModel *languageModel = new QStandardItemModel(this);
 	listViewLanguages->setModel(languageModel);
@@ -72,12 +72,12 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	// Third panel: shorcuts
 	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
-		connect(shortcutWidget, SIGNAL(shortcutChanged(ShortcutWidget *, int)), this, SLOT(checkShortcut(ShortcutWidget *, int)));
+		connect(shortcutWidget, &ShortcutWidget::shortcutChanged, this, &CustomizeOptionsDialog::checkShortcut);
 	}
 
 	// Fourth panel: playback
 	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
-	connect(radioButtonKeepPlaylists, SIGNAL(toggled(bool)), settings, SLOT(setPlaybackKeepPlaylists(bool)));
+	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackKeepPlaylists);
 
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
 	if (settings->playbackKeepPlaylists()) {
@@ -93,10 +93,10 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	}
 
 	// Fifth panel: drag and drop
-	connect(radioButtonDDOpenPopup, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
-	connect(radioButtonDDAddToLibrary, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
-	connect(radioButtonDDAddToPlaylist, SIGNAL(toggled(bool)), settings, SLOT(setDragAndDropBehaviour()));
-	connect(radioButtonDDCopyPlaylistTracks, SIGNAL(toggled(bool)), settings, SLOT(setCopyTracksFromPlaylist(bool)));
+	connect(radioButtonDDOpenPopup, &QRadioButton::toggled, settings, &Settings::setDragAndDropBehaviour);
+	connect(radioButtonDDAddToLibrary, &QRadioButton::toggled, settings, &Settings::setDragAndDropBehaviour);
+	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, settings, &Settings::setDragAndDropBehaviour);
+	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &Settings::setCopyTracksFromPlaylist);
 
 	QRadioButton *radioButtonDD = this->findChild<QRadioButton*>(settings->dragAndDropBehaviour());
 	if (radioButtonDD) {
@@ -246,7 +246,7 @@ void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButt
 void CustomizeOptionsDialog::openLibraryDialog()
 {
 	QString libraryPath = QFileDialog::getExistingDirectory(this, tr("Select a location of your music"),
-		QStandardPaths::displayName(QStandardPaths::MusicLocation), QFileDialog::ShowDirsOnly);
+		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
 		this->addMusicLocation(libraryPath);
 	}

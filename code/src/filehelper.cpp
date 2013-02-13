@@ -145,7 +145,7 @@ Cover* FileHelper::extractCover()
 					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
 					// Performs a deep copy of the cover
 					QByteArray b = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
-					cover = new Cover(b, QString(pictureFrame->mimeType().toCString()));
+					cover = new Cover(b, QString(pictureFrame->mimeType().toCString(true)));
 				}
 			}
 		} else if (mpegFile->ID3v1Tag()) {

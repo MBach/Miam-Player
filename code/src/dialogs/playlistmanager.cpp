@@ -111,9 +111,9 @@ void PlaylistManager::loadPreviewPlaylist(QListView *list)
 		TagLib::FileRef f("");
 
 		// Build the item: "title (artist - album)"
-		QString text = f.tag()->title().toCString();
-		text.append(" (").append( f.tag()->artist().toCString()).append(" - ");
-		text.append(f.tag()->album().toCString()).append(')');
+		QString text = f.tag()->title().toCString(true);
+		text.append(" (").append( f.tag()->artist().toCString(true)).append(" - ");
+		text.append(f.tag()->album().toCString(true)).append(')');
 		previewPlaylist->insertItem(i, text);
 	}
 }

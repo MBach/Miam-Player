@@ -88,7 +88,7 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
 			/// FIXME Qt5
-			QMediaContent source(QUrl(TreeView::absFilePath(index)));
+			QMediaContent source(QUrl::fromLocalFile(TreeView::absFilePath(index)));
 			if (row != -1) {
 				row++;
 			}

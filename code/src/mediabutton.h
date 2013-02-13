@@ -31,9 +31,6 @@ public slots:
 
 	/** Override the QPushButton slot to add a write/read QSetting system. */
 	void setVisible(bool visible);
-
-	/** "Slot-wrapping" to be able to call the setter. */
-	inline void makeFlat(bool b) { this->setFlat(b); }
 };
 
 #endif // MEDIABUTTON_H

@@ -136,7 +136,7 @@ void AlbumCover::removeCover()
 void AlbumCover::loadCover()
 {
 	QString newCover = QFileDialog::getOpenFileName(this, tr("Load a new cover"),
-		QStandardPaths::displayName(QStandardPaths::MusicLocation), tr("Images (*.png *.jpg)"));
+		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(), tr("Images (*.png *.jpg)"));
 	if (!newCover.isEmpty()) {
 		this->createPixmapFromFile(newCover);
 	}
@@ -146,7 +146,7 @@ void AlbumCover::loadCover()
 void AlbumCover::extractCover()
 {
 	QString imageName = QFileDialog::getSaveFileName(this, tr("Save a cover"),
-		QStandardPaths::displayName(QStandardPaths::MusicLocation),	tr("Image (*.jpg)"));
+		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(),	tr("Image (*.jpg)"));
 	if (!imageName.isEmpty()) {
 		QFile image(imageName);
 		if (image.open(QIODevice::WriteOnly)) {

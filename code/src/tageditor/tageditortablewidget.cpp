@@ -72,15 +72,15 @@ void TagEditorTableWidget::resetTable()
 		QTableWidgetItem *genre = this->item(row, ++column);
 		QTableWidgetItem *comment = this->item(row, ++column);
 
-		title->setText(f.tag()->title().toCString());
-		artist->setText(f.tag()->artist().toCString());
-		artistAlbum->setText(fh.artistAlbum().toCString());
-		album->setText(f.tag()->album().toCString());
+		title->setText(f.tag()->title().toCString(true));
+		artist->setText(f.tag()->artist().toCString(true));
+		artistAlbum->setText(fh.artistAlbum().toCString(true));
+		album->setText(f.tag()->album().toCString(true));
 		trackNumber->setText(QString::number(f.tag()->track()));
 		disc->setText(QString());
 		year->setText(QString::number(f.tag()->year()));
-		genre->setText(f.tag()->genre().toCString());
-		comment->setText(f.tag()->comment().toCString());
+		genre->setText(f.tag()->genre().toCString(true));
+		comment->setText(f.tag()->comment().toCString(true));
 		//}
 		row++;
 	}
@@ -112,18 +112,18 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 		QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
 		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString());
-		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString());
-		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString());
-		QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString());
+		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString(true));
+		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString(true));
+		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString(true));
+		QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString(true));
 		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
 		QString track = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
 		QTableWidgetItem *trackNumber = new QTableWidgetItem(track);
 		//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
 		QTableWidgetItem *disc = new QTableWidgetItem("");
 		QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
-		QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString());
-		QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString());
+		QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString(true));
+		QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString(true));
 
 		QList<QTableWidgetItem*> items;
 		items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;

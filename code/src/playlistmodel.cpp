@@ -61,8 +61,7 @@ void PlaylistModel::insertMedia(int start, int end)
 {
 
 	// Resolve metaDatas from TagLib
-	TagLib::FileRef f(qMediaPlaylist->currentMedia().canonicalUrl().toLocalFile().toStdString().data());
-	qDebug() << qMediaPlaylist->currentMedia().canonicalUrl() << qMediaPlaylist->currentMedia().canonicalUrl().isLocalFile();
+	TagLib::FileRef f(qMediaPlaylist->currentMedia().canonicalUrl().toLocalFile().mid(2).toStdWString().data());
 	if (!f.isNull()) {
 		int currentRow;
 		if (start == -1) {
@@ -71,7 +70,7 @@ void PlaylistModel::insertMedia(int start, int end)
 			currentRow = start;
 		}
 
-		QString title(f.tag()->title().toCString());
+		QString title(f.tag()->title().toCString(true));
 		if (title.isEmpty()) {
 			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
 			//title = m.fileName().split('/').last();
@@ -81,9 +80,9 @@ void PlaylistModel::insertMedia(int start, int end)
 		QList<QStandardItem *> widgetItems;
 		QStandardItem *trackItem = new QStandardItem(QString::number(f.tag()->track()));
 		QStandardItem *titleItem = new QStandardItem(title);
-		QStandardItem *albumItem = new QStandardItem(f.tag()->album().toCString());
+		QStandardItem *albumItem = new QStandardItem(f.tag()->album().toCString(true));
 		QStandardItem *lengthItem = new QStandardItem(PlaylistModel::convertTrackLength(f.audioProperties()->length()));
-		QStandardItem *artistItem = new QStandardItem(f.tag()->artist().toCString());
+		QStandardItem *artistItem = new QStandardItem(f.tag()->artist().toCString(true));
 		QStandardItem *ratingItem = new QStandardItem("***");
 		QStandardItem *yearItem = new QStandardItem(QString::number(f.tag()->year()));
 

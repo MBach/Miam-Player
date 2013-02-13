@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	// Init the address bar
-	addressBar->init(QStandardPaths::displayName(QStandardPaths::MusicLocation));
+	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 }
 
 /** Set up all actions and behaviour. */

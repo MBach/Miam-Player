@@ -84,7 +84,7 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 
 	LibraryItem *itemTitle = NULL;
 	if (isNewTrack) {
-		QString title(fileHelper.file()->tag()->title().toCString(false));
+		QString title(fileHelper.file()->tag()->title().toCString(true));
 		if (title.isEmpty()) {
 			title = QFileInfo(fileName).baseName();
 		}
@@ -217,19 +217,19 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 		}
 
 		// Is there is already this artist in the library?
-		indexArtist = hasArtist(QString(artist.toCString(false)));
+		indexArtist = hasArtist(QString(artist.toCString(true)));
 		if (indexArtist == NULL) {
-			indexArtist = insertArtist(QString(artist.toCString(false)));
+			indexArtist = insertArtist(QString(artist.toCString(true)));
 		}
 
 		// Is there is already an album from this artist?
-		indexAlbum = hasAlbum(indexArtist, QString(f->tag()->album().toCString(false)));
+		indexAlbum = hasAlbum(indexArtist, QString(f->tag()->album().toCString(true)));
 		if (indexAlbum == NULL) {
 			// New album to create, only if it's not empty
 			if (f->tag()->album().isEmpty()) {
 				indexAlbum = indexArtist;
 			} else {
-				indexAlbum = insertAlbum(QString(f->tag()->album().toCString(false)), filePath, indexArtist);
+				indexAlbum = insertAlbum(QString(f->tag()->album().toCString(true)), filePath, indexArtist);
 			}
 		}
 		this->insertTrack(musicLocationIndex, qFileName, fh, indexAlbum);

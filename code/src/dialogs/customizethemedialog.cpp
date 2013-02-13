@@ -81,14 +81,14 @@ void CustomizeThemeDialog::setupActions()
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
 		if (checkBox) {
-			connect(checkBox, SIGNAL(toggled(bool)), b, SLOT(setVisible(bool)));
-			connect(b, SIGNAL(visibilityChanged(MediaButton*, bool)), settings, SLOT(setVisible(MediaButton*, bool)));
+			connect(checkBox, &QCheckBox::toggled, b, &MediaButton::setVisible);
+			connect(b, &MediaButton::visibilityChanged, settings, &Settings::setVisible);
 		}
 
 		// Connect a file dialog to every button if one wants to customize everything
 		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
-		connect(pushButton, SIGNAL(clicked()), this, SLOT(openChooseIconDialog()));
-		connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), b, SLOT(makeFlat(bool)));
+		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
+		connect(flatButtonsCheckBox, &QCheckBox::toggled, [=] (bool flat) { b->setFlat(flat); });
 	}
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
@@ -254,7 +254,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 {
 	QPushButton *button = qobject_cast<QPushButton *>(sender());
 	MediaButton *b = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
-	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QStandardPaths::displayName(QStandardPaths::PicturesLocation), tr("Pictures (*.jpg *.jpeg *.png)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first(), tr("Pictures (*.jpg *.jpeg *.png)"));
 
 	Settings *settings = Settings::getInstance();
 	settings->setCustomIcon(b, path);
