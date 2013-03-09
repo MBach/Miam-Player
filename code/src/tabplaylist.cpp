@@ -19,25 +19,22 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
 	messageBox = new TracksNotFoundMessageBox(this);
-
-	// Init Phonon Module
-	mediaObject = new QMediaPlayer(this);
-	//metaInformationResolver = new MediaObject(this);
+	_mediaPlayer = new QMediaPlayer(this);
 
 	// Link core mp3 actions
 	/// FIXME Qt5
-	connect(mediaObject, &QMediaPlayer::stateChanged, this, &TabPlaylist::stateChanged);
+	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::stateChanged);
 	//connect(metaInformationResolver, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(metaStateChanged(QMediaPlayer::State)));
 	//connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
 	// Keep playlists in memory before exit
-	connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(savePlaylists()));
+	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
 
 	// Add a new playlist
-	connect(this, SIGNAL(currentChanged(int)), this, SLOT(checkAddPlaylistButton(int)));
+	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
 
 	// Other actions
-	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTabFromCloseButton(int)));
+	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::removeTabFromCloseButton);
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -89,10 +86,11 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 		if (index.isValid()) {
 			/// FIXME Qt5
 			QMediaContent source(QUrl::fromLocalFile(TreeView::absFilePath(index)));
-			if (row != -1) {
+			if (row == -1) {
 				row++;
 			}
-			playlist->mediaPlaylist()->insertMedia(row, source);
+			bool b = playlist->mediaPlaylist()->insertMedia(row, source);
+			qDebug() << "add?" << b << row;
 		}
 	}
 
@@ -122,7 +120,7 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 	}
 
 	// Then append a new empty playlist to the others
-	Playlist *p = new Playlist(this);
+	Playlist *p = new Playlist(this, _mediaPlayer);
 	p->init();
 	int i = insertTab(count(), p, newPlaylistName);
 
@@ -142,18 +140,20 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 }
 
 /** When the user is double clicking on a track in a playlist. */
-void TabPlaylist::changeTrack(const QModelIndex &item, bool autoscroll)
+void TabPlaylist::changeTrack(const QModelIndex &item)
 {
 	/// FIXME Qt5
 	//MediaSource media = currentPlayList()->track(item.row());
 	//currentPlayList()->playlistModel()->setActiveTrack(item.row());
 	//mediaObject->setCurrentSource(media);
+	qDebug() << "ici";
 	currentPlayList()->highlightCurrentTrack();
+	/// FIXME
 	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
-	if (autoscroll) {
+	//if (autoscroll) {
 		currentPlayList()->scrollTo(item, QAbstractItemView::PositionAtCenter);
-	}
-	mediaObject->play();
+	//}
+	_mediaPlayer->play();
 }
 
 /** When the user is clicking on the (+) button to add a new playlist. */

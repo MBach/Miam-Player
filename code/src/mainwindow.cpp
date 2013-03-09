@@ -88,14 +88,14 @@ void MainWindow::setupActions()
 
 	// Link user interface
 	// Actions from the menu
-	connect(actionExit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(actionExit, &QAction::triggered, &QApplication::quit);
 	/// FIXME Qt5
 	//connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &QDialog::open);
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &QDialog::open);
 	connect(actionAboutM4P, &QAction::triggered, this, &MainWindow::aboutM4P);
-	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
 
 	// When no library is set
@@ -127,8 +127,9 @@ void MainWindow::setupActions()
 	connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipForward);
 	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
 	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
-	/// FIXME Qt5
-	//connect(volumeSlider->audioOutput(), SIGNAL(volumeChanged(qreal)), settings, SLOT(setVolume(qreal)));
+    connect(volumeSlider, &QSlider::valueChanged, [=] (int volume) {
+        tabPlaylists->mediaPlayer()->setVolume(volume);
+        settings->setVolume(volume); });
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
@@ -146,7 +147,7 @@ void MainWindow::setupActions()
 
 	// Drag & Drop actions
 	connect(dragDropDialog, SIGNAL(rememberDragDrop(QToolButton*)), customizeOptionsDialog, SLOT(setExternalDragDropPreference(QToolButton*)));
-	/// FIXME
+    /// FIXME Qt5
 	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
 	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
 	connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));

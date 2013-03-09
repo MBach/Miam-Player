@@ -15,8 +15,8 @@ class TabPlaylist : public QTabWidget
 
 private:
 	// Mp3 module
-	QMediaPlayer *mediaObject;
-	QMediaObject *metaInformationResolver;
+    QMediaPlayer *_mediaPlayer;
+	//QMediaObject *metaInformationResolver;
 
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
@@ -28,7 +28,7 @@ public:
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
 
-	QMediaPlayer *media() const { return this->mediaObject; }
+    QMediaPlayer *mediaPlayer() const { return this->_mediaPlayer; }
 
 	/** Get the playlist at index. */
 	Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
@@ -50,7 +50,7 @@ public slots:
 	void addItemToPlaylist(const QModelIndex &index);
 
 	/** When the user is double clicking on a track in a playlist. */
-	void changeTrack(const QModelIndex &, bool autoscroll = false);
+	void changeTrack(const QModelIndex &);
 
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);

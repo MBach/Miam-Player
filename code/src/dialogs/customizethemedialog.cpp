@@ -93,9 +93,9 @@ void CustomizeThemeDialog::setupActions()
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
 	// Fonts
-	connect(fontComboBoxPlaylist, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontFamily(QFont)));
-	connect(fontComboBoxLibrary, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontFamily(QFont)));
-	connect(fontComboBoxMenus, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateFontFamily(QFont)));
+    connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, this, &CustomizeThemeDialog::updateFontFamily);
+    connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, this, &CustomizeThemeDialog::updateFontFamily);
+    connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, this, &CustomizeThemeDialog::updateFontFamily);
 	connect(spinBoxPlaylist, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 	connect(spinBoxLibrary, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
 	connect(spinBoxMenus, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
@@ -111,7 +111,7 @@ void CustomizeThemeDialog::setupActions()
 	// Library
 	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(displayAlphabeticalSeparators(bool)));
 	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), this, SLOT(displayCovers(bool)));
-	connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SIGNAL(sizeOfCoversChanged(int)));
+    connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));
 }
 
 /** Automatically centers the parent window when closing this dialog. */

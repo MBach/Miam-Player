@@ -31,7 +31,6 @@ public slots:
 	/** Send folders or tracks to a playlist. */
 	void sendToPlaylist(Playlist *playlist = 0, int row = -1);
 
-protected slots:
 	/** Send folders or tracks to the tag editor. */
 	void openTagEditor();
 

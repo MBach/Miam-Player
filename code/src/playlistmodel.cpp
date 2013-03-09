@@ -59,8 +59,8 @@ void PlaylistModel::move(const QModelIndexList &rows, int destChild)
 /** Add a track to this Playlist instance. */
 void PlaylistModel::insertMedia(int start, int end)
 {
-
 	// Resolve metaDatas from TagLib
+	qDebug() << "ICI ?" << start << end;
 	TagLib::FileRef f(qMediaPlaylist->currentMedia().canonicalUrl().toLocalFile().mid(2).toStdWString().data());
 	if (!f.isNull()) {
 		int currentRow;
@@ -69,6 +69,7 @@ void PlaylistModel::insertMedia(int start, int end)
 		} else {
 			currentRow = start;
 		}
+		qDebug() << "ICI !" << start << end;
 
 		QString title(f.tag()->title().toCString(true));
 		if (title.isEmpty()) {

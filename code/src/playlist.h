@@ -2,6 +2,7 @@
 #define PLAYLIST_H
 
 #include <QMediaPlaylist>
+#include <QMediaPlayer>
 #include <QMenu>
 #include <QTableView>
 
@@ -20,9 +21,10 @@ private:
 	PlaylistModel *_playlistModel;
 
 	QMediaPlaylist *qMediaPlaylist;
+	QMediaPlayer *_mediaPlayer;
 
 public:
-	Playlist(QWidget *parent = 0);
+	Playlist(QWidget *parent, QMediaPlayer *mediaplayer);
 
 	/*MediaSource track(int i) {
 		//return _playlistModel->tracks().at(i);
@@ -69,6 +71,8 @@ public slots:
 	void highlightCurrentTrack();
 
 private slots:
+	void changeTrack(int i);
+
 	void resizeColumns();
 
 	/** Display a context menu with the state of all columns. */

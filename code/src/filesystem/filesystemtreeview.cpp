@@ -50,7 +50,7 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 	// Same thing for the tag editor
 	QAction *actionSendToTagEditor = new QAction(toTagEditor.arg(fileInfo.baseName()), properties);
-	connect(actionSendToTagEditor, SIGNAL(triggered()), this, SLOT(openTagEditor()));
+    connect(actionSendToTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 	properties->addAction(actionSendToTagEditor);
 
 	// But restricts for the library. It is not wished to add single file as placeholder

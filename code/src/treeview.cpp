@@ -30,6 +30,7 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 	int count = this->countAll(selectedIndexes());
 
 	int ret = QMessageBox::Ok;
+    /// XXX: extract magic number (to where?)
 	if (count > 300) {
 		QMessageBox msgBox;
 		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");

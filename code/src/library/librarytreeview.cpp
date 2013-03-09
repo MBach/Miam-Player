@@ -70,7 +70,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
 	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
 
-	connect(this, SIGNAL(sizeOfCoversChanged(int)), this, SLOT(setCoverSize(int)));
 	connect(settings, SIGNAL(currentFontChanged()), libraryModel, SIGNAL(layoutChanged()));
 
 	// When the scan is complete, save the model in the filesystem
@@ -80,8 +79,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
 
 	// Context menu
-	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToPlaylist()));
-	connect(actionOpenTagEditor, SIGNAL(triggered()), this, SLOT(openTagEditor()));
+    connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToPlaylist()));
+    connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 }
 
 /** Small function for translating the QMenu exclusively. */

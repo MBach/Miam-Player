@@ -12,14 +12,16 @@
 #include "settings.h"
 #include "nofocusitemdelegate.h"
 #include "library/librarytreeview.h"
+#include "tabplaylist.h"
 
 #include <QtDebug>
 
-Playlist::Playlist(QWidget *parent) :
-	QTableView(parent)
+Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
+	QTableView(parent), _mediaPlayer(mediaPlayer)
 {
 	qMediaPlaylist = new QMediaPlaylist(this);
 	_playlistModel = new PlaylistModel(qMediaPlaylist);
+    _mediaPlayer->setPlaylist(qMediaPlaylist);
 
 	this->setModel(_playlistModel);
 
@@ -53,22 +55,24 @@ Playlist::Playlist(QWidget *parent) :
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
 	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
-	connect(removeFromCurrentPlaylist, SIGNAL(triggered()), this, SLOT(removeSelectedTracks()));
+    connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 
 	// Context menu on header of columns
 	columns = new QMenu(this);
 
-	// Change track
-	// no need to cast parent as a TabPlaylist instance
-	connect(this, SIGNAL(doubleClicked(QModelIndex)), parent, SLOT(changeTrack(QModelIndex)));
+	//TabPlaylist *tabPlaylist = qobject_cast<TabPlaylist*>(parent);
+	//connect(this, &QTableView::doubleClicked, tabPlaylist, &TabPlaylist::changeTrack);
+	//connect(this, &QTableView::doubleClicked, this, &Playlist::changeTrack);
+	connect(this, &QTableView::doubleClicked, [=] (const QModelIndex &index) { qMediaPlaylist->setCurrentIndex(index.row()); });
+	connect(qMediaPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::changeTrack);
 	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 
 	// Link this playlist with the Settings instance to change fonts at runtime
-	connect(Settings::getInstance(), SIGNAL(currentFontChanged()), this, SLOT(highlightCurrentTrack()));
+    connect(Settings::getInstance(), &Settings::currentFontChanged, this, &Playlist::highlightCurrentTrack);
 
 	// Hide the selected column in context menu
-	connect(horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showColumnsMenu(QPoint)));
-	connect(horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(saveColumnsState(int,int,int)));
+    connect(horizontalHeader(), &QWidget::customContextMenuRequested, this, &Playlist::showColumnsMenu);
+    connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &Playlist::saveColumnsState);
 
 	//connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
 	//connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
@@ -188,6 +192,15 @@ void Playlist::resizeEvent(QResizeEvent *)
 {
 	/// XXX: need to be improved to avoid flickering
 	this->resizeColumns();
+}
+
+void Playlist::changeTrack(int i)
+{
+    qDebug() << "Playlist::changeTrack =" << i;
+	Q_UNUSED(i)
+    //_mediaPlayer->play();
+    qDebug() << "volume" << _mediaPlayer->volume();
+    qDebug() << "media" << qMediaPlaylist->media(i).canonicalUrl();
 }
 
 void Playlist::resizeColumns()
