@@ -3,6 +3,53 @@
 <TS version="2.0" language="fr_FR" sourcelanguage="en_US">
 <defaultcodec>ISO-8859-5</defaultcodec>
 <context>
+    <name>AlbumCover</name>
+    <message>
+        <source>Load a new cover...</source>
+        <translation>Charger une nouvelle pochette...</translation>
+    </message>
+    <message>
+        <source>Extract current cover...</source>
+        <translation>Extraire la pochette courante...</translation>
+    </message>
+    <message>
+        <source>Remove cover</source>
+        <translation>Supprimer la pochette</translation>
+    </message>
+    <message>
+        <source>Apply cover to &apos;%1&apos;</source>
+        <translation>Appliquer la pochette à &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Apply cover</source>
+        <translation>Appliquer la pochette</translation>
+    </message>
+    <message>
+        <source>to &apos;%1&apos; only</source>
+        <translation>à &apos;%1&apos; uniquement</translation>
+    </message>
+    <message>
+        <source>to every tracks</source>
+        <translation>à toutes les pistes</translation>
+    </message>
+    <message>
+        <source>Load a new cover</source>
+        <translation>Charger une nouvelle pochette</translation>
+    </message>
+    <message>
+        <source>Images (*.png *.jpg)</source>
+        <translation>Images (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <source>Save a cover</source>
+        <translation>Sauvegarder une pochette</translation>
+    </message>
+    <message>
+        <source>Image (*.jpg)</source>
+        <translation>Image (*.jpg)</translation>
+    </message>
+</context>
+<context>
     <name>CustomizeOptionsDialog</name>
     <message>
         <source>Customize general options</source>
@@ -433,22 +480,6 @@
         <translation>Voulez-vous alterner les couleurs dans les listes de lectures ?</translation>
     </message>
     <message>
-        <source>Group elements</source>
-        <translation>Grouper les éléments</translation>
-    </message>
-    <message>
-        <source>Would you like to associate displayed elements as a group ?</source>
-        <translation>Voulez-vous associer les éléments affichés et ne former qu&apos;un seul groupe ?</translation>
-    </message>
-    <message>
-        <source>It is not possible to customize elements separately in this release</source>
-        <translation>Il n&apos;est pas possible de personnaliser séparément chaque élément dans cette version</translation>
-    </message>
-    <message>
-        <source>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</source>
-        <translation>Note : il est hautement recommandé de garder cette option à &apos;Oui&apos; parce qu&apos;il est très difficile de concevoir un thème attirant et cohérent.</translation>
-    </message>
-    <message>
         <source>Alternative colors</source>
         <translation>Couleurs alternées</translation>
     </message>
@@ -483,6 +514,18 @@
     <message>
         <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
         <translation>Cette option va filtrer les pronoms grammaticaux. Par exemple, &quot;The Beatles&quot; sera considéré comme &quot;Beatles, the&quot;</translation>
+    </message>
+    <message>
+        <source>Custom colors</source>
+        <translation>Couleurs personnalisées</translation>
+    </message>
+    <message>
+        <source>Would you like to customize the colors of the player?</source>
+        <translation>Souhaitez-vous personnalisez les couleurs du lecteur ?</translation>
+    </message>
+    <message>
+        <source>No, keep the colors provided by my Operating System</source>
+        <translation>Non, converver les couleurs utilisées par le système d&apos;exploitation</translation>
     </message>
 </context>
 <context>
@@ -555,14 +598,6 @@
     <message>
         <source>Search...</source>
         <translation>Rechercher...</translation>
-    </message>
-    <message>
-        <source>No library was found!</source>
-        <translation>Aucun emplacement pour la bibiothèque n&apos;a été défini !</translation>
-    </message>
-    <message>
-        <source>Click here to start</source>
-        <translation>Cliquez ici pour commencer</translation>
     </message>
     <message>
         <source>File explorer</source>
@@ -716,6 +751,34 @@
         <source>Move selected tracks &amp;down</source>
         <translation>Déplacer vers le &amp;bas les pistes sélectionnées</translation>
     </message>
+    <message>
+        <source>Quick start</source>
+        <translation>Configuration rapide</translation>
+    </message>
+    <message>
+        <source>Folders</source>
+        <translation>Dossiers</translation>
+    </message>
+    <message>
+        <source>Number of files</source>
+        <translation>Nombre de fichiers</translation>
+    </message>
+    <message>
+        <source>Some music folders were found automatically</source>
+        <translation>Des dossiers musicaux viennent d&apos;être trouvés</translation>
+    </message>
+    <message>
+        <source>- otherwise -</source>
+        <translation>- ou sinon -</translation>
+    </message>
+    <message>
+        <source>Click here to manually search for music</source>
+        <translation>Cliquez ici pour rechercher des dossiers musicaux</translation>
+    </message>
+    <message>
+        <source>%1 elements</source>
+        <translation>%1 éléments</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -847,18 +910,6 @@
 </context>
 <context>
     <name>TabPlaylist</name>
-    <message>
-        <source>Fatal Error</source>
-        <translation>Erreur fatale</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Erreur</translation>
-    </message>
-    <message>
-        <source>Error opening files</source>
-        <translation>Error à l&apos;ouverture de fichiers</translation>
-    </message>
     <message>
         <source>Playlist </source>
         <translation>Liste de lecture </translation>

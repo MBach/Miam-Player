@@ -3,6 +3,53 @@
 <TS version="2.0" language="en_US" sourcelanguage="en_US">
 <defaultcodec>ISO-8859-5</defaultcodec>
 <context>
+    <name>AlbumCover</name>
+    <message>
+        <source>Load a new cover...</source>
+        <translation>Load a new cover...</translation>
+    </message>
+    <message>
+        <source>Extract current cover...</source>
+        <translation>Extract current cover...</translation>
+    </message>
+    <message>
+        <source>Remove cover</source>
+        <translation>Remove cover</translation>
+    </message>
+    <message>
+        <source>Apply cover to &apos;%1&apos;</source>
+        <translation>Apply cover to &apos;%1&apos;</translation>
+    </message>
+    <message>
+        <source>Apply cover</source>
+        <translation>Apply cover</translation>
+    </message>
+    <message>
+        <source>to &apos;%1&apos; only</source>
+        <translation>to &apos;%1&apos; only</translation>
+    </message>
+    <message>
+        <source>to every tracks</source>
+        <translation>to every tracks</translation>
+    </message>
+    <message>
+        <source>Load a new cover</source>
+        <translation>Load a new cover</translation>
+    </message>
+    <message>
+        <source>Images (*.png *.jpg)</source>
+        <translation>Images (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <source>Save a cover</source>
+        <translation>Save a cover</translation>
+    </message>
+    <message>
+        <source>Image (*.jpg)</source>
+        <translation>Image (*.jpg)</translation>
+    </message>
+</context>
+<context>
     <name>CustomizeOptionsDialog</name>
     <message>
         <source>Customize general options</source>
@@ -433,22 +480,6 @@
         <translation>Would you like to alternate colors in playlists?</translation>
     </message>
     <message>
-        <source>Group elements</source>
-        <translation>Group elements</translation>
-    </message>
-    <message>
-        <source>Would you like to associate displayed elements as a group ?</source>
-        <translation>Would you like to associate displayed elements as a group ?</translation>
-    </message>
-    <message>
-        <source>It is not possible to customize elements separately in this release</source>
-        <translation>It is not possible to customize elements separately in this release</translation>
-    </message>
-    <message>
-        <source>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</source>
-        <translation>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</translation>
-    </message>
-    <message>
         <source>Alternative colors</source>
         <translation>Alternative colors</translation>
     </message>
@@ -483,6 +514,18 @@
     <message>
         <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
         <translation>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</translation>
+    </message>
+    <message>
+        <source>Custom colors</source>
+        <translation>Custom colors</translation>
+    </message>
+    <message>
+        <source>Would you like to customize the colors of the player?</source>
+        <translation>Would you like to customize the colors of the player?</translation>
+    </message>
+    <message>
+        <source>No, keep the colors provided by my Operating System</source>
+        <translation>No, keep the colors provided by my Operating System</translation>
     </message>
 </context>
 <context>
@@ -554,14 +597,6 @@
     <message>
         <source>Search...</source>
         <translation>Search...</translation>
-    </message>
-    <message>
-        <source>No library was found!</source>
-        <translation>No library was found!</translation>
-    </message>
-    <message>
-        <source>Click here to start</source>
-        <translation>Click here to start</translation>
     </message>
     <message>
         <source>File explorer</source>
@@ -715,6 +750,34 @@
         <source>Move selected tracks &amp;down</source>
         <translation>Move selected tracks &amp;down</translation>
     </message>
+    <message>
+        <source>Quick start</source>
+        <translation>Quick start</translation>
+    </message>
+    <message>
+        <source>Folders</source>
+        <translation>Folders</translation>
+    </message>
+    <message>
+        <source>Number of files</source>
+        <translation>Number of files</translation>
+    </message>
+    <message>
+        <source>Some music folders were found automatically</source>
+        <translation>Some music folders were found automatically</translation>
+    </message>
+    <message>
+        <source>- otherwise -</source>
+        <translation>- otherwise -</translation>
+    </message>
+    <message>
+        <source>Click here to manually search for music</source>
+        <translation>Click here to manually search for music</translation>
+    </message>
+    <message>
+        <source>%1 elements</source>
+        <translation>%1 elements</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -846,18 +909,6 @@
 </context>
 <context>
     <name>TabPlaylist</name>
-    <message>
-        <source>Fatal Error</source>
-        <translation>Fatal Error</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <source>Error opening files</source>
-        <translation>Error opening files</translation>
-    </message>
     <message>
         <source>Playlist </source>
         <translation>Playlist </translation>

@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="kr" sourcelanguage="en_US">
+<TS version="2.0" language="th_TH" sourcelanguage="en_US">
+<context>
+    <name>AlbumCover</name>
+    <message>
+        <source>Load a new cover...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extract current cover...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove cover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply cover to &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Apply cover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to &apos;%1&apos; only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>to every tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load a new cover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Images (*.png *.jpg)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save a cover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Image (*.jpg)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 <context>
     <name>CustomizeOptionsDialog</name>
     <message>
@@ -432,22 +479,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Group elements</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Would you like to associate displayed elements as a group ?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>It is not possible to customize elements separately in this release</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Note: it is highly recommended to keep this option on &apos;Yes&apos; because it&apos;s really difficult to make an attractive and consistent theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Alternative colors</source>
         <translation type="unfinished"></translation>
     </message>
@@ -481,6 +512,18 @@
     </message>
     <message>
         <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to customize the colors of the player?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, keep the colors provided by my Operating System</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -552,14 +595,6 @@
     </message>
     <message>
         <source>Search...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No library was found!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Click here to start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -714,6 +749,34 @@
         <source>Move selected tracks &amp;down</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Quick start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some music folders were found automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>- otherwise -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Click here to manually search for music</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 elements</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -845,18 +908,6 @@
 </context>
 <context>
     <name>TabPlaylist</name>
-    <message>
-        <source>Fatal Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error opening files</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Playlist </source>
         <translation type="unfinished"></translation>

@@ -270,7 +270,7 @@
           <item>
            <widget class="QLabel" name="timeLabel">
             <property name="text">
-             <string>--:--</string>
+             <string notr="true">--:--</string>
             </property>
            </widget>
           </item>
