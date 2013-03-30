@@ -33,6 +33,9 @@ private:
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
+	/** The first time the player is launched, this function will scan for multimedia files. */
+	void quickStart();
+
 	QAudioOutput *audioOutput;
 
 	// MP3 actions

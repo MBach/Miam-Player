@@ -78,19 +78,19 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 	} else {
 		this->setCurrentWidget(playlist);
 	}
-	/// FIXME Qt5
-	//bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
-	bool isEmpty = true;
+	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
 	// Append tracks
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
+			/// XXX: here we are linking the treeview with the playlist, is it really what needs to be done?
+			/// It might be better to transform the static call to pure virtual function
+			/// Or to stop using indexes by getting a step before, abs path
 			/// FIXME Qt5
 			QMediaContent source(QUrl::fromLocalFile(TreeView::absFilePath(index)));
-			if (row == -1) {
-				row++;
+			bool b = playlist->mediaPlaylist()->addMedia(source);
+			if (b) {
+				playlist->model();
 			}
-			bool b = playlist->mediaPlaylist()->insertMedia(row, source);
-			qDebug() << "add?" << b << row;
 		}
 	}
 
