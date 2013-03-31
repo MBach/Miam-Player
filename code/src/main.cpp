@@ -4,7 +4,7 @@
 
 #define SOFT "MmeMiamMiamMusicPlayer"
 #define COMPANY "MmeMiamMiam"
-#define VERSION "0.3.8"
+#define VERSION "0.4.0"
 
 #include <QtDebug>
 

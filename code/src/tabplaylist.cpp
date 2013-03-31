@@ -23,7 +23,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	// Link core mp3 actions
 	/// FIXME Qt5
-	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::stateChanged);
+	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
 	//connect(metaInformationResolver, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(metaStateChanged(QMediaPlayer::State)));
 	//connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
@@ -49,6 +49,18 @@ void TabPlaylist::retranslateUi()
 		}
 		playlist(i)->retranslateUi();
 	}
+}
+
+void TabPlaylist::setMediaButtons(const QList<MediaButton*> &mediaButtons) {
+	this->_mediaButtons = mediaButtons;
+
+	/// XXX: move connect() from MainWindow here? Relevance? POC?
+	// Media buttons
+	//Settings *settings = Settings::getInstance();
+	//foreach (MediaButton *button, _mediaButtons) {
+	//	if (button->objectName().remove("Button"))
+	//	QMetaObject::invokeMethod(&obj, "someMethod", Qt::DirectConnection);
+	//}
 }
 
 /** Add external folders (from a drag and drop) to the current playlist. */
@@ -79,20 +91,14 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 		this->setCurrentWidget(playlist);
 	}
 	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
-	// Append tracks
+
+	QList<QMediaContent> medias;
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
-			/// XXX: here we are linking the treeview with the playlist, is it really what needs to be done?
-			/// It might be better to transform the static call to pure virtual function
-			/// Or to stop using indexes by getting a step before, abs path
-			/// FIXME Qt5
-			QMediaContent source(QUrl::fromLocalFile(TreeView::absFilePath(index)));
-			bool b = playlist->mediaPlaylist()->addMedia(source);
-			if (b) {
-				playlist->model();
-			}
+			medias.append(QMediaContent(QUrl::fromLocalFile(TreeView::absFilePath(index))));
 		}
 	}
+	playlist->appendTracks(medias);
 
 	// Automatically plays the first track
 	if (isEmpty) {
@@ -146,7 +152,7 @@ void TabPlaylist::changeTrack(const QModelIndex &item)
 	//MediaSource media = currentPlayList()->track(item.row());
 	//currentPlayList()->playlistModel()->setActiveTrack(item.row());
 	//mediaObject->setCurrentSource(media);
-	qDebug() << "ici";
+	qDebug() << "here";
 	currentPlayList()->highlightCurrentTrack();
 	/// FIXME
 	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
@@ -323,44 +329,21 @@ void TabPlaylist::tick(qint64 time)
 	//timeLcd->display(displayTime.toString("mm:ss"));
 }
 
-void TabPlaylist::stateChanged(QMediaPlayer::State newState)
+void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 {
-	/*switch (newState) {
-	case ErrorState:
-		if (mediaObject->errorType() == FatalError) {
-			QMessageBox::warning(this, tr("Fatal Error"),
-			mediaObject->errorString());
-		} else {
-			QMessageBox::warning(this, tr("Error"),
-			mediaObject->errorString());
-		}
-		break;
-
-	case BufferingState:
-		break;
-
-	case PlayingState:
-	case PausedState:
-		emit iconStatusChanged(newState);
-		break;
-
-	case StoppedState:
-		if (oldState == LoadingState) {
-			// Play media only if one has not removed the playlist meanwhile, otherwise,  playlist
-			if (currentPlayList() && currentPlayList()->playlistModel()->rowCount() == 0) {
-				/// todo clear mediaObject!
-			} else {
-				mediaObject->play();
-			}
-		}
+	qDebug() << newMediaState;
+	switch (newMediaState) {
+	case QMediaPlayer::BufferedMedia:
+		this->currentPlayList()->highlightCurrentTrack();
+		//emit iconStatusChanged(newState);
 		break;
 	default:
 		;
-	}*/
+	}
 }
 
-void TabPlaylist::metaStateChanged(QMediaPlayer::State newState)
-{
+//void TabPlaylist::metaStateChanged(QMediaPlayer::State newState)
+//{
 	/*if (newState == ErrorState) {
 		QMessageBox::warning(this, tr("Error opening files"), metaInformationResolver->errorString());
 		//while (!sources.isEmpty() && !(sources.takeLast() == metaInformationResolver->currentSource())) {
@@ -392,4 +375,4 @@ void TabPlaylist::metaStateChanged(QMediaPlayer::State newState)
 			currentPlayList()->setColumnWidth(0, 300);
 		}
 	}*/
-}
+//}

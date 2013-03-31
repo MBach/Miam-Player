@@ -31,8 +31,6 @@ public:
 
 	StyleSheetUpdater(QObject *parent = 0);
 
-	void replace(Reflector *reflector, const QColor &color);
-
 	inline const QRegExp regExp(Element key) const { return regExps[key]; }
 
 private:
@@ -41,6 +39,9 @@ private:
 
 	/** Dispatch instances and get their correct stylesheet. */
 	void replace(QWidget *target, Element key, const QColor &color);
+
+public slots:
+	void replace(Reflector *reflector, const QColor &color);
 };
 
 #endif // STYLESHEETUPDATER_H

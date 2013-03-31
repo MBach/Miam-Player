@@ -106,7 +106,9 @@ void CustomizeThemeDialog::setupActions()
 	foreach (QToolButton *b, findChildren<QToolButton*>()) {
 		connect(b, SIGNAL(clicked()), this, SLOT(showColorDialog()));
 	}
-	connect(colorDialog, SIGNAL(currentColorChanged(QColor)), this, SLOT(changeColor(QColor)));
+	connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
+		styleSheetUpdater->replace(targetedColor, selectedColor);
+	});
 
 	// Library
 	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(displayAlphabeticalSeparators(bool)));

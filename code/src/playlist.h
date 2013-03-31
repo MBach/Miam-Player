@@ -41,6 +41,8 @@ public:
 
 	void init();
 
+	void appendTracks(const QList<QMediaContent> &medias);
+
 protected:
 	/** Redefined to display a small context menu in the view. */
 	void contextMenuEvent(QContextMenuEvent *event);
@@ -71,7 +73,7 @@ public slots:
 	void highlightCurrentTrack();
 
 private slots:
-	void changeTrack(int i);
+	//void changeTrack(int i);
 
 	void resizeColumns();
 

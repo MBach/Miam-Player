@@ -751,20 +751,12 @@
         <translation>Move selected tracks &amp;down</translation>
     </message>
     <message>
-        <source>Quick start</source>
-        <translation>Quick start</translation>
-    </message>
-    <message>
         <source>Folders</source>
         <translation>Folders</translation>
     </message>
     <message>
         <source>Number of files</source>
         <translation>Number of files</translation>
-    </message>
-    <message>
-        <source>Some music folders were found automatically</source>
-        <translation>Some music folders were found automatically</translation>
     </message>
     <message>
         <source>- otherwise -</source>
@@ -777,6 +769,14 @@
     <message>
         <source>%1 elements</source>
         <translation>%1 elements</translation>
+    </message>
+    <message>
+        <source>The following items were found in your default music folder:</source>
+        <translation>The following items were found in your default music folder:</translation>
+    </message>
+    <message>
+        <source>Would you like to add them? (you can uncheck some folders)</source>
+        <translation>Would you like to add them? (you can uncheck some folders)</translation>
     </message>
 </context>
 <context>

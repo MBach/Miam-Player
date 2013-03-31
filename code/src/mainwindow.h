@@ -63,7 +63,7 @@ private slots:
 	void changeMenuLabels(int);
 
 	/// Media actions
-	/** These buttons switch the play function with the pause function because they are mutually exclusive. */
+	/** These 2 buttons toggle play and pause functions because they are mutually exclusive. */
 	void playAndPause();
 
 	/** If playing, then stops the track. */

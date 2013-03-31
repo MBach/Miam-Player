@@ -79,7 +79,7 @@ public:
 	int bufferedCoverSize() const;
 
 	/** Returns volume from the slider. */
-    inline int volume() const { return value("volume").toInt(); }
+	inline int volume() const { return value("volume").toInt(); }
 
 	bool repeatPlayBack() const { return value("repeatPlayBack").toBool(); }
 
@@ -151,7 +151,7 @@ public slots:
 	inline void setBufferedCoverSize(int i) { setValue("bufferedCoverSize", i); }
 
 	/** Sets volume from the slider. */
-    inline void setVolume(int v) { setValue("volume", v); }
+	inline void setVolume(int v) { setValue("volume", v); }
 
 	inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
 

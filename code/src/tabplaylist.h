@@ -9,17 +9,20 @@
 #include "playlist.h"
 #include "tracksnotfoundmessagebox.h"
 
+#include "mediabutton.h"
+
 class TabPlaylist : public QTabWidget
 {
 	Q_OBJECT
 
 private:
-	// Mp3 module
-    QMediaPlayer *_mediaPlayer;
-	//QMediaObject *metaInformationResolver;
+	/// XXX: make static instance?
+	QMediaPlayer *_mediaPlayer;
 
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
+
+	QList<MediaButton*> _mediaButtons;
 
 public:
 	/** Default constructor. */
@@ -35,6 +38,8 @@ public:
 
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
+
+	void setMediaButtons(const QList<MediaButton *> &mediaButtons);
 
 public slots:
 	/** Add a new playlist tab. */
@@ -92,8 +97,7 @@ private slots:
 	void savePlaylists();
 
 	void tick(qint64 time);
-	void stateChanged(QMediaPlayer::State newState);
-	void metaStateChanged(QMediaPlayer::State newState);
+	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
 };
 
 #endif // TABPLAYLIST_H

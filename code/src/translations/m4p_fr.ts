@@ -752,20 +752,12 @@
         <translation>Déplacer vers le &amp;bas les pistes sélectionnées</translation>
     </message>
     <message>
-        <source>Quick start</source>
-        <translation>Configuration rapide</translation>
-    </message>
-    <message>
         <source>Folders</source>
         <translation>Dossiers</translation>
     </message>
     <message>
         <source>Number of files</source>
         <translation>Nombre de fichiers</translation>
-    </message>
-    <message>
-        <source>Some music folders were found automatically</source>
-        <translation>Des dossiers musicaux viennent d&apos;être trouvés</translation>
     </message>
     <message>
         <source>- otherwise -</source>
@@ -778,6 +770,14 @@
     <message>
         <source>%1 elements</source>
         <translation>%1 éléments</translation>
+    </message>
+    <message>
+        <source>The following items were found in your default music folder:</source>
+        <translation>Les dossiers suivants ont été trouvés dans votre bibliothèque musicale :</translation>
+    </message>
+    <message>
+        <source>Would you like to add them? (you can uncheck some folders)</source>
+        <translation>Souhaitez-vous les ajouter ? (vous pouvez en décocher)</translation>
     </message>
 </context>
 <context>

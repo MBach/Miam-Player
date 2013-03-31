@@ -26,20 +26,6 @@ StyleSheetUpdater::StyleSheetUpdater(QObject *parent) :
 	regExps.insert(BORDER_BOTTOM, QRegExp("(border-bottom: 1px solid )#[0-9a-f]{6}", Qt::CaseInsensitive));
 }
 
-void StyleSheetUpdater::replace(Reflector *reflector, const QColor &color)
-{
-	foreach (QWidget *target, reflector->associatedInstances()) {
-		if (target != NULL) {
-			this->replace(target, reflector->key(), color);
-		}
-	}
-
-	// Finally, replaces the sender itself
-	this->replace(reflector, BACKGROUND, color);
-	reflector->setColor(color);
-}
-
-
 /** Create a linear gradient with 2 or 4 colors. */
 QList<QColor> StyleSheetUpdater::makeLinearGradient(Element complexity, const QColor &color)
 {
@@ -235,4 +221,17 @@ void StyleSheetUpdater::replace(QWidget *target, Element key, const QColor &colo
 		break;
 	}
 	target->setStyleSheet(styleSheet);
+}
+
+void StyleSheetUpdater::replace(Reflector *reflector, const QColor &color)
+{
+	foreach (QWidget *target, reflector->associatedInstances()) {
+		if (target != NULL) {
+			this->replace(target, reflector->key(), color);
+		}
+	}
+
+	// Finally, replaces the sender itself
+	this->replace(reflector, BACKGROUND, color);
+	reflector->setColor(color);
 }

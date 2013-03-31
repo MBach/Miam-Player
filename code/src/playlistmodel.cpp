@@ -6,6 +6,7 @@
 #include <tag.h>
 
 #include <QTime>
+#include <QUrl>
 
 #include <QtDebug>
 
@@ -54,28 +55,19 @@ void PlaylistModel::move(const QModelIndexList &rows, int destChild)
 	}
 }
 
-#include <QUrl>
-
-/** Add a track to this Playlist instance. */
-void PlaylistModel::insertMedia(int start, int end)
+void PlaylistModel::createRows(const QList<QMediaContent> &tracks)
 {
-	// Resolve metaDatas from TagLib
-	qDebug() << "ICI ?" << start << end;
-	TagLib::FileRef f(qMediaPlaylist->currentMedia().canonicalUrl().toLocalFile().mid(2).toStdWString().data());
+	foreach (QMediaContent track, tracks) {
+		this->createRow(track);
+	}
+}
+
+void PlaylistModel::createRow(const QMediaContent &track)
+{
+	TagLib::FileRef f(track.canonicalUrl().toLocalFile().toStdWString().data());
 	if (!f.isNull()) {
-		int currentRow;
-		if (start == -1) {
-			currentRow = rowCount();
-		} else {
-			currentRow = start;
-		}
-		qDebug() << "ICI !" << start << end;
 
 		QString title(f.tag()->title().toCString(true));
-		if (title.isEmpty()) {
-			// Filename in a MediaSource doesn't handle cross-platform QDir::separator(), so '/' is hardcoded
-			//title = m.fileName().split('/').last();
-		}
 
 		// Then, construct a new row with correct informations
 		QList<QStandardItem *> widgetItems;
@@ -87,10 +79,11 @@ void PlaylistModel::insertMedia(int start, int end)
 		QStandardItem *ratingItem = new QStandardItem("***");
 		QStandardItem *yearItem = new QStandardItem(QString::number(f.tag()->year()));
 
-		trackItem->setData(qMediaPlaylist->currentMedia().canonicalUrl());
+		trackItem->setData(track.canonicalUrl());
 
 		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
 
+		int currentRow = rowCount();
 		this->insertRow(currentRow);
 
 		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
@@ -98,8 +91,9 @@ void PlaylistModel::insertMedia(int start, int end)
 			QStandardItem *item = widgetItems.at(i);
 			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
 			item->setFont(font);
-			setItem(currentRow, i, item);
-			QFontMetrics fm(font);
+			this->setItem(currentRow, i, item);
+			/// FIXME ?
+			//QFontMetrics fm(font);
 			//setRowHeight(currentRow, fm.height());
 		}
 

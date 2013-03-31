@@ -750,19 +750,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Quick start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Folders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Number of files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Some music folders were found automatically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -775,6 +767,14 @@
     </message>
     <message>
         <source>%1 elements</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following items were found in your default music folder:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to add them? (you can uncheck some folders)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

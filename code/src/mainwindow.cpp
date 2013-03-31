@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
 				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
+	tabPlaylists->setMediaButtons(mediaButtons);
 	foreach (MediaButton *b, mediaButtons) {
 		b->setStyleSheet(settings->styleSheet(b));
 	}
@@ -42,10 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	/// FIXME Qt5
 	// Init the audio module
 	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
-	audioOutput->setVolume(Settings::getInstance()->volume());
-	//createPath(tabPlaylists->media(), audioOutput);
-	//seekSlider->setMediaObject(tabPlaylists->media());
-	//volumeSlider->setAudioOutput(audioOutput);
+	tabPlaylists->mediaPlayer()->setVolume(settings->volume());
+	volumeSlider->setValue(settings->volume());
 
 	// Init shortcuts
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
@@ -109,7 +108,10 @@ void MainWindow::setupActions()
 	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
 
 	// When no library is set
-	connect(commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &QDialog::open);
+	connect(commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
+		customizeOptionsDialog->listWidget->setCurrentRow(0);
+		customizeOptionsDialog->open();
+	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::setTagEditorVisible, this, &MainWindow::toggleTagEditor);
@@ -127,7 +129,7 @@ void MainWindow::setupActions()
 	// Rebuild the treeview when tracks have changed using the tag editor
 	connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
 
-	// Link media buttons
+	// Media buttons
 	Settings *settings = Settings::getInstance();
 	connect(skipBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);
@@ -137,9 +139,11 @@ void MainWindow::setupActions()
 	connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipForward);
 	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
 	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
-    connect(volumeSlider, &QSlider::valueChanged, [=] (int volume) {
+
+	// Volume
+	connect(volumeSlider, &QSlider::valueChanged, [=] (int volume) {
         tabPlaylists->mediaPlayer()->setVolume(volume);
-        settings->setVolume(volume); });
+	});
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
@@ -161,6 +165,14 @@ void MainWindow::setupActions()
 	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
 	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
 	connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
+
+	connect(quickStartTableWidget, &QTableWidget::cellClicked, [=] (int row, int column) {
+		if (quickStartTableWidget->item(row, 0)->checkState() == Qt::Checked) {
+			quickStartTableWidget->item(row, 0)->setCheckState(Qt::Unchecked);
+		} else {
+			quickStartTableWidget->item(row, 0)->setCheckState(Qt::Checked);
+		}
+	});
 }
 
 /** The first time the player is launched, this function will scan for multimedia files. */
@@ -238,6 +250,7 @@ void MainWindow::closeEvent(QCloseEvent */*event*/)
 	settings->setValue("mainWindowGeometry", saveGeometry());
 	settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
+	settings->setVolume(volumeSlider->value());
 	Settings::getInstance()->sync();
 }
 
@@ -325,24 +338,21 @@ void MainWindow::changeMenuLabels(int itemCount)
 	}
 }
 
-/** These buttons switch the play function with the pause function because they are mutually exclusive. */
+/** These 2 buttons toggle play and pause functions because they are mutually exclusive. */
 void MainWindow::playAndPause()
 {
-	/// FIXME Qt5
-	/*if (!tabPlaylists->currentPlayList()->playlistModel()->rowCount() == 0) {
-		if (tabPlaylists->media()->state() == PlayingState) {
-			tabPlaylists->media()->pause();
-			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);
-		} else {
-			tabPlaylists->media()->play();
-			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"), true);
-		}
-	}*/
+	if (tabPlaylists->mediaPlayer()->state() == QMediaPlayer::PlayingState) {
+		tabPlaylists->mediaPlayer()->pause();
+		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);
+	} else {
+		tabPlaylists->mediaPlayer()->play();
+		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"), true);
+	}
 }
 
 void MainWindow::stop()
 {
-	//tabPlaylists->media()->stop();
+	tabPlaylists->mediaPlayer()->stop();
 	Settings *settings = Settings::getInstance();
 	QString play(":/player/" + settings->theme() + "/play");
 	if (playButton->icon().name() != play) {

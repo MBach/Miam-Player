@@ -57,14 +57,16 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
     connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 
-	// Context menu on header of columns
-	columns = new QMenu(this);
+	connect(this, &QTableView::doubleClicked, [=] (const QModelIndex &index) {
+		_mediaPlayer->setPlaylist(qMediaPlaylist);
+		qMediaPlaylist->setCurrentIndex(index.row());
+		_mediaPlayer->play();
+		qDebug() << _mediaPlayer->currentMedia().canonicalUrl();
+	});
 
-	//TabPlaylist *tabPlaylist = qobject_cast<TabPlaylist*>(parent);
-	//connect(this, &QTableView::doubleClicked, tabPlaylist, &TabPlaylist::changeTrack);
-	//connect(this, &QTableView::doubleClicked, this, &Playlist::changeTrack);
-	connect(this, &QTableView::doubleClicked, [=] (const QModelIndex &index) { qMediaPlaylist->setCurrentIndex(index.row()); });
-	connect(qMediaPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::changeTrack);
+	// Context menu on header of columns
+	//connect(qMediaPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::changeTrack);
+	columns = new QMenu(this);
 	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 
 	// Link this playlist with the Settings instance to change fonts at runtime
@@ -76,8 +78,6 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 
 	//connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
 	//connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
-
-	connect(qMediaPlaylist, &QMediaPlaylist::mediaInserted, _playlistModel, &PlaylistModel::insertMedia);
 }
 
 void Playlist::init()
@@ -112,6 +112,12 @@ void Playlist::init()
 		setColumnHidden(i, hidden);
 		columns->actions().at(i)->setChecked(!hidden);
 	}
+}
+
+void Playlist::appendTracks(const QList<QMediaContent> &medias)
+{
+	qMediaPlaylist->addMedia(medias);
+	_playlistModel->createRows(medias);
 }
 
 /** Display a context menu with the state of all columns. */
@@ -194,14 +200,14 @@ void Playlist::resizeEvent(QResizeEvent *)
 	this->resizeColumns();
 }
 
-void Playlist::changeTrack(int i)
+/*void Playlist::changeTrack(int i)
 {
     qDebug() << "Playlist::changeTrack =" << i;
 	Q_UNUSED(i)
-    //_mediaPlayer->play();
+	_mediaPlayer->play();
     qDebug() << "volume" << _mediaPlayer->volume();
     qDebug() << "media" << qMediaPlaylist->media(i).canonicalUrl();
-}
+}*/
 
 void Playlist::resizeColumns()
 {
@@ -331,12 +337,13 @@ void Playlist::removeSelectedTracks()
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 void Playlist::highlightCurrentTrack()
 {
-	QStandardItem *it;
+	qDebug() << "Playlist::highlightCurrentTrack()";
+	QStandardItem *it = NULL;
 	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-	/*if (playlistModel()->rowCount() > 0) {
-		for (int i=0; i < playlistModel()->rowCount(); i++) {
-			for (int j = 0; j < playlistModel()->columnCount(); j++) {
-				it = playlistModel()->item(i, j);
+	if (_playlistModel->rowCount() > 0) {
+		for (int i=0; i < _playlistModel->rowCount(); i++) {
+			for (int j = 0; j < _playlistModel->columnCount(); j++) {
+				it = _playlistModel->item(i, j);
 				QFont itemFont = font;
 				itemFont.setBold(false);
 				itemFont.setItalic(false);
@@ -345,8 +352,8 @@ void Playlist::highlightCurrentTrack()
 				this->setRowHeight(i, fm.height());
 			}
 		}
-		for (int j=0; j < playlistModel()->columnCount(); j++) {
-			it = playlistModel()->item(playlistModel()->activeTrack(), j);
+		for (int j=0; j < _playlistModel->columnCount(); j++) {
+			it = _playlistModel->item(qMediaPlaylist->currentIndex(), j);
 			// If there is actually one selected track in the playlist
 			if (it != NULL) {
 				QFont itemFont = font;
@@ -355,5 +362,5 @@ void Playlist::highlightCurrentTrack()
 				it->setFont(itemFont);
 			}
 		}
-	}*/
+	}
 }
