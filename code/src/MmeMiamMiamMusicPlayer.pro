@@ -13,7 +13,8 @@ FORMS += \
     playlistmanager.ui \
     tagconverter.ui \
     tageditor.ui \
-    dragdroppopup.ui
+    dragdroppopup.ui \
+    quickstart.ui
 
 SOURCES += \
     dialogs/colordialog.cpp \
@@ -54,7 +55,9 @@ SOURCES += \
     tabplaylist.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    playlistmodel.cpp
+    playlistmodel.cpp \
+    columnutils.cpp \
+    quickstart.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -95,7 +98,9 @@ HEADERS += \
     tabplaylist.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    playlistmodel.h
+    playlistmodel.h \
+    columnutils.h \
+    quickstart.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

@@ -750,34 +750,6 @@
         <source>Move selected tracks &amp;down</source>
         <translation>Move selected tracks &amp;down</translation>
     </message>
-    <message>
-        <source>Folders</source>
-        <translation>Folders</translation>
-    </message>
-    <message>
-        <source>Number of files</source>
-        <translation>Number of files</translation>
-    </message>
-    <message>
-        <source>- otherwise -</source>
-        <translation>- otherwise -</translation>
-    </message>
-    <message>
-        <source>Click here to manually search for music</source>
-        <translation>Click here to manually search for music</translation>
-    </message>
-    <message>
-        <source>%1 elements</source>
-        <translation>%1 elements</translation>
-    </message>
-    <message>
-        <source>The following items were found in your default music folder:</source>
-        <translation>The following items were found in your default music folder:</translation>
-    </message>
-    <message>
-        <source>Would you like to add them? (you can uncheck some folders)</source>
-        <translation>Would you like to add them? (you can uncheck some folders)</translation>
-    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -835,6 +807,29 @@
     <message>
         <source>Preview playlist</source>
         <translation>Preview playlist</translation>
+    </message>
+</context>
+<context>
+    <name>QuickStart</name>
+    <message>
+        <source>The following items were found in your default music folder:</source>
+        <translation>The following items were found in your default music folder:</translation>
+    </message>
+    <message>
+        <source>Would you like to add them? (you can uncheck some folders)</source>
+        <translation>Would you like to add them? (you can uncheck some folders)</translation>
+    </message>
+    <message>
+        <source>- otherwise -</source>
+        <translation>- otherwise -</translation>
+    </message>
+    <message>
+        <source>Click here to manually search for music</source>
+        <translation>Click here to manually search for music</translation>
+    </message>
+    <message>
+        <source>%1 elements</source>
+        <translation>%1 elements</translation>
     </message>
 </context>
 <context>

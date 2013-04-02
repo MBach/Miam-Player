@@ -10,6 +10,8 @@
 #include <QScrollBar>
 #include <QTabWidget>
 
+#include <QtDebug>
+
 Settings* Settings::settings = NULL;
 
 /** Private constructor. */
@@ -45,7 +47,7 @@ QString Settings::theme() const
 {
 	QString theme = value("theme").toString();
 	if (theme.isEmpty()) {
-		return "fairytale";
+		return "oxygen";
 	} else {
 		return theme;
 	}
@@ -56,7 +58,7 @@ int Settings::buttonsSize() const
 {
 	int s = value("buttonsSize").toInt();
 	if (s == 0) {
-		return 20;
+		return 36;
 	} else {
 		return s;
 	}
@@ -68,11 +70,9 @@ bool Settings::buttonsFlat() const
 	if (ok.isValid()) {
 		return ok.toBool();
 	} else {
-		return false;
+		return true;
 	}
 }
-
-#include <QtDebug>
 
 /** Returns true if the button in parameter is visible or not. */
 bool Settings::isVisible(MediaButton *b) const
@@ -91,8 +91,9 @@ QString Settings::language()
 {
 	QString l = value("language").toString();
 	if (l.isEmpty()) {
-		setValue("language", "en");
-		return "en";
+		l = QLocale::system().uiLanguages().first().left(2);
+		setValue("language", l);
+		return l;
 	} else {
 		return l;
 	}
@@ -118,13 +119,23 @@ int Settings::fontSize(const FontFamily fontFamily)
 	fontPointSizeMap = this->value("fontPointSizeMap").toMap();
 	int pointSize = fontPointSizeMap.value(QString(fontFamily)).toInt();
 	if (pointSize == 0) {
-		pointSize = 8;
+		pointSize = 12;
 	}
 	return pointSize;
 }
 
+bool Settings::toggleSeparators() const
+{
+	if (value("alphabeticalSeparators").isNull()) {
+		return true;
+	} else {
+		return value("alphabeticalSeparators").toBool();
+	}
+}
+
 /** Adds a new path in the application. */
-void Settings::addMusicLocation(const QString &location) {
+void Settings::addMusicLocation(const QString &location)
+{
 	locations = value("musicLocations").toList();
 	if (!locations.contains(location)) {
 		locations.append(QVariant(location));
@@ -133,12 +144,22 @@ void Settings::addMusicLocation(const QString &location) {
 }
 
 /** Removes a path in the application. */
-void Settings::removeMusicLocation(const QString &location) {
+void Settings::removeMusicLocation(const QString &location)
+{
 	locations = value("musicLocations").toList();
 	locations.removeOne(location);
 	setValue("musicLocations", locations);
 	if (locations.isEmpty()) {
 		remove("musicLocations");
+	}
+}
+
+bool Settings::withCovers() const
+{
+	if (value("covers").isNull()) {
+		return true;
+	} else {
+		return value("covers").toBool();
 	}
 }
 
@@ -189,7 +210,8 @@ QMap<QString, QVariant> Settings::shortcuts() const
 }
 
 /** Sets if the button in parameter is visible or not. */
-void Settings::setVisible(MediaButton *b, const bool &value) {
+void Settings::setVisible(MediaButton *b, const bool &value)
+{
 	setValue(b->objectName(), value);
 	// The only buttons which are checkable are repeat and shuffle buttons
 	if (b->isCheckable() && !value) {

@@ -751,34 +751,6 @@
         <source>Move selected tracks &amp;down</source>
         <translation>Déplacer vers le &amp;bas les pistes sélectionnées</translation>
     </message>
-    <message>
-        <source>Folders</source>
-        <translation>Dossiers</translation>
-    </message>
-    <message>
-        <source>Number of files</source>
-        <translation>Nombre de fichiers</translation>
-    </message>
-    <message>
-        <source>- otherwise -</source>
-        <translation>- ou sinon -</translation>
-    </message>
-    <message>
-        <source>Click here to manually search for music</source>
-        <translation>Cliquez ici pour rechercher des dossiers musicaux</translation>
-    </message>
-    <message>
-        <source>%1 elements</source>
-        <translation>%1 éléments</translation>
-    </message>
-    <message>
-        <source>The following items were found in your default music folder:</source>
-        <translation>Les dossiers suivants ont été trouvés dans votre bibliothèque musicale :</translation>
-    </message>
-    <message>
-        <source>Would you like to add them? (you can uncheck some folders)</source>
-        <translation>Souhaitez-vous les ajouter ? (vous pouvez en décocher)</translation>
-    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -836,6 +808,29 @@
     <message>
         <source>Preview playlist</source>
         <translation>Aperçu de la liste de lecture</translation>
+    </message>
+</context>
+<context>
+    <name>QuickStart</name>
+    <message>
+        <source>The following items were found in your default music folder:</source>
+        <translation>Les dossiers suivants ont été trouvés dans votre bibliothèque musicale :</translation>
+    </message>
+    <message>
+        <source>Would you like to add them? (you can uncheck some folders)</source>
+        <translation>Souhaitez-vous les ajouter ? (vous pouvez en décocher)</translation>
+    </message>
+    <message>
+        <source>- otherwise -</source>
+        <translation>- ou sinon -</translation>
+    </message>
+    <message>
+        <source>Click here to manually search for music</source>
+        <translation>Cliquez ici pour rechercher des dossiers musicaux</translation>
+    </message>
+    <message>
+        <source>%1 elements</source>
+        <translation>%1 éléments</translation>
     </message>
 </context>
 <context>

@@ -6,8 +6,6 @@
 #define COMPANY "MmeMiamMiam"
 #define VERSION "0.4.0"
 
-#include <QtDebug>
-
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
@@ -24,5 +22,4 @@ int main(int argc, char *argv[])
 	window->show();
 
 	return app.exec();
-	//return 0;
 }

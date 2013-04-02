@@ -194,10 +194,12 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	QTableView::mousePressEvent(event);
 }
 
+#include "columnutils.h"
+
 void Playlist::resizeEvent(QResizeEvent *)
 {
-	/// XXX: need to be improved to avoid flickering
-	this->resizeColumns();
+	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+	ColumnUtils::resizeColumns(this, ratios);
 }
 
 /*void Playlist::changeTrack(int i)
@@ -208,41 +210,6 @@ void Playlist::resizeEvent(QResizeEvent *)
     qDebug() << "volume" << _mediaPlayer->volume();
     qDebug() << "media" << qMediaPlaylist->media(i).canonicalUrl();
 }*/
-
-void Playlist::resizeColumns()
-{
-	int visibleRatio = 0;
-	int resizableArea = size().width() - 4;
-	if (verticalScrollBar()->isVisible()) {
-		resizableArea -= verticalScrollBar()->size().width();
-	}
-
-	// Test: 0 = Fixed, n>0 = real ratio for each column
-	const QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
-
-	// Resize fixed columns first, and then compute the remaining width
-	for (int c = 0; c < _playlistModel->columnCount(); c++) {
-		if (!isColumnHidden(c)) {
-			int ratio = ratios.at(c);
-			// Fixed column
-			if (ratio == 0) {
-				this->resizeColumnToContents(c);
-				resizableArea -= columnWidth(c) - 1;
-			}
-			visibleRatio += ratio;
-		}
-	}
-	for (int c = 0; c < _playlistModel->columnCount(); c++) {
-		int ratio = ratios.at(c);
-		// Resizable column
-		if (ratio != 0) {
-			int s = resizableArea * ratio / visibleRatio ;
-			if (!isColumnHidden(c)) {
-				this->setColumnWidth(c, s);
-			}
-		}
-	}
-}
 
 void Playlist::countSelectedItems(const QItemSelection &, const QItemSelection &)
 {
@@ -259,7 +226,8 @@ void Playlist::toggleSelectedColumn(QAction *action)
 {
 	int columnIndex = action->data().toInt();
 	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
-	this->resizeColumns();
+	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+	ColumnUtils::resizeColumns(this, ratios);
 	this->saveColumnsState();
 }
 

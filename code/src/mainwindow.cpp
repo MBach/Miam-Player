@@ -7,7 +7,6 @@
 #include "mainwindow.h"
 #include "dialogs/customizethemedialog.h"
 #include "playlist.h"
-#include "nofocusitemdelegate.h"
 
 #include <QtMultimedia/QAudioDeviceInfo>
 #include <QGraphicsScene>
@@ -40,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	pauseButton->hide();
 
-	/// FIXME Qt5
 	// Init the audio module
 	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
 	tabPlaylists->mediaPlayer()->setVolume(settings->volume());
@@ -80,20 +78,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 }
 
+#include <QTableWidgetItem>
+
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
 	// Load music
 	connect(customizeOptionsDialog, SIGNAL(musicLocationsHaveChanged(bool)), this, SLOT(drawLibrary(bool)));
-	connect(quickStartButtonBox, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
-		for (int i = 0; i < quickStartTableWidget->rowCount(); i++) {
-			if (quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
-				QString musicLocation = quickStartTableWidget->item(i, 0)->data(Qt::UserRole).toString();
-				customizeOptionsDialog->addMusicLocation(musicLocation);
-			}
-		}
-		drawLibrary(true);
-	});
 
 	// Link user interface
 	// Actions from the menu
@@ -107,10 +98,21 @@ void MainWindow::setupActions()
     connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
 
-	// When no library is set
-	connect(commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
+	// Quick Start
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
 		customizeOptionsDialog->listWidget->setCurrentRow(0);
 		customizeOptionsDialog->open();
+	});
+
+	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
+		for (int i = 0; i < quickStart->quickStartTableWidget->rowCount(); i++) {
+			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
+				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
+				customizeOptionsDialog->addMusicLocation(musicLocation);
+			}
+		}
+		this->drawLibrary(true);
+		quickStart->hide();
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
@@ -165,62 +167,6 @@ void MainWindow::setupActions()
 	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
 	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
 	connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
-
-	connect(quickStartTableWidget, &QTableWidget::cellClicked, [=] (int row, int column) {
-		if (quickStartTableWidget->item(row, 0)->checkState() == Qt::Checked) {
-			quickStartTableWidget->item(row, 0)->setCheckState(Qt::Unchecked);
-		} else {
-			quickStartTableWidget->item(row, 0)->setCheckState(Qt::Checked);
-		}
-	});
-}
-
-/** The first time the player is launched, this function will scan for multimedia files. */
-void MainWindow::quickStart()
-{
-	QString userMusicPath = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-	if (userMusicPath.isEmpty()) {
-		quickStartGroupBox->hide();
-	} else {
-		QDir musicDir(userMusicPath);
-		int totalMusicFiles = 0;
-		quickStartTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
-		// For every subfolder in the user's music path, a quick test on multimedia files is done
-		foreach (QFileInfo fileInfo, musicDir.entryInfoList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::Name)) {
-			int rowCount = quickStartTableWidget->rowCount();
-			quickStartTableWidget->insertRow(rowCount);
-
-			// Files are excluded if the player can't read them!
-			QString elements = tr("%1 elements");
-			QStringList filters;
-			foreach (QString filter, FileHelper::suffixes()) {
-				filters.append("*." + filter);
-			}
-			QDirIterator it(fileInfo.absoluteFilePath(), filters, QDir::Files, QDirIterator::Subdirectories);
-			int musicFiles = 0;
-			while (it.hasNext()) {
-				it.next();
-				musicFiles++;
-			}
-
-			// A subfolder is displayed with its number of files on the right
-			QTableWidgetItem *musicSubFolderName = new QTableWidgetItem(fileInfo.baseName());
-			musicSubFolderName->setFlags(musicSubFolderName->flags()|Qt::ItemIsUserCheckable);
-			musicSubFolderName->setCheckState(Qt::Checked);
-			musicSubFolderName->setData(Qt::UserRole, fileInfo.absoluteFilePath());
-
-			QTableWidgetItem *musicSubFolderCount = new QTableWidgetItem(elements.arg(musicFiles));
-			musicSubFolderCount->setTextAlignment(Qt::AlignRight);
-
-			quickStartTableWidget->setItem(rowCount, 0, musicSubFolderName);
-			quickStartTableWidget->setItem(rowCount, 1, musicSubFolderCount);
-			quickStartTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-			totalMusicFiles += musicFiles;
-		}
-		if (totalMusicFiles == 0) {
-			quickStartGroupBox->hide();
-		}
-	}
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -228,6 +174,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
 		retranslateUi(this);
+		quickStart->retranslateUi(quickStart);
 		customizeThemeDialog->retranslateUi(customizeThemeDialog);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
 		// Also retranslate each playlist which includes columns like "album", "length", ...
@@ -302,14 +249,13 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 void MainWindow::drawLibrary(bool b)
 {
 	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
-	widgetFirstRun->setVisible(isEmpty);
+	quickStart->setVisible(isEmpty);
 	library->setVisible(!isEmpty);
 	actionScanLibrary->setEnabled(!isEmpty);
 	widgetSearchBar->setVisible(!isEmpty);
 	this->toggleTagEditor(false);
-	if (isEmpty) {
-		quickStart();
-	} else {
+	qDebug() << Settings::getInstance()->musicLocations().count();
+	if (!isEmpty) {
 		// Warning: This function violates the object-oriented principle of modularity.
 		// However, getting access to the sender might be useful when many signals are connected to a single slot.
 		if (sender() == actionScanLibrary) {

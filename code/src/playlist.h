@@ -75,8 +75,6 @@ public slots:
 private slots:
 	//void changeTrack(int i);
 
-	void resizeColumns();
-
 	/** Display a context menu with the state of all columns. */
 	void showColumnsMenu(const QPoint &);
 

@@ -105,6 +105,9 @@
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QComboBox" name="themeComboBox">
+            <property name="currentIndex">
+             <number>3</number>
+            </property>
             <item>
              <property name="text">
               <string notr="true">Fairytale</string>
@@ -836,7 +839,7 @@
              <number>2</number>
             </property>
             <property name="value">
-             <number>20</number>
+             <number>36</number>
             </property>
            </widget>
           </item>
@@ -851,6 +854,9 @@
            <widget class="QCheckBox" name="flatButtonsCheckBox">
             <property name="text">
              <string/>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -895,7 +901,13 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QFontComboBox" name="fontComboBoxPlaylist"/>
+           <widget class="QFontComboBox" name="fontComboBoxPlaylist">
+            <property name="currentFont">
+             <font>
+              <family>Arial</family>
+             </font>
+            </property>
+           </widget>
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="label_5">
@@ -905,7 +917,13 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QFontComboBox" name="fontComboBoxMenus"/>
+           <widget class="QFontComboBox" name="fontComboBoxMenus">
+            <property name="currentFont">
+             <font>
+              <family>Arial</family>
+             </font>
+            </property>
+           </widget>
           </item>
           <item row="2" column="2">
            <widget class="QSpinBox" name="spinBoxPlaylist">
@@ -916,7 +934,7 @@
              <number>72</number>
             </property>
             <property name="value">
-             <number>8</number>
+             <number>12</number>
             </property>
            </widget>
           </item>
@@ -949,7 +967,7 @@
              <number>72</number>
             </property>
             <property name="value">
-             <number>8</number>
+             <number>12</number>
             </property>
            </widget>
           </item>
@@ -961,7 +979,14 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QFontComboBox" name="fontComboBoxLibrary"/>
+           <widget class="QFontComboBox" name="fontComboBoxLibrary">
+            <property name="currentFont">
+             <font>
+              <family>Arial</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
           <item row="1" column="2">
            <widget class="QSpinBox" name="spinBoxLibrary">
@@ -972,7 +997,7 @@
              <number>72</number>
             </property>
             <property name="value">
-             <number>8</number>
+             <number>12</number>
             </property>
            </widget>
           </item>
@@ -1051,7 +1076,7 @@
                <string>Yes</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -1059,6 +1084,9 @@
              <widget class="QRadioButton" name="disableCustomColorsRadioButton">
               <property name="text">
                <string>No, keep the colors provided by my Operating System</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>

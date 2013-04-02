@@ -59,7 +59,7 @@ public:
 	/** Sets the font of the application. */
 	int fontSize(const FontFamily fontFamily);
 
-	inline bool toggleSeparators() const { return value("alphabeticalSeparators").toBool(); }
+	bool toggleSeparators() const;
 
 	/** Adds a new path in the application. */
 	void addMusicLocation(const QString &location);
@@ -70,7 +70,7 @@ public:
 	/** Returns all music locations. */
 	inline QList<QVariant> musicLocations() const { return value("musicLocations").toList(); }
 
-	inline bool withCovers() const { return value("covers").toBool(); }
+	bool withCovers() const;
 
 	/** Returns the size of a cover. */
 	int coverSize() const;
