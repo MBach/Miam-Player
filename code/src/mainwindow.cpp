@@ -105,7 +105,7 @@ void MainWindow::setupActions()
 	});
 
 	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
-		for (int i = 0; i < quickStart->quickStartTableWidget->rowCount(); i++) {
+		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
 				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
 				customizeOptionsDialog->addMusicLocation(musicLocation);

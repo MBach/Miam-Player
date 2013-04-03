@@ -830,6 +830,10 @@
         <source>%1 elements</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>%1 folders</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShortcutLineEdit</name>

@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include <QtDebug>
+
 #include "ui_quickstart.h"
 
 class QuickStart : public QWidget, public Ui::QuickStart

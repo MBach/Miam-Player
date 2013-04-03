@@ -831,6 +831,10 @@
         <source>%1 elements</source>
         <translation>%1 elements</translation>
     </message>
+    <message>
+        <source>%1 folders</source>
+        <translation>%1 folders</translation>
+    </message>
 </context>
 <context>
     <name>ShortcutLineEdit</name>
