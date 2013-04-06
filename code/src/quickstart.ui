@@ -20,7 +20,7 @@
    <string notr="true"/>
   </property>
   <property name="autoFillBackground">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="styleSheet">
    <string notr="true">#QuickStart {
@@ -42,7 +42,10 @@ background-color: white;
       </sizepolicy>
      </property>
      <property name="title">
-      <string>The following items were found in your default music folder:</string>
+      <string>The following items were found in your default music folder</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>

@@ -9,6 +9,8 @@
 
 #include <QtDebug>
 
+const QList<int> QuickStart::ratios = QList<int>() << 0 << 3 << 2;
+
 QuickStart::QuickStart(QWidget *parent) :
 	QWidget(parent)
 {
@@ -23,8 +25,17 @@ QuickStart::QuickStart(QWidget *parent) :
 		}
 	});
 
-	//this->setStyleSheet("#quickStart { border-left: #ACACAC; border-bottom: #ACACAC; border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }");
-	//this->setStyleSheet("#QuickStart { border-left: #ACACAC; border-bottom: #ACACAC; border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }");
+	this->installEventFilter(this);
+}
+
+bool QuickStart::eventFilter(QObject *, QEvent *e)
+{
+	if (e->type() == QEvent::Show || e->type() == QEvent::Resize) {
+		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /** The first time the player is launched, this function will scan for multimedia files. */
@@ -78,7 +89,6 @@ void QuickStart::setVisible(bool b)
 			if (totalMusicFiles == 0) {
 				quickStartGroupBox->hide();
 			} else {
-				QList<int> ratios = (QList<int>() << 0 << 3 << 2);
 				ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
 
 				quickStartTableWidget->insertRow(0);
@@ -95,14 +105,10 @@ void QuickStart::setVisible(bool b)
 				quickStartTableWidget->setItem(0, 2, totalFiles);
 			}
 		}
+		//this->setStyleSheet("QuickStart#" + objectName() + " { border-top: 0; border-left: #ACACAC; border-bottom: #ACACAC; border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }");
 	}
+	qDebug() << "setVisible";
 	QWidget::setVisible(b);
-}
-
-void QuickStart::resizeEvent(QResizeEvent *)
-{
-	QList<int> ratios(QList<int>() << 0 << 3 << 2);
-	ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
 }
 
 void QuickStart::checkRow(int row, int)

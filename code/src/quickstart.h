@@ -10,15 +10,17 @@
 class QuickStart : public QWidget, public Ui::QuickStart
 {
 	Q_OBJECT
+private:
+	static const QList<int> ratios;
+
 public:
-	QuickStart(QWidget *parent = 0);
+	explicit QuickStart(QWidget *parent = 0);
+
+	virtual bool eventFilter(QObject *, QEvent *e);
 
 	/// Redefined
 	/** The first time the player is launched, this function will scan for multimedia files. */
 	void setVisible(bool b);
-
-protected:
-	void resizeEvent(QResizeEvent *);
 
 private slots:
 	void checkRow(int row, int);
