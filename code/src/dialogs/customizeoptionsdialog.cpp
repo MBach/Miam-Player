@@ -9,6 +9,8 @@
 
 #include <QtDebug>
 
+#include <QLibraryInfo>
+
 #include "shortcutwidget.h"
 
 CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
@@ -102,6 +104,12 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	if (radioButtonDD) {
 		radioButtonDD->setChecked(true);
 	}
+
+	QTranslator qtTranslator;
+	bool b = qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	qDebug() << "qt translation loaded?" << b << QLocale::system().name() << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+	b = QApplication::installTranslator(&qtTranslator);
+	qDebug() << "translator installed?" << b;
 
 	// Load the language of the application
 	QString lang = languages.value(Settings::getInstance()->language());

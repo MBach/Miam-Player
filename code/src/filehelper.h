@@ -16,7 +16,7 @@ private:
 
 	int fileType;
 
-	static QStringList suff;
+	static const QStringList suff;
 
 	Q_ENUMS(extension)
 

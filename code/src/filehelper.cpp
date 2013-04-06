@@ -24,7 +24,7 @@
 
 using namespace TagLib;
 
-QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
+const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
 
 FileHelper::FileHelper(FileRef &fileRef, QVariant v)
 	: fileType(v.toInt())

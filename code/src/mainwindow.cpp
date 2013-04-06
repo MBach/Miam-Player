@@ -22,20 +22,20 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setAcceptDrops(true);
 
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
-	this->setStyleSheet(settings->styleSheet(this));
+	/*this->setStyleSheet(settings->styleSheet(this));
 	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
 	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
 	splitter->setStyleSheet(settings->styleSheet(splitter));
 	volumeSlider->setStyleSheet(settings->styleSheet(volumeSlider));
-	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
+	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));*/
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
 				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
 	tabPlaylists->setMediaButtons(mediaButtons);
-	foreach (MediaButton *b, mediaButtons) {
+	/*foreach (MediaButton *b, mediaButtons) {
 		b->setStyleSheet(settings->styleSheet(b));
-	}
+	}*/
 
 	pauseButton->hide();
 
@@ -250,6 +250,11 @@ void MainWindow::drawLibrary(bool b)
 {
 	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
+	qDebug() << quickStart->metaObject()->className()<< quickStart->objectName();
+	//quickStart->setStyleSheet("QuickStart#quickStart { background-color: red; }");
+	//quickStart->setBackgroundRole(QPalette::Window);
+	quickStart->setPalette(QPalette(Qt::white));
+	stopButton->setPalette(QPalette(Qt::white));
 	library->setVisible(!isEmpty);
 	actionScanLibrary->setEnabled(!isEmpty);
 	widgetSearchBar->setVisible(!isEmpty);

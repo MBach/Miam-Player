@@ -2,8 +2,11 @@
 
 #include <QDir>
 
-AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *parent) :
-	QPushButton(parent), path(QDir::toNativeSeparators(newPath)), idx(index)
+#include <QMouseEvent>
+#include <QtDebug>
+
+AddressBarButton::AddressBarButton(ButtonType type, const QString &newPath, int index, QWidget *parent) :
+	QPushButton(parent), _type(type), path(QDir::toNativeSeparators(newPath)), idx(index)
 {
 	QString styleSheet;
 	styleSheet = "QPushButton {";
@@ -36,6 +39,7 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 	}
 
 	this->setStyleSheet(styleSheet);
+	//this->setMouseTracking(true);
 }
 
 QString AddressBarButton::currentPath() const
@@ -47,3 +51,14 @@ QString AddressBarButton::currentPath() const
 		return path;
 	}
 }
+
+/*
+void AddressBarButton::mouseMoveEvent(QMouseEvent * e)
+{
+	qDebug() << "AddressBarButton::mouseMoveEvent" << frameGeometry() << mapToParent(e->pos());
+	if (frameGeometry().contains(mapToParent(e->pos()))) {
+		//qDebug() << "inside!";
+	}
+	QPushButton::mouseMoveEvent(e);
+}
+*/

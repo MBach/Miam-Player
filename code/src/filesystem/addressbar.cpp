@@ -5,6 +5,7 @@
 #include <QSpacerItem>
 
 #include <QtDebug>
+#include <QMouseEvent>
 
 AddressBar::AddressBar(QWidget *parent) :
 	QWidget(parent)
@@ -21,12 +22,34 @@ AddressBar::AddressBar(QWidget *parent) :
 
 	menu = new AddressBarMenu(this);
 	connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(appendSubDir(QAction*)));
+
+	this->setMouseTracking(true);
 }
+
+/// The idea is to programmatically highlight 2 AddressBarButton instances
+/// Unfortunately, that's seems really difficult to proceed...
+/// Is there any chance to succeed?
+/*void AddressBar::mouseMoveEvent(QMouseEvent * e)
+{
+	for (int i = 0; i < hBoxLayout->count() - 2; i++) {
+		QWidget *w = hBoxLayout->itemAt(i)->widget();
+		if (w->frameGeometry().contains(w->mapFromParent(e->pos()))) {
+			AddressBarButton *b = qobject_cast<AddressBarButton*>(w);
+			if (b->type() == AddressBarButton::Folder) {
+				AddressBarButton *arrow = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(++i)->widget());
+				qDebug() << b->currentPath() << b->index() << arrow->index();
+				arrow->setAttribute(Qt::WA_Hover);
+			}
+			break;
+		}
+	}
+	QWidget::mouseMoveEvent(e);
+}*/
 
 /** Create a special root arrow button.*/
 void AddressBar::createRoot()
 {
-	AddressBarButton *buttonArrow = new AddressBarButton("/", -1, this);
+	AddressBarButton *buttonArrow = new AddressBarButton(AddressBarButton::Arrow, "/", -1, this);
 	buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
 	buttonArrow->setIconSize(QSize(17, 7));
 	connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showDrivesAndPreviousFolders()));
@@ -36,7 +59,7 @@ void AddressBar::createRoot()
 /** Append 2 buttons to the address bar to navigate through the filesystem. */
 void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 {
-	AddressBarButton *buttonDir = new AddressBarButton(path.absolutePath(), hBoxLayout->count() - 1, this);
+	AddressBarButton *buttonDir = new AddressBarButton(AddressBarButton::Folder, path.absolutePath(), hBoxLayout->count() - 1, this);
 	buttonDir->setFlat(true);
 	buttonDir->setIcon(QFileIconProvider().icon(QFileInfo(path.absolutePath())));
 	// Special case for the root directory
@@ -60,7 +83,7 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 
 	// Create an arrow only if there's at least one subfolder
 	if (!path.entryInfoList(QStringList(), QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks).isEmpty()) {
-		AddressBarButton *buttonArrow = new AddressBarButton(path.absolutePath(), hBoxLayout->count() - 1, this);
+		AddressBarButton *buttonArrow = new AddressBarButton(AddressBarButton::Arrow, path.absolutePath(), hBoxLayout->count() - 1, this);
 		buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
 		buttonArrow->setIconSize(QSize(17, 7));
 		buttonArrow->setFlat(true);

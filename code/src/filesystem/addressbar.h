@@ -19,6 +19,9 @@ private:
 public:
 	explicit AddressBar(QWidget *parent = 0);
 
+//protected:
+//	void mouseMoveEvent(QMouseEvent * e);
+
 private:
 	/** Create a special root arrow button.*/
 	void createRoot();
