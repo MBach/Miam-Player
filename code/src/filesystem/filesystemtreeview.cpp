@@ -33,6 +33,8 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	toLibrary = tr("Add \"%1\" to library");
 	toTagEditor = tr("Send \"%1\" to the tag editor");
 
+	header()->setSectionResizeMode(QHeaderView::Stretch);
+
 	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(convertToFolder(QModelIndex)));
 }
 
