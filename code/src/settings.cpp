@@ -107,7 +107,10 @@ QFont Settings::font(const FontFamily fontFamily)
 	case PLAYLIST:
 	case LIBRARY:
 	case MENUS:
-		font = QFont(value(QString(fontFamily)).toString());
+		QVariant vFont = value(QString(fontFamily));
+		if (!vFont.isNull()) {
+			font = QFont(vFont.toString());
+		}
 		font.setPointSize(this->fontSize(fontFamily));
 	}
 	return font;
