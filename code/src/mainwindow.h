@@ -59,17 +59,12 @@ private slots:
 	/** Change the labels like "Remove selected track(s)" depending of the number of selected elements in the current playlist. */
 	void changeMenuLabels(int);
 
-	/// Media actions
-	/** These 2 buttons toggle play and pause functions because they are mutually exclusive. */
-	void playAndPause();
-
-	/** If playing, then stops the track. */
-	void stop();
-
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();
 
 	void toggleTagEditor(bool b);
+
+	void stateChanged(QMediaPlayer::State newState);
 };
 
 #endif // MAINWINDOW_H

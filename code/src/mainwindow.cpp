@@ -32,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
 				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
-	tabPlaylists->setMediaButtons(mediaButtons);
 	/*foreach (MediaButton *b, mediaButtons) {
 		b->setStyleSheet(settings->styleSheet(b));
 	}*/
@@ -133,19 +132,28 @@ void MainWindow::setupActions()
 
 	// Media buttons
 	Settings *settings = Settings::getInstance();
+
+	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
 	connect(skipBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);
-	connect(playButton, &QAbstractButton::clicked, this, &MainWindow::playAndPause);
-	connect(stopButton, &QAbstractButton::clicked, this, &MainWindow::stop);
+	connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
+	connect(stopButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipForward);
 	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
 	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
 
-	// Volume
-	connect(volumeSlider, &QSlider::valueChanged, [=] (int volume) {
-        tabPlaylists->mediaPlayer()->setVolume(volume);
+	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
+		seekSlider->setValue(1000 * pos / tabPlaylists->mediaPlayer()->duration());
 	});
+	connect(seekSlider, &QSlider::sliderMoved, [=] (int pos) {
+		tabPlaylists->mediaPlayer()->blockSignals(true);
+		tabPlaylists->mediaPlayer()->setPosition(pos * tabPlaylists->mediaPlayer()->duration() / 1000);
+		tabPlaylists->mediaPlayer()->blockSignals(false);
+	});
+
+	// Volume
+	connect(volumeSlider, &QSlider::valueChanged, tabPlaylists->mediaPlayer(), &QMediaPlayer::setVolume);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
@@ -250,16 +258,10 @@ void MainWindow::drawLibrary(bool b)
 {
 	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
-	qDebug() << quickStart->metaObject()->className()<< quickStart->objectName();
-	//quickStart->setStyleSheet("QuickStart#quickStart { background-color: red; }");
-	//quickStart->setBackgroundRole(QPalette::Window);
-	quickStart->setPalette(QPalette(Qt::white));
-	stopButton->setPalette(QPalette(Qt::white));
 	library->setVisible(!isEmpty);
 	actionScanLibrary->setEnabled(!isEmpty);
 	widgetSearchBar->setVisible(!isEmpty);
 	this->toggleTagEditor(false);
-	qDebug() << Settings::getInstance()->musicLocations().count();
 	if (!isEmpty) {
 		// Warning: This function violates the object-oriented principle of modularity.
 		// However, getting access to the sender might be useful when many signals are connected to a single slot.
@@ -289,28 +291,6 @@ void MainWindow::changeMenuLabels(int itemCount)
 	}
 }
 
-/** These 2 buttons toggle play and pause functions because they are mutually exclusive. */
-void MainWindow::playAndPause()
-{
-	if (tabPlaylists->mediaPlayer()->state() == QMediaPlayer::PlayingState) {
-		tabPlaylists->mediaPlayer()->pause();
-		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"), true);
-	} else {
-		tabPlaylists->mediaPlayer()->play();
-		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"), true);
-	}
-}
-
-void MainWindow::stop()
-{
-	tabPlaylists->mediaPlayer()->stop();
-	Settings *settings = Settings::getInstance();
-	QString play(":/player/" + settings->theme() + "/play");
-	if (playButton->icon().name() != play) {
-		playButton->setIcon(QIcon(play));
-	}
-}
-
 /** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 void MainWindow::aboutM4P()
 {
@@ -327,4 +307,22 @@ void MainWindow::toggleTagEditor(bool b)
 	tagEditor->setVisible(b);
 	seekSlider->setVisible(!b);
 	tabPlaylists->setVisible(!b);
+}
+
+void MainWindow::stateChanged(QMediaPlayer::State newState)
+{
+	playButton->disconnect();
+	if (newState == QMediaPlayer::PlayingState) {
+		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
+		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
+		seekSlider->setEnabled(true);
+	} else if (newState == QMediaPlayer::StoppedState) {
+		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
+		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
+		seekSlider->setEnabled(false);
+	} else { // PausedState
+		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
+		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
+		seekSlider->setEnabled(true);
+	}
 }

@@ -61,7 +61,6 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 		_mediaPlayer->setPlaylist(qMediaPlaylist);
 		qMediaPlaylist->setCurrentIndex(index.row());
 		_mediaPlayer->play();
-		qDebug() << _mediaPlayer->currentMedia().canonicalUrl();
 	});
 
 	// Context menu on header of columns
@@ -305,7 +304,6 @@ void Playlist::removeSelectedTracks()
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 void Playlist::highlightCurrentTrack()
 {
-	qDebug() << "Playlist::highlightCurrentTrack()";
 	QStandardItem *it = NULL;
 	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
 	if (_playlistModel->rowCount() > 0) {

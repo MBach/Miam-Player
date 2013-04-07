@@ -20,12 +20,10 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setDocumentMode(true);
 	messageBox = new TracksNotFoundMessageBox(this);
 	_mediaPlayer = new QMediaPlayer(this);
+	_mediaPlayer->setNotifyInterval(100);
 
-	// Link core mp3 actions
-	/// FIXME Qt5
+	// Link core multimedia actions
 	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
-	//connect(metaInformationResolver, SIGNAL(stateChanged(QMediaPlayer::State)), this, SLOT(metaStateChanged(QMediaPlayer::State)));
-	//connect(mediaObject, SIGNAL(finished()), this, SLOT(skipForward()));
 
 	// Keep playlists in memory before exit
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
@@ -49,18 +47,6 @@ void TabPlaylist::retranslateUi()
 		}
 		playlist(i)->retranslateUi();
 	}
-}
-
-void TabPlaylist::setMediaButtons(const QList<MediaButton*> &mediaButtons) {
-	this->_mediaButtons = mediaButtons;
-
-	/// XXX: move connect() from MainWindow here? Relevance? POC?
-	// Media buttons
-	//Settings *settings = Settings::getInstance();
-	//foreach (MediaButton *button, _mediaButtons) {
-	//	if (button->objectName().remove("Button"))
-	//	QMetaObject::invokeMethod(&obj, "someMethod", Qt::DirectConnection);
-	//}
 }
 
 /** Add external folders (from a drag and drop) to the current playlist. */
@@ -146,7 +132,7 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 }
 
 /** When the user is double clicking on a track in a playlist. */
-void TabPlaylist::changeTrack(const QModelIndex &item)
+/*void TabPlaylist::changeTrack(const QModelIndex &item)
 {
 	/// FIXME Qt5
 	//MediaSource media = currentPlayList()->track(item.row());
@@ -160,7 +146,7 @@ void TabPlaylist::changeTrack(const QModelIndex &item)
 		currentPlayList()->scrollTo(item, QAbstractItemView::PositionAtCenter);
 	//}
 	_mediaPlayer->play();
-}
+}*/
 
 /** When the user is clicking on the (+) button to add a new playlist. */
 void TabPlaylist::checkAddPlaylistButton(int i)
@@ -250,6 +236,7 @@ void TabPlaylist::seekBackward()
 			mediaObject->seek(time);
 		}
 	}*/
+	qDebug() << "TabPlaylist::seekBackward()";
 }
 
 /** Seek forward in the current playing track for a small amount of time. */
@@ -263,16 +250,18 @@ void TabPlaylist::seekForward()
 			mediaObject->seek(time);
 		}
 	}*/
+	//_mediaPlayer->seekableChanged();
+	qDebug() << "TabPlaylist::seekForward()";
 }
 
 /** Change the current track to the previous one. */
 void TabPlaylist::skipBackward()
 {
-	/*int activeTrack = currentPlayList()->playlistModel()->activeTrack();
-	if (activeTrack-- > 0) {
-		QStandardItem *item = currentPlayList()->playlistModel()->item(activeTrack, 1);
-		this->changeTrack(item->index(), true);
-	}*/
+	int previous = currentPlayList()->mediaPlaylist()->previousIndex();
+	if (previous > 0) {
+		//this->changeTrack(item->index());
+	}
+	qDebug() << "TabPlaylist::skipBackward()";
 }
 
 /** Change the current track to the next one. */
@@ -287,8 +276,9 @@ void TabPlaylist::skipForward()
 	}
 	if (++next < currentPlayList()->playlistModel()->rowCount()) {
 		QStandardItem *item = currentPlayList()->playlistModel()->item(next, 1);
-		this->changeTrack(item->index(), true);
+		//this->changeTrack(item->index());
 	}*/
+	qDebug() << "TabPlaylist::skipForward()";
 }
 
 /** Save playlists before exit. */
@@ -322,57 +312,11 @@ void TabPlaylist::savePlaylists()
 	}
 }
 
-void TabPlaylist::tick(qint64 time)
-{
-	//QTime displayTime(0, (time / 60000) % 60, (time / 1000) % 60);
-	// TODO
-	//timeLcd->display(displayTime.toString("mm:ss"));
-}
-
 void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 {
-	qDebug() << newMediaState;
-	switch (newMediaState) {
-	case QMediaPlayer::BufferedMedia:
+	if (newMediaState == QMediaPlayer::BufferedMedia) {
 		this->currentPlayList()->highlightCurrentTrack();
-		//emit iconStatusChanged(newState);
-		break;
-	default:
-		;
+	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
+		this->skipForward();
 	}
 }
-
-//void TabPlaylist::metaStateChanged(QMediaPlayer::State newState)
-//{
-	/*if (newState == ErrorState) {
-		QMessageBox::warning(this, tr("Error opening files"), metaInformationResolver->errorString());
-		//while (!sources.isEmpty() && !(sources.takeLast() == metaInformationResolver->currentSource())) {
-		// TODO
-		//};
-		return;
-	}
-
-	if (newState != StoppedState && newState != PausedState) {
-		return;
-	}
-
-	if (metaInformationResolver->currentSource().type() == MediaSource::Invalid) {
-		return;
-	}
-
-	if (!currentPlayList()->selectionModel()->hasSelection()) {
-		currentPlayList()->selectRow(0);
-		mediaObject->setCurrentSource(metaInformationResolver->currentSource());
-	}
-
-	/// TODO: code review
-	int index = currentPlayList()->playlistModel()->activeTrack();
-	if (currentPlayList()->playlistModel()->rowCount() > index) {
-		//metaInformationResolver->setCurrentSource(currentPlayList()->tracks().at(index));
-	} else {
-		currentPlayList()->resizeColumnsToContents();
-		if (currentPlayList()->columnWidth(0) > 300) {
-			currentPlayList()->setColumnWidth(0, 300);
-		}
-	}*/
-//}

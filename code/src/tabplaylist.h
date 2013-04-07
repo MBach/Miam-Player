@@ -22,8 +22,6 @@ private:
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
-	QList<MediaButton*> _mediaButtons;
-
 public:
 	/** Default constructor. */
 	TabPlaylist(QWidget *parent = 0);
@@ -39,8 +37,6 @@ public:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
 
-	void setMediaButtons(const QList<MediaButton *> &mediaButtons);
-
 public slots:
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist(const QString &playlistName = QString());
@@ -55,7 +51,7 @@ public slots:
 	void addItemToPlaylist(const QModelIndex &index);
 
 	/** When the user is double clicking on a track in a playlist. */
-	void changeTrack(const QModelIndex &);
+	//void changeTrack(const QModelIndex &);
 
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
@@ -69,6 +65,7 @@ public slots:
 	/** Restore playlists at startup. */
 	void restorePlaylists();
 
+	/// Media actions
 	/** Seek backward in the current playing track for a small amount of time. */
 	void seekBackward();
 
@@ -82,8 +79,6 @@ public slots:
 	void skipForward();
 
 signals:
-	//void iconStatusChanged(State);
-
 	void destroyed(int);
 	void created();
 
@@ -96,7 +91,6 @@ private slots:
 	/** Save playlists before exit. */
 	void savePlaylists();
 
-	void tick(qint64 time);
 	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
 };
 
