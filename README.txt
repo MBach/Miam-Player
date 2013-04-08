@@ -12,7 +12,7 @@ What is NOT inside?
 * Automatically display informations about Artist / Albums / etc from Wikipedia
 * Well, it's just reading MP3, but it's doing it well!
 
-This software was developped using Qt, Phonon and Taglib
+This software was developped using Qt5 and Taglib
 
 To download it: https://sourceforge.net/projects/miammusicplayer/files/
 Project page: https://sourceforge.net/projects/miammusicplayer/
