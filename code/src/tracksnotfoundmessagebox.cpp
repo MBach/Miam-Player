@@ -9,7 +9,7 @@ TracksNotFoundMessageBox::TracksNotFoundMessageBox(QWidget *parent) :
 	setWindowTitle(tr("Warning"));
 }
 
-void TracksNotFoundMessageBox::displayError(Context /*context*/, const QStringList &tracksNotFound)
+void TracksNotFoundMessageBox::displayError(Context /*context*/, const QList<QMediaContent> &tracksNotFound)
 {
 	QString message;
 	QString detailedMessage;
@@ -20,11 +20,11 @@ void TracksNotFoundMessageBox::displayError(Context /*context*/, const QStringLi
 	}
 	message.append("<ul>");
 	for (int i=0; i < tracksNotFound.size(); i++) {
-		QString trackNotFound = tracksNotFound.at(i);
+		QMediaContent trackNotFound = tracksNotFound.at(i);
 		if (i < 10) {
-			message.append("<li>" + trackNotFound + "</li>");
+			message.append("<li>" + trackNotFound.canonicalUrl().toLocalFile() + "</li>");
 		} else {
-			detailedMessage.append(trackNotFound + '\n');
+			detailedMessage.append(trackNotFound.canonicalUrl().toLocalFile() + '\n');
 		}
 	}
 	if (tracksNotFound.size() > 10) {

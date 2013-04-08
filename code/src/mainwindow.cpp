@@ -132,7 +132,6 @@ void MainWindow::setupActions()
 
 	// Media buttons
 	Settings *settings = Settings::getInstance();
-
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
 	connect(skipBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);

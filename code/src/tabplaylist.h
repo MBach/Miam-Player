@@ -50,9 +50,6 @@ public slots:
 	/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
 	void addItemToPlaylist(const QModelIndex &index);
 
-	/** When the user is double clicking on a track in a playlist. */
-	//void changeTrack(const QModelIndex &);
-
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
 

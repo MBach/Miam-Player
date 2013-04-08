@@ -1,6 +1,7 @@
 #ifndef TRACKSNOTFOUNDMESSAGEBOX_H
 #define TRACKSNOTFOUNDMESSAGEBOX_H
 
+#include <QMediaContent>
 #include <QMessageBox>
 
 class TracksNotFoundMessageBox : public QMessageBox
@@ -11,7 +12,7 @@ public:
 
 	TracksNotFoundMessageBox(QWidget *parent);
 
-	void displayError(Context context, const QStringList &tracksNotFound);
+	void displayError(Context context, const QList<QMediaContent> &tracksNotFound);
 };
 
 #endif // TRACKSNOTFOUNDMESSAGEBOX_H

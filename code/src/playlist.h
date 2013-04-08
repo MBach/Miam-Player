@@ -26,14 +26,6 @@ private:
 public:
 	Playlist(QWidget *parent, QMediaPlayer *mediaplayer);
 
-	/*MediaSource track(int i) {
-		//return _playlistModel->tracks().at(i);
-		QStandardItem *item = this->playlistModel()->item(i);
-		return MediaSource(item->data().toString());
-	}*/
-
-	//PlaylistModel *playlistModel() { return _playlistModel; }
-
 	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
 
 	/** Retranslate header columns. */

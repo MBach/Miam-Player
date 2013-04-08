@@ -131,23 +131,6 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 	return p;
 }
 
-/** When the user is double clicking on a track in a playlist. */
-/*void TabPlaylist::changeTrack(const QModelIndex &item)
-{
-	/// FIXME Qt5
-	//MediaSource media = currentPlayList()->track(item.row());
-	//currentPlayList()->playlistModel()->setActiveTrack(item.row());
-	//mediaObject->setCurrentSource(media);
-	qDebug() << "here";
-	currentPlayList()->highlightCurrentTrack();
-	/// FIXME
-	// Autoscrolling is enabled only when skiping a track (or when current track is finished)
-	//if (autoscroll) {
-		currentPlayList()->scrollTo(item, QAbstractItemView::PositionAtCenter);
-	//}
-	_mediaPlayer->play();
-}*/
-
 /** When the user is clicking on the (+) button to add a new playlist. */
 void TabPlaylist::checkAddPlaylistButton(int i)
 {
@@ -193,25 +176,24 @@ void TabPlaylist::restorePlaylists()
 	if (settings->playbackKeepPlaylists()) {
 		QList<QVariant> playlists = settings->value("playlists").toList();
 		if (!playlists.isEmpty()) {
-			QStringList tracksNotFound;
+			QList<QMediaContent> tracksNotFound;
 
 			// For all playlists (stored as a pair of { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] }
 			for (int i = 0; i < playlists.size(); i++) {
 				QList<QVariant> vTracks = playlists.at(i++).toList();
-				//Playlist *p = this->addPlaylist(playlists.at(i).toString());
+				Playlist *p = this->addPlaylist(playlists.at(i).toString());
 
 				// For all tracks in one playlist
-				foreach(QVariant vTrack, vTracks) {
-
-					// Check if the file is still on the disk before appending
-					QString track = vTrack.toString();
-					if (QFile::exists(track)) {
-						/// FIXME Qt5
-						//p->playlistModel()->append(MediaSource(track));
+				QList<QMediaContent> medias;
+				foreach (QVariant vTrack, vTracks) {
+					QMediaContent track(vTrack.toUrl());
+					if (!track.isNull()) {
+						medias.append(track);
 					} else {
-						tracksNotFound << track;
+						tracksNotFound.append(track);
 					}
 				}
+				p->appendTracks(medias);
 			}
 			// Error handling
 			if (!tracksNotFound.isEmpty()) {
@@ -290,21 +272,15 @@ void TabPlaylist::savePlaylists()
 		// Iterate on all playlists, except empty ones and the last one (the (+) button)
 		for (int i = 0; i < count() - 1; i++) {
 			Playlist *p = playlist(i);
-			/// FIXME Qt5
-			/*QList<MediaSource> t;
-			for (int j = 0; j < p->playlistModel()->rowCount(); j++) {
-				t.append(p->track(j));
-			}
-			//QListIterator<MediaSource> tracks(p->playlistModel()->tracks());
-			QListIterator<MediaSource> tracks(t);
-			QList<QVariant> vTracks;
-			while (tracks.hasNext()) {
-				vTracks.append(tracks.next().fileName());
-			}
-			if (!vTracks.isEmpty()) {
+
+			if (!p->mediaPlaylist()->isEmpty()) {
+				QList<QVariant> vTracks;
+				for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
+					vTracks.append(p->mediaPlaylist()->media(j).canonicalUrl());
+				}
 				vPlaylists.append(QVariant(vTracks));
 				vPlaylists.append(QVariant(tabBar()->tabText(i)));
-			}*/
+			}
 		}
 		// Tracks are stored in QList< QList<QVariant> >
 		settings->setValue("playlists", vPlaylists);
