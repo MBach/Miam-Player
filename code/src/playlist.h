@@ -64,8 +64,9 @@ public slots:
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 	void highlightCurrentTrack();
 
+	void play(const QModelIndex &index);
+
 private slots:
-	//void changeTrack(int i);
 
 	/** Display a context menu with the state of all columns. */
 	void showColumnsMenu(const QPoint &);

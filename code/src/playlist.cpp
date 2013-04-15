@@ -57,14 +57,9 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
     connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 
-	connect(this, &QTableView::doubleClicked, [=] (const QModelIndex &index) {
-		_mediaPlayer->setPlaylist(qMediaPlaylist);
-		qMediaPlaylist->setCurrentIndex(index.row());
-		_mediaPlayer->play();
-	});
+	connect(this, &QTableView::doubleClicked, this, &Playlist::play);
 
 	// Context menu on header of columns
-	//connect(qMediaPlaylist, &QMediaPlaylist::currentIndexChanged, this, &Playlist::changeTrack);
 	columns = new QMenu(this);
 	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 
@@ -329,4 +324,11 @@ void Playlist::highlightCurrentTrack()
 			}
 		}
 	}
+}
+
+void Playlist::play(const QModelIndex &index)
+{
+	_mediaPlayer->setPlaylist(qMediaPlaylist);
+	qMediaPlaylist->setCurrentIndex(index.row());
+	_mediaPlayer->play();
 }

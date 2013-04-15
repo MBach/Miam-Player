@@ -139,6 +139,7 @@ void MainWindow::setupActions()
 	connect(stopButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipForward);
+	//connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists->currentPlayList()->mediaPlaylist(), &QMediaPlaylist::next);
 	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
 	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
 

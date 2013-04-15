@@ -251,15 +251,19 @@ void TabPlaylist::skipForward()
 {
 	/*int next;
 	if (Settings::getInstance()->repeatPlayBack() &&
-			currentPlayList()->playlistModel()->activeTrack() == this->currentPlayList()->playlistModel()->rowCount() - 1) {
+			currentPlayList()->mediaPlaylist()->currentIndex() == this->currentPlayList()->mediaPlaylist()->mediaCount() - 1) {
 		next = -1;
 	} else {
-		next = currentPlayList()->playlistModel()->activeTrack();
+		next = currentPlayList()->mediaPlaylist()->currentIndex();
 	}
-	if (++next < currentPlayList()->playlistModel()->rowCount()) {
-		QStandardItem *item = currentPlayList()->playlistModel()->item(next, 1);
-		//this->changeTrack(item->index());
-	}*/
+	if (++next < currentPlayList()->mediaPlaylist()->mediaCount()) {
+		//this->currentPlayList()->play(currentPlayList()->model()->index(next, 0));
+	*/
+	if (mediaPlayer()->state() == QMediaPlayer::PlayingState) {
+		mediaPlayer()->stop();
+	}
+	//this->currentPlayList()->mediaPlaylist()->next();
+	//}
 	qDebug() << "TabPlaylist::skipForward()";
 }
 
@@ -290,6 +294,7 @@ void TabPlaylist::savePlaylists()
 
 void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 {
+	qDebug() << "TabPlaylist::mediaStatusChanged";
 	if (newMediaState == QMediaPlayer::BufferedMedia) {
 		this->currentPlayList()->highlightCurrentTrack();
 	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
