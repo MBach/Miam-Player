@@ -75,19 +75,19 @@ void TabPlaylist::skip(bool forward)
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
-	/// FIXME Qt5
-	//bool isEmpty = this->currentPlayList()->playlistModel()->tracks().isEmpty();
-	/*bool isEmpty = (this->currentPlayList()->playlistModel()->rowCount() == 0);
+	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
+		QList<QMediaContent> medias;
 		while (it.hasNext()) {
-			//this->currentPlayList()->playlistModel()->append(MediaSource(it.next()));
+			medias.append(QMediaContent(QUrl::fromLocalFile(it.next())));
 		}
+		this->currentPlayList()->appendTracks(medias);
 	}
 	// Automatically plays the first track
 	if (isEmpty) {
-		this->skipForward();
-	}*/
+		this->skip();
+	}
 }
 
 /** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
@@ -111,7 +111,7 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 
 	// Automatically plays the first track
 	if (isEmpty) {
-		this->skipForward();
+		this->skip();
 	}
 }
 
@@ -290,6 +290,6 @@ void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 	if (newMediaState == QMediaPlayer::BufferedMedia) {
 		this->currentPlayList()->highlightCurrentTrack();
 	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
-		this->skipForward();
+		this->skip();
 	}
 }

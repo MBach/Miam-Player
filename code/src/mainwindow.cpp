@@ -133,16 +133,20 @@ void MainWindow::setupActions()
 	// Media buttons
 	Settings *settings = Settings::getInstance();
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
-	connect(skipBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipBackward);
+	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {
+		tabPlaylists->skip(false);
+	});
 	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);
 	connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
 	connect(stopButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::skipForward);
-	//connect(skipForwardButton, &QAbstractButton::clicked, tabPlaylists->currentPlayList()->mediaPlaylist(), &QMediaPlaylist::next);
+	connect(skipForwardButton, &QAbstractButton::clicked, [=] () {
+		tabPlaylists->skip();
+	});
 	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
 	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
 
+	// Sliders
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
 		seekSlider->setValue(1000 * pos / tabPlaylists->mediaPlayer()->duration());
 	});

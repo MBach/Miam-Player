@@ -48,9 +48,7 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
-	/// FIXME Qt5
-	//horizontalHeader()->setMovable(true);
-	//horizontalHeader()->setResizeMode(QHeaderView::Fixed);
+	horizontalHeader()->setSectionsMovable(true);
 
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
@@ -72,11 +70,6 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 
 	//connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
 	//connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
-
-	connect(qMediaPlaylist, &QMediaPlaylist::currentIndexChanged, [=] (int index) {
-		qDebug() << "currentIndexChanged";
-	});
-
 }
 
 void Playlist::init()
@@ -333,7 +326,16 @@ void Playlist::highlightCurrentTrack()
 
 void Playlist::play(const QModelIndex &index)
 {
-	_mediaPlayer->setPlaylist(qMediaPlaylist);
-	qMediaPlaylist->setCurrentIndex(index.row());
-	_mediaPlayer->play();
+	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+		_mediaPlayer->blockSignals(true);
+		_mediaPlayer->stop();
+		_mediaPlayer->setPlaylist(qMediaPlaylist);
+		qMediaPlaylist->setCurrentIndex(index.row());
+		_mediaPlayer->play();
+		_mediaPlayer->blockSignals(false);
+	} else {
+		_mediaPlayer->setPlaylist(qMediaPlaylist);
+		qMediaPlaylist->setCurrentIndex(index.row());
+		_mediaPlayer->play();
+	}
 }
