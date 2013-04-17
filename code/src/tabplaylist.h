@@ -37,6 +37,10 @@ public:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
 
+private:
+	/** Change the current track. */
+	void skip(bool forward = true);
+
 public slots:
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist(const QString &playlistName = QString());
@@ -70,10 +74,10 @@ public slots:
 	void seekForward();
 
 	/** Change the current track to the previous one. */
-	void skipBackward();
+	void skipBackward() { this->skip(false); }
 
 	/** Change the current track to the next one. */
-	void skipForward();
+	void skipForward() { this->skip(); }
 
 signals:
 	void destroyed(int);

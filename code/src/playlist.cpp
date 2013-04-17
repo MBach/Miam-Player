@@ -72,6 +72,11 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 
 	//connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
 	//connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
+
+	connect(qMediaPlaylist, &QMediaPlaylist::currentIndexChanged, [=] (int index) {
+		qDebug() << "currentIndexChanged";
+	});
+
 }
 
 void Playlist::init()

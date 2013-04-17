@@ -24,6 +24,13 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	// Link core multimedia actions
 	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
+	//connect(_mediaPlayer, &QMediaPlayer::mediaChanged, this, &TabPlaylist::mediaChanged);
+	//connect(_mediaPlayer, &QMediaPlayer::mediaChanged, [=] (const QMediaContent & media) {
+	//	qDebug() << "mediaChanged" << media.canonicalUrl();
+	//});
+	//connect(_mediaPlayer, &QMediaPlayer::currentMediaChanged, [=] (const QMediaContent & media) {
+	//	qDebug() << "currentMediaChanged" << media.canonicalUrl().toLocalFile() << "mediaStatus:" << _mediaPlayer->mediaStatus() << "state:" << _mediaPlayer->state();
+	//});
 
 	// Keep playlists in memory before exit
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
@@ -46,6 +53,22 @@ void TabPlaylist::retranslateUi()
 			setTabText(i, playlistName);
 		}
 		playlist(i)->retranslateUi();
+	}
+}
+
+/** Change the current track. */
+void TabPlaylist::skip(bool forward)
+{
+	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+		// Is it strange? When it's playing, if signals aren't blocked a crash happens
+		_mediaPlayer->blockSignals(true);
+		_mediaPlayer->stop();
+		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
+		_mediaPlayer->play();
+		_mediaPlayer->blockSignals(false);
+	} else {
+		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
+		_mediaPlayer->play();
 	}
 }
 
@@ -236,37 +259,6 @@ void TabPlaylist::seekForward()
 	qDebug() << "TabPlaylist::seekForward()";
 }
 
-/** Change the current track to the previous one. */
-void TabPlaylist::skipBackward()
-{
-	int previous = currentPlayList()->mediaPlaylist()->previousIndex();
-	if (previous > 0) {
-		//this->changeTrack(item->index());
-	}
-	qDebug() << "TabPlaylist::skipBackward()";
-}
-
-/** Change the current track to the next one. */
-void TabPlaylist::skipForward()
-{
-	/*int next;
-	if (Settings::getInstance()->repeatPlayBack() &&
-			currentPlayList()->mediaPlaylist()->currentIndex() == this->currentPlayList()->mediaPlaylist()->mediaCount() - 1) {
-		next = -1;
-	} else {
-		next = currentPlayList()->mediaPlaylist()->currentIndex();
-	}
-	if (++next < currentPlayList()->mediaPlaylist()->mediaCount()) {
-		//this->currentPlayList()->play(currentPlayList()->model()->index(next, 0));
-	*/
-	if (mediaPlayer()->state() == QMediaPlayer::PlayingState) {
-		mediaPlayer()->stop();
-	}
-	//this->currentPlayList()->mediaPlaylist()->next();
-	//}
-	qDebug() << "TabPlaylist::skipForward()";
-}
-
 /** Save playlists before exit. */
 void TabPlaylist::savePlaylists()
 {
@@ -294,7 +286,7 @@ void TabPlaylist::savePlaylists()
 
 void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 {
-	qDebug() << "TabPlaylist::mediaStatusChanged";
+	qDebug() << "TabPlaylist::mediaStatusChanged" << newMediaState;
 	if (newMediaState == QMediaPlayer::BufferedMedia) {
 		this->currentPlayList()->highlightCurrentTrack();
 	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
