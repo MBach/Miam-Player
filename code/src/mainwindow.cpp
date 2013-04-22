@@ -88,8 +88,7 @@ void MainWindow::setupActions()
 	// Link user interface
 	// Actions from the menu
     connect(actionExit, &QAction::triggered, &QApplication::quit);
-	/// FIXME Qt5
-	//connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
+	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &QDialog::open);
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &QDialog::open);
@@ -132,7 +131,7 @@ void MainWindow::setupActions()
 
 	// Media buttons
 	Settings *settings = Settings::getInstance();
-	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
+	//connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
 	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {
 		tabPlaylists->skip(false);
 	});
@@ -320,13 +319,9 @@ void MainWindow::stateChanged(QMediaPlayer::State newState)
 		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
 		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
 		seekSlider->setEnabled(true);
-	} else if (newState == QMediaPlayer::StoppedState) {
+	} else {
 		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
 		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
-		seekSlider->setEnabled(false);
-	} else { // PausedState
-		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
-		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
-		seekSlider->setEnabled(true);
+		seekSlider->setDisabled(newState == QMediaPlayer::StoppedState);
 	}
 }

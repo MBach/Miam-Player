@@ -79,7 +79,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
 
 	// Context menu
-    connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToPlaylist()));
+	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::sendToPlaylist);
     connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 }
 

@@ -30,7 +30,7 @@ PlaylistManager::PlaylistManager(TabPlaylist *tabPlaylist, QWidget *parent) :
 	connect(loadPlaylists, SIGNAL(clicked()), this, SLOT(loadSavedPlaylists()));
 	connect(deletePlaylists, SIGNAL(clicked()), this, SLOT(deleteSavedPlaylists()));
 
-	connect(playlists, SIGNAL(destroyed(int)), this, SLOT(clearPlaylist(int)));
+	connect(playlists, &TabPlaylist::destroyed, this, &PlaylistManager::clearPlaylist);
 	connect(playlists, SIGNAL(created()), this, SLOT(updatePlaylists()));
 
 	connect(unsavedPlaylists->model(), SIGNAL(rowsRemoved(const QModelIndex &, int, int)),

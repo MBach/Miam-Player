@@ -35,7 +35,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 
 	header()->setSectionResizeMode(QHeaderView::Stretch);
 
-	connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(convertToFolder(QModelIndex)));
+	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertToFolder);
 }
 
 /** Reimplemented to display up to 3 actions. */
@@ -47,7 +47,7 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 	// Always add the possibility for one to send a folder or a track to the current playlist
 	QAction *actionSendToCurrentPlaylist = new QAction(toPlaylist.arg(fileInfo.baseName()), properties);
-	connect(actionSendToCurrentPlaylist, SIGNAL(triggered()), this, SLOT(sendToPlaylist()));
+	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::sendToPlaylist);
 	properties->addAction(actionSendToCurrentPlaylist);
 
 	// Same thing for the tag editor
@@ -58,7 +58,7 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 	// But restricts for the library. It is not wished to add single file as placeholder
 	if (fileInfo.isDir()) {
 		QAction *actionAddToLibrary = new QAction(toLibrary.arg(fileInfo.baseName()), properties);
-		connect(actionAddToLibrary, SIGNAL(triggered()), this, SLOT(addFolderToLibrary()));
+		connect(actionAddToLibrary, &QAction::triggered, this, &FileSystemTreeView::addFolderToLibrary);
 		properties->addAction(actionAddToLibrary);
 	}
 	properties->exec(event->globalPos());
