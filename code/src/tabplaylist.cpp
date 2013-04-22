@@ -10,9 +10,11 @@
 #include "tabbar.h"
 #include "treeview.h"
 
+#include <QEventLoop>
+
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent)
+	QTabWidget(parent), _tabIndex(-1)
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
@@ -24,13 +26,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	// Link core multimedia actions
 	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
-	//connect(_mediaPlayer, &QMediaPlayer::mediaChanged, this, &TabPlaylist::mediaChanged);
-	//connect(_mediaPlayer, &QMediaPlayer::mediaChanged, [=] (const QMediaContent & media) {
-	//	qDebug() << "mediaChanged" << media.canonicalUrl();
-	//});
-	//connect(_mediaPlayer, &QMediaPlayer::currentMediaChanged, [=] (const QMediaContent & media) {
-	//	qDebug() << "currentMediaChanged" << media.canonicalUrl().toLocalFile() << "mediaStatus:" << _mediaPlayer->mediaStatus() << "state:" << _mediaPlayer->state();
-	//});
 
 	// Keep playlists in memory before exit
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
@@ -38,8 +33,26 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
 
-	// Other actions
-	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::removeTabFromCloseButton);
+	// Removing a playlist
+	connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
+		qDebug() << _mediaPlayer->state();
+		if (_mediaPlayer->state() == QMediaPlayer::StoppedState) {
+			this->removeTabFromCloseButton(index);
+		} else {
+			// QMediaPlayer slots are asynchronous, therefore it's necessary to keep functions arguments
+			qDebug() << "lambda";
+			_nextAction = "RemovePlaylist";
+			_tabIndex = index;
+			_mediaPlayer->stop();
+		}
+	});
+	connect(_mediaPlayer, &QMediaPlayer::mediaChanged, [=](const QMediaContent & media) {
+		qDebug() << "lambda mediaChanged!" << (media == NULL);
+		if (media == NULL) {
+
+		}
+	});
+	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -91,26 +104,19 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 }
 
 /** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
-void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, Playlist *playlist, int row)
+void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes)
 {
-	// Select the playlist
-	if (playlist == NULL) {
-		playlist = this->currentPlayList();
-	} else {
-		this->setCurrentWidget(playlist);
-	}
 	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
-
 	QList<QMediaContent> medias;
 	foreach (QPersistentModelIndex index, indexes) {
 		if (index.isValid()) {
 			medias.append(QMediaContent(QUrl::fromLocalFile(TreeView::absFilePath(index))));
 		}
 	}
-	playlist->appendTracks(medias);
+	currentPlayList()->appendTracks(medias);
 
 	// Automatically plays the first track
-	if (isEmpty) {
+	if (isEmpty && !medias.isEmpty()) {
 		this->skip();
 	}
 }
@@ -120,19 +126,13 @@ void TabPlaylist::addItemToPlaylist(const QModelIndex &index)
 {
 	QList<QPersistentModelIndex> indexes;
 	indexes.append(index);
-	this->addItemsToPlaylist(indexes, currentPlayList());
+	this->addItemsToPlaylist(indexes);
 }
 
 /** Add a new playlist tab. */
-Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
+Playlist* TabPlaylist::addPlaylist()
 {
-	// Get the next label for the playlist
-	QString newPlaylistName;
-	if (playlistName.isEmpty()) {
-		newPlaylistName = tr("Playlist ").append(QString::number(count()));
-	} else {
-		newPlaylistName = playlistName;
-	}
+	QString newPlaylistName = tr("Playlist ").append(QString::number(count()));
 
 	// Then append a new empty playlist to the others
 	Playlist *p = new Playlist(this, _mediaPlayer);
@@ -146,7 +146,7 @@ Playlist* TabPlaylist::addPlaylist(const QString &playlistName)
 		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
 	}
 	// Forward this signal to the MainWindow instance
-	connect(p, SIGNAL(selectedTracks(int)), this, SIGNAL(aboutToChangeMenuLabels(int)));
+	connect(p, &Playlist::selectedTracks, this, &TabPlaylist::aboutToChangeMenuLabels);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
@@ -161,7 +161,7 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 	if (i == count()-1) {
 		addPlaylist();
 	} else {
-		currentPlayList()->countSelectedItems();
+		//currentPlayList()->countSelectedItems();
 	}
 }
 
@@ -177,18 +177,23 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 	// Don't delete the first tab, if it's the last one remaining
 	if (index > 0 || (index == 0 && count() > 2)) {
 		// If the playlist we want to delete has no more right tab, then pick the left tab
-		if (index+1 > count()-2) {
-			setCurrentIndex(index-1);
+		if (index + 1 > count() - 2) {
+			setCurrentIndex(index - 1);
 		}
-		/// FIXME: when closing a tab which is playing
-		/// call mediaObject->clear() [asynchronous ; see how stateChanged() can delete it safely ]
 		Playlist *p = playlist(index);
 		this->removeTab(index);
 		delete p;
 		emit destroyed(index);
 	} else {
-		// Clear the content of last tab
-		//currentPlayList()->playlistModel()->clear();
+		// Clear the content of first tab
+		qDebug() << "clear the first tab" << _mediaPlayer->media().canonicalUrl() << _mediaPlayer->state() << _mediaPlayer->mediaStatus();
+
+		//_mediaPlayer->setPlaylist(NULL); // crash
+		//_mediaPlayer->setMedia(NULL); // crash
+		//_mediaPlayer->setMedia(QMediaContent()); // crash
+
+		currentPlayList()->mediaPlaylist()->clear(); // crash is mediaStatus != NoMedia
+		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount()); // ok
 	}
 }
 
@@ -204,7 +209,12 @@ void TabPlaylist::restorePlaylists()
 			// For all playlists (stored as a pair of { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] }
 			for (int i = 0; i < playlists.size(); i++) {
 				QList<QVariant> vTracks = playlists.at(i++).toList();
-				Playlist *p = this->addPlaylist(playlists.at(i).toString());
+				Playlist *p = this->addPlaylist();
+				if (i - 2 > 0) {
+					this->setTabText(i - 2, playlists.at(i).toString());
+				} else {
+					this->setTabText(0, playlists.at(i).toString());
+				}
 
 				// For all tracks in one playlist
 				QList<QMediaContent> medias;
@@ -257,6 +267,22 @@ void TabPlaylist::seekForward()
 	}*/
 	//_mediaPlayer->seekableChanged();
 	qDebug() << "TabPlaylist::seekForward()";
+}
+
+void TabPlaylist::dispatchState(QMediaPlayer::State newState)
+{
+	qDebug() << "TabPlaylist::dispatchState";
+	if (newState == QMediaPlayer::StoppedState) {
+		if (_nextAction == "RemovePlaylist" && _tabIndex >= 0) {
+			qDebug() << "RemovePlaylist:" << _tabIndex;
+			this->removeTabFromCloseButton(_tabIndex);
+		} else {
+			//qDebug() << "NOT RemovePlaylist";
+			//emit stateChanged(newState);
+		}
+		_nextAction.clear();
+		_tabIndex = -1;
+	}
 }
 
 /** Save playlists before exit. */

@@ -29,14 +29,14 @@ private:
 
 public slots:
 	/** Send folders or tracks to a playlist. */
-	void sendToPlaylist(Playlist *playlist = 0, int row = -1);
+	void sendToPlaylist();
 
 	/** Send folders or tracks to the tag editor. */
 	void openTagEditor();
 
 signals:
-	/** Add tracks to the a playlist. */
-	void aboutToSendToPlaylist(const QList<QPersistentModelIndex> &, Playlist*, int);
+	/** Add tracks to the current playlist. */
+	void aboutToSendToPlaylist(const QList<QPersistentModelIndex> &);
 
 	/** Add tracks to the tag editor. */
 	void sendToTagEditor(QList<QPersistentModelIndex>);

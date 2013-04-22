@@ -51,11 +51,11 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 }
 
 /** Send folders or tracks to a playlist. */
-void TreeView::sendToPlaylist(Playlist *playlist, int row)
+void TreeView::sendToPlaylist()
 {
 	QMap<QString, QPersistentModelIndex> indexes;
 	if (this->beforeSending(tr("playlist"), indexes) == QMessageBox::Ok) {
-		emit aboutToSendToPlaylist(indexes.values(), playlist, row);
+		emit aboutToSendToPlaylist(indexes.values());
 	}
 }
 

@@ -9,6 +9,7 @@
 #include <fileref.h>
 #include <tag.h>
 
+#include "columnutils.h"
 #include "settings.h"
 #include "nofocusitemdelegate.h"
 #include "library/librarytreeview.h"
@@ -21,7 +22,6 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 {
 	qMediaPlaylist = new QMediaPlaylist(this);
 	_playlistModel = new PlaylistModel(qMediaPlaylist);
-    _mediaPlayer->setPlaylist(qMediaPlaylist);
 
 	this->setModel(_playlistModel);
 
@@ -160,7 +160,7 @@ void Playlist::dropEvent(QDropEvent *event)
 	QObject *source = event->source();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
 		int row = this->indexAt(event->pos()).row();
-		view->sendToPlaylist(this, row-1);
+		view->sendToPlaylist();
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
 			qDebug() << "internal move";
@@ -186,22 +186,11 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	QTableView::mousePressEvent(event);
 }
 
-#include "columnutils.h"
-
 void Playlist::resizeEvent(QResizeEvent *)
 {
 	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
 	ColumnUtils::resizeColumns(this, ratios);
 }
-
-/*void Playlist::changeTrack(int i)
-{
-    qDebug() << "Playlist::changeTrack =" << i;
-	Q_UNUSED(i)
-	_mediaPlayer->play();
-    qDebug() << "volume" << _mediaPlayer->volume();
-    qDebug() << "media" << qMediaPlaylist->media(i).canonicalUrl();
-}*/
 
 void Playlist::countSelectedItems(const QItemSelection &, const QItemSelection &)
 {

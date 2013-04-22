@@ -22,6 +22,11 @@ private:
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
+	QString _nextAction;
+
+	/** Test: used to simulate a callback.*/
+	int _tabIndex;
+
 public:
 	/** Default constructor. */
 	TabPlaylist(QWidget *parent = 0);
@@ -39,13 +44,13 @@ public:
 
 public slots:
 	/** Add a new playlist tab. */
-	Playlist* addPlaylist(const QString &playlistName = QString());
+	Playlist* addPlaylist();
 
 	/** Add external folders (from a drag and drop) to the current playlist. */
 	void addExtFolders(const QList<QDir> &folders);
 
 	/** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
-	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes, Playlist *playlist, int row = -1);
+	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes);
 
 	/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
 	void addItemToPlaylist(const QModelIndex &index);
@@ -82,6 +87,8 @@ signals:
 	void sendToTagEditor(const QList<QPersistentModelIndex> &);
 
 private slots:
+	void dispatchState(QMediaPlayer::State newState);
+
 	/** Save playlists before exit. */
 	void savePlaylists();
 

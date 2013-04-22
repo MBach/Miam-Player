@@ -74,7 +74,7 @@ void TabBar::dropEvent(QDropEvent *event)
 		} else {
 			target = tabPlaylist->playlist(tab);
 		}
-		origin->sendToPlaylist(target);
+		origin->sendToPlaylist();
 	}
 }
 
