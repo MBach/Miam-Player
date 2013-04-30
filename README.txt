@@ -16,3 +16,7 @@ This software was developped using Qt5 and Taglib
 
 To download it: https://sourceforge.net/projects/miammusicplayer/files/
 Project page: https://sourceforge.net/projects/miammusicplayer/
+
+Resources used to develop this software:
+# Taglib API: http://taglib.github.io/
+# Qt: http://qt.digia.com/
