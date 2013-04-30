@@ -21,7 +21,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
 	messageBox = new TracksNotFoundMessageBox(this);
-	_mediaPlayer = new QMediaPlayer(this);
+	_mediaPlayer = new QMediaPlayer(this, QMediaPlayer::StreamPlayback);
 	_mediaPlayer->setNotifyInterval(100);
 
 	// Link core multimedia actions
@@ -35,23 +35,16 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	// Removing a playlist
 	connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
-		qDebug() << _mediaPlayer->state();
 		if (_mediaPlayer->state() == QMediaPlayer::StoppedState) {
 			this->removeTabFromCloseButton(index);
 		} else {
 			// QMediaPlayer slots are asynchronous, therefore it's necessary to keep functions arguments
-			qDebug() << "lambda";
 			_nextAction = "RemovePlaylist";
 			_tabIndex = index;
 			_mediaPlayer->stop();
 		}
 	});
-	connect(_mediaPlayer, &QMediaPlayer::mediaChanged, [=](const QMediaContent & media) {
-		qDebug() << "lambda mediaChanged!" << (media == NULL);
-		if (media == NULL) {
-
-		}
-	});
+	connect(_mediaPlayer, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(handleError(QMediaPlayer::Error)));
 	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
 }
 
@@ -81,6 +74,9 @@ void TabPlaylist::skip(bool forward)
 		_mediaPlayer->blockSignals(false);
 	} else {
 		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
+		if (_mediaPlayer->playlist() == NULL) {
+			_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
+		}
 		_mediaPlayer->play();
 	}
 }
@@ -186,13 +182,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		emit destroyed(index);
 	} else {
 		// Clear the content of first tab
-		qDebug() << "clear the first tab" << _mediaPlayer->media().canonicalUrl() << _mediaPlayer->state() << _mediaPlayer->mediaStatus();
-
-		//_mediaPlayer->setPlaylist(NULL); // crash
-		//_mediaPlayer->setMedia(NULL); // crash
-		//_mediaPlayer->setMedia(QMediaContent()); // crash
-
-		currentPlayList()->mediaPlaylist()->clear(); // crash is mediaStatus != NoMedia
+		currentPlayList()->mediaPlaylist()->clear();
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount()); // ok
 	}
 }
@@ -208,13 +198,9 @@ void TabPlaylist::restorePlaylists()
 
 			// For all playlists (stored as a pair of { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] }
 			for (int i = 0; i < playlists.size(); i++) {
-				QList<QVariant> vTracks = playlists.at(i++).toList();
+				QList<QVariant> vTracks = playlists.at(i).toList();
 				Playlist *p = this->addPlaylist();
-				if (i - 2 > 0) {
-					this->setTabText(i - 2, playlists.at(i).toString());
-				} else {
-					this->setTabText(0, playlists.at(i).toString());
-				}
+				this->setTabText(count(), playlists.at(++i).toString());
 
 				// For all tracks in one playlist
 				QList<QMediaContent> medias;
@@ -271,17 +257,16 @@ void TabPlaylist::seekForward()
 
 void TabPlaylist::dispatchState(QMediaPlayer::State newState)
 {
-	qDebug() << "TabPlaylist::dispatchState";
 	if (newState == QMediaPlayer::StoppedState) {
 		if (_nextAction == "RemovePlaylist" && _tabIndex >= 0) {
+			_nextAction.clear();
 			qDebug() << "RemovePlaylist:" << _tabIndex;
 			this->removeTabFromCloseButton(_tabIndex);
+			_tabIndex = -1;
 		} else {
 			//qDebug() << "NOT RemovePlaylist";
 			//emit stateChanged(newState);
 		}
-		_nextAction.clear();
-		_tabIndex = -1;
 	}
 }
 
@@ -312,10 +297,15 @@ void TabPlaylist::savePlaylists()
 
 void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 {
-	qDebug() << "TabPlaylist::mediaStatusChanged" << newMediaState;
 	if (newMediaState == QMediaPlayer::BufferedMedia) {
 		this->currentPlayList()->highlightCurrentTrack();
 	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
 		this->skip();
 	}
 }
+
+void TabPlaylist::handleError(QMediaPlayer::Error error)
+{
+	qDebug() << error;
+}
+

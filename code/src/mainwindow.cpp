@@ -22,12 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setAcceptDrops(true);
 
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
-	/*this->setStyleSheet(settings->styleSheet(this));
+	this->setStyleSheet(settings->styleSheet(this));
 	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
 	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
 	splitter->setStyleSheet(settings->styleSheet(splitter));
 	volumeSlider->setStyleSheet(settings->styleSheet(volumeSlider));
-	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));*/
+	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
@@ -131,7 +131,7 @@ void MainWindow::setupActions()
 
 	// Media buttons
 	Settings *settings = Settings::getInstance();
-	//connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
+	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
 	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {
 		tabPlaylists->skip(false);
 	});
@@ -147,7 +147,9 @@ void MainWindow::setupActions()
 
 	// Sliders
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
-		seekSlider->setValue(1000 * pos / tabPlaylists->mediaPlayer()->duration());
+		if (tabPlaylists->mediaPlayer()->duration() > 0) {
+			seekSlider->setValue(1000 * pos / tabPlaylists->mediaPlayer()->duration());
+		}
 	});
 	connect(seekSlider, &QSlider::sliderMoved, [=] (int pos) {
 		tabPlaylists->mediaPlayer()->blockSignals(true);

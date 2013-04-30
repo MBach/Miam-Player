@@ -93,6 +93,8 @@ private slots:
 	void savePlaylists();
 
 	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
+
+	void handleError(QMediaPlayer::Error);
 };
 
 #endif // TABPLAYLIST_H

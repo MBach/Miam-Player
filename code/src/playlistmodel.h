@@ -1,10 +1,9 @@
 #ifndef PLAYLISTMODEL_H
 #define PLAYLISTMODEL_H
 
+#include <QMediaContent>
 #include <QMenu>
 #include <QStandardItemModel>
-
-#include <QMediaPlaylist>
 
 /**
  * @brief The PlaylistModel class
@@ -16,10 +15,8 @@ private:
 	/** The current playing track. */
 	int track;
 
-	QMediaPlaylist *qMediaPlaylist;
-
 public:
-	explicit PlaylistModel(QMediaPlaylist *mediaPlaylist);
+	explicit PlaylistModel(QObject *parent);
 
 	/** Clear the content of playlist. */
 	void clear();

@@ -10,8 +10,8 @@
 
 #include <QtDebug>
 
-PlaylistModel::PlaylistModel(QMediaPlaylist *mediaPlaylist) :
-	QStandardItemModel(mediaPlaylist), track(-1), qMediaPlaylist(mediaPlaylist)
+PlaylistModel::PlaylistModel(QObject *parent) :
+	QStandardItemModel(parent), track(-1)
 {}
 
 /** Convert time in seconds into "mm:ss" format. */

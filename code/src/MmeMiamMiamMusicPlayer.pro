@@ -1,4 +1,4 @@
-QT += widgets multimedia
+QT += core gui widgets multimedia
 
 TagLibDirectory = ./3rdparty/taglib
 

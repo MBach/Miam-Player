@@ -21,7 +21,7 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 	QTableView(parent), _mediaPlayer(mediaPlayer)
 {
 	qMediaPlaylist = new QMediaPlaylist(this);
-	_playlistModel = new PlaylistModel(qMediaPlaylist);
+	_playlistModel = new PlaylistModel(this);
 
 	this->setModel(_playlistModel);
 
