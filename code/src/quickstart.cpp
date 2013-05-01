@@ -48,6 +48,7 @@ void QuickStart::setVisible(bool b)
 		QString userMusicPath = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
 		if (userMusicPath.isEmpty()) {
 			quickStartGroupBox->hide();
+			otherwiseLabel->hide();
 		} else {
 			QDir musicDir(userMusicPath);
 			int totalMusicFiles = 0;
@@ -88,6 +89,7 @@ void QuickStart::setVisible(bool b)
 
 			if (totalMusicFiles == 0) {
 				quickStartGroupBox->hide();
+				otherwiseLabel->hide();
 			} else {
 				ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
 
@@ -112,7 +114,6 @@ void QuickStart::setVisible(bool b)
 
 void QuickStart::checkRow(int row, int)
 {
-	qDebug() << "checkRow" << row;
 	if (row == 0) {
 		if (quickStartTableWidget->item(0, 0)->checkState() == Qt::Checked) {
 			for (int r = 1; r < quickStartTableWidget->rowCount(); r++) {
