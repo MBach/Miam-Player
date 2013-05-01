@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <QThread>
 
 #include <QtDebug>
 
@@ -50,7 +51,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
 
-	musicSearchEngine = new MusicSearchEngine();
+	QThread *worker = new QThread();
+	MusicSearchEngine *musicSearchEngine = new MusicSearchEngine();
+	musicSearchEngine->moveToThread(worker);
+	worker->start();
+	connect(this, &LibraryTreeView::searchMusic, musicSearchEngine, &MusicSearchEngine::doSearch);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	//QAction *actionOpenStarEditor = new QAction(tr("Ratings: *****"), this);
@@ -184,8 +189,7 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 	this->reset();
 	if (musicLocationHasChanged) {
 
-		//emit searchMusic();
-		musicSearchEngine->doSearch();
+		emit searchMusic();
 
 	} else {
 		if (QFile::exists("library.mmmmp")) {

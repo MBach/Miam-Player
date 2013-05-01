@@ -1,12 +1,10 @@
 #ifndef MUSICSEARCHENGINE_H
 #define MUSICSEARCHENGINE_H
 
-#include <QFileInfo>
-#include <QThread>
-
 #include <QDir>
+#include <QFileInfo>
 
-class MusicSearchEngine : public QThread
+class MusicSearchEngine : public QObject
 {
 	Q_OBJECT
 
@@ -16,13 +14,8 @@ private:
 public:
 	MusicSearchEngine(QObject *parent = 0);
 
-	void doSearch();
-
 public slots:
-	void setLocations(const QList<QDir> &locations);
-
-protected:
-	void run();
+	void doSearch();
 
 signals:
 	void scannedCover(const QString &);
