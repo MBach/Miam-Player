@@ -12,7 +12,10 @@
 
 #include <id3v2tag.h>
 #include <id3v2frame.h>
-#include <attachedPictureFrame.h>
+
+#include <attachedpictureframe.h>
+///FIXME ubuntu?
+//#include <taglib/attachedpictureframe.h>
 
 #include <tag.h>
 #include <tlist.h>

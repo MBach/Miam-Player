@@ -148,8 +148,9 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 /** Redefined to add custom behaviour. */
 void CustomizeOptionsDialog::closeEvent(QCloseEvent * /* event */)
 {
-	if (Settings::getInstance()->musicLocations().isEmpty() && QFile::exists("library.mmmmp")) {
-		QFile::remove("library.mmmmp");
+    QString libraryPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp");
+    if (Settings::getInstance()->musicLocations().isEmpty() && QFile::exists(libraryPath)) {
+        QFile::remove(libraryPath);
 	}
 	if (musicLocationsChanged) {
 		emit musicLocationsHaveChanged(true);

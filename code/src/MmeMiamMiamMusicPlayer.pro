@@ -1,4 +1,4 @@
-QT += core gui widgets multimedia
+QT += widgets multimedia
 
 TagLibDirectory = ./3rdparty/taglib
 
@@ -133,14 +133,16 @@ win32 {
 }
 
 CONFIG(debug, debug|release) {
-    LIBS += -Ldebug -llibtag
+    win32: LIBS += -Ldebug -llibtag
+    unix: LIBS += -Ldebug -ltag
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
 }
 
 CONFIG(release, debug|release) {
-    LIBS += -Lrelease -llibtag
+    win32: LIBS += -Lrelease -llibtag
+    unix: LIBS += -Lrelease -ltag
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc

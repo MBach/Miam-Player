@@ -3,6 +3,9 @@
 #include "settings.h"
 #include "libraryitem.h"
 
+#include <QDir>
+#include <QStandardPaths>
+
 #include <QtDebug>
 
 using namespace TagLib;
@@ -166,7 +169,7 @@ void LibraryModel::displayCovers(bool withCovers)
 /** Build a tree from a flat file saved on disk. */
 void LibraryModel::loadFromFile()
 {
-	QFile mmmmp("library.mmmmp");
+	QFile mmmmp(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"));
 	if (mmmmp.open(QIODevice::ReadOnly)) {
 		QByteArray input = qUncompress(mmmmp.readAll());
 		QDataStream dataStream(&input, QIODevice::ReadOnly);
@@ -240,8 +243,14 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 /** Save a tree to a flat file on disk. */
 void LibraryModel::saveToFile()
 {
-	QFile mmmmp("library.mmmmp");
-	if (mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+	QString librarySaveFolder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+	bool isFolderAvailable = true;
+	QDir folder;
+	if (!folder.exists(librarySaveFolder)) {
+		isFolderAvailable = folder.mkpath(librarySaveFolder);
+	}
+	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
+	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 		QByteArray output;
 
 		// No need to store separators, they will be rebuilt at runtime.
@@ -263,6 +272,8 @@ void LibraryModel::saveToFile()
 		}
 		mmmmp.write(qCompress(output, 9));
 		mmmmp.close();
+	} else {
+		qDebug() << "error when retrieving folder for saving useful data";
 	}
 }
 

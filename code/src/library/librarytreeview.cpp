@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <QStandardPaths>
 #include <QThread>
 
 #include <QtDebug>
