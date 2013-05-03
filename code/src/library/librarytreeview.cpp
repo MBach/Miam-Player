@@ -192,7 +192,7 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 		emit searchMusic();
 
 	} else {
-		if (QFile::exists("library.mmmmp")) {
+		if (QFile::exists(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"))) {
 			libraryModel->loadFromFile();
 		} else {
 			// If the file has been erased from the disk meanwhile
