@@ -69,7 +69,7 @@ void TabPlaylist::skip(bool forward)
 		// Is it strange? When it's playing, if signals aren't blocked a crash happens
 		_mediaPlayer->blockSignals(true);
 		_mediaPlayer->stop();
-		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
+		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
 		_mediaPlayer->play();
 		_mediaPlayer->blockSignals(false);
 	} else {
@@ -298,7 +298,14 @@ void TabPlaylist::savePlaylists()
 void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 {
 	if (newMediaState == QMediaPlayer::BufferedMedia) {
-		this->currentPlayList()->highlightCurrentTrack();
+		// Find the right playlist where the track needs to be highlighted because one change between tabs
+		for (int i = 0; i < count() - 1; i++) {
+			Playlist *p = playlist(i);
+			// Only the media player keeps this information
+			if (p->mediaPlaylist() == _mediaPlayer->playlist()) {
+				p->highlightCurrentTrack();
+			}
+		}
 	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
 		this->skip();
 	}
