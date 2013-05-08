@@ -81,9 +81,9 @@ public:
 	/** Returns volume from the slider. */
 	inline int volume() const { return value("volume").toInt(); }
 
-	bool repeatPlayBack() const { return value("repeatPlayBack").toBool(); }
+	//bool repeatPlayBack() const { return value("repeatPlayBack").toBool(); }
 
-	bool shufflePlayBack() const { return value("shufflePlayBack").toBool(); }
+	//bool shufflePlayBack() const { return value("shufflePlayBack").toBool(); }
 
 	void setShortcut(const QString &objectName, int keySequence);
 
@@ -153,9 +153,9 @@ public slots:
 	/** Sets volume from the slider. */
 	inline void setVolume(int v) { setValue("volume", v); }
 
-	inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
+	//inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
 
-	inline void setShufflePlayBack(bool b) { setValue("shufflePlayBack", b); }
+	//inline void setShufflePlayBack(bool b) { setValue("shufflePlayBack", b); }
 
 	/// PlayBack options
 	inline void setPlaybackSeekTime(int t) { setValue("playbackSeekTime", t*1000); }

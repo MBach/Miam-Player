@@ -57,7 +57,9 @@ SOURCES += \
     treeview.cpp \
     playlistmodel.cpp \
     columnutils.cpp \
-    quickstart.cpp
+    quickstart.cpp \
+    playbackmodewidget.cpp \
+    playbackmodewidgetfactory.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -100,7 +102,9 @@ HEADERS += \
     treeview.h \
     playlistmodel.h \
     columnutils.h \
-    quickstart.h
+    quickstart.h \
+    playbackmodewidget.h \
+    playbackmodewidgetfactory.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

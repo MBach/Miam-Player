@@ -78,6 +78,9 @@
         <file alias="stop">player/oxygen/stop.png</file>
         <file alias="repeat">player/oxygen/repeat.png</file>
         <file alias="shuffle">player/oxygen/shuffle.png</file>
+        <file alias="itemLoop">player/oxygen/item-loop.png</file>
+        <file alias="itemOnce">player/oxygen/item-once.png</file>
+        <file alias="sequential">player/oxygen/sequential.png</file>
     </qresource>
     <qresource prefix="/languages">
         <file alias="en">language/en.png</file>

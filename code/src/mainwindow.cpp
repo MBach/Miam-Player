@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
 
 	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton
-				 << stopButton << seekForwardButton << skipForwardButton << repeatButton << shuffleButton;
+	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton << stopButton << seekForwardButton << skipForwardButton;
+	//mediaButtons << playbackModeButton;
 	/*foreach (MediaButton *b, mediaButtons) {
 		b->setStyleSheet(settings->styleSheet(b));
 	}*/
@@ -52,8 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 
 	// Init checkable buttons
-	actionRepeat->setChecked(settings->repeatPlayBack());
-	actionShuffle->setChecked(settings->shufflePlayBack());
+	//actionRepeat->setChecked(settings->repeatPlayBack());
+	//actionShuffle->setChecked(settings->shufflePlayBack());
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	tabPlaylists->restorePlaylists();
@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 	playlistManager = new PlaylistManager(tabPlaylists);
 	dragDropDialog = new DragDropDialog(this);
+	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
 	// Tag Editor
 	tagEditor->hide();
@@ -75,9 +76,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+
+	qDebug() << children().count();
+	foreach (QObject *child, children()) {
+		qDebug() << child->objectName();
+		this->installEventFilter(child);
+	}
 }
 
-#include <QTableWidgetItem>
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+	qDebug() << obj;
+	if (event->type() == QEvent::MouseButtonPress) {
+		qDebug() << "here ?";
+	}
+	return QMainWindow::eventFilter(obj, event);
+}
 
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
@@ -130,7 +144,6 @@ void MainWindow::setupActions()
 	connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
 
 	// Media buttons
-	Settings *settings = Settings::getInstance();
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
 	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {
 		tabPlaylists->skip(false);
@@ -142,8 +155,8 @@ void MainWindow::setupActions()
 	connect(skipForwardButton, &QAbstractButton::clicked, [=] () {
 		tabPlaylists->skip();
 	});
-	connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
-	connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
+	//connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
+	//connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
 
 	// Sliders
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
@@ -180,6 +193,8 @@ void MainWindow::setupActions()
 	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
 	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
 	connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
+
+	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */

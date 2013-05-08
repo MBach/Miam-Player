@@ -11,6 +11,7 @@
 #include "library/librarytreeview.h"
 #include "settings.h"
 #include "mediabutton.h"
+#include "playbackmodewidgetfactory.h"
 
 /// Need to use this forward declaration (circular inclusion)
 class CustomizeThemeDialog;
@@ -21,6 +22,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 public:
 	MainWindow(QWidget *parent = 0);
 
+	bool eventFilter(QObject *obj, QEvent *event);
+
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
 
@@ -29,6 +32,7 @@ private:
 	CustomizeOptionsDialog *customizeOptionsDialog;
 	PlaylistManager *playlistManager;
 	DragDropDialog *dragDropDialog;
+	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();
@@ -49,6 +53,7 @@ protected:
 	void dropEvent(QDropEvent *event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dragMoveEvent(QDragMoveEvent *event);
+	//void mousePressEvent(QMouseEvent *event);
 
 public slots:
 	void bindShortcut(const QString&, int keySequence);

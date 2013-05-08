@@ -206,8 +206,8 @@ void CustomizeThemeDialog::loadTheme()
 		QPushButton *pushButton = findChild<QPushButton *>(b->objectName().remove("Button"));
 		pushButton->setIcon(b->icon());
 	}
-	mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
-	mainWindow->shuffleButton->setChecked(settings->shufflePlayBack());
+	//mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
+	//mainWindow->shuffleButton->setChecked(settings->shufflePlayBack());
 
 	// Fonts
 	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::PLAYLIST));

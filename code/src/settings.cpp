@@ -219,7 +219,7 @@ void Settings::setVisible(MediaButton *b, const bool &value)
 	// The only buttons which are checkable are repeat and shuffle buttons
 	if (b->isCheckable() && !value) {
 		/// FIXME
-		setRepeatPlayBack(value);
+		//setRepeatPlayBack(value);
 	}
 }
 
