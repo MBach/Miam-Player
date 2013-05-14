@@ -76,21 +76,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
-
-	qDebug() << children().count();
-	foreach (QObject *child, children()) {
-		qDebug() << child->objectName();
-		this->installEventFilter(child);
-	}
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
-	qDebug() << obj;
-	if (event->type() == QEvent::MouseButtonPress) {
-		qDebug() << "here ?";
-	}
-	return QMainWindow::eventFilter(obj, event);
 }
 
 /** Set up all actions and behaviour. */
@@ -255,6 +240,12 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
+}
+
+void MainWindow::moveEvent(QMoveEvent *event)
+{
+	playbackModeWidgetFactory->move();
+	QMainWindow::moveEvent(event);
 }
 
 void MainWindow::bindShortcut(const QString &objectName, int keySequence)

@@ -14,12 +14,21 @@ private:
 	QList<PlaybackModeWidget*> _popups;
 	QPushButton *_playbackModeButton;
 
+	Q_ENUMS(Edge)
+
 public:
 	PlaybackModeWidgetFactory(QWidget *parent, QPushButton *playbackModeButton, TabPlaylist *tabPlaylists);
 
-	//void syncPositions();
+	enum Edge { UNDEFINED	= -1,
+				TOP			= 0,
+				RIGHT		= 1,
+				BOTTOM		= 2,
+				LEFT		= 3
+			   };
 
 	void hideAll();
+
+	void move();
 
 private:
 	QRect moveButtons(int index);

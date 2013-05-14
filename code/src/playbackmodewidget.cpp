@@ -8,8 +8,10 @@ PlaybackModeWidget::PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushB
 {
 	_animation = new QPropertyAnimation(this, "pos");
 	_animation->setDuration(200);
+	this->setMouseTracking(true);
 
 	QPushButton *button = new QPushButton(this);
+	button->setMouseTracking(true);
 	QString playbackMode;
 	switch (mode) {
 	case QMediaPlaylist::CurrentItemOnce:
@@ -36,6 +38,8 @@ PlaybackModeWidget::PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushB
 	vLayout->setContentsMargins(0, 0, 0, 0);
 	vLayout->addWidget(button);
 	this->setLayout(vLayout);
+
+	this->installEventFilter(button);
 }
 
 void PlaybackModeWidget::animate(const QPoint &start, const QPoint &end)
@@ -43,4 +47,10 @@ void PlaybackModeWidget::animate(const QPoint &start, const QPoint &end)
 	_animation->setStartValue(start);
 	_animation->setEndValue(end);
 	_animation->start();
+}
+
+bool PlaybackModeWidget::eventFilter(QObject *obj, QEvent *event)
+{
+	qDebug() << "ici";
+	return QWidget::eventFilter(obj, event);
 }

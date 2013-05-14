@@ -22,8 +22,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 public:
 	MainWindow(QWidget *parent = 0);
 
-	bool eventFilter(QObject *obj, QEvent *event);
-
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
 
@@ -53,7 +51,8 @@ protected:
 	void dropEvent(QDropEvent *event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dragMoveEvent(QDragMoveEvent *event);
-	//void mousePressEvent(QMouseEvent *event);
+
+	void moveEvent(QMoveEvent *);
 
 public slots:
 	void bindShortcut(const QString&, int keySequence);

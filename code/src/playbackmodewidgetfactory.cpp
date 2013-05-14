@@ -51,6 +51,72 @@ void PlaybackModeWidgetFactory::hideAll()
 	}
 }
 
+void PlaybackModeWidgetFactory::move()
+{
+	/// TEST
+	QRect screen = QApplication::desktop()->availableGeometry();
+	//int edge = -1;
+	Edge edge = UNDEFINED;
+	for (int index = 0; index < _popups.count(); index++) {
+		PlaybackModeWidget *popup = _popups.at(index);
+		qreal length = 60;
+		qreal angle = (360 / _popups.count()) * index + 90;
+		QLineF line = QLineF::fromPolar(length, angle);
+		QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
+		line.translate(p);
+		QPoint p2 = line.p2().toPoint();
+		QRect dest = popup->rect();
+		dest.translate(p2);
+		if (!screen.contains(dest)) {
+			if (dest.bottom() > screen.bottom()) {
+				//qDebug() << "bouger vers le haut !" << dest;
+				edge = BOTTOM;
+			} else if (dest.right() > screen.right()) {
+				//qDebug() << "bouger vers la gauche !" << dest;
+				edge = RIGHT;
+			} else if (dest.left() < screen.left()) {
+				//qDebug() << "bouger vers la droite !" << dest;
+				edge = LEFT;
+			} else if (dest.top() < screen.top()) {
+				//qDebug() << "bouger vers le bas !" << dest;
+				edge = TOP;
+			}
+			//_offScreen = true;
+			break;
+		}
+		/*if (_offScreen) {
+			break;
+		} else {
+		}*/
+		popup->move(p2);
+	}
+	if (edge != UNDEFINED) {
+		const int margin = 10;
+		for (int index = 0; index < _popups.count(); index++) {
+			QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
+			QPoint p2(p);
+			PlaybackModeWidget *popup = _popups.at(index);
+			switch (edge) {
+			case BOTTOM:
+				p2.setX(p.x() - index * (popup->width() + margin));
+				p2.setY(p.y() - (popup->height() + margin));
+				break;
+			case RIGHT:
+				break;
+			case LEFT:
+				break;
+			case TOP:
+				break;
+			}
+			//if (_offScreen) {
+			popup->animate(p, p2);
+			/*} else {
+				popup->move(p2);
+			}*/
+		}
+	}
+}
+
 /** Display buttons in circle (if possible, otherwise in line) around the playbackModeButton. */
 QRect PlaybackModeWidgetFactory::moveButtons(int index)
 {
@@ -62,6 +128,13 @@ QRect PlaybackModeWidgetFactory::moveButtons(int index)
 	QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
 	line.translate(p);
 	QPoint p2 = line.p2().toPoint();
+	QRect dest = popup->rect();
+	dest.translate(p2);
+	qDebug() << dest;
+	if (dest.contains(dest)) {
+
+	}
+
 	popup->animate(p, p2);
 	return popup->frameGeometry();
 }
@@ -78,29 +151,3 @@ void PlaybackModeWidgetFactory::togglePlaybackModes()
 		}
 	}
 }
-
-/** Called when one is moving the top level window. */
-/*void PlaybackModeWidgetFactory::syncPositions()
-{
-	QDesktopWidget *d = QApplication::desktop();
-
-	QList<QRect> positions;
-	for (int i = 0; i < _popups.count(); i++) {
-		positions.append(this->moveButtons(i));
-	}
-	bool contains = true;
-	int i = 0;
-	foreach (QRect position, positions) {
-		contains = contains && d->availableGeometry().contains(position);
-		if (!d->availableGeometry().contains(position)) {
-			//qDebug() << i << d->availableGeometry() << position;
-		}
-		i++;
-	}
-	if (contains) {
-		qDebug() << "the calculated positions seems to be ok";
-	} else {
-		qDebug() << "the calculated positions are wrong";
-		qDebug() << d->availableGeometry() << positions;
-	}
-}*/

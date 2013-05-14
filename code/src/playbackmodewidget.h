@@ -21,7 +21,10 @@ public:
 
 	inline QPushButton *button() const { return qobject_cast<QPushButton*>(this->layout()->itemAt(0)->widget()); }
 
-	inline QMediaPlaylist::PlaybackMode mode() const { return _mode;}
+	inline QMediaPlaylist::PlaybackMode mode() const { return _mode; }
+
+	bool eventFilter(QObject *obj, QEvent *event);
+
 };
 
 #endif // PLAYBACKMODEWIDGET_H
