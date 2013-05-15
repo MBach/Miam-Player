@@ -9,12 +9,12 @@
 class PlaybackModeWidgetFactory : public QObject
 {
 	Q_OBJECT
-
 private:
-	QList<PlaybackModeWidget*> _popups;
+	Q_ENUMS(Edge)
+
 	QPushButton *_playbackModeButton;
 
-	Q_ENUMS(Edge)
+	QList<PlaybackModeWidget*> _popups;
 
 public:
 	PlaybackModeWidgetFactory(QWidget *parent, QPushButton *playbackModeButton, TabPlaylist *tabPlaylists);
@@ -26,12 +26,10 @@ public:
 				LEFT		= 3
 			   };
 
-	void hideAll();
-
 	void move();
 
 private:
-	QRect moveButtons(int index);
+	Edge _previousEdge;
 
 public slots:
 	void togglePlaybackModes();

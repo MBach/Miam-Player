@@ -43,20 +43,13 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, QPushButto
 	}
 }
 
-void PlaybackModeWidgetFactory::hideAll()
-{
-	for (int i = 0; i < _popups.count(); i++) {
-		PlaybackModeWidget *popup = _popups.at(i);
-		popup->hide();
-	}
-}
-
+/** Display buttons in circle (if possible, otherwise in line) around the playbackModeButton. */
 void PlaybackModeWidgetFactory::move()
 {
-	/// TEST
 	QRect screen = QApplication::desktop()->availableGeometry();
-	//int edge = -1;
 	Edge edge = UNDEFINED;
+	const int margin = 10;
+
 	for (int index = 0; index < _popups.count(); index++) {
 		PlaybackModeWidget *popup = _popups.at(index);
 		qreal length = 60;
@@ -69,85 +62,57 @@ void PlaybackModeWidgetFactory::move()
 		dest.translate(p2);
 		if (!screen.contains(dest)) {
 			if (dest.bottom() > screen.bottom()) {
-				//qDebug() << "bouger vers le haut !" << dest;
 				edge = BOTTOM;
 			} else if (dest.right() > screen.right()) {
-				//qDebug() << "bouger vers la gauche !" << dest;
 				edge = RIGHT;
 			} else if (dest.left() < screen.left()) {
-				//qDebug() << "bouger vers la droite !" << dest;
 				edge = LEFT;
 			} else if (dest.top() < screen.top()) {
-				//qDebug() << "bouger vers le bas !" << dest;
 				edge = TOP;
 			}
-			//_offScreen = true;
 			break;
 		}
-		/*if (_offScreen) {
+	}
+
+	for (int index = 0; index < _popups.count(); index++) {
+		QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
+		QPoint p2(p);
+		PlaybackModeWidget *popup = _popups.at(index);
+		switch (edge) {
+		case BOTTOM:
+			p2.setX(p.x() - index * (popup->width() + margin));
+			p2.setY(p.y() - (popup->height() + margin));
 			break;
+		case RIGHT:
+			break;
+		case LEFT:
+			break;
+		case TOP:
+			break;
+		case UNDEFINED:
+			qreal length = popup->frameGeometry().width() + margin;
+			qreal angle = (360 / _popups.count()) * index + 90;
+			QLineF line = QLineF::fromPolar(length, angle);
+			line.translate(p);
+			p2 = line.p2().toPoint();
+			break;
+		}
+		if (edge == UNDEFINED ||_previousEdge != UNDEFINED) {
+			popup->move(p2);
 		} else {
-		}*/
-		popup->move(p2);
-	}
-	if (edge != UNDEFINED) {
-		const int margin = 10;
-		for (int index = 0; index < _popups.count(); index++) {
-			QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
-			QPoint p2(p);
-			PlaybackModeWidget *popup = _popups.at(index);
-			switch (edge) {
-			case BOTTOM:
-				p2.setX(p.x() - index * (popup->width() + margin));
-				p2.setY(p.y() - (popup->height() + margin));
-				break;
-			case RIGHT:
-				break;
-			case LEFT:
-				break;
-			case TOP:
-				break;
-			}
-			//if (_offScreen) {
 			popup->animate(p, p2);
-			/*} else {
-				popup->move(p2);
-			}*/
 		}
 	}
+	_previousEdge = edge;
 }
 
-/** Display buttons in circle (if possible, otherwise in line) around the playbackModeButton. */
-QRect PlaybackModeWidgetFactory::moveButtons(int index)
-{
-	/// TODO move these buttons in line when there's not enough space around the center
-	qreal length = 60;
-	PlaybackModeWidget *popup = _popups.at(index);
-	qreal angle = (360 / _popups.count()) * index + 90;
-	QLineF line = QLineF::fromPolar(length, angle);
-	QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
-	line.translate(p);
-	QPoint p2 = line.p2().toPoint();
-	QRect dest = popup->rect();
-	dest.translate(p2);
-	qDebug() << dest;
-	if (dest.contains(dest)) {
 
-	}
-
-	popup->animate(p, p2);
-	return popup->frameGeometry();
-}
 
 void PlaybackModeWidgetFactory::togglePlaybackModes()
 {
+	this->move();
 	for (int i = 0; i < _popups.count(); i++) {
 		PlaybackModeWidget *popup = _popups.at(i);
-		if (popup->isVisible()) {
-			popup->hide();
-		} else {
-			this->moveButtons(i);
-			popup->show();
-		}
+		popup->isVisible() ? popup->hide() : popup->show();
 	}
 }
