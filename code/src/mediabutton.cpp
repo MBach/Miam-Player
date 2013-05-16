@@ -49,13 +49,18 @@ void MediaButton::setIconFromTheme(const QString &theme)
 {
 	// The objectName in the UI file MUST match the alias in the QRC file!
 	QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
-	this->setIcon(QIcon(iconFile));
+	QIcon icon(iconFile);
+	if (!icon.isNull()) {
+		this->setIcon(icon);
+	}
+	emit mediaButtonChanged();
 }
 
 /** Change the size of icons from the options. */
 void MediaButton::setSize(const int &s)
 {
 	this->setIconSize(QSize(s, s));
+	emit mediaButtonChanged();
 }
 
 /** Override the QPushButton slot to add a write/read QSetting system. */

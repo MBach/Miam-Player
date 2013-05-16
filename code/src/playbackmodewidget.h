@@ -14,17 +14,18 @@ private:
 
 	QPropertyAnimation *_animation;
 
+	QString _playbackMode;
+
 public:
 	explicit PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushButton *playbackModeButton = 0);
+
+	void adjustIcon();
 
 	void animate(const QPoint &start, const QPoint &end);
 
 	inline QPushButton *button() const { return qobject_cast<QPushButton*>(this->layout()->itemAt(0)->widget()); }
 
 	inline QMediaPlaylist::PlaybackMode mode() const { return _mode; }
-
-	bool eventFilter(QObject *obj, QEvent *event);
-
 };
 
 #endif // PLAYBACKMODEWIDGET_H

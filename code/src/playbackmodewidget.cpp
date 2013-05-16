@@ -12,34 +12,39 @@ PlaybackModeWidget::PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushB
 
 	QPushButton *button = new QPushButton(this);
 	button->setMouseTracking(true);
-	QString playbackMode;
+	_playbackMode;
 	switch (mode) {
 	case QMediaPlaylist::CurrentItemOnce:
-		playbackMode = "itemOnce";
+		_playbackMode = "itemOnce";
 		break;
 	case QMediaPlaylist::CurrentItemInLoop:
-		playbackMode = "itemLoop";
+		_playbackMode = "itemLoop";
 		break;
 	case QMediaPlaylist::Sequential:
-		playbackMode = "sequential";
+		_playbackMode = "sequential";
 		break;
 	case QMediaPlaylist::Loop:
-		playbackMode = "repeat";
+		_playbackMode = "repeat";
 		break;
 	case QMediaPlaylist::Random:
-		playbackMode = "shuffle";
+		_playbackMode = "shuffle";
 		break;
 	}
 	Settings *settings = Settings::getInstance();
-	button->setIcon(QIcon(":/player/" + settings->theme() + "/" + playbackMode));
+	button->setIcon(QIcon(":/player/" + settings->theme() + "/" + _playbackMode));
 	button->setIconSize(QSize(settings->buttonsSize(), settings->buttonsSize()));
 
 	QVBoxLayout *vLayout = new QVBoxLayout(this);
 	vLayout->setContentsMargins(0, 0, 0, 0);
 	vLayout->addWidget(button);
 	this->setLayout(vLayout);
+}
 
-	this->installEventFilter(button);
+void PlaybackModeWidget::adjustIcon()
+{
+	Settings *settings = Settings::getInstance();
+	button()->setIcon(QIcon(":/player/" + settings->theme() + "/" + _playbackMode));
+	button()->setIconSize(QSize(settings->buttonsSize(), settings->buttonsSize()));
 }
 
 void PlaybackModeWidget::animate(const QPoint &start, const QPoint &end)
@@ -47,10 +52,4 @@ void PlaybackModeWidget::animate(const QPoint &start, const QPoint &end)
 	_animation->setStartValue(start);
 	_animation->setEndValue(end);
 	_animation->start();
-}
-
-bool PlaybackModeWidget::eventFilter(QObject *obj, QEvent *event)
-{
-	qDebug() << "ici";
-	return QWidget::eventFilter(obj, event);
 }

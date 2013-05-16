@@ -22,6 +22,8 @@ signals:
 	/** Hide or show buttons from options. */
 	void visibilityChanged(MediaButton *b, bool visible);
 
+	void mediaButtonChanged();
+
 public slots:
 	/** Load an icon from a chosen theme in options. */
 	void setIconFromTheme(const QString &);

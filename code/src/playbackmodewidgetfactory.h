@@ -1,7 +1,7 @@
 #ifndef PLAYBACKMODEWIDGETFACTORY_H
 #define PLAYBACKMODEWIDGETFACTORY_H
 
-#include <QPushButton>
+#include "mediabutton.h"
 #include "tabplaylist.h"
 #include "playbackmodewidget.h"
 
@@ -12,12 +12,12 @@ class PlaybackModeWidgetFactory : public QObject
 private:
 	Q_ENUMS(Edge)
 
-	QPushButton *_playbackModeButton;
+	MediaButton *_playbackModeButton;
 
 	QList<PlaybackModeWidget*> _popups;
 
 public:
-	PlaybackModeWidgetFactory(QWidget *parent, QPushButton *playbackModeButton, TabPlaylist *tabPlaylists);
+	PlaybackModeWidgetFactory(QWidget *parent, MediaButton *playbackModeButton, TabPlaylist *tabPlaylists);
 
 	enum Edge { UNDEFINED	= -1,
 				TOP			= 0,

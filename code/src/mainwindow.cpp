@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
 
 	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton << stopButton << seekForwardButton << skipForwardButton;
-	//mediaButtons << playbackModeButton;
+	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton << stopButton;
+	mediaButtons << seekForwardButton << skipForwardButton << playbackModeButton;
 	/*foreach (MediaButton *b, mediaButtons) {
 		b->setStyleSheet(settings->styleSheet(b));
 	}*/

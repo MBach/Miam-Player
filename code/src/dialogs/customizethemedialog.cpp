@@ -87,8 +87,10 @@ void CustomizeThemeDialog::setupActions()
 
 		// Connect a file dialog to every button if one wants to customize everything
 		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
-		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
-		connect(flatButtonsCheckBox, &QCheckBox::toggled, [=] (bool flat) { b->setFlat(flat); });
+		if (pushButton) {
+			connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
+			connect(flatButtonsCheckBox, &QCheckBox::toggled, [=] (bool flat) { b->setFlat(flat); });
+		}
 	}
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
@@ -204,10 +206,10 @@ void CustomizeThemeDialog::loadTheme()
 
 		// Display customs icons, if any
 		QPushButton *pushButton = findChild<QPushButton *>(b->objectName().remove("Button"));
-		pushButton->setIcon(b->icon());
+		if (pushButton) {
+			pushButton->setIcon(b->icon());
+		}
 	}
-	//mainWindow->repeatButton->setChecked(settings->repeatPlayBack());
-	//mainWindow->shuffleButton->setChecked(settings->shufflePlayBack());
 
 	// Fonts
 	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::PLAYLIST));

@@ -5,7 +5,7 @@
 
 #include <QtDebug>
 
-PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, QPushButton *playbackModeButton, TabPlaylist *tabPlaylists)
+PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButton *playbackModeButton, TabPlaylist *tabPlaylists)
 	: QObject(parent), _playbackModeButton(playbackModeButton)
 {
 	// Create 5 buttons: one for each playback mode available
@@ -41,6 +41,13 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, QPushButto
 			tabPlaylists->mediaPlayer()->playlist()->setPlaybackMode(i.key()->mode());
 		});
 	}
+
+	connect(playbackModeButton, &MediaButton::mediaButtonChanged, [=]() {
+		foreach (PlaybackModeWidget *w, _popups) {
+			w->adjustIcon();
+			w->adjustSize();
+		}
+	});
 }
 
 /** Display buttons in circle (if possible, otherwise in line) around the playbackModeButton. */
@@ -74,39 +81,48 @@ void PlaybackModeWidgetFactory::move()
 		}
 	}
 
+	/// TODO: finish left, top, and minor init postions?
 	for (int index = 0; index < _popups.count(); index++) {
+		PlaybackModeWidget *popup = _popups.at(index);
 		QPoint p = _playbackModeButton->mapToGlobal(QPoint(0, 0));
 		QPoint p2(p);
-		PlaybackModeWidget *popup = _popups.at(index);
 		switch (edge) {
 		case BOTTOM:
 			p2.setX(p.x() - index * (popup->width() + margin));
 			p2.setY(p.y() - (popup->height() + margin));
 			break;
 		case RIGHT:
+			p2.setX(p.x() - (popup->height() + margin));
+			p2.setY(p.y() - index * (popup->width() + margin));
 			break;
 		case LEFT:
 			break;
 		case TOP:
 			break;
 		case UNDEFINED:
-			qreal length = popup->frameGeometry().width() + margin;
+			//if (_previousEdge == UNDEFINED) {
+			qreal length = _playbackModeButton->frameGeometry().width() + margin;
 			qreal angle = (360 / _popups.count()) * index + 90;
 			QLineF line = QLineF::fromPolar(length, angle);
 			line.translate(p);
 			p2 = line.p2().toPoint();
+			/*} else {
+
+			}*/
 			break;
 		}
-		if (edge == UNDEFINED ||_previousEdge != UNDEFINED) {
-			popup->move(p2);
+		if (edge == UNDEFINED || _previousEdge != UNDEFINED) {
+			if (popup->isVisible()) {
+				popup->move(p2);
+			} else {
+				popup->animate(p, p2);
+			}
 		} else {
 			popup->animate(p, p2);
 		}
 	}
 	_previousEdge = edge;
 }
-
-
 
 void PlaybackModeWidgetFactory::togglePlaybackModes()
 {
