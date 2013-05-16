@@ -47,6 +47,7 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButto
 			w->adjustIcon();
 			w->adjustSize();
 		}
+		this->move();
 	});
 }
 

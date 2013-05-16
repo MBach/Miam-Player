@@ -88,10 +88,14 @@ void CustomizeThemeDialog::setupActions()
 		// Connect a file dialog to every button if one wants to customize everything
 		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
 		if (pushButton) {
-			connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
+			//connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
 			connect(flatButtonsCheckBox, &QCheckBox::toggled, [=] (bool flat) { b->setFlat(flat); });
 		}
 	}
+	foreach (QPushButton *pushButton, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
+		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
+	}
+
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
 	// Fonts
@@ -258,16 +262,18 @@ void CustomizeThemeDialog::openChooseIconDialog()
 {
 	QPushButton *button = qobject_cast<QPushButton *>(sender());
 	MediaButton *b = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
-	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first(), tr("Pictures (*.jpg *.jpeg *.png)"));
+	if (b) {
+		QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first(), tr("Pictures (*.jpg *.jpeg *.png)"));
 
-	Settings *settings = Settings::getInstance();
-	settings->setCustomIcon(b, path);
-	// Reset the custom icon
-	if (path.isEmpty()) {
-		path = ":/player/" + settings->theme() + "/" + button->objectName();
+		Settings *settings = Settings::getInstance();
+		settings->setCustomIcon(b, path);
+		// Reset the custom icon
+		if (path.isEmpty()) {
+			path = ":/player/" + settings->theme() + "/" + button->objectName();
+		}
+		button->setIcon(QIcon(path));
+		b->setIcon(QIcon(path));
 	}
-	button->setIcon(QIcon(path));
-	b->setIcon(QIcon(path));
 }
 
 /** Changes the current theme and updates this dialog too. */
@@ -277,11 +283,13 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme) {
 	// Check for each button if there is a custom icon
 	foreach(QPushButton *button, buttonsListBox->findChildren<QPushButton*>()) {
 		MediaButton *mediaButton = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
-		// Keep the custom icon provided by one
-		if (settings->hasCustomIcon(mediaButton)) {
-			button->setIcon(QIcon(settings->customIcon(mediaButton)));
-		} else {
-			button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
+		if (mediaButton) {
+			// Keep the custom icon provided by one
+			if (settings->hasCustomIcon(mediaButton)) {
+				button->setIcon(QIcon(settings->customIcon(mediaButton)));
+			} else {
+				button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
+			}
 		}
 	}
 	settings->setThemeName(newTheme);
