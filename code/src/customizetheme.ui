@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>520</height>
+    <height>524</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -95,7 +95,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="page">
+     <widget class="QWidget" name="buttonsPage">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QGroupBox" name="buttonThemeBox">
@@ -167,12 +167,18 @@
        </item>
        <item>
         <widget class="QGroupBox" name="buttonsListBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Button list and their associated behaviour</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="customizeIconsLabel">
             <property name="font">
              <font>
               <italic>true</italic>
@@ -192,7 +198,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-128</y>
+               <y>-280</y>
                <width>421</width>
                <height>542</height>
               </rect>
@@ -700,7 +706,7 @@
               <item row="9" column="5">
                <layout class="QHBoxLayout" name="horizontalLayout_12">
                 <item>
-                 <widget class="QPushButton" name="loop">
+                 <widget class="QPushButton" name="repeat">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -941,15 +947,15 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>20</width>
-           <height>40</height>
+           <width>0</width>
+           <height>0</height>
           </size>
          </property>
         </spacer>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
+     <widget class="QWidget" name="fontsPage">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QGroupBox" name="groupBoxFonts">
@@ -1077,7 +1083,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_3">
+     <widget class="QWidget" name="colorsPage">
       <layout class="QVBoxLayout" name="verticalLayout_12">
        <item>
         <widget class="QGroupBox" name="groupBox_4">
@@ -1336,7 +1342,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_4">
+     <widget class="QWidget" name="libraryPage">
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QGroupBox" name="groupBoxLibraryCovers">
@@ -1598,34 +1604,66 @@
  </resources>
  <connections>
   <connection>
-   <sender>skipBackwardCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>skipBackward</receiver>
-   <slot>setEnabled(bool)</slot>
+   <sender>listWidget</sender>
+   <signal>currentRowChanged(int)</signal>
+   <receiver>stackedWidget</receiver>
+   <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>231</y>
+     <x>69</x>
+     <y>285</y>
     </hint>
     <hint type="destinationlabel">
-     <x>502</x>
-     <y>231</y>
+     <x>383</x>
+     <y>285</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>seekBackwardCheckBox</sender>
+   <sender>checkBoxDisplayCovers</sender>
    <signal>toggled(bool)</signal>
-   <receiver>seekBackward</receiver>
+   <receiver>spinBoxCoverSize</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>497</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>497</x>
+     <y>80</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonDesactivatePronouns</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lineEditFilterPronouns</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>393</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>seekForwardCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>seekForward</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>164</x>
-     <y>279</y>
+     <y>471</y>
     </hint>
     <hint type="destinationlabel">
      <x>502</x>
-     <y>279</y>
+     <y>471</y>
     </hint>
    </hints>
   </connection>
@@ -1662,50 +1700,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>seekForwardCheckBox</sender>
+   <sender>customizeThemeCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>seekForward</receiver>
-   <slot>setEnabled(bool)</slot>
+   <receiver>buttonsListBox</receiver>
+   <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>471</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>502</x>
-     <y>471</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>skipForwardCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>skipForward</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>164</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>502</x>
-     <y>519</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>listWidget</sender>
-   <signal>currentRowChanged(int)</signal>
-   <receiver>stackedWidget</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>69</x>
-     <y>285</y>
+     <x>383</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
      <x>383</x>
-     <y>285</y>
+     <y>301</y>
     </hint>
    </hints>
   </connection>
@@ -1726,50 +1732,50 @@
    </hints>
   </connection>
   <connection>
-   <sender>checkBoxDisplayCovers</sender>
+   <sender>seekBackwardCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>spinBoxCoverSize</receiver>
+   <receiver>seekBackward</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>497</x>
-     <y>54</y>
+     <x>164</x>
+     <y>279</y>
     </hint>
     <hint type="destinationlabel">
-     <x>497</x>
-     <y>80</y>
+     <x>502</x>
+     <y>279</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>customizeThemeCheckBox</sender>
+   <sender>skipForwardCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>buttonsListBox</receiver>
-   <slot>setVisible(bool)</slot>
+   <receiver>skipForward</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>383</x>
-     <y>88</y>
+     <x>164</x>
+     <y>519</y>
     </hint>
     <hint type="destinationlabel">
-     <x>383</x>
-     <y>301</y>
+     <x>502</x>
+     <y>519</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>radioButtonDesactivatePronouns</sender>
+   <sender>skipBackwardCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>lineEditFilterPronouns</receiver>
-   <slot>setVisible(bool)</slot>
+   <receiver>skipBackward</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>279</x>
-     <y>193</y>
+     <x>164</x>
+     <y>231</y>
     </hint>
     <hint type="destinationlabel">
-     <x>393</x>
-     <y>222</y>
+     <x>502</x>
+     <y>231</y>
     </hint>
    </hints>
   </connection>

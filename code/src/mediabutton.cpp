@@ -53,6 +53,9 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	if (!icon.isNull()) {
 		this->setIcon(icon);
 	}
+	/*if (this->objectName().remove("Button") == "playbackMode") {
+		qDebug() << "ici";
+	}*/
 	emit mediaButtonChanged();
 }
 

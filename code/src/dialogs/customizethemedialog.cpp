@@ -14,6 +14,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	colorDialog = new ColorDialog(this);
 	styleSheetUpdater = new StyleSheetUpdater(this);
 	buttonsListBox->setVisible(false);
+	//verticalLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
 	this->setupActions();
 	this->associatePaintableElements();
@@ -277,16 +278,15 @@ void CustomizeThemeDialog::openChooseIconDialog()
 }
 
 /** Changes the current theme and updates this dialog too. */
-void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme) {
-	// Updates dynamically this Dialog
+void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
+{
 	Settings *settings = Settings::getInstance();
 	// Check for each button if there is a custom icon
-	foreach(QPushButton *button, buttonsListBox->findChildren<QPushButton*>()) {
-		MediaButton *mediaButton = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
-		if (mediaButton) {
+	foreach(QPushButton *button, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
+		if (button) {
 			// Keep the custom icon provided by one
-			if (settings->hasCustomIcon(mediaButton)) {
-				button->setIcon(QIcon(settings->customIcon(mediaButton)));
+			if (settings->hasCustomIcon(button)) {
+				button->setIcon(QIcon(settings->customIcon(button)));
 			} else {
 				button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
 			}

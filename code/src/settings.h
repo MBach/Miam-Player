@@ -92,9 +92,9 @@ public:
 	QMap<QString, QVariant> shortcuts() const;
 
 	/// Custom icons in CustomizeTheme
-	bool hasCustomIcon(MediaButton *) const;
-	void setCustomIcon(MediaButton *, const QString &buttonName);
-	const QString customIcon(MediaButton *, bool toggled = false) const;
+	bool hasCustomIcon(QPushButton *) const;
+	void setCustomIcon(QPushButton *, const QString &buttonName);
+	const QString customIcon(QPushButton *, bool toggled = false) const;
 
 	/// PlayBack options
 	qint64 playbackSeekTime() const;

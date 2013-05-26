@@ -223,13 +223,13 @@ void Settings::setVisible(MediaButton *b, const bool &value)
 	}
 }
 
-bool Settings::hasCustomIcon(MediaButton *b) const
+bool Settings::hasCustomIcon(QPushButton *b) const
 {
 	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
 	return customIcons.value(b->objectName()).toBool();
 }
 
-void Settings::setCustomIcon(MediaButton *b, const QString &iconPath)
+void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
 {
 	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
 	if (iconPath.isEmpty()) {
@@ -240,7 +240,7 @@ void Settings::setCustomIcon(MediaButton *b, const QString &iconPath)
 	setValue("customIcons", customIcons);
 }
 
-const QString Settings::customIcon(MediaButton *b, bool toggled) const
+const QString Settings::customIcon(QPushButton *b, bool toggled) const
 {
 	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
 	if (toggled) {
