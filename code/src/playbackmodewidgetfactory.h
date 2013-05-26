@@ -14,6 +14,8 @@ private:
 
 	MediaButton *_playbackModeButton;
 
+	TabPlaylist *_tabPlaylists;
+
 	QList<PlaybackModeWidget*> _popups;
 
 public:
@@ -33,6 +35,8 @@ private:
 
 public slots:
 	void togglePlaybackModes();
+
+	void update();
 };
 
 #endif // PLAYBACKMODEWIDGETFACTORY_H

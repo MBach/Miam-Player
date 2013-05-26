@@ -69,7 +69,6 @@ void CustomizeThemeDialog::associatePaintableElements()
 void CustomizeThemeDialog::setupActions()
 {
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
-		connect(themeComboBox, SIGNAL(currentIndexChanged(QString)), b, SLOT(setIconFromTheme(QString)));
 		connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), b, SLOT(setSize(int)));
 	}
 
@@ -293,6 +292,9 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 		}
 	}
 	settings->setThemeName(newTheme);
+	foreach(MediaButton *m, mainWindow->mediaButtons) {
+		m->setIconFromTheme(newTheme);
+	}
 }
 
 /** Displays covers or not in the library. */

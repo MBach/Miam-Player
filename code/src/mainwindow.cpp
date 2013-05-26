@@ -137,11 +137,8 @@ void MainWindow::setupActions()
 	connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
 	connect(stopButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, [=] () {
-		tabPlaylists->skip();
-	});
-	//connect(repeatButton, &QAbstractButton::clicked, settings, &Settings::setRepeatPlayBack);
-	//connect(shuffleButton, &QAbstractButton::clicked, settings, &Settings::setShufflePlayBack);
+	connect(skipForwardButton, &QAbstractButton::clicked, [=] () { tabPlaylists->skip(); });
+	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	// Sliders
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {

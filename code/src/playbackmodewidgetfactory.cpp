@@ -1,12 +1,14 @@
 #include "playbackmodewidgetfactory.h"
 
+#include "settings.h"
+
 #include <QApplication>
 #include <QDesktopWidget>
 
 #include <QtDebug>
 
 PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButton *playbackModeButton, TabPlaylist *tabPlaylists)
-	: QObject(parent), _playbackModeButton(playbackModeButton)
+	: QObject(parent), _playbackModeButton(playbackModeButton), _tabPlaylists(tabPlaylists)
 {
 	// Create 5 buttons: one for each playback mode available
 	PlaybackModeWidget *pCurrentItemOnce = new PlaybackModeWidget(QMediaPlaylist::CurrentItemOnce, playbackModeButton);
@@ -35,20 +37,12 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButto
 
 		// Also, send to the playlist the right enumeration
 		connect(i.value(), &QPushButton::clicked, [=]() {
-			if (tabPlaylists->mediaPlayer()->playlist() == NULL) {
-				tabPlaylists->mediaPlayer()->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
+			if (_tabPlaylists->mediaPlayer()->playlist() == NULL) {
+				_tabPlaylists->mediaPlayer()->setPlaylist(_tabPlaylists->currentPlayList()->mediaPlaylist());
 			}
-			tabPlaylists->mediaPlayer()->playlist()->setPlaybackMode(i.key()->mode());
+			_tabPlaylists->mediaPlayer()->playlist()->setPlaybackMode(i.key()->mode());
 		});
 	}
-
-	connect(playbackModeButton, &MediaButton::mediaButtonChanged, [=]() {
-		foreach (PlaybackModeWidget *w, _popups) {
-			w->adjustIcon();
-			w->adjustSize();
-		}
-		this->move();
-	});
 }
 
 /** Display buttons in circle (if possible, otherwise in line) around the playbackModeButton. */
@@ -132,4 +126,17 @@ void PlaybackModeWidgetFactory::togglePlaybackModes()
 		PlaybackModeWidget *popup = _popups.at(i);
 		popup->isVisible() ? popup->hide() : popup->show();
 	}
+}
+
+void PlaybackModeWidgetFactory::update()
+{
+	QMediaPlaylist::PlaybackMode mode = _tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
+	QString playbackMode = PlaybackModeWidget::nameFromMode(mode);
+	_playbackModeButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/" + playbackMode));
+
+	foreach (PlaybackModeWidget *w, _popups) {
+		w->adjustIcon();
+		w->adjustSize();
+	}
+	this->move();
 }

@@ -19,6 +19,8 @@ private:
 public:
 	explicit PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushButton *playbackModeButton = 0);
 
+	static QString nameFromMode(QMediaPlaylist::PlaybackMode mode);
+
 	void adjustIcon();
 
 	void animate(const QPoint &start, const QPoint &end);
