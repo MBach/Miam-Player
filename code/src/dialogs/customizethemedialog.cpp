@@ -88,7 +88,6 @@ void CustomizeThemeDialog::setupActions()
 		// Connect a file dialog to every button if one wants to customize everything
 		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
 		if (pushButton) {
-			//connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
 			connect(flatButtonsCheckBox, &QCheckBox::toggled, [=] (bool flat) { b->setFlat(flat); });
 		}
 	}

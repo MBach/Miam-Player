@@ -27,7 +27,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	// Link core multimedia actions
 	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
 
-	// Keep playlists in memory before exit
+	// Keep playlists on drive before exit
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
 
 	// Add a new playlist
@@ -46,6 +46,9 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	});
 	connect(_mediaPlayer, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(handleError(QMediaPlayer::Error)));
 	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
+
+	// Load playlists at startup if any, otherwise just add an empty one
+	//this->restorePlaylists();
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -62,24 +65,75 @@ void TabPlaylist::retranslateUi()
 	}
 }
 
-/** Change the current track. */
-void TabPlaylist::skip(bool forward)
+/** Restore playlists at startup. */
+void TabPlaylist::restorePlaylists()
 {
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
-		// Is it strange? When it's playing, if signals aren't blocked a crash happens
-		_mediaPlayer->blockSignals(true);
-		_mediaPlayer->stop();
-		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
-		_mediaPlayer->play();
-		_mediaPlayer->blockSignals(false);
-	} else {
-		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
-		if (_mediaPlayer->playlist() == NULL) {
-			_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
+	Settings *settings = Settings::getInstance();
+	if (settings->playbackKeepPlaylists()) {
+		QList<QVariant> playlists = settings->value("playlists").toList();
+		if (!playlists.isEmpty()) {
+			QList<QMediaContent> tracksNotFound;
+
+			// For all playlists (p : { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] ; QVariant[QMediaPlaylist::PlaybackMode] }
+			for (int i = 0; i < playlists.size(); i++) {
+				QList<QVariant> vTracks = playlists.at(i).toList();
+				Playlist *p = this->addPlaylist();
+				this->setTabText(count(), playlists.at(++i).toString());
+				p->mediaPlaylist()->setPlaybackMode((QMediaPlaylist::PlaybackMode) playlists.at(++i).toInt());
+
+				// For all tracks in one playlist
+				QList<QMediaContent> medias;
+				foreach (QVariant vTrack, vTracks) {
+					QMediaContent track(vTrack.toUrl());
+					if (!track.isNull()) {
+						medias.append(track);
+					} else {
+						tracksNotFound.append(track);
+					}
+				}
+				p->appendTracks(medias);
+				if (i == playlists.size() - 1) {
+					qDebug() << "fin";
+					emit playlistsRestored();
+				}
+			}
+			// Error handling
+			if (!tracksNotFound.isEmpty()) {
+				messageBox->displayError(TracksNotFoundMessageBox::RESTORE_AT_STARTUP, tracksNotFound);
+			}
+		} else {
+			this->addPlaylist();
 		}
-		_mediaPlayer->play();
+	} else {
+		this->addPlaylist();
 	}
 }
+
+/** Add a new playlist tab. */
+Playlist* TabPlaylist::addPlaylist()
+{
+	QString newPlaylistName = tr("Playlist ").append(QString::number(count()));
+
+	// Then append a new empty playlist to the others
+	Playlist *p = new Playlist(this, _mediaPlayer);
+	p->init();
+	int i = insertTab(count(), p, newPlaylistName);
+
+	// If there's a custom stylesheet on the playlist, copy it from the previous one
+	if (i > 1) {
+		Playlist *previous = this->playlist(i - 1);
+		p->setStyleSheet(previous->styleSheet());
+		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
+	}
+	// Forward this signal to the MainWindow instance
+	connect(p, &Playlist::selectedTracks, this, &TabPlaylist::aboutToChangeMenuLabels);
+
+	// Select the new empty playlist
+	setCurrentIndex(i);
+	emit created();
+	return p;
+}
+
 
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
@@ -125,48 +179,6 @@ void TabPlaylist::addItemToPlaylist(const QModelIndex &index)
 	this->addItemsToPlaylist(indexes);
 }
 
-/** Add a new playlist tab. */
-Playlist* TabPlaylist::addPlaylist()
-{
-	QString newPlaylistName = tr("Playlist ").append(QString::number(count()));
-
-	// Then append a new empty playlist to the others
-	Playlist *p = new Playlist(this, _mediaPlayer);
-	p->init();
-	int i = insertTab(count(), p, newPlaylistName);
-
-	// If there's a custom stylesheet on the playlist, copy it from the previous one
-	if (i > 1) {
-		Playlist *previous = this->playlist(i - 1);
-		p->setStyleSheet(previous->styleSheet());
-		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
-	}
-	// Forward this signal to the MainWindow instance
-	connect(p, &Playlist::selectedTracks, this, &TabPlaylist::aboutToChangeMenuLabels);
-
-	// Select the new empty playlist
-	setCurrentIndex(i);
-	emit created();
-	return p;
-}
-
-/** When the user is clicking on the (+) button to add a new playlist. */
-void TabPlaylist::checkAddPlaylistButton(int i)
-{
-	// The (+) button is the last tab
-	if (i == count()-1) {
-		addPlaylist();
-	} else {
-		//currentPlayList()->countSelectedItems();
-	}
-}
-
-/** Action sent from the menu. */
-void TabPlaylist::removeCurrentPlaylist()
-{
-	removeTabFromCloseButton(this->tabBar()->currentIndex());
-}
-
 /** Remove a playlist when clicking on a close button in the corner. */
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
@@ -184,45 +196,6 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		// Clear the content of first tab
 		currentPlayList()->mediaPlaylist()->clear();
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount()); // ok
-	}
-}
-
-/** Restore playlists at startup. */
-void TabPlaylist::restorePlaylists()
-{
-	Settings *settings = Settings::getInstance();
-	if (settings->playbackKeepPlaylists()) {
-		QList<QVariant> playlists = settings->value("playlists").toList();
-		if (!playlists.isEmpty()) {
-			QList<QMediaContent> tracksNotFound;
-
-			// For all playlists (stored as a pair of { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] }
-			for (int i = 0; i < playlists.size(); i++) {
-				QList<QVariant> vTracks = playlists.at(i).toList();
-				Playlist *p = this->addPlaylist();
-				this->setTabText(count(), playlists.at(++i).toString());
-
-				// For all tracks in one playlist
-				QList<QMediaContent> medias;
-				foreach (QVariant vTrack, vTracks) {
-					QMediaContent track(vTrack.toUrl());
-					if (!track.isNull()) {
-						medias.append(track);
-					} else {
-						tracksNotFound.append(track);
-					}
-				}
-				p->appendTracks(medias);
-			}
-			// Error handling
-			if (!tracksNotFound.isEmpty()) {
-				messageBox->displayError(TracksNotFoundMessageBox::RESTORE_AT_STARTUP, tracksNotFound);
-			}
-		} else {
-			this->addPlaylist();
-		}
-	} else {
-		this->addPlaylist();
 	}
 }
 
@@ -253,6 +226,36 @@ void TabPlaylist::seekForward()
 	}*/
 	//_mediaPlayer->seekableChanged();
 	qDebug() << "TabPlaylist::seekForward()";
+}
+
+/** Change the current track. */
+void TabPlaylist::skip(bool forward)
+{
+	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+		// Is it strange? When it's playing, if signals aren't blocked a crash happens
+		_mediaPlayer->blockSignals(true);
+		_mediaPlayer->stop();
+		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
+		_mediaPlayer->play();
+		_mediaPlayer->blockSignals(false);
+	} else {
+		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
+		if (_mediaPlayer->playlist() == NULL) {
+			_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
+		}
+		_mediaPlayer->play();
+	}
+}
+
+/** When the user is clicking on the (+) button to add a new playlist. */
+void TabPlaylist::checkAddPlaylistButton(int i)
+{
+	// The (+) button is the last tab
+	if (i == count() - 1) {
+		addPlaylist();
+	} else {
+		//currentPlayList()->countSelectedItems();
+	}
 }
 
 void TabPlaylist::dispatchState(QMediaPlayer::State newState)
@@ -287,6 +290,7 @@ void TabPlaylist::savePlaylists()
 				}
 				vPlaylists.append(QVariant(vTracks));
 				vPlaylists.append(QVariant(tabBar()->tabText(i)));
+				vPlaylists.append(p->mediaPlaylist()->playbackMode());
 			}
 		}
 		// Tracks are stored in QList< QList<QVariant> >

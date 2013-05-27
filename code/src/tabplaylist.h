@@ -42,7 +42,13 @@ public:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
 
+private:
+	/** Restore playlists at startup. */
+	//void restorePlaylists();
+
 public slots:
+	void restorePlaylists();
+
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist();
 
@@ -55,17 +61,11 @@ public slots:
 	/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
 	void addItemToPlaylist(const QModelIndex &index);
 
-	/** When the user is clicking on the (+) button to add a new playlist. */
-	void checkAddPlaylistButton(int i);
-
 	/** Action sent from the menu. */
-	void removeCurrentPlaylist();
+	void removeCurrentPlaylist() { removeTabFromCloseButton(this->tabBar()->currentIndex()); }
 
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
-
-	/** Restore playlists at startup. */
-	void restorePlaylists();
 
 	/// Media actions
 	/** Seek backward in the current playing track for a small amount of time. */
@@ -77,16 +77,10 @@ public slots:
 	/** Change the current track. */
 	void skip(bool forward = true);
 
-signals:
-	void destroyed(int);
-	void created();
-
-	/** Forward the signal. */
-	void aboutToChangeMenuLabels(int);
-
-	void sendToTagEditor(const QList<QPersistentModelIndex> &);
-
 private slots:
+	/** When the user is clicking on the (+) button to add a new playlist. */
+	void checkAddPlaylistButton(int i);
+
 	void dispatchState(QMediaPlayer::State newState);
 
 	/** Save playlists before exit. */
@@ -95,6 +89,18 @@ private slots:
 	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
 
 	void handleError(QMediaPlayer::Error);
+
+signals:
+	void destroyed(int);
+
+	void created();
+
+	/** Forward the signal. */
+	void aboutToChangeMenuLabels(int);
+
+	void sendToTagEditor(const QList<QPersistentModelIndex> &);
+
+	void playlistsRestored();
 };
 
 #endif // TABPLAYLIST_H

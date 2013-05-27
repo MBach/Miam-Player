@@ -51,13 +51,6 @@ MainWindow::MainWindow(QWidget *parent) :
 		this->bindShortcut(it.key(), it.value().toInt());
 	}
 
-	// Init checkable buttons
-	//actionRepeat->setChecked(settings->repeatPlayBack());
-	//actionShuffle->setChecked(settings->shufflePlayBack());
-
-	// Load playlists at startup if any, otherwise just add an empty one
-	tabPlaylists->restorePlaylists();
-
 	// Instantiate dialogs
 	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
@@ -67,15 +60,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Tag Editor
 	tagEditor->hide();
+}
 
-	this->setupActions();
+void MainWindow::init()
+{
+	/// FIXME
+	//this->setupActions();
 	this->drawLibrary();
+
+	Settings *settings = Settings::getInstance();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	splitter->restoreState(settings->value("splitterState").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+
+	// Load playlists at startup if any, otherwise just add an empty one
+	tabPlaylists->restorePlaylists();
 }
 
 /** Set up all actions and behaviour. */
@@ -139,6 +141,9 @@ void MainWindow::setupActions()
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, [=] () { tabPlaylists->skip(); });
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+	connect(tabPlaylists, &TabPlaylist::playlistsRestored, [=]() {
+		qDebug() << "todo update playbackmode button with right icon";
+	});
 
 	// Sliders
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {

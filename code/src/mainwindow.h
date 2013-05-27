@@ -20,10 +20,12 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 	Q_OBJECT
 public:
-	MainWindow(QWidget *parent = 0);
-
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
+
+	MainWindow(QWidget *parent = 0);
+
+	void init();
 
 private:
 	CustomizeThemeDialog *customizeThemeDialog;

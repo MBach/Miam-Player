@@ -82,7 +82,7 @@ bool Settings::isVisible(MediaButton *b) const
 	   return ok.toBool();
    } else {
 	   // For the first run, show buttons anyway
-	   return (true && b->objectName() != "pauseButton");
+	   return (b->objectName() != "pauseButton");
    }
 }
 
