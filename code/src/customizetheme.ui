@@ -198,7 +198,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-280</y>
+               <y>-295</y>
                <width>421</width>
                <height>542</height>
               </rect>
@@ -1776,6 +1776,86 @@
     <hint type="destinationlabel">
      <x>502</x>
      <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playbackModeCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sequential</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playbackModeCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>repeat</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>247</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playbackModeCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>shuffle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playbackModeCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>itemOnce</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playbackModeCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>itemLoop</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>184</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>391</y>
     </hint>
    </hints>
   </connection>
