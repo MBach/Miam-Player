@@ -1,0 +1,27 @@
+Source: miamplayer
+Package: miamplayer
+Section: sound
+Version: 0.4.2
+Priority: optional
+Architecture: amd64
+Depends: libc6, libqt5widgets5, libqt5multimedia5
+Maintainer: Matthieu BACHELIER <bachelier.matthieu@gmail.com>
+Installed-Size: 2412
+Description: Madame MiamMiam's Music Player
+ Madame MiamMiam's Music Player is an all new audio player. Yet another player?
+ .
+ * What's inside? 
+  * Read MP3, MP4, Flac, OGG Vorbis, Monkey Audio and ASF files
+  * Read and Edit lots of Tags using Taglib
+  * Customize everything: User Interface, Covers, Shortcuts, Buttons, Themes
+  * Fast and reliable
+ .
+ * What is NOT inside?
+  * Automatically search from the Internet for lyrics
+  * Automatically search from the Internet for Tags
+  * Automatically display informations about Artist / Albums / etc from
+ Wikipedia
+  * Well, it's just reading audio files, but it's doing it well!
+ .
+ * This software was developped using Qt and Taglib.
+Homepage: https://sourceforge.net/projects/miammusicplayer/

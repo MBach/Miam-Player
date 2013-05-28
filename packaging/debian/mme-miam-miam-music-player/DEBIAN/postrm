@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -rf ~/.config/MmeMiamMiam
+rm -rf ~/.local/share/MmeMiamMiamMusicPlayer

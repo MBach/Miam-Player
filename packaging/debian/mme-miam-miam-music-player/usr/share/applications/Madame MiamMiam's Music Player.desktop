@@ -1,0 +1,39 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Madame Miam-Miam's Music Player
+GenericName=The music player designed for Madam Yum-Yum!
+GenericName[fr]=Le lecteur de musique spécialement conçu pour Madame Miam-Miam !
+Version=1.0
+Exec=miamplayer %U
+TryExec=miamplayer
+Path=/usr/bin/
+Icon=application-x-miamplayer
+Terminal=false
+Categories=AudioVideo;Player;Qt;
+MimeType=application/ogg;application/x-ogg;application/x-ogm-audio;audio/aac;audio/mp4;audio/mpeg;audio/mpegurl;audio/ogg;audio/vorbis;audio/x-flac;audio/x-mp3;audio/x-mpeg;audio/x-mpegurl;audio/x-musepack;audio/x-oggflac;audio/x-vorbis;audio/x-vorbis+ogg;audio/x-wav;video/x-ms-asf;x-content/audio-player;
+
+[Play Shortcut Group]
+Name=Play
+Exec=miamplayer --play
+TargetEnvironment=Unity
+
+[Pause Shortcut Group]
+Name=Pause
+Exec=miamplayer --pause
+TargetEnvironment=Unity
+
+[Stop Shortcut Group]
+Name=Stop
+Exec=miamplayer --stop
+TargetEnvironment=Unity
+
+[Previous Shortcut Group]
+Name=Previous
+Exec=miamplayer --previous
+TargetEnvironment=Unity
+
+[Next Shortcut Group]
+Name=Next
+Exec=miamplayer --next
+TargetEnvironment=Unity

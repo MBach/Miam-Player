@@ -1,0 +1,29 @@
+In home
+
+*Clone:
+git clone https://github.com/MBach/Madame-Miam-Miam-Music-Player.git
+
+*Modifiy the fucking cpp file which fails to build on Ubuntu!
+(playlistmodel.cpp
+67:    TagLib::FileRef f(track.canonicalUrl().toLocalFile().toStdString().data());)
+
+*Copy the binary file:
+cp /home/mbachelier/Madame-Miam-Miam-Music-Player/code/build-MmeMiamMiamMusicPlayer-Desktop_Qt_5_0_2_GCC_64bit-Release/MmeMiamMiamMusicPlayer Bureau/
+
+*Update the control file (release version)
+
+*cd Bureau
+
+*Rename the binary file:
+sudo mv MmeMiamMiamMusicPlayer mme-miam-miam-music-player/usr/bin/miamplayer
+
+*Change chmod:
+sudo chmod 755 mme-miam-miam-music-player/usr/bin/miamplayer
+
+*Change chown:
+sudo chown root:root mme-miam-miam-music-player/usr/bin/miamplayer
+
+*Create package:
+dpkg-deb --build mme-miam-miam-music-player
+
+
