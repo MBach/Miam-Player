@@ -436,10 +436,6 @@
         <translation>Show alphabetical separators</translation>
     </message>
     <message>
-        <source>Repeat</source>
-        <translation>Repeat</translation>
-    </message>
-    <message>
         <source>Customize selected theme</source>
         <translation>Customize selected theme</translation>
     </message>
@@ -526,6 +522,26 @@
     <message>
         <source>No, keep the colors provided by my Operating System</source>
         <translation>No, keep the colors provided by my Operating System</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>Loop</translation>
+    </message>
+    <message>
+        <source>Playback Mode</source>
+        <translation>Playback Mode</translation>
+    </message>
+    <message>
+        <source>Sequential</source>
+        <translation>Sequential</translation>
+    </message>
+    <message>
+        <source>Current item once</source>
+        <translation>Current item once</translation>
+    </message>
+    <message>
+        <source>Current item in loop</source>
+        <translation>Current item in loop</translation>
     </message>
 </context>
 <context>
@@ -812,10 +828,6 @@
 <context>
     <name>QuickStart</name>
     <message>
-        <source>The following items were found in your default music folder:</source>
-        <translation>The following items were found in your default music folder:</translation>
-    </message>
-    <message>
         <source>Would you like to add them? (you can uncheck some folders)</source>
         <translation>Would you like to add them? (you can uncheck some folders)</translation>
     </message>
@@ -834,6 +846,10 @@
     <message>
         <source>%1 folders</source>
         <translation>%1 folders</translation>
+    </message>
+    <message>
+        <source>The following items were found in your default music folder</source>
+        <translation>The following items were found in your default music folder</translation>
     </message>
 </context>
 <context>

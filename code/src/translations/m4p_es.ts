@@ -435,10 +435,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Repeat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Customize selected theme</source>
         <translation type="unfinished"></translation>
     </message>
@@ -524,6 +520,26 @@
     </message>
     <message>
         <source>No, keep the colors provided by my Operating System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playback Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sequential</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item in loop</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -811,10 +827,6 @@
 <context>
     <name>QuickStart</name>
     <message>
-        <source>The following items were found in your default music folder:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Would you like to add them? (you can uncheck some folders)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -832,6 +844,10 @@
     </message>
     <message>
         <source>%1 folders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The following items were found in your default music folder</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

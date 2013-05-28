@@ -436,10 +436,6 @@
         <translation>Afficher les séparateurs alphabétiques</translation>
     </message>
     <message>
-        <source>Repeat</source>
-        <translation>Répéter</translation>
-    </message>
-    <message>
         <source>Customize selected theme</source>
         <translation>Modifier le thème sélectionné</translation>
     </message>
@@ -526,6 +522,26 @@
     <message>
         <source>No, keep the colors provided by my Operating System</source>
         <translation>Non, converver les couleurs utilisées par le système d&apos;exploitation</translation>
+    </message>
+    <message>
+        <source>Loop</source>
+        <translation>En boucle</translation>
+    </message>
+    <message>
+        <source>Playback Mode</source>
+        <translation>Mode de lecture</translation>
+    </message>
+    <message>
+        <source>Sequential</source>
+        <translation>Séquentiel</translation>
+    </message>
+    <message>
+        <source>Current item once</source>
+        <translation>Une piste, une seule fois</translation>
+    </message>
+    <message>
+        <source>Current item in loop</source>
+        <translation>Une piste, toujours en boucle</translation>
     </message>
 </context>
 <context>
@@ -813,10 +829,6 @@
 <context>
     <name>QuickStart</name>
     <message>
-        <source>The following items were found in your default music folder:</source>
-        <translation>Les dossiers suivants ont été trouvés dans votre bibliothèque musicale :</translation>
-    </message>
-    <message>
         <source>Would you like to add them? (you can uncheck some folders)</source>
         <translation>Souhaitez-vous les ajouter ? (vous pouvez en décocher)</translation>
     </message>
@@ -835,6 +847,10 @@
     <message>
         <source>%1 folders</source>
         <translation>%1 dossiers</translation>
+    </message>
+    <message>
+        <source>The following items were found in your default music folder</source>
+        <translation>Les dossiers suivants ont été trouvés dans votre bibliothèque musicale</translation>
     </message>
 </context>
 <context>
