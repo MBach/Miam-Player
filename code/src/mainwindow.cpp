@@ -64,8 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
-	/// FIXME
-	//this->setupActions();
+	// Load playlists at startup if any, otherwise just add an empty one
+	this->setupActions();
 	this->drawLibrary();
 
 	Settings *settings = Settings::getInstance();
@@ -75,9 +75,6 @@ void MainWindow::init()
 
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
-
-	// Load playlists at startup if any, otherwise just add an empty one
-	tabPlaylists->restorePlaylists();
 }
 
 /** Set up all actions and behaviour. */
@@ -141,9 +138,6 @@ void MainWindow::setupActions()
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, [=] () { tabPlaylists->skip(); });
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
-	connect(tabPlaylists, &TabPlaylist::playlistsRestored, [=]() {
-		qDebug() << "todo update playbackmode button with right icon";
-	});
 
 	// Sliders
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
@@ -164,6 +158,9 @@ void MainWindow::setupActions()
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
 
 	// Playback
+	// Warning: tabPlaylists->restorePlaylists() needs to be exactly at this position!
+	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+	tabPlaylists->restorePlaylists();
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::removeSelectedTracks);
 	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksUp);
 	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksDown);

@@ -100,7 +100,7 @@ signals:
 
 	void sendToTagEditor(const QList<QPersistentModelIndex> &);
 
-	void playlistsRestored();
+	void updatePlaybackModeButton();
 };
 
 #endif // TABPLAYLIST_H

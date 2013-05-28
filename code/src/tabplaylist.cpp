@@ -80,6 +80,7 @@ void TabPlaylist::restorePlaylists()
 				Playlist *p = this->addPlaylist();
 				this->setTabText(count(), playlists.at(++i).toString());
 				p->mediaPlaylist()->setPlaybackMode((QMediaPlaylist::PlaybackMode) playlists.at(++i).toInt());
+				qDebug() << p->mediaPlaylist()->playbackMode();
 
 				// For all tracks in one playlist
 				QList<QMediaContent> medias;
@@ -94,7 +95,7 @@ void TabPlaylist::restorePlaylists()
 				p->appendTracks(medias);
 				if (i == playlists.size() - 1) {
 					qDebug() << "fin";
-					emit playlistsRestored();
+					emit updatePlaybackModeButton();
 				}
 			}
 			// Error handling
@@ -255,6 +256,7 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 		addPlaylist();
 	} else {
 		//currentPlayList()->countSelectedItems();
+		emit updatePlaybackModeButton();
 	}
 }
 
