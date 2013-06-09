@@ -188,7 +188,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="timeLabel">
+           <widget class="TimeLabel" name="timeLabel">
             <property name="text">
              <string notr="true">--:--</string>
             </property>
@@ -650,6 +650,11 @@
    <extends>QWidget</extends>
    <header>quickstart.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TimeLabel</class>
+   <extends>QLabel</extends>
+   <header>timelabel.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -77,6 +77,8 @@ void MainWindow::init()
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 }
 
+#include <QDateTime>
+
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
@@ -143,6 +145,7 @@ void MainWindow::setupActions()
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
 		if (tabPlaylists->mediaPlayer()->duration() > 0) {
 			seekSlider->setValue(1000 * pos / tabPlaylists->mediaPlayer()->duration());
+			timeLabel->setTime(pos, tabPlaylists->mediaPlayer()->duration());
 		}
 	});
 	connect(seekSlider, &QSlider::sliderMoved, [=] (int pos) {
@@ -150,6 +153,9 @@ void MainWindow::setupActions()
 		tabPlaylists->mediaPlayer()->setPosition(pos * tabPlaylists->mediaPlayer()->duration() / 1000);
 		tabPlaylists->mediaPlayer()->blockSignals(false);
 	});
+
+	// Time label
+	//connect()
 
 	// Volume
 	connect(volumeSlider, &QSlider::valueChanged, tabPlaylists->mediaPlayer(), &QMediaPlayer::setVolume);

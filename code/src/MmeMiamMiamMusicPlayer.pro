@@ -59,7 +59,8 @@ SOURCES += \
     columnutils.cpp \
     quickstart.cpp \
     playbackmodewidget.cpp \
-    playbackmodewidgetfactory.cpp
+    playbackmodewidgetfactory.cpp \
+    timelabel.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -104,7 +105,8 @@ HEADERS += \
     columnutils.h \
     quickstart.h \
     playbackmodewidget.h \
-    playbackmodewidgetfactory.h
+    playbackmodewidgetfactory.h \
+    timelabel.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
