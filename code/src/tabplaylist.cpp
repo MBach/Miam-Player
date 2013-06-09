@@ -44,11 +44,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			_mediaPlayer->stop();
 		}
 	});
-	connect(_mediaPlayer, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(handleError(QMediaPlayer::Error)));
 	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
-
-	// Load playlists at startup if any, otherwise just add an empty one
-	//this->restorePlaylists();
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -80,7 +76,6 @@ void TabPlaylist::restorePlaylists()
 				Playlist *p = this->addPlaylist();
 				this->setTabText(count(), playlists.at(++i).toString());
 				p->mediaPlaylist()->setPlaybackMode((QMediaPlaylist::PlaybackMode) playlists.at(++i).toInt());
-				qDebug() << p->mediaPlaylist()->playbackMode();
 
 				// For all tracks in one playlist
 				QList<QMediaContent> medias;
@@ -94,9 +89,10 @@ void TabPlaylist::restorePlaylists()
 				}
 				p->appendTracks(medias);
 				if (i == playlists.size() - 1) {
-					qDebug() << "fin";
 					emit updatePlaybackModeButton();
 				}
+
+				p->highlightCurrentTrack();
 			}
 			// Error handling
 			if (!tracksNotFound.isEmpty()) {
@@ -203,30 +199,28 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 /** Seek backward in the current playing track for a small amount of time. */
 void TabPlaylist::seekBackward()
 {
-	/*if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
-		qint64 time = mediaObject->currentTime() - Settings::getInstance()->playbackSeekTime();
+
+	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
+		qint64 time = _mediaPlayer->position() - Settings::getInstance()->playbackSeekTime();
 		if (time < 0) {
-			mediaObject->seek(0);
+			_mediaPlayer->setPosition(1);
 		} else {
-			mediaObject->seek(time);
+			_mediaPlayer->setPosition(time);
 		}
-	}*/
-	qDebug() << "TabPlaylist::seekBackward()";
+	}
 }
 
 /** Seek forward in the current playing track for a small amount of time. */
 void TabPlaylist::seekForward()
 {
-	/*if (mediaObject->state() == PlayingState || mediaObject->state() == PausedState) {
-		qint64 time = mediaObject->currentTime() + Settings::getInstance()->playbackSeekTime();
-		if (time > mediaObject->totalTime()) {
-			skipForward();
+	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
+		qint64 time = _mediaPlayer->position() + Settings::getInstance()->playbackSeekTime();
+		if (time > _mediaPlayer->duration()) {
+			skip(true);
 		} else {
-			mediaObject->seek(time);
+			_mediaPlayer->setPosition(time);
 		}
-	}*/
-	//_mediaPlayer->seekableChanged();
-	qDebug() << "TabPlaylist::seekForward()";
+	}
 }
 
 /** Change the current track. */
@@ -316,9 +310,3 @@ void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
 		this->skip();
 	}
 }
-
-void TabPlaylist::handleError(QMediaPlayer::Error error)
-{
-	qDebug() << error;
-}
-

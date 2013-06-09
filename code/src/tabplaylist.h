@@ -88,8 +88,6 @@ private slots:
 
 	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
 
-	void handleError(QMediaPlayer::Error);
-
 signals:
 	void destroyed(int);
 
