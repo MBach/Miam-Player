@@ -11,20 +11,8 @@
 #include <QtDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(parent), track(-1)
+	QStandardItemModel(parent)
 {}
-
-/** Convert time in seconds into "mm:ss" format. */
-QString PlaylistModel::convertTrackLength(int length)
-{
-	QTime time = QTime(0, 0).addSecs(length);
-	// QTime is not designed to handle minutes > 60
-	if (time.hour() > 0) {
-		return QString::number(time.hour()*60 + time.minute()).append(":").append(time.toString("ss"));
-	} else {
-		return time.toString("m:ss");
-	}
-}
 
 /** Clear the content of playlist. */
 void PlaylistModel::clear()
@@ -32,26 +20,6 @@ void PlaylistModel::clear()
 	// Iterate on the table and always remove the first item
 	while (rowCount() > 0) {
 		removeRow(0);
-	}
-	track = -1;
-}
-
-void PlaylistModel::move(const QModelIndexList &rows, int destChild)
-{
-	QModelIndex srcParent = rows.first();
-	int srcFirst = rows.first().row();
-	int srcLast = rows.last().row();
-	QModelIndex parent = rows.first().parent();
-	QModelIndex root = invisibleRootItem()->index();
-	qDebug() << root << srcFirst << srcLast << destChild;
-	// Moving up and down conditions
-	if (destChild < srcFirst || destChild > srcLast) {
-
-		bool b = this->beginMoveRows(QModelIndex(), srcFirst, srcLast, QModelIndex(), destChild);
-		qDebug() << "success ?" << b;
-		if (b) {
-			this->endMoveRows();
-		}
 	}
 }
 
@@ -74,7 +42,7 @@ void PlaylistModel::createRow(const QMediaContent &track)
 		QStandardItem *trackItem = new QStandardItem(QString::number(f.tag()->track()));
 		QStandardItem *titleItem = new QStandardItem(title);
 		QStandardItem *albumItem = new QStandardItem(f.tag()->album().toCString(true));
-		QStandardItem *lengthItem = new QStandardItem(PlaylistModel::convertTrackLength(f.audioProperties()->length()));
+		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(f.audioProperties()->length()).toString("m:ss"));
 		QStandardItem *artistItem = new QStandardItem(f.tag()->artist().toCString(true));
 		QStandardItem *ratingItem = new QStandardItem("***");
 		QStandardItem *yearItem = new QStandardItem(QString::number(f.tag()->year()));
@@ -82,24 +50,45 @@ void PlaylistModel::createRow(const QMediaContent &track)
 		trackItem->setData(track.canonicalUrl());
 
 		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
-
-		int currentRow = rowCount();
-		this->insertRow(currentRow);
-
-		QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-		for (int i=0; i < widgetItems.length(); i++) {
-			QStandardItem *item = widgetItems.at(i);
-			item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
-			item->setFont(font);
-			this->setItem(currentRow, i, item);
-			/// FIXME ?
-			//QFontMetrics fm(font);
-			//setRowHeight(currentRow, fm.height());
-		}
+		this->insertRow(rowCount(), widgetItems);
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
 		ratingItem->setTextAlignment(Qt::AlignCenter);
 		yearItem->setTextAlignment(Qt::AlignCenter);
 	}
+}
+
+void PlaylistModel::internalMove(QModelIndex dest, QModelIndexList selectedIndexes)
+{
+	// Sort in reverse lexical order for correctly taking rows
+	qSort(selectedIndexes.begin(), selectedIndexes.end(), qGreater<QModelIndex>());
+
+	QList<QList<QStandardItem*> > removedRows;
+	foreach (QModelIndex selectedIndex, selectedIndexes) {
+		removedRows.append(this->takeRow(selectedIndex.row()));
+	}
+
+	// Dest equals -1 when rows are dropped at the bottom of the playlist
+	int insertPoint = dest.isValid() ? dest.row() : rowCount();
+	/*int insertPoint;
+	if (dest.isValid() && selectedIndexes.count() - dest.row() >= 0) {
+		insertPoint = selectedIndexes.count() - dest.row();
+	} else {
+		insertPoint = rowCount();
+	}*/
+	for (int i = 0; i < removedRows.count(); i++) {
+		this->insertRow(insertPoint, removedRows.at(i));
+	}
+}
+
+void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
+{
+	QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	for (int i=0; i < items.length(); i++) {
+		QStandardItem *item = items.at(i);
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
+		item->setFont(font);
+	}
+	QStandardItemModel::insertRow(row, items);
 }

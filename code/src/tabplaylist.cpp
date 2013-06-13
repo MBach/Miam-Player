@@ -91,8 +91,6 @@ void TabPlaylist::restorePlaylists()
 				if (i == playlists.size() - 1) {
 					emit updatePlaybackModeButton();
 				}
-
-				p->highlightCurrentTrack();
 			}
 			// Error handling
 			if (!tracksNotFound.isEmpty()) {

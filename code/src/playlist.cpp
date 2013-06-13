@@ -33,7 +33,7 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
 	this->setDragEnabled(true);
-	this->setDragDropMode(QAbstractItemView::DragDrop);
+	this->setDragDropMode(QAbstractItemView::InternalMove);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
 	// Select only one row, not cell by cell
@@ -68,8 +68,8 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
     connect(horizontalHeader(), &QWidget::customContextMenuRequested, this, &Playlist::showColumnsMenu);
     connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &Playlist::saveColumnsState);
 
-	//connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(countSelectedItems(QItemSelection,QItemSelection)));
-	//connect(playlistModel(), SIGNAL(layoutChanged()), this, SLOT(update()));
+	/// XXX
+	verticalHeader()->setDefaultSectionSize(50);
 }
 
 void Playlist::init()
@@ -163,10 +163,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		view->sendToPlaylist();
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
-			qDebug() << "internal move";
-			QModelIndexList list = this->selectionModel()->selectedRows();
-			int destChild = this->indexAt(event->pos()).row();
-			//this->playlistModel()->move(list, destChild);
+			_playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 		}
 	}
 }
