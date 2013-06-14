@@ -21,7 +21,8 @@ public:
 
 	void createRow(const QMediaContent &tracks);
 
-	void internalMove(QModelIndex dest, QModelIndexList selectedIndexes);
+	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
+	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);
 
 	void insertRow(int row, const QList<QStandardItem *> & items);
 

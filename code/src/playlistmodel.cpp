@@ -59,27 +59,28 @@ void PlaylistModel::createRow(const QMediaContent &track)
 	}
 }
 
-void PlaylistModel::internalMove(QModelIndex dest, QModelIndexList selectedIndexes)
+/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
+QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexList selectedIndexes)
 {
+	// After moving rows, selection is lost. We need to keep a track on previously selected indexes
+	QList<QStandardItem*> rowsToHiglight;
+
 	// Sort in reverse lexical order for correctly taking rows
 	qSort(selectedIndexes.begin(), selectedIndexes.end(), qGreater<QModelIndex>());
 
 	QList<QList<QStandardItem*> > removedRows;
 	foreach (QModelIndex selectedIndex, selectedIndexes) {
-		removedRows.append(this->takeRow(selectedIndex.row()));
+		QList<QStandardItem*> row = this->takeRow(selectedIndex.row());
+		rowsToHiglight << row.at(0);
+		removedRows.append(row);
 	}
 
 	// Dest equals -1 when rows are dropped at the bottom of the playlist
 	int insertPoint = dest.isValid() ? dest.row() : rowCount();
-	/*int insertPoint;
-	if (dest.isValid() && selectedIndexes.count() - dest.row() >= 0) {
-		insertPoint = selectedIndexes.count() - dest.row();
-	} else {
-		insertPoint = rowCount();
-	}*/
 	for (int i = 0; i < removedRows.count(); i++) {
 		this->insertRow(insertPoint, removedRows.at(i));
 	}
+	return rowsToHiglight;
 }
 
 void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)

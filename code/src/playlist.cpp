@@ -69,7 +69,7 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
     connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &Playlist::saveColumnsState);
 
 	/// XXX
-	verticalHeader()->setDefaultSectionSize(50);
+	//verticalHeader()->setDefaultSectionSize(50);
 }
 
 void Playlist::init()
@@ -163,7 +163,14 @@ void Playlist::dropEvent(QDropEvent *event)
 		view->sendToPlaylist();
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
-			_playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
+			QModelIndexList selectedIndexes = selectionModel()->selectedRows();
+			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectedIndexes);
+			foreach (QStandardItem *item, rowsToHighlight) {
+				for (int c = 0; c < _playlistModel->columnCount(); c++) {
+					QModelIndex index = _playlistModel->index(item->row(), c);
+					selectionModel()->select(index, QItemSelectionModel::Select);
+				}
+			}
 		}
 	}
 }
