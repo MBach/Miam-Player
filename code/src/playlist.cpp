@@ -67,8 +67,8 @@ Playlist::Playlist(QWidget *parent) :
     connect(horizontalHeader(), &QWidget::customContextMenuRequested, this, &Playlist::showColumnsMenu);
     connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &Playlist::saveColumnsState);
 
-	/// XXX
-	//verticalHeader()->setDefaultSectionSize(50);
+	// Set row height
+	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
 }
 
 void Playlist::init()
@@ -160,6 +160,7 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 	_dropDownIndex = NULL;
 }
 
+/** Redefined to be able to move tracks between playlists or internally. */
 void Playlist::dropEvent(QDropEvent *event)
 {
 	QObject *source = event->source();
@@ -321,8 +322,6 @@ void Playlist::highlightCurrentTrack()
 				itemFont.setBold(false);
 				itemFont.setItalic(false);
 				it->setFont(itemFont);
-				QFontMetrics fm(itemFont);
-				this->setRowHeight(i, fm.height());
 			}
 		}
 		for (int j=0; j < _playlistModel->columnCount(); j++) {

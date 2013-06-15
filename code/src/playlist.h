@@ -42,7 +42,10 @@ protected:
 
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dragMoveEvent(QDragMoveEvent *event);
+
+	/** Redefined to be able to move tracks between playlists or internally. */
 	void dropEvent(QDropEvent *event);
+
 	void mouseMoveEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 
