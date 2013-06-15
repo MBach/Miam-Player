@@ -16,15 +16,16 @@ private:
 	QMenu *columns;
 	QMenu *trackProperties;
 
-	bool _selected;
-
+	/** Model to store basic fields on a track. Mostly used to create or move rows. */
 	PlaylistModel *_playlistModel;
 
+	/** Each instance of Playlist has its own QMediaPlaylist*/
 	QMediaPlaylist *qMediaPlaylist;
-	QMediaPlayer *_mediaPlayer;
+
+	QModelIndex *_dropDownIndex;
 
 public:
-	Playlist(QWidget *parent, QMediaPlayer *mediaplayer);
+	Playlist(QWidget *parent);
 
 	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
 
@@ -45,6 +46,8 @@ protected:
 	void mouseMoveEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 
+	/** Redefined to display a thin line to help user for dropping tracks. */
+	void paintEvent(QPaintEvent *e);
 	void resizeEvent(QResizeEvent *event);
 
 public slots:
@@ -63,8 +66,6 @@ public slots:
 
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 	void highlightCurrentTrack();
-
-	void play(const QModelIndex &index);
 
 private slots:
 

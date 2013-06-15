@@ -88,6 +88,8 @@ private slots:
 
 	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
 
+	void play(const QModelIndex &index);
+
 signals:
 	void destroyed(int);
 

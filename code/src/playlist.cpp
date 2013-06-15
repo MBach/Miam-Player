@@ -17,8 +17,8 @@
 
 #include <QtDebug>
 
-Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
-	QTableView(parent), _mediaPlayer(mediaPlayer)
+Playlist::Playlist(QWidget *parent) :
+	QTableView(parent), _dropDownIndex(NULL)
 {
 	qMediaPlaylist = new QMediaPlaylist(this);
 	_playlistModel = new PlaylistModel(this);
@@ -32,11 +32,12 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
+	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
-	this->setDragDropMode(QAbstractItemView::InternalMove);
+	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
-	// Select only one row, not cell by cell
+	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	this->setShowGrid(false);
@@ -54,8 +55,6 @@ Playlist::Playlist(QWidget *parent, QMediaPlayer *mediaPlayer) :
 	trackProperties = new QMenu(this);
 	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
     connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
-
-	connect(this, &QTableView::doubleClicked, this, &Playlist::play);
 
 	// Context menu on header of columns
 	columns = new QMenu(this);
@@ -142,7 +141,7 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 
 void Playlist::dragEnterEvent(QDragEnterEvent *event)
 {
-	// If the source of the drag and drop is another application
+	// If the source of the drag and drop is another application, do nothing?
 	if (event->source() == NULL) {
 		event->ignore();
 	} else {
@@ -153,6 +152,12 @@ void Playlist::dragEnterEvent(QDragEnterEvent *event)
 void Playlist::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
+	_dropDownIndex = new QModelIndex();
+	// Kind of hack to keep track of position?
+	*_dropDownIndex = indexAt(event->pos());
+	repaint();
+	delete _dropDownIndex;
+	_dropDownIndex = NULL;
 }
 
 void Playlist::dropEvent(QDropEvent *event)
@@ -163,8 +168,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		view->sendToPlaylist();
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
-			QModelIndexList selectedIndexes = selectionModel()->selectedRows();
-			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectedIndexes);
+			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			foreach (QStandardItem *item, rowsToHighlight) {
 				for (int c = 0; c < _playlistModel->columnCount(); c++) {
 					QModelIndex index = _playlistModel->index(item->row(), c);
@@ -177,7 +181,8 @@ void Playlist::dropEvent(QDropEvent *event)
 
 void Playlist::mouseMoveEvent(QMouseEvent *event)
 {
-	if (!_selected && state() == NoState) {
+	/// XXX ?
+	if (state() == NoState) {
 		this->setState(DragSelectingState);
 	}
 	QTableView::mouseMoveEvent(event);
@@ -188,6 +193,22 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	QModelIndex index = indexAt(event->pos());
 	//_selected = selectionModel()->isSelected(index);
 	QTableView::mousePressEvent(event);
+}
+
+/** Redefined to display a thin line to help user for dropping tracks. */
+void Playlist::paintEvent(QPaintEvent *event)
+{
+	QTableView::paintEvent(event);
+	if (_dropDownIndex) {
+		// Where to draw the indicator line
+		int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
+		int height = this->rowHeight(0);
+		QPainter painter(viewport());
+		/// TODO computes color from user define settings
+		painter.setPen(Qt::black);
+		painter.drawLine(viewport()->rect().left(), rowDest * height,
+						 viewport()->rect().right(), rowDest * height);
+	}
 }
 
 void Playlist::resizeEvent(QResizeEvent *)
@@ -314,21 +335,5 @@ void Playlist::highlightCurrentTrack()
 				it->setFont(itemFont);
 			}
 		}
-	}
-}
-
-void Playlist::play(const QModelIndex &index)
-{
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
-		_mediaPlayer->blockSignals(true);
-		_mediaPlayer->stop();
-		_mediaPlayer->setPlaylist(qMediaPlaylist);
-		qMediaPlaylist->setCurrentIndex(index.row());
-		_mediaPlayer->play();
-		_mediaPlayer->blockSignals(false);
-	} else {
-		_mediaPlayer->setPlaylist(qMediaPlaylist);
-		qMediaPlaylist->setCurrentIndex(index.row());
-		_mediaPlayer->play();
 	}
 }

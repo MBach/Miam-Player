@@ -110,7 +110,7 @@ Playlist* TabPlaylist::addPlaylist()
 	QString newPlaylistName = tr("Playlist ").append(QString::number(count()));
 
 	// Then append a new empty playlist to the others
-	Playlist *p = new Playlist(this, _mediaPlayer);
+	Playlist *p = new Playlist(this);
 	p->init();
 	int i = insertTab(count(), p, newPlaylistName);
 
@@ -122,6 +122,8 @@ Playlist* TabPlaylist::addPlaylist()
 	}
 	// Forward this signal to the MainWindow instance
 	connect(p, &Playlist::selectedTracks, this, &TabPlaylist::aboutToChangeMenuLabels);
+
+	connect(p, &QTableView::doubleClicked, this, &TabPlaylist::play);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
@@ -193,6 +195,23 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount()); // ok
 	}
 }
+
+void TabPlaylist::play(const QModelIndex &index)
+{
+	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+		_mediaPlayer->blockSignals(true);
+		_mediaPlayer->stop();
+		_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
+		currentPlayList()->mediaPlaylist()->setCurrentIndex(index.row());
+		_mediaPlayer->play();
+		_mediaPlayer->blockSignals(false);
+	} else {
+		_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
+		currentPlayList()->mediaPlaylist()->setCurrentIndex(index.row());
+		_mediaPlayer->play();
+	}
+}
+
 
 /** Seek backward in the current playing track for a small amount of time. */
 void TabPlaylist::seekBackward()
