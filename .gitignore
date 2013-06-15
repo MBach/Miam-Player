@@ -6,3 +6,5 @@ build/
 *.pro.user*
 *.wixobj
 *.wixpdb
+
+packaging/windows/*.msi
