@@ -1,3 +1,3 @@
 @echo off
-candle -ext WixUtilExtension MmeMiamMiamMusicPlayer_0.4.4.wxs
-light -ext WixUtilExtension -ext WixUIExtension MmeMiamMiamMusicPlayer_0.4.4.wixobj
+candle -ext WixUtilExtension MmeMiamMiamMusicPlayer.wxs
+light -ext WixUtilExtension -ext WixUIExtension MmeMiamMiamMusicPlayer.wixobj
