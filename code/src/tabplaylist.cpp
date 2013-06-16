@@ -259,6 +259,16 @@ void TabPlaylist::skip(bool forward)
 	}
 }
 
+void TabPlaylist::updateRowHeight()
+{
+	Settings *settings = Settings::getInstance();
+	for (int i = 0; i < count() - 1; i++) {
+		Playlist *p = playlist(i);
+		p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
+		p->highlightCurrentTrack();
+	}
+}
+
 /** When the user is clicking on the (+) button to add a new playlist. */
 void TabPlaylist::checkAddPlaylistButton(int i)
 {

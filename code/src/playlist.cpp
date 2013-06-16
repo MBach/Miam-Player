@@ -60,9 +60,6 @@ Playlist::Playlist(QWidget *parent) :
 	columns = new QMenu(this);
 	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
 
-	// Link this playlist with the Settings instance to change fonts at runtime
-    connect(Settings::getInstance(), &Settings::currentFontChanged, this, &Playlist::highlightCurrentTrack);
-
 	// Hide the selected column in context menu
     connect(horizontalHeader(), &QWidget::customContextMenuRequested, this, &Playlist::showColumnsMenu);
     connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &Playlist::saveColumnsState);

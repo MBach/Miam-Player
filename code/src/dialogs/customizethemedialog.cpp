@@ -98,12 +98,22 @@ void CustomizeThemeDialog::setupActions()
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
 	// Fonts
-    connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, this, &CustomizeThemeDialog::updateFontFamily);
-    connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, this, &CustomizeThemeDialog::updateFontFamily);
-    connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, this, &CustomizeThemeDialog::updateFontFamily);
-	connect(spinBoxPlaylist, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
-	connect(spinBoxLibrary, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
-	connect(spinBoxMenus, SIGNAL(valueChanged(int)), this, SLOT(updateFontSize(int)));
+	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+		settings->setFont(Settings::PLAYLIST, font);
+		mainWindow->tabPlaylists->updateRowHeight();
+	});
+	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged,  [=](const QFont &font) {
+		settings->setFont(Settings::LIBRARY, font);
+		mainWindow->library->model()->layoutChanged();
+	});
+	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		settings->setFontPointSize(Settings::PLAYLIST, i);
+		mainWindow->tabPlaylists->updateRowHeight();
+	});
+	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		settings->setFontPointSize(Settings::LIBRARY, i);
+		mainWindow->library->model()->layoutChanged();
+	});
 
 	// Colors
 	connect(enableCustomColorsRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleCustomColors(bool)));
@@ -116,8 +126,15 @@ void CustomizeThemeDialog::setupActions()
 	});
 
 	// Library
-	connect(checkBoxAlphabeticalSeparators, SIGNAL(toggled(bool)), this, SLOT(displayAlphabeticalSeparators(bool)));
-	connect(checkBoxDisplayCovers, SIGNAL(toggled(bool)), this, SLOT(displayCovers(bool)));
+	connect(checkBoxAlphabeticalSeparators, &QCheckBox::toggled, [=](bool b) {
+		settings->setToggleSeparators(b);
+		mainWindow->library->beginPopulateTree();
+	});
+	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
+		settings->setCovers(b);
+		mainWindow->library->beginPopulateTree();
+	});
+
     connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));
 }
 
@@ -152,11 +169,6 @@ void CustomizeThemeDialog::showColorDialog()
 		}
 		this->hide();
 	}
-}
-
-void CustomizeThemeDialog::changeColor(QColor selectedColor)
-{
-	styleSheetUpdater->replace(targetedColor, selectedColor);
 }
 
 void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
@@ -293,43 +305,5 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 	settings->setThemeName(newTheme);
 	foreach(MediaButton *m, mainWindow->mediaButtons) {
 		m->setIconFromTheme(newTheme);
-	}
-}
-
-/** Displays covers or not in the library. */
-void CustomizeThemeDialog::displayCovers(bool b)
-{
-	Settings::getInstance()->setCovers(b);
-	mainWindow->library->beginPopulateTree();
-}
-
-/** Displays alphabecical separators or not in the library. */
-void CustomizeThemeDialog::displayAlphabeticalSeparators(bool b)
-{
-	Settings::getInstance()->setToggleSeparators(b);
-	mainWindow->library->beginPopulateTree();
-}
-
-/** Updates the font family of a specific component. */
-void CustomizeThemeDialog::updateFontFamily(const QFont &font) {
-	Settings *settings = Settings::getInstance();
-	if (sender()->objectName().contains("Playlist")) {
-		settings->setFont(Settings::PLAYLIST, font);
-	} else if (sender()->objectName().contains("Library")) {
-		settings->setFont(Settings::LIBRARY, font);
-	} else if (sender()->objectName().contains("Menus")) {
-		settings->setFont(Settings::MENUS, font);
-	}
-}
-
-/** Updates the font size of a specific component. */
-void CustomizeThemeDialog::updateFontSize(int i) {
-	Settings *settings = Settings::getInstance();
-	if (sender()->objectName().contains("Playlist")) {
-		settings->setFontPointSize(Settings::PLAYLIST, i);
-	} else if (sender()->objectName().contains("Library")) {
-		settings->setFontPointSize(Settings::LIBRARY, i);
-	} else if (sender()->objectName().contains("Menus")) {
-		settings->setFontPointSize(Settings::MENUS, i);
 	}
 }

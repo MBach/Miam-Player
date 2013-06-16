@@ -81,10 +81,6 @@ public:
 	/** Returns volume from the slider. */
 	inline int volume() const { return value("volume").toInt(); }
 
-	//bool repeatPlayBack() const { return value("repeatPlayBack").toBool(); }
-
-	//bool shufflePlayBack() const { return value("shufflePlayBack").toBool(); }
-
 	void setShortcut(const QString &objectName, int keySequence);
 
 	int shortcut(const QString &objectName) const;
@@ -111,9 +107,6 @@ public:
 
 	QString dragAndDropBehaviour() const { return value("dragAndDropBehaviour").toString(); }
 
-signals:
-	void currentFontChanged();
-
 public slots:
 	/** Sets a new theme. */
 	inline void setThemeName(const QString &theme) { setValue("theme", theme.toLower()); }
@@ -129,15 +122,11 @@ public slots:
 	inline void setDelegates(const bool &value) { setValue("delegates", value); }
 
 	/** Sets the font of the application. */
-	inline void setFont(const FontFamily &fontFamily, const QFont &font) {
-		setValue(QString(fontFamily), font.family());
-		emit currentFontChanged();
-	}
+	inline void setFont(const FontFamily &fontFamily, const QFont &font) { setValue(QString(fontFamily), font.family()); }
 
 	inline void setFontPointSize(const FontFamily &fontFamily, int i) {
 		fontPointSizeMap.insert(QString(fontFamily), i);
 		setValue("fontPointSizeMap", fontPointSizeMap);
-		emit currentFontChanged();
 	}
 
 	inline void setToggleSeparators(bool b) { setValue("alphabeticalSeparators", b); }
@@ -153,10 +142,6 @@ public slots:
 	/** Sets volume from the slider. */
 	inline void setVolume(int v) { setValue("volume", v); }
 
-	//inline void setRepeatPlayBack(bool b) { setValue("repeatPlayBack", b); }
-
-	//inline void setShufflePlayBack(bool b) { setValue("shufflePlayBack", b); }
-
 	/// PlayBack options
 	inline void setPlaybackSeekTime(int t) { setValue("playbackSeekTime", t*1000); }
 	inline void setPlaybackKeepPlaylists(bool b) { setValue("playbackKeepPlaylists", b); }
@@ -168,10 +153,9 @@ public slots:
 	/// StyleSheets
 	void setCustomStyleSheet(QWidget *w);
 
-	void setCopyTracksFromPlaylist(bool b) { setValue("copyTracksFromPlaylist", b); }
+	inline void setCopyTracksFromPlaylist(bool b) { setValue("copyTracksFromPlaylist", b); }
 
-	void setDragAndDropBehaviour() { setValue("dragAndDropBehaviour", sender()->objectName()); }
-
+	inline void setDragAndDropBehaviour() { setValue("dragAndDropBehaviour", sender()->objectName()); }
 };
 
 #endif // SETTINGS_H

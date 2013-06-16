@@ -47,25 +47,11 @@ private slots:
 	 * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 	void showColorDialog();
 
-	void changeColor(QColor selectedColor);
-
 	void toggleAlternativeBackgroundColor(bool);
 	void toggleCustomColors(bool);
 
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);
-
-	/** Displays covers or not in the library. */
-	void displayCovers(bool);
-
-	/** Displays alphabecical separators or not in the library. */
-	void displayAlphabeticalSeparators(bool);
-
-	/** Updates the font family of a specific component. */
-	void updateFontFamily(const QFont&);
-
-	/** Updates the font size of a specific component. */
-	void updateFontSize(int);
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

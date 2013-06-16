@@ -76,8 +76,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
 	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
 
-	connect(settings, SIGNAL(currentFontChanged()), libraryModel, SIGNAL(layoutChanged()));
-
 	// When the scan is complete, save the model in the filesystem
 	connect(musicSearchEngine, SIGNAL(endSearch()), libraryModel, SLOT(saveToFile()));
 

@@ -42,10 +42,6 @@ public:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
 
-private:
-	/** Restore playlists at startup. */
-	//void restorePlaylists();
-
 public slots:
 	void restorePlaylists();
 
@@ -76,6 +72,8 @@ public slots:
 
 	/** Change the current track. */
 	void skip(bool forward = true);
+
+	void updateRowHeight();
 
 private slots:
 	/** When the user is clicking on the (+) button to add a new playlist. */
