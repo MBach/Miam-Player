@@ -5,6 +5,8 @@
 #include <QScrollBar>
 #include <QStandardPaths>
 
+#include <QGraphicsOpacityEffect>
+
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), targetedColor(NULL)
 {
@@ -15,6 +17,9 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	styleSheetUpdater = new StyleSheetUpdater(this);
 	buttonsListBox->setVisible(false);
 	//verticalLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+	spinBoxLibrary->setDialog(this);
+	spinBoxPlaylist->setDialog(this);
 
 	this->setupActions();
 	this->associatePaintableElements();

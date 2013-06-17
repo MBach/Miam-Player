@@ -60,7 +60,8 @@ SOURCES += \
     quickstart.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
-    timelabel.cpp
+    timelabel.cpp \
+    dialogs/transparentspinbox.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -106,7 +107,8 @@ HEADERS += \
     quickstart.h \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \
-    timelabel.h
+    timelabel.h \
+    dialogs/transparentspinbox.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

@@ -198,7 +198,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-295</y>
+               <y>0</y>
                <width>421</width>
                <height>542</height>
               </rect>
@@ -995,6 +995,9 @@
           </item>
           <item row="4" column="1">
            <widget class="QFontComboBox" name="fontComboBoxMenus">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="currentFont">
              <font>
               <family>Arial</family>
@@ -1003,7 +1006,7 @@
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="QSpinBox" name="spinBoxPlaylist">
+           <widget class="TransparentSpinBox" name="spinBoxPlaylist">
             <property name="minimum">
              <number>4</number>
             </property>
@@ -1037,6 +1040,9 @@
           </item>
           <item row="4" column="2">
            <widget class="QSpinBox" name="spinBoxMenus">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <number>4</number>
             </property>
@@ -1066,7 +1072,7 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QSpinBox" name="spinBoxLibrary">
+           <widget class="TransparentSpinBox" name="spinBoxLibrary">
             <property name="minimum">
              <number>4</number>
             </property>
@@ -1597,6 +1603,11 @@
    <extends>QWidget</extends>
    <header>dialogs/reflector.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TransparentSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>dialogs/transparentspinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources>
