@@ -8,18 +8,33 @@
 #include <QGraphicsOpacityEffect>
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
-	QDialog(parent), targetedColor(NULL)
+	QDialog(parent), _targetedColor(NULL)
 {
 	setupUi(this);
+	this->setWindowFlags(Qt::Tool);
+	this->setModal(true);
 
 	mainWindow = qobject_cast<MainWindow *>(parent);
-	colorDialog = new ColorDialog(this);
-	styleSheetUpdater = new StyleSheetUpdater(this);
+	_colorDialog = new ColorDialog(this);
+	_styleSheetUpdater = new StyleSheetUpdater(this);
 	buttonsListBox->setVisible(false);
 	//verticalLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-	spinBoxLibrary->setDialog(this);
-	spinBoxPlaylist->setDialog(this);
+	//spinBoxLibrary->setDialog(this);
+	//spinBoxPlaylist->setDialog(this);
+
+	spinBoxLibrary->installEventFilter(this);
+	spinBoxPlaylist->installEventFilter(this);
+	fontComboBoxLibrary->installEventFilter(this);
+	fontComboBoxPlaylist->installEventFilter(this);
+
+	// Animates this Dialog
+	_timer = new QTimer(this);
+	_timer->setInterval(3000);
+	_timer->setSingleShot(true);
+	_animation = new QPropertyAnimation(this, "windowOpacity");
+	_animation->setDuration(200);
+	_animation->setTargetObject(this);
 
 	this->setupActions();
 	this->associatePaintableElements();
@@ -29,10 +44,10 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 void CustomizeThemeDialog::associatePaintableElements()
 {
 	// There are 4 kinds of paintables elements
-	bgPrimaryColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::BACKGROUND);
-	globalBackgroundColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::GLOBAL_BACKGROUND);
-	itemColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::TEXT);
-	selectedItemColorWidget->setStyleSheetUpdater(styleSheetUpdater, StyleSheetUpdater::HOVER);
+	bgPrimaryColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::BACKGROUND);
+	globalBackgroundColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::GLOBAL_BACKGROUND);
+	itemColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::TEXT);
+	selectedItemColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::HOVER);
 
 	// Associate instances of Classes to their "preview pane" to dynamically change colors
 	/// FIXME: should be class for Playlist because there are some problems when adding/removing playlists during color change
@@ -102,23 +117,53 @@ void CustomizeThemeDialog::setupActions()
 
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
-	// Fonts
+	// Fonts and fonts size
 	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+		if (this->isVisible()) {
+			if (!_timer->isActive()) {
+				this->animate(1.0, 0.5);
+			}
+			_timer->start();
+		}
+
 		settings->setFont(Settings::PLAYLIST, font);
 		mainWindow->tabPlaylists->updateRowHeight();
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged,  [=](const QFont &font) {
+		if (this->isVisible()) {
+			if (!_timer->isActive()) {
+				this->animate(1.0, 0.5);
+			}
+			_timer->start();
+		}
+
 		settings->setFont(Settings::LIBRARY, font);
 		mainWindow->library->model()->layoutChanged();
 	});
 	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		if (this->isVisible()) {
+			if (!_timer->isActive()) {
+				this->animate(1.0, 0.5);
+			}
+			_timer->start();
+		}
+
 		settings->setFontPointSize(Settings::PLAYLIST, i);
 		mainWindow->tabPlaylists->updateRowHeight();
 	});
 	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		if (this->isVisible()) {
+			if (!_timer->isActive()) {
+				this->animate(1.0, 0.5);
+			}
+			_timer->start();
+		}
+
 		settings->setFontPointSize(Settings::LIBRARY, i);
 		mainWindow->library->model()->layoutChanged();
 	});
+	connect(_timer, &QTimer::timeout, [=]() { this->animate(0.5, 1.0); });
+
 
 	// Colors
 	connect(enableCustomColorsRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleCustomColors(bool)));
@@ -126,8 +171,8 @@ void CustomizeThemeDialog::setupActions()
 	foreach (QToolButton *b, findChildren<QToolButton*>()) {
 		connect(b, SIGNAL(clicked()), this, SLOT(showColorDialog()));
 	}
-	connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
-		styleSheetUpdater->replace(targetedColor, selectedColor);
+	connect(_colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
+		_styleSheetUpdater->replace(_targetedColor, selectedColor);
 	});
 
 	// Library
@@ -154,23 +199,41 @@ void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 	QDialog::closeEvent(e);
 }
 
+bool CustomizeThemeDialog::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::FocusOut) {
+		if (_timer->isActive()) {
+			_timer->stop();
+			this->animate(0.5, 1.0);
+		}
+	}
+	return QDialog::eventFilter(obj, event);
+}
+
+void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)
+{
+	_animation->setStartValue(startValue);
+	_animation->setEndValue(stopValue);
+	_animation->start();
+}
+
 /** Shows a color dialog and hides this dialog temporarily.
  * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 void CustomizeThemeDialog::showColorDialog()
 {
-	targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
-	if (targetedColor) {
+	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
+	if (_targetedColor) {
 		// Very important: gets at runtime the elements that will be repaint by one
-		colorDialog->setPaintableElements(targetedColor);
-		colorDialog->setCurrentColor(targetedColor->color());
+		_colorDialog->setPaintableElements(_targetedColor);
+		_colorDialog->setCurrentColor(_targetedColor->color());
 
 		// Moves the color dialog right to the mainWindow
-		if (parentWidget()->width() + 20 + colorDialog->width() < qApp->desktop()->availableGeometry().width()) {
+		if (parentWidget()->width() + 20 + _colorDialog->width() < qApp->desktop()->availableGeometry().width()) {
 			int desktopWidth = qApp->desktop()->availableGeometry().width();
-			int w = (desktopWidth - (parentWidget()->width() + 20 + colorDialog->width())) / 2;
+			int w = (desktopWidth - (parentWidget()->width() + 20 + _colorDialog->width())) / 2;
 			parentWidget()->move(QPoint(w, parentWidget()->pos().y()));
-			int h = parentWidget()->y() + parentWidget()->height() / 2 - colorDialog->height() / 2;
-			colorDialog->move(parentWidget()->x() + 40 + parentWidget()->width(), h);
+			int h = parentWidget()->y() + parentWidget()->height() / 2 - _colorDialog->height() / 2;
+			_colorDialog->move(parentWidget()->x() + 40 + parentWidget()->width(), h);
 		}
 		this->hide();
 	}

@@ -1006,7 +1006,7 @@
            </widget>
           </item>
           <item row="2" column="2">
-           <widget class="TransparentSpinBox" name="spinBoxPlaylist">
+           <widget class="QSpinBox" name="spinBoxPlaylist">
             <property name="minimum">
              <number>4</number>
             </property>
@@ -1072,7 +1072,7 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="TransparentSpinBox" name="spinBoxLibrary">
+           <widget class="QSpinBox" name="spinBoxLibrary">
             <property name="minimum">
              <number>4</number>
             </property>
@@ -1603,11 +1603,6 @@
    <extends>QWidget</extends>
    <header>dialogs/reflector.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>TransparentSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>dialogs/transparentspinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

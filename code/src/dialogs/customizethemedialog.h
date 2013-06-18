@@ -9,6 +9,9 @@
 #include "stylesheetupdater.h"
 #include "reflector.h"
 
+#include <QPropertyAnimation>
+#include <QTimer>
+
 class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 {
 	Q_OBJECT
@@ -16,11 +19,17 @@ class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 private:
 	MainWindow *mainWindow;
 
-	ColorDialog *colorDialog;
+	ColorDialog *_colorDialog;
 
-	Reflector *targetedColor;
+	Reflector *_targetedColor;
 
-	StyleSheetUpdater *styleSheetUpdater;
+	StyleSheetUpdater *_styleSheetUpdater;
+
+	/** Used to make this dialog transparent to have a nice fading effect. */
+	QPropertyAnimation *_animation;
+
+	/** Duration of the fading effect. */
+	QTimer *_timer;
 
 public:
 	CustomizeThemeDialog(QWidget *parent);
@@ -32,9 +41,13 @@ private:
 	/** Load theme at startup. */
 	void loadTheme();
 
+	void animate(qreal startValue, qreal stopValue);
+
 protected:
 	/** Automatically centers the parent window when closing this dialog. */
 	void closeEvent(QCloseEvent *e);
+
+	bool eventFilter(QObject *obj, QEvent *event);
 
 public slots:
 	/** Redefined to initialize favorites from settings. */

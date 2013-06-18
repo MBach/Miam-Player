@@ -90,8 +90,14 @@ void MainWindow::setupActions()
     connect(actionExit, &QAction::triggered, &QApplication::quit);
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
-	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &QDialog::open);
-	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &QDialog::open);
+	connect(actionShowCustomize, &QAction::triggered, [=] {
+		customizeThemeDialog->show();
+		customizeThemeDialog->activateWindow();
+	});
+	connect(actionShowOptions, &QAction::triggered, [=] {
+		customizeOptionsDialog->show();
+		customizeOptionsDialog->activateWindow();
+	});
 	connect(actionAboutM4P, &QAction::triggered, this, &MainWindow::aboutM4P);
     connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);

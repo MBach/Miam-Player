@@ -17,6 +17,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDialog(parent), musicLocationsChanged(false)
 {
 	setupUi(this);
+	this->setWindowFlags(Qt::Tool);
+	this->setModal(true);
+
 	Settings *settings = Settings::getInstance();
 
 	// First panel: library
