@@ -7,6 +7,8 @@
 
 #include <QGraphicsOpacityEffect>
 
+#include "settings.h"
+
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), _targetedColor(NULL)
 {
@@ -117,53 +119,41 @@ void CustomizeThemeDialog::setupActions()
 
 	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
 
-	// Fonts and fonts size
-	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+	// Fonts
+	foreach (QFontComboBox *fontComboBox, groupBoxFonts->findChildren<QFontComboBox*>()) {
+		connect(fontComboBox, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+			if (fontComboBox->objectName().endsWith("Playlist")) {
+				settings->setFont(Settings::PLAYLIST, font);
+			} else {
+				settings->setFont(Settings::LIBRARY, font);
+			}
+			mainWindow->library->model()->layoutChanged();
+			emit aboutToFade();
+		});
+	}
+	// And fonts size
+	foreach (QSpinBox *spinBox, this->findChildren<QSpinBox*>()) {
+		connect(spinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+			if (spinBox->objectName().endsWith("Playlist")) {
+				settings->setFontPointSize(Settings::PLAYLIST, i);
+			} else {
+				settings->setFontPointSize(Settings::LIBRARY, i);
+			}
+			mainWindow->tabPlaylists->updateRowHeight();
+			emit aboutToFade();
+		});
+	}
+	connect(this, &CustomizeThemeDialog::aboutToFade, [=]() {
 		if (this->isVisible()) {
 			if (!_timer->isActive()) {
 				this->animate(1.0, 0.5);
 			}
 			_timer->start();
 		}
-
-		settings->setFont(Settings::PLAYLIST, font);
-		mainWindow->tabPlaylists->updateRowHeight();
 	});
-	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged,  [=](const QFont &font) {
-		if (this->isVisible()) {
-			if (!_timer->isActive()) {
-				this->animate(1.0, 0.5);
-			}
-			_timer->start();
-		}
 
-		settings->setFont(Settings::LIBRARY, font);
-		mainWindow->library->model()->layoutChanged();
-	});
-	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		if (this->isVisible()) {
-			if (!_timer->isActive()) {
-				this->animate(1.0, 0.5);
-			}
-			_timer->start();
-		}
-
-		settings->setFontPointSize(Settings::PLAYLIST, i);
-		mainWindow->tabPlaylists->updateRowHeight();
-	});
-	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		if (this->isVisible()) {
-			if (!_timer->isActive()) {
-				this->animate(1.0, 0.5);
-			}
-			_timer->start();
-		}
-
-		settings->setFontPointSize(Settings::LIBRARY, i);
-		mainWindow->library->model()->layoutChanged();
-	});
+	// Timer
 	connect(_timer, &QTimer::timeout, [=]() { this->animate(0.5, 1.0); });
-
 
 	// Colors
 	connect(enableCustomColorsRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleCustomColors(bool)));
