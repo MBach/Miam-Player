@@ -21,6 +21,9 @@ private:
 	/** Store the size of each font used in the app. */
 	QMap<QString, QVariant> fontPointSizeMap;
 
+	/** Store the family of each font used in the app. */
+	QMap<QString, QVariant> fontFamilyMap;
+
 	QList<QVariant> locations;
 
 	QMap<QString, QByteArray> stylesheets;
@@ -121,9 +124,13 @@ public slots:
 	/** Sets if stars are visible and active. */
 	inline void setDelegates(const bool &value) { setValue("delegates", value); }
 
-	/** Sets the font of the application. */
-	inline void setFont(const FontFamily &fontFamily, const QFont &font) { setValue(QString(fontFamily), font.family()); }
+	/** Sets the font of a part of the application. */
+	inline void setFont(const FontFamily &fontFamily, const QFont &font) {
+		fontFamilyMap.insert(QString(fontFamily), font.family());
+		setValue("fontFamilyMap", fontFamilyMap);
+	}
 
+	/** Sets the font size of a part of the application. */
 	inline void setFontPointSize(const FontFamily &fontFamily, int i) {
 		fontPointSizeMap.insert(QString(fontFamily), i);
 		setValue("fontPointSizeMap", fontPointSizeMap);

@@ -36,6 +36,7 @@ public:
 
 private:
 	void associatePaintableElements();
+	void fade();
 	void setupActions();
 
 	/** Load theme at startup. */
@@ -66,8 +67,8 @@ private slots:
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);
 
-signals:
-	void aboutToFade();
+//signals:
+	//void aboutToFade();
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

@@ -124,33 +124,27 @@ void CustomizeThemeDialog::setupActions()
 		connect(fontComboBox, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 			if (fontComboBox->objectName().endsWith("Playlist")) {
 				settings->setFont(Settings::PLAYLIST, font);
+				mainWindow->tabPlaylists->updateRowHeight();
 			} else {
 				settings->setFont(Settings::LIBRARY, font);
+				mainWindow->library->model()->layoutChanged();
 			}
-			mainWindow->library->model()->layoutChanged();
-			emit aboutToFade();
+			this->fade();
 		});
 	}
 	// And fonts size
-	foreach (QSpinBox *spinBox, this->findChildren<QSpinBox*>()) {
+	foreach (QSpinBox *spinBox, groupBoxFonts->findChildren<QSpinBox*>()) {
 		connect(spinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
 			if (spinBox->objectName().endsWith("Playlist")) {
 				settings->setFontPointSize(Settings::PLAYLIST, i);
+				mainWindow->tabPlaylists->updateRowHeight();
 			} else {
 				settings->setFontPointSize(Settings::LIBRARY, i);
+				mainWindow->library->model()->layoutChanged();
 			}
-			mainWindow->tabPlaylists->updateRowHeight();
-			emit aboutToFade();
+			this->fade();
 		});
 	}
-	connect(this, &CustomizeThemeDialog::aboutToFade, [=]() {
-		if (this->isVisible()) {
-			if (!_timer->isActive()) {
-				this->animate(1.0, 0.5);
-			}
-			_timer->start();
-		}
-	});
 
 	// Timer
 	connect(_timer, &QTimer::timeout, [=]() { this->animate(0.5, 1.0); });
@@ -176,6 +170,16 @@ void CustomizeThemeDialog::setupActions()
 	});
 
     connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));
+}
+
+void CustomizeThemeDialog::fade()
+{
+	if (this->isVisible()) {
+		if (!_timer->isActive()) {
+			this->animate(1.0, 0.5);
+		}
+		_timer->start();
+	}
 }
 
 /** Automatically centers the parent window when closing this dialog. */

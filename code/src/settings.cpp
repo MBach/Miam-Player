@@ -102,17 +102,19 @@ QString Settings::language()
 /** Returns the font of the application. */
 QFont Settings::font(const FontFamily fontFamily)
 {
+	fontFamilyMap = this->value("fontFamilyMap").toMap();
 	QFont font;
 	switch(fontFamily) {
 	case PLAYLIST:
 	case LIBRARY:
 	case MENUS:
-		QVariant vFont = value(QString(fontFamily));
+		QVariant vFont = fontFamilyMap.value(QString(fontFamily));
 		if (!vFont.isNull()) {
 			font = QFont(vFont.toString());
 		}
 		font.setPointSize(this->fontSize(fontFamily));
 	}
+	//qDebug() << font.toString() << fontFamily;
 	return font;
 }
 

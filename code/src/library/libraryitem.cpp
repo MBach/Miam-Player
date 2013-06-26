@@ -17,6 +17,7 @@ LibraryItem::LibraryItem(const QString &text, LibraryModel::MediaType mediaType,
 	//} else {
 	this->setData(text, INTERNAL_NAME);
 	//}
+	setFont(Settings::getInstance()->font(Settings::LIBRARY));
 }
 
 LibraryItem::LibraryItem() :

@@ -96,6 +96,7 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		itemTitle->setRating(fileHelper.file()->tag()->track());
 		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
+		qDebug() << "insertTrack" << Settings::getInstance()->font(Settings::LIBRARY);
 		parent->setChild(parent->rowCount(), itemTitle);
 	}
 }
@@ -194,6 +195,8 @@ void LibraryModel::loadFromFile()
 		/// FIXME
 		qDebug() << "loadFromFile" << artists.count();
 		emit loadedFromFile();
+		qDebug() << Settings::getInstance()->font(Settings::LIBRARY);
+
 	}
 }
 
