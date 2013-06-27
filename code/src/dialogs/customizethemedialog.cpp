@@ -20,15 +20,20 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	_colorDialog = new ColorDialog(this);
 	_styleSheetUpdater = new StyleSheetUpdater(this);
 	buttonsListBox->setVisible(false);
-	//verticalLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Minimum, QSizePolicy::Expanding));
-
-	//spinBoxLibrary->setDialog(this);
-	//spinBoxPlaylist->setDialog(this);
 
 	spinBoxLibrary->installEventFilter(this);
 	spinBoxPlaylist->installEventFilter(this);
 	fontComboBoxLibrary->installEventFilter(this);
 	fontComboBoxPlaylist->installEventFilter(this);
+	/*spinBoxLibrary->setMouseTracking(true);
+	spinBoxPlaylist->setMouseTracking(true);
+	fontComboBoxLibrary->setMouseTracking(true);
+	fontComboBoxPlaylist->setMouseTracking(true);*/
+	//this->installEventFilter(this);
+	//this->setMouseTracking(true);
+
+	groupBoxFonts->setMouseTracking(true);
+	groupBoxFonts->installEventFilter(this);
 
 	// Animates this Dialog
 	_timer = new QTimer(this);
@@ -37,6 +42,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	_animation = new QPropertyAnimation(this, "windowOpacity");
 	_animation->setDuration(200);
 	_animation->setTargetObject(this);
+
 
 	this->setupActions();
 	this->associatePaintableElements();
@@ -125,7 +131,7 @@ void CustomizeThemeDialog::setupActions()
 			if (fontComboBox->objectName().endsWith("Playlist")) {
 				settings->setFont(Settings::PLAYLIST, font);
 				mainWindow->tabPlaylists->updateRowHeight();
-			} else {
+			} else if (fontComboBox->objectName().endsWith("Library")) {
 				settings->setFont(Settings::LIBRARY, font);
 				mainWindow->library->model()->layoutChanged();
 			}
@@ -193,6 +199,13 @@ void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 	QDialog::closeEvent(e);
 }
 
+/** Automatically centers the parent window when closing this dialog. */
+void CustomizeThemeDialog::mouseMoveEvent(QMouseEvent *event)
+{
+	qDebug() << event->pos();
+	QDialog::mouseMoveEvent(event);
+}
+
 bool CustomizeThemeDialog::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::FocusOut) {
@@ -200,6 +213,18 @@ bool CustomizeThemeDialog::eventFilter(QObject *obj, QEvent *event)
 			_timer->stop();
 			this->animate(0.5, 1.0);
 		}
+		event->accept();
+	} else if (event->type() == QEvent::MouseMove) {
+		QWidget *childWidget = focusWidget();
+		if (childWidget->parent() == obj) {
+			QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+			QPoint point = childWidget->mapToParent(childWidget->rect().center()) - mouseEvent->pos();
+			qDebug() << childWidget->mapToParent(childWidget->rect().center()) << mouseEvent->pos() << point.manhattanLength();
+		}
+		/*if (widget->hasFocus() && _timer->isActive() && point.manhattanLength() > 300) {
+			_timer->stop();
+			this->animate(0.5, 1.0);
+		}*/
 	}
 	return QDialog::eventFilter(obj, event);
 }

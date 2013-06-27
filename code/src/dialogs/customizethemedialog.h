@@ -48,6 +48,8 @@ protected:
 	/** Automatically centers the parent window when closing this dialog. */
 	void closeEvent(QCloseEvent *e);
 
+	void mouseMoveEvent(QMouseEvent *event);
+
 	bool eventFilter(QObject *obj, QEvent *event);
 
 public slots:
