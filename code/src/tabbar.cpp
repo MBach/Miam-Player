@@ -43,10 +43,7 @@ void TabBar::dropEvent(QDropEvent *event)
 {
 	int tab = this->tabAt(event->pos());
 	if (Playlist *origin = qobject_cast<Playlist*>(event->source())) {
-		if (tab == this->currentIndex()) {
-			/// What to do when it's the same tab? Currently: nothing
-			/// XXX: It would be great to dynamically disable the drop indicator for the current playlist
-		} else {
+		if (tab != this->currentIndex()) {
 			Playlist *target;
 			// Tracks were dropped on the (+) button
 			if (tab == this->count() - 1) {
@@ -56,10 +53,11 @@ void TabBar::dropEvent(QDropEvent *event)
 			}
 
 			// Copy tracks in the target
-			foreach (QModelIndex index,  origin->selectionModel()->selectedRows()) {
-				/// FIXME Qt5
-				//target->playlistModel()->append(origin->track(index.row()));
+			QList<QMediaContent> medias;
+			foreach (QPersistentModelIndex index, origin->selectionModel()->selectedRows()) {
+				medias.append(origin->mediaPlaylist()->media(index.row()));
 			}
+			target->appendTracks(medias);
 
 			// Remove tracks from the current playlist if necessary
 			if (!Settings::getInstance()->copyTracksFromPlaylist()) {

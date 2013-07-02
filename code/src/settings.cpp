@@ -114,7 +114,6 @@ QFont Settings::font(const FontFamily fontFamily)
 		}
 		font.setPointSize(this->fontSize(fontFamily));
 	}
-	//qDebug() << font.toString() << fontFamily;
 	return font;
 }
 
@@ -339,13 +338,15 @@ QString Settings::styleSheet(QWidget *w) const
 		styleSheet = map.value(QTabWidget::staticMetaObject.className()).toString();
 		if (styleSheet.isEmpty()) {
 			// The first selected tab has nothing to overlap with on the left
-			styleSheet = "::tab:first:selected { margin-left: 0; } ";
+			/*styleSheet = "::tab:first:selected { margin-left: 0; } ";
 			styleSheet += "::tab { padding-left: 10px; padding-right: 10px; padding-bottom: 2px; }";
 			styleSheet += "::tab:first:!selected { margin-left: 2px; }";
 			styleSheet += "::tab:!selected { padding-bottom: 0px; margin-top: 2px; border: 1px solid grey; ";
 			styleSheet += "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f2f2f2, stop:1 #cfcfcf); }";
 			styleSheet += "::tab:selected { padding-top: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-left: -2px; margin-right: -2px; ";
-			styleSheet += "border: 1px solid grey; border-bottom: 0px; color: #000000; background-color: #ffffff; }";
+			styleSheet += "border: 1px solid grey; border-bottom: 0px; color: #000000; background-color: #ffffff; }";*/
+			styleSheet += "::close-button { image: url(:/icons/close_tabs); }";
+			styleSheet += "::close-button:hover { image: url(:/icons/close_tabs_hover); }";
 		}
 	} else if (qobject_cast<QHeaderView*>(w) != NULL) {
 

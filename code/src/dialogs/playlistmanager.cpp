@@ -11,9 +11,11 @@
 #include <QAbstractItemModel>
 
 PlaylistManager::PlaylistManager(TabPlaylist *tabPlaylist, QWidget *parent) :
-	QDialog(parent, Qt::Window), playlists(tabPlaylist)
+	QDialog(parent), playlists(tabPlaylist)
 {
 	setupUi(this);
+	this->setWindowFlags(Qt::Tool);
+	this->setModal(true);
 
 	unsavedPlaylists->installEventFilter(this);
 	savedPlaylists->installEventFilter(this);

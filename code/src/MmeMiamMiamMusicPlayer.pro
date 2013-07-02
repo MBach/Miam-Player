@@ -106,7 +106,9 @@ HEADERS += \
     quickstart.h \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \
-    timelabel.h
+    timelabel.h \
+    library/extendedtabwidget.h \
+    library/extendedtabbar.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
