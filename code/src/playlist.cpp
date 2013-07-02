@@ -179,17 +179,18 @@ void Playlist::dropEvent(QDropEvent *event)
 
 void Playlist::mouseMoveEvent(QMouseEvent *event)
 {
-	/// XXX ?
-	if (state() == NoState) {
-		this->setState(DragSelectingState);
-	}
+	if (!(event->buttons() & Qt::LeftButton))
+		return;
+	if ((event->pos() - _dragStartPosition).manhattanLength() < QApplication::startDragDistance())
+		return;
 	QTableView::mouseMoveEvent(event);
 }
 
 void Playlist::mousePressEvent(QMouseEvent *event)
 {
-	QModelIndex index = indexAt(event->pos());
-	//_selected = selectionModel()->isSelected(index);
+	if (event->button() == Qt::LeftButton) {
+		_dragStartPosition = event->pos();
+	}
 	QTableView::mousePressEvent(event);
 }
 
@@ -302,7 +303,9 @@ void Playlist::removeSelectedTracks()
 {
 	QModelIndexList indexes = this->selectionModel()->selectedRows();
 	for (int i = indexes.size() - 1; i >= 0; i--) {
-		//playlistModel()->removeRow(indexes.at(i).row());
+		int row = indexes.at(i).row();
+		_playlistModel->removeRow(row);
+		qMediaPlaylist->removeMedia(row);
 	}
 }
 

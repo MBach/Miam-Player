@@ -24,6 +24,8 @@ private:
 
 	QModelIndex *_dropDownIndex;
 
+	QPoint _dragStartPosition;
+
 public:
 	Playlist(QWidget *parent);
 
