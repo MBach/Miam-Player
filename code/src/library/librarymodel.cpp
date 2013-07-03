@@ -11,11 +11,8 @@
 using namespace TagLib;
 
 LibraryModel::LibraryModel(QObject *parent)
-	 : QStandardItemModel(parent)
-{
-	this->setColumnCount(1);
-	//this->setSortRole(LibraryItem::INTERNAL_NAME);
-}
+	 : QStandardItemModel(0, 1, parent)
+{}
 
 /** Removes everything. */
 void LibraryModel::clear()
@@ -27,6 +24,7 @@ void LibraryModel::clear()
 	covers.clear();
 	tracks.clear();
 	QStandardItemModel::clear();
+	setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
 }
 
 /** Artist? */
@@ -96,7 +94,6 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		itemTitle->setRating(fileHelper.file()->tag()->track());
 		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
-		qDebug() << "insertTrack" << Settings::getInstance()->font(Settings::LIBRARY);
 		parent->setChild(parent->rowCount(), itemTitle);
 	}
 }
@@ -192,11 +189,8 @@ void LibraryModel::loadFromFile()
 			this->loadNode(dataStream, libraryItem);
 		}
 		mmmmp.close();
-		/// FIXME
-		qDebug() << "loadFromFile" << artists.count();
+		/// FIXME ?
 		emit loadedFromFile();
-		qDebug() << Settings::getInstance()->font(Settings::LIBRARY);
-
 	}
 }
 

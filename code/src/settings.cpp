@@ -345,8 +345,13 @@ QString Settings::styleSheet(QWidget *w) const
 			styleSheet += "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f2f2f2, stop:1 #cfcfcf); }";
 			styleSheet += "::tab:selected { padding-top: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-left: -2px; margin-right: -2px; ";
 			styleSheet += "border: 1px solid grey; border-bottom: 0px; color: #000000; background-color: #ffffff; }";*/
-			styleSheet += "::close-button { image: url(:/icons/close_tabs); }";
-			styleSheet += "::close-button:hover { image: url(:/icons/close_tabs_hover); }";
+			#if defined(Q_OS_WIN)
+			styleSheet += "::close-button { image: url(:/icons/closeTabs); }";
+			styleSheet += "::close-button:hover { image: url(:/icons/win/closeTabsHover); }";
+			#elif defined(Q_OS_UNIX)
+			styleSheet += "::close-button { image: url(:/icons/closeTabs); }";
+			styleSheet += "::close-button:hover { image: url(:/icons/unix/closeTabsHover); }";
+			#endif
 		}
 	} else if (qobject_cast<QHeaderView*>(w) != NULL) {
 

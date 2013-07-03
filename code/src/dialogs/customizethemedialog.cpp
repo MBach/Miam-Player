@@ -134,6 +134,8 @@ void CustomizeThemeDialog::setupActions()
 			} else if (fontComboBox->objectName().endsWith("Library")) {
 				settings->setFont(Settings::LIBRARY, font);
 				mainWindow->library->model()->layoutChanged();
+			} else if (fontComboBox->objectName().endsWith("Menus")) {
+				settings->setFont(Settings::MENUS, font);
 			}
 			this->fade();
 		});

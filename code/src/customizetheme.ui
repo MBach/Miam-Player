@@ -995,9 +995,6 @@
           </item>
           <item row="4" column="1">
            <widget class="QFontComboBox" name="fontComboBoxMenus">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="currentFont">
              <font>
               <family>Arial</family>
@@ -1040,9 +1037,6 @@
           </item>
           <item row="4" column="2">
            <widget class="QSpinBox" name="spinBoxMenus">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="minimum">
              <number>4</number>
             </property>

@@ -76,6 +76,8 @@ HEADERS += \
     filesystem/addressbarbutton.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
+    library/extendedtabbar.h \
+    library/extendedtabwidget.h \
     library/libraryfilterlineedit.h \
     library/libraryfilterproxymodel.h \
     library/libraryitem.h \
@@ -89,26 +91,24 @@ HEADERS += \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
     circleprogressbar.h \
+    columnutils.h \
     filehelper.h \
     mainwindow.h \
     mediabutton.h \
     nofocusitemdelegate.h \
-    playlist.h \
-    settings.h \
-    starrating.h \
-    stareditor.h \
-    tabbar.h \
-    tabplaylist.h \
-    tracksnotfoundmessagebox.h \
-    treeview.h \
-    playlistmodel.h \
-    columnutils.h \
-    quickstart.h \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \
+    playlist.h \
+    playlistmodel.h \
+    quickstart.h \
+    settings.h \
+    stareditor.h \
+    starrating.h \
+    tabbar.h \
+    tabplaylist.h \
     timelabel.h \
-    library/extendedtabwidget.h \
-    library/extendedtabbar.h
+    tracksnotfoundmessagebox.h \
+    treeview.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

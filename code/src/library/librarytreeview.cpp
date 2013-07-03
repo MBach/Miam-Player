@@ -18,6 +18,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent)
 {
 	libraryModel = new LibraryModel(this);
+
 	proxyModel = new LibraryFilterProxyModel(this);
 	proxyModel->setSourceModel(libraryModel);
 
@@ -31,9 +32,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
 	this->setItemDelegate(new LibraryItemDelegate(this));
-
-	//QHeaderView *hv = this->header();
-	//qDebug() << hv->count();
 
 	//QHBoxLayout *vLayout = new QHBoxLayout();
 	//this->setLayout(vLayout);
@@ -73,14 +71,14 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(musicSearchEngine, SIGNAL(endSearch()), this, SLOT(endPopulateTree()));
-	connect(libraryModel, SIGNAL(loadedFromFile()), this, SLOT(endPopulateTree()));
+	connect(musicSearchEngine, &MusicSearchEngine::endSearch, this, &LibraryTreeView::endPopulateTree);
+	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
 	// When the scan is complete, save the model in the filesystem
-	connect(musicSearchEngine, SIGNAL(endSearch()), libraryModel, SLOT(saveToFile()));
+	connect(musicSearchEngine, &MusicSearchEngine::endSearch, libraryModel, &LibraryModel::saveToFile);
 
 	// Load covers only when an item need to be expanded
-	connect(this, SIGNAL(expanded(QModelIndex)), proxyModel, SLOT(loadCovers(QModelIndex)));
+	connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::sendToPlaylist);
@@ -104,15 +102,12 @@ QSize LibraryTreeView::sizeInt() const
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	QModelIndex index = this->indexAt(event->pos());
-	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
 		LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
 		if (!(libraryItem && libraryItem->type() == LibraryModel::LETTER)) {
 			properties->exec(event->globalPos());
 		}
-	} else {
-		qDebug() << "cast failed?";
 	}
 }
 
@@ -131,8 +126,7 @@ int LibraryTreeView::count(const QModelIndex &index) const
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
-		QModelIndex sourceIndex = proxyModel->mapToSource(index);
-		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
+		QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		int tmp = 0;
 		for (int i = 0; i < item->rowCount(); i++) {
 			tmp += count(index.child(i, 0));

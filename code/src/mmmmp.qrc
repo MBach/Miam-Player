@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="plusIcon">plus_icon.png</file>
         <file alias="mmmmp_win32">mmmmp.ico</file>
         <file alias="favorite">config/favorite.png</file>
         <file alias="down-arrow">config/down-arrow.png</file>
@@ -13,8 +12,9 @@
         <file alias="right-arrow">config/right-arrow.png</file>
         <file alias="mmmmp_osx">mmmmp.icns</file>
         <file alias="drop-arrow">config/drop-arrow.png</file>
-        <file alias="close_tabs">config/windows/close_tabs.png</file>
-        <file alias="close_tabs_hover">config/windows/close_tabs_hover.png</file>
+        <file alias="closeButton">config/closeButton.png</file>
+        <file alias="closeTabs">config/close_tabs.png</file>
+        <file alias="plusIcon">config/plus_icon.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>
@@ -110,5 +110,11 @@
         <file alias="qslider">stylesheets/qslider.qss</file>
         <file alias="playlist">stylesheets/playlist.qss</file>
         <file alias="tageditor">stylesheets/tageditor.qss</file>
+    </qresource>
+    <qresource prefix="/icons/win">
+        <file alias="closeTabsHover">config/windows/close_tabs_hover.png</file>
+    </qresource>
+    <qresource prefix="/icons/unix">
+        <file alias="closeTabsHover">config/unix/close_tabs_hover.png</file>
     </qresource>
 </RCC>

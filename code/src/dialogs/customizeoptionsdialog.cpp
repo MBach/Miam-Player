@@ -108,12 +108,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		radioButtonDD->setChecked(true);
 	}
 
-	QTranslator qtTranslator;
-	bool b = qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	qDebug() << "qt translation loaded?" << b << QLocale::system().name() << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
-	b = QApplication::installTranslator(&qtTranslator);
-	qDebug() << "translator installed?" << b;
-
 	// Load the language of the application
 	QString lang = languages.value(Settings::getInstance()->language());
 	t.load(lang);

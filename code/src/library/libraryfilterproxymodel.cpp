@@ -12,8 +12,6 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent)
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
-	//this->setSortLocaleAware(true);
-	//this->setSortRole(LibraryItem::INTERNAL_NAME);
 }
 
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
@@ -21,9 +19,6 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	if (role == Qt::FontRole) {
 		return Settings::getInstance()->font(Settings::LIBRARY);
 	} else {
-		/*if (role == LibraryItem::INTERNAL_NAME) {
-			qDebug() << index.data(LibraryItem::INTERNAL_NAME).toString() << index.data().toString();
-		}*/
 		return QSortFilterProxyModel::data(index, role);
 	}
 }
@@ -67,10 +62,6 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 
 	case LibraryModel::ARTIST:
 		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
-		//if (libraryItemRight->type() == LibraryModel::ARTIST) {
-		//qDebug() << libraryItemLeft->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemLeft->text();
-		//qDebug() << libraryItemRight->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemRight->text();
-		//}
 		result = QSortFilterProxyModel::lessThan(left, right);
 		break;
 
@@ -93,7 +84,6 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 		break;
 
 	default:
-		//qDebug() << libraryItemLeft->data(LibraryItem::INTERNAL_NAME).toString() << libraryItemLeft->text();
 		result = QSortFilterProxyModel::lessThan(left, right);
 	}
 	return result;
