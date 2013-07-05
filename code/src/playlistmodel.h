@@ -17,13 +17,14 @@ public:
 	/** Clear the content of playlist. */
 	void clear();
 
-	void createRows(const QList<QMediaContent> &tracks);
+	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
-	void createRow(const QMediaContent &tracks);
+	void insertMedia(int rowIndex, const QMediaContent &track);
 
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);
 
+	/** Redefined. */
 	void insertRow(int row, const QList<QStandardItem *> & items);
 
 };

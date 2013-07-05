@@ -40,59 +40,90 @@
 
 #include <QtWidgets>
 
+#include "stardelegate.h"
 #include "stareditor.h"
 #include "starrating.h"
 
 //! [0]
-StarEditor::StarEditor(QWidget *parent)
-	: QWidget(parent)
+void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+						 const QModelIndex &index) const
 {
-	setMouseTracking(true);
-	setAutoFillBackground(true);
-}
-//! [0]
+	if (index.data().canConvert<StarRating>()) {
+		StarRating starRating = qvariant_cast<StarRating>(index.data());
 
-QSize StarEditor::sizeHint() const
-{
-	return myStarRating.sizeHint();
+		if (option.state & QStyle::State_Selected)
+			painter->fillRect(option.rect, option.palette.highlight());
+
+		starRating.paint(painter, option.rect, option.palette,
+						 StarRating::ReadOnly);
+	} else {
+		QStyledItemDelegate::paint(painter, option, index);
+	}
+//! [0]
 }
 
 //! [1]
-void StarEditor::paintEvent(QPaintEvent *)
+QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option,
+							 const QModelIndex &index) const
 {
-	QPainter painter(this);
-	myStarRating.paint(&painter, rect(), this->palette(),
-					   StarRating::Editable);
+	if (index.data().canConvert<StarRating>()) {
+		StarRating starRating = qvariant_cast<StarRating>(index.data());
+		return starRating.sizeHint();
+	} else {
+		return QStyledItemDelegate::sizeHint(option, index);
+	}
 }
 //! [1]
 
 //! [2]
-void StarEditor::mouseMoveEvent(QMouseEvent *event)
-{
-	int star = starAtPosition(event->x());
+QWidget *StarDelegate::createEditor(QWidget *parent,
+									const QStyleOptionViewItem &option,
+									const QModelIndex &index) const
 
-	if (star != myStarRating.starCount() && star != -1) {
-		myStarRating.setStarCount(star);
-		update();
+{
+	if (index.data().canConvert<StarRating>()) {
+		StarEditor *editor = new StarEditor(parent);
+		connect(editor, SIGNAL(editingFinished()),
+				this, SLOT(commitAndCloseEditor()));
+		return editor;
+	} else {
+		return QStyledItemDelegate::createEditor(parent, option, index);
 	}
 }
 //! [2]
 
 //! [3]
-void StarEditor::mouseReleaseEvent(QMouseEvent * /* event */)
+void StarDelegate::setEditorData(QWidget *editor,
+								 const QModelIndex &index) const
 {
-	emit editingFinished();
+	if (index.data().canConvert<StarRating>()) {
+		StarRating starRating = qvariant_cast<StarRating>(index.data());
+		StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+		starEditor->setStarRating(starRating);
+	} else {
+		QStyledItemDelegate::setEditorData(editor, index);
+	}
 }
 //! [3]
 
 //! [4]
-int StarEditor::starAtPosition(int x)
+void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+								const QModelIndex &index) const
 {
-	int star = (x / (myStarRating.sizeHint().width()
-					 / myStarRating.maxStarCount())) + 1;
-	if (star <= 0 || star > myStarRating.maxStarCount())
-		return -1;
-
-	return star;
+	if (index.data().canConvert<StarRating>()) {
+		StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+		model->setData(index, QVariant::fromValue(starEditor->starRating()));
+	} else {
+		QStyledItemDelegate::setModelData(editor, model, index);
+	}
 }
 //! [4]
+
+//! [5]
+void StarDelegate::commitAndCloseEditor()
+{
+	StarEditor *editor = qobject_cast<StarEditor *>(sender());
+	emit commitData(editor);
+	emit closeEditor(editor);
+}
+//! [5]

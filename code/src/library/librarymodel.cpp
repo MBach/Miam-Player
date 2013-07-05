@@ -23,8 +23,7 @@ void LibraryModel::clear()
 	artists.clear();
 	covers.clear();
 	tracks.clear();
-	QStandardItemModel::clear();
-	setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
+	removeRows(0, rowCount());
 }
 
 /** Artist? */

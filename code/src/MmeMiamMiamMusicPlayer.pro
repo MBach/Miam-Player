@@ -60,7 +60,8 @@ SOURCES += \
     quickstart.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
-    timelabel.cpp
+    timelabel.cpp \
+    stardelegate.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -108,7 +109,8 @@ HEADERS += \
     tabplaylist.h \
     timelabel.h \
     tracksnotfoundmessagebox.h \
-    treeview.h
+    treeview.h \
+    stardelegate.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

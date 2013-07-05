@@ -21,7 +21,7 @@ TabBar::TabBar(TabPlaylist *parent) :
 	lineEdit->setFrame(false);
 	lineEdit->installEventFilter(this);
 
-	connect(lineEdit, SIGNAL(returnPressed()), this, SLOT(renameTab()));
+	connect(lineEdit, &QLineEdit::returnPressed, this, &TabBar::renameTab);
 }
 
 /** Redefined to validate new tab name if the focus is lost. */
@@ -39,6 +39,7 @@ bool TabBar::eventFilter(QObject *obj, QEvent *event)
 	return false;
 }
 
+/** Redefined to accept D&D from another playlist or the library. */
 void TabBar::dropEvent(QDropEvent *event)
 {
 	int tab = this->tabAt(event->pos());
@@ -57,7 +58,8 @@ void TabBar::dropEvent(QDropEvent *event)
 			foreach (QPersistentModelIndex index, origin->selectionModel()->selectedRows()) {
 				medias.append(origin->mediaPlaylist()->media(index.row()));
 			}
-			target->appendTracks(medias);
+			// Append tracks at the end
+			target->insertMedias(target->model()->rowCount(), medias);
 
 			// Remove tracks from the current playlist if necessary
 			if (!Settings::getInstance()->copyTracksFromPlaylist()) {
@@ -65,17 +67,17 @@ void TabBar::dropEvent(QDropEvent *event)
 			}
 		}
 	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
-		Playlist *target;
 		// Tracks were dropped on the (+) button
 		if (tab == this->count() - 1) {
-			target = tabPlaylist->addPlaylist();
+			tabPlaylist->addPlaylist();
 		} else {
-			target = tabPlaylist->playlist(tab);
+			tabPlaylist->playlist(tab);
 		}
-		origin->sendToPlaylist();
+		origin->appendToPlaylist();
 	}
 }
 
+/** Redefined to accept D&D from another playlist or the library. */
 void TabBar::dragEnterEvent(QDragEnterEvent *event)
 {
 	if (!event->source()) {
@@ -85,6 +87,7 @@ void TabBar::dragEnterEvent(QDragEnterEvent *event)
 	}
 }
 
+/** Redefined to accept D&D from another playlist or the library. */
 void TabBar::dragMoveEvent(QDragMoveEvent *event)
 {
 	if (!event->source()) {

@@ -27,6 +27,9 @@ public:
 
 	void init();
 
+	/** Update fonts for menu and context menus. */
+	void updateFonts(const QFont &font);
+
 private:
 	CustomizeThemeDialog *customizeThemeDialog;
 	CustomizeOptionsDialog *customizeOptionsDialog;

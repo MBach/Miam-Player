@@ -14,6 +14,7 @@
 #include "nofocusitemdelegate.h"
 #include "library/librarytreeview.h"
 #include "tabplaylist.h"
+#include "stardelegate.h"
 
 #include <QtDebug>
 
@@ -36,6 +37,7 @@ Playlist::Playlist(QWidget *parent) :
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
+	//this->setItemDelegateForColumn(5, new StarDelegate);
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -75,8 +77,10 @@ void Playlist::init()
 	_playlistModel->setColumnCount(labels.count());
 
 	// Initialize values for the Header (label and horizontal resize mode)
+	Settings *settings = Settings::getInstance();
 	for (int i = 0; i < labels.size(); i++) {
 		_playlistModel->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
+		_playlistModel->setHeaderData(i, Qt::Horizontal, settings->font(Settings::PLAYLIST), Qt::FontRole);
 	}
 
 	for (int i = 0; i < _playlistModel->columnCount(); i++) {
@@ -102,10 +106,10 @@ void Playlist::init()
 	}
 }
 
-void Playlist::appendTracks(const QList<QMediaContent> &medias)
+void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
-	qMediaPlaylist->addMedia(medias);
-	_playlistModel->createRows(medias);
+	qMediaPlaylist->insertMedia(rowIndex, medias);
+	_playlistModel->insertMedias(rowIndex, medias);
 }
 
 /** Display a context menu with the state of all columns. */
@@ -163,9 +167,10 @@ void Playlist::dropEvent(QDropEvent *event)
 	QObject *source = event->source();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
 		int row = this->indexAt(event->pos()).row();
-		view->sendToPlaylist();
+		view->insertToPlaylist(row);
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
+			qDebug() << indexAt(event->pos());
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			foreach (QStandardItem *item, rowsToHighlight) {
 				for (int c = 0; c < _playlistModel->columnCount(); c++) {

@@ -47,7 +47,7 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 	// Always add the possibility for one to send a folder or a track to the current playlist
 	QAction *actionSendToCurrentPlaylist = new QAction(toPlaylist.arg(fileInfo.baseName()), properties);
-	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::sendToPlaylist);
+	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
 	properties->addAction(actionSendToCurrentPlaylist);
 
 	// Same thing for the tag editor

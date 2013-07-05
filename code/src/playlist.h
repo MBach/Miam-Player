@@ -36,7 +36,7 @@ public:
 
 	void init();
 
-	void appendTracks(const QList<QMediaContent> &medias);
+	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
 protected:
 	/** Redefined to display a small context menu in the view. */

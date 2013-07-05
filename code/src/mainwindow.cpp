@@ -77,13 +77,27 @@ void MainWindow::init()
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 }
 
-#include <QDateTime>
+/** Update fonts for menu and context menus. */
+void MainWindow::updateFonts(const QFont &font)
+{
+	menuBar()->setFont(font);
+	foreach (QAction *action, findChildren<QAction*>()) {
+		action->setFont(font);
+	}
+}
 
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
 	// Load music
 	connect(customizeOptionsDialog, SIGNAL(musicLocationsHaveChanged(bool)), this, SLOT(drawLibrary(bool)));
+
+	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
+	foreach(QAction *actionPlayBack, findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
+		actionPlaybackGroup->addAction(actionPlayBack);
+	}
+	/// TODO
+	/// Update QMenu when one switches from a playlist to another
 
 	// Link user interface
 	// Actions from the menu
@@ -108,6 +122,7 @@ void MainWindow::setupActions()
 		customizeOptionsDialog->open();
 	});
 
+	// Select only folders that are checked by one
 	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
@@ -121,13 +136,14 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::setTagEditorVisible, this, &MainWindow::toggleTagEditor);
-		connect(tab, &TreeView::aboutToSendToPlaylist, tabPlaylists, &TabPlaylist::addItemsToPlaylist);
+		//connect(tab, &TreeView::aboutToAppendToPlaylist, tabPlaylists, &TabPlaylist::appendItemsToPlaylist);
+		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
 		connect(tab, &TreeView::sendToTagEditor, tagEditor, &TagEditor::addItemsToEditor);
 	}
 
 	// Send one folder to the music locations
 	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocation, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocation);
-	connect(filesystem, &QAbstractItemView::doubleClicked, tabPlaylists, &TabPlaylist::addItemToPlaylist);
+	connect(filesystem, &QAbstractItemView::doubleClicked, tabPlaylists, &TabPlaylist::appendItemToPlaylist);
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
@@ -170,7 +186,8 @@ void MainWindow::setupActions()
 	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
 
 	// Playback
-	// Warning: tabPlaylists->restorePlaylists() needs to be exactly at this position!
+	/// XXX
+	/// Warning: tabPlaylists->restorePlaylists() needs to be exactly at this position!
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 	tabPlaylists->restorePlaylists();
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::removeSelectedTracks);

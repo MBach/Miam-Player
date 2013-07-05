@@ -18,7 +18,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent)
 {
 	libraryModel = new LibraryModel(this);
-
 	proxyModel = new LibraryFilterProxyModel(this);
 	proxyModel->setSourceModel(libraryModel);
 
@@ -32,6 +31,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
 	this->setItemDelegate(new LibraryItemDelegate(this));
+
+	proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
+	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 
 	//QHBoxLayout *vLayout = new QHBoxLayout();
 	//this->setLayout(vLayout);
@@ -65,7 +67,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addSeparator();
 	properties->addAction(actionOpenTagEditor);
 
-	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { sendToPlaylist(); });
+	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
 	connect(musicSearchEngine, &MusicSearchEngine::scannedFile, libraryModel, &LibraryModel::readFile);
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
@@ -81,7 +83,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
 
 	// Context menu
-	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::sendToPlaylist);
+	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
     connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 }
 

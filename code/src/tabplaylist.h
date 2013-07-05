@@ -39,6 +39,14 @@ public:
 	/** Get the playlist at index. */
 	Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
 
+	QList<Playlist *> playlists() {
+		QList<Playlist*> _playlists;
+		for (int i = 0; i < count() - 1; i++) {
+			_playlists.append(this->playlist(i));
+		}
+		return _playlists;
+	}
+
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void retranslateUi();
 
@@ -51,11 +59,14 @@ public slots:
 	/** Add external folders (from a drag and drop) to the current playlist. */
 	void addExtFolders(const QList<QDir> &folders);
 
-	/** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
-	void addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes);
+	/** Append multiple tracks chosen by one from the library or the filesystem into a playlist. */
+	//void appendItemsToPlaylist(const QList<QPersistentModelIndex> &indexes);
 
-	/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
-	void addItemToPlaylist(const QModelIndex &index);
+	/** Append a single track chosen by one from the library or the filesystem into the active playlist. */
+	void appendItemToPlaylist(const QModelIndex &index);
+
+	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
+	void insertItemsToPlaylist(int rowIndex, const QList<QPersistentModelIndex> &indexes);
 
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist() { removeTabFromCloseButton(this->tabBar()->currentIndex()); }

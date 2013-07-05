@@ -123,36 +123,57 @@ void CustomizeThemeDialog::setupActions()
 		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
 	}
 
-	connect(flatButtonsCheckBox, SIGNAL(toggled(bool)), settings, SLOT(setButtonsFlat(bool)));
+	connect(flatButtonsCheckBox, &QCheckBox::toggled, settings, &Settings::setButtonsFlat);
 
-	// Fonts
-	foreach (QFontComboBox *fontComboBox, groupBoxFonts->findChildren<QFontComboBox*>()) {
-		connect(fontComboBox, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-			if (fontComboBox->objectName().endsWith("Playlist")) {
-				settings->setFont(Settings::PLAYLIST, font);
-				mainWindow->tabPlaylists->updateRowHeight();
-			} else if (fontComboBox->objectName().endsWith("Library")) {
-				settings->setFont(Settings::LIBRARY, font);
-				mainWindow->library->model()->layoutChanged();
-			} else if (fontComboBox->objectName().endsWith("Menus")) {
-				settings->setFont(Settings::MENUS, font);
+	// Fonts	
+	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+		settings->setFont(Settings::PLAYLIST, font);
+		mainWindow->tabPlaylists->updateRowHeight();
+		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
+			for (int i = 0; i < playlist->model()->columnCount(); i++) {
+				playlist->model()->setHeaderData(i, Qt::Horizontal, font, Qt::FontRole);
 			}
-			this->fade();
-		});
-	}
+		}
+		this->fade();
+	});
+	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+		settings->setFont(Settings::LIBRARY, font);
+		mainWindow->library->model()->layoutChanged();
+		mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, font, Qt::FontRole);
+		mainWindow->searchBar->setFont(font);
+		this->fade();
+	});
+	connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
+		settings->setFont(Settings::MENUS, font);
+		mainWindow->updateFonts(font);
+		this->fade();
+	});
+
 	// And fonts size
-	foreach (QSpinBox *spinBox, groupBoxFonts->findChildren<QSpinBox*>()) {
-		connect(spinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-			if (spinBox->objectName().endsWith("Playlist")) {
-				settings->setFontPointSize(Settings::PLAYLIST, i);
-				mainWindow->tabPlaylists->updateRowHeight();
-			} else {
-				settings->setFontPointSize(Settings::LIBRARY, i);
-				mainWindow->library->model()->layoutChanged();
+	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		settings->setFontPointSize(Settings::PLAYLIST, i);
+		mainWindow->tabPlaylists->updateRowHeight();
+		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
+			for (int i = 0; i < playlist->model()->columnCount(); i++) {
+				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(Settings::PLAYLIST), Qt::FontRole);
 			}
-			this->fade();
-		});
-	}
+		}
+		this->fade();
+	});
+	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		settings->setFontPointSize(Settings::LIBRARY, i);
+		mainWindow->library->model()->layoutChanged();
+		QFont lowerFont = settings->font(Settings::LIBRARY);
+		lowerFont.setPointSize(lowerFont.pointSizeF() * 0.7);
+		mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, lowerFont, Qt::FontRole);
+		mainWindow->searchBar->setFont(lowerFont);
+		this->fade();
+	});
+	connect(spinBoxMenus, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
+		settings->setFontPointSize(Settings::MENUS, i);
+		mainWindow->updateFonts(settings->font(Settings::MENUS));
+		this->fade();
+	});
 
 	// Timer
 	connect(_timer, &QTimer::timeout, [=]() { this->animate(0.5, 1.0); });

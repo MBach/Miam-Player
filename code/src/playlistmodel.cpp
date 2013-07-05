@@ -10,6 +10,8 @@
 
 #include <QtDebug>
 
+#include "filehelper.h"
+
 PlaylistModel::PlaylistModel(QObject *parent) :
 	QStandardItemModel(parent)
 {}
@@ -23,34 +25,40 @@ void PlaylistModel::clear()
 	}
 }
 
-void PlaylistModel::createRows(const QList<QMediaContent> &tracks)
+void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
 	foreach (QMediaContent track, tracks) {
-		this->createRow(track);
+		this->insertMedia(rowIndex++, track);
 	}
 }
 
-void PlaylistModel::createRow(const QMediaContent &track)
+void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
-	TagLib::FileRef f(track.canonicalUrl().toLocalFile().toStdWString().data());
-	if (!f.isNull()) {
+	//TagLib::FileRef f(track.canonicalUrl().toLocalFile().toStdWString().data());
+	FileHelper f(track.canonicalUrl().toLocalFile());
+	if (f.file()->isValid()) {
 
-		QString title(f.tag()->title().toCString(true));
+		QString title(f.file()->tag()->title().toCString(true));
 
 		// Then, construct a new row with correct informations
 		QList<QStandardItem *> widgetItems;
-		QStandardItem *trackItem = new QStandardItem(QString::number(f.tag()->track()));
+		QStandardItem *trackItem = new QStandardItem(QString::number(f.file()->tag()->track()));
 		QStandardItem *titleItem = new QStandardItem(title);
-		QStandardItem *albumItem = new QStandardItem(f.tag()->album().toCString(true));
-		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(f.audioProperties()->length()).toString("m:ss"));
-		QStandardItem *artistItem = new QStandardItem(f.tag()->artist().toCString(true));
-		QStandardItem *ratingItem = new QStandardItem("***");
-		QStandardItem *yearItem = new QStandardItem(QString::number(f.tag()->year()));
+		QStandardItem *albumItem = new QStandardItem(f.file()->tag()->album().toCString(true));
+		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(f.file()->audioProperties()->length()).toString("m:ss"));
+		QStandardItem *artistItem = new QStandardItem(f.file()->tag()->artist().toCString(true));
+		QStandardItem *ratingItem;
+		if (f.rating() < 0) {
+			ratingItem = new QStandardItem();
+		} else {
+			ratingItem = new QStandardItem(QString::number(f.rating()));
+		}
+		QStandardItem *yearItem = new QStandardItem(QString::number(f.file()->tag()->year()));
 
 		trackItem->setData(track.canonicalUrl());
 
 		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
-		this->insertRow(rowCount(), widgetItems);
+		this->insertRow(rowIndex, widgetItems);
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
@@ -76,7 +84,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	}
 
 	// Dest equals -1 when rows are dropped at the bottom of the playlist
-	int insertPoint = dest.isValid() ? dest.row() : rowCount();
+	int insertPoint = (dest.isValid() || dest.row() >= 0) ? dest.row() : rowCount();
 	for (int i = 0; i < removedRows.count(); i++) {
 		this->insertRow(insertPoint, removedRows.at(i));
 	}

@@ -23,10 +23,13 @@ public:
 	bool eventFilter(QObject *, QEvent *);
 
 protected:
+	/** Redefined to accept D&D from another playlist or the library. */
 	void dropEvent(QDropEvent *event);
 
+	/** Redefined to accept D&D from another playlist or the library. */
 	void dragEnterEvent(QDragEnterEvent *event);
 
+	/** Redefined to accept D&D from another playlist or the library. */
 	void dragMoveEvent(QDragMoveEvent *event);
 
 	/** Redefined to display an editable area. */

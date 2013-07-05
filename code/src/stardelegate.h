@@ -38,39 +38,32 @@
 **
 ****************************************************************************/
 
-#ifndef STARRATING_H
-#define STARRATING_H
+#ifndef STARDELEGATE_H
+#define STARDELEGATE_H
 
-#include <QMetaType>
-#include <QPointF>
-#include <QVector>
+#include <QStyledItemDelegate>
 
 //! [0]
-class StarRating
+class StarDelegate : public QStyledItemDelegate
 {
+	Q_OBJECT
+
 public:
-	enum EditMode { Editable, ReadOnly };
+	StarDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
 
-	explicit StarRating(int starCount = 1, int maxStarCount = 5);
+	void paint(QPainter *painter, const QStyleOptionViewItem &option,
+			   const QModelIndex &index) const;
+	QSize sizeHint(const QStyleOptionViewItem &option,
+				   const QModelIndex &index) const;
+	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+						  const QModelIndex &index) const;
+	void setEditorData(QWidget *editor, const QModelIndex &index) const;
+	void setModelData(QWidget *editor, QAbstractItemModel *model,
+					  const QModelIndex &index) const;
 
-	void paint(QPainter *painter, const QRect &rect,
-			   const QPalette &palette, EditMode mode) const;
-	QSize sizeHint() const;
-	int starCount() const { return myStarCount; }
-	int maxStarCount() const { return myMaxStarCount; }
-	void setStarCount(int starCount) { myStarCount = starCount; }
-	void setMaxStarCount(int maxStarCount) { myMaxStarCount = maxStarCount; }
-
-private:
-	QPolygonF starPolygon;
-	QPolygonF diamondPolygon;
-	int myStarCount;
-	int myMaxStarCount;
+private slots:
+	void commitAndCloseEditor();
 };
 //! [0]
-
-//! [1]
-Q_DECLARE_METATYPE(StarRating)
-//! [1]
 
 #endif

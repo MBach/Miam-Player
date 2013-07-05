@@ -19,10 +19,13 @@ private:
 public:
 	explicit PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushButton *playbackModeButton = 0);
 
+	/** Convert Enum in QString to dynamically load icons. */
 	static QString nameFromMode(QMediaPlaylist::PlaybackMode mode);
 
+	/** Reload icon when theme has changed or buttons size was changed in options by one. */
 	void adjustIcon();
 
+	/** Animates this button in circle or in line. */
 	void animate(const QPoint &start, const QPoint &end);
 
 	inline QPushButton *button() const { return qobject_cast<QPushButton*>(this->layout()->itemAt(0)->widget()); }

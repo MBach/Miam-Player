@@ -43,6 +43,8 @@ public:
 
 	bool insert(QString key, const QVariant &value);
 
+	int rating() const;
+
 	inline bool save() { return f->save(); }
 
 	void setCover(Cover *cover);

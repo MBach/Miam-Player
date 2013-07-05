@@ -12,6 +12,7 @@ TreeView::TreeView(QWidget *parent) :
 {
 }
 
+///XXX Is it really a good design to enumerate all subclasses below? What if I add a 3rd model later?
 QString TreeView::absFilePath(const QModelIndex &index)
 {
 	const QFileSystemModel *fileSystemModel = qobject_cast<const QFileSystemModel*>(index.model());
@@ -24,6 +25,7 @@ QString TreeView::absFilePath(const QModelIndex &index)
 	}
 }
 
+/** Alerts the user if there's too many tracks to add. */
 int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentModelIndex> &indexes)
 {
 	// Quick count tracks before anything else
@@ -42,7 +44,7 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 	}
 
 	if (ret == QMessageBox::Ok) {
-		// Gather all items (pure virtual call reimplemented function in subclasses)
+		// Gather all items (pure virtual call, this function must be reimplemented in subclasses: custom tree, file system, etc.)
 		foreach (QPersistentModelIndex index, selectedIndexes()) {
 			this->findAll(index, indexes);
 		}
@@ -50,12 +52,12 @@ int TreeView::beforeSending(const QString &target, QMap<QString, QPersistentMode
 	return ret;
 }
 
-/** Send folders or tracks to a playlist. */
-void TreeView::sendToPlaylist()
+/** Send folders or tracks to a specific position in a playlist. */
+void TreeView::insertToPlaylist(int rowIndex)
 {
 	QMap<QString, QPersistentModelIndex> indexes;
 	if (this->beforeSending(tr("playlist"), indexes) == QMessageBox::Ok) {
-		emit aboutToSendToPlaylist(indexes.values());
+		emit aboutToInsertToPlaylist(rowIndex, indexes.values());
 	}
 }
 

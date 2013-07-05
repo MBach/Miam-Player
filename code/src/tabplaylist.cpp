@@ -87,7 +87,7 @@ void TabPlaylist::restorePlaylists()
 						tracksNotFound.append(track);
 					}
 				}
-				p->appendTracks(medias);
+				p->insertMedias(0, medias);
 				if (i == playlists.size() - 1) {
 					emit updatePlaybackModeButton();
 				}
@@ -142,7 +142,7 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 		while (it.hasNext()) {
 			medias.append(QMediaContent(QUrl::fromLocalFile(it.next())));
 		}
-		this->currentPlayList()->appendTracks(medias);
+		this->currentPlayList()->insertMedias(currentPlayList()->model()->rowCount(), medias);
 	}
 	// Automatically plays the first track
 	if (isEmpty) {
@@ -150,8 +150,16 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 	}
 }
 
-/** Add multiple tracks chosen by one from the library or the filesystem into a playlist. */
-void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes)
+/** Append a single track chosen by one from the library or the filesystem into the active playlist. */
+void TabPlaylist::appendItemToPlaylist(const QModelIndex &index)
+{
+	QList<QPersistentModelIndex> indexes;
+	indexes.append(index);
+	this->insertItemsToPlaylist(-1, indexes);
+}
+
+/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
+void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QPersistentModelIndex> &indexes)
 {
 	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
 	QList<QMediaContent> medias;
@@ -160,20 +168,17 @@ void TabPlaylist::addItemsToPlaylist(const QList<QPersistentModelIndex> &indexes
 			medias.append(QMediaContent(QUrl::fromLocalFile(TreeView::absFilePath(index))));
 		}
 	}
-	currentPlayList()->appendTracks(medias);
+	// If the track needs to be appended at the end
+	if (rowIndex == -1) {
+		rowIndex = currentPlayList()->mediaPlaylist()->mediaCount();
+	}
+	currentPlayList()->insertMedias(rowIndex, medias);
+
 
 	// Automatically plays the first track
 	if (isEmpty && !medias.isEmpty()) {
 		this->skip();
 	}
-}
-
-/** Add a single track chosen by one from the library or the filesystem into the active playlist. */
-void TabPlaylist::addItemToPlaylist(const QModelIndex &index)
-{
-	QList<QPersistentModelIndex> indexes;
-	indexes.append(index);
-	this->addItemsToPlaylist(indexes);
 }
 
 /** Remove a playlist when clicking on a close button in the corner. */

@@ -21,7 +21,6 @@ private:
 	LibraryModel *libraryModel;
 	LibraryFilterProxyModel *proxyModel;
 	CircleProgressBar *circleProgressBar;
-	//MusicSearchEngine *musicSearchEngine;
 	QPoint currentPos;
 	QMenu *properties;
 
@@ -30,8 +29,6 @@ public:
 
 	/** Small function for translating the QMenu exclusively. */
 	void retranslateUi();
-
-	//inline MusicSearchEngine * searchEngine() { return musicSearchEngine; }
 
 	QSize sizeInt() const;
 

@@ -249,6 +249,32 @@ bool FileHelper::insert(QString key, const QVariant &value)
 	return true;
 }
 
+#include <popularimeterframe.h>
+
+int FileHelper::rating() const
+{
+	MPEG::File *mpegFile = NULL;
+	int r = -1;
+	switch (fileType) {
+	case MP3:
+		mpegFile = static_cast<MPEG::File*>(f);
+		if (mpegFile->ID3v2Tag()) {
+			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
+			for (int i = 0; i < l.size(); i++) {
+				ID3v2::Frame *f = l[i];
+				/// TODO
+				//qDebug() << mpegFile->tag()->title().toCString() << f->toString().toCString();
+			}
+		} else if (mpegFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";
+		}
+		break;
+	default:
+		break;
+	}
+	return r;
+}
+
 void FileHelper::setCover(Cover *cover)
 {
 	qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);

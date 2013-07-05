@@ -25,20 +25,24 @@ protected:
 	virtual void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes) = 0;
 
 private:
+	/** Alerts the user if there's too many tracks to add. */
 	int beforeSending(const QString &target, QMap<QString, QPersistentModelIndex> &indexes);
 
 public slots:
-	/** Send folders or tracks to a playlist. */
-	void sendToPlaylist();
+	/** Sends folders or tracks to the end of a playlist. */
+	void appendToPlaylist() { this->insertToPlaylist(-1); }
 
-	/** Send folders or tracks to the tag editor. */
+	/** Sends folders or tracks to a specific position in a playlist. */
+	void insertToPlaylist(int rowIndex);
+
+	/** Sends folders or tracks to the tag editor. */
 	void openTagEditor();
 
 signals:
-	/** Add tracks to the current playlist. */
-	void aboutToSendToPlaylist(const QList<QPersistentModelIndex> &);
+	/** Adds tracks to the current playlist at a specific position. */
+	void aboutToInsertToPlaylist(int rowIndex, const QList<QPersistentModelIndex> &);
 
-	/** Add tracks to the tag editor. */
+	/** Adds tracks to the tag editor. */
 	void sendToTagEditor(QList<QPersistentModelIndex>);
 
 	void setTagEditorVisible(bool);

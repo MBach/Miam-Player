@@ -37,6 +37,9 @@
         <bool>true</bool>
        </property>
        <widget class="QWidget" name="tabLibrary">
+        <property name="styleSheet">
+         <string notr="true">QWidget#tabLibrary { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f0f0f0); }</string>
+        </property>
         <attribute name="title">
          <string>Library</string>
         </attribute>
@@ -445,8 +448,11 @@
     <addaction name="actionSeekForward"/>
     <addaction name="actionSkipForward"/>
     <addaction name="separator"/>
-    <addaction name="actionRepeat"/>
-    <addaction name="actionShuffle"/>
+    <addaction name="actionPlaybackNormal"/>
+    <addaction name="actionPlaybackRepeat"/>
+    <addaction name="actionPlaybackShuffle"/>
+    <addaction name="actionPlaybackCurrentOnce"/>
+    <addaction name="actionPlaybackCurrentLoop"/>
     <addaction name="separator"/>
     <addaction name="actionMute"/>
     <addaction name="actionIncreaseVolume"/>
@@ -553,7 +559,7 @@
     <string>Skip &amp;forward</string>
    </property>
   </action>
-  <action name="actionRepeat">
+  <action name="actionPlaybackRepeat">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -561,7 +567,7 @@
     <string>&amp;Repeat</string>
    </property>
   </action>
-  <action name="actionShuffle">
+  <action name="actionPlaybackShuffle">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -606,6 +612,33 @@
   <action name="actionDecreaseVolume">
    <property name="text">
     <string>&amp;Decrease volume</string>
+   </property>
+  </action>
+  <action name="actionPlaybackCurrentOnce">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Current item &amp;once</string>
+   </property>
+  </action>
+  <action name="actionPlaybackNormal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Normal</string>
+   </property>
+  </action>
+  <action name="actionPlaybackCurrentLoop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Current item in &amp;loop</string>
    </property>
   </action>
  </widget>

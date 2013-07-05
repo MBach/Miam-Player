@@ -22,6 +22,7 @@ PlaybackModeWidget::PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushB
 	this->setLayout(vLayout);
 }
 
+/** Convert Enum in QString to dynamically load icons. */
 QString PlaybackModeWidget::nameFromMode(QMediaPlaylist::PlaybackMode mode)
 {
 	QString playbackMode;
@@ -45,6 +46,7 @@ QString PlaybackModeWidget::nameFromMode(QMediaPlaylist::PlaybackMode mode)
 	return playbackMode;
 }
 
+/** Reload icon when theme has changed or buttons size was changed in options by one. */
 void PlaybackModeWidget::adjustIcon()
 {
 	Settings *settings = Settings::getInstance();
@@ -52,6 +54,7 @@ void PlaybackModeWidget::adjustIcon()
 	button()->setIconSize(QSize(settings->buttonsSize(), settings->buttonsSize()));
 }
 
+/** Animates this button in circle or in line. */
 void PlaybackModeWidget::animate(const QPoint &start, const QPoint &end)
 {
 	_animation->setStartValue(start);
