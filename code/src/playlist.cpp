@@ -170,7 +170,6 @@ void Playlist::dropEvent(QDropEvent *event)
 		view->insertToPlaylist(row);
 	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
 		if (currentPlaylist == this) {
-			qDebug() << indexAt(event->pos());
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			foreach (QStandardItem *item, rowsToHighlight) {
 				for (int c = 0; c < _playlistModel->columnCount(); c++) {

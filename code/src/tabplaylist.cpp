@@ -221,7 +221,6 @@ void TabPlaylist::play(const QModelIndex &index)
 /** Seek backward in the current playing track for a small amount of time. */
 void TabPlaylist::seekBackward()
 {
-
 	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
 		qint64 time = _mediaPlayer->position() - Settings::getInstance()->playbackSeekTime();
 		if (time < 0) {

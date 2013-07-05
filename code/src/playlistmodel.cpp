@@ -1,16 +1,16 @@
 #include "playlistmodel.h"
 
+#include "filehelper.h"
 #include "settings.h"
 
 #include <fileref.h>
 #include <tag.h>
 
+#include <QFile>
 #include <QTime>
 #include <QUrl>
 
 #include <QtDebug>
-
-#include "filehelper.h"
 
 PlaylistModel::PlaylistModel(QObject *parent) :
 	QStandardItemModel(parent)
@@ -34,8 +34,8 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 
 void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
-	//TagLib::FileRef f(track.canonicalUrl().toLocalFile().toStdWString().data());
-	FileHelper f(track.canonicalUrl().toLocalFile());
+	TagLib::FileRef file(QFile::encodeName(track.canonicalUrl().toLocalFile()).data());
+	FileHelper f(file, -1);
 	if (f.file()->isValid()) {
 
 		QString title(f.file()->tag()->title().toCString(true));

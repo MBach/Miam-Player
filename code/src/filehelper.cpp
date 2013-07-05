@@ -39,8 +39,7 @@ FileHelper::FileHelper(const QString &filePath)
 {
 	QFileInfo fileInfo(filePath);
 	QString suffix = fileInfo.suffix().toLower();
-	const char *fp = filePath.toLocal8Bit().data();
-
+	const char *fp = QFile::encodeName(filePath).constData();
 	if (suffix == "ape") {
 		f = new APE::File(fp);
 		fileType = APE;
