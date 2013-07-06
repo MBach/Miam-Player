@@ -21,7 +21,12 @@ TabBar::TabBar(TabPlaylist *parent) :
 	lineEdit->setFrame(false);
 	lineEdit->installEventFilter(this);
 
+	_timer = new QTimer(this);
+	_timer->setInterval(1000);
+	_timer->setSingleShot(true);
+
 	connect(lineEdit, &QLineEdit::returnPressed, this, &TabBar::renameTab);
+	connect(_timer, &QTimer::timeout, this, &TabBar::autoChangeTab);
 }
 
 /** Redefined to validate new tab name if the focus is lost. */
@@ -65,6 +70,8 @@ void TabBar::dropEvent(QDropEvent *event)
 			if (!Settings::getInstance()->copyTracksFromPlaylist()) {
 				origin->removeSelectedTracks();
 			}
+		} else {
+			qDebug() << "ici ?";
 		}
 	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
 		// Tracks were dropped on the (+) button
@@ -80,6 +87,15 @@ void TabBar::dropEvent(QDropEvent *event)
 /** Redefined to accept D&D from another playlist or the library. */
 void TabBar::dragEnterEvent(QDragEnterEvent *event)
 {
+	int idx = tabAt(event->pos());
+	if (idx != currentIndex() && idx < count() - 1) {
+		_targetRect = tabRect(idx);
+		_cursorOverSameTab = true;
+	} else {
+		_targetRect = QRect();
+		_cursorOverSameTab = false;
+	}
+	qDebug() << "dragEnterEvent index:" << idx << _targetRect;
 	if (!event->source()) {
 		event->ignore();
 	} else {
@@ -90,10 +106,34 @@ void TabBar::dragEnterEvent(QDragEnterEvent *event)
 /** Redefined to accept D&D from another playlist or the library. */
 void TabBar::dragMoveEvent(QDragMoveEvent *event)
 {
+	int idx = tabAt(event->pos());
+	//qDebug() << "dragMoveEvent";
+	if (_targetRect.isNull() && idx != currentIndex() && idx < count() - 1) {
+		_targetRect = tabRect(idx);
+		_cursorOverSameTab = true;
+		qDebug() << "index:" << idx << _targetRect;
+	}
+	_cursorOverSameTab = _targetRect.contains(event->pos());
+	Playlist *playlist = qobject_cast<Playlist*>(event->source());
+	if (playlist) {
+		// Exclude current tab and last one
+		if (currentIndex() != tabAt(event->pos()) && tabAt(event->pos()) < count() - 1 && !_timer->isActive()) {
+			_timer->start();
+		}
+	}
 	if (!event->source()) {
 		event->ignore();
 	} else {
 		event->acceptProposedAction();
+	}
+}
+
+void TabBar::autoChangeTab()
+{
+	if (_cursorOverSameTab) {
+		setCurrentIndex(tabAt(_targetRect.center()));
+		_targetRect = tabRect(currentIndex());
+		_cursorOverSameTab = true;
 	}
 }
 

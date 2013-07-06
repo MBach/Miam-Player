@@ -165,17 +165,38 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 void Playlist::dropEvent(QDropEvent *event)
 {
 	QObject *source = event->source();
+	int row = this->indexAt(event->pos()).row();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
-		int row = this->indexAt(event->pos()).row();
 		view->insertToPlaylist(row);
-	} else if (Playlist *currentPlaylist = qobject_cast<Playlist*>(source)) {
-		if (currentPlaylist == this) {
+	} else if (Playlist *target = qobject_cast<Playlist*>(source)) {
+		if (target && target == this) {
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
+			// Highlight rows that were just moved
 			foreach (QStandardItem *item, rowsToHighlight) {
 				for (int c = 0; c < _playlistModel->columnCount(); c++) {
 					QModelIndex index = _playlistModel->index(item->row(), c);
 					selectionModel()->select(index, QItemSelectionModel::Select);
 				}
+			}
+		} else if (target && target != this) {
+			QList<QMediaContent> medias;
+			foreach (QModelIndex index, target->selectionModel()->selectedRows()) {
+				medias.append(target->mediaPlaylist()->media(index.row()));
+			}
+			if (row == -1) {
+				row = qMediaPlaylist->mediaCount();
+			}
+			this->insertMedias(row, medias);
+
+			// Highlight rows that were just moved
+			for (int r = 0; r < medias.count(); r++) {
+				for (int c = 0; c < _playlistModel->columnCount(); c++) {
+					QModelIndex index = _playlistModel->index(row + r, c);
+					selectionModel()->select(index, QItemSelectionModel::Select);
+				}
+			}
+			if (!Settings::getInstance()->copyTracksFromPlaylist()) {
+				target->removeSelectedTracks();
 			}
 		}
 	}

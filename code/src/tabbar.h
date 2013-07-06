@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QMouseEvent>
 #include <QTabBar>
+#include <QTimer>
 
 #include "playlist.h"
 #include "tabplaylist.h"
@@ -15,6 +16,10 @@ private:
 	QLineEdit *lineEdit;
 
 	TabPlaylist *tabPlaylist;
+
+	QRect _targetRect;
+	bool _cursorOverSameTab;
+	QTimer *_timer;
 
 public:
 	TabBar(TabPlaylist *parent);
@@ -39,6 +44,8 @@ protected:
 	void mousePressEvent(QMouseEvent *);
 
 private slots:
+	void autoChangeTab();
+
 	/** Rename a tab. */
 	void renameTab();
 };
