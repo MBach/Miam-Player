@@ -448,11 +448,11 @@
     <addaction name="actionSeekForward"/>
     <addaction name="actionSkipForward"/>
     <addaction name="separator"/>
-    <addaction name="actionPlaybackNormal"/>
-    <addaction name="actionPlaybackRepeat"/>
-    <addaction name="actionPlaybackShuffle"/>
-    <addaction name="actionPlaybackCurrentOnce"/>
-    <addaction name="actionPlaybackCurrentLoop"/>
+    <addaction name="actionPlaybackSequential"/>
+    <addaction name="actionPlaybackLoop"/>
+    <addaction name="actionPlaybackRandom"/>
+    <addaction name="actionPlaybackCurrentItemOnce"/>
+    <addaction name="actionPlaybackCurrentItemInLoop"/>
     <addaction name="separator"/>
     <addaction name="actionMute"/>
     <addaction name="actionIncreaseVolume"/>
@@ -559,7 +559,7 @@
     <string>Skip &amp;forward</string>
    </property>
   </action>
-  <action name="actionPlaybackRepeat">
+  <action name="actionPlaybackLoop">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -567,7 +567,7 @@
     <string>&amp;Repeat</string>
    </property>
   </action>
-  <action name="actionPlaybackShuffle">
+  <action name="actionPlaybackRandom">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -614,7 +614,7 @@
     <string>&amp;Decrease volume</string>
    </property>
   </action>
-  <action name="actionPlaybackCurrentOnce">
+  <action name="actionPlaybackCurrentItemOnce">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -622,7 +622,7 @@
     <string>Current item &amp;once</string>
    </property>
   </action>
-  <action name="actionPlaybackNormal">
+  <action name="actionPlaybackSequential">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -633,7 +633,7 @@
     <string>&amp;Normal</string>
    </property>
   </action>
-  <action name="actionPlaybackCurrentLoop">
+  <action name="actionPlaybackCurrentItemInLoop">
    <property name="checkable">
     <bool>true</bool>
    </property>

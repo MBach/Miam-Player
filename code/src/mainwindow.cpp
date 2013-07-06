@@ -194,8 +194,6 @@ void MainWindow::setupActions()
 	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksDown);
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &QDialog::open);
 
-	connect(tabPlaylists, &TabPlaylist::aboutToChangeMenuLabels, this, &MainWindow::changeMenuLabels);
-
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::pathChanged, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
@@ -207,6 +205,25 @@ void MainWindow::setupActions()
 	connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToPlaylist(QList<QDir>)), tabPlaylists, SLOT(addExtFolders(QList<QDir>)));
 
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
+
+	connect(menuPlayback, &QMenu::aboutToShow, [=](){
+		QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
+		const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+		QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+		QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
+		action->setChecked(true);
+	});
+	connect(menuPlaylist, &QMenu::aboutToShow, [=]() {
+		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
+		actionRemoveSelectedTracks->setEnabled(b);
+		actionMoveTrackUp->setEnabled(b);
+		actionMoveTrackDown->setEnabled(b);
+		if (b) {
+			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count()));
+			actionMoveTrackUp->setText(tr("Move selected tracks &up", "Move upward", tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count()));
+			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count()));
+		}
+	});
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -307,25 +324,6 @@ void MainWindow::drawLibrary(bool b)
 			b = true;
 		}
 		library->beginPopulateTree(b);
-	}
-}
-
-/** Change the labels like "Remove selected track(s)" depending of the number of selected elements in the current playlist. */
-void MainWindow::changeMenuLabels(int itemCount)
-{
-	bool b = (itemCount > 0);
-	actionRemoveSelectedTracks->setEnabled(b);
-	actionMoveTrackUp->setEnabled(b);
-	actionMoveTrackDown->setEnabled(b);
-
-	if (itemCount <= 1) {
-		actionRemoveSelectedTracks->setText(tr("&Remove selected track"));
-		actionMoveTrackUp->setText(tr("Move selected track &up"));
-		actionMoveTrackDown->setText(tr("Move selected track &down"));
-	} else {
-		actionRemoveSelectedTracks->setText(tr("&Remove selected tracks"));
-		actionMoveTrackUp->setText(tr("Move selected tracks &up"));
-		actionMoveTrackDown->setText(tr("Move selected tracks &down"));
 	}
 }
 

@@ -63,10 +63,7 @@ public slots:
 	void bindShortcut(const QString&, int keySequence);
 
 private slots:
-	void drawLibrary(bool b=false);
-
-	/** Change the labels like "Remove selected track(s)" depending of the number of selected elements in the current playlist. */
-	void changeMenuLabels(int);
+	void drawLibrary(bool b = false);
 
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();
