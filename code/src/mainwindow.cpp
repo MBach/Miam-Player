@@ -136,7 +136,6 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::setTagEditorVisible, this, &MainWindow::toggleTagEditor);
-		//connect(tab, &TreeView::aboutToAppendToPlaylist, tabPlaylists, &TabPlaylist::appendItemsToPlaylist);
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
 		connect(tab, &TreeView::sendToTagEditor, tagEditor, &TagEditor::addItemsToEditor);
 	}
@@ -339,13 +338,14 @@ void MainWindow::aboutM4P()
 
 void MainWindow::toggleTagEditor(bool b)
 {
-	if (b) {
-		//qDebug() << "MainWindow::toggleTagEditor";
-		//tagEditor->clear();
-	}
 	tagEditor->setVisible(b);
-	seekSlider->setVisible(!b);
 	tabPlaylists->setVisible(!b);
+	seekSlider->setVisible(!b);
+	timeLabel->setVisible(!b);
+	foreach (MediaButton *mediaButton, mediaButtons) {
+		mediaButton->setVisible(!b);
+	}
+	volumeSlider->setVisible(!b);
 }
 
 void MainWindow::stateChanged(QMediaPlayer::State newState)

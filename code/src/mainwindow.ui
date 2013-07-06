@@ -167,7 +167,7 @@
          <widget class="TabPlaylist" name="tabPlaylists"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="seekSliderLayout">
           <property name="rightMargin">
            <number>10</number>
           </property>
