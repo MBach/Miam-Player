@@ -598,6 +598,10 @@
         <source>Properties</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -754,16 +758,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Current item &amp;once</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item in &amp;loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
-        <translation type="unfinished"></translation>
+        <comment>Number of tracks to remove</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Move selected tracks &amp;up</source>
-        <translation type="unfinished"></translation>
+        <comment>Move upward</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Move selected tracks &amp;down</source>
-        <translation type="unfinished"></translation>
+        <comment>Move downward</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="en_US" sourcelanguage="en_US">
-<defaultcodec>ISO-8859-5</defaultcodec>
 <context>
     <name>AlbumCover</name>
     <message>
@@ -599,6 +598,10 @@
         <source>Properties</source>
         <translation>Properties</translation>
     </message>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation>  Artists \ Albums</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -755,16 +758,40 @@
         <translation>&amp;Remove selected track</translation>
     </message>
     <message>
+        <source>Current item &amp;once</source>
+        <translation>Current item &amp;once</translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation>&amp;Normal</translation>
+    </message>
+    <message>
+        <source>Current item in &amp;loop</source>
+        <translation>Current item in &amp;loop</translation>
+    </message>
+    <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
-        <translation>&amp;Remove selected tracks</translation>
+        <comment>Number of tracks to remove</comment>
+        <translation>
+            <numerusform>&amp;Remove selected track</numerusform>
+            <numerusform>&amp;Remove selected tracks</numerusform>
+        </translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Move selected tracks &amp;up</source>
-        <translation>Move selected tracks &amp;up</translation>
+        <comment>Move upward</comment>
+        <translation>
+            <numerusform>Move selected track &amp;up</numerusform>
+            <numerusform>Move selected tracks &amp;up</numerusform>
+        </translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Move selected tracks &amp;down</source>
-        <translation>Move selected tracks &amp;down</translation>
+        <comment>Move downward</comment>
+        <translation>
+            <numerusform>Move selected track &amp;down</numerusform>
+            <numerusform>Move selected tracks &amp;down</numerusform>
+        </translation>
     </message>
 </context>
 <context>

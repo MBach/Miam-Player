@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR" sourcelanguage="en_US">
-<defaultcodec>ISO-8859-5</defaultcodec>
 <context>
     <name>AlbumCover</name>
     <message>
@@ -599,6 +598,10 @@
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation>  Artistes \ Albums</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -756,16 +759,40 @@
         <translation>&amp;Retirer la piste sélectionnée</translation>
     </message>
     <message>
+        <source>Current item &amp;once</source>
+        <translation>Une piste, une seule &amp;fois</translation>
+    </message>
+    <message>
+        <source>&amp;Normal</source>
+        <translation>&amp;Normal</translation>
+    </message>
+    <message>
+        <source>Current item in &amp;loop</source>
+        <translation>Une piste, &amp;toujours en boucle</translation>
+    </message>
+    <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
-        <translation>&amp;Retirer les pistes sélectionnées</translation>
+        <comment>Number of tracks to remove</comment>
+        <translation>
+            <numerusform>&amp;Retirer la piste sélectionnée</numerusform>
+            <numerusform>&amp;Retirer les pistes sélectionnées</numerusform>
+        </translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Move selected tracks &amp;up</source>
-        <translation>Déplacer vers le &amp;haut les pistes sélectionnées</translation>
+        <comment>Move upward</comment>
+        <translation>
+            <numerusform>Déplacer vers le &amp;haut la piste sélectionnée</numerusform>
+            <numerusform>Déplacer vers le &amp;haut les pistes sélectionnées</numerusform>
+        </translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>Move selected tracks &amp;down</source>
-        <translation>Déplacer vers le &amp;bas les pistes sélectionnées</translation>
+        <comment>Move downward</comment>
+        <translation>
+            <numerusform>Déplacer vers le &amp;bas la piste sélectionnée</numerusform>
+            <numerusform>Déplacer vers le &amp;bas les pistes sélectionnées</numerusform>
+        </translation>
     </message>
 </context>
 <context>
