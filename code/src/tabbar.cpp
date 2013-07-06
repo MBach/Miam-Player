@@ -22,7 +22,7 @@ TabBar::TabBar(TabPlaylist *parent) :
 	lineEdit->installEventFilter(this);
 
 	_timer = new QTimer(this);
-	_timer->setInterval(1000);
+	_timer->setInterval(300);
 	_timer->setSingleShot(true);
 
 	connect(lineEdit, &QLineEdit::returnPressed, this, &TabBar::renameTab);
@@ -49,36 +49,32 @@ void TabBar::dropEvent(QDropEvent *event)
 {
 	int tab = this->tabAt(event->pos());
 	if (Playlist *origin = qobject_cast<Playlist*>(event->source())) {
-		if (tab != this->currentIndex()) {
-			Playlist *target;
-			// Tracks were dropped on the (+) button
-			if (tab == this->count() - 1) {
-				target = tabPlaylist->addPlaylist();
-			} else {
-				target = tabPlaylist->playlist(tab);
-			}
-
-			// Copy tracks in the target
-			QList<QMediaContent> medias;
-			foreach (QPersistentModelIndex index, origin->selectionModel()->selectedRows()) {
-				medias.append(origin->mediaPlaylist()->media(index.row()));
-			}
-			// Append tracks at the end
-			target->insertMedias(target->model()->rowCount(), medias);
-
-			// Remove tracks from the current playlist if necessary
-			if (!Settings::getInstance()->copyTracksFromPlaylist()) {
-				origin->removeSelectedTracks();
-			}
+		Playlist *target;
+		// Tracks were dropped on the (+) button
+		if (tab == this->count() - 1) {
+			target = tabPlaylist->addPlaylist();
 		} else {
-			qDebug() << "ici ?";
+			target = tabPlaylist->playlist(tab);
+		}
+
+		// Copy tracks in the target
+		QList<QMediaContent> medias;
+		foreach (QPersistentModelIndex index, origin->selectionModel()->selectedRows()) {
+			medias.append(origin->mediaPlaylist()->media(index.row()));
+		}
+		// Append tracks at the end
+		target->insertMedias(target->model()->rowCount(), medias);
+
+		// Remove tracks from the current playlist if necessary
+		if (!Settings::getInstance()->copyTracksFromPlaylist()) {
+			origin->removeSelectedTracks();
 		}
 	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
 		// Tracks were dropped on the (+) button
 		if (tab == this->count() - 1) {
 			tabPlaylist->addPlaylist();
 		} else {
-			tabPlaylist->playlist(tab);
+			tabPlaylist->setCurrentIndex(tab);
 		}
 		origin->appendToPlaylist();
 	}

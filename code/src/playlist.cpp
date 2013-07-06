@@ -179,16 +179,18 @@ void Playlist::dropEvent(QDropEvent *event)
 				}
 			}
 		} else if (target && target != this) {
+			// If the drop occurs at the end of the playlist, indexAt is invalid
+			if (row == -1) {
+				row = qMediaPlaylist->mediaCount();
+			}
 			QList<QMediaContent> medias;
 			foreach (QModelIndex index, target->selectionModel()->selectedRows()) {
 				medias.append(target->mediaPlaylist()->media(index.row()));
 			}
-			if (row == -1) {
-				row = qMediaPlaylist->mediaCount();
-			}
 			this->insertMedias(row, medias);
 
 			// Highlight rows that were just moved
+			this->clearSelection();
 			for (int r = 0; r < medias.count(); r++) {
 				for (int c = 0; c < _playlistModel->columnCount(); c++) {
 					QModelIndex index = _playlistModel->index(row + r, c);

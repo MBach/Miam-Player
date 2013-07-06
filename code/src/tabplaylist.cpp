@@ -120,9 +120,6 @@ Playlist* TabPlaylist::addPlaylist()
 		p->setStyleSheet(previous->styleSheet());
 		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
 	}
-	// Forward this signal to the MainWindow instance
-	connect(p, &Playlist::selectedTracks, this, &TabPlaylist::aboutToChangeMenuLabels);
-
 	connect(p, &QTableView::doubleClicked, this, &TabPlaylist::play);
 
 	// Select the new empty playlist

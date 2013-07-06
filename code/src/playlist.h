@@ -82,9 +82,6 @@ private slots:
 
 	/** Toggle the selected column from the context menu. */
 	void toggleSelectedColumn(QAction *action);
-
-signals:
-	void selectedTracks(int);
 };
 
 #endif // PLAYLIST_H
