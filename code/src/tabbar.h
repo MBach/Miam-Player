@@ -44,8 +44,6 @@ protected:
 	void mousePressEvent(QMouseEvent *);
 
 private slots:
-	void autoChangeTab();
-
 	/** Rename a tab. */
 	void renameTab();
 };

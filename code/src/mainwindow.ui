@@ -268,26 +268,6 @@
            </widget>
           </item>
           <item>
-           <widget class="MediaButton" name="pauseButton">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/pause</normaloff>:/player/oxygen/pause</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="MediaButton" name="stopButton">
             <property name="text">
              <string notr="true"/>
@@ -707,7 +687,6 @@
   <tabstop>skipBackwardButton</tabstop>
   <tabstop>seekBackwardButton</tabstop>
   <tabstop>playButton</tabstop>
-  <tabstop>pauseButton</tabstop>
   <tabstop>stopButton</tabstop>
   <tabstop>seekForwardButton</tabstop>
   <tabstop>skipForwardButton</tabstop>

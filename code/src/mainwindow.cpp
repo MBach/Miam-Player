@@ -30,13 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
 
 	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << pauseButton << stopButton;
+	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton;
 	mediaButtons << seekForwardButton << skipForwardButton << playbackModeButton;
 	/*foreach (MediaButton *b, mediaButtons) {
 		b->setStyleSheet(settings->styleSheet(b));
 	}*/
-
-	pauseButton->hide();
 
 	// Init the audio module
 	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
@@ -219,9 +217,10 @@ void MainWindow::setupActions()
 		actionMoveTrackUp->setEnabled(b);
 		actionMoveTrackDown->setEnabled(b);
 		if (b) {
-			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count()));
-			actionMoveTrackUp->setText(tr("Move selected tracks &up", "Move upward", tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count()));
-			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count()));
+			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
+			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
+			actionMoveTrackUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
+			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});
 }

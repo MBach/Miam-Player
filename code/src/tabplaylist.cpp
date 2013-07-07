@@ -171,9 +171,9 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QPersistentMod
 	}
 	currentPlayList()->insertMedias(rowIndex, medias);
 
-
 	// Automatically plays the first track
 	if (isEmpty && !medias.isEmpty()) {
+		//setCurrentIndex();
 		this->skip();
 	}
 }
@@ -244,6 +244,7 @@ void TabPlaylist::seekForward()
 /** Change the current track. */
 void TabPlaylist::skip(bool forward)
 {
+	_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
 	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
 		// Is it strange? When it's playing, if signals aren't blocked a crash happens
 		_mediaPlayer->blockSignals(true);
@@ -253,9 +254,6 @@ void TabPlaylist::skip(bool forward)
 		_mediaPlayer->blockSignals(false);
 	} else {
 		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
-		if (_mediaPlayer->playlist() == NULL) {
-			_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
-		}
 		_mediaPlayer->play();
 	}
 }
