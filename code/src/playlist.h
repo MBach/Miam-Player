@@ -56,10 +56,6 @@ protected:
 	void resizeEvent(QResizeEvent *event);
 
 public slots:
-	void countSelectedItems(const QItemSelection &, const QItemSelection &);
-
-	void countSelectedItems();
-
 	/** Move selected tracks downward. */
 	void moveTracksDown();
 

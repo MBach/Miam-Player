@@ -2,6 +2,7 @@
 
 #include "filehelper.h"
 #include "settings.h"
+#include "starrating.h"
 
 #include <fileref.h>
 #include <tag.h>
@@ -36,34 +37,34 @@ void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
 	TagLib::FileRef file(QFile::encodeName(track.canonicalUrl().toLocalFile()).data());
 	FileHelper f(file, -1);
+	//FileHelper f(QFile::encodeName(track.canonicalUrl().toLocalFile()));
 	if (f.file()->isValid()) {
 
 		QString title(f.file()->tag()->title().toCString(true));
 
 		// Then, construct a new row with correct informations
-		QList<QStandardItem *> widgetItems;
 		QStandardItem *trackItem = new QStandardItem(QString::number(f.file()->tag()->track()));
+		trackItem->setData(track.canonicalUrl());
 		QStandardItem *titleItem = new QStandardItem(title);
 		QStandardItem *albumItem = new QStandardItem(f.file()->tag()->album().toCString(true));
 		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(f.file()->audioProperties()->length()).toString("m:ss"));
 		QStandardItem *artistItem = new QStandardItem(f.file()->tag()->artist().toCString(true));
-		QStandardItem *ratingItem;
-		if (f.rating() < 0) {
-			ratingItem = new QStandardItem();
-		} else {
-			ratingItem = new QStandardItem(QString::number(f.rating()));
+		QStandardItem *ratingItem = new QStandardItem();
+		int rating = f.rating();
+		if (rating > 0) {
+			StarRating r(rating);
+			ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
 		}
 		QStandardItem *yearItem = new QStandardItem(QString::number(f.file()->tag()->year()));
-
-		trackItem->setData(track.canonicalUrl());
-
-		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
-		this->insertRow(rowIndex, widgetItems);
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
 		ratingItem->setTextAlignment(Qt::AlignCenter);
 		yearItem->setTextAlignment(Qt::AlignCenter);
+
+		QList<QStandardItem *> widgetItems;
+		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
+		this->insertRow(rowIndex, widgetItems);
 	}
 }
 

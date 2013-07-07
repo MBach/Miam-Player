@@ -37,7 +37,7 @@ Playlist::Playlist(QWidget *parent) :
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
-	//this->setItemDelegateForColumn(5, new StarDelegate);
+	this->setItemDelegateForColumn(5, new StarDelegate);
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -239,18 +239,8 @@ void Playlist::paintEvent(QPaintEvent *event)
 
 void Playlist::resizeEvent(QResizeEvent *)
 {
-	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 2 << 0);
 	ColumnUtils::resizeColumns(this, ratios);
-}
-
-void Playlist::countSelectedItems(const QItemSelection &, const QItemSelection &)
-{
-	this->countSelectedItems();
-}
-
-void Playlist::countSelectedItems()
-{
-	//emit selectedTracks(this->selectionModel()->selectedRows().size());
 }
 
 /** Toggle the selected column from the context menu. */

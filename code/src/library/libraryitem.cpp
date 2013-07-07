@@ -72,7 +72,6 @@ void LibraryItem::read(QDataStream &in)
 	quint32 dataLength;
 	char *s1;
 	QVariant v;
-	StarRating starRating;
 
 	// See in the future if the 2 first conditions should be merged
 	switch (type) {
@@ -150,10 +149,10 @@ void LibraryItem::read(QDataStream &in)
 		setData(QByteArray(s1, dataLength), REL_PATH_TO_MEDIA);
 		delete[] s1;
 
-		in >> dataLength;
-		starRating = StarRating(dataLength);
-		v.setValue(starRating);
-		setData(v, STAR_RATING);
+		//in >> dataLength;
+		//starRating = StarRating(dataLength);
+		//v.setValue(starRating);
+		//setData(v, STAR_RATING);
 
 		in >> dataLength;
 		setTrackNumber(dataLength);
@@ -165,7 +164,7 @@ void LibraryItem::read(QDataStream &in)
 void LibraryItem::write(QDataStream &out) const
 {
 	int type = this->type();
-	StarRating starRating;
+	//StarRating starRating;
 
 	switch (type) {
 	case LibraryModel::ALBUM:
@@ -193,8 +192,8 @@ void LibraryItem::write(QDataStream &out) const
 		out << data(Qt::DisplayRole).toByteArray();
 		out << data(IDX_TO_ABS_PATH).toInt();
 		out << data(REL_PATH_TO_MEDIA).toByteArray();
-		starRating = data(STAR_RATING).value<StarRating>();
-		out << starRating.starCount();
+		//starRating = data(STAR_RATING).value<StarRating>();
+		//out << starRating.starCount();
 		out << trackNumber();
 		break;
 	}

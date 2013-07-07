@@ -43,35 +43,25 @@
 
 #include "starrating.h"
 
+/// TODO: make this dynamic
 const int PaintingScaleFactor = 20;
 
-//! [0]
-StarRating::StarRating(int starCount, int maxStarCount)
+StarRating::StarRating(int starCount)
+	: myMaxStarCount(5)
 {
 	myStarCount = starCount;
-	myMaxStarCount = maxStarCount;
-
-	starPolygon << QPointF(1.0, 0.5);
-	for (int i = 1; i < 5; ++i)
-		starPolygon << QPointF(0.5 + 0.5 * cos(0.8 * i * 3.14),
-							   0.5 + 0.5 * sin(0.8 * i * 3.14));
-
-	diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4)
-				   << QPointF(0.6, 0.5) << QPointF(0.5, 0.6)
-				   << QPointF(0.4, 0.5);
+	for (int i = 0; i < 5; ++i) {
+		starPolygon << QPointF(0.5 + 0.5 * cos((i+0.375) * 0.8 * M_PI), 0.5 + 0.5 * sin((i+0.375) * 0.8 * M_PI));
+	}
+	diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
 }
-//! [0]
 
-//! [1]
 QSize StarRating::sizeHint() const
 {
 	return PaintingScaleFactor * QSize(myMaxStarCount, 1);
 }
-//! [1]
 
-//! [2]
-void StarRating::paint(QPainter *painter, const QRect &rect,
-					   const QPalette &palette, EditMode mode) const
+void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const
 {
 	painter->save();
 
@@ -81,7 +71,7 @@ void StarRating::paint(QPainter *painter, const QRect &rect,
 	if (mode == Editable) {
 		painter->setBrush(palette.highlight());
 	} else {
-		painter->setBrush(palette.foreground());
+		painter->setBrush(palette.windowText());
 	}
 
 	int yOffset = (rect.height() - PaintingScaleFactor) / 2;
@@ -99,4 +89,3 @@ void StarRating::paint(QPainter *painter, const QRect &rect,
 
 	painter->restore();
 }
-//! [2]

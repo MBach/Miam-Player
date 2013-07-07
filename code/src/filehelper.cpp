@@ -2,6 +2,7 @@
 
 #include <QFileInfo>
 
+// Taglib headers
 #include <apefile.h>
 #include <asffile.h>
 #include <flacfile.h>
@@ -14,9 +15,7 @@
 #include <id3v2frame.h>
 
 #include <attachedpictureframe.h>
-///FIXME ubuntu?
-//#include <taglib/attachedpictureframe.h>
-
+#include <popularimeterframe.h>
 #include <tag.h>
 #include <tlist.h>
 #include <textidentificationframe.h>
@@ -33,6 +32,27 @@ FileHelper::FileHelper(FileRef &fileRef, QVariant v)
 	: fileType(v.toInt())
 {
 	f = fileRef.file();
+	if (v.toInt() > 0) {
+		fileType = v.toInt();
+	} else {
+		QFileInfo fileInfo(QString(f->name()));
+		QString suffix = fileInfo.suffix().toLower();
+		if (suffix == "ape") {
+			fileType = APE;
+		} else if (suffix == "asf") {
+			fileType = ASF;
+		} else if (suffix == "flac") {
+			fileType = FLAC;
+		} else if (suffix == "m4a") {
+			fileType = MP4;
+		} else if (suffix == "mpc") {
+			fileType = MPC;
+		} else if (suffix == "mp3") {
+			fileType = MP3;
+		} else if (suffix == "ogg" || suffix == "oga") {
+			fileType = OGG;
+		}
+	}
 }
 
 FileHelper::FileHelper(const QString &filePath)
@@ -248,21 +268,38 @@ bool FileHelper::insert(QString key, const QVariant &value)
 	return true;
 }
 
-#include <popularimeterframe.h>
-
 int FileHelper::rating() const
 {
 	MPEG::File *mpegFile = NULL;
 	int r = -1;
+
+	/// TODO other types?
 	switch (fileType) {
 	case MP3:
 		mpegFile = static_cast<MPEG::File*>(f);
 		if (mpegFile->ID3v2Tag()) {
 			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
-			for (int i = 0; i < l.size(); i++) {
-				ID3v2::Frame *f = l[i];
-				/// TODO
-				//qDebug() << mpegFile->tag()->title().toCString() << f->toString().toCString();
+			if (!l.isEmpty()) {
+				ID3v2::PopularimeterFrame *pf = static_cast<ID3v2::PopularimeterFrame*>(l.front());
+				if (pf) {
+					switch (pf->rating()) {
+					case 1:
+						r = 1;
+						break;
+					case 64:
+						r = 2;
+						break;
+					case 128:
+						r = 3;
+						break;
+					case 196:
+						r = 4;
+						break;
+					case 255:
+						r = 5;
+						break;
+					}
+				}
 			}
 		} else if (mpegFile->ID3v1Tag()) {
 			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";

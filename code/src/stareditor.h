@@ -68,8 +68,6 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-	int starAtPosition(int x);
-
 	StarRating myStarRating;
 };
 //! [0]
