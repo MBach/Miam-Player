@@ -4,7 +4,7 @@
 #include <QTreeView>
 
 #include "library/libraryitem.h"
-#include "playlist.h"
+#include "playlists/playlist.h"
 
 /**
  * @brief The TreeView class is the base class for displaying trees in the player.

@@ -51,8 +51,16 @@ StarRating::StarRating(int starCount)
 {
 	myStarCount = starCount;
 	for (int i = 0; i < 5; ++i) {
-		starPolygon << QPointF(0.5 + 0.5 * cos((i+0.375) * 0.8 * M_PI), 0.5 + 0.5 * sin((i+0.375) * 0.8 * M_PI));
+		QLineF l(0.5, 0.5, 0.5, 0);
+		l.setAngle(i * 72 + 18);
+		starPolygon << l.p2();
+
+		QLineF l2(0.5, 0.5, 0.5, 0.71);
+		l2.setAngle(i * 72 + 54);
+		starPolygon << l2.p2();
 	}
+
+	//starPolygon << QPointF(0.5, 0);
 	diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
 }
 
@@ -71,7 +79,26 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 	if (mode == Editable) {
 		painter->setBrush(palette.highlight());
 	} else {
-		painter->setBrush(palette.windowText());
+		/// XXX: extract this somewhere?
+		#if defined(Q_OS_WIN)
+		QLinearGradient linearGradientBrush(0, 0, 0, 1);
+		linearGradientBrush.setColorAt(0, Qt::white);
+		linearGradientBrush.setColorAt(1, QColor(253, 230, 116));
+
+		QLinearGradient linearGradientPen(0, 0, 0, 1);
+		linearGradientPen.setColorAt(0, QColor(227, 178, 94));
+		linearGradientPen.setColorAt(1, QColor(166, 122, 87));
+
+		QPen pen(QColor(171, 122, 77));
+		pen.setWidthF(pen.widthF() / PaintingScaleFactor);
+		pen.setBrush(QBrush(linearGradientPen));
+
+		painter->setPen(pen);
+		painter->setBrush(QBrush(linearGradientBrush));
+		#elif defined(Q_OS_UNIX)
+		QBrush brush(QColor(255, 82, 25));
+		painter->setBrush(brush);
+		#endif
 	}
 
 	int yOffset = (rect.height() - PaintingScaleFactor) / 2;
@@ -80,7 +107,7 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 
 	for (int i = 0; i < myMaxStarCount; ++i) {
 		if (i < myStarCount) {
-			painter->drawPolygon(starPolygon, Qt::WindingFill);
+			painter->drawPolygon(starPolygon);
 		} else if (mode == Editable) {
 			painter->drawPolygon(diamondPolygon, Qt::WindingFill);
 		}

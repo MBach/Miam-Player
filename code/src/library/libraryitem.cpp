@@ -1,6 +1,6 @@
 #include "libraryitem.h"
 #include "librarymodel.h"
-#include "starrating.h"
+#include "playlists/starrating.h"
 #include "settings.h"
 
 #include <QPainter>

@@ -3,8 +3,8 @@
 #include "library/librarytreeview.h"
 #include "library/libraryfilterlineedit.h"
 #include "mainwindow.h"
-#include "playlist.h"
-#include "tabplaylist.h"
+#include "playlists/playlist.h"
+#include "playlists/tabplaylist.h"
 
 #include <QHeaderView>
 #include <QScrollBar>

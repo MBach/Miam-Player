@@ -6,10 +6,10 @@
 
 #include <QtDebug>
 
-#include "library/librarytreeview.h"
-#include "playlist.h"
 #include "settings.h"
-#include "tabplaylist.h"
+#include "library/librarytreeview.h"
+#include "playlists/playlist.h"
+#include "playlists/tabplaylist.h"
 #include "tageditor/tageditor.h"
 
 #include "reflector.h"

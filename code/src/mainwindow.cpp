@@ -6,7 +6,7 @@
 
 #include "mainwindow.h"
 #include "dialogs/customizethemedialog.h"
-#include "playlist.h"
+#include "playlists/playlist.h"
 
 #include <QtMultimedia/QAudioDeviceInfo>
 #include <QGraphicsScene>

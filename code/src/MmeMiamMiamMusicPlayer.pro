@@ -37,31 +37,31 @@ SOURCES += \
     library/librarymodel.cpp \
     library/librarytreeview.cpp \
     library/musicsearchengine.cpp \
+    playlists/playlist.cpp \
+    playlists/playlistmodel.cpp \
+    playlists/stardelegate.cpp \
+    playlists/stareditor.cpp \
+    playlists/starrating.cpp \
+    playlists/tabbar.cpp \
+    playlists/tabplaylist.cpp \
     tageditor/albumcover.cpp \
     tageditor/cover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
     circleprogressbar.cpp \
+    columnutils.cpp \
     filehelper.cpp \
     main.cpp \
     mainwindow.cpp \
     mediabutton.cpp \
-    playlist.cpp \
-    settings.cpp \
-    stareditor.cpp \
-    starrating.cpp \
-    tabbar.cpp \
-    tabplaylist.cpp \
-    tracksnotfoundmessagebox.cpp \
-    treeview.cpp \
-    playlistmodel.cpp \
-    columnutils.cpp \
-    quickstart.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
+    quickstart.cpp \
+    settings.cpp \
     timelabel.cpp \
-    stardelegate.cpp
+    tracksnotfoundmessagebox.cpp \
+    treeview.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -86,6 +86,13 @@ HEADERS += \
     library/librarymodel.h \
     library/librarytreeview.h \
     library/musicsearchengine.h \
+    playlists/playlist.h \
+    playlists/playlistmodel.h \
+    playlists/stardelegate.h \
+    playlists/stareditor.h \
+    playlists/starrating.h \
+    playlists/tabbar.h \
+    playlists/tabplaylist.h \
     tageditor/albumcover.h \
     tageditor/cover.h \
     tageditor/tagconverter.h \
@@ -99,18 +106,11 @@ HEADERS += \
     nofocusitemdelegate.h \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \
-    playlist.h \
-    playlistmodel.h \
     quickstart.h \
     settings.h \
-    stareditor.h \
-    starrating.h \
-    tabbar.h \
-    tabplaylist.h \
     timelabel.h \
     tracksnotfoundmessagebox.h \
-    treeview.h \
-    stardelegate.h
+    treeview.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

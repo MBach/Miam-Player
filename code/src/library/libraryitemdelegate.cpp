@@ -1,8 +1,8 @@
 #include "libraryitemdelegate.h"
 
 #include "settings.h"
-#include "stareditor.h"
-#include "starrating.h"
+#include "playlists/stareditor.h"
+#include "playlists/starrating.h"
 #include "libraryitem.h"
 #include "librarytreeview.h"
 
@@ -106,7 +106,7 @@ QWidget* LibraryItemDelegate::createEditor(QWidget *parent, const QStyleOptionVi
 	if (index.data(LibraryItem::STAR_RATING).canConvert<StarRating>()) {
 		starEditor->setMinimumHeight(20);
 		starEditor->move(QPoint(100, 100));
-		connect(starEditor, SIGNAL(editingFinished(QWidget *)), this, SLOT(commitAndCloseEditor(QWidget *)));
+		connect(starEditor, &StarEditor::editingFinished, this, &LibraryItemDelegate::commitAndCloseEditor);
 		setEditorData(starEditor, index);
 		return starEditor;
 	} else {
@@ -148,7 +148,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	}
 }
 
-void LibraryItemDelegate::commitAndCloseEditor(QWidget */*e*/)
+void LibraryItemDelegate::commitAndCloseEditor()
 {
 	qDebug() << "LibraryItemDelegate::commitAndCloseEditor(). StarEditor is NULL ?" << (starEditor == NULL);
 	emit commitData(starEditor);

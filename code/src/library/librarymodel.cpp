@@ -1,5 +1,5 @@
 #include "librarymodel.h"
-#include "starrating.h"
+#include "playlists/starrating.h"
 #include "settings.h"
 #include "libraryitem.h"
 

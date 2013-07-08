@@ -5,7 +5,7 @@
 
 #include <QPainter>
 
-#include "stareditor.h"
+#include "playlists/stareditor.h"
 
 class LibraryItemDelegate : public QStyledItemDelegate
 {
@@ -45,7 +45,7 @@ protected:
 	inline void drawFocus(QPainter *, const QStyleOptionViewItem &, const QRect &) const {}
 
 private slots:
-	void commitAndCloseEditor(QWidget *);
+	void commitAndCloseEditor();
 };
 
 #endif // LIBRARYITEMDELEGATE_H

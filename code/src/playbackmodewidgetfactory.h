@@ -2,7 +2,7 @@
 #define PLAYBACKMODEWIDGETFACTORY_H
 
 #include "mediabutton.h"
-#include "tabplaylist.h"
+#include "playlists/tabplaylist.h"
 #include "playbackmodewidget.h"
 
 /// Factory or helper?

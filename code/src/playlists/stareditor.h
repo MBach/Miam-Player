@@ -38,32 +38,36 @@
 **
 ****************************************************************************/
 
-#ifndef STARDELEGATE_H
-#define STARDELEGATE_H
+#ifndef STAREDITOR_H
+#define STAREDITOR_H
 
-#include <QStyledItemDelegate>
+#include <QWidget>
 
-//! [0]
-class StarDelegate : public QStyledItemDelegate
+#include "starrating.h"
+
+class StarEditor : public QWidget
 {
 	Q_OBJECT
 
 public:
-	StarDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+	StarEditor(QWidget *parent = 0);
 
-	void paint(QPainter *painter, const QStyleOptionViewItem &option,
-			   const QModelIndex &index) const;
-	QSize sizeHint(const QStyleOptionViewItem &option,
-				   const QModelIndex &index) const;
-	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-						  const QModelIndex &index) const;
-	void setEditorData(QWidget *editor, const QModelIndex &index) const;
-	void setModelData(QWidget *editor, QAbstractItemModel *model,
-					  const QModelIndex &index) const;
+	QSize sizeHint() const;
+	void setStarRating(const StarRating &starRating) {
+		myStarRating = starRating;
+	}
+	StarRating starRating() { return myStarRating; }
 
-private slots:
-	void commitAndCloseEditor();
+signals:
+	void editingFinished();
+
+protected:
+	void paintEvent(QPaintEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
+
+private:
+	StarRating myStarRating;
 };
-//! [0]
 
 #endif
