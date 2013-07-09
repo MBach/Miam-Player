@@ -45,32 +45,32 @@
 #include <QPointF>
 #include <QVector>
 
-//! [0]
 class StarRating
 {
+private:
+	QPolygonF starPolygon;
+	QPolygonF diamondPolygon;
+	int _starCount;
+	int _maxStarCount;
+
 public:
 	enum EditMode { Editable, ReadOnly };
 
 	explicit StarRating(int starCount = 1);
 
-	void paint(QPainter *painter, const QRect &rect,
-			   const QPalette &palette, EditMode mode) const;
-	QSize sizeHint() const;
-	int starCount() const { return myStarCount; }
-	int maxStarCount() const { return myMaxStarCount; }
-	void setStarCount(int starCount) { myStarCount = starCount; }
-	void setMaxStarCount(int maxStarCount) { myMaxStarCount = maxStarCount; }
+	void paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const;
 
-private:
-	QPolygonF starPolygon;
-	QPolygonF diamondPolygon;
-	int myStarCount;
-	int myMaxStarCount;
+	//QSize sizeHint() const;
+
+	inline int starCount() const { return _starCount; }
+
+	inline int maxStarCount() const { return _maxStarCount; }
+
+	inline void setStarCount(int starCount) { _starCount = starCount; }
+
+	inline void setMaxStarCount(int maxStarCount) { _maxStarCount = maxStarCount; }
 };
-//! [0]
 
-//! [1]
 Q_DECLARE_METATYPE(StarRating)
-//! [1]
 
 #endif

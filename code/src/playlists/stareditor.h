@@ -52,7 +52,8 @@ class StarEditor : public QWidget
 public:
 	StarEditor(QWidget *parent = 0);
 
-	QSize sizeHint() const;
+	//QSize sizeHint() const;
+
 	void setStarRating(const StarRating &starRating) {
 		myStarRating = starRating;
 	}

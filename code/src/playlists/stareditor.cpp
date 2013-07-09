@@ -50,10 +50,10 @@ StarEditor::StarEditor(QWidget *parent)
 	setAutoFillBackground(true);
 }
 
-QSize StarEditor::sizeHint() const
+/*QSize StarEditor::sizeHint() const
 {
 	return myStarRating.sizeHint();
-}
+}*/
 
 void StarEditor::paintEvent(QPaintEvent *)
 {
@@ -63,8 +63,8 @@ void StarEditor::paintEvent(QPaintEvent *)
 
 void StarEditor::mouseMoveEvent(QMouseEvent *event)
 {
-	double starWidth = myStarRating.sizeHint().width() / myStarRating.maxStarCount();
-	myStarRating.setStarCount(round(event->x() / (double)starWidth));
+	/*double starWidth = myStarRating.sizeHint().width() / myStarRating.maxStarCount();
+	myStarRating.setStarCount(round(event->x() / (double)starWidth));*/
 	update();
 }
 

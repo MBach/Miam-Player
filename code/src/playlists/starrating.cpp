@@ -43,13 +43,10 @@
 
 #include "starrating.h"
 
-/// TODO: make this dynamic
-const int PaintingScaleFactor = 20;
-
 StarRating::StarRating(int starCount)
-	: myMaxStarCount(5)
+	: _maxStarCount(5)
 {
-	myStarCount = starCount;
+	_starCount = starCount;
 	for (int i = 0; i < 5; ++i) {
 		QLineF l(0.5, 0.5, 0.5, 0);
 		l.setAngle(i * 72 + 18);
@@ -59,22 +56,21 @@ StarRating::StarRating(int starCount)
 		l2.setAngle(i * 72 + 54);
 		starPolygon << l2.p2();
 	}
-
-	//starPolygon << QPointF(0.5, 0);
 	diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
 }
 
+/*
 QSize StarRating::sizeHint() const
 {
-	return PaintingScaleFactor * QSize(myMaxStarCount, 1);
+	return PaintingScaleFactor * QSize(_maxStarCount, 1);
 }
+*/
 
 void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const
 {
 	painter->save();
 
 	painter->setRenderHint(QPainter::Antialiasing, true);
-	painter->setPen(Qt::NoPen);
 
 	if (mode == Editable) {
 		painter->setBrush(palette.highlight());
@@ -90,7 +86,7 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 		linearGradientPen.setColorAt(1, QColor(166, 122, 87));
 
 		QPen pen(QColor(171, 122, 77));
-		pen.setWidthF(pen.widthF() / PaintingScaleFactor);
+		pen.setWidthF(pen.widthF() / rect.height());
 		pen.setBrush(QBrush(linearGradientPen));
 
 		painter->setPen(pen);
@@ -101,12 +97,11 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 		#endif
 	}
 
-	int yOffset = (rect.height() - PaintingScaleFactor) / 2;
-	painter->translate(rect.x(), rect.y() + yOffset);
-	painter->scale(PaintingScaleFactor, PaintingScaleFactor);
+	painter->translate(rect.x(), rect.y() + (rect.height() - rect.height() * starPolygon.boundingRect().height()) / 2);
+	painter->scale(rect.height(), rect.height());
 
-	for (int i = 0; i < myMaxStarCount; ++i) {
-		if (i < myStarCount) {
+	for (int i = 0; i < _maxStarCount; ++i) {
+		if (i < _starCount) {
 			painter->drawPolygon(starPolygon);
 		} else if (mode == Editable) {
 			painter->drawPolygon(diamondPolygon, Qt::WindingFill);

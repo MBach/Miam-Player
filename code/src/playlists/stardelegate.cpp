@@ -46,25 +46,32 @@
 
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+	// Removes the dotted rectangle
+	QStyleOptionViewItem opt = option;
+	opt.state &= ~QStyle::State_HasFocus;
+
+	QLinearGradient linearGradient(opt.rect.x(), opt.rect.y(), opt.rect.x(), opt.rect.y() + opt.rect.height());
+	linearGradient.setColorAt(0, QColor::fromRgb(221, 236, 251));
+	linearGradient.setColorAt(1, QColor::fromRgb(202, 224, 251));
+	QBrush brush(linearGradient);
+
+	if (opt.state & QStyle::State_Selected) {
+		painter->fillRect(opt.rect, brush);
+	}
 	if (index.data().canConvert<StarRating>()) {
 		StarRating starRating = qvariant_cast<StarRating>(index.data());
-		if (option.state & QStyle::State_Selected) {
-			painter->fillRect(option.rect, option.palette.highlight());
-		}
-		starRating.paint(painter, option.rect, option.palette, StarRating::ReadOnly);
-	} else {
-		QStyledItemDelegate::paint(painter, option, index);
+		starRating.paint(painter, opt.rect, opt.palette, StarRating::ReadOnly);
 	}
 }
 
 QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	if (index.data().canConvert<StarRating>()) {
+	/*if (index.data().canConvert<StarRating>()) {
 		StarRating starRating = qvariant_cast<StarRating>(index.data());
 		return starRating.sizeHint();
-	} else {
-		return QStyledItemDelegate::sizeHint(option, index);
-	}
+	} else {*/
+	return QStyledItemDelegate::sizeHint(option, index);
+	//}
 }
 
 QWidget *StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
