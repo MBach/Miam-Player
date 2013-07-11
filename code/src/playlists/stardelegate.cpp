@@ -44,6 +44,9 @@
 #include "stareditor.h"
 #include "starrating.h"
 
+#include "playlist.h"
+#include "settings.h"
+
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	// Removes the dotted rectangle
@@ -60,18 +63,27 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	}
 	if (index.data().canConvert<StarRating>()) {
 		StarRating starRating = qvariant_cast<StarRating>(index.data());
+		Playlist *playlist = qobject_cast<Playlist*>(parent());
+		if (playlist) {
+			//Settings *settings = Settings::getInstance();
+			//QFont font = settings->font(Settings::PLAYLIST);
+			//QFontMetrics fm(font);
+			//width += fm.width(_playlistModel->headerData(c, Qt::Horizontal).toString());
+			qDebug() << "sh" << _sizeHint << "rect" << opt.rect.width();
+		}
 		starRating.paint(painter, opt.rect, opt.palette, StarRating::ReadOnly);
 	}
+
 }
 
 QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	/*if (index.data().canConvert<StarRating>()) {
-		StarRating starRating = qvariant_cast<StarRating>(index.data());
-		return starRating.sizeHint();
-	} else {*/
-	return QStyledItemDelegate::sizeHint(option, index);
-	//}
+	if (index.data().canConvert<StarRating>()) {
+		//StarRating starRating = qvariant_cast<StarRating>(index.data());
+		return option.rect.size();
+	} else {
+		return QStyledItemDelegate::sizeHint(option, index);
+	}
 }
 
 QWidget *StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const

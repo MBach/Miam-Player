@@ -46,6 +46,8 @@
 class StarDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
+private:
+	int _sizeHint;
 
 public:
 	StarDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
@@ -59,6 +61,8 @@ public:
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 
 	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+
+	void setSizeHint(int sizeHint) { _sizeHint = sizeHint; }
 
 private slots:
 	void commitAndCloseEditor();

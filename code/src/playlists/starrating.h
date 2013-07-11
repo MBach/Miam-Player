@@ -51,9 +51,10 @@ private:
 	QPolygonF starPolygon;
 	QPolygonF diamondPolygon;
 	int _starCount;
-	int _maxStarCount;
 
 public:
+	static int maxStarCount;
+
 	enum EditMode { Editable, ReadOnly };
 
 	explicit StarRating(int starCount = 1);
@@ -64,11 +65,9 @@ public:
 
 	inline int starCount() const { return _starCount; }
 
-	inline int maxStarCount() const { return _maxStarCount; }
-
 	inline void setStarCount(int starCount) { _starCount = starCount; }
 
-	inline void setMaxStarCount(int maxStarCount) { _maxStarCount = maxStarCount; }
+	inline void setMaxStarCount(int maxStarCount) { maxStarCount = maxStarCount; }
 };
 
 Q_DECLARE_METATYPE(StarRating)

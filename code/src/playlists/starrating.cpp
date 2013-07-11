@@ -43,8 +43,9 @@
 
 #include "starrating.h"
 
+int StarRating::maxStarCount = 5;
+
 StarRating::StarRating(int starCount)
-	: _maxStarCount(5)
 {
 	_starCount = starCount;
 	for (int i = 0; i < 5; ++i) {
@@ -98,9 +99,13 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 	}
 
 	painter->translate(rect.x(), rect.y() + (rect.height() - rect.height() * starPolygon.boundingRect().height()) / 2);
-	painter->scale(rect.height(), rect.height());
+	if (rect.height() < rect.width() / 5) {
+		painter->scale(rect.height(), rect.height());
+	} else {
+		painter->scale(rect.width() / maxStarCount, rect.width() / maxStarCount);
+	}
 
-	for (int i = 0; i < _maxStarCount; ++i) {
+	for (int i = 0; i < maxStarCount; ++i) {
 		if (i < _starCount) {
 			painter->drawPolygon(starPolygon);
 		} else if (mode == Editable) {
