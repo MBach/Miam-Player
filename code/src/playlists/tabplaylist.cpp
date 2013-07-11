@@ -45,6 +45,13 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		}
 	});
 	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
+
+	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
+		Settings *settings = Settings::getInstance();
+		for (int i = 0; i < playlists().size(); i++) {
+			settings->saveColumnStateForPlaylist(i, playlist(i)->horizontalHeader()->saveState());
+		}
+	});
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -71,7 +78,7 @@ void TabPlaylist::restorePlaylists()
 			QList<QMediaContent> tracksNotFound;
 
 			// For all playlists (p : { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] ; QVariant[QMediaPlaylist::PlaybackMode] }
-			for (int i = 0; i < playlists.size(); i++) {
+			for (int i = 0, j = 0; i < playlists.size(); i++) {
 				QList<QVariant> vTracks = playlists.at(i).toList();
 				Playlist *p = this->addPlaylist();
 				this->setTabText(count(), playlists.at(++i).toString());
@@ -91,6 +98,10 @@ void TabPlaylist::restorePlaylists()
 				if (i == playlists.size() - 1) {
 					emit updatePlaybackModeButton();
 				}
+
+				// Restore columnState for each playlist too
+				p->horizontalHeader()->restoreState(settings->restoreColumnStateForPlaylist(j));
+				j++;
 			}
 			// Error handling
 			if (!tracksNotFound.isEmpty()) {

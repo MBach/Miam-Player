@@ -15,6 +15,7 @@
 #include "library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "stardelegate.h"
+#include "starrating.h"
 
 #include <QtDebug>
 
@@ -30,14 +31,15 @@ Playlist::Playlist(QWidget *parent) :
 	// Init direct members
 	this->setAcceptDrops(true);
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
-
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
-	this->setItemDelegateForColumn(5, new StarDelegate);
+	// Replace the default delegate with a custom StarDelegate for ratings
+	StarDelegate *starDelegate = new StarDelegate(this);
+	this->setItemDelegateForColumn(5, starDelegate);
 	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -47,11 +49,13 @@ Playlist::Playlist(QWidget *parent) :
 
 	// Init child members
 	verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
-	verticalHeader()->setVisible(false);
-	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
+	verticalHeader()->hide();
 	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
 	horizontalHeader()->setHighlightSections(false);
 	horizontalHeader()->setSectionsMovable(true);
+	horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+	horizontalHeader()->setStretchLastSection(true);
+	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
 
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
@@ -64,10 +68,14 @@ Playlist::Playlist(QWidget *parent) :
 
 	// Hide the selected column in context menu
     connect(horizontalHeader(), &QWidget::customContextMenuRequested, this, &Playlist::showColumnsMenu);
-    connect(horizontalHeader(), &QHeaderView::sectionMoved, this, &Playlist::saveColumnsState);
 
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
+
+	connect(horizontalHeader(), &QHeaderView::sectionResized, [=](int idx, int oldSize, int newSize) {
+		qDebug() << idx << oldSize << newSize;
+		starDelegate->setSizeHint(newSize);
+	});
 }
 
 void Playlist::init()
@@ -110,6 +118,25 @@ void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	qMediaPlaylist->insertMedia(rowIndex, medias);
 	_playlistModel->insertMedias(rowIndex, medias);
+	resizeColumnToContents(TRACK_NUMBER);
+	resizeColumnToContents(RATINGS);
+	resizeColumnToContents(YEAR);
+}
+
+QSize Playlist::minimumSizeHint() const
+{
+	int width = 0;
+	Settings *settings = Settings::getInstance();
+	QFont font = settings->font(Settings::PLAYLIST);
+	//qDebug() << font.pointSize() << settings->fontSize(Settings::PLAYLIST);
+	QFontMetrics fm(font);
+	for (int c = 0; c < _playlistModel->columnCount(); c++) {
+		if (!isColumnHidden(c)) {
+			width += fm.width(_playlistModel->headerData(c, Qt::Horizontal).toString());
+		}
+	}
+	//qDebug() << Q_FUNC_INFO << width << QTableView::minimumSizeHint().width();
+	return QTableView::minimumSizeHint();
 }
 
 /** Display a context menu with the state of all columns. */
@@ -224,23 +251,43 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
+	//qDebug() << "painting?";
 	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line
 		int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
 		int height = this->rowHeight(0);
+		/// TODO computes color from user defined settings
 		QPainter painter(viewport());
-		/// TODO computes color from user define settings
 		painter.setPen(Qt::black);
 		painter.drawLine(viewport()->rect().left(), rowDest * height,
 						 viewport()->rect().right(), rowDest * height);
 	}
 }
 
-void Playlist::resizeEvent(QResizeEvent *)
+/*void Playlist::resizeEvent(QResizeEvent *)
 {
 	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 2 << 0);
 	ColumnUtils::resizeColumns(this, ratios);
+	repaint();
+}*/
+
+int Playlist::sizeHintForColumn(int column) const
+{
+	//qDebug() << QTableView::sizeHintForColumn(LENGTH);
+	if (column == RATINGS) {
+		return rowHeight(RATINGS) * StarRating::maxStarCount;
+	} else {
+		return QTableView::sizeHintForColumn(column);
+	}
+}
+
+void Playlist::showEvent(QShowEvent *event)
+{
+	resizeColumnToContents(TRACK_NUMBER);
+	resizeColumnToContents(RATINGS);
+	resizeColumnToContents(YEAR);
+	QTableView::showEvent(event);
 }
 
 /** Toggle the selected column from the context menu. */
@@ -248,16 +295,8 @@ void Playlist::toggleSelectedColumn(QAction *action)
 {
 	int columnIndex = action->data().toInt();
 	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
-	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
-	ColumnUtils::resizeColumns(this, ratios);
-	this->saveColumnsState();
-}
-
-/** Save state when one checks or moves a column. */
-void Playlist::saveColumnsState(int /*logicalIndex*/, int /*oldVisualIndex*/, int /*newVisualIndex*/)
-{
-	// The pair "playlistColumnsState" is only used in this class, so there's no need to create specific getter and setter
-	Settings::getInstance()->setValue("playlistColumnsState", horizontalHeader()->saveState());
+	//QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
+	//ColumnUtils::resizeColumns(this, ratios);
 }
 
 /** Move selected tracks downward. */

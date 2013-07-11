@@ -428,6 +428,18 @@ QString Settings::styleSheet(QWidget *w) const
 	return styleSheet;
 }
 
+void Settings::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state)
+{
+	columnStates = this->value("columnStateForPlaylist").toMap();
+	columnStates.insert(QString::number(playlistIndex), state);
+	this->setValue("columnStateForPlaylist", columnStates);
+}
+
+QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
+{
+	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
+}
+
 void Settings::setCustomStyleSheet(QWidget *w)
 {
 	QMap<QString, QVariant> map = value("styleSheet").toMap();

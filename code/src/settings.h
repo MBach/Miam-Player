@@ -28,6 +28,8 @@ private:
 
 	QMap<QString, QByteArray> stylesheets;
 
+	QMap<QString, QVariant> columnStates;
+
 	Q_ENUMS(FontFamily)
 
 public:
@@ -109,6 +111,10 @@ public:
 	bool copyTracksFromPlaylist() const { return value("copyTracksFromPlaylist").toBool(); }
 
 	QString dragAndDropBehaviour() const { return value("dragAndDropBehaviour").toString(); }
+
+	void saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state);
+
+	QByteArray restoreColumnStateForPlaylist(int playlistIndex) const;
 
 public slots:
 	/** Sets a new theme. */

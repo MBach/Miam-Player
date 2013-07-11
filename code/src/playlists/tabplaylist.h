@@ -59,9 +59,6 @@ public slots:
 	/** Add external folders (from a drag and drop) to the current playlist. */
 	void addExtFolders(const QList<QDir> &folders);
 
-	/** Append multiple tracks chosen by one from the library or the filesystem into a playlist. */
-	//void appendItemsToPlaylist(const QList<QPersistentModelIndex> &indexes);
-
 	/** Append a single track chosen by one from the library or the filesystem into the active playlist. */
 	void appendItemToPlaylist(const QModelIndex &index);
 

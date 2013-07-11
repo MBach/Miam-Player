@@ -26,7 +26,17 @@ private:
 
 	QPoint _dragStartPosition;
 
+	Q_ENUMS(Columns)
+
 public:
+	enum Columns{TRACK_NUMBER = 0,
+				 TITLE = 1,
+				 ALBUM = 2,
+				 ARTIST = 3,
+				 LENGTH = 4,
+				 RATINGS = 5,
+				 YEAR = 6};
+
 	Playlist(QWidget *parent);
 
 	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
@@ -37,6 +47,8 @@ public:
 	void init();
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
+
+	QSize minimumSizeHint() const;
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -53,7 +65,12 @@ protected:
 
 	/** Redefined to display a thin line to help user for dropping tracks. */
 	void paintEvent(QPaintEvent *e);
-	void resizeEvent(QResizeEvent *event);
+
+	//void resizeEvent(QResizeEvent *event);
+
+	int sizeHintForColumn(int column) const;
+
+	void showEvent(QShowEvent *event);
 
 public slots:
 	/** Move selected tracks downward. */
@@ -72,9 +89,6 @@ private slots:
 
 	/** Display a context menu with the state of all columns. */
 	void showColumnsMenu(const QPoint &);
-
-	/** Save state when one checks or moves a column. */
-	void saveColumnsState(int column = 0, int oldIndex = 0, int newIndex = 0);
 
 	/** Toggle the selected column from the context menu. */
 	void toggleSelectedColumn(QAction *action);
