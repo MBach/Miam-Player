@@ -61,7 +61,8 @@ SOURCES += \
     settings.cpp \
     timelabel.cpp \
     tracksnotfoundmessagebox.cpp \
-    treeview.cpp
+    treeview.cpp \
+    playlists/playlistheaderview.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -110,7 +111,8 @@ HEADERS += \
     settings.h \
     timelabel.h \
     tracksnotfoundmessagebox.h \
-    treeview.h
+    treeview.h \
+    playlists/playlistheaderview.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(parent)
+	QStandardItemModel(0, 7, parent)
 {}
 
 /** Clear the content of playlist. */

@@ -48,8 +48,12 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
 		Settings *settings = Settings::getInstance();
-		for (int i = 0; i < playlists().size(); i++) {
-			settings->saveColumnStateForPlaylist(i, playlist(i)->horizontalHeader()->saveState());
+		if (playlists().size() == 1 && playlist(0)->mediaPlaylist()->isEmpty()) {
+			settings->remove("columnStateForPlaylist");
+		} else {
+			for (int i = 0; i < playlists().size(); i++) {
+				settings->saveColumnStateForPlaylist(i, playlist(i)->horizontalHeader()->saveState());
+			}
 		}
 	});
 }
@@ -62,9 +66,8 @@ void TabPlaylist::retranslateUi()
 		QString playlistName = tr("Playlist ");
 		playlistName.append(QString::number(i+1));
 		if (tabText(i) == playlistName) {
-			setTabText(i, playlistName);
+			this->setTabText(i, playlistName);
 		}
-		playlist(i)->retranslateUi();
 	}
 }
 
@@ -122,13 +125,13 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Then append a new empty playlist to the others
 	Playlist *p = new Playlist(this);
-	p->init();
 	int i = insertTab(count(), p, newPlaylistName);
 
 	// If there's a custom stylesheet on the playlist, copy it from the previous one
 	if (i > 1) {
 		Playlist *previous = this->playlist(i - 1);
 		p->setStyleSheet(previous->styleSheet());
+		/// FIXME: stylesheet should be for Class, not instances
 		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
 	}
 	connect(p, &QTableView::doubleClicked, this, &TabPlaylist::play);

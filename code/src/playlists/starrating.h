@@ -61,8 +61,6 @@ public:
 
 	void paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const;
 
-	//QSize sizeHint() const;
-
 	inline int starCount() const { return _starCount; }
 
 	inline void setStarCount(int starCount) { _starCount = starCount; }

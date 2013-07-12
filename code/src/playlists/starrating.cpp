@@ -60,13 +60,6 @@ StarRating::StarRating(int starCount)
 	diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
 }
 
-/*
-QSize StarRating::sizeHint() const
-{
-	return PaintingScaleFactor * QSize(_maxStarCount, 1);
-}
-*/
-
 void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const
 {
 	painter->save();

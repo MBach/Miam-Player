@@ -13,7 +13,7 @@ class Playlist : public QTableView
 	Q_OBJECT
 
 private:
-	QMenu *columns;
+	//QMenu *columns;
 	QMenu *trackProperties;
 
 	/** Model to store basic fields on a track. Mostly used to create or move rows. */
@@ -41,11 +41,6 @@ public:
 
 	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
 
-	/** Retranslate header columns. */
-	void retranslateUi();
-
-	void init();
-
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
 	QSize minimumSizeHint() const;
@@ -66,8 +61,6 @@ protected:
 	/** Redefined to display a thin line to help user for dropping tracks. */
 	void paintEvent(QPaintEvent *e);
 
-	//void resizeEvent(QResizeEvent *event);
-
 	int sizeHintForColumn(int column) const;
 
 	void showEvent(QShowEvent *event);
@@ -84,14 +77,6 @@ public slots:
 
 	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 	void highlightCurrentTrack();
-
-private slots:
-
-	/** Display a context menu with the state of all columns. */
-	void showColumnsMenu(const QPoint &);
-
-	/** Toggle the selected column from the context menu. */
-	void toggleSelectedColumn(QAction *action);
 };
 
 #endif // PLAYLIST_H

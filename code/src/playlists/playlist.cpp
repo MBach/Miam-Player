@@ -15,7 +15,7 @@
 #include "library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "stardelegate.h"
-#include "starrating.h"
+#include "playlistheaderview.h"
 
 #include <QtDebug>
 
@@ -40,7 +40,6 @@ Playlist::Playlist(QWidget *parent) :
 	// Replace the default delegate with a custom StarDelegate for ratings
 	StarDelegate *starDelegate = new StarDelegate(this);
 	this->setItemDelegateForColumn(5, starDelegate);
-	this->setHorizontalHeader(new QHeaderView(Qt::Horizontal, this));
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -50,68 +49,19 @@ Playlist::Playlist(QWidget *parent) :
 	// Init child members
 	verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
 	verticalHeader()->hide();
-	horizontalHeader()->setContextMenuPolicy(Qt::CustomContextMenu);
-	horizontalHeader()->setHighlightSections(false);
-	horizontalHeader()->setSectionsMovable(true);
-	horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
-	horizontalHeader()->setStretchLastSection(true);
-	horizontalHeader()->setStyleSheet(settings->styleSheet(horizontalHeader()));
+	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
 	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
     connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 
-	// Context menu on header of columns
-	columns = new QMenu(this);
-	connect(columns, SIGNAL(triggered(QAction*)), this, SLOT(toggleSelectedColumn(QAction*)));
-
-	// Hide the selected column in context menu
-    connect(horizontalHeader(), &QWidget::customContextMenuRequested, this, &Playlist::showColumnsMenu);
-
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
 
-	connect(horizontalHeader(), &QHeaderView::sectionResized, [=](int idx, int oldSize, int newSize) {
-		qDebug() << idx << oldSize << newSize;
+	connect(horizontalHeader(), &QHeaderView::sectionResized, [=](int, int, int newSize) {
 		starDelegate->setSizeHint(newSize);
 	});
-}
-
-void Playlist::init()
-{
-	QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
-
-	_playlistModel->setColumnCount(labels.count());
-
-	// Initialize values for the Header (label and horizontal resize mode)
-	Settings *settings = Settings::getInstance();
-	for (int i = 0; i < labels.size(); i++) {
-		_playlistModel->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
-		_playlistModel->setHeaderData(i, Qt::Horizontal, settings->font(Settings::PLAYLIST), Qt::FontRole);
-	}
-
-	for (int i = 0; i < _playlistModel->columnCount(); i++) {
-		QString label = labels.at(i);
-
-		// Match actions with columns using index of labels
-		QAction *actionColumn = new QAction(label, this);
-		actionColumn->setData(i);
-		actionColumn->setEnabled(actionColumn->text() != tr("Title"));
-		actionColumn->setCheckable(true);
-		actionColumn->setChecked(!isColumnHidden(i));
-
-		// Then populate the context menu
-		columns->addAction(actionColumn);
-	}
-
-	// Load columns state
-	horizontalHeader()->restoreState(Settings::getInstance()->value("playlistColumnsState").toByteArray());
-	for (int i = 0; i < horizontalHeader()->count(); i++) {
-		bool hidden = horizontalHeader()->isSectionHidden(i);
-		setColumnHidden(i, hidden);
-		columns->actions().at(i)->setChecked(!hidden);
-	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -128,33 +78,13 @@ QSize Playlist::minimumSizeHint() const
 	int width = 0;
 	Settings *settings = Settings::getInstance();
 	QFont font = settings->font(Settings::PLAYLIST);
-	//qDebug() << font.pointSize() << settings->fontSize(Settings::PLAYLIST);
 	QFontMetrics fm(font);
 	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		if (!isColumnHidden(c)) {
 			width += fm.width(_playlistModel->headerData(c, Qt::Horizontal).toString());
 		}
 	}
-	//qDebug() << Q_FUNC_INFO << width << QTableView::minimumSizeHint().width();
 	return QTableView::minimumSizeHint();
-}
-
-/** Display a context menu with the state of all columns. */
-void Playlist::showColumnsMenu(const QPoint &pos)
-{
-	columns->exec(mapToGlobal(pos));
-}
-
-/** Retranslate header columns. */
-void Playlist::retranslateUi()
-{
-	const QStringList labels = (QStringList() << "#" << tr("Title") << tr("Album") << tr("Length") << tr("Artist") << tr("Rating") << tr("Year"));
-
-	// Initialize values for the Header (label and horizontal resize mode)
-	for (int i = 0; i < labels.size(); i++) {
-		_playlistModel->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
-		columns->actions().at(i)->setText(labels.at(i));
-	}
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -251,7 +181,6 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
-	//qDebug() << "painting?";
 	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line
@@ -265,18 +194,10 @@ void Playlist::paintEvent(QPaintEvent *event)
 	}
 }
 
-/*void Playlist::resizeEvent(QResizeEvent *)
-{
-	QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 2 << 0);
-	ColumnUtils::resizeColumns(this, ratios);
-	repaint();
-}*/
-
 int Playlist::sizeHintForColumn(int column) const
 {
-	//qDebug() << QTableView::sizeHintForColumn(LENGTH);
 	if (column == RATINGS) {
-		return rowHeight(RATINGS) * StarRating::maxStarCount;
+		return rowHeight(RATINGS) * 5;
 	} else {
 		return QTableView::sizeHintForColumn(column);
 	}
@@ -288,15 +209,6 @@ void Playlist::showEvent(QShowEvent *event)
 	resizeColumnToContents(RATINGS);
 	resizeColumnToContents(YEAR);
 	QTableView::showEvent(event);
-}
-
-/** Toggle the selected column from the context menu. */
-void Playlist::toggleSelectedColumn(QAction *action)
-{
-	int columnIndex = action->data().toInt();
-	this->setColumnHidden(columnIndex, !isColumnHidden(columnIndex));
-	//QList<int> ratios(QList<int>() << 0 << 5 << 4 << 1 << 3 << 0 << 0);
-	//ColumnUtils::resizeColumns(this, ratios);
 }
 
 /** Move selected tracks downward. */
