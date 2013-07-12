@@ -47,8 +47,9 @@ public:
 		return _playlists;
 	}
 
+protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
-	void retranslateUi();
+	void changeEvent(QEvent *event);
 
 public slots:
 	void restorePlaylists();

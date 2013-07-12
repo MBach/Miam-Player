@@ -87,25 +87,14 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
     connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 }
 
-/** Small function for translating the QMenu exclusively. */
-void LibraryTreeView::retranslateUi()
-{
-	foreach (QAction *action, properties->actions()) {
-		action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
-	}
-}
-
-QSize LibraryTreeView::sizeInt() const
-{
-	return QSize();
-}
-
-
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
+		foreach (QAction *action, properties->actions()) {
+			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
+		}
 		LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
 		if (!(libraryItem && libraryItem->type() == LibraryModel::LETTER)) {
 			properties->exec(event->globalPos());

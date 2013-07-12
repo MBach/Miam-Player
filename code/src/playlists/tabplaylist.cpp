@@ -44,7 +44,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			_mediaPlayer->stop();
 		}
 	});
-	connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
+	//connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
 
 	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
 		Settings *settings = Settings::getInstance();
@@ -59,14 +59,17 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
-void TabPlaylist::retranslateUi()
+void TabPlaylist::changeEvent(QEvent *event)
 {
-	// No translation for the (+) tab button
-	for (int i=0; i < count()-1; i++) {
-		QString playlistName = tr("Playlist ");
-		playlistName.append(QString::number(i+1));
-		if (tabText(i) == playlistName) {
-			this->setTabText(i, playlistName);
+	if (event->type() == QEvent::LanguageChange) {
+		// No translation for the (+) tab button
+		for (int i = 0; i < count() - 1; i++) {
+			QString playlistName = tr("Playlist ");
+			playlistName.append(QString::number(i + 1));
+			if (tabText(i) == playlistName) {
+				this->setTabText(i, playlistName);
+			}
+			playlist(i)->horizontalHeader();
 		}
 	}
 }

@@ -27,11 +27,6 @@ private:
 public:
 	LibraryTreeView(QWidget *parent = 0);
 
-	/** Small function for translating the QMenu exclusively. */
-	void retranslateUi();
-
-	QSize sizeInt() const;
-
 protected:
 	/** Redefined to display a small context menu in the view. */
 	void contextMenuEvent(QContextMenuEvent *event);

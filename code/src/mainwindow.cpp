@@ -233,9 +233,6 @@ void MainWindow::changeEvent(QEvent *event)
 		quickStart->retranslateUi(quickStart);
 		customizeThemeDialog->retranslateUi(customizeThemeDialog);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
-		// Also retranslate each playlist which includes columns like "album", "length", ...
-		tabPlaylists->retranslateUi();
-		library->retranslateUi();
 		tagEditor->retranslateUi(tagEditor);
 
 		// (need to be tested with Arabic language)
@@ -254,7 +251,7 @@ void MainWindow::closeEvent(QCloseEvent */*event*/)
 	settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 	settings->setVolume(volumeSlider->value());
-	Settings::getInstance()->sync();
+	settings->sync();
 }
 
 void MainWindow::dropEvent(QDropEvent *event)

@@ -21,6 +21,9 @@ public:
 	void setModel(QAbstractItemModel *model);
 
 protected:
+	/** Redefined for dynamic translation. */
+	void changeEvent(QEvent *event);
+
 	/** Redefined. */
 	void contextMenuEvent(QContextMenuEvent *event);
 };

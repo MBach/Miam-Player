@@ -4,8 +4,6 @@
 
 #include <QtDebug>
 
-#include <QCoreApplication>
-
 QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Title")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Album")
@@ -23,6 +21,7 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	this->setStretchLastSection(true);
 	this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 
+
 	// Context menu on header of columns
 	columns = new QMenu(this);
 	connect(columns, &QMenu::triggered, [=](const QAction *action) {
@@ -31,10 +30,23 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	});
 }
 
+/** Redefined for dynamic translation. */
+void PlaylistHeaderView::changeEvent(QEvent *event)
+{
+	QHeaderView::changeEvent(event);
+	if (model() && event->type() == QEvent::LanguageChange) {
+		for (int i = 0; i < model()->columnCount(); i++) {
+			model()->setHeaderData(i, Qt::Horizontal, tr(labels.at(i).toStdString().data()), Qt::DisplayRole);
+		}
+	}
+}
+
 void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 {
+	QHeaderView::setModel(model);
 	for (int i = 0; i < model->columnCount(); i++) {
 		QString label = labels.at(i);
+		model->setHeaderData(i, Qt::Horizontal, tr(label.toStdString().data()), Qt::DisplayRole);
 
 		// Match actions with columns using index of labels
 		QAction *actionColumn = new QAction(label, this);
@@ -46,14 +58,12 @@ void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 		// Then populate the context menu
 		columns->addAction(actionColumn);
 	}
-	QHeaderView::setModel(model);
 }
 
 void PlaylistHeaderView::contextMenuEvent(QContextMenuEvent *event)
 {
 	// Initialize values for the Header (label and horizontal resize mode)
 	for (int i = 0; i < labels.size(); i++) {
-		//_playlistModel->setHeaderData(i, Qt::Horizontal, labels.at(i), Qt::DisplayRole);
 		columns->actions().at(i)->setText(tr(labels.at(i).toStdString().data()));
 	}
 

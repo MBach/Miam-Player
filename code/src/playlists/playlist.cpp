@@ -38,8 +38,7 @@ Playlist::Playlist(QWidget *parent) :
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 	// Replace the default delegate with a custom StarDelegate for ratings
-	StarDelegate *starDelegate = new StarDelegate(this);
-	this->setItemDelegateForColumn(5, starDelegate);
+	this->setItemDelegateForColumn(5, new StarDelegate(this));
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -58,10 +57,6 @@ Playlist::Playlist(QWidget *parent) :
 
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
-
-	connect(horizontalHeader(), &QHeaderView::sectionResized, [=](int, int, int newSize) {
-		starDelegate->setSizeHint(newSize);
-	});
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -93,6 +88,9 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 	QModelIndex index = this->indexAt(event->pos());
 	QStandardItem *item = _playlistModel->itemFromIndex(index);
 	if (item != NULL) {
+		foreach (QAction *action, trackProperties->actions()) {
+			action->setText(tr(action->text().toStdString().data()));
+		}
 		trackProperties->exec(event->globalPos());
 	}
 }
