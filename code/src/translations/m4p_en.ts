@@ -797,12 +797,19 @@
 <context>
     <name>Playlist</name>
     <message>
-        <source>Album</source>
-        <translation>Album</translation>
+        <source>Remove from playlist</source>
+        <translation>Remove from playlist</translation>
     </message>
+</context>
+<context>
+    <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
         <translation>Title</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Length</source>
@@ -819,10 +826,6 @@
     <message>
         <source>Year</source>
         <translation>Year</translation>
-    </message>
-    <message>
-        <source>Remove from playlist</source>
-        <translation>Remove from playlist</translation>
     </message>
 </context>
 <context>

@@ -794,6 +794,13 @@
 <context>
     <name>Playlist</name>
     <message>
+        <source>Remove from playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PlaylistHeaderView</name>
+    <message>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
@@ -815,10 +822,6 @@
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove from playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

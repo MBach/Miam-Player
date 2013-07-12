@@ -798,12 +798,19 @@
 <context>
     <name>Playlist</name>
     <message>
-        <source>Album</source>
-        <translation>Album</translation>
+        <source>Remove from playlist</source>
+        <translation>Retirer de la liste de lecture</translation>
     </message>
+</context>
+<context>
+    <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
         <translation>Titre</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Length</source>
@@ -820,10 +827,6 @@
     <message>
         <source>Year</source>
         <translation>Année</translation>
-    </message>
-    <message>
-        <source>Remove from playlist</source>
-        <translation>Retirer de la liste de lecture</translation>
     </message>
 </context>
 <context>
