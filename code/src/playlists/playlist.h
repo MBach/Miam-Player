@@ -26,6 +26,8 @@ private:
 
 	QPoint _dragStartPosition;
 
+	QModelIndexList _previouslySelectedRows;
+
 	Q_ENUMS(Columns)
 
 public:
@@ -55,6 +57,9 @@ protected:
 	/** Redefined to be able to move tracks between playlists or internally. */
 	void dropEvent(QDropEvent *event);
 
+	/** Redefined to handle escape key when editing ratings. */
+	void keyPressEvent(QKeyEvent *event);
+
 	void mouseMoveEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 
@@ -70,7 +75,7 @@ public slots:
 	void moveTracksDown();
 
 	/** Move selected tracks upward. */
-	void moveTracksUp(int i = 1);
+	void moveTracksUp();
 
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();

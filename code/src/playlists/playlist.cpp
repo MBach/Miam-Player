@@ -19,6 +19,8 @@
 
 #include <QtDebug>
 
+#include <QApplication>
+
 Playlist::Playlist(QWidget *parent) :
 	QTableView(parent), _dropDownIndex(NULL)
 {
@@ -38,7 +40,8 @@ Playlist::Playlist(QWidget *parent) :
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 	// Replace the default delegate with a custom StarDelegate for ratings
-	this->setItemDelegateForColumn(5, new StarDelegate(this));
+	StarDelegate *starDelegate = new StarDelegate(this);
+	this->setItemDelegateForColumn(5, starDelegate);
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -57,6 +60,40 @@ Playlist::Playlist(QWidget *parent) :
 
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
+
+	///XXX : why setEditTriggers(QAbstractItemView::SelectedClicked) isn't opening the editor?
+	///FIXME: clicked is only for mouse, what about keyboard event >_< ?
+	connect(this, &QTableView::clicked, [=](const QModelIndex &index) {
+		if (index.column() == RATINGS && _previouslySelectedRows.contains(index)) {
+			foreach (QModelIndex i, _previouslySelectedRows) {
+				qDebug() << "open";
+				this->openPersistentEditor(i);
+			}
+		} else {
+			for (int i = 0; i < _playlistModel->rowCount(); i++) {
+				this->closePersistentEditor(_playlistModel->index(i, RATINGS));
+			}
+		}
+	});
+
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &selected, const QItemSelection &deselected) {
+		_previouslySelectedRows.clear();
+		foreach (QModelIndex i, selected.indexes()) {
+			if (i.column() == RATINGS) {
+				_previouslySelectedRows.append(i);
+			}
+		}
+		qDebug() << selected;
+	});
+
+	/*connect(this->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &current, const QModelIndex &previous) {
+		_previouslySelectedRows.clear();
+		//if (current.column() == RATINGS) {
+		//_playlistModel->index(current.row(), RATINGS);
+		_previouslySelectedRows.append(_playlistModel->index(current.row(), RATINGS));
+		//}
+		qDebug() << _previouslySelectedRows;
+	});*/
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -159,6 +196,17 @@ void Playlist::dropEvent(QDropEvent *event)
 	}
 }
 
+/** Redefined to handle escape key when editing ratings. */
+void Playlist::keyPressEvent(QKeyEvent *event)
+{
+	if (event->key() == Qt::Key_Escape) {
+		for (int row = 0; row < _playlistModel->rowCount(); row++) {
+			this->closePersistentEditor(_playlistModel->index(row, RATINGS));
+		}
+	}
+	QTableView::keyPressEvent(event);
+}
+
 void Playlist::mouseMoveEvent(QMouseEvent *event)
 {
 	if (!(event->buttons() & Qt::LeftButton))
@@ -170,8 +218,15 @@ void Playlist::mouseMoveEvent(QMouseEvent *event)
 
 void Playlist::mousePressEvent(QMouseEvent *event)
 {
+	// For drag & drop
 	if (event->button() == Qt::LeftButton) {
 		_dragStartPosition = event->pos();
+	}
+	// For star ratings: close every opened editor!
+	foreach (QModelIndex index, selectionModel()->selectedRows(RATINGS)) {
+		StarDelegate *starDelegate = qobject_cast<StarDelegate*>(this->itemDelegateForRow(RATINGS));
+		qDebug() << starDelegate;
+		//starDelegate->commitAndClose(index);
 	}
 	QTableView::mousePressEvent(event);
 }
@@ -212,56 +267,13 @@ void Playlist::showEvent(QShowEvent *event)
 /** Move selected tracks downward. */
 void Playlist::moveTracksDown()
 {
-	/*if (currentItem()) {
-		int currentRow = currentItem()->row();
-		if (currentRow < rowCount()-1) {
-			for (int c=0; c < columnCount(); c++) {
-				QTableWidgetItem *currentItem = takeItem(currentRow, c);
-				QTableWidgetItem *nextItem = takeItem(currentRow+1, c);
-				setItem(currentRow, c, nextItem);
-				setItem(currentRow+1, c, currentItem);
-			}
-			sources.swap(currentRow, currentRow+1);
-			this->setCurrentIndex(_playlistModel()->index(currentRow+1, 0));
-			if (currentRow == track) {
-				track++;
-			}
-		}
-	}*/
+	/// TODO
 }
 
 /** Move selected tracks upward. */
-void Playlist::moveTracksUp(int i)
+void Playlist::moveTracksUp()
 {
-	/*QList<QTableWidgetItem *> selection = selectedItems();
-	int prev = -1;
-	for (int k = selection.length() - 1; k >= 0; k--) {
-		int current = selection.at(k)->row();
-		if (current != prev) {
-			QTableWidgetItem *item = takeItem(current, 0);
-			QTableWidgetItem *itemBelow = takeItem(current+1, 0);
-			setItem(current, 0, itemBelow);
-			setItem(current+1, 0, item);
-			prev = current;
-		}
-	}*/
-
-	/*if (this->selectionModel()->hasSelection()) {
-		int currentRow = currentItem()->row();
-		if (currentRow > 0) {
-			for (int c=0; c < columnCount(); c++) {
-				QTableWidgetItem *currentItem = takeItem(currentRow, c);
-				QTableWidgetItem *previousItem = takeItem(currentRow-1, c);
-				setItem(currentRow, c, previousItem);
-				setItem(currentRow-1, c, currentItem);
-			}
-			sources.swap(currentRow, currentRow-1);
-			setCurrentIndex(_playlistModel()->index(currentRow-1, 0));
-			if (currentRow == track) {
-				track--;
-			}
-		}
-	}*/
+	/// TODO
 }
 
 /** Remove selected tracks from the playlist. */

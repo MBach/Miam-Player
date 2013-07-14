@@ -46,12 +46,42 @@
 
 #include "settings.h"
 
+StarDelegate::StarDelegate(QWidget *parent)
+	: QStyledItemDelegate(parent)
+{
+
+}
+
+/** Request commit. */
+void StarDelegate::commitAndClose(const QModelIndex &index)
+{
+	qDebug() << Q_FUNC_INFO << index;
+	/// Woht? Where can I request the editor? Almost every redefined methods are const
+	/// I cannot create a copy somewhere to commit data?
+	StarEditor *editor;
+	//emit commitData(editor);
+}
+
+/** Redefined. */
+QWidget *StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const
+{
+	qDebug() << Q_FUNC_INFO << parent;
+	StarEditor *editor = new StarEditor(parent);
+	connect(editor, &StarEditor::editingFinished, [=]() {
+		emit commitData(editor);
+		delete editor;
+	});
+	return editor;
+}
+
+/** Redefined. */
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	// Removes the dotted rectangle
 	QStyleOptionViewItem opt = option;
 	opt.state &= ~QStyle::State_HasFocus;
 
+	///XXX
 	QLinearGradient linearGradient(opt.rect.x(), opt.rect.y(), opt.rect.x(), opt.rect.y() + opt.rect.height());
 	linearGradient.setColorAt(0, QColor::fromRgb(221, 236, 251));
 	linearGradient.setColorAt(1, QColor::fromRgb(202, 224, 251));
@@ -63,56 +93,35 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	if (index.data().canConvert<StarRating>()) {
 		StarRating starRating = qvariant_cast<StarRating>(index.data());
 		starRating.paint(painter, opt.rect, opt.palette, StarRating::ReadOnly);
+	} else if (opt.state & QStyle::State_Selected) {
+		StarRating starRating(StarRating::maxStarCount);
+		starRating.paint(painter, opt.rect, opt.palette, StarRating::NoStarsYet);
 	}
-
 }
 
+/** Redefined. */
+void StarDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+{
+	qDebug() << Q_FUNC_INFO << editor;
+	StarRating starRating = qvariant_cast<StarRating>(index.data());
+	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+	starEditor->setStarRating(starRating);
+}
+
+/** Redefined. */
+void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+	qDebug() << Q_FUNC_INFO;
+	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+	model->setData(index, QVariant::fromValue(starEditor->starRating()));
+}
+
+/** Redefined. */
 QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	if (index.data().canConvert<StarRating>()) {
-		//StarRating starRating = qvariant_cast<StarRating>(index.data());
 		return option.rect.size();
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
-}
-
-QWidget *StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-
-{
-	if (index.data().canConvert<StarRating>()) {
-		StarEditor *editor = new StarEditor(parent);
-		connect(editor, SIGNAL(editingFinished()), this, SLOT(commitAndCloseEditor()));
-		return editor;
-	} else {
-		return QStyledItemDelegate::createEditor(parent, option, index);
-	}
-}
-
-void StarDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
-{
-	if (index.data().canConvert<StarRating>()) {
-		StarRating starRating = qvariant_cast<StarRating>(index.data());
-		StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-		starEditor->setStarRating(starRating);
-	} else {
-		QStyledItemDelegate::setEditorData(editor, index);
-	}
-}
-
-void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
-	if (index.data().canConvert<StarRating>()) {
-		StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-		model->setData(index, QVariant::fromValue(starEditor->starRating()));
-	} else {
-		QStyledItemDelegate::setModelData(editor, model, index);
-	}
-}
-
-void StarDelegate::commitAndCloseEditor()
-{
-	StarEditor *editor = qobject_cast<StarEditor *>(sender());
-	emit commitData(editor);
-	emit closeEditor(editor);
 }

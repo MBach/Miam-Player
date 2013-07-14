@@ -55,17 +55,13 @@ private:
 public:
 	static int maxStarCount;
 
-	enum EditMode { Editable, ReadOnly };
+	enum EditMode { Editable, NoStarsYet, ReadOnly };
 
 	explicit StarRating(int starCount = 1);
 
 	void paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const;
 
-	inline int starCount() const { return _starCount; }
-
 	inline void setStarCount(int starCount) { _starCount = starCount; }
-
-	inline void setMaxStarCount(int maxStarCount) { maxStarCount = maxStarCount; }
 };
 
 Q_DECLARE_METATYPE(StarRating)

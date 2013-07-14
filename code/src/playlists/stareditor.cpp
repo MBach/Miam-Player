@@ -41,7 +41,11 @@
 #include <QtWidgets>
 
 #include "stareditor.h"
+
+
 #include "starrating.h"
+
+#include <QtDebug>
 
 StarEditor::StarEditor(QWidget *parent)
 	: QWidget(parent)
@@ -50,25 +54,20 @@ StarEditor::StarEditor(QWidget *parent)
 	setAutoFillBackground(true);
 }
 
-/*QSize StarEditor::sizeHint() const
-{
-	return myStarRating.sizeHint();
-}*/
-
 void StarEditor::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
-	myStarRating.paint(&painter, rect(), this->palette(), StarRating::Editable);
+	_starRating.paint(&painter, rect(), this->palette(), StarRating::Editable);
 }
 
 void StarEditor::mouseMoveEvent(QMouseEvent *event)
 {
-	/*double starWidth = myStarRating.sizeHint().width() / myStarRating.maxStarCount();
-	myStarRating.setStarCount(round(event->x() / (double)starWidth));*/
+	double starWidth = this->rect().width() / StarRating::maxStarCount;
+	_starRating.setStarCount(round(event->x() / (double)starWidth));
 	update();
 }
 
-void StarEditor::mouseReleaseEvent(QMouseEvent * /* event */)
+void StarEditor::mousePressEvent(QMouseEvent *)
 {
 	emit editingFinished();
 }

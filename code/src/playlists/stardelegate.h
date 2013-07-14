@@ -43,24 +43,32 @@
 
 #include <QStyledItemDelegate>
 
+/**
+ * @brief The StarDelegate class is used to draw stars for ratings.
+ */
 class StarDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 public:
-	StarDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+	StarDelegate(QWidget *parent = 0);
 
+	/** Request commit. */
+	void commitAndClose(const QModelIndex &index);
+
+	/** Redefined. */
+	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const;
+
+	/** Redefined. */
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
+	/** Redefined. */
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 
+	/** Redefined. */
 	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
-private slots:
-	void commitAndCloseEditor();
+	/** Redefined. */
+	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 };
 
 #endif

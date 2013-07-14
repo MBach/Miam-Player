@@ -66,32 +66,60 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 
 	painter->setRenderHint(QPainter::Antialiasing, true);
 
-	if (mode == Editable) {
-		painter->setBrush(palette.highlight());
-	} else {
-		/// XXX: extract this somewhere?
+	/// XXX: extract this somewhere?
+	QPen pen(QColor(171, 122, 77));
+	QLinearGradient linearGradientBrush(0, 0, 0, 1);
+	QLinearGradient linearGradientPen(0, 0, 0, 1);
+	QLinearGradient backgroundGradient(0, 0, 0, rect.height());
+
+	pen.setWidthF(pen.widthF() / rect.height());
+
+	switch (mode) {
+	case Editable:
 		#if defined(Q_OS_WIN)
-		QLinearGradient linearGradientBrush(0, 0, 0, 1);
+		///XXX
+		backgroundGradient.setColorAt(0, QColor::fromRgb(221, 236, 251));
+		backgroundGradient.setColorAt(1, QColor::fromRgb(202, 224, 251));
+		painter->fillRect(rect, QBrush(backgroundGradient));
+
 		linearGradientBrush.setColorAt(0, Qt::white);
 		linearGradientBrush.setColorAt(1, QColor(253, 230, 116));
 
-		QLinearGradient linearGradientPen(0, 0, 0, 1);
 		linearGradientPen.setColorAt(0, QColor(227, 178, 94));
 		linearGradientPen.setColorAt(1, QColor(166, 122, 87));
 
-		QPen pen(QColor(171, 122, 77));
-		pen.setWidthF(pen.widthF() / rect.height());
+		pen.setColor(QColor(171, 122, 77));
 		pen.setBrush(QBrush(linearGradientPen));
-
-		painter->setPen(pen);
-		painter->setBrush(QBrush(linearGradientBrush));
 		#elif defined(Q_OS_UNIX)
-		QBrush brush(QColor(255, 82, 25));
-		painter->setBrush(brush);
+		linearGradientBrush.setColorAt(0, Qt::white);
+		linearGradientBrush.setColorAt(1, QColor(242, 122, 73));
 		#endif
-	}
+		painter->setBrush(QBrush(linearGradientBrush));
+		break;
+	case NoStarsYet:
+		painter->setBrush(QBrush(QColor::fromRgbF(1, 1, 1, 0.9)));
+		break;
+	case ReadOnly:
+		#if defined(Q_OS_WIN)
+		linearGradientBrush.setColorAt(0, Qt::white);
+		linearGradientBrush.setColorAt(1, QColor(253, 230, 116));
 
-	painter->translate(rect.x(), rect.y() + (rect.height() - rect.height() * starPolygon.boundingRect().height()) / 2);
+		linearGradientPen.setColorAt(0, QColor(227, 178, 94));
+		linearGradientPen.setColorAt(1, QColor(166, 122, 87));
+
+		pen.setColor(QColor(171, 122, 77));
+		pen.setBrush(QBrush(linearGradientPen));
+		#elif defined(Q_OS_UNIX)
+		linearGradientBrush.setColorAt(0, Qt::white);
+		linearGradientBrush.setColorAt(1, QColor(242, 122, 73));
+		#endif
+		painter->setBrush(QBrush(linearGradientBrush));
+		break;
+	}
+	painter->setPen(pen);
+
+	int yOffset = (rect.height() - rect.height() * starPolygon.boundingRect().height()) / 2;
+	painter->translate(rect.x(), rect.y() + yOffset);
 	if (rect.height() < rect.width() / 5) {
 		painter->scale(rect.height(), rect.height());
 	} else {
@@ -104,7 +132,7 @@ void StarRating::paint(QPainter *painter, const QRect &rect, const QPalette &pal
 		} else if (mode == Editable) {
 			painter->drawPolygon(diamondPolygon, Qt::WindingFill);
 		}
-		painter->translate(1.0, 0.0);
+		painter->translate(1.0, 0);
 	}
 
 	painter->restore();
