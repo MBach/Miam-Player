@@ -33,7 +33,6 @@ SOURCES += \
     library/libraryfilterlineedit.cpp \
     library/libraryfilterproxymodel.cpp \
     library/libraryitem.cpp \
-    library/libraryitemdelegate.cpp \
     library/librarymodel.cpp \
     library/librarytreeview.cpp \
     library/musicsearchengine.cpp \
@@ -62,7 +61,13 @@ SOURCES += \
     timelabel.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    playlists/playlistheaderview.cpp
+    playlists/playlistheaderview.cpp \
+    library/libraryitemletter.cpp \
+    library/libraryitemalbum.cpp \
+    library/libraryitemartist.cpp \
+    library/libraryitemtrack.cpp \
+    library/libraryitemfactory.cpp \
+    library/libraryitemdelegate.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -83,7 +88,6 @@ HEADERS += \
     library/libraryfilterlineedit.h \
     library/libraryfilterproxymodel.h \
     library/libraryitem.h \
-    library/libraryitemdelegate.h \
     library/librarymodel.h \
     library/librarytreeview.h \
     library/musicsearchengine.h \
@@ -112,7 +116,13 @@ HEADERS += \
     timelabel.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    playlists/playlistheaderview.h
+    playlists/playlistheaderview.h \
+    library/libraryitemletter.h \
+    library/libraryitemalbum.h \
+    library/libraryitemartist.h \
+    library/libraryitemtrack.h \
+    library/libraryitemfactory.h \
+    library/libraryitemdelegate.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

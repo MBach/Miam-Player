@@ -15,6 +15,7 @@
 #include "library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "stardelegate.h"
+#include "stareditor.h"
 #include "playlistheaderview.h"
 
 #include <QtDebug>
@@ -61,30 +62,44 @@ Playlist::Playlist(QWidget *parent) :
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
 
+	this->setEditTriggers(QTableView::SelectedClicked);
+
 	///XXX : why setEditTriggers(QAbstractItemView::SelectedClicked) isn't opening the editor?
 	///FIXME: clicked is only for mouse, what about keyboard event >_< ?
 	connect(this, &QTableView::clicked, [=](const QModelIndex &index) {
-		if (index.column() == RATINGS && _previouslySelectedRows.contains(index)) {
-			foreach (QModelIndex i, _previouslySelectedRows) {
-				qDebug() << "open";
-				this->openPersistentEditor(i);
+		if (index.column() == RATINGS) {
+			if (_previouslySelectedRows.contains(index)) {
+				foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+					qDebug() << "openPersistentEditor" << i;
+					this->openPersistentEditor(i);
+				}
+			} else {
+				if (_previouslySelectedRows.isEmpty()) {
+					foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+						_previouslySelectedRows.append(i);
+					}
+				} else {
+					_previouslySelectedRows.clear();
+
+				}
 			}
 		} else {
-			for (int i = 0; i < _playlistModel->rowCount(); i++) {
-				this->closePersistentEditor(_playlistModel->index(i, RATINGS));
+			_previouslySelectedRows.clear();
+			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+				_previouslySelectedRows.append(i);
 			}
 		}
 	});
 
-	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &selected, const QItemSelection &deselected) {
+	/*connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &selected, const QItemSelection &deselected) {
 		_previouslySelectedRows.clear();
 		foreach (QModelIndex i, selected.indexes()) {
 			if (i.column() == RATINGS) {
+				qDebug() << "append" << i;
 				_previouslySelectedRows.append(i);
 			}
 		}
-		qDebug() << selected;
-	});
+	});*/
 
 	/*connect(this->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &current, const QModelIndex &previous) {
 		_previouslySelectedRows.clear();
@@ -223,11 +238,11 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 		_dragStartPosition = event->pos();
 	}
 	// For star ratings: close every opened editor!
-	foreach (QModelIndex index, selectionModel()->selectedRows(RATINGS)) {
-		StarDelegate *starDelegate = qobject_cast<StarDelegate*>(this->itemDelegateForRow(RATINGS));
-		qDebug() << starDelegate;
-		//starDelegate->commitAndClose(index);
+	foreach (StarEditor *starEditor, this->findChildren<StarEditor*>()) {
+		commitData(starEditor);
+		delete starEditor;
 	}
+
 	QTableView::mousePressEvent(event);
 }
 

@@ -52,9 +52,6 @@ class StarDelegate : public QStyledItemDelegate
 public:
 	StarDelegate(QWidget *parent = 0);
 
-	/** Request commit. */
-	void commitAndClose(const QModelIndex &index);
-
 	/** Redefined. */
 	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const;
 

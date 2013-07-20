@@ -13,7 +13,14 @@
 
 #include "filehelper.h"
 
-class LibraryItem;
+
+
+//class LibraryItem;
+
+#include "libraryitemalbum.h"
+#include "libraryitemartist.h"
+#include "libraryitemletter.h"
+#include "libraryitemtrack.h"
 
 #include <QStandardItemModel>
 
@@ -23,46 +30,42 @@ class LibraryModel : public QStandardItemModel
 
 private:
 	QMap<QString, QStandardItem*> alphabeticalSeparators;
-	QMap<QString, LibraryItem*> artists;
-	QMap<QPair<LibraryItem*, QString>, LibraryItem*> albums;
+	QMap<QString, LibraryItemArtist*> artists;
+	QMap<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> albums;
 
 	// An efficient way to tell if a track was already inserted
-	QHash<QString, LibraryItem*> tracks;
+	QHash<QString, LibraryItemAlbum*> tracks;
 
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
-	QMap<QString, LibraryItem*> covers;
+	QMap<QString, LibraryItemAlbum*> covers;
 
-	QMap<LibraryItem*, QIcon> albumsWithCovers;
+	QMap<LibraryItemAlbum*, QIcon> albumsWithCovers;
 
 	Q_ENUMS(MediaType)
 
 public:
 	LibraryModel(QObject *parent = 0);
 
-	enum MediaType { LETTER	= Qt::UserRole+1,
-					 ARTIST	= Qt::UserRole+2,
-					 ALBUM	= Qt::UserRole+3,
-					 TRACK	= Qt::UserRole+4
-				   };
-
 	/** Removes everything. */
 	void clear();
 
 	/** Artist? Album? */
-	LibraryItem* hasArtist(const QString &artist) const;
-	LibraryItem* hasAlbum(LibraryItem *artist, const QString &album) const;
+	LibraryItemArtist *hasArtist(const QString &artist) const;
+	LibraryItemAlbum* hasAlbum(LibraryItemArtist *artist, const QString &album) const;
 
 	/** Insert a new artist/album/track in the library. */
-	LibraryItem* insertArtist(const QString &artist);
-	LibraryItem* insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist);
-	void insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItem *parent);
+	LibraryItemArtist* insertArtist(const QString &artist);
+	LibraryItemAlbum* insertAlbum(const QString &album, const QString &path, LibraryItemArtist *parentArtist);
+	void insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItemAlbum *parent);
 
 	void makeSeparators();
 
-	void removeNode(const QModelIndex &index);
+	//void removeNode(const QModelIndex &index);
 
-	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	 LibraryItem *itemFromIndex(const QModelIndex &index) const {
+		 return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
+	 }
 
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */

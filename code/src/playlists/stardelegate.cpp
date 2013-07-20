@@ -52,20 +52,9 @@ StarDelegate::StarDelegate(QWidget *parent)
 
 }
 
-/** Request commit. */
-void StarDelegate::commitAndClose(const QModelIndex &index)
-{
-	qDebug() << Q_FUNC_INFO << index;
-	/// Woht? Where can I request the editor? Almost every redefined methods are const
-	/// I cannot create a copy somewhere to commit data?
-	StarEditor *editor;
-	//emit commitData(editor);
-}
-
 /** Redefined. */
 QWidget *StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const
 {
-	qDebug() << Q_FUNC_INFO << parent;
 	StarEditor *editor = new StarEditor(parent);
 	connect(editor, &StarEditor::editingFinished, [=]() {
 		emit commitData(editor);

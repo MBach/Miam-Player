@@ -1,7 +1,8 @@
 #include "librarymodel.h"
 #include "playlists/starrating.h"
 #include "settings.h"
-#include "libraryitem.h"
+
+#include "library/libraryitemfactory.h"
 
 #include <QDir>
 #include <QStandardPaths>
@@ -27,22 +28,22 @@ void LibraryModel::clear()
 }
 
 /** Artist? */
-LibraryItem* LibraryModel::hasArtist(const QString &artist) const
+LibraryItemArtist* LibraryModel::hasArtist(const QString &artist) const
 {
 	return artists.value(artist.toLower());
 }
 
 /** Album? */
-LibraryItem* LibraryModel::hasAlbum(LibraryItem* artist, const QString &album) const
+LibraryItemAlbum *LibraryModel::hasAlbum(LibraryItemArtist* artist, const QString &album) const
 {
-	return albums.value(QPair<LibraryItem*, QString>(artist, album));
+	return albums.value(QPair<LibraryItemArtist*, QString>(artist, album));
 }
 
 /** Insert a new artist in the library. */
-LibraryItem* LibraryModel::insertArtist(const QString &artist)
+LibraryItemArtist *LibraryModel::insertArtist(const QString &artist)
 {
 	// Create the artist
-	LibraryItem *itemArtist = new LibraryItem(artist, ARTIST);
+	LibraryItemArtist *itemArtist = new LibraryItemArtist(artist);
 	itemArtist->setFilePath(artist);
 	artists.insert(artist.toLower(), itemArtist);
 	this->appendRow(itemArtist);
@@ -50,18 +51,18 @@ LibraryItem* LibraryModel::insertArtist(const QString &artist)
 }
 
 /** Insert a new album in the library. */
-LibraryItem* LibraryModel::insertAlbum(const QString &album, const QString &path, LibraryItem *parentArtist)
+LibraryItemAlbum *LibraryModel::insertAlbum(const QString &album, const QString &path, LibraryItemArtist *parentArtist)
 {
-	LibraryItem *itemAlbum = new LibraryItem(album, ALBUM);
+	LibraryItemAlbum *itemAlbum = new LibraryItemAlbum(album);
 	QString coverPath = path.left(path.lastIndexOf('/'));
 	covers.insert(coverPath, itemAlbum);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
-	albums.insert(QPair<LibraryItem *, QString>(parentArtist, album), itemAlbum);
+	albums.insert(QPair<LibraryItemArtist *, QString>(parentArtist, album), itemAlbum);
 	return itemAlbum;
 }
 
 /** Insert a new track in the library. */
-void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItem *parent)
+void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItemAlbum *parentAlbum)
 {
 	QList<QVariant> musicLocations = Settings::getInstance()->musicLocations();
 	// Check if a track was already inserted
@@ -77,23 +78,27 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 				isNewTrack = false;
 				break;
 			} else {
-				tracks.insert(file, parent);
+				tracks.insert(file, parentAlbum);
 			}
 		}
 	}
 
-	LibraryItem *itemTitle = NULL;
+	LibraryItemTrack *itemTitle = NULL;
 	if (isNewTrack) {
 		QString title(fileHelper.file()->tag()->title().toCString(true));
 		if (title.isEmpty()) {
 			title = QFileInfo(fileName).baseName();
 		}
-		itemTitle = new LibraryItem(title, TRACK, fileHelper.type());
+		itemTitle = new LibraryItemTrack(title, fileHelper.type());
 		itemTitle->setFilePath(musicLocationIndex, fileName);
-		itemTitle->setRating(fileHelper.file()->tag()->track());
+		//itemTitle->setRating(fileHelper.file()->tag()->track());
 		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
-		parent->setChild(parent->rowCount(), itemTitle);
+
+		parentAlbum->setChild(parentAlbum->rowCount(), itemTitle);
+		if (parentAlbum->year() < 0) {
+			parentAlbum->setYear(fileHelper.file()->tag()->year());
+		}
 	}
 }
 
@@ -126,7 +131,7 @@ void LibraryModel::makeSeparators()
 				letter = tr(" Various");
 			}
 			if (!alphabeticalSeparators.contains(letter)) {
-				LibraryItem *separator = new LibraryItem(letter, LETTER);
+				LibraryItemLetter *separator = new LibraryItemLetter(letter);
 				alphabeticalSeparators.insert(letter, separator);
 			}
 		}
@@ -137,7 +142,7 @@ void LibraryModel::makeSeparators()
 /** Add (a path to) an icon to every album. */
 void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 {
-	LibraryItem *indexAlbum = covers.value(qFileName.left(qFileName.lastIndexOf('/')));
+	LibraryItemAlbum *indexAlbum = covers.value(qFileName.left(qFileName.lastIndexOf('/')));
 	if (indexAlbum) {
 
 		Settings *settings = Settings::getInstance();
@@ -153,7 +158,7 @@ void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 /** If True, draws one cover before an album name. */
 void LibraryModel::displayCovers(bool withCovers)
 {
-	foreach (LibraryItem *album, albums.values()) {
+	foreach (LibraryItemAlbum *album, albums.values()) {
 		if (withCovers) {
 			album->setIcon(albumsWithCovers.value(album));
 		} else {
@@ -177,15 +182,20 @@ void LibraryModel::loadFromFile()
 		bool separators = Settings::getInstance()->toggleSeparators();
 		QStandardItem *root = invisibleRootItem();
 
-		for (quint32 i=0; i < rootChildren; i++) {
-			LibraryItem *libraryItem = new LibraryItem();
-			libraryItem->read(dataStream);
-			if (separators || libraryItem->type() != LETTER) {
-				root->appendRow(libraryItem);
-			}
+		for (quint32 i = 0; i < rootChildren; i++) {
+			int type;
+			dataStream >> type;
+			qDebug() << type;
+			LibraryItem *libraryItem = LibraryItemFactory::createItem(type);
+			if (libraryItem) {
+				libraryItem->read(dataStream);
+				if (separators || libraryItem->type() != LibraryItem::Letter) {
+					root->appendRow(libraryItem);
+				}
 
-			// Then build nodes
-			this->loadNode(dataStream, libraryItem);
+				// Then build nodes
+				this->loadNode(dataStream, libraryItem);
+			}
 		}
 		mmmmp.close();
 		/// FIXME ?
@@ -196,8 +206,8 @@ void LibraryModel::loadFromFile()
 /** Read a file from the filesystem and adds it into the library. */
 void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 {
-	static LibraryItem *indexArtist = NULL;
-	static LibraryItem *indexAlbum = NULL;
+	static LibraryItemArtist *indexArtist = NULL;
+	static LibraryItemAlbum *indexAlbum = NULL;
 	Settings *settings = Settings::getInstance();
 	settings->musicLocations().at(musicLocationIndex).toString();
 	QString filePath = settings->musicLocations().at(musicLocationIndex).toString() + qFileName;
@@ -226,7 +236,7 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 		if (indexAlbum == NULL) {
 			// New album to create, only if it's not empty
 			if (f->tag()->album().isEmpty()) {
-				indexAlbum = indexArtist;
+				indexAlbum = new LibraryItemAlbum("");
 			} else {
 				indexAlbum = insertAlbum(QString(f->tag()->album().toCString(true)), filePath, indexArtist);
 			}
@@ -247,20 +257,20 @@ void LibraryModel::saveToFile()
 	}
 	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
 	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-		QByteArray output;
 
 		// No need to store separators, they will be rebuilt at runtime.
 		QStandardItem *item = invisibleRootItem();
 		int separators = 0;
 		if (Settings::getInstance()->toggleSeparators()) {
 			for (int i = 0; i < item->rowCount(); i++) {
-				if (item->child(i)->data(LibraryItem::MEDIA_TYPE).toInt() == LibraryModel::LETTER) {
+				if (item->child(i)->type() == LibraryItem::Letter) {
 					++separators;
 				}
 			}
 		}
 
 		// Write the root first, which is not a LibraryItem instance
+		QByteArray output;
 		QDataStream dataStream(&output, QIODevice::ReadWrite);
 		dataStream << item->rowCount() - separators;
 		for (int i = 0; i < item->rowCount() - separators; i++) {
@@ -274,7 +284,7 @@ void LibraryModel::saveToFile()
 }
 
 /** Recursively remove a leaf and its parents if the leaf is a "one node" branch. */
-void LibraryModel::removeNode(const QModelIndex &index)
+/*void LibraryModel::removeNode(const QModelIndex &index)
 {
 	QModelIndex parent;
 	if (this->rowCount(index.parent()) == 1) {
@@ -312,36 +322,19 @@ void LibraryModel::removeNode(const QModelIndex &index)
 	if (parent.isValid()) {
 		this->removeNode(parent);
 	}
-}
-
-QVariant LibraryModel::data(const QModelIndex &index, int role) const
-{
-	QVariant d;
-	switch (role) {
-	case LibraryItem::INTERNAL_NAME:
-		if (index.isValid()) {
-			qDebug() << "INTERNAL_NAME" << index.data(LibraryItem::INTERNAL_NAME);
-
-		}
-		d = QStandardItemModel::data(index, role);
-		break;
-	default:
-		//qDebug() << "default";
-		d = QStandardItemModel::data(index, role);
-		break;
-	}
-	return d;
-}
+}*/
 
 /** Recursively reads the input stream to build nodes and append them to its parent. */
 void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 {
 	int type = parent->type();
-	if (type == LibraryModel::ARTIST || type == LibraryModel::ALBUM) {
+	if (type == LibraryItem::Artist || type == LibraryItem::Album) {
 		int childCount = parent->data(LibraryItem::CHILD_COUNT).toInt();
 		for (int i = 0; i < childCount; i++) {
-			LibraryItem *node = new LibraryItem();
+			in >> type;
+			LibraryItem *node = LibraryItemFactory::createItem(type);
 			node->read(in);
+			//qDebug() << type << node->data(Qt::DisplayRole).toString();
 			parent->appendRow(node);
 
 			// Then load nodes recursively
@@ -364,7 +357,7 @@ void LibraryModel::writeNode(QDataStream &dataStream, LibraryItem *parent)
 		}
 	} else {
 		// A track needs to be saved
-		if (parent->type() == LibraryModel::TRACK) {
+		if (parent->type() == LibraryItem::Track) {
 			parent->write(dataStream);
 		}
 	}

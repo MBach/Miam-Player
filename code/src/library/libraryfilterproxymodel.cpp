@@ -53,24 +53,37 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 {
 	bool result;
 	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
-	QStandardItem *qStandardItemLeft = model->itemFromIndex(left);
-
-	LibraryItem *libraryItemLeft = static_cast<LibraryItem *>(qStandardItemLeft);
+	LibraryItem *libraryItemLeft = model->itemFromIndex(left);
 	LibraryItem *libraryItemRight = NULL;
+
+	LibraryItemTrack *leftTrack = NULL;
+	LibraryItemTrack *rightTrack = NULL;
 
 	switch (libraryItemLeft->type()) {
 
-	case LibraryModel::ARTIST:
-		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
+	case LibraryItem::Artist:
+		libraryItemRight = model->itemFromIndex(right);
 		result = QSortFilterProxyModel::lessThan(left, right);
 		break;
 
+	case LibraryItem::Album:
+		libraryItemRight = model->itemFromIndex(right);
+		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Album) {
+			if (libraryItemLeft->data(Qt::UserRole+5).toInt() > 0 && libraryItemRight->data(Qt::UserRole+5).toInt() > 0) {
+				result = libraryItemLeft->data(Qt::UserRole+5).toInt() < libraryItemRight->data(Qt::UserRole+5).toInt();
+			} else {
+				result = QSortFilterProxyModel::lessThan(left, right);
+			}
+		} else {
+			result = QSortFilterProxyModel::lessThan(left, right);
+		}
+		break;
 
-	case LibraryModel::LETTER:
-		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
+	case LibraryItem::Letter:
+		libraryItemRight = model->itemFromIndex(right);
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
-		if (libraryItemRight && libraryItemRight->type() == LibraryModel::ARTIST && libraryItemLeft->text().compare(libraryItemRight->text()) == 0) {
+		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Artist && libraryItemLeft->text().compare(libraryItemRight->text()) == 0) {
 			result = true;
 		} else {
 			result = QSortFilterProxyModel::lessThan(left, right);
@@ -78,9 +91,14 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 		break;
 
 	// Sort tracks by their numbers
-	case LibraryModel::TRACK:
-		libraryItemRight = static_cast<LibraryItem *>(model->itemFromIndex(right));
-		result = libraryItemLeft->trackNumber() < libraryItemRight->trackNumber();
+	case LibraryItem::Track:
+		leftTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(left));
+		rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(right));
+		if (leftTrack && rightTrack) {
+			result = leftTrack->trackNumber() < rightTrack->trackNumber();
+		} else {
+			result = QSortFilterProxyModel::lessThan(left, right);
+		}
 		break;
 
 	default:
@@ -122,8 +140,9 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 /** Load covers only when an item needs to be expanded. */
 void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 {
-	if (index.data(LibraryItem::MEDIA_TYPE) == LibraryModel::ARTIST) {
-
+	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
+	LibraryItem *artist = model->itemFromIndex(mapToSource(index));
+	if (artist && artist->type() == LibraryItem::Artist) {
 		Settings *settings = Settings::getInstance();
 		if (settings->withCovers()) {
 
@@ -133,7 +152,6 @@ void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 			QPixmap pixmap(size);
 			QPainter painter(&pixmap);
 
-			QStandardItemModel *model = qobject_cast<QStandardItemModel *>(this->sourceModel());
 			for (int i=0; i < this->rowCount(index); i++) {
 
 				// Build the path to the cover

@@ -1,5 +1,4 @@
 #include "librarytreeview.h"
-#include "libraryitemdelegate.h"
 #include "settings.h"
 #include "libraryitem.h"
 
@@ -13,6 +12,9 @@
 #include <QThread>
 
 #include <QtDebug>
+
+#include "library/libraryitemdelegate.h"
+
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent)
@@ -30,10 +32,12 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	int iconSize = Settings::getInstance()->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
-	this->setItemDelegate(new LibraryItemDelegate(this));
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
+
+	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
+
 
 	//QHBoxLayout *vLayout = new QHBoxLayout();
 	//this->setLayout(vLayout);
@@ -90,13 +94,12 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
+	LibraryItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 		}
-		LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
-		if (!(libraryItem && libraryItem->type() == LibraryModel::LETTER)) {
+		if (item->type() != LibraryItem::Letter) {
 			properties->exec(event->globalPos());
 		}
 	}
@@ -149,16 +152,10 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QMap<QString, 
 				// Recursive call on children
 				this->findAll(index.child(i, 0), indexes);
 			}
-		} else if (item->data(LibraryItem::MEDIA_TYPE).toInt() != LibraryModel::LETTER) {
+		} else if (item->type() != LibraryItem::Letter) {
 			// If the click from the mouse was on a text label or on a star
-			if (!Settings::getInstance()->isStarDelegates() ||
-					(delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty()))) {
-				indexes.insert(TreeView::absFilePath(index), sourceIndex);
-			} else if (delegate->stars()->contains(currentPos)) {
-				QStyleOptionViewItemV4 qsovi;
-				QWidget *editor = delegate->createEditor(this, qsovi, sourceIndex);
-				editor->show();
-			}
+			//if (!Settings::getInstance()->isStarDelegates() || (delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty())))
+			indexes.insert(TreeView::absFilePath(index), sourceIndex);
 		}
 	}
 }
@@ -212,17 +209,15 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 	foreach (QPersistentModelIndex index, indexes) {
 		QStandardItem *item = libraryModel->itemFromIndex(index);
 		if (item) {
-			LibraryItem *libraryItem = static_cast<LibraryItem*>(item);
-			if (libraryItem) {
-				int i = libraryItem->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
-				QString file = libraryItem->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-				libraryModel->readFile(i, file);
-			}
+			int i = item->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+			QString file = item->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+			libraryModel->readFile(i, file);
 		}
 	}
 	// Remove items that were tagged as modified
+	/// FIXME
 	foreach (QPersistentModelIndex index, indexes) {
-		libraryModel->removeNode(index);
+		//libraryModel->removeNode(index);
 	}
 	libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
