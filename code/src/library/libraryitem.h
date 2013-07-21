@@ -21,21 +21,23 @@ public:
 					 Letter		= QStandardItem::UserType + 4
 				   };
 
-	enum CustomType { CHILD_COUNT		= Qt::UserRole+4,
-					  TRACK_NUMBER		= Qt::UserRole+5,
-					  IDX_TO_ABS_PATH	= Qt::UserRole+6,
-					  REL_PATH_TO_MEDIA	= Qt::UserRole+7,
+	enum CustomType { CHILD_COUNT		= Qt::UserRole + 4,
+					  TRACK_NUMBER		= Qt::UserRole + 5,
+					  IDX_TO_ABS_PATH	= Qt::UserRole + 6,
+					  REL_PATH_TO_MEDIA	= Qt::UserRole + 7,
 					  /// XXX: refactor (remove...) this one
-					  SUFFIX			= Qt::UserRole+8
+					  SUFFIX			= Qt::UserRole + 8,
+					  FILEPATH			= Qt::UserRole + 9
 					};
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
-	void setFilePath(const QString &filePath);
-	void setFilePath(int musicLocationIndex, const QString &fileName);	
+	virtual int childCount() const { return data(LibraryItem::CHILD_COUNT).toInt(); }
 
 protected:
 	void setDisplayedName(const char *name, int size);
+
+	QVariant data(int role) const { return QStandardItem::data(role); }
 };
 
 #endif // LIBRARYITEM_H

@@ -44,7 +44,7 @@ LibraryItemArtist *LibraryModel::insertArtist(const QString &artist)
 {
 	// Create the artist
 	LibraryItemArtist *itemArtist = new LibraryItemArtist(artist);
-	itemArtist->setFilePath(artist);
+	//itemArtist->setFilePath(artist);
 	artists.insert(artist.toLower(), itemArtist);
 	this->appendRow(itemArtist);
 	return itemArtist;
@@ -55,6 +55,7 @@ LibraryItemAlbum *LibraryModel::insertAlbum(const QString &album, const QString 
 {
 	LibraryItemAlbum *itemAlbum = new LibraryItemAlbum(album);
 	QString coverPath = path.left(path.lastIndexOf('/'));
+	qDebug() << coverPath;
 	covers.insert(coverPath, itemAlbum);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
 	albums.insert(QPair<LibraryItemArtist *, QString>(parentArtist, album), itemAlbum);
@@ -91,7 +92,6 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		}
 		itemTitle = new LibraryItemTrack(title, fileHelper.type());
 		itemTitle->setFilePath(musicLocationIndex, fileName);
-		//itemTitle->setRating(fileHelper.file()->tag()->track());
 		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
 		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
 
@@ -145,13 +145,17 @@ void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 	LibraryItemAlbum *indexAlbum = covers.value(qFileName.left(qFileName.lastIndexOf('/')));
 	if (indexAlbum) {
 
-		Settings *settings = Settings::getInstance();
-		int i = indexAlbum->child(0, 0)->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
-		QVariant v = settings->musicLocations().at(i);
-		indexAlbum->setFilePath(i, qFileName.mid(v.toString().size()+1));
+		//Settings *settings = Settings::getInstance();
+		//int i = indexAlbum->child(0, 0)->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+		//QVariant v = settings->musicLocations().at(i);
+
+		qDebug() << "setCoverPath" << qFileName;
+		indexAlbum->setCoverPath(qFileName);
 
 		// Keep a copy of covers in case of any changes in settings
 		albumsWithCovers.insert(indexAlbum, indexAlbum->icon());
+	} else {
+		qDebug() << "vide";
 	}
 }
 
@@ -329,8 +333,7 @@ void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
 {
 	int type = parent->type();
 	if (type == LibraryItem::Artist || type == LibraryItem::Album) {
-		int childCount = parent->data(LibraryItem::CHILD_COUNT).toInt();
-		for (int i = 0; i < childCount; i++) {
+		for (int i = 0; i < parent->childCount(); i++) {
 			in >> type;
 			LibraryItem *node = LibraryItemFactory::createItem(type);
 			node->read(in);

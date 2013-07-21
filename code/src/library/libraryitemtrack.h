@@ -10,6 +10,8 @@ public:
 
 	explicit LibraryItemTrack(const QString &track, int suffix);
 
+	int childCount() const { return 0; }
+
 	void setTrackNumber(int track) { setData(track, TRACK_NUMBER);}
 	inline int trackNumber() const { return data(TRACK_NUMBER).toInt(); }
 
@@ -21,6 +23,9 @@ public:
 
 	/** Redefined. */
 	inline int type() const { return LibraryItem::Track; }
+
+	QString filePath() const;
+	void setFilePath(int musicLocationIndex, const QString &fileName);
 };
 
 #endif // LIBRARYITEMTRACK_H

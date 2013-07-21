@@ -18,8 +18,6 @@ private:
 	LibraryModel* _libraryModel;
 
 public:
-	enum EditMode { Editable, ReadOnly };
-
 	LibraryItemDelegate(LibraryFilterProxyModel *proxy);
 
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

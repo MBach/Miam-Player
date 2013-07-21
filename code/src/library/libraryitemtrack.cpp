@@ -1,5 +1,7 @@
 #include "libraryitemtrack.h"
 
+#include "settings.h"
+
 LibraryItemTrack::LibraryItemTrack(const QString &track, int suffix)
 	: LibraryItem(track)
 {
@@ -43,4 +45,18 @@ void LibraryItemTrack::write(QDataStream &out) const
 	out << data(IDX_TO_ABS_PATH).toInt();
 	out << data(REL_PATH_TO_MEDIA).toByteArray();
 	out << trackNumber();
+}
+
+QString LibraryItemTrack::filePath() const
+{
+	int index = data(IDX_TO_ABS_PATH).toInt();
+	QString absPath = Settings::getInstance()->musicLocations().at(index).toString();
+	QString relPath = data(REL_PATH_TO_MEDIA).toString();
+	return absPath + relPath;
+}
+
+void LibraryItemTrack::setFilePath(int musicLocationIndex, const QString &fileName)
+{
+	setData(QVariant(musicLocationIndex), IDX_TO_ABS_PATH);
+	setData(QVariant(fileName), REL_PATH_TO_MEDIA);
 }

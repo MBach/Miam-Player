@@ -1,5 +1,7 @@
 #include "libraryitemalbum.h"
 
+#include <QtDebug>
+
 LibraryItemAlbum::LibraryItemAlbum(const QString &album)
 	: LibraryItem(album)
 {
@@ -33,6 +35,10 @@ void LibraryItemAlbum::read(QDataStream &in)
 		delete[] s;
 	}
 
+	int year;
+	in >> year;
+	setYear(year);
+
 	int trackCount;
 	in >> trackCount;
 	setData(trackCount, CHILD_COUNT);
@@ -40,16 +46,11 @@ void LibraryItemAlbum::read(QDataStream &in)
 	in >> dataLength;
 	// If the path to the cover isn't null, there read it and build a new icon
 	if (dataLength != 0xFFFFFFFF) {
-
-		// Relative path to image album
 		char *s = new char[dataLength];
 		in.readRawData(s, dataLength);
-		setData(QByteArray(s, dataLength), REL_PATH_TO_MEDIA);
+		setCoverPath(QString(s));
 		delete[] s;
-
-		// Reference to Absolute path
-		in >> dataLength;
-		setData(QVariant(dataLength), IDX_TO_ABS_PATH);
+		qDebug() << s;
 	}
 }
 
@@ -57,13 +58,21 @@ void LibraryItemAlbum::read(QDataStream &in)
 void LibraryItemAlbum::write(QDataStream &out) const
 {
 	out << this->type();
-	out << data(Qt::DisplayRole).toByteArray();
-	out << rowCount();
+	out << this->data(Qt::DisplayRole).toByteArray();
+	out << this->year();
+	out << this->rowCount();
 
-	// Save Absolute path + Relative path to picture, if exists
 	// It's useless to store the picture itself, it will be loaded when expanding items
-	out << data(REL_PATH_TO_MEDIA).toByteArray();
-	if (!data(REL_PATH_TO_MEDIA).toString().isEmpty()) {
-		out << data(IDX_TO_ABS_PATH).toInt();
-	}
+	out << this->data(FILEPATH).toByteArray();
+	qDebug() << this->coverPath();
+}
+
+QString LibraryItemAlbum::coverPath() const
+{
+	return data(FILEPATH).toString();
+}
+
+void LibraryItemAlbum::setCoverPath(const QString &cover)
+{
+	setData(cover, FILEPATH);
 }

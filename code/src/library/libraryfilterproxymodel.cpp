@@ -54,7 +54,10 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 	bool result;
 	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
 	LibraryItem *libraryItemLeft = model->itemFromIndex(left);
-	LibraryItem *libraryItemRight = NULL;
+	LibraryItem *libraryItemRight = model->itemFromIndex(right);
+
+	LibraryItemAlbum *leftAlbum = NULL;
+	LibraryItemAlbum *rightAlbum = NULL;
 
 	LibraryItemTrack *leftTrack = NULL;
 	LibraryItemTrack *rightTrack = NULL;
@@ -62,15 +65,19 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 	switch (libraryItemLeft->type()) {
 
 	case LibraryItem::Artist:
-		libraryItemRight = model->itemFromIndex(right);
 		result = QSortFilterProxyModel::lessThan(left, right);
 		break;
 
 	case LibraryItem::Album:
-		libraryItemRight = model->itemFromIndex(right);
 		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Album) {
-			if (libraryItemLeft->data(Qt::UserRole+5).toInt() > 0 && libraryItemRight->data(Qt::UserRole+5).toInt() > 0) {
-				result = libraryItemLeft->data(Qt::UserRole+5).toInt() < libraryItemRight->data(Qt::UserRole+5).toInt();
+			leftAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(left));
+			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(right));
+			if (leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
+				if (sortOrder() == Qt::AscendingOrder) {
+					result = leftAlbum->year() < rightAlbum->year();
+				} else {
+					result = leftAlbum->year() > rightAlbum->year();
+				}
 			} else {
 				result = QSortFilterProxyModel::lessThan(left, right);
 			}
@@ -80,11 +87,11 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 		break;
 
 	case LibraryItem::Letter:
-		libraryItemRight = model->itemFromIndex(right);
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
-		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Artist && libraryItemLeft->text().compare(libraryItemRight->text()) == 0) {
-			result = true;
+		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Artist &&
+				libraryItemLeft->text().compare(libraryItemRight->text().left(1)) == 0) {
+			result = (sortOrder() == Qt::AscendingOrder);
 		} else {
 			result = QSortFilterProxyModel::lessThan(left, right);
 		}
@@ -141,8 +148,8 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 {
 	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
-	LibraryItem *artist = model->itemFromIndex(mapToSource(index));
-	if (artist && artist->type() == LibraryItem::Artist) {
+	LibraryItemArtist *artist = static_cast<LibraryItemArtist*>(model->itemFromIndex(mapToSource(index)));
+	if (artist) {
 		Settings *settings = Settings::getInstance();
 		if (settings->withCovers()) {
 
@@ -152,21 +159,15 @@ void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
 			QPixmap pixmap(size);
 			QPainter painter(&pixmap);
 
-			for (int i=0; i < this->rowCount(index); i++) {
-
-				// Build the path to the cover
-				QModelIndex album = index.child(i, 0);
-				int indexToAbsPath = album.data(LibraryItem::IDX_TO_ABS_PATH).toInt();
-				QString absolutePath = settings->musicLocations().at(indexToAbsPath).toString();
-				QString relativePathToCover = album.data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-				QString coverPath = absolutePath + "/" + relativePathToCover;
-
-				QStandardItem *item = model->itemFromIndex(this->mapToSource(album));
+			for (int i = 0; i < artist->rowCount(); i++) {
+				LibraryItemAlbum *album = static_cast<LibraryItemAlbum*>(model->itemFromIndex(this->mapToSource(index.child(i, 0))));
 				// If the cover is still on the disk
-				if (item && !relativePathToCover.isEmpty() && QFile::exists(coverPath)) {
-					QImage image(coverPath);
+				qDebug() << "coverPath" << album->text() << album->coverPath();
+				if (album && QFile::exists(album->coverPath())) {
+					QImage image(album->coverPath());
+
 					painter.drawImage(QRect(0, 0, bufferedCoverSize, bufferedCoverSize), image);
-					item->setIcon(QIcon(pixmap));
+					album->setIcon(QIcon(pixmap));
 				}
 			}
 		}

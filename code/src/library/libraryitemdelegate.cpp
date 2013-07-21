@@ -14,8 +14,16 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
+	LibraryItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItemV4 o = option;
+	if (item->type() == LibraryItem::Track) {
+		LibraryItemTrack *track = static_cast<LibraryItemTrack*>(item);
+		FileHelper fh(track->filePath());
+		if (fh.rating() > 0) {
+			StarRating starRating(fh.rating());
+			starRating.paint(painter, option.rect, option.palette, StarRating::ReadOnly);
+		}
+	}
 	if (item->type() == LibraryItem::Letter) {
 		o.state = QStyle::State_None;
 		o.font.setBold(true);

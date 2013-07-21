@@ -21,6 +21,9 @@ public:
 
 	/** Redefined. */
 	inline int type() const { return LibraryItem::Album; }
+
+	QString coverPath() const;
+	void setCoverPath(const QString &cover);
 };
 
 #endif // LIBRARYITEMALBUM_H
