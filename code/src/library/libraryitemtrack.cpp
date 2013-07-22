@@ -18,19 +18,17 @@ void LibraryItemTrack::read(QDataStream &in)
 	// If we have saved an empty track, then the byte array is null (see Serializing Qt Data Types)
 	in >> dataLength;
 	if (dataLength != 0xFFFFFFFF) {
-		char *s = new char[dataLength];
-		in.readRawData(s, dataLength);
-		setDisplayedName(s, dataLength);
-		delete[] s;
+		QByteArray byteArray(dataLength, Qt::Uninitialized);
+		in.readRawData(byteArray.data(), dataLength);
+		setDisplayedName(QString(byteArray));
 	}
 	in >> dataLength;
 	setData(QVariant(dataLength), IDX_TO_ABS_PATH);
 
-	in >> dataLength;
-	char *s1 = new char[dataLength];
-	in.readRawData(s1, dataLength);
-	setData(QByteArray(s1, dataLength), REL_PATH_TO_MEDIA);
-	delete[] s1;
+	in >> dataLength;	
+	QByteArray byteArray(dataLength, Qt::Uninitialized);
+	in.readRawData(byteArray.data(), dataLength);
+	setData(QString(byteArray), REL_PATH_TO_MEDIA);
 
 	in >> dataLength;
 	setTrackNumber(dataLength);

@@ -35,7 +35,7 @@ public:
 	virtual int childCount() const { return data(LibraryItem::CHILD_COUNT).toInt(); }
 
 protected:
-	void setDisplayedName(const char *name, int size);
+	void setDisplayedName(const QString &name);
 
 	QVariant data(int role) const { return QStandardItem::data(role); }
 };

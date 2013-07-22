@@ -55,7 +55,6 @@ LibraryItemAlbum *LibraryModel::insertAlbum(const QString &album, const QString 
 {
 	LibraryItemAlbum *itemAlbum = new LibraryItemAlbum(album);
 	QString coverPath = path.left(path.lastIndexOf('/'));
-	qDebug() << coverPath;
 	covers.insert(coverPath, itemAlbum);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
 	albums.insert(QPair<LibraryItemArtist *, QString>(parentArtist, album), itemAlbum);
@@ -144,12 +143,6 @@ void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 {
 	LibraryItemAlbum *indexAlbum = covers.value(qFileName.left(qFileName.lastIndexOf('/')));
 	if (indexAlbum) {
-
-		//Settings *settings = Settings::getInstance();
-		//int i = indexAlbum->child(0, 0)->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
-		//QVariant v = settings->musicLocations().at(i);
-
-		qDebug() << "setCoverPath" << qFileName;
 		indexAlbum->setCoverPath(qFileName);
 
 		// Keep a copy of covers in case of any changes in settings

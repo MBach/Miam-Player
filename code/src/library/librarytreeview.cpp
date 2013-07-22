@@ -15,6 +15,8 @@
 
 #include "library/libraryitemdelegate.h"
 
+#include "library/libraryorderdialog.h"
+
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent)
@@ -37,6 +39,17 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 
 	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
+
+	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
+
+	LibraryOrderDialog *lod = new LibraryOrderDialog(this);
+	lod->artistTreeView->setModel(proxyModel);
+	lod->albumTreeView->setModel(proxyModel);
+	lod->artistAlbumTreeView->setModel(proxyModel);
+	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
+		lod->move(mapToGlobal(pos));
+		lod->show();
+	});
 
 
 	//QHBoxLayout *vLayout = new QHBoxLayout();
@@ -84,7 +97,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(musicSearchEngine, &MusicSearchEngine::endSearch, libraryModel, &LibraryModel::saveToFile);
 
 	// Load covers only when an item need to be expanded
-	connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
+	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
+	connect(this, &QTreeView::expanded, this, &LibraryTreeView::loadCovers);
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
@@ -244,6 +258,32 @@ void LibraryTreeView::expandTreeView(const QModelIndex &index)
 	expand(parent);
 }
 
+/** Load covers only when an item needs to be expanded. */
+void LibraryTreeView::loadCovers(const QModelIndex &index)
+{
+	LibraryItemArtist *artist = static_cast<LibraryItemArtist*>(libraryModel->itemFromIndex(proxyModel->mapToSource(index)));
+	if (artist) {
+		Settings *settings = Settings::getInstance();
+		if (settings->withCovers()) {
+
+			// Load covers in a buffer greater than the real displayed picture
+			int bufferedCoverSize = settings->bufferedCoverSize();
+			QSize size(bufferedCoverSize, bufferedCoverSize);
+
+			for (int i = 0; i < artist->rowCount(); i++) {
+				LibraryItemAlbum *album = static_cast<LibraryItemAlbum*>(artist->child(i, 0));
+				if (album && album->icon().isNull()) {
+					QPixmap pixmap(size);
+					// If the cover is still on the disk
+					if (pixmap.load(album->coverPath())) {
+						album->setIcon(QIcon(pixmap));
+					}
+				}
+			}
+		}
+	}
+}
+
 /**  Layout the library at runtime when one is changing the size in options. */
 void LibraryTreeView::setCoverSize(int newSize)
 {
@@ -275,7 +315,8 @@ void LibraryTreeView::setCoverSize(int newSize)
 			// It's really slow to reload covers from disk for every changes in the User Interface.
 			// It's more efficient to load icons just for some resolutions, like 128x128 or 512x512.
 			if (isExpanded(index)) {
-				proxyModel->loadCovers(index);
+				//proxyModel->loadCovers(index);
+				this->loadCovers(index);
 			}
 		}
 	}

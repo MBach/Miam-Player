@@ -14,9 +14,7 @@ LibraryItem::LibraryItem() :
 	this->setData(-1, SUFFIX);
 }
 
-void LibraryItem::setDisplayedName(const char *name, int size)
+void LibraryItem::setDisplayedName(const QString &name)
 {
-	QByteArray byteArray(name, size);
-	QVariant v(byteArray);
-	setData(v.toString(), Qt::DisplayRole);
+	setData(name, Qt::DisplayRole);
 }

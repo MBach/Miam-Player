@@ -16,7 +16,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 {
 	LibraryItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItemV4 o = option;
-	if (item->type() == LibraryItem::Track) {
+	if (item->type() == LibraryItem::Track && Settings::getInstance()->isStarDelegates()) {
 		LibraryItemTrack *track = static_cast<LibraryItemTrack*>(item);
 		FileHelper fh(track->filePath());
 		if (fh.rating() > 0) {

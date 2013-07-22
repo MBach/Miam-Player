@@ -29,10 +29,9 @@ void LibraryItemAlbum::read(QDataStream &in)
 
 	// If we have saved an empty album, then the byte array is null (see Serializing Qt Data Types)
 	if (dataLength != 0xFFFFFFFF) {
-		char *s = new char[dataLength];
-		in.readRawData(s, dataLength);
-		setDisplayedName(s, dataLength);
-		delete[] s;
+		QByteArray byteArray(dataLength, Qt::Uninitialized);
+		in.readRawData(byteArray.data(), dataLength);
+		setDisplayedName(QString(byteArray));
 	}
 
 	int year;
@@ -46,11 +45,9 @@ void LibraryItemAlbum::read(QDataStream &in)
 	in >> dataLength;
 	// If the path to the cover isn't null, there read it and build a new icon
 	if (dataLength != 0xFFFFFFFF) {
-		char *s = new char[dataLength];
-		in.readRawData(s, dataLength);
-		setCoverPath(QString(s));
-		delete[] s;
-		qDebug() << s;
+		QByteArray byteArray(dataLength, Qt::Uninitialized);
+		in.readRawData(byteArray.data(), dataLength);
+		setCoverPath(QString(byteArray));
 	}
 }
 
@@ -64,7 +61,6 @@ void LibraryItemAlbum::write(QDataStream &out) const
 
 	// It's useless to store the picture itself, it will be loaded when expanding items
 	out << this->data(FILEPATH).toByteArray();
-	qDebug() << this->coverPath();
 }
 
 QString LibraryItemAlbum::coverPath() const

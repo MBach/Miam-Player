@@ -13,10 +13,9 @@ void LibraryItemArtist::read(QDataStream &in)
 
 	// If we have saved an empty artist, then the byte array is null (see Serializing Qt Data Types)
 	if (dataLength != 0xFFFFFFFF) {
-		char *s = new char[dataLength];
-		in.readRawData(s, dataLength);
-		setDisplayedName(s, dataLength);
-		delete[] s;
+		QByteArray byteArray(dataLength, Qt::Uninitialized);
+		in.readRawData(byteArray.data(), dataLength);
+		setDisplayedName(QString(byteArray));
 	}
 
 	int albumCount;

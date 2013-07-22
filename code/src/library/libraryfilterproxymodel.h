@@ -23,10 +23,6 @@ private:
 	bool filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const;
 	bool hasAcceptedChildren(int sourceRow, const QModelIndex &sourceParent) const;
 
-public slots:
-	/** Load covers only when an item needs to be expanded. */
-	void loadCovers(const QModelIndex &index);
-
 signals:
 	void aboutToExpand(const QModelIndex &) const;
 };

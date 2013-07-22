@@ -143,33 +143,3 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 	}
 	return false;
 }
-
-/** Load covers only when an item needs to be expanded. */
-void LibraryFilterProxyModel::loadCovers(const QModelIndex &index)
-{
-	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
-	LibraryItemArtist *artist = static_cast<LibraryItemArtist*>(model->itemFromIndex(mapToSource(index)));
-	if (artist) {
-		Settings *settings = Settings::getInstance();
-		if (settings->withCovers()) {
-
-			// Load covers in a buffer greater than the real displayed picture
-			int bufferedCoverSize = settings->bufferedCoverSize();
-			QSize size(bufferedCoverSize, bufferedCoverSize);
-			QPixmap pixmap(size);
-			QPainter painter(&pixmap);
-
-			for (int i = 0; i < artist->rowCount(); i++) {
-				LibraryItemAlbum *album = static_cast<LibraryItemAlbum*>(model->itemFromIndex(this->mapToSource(index.child(i, 0))));
-				// If the cover is still on the disk
-				qDebug() << "coverPath" << album->text() << album->coverPath();
-				if (album && QFile::exists(album->coverPath())) {
-					QImage image(album->coverPath());
-
-					painter.drawImage(QRect(0, 0, bufferedCoverSize, bufferedCoverSize), image);
-					album->setIcon(QIcon(pixmap));
-				}
-			}
-		}
-	}
-}

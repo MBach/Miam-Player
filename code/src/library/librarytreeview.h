@@ -63,6 +63,9 @@ private slots:
 	//test
 	void expandTreeView(const QModelIndex &index);
 
+	/** Load covers only when an item needs to be expanded. */
+	void loadCovers(const QModelIndex &index);
+
 signals:
 	/** (Dis|En)able covers.*/
 	void displayCovers(bool);
