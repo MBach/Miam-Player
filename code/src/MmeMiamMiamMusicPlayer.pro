@@ -9,12 +9,13 @@ QMAKE_CXXFLAGS += -std=c++11
 FORMS += \
     customizeoptionsdialog.ui \
     customizetheme.ui \
+    dragdroppopup.ui \
+    libraryorderdialog.ui \
     mainwindow.ui \
     playlistmanager.ui \
+    quickstart.ui \
     tagconverter.ui \
-    tageditor.ui \
-    dragdroppopup.ui \
-    quickstart.ui
+    tageditor.ui
 
 SOURCES += \
     dialogs/colordialog.cpp \
@@ -67,7 +68,8 @@ SOURCES += \
     library/libraryitemartist.cpp \
     library/libraryitemtrack.cpp \
     library/libraryitemfactory.cpp \
-    library/libraryitemdelegate.cpp
+    library/libraryitemdelegate.cpp \
+    library/libraryorderdialog.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -122,7 +124,8 @@ HEADERS += \
     library/libraryitemartist.h \
     library/libraryitemtrack.h \
     library/libraryitemfactory.h \
-    library/libraryitemdelegate.h
+    library/libraryitemdelegate.h \
+    library/libraryorderdialog.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
