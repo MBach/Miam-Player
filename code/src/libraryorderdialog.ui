@@ -6,87 +6,79 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>352</width>
-    <height>439</height>
+    <width>374</width>
+    <height>285</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="4" column="0">
-    <widget class="QRadioButton" name="radioButton_3">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>Artist - Album</string>
+      <string>Select how to display your library</string>
      </property>
-     <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
-     </attribute>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QRadioButton" name="radioButton_2">
-     <property name="text">
-      <string>Album</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QRadioButton" name="radioButton_4">
-     <property name="text">
-      <string>Year</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QRadioButton" name="radioButton_5">
-     <property name="text">
-      <string>Folders</string>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QRadioButton" name="radioButton">
-     <property name="text">
-      <string>Artist</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <attribute name="buttonGroup">
-      <string notr="true">buttonGroup</string>
-     </attribute>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QTreeView" name="artistTreeView"/>
-   </item>
-   <item row="2" column="1">
-    <widget class="QTreeView" name="albumTreeView"/>
-   </item>
-   <item row="4" column="1">
-    <widget class="QTreeView" name="artistAlbumTreeView"/>
-   </item>
-   <item row="8" column="1">
-    <widget class="QTreeView" name="folderTreeView"/>
-   </item>
-   <item row="6" column="1">
-    <widget class="QTreeView" name="yearTreeView"/>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QTreeView" name="artistTreeView">
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QTreeView" name="albumTreeView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <attribute name="headerHighlightSections">
+        <bool>true</bool>
+       </attribute>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QTreeView" name="artistAlbumTreeView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <attribute name="headerHighlightSections">
+        <bool>true</bool>
+       </attribute>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QTreeView" name="yearTreeView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>

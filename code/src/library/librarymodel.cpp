@@ -18,25 +18,25 @@ LibraryModel::LibraryModel(QObject *parent)
 /** Removes everything. */
 void LibraryModel::clear()
 {
-	albums.clear();
-	albumsWithCovers.clear();
-	alphabeticalSeparators.clear();
-	artists.clear();
-	covers.clear();
-	tracks.clear();
+	_albums.clear();
+	_albumsWithCovers.clear();
+	_alphabeticalSeparators.clear();
+	_artists.clear();
+	_covers.clear();
+	_tracks.clear();
 	removeRows(0, rowCount());
 }
 
 /** Artist? */
 LibraryItemArtist* LibraryModel::hasArtist(const QString &artist) const
 {
-	return artists.value(artist.toLower());
+	return _artists.value(artist.toLower());
 }
 
 /** Album? */
 LibraryItemAlbum *LibraryModel::hasAlbum(LibraryItemArtist* artist, const QString &album) const
 {
-	return albums.value(QPair<LibraryItemArtist*, QString>(artist, album));
+	return _albums.value(QPair<LibraryItemArtist*, QString>(artist, album));
 }
 
 /** Insert a new artist in the library. */
@@ -45,7 +45,7 @@ LibraryItemArtist *LibraryModel::insertArtist(const QString &artist)
 	// Create the artist
 	LibraryItemArtist *itemArtist = new LibraryItemArtist(artist);
 	//itemArtist->setFilePath(artist);
-	artists.insert(artist.toLower(), itemArtist);
+	_artists.insert(artist.toLower(), itemArtist);
 	this->appendRow(itemArtist);
 	return itemArtist;
 }
@@ -55,9 +55,9 @@ LibraryItemAlbum *LibraryModel::insertAlbum(const QString &album, const QString 
 {
 	LibraryItemAlbum *itemAlbum = new LibraryItemAlbum(album);
 	QString coverPath = path.left(path.lastIndexOf('/'));
-	covers.insert(coverPath, itemAlbum);
+	_covers.insert(coverPath, itemAlbum);
 	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
-	albums.insert(QPair<LibraryItemArtist *, QString>(parentArtist, album), itemAlbum);
+	_albums.insert(QPair<LibraryItemArtist *, QString>(parentArtist, album), itemAlbum);
 	return itemAlbum;
 }
 
@@ -74,11 +74,11 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 		for (int i=0; i < musicLocations.size(); i++) {
 			QString musicLocation = musicLocations.at(i).toString();
 			QString file = musicLocation.append(fileName);
-			if (tracks.contains(file)) {
+			if (_tracks.contains(file)) {
 				isNewTrack = false;
 				break;
 			} else {
-				tracks.insert(file, parentAlbum);
+				_tracks.insert(file, parentAlbum);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, 
 void LibraryModel::makeSeparators()
 {
 	// Removing previous separators
-	QMapIterator<QString, QStandardItem*> mapIterator(alphabeticalSeparators);
+	QMapIterator<QString, QStandardItem*> mapIterator(_alphabeticalSeparators);
 	while (mapIterator.hasNext()) {
 		mapIterator.next();
 		LibraryItem *libraryItem = static_cast<LibraryItem*>(mapIterator.value());
@@ -112,7 +112,7 @@ void LibraryModel::makeSeparators()
 			this->removeRow(libraryItem->row(), libraryItem->index().parent());
 		}
 	}
-	alphabeticalSeparators.clear();
+	_alphabeticalSeparators.clear();
 
 	// Builing new separators
 	QStandardItem *root = invisibleRootItem();
@@ -129,24 +129,24 @@ void LibraryModel::makeSeparators()
 				/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
 				letter = tr(" Various");
 			}
-			if (!alphabeticalSeparators.contains(letter)) {
+			if (!_alphabeticalSeparators.contains(letter)) {
 				LibraryItemLetter *separator = new LibraryItemLetter(letter);
-				alphabeticalSeparators.insert(letter, separator);
+				_alphabeticalSeparators.insert(letter, separator);
 			}
 		}
 	}
-	root->appendRows(alphabeticalSeparators.values());
+	root->appendRows(_alphabeticalSeparators.values());
 }
 
 /** Add (a path to) an icon to every album. */
 void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 {
-	LibraryItemAlbum *indexAlbum = covers.value(qFileName.left(qFileName.lastIndexOf('/')));
+	LibraryItemAlbum *indexAlbum = _covers.value(qFileName.left(qFileName.lastIndexOf('/')));
 	if (indexAlbum) {
 		indexAlbum->setCoverPath(qFileName);
 
 		// Keep a copy of covers in case of any changes in settings
-		albumsWithCovers.insert(indexAlbum, indexAlbum->icon());
+		_albumsWithCovers.insert(indexAlbum, indexAlbum->icon());
 	} else {
 		qDebug() << "vide";
 	}
@@ -155,9 +155,9 @@ void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
 /** If True, draws one cover before an album name. */
 void LibraryModel::displayCovers(bool withCovers)
 {
-	foreach (LibraryItemAlbum *album, albums.values()) {
+	foreach (LibraryItemAlbum *album, _albums.values()) {
 		if (withCovers) {
-			album->setIcon(albumsWithCovers.value(album));
+			album->setIcon(_albumsWithCovers.value(album));
 		} else {
 			album->setIcon(QIcon());
 		}
@@ -195,7 +195,6 @@ void LibraryModel::loadFromFile()
 			}
 		}
 		mmmmp.close();
-		/// FIXME ?
 		emit loadedFromFile();
 	}
 }

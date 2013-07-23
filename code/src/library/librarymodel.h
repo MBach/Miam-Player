@@ -29,18 +29,18 @@ class LibraryModel : public QStandardItemModel
 	Q_OBJECT
 
 private:
-	QMap<QString, QStandardItem*> alphabeticalSeparators;
-	QMap<QString, LibraryItemArtist*> artists;
-	QMap<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> albums;
+	QMap<QString, QStandardItem*> _alphabeticalSeparators;
+	QMap<QString, LibraryItemArtist*> _artists;
+	QMap<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
 
 	// An efficient way to tell if a track was already inserted
-	QHash<QString, LibraryItemAlbum*> tracks;
+	QHash<QString, LibraryItemAlbum*> _tracks;
 
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
-	QMap<QString, LibraryItemAlbum*> covers;
+	QMap<QString, LibraryItemAlbum*> _covers;
 
-	QMap<LibraryItemAlbum*, QIcon> albumsWithCovers;
+	QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 
 	Q_ENUMS(MediaType)
 
@@ -67,6 +67,8 @@ public:
 		 return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
 	 }
 
+	 QMap<QString, LibraryItemArtist*> artists() const { return _artists; }
+
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */
 	void loadNode(QDataStream &in, LibraryItem *parent);
@@ -87,7 +89,6 @@ public slots:
 
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();
-
 	/** Read a file from the filesystem and adds it into the library. */
 	void readFile(int musicLocationIndex, const QString &qFileName);
 

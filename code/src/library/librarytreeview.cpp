@@ -43,28 +43,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	LibraryOrderDialog *lod = new LibraryOrderDialog(this);
-	lod->artistTreeView->setModel(proxyModel);
-	lod->albumTreeView->setModel(proxyModel);
-	lod->artistAlbumTreeView->setModel(proxyModel);
+	lod->setModel(libraryModel);
 	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
 		lod->move(mapToGlobal(pos));
 		lod->show();
 	});
-
-
-	//QHBoxLayout *vLayout = new QHBoxLayout();
-	//this->setLayout(vLayout);
-	//QWidget *centeredOverlay = new QWidget(this);
-	//qDebug() << this->width() << this->height();
-	//centeredOverlay->setBaseSize(this->width(), this->height());
-	//QPalette pal;
-	//pal.setColor(QPalette::Window, Qt::black);
-	//centeredOverlay->setPalette(pal);
-	//centeredOverlay->setAttribute(Qt::WA_NoSystemBackground, false);
-	//circleProgressBar = new CircleProgressBar(centeredOverlay);
-	//QGraphicsOpacityEffect *goe = new QGraphicsOpacityEffect(circleProgressBar);
-	//goe->setOpacity(0.5);
-	//circleProgressBar->setGraphicsEffect(goe);
 
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
