@@ -59,18 +59,15 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(this, &LibraryTreeView::searchMusic, musicSearchEngine, &MusicSearchEngine::doSearch);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
-	//QAction *actionOpenStarEditor = new QAction(tr("Ratings: *****"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Properties"), this);
 	properties = new QMenu(this);
 	properties->addAction(actionSendToCurrentPlaylist);
-	//properties->addAction(actionOpenStarEditor);
 	properties->addSeparator();
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
-	//connect(musicSearchEngine, &MusicSearchEngine::scannedFile, libraryModel, &LibraryModel::readFile);
-	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled2, libraryModel, &LibraryModel::readFile2);
+	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled2, libraryModel, &LibraryModel::readFile);
 
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
@@ -79,7 +76,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
 	// When the scan is complete, save the model in the filesystem
-	connect(musicSearchEngine, &MusicSearchEngine::endSearch, libraryModel, &LibraryModel::saveToFile);
+	//connect(musicSearchEngine, &MusicSearchEngine::endSearch, libraryModel, &LibraryModel::saveToFile);
 
 	// Load covers only when an item need to be expanded
 	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
@@ -210,24 +207,22 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 		if (item) {
 			int i = item->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
 			QString file = item->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-			libraryModel->readFile(i, file);
+			libraryModel->readFile(file);
 		}
 	}
 	// Remove items that were tagged as modified
 	/// FIXME
-	foreach (QPersistentModelIndex index, indexes) {
+	//foreach (QPersistentModelIndex index, indexes) {
 		//libraryModel->removeNode(index);
-	}
-	libraryModel->makeSeparators();
+	//}
+	//libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
 	libraryModel->saveToFile();
 }
 
 void LibraryTreeView::endPopulateTree()
 {
-	if (Settings::getInstance()->toggleSeparators()) {
-		libraryModel->makeSeparators();
-	}
+	//libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);

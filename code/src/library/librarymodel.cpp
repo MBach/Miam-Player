@@ -14,7 +14,7 @@ using namespace TagLib;
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(0, 1, parent)
 {
-	_currentInsertPolicy = Artist;
+	_currentInsertPolicy = ArtistAlbum;
 }
 
 /** Removes everything. */
@@ -22,7 +22,6 @@ void LibraryModel::clear()
 {
 	_albums.clear();
 	_albumsWithCovers.clear();
-	_alphabeticalSeparators.clear();
 	_artists.clear();
 	_covers.clear();
 	_tracks.clear();
@@ -31,116 +30,29 @@ void LibraryModel::clear()
 	}
 }
 
-/** Artist? */
-LibraryItemArtist* LibraryModel::hasArtist(const QString &artist) const
-{
-	return _artists.value(artist.toLower());
-}
-
 /** Album? */
 LibraryItemAlbum *LibraryModel::hasAlbum(LibraryItemArtist* artist, const QString &album) const
 {
 	return _albums.value(QPair<LibraryItemArtist*, QString>(artist, album));
 }
 
-/** Insert a new artist in the library. */
-LibraryItemArtist *LibraryModel::insertArtist(const QString &artist)
-{
-	// Create the artist
-	LibraryItemArtist *itemArtist = new LibraryItemArtist(artist);
-	//itemArtist->setFilePath(artist);
-	_artists.insert(artist.toLower(), itemArtist);
-	this->appendRow(itemArtist);
-	return itemArtist;
-}
+void LibraryModel::insertLetter(const QString &letters)
+{	
+	static QSet<QString> _letters;
 
-/** Insert a new album in the library. */
-LibraryItemAlbum *LibraryModel::insertAlbum(const QString &album, const QString &path, LibraryItemArtist *parentArtist)
-{
-	LibraryItemAlbum *itemAlbum = new LibraryItemAlbum(album);
-	QString coverPath = path.left(path.lastIndexOf('/'));
-	_covers.insert(coverPath, itemAlbum);
-	parentArtist->setChild(parentArtist->rowCount(), itemAlbum);
-	_albums.insert(QPair<LibraryItemArtist *, QString>(parentArtist, album), itemAlbum);
-	return itemAlbum;
-}
-
-/** Insert a new track in the library. */
-void LibraryModel::insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItemAlbum *parentAlbum)
-{
-	QList<QVariant> musicLocations = Settings::getInstance()->musicLocations();
-	// Check if a track was already inserted
-	// Imagine if a one has added two music folders: ~/music/randomArtist and ~/music/randomArtist/randomAlbum
-	// When iterating over directories and subdirectories, at some time, we will try to add twice the same album called "randomAlbum"
-	// So tracks need to be compared each time, by saving their absolute file path in a non persistent map (tracks)
-	bool isNewTrack = true;
-	if (musicLocations.size() > 1) {
-		for (int i=0; i < musicLocations.size(); i++) {
-			QString musicLocation = musicLocations.at(i).toString();
-			QString file = musicLocation.append(fileName);
-			if (_tracks.contains(file)) {
-				isNewTrack = false;
-				break;
-			} else {
-				_tracks.insert(file, parentAlbum);
-			}
+	if (!letters.isEmpty()) {
+		QString c = letters.left(1).toUpper();
+		QString letter;
+		if (c.contains(QRegExp("\\w"))) {
+			letter = c;
+		} else {
+			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
+			letter = tr(" Various");
 		}
-	}
-
-	LibraryItemTrack *itemTitle = NULL;
-	if (isNewTrack) {
-		QString title(fileHelper.file()->tag()->title().toCString(true));
-		if (title.isEmpty()) {
-			title = QFileInfo(fileName).baseName();
+		if (!_letters.contains(letter)) {
+			_letters.insert(letter);
+			invisibleRootItem()->appendRow(new LibraryItemLetter(letter));
 		}
-		itemTitle = new LibraryItemTrack(title, fileHelper.type());
-		itemTitle->setFilePath(musicLocationIndex, fileName);
-		itemTitle->setTrackNumber(fileHelper.file()->tag()->track());
-		itemTitle->setFont(Settings::getInstance()->font(Settings::LIBRARY));
-
-		parentAlbum->setChild(parentAlbum->rowCount(), itemTitle);
-		if (parentAlbum->year() < 0) {
-			parentAlbum->setYear(fileHelper.file()->tag()->year());
-		}
-	}
-}
-
-void LibraryModel::makeSeparators()
-{
-	// Removing previous separators
-	QMapIterator<QString, QStandardItem*> mapIterator(_alphabeticalSeparators);
-	while (mapIterator.hasNext()) {
-		mapIterator.next();
-		LibraryItem *libraryItem = static_cast<LibraryItem*>(mapIterator.value());
-		if (libraryItem) {
-			this->removeRow(libraryItem->row(), libraryItem->index().parent());
-		}
-	}
-	_alphabeticalSeparators.clear();
-
-	// Builing new separators
-	QStandardItem *root = invisibleRootItem();
-	for (int i = 0; i < root->rowCount(); i++) {
-		QString artist = root->child(i)->data(Qt::DisplayRole).toString();
-
-		// Check if the first letter of the artist is a known new letter
-		if (!artist.isEmpty()) {
-			QString c = artist.left(1).toUpper();
-			QString letter;
-			if (c.contains(QRegExp("\\w"))) {
-				letter = c;
-			} else {
-				/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
-				letter = tr(" Various");
-			}
-			if (!_alphabeticalSeparators.contains(letter)) {
-				LibraryItemLetter *separator = new LibraryItemLetter(letter);
-				_alphabeticalSeparators.insert(letter, separator);
-			}
-		}
-	}
-	if (root->hasChildren()) {
-		root->appendRows(_alphabeticalSeparators.values());
 	}
 }
 
@@ -182,17 +94,15 @@ void LibraryModel::loadFromFile()
 		// To build the first item, just read how many children the root has
 		quint32 rootChildren;
 		dataStream >> rootChildren;
-		bool separators = Settings::getInstance()->toggleSeparators();
 		QStandardItem *root = invisibleRootItem();
 
 		for (quint32 i = 0; i < rootChildren; i++) {
 			int type;
 			dataStream >> type;
-			qDebug() << type;
 			LibraryItem *libraryItem = LibraryItemFactory::createItem(type);
 			if (libraryItem) {
 				libraryItem->read(dataStream);
-				if (separators || libraryItem->type() != LibraryItem::Letter) {
+				if (libraryItem->type() != LibraryItem::Letter) {
 					root->appendRow(libraryItem);
 				}
 
@@ -206,73 +116,104 @@ void LibraryModel::loadFromFile()
 }
 
 /** Read a file from the filesystem and adds it into the library. */
-void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
-{
-	static LibraryItemArtist *indexArtist = NULL;
-	static LibraryItemAlbum *indexAlbum = NULL;
-	Settings *settings = Settings::getInstance();
-	settings->musicLocations().at(musicLocationIndex).toString();
-	QString filePath = settings->musicLocations().at(musicLocationIndex).toString() + qFileName;
-
-	FileHelper fh(filePath);
-	File *f = fh.file();
-
-	if (f->isValid() && f->tag()) {
-
-		String artist;
-		String artistAlbum = fh.artistAlbum();
-		if (artistAlbum.isEmpty()) {
-			artist = f->tag()->artist();
-		} else {
-			artist = artistAlbum;
-		}
-
-		// Is there is already this artist in the library?
-		indexArtist = hasArtist(QString(artist.toCString(true)));
-		if (indexArtist == NULL) {
-			indexArtist = insertArtist(QString(artist.toCString(true)));
-		}
-
-		// Is there is already an album from this artist?
-		indexAlbum = hasAlbum(indexArtist, QString(f->tag()->album().toCString(true)));
-		if (indexAlbum == NULL) {
-			// New album to create, only if it's not empty
-			if (f->tag()->album().isEmpty()) {
-				indexAlbum = new LibraryItemAlbum("");
-			} else {
-				indexAlbum = insertAlbum(QString(f->tag()->album().toCString(true)), filePath, indexArtist);
-			}
-		}
-		this->insertTrack(musicLocationIndex, qFileName, fh, indexAlbum);
-	}
-	delete f;
-}
-
-/// Work in progress
-void LibraryModel::readFile2(const QString &qFileName)
+void LibraryModel::readFile(const QString &qFileName)
 {
 	FileRef *fileRef = new FileRef(QFile::encodeName(qFileName).constData());
 	if (fileRef && fileRef->tag()) {
-		qDebug() << fileRef->tag()->album().toCString(true) << fileRef->tag()->title().toCString(true);
-		//delete fileRef;
 		_fileRefs.insert(fileRef);
-		//insertTrack();
-		//insertTrack2(fileRef->tag(), _currentInsertPolicy);
+		insertTrack(fileRef->tag(), _currentInsertPolicy);
 	}
 }
 
 /// Strategy or Policy? Strategies are usually called from other classes
-void LibraryModel::insertTrack2(Tag *tag, InsertPolicy policy)
+void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
 {
+	LibraryItemArtist *itemArtist = NULL;
+	LibraryItemAlbum *itemAlbum = NULL;
+	LibraryItemTrack *itemTrack = NULL;
+	LibraryItem *itemYear = NULL;
+	QString artist(tag->artist().toCString(true));
+	QString album(tag->album().toCString(true));
+	QString title(tag->title().toCString(true));
+
+	static QMap<QString, LibraryItemAlbum*> _albums2;
+	static QMap<QString, LibraryItemAlbum*> _artistsAlbums;
+	static QMap<int, LibraryItem*> _years;
+
 	switch (policy) {
 	case Artist:
-
+		// Level 1
+		if (_artists.contains(artist.toLower())) {
+			itemArtist = _artists.value(artist.toLower());
+		} else {
+			itemArtist = new LibraryItemArtist(artist);
+			_artists.insert(artist.toLower(), itemArtist);
+			invisibleRootItem()->appendRow(itemArtist);
+			this->insertLetter(artist);
+		}
+		// Level 2
+		itemAlbum = hasAlbum(itemArtist, album);
+		if (itemAlbum == NULL) {
+			itemAlbum = new LibraryItemAlbum(album);
+			itemAlbum->setYear(tag->year());
+			_albums.insert(QPair<LibraryItemArtist *, QString>(itemArtist, album), itemAlbum);
+			itemArtist->appendRow(itemAlbum);
+		}
+		// Level 3
+		itemTrack = new LibraryItemTrack(title, -1);
+		itemAlbum->appendRow(itemTrack);
 		break;
 	case Album:
+		// Level 1
+		if (_albums2.contains(album)) {
+			itemAlbum = _albums2.value(album);
+		} else {
+			itemAlbum = new LibraryItemAlbum(album);
+			itemAlbum->setYear(tag->year());
+			_albums2.insert(album, itemAlbum);
+			invisibleRootItem()->appendRow(itemAlbum);
+			this->insertLetter(album);
+		}
+		// Level 2
+		itemTrack = new LibraryItemTrack(title, -1);
+		itemAlbum->appendRow(itemTrack);
 		break;
 	case ArtistAlbum:
+		// Level 1
+		if (_artistsAlbums.contains(artist + album)) {
+			itemAlbum = _artistsAlbums.value(artist + album);
+		} else {
+			itemAlbum = new LibraryItemAlbum(artist + " - " + album);
+			itemAlbum->setYear(tag->year());
+			_artistsAlbums.insert(artist + album, itemAlbum);
+			invisibleRootItem()->appendRow(itemAlbum);
+			this->insertLetter(artist);
+		}
+		// Level 2
+		itemTrack = new LibraryItemTrack(title, -1);
+		itemAlbum->appendRow(itemTrack);
 		break;
 	case Year:
+		// Level 1
+		if (_years.contains(tag->year())) {
+			itemYear = _years.value(tag->year());
+		} else {
+			itemYear = new LibraryItem(QString::number(tag->year()));
+			_years.insert(tag->year(), itemYear);
+			invisibleRootItem()->appendRow(itemYear);
+		}
+		// Level 2
+		if (_artistsAlbums.contains(artist + album)) {
+			itemAlbum = _artistsAlbums.value(artist + album);
+		} else {
+			itemAlbum = new LibraryItemAlbum(artist + " - " + album);
+			itemAlbum->setYear(tag->year());
+			_artistsAlbums.insert(artist + album, itemAlbum);
+			itemYear->appendRow(itemAlbum);
+		}
+		// Level 3
+		itemTrack = new LibraryItemTrack(title, -1);
+		itemAlbum->appendRow(itemTrack);
 		break;
 	case Folders:
 		break;
@@ -294,11 +235,9 @@ void LibraryModel::saveToFile()
 		// No need to store separators, they will be rebuilt at runtime.
 		QStandardItem *item = invisibleRootItem();
 		int separators = 0;
-		if (Settings::getInstance()->toggleSeparators()) {
-			for (int i = 0; i < item->rowCount(); i++) {
-				if (item->child(i)->type() == LibraryItem::Letter) {
-					++separators;
-				}
+		for (int i = 0; i < item->rowCount(); i++) {
+			if (item->child(i)->type() == LibraryItem::Letter) {
+				++separators;
 			}
 		}
 

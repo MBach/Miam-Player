@@ -30,7 +30,6 @@ class LibraryModel : public QStandardItemModel
 	Q_OBJECT
 
 private:
-	QMap<QString, QStandardItem*> _alphabeticalSeparators;
 	QMap<QString, LibraryItemArtist*> _artists;
 	QMap<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
 
@@ -60,24 +59,13 @@ public:
 	/** Removes everything. */
 	void clear();
 
-	/** Artist? Album? */
-	LibraryItemArtist *hasArtist(const QString &artist) const;
-	LibraryItemAlbum* hasAlbum(LibraryItemArtist *artist, const QString &album) const;
-
-	/** Insert a new artist/album/track in the library. */
-	LibraryItemArtist* insertArtist(const QString &artist);
-	LibraryItemAlbum* insertAlbum(const QString &album, const QString &path, LibraryItemArtist *parentArtist);
-	void insertTrack(int musicLocationIndex, const QString &fileName, FileHelper &fileHelper, LibraryItemAlbum *parent);
-
-	void makeSeparators();
-
 	//void removeNode(const QModelIndex &index);
 
-	 LibraryItem *itemFromIndex(const QModelIndex &index) const {
-		 return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
-	 }
+	LibraryItem *itemFromIndex(const QModelIndex &index) const {
+		return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
+	}
 
-	 QMap<QString, LibraryItemArtist*> artists() const { return _artists; }
+	QMap<QString, LibraryItemArtist*> artists() const { return _artists; }
 
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */
@@ -86,7 +74,11 @@ private:
 	/** Recursively writes nodes to the output stream. */
 	void writeNode(QDataStream &dataStream, LibraryItem *parent);
 
-	void insertTrack2(TagLib::Tag* tag, InsertPolicy policy);
+	/** Returns the Album Item if exits. */
+	LibraryItemAlbum* hasAlbum(LibraryItemArtist *artist, const QString &album) const;
+
+	void insertLetter(const QString &letters);
+	void insertTrack(TagLib::Tag* tag, InsertPolicy policy);
 
 signals:
 	/** A flat file on your computer was successfully loaded. */
@@ -101,11 +93,9 @@ public slots:
 
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();
-	/** Read a file from the filesystem and adds it into the library. */
-	void readFile(int musicLocationIndex, const QString &qFileName);
 
-	/// Work in progress
-	void readFile2(const QString &qFileName);
+	/** Read a file from the filesystem and adds it into the library. */
+	void readFile(const QString &qFileName);
 
 	/** Save a tree to a flat file on disk. */
 	void saveToFile();

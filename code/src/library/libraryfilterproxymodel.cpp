@@ -74,7 +74,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(right));
 			if (leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
-					result = leftAlbum->year() < rightAlbum->year();
+					result = leftAlbum->year() <= rightAlbum->year();
 				} else {
 					result = leftAlbum->year() > rightAlbum->year();
 				}
