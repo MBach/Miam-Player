@@ -69,7 +69,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
-	connect(musicSearchEngine, &MusicSearchEngine::scannedFile, libraryModel, &LibraryModel::readFile);
+	//connect(musicSearchEngine, &MusicSearchEngine::scannedFile, libraryModel, &LibraryModel::readFile);
+	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled2, libraryModel, &LibraryModel::readFile2);
+
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file

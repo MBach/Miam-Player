@@ -13,7 +13,9 @@ using namespace TagLib;
 
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(0, 1, parent)
-{}
+{
+	_currentInsertPolicy = Artist;
+}
 
 /** Removes everything. */
 void LibraryModel::clear()
@@ -24,7 +26,9 @@ void LibraryModel::clear()
 	_artists.clear();
 	_covers.clear();
 	_tracks.clear();
-	removeRows(0, rowCount());
+	if (rowCount() > 0) {
+		removeRows(0, rowCount());
+	}
 }
 
 /** Artist? */
@@ -135,7 +139,9 @@ void LibraryModel::makeSeparators()
 			}
 		}
 	}
-	root->appendRows(_alphabeticalSeparators.values());
+	if (root->hasChildren()) {
+		root->appendRows(_alphabeticalSeparators.values());
+	}
 }
 
 /** Add (a path to) an icon to every album. */
@@ -240,6 +246,37 @@ void LibraryModel::readFile(int musicLocationIndex, const QString &qFileName)
 		this->insertTrack(musicLocationIndex, qFileName, fh, indexAlbum);
 	}
 	delete f;
+}
+
+/// Work in progress
+void LibraryModel::readFile2(const QString &qFileName)
+{
+	FileRef *fileRef = new FileRef(QFile::encodeName(qFileName).constData());
+	if (fileRef && fileRef->tag()) {
+		qDebug() << fileRef->tag()->album().toCString(true) << fileRef->tag()->title().toCString(true);
+		//delete fileRef;
+		_fileRefs.insert(fileRef);
+		//insertTrack();
+		//insertTrack2(fileRef->tag(), _currentInsertPolicy);
+	}
+}
+
+/// Strategy or Policy? Strategies are usually called from other classes
+void LibraryModel::insertTrack2(Tag *tag, InsertPolicy policy)
+{
+	switch (policy) {
+	case Artist:
+
+		break;
+	case Album:
+		break;
+	case ArtistAlbum:
+		break;
+	case Year:
+		break;
+	case Folders:
+		break;
+	}
 }
 
 /** Save a tree to a flat file on disk. */

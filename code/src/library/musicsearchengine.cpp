@@ -56,6 +56,7 @@ void MusicSearchEngine::doSearch()
 			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
 				//qDebug() << qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath());
 				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath()));
+				emit scannedFiled2(qFileInfo.absoluteFilePath());
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then
 				// we have to be sure that a we have found a cover before scanning a new directory

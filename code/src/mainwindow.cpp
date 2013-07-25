@@ -146,7 +146,7 @@ void MainWindow::setupActions()
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
 
 	// Rebuild the treeview when tracks have changed using the tag editor
-	connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
+	//connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
 
 	// Media buttons
 	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);

@@ -22,6 +22,7 @@
 #include "libraryitemletter.h"
 #include "libraryitemtrack.h"
 
+#include <QSet>
 #include <QStandardItemModel>
 
 class LibraryModel : public QStandardItemModel
@@ -42,7 +43,16 @@ private:
 
 	QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 
-	Q_ENUMS(MediaType)
+	enum InsertPolicy { Artist,
+						  Album,
+						  ArtistAlbum,
+						  Year,
+						  Folders };
+
+	InsertPolicy _currentInsertPolicy;
+
+	/// test
+	QSet<TagLib::FileRef*> _fileRefs;
 
 public:
 	LibraryModel(QObject *parent = 0);
@@ -76,6 +86,8 @@ private:
 	/** Recursively writes nodes to the output stream. */
 	void writeNode(QDataStream &dataStream, LibraryItem *parent);
 
+	void insertTrack2(TagLib::Tag* tag, InsertPolicy policy);
+
 signals:
 	/** A flat file on your computer was successfully loaded. */
 	void loadedFromFile();
@@ -91,6 +103,9 @@ public slots:
 	void loadFromFile();
 	/** Read a file from the filesystem and adds it into the library. */
 	void readFile(int musicLocationIndex, const QString &qFileName);
+
+	/// Work in progress
+	void readFile2(const QString &qFileName);
 
 	/** Save a tree to a flat file on disk. */
 	void saveToFile();

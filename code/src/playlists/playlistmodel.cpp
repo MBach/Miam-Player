@@ -20,9 +20,8 @@ PlaylistModel::PlaylistModel(QObject *parent) :
 /** Clear the content of playlist. */
 void PlaylistModel::clear()
 {
-	// Iterate on the table and always remove the first item
-	while (rowCount() > 0) {
-		removeRow(0);
+	if (rowCount() > 0) {
+		removeRows(0, rowCount());
 	}
 }
 
