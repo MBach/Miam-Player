@@ -25,12 +25,6 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	spinBoxPlaylist->installEventFilter(this);
 	fontComboBoxLibrary->installEventFilter(this);
 	fontComboBoxPlaylist->installEventFilter(this);
-	/*spinBoxLibrary->setMouseTracking(true);
-	spinBoxPlaylist->setMouseTracking(true);
-	fontComboBoxLibrary->setMouseTracking(true);
-	fontComboBoxPlaylist->setMouseTracking(true);*/
-	//this->installEventFilter(this);
-	//this->setMouseTracking(true);
 
 	groupBoxFonts->setMouseTracking(true);
 	groupBoxFonts->installEventFilter(this);
@@ -189,10 +183,6 @@ void CustomizeThemeDialog::setupActions()
 	});
 
 	// Library
-	connect(checkBoxAlphabeticalSeparators, &QCheckBox::toggled, [=](bool b) {
-		settings->setToggleSeparators(b);
-		mainWindow->library->beginPopulateTree();
-	});
 	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
 		settings->setCovers(b);
 		mainWindow->library->beginPopulateTree();
@@ -347,7 +337,6 @@ void CustomizeThemeDialog::loadTheme()
 	// Library
 	checkBoxDisplayCovers->setChecked(settings->withCovers());
 	spinBoxCoverSize->setValue(settings->coverSize());
-	checkBoxAlphabeticalSeparators->setChecked(settings->toggleSeparators());
 
 	// Colors
 	if (settings->colorsAlternateBG()) {

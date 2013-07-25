@@ -64,8 +64,6 @@ public:
 	/** Sets the font of the application. */
 	int fontSize(const FontFamily fontFamily);
 
-	bool toggleSeparators() const;
-
 	/** Adds a new path in the application. */
 	void addMusicLocation(const QString &location);
 
@@ -141,8 +139,6 @@ public slots:
 		fontPointSizeMap.insert(QString(fontFamily), i);
 		setValue("fontPointSizeMap", fontPointSizeMap);
 	}
-
-	inline void setToggleSeparators(bool b) { setValue("alphabeticalSeparators", b); }
 
 	inline void setCovers(bool b) { setValue("covers", b); }
 

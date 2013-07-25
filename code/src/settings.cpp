@@ -128,15 +128,6 @@ int Settings::fontSize(const FontFamily fontFamily)
 	return pointSize;
 }
 
-bool Settings::toggleSeparators() const
-{
-	if (value("alphabeticalSeparators").isNull()) {
-		return true;
-	} else {
-		return value("alphabeticalSeparators").toBool();
-	}
-}
-
 /** Adds a new path in the application. */
 void Settings::addMusicLocation(const QString &location)
 {
