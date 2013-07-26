@@ -72,11 +72,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(musicSearchEngine, &MusicSearchEngine::endSearch, this, &LibraryTreeView::endPopulateTree);
+	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, &LibraryTreeView::endPopulateTree);
 	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
 	// When the scan is complete, save the model in the filesystem
-	//connect(musicSearchEngine, &MusicSearchEngine::endSearch, libraryModel, &LibraryModel::saveToFile);
+	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
 
 	// Load covers only when an item need to be expanded
 	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);

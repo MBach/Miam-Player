@@ -17,7 +17,7 @@ protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &parent) const;
 
 	/** Redefined for custom sorting. */
-	bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+	bool lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const;
 
 private:
 	bool filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const;

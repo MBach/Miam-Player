@@ -29,6 +29,13 @@ class LibraryModel : public QStandardItemModel
 {
 	Q_OBJECT
 
+public:
+	enum InsertPolicy { Artist,
+						Album,
+						ArtistAlbum,
+						Year,
+						Folders };
+
 private:
 	QMap<QString, LibraryItemArtist*> _artists;
 	QMap<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
@@ -42,18 +49,13 @@ private:
 
 	QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 
-	enum InsertPolicy { Artist,
-						  Album,
-						  ArtistAlbum,
-						  Year,
-						  Folders };
-
 	InsertPolicy _currentInsertPolicy;
 
 	/// test
 	QSet<TagLib::FileRef*> _fileRefs;
 
 public:
+
 	LibraryModel(QObject *parent = 0);
 
 	/** Removes everything. */
@@ -67,15 +69,14 @@ public:
 
 	QMap<QString, LibraryItemArtist*> artists() const { return _artists; }
 
+	InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
+
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */
 	void loadNode(QDataStream &in, LibraryItem *parent);
 
 	/** Recursively writes nodes to the output stream. */
 	void writeNode(QDataStream &dataStream, LibraryItem *parent);
-
-	/** Returns the Album Item if exits. */
-	LibraryItemAlbum* hasAlbum(LibraryItemArtist *artist, const QString &album) const;
 
 	void insertLetter(const QString &letters);
 	void insertTrack(TagLib::Tag* tag, InsertPolicy policy);

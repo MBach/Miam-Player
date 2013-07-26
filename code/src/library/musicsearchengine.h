@@ -22,13 +22,13 @@ signals:
 	///FIXME: however, it's not proven this file belongs to a well formed music directory like "<REP> -> Tracks + Cover.JPG"
 	void scannedCover(const QString &);
 
-	void scannedFile(int, const QString &);
+	//void scannedFile(int, const QString &);
 
 	void scannedFiled2(const QString &);
 
 	void progressChanged(const int &);
 
-	void endSearch();
+	void searchHasEnded();
 };
 
 #endif // MUSICSEARCHENGINE_H

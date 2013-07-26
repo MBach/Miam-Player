@@ -2,10 +2,19 @@
 #include "librarymodel.h"
 #include "settings.h"
 
+#include <QtDebug>
+
 LibraryItem::LibraryItem(const QString &text) :
 	QStandardItem(text)
 {
 	setFont(Settings::getInstance()->font(Settings::LIBRARY));
+	QString n = text.normalized(QString::NormalizationForm_KD).toLower().remove(QRegExp("[^0-9a-z\\s]"));
+	//qDebug() << n << text;
+	if (n.isEmpty() || text == "( )") {
+		qDebug() << text;
+		n = " ";
+	}
+	this->setData(n, NormalizedString);
 }
 
 LibraryItem::LibraryItem() :

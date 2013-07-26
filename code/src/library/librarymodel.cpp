@@ -14,7 +14,7 @@ using namespace TagLib;
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(0, 1, parent)
 {
-	_currentInsertPolicy = ArtistAlbum;
+	_currentInsertPolicy = Album;
 }
 
 /** Removes everything. */
@@ -30,18 +30,12 @@ void LibraryModel::clear()
 	}
 }
 
-/** Album? */
-LibraryItemAlbum *LibraryModel::hasAlbum(LibraryItemArtist* artist, const QString &album) const
-{
-	return _albums.value(QPair<LibraryItemArtist*, QString>(artist, album));
-}
-
 void LibraryModel::insertLetter(const QString &letters)
 {	
 	static QSet<QString> _letters;
 
 	if (!letters.isEmpty()) {
-		QString c = letters.left(1).toUpper();
+		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		QString letter;
 		if (c.contains(QRegExp("\\w"))) {
 			letter = c;
@@ -137,7 +131,7 @@ void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
 	QString title(tag->title().toCString(true));
 
 	static QMap<QString, LibraryItemAlbum*> _albums2;
-	static QMap<QString, LibraryItemAlbum*> _artistsAlbums;
+	static QMap<QString, LibraryItemArtist*> _artistsAlbums;
 	static QMap<int, LibraryItem*> _years;
 
 	switch (policy) {
@@ -152,7 +146,7 @@ void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
 			this->insertLetter(artist);
 		}
 		// Level 2
-		itemAlbum = hasAlbum(itemArtist, album);
+		itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
 		if (itemAlbum == NULL) {
 			itemAlbum = new LibraryItemAlbum(album);
 			itemAlbum->setYear(tag->year());
@@ -181,39 +175,41 @@ void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
 	case ArtistAlbum:
 		// Level 1
 		if (_artistsAlbums.contains(artist + album)) {
-			itemAlbum = _artistsAlbums.value(artist + album);
+			itemArtist = _artistsAlbums.value(artist + album);
 		} else {
-			itemAlbum = new LibraryItemAlbum(artist + " - " + album);
-			itemAlbum->setYear(tag->year());
-			_artistsAlbums.insert(artist + album, itemAlbum);
-			invisibleRootItem()->appendRow(itemAlbum);
+			itemArtist = new LibraryItemArtist(artist + " - " + album);
+			_artistsAlbums.insert(artist + album, itemArtist);
+			invisibleRootItem()->appendRow(itemArtist);
 			this->insertLetter(artist);
 		}
 		// Level 2
 		itemTrack = new LibraryItemTrack(title, -1);
-		itemAlbum->appendRow(itemTrack);
+		itemArtist->appendRow(itemTrack);
 		break;
 	case Year:
 		// Level 1
 		if (_years.contains(tag->year())) {
 			itemYear = _years.value(tag->year());
 		} else {
-			itemYear = new LibraryItem(QString::number(tag->year()));
+			if (tag->year() > 0) {
+				itemYear = new LibraryItem(QString::number(tag->year()));
+			} else {
+				itemYear = new LibraryItem();
+			}
 			_years.insert(tag->year(), itemYear);
 			invisibleRootItem()->appendRow(itemYear);
 		}
 		// Level 2
 		if (_artistsAlbums.contains(artist + album)) {
-			itemAlbum = _artistsAlbums.value(artist + album);
+			itemArtist = _artistsAlbums.value(artist + album);
 		} else {
-			itemAlbum = new LibraryItemAlbum(artist + " - " + album);
-			itemAlbum->setYear(tag->year());
-			_artistsAlbums.insert(artist + album, itemAlbum);
-			itemYear->appendRow(itemAlbum);
+			itemArtist = new LibraryItemArtist(artist + " - " + album);
+			_artistsAlbums.insert(artist + album, itemArtist);
+			itemYear->appendRow(itemArtist);
 		}
 		// Level 3
 		itemTrack = new LibraryItemTrack(title, -1);
-		itemAlbum->appendRow(itemTrack);
+		itemArtist->appendRow(itemTrack);
 		break;
 	case Folders:
 		break;
@@ -245,7 +241,7 @@ void LibraryModel::saveToFile()
 		QByteArray output;
 		QDataStream dataStream(&output, QIODevice::ReadWrite);
 		dataStream << item->rowCount() - separators;
-		for (int i = 0; i < item->rowCount() - separators; i++) {
+		for (int i = 0; i < item->rowCount(); i++) {
 			this->writeNode(dataStream, static_cast<LibraryItem *>(item->child(i, 0)));
 		}
 		mmmmp.write(qCompress(output, 9));

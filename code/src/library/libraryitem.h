@@ -30,9 +30,13 @@ public:
 					  FILEPATH			= Qt::UserRole + 9
 					};
 
+	enum { NormalizedString = Qt::UserRole + 10 };
+
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
 	virtual int childCount() const { return data(LibraryItem::CHILD_COUNT).toInt(); }
+
+	QString normalizedString() const { return data(NormalizedString).toString(); }
 
 protected:
 	void setDisplayedName(const QString &name);

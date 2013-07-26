@@ -12,6 +12,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent)
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
+	this->setSortRole(LibraryItem::NormalizedString);
 }
 
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
@@ -49,12 +50,12 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 }
 
 /** Redefined for custom sorting. */
-bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const
 {
 	bool result;
 	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
-	LibraryItem *libraryItemLeft = model->itemFromIndex(left);
-	LibraryItem *libraryItemRight = model->itemFromIndex(right);
+	LibraryItem *left = model->itemFromIndex(idxLeft);
+	LibraryItem *right = model->itemFromIndex(idxRight);
 
 	LibraryItemAlbum *leftAlbum = NULL;
 	LibraryItemAlbum *rightAlbum = NULL;
@@ -62,54 +63,54 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &left, const QModelInde
 	LibraryItemTrack *leftTrack = NULL;
 	LibraryItemTrack *rightTrack = NULL;
 
-	switch (libraryItemLeft->type()) {
+	switch (left->type()) {
 
 	case LibraryItem::Artist:
-		result = QSortFilterProxyModel::lessThan(left, right);
+		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		break;
 
 	case LibraryItem::Album:
-		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Album) {
-			leftAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(left));
-			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(right));
-			if (leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
+		if (right && right->type() == LibraryItem::Album) {
+			leftAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxLeft));
+			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxRight));
+			if (model->currentInsertPolicy() == LibraryModel::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
 					result = leftAlbum->year() <= rightAlbum->year();
 				} else {
 					result = leftAlbum->year() > rightAlbum->year();
 				}
 			} else {
-				result = QSortFilterProxyModel::lessThan(left, right);
+				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 			}
 		} else {
-			result = QSortFilterProxyModel::lessThan(left, right);
+			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
 	case LibraryItem::Letter:
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
-		if (libraryItemRight && libraryItemRight->type() == LibraryItem::Artist &&
-				libraryItemLeft->text().compare(libraryItemRight->text().left(1)) == 0) {
+		//qDebug() << left->normalizedString() << right->normalizedString();
+		if (right && QString::compare(left->normalizedString().left(1), right->normalizedString().left(1)) == 0) {
 			result = (sortOrder() == Qt::AscendingOrder);
 		} else {
-			result = QSortFilterProxyModel::lessThan(left, right);
+			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
 	// Sort tracks by their numbers
 	case LibraryItem::Track:
-		leftTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(left));
-		rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(right));
+		leftTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxLeft));
+		rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxRight));
 		if (leftTrack && rightTrack) {
 			result = leftTrack->trackNumber() < rightTrack->trackNumber();
 		} else {
-			result = QSortFilterProxyModel::lessThan(left, right);
+			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
 	default:
-		result = QSortFilterProxyModel::lessThan(left, right);
+		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 	}
 	return result;
 }

@@ -3,6 +3,7 @@
 LibraryItemArtist::LibraryItemArtist(const QString &artist)
 	: LibraryItem(artist)
 {
+
 }
 
 /** Reads data from the input stream and fills informations in this new node. */

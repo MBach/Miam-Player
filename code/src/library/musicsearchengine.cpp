@@ -55,7 +55,7 @@ void MusicSearchEngine::doSearch()
 				aCoverWasFound = true;
 			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
 				//qDebug() << qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath());
-				emit scannedFile(i, qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath()));
+				//emit scannedFile(i, qFileInfo.absoluteFilePath().remove(savedLocations.at(i).absolutePath()));
 				emit scannedFiled2(qFileInfo.absoluteFilePath());
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then
@@ -79,5 +79,5 @@ void MusicSearchEngine::doSearch()
 			aCoverWasFound = false;
 		}
 	}
-	emit endSearch();
+	emit searchHasEnded();
 }
