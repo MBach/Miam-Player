@@ -15,18 +15,16 @@ class TreeView : public QTreeView
 public:
 	explicit TreeView(QWidget *parent = 0);
 
-	static QString absFilePath(const QModelIndex &index);
-
 protected:
 	/** Explore items to count leaves (tracks). */
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
 
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
-	virtual void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes) = 0;
+	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks) = 0;
 
 private:
 	/** Alerts the user if there's too many tracks to add. */
-	int beforeSending(const QString &target, QMap<QString, QPersistentModelIndex> &indexes);
+	int beforeSending(const QString &target, QStringList &tracks);
 
 public slots:
 	/** Sends folders or tracks to the end of a playlist. */
@@ -40,10 +38,10 @@ public slots:
 
 signals:
 	/** Adds tracks to the current playlist at a specific position. */
-	void aboutToInsertToPlaylist(int rowIndex, const QList<QPersistentModelIndex> &);
+	void aboutToInsertToPlaylist(int rowIndex, const QStringList &tracks);
 
 	/** Adds tracks to the tag editor. */
-	void sendToTagEditor(QList<QPersistentModelIndex>);
+	void sendToTagEditor(const QStringList &tracks);
 
 	void setTagEditorVisible(bool);
 };

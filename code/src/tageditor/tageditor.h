@@ -35,7 +35,7 @@ private:
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
-	void addItemsToEditor(const QList<QPersistentModelIndex> &indexes);
+	void addItemsToEditor(const QStringList &tracks);
 
 	/** Clears all rows and comboboxes. */
 	void clear();

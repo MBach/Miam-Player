@@ -66,8 +66,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
-	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
-	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled2, libraryModel, &LibraryModel::readFile);
+	//connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
+	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled, libraryModel, &LibraryModel::readFile, Qt::BlockingQueuedConnection);
 
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
@@ -77,6 +77,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// When the scan is complete, save the model in the filesystem
 	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
+	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile2);
 
 	// Load covers only when an item need to be expanded
 	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
@@ -137,21 +138,20 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 }
 
 /** Reimplemented. */
-void LibraryTreeView::findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes)
+void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &tracks)
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
-		QStandardItem *item = libraryModel->itemFromIndex(sourceIndex);
+		LibraryItem *item = libraryModel->itemFromIndex(sourceIndex);
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
-				this->findAll(index.child(i, 0), indexes);
+				this->findAll(index.child(i, 0), tracks);
 			}
-		} else if (item->type() != LibraryItem::Letter) {
-			// If the click from the mouse was on a text label or on a star
-			//if (!Settings::getInstance()->isStarDelegates() || (delegate->title()->contains(currentPos) || (delegate->title()->isEmpty() && delegate->stars()->isEmpty())))
-			indexes.insert(TreeView::absFilePath(index), sourceIndex);
+		} else if (item->type() == LibraryItem::Track) {
+			LibraryItemTrack *track = static_cast<LibraryItemTrack*>(item);
+			tracks.append(track->filePath());
 		}
 	}
 }
@@ -162,6 +162,7 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 	circleProgressBar->show();
 	// Clean all before scanning again
 	// Seems difficult to clean efficiently delegates: they are disabled right now.
+	qDebug() << Q_FUNC_INFO;
 	libraryModel->clear();
 	this->reset();
 	if (musicLocationHasChanged) {
@@ -170,7 +171,7 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 
 	} else {
 		if (QFile::exists(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"))) {
-			libraryModel->loadFromFile();
+			libraryModel->loadFromFile2();
 		} else {
 			// If the file has been erased from the disk meanwhile
 			this->beginPopulateTree(true);
@@ -203,11 +204,12 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 {
 	// Parse once again those items
 	foreach (QPersistentModelIndex index, indexes) {
-		QStandardItem *item = libraryModel->itemFromIndex(index);
+		LibraryItem *item = libraryModel->itemFromIndex(index);
 		if (item) {
-			int i = item->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
-			QString file = item->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
-			libraryModel->readFile(file);
+			//int i = item->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
+			//QString file = item->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
+			//item->filePath();
+			//libraryModel->readFile(file);
 		}
 	}
 	// Remove items that were tagged as modified
@@ -215,14 +217,12 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 	//foreach (QPersistentModelIndex index, indexes) {
 		//libraryModel->removeNode(index);
 	//}
-	//libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
 	libraryModel->saveToFile();
 }
 
 void LibraryTreeView::endPopulateTree()
 {
-	//libraryModel->makeSeparators();
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);

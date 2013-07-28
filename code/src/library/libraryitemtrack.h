@@ -25,7 +25,7 @@ public:
 	inline int type() const { return LibraryItem::Track; }
 
 	QString filePath() const;
-	void setFilePath(int musicLocationIndex, const QString &fileName);
+	void setFilePath(const QString &absFilePath);
 };
 
 #endif // LIBRARYITEMTRACK_H

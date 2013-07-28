@@ -2,5 +2,4 @@
 
 LibraryItemLetter::LibraryItemLetter(const QString &letter)
 	: LibraryItem(letter)
-{
-}
+{}

@@ -13,7 +13,7 @@ class CustomizeOptionsDialog : public QDialog, public Ui::CustomizeOptionsDialog
 private:
 	QTranslator t;
 	QMap<QString, QString> languages;
-	bool musicLocationsChanged;
+	//bool musicLocationsChanged;
 
 public:
 	CustomizeOptionsDialog(QWidget *parent = 0);
@@ -27,9 +27,10 @@ protected:
 
 signals:
 	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged(bool);
+	void musicLocationsHaveChanged();
 
 public slots:
+	/** Adds a new music location in the library. */
 	void addMusicLocation(const QString &musicLocation);
 
 	void checkShortcut(ShortcutWidget *, int typedKey);

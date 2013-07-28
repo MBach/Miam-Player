@@ -22,13 +22,11 @@ void LibraryItemTrack::read(QDataStream &in)
 		in.readRawData(byteArray.data(), dataLength);
 		setDisplayedName(QString(byteArray));
 	}
-	in >> dataLength;
-	setData(QVariant(dataLength), IDX_TO_ABS_PATH);
 
 	in >> dataLength;	
 	QByteArray byteArray(dataLength, Qt::Uninitialized);
 	in.readRawData(byteArray.data(), dataLength);
-	setData(QString(byteArray), REL_PATH_TO_MEDIA);
+	setData(QString(byteArray), FILEPATH);
 
 	in >> dataLength;
 	setTrackNumber(dataLength);
@@ -40,21 +38,16 @@ void LibraryItemTrack::write(QDataStream &out) const
 	out << type();
 	out << data(SUFFIX).toInt();
 	out << data(Qt::DisplayRole).toByteArray();
-	out << data(IDX_TO_ABS_PATH).toInt();
-	out << data(REL_PATH_TO_MEDIA).toByteArray();
+	out << data(FILEPATH).toByteArray();
 	out << trackNumber();
 }
 
 QString LibraryItemTrack::filePath() const
 {
-	int index = data(IDX_TO_ABS_PATH).toInt();
-	QString absPath = Settings::getInstance()->musicLocations().at(index).toString();
-	QString relPath = data(REL_PATH_TO_MEDIA).toString();
-	return absPath + relPath;
+	return data(FILEPATH).toString();
 }
 
-void LibraryItemTrack::setFilePath(int musicLocationIndex, const QString &fileName)
+void LibraryItemTrack::setFilePath(const QString &absFilePath)
 {
-	setData(QVariant(musicLocationIndex), IDX_TO_ABS_PATH);
-	setData(QVariant(fileName), REL_PATH_TO_MEDIA);
+	setData(absFilePath, FILEPATH);
 }

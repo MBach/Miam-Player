@@ -128,25 +128,17 @@ int Settings::fontSize(const FontFamily fontFamily)
 	return pointSize;
 }
 
-/** Adds a new path in the application. */
-void Settings::addMusicLocation(const QString &location)
+void Settings::setMusicLocations(const QStringList &locations)
 {
-	locations = value("musicLocations").toList();
-	if (!locations.contains(location)) {
-		locations.append(QVariant(location));
-		setValue("musicLocations", locations);
-	}
+	setValue("musicLocations", locations);
 }
 
-/** Removes a path in the application. */
-void Settings::removeMusicLocation(const QString &location)
-{
-	locations = value("musicLocations").toList();
-	locations.removeOne(location);
-	setValue("musicLocations", locations);
-	if (locations.isEmpty()) {
-		remove("musicLocations");
+QStringList Settings::musicLocations() const {
+	QStringList list;
+	foreach (QVariant v, value("musicLocations").toList()) {
+		list.append(v.toString());
 	}
+	return list;
 }
 
 bool Settings::withCovers() const

@@ -8,9 +8,6 @@ class MusicSearchEngine : public QObject
 {
 	Q_OBJECT
 
-private:
-	QList<QDir> savedLocations;
-
 public:
 	MusicSearchEngine(QObject *parent = 0);
 
@@ -22,9 +19,7 @@ signals:
 	///FIXME: however, it's not proven this file belongs to a well formed music directory like "<REP> -> Tracks + Cover.JPG"
 	void scannedCover(const QString &);
 
-	//void scannedFile(int, const QString &);
-
-	void scannedFiled2(const QString &);
+	void scannedFiled(const QString &);
 
 	void progressChanged(const int &);
 

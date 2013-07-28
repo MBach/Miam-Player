@@ -40,7 +40,7 @@ public:
 
 public slots:
 	/** Add items to the table in order to edit them. */
-	bool addItemsToEditor(const QList<QPersistentModelIndex> &indexList, QMap<int, Cover*> &covers);
+	bool addItemsToEditor(const QStringList &tracks, QMap<int, Cover*> &covers);
 
 	/** Redefined. */
 	void clear();

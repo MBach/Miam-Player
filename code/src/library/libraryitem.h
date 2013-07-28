@@ -23,8 +23,8 @@ public:
 
 	enum CustomType { CHILD_COUNT		= Qt::UserRole + 4,
 					  TRACK_NUMBER		= Qt::UserRole + 5,
-					  IDX_TO_ABS_PATH	= Qt::UserRole + 6,
-					  REL_PATH_TO_MEDIA	= Qt::UserRole + 7,
+					  //IDX_TO_ABS_PATH	= Qt::UserRole + 6,
+					  //REL_PATH_TO_MEDIA	= Qt::UserRole + 7,
 					  /// XXX: refactor (remove...) this one
 					  SUFFIX			= Qt::UserRole + 8,
 					  FILEPATH			= Qt::UserRole + 9

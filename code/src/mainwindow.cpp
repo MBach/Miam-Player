@@ -88,7 +88,9 @@ void MainWindow::updateFonts(const QFont &font)
 void MainWindow::setupActions()
 {
 	// Load music
-	connect(customizeOptionsDialog, SIGNAL(musicLocationsHaveChanged(bool)), this, SLOT(drawLibrary(bool)));
+	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=] () {
+		this->drawLibrary(true);
+	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
 	foreach(QAction *actionPlayBack, findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
@@ -140,7 +142,8 @@ void MainWindow::setupActions()
 
 	// Send one folder to the music locations
 	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocation, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocation);
-	connect(filesystem, &QAbstractItemView::doubleClicked, tabPlaylists, &TabPlaylist::appendItemToPlaylist);
+	/// FIXME
+	//connect(filesystem, &QAbstractItemView::doubleClicked, tabPlaylists, &TabPlaylist::appendItemToPlaylist);
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);

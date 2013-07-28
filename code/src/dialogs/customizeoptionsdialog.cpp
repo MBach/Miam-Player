@@ -14,7 +14,7 @@
 #include "shortcutwidget.h"
 
 CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
-	QDialog(parent), musicLocationsChanged(false)
+	QDialog(parent)
 {
 	setupUi(this);
 	this->setWindowFlags(Qt::Tool);
@@ -33,13 +33,12 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		radioButtonDesactivateDelegates->setChecked(true);
 	}
 
-	QList<QVariant> locations = settings->musicLocations();
+	QStringList locations = settings->musicLocations();
 	if (locations.isEmpty()) {
-		listWidgetMusicLocations->addItem(new QListWidgetItem("Add some music locations here"));
+		listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
 	} else {
-		for (int i=0; i<locations.count(); i++) {
-			QString convertedPath = QDir::toNativeSeparators(locations.at(i).toString());
-			listWidgetMusicLocations->addItem(new QListWidgetItem(convertedPath));
+		foreach (QString path, locations) {
+			listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(path), listWidgetMusicLocations));
 		}
 		pushButtonDeleteLocation->setEnabled(true);
 	}
@@ -143,42 +142,64 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 }
 
 /** Redefined to add custom behaviour. */
-void CustomizeOptionsDialog::closeEvent(QCloseEvent * /* event */)
+void CustomizeOptionsDialog::closeEvent(QCloseEvent *)
 {
+	Settings *settings = Settings::getInstance();
     QString libraryPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp");
-    if (Settings::getInstance()->musicLocations().isEmpty() && QFile::exists(libraryPath)) {
+	if (settings->musicLocations().isEmpty() && QFile::exists(libraryPath)) {
         QFile::remove(libraryPath);
 	}
-	if (musicLocationsChanged) {
-		emit musicLocationsHaveChanged(true);
-		musicLocationsChanged = false;
+
+	QStringList newLocations;
+	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
+		QString newLocation = listWidgetMusicLocations->item(i)->text();
+		if (QString::compare(newLocation, tr("Add some music locations here")) != 0) {
+			newLocations << newLocation;
+		}
+	}
+	newLocations.sort();
+
+	bool musicLocationsAreIdenticals = true;
+	QStringList savedLocations = settings->musicLocations();
+	savedLocations.sort();
+	if (savedLocations.size() == newLocations.size()) {
+		for (int i = 0; i < savedLocations.count() && musicLocationsAreIdenticals; i++) {
+			musicLocationsAreIdenticals = (QString::compare(savedLocations.at(i), newLocations.at(i)) == 0);
+		}
+	} else {
+		musicLocationsAreIdenticals = false;
+	}
+
+	if (!musicLocationsAreIdenticals) {
+		qDebug() << newLocations;
+		settings->setMusicLocations(newLocations);
+		settings->sync();
+		emit musicLocationsHaveChanged();
 	}
 }
 
+/** Adds a new music location in the library. */
 void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 {
-	bool existingItem = false;
-	for (int i=0; i<listWidgetMusicLocations->count(); i++) {
+	int existingItem = -1;
+	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
 		QListWidgetItem *item = listWidgetMusicLocations->item(i);
-		if (item->text() == QDir::toNativeSeparators(musicLocation)) {
-			existingItem = true;
+		if (QString::compare(item->text(), QDir::toNativeSeparators(musicLocation)) == 0 ||
+			QString::compare(item->text(), tr("Add some music locations here")) == 0) {
+			existingItem = i;
 			break;
 		}
 	}
 
-	if (!existingItem) {
-		listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation)));
-		pushButtonDeleteLocation->setEnabled(true);
-
-		Settings *settings = Settings::getInstance();
-		if (settings->musicLocations().isEmpty()) {
-			delete listWidgetMusicLocations->takeItem(0);
-		}
-		settings->addMusicLocation(QDir::fromNativeSeparators(musicLocation));
-
-		// Scan the hard-drive once again
-		musicLocationsChanged = true;
+	/*if (Settings::getInstance()->musicLocations().isEmpty()) {
+		qDebug() << "deleting first item (should I?)";
+		delete listWidgetMusicLocations->takeItem(0);
+	}*/
+	if (existingItem >= 0) {
+		delete listWidgetMusicLocations->takeItem(existingItem);
 	}
+	listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
+	pushButtonDeleteLocation->setEnabled(true);
 }
 
 void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
@@ -269,17 +290,11 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 
 	Settings *settings = Settings::getInstance();
 	if (!settings->musicLocations().isEmpty()) {
-		QListWidgetItem *current = listWidgetMusicLocations->takeItem(row);
-
-		settings->removeMusicLocation(QDir::fromNativeSeparators(current->text()));
-		delete current;
-
-		// Scan the hard-drive once again
-		musicLocationsChanged = true;
+		delete listWidgetMusicLocations->takeItem(row);
 
 		if (listWidgetMusicLocations->count() == 0) {
 			pushButtonDeleteLocation->setEnabled(false);
-			listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here")));
+			listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
 		}
 	}
 }

@@ -30,7 +30,7 @@ private:
 	int countAll(const QModelIndexList &indexes) const;
 
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes);
+	void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
 public slots:
 	/** Reload tree when the path has changed in the address bar. */

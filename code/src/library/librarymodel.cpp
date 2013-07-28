@@ -14,7 +14,7 @@ using namespace TagLib;
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(0, 1, parent)
 {
-	_currentInsertPolicy = Album;
+	_currentInsertPolicy = Artist;
 }
 
 /** Removes everything. */
@@ -25,6 +25,11 @@ void LibraryModel::clear()
 	_artists.clear();
 	_covers.clear();
 	_tracks.clear();
+	_fileRefs.clear();
+	_albums2.clear();
+	_artistsAlbums.clear();
+	_years.clear();
+	_letters.clear();
 	if (rowCount() > 0) {
 		removeRows(0, rowCount());
 	}
@@ -32,8 +37,6 @@ void LibraryModel::clear()
 
 void LibraryModel::insertLetter(const QString &letters)
 {	
-	static QSet<QString> _letters;
-
 	if (!letters.isEmpty()) {
 		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		QString letter;
@@ -51,11 +54,13 @@ void LibraryModel::insertLetter(const QString &letters)
 }
 
 /** Add (a path to) an icon to every album. */
-void LibraryModel::addCoverPathToAlbum(const QString &qFileName)
+void LibraryModel::addCoverPathToAlbum(const QString &fileName)
 {
-	LibraryItemAlbum *indexAlbum = _covers.value(qFileName.left(qFileName.lastIndexOf('/')));
+	// LibraryItemAlbum *indexAlbum = _covers.value(fileName);
+	// "D:\Musique\MP3\Air\2001 - 10000 Hz Legend\Folder.jpg"
+	LibraryItemAlbum *indexAlbum = _tracks.value(QFileInfo(fileName).absolutePath());
 	if (indexAlbum) {
-		indexAlbum->setCoverPath(qFileName);
+		indexAlbum->setCoverPath(fileName);
 
 		// Keep a copy of covers in case of any changes in settings
 		_albumsWithCovers.insert(indexAlbum, indexAlbum->icon());
@@ -109,18 +114,39 @@ void LibraryModel::loadFromFile()
 	}
 }
 
-/** Read a file from the filesystem and adds it into the library. */
-void LibraryModel::readFile(const QString &qFileName)
+/** Build a tree from a flat file saved on disk. */
+void LibraryModel::loadFromFile2()
 {
-	FileRef *fileRef = new FileRef(QFile::encodeName(qFileName).constData());
-	if (fileRef && fileRef->tag()) {
-		_fileRefs.insert(fileRef);
-		insertTrack(fileRef->tag(), _currentInsertPolicy);
+	QFile mmmmp(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"));
+	if (mmmmp.open(QIODevice::ReadOnly)) {
+		QByteArray input = qUncompress(mmmmp.readAll());
+		QDataStream dataStream(&input, QIODevice::ReadOnly);
+
+		mmmmp.close();
+		emit loadedFromFile();
+	}
+}
+
+/** Read a file from the filesystem and adds it into the library. */
+void LibraryModel::readFile(const QString &absFilePath)
+{
+	//FileRef *fileRef = new FileRef(QFile::encodeName(absFilePath).constData(), true);
+	//FileRef *fileRef = new FileRef(QFile::encodeName(absFilePath).constData());
+	FileHelper fh(absFilePath);
+	//fh.file()->tag();
+	//if (fileRef && fileRef->tag()) {
+	if (fh.file() && fh.file()->tag()) {
+		//_fileRefs.insert(fileRef);
+		//insertTrack(absFilePath, fileRef->tag(), _currentInsertPolicy);
+		insertTrack(absFilePath, fh.file()->tag(), _currentInsertPolicy);
+		//qDebug() << "ici";
+	} else {
+		qDebug() << "there was a pb creating a new instance of FileRef for" << absFilePath;
 	}
 }
 
 /// Strategy or Policy? Strategies are usually called from other classes
-void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
+void LibraryModel::insertTrack(const QString &absFilePath, Tag *tag, InsertPolicy policy)
 {
 	LibraryItemArtist *itemArtist = NULL;
 	LibraryItemAlbum *itemAlbum = NULL;
@@ -129,10 +155,6 @@ void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
 	QString artist(tag->artist().toCString(true));
 	QString album(tag->album().toCString(true));
 	QString title(tag->title().toCString(true));
-
-	static QMap<QString, LibraryItemAlbum*> _albums2;
-	static QMap<QString, LibraryItemArtist*> _artistsAlbums;
-	static QMap<int, LibraryItem*> _years;
 
 	switch (policy) {
 	case Artist:
@@ -214,6 +236,7 @@ void LibraryModel::insertTrack(Tag *tag, InsertPolicy policy)
 	case Folders:
 		break;
 	}
+	itemTrack->setFilePath(absFilePath);
 }
 
 /** Save a tree to a flat file on disk. */
@@ -251,6 +274,31 @@ void LibraryModel::saveToFile()
 	}
 }
 
+/** Save a tree to a flat file on disk. */
+void LibraryModel::saveToFile2()
+{
+	QString librarySaveFolder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+	bool isFolderAvailable = true;
+	QDir folder;
+	if (!folder.exists(librarySaveFolder)) {
+		isFolderAvailable = folder.mkpath(librarySaveFolder);
+	}
+	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
+	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+
+		QByteArray output;
+		QDataStream dataStream(&output, QIODevice::ReadWrite);
+		QSetIterator<FileRef *> it(_fileRefs);
+		while (it.hasNext()) {
+			dataStream << QFile::decodeName(it.next()->file()->name());
+			//qDebug() << QFile::decodeName(it.next()->file()->name());
+		}
+
+		mmmmp.write(qCompress(output, 9));
+		mmmmp.close();
+	}
+}
+
 /** Recursively remove a leaf and its parents if the leaf is a "one node" branch. */
 /*void LibraryModel::removeNode(const QModelIndex &index)
 {
@@ -271,7 +319,6 @@ void LibraryModel::saveToFile()
 				tracks.remove(key);
 				break;
 			case ALBUM:
-				/// FIXME
 				//albumPath = covers.key(libraryItem);
 				//qDebug() << albumPath << covers.remove(albumPath);
 				pair = albums.key(libraryItem);

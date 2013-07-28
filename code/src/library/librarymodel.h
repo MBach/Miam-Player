@@ -49,10 +49,15 @@ private:
 
 	QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 
+	QMap<QString, LibraryItemAlbum*> _albums2;
+	QMap<QString, LibraryItemArtist*> _artistsAlbums;
+	QMap<int, LibraryItem*> _years;
+
 	InsertPolicy _currentInsertPolicy;
 
 	/// test
 	QSet<TagLib::FileRef*> _fileRefs;
+	QSet<QString> _letters;
 
 public:
 
@@ -79,7 +84,7 @@ private:
 	void writeNode(QDataStream &dataStream, LibraryItem *parent);
 
 	void insertLetter(const QString &letters);
-	void insertTrack(TagLib::Tag* tag, InsertPolicy policy);
+	void insertTrack(const QString &absFilePath, TagLib::Tag* tag, InsertPolicy policy);
 
 signals:
 	/** A flat file on your computer was successfully loaded. */
@@ -87,19 +92,22 @@ signals:
 
 public slots:
 	/** Add (a path to) an icon to every album. */
-	void addCoverPathToAlbum(const QString &qFileName);
+	void addCoverPathToAlbum(const QString &fileName);
 
 	/** If True, draws one cover before an album name. */
 	void displayCovers(bool withCovers);
 
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();
+	void loadFromFile2();
 
 	/** Read a file from the filesystem and adds it into the library. */
-	void readFile(const QString &qFileName);
+	void readFile(const QString &absFilePath);
 
 	/** Save a tree to a flat file on disk. */
 	void saveToFile();
+
+	void saveToFile2();
 };
 
 #endif // LIBRARYMODEL_H

@@ -105,7 +105,7 @@ void TagEditor::replaceCover(Cover *newCover)
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
-void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
+void TagEditor::addItemsToEditor(const QStringList &tracks)
 {
 	this->clear();
 	saveChangesButton->setEnabled(false);
@@ -114,7 +114,7 @@ void TagEditor::addItemsToEditor(const QList<QPersistentModelIndex> &indexes)
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
-	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(indexes, covers);
+	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, covers);
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
 	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
 

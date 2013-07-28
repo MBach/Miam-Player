@@ -61,10 +61,10 @@ public slots:
 	void addExtFolders(const QList<QDir> &folders);
 
 	/** Append a single track chosen by one from the library or the filesystem into the active playlist. */
-	void appendItemToPlaylist(const QModelIndex &index);
+	void appendItemToPlaylist(const QString &track);
 
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
-	void insertItemsToPlaylist(int rowIndex, const QList<QPersistentModelIndex> &indexes);
+	void insertItemsToPlaylist(int rowIndex, const QStringList &tracks);
 
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist() { removeTabFromCloseButton(this->tabBar()->currentIndex()); }

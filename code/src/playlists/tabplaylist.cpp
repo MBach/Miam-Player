@@ -165,22 +165,20 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 }
 
 /** Append a single track chosen by one from the library or the filesystem into the active playlist. */
-void TabPlaylist::appendItemToPlaylist(const QModelIndex &index)
+void TabPlaylist::appendItemToPlaylist(const QString &track)
 {
-	QList<QPersistentModelIndex> indexes;
-	indexes.append(index);
-	this->insertItemsToPlaylist(-1, indexes);
+	QList<QString> tracks;
+	tracks.append(track);
+	this->insertItemsToPlaylist(-1, tracks);
 }
 
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
-void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QPersistentModelIndex> &indexes)
+void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
 	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
 	QList<QMediaContent> medias;
-	foreach (QPersistentModelIndex index, indexes) {
-		if (index.isValid()) {
-			medias.append(QMediaContent(QUrl::fromLocalFile(TreeView::absFilePath(index))));
-		}
+	foreach (QString track, tracks) {
+		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
 	}
 	// If the track needs to be appended at the end
 	if (rowIndex == -1) {

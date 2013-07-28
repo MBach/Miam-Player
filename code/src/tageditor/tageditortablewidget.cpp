@@ -90,40 +90,34 @@ void TagEditorTableWidget::resetTable()
 }
 
 /** Add items to the table in order to edit them. */
-bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &indexList, QMap<int, Cover*> &covers)
+bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int, Cover*> &covers)
 {
 	QSet<QPair<QString, QString> > artistAlbumSet;
-	foreach (QPersistentModelIndex index, indexList) {
-		QString absFilePath = TreeView::absFilePath(index);
-		/// FIXME Qt5
-		//MediaSource source(absFilePath);
-		//if (source.type() != MediaSource::Invalid) {
-		TagLib::FileRef f(absFilePath.toLocal8Bit().data());
-		indexes.insert(absFilePath, index);
-
-		FileHelper fh(f, index.data(LibraryItem::SUFFIX).toInt());
+	foreach (QString track, tracks) {
+		FileHelper fh(track);
 
 		// The first two columns are not editable
 		// It may changes in the future for the first one (the filename)
-		QFileInfo qFileInfo(absFilePath);
+		//QFileInfo qFileInfo(absFilePath);
+		QFileInfo qFileInfo;
 		QTableWidgetItem *fileName = new QTableWidgetItem(qFileInfo.fileName());
 		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 		fileName->setData(LibraryItem::SUFFIX, fh.type());
 		QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
 		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-		QTableWidgetItem *title = new QTableWidgetItem(f.tag()->title().toCString(true));
-		QTableWidgetItem *artist = new QTableWidgetItem(f.tag()->artist().toCString(true));
+		QTableWidgetItem *title = new QTableWidgetItem(fh.file()->tag()->title().toCString(true));
+		QTableWidgetItem *artist = new QTableWidgetItem(fh.file()->tag()->artist().toCString(true));
 		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString(true));
-		QTableWidgetItem *album = new QTableWidgetItem(f.tag()->album().toCString(true));
+		QTableWidgetItem *album = new QTableWidgetItem(fh.file()->tag()->album().toCString(true));
 		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-		QString track = QString("%1").arg(f.tag()->track(), 2, 10, QChar('0')).toUpper();
-		QTableWidgetItem *trackNumber = new QTableWidgetItem(track);
+		QString trackN = QString("%1").arg(fh.file()->tag()->track(), 2, 10, QChar('0')).toUpper();
+		QTableWidgetItem *trackNumber = new QTableWidgetItem(trackN);
 		//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
 		QTableWidgetItem *disc = new QTableWidgetItem("");
-		QTableWidgetItem *year = new QTableWidgetItem(QString::number(f.tag()->year()));
-		QTableWidgetItem *genre = new QTableWidgetItem(f.tag()->genre().toCString(true));
-		QTableWidgetItem *comment = new QTableWidgetItem(f.tag()->comment().toCString(true));
+		QTableWidgetItem *year = new QTableWidgetItem(QString::number(fh.file()->tag()->year()));
+		QTableWidgetItem *genre = new QTableWidgetItem(fh.file()->tag()->genre().toCString(true));
+		QTableWidgetItem *comment = new QTableWidgetItem(fh.file()->tag()->comment().toCString(true));
 
 		QList<QTableWidgetItem*> items;
 		items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;
@@ -145,7 +139,6 @@ bool TagEditorTableWidget::addItemsToEditor(const QList<QPersistentModelIndex> &
 		if (cover != NULL && !cover->byteArray().isEmpty()) {
 			covers.insert(row, cover);
 		}
-		//}
 	}
 	return (artistAlbumSet.size() == 1);
 }

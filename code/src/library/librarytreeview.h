@@ -42,7 +42,7 @@ private:
 	int countAll(const QModelIndexList &indexes) const;
 
 	/** Reimplemented. */
-	void findAll(const QPersistentModelIndex &index, QMap<QString, QPersistentModelIndex> &indexes);
+	void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
 public slots:
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/

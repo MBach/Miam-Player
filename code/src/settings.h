@@ -64,14 +64,10 @@ public:
 	/** Sets the font of the application. */
 	int fontSize(const FontFamily fontFamily);
 
-	/** Adds a new path in the application. */
-	void addMusicLocation(const QString &location);
-
-	/** Removes a path in the application. */
-	void removeMusicLocation(const QString &location);
+	void setMusicLocations(const QStringList &locations);
 
 	/** Returns all music locations. */
-	inline QList<QVariant> musicLocations() const { return value("musicLocations").toList(); }
+	QStringList musicLocations() const;
 
 	bool withCovers() const;
 
