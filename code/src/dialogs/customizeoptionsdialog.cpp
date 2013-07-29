@@ -190,14 +190,10 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 			break;
 		}
 	}
-
-	/*if (Settings::getInstance()->musicLocations().isEmpty()) {
-		qDebug() << "deleting first item (should I?)";
-		delete listWidgetMusicLocations->takeItem(0);
-	}*/
 	if (existingItem >= 0) {
 		delete listWidgetMusicLocations->takeItem(existingItem);
 	}
+	qDebug() << "adding:" << musicLocation;
 	listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
 	pushButtonDeleteLocation->setEnabled(true);
 }

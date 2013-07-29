@@ -69,7 +69,8 @@ SOURCES += \
     library/libraryitemtrack.cpp \
     library/libraryitemfactory.cpp \
     library/libraryitemdelegate.cpp \
-    library/libraryorderdialog.cpp
+    library/libraryorderdialog.cpp \
+    quickstartsearchengine.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -125,7 +126,8 @@ HEADERS += \
     library/libraryitemtrack.h \
     library/libraryitemfactory.h \
     library/libraryitemdelegate.h \
-    library/libraryorderdialog.h
+    library/libraryorderdialog.h \
+    quickstartsearchengine.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

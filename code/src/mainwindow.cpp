@@ -124,12 +124,15 @@ void MainWindow::setupActions()
 
 	// Select only folders that are checked by one
 	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
+		QStringList newLocations;
 		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
 				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
 				customizeOptionsDialog->addMusicLocation(musicLocation);
+				newLocations.append(musicLocation);
 			}
 		}
+		Settings::getInstance()->setMusicLocations(newLocations);
 		this->drawLibrary(true);
 		quickStart->hide();
 	});
@@ -316,7 +319,9 @@ void MainWindow::drawLibrary(bool b)
 	actionScanLibrary->setEnabled(!isEmpty);
 	widgetSearchBar->setVisible(!isEmpty);
 	this->toggleTagEditor(false);
-	if (!isEmpty) {
+	if (isEmpty) {
+		quickStart->searchMultimediaFiles();
+	} else {
 		// Warning: This function violates the object-oriented principle of modularity.
 		// However, getting access to the sender might be useful when many signals are connected to a single slot.
 		if (sender() == actionScanLibrary) {
