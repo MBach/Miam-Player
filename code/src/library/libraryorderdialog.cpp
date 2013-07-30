@@ -1,6 +1,7 @@
 #include "libraryorderdialog.h"
 
 #include "library/librarymodel.h"
+#include "settings.h"
 
 #include <QtDebug>
 
@@ -22,7 +23,6 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		}
 	}
 	artistTreeView->setModel(artistModel);
-	artistTreeView->header()->setStyleSheet("QHeaderView::section {	border: 1px solid #66A7E8; background-color: #D1E8FF; }");
 
 	bool disabled = false;
 
@@ -66,8 +66,11 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		connect(treeView, &QTreeView::clicked, [=]() {
 			foreach (QTreeView *treeView_2, findChildren<QTreeView*>()) {
 				if (treeView == treeView_2) {
-					treeView_2->header()->setStyleSheet("QHeaderView::section {	border: 1px solid #66A7E8; background-color: #D1E8FF; }");
+					treeView_2->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
+					treeView_2->header()->setStyleSheet("QHeaderView::section {	margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
+					treeView_2->clearSelection();
 				} else {
+					treeView_2->setStyleSheet("");
 					treeView_2->header()->setStyleSheet("");
 				}
 			}
@@ -78,10 +81,10 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 
 void LibraryOrderDialog::show()
 {
-	if (!_model->artists().isEmpty()) {
+	//if (!_model->artists().isEmpty()) {
 		qDebug() << "pick one to populate this popup!";
 		///FIXME: the list is empty when reading from a file!
 		///The model class should really be redesigned completely
-	}
+	//}
 	QDialog::show();
 }

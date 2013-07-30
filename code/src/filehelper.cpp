@@ -87,7 +87,7 @@ FileHelper::FileHelper(const QString &filePath)
 	}
 }
 
-String FileHelper::artistAlbum() const
+QString FileHelper::artistAlbum() const
 {
 	String artAlb = "";
 	APE::File *apeFile = NULL;
@@ -147,7 +147,7 @@ String FileHelper::artistAlbum() const
 	case 10:
 		break;
 	}
-	return artAlb;
+	return QString(artAlb.toCString(true));
 }
 
 Cover* FileHelper::extractCover()

@@ -11,6 +11,7 @@ CircleProgressBar::CircleProgressBar(QWidget *parent) :
 	this->setMinimumHeight(size);
 	this->setMaximumWidth(size);
 	this->setMaximumHeight(size);
+	this->setValue(0);
 
 	static double coefOuter = 0.6;
 	static double coefInner = 0.47;

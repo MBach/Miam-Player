@@ -74,7 +74,7 @@ void TagEditorTableWidget::resetTable()
 
 		title->setText(f.tag()->title().toCString(true));
 		artist->setText(f.tag()->artist().toCString(true));
-		artistAlbum->setText(fh.artistAlbum().toCString(true));
+		artistAlbum->setText(fh.artistAlbum());
 		album->setText(f.tag()->album().toCString(true));
 		trackNumber->setText(QString::number(f.tag()->track()));
 		disc->setText(QString());
@@ -108,7 +108,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 
 		QTableWidgetItem *title = new QTableWidgetItem(fh.file()->tag()->title().toCString(true));
 		QTableWidgetItem *artist = new QTableWidgetItem(fh.file()->tag()->artist().toCString(true));
-		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum().toCString(true));
+		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum());
 		QTableWidgetItem *album = new QTableWidgetItem(fh.file()->tag()->album().toCString(true));
 		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
 		QString trackN = QString("%1").arg(fh.file()->tag()->track(), 2, 10, QChar('0')).toUpper();

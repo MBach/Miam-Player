@@ -78,7 +78,7 @@ public:
 	int bufferedCoverSize() const;
 
 	/** Returns volume from the slider. */
-	inline int volume() const { return value("volume").toInt(); }
+	int volume() const;
 
 	void setShortcut(const QString &objectName, int keySequence);
 

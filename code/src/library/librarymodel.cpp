@@ -21,11 +21,9 @@ LibraryModel::LibraryModel(QObject *parent)
 void LibraryModel::clear()
 {
 	_albums.clear();
-	_albumsWithCovers.clear();
+	//_albumsWithCovers.clear();
 	_artists.clear();
-	_covers.clear();
-	_tracks.clear();
-	_fileRefs.clear();
+	//_covers.clear();
 	_albums2.clear();
 	_artistsAlbums.clear();
 	_years.clear();
@@ -54,7 +52,8 @@ void LibraryModel::insertLetter(const QString &letters)
 }
 
 /** Add (a path to) an icon to every album. */
-void LibraryModel::addCoverPathToAlbum(const QString &fileName)
+/// FIXME
+/*void LibraryModel::addCoverPathToAlbum(const QString &fileName)
 {
 	// LibraryItemAlbum *indexAlbum = _covers.value(fileName);
 	// "D:\Musique\MP3\Air\2001 - 10000 Hz Legend\Folder.jpg"
@@ -67,9 +66,10 @@ void LibraryModel::addCoverPathToAlbum(const QString &fileName)
 	} else {
 		qDebug() << "vide";
 	}
-}
+}*/
 
 /** If True, draws one cover before an album name. */
+/*
 void LibraryModel::displayCovers(bool withCovers)
 {
 	foreach (LibraryItemAlbum *album, _albums.values()) {
@@ -81,6 +81,7 @@ void LibraryModel::displayCovers(bool withCovers)
 	}
 	Settings::getInstance()->setCovers(withCovers);
 }
+*/
 
 /** Build a tree from a flat file saved on disk. */
 void LibraryModel::loadFromFile()
@@ -130,53 +131,67 @@ void LibraryModel::loadFromFile2()
 /** Read a file from the filesystem and adds it into the library. */
 void LibraryModel::readFile(const QString &absFilePath)
 {
-	//FileRef *fileRef = new FileRef(QFile::encodeName(absFilePath).constData(), true);
-	//FileRef *fileRef = new FileRef(QFile::encodeName(absFilePath).constData());
 	FileHelper fh(absFilePath);
-	//fh.file()->tag();
-	//if (fileRef && fileRef->tag()) {
-	if (fh.file() && fh.file()->tag()) {
-		//_fileRefs.insert(fileRef);
-		//insertTrack(absFilePath, fileRef->tag(), _currentInsertPolicy);
-		insertTrack(absFilePath, fh.file()->tag(), _currentInsertPolicy);
-		//qDebug() << "ici";
-	} else {
-		qDebug() << "there was a pb creating a new instance of FileRef for" << absFilePath;
+	if (fh.file() != NULL && fh.file()->tag() != NULL && !fh.file()->tag()->isEmpty()) {
+		insertTrack(absFilePath, fh, _currentInsertPolicy);
+	} else if (fh.file() == NULL) {
+		qDebug() << "fh.file() == NULL" << absFilePath;
+	} else if (fh.file()->tag() == NULL) {
+		qDebug() << "fh.file()->tag() == NULL" << absFilePath;
+	} else if (fh.file()->tag()->isEmpty()) {
+		qDebug() << "fh.file()->tag()->isEmpty()" << absFilePath;
 	}
 }
 
 /// Strategy or Policy? Strategies are usually called from other classes
-void LibraryModel::insertTrack(const QString &absFilePath, Tag *tag, InsertPolicy policy)
+void LibraryModel::insertTrack(const QString &absFilePath, const FileHelper &fileHelper, InsertPolicy policy)
 {
 	LibraryItemArtist *itemArtist = NULL;
 	LibraryItemAlbum *itemAlbum = NULL;
 	LibraryItemTrack *itemTrack = NULL;
 	LibraryItem *itemYear = NULL;
-	QString artist(tag->artist().toCString(true));
-	QString album(tag->album().toCString(true));
-	QString title(tag->title().toCString(true));
+	Tag *tag = fileHelper.file()->tag();
+	QString artist = QString(tag->artist().toCString(true)).trimmed();
+	QString artistAlbum = fileHelper.artistAlbum();
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	QString album = QString(tag->album().toCString(true)).trimmed();
+	QString title = QString(tag->title().toCString(true)).trimmed();
+	int year = tag->year();
+
+	static bool existingArtist = true;
+	/*static bool itemForDynamicHierarchyWasFound = false;
+	if (!theArtist.isEmpty() && !album.isEmpty() && !title.isEmpty() && year > 0 && !itemForDynamicHierarchyWasFound) {
+
+	}*/
 
 	switch (policy) {
 	case Artist:
 		// Level 1
-		if (_artists.contains(artist.toLower())) {
-			itemArtist = _artists.value(artist.toLower());
+		if (_artists.contains(theArtist.toLower())) {
+			itemArtist = _artists.value(theArtist.toLower());
+			existingArtist = true;
 		} else {
-			itemArtist = new LibraryItemArtist(artist);
-			_artists.insert(artist.toLower(), itemArtist);
+			itemArtist = new LibraryItemArtist(theArtist);
+			_artists.insert(theArtist.toLower(), itemArtist);
 			invisibleRootItem()->appendRow(itemArtist);
-			this->insertLetter(artist);
+			this->insertLetter(theArtist);
+			existingArtist = false;
 		}
 		// Level 2
-		itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
-		if (itemAlbum == NULL) {
+		if (existingArtist && _albums.contains(QPair<LibraryItemArtist*, QString>(itemArtist, album))) {
+			itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
+		} else {
 			itemAlbum = new LibraryItemAlbum(album);
-			itemAlbum->setYear(tag->year());
+			itemAlbum->setYear(year);
 			_albums.insert(QPair<LibraryItemArtist *, QString>(itemArtist, album), itemAlbum);
 			itemArtist->appendRow(itemAlbum);
 		}
 		// Level 3
-		itemTrack = new LibraryItemTrack(title, -1);
+		if (artistAlbum.isEmpty()) {
+			itemTrack = new LibraryItemTrack(title, -1);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")", -1);
+		}
 		itemAlbum->appendRow(itemTrack);
 		break;
 	case Album:
@@ -185,7 +200,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, Tag *tag, InsertPolic
 			itemAlbum = _albums2.value(album);
 		} else {
 			itemAlbum = new LibraryItemAlbum(album);
-			itemAlbum->setYear(tag->year());
+			itemAlbum->setYear(year);
 			_albums2.insert(album, itemAlbum);
 			invisibleRootItem()->appendRow(itemAlbum);
 			this->insertLetter(album);
@@ -210,15 +225,15 @@ void LibraryModel::insertTrack(const QString &absFilePath, Tag *tag, InsertPolic
 		break;
 	case Year:
 		// Level 1
-		if (_years.contains(tag->year())) {
-			itemYear = _years.value(tag->year());
+		if (_years.contains(year)) {
+			itemYear = _years.value(year);
 		} else {
-			if (tag->year() > 0) {
-				itemYear = new LibraryItem(QString::number(tag->year()));
+			if (year > 0) {
+				itemYear = new LibraryItem(QString::number(year));
 			} else {
 				itemYear = new LibraryItem();
 			}
-			_years.insert(tag->year(), itemYear);
+			_years.insert(year, itemYear);
 			invisibleRootItem()->appendRow(itemYear);
 		}
 		// Level 2
@@ -232,8 +247,6 @@ void LibraryModel::insertTrack(const QString &absFilePath, Tag *tag, InsertPolic
 		// Level 3
 		itemTrack = new LibraryItemTrack(title, -1);
 		itemArtist->appendRow(itemTrack);
-		break;
-	case Folders:
 		break;
 	}
 	itemTrack->setFilePath(absFilePath);
@@ -251,48 +264,13 @@ void LibraryModel::saveToFile()
 	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
 	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 
-		// No need to store separators, they will be rebuilt at runtime.
-		QStandardItem *item = invisibleRootItem();
-		int separators = 0;
-		for (int i = 0; i < item->rowCount(); i++) {
-			if (item->child(i)->type() == LibraryItem::Letter) {
-				++separators;
-			}
-		}
-
-		// Write the root first, which is not a LibraryItem instance
 		QByteArray output;
 		QDataStream dataStream(&output, QIODevice::ReadWrite);
-		dataStream << item->rowCount() - separators;
-		for (int i = 0; i < item->rowCount(); i++) {
-			this->writeNode(dataStream, static_cast<LibraryItem *>(item->child(i, 0)));
-		}
-		mmmmp.write(qCompress(output, 9));
-		mmmmp.close();
-	} else {
-		qDebug() << "error when retrieving folder for saving useful data";
-	}
-}
-
-/** Save a tree to a flat file on disk. */
-void LibraryModel::saveToFile2()
-{
-	QString librarySaveFolder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-	bool isFolderAvailable = true;
-	QDir folder;
-	if (!folder.exists(librarySaveFolder)) {
-		isFolderAvailable = folder.mkpath(librarySaveFolder);
-	}
-	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
-	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-
-		QByteArray output;
-		QDataStream dataStream(&output, QIODevice::ReadWrite);
-		QSetIterator<FileRef *> it(_fileRefs);
+		/*QSetIterator<FileRef *> it(_fileRefs);
 		while (it.hasNext()) {
 			dataStream << QFile::decodeName(it.next()->file()->name());
-			//qDebug() << QFile::decodeName(it.next()->file()->name());
-		}
+			qDebug() << QFile::decodeName(it.next()->file()->name());
+		}*/
 
 		mmmmp.write(qCompress(output, 9));
 		mmmmp.close();

@@ -76,7 +76,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
 	// When the scan is complete, save the model in the filesystem
-	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
 	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile2);
 
 	// Load covers only when an item need to be expanded
@@ -218,7 +217,7 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 		//libraryModel->removeNode(index);
 	//}
 	sortByColumn(0, Qt::AscendingOrder);
-	libraryModel->saveToFile();
+	//libraryModel->saveToFile();
 }
 
 void LibraryTreeView::endPopulateTree()

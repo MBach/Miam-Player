@@ -35,7 +35,11 @@ public:
 
 	FileHelper(const QString &filePath);
 
-	TagLib::String artistAlbum() const;
+	~FileHelper() {
+		delete f;
+	}
+
+	QString artistAlbum() const;
 
 	Cover* extractCover();
 

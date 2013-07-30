@@ -33,31 +33,22 @@ public:
 	enum InsertPolicy { Artist,
 						Album,
 						ArtistAlbum,
-						Year,
-						Folders };
+						Year };
 
 private:
-	QMap<QString, LibraryItemArtist*> _artists;
-	QMap<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
-
-	// An efficient way to tell if a track was already inserted
-	QHash<QString, LibraryItemAlbum*> _tracks;
+	QHash<QString, LibraryItemArtist*> _artists;
+	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
+	QHash<QString, LibraryItemAlbum*> _albums2;
+	QHash<QString, LibraryItemArtist*> _artistsAlbums;
+	QHash<int, LibraryItem*> _years;
+	//QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
+	QSet<QString> _letters;
 
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
-	QMap<QString, LibraryItemAlbum*> _covers;
-
-	QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
-
-	QMap<QString, LibraryItemAlbum*> _albums2;
-	QMap<QString, LibraryItemArtist*> _artistsAlbums;
-	QMap<int, LibraryItem*> _years;
+	//QMap<QString, LibraryItemAlbum*> _covers;
 
 	InsertPolicy _currentInsertPolicy;
-
-	/// test
-	QSet<TagLib::FileRef*> _fileRefs;
-	QSet<QString> _letters;
 
 public:
 
@@ -72,7 +63,7 @@ public:
 		return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
 	}
 
-	QMap<QString, LibraryItemArtist*> artists() const { return _artists; }
+	QHash<QString, LibraryItemAlbum*> albums() const { return _albums2; }
 
 	InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
 
@@ -84,7 +75,7 @@ private:
 	void writeNode(QDataStream &dataStream, LibraryItem *parent);
 
 	void insertLetter(const QString &letters);
-	void insertTrack(const QString &absFilePath, TagLib::Tag* tag, InsertPolicy policy);
+	void insertTrack(const QString &absFilePath, const FileHelper &fileHelper, InsertPolicy policy);
 
 signals:
 	/** A flat file on your computer was successfully loaded. */
@@ -92,10 +83,12 @@ signals:
 
 public slots:
 	/** Add (a path to) an icon to every album. */
-	void addCoverPathToAlbum(const QString &fileName);
+	/// FIXME
+	//void addCoverPathToAlbum(const QString &fileName);
 
 	/** If True, draws one cover before an album name. */
-	void displayCovers(bool withCovers);
+	/// FIXME
+	//void displayCovers(bool withCovers);
 
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();
@@ -106,8 +99,6 @@ public slots:
 
 	/** Save a tree to a flat file on disk. */
 	void saveToFile();
-
-	void saveToFile2();
 };
 
 #endif // LIBRARYMODEL_H

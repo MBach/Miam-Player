@@ -170,6 +170,16 @@ int Settings::bufferedCoverSize() const
 	return buffer;
 }
 
+/** Returns volume from the slider. */
+int Settings::volume() const
+{
+   if (value("volume").isNull()) {
+	   return 90;
+   } else {
+	   return value("volume").toInt();
+   }
+}
+
 void Settings::setShortcut(const QString &objectName, int keySequence)
 {
 	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
