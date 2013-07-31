@@ -21,6 +21,9 @@ public:
 
 public slots:
 	void show();
+
+signals:
+	void aboutToRedrawLibrary(LibraryModel::InsertPolicy);
 };
 
 #endif // LIBRARYORDERDIALOG_H

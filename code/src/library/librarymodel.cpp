@@ -14,7 +14,7 @@ using namespace TagLib;
 LibraryModel::LibraryModel(QObject *parent)
 	 : QStandardItemModel(0, 1, parent)
 {
-	_currentInsertPolicy = Artist;
+	_currentInsertPolicy = Settings::getInstance()->insertPolicy();
 }
 
 /** Removes everything. */
@@ -211,16 +211,20 @@ void LibraryModel::insertTrack(const QString &absFilePath, const FileHelper &fil
 		break;
 	case ArtistAlbum:
 		// Level 1
-		if (_artistsAlbums.contains(artist + album)) {
-			itemArtist = _artistsAlbums.value(artist + album);
+		if (_artistsAlbums.contains(theArtist + album)) {
+			itemArtist = _artistsAlbums.value(theArtist + album);
 		} else {
-			itemArtist = new LibraryItemArtist(artist + " - " + album);
-			_artistsAlbums.insert(artist + album, itemArtist);
+			itemArtist = new LibraryItemArtist(theArtist + " – " + album);
+			_artistsAlbums.insert(theArtist + album, itemArtist);
 			invisibleRootItem()->appendRow(itemArtist);
-			this->insertLetter(artist);
+			this->insertLetter(theArtist);
 		}
 		// Level 2
-		itemTrack = new LibraryItemTrack(title, -1);
+		if (artistAlbum.isEmpty()) {
+			itemTrack = new LibraryItemTrack(title, -1);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")", -1);
+		}
 		itemArtist->appendRow(itemTrack);
 		break;
 	case Year:
@@ -237,15 +241,19 @@ void LibraryModel::insertTrack(const QString &absFilePath, const FileHelper &fil
 			invisibleRootItem()->appendRow(itemYear);
 		}
 		// Level 2
-		if (_artistsAlbums.contains(artist + album)) {
-			itemArtist = _artistsAlbums.value(artist + album);
+		if (_artistsAlbums.contains(theArtist + album)) {
+			itemArtist = _artistsAlbums.value(theArtist + album);
 		} else {
-			itemArtist = new LibraryItemArtist(artist + " - " + album);
-			_artistsAlbums.insert(artist + album, itemArtist);
+			itemArtist = new LibraryItemArtist(theArtist + " – " + album);
+			_artistsAlbums.insert(theArtist + album, itemArtist);
 			itemYear->appendRow(itemArtist);
 		}
 		// Level 3
-		itemTrack = new LibraryItemTrack(title, -1);
+		if (artistAlbum.isEmpty()) {
+			itemTrack = new LibraryItemTrack(title, -1);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")", -1);
+		}
 		itemArtist->appendRow(itemTrack);
 		break;
 	}

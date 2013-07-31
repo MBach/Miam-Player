@@ -3,6 +3,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include "librarymodel.h"
+
 class LibraryFilterProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT
@@ -11,6 +13,8 @@ public:
 	LibraryFilterProxyModel(QObject *parent = 0);
 
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+	void updateHeaderData(LibraryModel::InsertPolicy policy);
 
 protected:
 	/** Redefined from QSortFilterProxyModel. */

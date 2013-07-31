@@ -30,10 +30,10 @@ class LibraryModel : public QStandardItemModel
 	Q_OBJECT
 
 public:
-	enum InsertPolicy { Artist,
-						Album,
-						ArtistAlbum,
-						Year };
+	enum InsertPolicy { Artist = 0,
+						Album = 1,
+						ArtistAlbum = 2,
+						Year = 3};
 
 private:
 	QHash<QString, LibraryItemArtist*> _artists;
@@ -63,9 +63,11 @@ public:
 		return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
 	}
 
-	QHash<QString, LibraryItemAlbum*> albums() const { return _albums2; }
+	inline QHash<QString, LibraryItemAlbum*> albums() const { return _albums2; }
 
-	InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
+	inline InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
+
+	inline void setInsertPolicy(InsertPolicy policy) { _currentInsertPolicy = policy; }
 
 private:
 	/** Recursively reads the input stream to build nodes and append them to its parent. */

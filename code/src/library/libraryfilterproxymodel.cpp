@@ -1,7 +1,6 @@
 #include "libraryfilterproxymodel.h"
 
 #include "libraryitem.h"
-#include "librarymodel.h"
 #include "settings.h"
 
 #include <QtDebug>
@@ -21,6 +20,24 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 		return Settings::getInstance()->font(Settings::LIBRARY);
 	} else {
 		return QSortFilterProxyModel::data(index, role);
+	}
+}
+
+void LibraryFilterProxyModel::updateHeaderData(LibraryModel::InsertPolicy policy)
+{
+	switch (policy) {
+	case LibraryModel::Artist:
+		this->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
+		break;
+	case LibraryModel::Album:
+		this->setHeaderData(0, Qt::Horizontal, tr("  Albums"), Qt::DisplayRole);
+		break;
+	case LibraryModel::ArtistAlbum:
+		this->setHeaderData(0, Qt::Horizontal, tr("  Artists – Albums"), Qt::DisplayRole);
+		break;
+	case LibraryModel::Year:
+		this->setHeaderData(0, Qt::Horizontal, tr("  Years"), Qt::DisplayRole);
+		break;
 	}
 }
 

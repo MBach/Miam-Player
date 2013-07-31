@@ -26,27 +26,33 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel->setSourceModel(libraryModel);
 
 	Settings *settings = Settings::getInstance();
+	proxyModel->updateHeaderData(libraryModel->currentInsertPolicy());
 
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
 	this->header()->setStyleSheet(settings->styleSheet(this->header()));
 	this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 
-	int iconSize = Settings::getInstance()->coverSize();
+	int iconSize = settings->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
 
-	proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 
 	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
 
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
+	// One can choose a hierarchical order for drawing the library
 	LibraryOrderDialog *lod = new LibraryOrderDialog(this);
 	lod->setModel(libraryModel);
 	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
 		lod->move(mapToGlobal(pos));
 		lod->show();
+	});
+	connect(lod, &LibraryOrderDialog::aboutToRedrawLibrary, [=](LibraryModel::InsertPolicy policy) {
+		libraryModel->setInsertPolicy(policy);
+		proxyModel->updateHeaderData(policy);
+		this->beginPopulateTree();
 	});
 
 	circleProgressBar = new CircleProgressBar(this);
@@ -76,7 +82,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
 	// When the scan is complete, save the model in the filesystem
-	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile2);
+	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
 
 	// Load covers only when an item need to be expanded
 	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);

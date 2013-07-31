@@ -5,6 +5,7 @@
 
 #include "mediabutton.h"
 #include "dialogs/reflector.h"
+#include "library/librarymodel.h"
 
 class Settings : public QSettings
 {
@@ -109,6 +110,9 @@ public:
 	void saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state);
 
 	QByteArray restoreColumnStateForPlaylist(int playlistIndex) const;
+
+	LibraryModel::InsertPolicy insertPolicy() const;
+	void setInsertPolicy(LibraryModel::InsertPolicy policy);
 
 public slots:
 	/** Sets a new theme. */

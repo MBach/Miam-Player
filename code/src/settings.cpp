@@ -433,6 +433,22 @@ QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
 	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
 }
 
+LibraryModel::InsertPolicy Settings::insertPolicy() const
+{
+	QVariant vPolicy = value("insertPolicy");
+	if (vPolicy.isNull()) {
+		return LibraryModel::Artist;
+	} else {
+		int i = vPolicy.toInt();
+		return LibraryModel::InsertPolicy(i);
+	}
+}
+
+void Settings::setInsertPolicy(LibraryModel::InsertPolicy policy)
+{
+	setValue("insertPolicy", policy);
+}
+
 void Settings::setCustomStyleSheet(QWidget *w)
 {
 	QMap<QString, QVariant> map = value("styleSheet").toMap();
