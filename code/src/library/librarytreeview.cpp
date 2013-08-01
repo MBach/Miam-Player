@@ -26,7 +26,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel->setSourceModel(libraryModel);
 
 	Settings *settings = Settings::getInstance();
-	proxyModel->updateHeaderData(libraryModel->currentInsertPolicy());
+	//proxyModel->updateHeaderData(libraryModel->currentInsertPolicy());
 
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
@@ -49,11 +49,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 		lod->move(mapToGlobal(pos));
 		lod->show();
 	});
-	connect(lod, &LibraryOrderDialog::aboutToRedrawLibrary, [=](LibraryModel::InsertPolicy policy) {
-		libraryModel->setInsertPolicy(policy);
-		proxyModel->updateHeaderData(policy);
-		this->beginPopulateTree();
-	});
+	connect(lod, &LibraryOrderDialog::aboutToRedrawLibrary, this, &LibraryTreeView::beginPopulateTree);
 
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
@@ -82,7 +78,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
 	// When the scan is complete, save the model in the filesystem
-	//connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
+	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
 
 	// Load covers only when an item need to be expanded
 	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
@@ -165,22 +161,29 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 {
 	circleProgressBar->show();
-	// Clean all before scanning again
-	// Seems difficult to clean efficiently delegates: they are disabled right now.
-	qDebug() << Q_FUNC_INFO;
 	libraryModel->clear();
 	this->reset();
+	switch (Settings::getInstance()->insertPolicy()) {
+	case LibraryModel::Artist:
+		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
+		break;
+	case LibraryModel::Album:
+		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Albums"), Qt::DisplayRole);
+		break;
+	case LibraryModel::ArtistAlbum:
+		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists – Albums"), Qt::DisplayRole);
+		break;
+	case LibraryModel::Year:
+		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Years"), Qt::DisplayRole);
+		break;
+	}
 	if (musicLocationHasChanged) {
-
 		emit searchMusic();
-
+	} else if (QFile::exists(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"))) {
+		libraryModel->loadFromFile();
 	} else {
-		if (QFile::exists(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"))) {
-			libraryModel->loadFromFile2();
-		} else {
-			// If the file has been erased from the disk meanwhile
-			this->beginPopulateTree(true);
-		}
+		// If the file has been erased from the disk meanwhile
+		this->beginPopulateTree(true);
 	}
 }
 

@@ -76,8 +76,12 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 					treeView_2->clearSelection();
 					int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole + 1).toInt();
 					LibraryModel::InsertPolicy insertPolicy = (LibraryModel::InsertPolicy) i;
-					settings->setInsertPolicy(insertPolicy);
-					emit aboutToRedrawLibrary(insertPolicy);
+					// Rebuild library only if the click was on another treeview
+					if (insertPolicy != settings->insertPolicy()) {
+						settings->setInsertPolicy(insertPolicy);
+						_model->setInsertPolicy(insertPolicy);
+						emit aboutToRedrawLibrary(false);
+					}
 				} else {
 					treeView_2->setStyleSheet("");
 					treeView_2->header()->setStyleSheet("");
@@ -89,9 +93,6 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 
 	QTreeView *initialTreeView;
 	switch (settings->insertPolicy()) {
-	case LibraryModel::Artist:
-		initialTreeView = artistTreeView;
-		break;
 	case LibraryModel::Album:
 		initialTreeView = albumTreeView;
 		break;
@@ -101,13 +102,32 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	case LibraryModel::Year:
 		initialTreeView = yearTreeView;
 		break;
+	case LibraryModel::Artist:
+	default:
+		initialTreeView = artistTreeView;
+		break;
 	}
 	initialTreeView->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
 	initialTreeView->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
 }
 
+// #include <QPropertyAnimation>
+
 void LibraryOrderDialog::show()
 {
-	//qDebug() << "pick one to populate this popup!";
 	QDialog::show();
+	//qDebug() << "pick one to populate this popup!";
+	/*QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
+	animation->setTargetObject(albumTreeView);
+	QPoint topLeft = artistTreeView->rect().topLeft();
+	QPoint topLeftEnd = topLeft;
+	topLeftEnd.setX(topLeft.x() + artistTreeView->rect().width());
+	animation->setStartValue(QVariant(topLeft));
+	animation->setEndValue(QVariant(topLeftEnd));
+	animation->setDuration(100);
+	animation->start();
+	yearTreeView->raise();
+	artistAlbumTreeView->raise();
+	albumTreeView->raise();
+	artistTreeView->raise();*/
 }

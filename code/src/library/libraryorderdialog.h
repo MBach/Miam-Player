@@ -23,7 +23,7 @@ public slots:
 	void show();
 
 signals:
-	void aboutToRedrawLibrary(LibraryModel::InsertPolicy);
+	void aboutToRedrawLibrary(bool);
 };
 
 #endif // LIBRARYORDERDIALOG_H

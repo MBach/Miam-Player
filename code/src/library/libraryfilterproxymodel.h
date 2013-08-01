@@ -14,8 +14,6 @@ public:
 
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-	void updateHeaderData(LibraryModel::InsertPolicy policy);
-
 protected:
 	/** Redefined from QSortFilterProxyModel. */
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &parent) const;

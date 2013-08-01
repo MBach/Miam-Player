@@ -44,6 +44,8 @@ private:
 	//QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 	QSet<QString> _letters;
 
+	QSet<QString> _tracks;
+
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
 	//QMap<QString, LibraryItemAlbum*> _covers;
@@ -70,12 +72,6 @@ public:
 	inline void setInsertPolicy(InsertPolicy policy) { _currentInsertPolicy = policy; }
 
 private:
-	/** Recursively reads the input stream to build nodes and append them to its parent. */
-	void loadNode(QDataStream &in, LibraryItem *parent);
-
-	/** Recursively writes nodes to the output stream. */
-	void writeNode(QDataStream &dataStream, LibraryItem *parent);
-
 	void insertLetter(const QString &letters);
 	void insertTrack(const QString &absFilePath, const FileHelper &fileHelper, InsertPolicy policy);
 
@@ -94,7 +90,6 @@ public slots:
 
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();
-	void loadFromFile2();
 
 	/** Read a file from the filesystem and adds it into the library. */
 	void readFile(const QString &absFilePath);

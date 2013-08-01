@@ -23,24 +23,6 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	}
 }
 
-void LibraryFilterProxyModel::updateHeaderData(LibraryModel::InsertPolicy policy)
-{
-	switch (policy) {
-	case LibraryModel::Artist:
-		this->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
-		break;
-	case LibraryModel::Album:
-		this->setHeaderData(0, Qt::Horizontal, tr("  Albums"), Qt::DisplayRole);
-		break;
-	case LibraryModel::ArtistAlbum:
-		this->setHeaderData(0, Qt::Horizontal, tr("  Artists – Albums"), Qt::DisplayRole);
-		break;
-	case LibraryModel::Year:
-		this->setHeaderData(0, Qt::Horizontal, tr("  Years"), Qt::DisplayRole);
-		break;
-	}
-}
-
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	if (filterAcceptsRowItself(sourceRow, sourceParent)) {

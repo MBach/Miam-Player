@@ -2,8 +2,6 @@
 #include "playlists/starrating.h"
 #include "settings.h"
 
-#include "library/libraryitemfactory.h"
-
 #include <QDir>
 #include <QStandardPaths>
 
@@ -28,6 +26,7 @@ void LibraryModel::clear()
 	_artistsAlbums.clear();
 	_years.clear();
 	_letters.clear();
+	_tracks.clear();
 	if (rowCount() > 0) {
 		removeRows(0, rowCount());
 	}
@@ -88,40 +87,15 @@ void LibraryModel::loadFromFile()
 {
 	QFile mmmmp(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"));
 	if (mmmmp.open(QIODevice::ReadOnly)) {
-		QByteArray input = qUncompress(mmmmp.readAll());
-		QDataStream dataStream(&input, QIODevice::ReadOnly);
 
-		// To build the first item, just read how many children the root has
-		quint32 rootChildren;
-		dataStream >> rootChildren;
-		QStandardItem *root = invisibleRootItem();
-
-		for (quint32 i = 0; i < rootChildren; i++) {
-			int type;
-			dataStream >> type;
-			LibraryItem *libraryItem = LibraryItemFactory::createItem(type);
-			if (libraryItem) {
-				libraryItem->read(dataStream);
-				if (libraryItem->type() != LibraryItem::Letter) {
-					root->appendRow(libraryItem);
-				}
-
-				// Then build nodes
-				this->loadNode(dataStream, libraryItem);
-			}
+		QTextStream stream(&mmmmp);
+		while (!stream.atEnd()) {
+			int length;
+			stream >> length;
+			QString trackToParse = stream.read(length);
+			//qDebug() << "loading:" << trackToParse;
+			this->readFile(trackToParse);
 		}
-		mmmmp.close();
-		emit loadedFromFile();
-	}
-}
-
-/** Build a tree from a flat file saved on disk. */
-void LibraryModel::loadFromFile2()
-{
-	QFile mmmmp(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"));
-	if (mmmmp.open(QIODevice::ReadOnly)) {
-		QByteArray input = qUncompress(mmmmp.readAll());
-		QDataStream dataStream(&input, QIODevice::ReadOnly);
 
 		mmmmp.close();
 		emit loadedFromFile();
@@ -134,6 +108,7 @@ void LibraryModel::readFile(const QString &absFilePath)
 	FileHelper fh(absFilePath);
 	if (fh.file() != NULL && fh.file()->tag() != NULL && !fh.file()->tag()->isEmpty()) {
 		insertTrack(absFilePath, fh, _currentInsertPolicy);
+		_tracks.insert(absFilePath);
 	} else if (fh.file() == NULL) {
 		qDebug() << "fh.file() == NULL" << absFilePath;
 	} else if (fh.file()->tag() == NULL) {
@@ -258,6 +233,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const FileHelper &fil
 		break;
 	}
 	itemTrack->setFilePath(absFilePath);
+	itemTrack->setTrackNumber(tag->track());
 }
 
 /** Save a tree to a flat file on disk. */
@@ -272,15 +248,13 @@ void LibraryModel::saveToFile()
 	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
 	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 
-		QByteArray output;
-		QDataStream dataStream(&output, QIODevice::ReadWrite);
-		/*QSetIterator<FileRef *> it(_fileRefs);
+		QTextStream dataStream(&mmmmp);
+		QSetIterator<QString> it(_tracks);
 		while (it.hasNext()) {
-			dataStream << QFile::decodeName(it.next()->file()->name());
-			qDebug() << QFile::decodeName(it.next()->file()->name());
-		}*/
-
-		mmmmp.write(qCompress(output, 9));
+			QString track = it.next();
+			dataStream << track.size() << track;
+			//qDebug() << "saving:" << track;
+		}
 		mmmmp.close();
 	}
 }
@@ -324,41 +298,3 @@ void LibraryModel::saveToFile()
 		this->removeNode(parent);
 	}
 }*/
-
-/** Recursively reads the input stream to build nodes and append them to its parent. */
-void LibraryModel::loadNode(QDataStream &in, LibraryItem *parent)
-{
-	int type = parent->type();
-	if (type == LibraryItem::Artist || type == LibraryItem::Album) {
-		for (int i = 0; i < parent->childCount(); i++) {
-			in >> type;
-			LibraryItem *node = LibraryItemFactory::createItem(type);
-			node->read(in);
-			//qDebug() << type << node->data(Qt::DisplayRole).toString();
-			parent->appendRow(node);
-
-			// Then load nodes recursively
-			this->loadNode(in, node);
-		}
-	}
-}
-
-/** Recursively writes nodes to the output stream. */
-void LibraryModel::writeNode(QDataStream &dataStream, LibraryItem *parent)
-{
-	if (parent->hasChildren()) {
-		// If the current item has children. It needs to be recursively parsed until there's a leaf
-		for (int i=0; i < parent->rowCount(); i++) {
-			// Store once the number of children and the new artist/album
-			if (i == 0) {
-				parent->write(dataStream);
-			}
-			this->writeNode(dataStream, parent->child(i, 0));
-		}
-	} else {
-		// A track needs to be saved
-		if (parent->type() == LibraryItem::Track) {
-			parent->write(dataStream);
-		}
-	}
-}
