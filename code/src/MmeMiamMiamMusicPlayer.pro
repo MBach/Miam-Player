@@ -67,7 +67,6 @@ SOURCES += \
     library/libraryitemalbum.cpp \
     library/libraryitemartist.cpp \
     library/libraryitemtrack.cpp \
-    library/libraryitemfactory.cpp \
     library/libraryitemdelegate.cpp \
     library/libraryorderdialog.cpp \
     quickstartsearchengine.cpp
@@ -124,7 +123,6 @@ HEADERS += \
     library/libraryitemalbum.h \
     library/libraryitemartist.h \
     library/libraryitemtrack.h \
-    library/libraryitemfactory.h \
     library/libraryitemdelegate.h \
     library/libraryorderdialog.h \
     quickstartsearchengine.h
