@@ -44,7 +44,7 @@ private:
 	//QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 	QSet<QString> _letters;
 
-	QSet<QString> _tracks;
+	QSet<LibraryItemTrack*> _tracks;
 
 	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
 	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
@@ -73,7 +73,9 @@ public:
 
 private:
 	void insertLetter(const QString &letters);
-	void insertTrack(const QString &absFilePath, const FileHelper &fileHelper, InsertPolicy policy);
+	void insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
+					 const QString &title, int trackNumber, int year);
+	void insertTrackFromFileSystem(const QString &absFilePath, const FileHelper &fileHelper);
 
 signals:
 	/** A flat file on your computer was successfully loaded. */

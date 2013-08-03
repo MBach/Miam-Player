@@ -13,7 +13,7 @@ public:
 	/// Constructor with a title and a filetype.
 	explicit LibraryItem(const QString &text);
 
-	explicit LibraryItem();
+	explicit LibraryItem() : QStandardItem() {}
 
 	enum MediaType { Artist		= QStandardItem::UserType + 1,
 					 Album		= QStandardItem::UserType + 2,
@@ -21,24 +21,16 @@ public:
 					 Letter		= QStandardItem::UserType + 4
 				   };
 
-	enum CustomType { CHILD_COUNT		= Qt::UserRole + 4,
-					  TRACK_NUMBER		= Qt::UserRole + 5,
-					  /// XXX: refactor (remove...) this one
-					  SUFFIX			= Qt::UserRole + 8,
-					  FILEPATH			= Qt::UserRole + 9
-					};
+	  /// XXX: refactor (remove...) this one because of AbsFilePath?
+	enum { SUFFIX = Qt::UserRole + 8 };
 
 	enum { NormalizedString = Qt::UserRole + 10 };
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
-	virtual int childCount() const { return data(LibraryItem::CHILD_COUNT).toInt(); }
-
 	QString normalizedString() const { return data(NormalizedString).toString(); }
 
 protected:
-	void setDisplayedName(const QString &name);
-
 	QVariant data(int role) const { return QStandardItem::data(role); }
 };
 

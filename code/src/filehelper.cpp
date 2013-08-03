@@ -147,7 +147,7 @@ QString FileHelper::artistAlbum() const
 	case 10:
 		break;
 	}
-	return QString(artAlb.toCString(true));
+	return QString(artAlb.toCString(true)).trimmed();
 }
 
 Cover* FileHelper::extractCover()

@@ -183,8 +183,9 @@ void TagEditor::commitChanges()
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
 		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
 		QString absPath(itemPath->text() + QDir::separator() + itemFileName->text());
-		FileRef file(QFile::encodeName(absPath).data());
-		FileHelper fh(file, itemFileName->data(LibraryItem::SUFFIX).toInt());
+		//FileRef file(QFile::encodeName(absPath).data());
+		//FileHelper fh(file, itemFileName->data(LibraryItem::SUFFIX).toInt());
+		FileHelper fh(absPath);
 		bool trackWasModified = false;
 		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
 
@@ -194,15 +195,15 @@ void TagEditor::commitChanges()
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
-				if (file.tag()) {
-					PropertyMap pm = file.tag()->properties();
+				if (fh.file()->tag()) {
+					PropertyMap pm = fh.file()->tag()->properties();
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
 					if (pm.contains(key.toStdString())) {
 						bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
 						if (b) {
-							file.tag()->setProperties(pm);
-							if (file.tag()) {
+							fh.file()->tag()->setProperties(pm);
+							if (fh.file()->tag()) {
 								trackWasModified = true;
 							}
 						}

@@ -21,7 +21,7 @@ int LibraryItemAlbum::year() const
 	}
 }
 
-QString LibraryItemAlbum::coverPath() const
+/*QString LibraryItemAlbum::coverPath() const
 {
 	return data(FILEPATH).toString();
 }
@@ -29,4 +29,4 @@ QString LibraryItemAlbum::coverPath() const
 void LibraryItemAlbum::setCoverPath(const QString &cover)
 {
 	setData(cover, FILEPATH);
-}
+}*/

@@ -263,9 +263,10 @@ void LibraryTreeView::loadCovers(const QModelIndex &index)
 				if (album && album->icon().isNull()) {
 					QPixmap pixmap(size);
 					// If the cover is still on the disk
-					if (pixmap.load(album->coverPath())) {
-						album->setIcon(QIcon(pixmap));
-					}
+					/// FIXME
+					/*if (pixmap.load(album->coverPath())) {
+						//album->setIcon(QIcon(pixmap));
+					}*/
 				}
 			}
 		}

@@ -6,18 +6,18 @@
 class LibraryItemAlbum : public LibraryItem
 {
 public:
-	explicit LibraryItemAlbum() : LibraryItem() {}
+	//explicit LibraryItemAlbum() : LibraryItem() {}
 
 	explicit LibraryItemAlbum(const QString &album);
 
 	void setYear(int year);
 	int year() const;
 
-	/** Redefined. */
+	/** Redefined for delegates (painting, etc). */
 	inline int type() const { return LibraryItem::Album; }
 
-	QString coverPath() const;
-	void setCoverPath(const QString &cover);
+	//QString coverPath() const;
+	//void setCoverPath(const QString &cover);
 };
 
 #endif // LIBRARYITEMALBUM_H

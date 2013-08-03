@@ -8,7 +8,7 @@ class LibraryItemLetter : public LibraryItem
 public:
 	explicit LibraryItemLetter(const QString &letter);
 
-	/** Redefined. */
+	/** Redefined for delegates (painting, etc). */
 	inline int type() const { return LibraryItem::Letter; }
 
 	/** Reads data from the input stream and fills informations in this new node. */

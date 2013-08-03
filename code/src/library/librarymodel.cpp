@@ -87,16 +87,14 @@ void LibraryModel::loadFromFile()
 {
 	QFile mmmmp(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"));
 	if (mmmmp.open(QIODevice::ReadOnly)) {
-
-		QTextStream stream(&mmmmp);
-		while (!stream.atEnd()) {
-			int length;
-			stream >> length;
-			QString trackToParse = stream.read(length);
-			//qDebug() << "loading:" << trackToParse;
-			this->readFile(trackToParse);
+		QByteArray input = qUncompress(mmmmp.readAll());
+		QDataStream dataStream(&input, QIODevice::ReadOnly);
+		LibraryItemTrack tempTrack;
+		while (!dataStream.atEnd()) {
+			tempTrack.read(dataStream);
+			this->insertTrack(tempTrack.filePath(), tempTrack.artist(), tempTrack.artistAlbum(), tempTrack.album(),
+							  tempTrack.text(), tempTrack.trackNumber(), tempTrack.year());
 		}
-
 		mmmmp.close();
 		emit loadedFromFile();
 	}
@@ -107,8 +105,7 @@ void LibraryModel::readFile(const QString &absFilePath)
 {
 	FileHelper fh(absFilePath);
 	if (fh.file() != NULL && fh.file()->tag() != NULL && !fh.file()->tag()->isEmpty()) {
-		insertTrack(absFilePath, fh, _currentInsertPolicy);
-		_tracks.insert(absFilePath);
+		this->insertTrackFromFileSystem(absFilePath, fh);
 	} else if (fh.file() == NULL) {
 		qDebug() << "fh.file() == NULL" << absFilePath;
 	} else if (fh.file()->tag() == NULL) {
@@ -118,28 +115,16 @@ void LibraryModel::readFile(const QString &absFilePath)
 	}
 }
 
-/// Strategy or Policy? Strategies are usually called from other classes
-void LibraryModel::insertTrack(const QString &absFilePath, const FileHelper &fileHelper, InsertPolicy policy)
+void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
+							   const QString &title, int trackNumber, int year)
 {
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	LibraryItemArtist *itemArtist = NULL;
 	LibraryItemAlbum *itemAlbum = NULL;
 	LibraryItemTrack *itemTrack = NULL;
 	LibraryItem *itemYear = NULL;
-	Tag *tag = fileHelper.file()->tag();
-	QString artist = QString(tag->artist().toCString(true)).trimmed();
-	QString artistAlbum = fileHelper.artistAlbum();
-	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
-	QString album = QString(tag->album().toCString(true)).trimmed();
-	QString title = QString(tag->title().toCString(true)).trimmed();
-	int year = tag->year();
-
 	static bool existingArtist = true;
-	/*static bool itemForDynamicHierarchyWasFound = false;
-	if (!theArtist.isEmpty() && !album.isEmpty() && !title.isEmpty() && year > 0 && !itemForDynamicHierarchyWasFound) {
-
-	}*/
-
-	switch (policy) {
+	switch (_currentInsertPolicy) {
 	case Artist:
 		// Level 1
 		if (_artists.contains(theArtist.toLower())) {
@@ -232,8 +217,24 @@ void LibraryModel::insertTrack(const QString &absFilePath, const FileHelper &fil
 		itemArtist->appendRow(itemTrack);
 		break;
 	}
+	itemTrack->setAlbum(album);
+	itemTrack->setArtist(artist);
+	itemTrack->setArtistAlbum(artistAlbum);
 	itemTrack->setFilePath(absFilePath);
-	itemTrack->setTrackNumber(tag->track());
+	itemTrack->setTrackNumber(trackNumber);
+	itemTrack->setYear(year);
+	_tracks.insert(itemTrack);
+}
+
+/// Strategy or Policy? Strategies are usually called from other classes
+void LibraryModel::insertTrackFromFileSystem(const QString &absFilePath, const FileHelper &fileHelper)
+{
+	Tag *tag = fileHelper.file()->tag();
+	QString artist = QString(tag->artist().toCString(true)).trimmed();
+	QString artistAlbum = fileHelper.artistAlbum();
+	QString album = QString(tag->album().toCString(true)).trimmed();
+	QString title = QString(tag->title().toCString(true)).trimmed();
+	this->insertTrack(absFilePath, artist, artistAlbum, album, title, tag->track(), tag->year());
 }
 
 /** Save a tree to a flat file on disk. */
@@ -248,13 +249,13 @@ void LibraryModel::saveToFile()
 	QFile mmmmp(librarySaveFolder.append(QDir::separator()).append("library.mmmmp"));
 	if (isFolderAvailable && mmmmp.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 
-		QTextStream dataStream(&mmmmp);
-		QSetIterator<QString> it(_tracks);
+		QByteArray output;
+		QDataStream dataStream(&output, QIODevice::ReadWrite);
+		QSetIterator<LibraryItemTrack*> it(_tracks);
 		while (it.hasNext()) {
-			QString track = it.next();
-			dataStream << track.size() << track;
-			//qDebug() << "saving:" << track;
+			it.next()->write(dataStream);
 		}
+		mmmmp.write(qCompress(output, 9));
 		mmmmp.close();
 	}
 }

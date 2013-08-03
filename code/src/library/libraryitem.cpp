@@ -14,14 +14,3 @@ LibraryItem::LibraryItem(const QString &text) :
 	}
 	this->setData(n, NormalizedString);
 }
-
-LibraryItem::LibraryItem() :
-	QStandardItem()
-{
-	this->setData(-1, SUFFIX);
-}
-
-void LibraryItem::setDisplayedName(const QString &name)
-{
-	setData(name, Qt::DisplayRole);
-}
