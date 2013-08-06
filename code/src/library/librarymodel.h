@@ -13,14 +13,11 @@
 
 #include "filehelper.h"
 
-
-
-//class LibraryItem;
-
 #include "libraryitemalbum.h"
 #include "libraryitemartist.h"
 #include "libraryitemletter.h"
 #include "libraryitemtrack.h"
+#include "persistentitem.h"
 
 #include <QSet>
 #include <QStandardItemModel>
@@ -39,17 +36,11 @@ private:
 	QHash<QString, LibraryItemArtist*> _artists;
 	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
 	QHash<QString, LibraryItemAlbum*> _albums2;
+	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
 	QHash<QString, LibraryItemArtist*> _artistsAlbums;
 	QHash<int, LibraryItem*> _years;
-	//QMap<LibraryItemAlbum*, QIcon> _albumsWithCovers;
 	QSet<QString> _letters;
-
-	QSet<LibraryItemTrack*> _tracks;
-
-	// A "cover" is not really a cover, it's just a reference to the upper folder where one track was scanned
-	// For a track in ~/music/randomArtist/randomAlbum/track01.mp3, ~/music/randomArtist/randomAlbum is stored
-	//QMap<QString, LibraryItemAlbum*> _covers;
-
+	QSet<PersistentItem*> _persistentItems;
 	InsertPolicy _currentInsertPolicy;
 
 public:
@@ -65,8 +56,6 @@ public:
 		return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
 	}
 
-	inline QHash<QString, LibraryItemAlbum*> albums() const { return _albums2; }
-
 	inline InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
 
 	inline void setInsertPolicy(InsertPolicy policy) { _currentInsertPolicy = policy; }
@@ -75,7 +64,6 @@ private:
 	void insertLetter(const QString &letters);
 	void insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
 					 const QString &title, int trackNumber, int year);
-	void insertTrackFromFileSystem(const QString &absFilePath, const FileHelper &fileHelper);
 
 signals:
 	/** A flat file on your computer was successfully loaded. */
@@ -84,11 +72,7 @@ signals:
 public slots:
 	/** Add (a path to) an icon to every album. */
 	/// FIXME
-	//void addCoverPathToAlbum(const QString &fileName);
-
-	/** If True, draws one cover before an album name. */
-	/// FIXME
-	//void displayCovers(bool withCovers);
+	void addCoverPathToAlbum(const QString &fileName);
 
 	/** Build a tree from a flat file saved on disk. */
 	void loadFromFile();

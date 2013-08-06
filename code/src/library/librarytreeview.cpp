@@ -68,7 +68,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
-	//connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
+	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
 	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled, libraryModel, &LibraryModel::readFile, Qt::BlockingQueuedConnection);
 
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
@@ -82,11 +82,13 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Load covers only when an item need to be expanded
 	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
-	connect(this, &QTreeView::expanded, this, &LibraryTreeView::loadCovers);
+	//connect(this, &QTreeView::expanded, this, &LibraryTreeView::loadCovers);
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
     connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
+
+	sortByColumn(0, Qt::AscendingOrder);
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -152,7 +154,7 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 			}
 		} else if (item->type() == LibraryItem::Track) {
 			LibraryItemTrack *track = static_cast<LibraryItemTrack*>(item);
-			tracks.append(track->filePath());
+			tracks.append(track->absoluteFilePath());
 		}
 	}
 }

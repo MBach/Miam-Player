@@ -25,24 +25,24 @@ private:
 	QMenu *properties;
 
 public:
-	LibraryTreeView(QWidget *parent = 0);
+	explicit LibraryTreeView(QWidget *parent = 0);
 
 protected:
 	/** Redefined to display a small context menu in the view. */
-	void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event);
 
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
-	void mouseDoubleClickEvent(QMouseEvent *event);
+	virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
 
 	/** Reimplemented. */
-	int countAll(const QModelIndexList &indexes) const;
+	virtual int countAll(const QModelIndexList &indexes) const;
 
 	/** Reimplemented. */
-	void findAll(const QPersistentModelIndex &index, QStringList &tracks);
+	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
 public slots:
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/

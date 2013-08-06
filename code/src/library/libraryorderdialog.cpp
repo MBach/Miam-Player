@@ -111,7 +111,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	initialTreeView->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
 }
 
-// #include <QPropertyAnimation>
+//#include <QPropertyAnimation>
 
 void LibraryOrderDialog::show()
 {

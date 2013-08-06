@@ -104,16 +104,34 @@ QFont Settings::font(const FontFamily fontFamily)
 {
 	fontFamilyMap = this->value("fontFamilyMap").toMap();
 	QFont font;
+	QVariant vFont;
 	switch(fontFamily) {
-	case PLAYLIST:
 	case LIBRARY:
-	case MENUS:
-		QVariant vFont = fontFamilyMap.value(QString(fontFamily));
-		if (!vFont.isNull()) {
+		vFont = fontFamilyMap.value(QString(fontFamily));
+		if (vFont.isNull()) {
+			#ifdef Q_OS_WIN
+			font = QFont("Segoe UI Light");
+			#else
+			font = QGuiApplication::font();
+			#endif
+		} else {
 			font = QFont(vFont.toString());
 		}
-		font.setPointSize(this->fontSize(fontFamily));
+		break;
+	case MENUS:
+	case PLAYLIST:
+		vFont = fontFamilyMap.value(QString(fontFamily));
+		if (vFont.isNull()) {
+			#ifdef Q_OS_WIN
+			font = QFont("Segoe UI");
+			#else
+			font = QGuiApplication::font();
+			#endif
+		} else {
+			font = QFont(vFont.toString());
+		}
 	}
+	font.setPointSize(this->fontSize(fontFamily));
 	return font;
 }
 

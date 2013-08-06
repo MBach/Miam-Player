@@ -58,7 +58,8 @@ void TagEditorTableWidget::resetTable()
 		//TagLib::FileRef f(source.fileName().toLocal8Bit().data());
 		TagLib::FileRef f(fileInfo.absoluteFilePath().toLocal8Bit().data());
 
-		FileHelper fh(f, it.value().data(LibraryItem::SUFFIX).toInt());
+		//FileHelper fh(f, it.value().data(LibraryItem::SUFFIX).toInt());
+		FileHelper fh(fileInfo.absoluteFilePath());
 
 		// Reload info
 		int column = 1;
@@ -102,7 +103,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		QFileInfo qFileInfo;
 		QTableWidgetItem *fileName = new QTableWidgetItem(qFileInfo.fileName());
 		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-		fileName->setData(LibraryItem::SUFFIX, fh.type());
+		//fileName->setData(LibraryItem::SUFFIX, fh.type());
 		QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
 		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 

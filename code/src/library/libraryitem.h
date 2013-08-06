@@ -10,10 +10,21 @@ private:
 	Q_ENUMS(MediaType)
 
 public:
-	/// Constructor with a title and a filetype.
-	explicit LibraryItem(const QString &text);
+	enum CustomType { TITLE				= Qt::DisplayRole,
+					  ABSOLUTE_PATH		= Qt::UserRole + 1,
+					  ALBUM				= Qt::UserRole + 2,
+					  ARTIST			= Qt::UserRole + 3,
+					  ARTISTALBUM		= Qt::UserRole + 4,
+					  COVER_FILENAME	= Qt::UserRole + 5,
+					  FILENAME			= Qt::UserRole + 6,
+					  TRACK_NUMBER		= Qt::UserRole + 7,
+					  YEAR				= Qt::UserRole + 8
+					};
 
 	explicit LibraryItem() : QStandardItem() {}
+
+	/// Constructor with a title and a filetype.
+	explicit LibraryItem(const QString &text);
 
 	enum MediaType { Artist		= QStandardItem::UserType + 1,
 					 Album		= QStandardItem::UserType + 2,
@@ -21,10 +32,7 @@ public:
 					 Letter		= QStandardItem::UserType + 4
 				   };
 
-	  /// XXX: refactor (remove...) this one because of AbsFilePath?
-	enum { SUFFIX = Qt::UserRole + 8 };
-
-	enum { NormalizedString = Qt::UserRole + 10 };
+	enum { NormalizedString = Qt::UserRole + 9 };
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 

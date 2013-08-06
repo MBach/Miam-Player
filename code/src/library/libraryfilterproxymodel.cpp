@@ -12,6 +12,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
 	this->setSortRole(LibraryItem::NormalizedString);
+	this->sort(0, Qt::DescendingOrder);
 }
 
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
@@ -74,9 +75,9 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxRight));
 			if (model->currentInsertPolicy() == LibraryModel::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
-					result = leftAlbum->year() <= rightAlbum->year();
+					result = leftAlbum->year() < rightAlbum->year();
 				} else {
-					result = leftAlbum->year() > rightAlbum->year();
+					result = leftAlbum->year() >= rightAlbum->year();
 				}
 			} else {
 				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
@@ -89,7 +90,6 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 	case LibraryItem::Letter:
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
-		//qDebug() << left->normalizedString() << right->normalizedString();
 		if (right && QString::compare(left->normalizedString().left(1), right->normalizedString().left(1)) == 0) {
 			result = (sortOrder() == Qt::AscendingOrder);
 		} else {

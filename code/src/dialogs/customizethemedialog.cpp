@@ -188,7 +188,7 @@ void CustomizeThemeDialog::setupActions()
 		mainWindow->library->beginPopulateTree();
 	});
 
-    connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));
+	//connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));
 }
 
 void CustomizeThemeDialog::fade()
