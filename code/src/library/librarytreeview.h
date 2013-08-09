@@ -54,17 +54,8 @@ public slots:
 	/** Rebuild a subset of the tree. */
 	void rebuild(QList<QPersistentModelIndex> indexes);
 
-    /**  Layout the library at runtime when one is changing the size in options. */
-    void setCoverSize(int);
-
 private slots:
 	void endPopulateTree();
-
-	//test
-	void expandTreeView(const QModelIndex &index);
-
-	/** Load covers only when an item needs to be expanded. */
-	void loadCovers(const QModelIndex &index);
 
 signals:
 	/** (Dis|En)able covers.*/

@@ -14,9 +14,7 @@
 #include <QtDebug>
 
 #include "library/libraryitemdelegate.h"
-
 #include "library/libraryorderdialog.h"
-
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent)
@@ -26,7 +24,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel->setSourceModel(libraryModel);
 
 	Settings *settings = Settings::getInstance();
-	//proxyModel->updateHeaderData(libraryModel->currentInsertPolicy());
 
 	this->setModel(proxyModel);
 	this->setStyleSheet(settings->styleSheet(this));
@@ -79,10 +76,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// When the scan is complete, save the model in the filesystem
 	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
-
-	// Load covers only when an item need to be expanded
-	//connect(this, &QTreeView::expanded, proxyModel, &LibraryFilterProxyModel::loadCovers);
-	//connect(this, &QTreeView::expanded, this, &LibraryTreeView::loadCovers);
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
@@ -236,82 +229,4 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
-}
-
-void LibraryTreeView::expandTreeView(const QModelIndex &index)
-{
-	QModelIndex parent = index;
-	while (parent.parent().isValid()) {
-		expand(parent);
-		parent = parent.parent();
-	}
-	expand(parent);
-}
-
-/** Load covers only when an item needs to be expanded. */
-void LibraryTreeView::loadCovers(const QModelIndex &index)
-{
-	LibraryItemArtist *artist = static_cast<LibraryItemArtist*>(libraryModel->itemFromIndex(proxyModel->mapToSource(index)));
-	if (artist) {
-		Settings *settings = Settings::getInstance();
-		if (settings->withCovers()) {
-
-			// Load covers in a buffer greater than the real displayed picture
-			int bufferedCoverSize = settings->bufferedCoverSize();
-			QSize size(bufferedCoverSize, bufferedCoverSize);
-
-			for (int i = 0; i < artist->rowCount(); i++) {
-				LibraryItemAlbum *album = static_cast<LibraryItemAlbum*>(artist->child(i, 0));
-				if (album && album->icon().isNull()) {
-					QPixmap pixmap(size);
-					// If the cover is still on the disk
-					/// FIXME
-					/*if (pixmap.load(album->coverPath())) {
-						//album->setIcon(QIcon(pixmap));
-					}*/
-				}
-			}
-		}
-	}
-}
-
-/**  Layout the library at runtime when one is changing the size in options. */
-void LibraryTreeView::setCoverSize(int newSize)
-{
-	Settings *settings = Settings::getInstance();
-	int oldSize = settings->coverSize();
-	int bufferedCoverSize = settings->bufferedCoverSize();
-	settings->setCoverSize(newSize);
-
-	bool coversNeedToBeReloaded = true;
-
-	// Increase buffer or not
-	static const short buffer = 128;
-	if (newSize < bufferedCoverSize) {
-		if (newSize + buffer < bufferedCoverSize) {
-			bufferedCoverSize -= buffer;
-			settings->setBufferedCoverSize(bufferedCoverSize);
-		} else {
-			coversNeedToBeReloaded = false;
-		}
-	} else if (oldSize <= newSize) {
-		bufferedCoverSize += buffer;
-		settings->setBufferedCoverSize(bufferedCoverSize);
-	}
-
-	// Scales covers for every expanded item in the tree
-	if (coversNeedToBeReloaded) {
-		for (int i=0; i<proxyModel->rowCount(rootIndex()); i++) {
-			QModelIndex index = proxyModel->index(i, 0);
-			// It's really slow to reload covers from disk for every changes in the User Interface.
-			// It's more efficient to load icons just for some resolutions, like 128x128 or 512x512.
-			if (isExpanded(index)) {
-				//proxyModel->loadCovers(index);
-				this->loadCovers(index);
-			}
-		}
-	}
-
-	// Upscale (or downscale) icons because their inner representation is already greater than what's displayed
-	this->setIconSize(QSize(newSize, newSize));
 }

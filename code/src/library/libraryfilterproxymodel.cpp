@@ -77,7 +77,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 				if (sortOrder() == Qt::AscendingOrder) {
 					result = leftAlbum->year() < rightAlbum->year();
 				} else {
-					result = leftAlbum->year() >= rightAlbum->year();
+					result = leftAlbum->year() > rightAlbum->year();
 				}
 			} else {
 				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);

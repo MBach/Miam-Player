@@ -142,9 +142,6 @@ public slots:
 
 	inline void setCovers(bool b) { setValue("covers", b); }
 
-	/** Sets the size of a cover. */
-	inline void setCoverSize(int i) { setValue("coverSize", i); }
-
 	/** Sets the size of the buffer for a cover. */
 	inline void setBufferedCoverSize(int i) { setValue("bufferedCoverSize", i); }
 

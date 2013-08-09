@@ -50,14 +50,13 @@ void LibraryModel::insertLetter(const QString &letters)
 }
 
 /** Add (a path to) an icon to every album. */
-/// FIXME
 void LibraryModel::addCoverPathToAlbum(const QString &fileName)
 {
 	QFileInfo fileInfo(fileName);
 	LibraryItemAlbum *album = _albumsAbsPath.value(fileInfo.absolutePath());
 	if (album && album->coverFileName().isEmpty()) {
 		album->setCoverFileName(fileInfo.fileName());
-		// hack !!
+		/// XXX: kind of hack
 		album->persistentItem()->setCoverFileName(fileInfo.fileName());
 	} else {
 		//qDebug() << "no valid album found for this cover";
@@ -137,7 +136,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 			itemArtist->appendRow(itemAlbum);
 		}
 		// Level 3
-		if (artistAlbum.isEmpty()) {
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
 			itemTrack = new LibraryItemTrack(title);
 		} else {
 			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
@@ -215,11 +214,8 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 
 	PersistentItem *persistentItem = new PersistentItem(itemTrack);
 	if (itemAlbum != NULL && !_albumsAbsPath.contains(absolutePath)) {
-		//qDebug() << "inserting" << absolutePath;
 		itemAlbum->setAbsolutePath(absolutePath);
 		itemAlbum->setPersistentItem(persistentItem);
-		//persistentItem->setItemAlbum(itemAlbum);
-		//_albumsAbsPath.insert(absolutePath, persistentItem);
 		_albumsAbsPath.insert(absolutePath, itemAlbum);
 	}
 	persistentItem->setAlbum(itemAlbum->text());

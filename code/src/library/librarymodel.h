@@ -71,7 +71,6 @@ signals:
 
 public slots:
 	/** Add (a path to) an icon to every album. */
-	/// FIXME
 	void addCoverPathToAlbum(const QString &fileName);
 
 	/** Build a tree from a flat file saved on disk. */
