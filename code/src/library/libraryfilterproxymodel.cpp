@@ -75,7 +75,11 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxRight));
 			if (model->currentInsertPolicy() == LibraryModel::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
-					result = leftAlbum->year() < rightAlbum->year();
+					if (leftAlbum->year() == rightAlbum->year()) {
+						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+					} else {
+						result = leftAlbum->year() < rightAlbum->year();
+					}
 				} else {
 					result = leftAlbum->year() > rightAlbum->year();
 				}
@@ -102,7 +106,13 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		leftTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxLeft));
 		rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxRight));
 		if (leftTrack && rightTrack) {
-			result = leftTrack->trackNumber() < rightTrack->trackNumber();
+			if (leftTrack->discNumber() == rightTrack->discNumber()) {
+				result = (leftTrack->trackNumber() < rightTrack->trackNumber() && sortOrder() == Qt::AscendingOrder) ||
+						(leftTrack->trackNumber() > rightTrack->trackNumber() && sortOrder() == Qt::DescendingOrder);
+			} else {
+				result = (leftTrack->discNumber() < rightTrack->discNumber() && sortOrder() == Qt::AscendingOrder) ||
+						  (leftTrack->discNumber() > rightTrack->discNumber() && sortOrder() == Qt::DescendingOrder);
+			}
 		} else {
 			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}

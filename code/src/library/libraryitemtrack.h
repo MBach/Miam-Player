@@ -21,6 +21,9 @@ public:
 	inline void setAbsolutePath(const QString &absolutePath) { setData(absolutePath, ABSOLUTE_PATH);}
 	inline QString absolutePath() const { return data(ABSOLUTE_PATH).toString(); }
 
+	inline void setDiscNumber(int track) { setData(track, DISC_NUMBER); }
+	inline int discNumber() const { return data(DISC_NUMBER).toInt(); }
+
 	inline void setFileName(const QString &fileName) { setData(fileName, FILENAME); }
 	inline QString fileName() const { return data(FILENAME).toString(); }
 

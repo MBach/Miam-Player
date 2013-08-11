@@ -227,7 +227,7 @@ void TagEditor::commitChanges()
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
 		// The Tree structure could be modified
 		if (trackWasModified) {
-			bool b = fh.save();
+			bool b = fh.file()->save();
 			if (!b) {
 				qDebug() << "tag wasn't saved :(";
 			}

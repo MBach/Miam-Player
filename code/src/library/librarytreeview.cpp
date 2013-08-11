@@ -14,6 +14,7 @@
 #include <QtDebug>
 
 #include "library/libraryitemdelegate.h"
+#include "library/libraryitemdelegate2.h"
 #include "library/libraryorderdialog.h"
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
@@ -36,6 +37,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 
 	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
+	//this->setItemDelegate(new LibraryItemDelegate2(proxyModel));
 
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 

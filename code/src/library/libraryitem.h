@@ -16,9 +16,10 @@ public:
 					  ARTIST			= Qt::UserRole + 3,
 					  ARTISTALBUM		= Qt::UserRole + 4,
 					  COVER_FILENAME	= Qt::UserRole + 5,
-					  FILENAME			= Qt::UserRole + 6,
-					  TRACK_NUMBER		= Qt::UserRole + 7,
-					  YEAR				= Qt::UserRole + 8
+					  DISC_NUMBER		= Qt::UserRole + 6,
+					  FILENAME			= Qt::UserRole + 7,
+					  TRACK_NUMBER		= Qt::UserRole + 8,
+					  YEAR				= Qt::UserRole + 9
 					};
 
 	explicit LibraryItem() : QStandardItem() {}
@@ -32,13 +33,14 @@ public:
 					 Letter		= QStandardItem::UserType + 4
 				   };
 
-	enum { NormalizedString = Qt::UserRole + 9 };
+	enum { NormalizedString = Qt::UserRole + 10 };
 
 	inline LibraryItem *child(int row, int column = 0) const { return (LibraryItem*) QStandardItem::child(row, column); }
 
 	QString normalizedString() const { return data(NormalizedString).toString(); }
 
 protected:
+	/** It's better to hide this method to non-direct child of this class. */
 	QVariant data(int role) const { return QStandardItem::data(role); }
 };
 

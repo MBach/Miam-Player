@@ -10,7 +10,7 @@ private:
 public:
 	explicit PersistentItem() : LibraryItemTrack() {}
 
-	explicit PersistentItem(LibraryItemTrack *track);
+	explicit PersistentItem(const LibraryItemTrack *track);
 
 	inline void setAlbum(const QString &album) { setData(album, ALBUM); }
 	inline QString album() const { return data(ALBUM).toString(); }

@@ -14,13 +14,13 @@ public:
 
 	explicit LibraryItemAlbum(const QString &album) : LibraryItem(album), _persistentItem(NULL) {}
 
-	PersistentItem *persistentItem() const { return _persistentItem; }
+	inline PersistentItem *persistentItem() const { return _persistentItem; }
 	inline void setPersistentItem(PersistentItem *persistentItem) { _persistentItem = persistentItem; }
 
 	/** Redefined for delegates (painting, etc). */
 	inline int type() const { return LibraryItem::Album; }
 
-	int year() const { return data(YEAR).isValid() ? data(YEAR).toInt() : -1; }
+	inline int year() const { return data(YEAR).isValid() ? data(YEAR).toInt() : -1; }
 	inline void setYear(int year) { setData(year, YEAR); }
 
 	inline QString absolutePath() const { return data(ABSOLUTE_PATH).toString(); }

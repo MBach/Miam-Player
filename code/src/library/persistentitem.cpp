@@ -2,10 +2,11 @@
 
 #include <QtDebug>
 
-PersistentItem::PersistentItem(LibraryItemTrack *track)
+PersistentItem::PersistentItem(const LibraryItemTrack *track)
 	: LibraryItemTrack(track->text())
 {
 	this->setAbsolutePath(track->absolutePath());
+	this->setDiscNumber(track->discNumber());
 	this->setFileName(track->fileName());
 	this->setTrackNumber(track->trackNumber());
 }
@@ -14,7 +15,7 @@ PersistentItem::PersistentItem(LibraryItemTrack *track)
 void PersistentItem::read(QDataStream &in)
 {
 	QList<CustomType> properties;
-	properties << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << YEAR;
+	properties << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR;
 
 	quint32 dataLength;
 	foreach (CustomType property, properties) {
@@ -32,7 +33,7 @@ void PersistentItem::read(QDataStream &in)
 void PersistentItem::write(QDataStream &out) const
 {
 	QList<CustomType> properties;
-	properties << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << YEAR;
+	properties << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR;
 	foreach (CustomType property, properties) {
 		out << data(property).toByteArray();
 	}

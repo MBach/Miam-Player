@@ -75,7 +75,7 @@ void LibraryModel::loadFromFile()
 		while (!inputDataStream.atEnd()) {
 			persistedItem.read(inputDataStream);
 			this->insertTrack(persistedItem.absoluteFilePath(), persistedItem.artist(), persistedItem.artistAlbum(), persistedItem.album(),
-							  persistedItem.text(), persistedItem.trackNumber(), persistedItem.year());
+							  persistedItem.text(), persistedItem.trackNumber(), persistedItem.discNumber(), persistedItem.year());
 			this->addCoverPathToAlbum(persistedItem.absolutePath() + '/' + persistedItem.coverFileName());
 		}
 		mmmmp.close();
@@ -93,7 +93,7 @@ void LibraryModel::readFile(const QString &absFilePath)
 		QString artistAlbum = fh.artistAlbum();
 		QString album = QString(tag->album().toCString(true)).trimmed();
 		QString title = QString(tag->title().toCString(true)).trimmed();
-		this->insertTrack(absFilePath, artist, artistAlbum, album, title, tag->track(), tag->year());
+		this->insertTrack(absFilePath, artist, artistAlbum, album, title, tag->track(), fh.discNumber(), tag->year());
 	} else if (fh.file() == NULL) {
 		qDebug() << "fh.file() == NULL" << absFilePath;
 	} else if (fh.file()->tag() == NULL) {
@@ -104,13 +104,14 @@ void LibraryModel::readFile(const QString &absFilePath)
 }
 
 void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
-							   const QString &title, int trackNumber, int year)
+							   const QString &title, int trackNumber, int discNumber, int year)
 {
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	LibraryItemArtist *itemArtist = NULL;
 	LibraryItemAlbum *itemAlbum = NULL;
 	LibraryItemTrack *itemTrack = NULL;
 	LibraryItem *itemYear = NULL;
+
 	QFileInfo fileInfo(absFilePath);
 	static bool existingArtist = true;
 	switch (_currentInsertPolicy) {
@@ -131,7 +132,6 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 			itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
 		} else {
 			itemAlbum = new LibraryItemAlbum(album);
-			itemAlbum->setYear(year);
 			_albums.insert(QPair<LibraryItemArtist *, QString>(itemArtist, album), itemAlbum);
 			itemArtist->appendRow(itemAlbum);
 		}
@@ -149,7 +149,6 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 			itemAlbum = _albums2.value(album);
 		} else {
 			itemAlbum = new LibraryItemAlbum(album);
-			itemAlbum->setYear(year);
 			_albums2.insert(album, itemAlbum);
 			invisibleRootItem()->appendRow(itemAlbum);
 			this->insertLetter(album);
@@ -169,7 +168,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 			this->insertLetter(theArtist);
 		}
 		// Level 2
-		if (artistAlbum.isEmpty()) {
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
 			itemTrack = new LibraryItemTrack(title);
 		} else {
 			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
@@ -177,7 +176,6 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		itemAlbum->appendRow(itemTrack);
 		break;
 	case Year:
-		/// XXX covers?
 		// Level 1
 		if (_years.contains(year)) {
 			itemYear = _years.value(year);
@@ -191,24 +189,25 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 			invisibleRootItem()->appendRow(itemYear);
 		}
 		// Level 2
-		if (_artistsAlbums.contains(theArtist + album)) {
-			itemArtist = _artistsAlbums.value(theArtist + album);
+		if (_albums2.contains(theArtist + album)) {
+			itemAlbum = _albums2.value(theArtist + album);
 		} else {
-			itemArtist = new LibraryItemArtist(theArtist + " – " + album);
-			_artistsAlbums.insert(theArtist + album, itemArtist);
-			itemYear->appendRow(itemArtist);
+			itemAlbum = new LibraryItemAlbum(theArtist + " – " + album);
+			_albums2.insert(theArtist + album, itemAlbum);
+			itemYear->appendRow(itemAlbum);
 		}
 		// Level 3
-		if (artistAlbum.isEmpty()) {
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
 			itemTrack = new LibraryItemTrack(title);
 		} else {
 			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
 		}
-		itemArtist->appendRow(itemTrack);
+		itemAlbum->appendRow(itemTrack);
 		break;
 	}
 	QString absolutePath = fileInfo.absolutePath();
 	itemTrack->setAbsolutePath(absolutePath);
+	itemTrack->setDiscNumber(discNumber);
 	itemTrack->setFileName(fileInfo.fileName());
 	itemTrack->setTrackNumber(trackNumber);
 
@@ -216,9 +215,12 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 	if (itemAlbum != NULL && !_albumsAbsPath.contains(absolutePath)) {
 		itemAlbum->setAbsolutePath(absolutePath);
 		itemAlbum->setPersistentItem(persistentItem);
+		itemAlbum->setYear(year);
 		_albumsAbsPath.insert(absolutePath, itemAlbum);
 	}
-	persistentItem->setAlbum(itemAlbum->text());
+	if (itemAlbum) {
+		persistentItem->setAlbum(album);
+	}
 	persistentItem->setArtist(artist);
 	persistentItem->setArtistAlbum(theArtist);
 	persistentItem->setYear(year);

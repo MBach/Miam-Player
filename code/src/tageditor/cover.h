@@ -22,15 +22,15 @@ public:
 	/** Constructor used when loading pictures directly from the filesystem (drag & drop or with the context menu). */
 	Cover(const QString &fileName = QString());
 
-	const char* mimeType() const { return _mimeType.toStdString().data(); }
+	inline const char* mimeType() const { return _mimeType.toStdString().data(); }
 
-	const QByteArray byteArray() const { return _data; }
+	inline const QByteArray byteArray() const { return _data; }
 
-	const char* format() { return _format.toStdString().data(); }
+	inline const char* format() { return _format.toStdString().data(); }
 
-	bool hasChanged() const { return _hasChanged && !_data.isEmpty(); }
+	inline bool hasChanged() const { return _hasChanged && !_data.isEmpty(); }
 
-	void setChanged(bool changed) { this->_hasChanged = changed; }
+	inline void setChanged(bool changed) { this->_hasChanged = changed; }
 };
 
 #endif // COVER_H

@@ -63,7 +63,7 @@ public:
 private:
 	void insertLetter(const QString &letters);
 	void insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
-					 const QString &title, int trackNumber, int year);
+					 const QString &title, int trackNumber, int discNumber, int year);
 
 signals:
 	/** A flat file on your computer was successfully loaded. */

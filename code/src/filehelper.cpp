@@ -87,67 +87,93 @@ FileHelper::FileHelper(const QString &filePath)
 	}
 }
 
+/** Field ArtistAlbum if exists (in a compilation for example). */
 QString FileHelper::artistAlbum() const
 {
-	String artAlb = "";
-	APE::File *apeFile = NULL;
-	ASF::File *asfFile = NULL;
-	FLAC::File *flacFile = NULL;
-	MPC::File *mpcFile = NULL;
-	MP4::File *mp4File = NULL;
-	MPEG::File *mpegFile = NULL;
-	Ogg::File *oggFile = NULL;
+	QString artAlb = "";
+	/// TODO
+	//APE::File *apeFile = NULL;
+	//ASF::File *asfFile = NULL;
+	//FLAC::File *flacFile = NULL;
+	//MPC::File *mpcFile = NULL;
+	//MP4::File *mp4File = NULL;
+	//MPEG::File *mpegFile = NULL;
+	//Ogg::File *oggFile = NULL;
 
 	switch (fileType) {
 	case APE:
-		apeFile = static_cast<APE::File*>(f);
-		//artAlb = "not yet for ape";
+		qDebug() << "FileHelper::artistAlbum: Not yet implemented for APE file";
 		break;
 	case ASF:
-		asfFile = static_cast<ASF::File*>(f);
-		//artAlb = "not yet for asf";
+		qDebug() << "FileHelper::artistAlbum: Not yet implemented for ASF file";
 		break;
 	case FLAC:
-		flacFile = static_cast<FLAC::File*>(f);
-		//artAlb = "not yet for flac";
-		break;
-	case 3:
+		artAlb = this->extractFlacFeature("TPE2");
 		break;
 	case MP4:
-		mp4File = static_cast<MP4::File*>(f);
-		//artAlb = "not yet for mp4";
+		qDebug() << "FileHelper::artistAlbum: Not yet implemented for MP4 file";
 		break;
 	case MPC:
-		mpcFile = static_cast<MPC::File*>(f);
-		//artAlb = "not yet for mpc";
+		qDebug() << "FileHelper::artistAlbum: Not yet implemented for MPC file";
 		break;
 	case MP3:
-		// For albums with multiple Artists, like OST, the "TPE2" value is commonly used for the tag "Album Artist"
-		// It is used in Windows 7, foobar2000, etc
-		mpegFile = static_cast<MPEG::File*>(f);
-		if (mpegFile->ID3v2Tag()) {
-			ID3v2::Tag *tag = mpegFile->ID3v2Tag();
-			if (tag) {
-				ID3v2::FrameList l = tag->frameListMap()["TPE2"];
-				if (!l.isEmpty()) {
-					artAlb = l.front()->toString();
-				}
-			}
-		} else if (mpegFile->ID3v1Tag()) {
-
-		}
+		artAlb = this->extractMpegFeature("TPE2");
 		break;
 	case OGG:
-		oggFile = static_cast<Ogg::File*>(f);
-		break;
-	case 8:
-		break;
-	case 9:
-		break;
-	case 10:
+		qDebug() << "FileHelper::artistAlbum: Not yet implemented for OGG file";
 		break;
 	}
-	return QString(artAlb.toCString(true)).trimmed();
+	return artAlb.trimmed();
+}
+
+int FileHelper::discNumber() const
+{
+	/// TODO
+	//APE::File *apeFile = NULL;
+	//ASF::File *asfFile = NULL;
+	//FLAC::File *flacFile = NULL;
+	//MPC::File *mpcFile = NULL;
+	//MP4::File *mp4File = NULL;
+	//MPEG::File *mpegFile = NULL;
+	//Ogg::File *oggFile = NULL;
+
+	QString strDiscNumber = "1";
+
+	switch (fileType) {
+	case APE:
+		//apeFile = static_cast<APE::File*>(f);
+		qDebug() << "FileHelper::discNumber: Not yet implemented for APE file";
+		break;
+	case ASF:
+		//asfFile = static_cast<ASF::File*>(f);
+		qDebug() << "FileHelper::discNumber: Not yet implemented for ASF file";
+		break;
+	case FLAC:
+		strDiscNumber = this->extractFlacFeature("TPOS");
+		break;
+	case MP4:
+		//mp4File = static_cast<MP4::File*>(f);
+		qDebug() << "FileHelper::discNumber: Not yet implemented for MP4 file";
+		break;
+	case MPC:
+		//mpcFile = static_cast<MPC::File*>(f);
+		qDebug() << "FileHelper::discNumber: Not yet implemented for MPC file";
+		break;
+	case MP3:
+		strDiscNumber = this->extractMpegFeature("TPOS");
+		break;
+	case OGG:
+		//oggFile = static_cast<Ogg::File*>(f);
+		break;
+	}
+	int disc = 1;
+	qDebug() << strDiscNumber;
+	if (strDiscNumber.contains('/')) {
+		disc = strDiscNumber.split('/').first().toInt();
+	} else {
+		disc = strDiscNumber.toInt();
+	}
+	return disc;
 }
 
 Cover* FileHelper::extractCover()
@@ -202,35 +228,32 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		f->tag()->setYear(value.toInt());
 	} else {
 		// Other non generic tags, like Artist Album
-		APE::File *apeFile = NULL;
-		ASF::File *asfFile = NULL;
-		FLAC::File *flacFile = NULL;
-		MP4::File *mp4File = NULL;
-		MPC::File *mpcFile = NULL;
+		//APE::File *apeFile = NULL;
+		//ASF::File *asfFile = NULL;
+		//FLAC::File *flacFile = NULL;
+		//MP4::File *mp4File = NULL;
+		//MPC::File *mpcFile = NULL;
 		MPEG::File *mpegFile = NULL;
 
 		switch (fileType) {
 		case APE:
-			apeFile = static_cast<APE::File*>(f);
+			//apeFile = static_cast<APE::File*>(f);
 			qDebug() << "APE file";
 			break;
 		case ASF:
-			asfFile = static_cast<ASF::File*>(f);
+			//asfFile = static_cast<ASF::File*>(f);
 			qDebug() << "ASF file";
 			break;
 		case FLAC:
-			flacFile = static_cast<FLAC::File*>(f);
+			//flacFile = static_cast<FLAC::File*>(f);
 			qDebug() << "FLAC file";
 			break;
-		case 3:
-			qDebug() << "Mod file";
-			break;
 		case MP4:
-			mp4File = static_cast<MP4::File*>(f);
+			//mp4File = static_cast<MP4::File*>(f);
 			qDebug() << "MP4 file";
 			break;
 		case MPC:
-			mpcFile = static_cast<MPC::File*>(f);
+			//mpcFile = static_cast<MPC::File*>(f);
 			qDebug() << "MPC file";
 			break;
 		case MP3:
@@ -254,20 +277,12 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		case OGG:
 			qDebug() << "OGG file";
 			break;
-		case 8:
-			qDebug() << "RIFF file";
-			break;
-		case 9:
-			qDebug() << "TrueAudio file";
-			break;
-		case 10:
-			qDebug() << "WavPack file";
-			break;
 		}
 	}
 	return true;
 }
 
+/** Convert the existing rating number into a smaller range from 1 to 5. */
 int FileHelper::rating() const
 {
 	MPEG::File *mpegFile = NULL;
@@ -311,6 +326,7 @@ int FileHelper::rating() const
 	return r;
 }
 
+/** Sets the inner picture. */
 void FileHelper::setCover(Cover *cover)
 {
 	qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);
@@ -356,4 +372,36 @@ QString FileHelper::convertKeyToID3v2Key(QString key)
 	} else {
 		return "";
 	}
+}
+
+QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
+{
+	QString feature;
+	FLAC::File *flacFile = static_cast<FLAC::File*>(f);
+	if (flacFile->ID3v2Tag()) {
+		ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+		if (!l.isEmpty()) {
+			feature = QString(l.front()->toString().toCString(true));
+		}
+	} else if (flacFile->ID3v1Tag()) {
+		qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for ID3v1Tag FLAC file";
+	} else if (flacFile->xiphComment()) {
+		qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for xiphComment FLAC file";
+	}
+	return feature;
+}
+
+QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
+{
+	QString feature;
+	MPEG::File *mpegFile = static_cast<MPEG::File*>(f);
+	if (mpegFile->ID3v2Tag()) {
+		ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+		if (!l.isEmpty()) {
+			feature = QString(l.front()->toString().toCString(true));
+		}
+	} else if (mpegFile->ID3v1Tag()) {
+		qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
+	}
+	return feature;
 }
