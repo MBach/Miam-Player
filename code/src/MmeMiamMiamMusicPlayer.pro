@@ -66,8 +66,7 @@ SOURCES += \
     library/libraryitemdelegate.cpp \
     library/libraryorderdialog.cpp \
     quickstartsearchengine.cpp \
-    library/persistentitem.cpp \
-    library/libraryitemdelegate2.cpp
+    library/persistentitem.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -124,8 +123,7 @@ HEADERS += \
     library/libraryitemdelegate.h \
     library/libraryorderdialog.h \
     quickstartsearchengine.h \
-    library/persistentitem.h \
-    library/libraryitemdelegate2.h
+    library/persistentitem.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

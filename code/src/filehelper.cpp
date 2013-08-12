@@ -150,6 +150,9 @@ int FileHelper::discNumber() const
 		break;
 	case FLAC:
 		strDiscNumber = this->extractFlacFeature("TPOS");
+		if (strDiscNumber.isEmpty()) {
+			strDiscNumber = this->extractFlacFeature("DISCNUMBER");
+		}
 		break;
 	case MP4:
 		//mp4File = static_cast<MP4::File*>(f);
@@ -167,7 +170,6 @@ int FileHelper::discNumber() const
 		break;
 	}
 	int disc = 1;
-	qDebug() << strDiscNumber;
 	if (strDiscNumber.contains('/')) {
 		disc = strDiscNumber.split('/').first().toInt();
 	} else {
@@ -386,7 +388,10 @@ QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 	} else if (flacFile->ID3v1Tag()) {
 		qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for ID3v1Tag FLAC file";
 	} else if (flacFile->xiphComment()) {
-		qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for xiphComment FLAC file";
+		const Ogg::FieldListMap map = flacFile->xiphComment()->fieldListMap();
+		if (!map[featureToExtract.toStdString().data()].isEmpty()) {
+			feature = QString(map[featureToExtract.toStdString().data()].front().toCString(true));
+		}
 	}
 	return feature;
 }

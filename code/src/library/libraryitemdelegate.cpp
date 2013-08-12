@@ -43,6 +43,9 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	case LibraryItem::Track:
 		this->drawTrack(painter, o, item);
 		break;
+	default:
+		QStyledItemDelegate::paint(painter, o, index);
+		break;
 	}
 }
 

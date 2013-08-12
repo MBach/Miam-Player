@@ -35,6 +35,7 @@ public:
 private:
 	QHash<QString, LibraryItemArtist*> _artists;
 	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
+	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemLetter*> _discNumbers;
 	QHash<QString, LibraryItemAlbum*> _albums2;
 	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
 	QHash<QString, LibraryItemArtist*> _artistsAlbums;

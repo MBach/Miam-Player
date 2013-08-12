@@ -14,9 +14,7 @@ PersistentItem::PersistentItem(const LibraryItemTrack *track)
 /** Reads data from the input stream and fills informations in this new node. */
 void PersistentItem::read(QDataStream &in)
 {
-	QList<CustomType> properties;
-	properties << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR;
-
+	static QList<CustomType> properties = (QList<CustomType>() << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR);
 	quint32 dataLength;
 	foreach (CustomType property, properties) {
 		in >> dataLength;
@@ -32,9 +30,12 @@ void PersistentItem::read(QDataStream &in)
 /** Write data from this node to the output stream. */
 void PersistentItem::write(QDataStream &out) const
 {
-	QList<CustomType> properties;
-	properties << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR;
+	static QList<CustomType> properties = (QList<CustomType>() << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR);
 	foreach (CustomType property, properties) {
+		/// FIXME
+		//if (property == COVER_FILENAME) {
+		//	qDebug() << album() << coverFileName();
+		//}
 		out << data(property).toByteArray();
 	}
 }
