@@ -37,6 +37,9 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	case LibraryItem::Artist:
 		this->drawArtist(painter, o, index);
 		break;
+	case LibraryItem::Disc:
+		this->drawDisc(painter, o, index);
+		break;
 	case LibraryItem::Letter:
 		this->drawLetter(painter, o, index);
 		break;
@@ -77,6 +80,12 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewIte
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+	QStyledItemDelegate::paint(painter, option, index);
+}
+
+void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+	option.state = QStyle::State_None;
 	QStyledItemDelegate::paint(painter, option, index);
 }
 

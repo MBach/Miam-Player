@@ -30,7 +30,8 @@ public:
 	enum MediaType { Artist		= QStandardItem::UserType + 1,
 					 Album		= QStandardItem::UserType + 2,
 					 Track		= QStandardItem::UserType + 3,
-					 Letter		= QStandardItem::UserType + 4
+					 Letter		= QStandardItem::UserType + 4,
+					 Disc		= QStandardItem::UserType + 5
 				   };
 
 	enum { NormalizedString = Qt::UserRole + 10 };

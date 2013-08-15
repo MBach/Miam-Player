@@ -15,6 +15,7 @@
 
 #include "libraryitemalbum.h"
 #include "libraryitemartist.h"
+#include "libraryitemdiscnumber.h"
 #include "libraryitemletter.h"
 #include "libraryitemtrack.h"
 #include "persistentitem.h"
@@ -35,7 +36,7 @@ public:
 private:
 	QHash<QString, LibraryItemArtist*> _artists;
 	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
-	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemLetter*> _discNumbers;
+	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemDiscNumber*> _discNumbers;
 	QHash<QString, LibraryItemAlbum*> _albums2;
 	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
 	QHash<QString, LibraryItemArtist*> _artistsAlbums;

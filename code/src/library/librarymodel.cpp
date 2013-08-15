@@ -112,7 +112,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 	LibraryItemAlbum *itemAlbum = NULL;
 	LibraryItemTrack *itemTrack = NULL;
 	LibraryItem *itemYear = NULL;
-	LibraryItemLetter *itemDiscNumber = NULL;
+	LibraryItemDiscNumber *itemDiscNumber = NULL;
 
 	QFileInfo fileInfo(absFilePath);
 	static bool existingArtist = true;
@@ -139,7 +139,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		}
 		// Level 3 (option)
 		if (discNumber > 0 && !_discNumbers.contains(QPair<LibraryItemAlbum*, int>(itemAlbum, discNumber))) {
-			itemDiscNumber = new LibraryItemLetter(QString("CD %1").arg(discNumber));
+			itemDiscNumber = new LibraryItemDiscNumber(discNumber);
 			_discNumbers.insert(QPair<LibraryItemAlbum *, int>(itemAlbum, discNumber), itemDiscNumber);
 			itemAlbum->appendRow(itemDiscNumber);
 		}

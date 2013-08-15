@@ -52,16 +52,14 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 /** Redefined for custom sorting. */
 bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const
 {
-	bool result;
+	bool result = false;
 	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
 	LibraryItem *left = model->itemFromIndex(idxLeft);
 	LibraryItem *right = model->itemFromIndex(idxRight);
 
-	LibraryItemAlbum *leftAlbum = NULL;
-	LibraryItemAlbum *rightAlbum = NULL;
-
-	LibraryItemTrack *leftTrack = NULL;
-	LibraryItemTrack *rightTrack = NULL;
+	LibraryItemAlbum *leftAlbum = NULL, *rightAlbum = NULL;
+	LibraryItemTrack *leftTrack = NULL, *rightTrack = NULL;
+	LibraryItemDiscNumber *leftDisc = NULL, *rightDisc = NULL;
 
 	switch (left->type()) {
 
@@ -91,6 +89,17 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		}
 		break;
 
+	case LibraryItem::Disc:
+		leftDisc = static_cast<LibraryItemDiscNumber *>(model->itemFromIndex(idxLeft));
+		if (model->itemFromIndex(idxRight)->type() == LibraryItem::Disc) {
+			rightDisc = static_cast<LibraryItemDiscNumber *>(model->itemFromIndex(idxRight));
+			result = leftDisc->discNumber() < rightDisc->discNumber();
+		} else if (model->itemFromIndex(idxRight)->type() == LibraryItem::Track) {
+			rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxRight));
+			result = leftDisc->discNumber() < rightTrack->discNumber();
+		}
+		break;
+
 	case LibraryItem::Letter:
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
@@ -105,7 +114,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 	case LibraryItem::Track:
 		leftTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxLeft));
 		rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxRight));
-		if (leftTrack && rightTrack) {
+		if (rightTrack) {
 			if (leftTrack->discNumber() == rightTrack->discNumber()) {
 				result = (leftTrack->trackNumber() < rightTrack->trackNumber() && sortOrder() == Qt::AscendingOrder) ||
 						(leftTrack->trackNumber() > rightTrack->trackNumber() && sortOrder() == Qt::DescendingOrder);
@@ -120,6 +129,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 
 	default:
 		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+		break;
 	}
 	return result;
 }

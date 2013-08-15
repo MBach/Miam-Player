@@ -28,6 +28,8 @@ private:
 
 	void drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
+
 	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItem *item) const;
