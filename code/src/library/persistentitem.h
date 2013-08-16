@@ -5,12 +5,12 @@
 
 class PersistentItem : public LibraryItemTrack
 {
-private:
-	void setPersistentItem(PersistentItem *persistentItem);
 public:
 	explicit PersistentItem() : LibraryItemTrack() {}
 
 	explicit PersistentItem(const LibraryItemTrack *track);
+
+	inline QString absolutePath() const { return data(ABSOLUTE_PATH).toString(); }
 
 	inline void setAlbum(const QString &album) { setData(album, ALBUM); }
 	inline QString album() const { return data(ALBUM).toString(); }

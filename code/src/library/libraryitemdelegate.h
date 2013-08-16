@@ -24,7 +24,7 @@ public:
 	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
 
 private:
-	void drawAlbum(QPainter *painter, const QStyleOptionViewItem &o, LibraryItem *item) const;
+	void drawAlbum(QPainter *painter, const QStyleOptionViewItem &o, LibraryItemAlbum *item) const;
 
 	void drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
@@ -32,7 +32,7 @@ private:
 
 	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItem *item) const;
+	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItemTrack *track) const;
 };
 
 #endif // LIBRARYITEMDELEGATE_H

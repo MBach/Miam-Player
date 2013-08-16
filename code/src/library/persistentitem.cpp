@@ -2,12 +2,14 @@
 
 #include <QtDebug>
 
+#include <QFileInfo>
+
 PersistentItem::PersistentItem(const LibraryItemTrack *track)
 	: LibraryItemTrack(track->text())
 {
-	this->setAbsolutePath(track->absolutePath());
+	QFileInfo f(track->absoluteFilePath());
+	this->setAbsoluteFilePath(f.absolutePath(), f.fileName());
 	this->setDiscNumber(track->discNumber());
-	this->setFileName(track->fileName());
 	this->setTrackNumber(track->trackNumber());
 }
 
@@ -33,9 +35,9 @@ void PersistentItem::write(QDataStream &out) const
 	static QList<CustomType> properties = (QList<CustomType>() << ABSOLUTE_PATH << FILENAME << COVER_FILENAME << ARTIST << ARTISTALBUM << ALBUM << TITLE << TRACK_NUMBER << DISC_NUMBER << YEAR);
 	foreach (CustomType property, properties) {
 		/// FIXME
-		//if (property == COVER_FILENAME) {
-		//	qDebug() << album() << coverFileName();
-		//}
+		if (property == COVER_FILENAME) {
+			qDebug() << "write" << album() << data(FILENAME).toString() << coverFileName();
+		}
 		out << data(property).toByteArray();
 	}
 }

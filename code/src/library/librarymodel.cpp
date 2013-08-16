@@ -58,9 +58,11 @@ void LibraryModel::addCoverPathToAlbum(const QString &fileName)
 	if (album && album->coverFileName().isEmpty()) {
 		album->setCoverFileName(fileInfo.fileName());
 		/// XXX: kind of hack
+		//qDebug() << "addCoverPathToAlbum" << album->text() << fileInfo.fileName();
 		album->persistentItem()->setCoverFileName(fileInfo.fileName());
+		qDebug() << "new cover added for album:" << album->text() << fileName;
 	} else {
-		//qDebug() << "no valid album found for this cover";
+		qDebug() << "no valid album found for this cover" << fileName;
 	}
 }
 
@@ -77,7 +79,12 @@ void LibraryModel::loadFromFile()
 			persistedItem.read(inputDataStream);
 			this->insertTrack(persistedItem.absoluteFilePath(), persistedItem.artist(), persistedItem.artistAlbum(), persistedItem.album(),
 							  persistedItem.text(), persistedItem.trackNumber(), persistedItem.discNumber(), persistedItem.year());
-			this->addCoverPathToAlbum(persistedItem.absolutePath() + '/' + persistedItem.coverFileName());
+			if (!persistedItem.coverFileName().isEmpty()) {
+				qDebug() << "cover is not empty. adding from file " << persistedItem.absoluteFilePath();
+				this->addCoverPathToAlbum(persistedItem.absolutePath() + '/' + persistedItem.coverFileName());
+			} else {
+				qDebug() << "cover is empty. skipping file" << persistedItem.absoluteFilePath();
+			}
 		}
 		mmmmp.close();
 		emit loadedFromFile();
@@ -134,6 +141,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 			itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
 		} else {
 			itemAlbum = new LibraryItemAlbum(album);
+			qDebug() << "creating a new album by" << theArtist << ":" << album;
 			_albums.insert(QPair<LibraryItemArtist *, QString>(itemArtist, album), itemAlbum);
 			itemArtist->appendRow(itemAlbum);
 		}
@@ -214,13 +222,12 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		break;
 	}
 	QString absolutePath = fileInfo.absolutePath();
-	itemTrack->setAbsolutePath(absolutePath);
+	itemTrack->setAbsoluteFilePath(fileInfo.absolutePath(), fileInfo.fileName());
 	itemTrack->setDiscNumber(discNumber);
-	itemTrack->setFileName(fileInfo.fileName());
 	itemTrack->setTrackNumber(trackNumber);
 
 	PersistentItem *persistentItem = new PersistentItem(itemTrack);
-	if (itemAlbum != NULL && !_albumsAbsPath.contains(absolutePath)) {
+	if (itemAlbum != NULL && itemAlbum->persistentItem() == NULL && !_albumsAbsPath.contains(absolutePath)) {
 		itemAlbum->setAbsolutePath(absolutePath);
 		itemAlbum->setPersistentItem(persistentItem);
 		itemAlbum->setYear(year);

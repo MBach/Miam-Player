@@ -32,7 +32,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	}
 	switch (item->type()) {
 	case LibraryItem::Album:
-		this->drawAlbum(painter, o, item);
+		this->drawAlbum(painter, o, static_cast<LibraryItemAlbum*>(item));
 		break;
 	case LibraryItem::Artist:
 		this->drawArtist(painter, o, index);
@@ -44,7 +44,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->drawLetter(painter, o, index);
 		break;
 	case LibraryItem::Track:
-		this->drawTrack(painter, o, item);
+		this->drawTrack(painter, o, static_cast<const LibraryItemTrack*>(item));
 		break;
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
@@ -64,16 +64,15 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	}
 }
 
-void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, LibraryItem *item) const
+void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, LibraryItemAlbum *item) const
 {
 	static QImageReader imageReader;
 	// Albums have covers usually
-	LibraryItemAlbum *album = static_cast<LibraryItemAlbum*>(item);
-	if (album->icon().isNull()) {
+	if (item->icon().isNull()) {
 		Settings *settings = Settings::getInstance();
-		imageReader.setFileName(album->absolutePath() + '/' + album->coverFileName());
+		imageReader.setFileName(item->absolutePath() + '/' + item->coverFileName());
 		imageReader.setScaledSize(QSize(settings->coverSize(), settings->coverSize()));
-		album->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
+		item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
 	}
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
@@ -86,6 +85,11 @@ void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewIt
 void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	option.state = QStyle::State_None;
+	QPointF p1 = option.rect.bottomLeft(), p2 = option.rect.bottomRight();
+	p1.setX(p1.x() + 2);
+	p2.setX(p2.x() - 2);
+	painter->setPen(Qt::gray);
+	painter->drawLine(p1, p2);
 	QStyledItemDelegate::paint(painter, option, index);
 }
 
@@ -102,36 +106,12 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	QStyledItemDelegate::paint(painter, option, index);
 }
 
-#include <QAbstractTextDocumentLayout>
-#include <QTextDocument>
-
-void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItem *item) const
+void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItemTrack *track) const
 {
-	const LibraryItemTrack *track = static_cast<const LibraryItemTrack*>(item);
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
 	QString title = QString("%1").arg(track->trackNumber(), 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
 	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
-
-	/*painter->save();
-	QTextDocument doc;
-	doc.setHtml(title);
-
-	option.text = "";
-	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter);
-
-	// shift text right to make icon visible
-	QSize iconSize = option.icon.actualSize(option.rect.size());
-	painter->translate(option.rect.left() + iconSize.width(), option.rect.top());
-	QRect clip(0, 0, option.rect.width() + iconSize.width(), option.rect.height());
-
-	painter->setClipRect(clip);
-	QAbstractTextDocumentLayout::PaintContext ctx;
-	// set text color to red for selected item
-	ctx.palette.setColor(QPalette::Text, QColor("red"));
-	ctx.clip = clip;
-	doc.documentLayout()->draw(painter, ctx);
-	painter->restore();*/
 }
