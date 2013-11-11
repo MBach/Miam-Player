@@ -61,8 +61,6 @@ void LibraryModel::addCoverPathToAlbum(const QString &fileName)
 		//qDebug() << "addCoverPathToAlbum" << album->text() << fileInfo.fileName();
 		album->persistentItem()->setCoverFileName(fileInfo.fileName());
 		qDebug() << "new cover added for album:" << album->text() << fileName;
-	} else {
-		qDebug() << "no valid album found for this cover" << fileName;
 	}
 }
 
@@ -231,6 +229,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		itemAlbum->setAbsolutePath(absolutePath);
 		itemAlbum->setPersistentItem(persistentItem);
 		itemAlbum->setYear(year);
+		qDebug() << "creating a new album" << itemAlbum->text() << ", persist" << persistentItem->text();
 		_albumsAbsPath.insert(absolutePath, itemAlbum);
 	}
 	if (itemAlbum) {

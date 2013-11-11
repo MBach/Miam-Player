@@ -155,15 +155,25 @@ void MainWindow::setupActions()
 	//connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
 
 	// Media buttons
-	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, this, &MainWindow::stateChanged);
-	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {
-		tabPlaylists->skip(false);
+	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, [=] (QMediaPlayer::State state) {
+		playButton->disconnect();
+		if (state == QMediaPlayer::PlayingState) {
+			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
+			connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
+			seekSlider->setEnabled(true);
+		} else {
+			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
+			connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
+			seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
+		}
 	});
+
+	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {	tabPlaylists->skip(false); });
 	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);
 	connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
 	connect(stopButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, [=] () { tabPlaylists->skip(); });
+	connect(skipForwardButton, &QAbstractButton::clicked, [=] () { tabPlaylists->skip(true); });
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	// Sliders
@@ -348,18 +358,4 @@ void MainWindow::toggleTagEditor(bool b)
 		mediaButton->setVisible(!b);
 	}
 	volumeSlider->setVisible(!b);
-}
-
-void MainWindow::stateChanged(QMediaPlayer::State newState)
-{
-	playButton->disconnect();
-	if (newState == QMediaPlayer::PlayingState) {
-		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
-		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
-		seekSlider->setEnabled(true);
-	} else {
-		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
-		connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
-		seekSlider->setDisabled(newState == QMediaPlayer::StoppedState);
-	}
 }

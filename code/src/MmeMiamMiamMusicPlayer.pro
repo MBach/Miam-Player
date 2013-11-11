@@ -34,10 +34,15 @@ SOURCES += \
     library/libraryfilterlineedit.cpp \
     library/libraryfilterproxymodel.cpp \
     library/libraryitem.cpp \
+    library/libraryitemdelegate.cpp \
     library/librarymodel.cpp \
+    library/libraryorderdialog.cpp \
     library/librarytreeview.cpp \
     library/musicsearchengine.cpp \
+    library/persistentitem.cpp \
+    library/libraryitemdiscnumber.cpp \
     playlists/playlist.cpp \
+    playlists/playlistheaderview.cpp \
     playlists/playlistmodel.cpp \
     playlists/stardelegate.cpp \
     playlists/stareditor.cpp \
@@ -55,19 +60,14 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mediabutton.cpp \
+    quickstart.cpp \
+    quickstartsearchengine.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
-    quickstart.cpp \
     settings.cpp \
     timelabel.cpp \
     tracksnotfoundmessagebox.cpp \
-    treeview.cpp \
-    playlists/playlistheaderview.cpp \
-    library/libraryitemdelegate.cpp \
-    library/libraryorderdialog.cpp \
-    quickstartsearchengine.cpp \
-    library/persistentitem.cpp \
-    library/libraryitemdiscnumber.cpp
+    treeview.cpp
 
 HEADERS += \
     dialogs/colordialog.h \
@@ -89,9 +89,18 @@ HEADERS += \
     library/libraryfilterproxymodel.h \
     library/libraryitem.h \
     library/librarymodel.h \
+    library/libraryitemletter.h \
+    library/libraryitemalbum.h \
+    library/libraryitemartist.h \
+    library/libraryitemdelegate.h \
+    library/libraryitemdiscnumber.h \
+    library/libraryitemtrack.h \
+    library/libraryorderdialog.h \
     library/librarytreeview.h \
     library/musicsearchengine.h \
+    library/persistentitem.h \
     playlists/playlist.h \
+    playlists/playlistheaderview.h \
     playlists/playlistmodel.h \
     playlists/stardelegate.h \
     playlists/stareditor.h \
@@ -112,20 +121,11 @@ HEADERS += \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \
     quickstart.h \
+    quickstartsearchengine.h \
     settings.h \
     timelabel.h \
     tracksnotfoundmessagebox.h \
-    treeview.h \
-    playlists/playlistheaderview.h \
-    library/libraryitemletter.h \
-    library/libraryitemalbum.h \
-    library/libraryitemartist.h \
-    library/libraryitemtrack.h \
-    library/libraryitemdelegate.h \
-    library/libraryorderdialog.h \
-    quickstartsearchengine.h \
-    library/persistentitem.h \
-    library/libraryitemdiscnumber.h
+    treeview.h
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \
@@ -173,5 +173,4 @@ CONFIG(release, debug|release) {
     RCC_DIR = release/.rcc
 }
 
-INCLUDEPATH += $$TagLibDirectory \
-    $$TagLibDirectory/include
+INCLUDEPATH += $$TagLibDirectory

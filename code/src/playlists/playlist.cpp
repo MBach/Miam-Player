@@ -90,25 +90,6 @@ Playlist::Playlist(QWidget *parent) :
 			}
 		}
 	});
-
-	/*connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &selected, const QItemSelection &deselected) {
-		_previouslySelectedRows.clear();
-		foreach (QModelIndex i, selected.indexes()) {
-			if (i.column() == RATINGS) {
-				qDebug() << "append" << i;
-				_previouslySelectedRows.append(i);
-			}
-		}
-	});*/
-
-	/*connect(this->selectionModel(), &QItemSelectionModel::currentChanged, [=](const QModelIndex &current, const QModelIndex &previous) {
-		_previouslySelectedRows.clear();
-		//if (current.column() == RATINGS) {
-		//_playlistModel->index(current.row(), RATINGS);
-		_previouslySelectedRows.append(_playlistModel->index(current.row(), RATINGS));
-		//}
-		qDebug() << _previouslySelectedRows;
-	});*/
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)

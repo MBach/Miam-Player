@@ -69,8 +69,6 @@ private slots:
 	void aboutM4P();
 
 	void toggleTagEditor(bool b);
-
-	void stateChanged(QMediaPlayer::State newState);
 };
 
 #endif // MAINWINDOW_H

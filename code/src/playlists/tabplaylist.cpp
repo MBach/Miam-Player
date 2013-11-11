@@ -25,7 +25,21 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	_mediaPlayer->setNotifyInterval(100);
 
 	// Link core multimedia actions
-	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
+	//connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
+	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, [=] (QMediaPlayer::MediaStatus status) {
+		if (status == QMediaPlayer::BufferedMedia) {
+			// Find the right playlist where the track needs to be highlighted because one change between tabs
+			for (int i = 0; i < count() - 1; i++) {
+				Playlist *p = playlist(i);
+				// Only the media player keeps this information
+				if (p->mediaPlaylist() == _mediaPlayer->playlist()) {
+					p->highlightCurrentTrack();
+				}
+			}
+		} else if (status == QMediaPlayer::EndOfMedia) {
+			this->skip();
+		}
+	});
 
 	// Keep playlists on drive before exit
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
@@ -260,15 +274,18 @@ void TabPlaylist::seekForward()
 void TabPlaylist::skip(bool forward)
 {
 	_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
+	qDebug() << "mediacount2:" << _mediaPlayer->state();
 	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
 		// Is it strange? When it's playing, if signals aren't blocked a crash happens
 		_mediaPlayer->blockSignals(true);
 		_mediaPlayer->stop();
+		qDebug() << "mediacount:" << _mediaPlayer->playlist()->mediaCount();
 		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
 		_mediaPlayer->play();
 		_mediaPlayer->blockSignals(false);
 	} else {
-		forward ? currentPlayList()->mediaPlaylist()->next() : currentPlayList()->mediaPlaylist()->previous();
+		qDebug() << "mediacount2:" << _mediaPlayer->playlist()->mediaCount();
+		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
 		_mediaPlayer->play();
 	}
 }
@@ -333,21 +350,5 @@ void TabPlaylist::savePlaylists()
 		// Tracks are stored in QList< QList<QVariant> >
 		settings->setValue("playlists", vPlaylists);
 		settings->sync();
-	}
-}
-
-void TabPlaylist::mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState)
-{
-	if (newMediaState == QMediaPlayer::BufferedMedia) {
-		// Find the right playlist where the track needs to be highlighted because one change between tabs
-		for (int i = 0; i < count() - 1; i++) {
-			Playlist *p = playlist(i);
-			// Only the media player keeps this information
-			if (p->mediaPlaylist() == _mediaPlayer->playlist()) {
-				p->highlightCurrentTrack();
-			}
-		}
-	} else if (newMediaState == QMediaPlayer::EndOfMedia) {
-		this->skip();
 	}
 }

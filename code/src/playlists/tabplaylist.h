@@ -93,8 +93,6 @@ private slots:
 	/** Save playlists before exit. */
 	void savePlaylists();
 
-	void mediaStatusChanged(QMediaPlayer::MediaStatus newMediaState);
-
 	void play(const QModelIndex &index);
 
 signals:
