@@ -11,6 +11,8 @@
 
 #include "mediabutton.h"
 
+#include <QFileSystemWatcher>
+
 class TabPlaylist : public QTabWidget
 {
 	Q_OBJECT
@@ -23,6 +25,8 @@ private:
 	TracksNotFoundMessageBox *messageBox;
 
 	QString _nextAction;
+
+	QFileSystemWatcher *_watcher;
 
 	/** Test: used to simulate a callback.*/
 	int _tabIndex;

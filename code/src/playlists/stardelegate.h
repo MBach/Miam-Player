@@ -42,6 +42,7 @@
 #define STARDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QMediaPlaylist>
 
 /**
  * @brief The StarDelegate class is used to draw stars for ratings.
@@ -49,11 +50,14 @@
 class StarDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
+private:
+	QMediaPlaylist *_mediaPlaylist;
+
 public:
-	StarDelegate(QWidget *parent = 0);
+	StarDelegate(QMediaPlaylist *parent = 0);
 
 	/** Redefined. */
-	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &) const;
+	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
 
 	/** Redefined. */
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -66,6 +70,9 @@ public:
 
 	/** Redefined. */
 	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+//signals:
+//	void aboutToUpdateRatings(const QModelIndex &);
 };
 
 #endif

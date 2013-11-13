@@ -15,6 +15,7 @@
         <file alias="closeButton">config/closeButton.png</file>
         <file alias="closeTabs">config/close_tabs.png</file>
         <file alias="plusIcon">config/plus_icon.png</file>
+        <file alias="plugin">config/plugin.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

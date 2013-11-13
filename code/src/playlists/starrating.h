@@ -62,6 +62,8 @@ public:
 	void paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const;
 
 	inline void setStarCount(int starCount) { _starCount = starCount; }
+
+	inline int starCount() const { return _starCount; }
 };
 
 Q_DECLARE_METATYPE(StarRating)

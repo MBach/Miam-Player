@@ -41,8 +41,17 @@ Playlist::Playlist(QWidget *parent) :
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 	// Replace the default delegate with a custom StarDelegate for ratings
-	StarDelegate *starDelegate = new StarDelegate(this);
+	StarDelegate *starDelegate = new StarDelegate(qMediaPlaylist);
 	this->setItemDelegateForColumn(5, starDelegate);
+	/*connect(starDelegate, &StarDelegate::aboutToUpdateRatings, [=] (const QModelIndex &index) {
+		qDebug() << "ratings to update" << qMediaPlaylist->media(index.row()).canonicalUrl();
+		QMediaContent mediaContent = qMediaPlaylist->media(index.row());
+		TagLib::FileRef file(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile()).data());
+		bool b = file.save();
+		file.audioProperties();
+		qDebug() << "file was saved:" << b;
+	});*/
+
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);

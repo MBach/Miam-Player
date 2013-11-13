@@ -62,6 +62,8 @@ public:
 	/** Sets the inner picture. */
 	void setCover(Cover *cover);
 
+	void setRating(int rating);
+
 private:
 	QString convertKeyToID3v2Key(QString key);
 

@@ -20,6 +20,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setTabBar(tabBar);
 	this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
+	_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
 	_mediaPlayer = new QMediaPlayer(this, QMediaPlayer::StreamPlayback);
 	_mediaPlayer->setNotifyInterval(100);
@@ -70,6 +71,10 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			}
 		}
 	});
+
+	connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &file) {
+		qDebug() << "file has changed:" << file;
+	});
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -104,17 +109,17 @@ void TabPlaylist::restorePlaylists()
 				this->setTabText(count(), playlists.at(++i).toString());
 				p->mediaPlaylist()->setPlaybackMode((QMediaPlaylist::PlaybackMode) playlists.at(++i).toInt());
 
-				// For all tracks in one playlist
-				QList<QMediaContent> medias;
+				// For all tracks in current playlist
+				QStringList medias;
 				foreach (QVariant vTrack, vTracks) {
-					QMediaContent track(vTrack.toUrl());
-					if (!track.isNull()) {
-						medias.append(track);
+					QUrl url = vTrack.toUrl();
+					if (url.isLocalFile()) {
+						medias.append(url.toLocalFile());
 					} else {
-						tracksNotFound.append(track);
+						tracksNotFound.append(QMediaContent(url));
 					}
 				}
-				p->insertMedias(0, medias);
+				this->insertItemsToPlaylist(0, medias);
 				if (i == playlists.size() - 1) {
 					emit updatePlaybackModeButton();
 				}
@@ -199,6 +204,11 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 		rowIndex = currentPlayList()->mediaPlaylist()->mediaCount();
 	}
 	currentPlayList()->insertMedias(rowIndex, medias);
+
+	if (_watcher->files().count() + tracks.count() < 200) {
+		_watcher->addPaths(tracks);
+		qDebug() << "watching:" << tracks;
+	}
 
 	// Automatically plays the first track
 	if (isEmpty && !medias.isEmpty()) {

@@ -85,6 +85,7 @@ FileHelper::FileHelper(const QString &filePath)
 		f = NULL;
 		fileType = -1;
 	}
+	qDebug() << (f == NULL) << fileType;
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -317,6 +318,7 @@ int FileHelper::rating() const
 						break;
 					}
 				}
+				qDebug() << "ici";
 			}
 		} else if (mpegFile->ID3v1Tag()) {
 			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";
@@ -364,6 +366,48 @@ void FileHelper::setCover(Cover *cover)
 	default:
 		break;
 	}
+}
+
+void FileHelper::setRating(int rating)
+{
+	MPEG::File *mpegFile = NULL;
+	switch (fileType) {
+	case MP3:
+		mpegFile = static_cast<MPEG::File*>(f);
+		if (mpegFile->ID3v2Tag()) {
+			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
+			ID3v2::PopularimeterFrame *pf = NULL;
+			if (l.isEmpty()) {
+				pf = new ID3v2::PopularimeterFrame();
+				mpegFile->ID3v2Tag()->addFrame(pf);
+			} else {
+				pf = static_cast<ID3v2::PopularimeterFrame*>(l.front());
+			}
+			switch (rating) {
+			case 1:
+				pf->setRating(1);
+				break;
+			case 2:
+				pf->setRating(64);
+				break;
+			case 3:
+				pf->setRating(128);
+				break;
+			case 4:
+				pf->setRating(196);
+				break;
+			case 5:
+				pf->setRating(255);
+				break;
+			}
+		} else if (mpegFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";
+		}
+		break;
+	default:
+		break;
+	}
+	f->save();
 }
 
 QString FileHelper::convertKeyToID3v2Key(QString key)
