@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 	window->setWindowIcon(QIcon(":/icons/mmmmp_win32"));
 #endif
 	window->init();
+	window->loadPlugins();
 	window->show();
 
 	return app.exec();

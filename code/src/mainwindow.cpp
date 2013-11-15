@@ -6,12 +6,15 @@
 
 #include "mainwindow.h"
 #include "dialogs/customizethemedialog.h"
+#include "interfaces/mediaplayerplugininterface.h"
 #include "playlists/playlist.h"
 
 #include <QtMultimedia/QAudioDeviceInfo>
 #include <QGraphicsScene>
 #include <QGraphicsProxyWidget>
+#include <QLibrary>
 #include <QMessageBox>
+#include <QPluginLoader>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
@@ -57,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
 	// Tag Editor
-	tagEditor->hide();
+	tagEditor->hide();	
 }
 
 void MainWindow::init()
@@ -73,6 +76,48 @@ void MainWindow::init()
 
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+}
+
+/** Plugins OMFG §§§ */
+void MainWindow::loadPlugins()
+{
+	QDir appDirPath = QDir(qApp->applicationDirPath());
+	appDirPath.cd("plugins");
+	QDirIterator it(appDirPath);
+	while (it.hasNext()) {
+		if (QLibrary::isLibrary(it.next())) {
+			QPluginLoader pluginLoader(appDirPath.absoluteFilePath(it.fileName()), this);
+			QObject *plugin = pluginLoader.instance();
+			if (plugin) {
+				BasicPluginInterface *basic = dynamic_cast<BasicPluginInterface *>(plugin);
+				if (basic) {
+					// Attach a new config page it the plugin provides one
+					if (basic->configPage()) {
+						customizeOptionsDialog->tabPlugins->addTab(basic->configPage(), basic->name());
+					}
+					// Add name, state and version info on a summary page
+					int row = customizeOptionsDialog->pluginSummaryTableWidget->rowCount();
+					customizeOptionsDialog->pluginSummaryTableWidget->insertRow(row);
+					QTableWidgetItem *checkbox = new QTableWidgetItem();
+					checkbox->setCheckState(Qt::Checked);
+					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(basic->name()));
+					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 1, checkbox);
+					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(basic->version()));
+				}
+
+				/// XXX Make a dispatcher for future types
+				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
+					mediaPlayerPlugin->setWinId(this->winId());
+					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::skip, [=](bool forward) {
+						tabPlaylists->skip(forward);
+					});
+					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::stop, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
+					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::play, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
+					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::pause, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
+				}
+			}
+		}
+	}
 }
 
 /** Update fonts for menu and context menus. */

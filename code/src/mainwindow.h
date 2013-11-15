@@ -27,6 +27,8 @@ public:
 
 	void init();
 
+	void loadPlugins();
+
 	/** Update fonts for menu and context menus. */
 	void updateFonts(const QFont &font);
 

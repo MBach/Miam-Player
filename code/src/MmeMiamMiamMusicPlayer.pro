@@ -83,6 +83,8 @@ HEADERS += \
     filesystem/addressbarbutton.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
+    interfaces/basicplugininterface.h \
+    interfaces/mediaplayerplugininterface.h \
     library/extendedtabbar.h \
     library/extendedtabwidget.h \
     library/libraryfilterlineedit.h \
