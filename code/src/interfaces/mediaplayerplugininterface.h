@@ -3,7 +3,7 @@
 
 #include "basicplugininterface.h"
 
-#include <QWindow>
+#include <QMainWindow>
 
 class MediaPlayerPluginInterface : public BasicPluginInterface
 {
@@ -11,7 +11,7 @@ class MediaPlayerPluginInterface : public BasicPluginInterface
 public:
 	virtual ~MediaPlayerPluginInterface() {}
 
-	virtual void setWinId(WId wId) {}
+	virtual void setMainWindow(QMainWindow *) {}
 
 signals:
 	void pause();

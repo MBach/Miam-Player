@@ -1,6 +1,5 @@
 #include "librarymodel.h"
 #include "playlists/starrating.h"
-#include "settings.h"
 
 #include <QDir>
 #include <QStandardPaths>
@@ -122,7 +121,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 	QFileInfo fileInfo(absFilePath);
 	static bool existingArtist = true;
 	switch (_currentInsertPolicy) {
-	case Artist:
+	case Settings::Artist:
 		// Level 1
 		if (_artists.contains(theArtist.toLower())) {
 			itemArtist = _artists.value(theArtist.toLower());
@@ -157,7 +156,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		}
 		itemAlbum->appendRow(itemTrack);
 		break;
-	case Album:
+	case Settings::Album:
 		// Level 1
 		if (_albums2.contains(album)) {
 			itemAlbum = _albums2.value(album);
@@ -171,7 +170,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		itemTrack = new LibraryItemTrack(title);
 		itemAlbum->appendRow(itemTrack);
 		break;
-	case ArtistAlbum:
+	case Settings::ArtistAlbum:
 		// Level 1
 		if (_albums2.contains(theArtist + album)) {
 			itemAlbum = _albums2.value(theArtist + album);
@@ -189,7 +188,7 @@ void LibraryModel::insertTrack(const QString &absFilePath, const QString &artist
 		}
 		itemAlbum->appendRow(itemTrack);
 		break;
-	case Year:
+	case Settings::Year:
 		// Level 1
 		if (_years.contains(year)) {
 			itemYear = _years.value(year);

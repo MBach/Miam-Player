@@ -159,16 +159,16 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 	libraryModel->clear();
 	this->reset();
 	switch (Settings::getInstance()->insertPolicy()) {
-	case LibraryModel::Artist:
+	case Settings::Artist:
 		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists \\ Albums"), Qt::DisplayRole);
 		break;
-	case LibraryModel::Album:
+	case Settings::Album:
 		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Albums"), Qt::DisplayRole);
 		break;
-	case LibraryModel::ArtistAlbum:
+	case Settings::ArtistAlbum:
 		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Artists – Albums"), Qt::DisplayRole);
 		break;
-	case LibraryModel::Year:
+	case Settings::Year:
 		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Years"), Qt::DisplayRole);
 		break;
 	}

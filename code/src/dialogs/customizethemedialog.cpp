@@ -104,7 +104,14 @@ void CustomizeThemeDialog::setupActions()
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
 		if (checkBox) {
 			connect(checkBox, &QCheckBox::toggled, b, &MediaButton::setVisible);
-			connect(b, &MediaButton::visibilityChanged, settings, &Settings::setVisible);
+			connect(b, &MediaButton::visibilityChanged, [=] (bool value) {
+				settings->setValue(b->objectName(), value);
+				// The only buttons which are checkable are repeat and shuffle buttons
+				if (b->isCheckable() && !value) {
+					/// FIXME
+					//setRepeatPlayBack(value);
+				}
+			});
 		}
 
 		// Connect a file dialog to every button if one wants to customize everything

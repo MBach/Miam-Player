@@ -70,7 +70,7 @@ void MediaButton::setSize(const int &s)
 void MediaButton::setVisible(bool visible)
 {
 	// Send a signal to write changes in QSettings object
-	emit visibilityChanged(this, visible);
+	emit visibilityChanged(visible);
 	QPushButton::setVisible(visible);
 }
 

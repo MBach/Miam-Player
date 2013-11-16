@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
 	// Tag Editor
-	tagEditor->hide();	
+	tagEditor->hide();
 }
 
 void MainWindow::init()
@@ -105,9 +105,10 @@ void MainWindow::loadPlugins()
 					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(basic->version()));
 				}
 
-				/// XXX Make a dispatcher for future types
+				/// XXX Make a dispatcher for other types of plugins?
 				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
-					mediaPlayerPlugin->setWinId(this->winId());
+					mediaPlayerPlugin->setMainWindow(this);
+					qDebug() << "MediaPlayerPluginInterface";
 					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::skip, [=](bool forward) {
 						tabPlaylists->skip(forward);
 					});
@@ -115,6 +116,8 @@ void MainWindow::loadPlugins()
 					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::play, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
 					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::pause, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
 				}
+			} else {
+				qDebug() << "plugin was NOT loaded !" << it.fileName();
 			}
 		}
 	}

@@ -1,11 +1,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <QPushButton>
 #include <QSettings>
 
-#include "mediabutton.h"
-#include "dialogs/reflector.h"
-#include "library/librarymodel.h"
+class MediaButton;
 
 class Settings : public QSettings
 {
@@ -32,9 +31,15 @@ private:
 	QMap<QString, QVariant> columnStates;
 
 	Q_ENUMS(FontFamily)
+	Q_ENUMS(InsertPolicy)
 
 public:
 	enum FontFamily{PLAYLIST, LIBRARY, MENUS};
+
+	enum InsertPolicy { Artist = 0,
+						Album = 1,
+						ArtistAlbum = 2,
+						Year = 3};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
@@ -111,8 +116,8 @@ public:
 
 	QByteArray restoreColumnStateForPlaylist(int playlistIndex) const;
 
-	LibraryModel::InsertPolicy insertPolicy() const;
-	void setInsertPolicy(LibraryModel::InsertPolicy policy);
+	InsertPolicy insertPolicy() const;
+	void setInsertPolicy(InsertPolicy policy);
 
 public slots:
 	/** Sets a new theme. */
@@ -123,7 +128,7 @@ public slots:
 	inline void setButtonsFlat(bool b) { setValue("buttonsFlat", b); }
 
 	/** Sets if the button in parameter is visible or not. */
-	void setVisible(MediaButton *b, const bool &value);
+	//void setVisible(MediaButton *b, const bool &value);
 
 	/** Sets if stars are visible and active. */
 	inline void setDelegates(const bool &value) { setValue("delegates", value); }
@@ -157,7 +162,11 @@ public slots:
 	inline void setCustomColors(bool b) { setValue("customColors", b); }
 
 	/// StyleSheets
-	void setCustomStyleSheet(QWidget *w);
+	inline void setCustomStyleSheet(QWidget *w) {
+		QMap<QString, QVariant> map = value("styleSheet").toMap();
+		map.insert(w->metaObject()->className(), w->styleSheet());
+		this->setValue("styleSheet", map);
+	}
 
 	inline void setCopyTracksFromPlaylist(bool b) { setValue("copyTracksFromPlaylist", b); }
 

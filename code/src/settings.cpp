@@ -1,8 +1,10 @@
 #include "settings.h"
 
+#include "dialogs/reflector.h"
 #include "library/librarytreeview.h"
 #include "library/libraryfilterlineedit.h"
 #include "mainwindow.h"
+#include "mediabutton.h"
 #include "playlists/playlist.h"
 #include "playlists/tabplaylist.h"
 
@@ -225,7 +227,7 @@ QMap<QString, QVariant> Settings::shortcuts() const
 }
 
 /** Sets if the button in parameter is visible or not. */
-void Settings::setVisible(MediaButton *b, const bool &value)
+/*void Settings::setVisible(MediaButton *b, const bool &value)
 {
 	setValue(b->objectName(), value);
 	// The only buttons which are checkable are repeat and shuffle buttons
@@ -233,7 +235,7 @@ void Settings::setVisible(MediaButton *b, const bool &value)
 		/// FIXME
 		//setRepeatPlayBack(value);
 	}
-}
+}*/
 
 bool Settings::hasCustomIcon(QPushButton *b) const
 {
@@ -451,25 +453,18 @@ QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
 	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
 }
 
-LibraryModel::InsertPolicy Settings::insertPolicy() const
+Settings::InsertPolicy Settings::insertPolicy() const
 {
 	QVariant vPolicy = value("insertPolicy");
 	if (vPolicy.isNull()) {
-		return LibraryModel::Artist;
+		return Artist;
 	} else {
 		int i = vPolicy.toInt();
-		return LibraryModel::InsertPolicy(i);
+		return InsertPolicy(i);
 	}
 }
 
-void Settings::setInsertPolicy(LibraryModel::InsertPolicy policy)
+void Settings::setInsertPolicy(InsertPolicy policy)
 {
 	setValue("insertPolicy", policy);
-}
-
-void Settings::setCustomStyleSheet(QWidget *w)
-{
-	QMap<QString, QVariant> map = value("styleSheet").toMap();
-	map.insert(w->metaObject()->className(), w->styleSheet());
-	this->setValue("styleSheet", map);
 }

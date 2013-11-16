@@ -20,7 +20,7 @@ public:
 
 signals:
 	/** Hide or show buttons from options. */
-	void visibilityChanged(MediaButton *b, bool visible);
+	void visibilityChanged(bool visible);
 
 	void mediaButtonChanged();
 

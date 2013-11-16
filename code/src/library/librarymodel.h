@@ -19,6 +19,7 @@
 #include "libraryitemletter.h"
 #include "libraryitemtrack.h"
 #include "persistentitem.h"
+#include "settings.h"
 
 #include <QSet>
 #include <QStandardItemModel>
@@ -28,10 +29,10 @@ class LibraryModel : public QStandardItemModel
 	Q_OBJECT
 
 public:
-	enum InsertPolicy { Artist = 0,
+	/*enum InsertPolicy { Artist = 0,
 						Album = 1,
 						ArtistAlbum = 2,
-						Year = 3};
+						Year = 3};*/
 
 private:
 	QHash<QString, LibraryItemArtist*> _artists;
@@ -43,7 +44,8 @@ private:
 	QHash<int, LibraryItem*> _years;
 	QSet<QString> _letters;
 	QSet<PersistentItem*> _persistentItems;
-	InsertPolicy _currentInsertPolicy;
+	//InsertPolicy _currentInsertPolicy;
+	Settings::InsertPolicy _currentInsertPolicy;
 
 public:
 
@@ -58,9 +60,9 @@ public:
 		return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
 	}
 
-	inline InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
+	inline Settings::InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
 
-	inline void setInsertPolicy(InsertPolicy policy) { _currentInsertPolicy = policy; }
+	inline void setInsertPolicy(Settings::InsertPolicy policy) { _currentInsertPolicy = policy; }
 
 private:
 	void insertLetter(const QString &letters);
