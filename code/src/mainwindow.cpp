@@ -108,6 +108,7 @@ void MainWindow::loadPlugins()
 				/// XXX Make a dispatcher for other types of plugins?
 				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
 					mediaPlayerPlugin->setMainWindow(this);
+					mediaPlayerPlugin->setMediaPlayer(tabPlaylists->mediaPlayer());
 					qDebug() << "MediaPlayerPluginInterface";
 					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::skip, [=](bool forward) {
 						tabPlaylists->skip(forward);

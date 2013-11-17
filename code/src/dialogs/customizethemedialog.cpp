@@ -96,7 +96,7 @@ void CustomizeThemeDialog::setupActions()
 
 	// Select button theme and size
 	Settings *settings = Settings::getInstance();
-	connect(themeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setThemeNameAndDialogButtons(QString)));
+	connect(themeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &CustomizeThemeDialog::setThemeNameAndDialogButtons);
 	connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setButtonsSize(int)));
 
 	// Hide buttons or not

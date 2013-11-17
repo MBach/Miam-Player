@@ -4,6 +4,7 @@
 #include "basicplugininterface.h"
 
 #include <QMainWindow>
+#include <QMediaPlayer>
 
 class MediaPlayerPluginInterface : public BasicPluginInterface
 {
@@ -12,6 +13,8 @@ public:
 	virtual ~MediaPlayerPluginInterface() {}
 
 	virtual void setMainWindow(QMainWindow *) {}
+
+	virtual void setMediaPlayer(QMediaPlayer *) {}
 
 signals:
 	void pause();
