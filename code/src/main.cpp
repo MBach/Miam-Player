@@ -2,13 +2,14 @@
 
 #include "mainwindow.h"
 
-#define SOFT "MmeMiamMiamMusicPlayer"
 #define COMPANY "MmeMiamMiam"
+#define SOFT "MmeMiamMiamMusicPlayer"
 #define VERSION "0.5.0"
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
+	app.setOrganizationName(COMPANY);
 	app.setApplicationName(SOFT);
 	app.setApplicationVersion(VERSION);
 

@@ -27,13 +27,6 @@
 class LibraryModel : public QStandardItemModel
 {
 	Q_OBJECT
-
-public:
-	/*enum InsertPolicy { Artist = 0,
-						Album = 1,
-						ArtistAlbum = 2,
-						Year = 3};*/
-
 private:
 	QHash<QString, LibraryItemArtist*> _artists;
 	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
@@ -44,7 +37,6 @@ private:
 	QHash<int, LibraryItem*> _years;
 	QSet<QString> _letters;
 	QSet<PersistentItem*> _persistentItems;
-	//InsertPolicy _currentInsertPolicy;
 	Settings::InsertPolicy _currentInsertPolicy;
 
 public:
