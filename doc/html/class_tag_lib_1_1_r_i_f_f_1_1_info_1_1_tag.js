@@ -1,0 +1,27 @@
+var class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag =
+[
+    [ "Tag", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#ac7061da7fb74e8fc0114c1f28b550e29", null ],
+    [ "Tag", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#af6e7ec1385fd538f8d80134e8e9eb5e6", null ],
+    [ "~Tag", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a13066a1e2e5210b06bd44e209c4e2949", null ],
+    [ "album", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a5a775bf3537709a54e1c4f2d0df3fab1", null ],
+    [ "artist", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a89b4aab58a9c064f761aad447698d32d", null ],
+    [ "comment", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a8bbb9a2b27bd7b493fe8a462b7f88bfb", null ],
+    [ "fieldListMap", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a4af558aa31a56456320964dad66f79b2", null ],
+    [ "fieldText", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a73c133eeb08a44e228e46aa73acee083", null ],
+    [ "genre", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a4b6ddba3152b09bfa5415ee9bbdc5c1d", null ],
+    [ "isEmpty", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#adf4db95df17ac367a6c3a42877faecb8", null ],
+    [ "parse", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a93cefaf88f6a26d829f29c2de56eb97f", null ],
+    [ "removeField", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a56e84cc92b26bb2da48321a4f7486fa0", null ],
+    [ "render", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a49daeee09a7a612c175972a6adb3de83", null ],
+    [ "setAlbum", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a0afc0e89131c2d2384d83a4c18f25494", null ],
+    [ "setArtist", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a299380837599b8b02039f403616ff79e", null ],
+    [ "setComment", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#aa16bab54d0bd064dd0c6c4de013aa43f", null ],
+    [ "setFieldText", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a93cb8f002b16c503dbffc0e09bf620d5", null ],
+    [ "setGenre", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a8528bb2d96603157bd3a00e4809407a6", null ],
+    [ "setTitle", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a5b2da8820b22b3897ae62d9c40d6b05b", null ],
+    [ "setTrack", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#abd26728123141b7f50ffdf6a5de4b57d", null ],
+    [ "setYear", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a35e9ddcab613623c69bd516ec92b333e", null ],
+    [ "title", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a1fce4ccb2b78071fed5fe01e8ee825cc", null ],
+    [ "track", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a22bf263c9fc3a54c3bba12ff64ab954c", null ],
+    [ "year", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_tag.html#a4cb890b4c83aaf0bc35b6c71bcc2bbfb", null ]
+];
