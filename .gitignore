@@ -2,7 +2,7 @@
 # QT CREATOR
 #############
 
-build/
+build*/
 *.pro.user*
 *.wixobj
 *.wixpdb

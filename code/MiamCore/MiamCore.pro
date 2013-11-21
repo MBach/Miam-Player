@@ -15,17 +15,16 @@ DEPENDPATH += $$TagLibDirectory
 
 TARGET = MiamCore
 TEMPLATE = lib
-#CONFIG += staticlib
 
 QMAKE_CXXFLAGS += -std=c++11
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$PWD/debug/ -llibtag
-    unix: LIBS += -L$$PWD/debug/ -ltag
+    win32: LIBS += -L$$OUT_PWD/debug/ -llibtag
+    unix: LIBS += -L$$OUT_PWD/debug/ -ltag
 }
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$PWD/release/ -llibtag
-    unix: LIBS += -L$$PWD/release/ -ltag
+    win32: LIBS += -L$$OUT_PWD/release/ -llibtag
+    unix: LIBS += -L$$OUT_PWD/release/ -ltag
 }
 
 SOURCES += \
