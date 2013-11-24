@@ -48,10 +48,11 @@ void QuickStart::searchMultimediaFiles()
 		quickStartGroupBox->hide();
 		otherwiseLabel->hide();
 	} else {
-		_worker = new QThread();
+		_worker = new QThread(this);
 		_qsse = new QuickStartSearchEngine();
 		_qsse->moveToThread(_worker);
-		connect(_qsse, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
+		//connect(_qsse, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
+		connect(_qsse, SIGNAL(folderScanned(QFileInfo,int)), this, SLOT(insertRow(QFileInfo,int)));
 		connect(_worker, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
 		connect(_worker, &QThread::finished, this, &QuickStart::insertFirstRow);
 		_worker->start();
@@ -128,7 +129,7 @@ void QuickStart::insertFirstRow()
 }
 
 /** Insert a row with a checkbox with folder's name and the number of files in this folder. */
-void QuickStart::insertRow(const QFileInfo &fileInfo, int musicFileNumber)
+void QuickStart::insertRow(const QFileInfo &fileInfo, const int & musicFileNumber)
 {
 	QString elements = tr("%1 elements");
 

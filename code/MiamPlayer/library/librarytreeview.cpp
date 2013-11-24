@@ -54,9 +54,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	QThread *worker = new QThread();
 	MusicSearchEngine *musicSearchEngine = new MusicSearchEngine();
+	//connect(this, &LibraryTreeView::searchMusic, musicSearchEngine, &MusicSearchEngine::doSearch);
+	//connect(this, SIGNAL(searchMusic()), musicSearchEngine, SLOT(doSearch()));
 	musicSearchEngine->moveToThread(worker);
 	worker->start();
-	connect(this, &LibraryTreeView::searchMusic, musicSearchEngine, &MusicSearchEngine::doSearch);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Properties"), this);
@@ -66,9 +67,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
-	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
+	//connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
+	connect(musicSearchEngine, SIGNAL(scannedCover(QString)), libraryModel, SLOT(addCoverPathToAlbum(QString)));
 	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled, libraryModel, &LibraryModel::readFile, Qt::BlockingQueuedConnection);
-
 	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file

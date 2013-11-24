@@ -55,13 +55,7 @@ void TagEditorTableWidget::resetTable()
 	while (it.hasNext()) {
 		it.next();
 		QFileInfo fileInfo(it.key());
-		/// FIXME Qt5
-		//MediaSource source(fileInfo.absoluteFilePath());
-		//if (source.type() != MediaSource::Invalid) {
-		//TagLib::FileRef f(source.fileName().toLocal8Bit().data());
-		TagLib::FileRef f(fileInfo.absoluteFilePath().toLocal8Bit().data());
 
-		//FileHelper fh(f, it.value().data(LibraryItem::SUFFIX).toInt());
 		FileHelper fh(fileInfo.absoluteFilePath());
 
 		// Reload info
@@ -76,15 +70,15 @@ void TagEditorTableWidget::resetTable()
 		QTableWidgetItem *genre = this->item(row, ++column);
 		QTableWidgetItem *comment = this->item(row, ++column);
 
-		title->setText(f.tag()->title().toCString(true));
-		artist->setText(f.tag()->artist().toCString(true));
+		title->setText(fh.title());
+		artist->setText(fh.artist());
 		artistAlbum->setText(fh.artistAlbum());
-		album->setText(f.tag()->album().toCString(true));
-		trackNumber->setText(QString::number(f.tag()->track()));
-		disc->setText(QString());
-		year->setText(QString::number(f.tag()->year()));
-		genre->setText(f.tag()->genre().toCString(true));
-		comment->setText(f.tag()->comment().toCString(true));
+		album->setText(fh.album());
+		trackNumber->setText(fh.trackNumber());
+		disc->setText(QString::number(fh.discNumber()));
+		year->setText(fh.year());
+		genre->setText(fh.genre());
+		comment->setText(fh.comment());
 		//}
 		row++;
 	}
@@ -110,18 +104,15 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
 		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-		QTableWidgetItem *title = new QTableWidgetItem(fh.file()->tag()->title().toCString(true));
-		QTableWidgetItem *artist = new QTableWidgetItem(fh.file()->tag()->artist().toCString(true));
+		QTableWidgetItem *title = new QTableWidgetItem(fh.title());
+		QTableWidgetItem *artist = new QTableWidgetItem(fh.artist());
 		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum());
-		QTableWidgetItem *album = new QTableWidgetItem(fh.file()->tag()->album().toCString(true));
-		/// FIXME: is there a way to extract String = "01" instead of int = 1 ?
-		QString trackN = QString("%1").arg(fh.file()->tag()->track(), 2, 10, QChar('0')).toUpper();
-		QTableWidgetItem *trackNumber = new QTableWidgetItem(trackN);
-		//QTableWidgetItem *disc = new QTableWidgetItem(discNumber.toCString());
-		QTableWidgetItem *disc = new QTableWidgetItem("");
-		QTableWidgetItem *year = new QTableWidgetItem(QString::number(fh.file()->tag()->year()));
-		QTableWidgetItem *genre = new QTableWidgetItem(fh.file()->tag()->genre().toCString(true));
-		QTableWidgetItem *comment = new QTableWidgetItem(fh.file()->tag()->comment().toCString(true));
+		QTableWidgetItem *album = new QTableWidgetItem(fh.album());
+		QTableWidgetItem *trackNumber = new QTableWidgetItem(fh.trackNumber());
+		QTableWidgetItem *disc = new QTableWidgetItem(QString::number(fh.discNumber()));
+		QTableWidgetItem *year = new QTableWidgetItem(fh.year());
+		QTableWidgetItem *genre = new QTableWidgetItem(fh.genre());
+		QTableWidgetItem *comment = new QTableWidgetItem(fh.comment());
 
 		QList<QTableWidgetItem*> items;
 		items << fileName << absPath << title << artist << artistAlbum << album << trackNumber << disc << year << genre << comment;

@@ -4,7 +4,7 @@
 #include <QFileInfo>
 #include <QWidget>
 
-#include "quickstartsearchengine.h"
+#include <quickstartsearchengine.h>
 
 #include "ui_quickstart.h"
 
@@ -35,7 +35,7 @@ public slots:
 	void insertFirstRow();
 
 	/** Insert a row with a checkbox with folder's name and the number of files in this folder. */
-	void insertRow(const QFileInfo &fileInfo, int musicFileNumber);
+	void insertRow(const QFileInfo &, const int &);
 };
 
 #endif // QUICKSTARTTABLEWIDGET_H

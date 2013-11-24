@@ -8,6 +8,8 @@
 
 int main(int argc, char *argv[])
 {
+	qRegisterMetaType<QFileInfo>();
+
 	QApplication app(argc, argv);
 	app.setOrganizationName(COMPANY);
 	app.setApplicationName(SOFT);

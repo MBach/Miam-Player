@@ -1,13 +1,15 @@
 #ifndef FILEHELPER_H
 #define FILEHELPER_H
 
-#include "cover.h"
-
+#include <QtMultimedia/QMediaContent>
 #include <QStringList>
 #include <QVariant>
 
-#include <3rdparty/taglib/taglib.h>
-#include <3rdparty/taglib/fileref.h>
+class Cover;
+
+namespace TagLib {
+	class File;
+}
 
 /**
  * @brief The FileHelper class is used to extract various but relevant fields in all types of tags (MP3, Flac, etc)
@@ -15,7 +17,7 @@
 class FileHelper
 {
 private:
-	TagLib::File *f;
+	TagLib::File *_file;
 
 	int fileType;
 
@@ -24,8 +26,6 @@ private:
 	Q_ENUMS(extension)
 
 public:
-	FileHelper(TagLib::FileRef &fileRef, QVariant v);
-
 	enum extension {
 		APE		= 0,
 		ASF		= 1,
@@ -36,19 +36,18 @@ public:
 		OGG		= 7
 	};
 
+	FileHelper(const QMediaContent &track);
+
 	FileHelper(const QString &filePath);
 
-	~FileHelper() {
-		delete f;
-	}
+	~FileHelper();
 
 	inline static QStringList suffixes() { return suff; }
-
-	inline TagLib::File *file() const { return f; }
 
 	/** Field ArtistAlbum if exists (in a compilation for example). */
 	QString artistAlbum() const;
 
+	/** Extract the disc number. */
 	int discNumber() const;
 
 	/** Extract the inner picture if exists. */
@@ -63,6 +62,18 @@ public:
 	void setCover(Cover *cover);
 
 	void setRating(int rating);
+
+	/// Facade
+	bool isValid();
+	QString title() const;
+	QString trackNumber() const;
+	QString album() const;
+	QString length() const;
+	QString artist() const;
+	QString year() const;
+	QString genre() const;
+	QString comment() const;
+	bool save();
 
 private:
 	QString convertKeyToID3v2Key(QString key);

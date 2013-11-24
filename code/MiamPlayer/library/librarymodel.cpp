@@ -92,19 +92,11 @@ void LibraryModel::loadFromFile()
 void LibraryModel::readFile(const QString &absFilePath)
 {
 	FileHelper fh(absFilePath);
-	if (fh.file() != NULL && fh.file()->tag() != NULL && !fh.file()->tag()->isEmpty()) {
-		Tag *tag = fh.file()->tag();
-		QString artist = QString(tag->artist().toCString(true)).trimmed();
-		QString artistAlbum = fh.artistAlbum();
-		QString album = QString(tag->album().toCString(true)).trimmed();
-		QString title = QString(tag->title().toCString(true)).trimmed();
-		this->insertTrack(absFilePath, artist, artistAlbum, album, title, tag->track(), fh.discNumber(), tag->year());
-	} else if (fh.file() == NULL) {
-		qDebug() << "fh.file() == NULL" << absFilePath;
-	} else if (fh.file()->tag() == NULL) {
-		qDebug() << "fh.file()->tag() == NULL" << absFilePath;
-	} else if (fh.file()->tag()->isEmpty()) {
-		qDebug() << "fh.file()->tag()->isEmpty()" << absFilePath;
+	//if (fh.file() != NULL && fh.file()->tag() != NULL && !fh.file()->tag()->isEmpty()) {
+	if (fh.isValid()) {
+		this->insertTrack(absFilePath, fh.artist(), fh.artistAlbum(), fh.album(), fh.title(), fh.trackNumber().toInt(), fh.discNumber(), fh.year().toInt());
+	} else {
+		qDebug() << "fh.isValid() is false for:" << absFilePath;
 	}
 }
 

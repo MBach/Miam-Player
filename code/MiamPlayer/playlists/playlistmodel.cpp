@@ -34,27 +34,26 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 
 void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
-	TagLib::FileRef file(QFile::encodeName(track.canonicalUrl().toLocalFile()).data());
-	FileHelper f(file, -1);
-	//FileHelper f(QFile::encodeName(track.canonicalUrl().toLocalFile()));
-	if (f.file()->isValid()) {
+	FileHelper f(track);
+	if (f.isValid()) {
 
-		QString title(f.file()->tag()->title().toCString(true));
+		QString title(f.title());
 
 		// Then, construct a new row with correct informations
-		QStandardItem *trackItem = new QStandardItem(QString::number(f.file()->tag()->track()));
+		//QStandardItem *trackItem = new QStandardItem(QString::number(f.file()->tag()->track()));
+		QStandardItem *trackItem = new QStandardItem(f.trackNumber());
 		trackItem->setData(track.canonicalUrl());
 		QStandardItem *titleItem = new QStandardItem(title);
-		QStandardItem *albumItem = new QStandardItem(f.file()->tag()->album().toCString(true));
-		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(f.file()->audioProperties()->length()).toString("m:ss"));
-		QStandardItem *artistItem = new QStandardItem(f.file()->tag()->artist().toCString(true));
+		QStandardItem *albumItem = new QStandardItem(f.album());
+		QStandardItem *lengthItem = new QStandardItem(f.length());
+		QStandardItem *artistItem = new QStandardItem(f.artist());
 		QStandardItem *ratingItem = new QStandardItem();
 		int rating = f.rating();
 		if (rating > 0) {
 			StarRating r(rating);
 			ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
 		}
-		QStandardItem *yearItem = new QStandardItem(QString::number(f.file()->tag()->year()));
+		QStandardItem *yearItem = new QStandardItem(f.year());
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);

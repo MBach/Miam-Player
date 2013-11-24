@@ -195,7 +195,8 @@ void TagEditor::commitChanges()
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
-				if (fh.file()->tag()) {
+				/// FIXME
+				/*if (fh.file()->tag()) {
 					PropertyMap pm = fh.file()->tag()->properties();
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
@@ -212,7 +213,7 @@ void TagEditor::commitChanges()
 					}
 				} else {
 					qDebug() << "no valid tag for this file";
-				}
+				}*/
 			}
 		}
 
@@ -227,7 +228,7 @@ void TagEditor::commitChanges()
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
 		// The Tree structure could be modified
 		if (trackWasModified) {
-			bool b = fh.file()->save();
+			bool b = fh.save();
 			if (!b) {
 				qDebug() << "tag wasn't saved :(";
 			}

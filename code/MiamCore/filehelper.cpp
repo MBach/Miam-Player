@@ -21,14 +21,20 @@
 #include <textidentificationframe.h>
 #include <tstring.h>
 
+#include "cover.h"
+
+#include <QDateTime>
 #include <QImage>
 #include <QtDebug>
 
-using namespace TagLib;
-
 const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
 
-FileHelper::FileHelper(FileRef &fileRef, QVariant v)
+#include <3rdparty/taglib/taglib.h>
+#include <3rdparty/taglib/fileref.h>
+
+using namespace TagLib;
+
+/*FileHelper::FileHelper(FileRef &fileRef, QVariant v)
 	: fileType(v.toInt())
 {
 	f = fileRef.file();
@@ -53,6 +59,11 @@ FileHelper::FileHelper(FileRef &fileRef, QVariant v)
 			fileType = OGG;
 		}
 	}
+}*/
+
+FileHelper::FileHelper(const QMediaContent &track)
+{
+	FileHelper(track.canonicalUrl().toLocalFile());
 }
 
 FileHelper::FileHelper(const QString &filePath)
@@ -61,31 +72,35 @@ FileHelper::FileHelper(const QString &filePath)
 	QString suffix = fileInfo.suffix().toLower();
 	const char *fp = QFile::encodeName(filePath).constData();
 	if (suffix == "ape") {
-		f = new APE::File(fp);
+		_file = new APE::File(fp);
 		fileType = APE;
 	} else if (suffix == "asf") {
-		f = new ASF::File(fp);
+		_file = new ASF::File(fp);
 		fileType = ASF;
 	} else if (suffix == "flac") {
-		f = new FLAC::File(fp);
+		_file = new FLAC::File(fp);
 		fileType = FLAC;
 	} else if (suffix == "m4a") {
-		f = new MP4::File(fp);
+		_file = new MP4::File(fp);
 		fileType = MP4;
 	} else if (suffix == "mpc") {
-		f = new MPC::File(fp);
+		_file = new MPC::File(fp);
 		fileType = MPC;
 	} else if (suffix == "mp3") {
-		f = new MPEG::File(fp);
+		_file = new MPEG::File(fp);
 		fileType = MP3;
 	} else if (suffix == "ogg" || suffix == "oga") {
-		f = new Vorbis::File(fp);
+		_file = new Vorbis::File(fp);
 		fileType = OGG;
 	} else {
-		f = NULL;
+		_file = NULL;
 		fileType = -1;
 	}
-	qDebug() << (f == NULL) << fileType;
+	qDebug() << (_file == NULL) << fileType;
+}
+
+FileHelper::~FileHelper() {
+	delete _file;
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -185,7 +200,7 @@ Cover* FileHelper::extractCover()
 	Cover *cover = NULL;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(f);
+		mpegFile = static_cast<MPEG::File*>(_file);
 		if (mpegFile->ID3v2Tag()) {
 			// Look for picture frames only
 			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
@@ -216,19 +231,19 @@ bool FileHelper::insert(QString key, const QVariant &value)
 
 	/// XXX Create an enumeration somewhere
 	if (key == "ALBUM") {
-		f->tag()->setAlbum(v);
+		_file->tag()->setAlbum(v);
 	} else if (key == "ARTIST") {
-		f->tag()->setArtist(v);
+		_file->tag()->setArtist(v);
 	} else if (key == "COMMENT") {
-		f->tag()->setComment(v);
+		_file->tag()->setComment(v);
 	} else if (key == "GENRE") {
-		f->tag()->setGenre(v);
+		_file->tag()->setGenre(v);
 	} else if (key == "TITLE") {
-		f->tag()->setTitle(v);
+		_file->tag()->setTitle(v);
 	} else if (key == "TRACKNUMBER") {
-		f->tag()->setTrack(value.toInt());
+		_file->tag()->setTrack(value.toInt());
 	} else if (key == "YEAR") {
-		f->tag()->setYear(value.toInt());
+		_file->tag()->setYear(value.toInt());
 	} else {
 		// Other non generic tags, like Artist Album
 		//APE::File *apeFile = NULL;
@@ -260,7 +275,7 @@ bool FileHelper::insert(QString key, const QVariant &value)
 			qDebug() << "MPC file";
 			break;
 		case MP3:
-			mpegFile = static_cast<MPEG::File*>(f);
+			mpegFile = static_cast<MPEG::File*>(_file);
 			if (mpegFile->ID3v2Tag()) {
 				ID3v2::Tag *tag = mpegFile->ID3v2Tag();
 				if (tag) {
@@ -294,7 +309,7 @@ int FileHelper::rating() const
 	/// TODO other types?
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(f);
+		mpegFile = static_cast<MPEG::File*>(_file);
 		if (mpegFile->ID3v2Tag()) {
 			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
 			if (!l.isEmpty()) {
@@ -337,7 +352,7 @@ void FileHelper::setCover(Cover *cover)
 	MPEG::File *mpegFile = NULL;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(f);
+		mpegFile = static_cast<MPEG::File*>(_file);
 		if (mpegFile->ID3v2Tag()) {
 			// Look for picture frames only
 			ID3v2::FrameList mp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
@@ -373,7 +388,7 @@ void FileHelper::setRating(int rating)
 	MPEG::File *mpegFile = NULL;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(f);
+		mpegFile = static_cast<MPEG::File*>(_file);
 		if (mpegFile->ID3v2Tag()) {
 			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
 			ID3v2::PopularimeterFrame *pf = NULL;
@@ -407,7 +422,57 @@ void FileHelper::setRating(int rating)
 	default:
 		break;
 	}
-	f->save();
+	_file->save();
+}
+
+bool FileHelper::isValid()
+{
+	return _file->isValid();
+}
+
+QString FileHelper::title() const
+{
+	return QString(_file->tag()->title().toCString(true));
+}
+
+QString FileHelper::trackNumber() const
+{
+	return QString("%1").arg(_file->tag()->track(), 2, 10, QChar('0')).toUpper();
+}
+
+QString FileHelper::album() const
+{
+	return QString(_file->tag()->album().toCString(true));
+}
+
+QString FileHelper::length() const
+{
+	return QString(QDateTime::fromTime_t(_file->audioProperties()->length()).toString("m:ss"));
+}
+
+QString FileHelper::artist() const
+{
+	return QString(_file->tag()->artist().toCString(true));
+}
+
+QString FileHelper::year() const
+{
+	return QString::number(_file->tag()->year());
+}
+
+QString FileHelper::genre() const
+{
+	return QString(_file->tag()->genre().toCString(true));
+}
+
+QString FileHelper::comment() const
+{
+	return QString(_file->tag()->comment().toCString(true));
+}
+
+bool FileHelper::save()
+{
+	return _file->save();
 }
 
 QString FileHelper::convertKeyToID3v2Key(QString key)
@@ -423,7 +488,7 @@ QString FileHelper::convertKeyToID3v2Key(QString key)
 QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	FLAC::File *flacFile = static_cast<FLAC::File*>(f);
+	FLAC::File *flacFile = static_cast<FLAC::File*>(_file);
 	if (flacFile->ID3v2Tag()) {
 		ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
 		if (!l.isEmpty()) {
@@ -443,7 +508,7 @@ QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	MPEG::File *mpegFile = static_cast<MPEG::File*>(f);
+	MPEG::File *mpegFile = static_cast<MPEG::File*>(_file);
 	if (mpegFile->ID3v2Tag()) {
 		ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
 		if (!l.isEmpty()) {
