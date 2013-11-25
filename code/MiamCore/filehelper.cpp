@@ -34,36 +34,10 @@ const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" <
 
 using namespace TagLib;
 
-/*FileHelper::FileHelper(FileRef &fileRef, QVariant v)
-	: fileType(v.toInt())
-{
-	f = fileRef.file();
-	if (v.toInt() > 0) {
-		fileType = v.toInt();
-	} else {
-		QFileInfo fileInfo(QString(f->name()));
-		QString suffix = fileInfo.suffix().toLower();
-		if (suffix == "ape") {
-			fileType = APE;
-		} else if (suffix == "asf") {
-			fileType = ASF;
-		} else if (suffix == "flac") {
-			fileType = FLAC;
-		} else if (suffix == "m4a") {
-			fileType = MP4;
-		} else if (suffix == "mpc") {
-			fileType = MPC;
-		} else if (suffix == "mp3") {
-			fileType = MP3;
-		} else if (suffix == "ogg" || suffix == "oga") {
-			fileType = OGG;
-		}
-	}
-}*/
-
 FileHelper::FileHelper(const QMediaContent &track)
+	: FileHelper(track.canonicalUrl().toLocalFile())
 {
-	FileHelper(track.canonicalUrl().toLocalFile());
+
 }
 
 FileHelper::FileHelper(const QString &filePath)
@@ -96,10 +70,10 @@ FileHelper::FileHelper(const QString &filePath)
 		_file = NULL;
 		fileType = -1;
 	}
-	qDebug() << (_file == NULL) << fileType;
 }
 
-FileHelper::~FileHelper() {
+FileHelper::~FileHelper()
+{
 	delete _file;
 }
 
@@ -425,7 +399,7 @@ void FileHelper::setRating(int rating)
 	_file->save();
 }
 
-bool FileHelper::isValid()
+bool FileHelper::isValid() const
 {
 	return _file->isValid();
 }

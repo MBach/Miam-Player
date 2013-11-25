@@ -196,6 +196,7 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
 	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
+
 	QList<QMediaContent> medias;
 	foreach (QString track, tracks) {
 		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
@@ -204,7 +205,9 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	if (rowIndex == -1) {
 		rowIndex = currentPlayList()->mediaPlaylist()->mediaCount();
 	}
+	qDebug() << "ici";
 	currentPlayList()->insertMedias(rowIndex, medias);
+	qDebug() << "ici";
 
 	if (_watcher->files().count() + tracks.count() < 200) {
 		_watcher->addPaths(tracks);
@@ -214,7 +217,8 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	// Automatically plays the first track
 	if (isEmpty && !medias.isEmpty()) {
 		//setCurrentIndex();
-		this->skip();
+		PlaylistModel *m = qobject_cast<PlaylistModel*>(currentPlayList()->model());
+		this->play(m->item(0)->index());
 	}
 }
 

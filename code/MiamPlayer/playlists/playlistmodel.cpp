@@ -34,26 +34,25 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 
 void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
-	FileHelper f(track);
-	if (f.isValid()) {
-
-		QString title(f.title());
+	FileHelper *f = new FileHelper(track);
+	if (f->isValid()) {
+		QString title(f->title());
 
 		// Then, construct a new row with correct informations
-		//QStandardItem *trackItem = new QStandardItem(QString::number(f.file()->tag()->track()));
-		QStandardItem *trackItem = new QStandardItem(f.trackNumber());
+		//QStandardItem *trackItem = new QStandardItem(QString::number(f->file()->tag()->track()));
+		QStandardItem *trackItem = new QStandardItem(f->trackNumber());
 		trackItem->setData(track.canonicalUrl());
 		QStandardItem *titleItem = new QStandardItem(title);
-		QStandardItem *albumItem = new QStandardItem(f.album());
-		QStandardItem *lengthItem = new QStandardItem(f.length());
-		QStandardItem *artistItem = new QStandardItem(f.artist());
+		QStandardItem *albumItem = new QStandardItem(f->album());
+		QStandardItem *lengthItem = new QStandardItem(f->length());
+		QStandardItem *artistItem = new QStandardItem(f->artist());
 		QStandardItem *ratingItem = new QStandardItem();
-		int rating = f.rating();
+		int rating = f->rating();
 		if (rating > 0) {
 			StarRating r(rating);
 			ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
 		}
-		QStandardItem *yearItem = new QStandardItem(f.year());
+		QStandardItem *yearItem = new QStandardItem(f->year());
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
@@ -64,6 +63,7 @@ void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
 		this->insertRow(rowIndex, widgetItems);
 	}
+	delete f;
 }
 
 /** Moves rows from various positions to a new one (discontiguous rows are grouped). */

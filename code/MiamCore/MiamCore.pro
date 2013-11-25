@@ -13,6 +13,8 @@ INCLUDEPATH += $$PWD
 INCLUDEPATH += $$TagLibDirectory
 DEPENDPATH += $$TagLibDirectory
 
+DEFINES += MIAMCORE_LIBRARY
+
 TARGET = MiamCore
 TEMPLATE = lib
 
@@ -39,7 +41,8 @@ HEADERS += \
     musicsearchengine.h \
     quickstartsearchengine.h \
     filehelper.h \
-    cover.h
+    cover.h \
+    miamcore_global.h
 
 unix:!symbian {
     target.path = /usr/lib

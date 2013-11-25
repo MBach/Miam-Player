@@ -3,7 +3,9 @@
 
 #include <QString>
 
-class Cover
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY Cover
 {
 private:
 	/** Like "image/jpeg" (for TagLib). */

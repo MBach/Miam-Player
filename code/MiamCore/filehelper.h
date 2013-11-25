@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QVariant>
 
+#include "miamcore_global.h"
+
 class Cover;
 
 namespace TagLib {
@@ -14,7 +16,7 @@ namespace TagLib {
 /**
  * @brief The FileHelper class is used to extract various but relevant fields in all types of tags (MP3, Flac, etc)
  */
-class FileHelper
+class MIAMCORE_LIBRARY FileHelper
 {
 private:
 	TagLib::File *_file;
@@ -40,7 +42,7 @@ public:
 
 	FileHelper(const QString &filePath);
 
-	~FileHelper();
+	virtual ~FileHelper();
 
 	inline static QStringList suffixes() { return suff; }
 
@@ -64,7 +66,7 @@ public:
 	void setRating(int rating);
 
 	/// Facade
-	bool isValid();
+	bool isValid() const;
 	QString title() const;
 	QString trackNumber() const;
 	QString album() const;

@@ -3,7 +3,9 @@
 
 #include <QFileInfo>
 
-class QuickStartSearchEngine : public QObject
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY QuickStartSearchEngine : public QObject
 {
 	Q_OBJECT
 public:

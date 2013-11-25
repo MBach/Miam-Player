@@ -4,7 +4,9 @@
 #include <QDir>
 #include <QFileInfo>
 
-class MusicSearchEngine : public QObject
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 {
 	Q_OBJECT
 

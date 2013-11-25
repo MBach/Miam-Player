@@ -4,7 +4,9 @@
 #include <QPushButton>
 #include <QSettings>
 
-class Settings : public QSettings
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY Settings : public QSettings
 {
 	Q_OBJECT
 

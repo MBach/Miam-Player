@@ -104,8 +104,11 @@ Playlist::Playlist(QWidget *parent) :
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
+	qDebug() << (qMediaPlaylist == NULL) << (_playlistModel == NULL);
 	qMediaPlaylist->insertMedia(rowIndex, medias);
+	qDebug() << (qMediaPlaylist == NULL) << (_playlistModel == NULL);
 	_playlistModel->insertMedias(rowIndex, medias);
+	qDebug() << (qMediaPlaylist == NULL) << (_playlistModel == NULL);
 	resizeColumnToContents(TRACK_NUMBER);
 	resizeColumnToContents(RATINGS);
 	resizeColumnToContents(YEAR);
