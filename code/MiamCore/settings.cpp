@@ -1,6 +1,7 @@
 #include "settings.h"
 
 #include <QFile>
+#include <QGuiApplication>
 #include <QHeaderView>
 #include <QScrollBar>
 #include <QTabWidget>
