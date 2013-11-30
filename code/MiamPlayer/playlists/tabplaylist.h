@@ -11,22 +11,19 @@
 
 #include "mediabutton.h"
 
-#include <QFileSystemWatcher>
+//#include <QFileSystemWatcher>
 
 class TabPlaylist : public QTabWidget
 {
 	Q_OBJECT
 
 private:
-	/// XXX: make static instance?
-	QMediaPlayer *_mediaPlayer;
-
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
 	QString _nextAction;
 
-	QFileSystemWatcher *_watcher;
+	//QFileSystemWatcher *_watcher;
 
 	/** Test: used to simulate a callback.*/
 	int _tabIndex;
@@ -37,8 +34,6 @@ public:
 
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
-
-    QMediaPlayer *mediaPlayer() const { return this->_mediaPlayer; }
 
 	/** Get the playlist at index. */
 	Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
@@ -76,16 +71,6 @@ public slots:
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
 
-	/// Media actions
-	/** Seek backward in the current playing track for a small amount of time. */
-	void seekBackward();
-
-	/** Seek forward in the current playing track for a small amount of time. */
-	void seekForward();
-
-	/** Change the current track. */
-	void skip(bool forward = true);
-
 	void updateRowHeight();
 
 private slots:
@@ -97,7 +82,7 @@ private slots:
 	/** Save playlists before exit. */
 	void savePlaylists();
 
-	void play(const QModelIndex &index);
+	//void play(const QModelIndex &index);
 
 signals:
 	void destroyed(int);

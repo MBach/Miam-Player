@@ -21,27 +21,8 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	///FIXME
 	//this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
-	_watcher = new QFileSystemWatcher(this);
+	//_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
-	_mediaPlayer = new QMediaPlayer(this, QMediaPlayer::StreamPlayback);
-	_mediaPlayer->setNotifyInterval(100);
-
-	// Link core multimedia actions
-	//connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, this, &TabPlaylist::mediaStatusChanged);
-	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, [=] (QMediaPlayer::MediaStatus status) {
-		if (status == QMediaPlayer::BufferedMedia) {
-			// Find the right playlist where the track needs to be highlighted because one change between tabs
-			for (int i = 0; i < count() - 1; i++) {
-				Playlist *p = playlist(i);
-				// Only the media player keeps this information
-				if (p->mediaPlaylist() == _mediaPlayer->playlist()) {
-					p->highlightCurrentTrack();
-				}
-			}
-		} else if (status == QMediaPlayer::EndOfMedia) {
-			this->skip();
-		}
-	});
 
 	// Keep playlists on drive before exit
 	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
@@ -50,7 +31,8 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
 
 	// Removing a playlist
-	connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
+	/// FIXME
+	/*connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
 		if (_mediaPlayer->state() == QMediaPlayer::StoppedState) {
 			this->removeTabFromCloseButton(index);
 		} else {
@@ -59,7 +41,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			_tabIndex = index;
 			_mediaPlayer->stop();
 		}
-	});
+	});*/
 	//connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
 
 	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
@@ -73,9 +55,10 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		}
 	});
 
-	connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &file) {
-		qDebug() << "file has changed:" << file;
-	});
+	/// TODO
+	//connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &file) {
+	//	qDebug() << "file has changed:" << file;
+	//});
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -157,7 +140,8 @@ Playlist* TabPlaylist::addPlaylist()
 		/// FIXME: stylesheet should be for Class, not instances
 		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
 	}
-	connect(p, &QTableView::doubleClicked, this, &TabPlaylist::play);
+	///FIXME
+	//connect(p, &QTableView::doubleClicked, this, &TabPlaylist::play);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
@@ -169,7 +153,7 @@ Playlist* TabPlaylist::addPlaylist()
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
-	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
+	/*bool isEmpty = */ this->currentPlayList()->mediaPlaylist()->isEmpty();
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
 		QList<QMediaContent> medias;
@@ -179,9 +163,9 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 		this->currentPlayList()->insertMedias(currentPlayList()->model()->rowCount(), medias);
 	}
 	// Automatically plays the first track
-	if (isEmpty) {
+	/*if (isEmpty) {
 		this->skip();
-	}
+	}*/
 }
 
 /** Append a single track chosen by one from the library or the filesystem into the active playlist. */
@@ -205,20 +189,19 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	if (rowIndex == -1) {
 		rowIndex = currentPlayList()->mediaPlaylist()->mediaCount();
 	}
-	qDebug() << "ici";
 	currentPlayList()->insertMedias(rowIndex, medias);
-	qDebug() << "ici";
 
-	if (_watcher->files().count() + tracks.count() < 200) {
+	/*if (_watcher->files().count() + tracks.count() < 200) {
 		_watcher->addPaths(tracks);
 		qDebug() << "watching:" << tracks;
-	}
+	}*/
 
 	// Automatically plays the first track
 	if (isEmpty && !medias.isEmpty()) {
 		//setCurrentIndex();
-		PlaylistModel *m = qobject_cast<PlaylistModel*>(currentPlayList()->model());
-		this->play(m->item(0)->index());
+		//PlaylistModel *m = qobject_cast<PlaylistModel*>(currentPlayList()->model());
+		///FIXME
+		//this->play(m->item(0)->index());
 	}
 }
 
@@ -239,69 +222,6 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		// Clear the content of first tab
 		currentPlayList()->mediaPlaylist()->clear();
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount()); // ok
-	}
-}
-
-void TabPlaylist::play(const QModelIndex &index)
-{
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
-		_mediaPlayer->blockSignals(true);
-		_mediaPlayer->stop();
-		_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
-		currentPlayList()->mediaPlaylist()->setCurrentIndex(index.row());
-		_mediaPlayer->play();
-		_mediaPlayer->blockSignals(false);
-	} else {
-		_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
-		currentPlayList()->mediaPlaylist()->setCurrentIndex(index.row());
-		_mediaPlayer->play();
-	}
-}
-
-
-/** Seek backward in the current playing track for a small amount of time. */
-void TabPlaylist::seekBackward()
-{
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
-		qint64 time = _mediaPlayer->position() - Settings::getInstance()->playbackSeekTime();
-		if (time < 0) {
-			_mediaPlayer->setPosition(1);
-		} else {
-			_mediaPlayer->setPosition(time);
-		}
-	}
-}
-
-/** Seek forward in the current playing track for a small amount of time. */
-void TabPlaylist::seekForward()
-{
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
-		qint64 time = _mediaPlayer->position() + Settings::getInstance()->playbackSeekTime();
-		if (time > _mediaPlayer->duration()) {
-			skip(true);
-		} else {
-			_mediaPlayer->setPosition(time);
-		}
-	}
-}
-
-/** Change the current track. */
-void TabPlaylist::skip(bool forward)
-{
-	_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
-	qDebug() << "mediacount2:" << _mediaPlayer->state();
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
-		// Is it strange? When it's playing, if signals aren't blocked a crash happens
-		_mediaPlayer->blockSignals(true);
-		_mediaPlayer->stop();
-		qDebug() << "mediacount:" << _mediaPlayer->playlist()->mediaCount();
-		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
-		_mediaPlayer->play();
-		_mediaPlayer->blockSignals(false);
-	} else {
-		qDebug() << "mediacount2:" << _mediaPlayer->playlist()->mediaCount();
-		forward ? _mediaPlayer->playlist()->next() : _mediaPlayer->playlist()->previous();
-		_mediaPlayer->play();
 	}
 }
 

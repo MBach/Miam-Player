@@ -185,7 +185,11 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 /** Reduces the size of the library when the user is typing text. */
 void LibraryTreeView::filterLibrary(const QString &filter)
 {
-	if (!filter.isEmpty()) {
+	if (filter.isEmpty()) {
+		proxyModel->setFilterRegExp(QRegExp());
+		collapseAll();
+		sortByColumn(0, Qt::AscendingOrder);
+	} else {
 		bool needToSortAgain = false;
 		if (proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
 			needToSortAgain = true;
@@ -195,10 +199,6 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 			collapseAll();
 			sortByColumn(0, Qt::AscendingOrder);
 		}
-	} else {
-		proxyModel->setFilterRegExp(QRegExp());
-		collapseAll();
-		sortByColumn(0, Qt::AscendingOrder);
 	}
 }
 

@@ -9,8 +9,8 @@
 #include "dialogs/dragdropdialog.h"
 #include "dialogs/playlistmanager.h"
 #include "library/librarytreeview.h"
-//#include "settings.h"
 #include "mediabutton.h"
+#include <mediaplayer.h>
 #include "playbackmodewidgetfactory.h"
 
 /// Need to use this forward declaration (circular inclusion)
@@ -38,6 +38,7 @@ private:
 	PlaylistManager *playlistManager;
 	DragDropDialog *dragDropDialog;
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
+	MediaPlayer *_mediaPlayer;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

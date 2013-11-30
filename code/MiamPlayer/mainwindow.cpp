@@ -42,7 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Init the audio module
 	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
-	tabPlaylists->mediaPlayer()->setVolume(settings->volume());
+	_mediaPlayer = new MediaPlayer(this);
+	_mediaPlayer->setVolume(settings->volume());
 	volumeSlider->setValue(settings->volume());
 
 	// Init shortcuts
@@ -83,7 +84,9 @@ void MainWindow::init()
 void MainWindow::loadPlugins()
 {
 	QDir appDirPath = QDir(qApp->applicationDirPath());
-	appDirPath.cd("plugins");
+	if (!appDirPath.cd("plugins")) {
+		return;
+	}
 	QDirIterator it(appDirPath);
 	while (it.hasNext()) {
 		if (QLibrary::isLibrary(it.next())) {
@@ -109,17 +112,20 @@ void MainWindow::loadPlugins()
 				/// XXX Make a dispatcher for other types of plugins?
 				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
 					mediaPlayerPlugin->setMainWindow(this);
-					mediaPlayerPlugin->setMediaPlayer(tabPlaylists->mediaPlayer());
+					mediaPlayerPlugin->setMediaPlayer(_mediaPlayer);
 					qDebug() << "MediaPlayerPluginInterface";
-					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::skip, [=](bool forward) {
-						tabPlaylists->skip(forward);
-					});
-					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::stop, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
-					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::play, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
-					connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::pause, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
+					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::skip, [=](bool forward) {
+					//	tabPlaylists->skip(forward);
+					//});
+					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::stop, _mediaPlayer, &QMediaPlayer::stop);
+					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::play, _mediaPlayer, &QMediaPlayer::play);
+					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::pause, _mediaPlayer, &QMediaPlayer::pause);
 				}
 			} else {
 				qDebug() << "plugin was NOT loaded !" << it.fileName();
+				QString message = "A plugin was found but was the player was unable to load it :(";
+				QMessageBox *m = new QMessageBox(QMessageBox::Warning, "Warning", message, QMessageBox::Close, this);
+				m->show();
 			}
 		}
 	}
@@ -208,48 +214,64 @@ void MainWindow::setupActions()
 	//connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
 
 	// Media buttons
-	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::stateChanged, [=] (QMediaPlayer::State state) {
+	connect(_mediaPlayer, &QMediaPlayer::stateChanged, [=] (QMediaPlayer::State state) {
 		playButton->disconnect();
 		if (state == QMediaPlayer::PlayingState) {
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
-			connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::pause);
+			connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &QMediaPlayer::pause);
 			seekSlider->setEnabled(true);
 		} else {
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
-			connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
+			connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &QMediaPlayer::play);
 			seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		}
 	});
 
-	connect(skipBackwardButton, &QAbstractButton::clicked, [=] () {	tabPlaylists->skip(false); });
-	connect(seekBackwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekBackward);
-	connect(playButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::play);
-	connect(stopButton, &QAbstractButton::clicked, tabPlaylists->mediaPlayer(), &QMediaPlayer::stop);
-	connect(seekForwardButton, &QAbstractButton::clicked, tabPlaylists, &TabPlaylist::seekForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, [=] () { tabPlaylists->skip(true); });
+	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
+	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &QMediaPlayer::play);
+	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &QMediaPlayer::stop);
+	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
+	// Link core multimedia actions
+	connect(_mediaPlayer, &QMediaPlayer::mediaStatusChanged, [=] (QMediaPlayer::MediaStatus status) {
+		if (status == QMediaPlayer::BufferedMedia) {
+			// Find the right playlist where the track needs to be highlighted because one change between tabs
+			for (int i = 0; i < tabPlaylists->count() - 1; i++) {
+				Playlist *p = tabPlaylists->playlist(i);
+				// Only the media player keeps this information
+				if (p->mediaPlaylist() == _mediaPlayer->playlist()) {
+					p->highlightCurrentTrack();
+				}
+			}
+		} else if (status == QMediaPlayer::EndOfMedia) {
+			_mediaPlayer->skipForward();
+		}
+	});
+
 	// Sliders
-	connect(tabPlaylists->mediaPlayer(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
-		if (tabPlaylists->mediaPlayer()->duration() > 0) {
-			seekSlider->setValue(1000 * pos / tabPlaylists->mediaPlayer()->duration());
-			timeLabel->setTime(pos, tabPlaylists->mediaPlayer()->duration());
+	connect(_mediaPlayer, &QMediaPlayer::positionChanged, [=] (qint64 pos) {
+		if (_mediaPlayer->duration() > 0) {
+			seekSlider->setValue(1000 * pos / _mediaPlayer->duration());
+			timeLabel->setTime(pos, _mediaPlayer->duration());
 		}
 	});
 	connect(seekSlider, &QSlider::sliderMoved, [=] (int pos) {
-		tabPlaylists->mediaPlayer()->blockSignals(true);
-		tabPlaylists->mediaPlayer()->setPosition(pos * tabPlaylists->mediaPlayer()->duration() / 1000);
-		tabPlaylists->mediaPlayer()->blockSignals(false);
+		_mediaPlayer->blockSignals(true);
+		_mediaPlayer->setPosition(pos * _mediaPlayer->duration() / 1000);
+		_mediaPlayer->blockSignals(false);
 	});
 
 	// Time label
 	//connect()
 
 	// Volume
-	connect(volumeSlider, &QSlider::valueChanged, tabPlaylists->mediaPlayer(), &QMediaPlayer::setVolume);
+	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer, &QMediaPlayer::setVolume);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	connect(searchBar, SIGNAL(textEdited(QString)), library, SLOT(filterLibrary(QString)));
+	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 
 	// Playback
 	/// XXX

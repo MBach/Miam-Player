@@ -4,15 +4,8 @@
 #include <QFileInfo>
 #include <QMap>
 
-//#include <fileref.h>
-//#include <id3v2tag.h>
-//#include <tag.h>
-//#include <tlist.h>
-//#include <textidentificationframe.h>
-//#include <tstring.h>
-
 #include <filehelper.h>
-//#include "../MiamCore/filehelper.h"
+#include <settings.h>
 
 #include "libraryitemalbum.h"
 #include "libraryitemartist.h"
@@ -23,8 +16,6 @@
 
 #include <QSet>
 #include <QStandardItemModel>
-
-#include "settings.h"
 
 class LibraryModel : public QStandardItemModel
 {

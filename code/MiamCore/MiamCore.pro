@@ -34,7 +34,8 @@ SOURCES += \
     musicsearchengine.cpp \
     quickstartsearchengine.cpp \
     filehelper.cpp \
-    cover.cpp
+    cover.cpp \
+    mediaplayer.cpp
 
 HEADERS += \
     settings.h \
@@ -42,7 +43,8 @@ HEADERS += \
     quickstartsearchengine.h \
     filehelper.h \
     cover.h \
-    miamcore_global.h
+    miamcore_global.h \
+    mediaplayer.h
 
 unix:!symbian {
     target.path = /usr/lib
