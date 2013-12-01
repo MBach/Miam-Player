@@ -77,10 +77,10 @@ void LibraryModel::loadFromFile()
 			this->insertTrack(persistedItem.absoluteFilePath(), persistedItem.artist(), persistedItem.artistAlbum(), persistedItem.album(),
 							  persistedItem.text(), persistedItem.trackNumber(), persistedItem.discNumber(), persistedItem.year());
 			if (!persistedItem.coverFileName().isEmpty()) {
-				qDebug() << "cover is not empty. adding from file " << persistedItem.absoluteFilePath();
+				//qDebug() << "cover is not empty. adding from file " << persistedItem.absoluteFilePath();
 				this->addCoverPathToAlbum(persistedItem.absolutePath() + '/' + persistedItem.coverFileName());
 			} else {
-				qDebug() << "cover is empty. skipping file" << persistedItem.absoluteFilePath();
+				//qDebug() << "cover is empty. skipping file" << persistedItem.absoluteFilePath();
 			}
 		}
 		mmmmp.close();

@@ -37,14 +37,6 @@
 							<ShortcutProperty Key="System.AppUserModel.StartPinOption" Value="2"></ShortcutProperty>
 						</Shortcut> 
 					</Component>
-					<!--
-					<Component Id="CMP_PMSHORTCUT" Guid="{DD6856FD-9A1A-43F9-8564-936E915A9219}"> 
-						<Shortcut Id="PM_SHORTCUT" Name="aa" Target="[INSTALLLOCATION]\UsbCharge.exe" WorkingDirectory="INSTALLLOCATION" > 
-						  <ShortcutProperty Key="System.AppUserModel.ID" Value="bb"></ShortcutProperty> 
-						  <ShortcutProperty Key="System.AppUserModel.StartPinOption" Value="2"></ShortcutProperty> 
-						</Shortcut>  
-					</Component>
-					-->
 				</Directory>
 			</Directory>
 		</Directory>

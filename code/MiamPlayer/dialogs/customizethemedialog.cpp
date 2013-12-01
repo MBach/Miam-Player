@@ -37,10 +37,8 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	_animation->setDuration(200);
 	_animation->setTargetObject(this);
 
-
 	this->setupActions();
 	this->associatePaintableElements();
-	this->loadTheme();
 }
 
 void CustomizeThemeDialog::associatePaintableElements()
@@ -103,14 +101,9 @@ void CustomizeThemeDialog::setupActions()
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
 		if (checkBox) {
-			connect(checkBox, &QCheckBox::toggled, b, &MediaButton::setVisible);
-			connect(b, &MediaButton::visibilityChanged, [=] (bool value) {
-				settings->setValue(b->objectName(), value);
-				// The only buttons which are checkable are repeat and shuffle buttons
-				if (b->isCheckable() && !value) {
-					/// FIXME
-					//setRepeatPlayBack(value);
-				}
+			connect(checkBox, &QCheckBox::toggled, [=] (bool visible) {
+				b->setVisible(visible && !mainWindow->tagEditor->isVisible());
+				settings->setMediaButtonVisible(b->objectName(), visible);
 			});
 		}
 
@@ -308,7 +301,7 @@ void CustomizeThemeDialog::loadTheme()
 	flatButtonsCheckBox->setChecked(settings->buttonsFlat());
 
 	// Select the right drop-down item according to the theme
-	int i=0;
+	int i = 0;
 	while (settings->theme() != themeComboBox->itemText(i).toLower()) {
 		i++;
 	}
@@ -316,16 +309,12 @@ void CustomizeThemeDialog::loadTheme()
 
 	// Buttons
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
-		// Display or hide buttons in the main window interface
-		/// FIXME
-		//bool state = settings->isVisible(b);
-		bool state = true;
-		b->setVisible(state);
+		b->setVisible(settings->isMediaButtonVisible(b->objectName()));
 
 		// Check or uncheck checkboxes in this customize interface
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
 		if (checkBox) {
-			checkBox->setChecked(state);
+			checkBox->setChecked(settings->isMediaButtonVisible(b->objectName()));
 		}
 
 		// Display customs icons, if any
@@ -344,7 +333,7 @@ void CustomizeThemeDialog::loadTheme()
 	spinBoxMenus->setValue(settings->fontSize(Settings::MENUS));
 
 	// Library
-	checkBoxDisplayCovers->setChecked(settings->withCovers());
+	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
 	spinBoxCoverSize->setValue(settings->coverSize());
 
 	// Colors
@@ -354,7 +343,7 @@ void CustomizeThemeDialog::loadTheme()
 		disableAlternateBGRadioButton->setChecked(true);
 	}
 
-	if (settings->customColors()) {
+	if (settings->isCustomColors()) {
 		enableCustomColorsRadioButton->setChecked(true);
 	} else {
 		disableCustomColorsRadioButton->setChecked(true);

@@ -34,13 +34,13 @@ private:
 public:
 	CustomizeThemeDialog(QWidget *parent);
 
+	/** Load theme at startup. */
+	void loadTheme();
+
 private:
 	void associatePaintableElements();
 	void fade();
 	void setupActions();
-
-	/** Load theme at startup. */
-	void loadTheme();
 
 	void animate(qreal startValue, qreal stopValue);
 

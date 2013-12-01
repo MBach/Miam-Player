@@ -243,13 +243,11 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()
 {
-	//Settings *settings = Settings::getInstance();
 	foreach(MediaButton *b, parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
 		if (button) {
 			button->setIcon(b->icon());
-			///FIXME
-			//button->setEnabled(settings->isVisible(b));
+			button->setEnabled(b->isVisible());
 			button->setChecked(b->isChecked());
 		}
 	}

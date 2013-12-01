@@ -1,6 +1,7 @@
 #include "mediabutton.h"
 
 #include "mainwindow.h"
+#include <settings.h>
 
 #include <QtDebug>
 
@@ -53,9 +54,6 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	if (!icon.isNull()) {
 		this->setIcon(icon);
 	}
-	/*if (this->objectName().remove("Button") == "playbackMode") {
-		qDebug() << "ici";
-	}*/
 	emit mediaButtonChanged();
 }
 
@@ -65,13 +63,3 @@ void MediaButton::setSize(const int &s)
 	this->setIconSize(QSize(s, s));
 	emit mediaButtonChanged();
 }
-
-/** Override the QPushButton slot to add a write/read QSetting system. */
-void MediaButton::setVisible(bool visible)
-{
-	// Send a signal to write changes in QSettings object
-	emit visibilityChanged(visible);
-	QPushButton::setVisible(visible);
-}
-
-

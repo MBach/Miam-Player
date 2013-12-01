@@ -57,7 +57,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 {
 	Settings *settings = Settings::getInstance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	if (settings->withCovers() && item->type() == LibraryItem::Album) {
+	if (settings->isCoversEnabled() && item->type() == LibraryItem::Album) {
 		return QSize(settings->coverSize(), settings->coverSize() + 2);
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);

@@ -38,15 +38,14 @@ Settings* Settings::getInstance()
 	return settings;
 }
 
-/** Returns the actual theme name. */
-QString Settings::theme() const
+/** Returns the size of the buffer for a cover. */
+int Settings::bufferedCoverSize() const
 {
-	QString theme = value("theme").toString();
-	if (theme.isEmpty()) {
-		return "oxygen";
-	} else {
-		return theme;
+	int buffer = value("bufferedCoverSize").toInt();
+	if (buffer == 0) {
+		buffer = 128;
 	}
+	return buffer;
 }
 
 /** Return the actual size of media buttons. */
@@ -60,6 +59,7 @@ int Settings::buttonsSize() const
 	}
 }
 
+/** Returns true if buttons are displayed without any border. */
 bool Settings::buttonsFlat() const
 {
 	QVariant ok = value("buttonsFlat");
@@ -70,29 +70,45 @@ bool Settings::buttonsFlat() const
 	}
 }
 
-/** Returns true if the button in parameter is visible or not. */
-/*bool Settings::isVisible(MediaButton *b) const
+/** Returns true if the background color in playlist is using alternatative colors. */
+bool Settings::colorsAlternateBG() const
 {
-   QVariant ok = value(b->objectName());
-   if (ok.isValid()) {
-	   return ok.toBool();
-   } else {
-	   // For the first run, show buttons anyway
-	   return (b->objectName() != "pauseButton");
-   }
-}*/
-
-/** Returns the language of the application. */
-QString Settings::language()
-{
-	QString l = value("language").toString();
-	if (l.isEmpty()) {
-		l = QLocale::system().uiLanguages().first().left(2);
-		setValue("language", l);
-		return l;
+	QVariant b = value("colorsAlternateBG");
+	if (b.isValid()) {
+		return b.toBool();
 	} else {
-		return l;
+		return true;
 	}
+}
+
+bool Settings::copyTracksFromPlaylist() const
+{
+	return value("copyTracksFromPlaylist").toBool();
+}
+
+/** Returns the size of a cover. */
+int Settings::coverSize() const
+{
+	int size = value("coverSize").toInt();
+	if (size == 0) {
+		size = 48;
+	}
+	return size;
+}
+
+const QString Settings::customIcon(QPushButton *b, bool toggled) const
+{
+	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
+	if (toggled) {
+		return customIcons.value("pauseButton").toString();
+	} else {
+		return customIcons.value(b->objectName()).toString();
+	}
+}
+
+const QString Settings::dragAndDropBehaviour() const
+{
+	return value("dragAndDropBehaviour").toString();
 }
 
 /** Returns the font of the application. */
@@ -142,20 +158,25 @@ int Settings::fontSize(const FontFamily fontFamily)
 	return pointSize;
 }
 
-void Settings::setMusicLocations(const QStringList &locations)
+bool Settings::hasCustomIcon(QPushButton *b) const
 {
-	setValue("musicLocations", locations);
+	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
+	return customIcons.value(b->objectName()).toBool();
 }
 
-QStringList Settings::musicLocations() const {
-	QStringList list;
-	foreach (QVariant v, value("musicLocations").toList()) {
-		list.append(v.toString());
+Settings::InsertPolicy Settings::insertPolicy() const
+{
+	QVariant vPolicy = value("insertPolicy");
+	if (vPolicy.isNull()) {
+		return Artist;
+	} else {
+		int i = vPolicy.toInt();
+		return InsertPolicy(i);
 	}
-	return list;
 }
 
-bool Settings::withCovers() const
+/** Returns true if covers are displayed in the library. */
+bool Settings::isCoversEnabled() const
 {
 	if (value("covers").isNull()) {
 		return true;
@@ -164,34 +185,112 @@ bool Settings::withCovers() const
 	}
 }
 
-/** Returns the size of a cover. */
-int Settings::coverSize() const
+bool Settings::isCustomColors() const
 {
-	int size = value("coverSize").toInt();
-	if (size == 0) {
-		size = 48;
+	QVariant b = value("customColors");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
 	}
-	return size;
 }
 
-/** Returns the size of the buffer for a cover. */
-int Settings::bufferedCoverSize() const
+/** Returns true if the button in parameter is visible or not. */
+bool Settings::isMediaButtonVisible(const QString & buttonName) const
 {
-	int buffer = value("bufferedCoverSize").toInt();
-	if (buffer == 0) {
-		buffer = 128;
-	}
-	return buffer;
-}
-
-/** Returns volume from the slider. */
-int Settings::volume() const
-{
-   if (value("volume").isNull()) {
-	   return 90;
+   QVariant ok = value(buttonName);
+   if (ok.isValid()) {
+	   return ok.toBool();
    } else {
-	   return value("volume").toInt();
+	   // For the first run, show buttons anyway
+	   return (QString::compare(buttonName, "pauseButton") != 0);
    }
+}
+
+bool Settings::isStarDelegates() const
+{
+	return value("delegates").toBool();
+}
+
+/** Returns the language of the application. */
+QString Settings::language()
+{
+	QString l = value("language").toString();
+	if (l.isEmpty()) {
+		l = QLocale::system().uiLanguages().first().left(2);
+		setValue("language", l);
+		return l;
+	} else {
+		return l;
+	}
+}
+
+QStringList Settings::musicLocations() const
+{
+	QStringList list;
+	foreach (QVariant v, value("musicLocations").toList()) {
+		list.append(v.toString());
+	}
+	return list;
+}
+
+/// PlayBack options
+qint64 Settings::playbackSeekTime() const
+{
+	qint64 t = value("playbackSeekTime").toLongLong();
+	if (t == 0) {
+		return 5000;
+	} else {
+		return t;
+	}
+}
+
+bool Settings::playbackKeepPlaylists() const
+{
+	QVariant b = value("playbackKeepPlaylists");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
+QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
+{
+	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
+}
+
+void Settings::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state)
+{
+	columnStates = this->value("columnStateForPlaylist").toMap();
+	columnStates.insert(QString::number(playlistIndex), state);
+	this->setValue("columnStateForPlaylist", columnStates);
+}
+
+void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
+{
+	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
+	if (iconPath.isEmpty()) {
+		customIcons.remove(b->objectName());
+	} else {
+		customIcons.insert(b->objectName(), iconPath);
+	}
+	setValue("customIcons", customIcons);
+}
+
+void Settings::setInsertPolicy(InsertPolicy policy)
+{
+	setValue("insertPolicy", policy);
+}
+
+void Settings::setLanguage(const QString &lang)
+{
+	setValue("language", lang);
+}
+
+void Settings::setMusicLocations(const QStringList &locations)
+{
+	setValue("musicLocations", locations);
 }
 
 void Settings::setShortcut(const QString &objectName, int keySequence)
@@ -220,251 +319,122 @@ QMap<QString, QVariant> Settings::shortcuts() const
 	return value("shortcuts").toMap();
 }
 
-/** Sets if the button in parameter is visible or not. */
-/*void Settings::setVisible(MediaButton *b, const bool &value)
+/** Returns the actual theme name. */
+QString Settings::theme() const
 {
-	setValue(b->objectName(), value);
-	// The only buttons which are checkable are repeat and shuffle buttons
-	if (b->isCheckable() && !value) {
-		/// FIXME
-		//setRepeatPlayBack(value);
-	}
-}*/
-
-bool Settings::hasCustomIcon(QPushButton *b) const
-{
-	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
-	return customIcons.value(b->objectName()).toBool();
-}
-
-void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
-{
-	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
-	if (iconPath.isEmpty()) {
-		customIcons.remove(b->objectName());
+	QString theme = value("theme").toString();
+	if (theme.isEmpty()) {
+		return "oxygen";
 	} else {
-		customIcons.insert(b->objectName(), iconPath);
-	}
-	setValue("customIcons", customIcons);
-}
-
-const QString Settings::customIcon(QPushButton *b, bool toggled) const
-{
-	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
-	if (toggled) {
-		return customIcons.value("pauseButton").toString();
-	} else {
-		return customIcons.value(b->objectName()).toString();
+		return theme;
 	}
 }
 
-/// PlayBack options
-qint64 Settings::playbackSeekTime() const
+/** Returns volume from the slider. */
+int Settings::volume() const
 {
-	qint64 t = value("playbackSeekTime").toLongLong();
-	if (t == 0) {
-		return 5000;
-	} else {
-		return t;
-	}
+   if (value("volume").isNull()) {
+	   return 90;
+   } else {
+	   return value("volume").toInt();
+   }
 }
 
-bool Settings::playbackKeepPlaylists() const
+/// SLOTS
+
+/** Sets the size of the buffer for a cover. */
+void Settings::setBufferedCoverSize(int i)
 {
-	QVariant b = value("playbackKeepPlaylists");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	setValue("bufferedCoverSize", i);
+}
+
+/** Sets a new button size. */
+void Settings::setButtonsSize(const int &s)
+{
+	setValue("buttonsSize", s);
+}
+
+void Settings::setButtonsFlat(bool b)
+{
+	setValue("buttonsFlat", b);
 }
 
 /// Colors
-bool Settings::colorsAlternateBG() const
+void Settings::setColorsAlternateBG(bool b)
 {
-	QVariant b = value("colorsAlternateBG");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	setValue("colorsAlternateBG", b);
 }
 
-bool Settings::customColors() const
+void Settings::setCopyTracksFromPlaylist(bool b)
 {
-	QVariant b = value("customColors");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	setValue("copyTracksFromPlaylist", b);
 }
 
-/** Should move in specific files in .qrc */
-/*QString Settings::styleSheet(QWidget *w) const
+void Settings::setCovers(bool b)
 {
-	QString styleSheet;
+	setValue("covers", b);
+}
+
+void Settings::setCustomColors(bool b)
+{
+	setValue("customColors", b);
+}
+
+void Settings::setCustomStyleSheet(QWidget *w)
+{
 	QMap<QString, QVariant> map = value("styleSheet").toMap();
-	if (qobject_cast<Playlist*>(w) != NULL) {
-
-		styleSheet = map.value(Playlist::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = stylesheets[":/stylesheets/playlist"];
-		}
-
-	} else if (qobject_cast<TagEditorTableWidget*>(w) != NULL) {
-
-		styleSheet = map.value(TagEditorTableWidget::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = stylesheets[":/stylesheets/tageditor"];
-		}
-
-	} else if (qobject_cast<LibraryTreeView*>(w) != NULL) {
-
-		styleSheet = map.value(LibraryTreeView::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = stylesheets[":/stylesheets/librarytreeview"];
-		}
-
-	} else if (qobject_cast<QTreeView*>(w) != NULL) {
-
-		styleSheet = map.value(QTreeView::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = "QTreeView { padding: 1px; border: 1px solid grey; border-top: 0px; color: #000000; background-color: #ffffff; }";
-		}
-
-	} else if (qobject_cast<LibraryFilterLineEdit*>(w) != NULL) {
-
-		styleSheet = map.value(LibraryFilterLineEdit::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = "LibraryFilterLineEdit { background-color: #ffffff; border: 1px solid #d5d5d5; border-radius: 10px; padding-left: 6px; padding-right: %1px; }";
-		}
-
-	} else if (qobject_cast<QTabWidget*>(w) != NULL) {
-
-		styleSheet = map.value(QTabWidget::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			// The first selected tab has nothing to overlap with on the left
-//			styleSheet = "::tab:first:selected { margin-left: 0; } ";
-//			styleSheet += "::tab { padding-left: 10px; padding-right: 10px; padding-bottom: 2px; }";
-//			styleSheet += "::tab:first:!selected { margin-left: 2px; }";
-//			styleSheet += "::tab:!selected { padding-bottom: 0px; margin-top: 2px; border: 1px solid grey; ";
-//			styleSheet += "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #f2f2f2, stop:1 #cfcfcf); }";
-//			styleSheet += "::tab:selected { padding-top: 4px; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-left: -2px; margin-right: -2px; ";
-//			styleSheet += "border: 1px solid grey; border-bottom: 0px; color: #000000; background-color: #ffffff; }";
-			#if defined(Q_OS_WIN)
-			styleSheet += "::close-button { image: url(:/icons/closeTabs); }";
-			styleSheet += "::close-button:hover { image: url(:/icons/win/closeTabsHover); }";
-			#elif defined(Q_OS_UNIX)
-			styleSheet += "::close-button { image: url(:/icons/closeTabs); }";
-			styleSheet += "::close-button:hover { image: url(:/icons/unix/closeTabsHover); }";
-			#endif
-		}
-	} else if (qobject_cast<QHeaderView*>(w) != NULL) {
-
-		styleSheet = map.value(QHeaderView::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = "QHeaderView::section { padding-top: 4px; padding-bottom: 4px; border: 0px; border-bottom: 1px solid #d5d5d5; color: #000000; ";
-			styleSheet += "background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f0f0f0); }";
-		}
-
-	} else if (qobject_cast<MainWindow*>(w) != NULL) {
-
-		styleSheet = map.value(MainWindow::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = "MainWindow { background-color: #f0f0f0; }";
-		}
-
-	} else if (qobject_cast<QScrollBar*>(w) != NULL) {
-
-		styleSheet = map.value(QScrollBar::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = stylesheets[":/stylesheets/qscrollbar"];
-		}
-
-	} else if (qobject_cast<QSplitter*>(w) != NULL) {
-
-		styleSheet = map.value(QSplitter::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = "QSplitter { width: 3px; background-color: #f0f0f0; } ";
-			styleSheet += "QSplitter::handle { background-color: #f0f0f0; ";
-			styleSheet += "padding-top: 20px; padding-bottom: 20px; ";
-			styleSheet += "border: 0px; } ";
-		}
-
-	} else if (qobject_cast<MediaButton*>(w) != NULL) {
-
-//		styleSheet = map.value(MediaButton::staticMetaObject.className()).toString();
-//		if (styleSheet.isEmpty()) {
-//			styleSheet = "MediaButton:off { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ff0000, stop:1 #00ff00); } ";
-//		}
-
-//	} else if (qobject_cast<SeekSlider*>(w) != NULL) {
-
-//		styleSheet = map.value(SeekSlider::staticMetaObject.className()).toString();
-//		if (styleSheet.isEmpty()) {
-//			styleSheet = stylesheets[":/stylesheets/qslider"];
-//		}
-
-//	} else if (qobject_cast<VolumeSlider*>(w) != NULL) {
-
-//		styleSheet = map.value(VolumeSlider::staticMetaObject.className()).toString();
-//		if (styleSheet.isEmpty()) {
-//			styleSheet = stylesheets[":/stylesheets/qslider"];
-//		}
-
-
-	} else if (qobject_cast<QSlider*>(w) != NULL) {
-
-		styleSheet = map.value(QSlider::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = stylesheets[":/stylesheets/qslider"];
-		}
-
-	} else if (w == NULL) {
-
-		styleSheet = map.value(QWidget::staticMetaObject.className()).toString();
-		if (styleSheet.isEmpty()) {
-			styleSheet = "QWidget { border-left: 1px solid grey; border-right: 1px solid grey; background-color: #ffffff; }";
-		}
-
-	} else {
-
-		styleSheet = map.value(w->metaObject()->className()).toString();
-	}
-	return styleSheet;
-}*/
-
-void Settings::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state)
-{
-	columnStates = this->value("columnStateForPlaylist").toMap();
-	columnStates.insert(QString::number(playlistIndex), state);
-	this->setValue("columnStateForPlaylist", columnStates);
+	map.insert(w->metaObject()->className(), w->styleSheet());
+	this->setValue("styleSheet", map);
 }
 
-QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
+/** Sets if stars are visible and active. */
+void Settings::setDelegates(const bool &value)
 {
-	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
+	setValue("delegates", value);
 }
 
-Settings::InsertPolicy Settings::insertPolicy() const
+void Settings::setDragAndDropBehaviour()
 {
-	QVariant vPolicy = value("insertPolicy");
-	if (vPolicy.isNull()) {
-		return Artist;
-	} else {
-		int i = vPolicy.toInt();
-		return InsertPolicy(i);
-	}
+	setValue("dragAndDropBehaviour", sender()->objectName());
 }
 
-void Settings::setInsertPolicy(InsertPolicy policy)
+void Settings::setFont(const FontFamily &fontFamily, const QFont &font)
 {
-	setValue("insertPolicy", policy);
+	fontFamilyMap.insert(QString(fontFamily), font.family());
+	setValue("fontFamilyMap", fontFamilyMap);
+}
+
+/** Sets the font size of a part of the application. */
+void Settings::setFontPointSize(const FontFamily &fontFamily, int i)
+{
+	fontPointSizeMap.insert(QString(fontFamily), i);
+	setValue("fontPointSizeMap", fontPointSizeMap);
+}
+
+/** Sets if the button in parameter is visible or not. */
+void Settings::setMediaButtonVisible(const QString & buttonName, const bool &value)
+{
+	this->setValue(buttonName, value);
+}
+
+/// PlayBack options
+void Settings::setPlaybackSeekTime(int t)
+{
+	setValue("playbackSeekTime", t*1000);
+}
+
+void Settings::setPlaybackKeepPlaylists(bool b)
+{
+	setValue("playbackKeepPlaylists", b);
 }
 
 void Settings::setThemeName(const QString &theme)
 {
 	setValue("theme", theme.toLower());
 	emit themeHasChanged();
+}
+
+void Settings::setVolume(int v)
+{
+	setValue("volume", v);
 }

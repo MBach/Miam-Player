@@ -19,9 +19,6 @@ public:
 	void setObjectName(const QString &);
 
 signals:
-	/** Hide or show buttons from options. */
-	void visibilityChanged(bool visible);
-
 	void mediaButtonChanged();
 
 public slots:
@@ -30,9 +27,6 @@ public slots:
 
 	/** Change the size of icons from the options. */
 	void setSize(const int &);
-
-	/** Override the QPushButton slot to add a write/read QSetting system. */
-	void setVisible(bool visible);
 };
 
 #endif // MEDIABUTTON_H

@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Instantiate dialogs
 	customizeThemeDialog = new CustomizeThemeDialog(this);
+	customizeThemeDialog->loadTheme();
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 	playlistManager = new PlaylistManager(tabPlaylists);
 	dragDropDialog = new DragDropDialog(this);
@@ -429,8 +430,8 @@ void MainWindow::toggleTagEditor(bool b)
 	tabPlaylists->setVisible(!b);
 	seekSlider->setVisible(!b);
 	timeLabel->setVisible(!b);
-	foreach (MediaButton *mediaButton, mediaButtons) {
-		mediaButton->setVisible(!b);
+	foreach (MediaButton *button, mediaButtons) {
+		button->setVisible(!b && Settings::getInstance()->isMediaButtonVisible(button->objectName()));
 	}
 	volumeSlider->setVisible(!b);
 }
