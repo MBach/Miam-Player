@@ -31,18 +31,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
 
 	// Removing a playlist
-	/// FIXME
-	/*connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
-		if (_mediaPlayer->state() == QMediaPlayer::StoppedState) {
-			this->removeTabFromCloseButton(index);
-		} else {
-			// QMediaPlayer slots are asynchronous, therefore it's necessary to keep functions arguments
-			_nextAction = "RemovePlaylist";
-			_tabIndex = index;
-			_mediaPlayer->stop();
-		}
-	});*/
-	//connect(_mediaPlayer, &QMediaPlayer::stateChanged, this, &TabPlaylist::dispatchState);
+	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::removeTabFromCloseButton);
 
 	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
 		Settings *settings = Settings::getInstance();
@@ -59,6 +48,11 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	//connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &file) {
 	//	qDebug() << "file has changed:" << file;
 	//});
+}
+
+void TabPlaylist::setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer)
+{
+	_mediaPlayer = mediaPlayer;
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -130,7 +124,7 @@ Playlist* TabPlaylist::addPlaylist()
 	QString newPlaylistName = tr("Playlist ").append(QString::number(count()));
 
 	// Then append a new empty playlist to the others
-	Playlist *p = new Playlist(this);
+	Playlist *p = new Playlist(this, _mediaPlayer);
 	int i = insertTab(count(), p, newPlaylistName);
 
 	// If there's a custom stylesheet on the playlist, copy it from the previous one
@@ -140,8 +134,6 @@ Playlist* TabPlaylist::addPlaylist()
 		/// FIXME: stylesheet should be for Class, not instances
 		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
 	}
-	///FIXME
-	//connect(p, &QTableView::doubleClicked, this, &TabPlaylist::play);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
@@ -179,30 +171,7 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
-	bool isEmpty = currentPlayList()->mediaPlaylist()->isEmpty();
-
-	QList<QMediaContent> medias;
-	foreach (QString track, tracks) {
-		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
-	}
-	// If the track needs to be appended at the end
-	if (rowIndex == -1) {
-		rowIndex = currentPlayList()->mediaPlaylist()->mediaCount();
-	}
-	currentPlayList()->insertMedias(rowIndex, medias);
-
-	/*if (_watcher->files().count() + tracks.count() < 200) {
-		_watcher->addPaths(tracks);
-		qDebug() << "watching:" << tracks;
-	}*/
-
-	// Automatically plays the first track
-	if (isEmpty && !medias.isEmpty()) {
-		//setCurrentIndex();
-		//PlaylistModel *m = qobject_cast<PlaylistModel*>(currentPlayList()->model());
-		///FIXME
-		//this->play(m->item(0)->index());
-	}
+	currentPlayList()->insertMedias(rowIndex, tracks);
 }
 
 /** Remove a playlist when clicking on a close button in the corner. */
@@ -221,7 +190,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 	} else {
 		// Clear the content of first tab
 		currentPlayList()->mediaPlaylist()->clear();
-		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount()); // ok
+		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount());
 	}
 }
 
@@ -244,21 +213,6 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 	} else {
 		//currentPlayList()->countSelectedItems();
 		emit updatePlaybackModeButton();
-	}
-}
-
-void TabPlaylist::dispatchState(QMediaPlayer::State newState)
-{
-	if (newState == QMediaPlayer::StoppedState) {
-		if (_nextAction == "RemovePlaylist" && _tabIndex >= 0) {
-			_nextAction.clear();
-			qDebug() << "RemovePlaylist:" << _tabIndex;
-			this->removeTabFromCloseButton(_tabIndex);
-			_tabIndex = -1;
-		} else {
-			//qDebug() << "NOT RemovePlaylist";
-			//emit stateChanged(newState);
-		}
 	}
 }
 

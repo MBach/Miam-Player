@@ -22,8 +22,8 @@
 
 #include <QApplication>
 
-Playlist::Playlist(QWidget *parent) :
-	QTableView(parent), _dropDownIndex(NULL)
+Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
+	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL)
 {
 	qMediaPlaylist = new QMediaPlaylist(this);
 	_playlistModel = new PlaylistModel(this);
@@ -63,6 +63,21 @@ Playlist::Playlist(QWidget *parent) :
 	//verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
 	verticalHeader()->hide();
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
+
+	connect(this, &QTableView::doubleClicked, [=](const QModelIndex &track) {
+		_mediaPlayer.data()->setPlaylist(qMediaPlaylist);
+		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
+		_mediaPlayer.data()->play();
+	});
+
+	// Link core multimedia actions
+	connect(_mediaPlayer.data(), &QMediaPlayer::mediaStatusChanged, [=] (QMediaPlayer::MediaStatus status) {
+		if (status == QMediaPlayer::BufferedMedia) {
+			this->highlightCurrentTrack();
+		} else if (status == QMediaPlayer::EndOfMedia) {
+			_mediaPlayer.data()->skipForward();
+		}
+	});
 
 	// Context menu on tracks
 	trackProperties = new QMenu(this);
@@ -104,14 +119,24 @@ Playlist::Playlist(QWidget *parent) :
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
-	qDebug() << (qMediaPlaylist == NULL) << (_playlistModel == NULL);
 	qMediaPlaylist->insertMedia(rowIndex, medias);
-	qDebug() << (qMediaPlaylist == NULL) << (_playlistModel == NULL);
 	_playlistModel->insertMedias(rowIndex, medias);
-	qDebug() << (qMediaPlaylist == NULL) << (_playlistModel == NULL);
-	resizeColumnToContents(TRACK_NUMBER);
-	resizeColumnToContents(RATINGS);
-	resizeColumnToContents(YEAR);
+	this->resizeColumnToContents(TRACK_NUMBER);
+	this->resizeColumnToContents(RATINGS);
+	this->resizeColumnToContents(YEAR);
+}
+
+void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
+{
+	QList<QMediaContent> medias;
+	foreach (QString track, tracks) {
+		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
+	}
+	// If the track needs to be appended at the end
+	if (rowIndex == -1) {
+		rowIndex = qMediaPlaylist->mediaCount();
+	}
+	this->insertMedias(rowIndex, medias);
 }
 
 QSize Playlist::minimumSizeHint() const

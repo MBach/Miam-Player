@@ -4,7 +4,6 @@
 #include <QDir>
 #include <QTabWidget>
 #include <QMouseEvent>
-#include <QtMultimedia/QMediaPlayer>
 
 #include "playlist.h"
 #include "tracksnotfoundmessagebox.h"
@@ -12,6 +11,7 @@
 #include "mediabutton.h"
 
 //#include <QFileSystemWatcher>
+#include <mediaplayer.h>
 
 class TabPlaylist : public QTabWidget
 {
@@ -27,6 +27,8 @@ private:
 
 	/** Test: used to simulate a callback.*/
 	int _tabIndex;
+
+	QWeakPointer<MediaPlayer> _mediaPlayer;
 
 public:
 	/** Default constructor. */
@@ -45,6 +47,8 @@ public:
 		}
 		return _playlists;
 	}
+
+	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
 protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
@@ -77,12 +81,8 @@ private slots:
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
 
-	void dispatchState(QMediaPlayer::State newState);
-
 	/** Save playlists before exit. */
 	void savePlaylists();
-
-	//void play(const QModelIndex &index);
 
 signals:
 	void destroyed(int);

@@ -2,11 +2,12 @@
 #define PLAYLIST_H
 
 #include <QMediaPlaylist>
-#include <QMediaPlayer>
 #include <QMenu>
 #include <QTableView>
 
 #include "playlistmodel.h"
+
+#include <mediaplayer.h>
 
 class Playlist : public QTableView
 {
@@ -21,6 +22,8 @@ private:
 
 	/** Each instance of Playlist has its own QMediaPlaylist*/
 	QMediaPlaylist *qMediaPlaylist;
+
+	QWeakPointer<MediaPlayer> _mediaPlayer;
 
 	QModelIndex *_dropDownIndex;
 
@@ -39,11 +42,13 @@ public:
 				 RATINGS = 5,
 				 YEAR = 6};
 
-	Playlist(QWidget *parent);
+	Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer);
 
 	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
+
+	void insertMedias(int rowIndex, const QStringList &tracks);
 
 	QSize minimumSizeHint() const;
 

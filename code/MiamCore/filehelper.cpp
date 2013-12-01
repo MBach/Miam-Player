@@ -307,7 +307,6 @@ int FileHelper::rating() const
 						break;
 					}
 				}
-				qDebug() << "ici";
 			}
 		} else if (mpegFile->ID3v1Tag()) {
 			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";

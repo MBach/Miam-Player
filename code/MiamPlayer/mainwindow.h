@@ -38,7 +38,7 @@ private:
 	PlaylistManager *playlistManager;
 	DragDropDialog *dragDropDialog;
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
-	MediaPlayer *_mediaPlayer;
+	QSharedPointer<MediaPlayer> _mediaPlayer;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

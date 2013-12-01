@@ -4,22 +4,16 @@
 #include "basicplugininterface.h"
 
 #include <QMainWindow>
-#include <QMediaPlayer>
+#include <mediaplayer.h>
 
 class MediaPlayerPluginInterface : public BasicPluginInterface
 {
 public:
 	virtual ~MediaPlayerPluginInterface() {}
 
-	virtual void setMainWindow(QMainWindow *) const = 0;
+	virtual void setMainWindow(QMainWindow *) = 0;
 
-	virtual void setMediaPlayer(QMediaPlayer *) const = 0;
-
-//signals:
-//	void pause();
-//	void play();
-//	void skip(bool forward);
-//	void stop();
+	virtual void setMediaPlayer(QWeakPointer<MediaPlayer>) = 0;
 };
 QT_BEGIN_NAMESPACE
 
