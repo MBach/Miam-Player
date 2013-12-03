@@ -12,7 +12,6 @@ SOURCES += \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
     treeview.cpp \
-    library/libraryfilterlineedit.cpp \
     library/libraryfilterproxymodel.cpp \
     library/libraryitem.cpp \
     library/libraryitemdelegate.cpp \
@@ -60,7 +59,6 @@ HEADERS += \
     treeview.h \
     library/extendedtabbar.h \
     library/extendedtabwidget.h \
-    library/libraryfilterlineedit.h \
     library/libraryfilterproxymodel.h \
     library/libraryitem.h \
     library/libraryitemalbum.h \
@@ -77,7 +75,6 @@ HEADERS += \
     tracksnotfoundmessagebox.h \
     quickstart.h \
     timelabel.h \
-    basicplugininterface.h \
     columnutils.h \
     nofocusitemdelegate.h \
     playbackmodewidget.h \
@@ -103,8 +100,6 @@ HEADERS += \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
-    interfaces/basicplugininterface.h \
-    interfaces/mediaplayerplugininterface.h \
     library/librarymodel.h
 
 FORMS += \
@@ -148,19 +143,22 @@ TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_zh.ts
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -llibtag
+    win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -llibtag -lMiamCore -lMiamUniqueLibrary
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
 }
 
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -llibtag
+    win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -L$$OUT_PWD/../MiamUniqueLibrary/release/ -llibtag -lMiamCore -lMiamUniqueLibrary
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
 }
-unix: LIBS += -L$$OUT_PWD/../MiamCore/ -lMiamCore -ltag
+unix: LIBS += -L$$OUT_PWD/../MiamCore/ -L$$OUT_PWD/../MiamUniqueLibrary/ -ltag -lMiamCore -lMiamUniqueLibrary
 
-INCLUDEPATH += $$PWD/../MiamCore/
+INCLUDEPATH += $$PWD/../MiamCore
+INCLUDEPATH += $$PWD/../MiamUniqueLibrary
+
 DEPENDPATH += $$PWD/../MiamCore
+DEPENDPATH += $$PWD/../MiamUniqueLibrary

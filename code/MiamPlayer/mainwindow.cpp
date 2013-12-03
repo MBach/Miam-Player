@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
 	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
+	_uniqueLibrary = new UniqueLibrary(this);
+	stackedWidget->addWidget(_uniqueLibrary);
+	_uniqueLibrary->hide();
 	volumeSlider->setValue(settings->volume());
 
 	// Init shortcuts
@@ -95,6 +98,7 @@ void MainWindow::loadPlugins()
 			QPluginLoader pluginLoader(appDirPath.absoluteFilePath(it.fileName()), this);
 			QObject *plugin = pluginLoader.instance();
 			if (plugin) {
+				qDebug() << "what plugin is it?";
 				BasicPluginInterface *basic = dynamic_cast<BasicPluginInterface *>(plugin);
 				if (basic) {
 					// Attach a new config page it the plugin provides one
@@ -113,15 +117,9 @@ void MainWindow::loadPlugins()
 
 				/// XXX Make a dispatcher for other types of plugins?
 				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
-					mediaPlayerPlugin->setMainWindow(this);
+					qDebug() << "MediaPlayerPluginInterface";
 					mediaPlayerPlugin->setMediaPlayer(_mediaPlayer);
 					qDebug() << "MediaPlayerPluginInterface";
-					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::skip, [=](bool forward) {
-					//	tabPlaylists->skip(forward);
-					//});
-					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::stop, _mediaPlayer, &QMediaPlayer::stop);
-					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::play, _mediaPlayer, &QMediaPlayer::play);
-					//connect(mediaPlayerPlugin, &MediaPlayerPluginInterface::pause, _mediaPlayer, &QMediaPlayer::pause);
 				}
 			} else {
 				qDebug() << "plugin was NOT loaded !" << it.fileName();
@@ -145,6 +143,8 @@ void MainWindow::updateFonts(const QFont &font)
 	}
 }
 
+#include <QAction>
+
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
@@ -153,10 +153,23 @@ void MainWindow::setupActions()
 		this->drawLibrary(true);
 	});
 
+	// Adds a group where view mode are mutually exclusive
+	QActionGroup *viewModeGroup = new QActionGroup(this);
+	actionPlaylistMode->setActionGroup(viewModeGroup);
+	actionPlaylistMode->setData(QVariant(0));
+	actionUniqueLibraryMode->setActionGroup(viewModeGroup);
+	actionUniqueLibraryMode->setData(QVariant(1));
+
+	/// TODO: A sample plugin to append a new view (let's say in QML with QQuickControls?)
+	connect(viewModeGroup, &QActionGroup::triggered, [=](QAction* action) {
+		stackedWidget->setCurrentIndex(action->data().toInt());
+	});
+
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
 	foreach(QAction *actionPlayBack, findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
 		actionPlaybackGroup->addAction(actionPlayBack);
 	}
+
 	/// TODO
 	/// Update QMenu when one switches from a playlist to another
 

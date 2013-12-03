@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>768</height>
+    <width>903</width>
+    <height>907</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,133 +17,29 @@
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QHBoxLayout" name="centralLayout">
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="ExtendedTabWidget" name="leftTabs">
-       <property name="currentIndex">
-        <number>0</number>
-       </property>
-       <property name="documentMode">
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="tabLibrary">
-        <property name="styleSheet">
-         <string notr="true">QWidget#tabLibrary { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f0f0f0); }</string>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <widget class="QWidget" name="defaultPage">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>0</number>
         </property>
-        <attribute name="title">
-         <string>Library</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QWidget" name="widgetSearchBar" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>20</height>
-            </size>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="LibraryFilterLineEdit" name="searchBar">
-              <property name="maxLength">
-               <number>100</number>
-              </property>
-              <property name="placeholderText">
-               <string>Search...</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="LibraryTreeView" name="library">
-           <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
-           </property>
-           <property name="dragEnabled">
-            <bool>true</bool>
-           </property>
-           <property name="dragDropMode">
-            <enum>QAbstractItemView::DragOnly</enum>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::ExtendedSelection</enum>
-           </property>
-           <property name="sortingEnabled">
-            <bool>true</bool>
-           </property>
-           <property name="expandsOnDoubleClick">
-            <bool>false</bool>
-           </property>
-           <attribute name="headerShowSortIndicator" stdset="0">
-            <bool>true</bool>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QuickStart" name="quickStart" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">#quickStart { border-left: #ACACAC; border-bottom: #ACACAC; border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="tabFileExplorer">
-        <attribute name="title">
-         <string>File explorer</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="AddressBar" name="addressBar" native="true"/>
-         </item>
-         <item>
-          <widget class="FileSystemTreeView" name="filesystem">
-           <property name="styleSheet">
-            <string notr="true">margin: -1px;</string>
-           </property>
-           <property name="dragEnabled">
-            <bool>true</bool>
-           </property>
-           <property name="dragDropMode">
-            <enum>QAbstractItemView::DragOnly</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="widgetMediaObjects" native="true">
-       <layout class="QVBoxLayout" name="verticalLayout">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -153,214 +49,368 @@
         <property name="rightMargin">
          <number>0</number>
         </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <widget class="TagEditor" name="tagEditor" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="TabPlaylist" name="tabPlaylists"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="seekSliderLayout">
-          <property name="rightMargin">
-           <number>10</number>
-          </property>
-          <item>
-           <widget class="QSlider" name="seekSlider">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="maximum">
-             <number>999</number>
-            </property>
-            <property name="singleStep">
-             <number>10</number>
-            </property>
-            <property name="pageStep">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="TimeLabel" name="timeLabel">
-            <property name="text">
-             <string notr="true">--:--</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_buttons">
-          <property name="rightMargin">
-           <number>10</number>
-          </property>
-          <item>
-           <widget class="MediaButton" name="skipBackwardButton">
+          <widget class="ExtendedTabWidget" name="leftTabs">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="documentMode">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="tabLibrary">
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">QWidget#tabLibrary { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f0f0f0); }</string>
             </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
+            <attribute name="title">
+             <string>Library</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QWidget" name="widgetSearchBar" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <item>
+                 <widget class="LibraryFilterLineEdit" name="searchBar">
+                  <property name="maxLength">
+                   <number>100</number>
+                  </property>
+                  <property name="placeholderText">
+                   <string>Search...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="LibraryTreeView" name="library">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::DragOnly</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="sortingEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="expandsOnDoubleClick">
+                <bool>false</bool>
+               </property>
+               <attribute name="headerShowSortIndicator" stdset="0">
+                <bool>true</bool>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QuickStart" name="quickStart" native="true">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">#quickStart { border-left: #ACACAC; border-bottom: #ACACAC; border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
-          </item>
-          <item>
-           <widget class="MediaButton" name="seekBackwardButton">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
+           <widget class="QWidget" name="tabFileExplorer">
+            <attribute name="title">
+             <string>File explorer</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="AddressBar" name="addressBar" native="true"/>
+             </item>
+             <item>
+              <widget class="FileSystemTreeView" name="filesystem">
+               <property name="styleSheet">
+                <string notr="true">margin: -1px;</string>
+               </property>
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::DragOnly</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
-          </item>
-          <item>
-           <widget class="MediaButton" name="playButton">
-            <property name="text">
-             <string notr="true"/>
+          </widget>
+          <widget class="QWidget" name="widgetMediaObjects" native="true">
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="leftMargin">
+             <number>0</number>
             </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
+            <property name="topMargin">
+             <number>0</number>
             </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
+            <property name="rightMargin">
+             <number>0</number>
             </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="MediaButton" name="stopButton">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="MediaButton" name="seekForwardButton">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="MediaButton" name="skipForwardButton">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="MediaButton" name="playbackModeButton">
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="icon">
-             <iconset resource="mmmmp.qrc">
-              <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>36</width>
-              <height>36</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSlider" name="volumeSlider">
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
+            <item>
+             <widget class="TagEditor" name="tagEditor" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="TabPlaylist" name="tabPlaylists"/>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="seekSliderLayout">
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QSlider" name="seekSlider">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="maximum">
+                 <number>999</number>
+                </property>
+                <property name="singleStep">
+                 <number>10</number>
+                </property>
+                <property name="pageStep">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="TimeLabel" name="timeLabel">
+                <property name="text">
+                 <string notr="true">--:--</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="MediaButton" name="skipBackwardButton">
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="MediaButton" name="seekBackwardButton">
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="MediaButton" name="playButton">
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="MediaButton" name="stopButton">
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="MediaButton" name="seekForwardButton">
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="MediaButton" name="skipForwardButton">
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="MediaButton" name="playbackModeButton">
+                <property name="text">
+                 <string notr="true"/>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>36</width>
+                  <height>36</height>
+                 </size>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSlider" name="volumeSlider">
+                <property name="maximum">
+                 <number>100</number>
+                </property>
+                <property name="value">
+                 <number>100</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -373,9 +423,12 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1024</width>
+     <width>903</width>
      <height>25</height>
     </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
@@ -438,8 +491,16 @@
     <addaction name="actionIncreaseVolume"/>
     <addaction name="actionDecreaseVolume"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionPlaylistMode"/>
+    <addaction name="actionUniqueLibraryMode"/>
+   </widget>
    <addaction name="menuMenu"/>
    <addaction name="menuOptions"/>
+   <addaction name="menuView"/>
    <addaction name="menuPlayback"/>
    <addaction name="menuPlaylist"/>
    <addaction name="menuHelp"/>
@@ -621,6 +682,25 @@
     <string>Current item in &amp;loop</string>
    </property>
   </action>
+  <action name="actionPlaylistMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Playlist Mode</string>
+   </property>
+  </action>
+  <action name="actionUniqueLibraryMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Unique library Mode</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -632,11 +712,6 @@
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header>mediabutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>LibraryFilterLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>library/libraryfilterlineedit.h</header>
   </customwidget>
   <customwidget>
    <class>TagEditor</class>
@@ -678,119 +753,14 @@
    <header>playlists/tabplaylist.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>LibraryFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">libraryfilterlineedit.h</header>
+  </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>leftTabs</tabstop>
-  <tabstop>searchBar</tabstop>
-  <tabstop>library</tabstop>
-  <tabstop>tabPlaylists</tabstop>
-  <tabstop>skipBackwardButton</tabstop>
-  <tabstop>seekBackwardButton</tabstop>
-  <tabstop>playButton</tabstop>
-  <tabstop>stopButton</tabstop>
-  <tabstop>seekForwardButton</tabstop>
-  <tabstop>skipForwardButton</tabstop>
-  <tabstop>filesystem</tabstop>
- </tabstops>
  <resources>
   <include location="mmmmp.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>actionSkipBackward</sender>
-   <signal>triggered()</signal>
-   <receiver>skipBackwardButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>390</x>
-     <y>732</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSeekBackward</sender>
-   <signal>triggered()</signal>
-   <receiver>seekBackwardButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>461</x>
-     <y>732</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionPlay</sender>
-   <signal>triggered()</signal>
-   <receiver>playButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>531</x>
-     <y>732</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionStop</sender>
-   <signal>triggered()</signal>
-   <receiver>stopButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>602</x>
-     <y>732</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSeekForward</sender>
-   <signal>triggered()</signal>
-   <receiver>seekForwardButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>672</x>
-     <y>732</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSkipForward</sender>
-   <signal>triggered()</signal>
-   <receiver>skipForwardButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>743</x>
-     <y>732</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

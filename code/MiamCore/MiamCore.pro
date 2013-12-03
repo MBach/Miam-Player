@@ -22,11 +22,11 @@ QMAKE_CXXFLAGS += -std=c++11
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/debug/ -llibtag
-    unix: LIBS += -L$$OUT_PWD/debug/ -ltag
+    unix: LIBS += -L$$OUT_PWD -ltag
 }
 CONFIG(release, debug|release) {
     win32: LIBS += -L$$OUT_PWD/release/ -llibtag
-    unix: LIBS += -L$$OUT_PWD/release/ -ltag
+    unix: LIBS += -L$$OUT_PWD -ltag
 }
 
 SOURCES += \
@@ -35,7 +35,8 @@ SOURCES += \
     quickstartsearchengine.cpp \
     filehelper.cpp \
     cover.cpp \
-    mediaplayer.cpp
+    mediaplayer.cpp \
+    libraryfilterlineedit.cpp
 
 HEADERS += \
     settings.h \
@@ -44,7 +45,10 @@ HEADERS += \
     filehelper.h \
     cover.h \
     miamcore_global.h \
-    mediaplayer.h
+    mediaplayer.h \
+    interfaces/basicplugininterface.h \
+    interfaces/mediaplayerplugininterface.h \
+    libraryfilterlineedit.h
 
 unix:!symbian {
     target.path = /usr/lib

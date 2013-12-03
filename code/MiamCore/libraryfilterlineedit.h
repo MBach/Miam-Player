@@ -3,7 +3,9 @@
 
 #include <QLineEdit>
 
-class LibraryFilterLineEdit : public QLineEdit
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY LibraryFilterLineEdit : public QLineEdit
 {
 	Q_OBJECT
 

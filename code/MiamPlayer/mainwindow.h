@@ -13,6 +13,8 @@
 #include <mediaplayer.h>
 #include "playbackmodewidgetfactory.h"
 
+#include "uniquelibrary.h"
+
 /// Need to use this forward declaration (circular inclusion)
 class CustomizeThemeDialog;
 
@@ -39,16 +41,12 @@ private:
 	DragDropDialog *dragDropDialog;
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 	QSharedPointer<MediaPlayer> _mediaPlayer;
+	UniqueLibrary *_uniqueLibrary;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
 	QAudioOutput *audioOutput;
-
-	// MP3 actions
-	QAction *actionPlay;
-	QAction *actionPause;
-	QAction *actionStop;
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */

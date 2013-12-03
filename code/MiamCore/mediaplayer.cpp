@@ -10,22 +10,6 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 	this->setNotifyInterval(100);
 }
 
-/*void MediaPlayer::play(const QModelIndex &index)
-{
-	if (state() == QMediaPlayer::PlayingState) {
-		blockSignals(true);
-		stop();
-		setPlaylist(currentPlayList()->mediaPlaylist());
-		currentPlayList()->mediaPlaylist()->setCurrentIndex(index.row());
-		play();
-		blockSignals(false);
-	} else {
-		setPlaylist(currentPlayList()->mediaPlaylist());
-		currentPlayList()->mediaPlaylist()->setCurrentIndex(index.row());
-		play();
-	}
-}*/
-
 /** Seek backward in the current playing track for a small amount of time. */
 void MediaPlayer::seekBackward()
 {
@@ -54,30 +38,16 @@ void MediaPlayer::seekForward()
 
 void MediaPlayer::skipBackward()
 {
-	//setPlaylist(currentPlayList()->mediaPlaylist());
-	if (state() == QMediaPlayer::PlayingState) {
-		blockSignals(true);
-		stop();
+	if (playlist()) {
 		playlist()->previous();
 		play();
-		blockSignals(false);
-	} else {
-		//currentPlayList()->mediaPlaylist()->previous();
-		playlist()->previous();
 	}
 }
 
 void MediaPlayer::skipForward()
 {
-	//setPlaylist(currentPlayList()->mediaPlaylist());
-	if (state() == QMediaPlayer::PlayingState) {
-		blockSignals(true);
-		stop();
+	if (playlist()) {
 		playlist()->next();
 		play();
-		blockSignals(false);
-	} else {
-		//currentPlayList()->mediaPlaylist()->next();
-		playlist()->next();
 	}
 }
