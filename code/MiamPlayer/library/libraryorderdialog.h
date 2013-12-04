@@ -5,7 +5,7 @@
 
 #include "ui_libraryorderdialog.h"
 
-#include "librarymodel.h"
+#include <model/librarymodel.h>
 
 class LibraryOrderDialog : public QDialog, public Ui::LibraryOrderDialog
 {

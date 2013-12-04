@@ -1,6 +1,6 @@
 #include "librarytreeview.h"
 #include "settings.h"
-#include "libraryitem.h"
+#include <model/libraryitem.h>
 
 #include <QApplication>
 #include <QDirIterator>
@@ -14,18 +14,13 @@
 #include <QtDebug>
 
 #include "library/libraryitemdelegate.h"
-#include "library/libraryorderdialog.h"
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent)
+	TreeView(parent), _libraryModel(NULL)
 {
-	libraryModel = new LibraryModel(this);
-	proxyModel = new LibraryFilterProxyModel(this);
-	proxyModel->setSourceModel(libraryModel);
-
 	Settings *settings = Settings::getInstance();
+	_currentInsertPolicy = settings->insertPolicy();
 
-	this->setModel(proxyModel);
 	///FIXME
 	//this->setStyleSheet(settings->styleSheet(this));
 	//this->header()->setStyleSheet(settings->styleSheet(this->header()));
@@ -34,29 +29,20 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	int iconSize = settings->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
 
-	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
-
-	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
-
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
+	proxyModel = new LibraryFilterProxyModel(this);
+
 	// One can choose a hierarchical order for drawing the library
-	LibraryOrderDialog *lod = new LibraryOrderDialog(this);
-	lod->setModel(libraryModel);
+	_lod = new LibraryOrderDialog(this);
 	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
-		lod->move(mapToGlobal(pos));
-		lod->show();
+		_lod->move(mapToGlobal(pos));
+		_lod->show();
 	});
-	connect(lod, &LibraryOrderDialog::aboutToRedrawLibrary, this, &LibraryTreeView::beginPopulateTree);
+	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, this, &LibraryTreeView::beginPopulateTree);
 
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
-
-	QThread *worker = new QThread();
-	MusicSearchEngine *musicSearchEngine = new MusicSearchEngine();
-	connect(this, &LibraryTreeView::searchMusic, musicSearchEngine, &MusicSearchEngine::doSearch);
-	musicSearchEngine->moveToThread(worker);
-	worker->start();
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Properties"), this);
@@ -66,16 +52,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
-	connect(musicSearchEngine, &MusicSearchEngine::scannedCover, libraryModel, &LibraryModel::addCoverPathToAlbum);
-	connect(musicSearchEngine, &MusicSearchEngine::scannedFiled, libraryModel, &LibraryModel::readFile, Qt::BlockingQueuedConnection);
-	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, circleProgressBar, &QProgressBar::setValue);
-
-	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, &LibraryTreeView::endPopulateTree);
-	connect(libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
-
-	// When the scan is complete, save the model in the filesystem
-	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, libraryModel, &LibraryModel::saveToFile);
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
@@ -84,10 +60,192 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	sortByColumn(0, Qt::AscendingOrder);
 }
 
+void LibraryTreeView::init()
+{
+	Settings *settings = Settings::getInstance();
+
+	proxyModel->setSourceModel(_libraryModel);
+	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
+	_lod->setModel(_libraryModel);
+
+	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
+
+	connect(_libraryModel, &LibraryModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
+	connect(_libraryModel, &LibraryModel::searchHasEnded, this, &LibraryTreeView::endPopulateTree);
+
+	// Build a tree directly by scanning the hard drive or from a previously saved file
+	connect(_libraryModel, &LibraryModel::trackCreated, this, &LibraryTreeView::insertTrack2);
+	connect(_libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
+
+	qDebug() << Q_FUNC_INFO;
+}
+
+void LibraryTreeView::insertLetter(const QString &letters)
+{
+	if (!letters.isEmpty()) {
+		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
+		QString letter;
+		if (c.contains(QRegExp("\\w"))) {
+			letter = c;
+		} else {
+			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
+			letter = tr(" Various");
+		}
+		if (!_letters.contains(letter)) {
+			_letters.insert(letter);
+			_libraryModel->invisibleRootItem()->appendRow(new LibraryItemLetter(letter));
+		}
+	}
+}
+
+void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
+							   const QString &title, int trackNumber, int discNumber, int year)
+{
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	LibraryItemArtist *itemArtist = NULL;
+	LibraryItemAlbum *itemAlbum = NULL;
+	LibraryItemTrack *itemTrack = NULL;
+	LibraryItem *itemYear = NULL;
+	LibraryItemDiscNumber *itemDiscNumber = NULL;
+
+	QFileInfo fileInfo(absFilePath);
+	static bool existingArtist = true;
+	switch (_currentInsertPolicy) {
+	case Settings::Artist:
+		// Level 1
+		if (_artists.contains(theArtist.toLower())) {
+			itemArtist = _artists.value(theArtist.toLower());
+			existingArtist = true;
+		} else {
+			itemArtist = new LibraryItemArtist(theArtist);
+			_artists.insert(theArtist.toLower(), itemArtist);
+			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
+			this->insertLetter(theArtist);
+			existingArtist = false;
+		}
+		// Level 2
+		if (existingArtist && _albums.contains(QPair<LibraryItemArtist*, QString>(itemArtist, album))) {
+			itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
+		} else {
+			itemAlbum = new LibraryItemAlbum(album);
+			qDebug() << "creating a new album by" << theArtist << ":" << album;
+			_albums.insert(QPair<LibraryItemArtist *, QString>(itemArtist, album), itemAlbum);
+			itemArtist->appendRow(itemAlbum);
+		}
+		// Level 3 (option)
+		if (discNumber > 0 && !_discNumbers.contains(QPair<LibraryItemAlbum*, int>(itemAlbum, discNumber))) {
+			itemDiscNumber = new LibraryItemDiscNumber(discNumber);
+			_discNumbers.insert(QPair<LibraryItemAlbum *, int>(itemAlbum, discNumber), itemDiscNumber);
+			itemAlbum->appendRow(itemDiscNumber);
+		}
+		// Level 3
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new LibraryItemTrack(title);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case Settings::Album:
+		// Level 1
+		if (_albums2.contains(album)) {
+			itemAlbum = _albums2.value(album);
+		} else {
+			itemAlbum = new LibraryItemAlbum(album);
+			_albums2.insert(album, itemAlbum);
+			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
+			this->insertLetter(album);
+		}
+		// Level 2
+		itemTrack = new LibraryItemTrack(title);
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case Settings::ArtistAlbum:
+		// Level 1
+		if (_albums2.contains(theArtist + album)) {
+			itemAlbum = _albums2.value(theArtist + album);
+		} else {
+			itemAlbum = new LibraryItemAlbum(theArtist + " – " + album);
+			_albums2.insert(theArtist + album, itemAlbum);
+			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
+			this->insertLetter(theArtist);
+		}
+		// Level 2
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new LibraryItemTrack(title);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case Settings::Year:
+		// Level 1
+		if (_years.contains(year)) {
+			itemYear = _years.value(year);
+		} else {
+			if (year > 0) {
+				itemYear = new LibraryItem(QString::number(year));
+			} else {
+				itemYear = new LibraryItem();
+			}
+			_years.insert(year, itemYear);
+			_libraryModel->invisibleRootItem()->appendRow(itemYear);
+		}
+		// Level 2
+		if (_albums2.contains(theArtist + album)) {
+			itemAlbum = _albums2.value(theArtist + album);
+		} else {
+			itemAlbum = new LibraryItemAlbum(theArtist + " – " + album);
+			_albums2.insert(theArtist + album, itemAlbum);
+			itemYear->appendRow(itemAlbum);
+		}
+		// Level 3
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new LibraryItemTrack(title);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	}
+	QString absolutePath = fileInfo.absolutePath();
+	itemTrack->setAbsoluteFilePath(fileInfo.absolutePath(), fileInfo.fileName());
+	itemTrack->setDiscNumber(discNumber);
+	itemTrack->setTrackNumber(trackNumber);
+
+	PersistentItem *persistentItem = new PersistentItem(itemTrack);
+	if (itemAlbum != NULL && itemAlbum->persistentItem() == NULL && !_albumsAbsPath.contains(absolutePath)) {
+		itemAlbum->setAbsolutePath(absolutePath);
+		itemAlbum->setPersistentItem(persistentItem);
+		itemAlbum->setYear(year);
+		qDebug() << "creating a new album" << itemAlbum->text() << ", persist" << persistentItem->text();
+		_albumsAbsPath.insert(absolutePath, itemAlbum);
+	}
+	if (itemAlbum) {
+		persistentItem->setAlbum(album);
+	}
+	persistentItem->setArtist(artist);
+	persistentItem->setArtistAlbum(theArtist);
+	persistentItem->setYear(year);
+	//_persistentItems.insert(persistentItem);
+}
+
+void LibraryTreeView::insertTrack2(PersistentItem *item)
+{
+	/// TODO
+	qDebug() << item->absoluteFilePath();
+}
+
+void LibraryTreeView::setModel(QAbstractItemModel *model)
+{
+	_libraryModel = qobject_cast<LibraryModel*>(model);
+	TreeView::setModel(proxyModel);
+}
+
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	LibraryItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
+	LibraryItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
@@ -113,7 +271,7 @@ int LibraryTreeView::count(const QModelIndex &index) const
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
-		QStandardItem *item = libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		int tmp = 0;
 		for (int i = 0; i < item->rowCount(); i++) {
 			tmp += count(index.child(i, 0));
@@ -139,7 +297,7 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
-		LibraryItem *item = libraryModel->itemFromIndex(sourceIndex);
+		LibraryItem *item = _libraryModel->itemFromIndex(sourceIndex);
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
@@ -155,8 +313,9 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 /** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
 void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 {
-	circleProgressBar->show();
-	libraryModel->clear();
+	//circleProgressBar->show();
+	/// XXX Behold with shared model between multiple views
+	//_libraryModel->clear();
 	this->reset();
 	switch (Settings::getInstance()->insertPolicy()) {
 	case Settings::Artist:
@@ -172,14 +331,14 @@ void LibraryTreeView::beginPopulateTree(bool musicLocationHasChanged)
 		proxyModel->setHeaderData(0, Qt::Horizontal, tr("  Years"), Qt::DisplayRole);
 		break;
 	}
-	if (musicLocationHasChanged) {
+	/*if (musicLocationHasChanged) {
 		emit searchMusic();
 	} else if (QFile::exists(QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp"))) {
-		libraryModel->loadFromFile();
+		_libraryModel->loadFromFile();
 	} else {
 		// If the file has been erased from the disk meanwhile
 		this->beginPopulateTree(true);
-	}
+	}*/
 }
 
 /** Reduces the size of the library when the user is typing text. */
@@ -207,13 +366,13 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 {
 	// Parse once again those items
 	foreach (QPersistentModelIndex index, indexes) {
-		LibraryItem *item = libraryModel->itemFromIndex(index);
-		if (item) {
+		//LibraryItem *item = libraryModel->itemFromIndex(index);
+		//if (item) {
 			//int i = item->data(LibraryItem::IDX_TO_ABS_PATH).toInt();
 			//QString file = item->data(LibraryItem::REL_PATH_TO_MEDIA).toString();
 			//item->filePath();
 			//libraryModel->readFile(file);
-		}
+		//}
 	}
 	// Remove items that were tagged as modified
 	/// FIXME
@@ -226,6 +385,7 @@ void LibraryTreeView::rebuild(QList<QPersistentModelIndex> indexes)
 
 void LibraryTreeView::endPopulateTree()
 {
+	qDebug() << Q_FUNC_INFO;
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);

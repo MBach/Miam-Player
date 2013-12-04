@@ -3,7 +3,7 @@
 
 #include "libraryitem.h"
 
-class LibraryItemLetter : public LibraryItem
+class MIAMCORE_LIBRARY LibraryItemLetter : public LibraryItem
 {
 public:
 	explicit LibraryItemLetter(const QString &letter) : LibraryItem(letter) {}

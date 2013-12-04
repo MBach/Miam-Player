@@ -4,11 +4,13 @@
 #include <QMenu>
 #include <QSortFilterProxyModel>
 
-#include "librarymodel.h"
+#include <model/librarymodel.h>
 #include "circleprogressbar.h"
 #include "musicsearchengine.h"
 #include "libraryfilterproxymodel.h"
 #include "treeview.h"
+
+#include "library/libraryorderdialog.h"
 
 /**
  * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
@@ -18,14 +20,44 @@ class LibraryTreeView : public TreeView
 	Q_OBJECT
 
 private:
-	LibraryModel *libraryModel;
+	LibraryOrderDialog *_lod;
 	LibraryFilterProxyModel *proxyModel;
 	CircleProgressBar *circleProgressBar;
 	QPoint currentPos;
 	QMenu *properties;
+	LibraryModel* _libraryModel;
+
+	Settings::InsertPolicy _currentInsertPolicy;
+
+	//test
+	QMap<QString, LibraryItemArtist*> _artists;
+	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
+	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemDiscNumber*> _discNumbers;
+	QHash<QString, LibraryItemAlbum*> _albums2;
+	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
+	QHash<QString, LibraryItemArtist*> _artistsAlbums;
+	QHash<int, LibraryItem*> _years;
+	QSet<QString> _letters;
 
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
+
+	void init();
+
+	void insertLetter(const QString &letters);
+
+	/** XXX: 8 args, seriously? */
+	void insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
+					 const QString &title, int trackNumber, int discNumber, int year);
+
+	void insertTrack2(PersistentItem *item);
+
+	/** Redefined. */
+	virtual void setModel(QAbstractItemModel *model);
+
+	inline Settings::InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
+
+	inline void setInsertPolicy(Settings::InsertPolicy policy) { _currentInsertPolicy = policy; }
 
 protected:
 	/** Redefined to display a small context menu in the view. */

@@ -13,12 +13,9 @@ SOURCES += \
     filesystem/filesystemtreeview.cpp \
     treeview.cpp \
     library/libraryfilterproxymodel.cpp \
-    library/libraryitem.cpp \
     library/libraryitemdelegate.cpp \
-    library/libraryitemdiscnumber.cpp \
     library/libraryorderdialog.cpp \
     library/librarytreeview.cpp \
-    library/persistentitem.cpp \
     circleprogressbar.cpp \
     mediabutton.cpp \
     tracksnotfoundmessagebox.cpp \
@@ -47,8 +44,7 @@ SOURCES += \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
-    tageditor/tageditortablewidget.cpp \
-    library/librarymodel.cpp
+    tageditor/tageditortablewidget.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -60,16 +56,9 @@ HEADERS += \
     library/extendedtabbar.h \
     library/extendedtabwidget.h \
     library/libraryfilterproxymodel.h \
-    library/libraryitem.h \
-    library/libraryitemalbum.h \
-    library/libraryitemartist.h \
     library/libraryitemdelegate.h \
-    library/libraryitemdiscnumber.h \
-    library/libraryitemletter.h \
-    library/libraryitemtrack.h \
     library/libraryorderdialog.h \
     library/librarytreeview.h \
-    library/persistentitem.h \
     circleprogressbar.h \
     mediabutton.h \
     tracksnotfoundmessagebox.h \
@@ -99,8 +88,7 @@ HEADERS += \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
-    tageditor/tageditortablewidget.h \
-    library/librarymodel.h
+    tageditor/tageditortablewidget.h
 
 FORMS += \
     mainwindow.ui \

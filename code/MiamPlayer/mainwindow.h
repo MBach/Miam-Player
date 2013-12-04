@@ -42,6 +42,7 @@ private:
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 	QSharedPointer<MediaPlayer> _mediaPlayer;
 	UniqueLibrary *_uniqueLibrary;
+	LibraryModel *_libraryModel;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

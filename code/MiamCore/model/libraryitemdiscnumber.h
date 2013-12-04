@@ -3,7 +3,7 @@
 
 #include "libraryitem.h"
 
-class LibraryItemDiscNumber : public LibraryItem
+class MIAMCORE_LIBRARY LibraryItemDiscNumber : public LibraryItem
 {
 public:
 	explicit LibraryItemDiscNumber(int discNumber);

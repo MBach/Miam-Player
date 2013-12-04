@@ -4,7 +4,7 @@
 #include "libraryitem.h"
 #include "persistentitem.h"
 
-class LibraryItemAlbum : public LibraryItem
+class MIAMCORE_LIBRARY LibraryItemAlbum : public LibraryItem
 {
 private:
 	PersistentItem *_persistentItem;

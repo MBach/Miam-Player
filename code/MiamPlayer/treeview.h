@@ -3,7 +3,7 @@
 
 #include <QTreeView>
 
-#include "library/libraryitem.h"
+#include <model/libraryitem.h>
 #include "playlists/playlist.h"
 
 /**

@@ -3,7 +3,9 @@
 
 #include <QStandardItem>
 
-class LibraryItem : public QStandardItem
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY LibraryItem : public QStandardItem
 {
 private:
 	Q_ENUMS(CustomType)

@@ -3,7 +3,7 @@
 
 #include "libraryitemtrack.h"
 
-class PersistentItem : public LibraryItemTrack
+class MIAMCORE_LIBRARY PersistentItem : public LibraryItemTrack
 {
 public:
 	explicit PersistentItem() : LibraryItemTrack() {}

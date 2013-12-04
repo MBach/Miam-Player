@@ -45,7 +45,16 @@ MainWindow::MainWindow(QWidget *parent) :
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
 	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
+
+	_libraryModel = new LibraryModel(this);
+	library->setModel(_libraryModel);
+	library->init();
+
+	/// XXX
 	_uniqueLibrary = new UniqueLibrary(this);
+	QSharedPointer<LibraryModel> m(_libraryModel);
+	_uniqueLibrary->setLibraryModel(m);
+
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
 	volumeSlider->setValue(settings->volume());
@@ -421,7 +430,8 @@ void MainWindow::drawLibrary(bool b)
 		if (sender() == actionScanLibrary) {
 			b = true;
 		}
-		library->beginPopulateTree(b);
+		//library->beginPopulateTree(b);
+		_libraryModel->loadFromFile();
 	}
 }
 

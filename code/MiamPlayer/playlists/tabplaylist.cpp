@@ -1,5 +1,5 @@
 #include "tabplaylist.h"
-#include "library/libraryitem.h"
+#include <model/libraryitem.h>
 #include "settings.h"
 
 #include <QAudio>

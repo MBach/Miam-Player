@@ -1,6 +1,6 @@
 #include "libraryorderdialog.h"
 
-#include "library/librarymodel.h"
+#include <model/librarymodel.h>
 #include "settings.h"
 
 #include <QtDebug>
@@ -79,7 +79,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 					// Rebuild library only if the click was on another treeview
 					if (insertPolicy != settings->insertPolicy()) {
 						settings->setInsertPolicy(insertPolicy);
-						_model->setInsertPolicy(insertPolicy);
+						//_model->setInsertPolicy(insertPolicy);
 						emit aboutToRedrawLibrary(false);
 					}
 				} else {

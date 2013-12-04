@@ -17,20 +17,13 @@
 #include <QSet>
 #include <QStandardItemModel>
 
-class LibraryModel : public QStandardItemModel
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY LibraryModel : public QStandardItemModel
 {
 	Q_OBJECT
 private:
-	QHash<QString, LibraryItemArtist*> _artists;
-	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
-	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemDiscNumber*> _discNumbers;
-	QHash<QString, LibraryItemAlbum*> _albums2;
-	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
-	QHash<QString, LibraryItemArtist*> _artistsAlbums;
-	QHash<int, LibraryItem*> _years;
-	QSet<QString> _letters;
 	QSet<PersistentItem*> _persistentItems;
-	Settings::InsertPolicy _currentInsertPolicy;
 
 public:
 
@@ -45,18 +38,19 @@ public:
 		return static_cast<LibraryItem*>(QStandardItemModel::itemFromIndex(index));
 	}
 
-	inline Settings::InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
+	//QSet<PersistentItem*> persistentItems() const { return _persistentItems; }
 
-	inline void setInsertPolicy(Settings::InsertPolicy policy) { _currentInsertPolicy = policy; }
-
-private:
-	void insertLetter(const QString &letters);
-	void insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
-					 const QString &title, int trackNumber, int discNumber, int year);
+	//QMap<QString, LibraryItemArtist*> artists() const { return _artists; }
 
 signals:
 	/** A flat file on your computer was successfully loaded. */
 	void loadedFromFile();
+
+	void progressChanged(int);
+
+	void searchHasEnded();
+
+	void trackCreated(PersistentItem *item);
 
 public slots:
 	/** Add (a path to) an icon to every album. */

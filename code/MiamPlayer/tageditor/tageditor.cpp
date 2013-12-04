@@ -1,6 +1,6 @@
 #include "tageditor.h"
 #include "filehelper.h"
-#include "library/libraryitem.h"
+#include <model/libraryitem.h>
 #include "settings.h"
 
 #include <3rdparty/taglib/tpropertymap.h>

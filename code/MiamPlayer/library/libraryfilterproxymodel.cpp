@@ -1,6 +1,6 @@
 #include "libraryfilterproxymodel.h"
 
-#include "libraryitem.h"
+#include <model/libraryitem.h>
 #include "settings.h"
 
 #include <QtDebug>
@@ -71,7 +71,8 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		if (right && right->type() == LibraryItem::Album) {
 			leftAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxLeft));
 			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxRight));
-			if (model->currentInsertPolicy() == Settings::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
+			if (Settings::getInstance()->insertPolicy() == Settings::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
+			//if (model->currentInsertPolicy() == Settings::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
 					if (leftAlbum->year() == rightAlbum->year()) {
 						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);

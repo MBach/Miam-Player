@@ -3,7 +3,7 @@
 
 #include <QSortFilterProxyModel>
 
-#include "librarymodel.h"
+#include <model/librarymodel.h>
 
 class LibraryFilterProxyModel : public QSortFilterProxyModel
 {

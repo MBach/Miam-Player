@@ -3,7 +3,7 @@
 
 #include "libraryitem.h"
 
-class LibraryItemTrack : public LibraryItem
+class MIAMCORE_LIBRARY LibraryItemTrack : public LibraryItem
 {
 private:
 	Q_ENUMS(CustomType)

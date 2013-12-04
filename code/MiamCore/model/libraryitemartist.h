@@ -3,7 +3,7 @@
 
 #include "libraryitem.h"
 
-class LibraryItemArtist : public LibraryItem
+class MIAMCORE_LIBRARY LibraryItemArtist : public LibraryItem
 {
 public:
 	explicit LibraryItemArtist(const QString &artist) : LibraryItem(artist) {}

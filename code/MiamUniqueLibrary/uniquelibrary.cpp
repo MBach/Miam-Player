@@ -6,6 +6,10 @@
 
 #include <QPushButton>
 
+#include <model/librarymodel.h>
+
+#include <QtDebug>
+
 UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	QWidget(parent), ui(new Ui::UniqueLibrary)
 {
@@ -16,9 +20,22 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 
 	_maxH = 100;
 	_maxW = 100;
-	connect(ui->buttonsNumberSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeNumberOfButtons(int)));
-	connect(ui->hButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeHeightOfButtons(int)));
-	connect(ui->wButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeWidthOfButtons(int)));
+	//connect(ui->buttonsNumberSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeNumberOfButtons(int)));
+	//connect(ui->hButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeHeightOfButtons(int)));
+	//connect(ui->wButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeWidthOfButtons(int)));
+}
+
+void UniqueLibrary::setLibraryModel(QWeakPointer<LibraryModel> model)
+{
+	_model = model;
+	//QMapIterator<QString, LibraryItemArtist*> it(_model.data()->artists());
+	/*while (it.hasNext()) {
+		it.next();
+		qDebug() << it.key();
+	}*/
+	/*foreach (, _model.data()->artists()) {
+
+	}*/
 }
 
 void UniqueLibrary::changeNumberOfButtons(int max)

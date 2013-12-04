@@ -1,7 +1,7 @@
 #include "libraryitemdelegate.h"
 
 #include "settings.h"
-#include "libraryitem.h"
+#include <model/libraryitem.h>
 #include "librarytreeview.h"
 #include "playlists/starrating.h"
 

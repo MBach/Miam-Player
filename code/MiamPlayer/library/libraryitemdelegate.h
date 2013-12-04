@@ -6,7 +6,7 @@
 #include <QPainter>
 
 #include "libraryfilterproxymodel.h"
-#include "librarymodel.h"
+#include <model/librarymodel.h>
 
 class LibraryItemDelegate : public QStyledItemDelegate
 {

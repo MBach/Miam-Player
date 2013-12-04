@@ -4,7 +4,7 @@
 #include <filehelper.h>
 #include <3rdparty/taglib/fileref.h>
 
-#include "library/libraryitem.h"
+#include <model/libraryitem.h>
 #include "nofocusitemdelegate.h"
 #include "treeview.h"
 
