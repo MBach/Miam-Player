@@ -132,8 +132,8 @@ void CustomizeThemeDialog::setupActions()
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(Settings::LIBRARY, font);
-		mainWindow->library->model()->layoutChanged();
-		mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, font, Qt::FontRole);
+		//mainWindow->library->model()->layoutChanged();
+		//mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, font, Qt::FontRole);
 		mainWindow->searchBar->setFont(font);
 		this->fade();
 	});

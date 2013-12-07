@@ -16,7 +16,7 @@
 #include "library/libraryitemdelegate.h"
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(NULL)
+	TreeView(parent)/*, _libraryModel(NULL)*/
 {
 	Settings *settings = Settings::getInstance();
 	_currentInsertPolicy = settings->insertPolicy();
@@ -60,24 +60,25 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	sortByColumn(0, Qt::AscendingOrder);
 }
 
-void LibraryTreeView::init()
+void LibraryTreeView::init(QWeakPointer<LibrarySqlModel> sql)
 {
 	Settings *settings = Settings::getInstance();
 
-	proxyModel->setSourceModel(_libraryModel);
+	//proxyModel->setSourceModel(_libraryModel);
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
-	_lod->setModel(_libraryModel);
+	//_lod->setModel(_libraryModel);
 
 	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
 
-	connect(_libraryModel, &LibraryModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
-	connect(_libraryModel, &LibraryModel::searchHasEnded, this, &LibraryTreeView::endPopulateTree);
+	//connect(_libraryModel, &LibraryModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
+	//connect(_libraryModel, &LibraryModel::searchHasEnded, this, &LibraryTreeView::endPopulateTree);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(_libraryModel, &LibraryModel::trackCreated, this, &LibraryTreeView::insertTrack2);
-	connect(_libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
+	//connect(_libraryModel, &LibraryModel::trackCreated, this, &LibraryTreeView::insertTrack2);
+	//connect(_libraryModel, &LibraryModel::loadedFromFile, this, &LibraryTreeView::endPopulateTree);
 
-	qDebug() << Q_FUNC_INFO;
+	sqlModel = sql;
+	connect(sqlModel.data(), &LibrarySqlModel::trackCreated, this, &LibraryTreeView::insertTrack2);
 }
 
 void LibraryTreeView::insertLetter(const QString &letters)
@@ -91,14 +92,14 @@ void LibraryTreeView::insertLetter(const QString &letters)
 			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
 			letter = tr(" Various");
 		}
-		if (!_letters.contains(letter)) {
+		/*if (!_letters.contains(letter)) {
 			_letters.insert(letter);
 			_libraryModel->invisibleRootItem()->appendRow(new LibraryItemLetter(letter));
-		}
+		}*/
 	}
 }
 
-void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
+/*void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
 							   const QString &title, int trackNumber, int discNumber, int year)
 {
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
@@ -228,24 +229,61 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 	persistentItem->setArtistAlbum(theArtist);
 	persistentItem->setYear(year);
 	//_persistentItems.insert(persistentItem);
-}
+}*/
 
-void LibraryTreeView::insertTrack2(PersistentItem *item)
+void LibraryTreeView::insertTrack2(const FileHelper &fh)
 {
-	/// TODO
-	qDebug() << item->absoluteFilePath();
+	qDebug() << Q_FUNC_INFO;
+	qDebug() << fh.artist();
+	/*switch (_currentInsertPolicy) {
+	case Settings::Artist:
+		// Level 1
+		if (_artists.contains(theArtist.toLower())) {
+			itemArtist = _artists.value(theArtist.toLower());
+			existingArtist = true;
+		} else {
+			itemArtist = new LibraryItemArtist(theArtist);
+			_artists.insert(theArtist.toLower(), itemArtist);
+			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
+			this->insertLetter(theArtist);
+			existingArtist = false;
+		}
+		// Level 2
+		if (existingArtist && _albums.contains(QPair<LibraryItemArtist*, QString>(itemArtist, album))) {
+			itemAlbum = _albums.value(QPair<LibraryItemArtist*, QString>(itemArtist, album));
+		} else {
+			itemAlbum = new LibraryItemAlbum(album);
+			qDebug() << "creating a new album by" << theArtist << ":" << album;
+			_albums.insert(QPair<LibraryItemArtist *, QString>(itemArtist, album), itemAlbum);
+			itemArtist->appendRow(itemAlbum);
+		}
+		// Level 3 (option)
+		if (discNumber > 0 && !_discNumbers.contains(QPair<LibraryItemAlbum*, int>(itemAlbum, discNumber))) {
+			itemDiscNumber = new LibraryItemDiscNumber(discNumber);
+			_discNumbers.insert(QPair<LibraryItemAlbum *, int>(itemAlbum, discNumber), itemDiscNumber);
+			itemAlbum->appendRow(itemDiscNumber);
+		}
+		// Level 3
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new LibraryItemTrack(title);
+		} else {
+			itemTrack = new LibraryItemTrack(title + " (" + artist + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	}*/
 }
 
-void LibraryTreeView::setModel(QAbstractItemModel *model)
+/*void LibraryTreeView::setModel(QAbstractItemModel *model)
 {
 	_libraryModel = qobject_cast<LibraryModel*>(model);
 	TreeView::setModel(proxyModel);
-}
+}*/
 
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	LibraryItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
+	/*LibraryItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
@@ -253,7 +291,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 		if (item->type() != LibraryItem::Letter) {
 			properties->exec(event->globalPos());
 		}
-	}
+	}*/
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
@@ -271,12 +309,12 @@ int LibraryTreeView::count(const QModelIndex &index) const
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		/*QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		int tmp = 0;
 		for (int i = 0; i < item->rowCount(); i++) {
 			tmp += count(index.child(i, 0));
 		}
-		return (tmp == 0) ? 1 : tmp;
+		return (tmp == 0) ? 1 : tmp;*/
 	}
 	return 0;
 }
@@ -297,7 +335,7 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
 		QModelIndex sourceIndex = proxyModel->mapToSource(index);
-		LibraryItem *item = _libraryModel->itemFromIndex(sourceIndex);
+		/*LibraryItem *item = _libraryModel->itemFromIndex(sourceIndex);
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
@@ -306,7 +344,7 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 		} else if (item->type() == LibraryItem::Track) {
 			LibraryItemTrack *track = static_cast<LibraryItemTrack*>(item);
 			tracks.append(track->absoluteFilePath());
-		}
+		}*/
 	}
 }
 

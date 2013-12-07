@@ -1,6 +1,7 @@
 #include "libraryorderdialog.h"
 
-#include <model/librarymodel.h>
+//#include <model/librarymodel.h>
+#include <qstandarditemmodel.h>
 #include "settings.h"
 
 #include <QtDebug>

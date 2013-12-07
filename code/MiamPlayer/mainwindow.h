@@ -13,6 +13,8 @@
 #include <mediaplayer.h>
 #include "playbackmodewidgetfactory.h"
 
+#include <model/librarysqlmodel.h>
+
 #include "uniquelibrary.h"
 
 /// Need to use this forward declaration (circular inclusion)
@@ -42,7 +44,8 @@ private:
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 	QSharedPointer<MediaPlayer> _mediaPlayer;
 	UniqueLibrary *_uniqueLibrary;
-	LibraryModel *_libraryModel;
+	//LibraryModel *_libraryModel;
+	LibrarySqlModel *_librarySqlModel;
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

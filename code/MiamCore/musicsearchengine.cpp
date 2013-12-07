@@ -14,6 +14,7 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 
 void MusicSearchEngine::doSearch()
 {
+	qDebug() << Q_FUNC_INFO;
 	QList<QDir> savedLocations;
 	foreach (QString musicPath, Settings::getInstance()->musicLocations()) {
 		QDir location(musicPath);
@@ -46,7 +47,7 @@ void MusicSearchEngine::doSearch()
 				coverPath = qFileInfo.absoluteFilePath();
 				aCoverWasFound = true;
 			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
-				//qDebug() << "doSearch" << qFileInfo.absoluteFilePath();
+				qDebug() << "scannedFiled(" << qFileInfo.absoluteFilePath() << ")";
 				emit scannedFiled(qFileInfo.absoluteFilePath());
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then

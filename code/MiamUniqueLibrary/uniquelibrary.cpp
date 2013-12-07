@@ -6,8 +6,6 @@
 
 #include <QPushButton>
 
-#include <model/librarymodel.h>
-
 #include <QtDebug>
 
 UniqueLibrary::UniqueLibrary(QWidget *parent) :
@@ -25,18 +23,18 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	//connect(ui->wButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeWidthOfButtons(int)));
 }
 
-void UniqueLibrary::setLibraryModel(QWeakPointer<LibraryModel> model)
+/*void UniqueLibrary::setLibraryModel(QWeakPointer<LibraryModel> model)
 {
-	_model = model;
+	//_model = model;
 	//QMapIterator<QString, LibraryItemArtist*> it(_model.data()->artists());
-	/*while (it.hasNext()) {
+	while (it.hasNext()) {
 		it.next();
 		qDebug() << it.key();
-	}*/
-	/*foreach (, _model.data()->artists()) {
+	}
+	foreach (, _model.data()->artists()) {
 
-	}*/
-}
+	}
+}*/
 
 void UniqueLibrary::changeNumberOfButtons(int max)
 {

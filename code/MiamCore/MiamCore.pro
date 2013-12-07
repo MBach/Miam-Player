@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += widgets multimedia
+QT       += widgets multimedia sql
 
 QT       -= gui
 
@@ -37,10 +37,10 @@ SOURCES += \
     cover.cpp \
     mediaplayer.cpp \
     libraryfilterlineedit.cpp \
-    model/librarymodel.cpp \
     model/libraryitem.cpp \
     model/persistentitem.cpp \
-    model/libraryitemdiscnumber.cpp
+    model/libraryitemdiscnumber.cpp \
+    model/librarysqlmodel.cpp
 
 HEADERS += \
     settings.h \
@@ -53,14 +53,14 @@ HEADERS += \
     interfaces/basicplugininterface.h \
     interfaces/mediaplayerplugininterface.h \
     libraryfilterlineedit.h \
-    model/librarymodel.h \
     model/libraryitem.h \
     model/libraryitemalbum.h \
     model/libraryitemartist.h \
     model/libraryitemletter.h \
     model/libraryitemtrack.h \
     model/persistentitem.h \
-    model/libraryitemdiscnumber.h
+    model/libraryitemdiscnumber.h \
+    model/librarysqlmodel.h
 
 unix:!symbian {
     target.path = /usr/lib

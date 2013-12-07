@@ -1,5 +1,6 @@
 #include <QtDebug>
 
+#include <QAction>
 #include <QDirIterator>
 #include <QFileSystemModel>
 #include <QStandardPaths>
@@ -17,7 +18,7 @@
 #include <QPluginLoader>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent)
+	QMainWindow(parent), _librarySqlModel(NULL)
 {
 	setupUi(this);
 	Settings *settings = Settings::getInstance();
@@ -46,14 +47,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
 
-	_libraryModel = new LibraryModel(this);
-	library->setModel(_libraryModel);
-	library->init();
+	//_libraryModel = new LibraryModel(this);
 
 	/// XXX
 	_uniqueLibrary = new UniqueLibrary(this);
-	QSharedPointer<LibraryModel> m(_libraryModel);
-	_uniqueLibrary->setLibraryModel(m);
+	//QSharedPointer<LibraryModel> m(_libraryModel);
+	//_uniqueLibrary->setLibraryModel(m);
 
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
@@ -81,6 +80,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
+	//library->setModel(_libraryModel);
+	QSharedPointer<LibrarySqlModel> sharedModel(_librarySqlModel);
+	library->init(sharedModel);
+
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 	this->drawLibrary();
@@ -152,7 +155,7 @@ void MainWindow::updateFonts(const QFont &font)
 	}
 }
 
-#include <QAction>
+
 
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
@@ -197,7 +200,11 @@ void MainWindow::setupActions()
 	});
 	connect(actionAboutM4P, &QAction::triggered, this, &MainWindow::aboutM4P);
     connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
-	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
+	//connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
+	//connect(actionScanLibrary, &QAction::triggered, _libraryModel->musicSearchEngine(), &MusicSearchEngine::doSearch);
+	//connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
+	_librarySqlModel = new LibrarySqlModel(this);
+	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
 
 	// Quick Start
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
@@ -431,7 +438,8 @@ void MainWindow::drawLibrary(bool b)
 			b = true;
 		}
 		//library->beginPopulateTree(b);
-		_libraryModel->loadFromFile();
+		//_libraryModel->loadFromFile();
+		_librarySqlModel->loadFromFile();
 	}
 }
 

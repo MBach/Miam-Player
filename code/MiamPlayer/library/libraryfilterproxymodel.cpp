@@ -53,7 +53,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const
 {
 	bool result = false;
-	LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
+	/*LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
 	LibraryItem *left = model->itemFromIndex(idxLeft);
 	LibraryItem *right = model->itemFromIndex(idxRight);
 
@@ -131,7 +131,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 	default:
 		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		break;
-	}
+	}*/
 	return result;
 }
 

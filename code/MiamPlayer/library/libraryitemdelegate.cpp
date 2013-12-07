@@ -11,12 +11,12 @@
 LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 	QStyledItemDelegate(proxy), _proxy(proxy)
 {
-	_libraryModel = static_cast<LibraryModel*>(_proxy->sourceModel());
+	//_libraryModel = static_cast<LibraryModel*>(_proxy->sourceModel());
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	LibraryItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
+	/*LibraryItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItemV4 o = option;
 	initStyleOption(&o, index);
 
@@ -49,21 +49,22 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
 		break;
-	}
+	}*/
 }
 
 /** Redefined to always display the same height for albums, even for those without one. */
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	Settings *settings = Settings::getInstance();
+	/*Settings *settings = Settings::getInstance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	if (settings->isCoversEnabled() && item->type() == LibraryItem::Album) {
 		return QSize(settings->coverSize(), settings->coverSize() + 2);
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
-	}
+	}*/
 }
 
+/*
 void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, LibraryItemAlbum *item) const
 {
 	static QImageReader imageReader;
@@ -76,6 +77,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewIte
 	}
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
+*/
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -106,6 +108,7 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	QStyledItemDelegate::paint(painter, option, index);
 }
 
+/*
 void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItemTrack *track) const
 {
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
@@ -115,3 +118,4 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	option.text = title;
 	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
 }
+*/

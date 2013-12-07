@@ -1,4 +1,4 @@
-QT += widgets multimedia
+QT += widgets multimedia sql
 
 TEMPLATE = app
 

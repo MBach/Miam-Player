@@ -1,5 +1,5 @@
 #include "libraryitem.h"
-#include "librarymodel.h"
+//#include "librarymodel.h"
 #include "settings.h"
 
 #include <QtDebug>
