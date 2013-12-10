@@ -5,8 +5,6 @@
 
 #include <miamuniquelibrary_global.h>
 
-//#include <model/librarymodel.h>
-
 namespace Ui {
 class UniqueLibrary;
 }
@@ -17,13 +15,8 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget/*, public Ui::Uni
 {
 	Q_OBJECT
 
-//private:
-//	QWeakPointer<LibraryModel> _model;
-
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);
-
-	//void setLibraryModel(QWeakPointer<LibraryModel> model);
 
 private:
 	Ui::UniqueLibrary *ui;

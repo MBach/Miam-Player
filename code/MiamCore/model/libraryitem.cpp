@@ -1,8 +1,5 @@
 #include "libraryitem.h"
-//#include "librarymodel.h"
 #include "settings.h"
-
-#include <QtDebug>
 
 LibraryItem::LibraryItem(const QString &text) :
 	QStandardItem(text)

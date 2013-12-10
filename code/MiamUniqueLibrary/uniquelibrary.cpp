@@ -23,19 +23,6 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	//connect(ui->wButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeWidthOfButtons(int)));
 }
 
-/*void UniqueLibrary::setLibraryModel(QWeakPointer<LibraryModel> model)
-{
-	//_model = model;
-	//QMapIterator<QString, LibraryItemArtist*> it(_model.data()->artists());
-	while (it.hasNext()) {
-		it.next();
-		qDebug() << it.key();
-	}
-	foreach (, _model.data()->artists()) {
-
-	}
-}*/
-
 void UniqueLibrary::changeNumberOfButtons(int max)
 {
 	while (QLayoutItem* item = _flowLayout->takeAt(0)) {

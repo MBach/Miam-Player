@@ -6,8 +6,6 @@
 
 QT       += widgets multimedia sql
 
-QT       -= gui
-
 TagLibDirectory = $$PWD/3rdparty/taglib
 INCLUDEPATH += $$PWD
 INCLUDEPATH += $$TagLibDirectory
@@ -28,6 +26,7 @@ CONFIG(release, debug|release) {
     win32: LIBS += -L$$OUT_PWD/release/ -llibtag
     unix: LIBS += -L$$OUT_PWD -ltag
 }
+win32:CONFIG += dll
 
 SOURCES += \
     settings.cpp \

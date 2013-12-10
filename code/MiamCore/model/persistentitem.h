@@ -3,12 +3,16 @@
 
 #include "libraryitemtrack.h"
 
+#include "miamcore_global.h"
+
 class MIAMCORE_LIBRARY PersistentItem : public LibraryItemTrack
 {
 public:
-	explicit PersistentItem() : LibraryItemTrack() {}
+	inline PersistentItem() : LibraryItemTrack() {}
 
-	explicit PersistentItem(const LibraryItemTrack *track);
+	PersistentItem(const LibraryItemTrack *track);
+
+	inline virtual ~PersistentItem() {}
 
 	inline QString absolutePath() const { return data(ABSOLUTE_PATH).toString(); }
 
@@ -28,10 +32,10 @@ public:
 	inline int year() const { return data(YEAR).toInt(); }
 
 	/** Reads data from the input stream and fills informations in this new node. */
-	void read(QDataStream &in);
+	//void read(QDataStream &in);
 
 	/** Write data from this node to the output stream. */
-	void write(QDataStream &out) const;
+	//void write(QDataStream &out) const;
 };
 
 #endif // PERSISTENTITEM_H

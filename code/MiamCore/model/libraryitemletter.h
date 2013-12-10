@@ -6,10 +6,14 @@
 class MIAMCORE_LIBRARY LibraryItemLetter : public LibraryItem
 {
 public:
-	explicit LibraryItemLetter(const QString &letter) : LibraryItem(letter) {}
+	inline LibraryItemLetter(const QString &letter) : LibraryItem(letter) {}
+
+	inline LibraryItemLetter() : LibraryItem() {}
+
+	inline virtual ~LibraryItemLetter() {}
 
 	/** Redefined for delegates (painting, etc). */
-	inline int type() const { return LibraryItem::Letter; }
+	//inline int type() const { return LibraryItem::Letter; }
 };
 
 #endif // LIBRARYITEMLETTER_H

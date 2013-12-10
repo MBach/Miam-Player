@@ -1,20 +1,24 @@
 #ifndef LIBRARYTREEVIEW_H
 #define LIBRARYTREEVIEW_H
 
-#include <QMenu>
-#include <QSortFilterProxyModel>
+#include <model/libraryitem.h>
+//#include <model/libraryitemalbum.h>
+//#include <model/libraryitemartist.h>
+//#include <model/libraryitemdiscnumber.h>
+//#include <model/libraryitemletter.h>
+//#include <model/libraryitemtrack.h>
+#include <model/librarysqlmodel.h>
+//#include <model/persistentitem.h>
+#include <settings.h>
 
-//#include <model/librarymodel.h>
 #include "circleprogressbar.h"
-#include "musicsearchengine.h"
 #include "libraryfilterproxymodel.h"
 #include "treeview.h"
-
 #include "library/libraryorderdialog.h"
 
-#include <model/librarysqlmodel.h>
-
-#include <settings.h>
+#include <QMenu>
+#include <QSortFilterProxyModel>
+#include <QStandardItemModel>
 
 /**
  * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
@@ -29,37 +33,36 @@ private:
 	CircleProgressBar *circleProgressBar;
 	QPoint currentPos;
 	QMenu *properties;
-	//LibraryModel* _libraryModel;
 
-	QWeakPointer<LibrarySqlModel> sqlModel;
+	QStandardItemModel* _libraryModel;
+	LibrarySqlModel *sqlModel;
 
 	Settings::InsertPolicy _currentInsertPolicy;
 
 	//test
-	//QMap<QString, LibraryItemArtist*> _artists;
-	//QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
-	//QHash<QPair<LibraryItemAlbum*, int>, LibraryItemDiscNumber*> _discNumbers;
-	//QHash<QString, LibraryItemAlbum*> _albums2;
-	//QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
-	//QHash<QString, LibraryItemArtist*> _artistsAlbums;
-	//QHash<int, LibraryItem*> _years;
-	//QSet<QString> _letters;
+	/*QMap<QString, LibraryItemArtist*> _artists;
+	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
+	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemDiscNumber*> _discNumbers;
+	QHash<QString, LibraryItemAlbum*> _albums2;
+	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
+	QHash<QString, LibraryItemArtist*> _artistsAlbums;*/
+	QMap<QString, LibraryItem*> _artists;
+	QHash<QPair<LibraryItem*, QString>, LibraryItem*> _albums;
+	QHash<QPair<LibraryItem*, int>, LibraryItem*> _discNumbers;
+	QHash<QString, LibraryItem*> _albums2;
+	QHash<QString, LibraryItem*> _albumsAbsPath;
+	QHash<QString, LibraryItem*> _artistsAlbums;
+	QHash<int, LibraryItem*> _years;
+	QSet<QString> _letters;
 
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
 
-	void init(QWeakPointer<LibrarySqlModel> sql);
+	void init(LibrarySqlModel *sql);
 
 	void insertLetter(const QString &letters);
 
-	/** XXX: 8 args, seriously? */
-	//void insertTrack(const QString &absFilePath, const QString &artist, const QString &artistAlbum, const QString &album,
-	//				 const QString &title, int trackNumber, int discNumber, int year);
-
-	void insertTrack2(const FileHelper &fh);
-
-	/** Redefined. */
-	//virtual void setModel(QAbstractItemModel *model);
+	void insertTrack(const FileHelper &fh);
 
 	inline Settings::InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
 
@@ -84,13 +87,13 @@ private:
 
 public slots:
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
-	void beginPopulateTree(bool = false);
+	void beginPopulateTree();
 
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);
 
 	/** Rebuild a subset of the tree. */
-	void rebuild(QList<QPersistentModelIndex> indexes);
+	//void rebuild(QList<QPersistentModelIndex> indexes);
 
 private slots:
 	void endPopulateTree();

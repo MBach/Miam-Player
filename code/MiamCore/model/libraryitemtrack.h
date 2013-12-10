@@ -9,12 +9,14 @@ private:
 	Q_ENUMS(CustomType)
 
 public:
-	explicit LibraryItemTrack() : LibraryItem() {}
+	inline LibraryItemTrack() : LibraryItem() {}
 
-	explicit LibraryItemTrack(const QString &track) : LibraryItem(track) {}
+	inline LibraryItemTrack(const QString &track) : LibraryItem(track) {}
+
+	inline virtual ~LibraryItemTrack() {}
 
 	/** Redefined for delegates (painting, etc). */
-	inline int type() const { return LibraryItem::Track; }
+	//inline int type() const { return LibraryItem::Track; }
 
 	inline void setAbsoluteFilePath(const QString &absPath, const QString &file) { setData(absPath, ABSOLUTE_PATH); setData(file, FILENAME); }
 	inline QString absoluteFilePath() const { return data(ABSOLUTE_PATH).toString() + '/' + data(FILENAME).toString(); }

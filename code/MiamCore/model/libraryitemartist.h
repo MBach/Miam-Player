@@ -3,13 +3,19 @@
 
 #include "libraryitem.h"
 
+#include "miamcore_global.h"
+
 class MIAMCORE_LIBRARY LibraryItemArtist : public LibraryItem
 {
 public:
-	explicit LibraryItemArtist(const QString &artist) : LibraryItem(artist) {}
+	inline LibraryItemArtist(const QString &artist) : LibraryItem(artist) {}
+
+	inline LibraryItemArtist() : LibraryItem() {}
+
+	inline virtual ~LibraryItemArtist() {}
 
 	/** Redefined for delegates (painting, etc). */
-	inline int type() const { return LibraryItem::Artist; }
+	//inline int type() const { return LibraryItem::Artist; }
 };
 
 #endif // LIBRARYITEMARTIST_H

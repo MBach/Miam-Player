@@ -44,7 +44,6 @@ private:
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 	QSharedPointer<MediaPlayer> _mediaPlayer;
 	UniqueLibrary *_uniqueLibrary;
-	//LibraryModel *_libraryModel;
 	LibrarySqlModel *_librarySqlModel;
 
 	/** Set up all actions and behaviour. */

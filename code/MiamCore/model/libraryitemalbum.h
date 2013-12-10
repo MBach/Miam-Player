@@ -10,15 +10,17 @@ private:
 	PersistentItem *_persistentItem;
 
 public:
-	explicit LibraryItemAlbum() : LibraryItem(), _persistentItem(NULL) {}
+	inline LibraryItemAlbum() : LibraryItem(), _persistentItem(NULL) {}
 
-	explicit LibraryItemAlbum(const QString &album) : LibraryItem(album), _persistentItem(NULL) {}
+	inline LibraryItemAlbum(const QString &album) : LibraryItem(album), _persistentItem(NULL) {}
+
+	inline virtual ~LibraryItemAlbum() { delete _persistentItem; }
 
 	inline PersistentItem *persistentItem() const { return _persistentItem; }
 	inline void setPersistentItem(PersistentItem *persistentItem) { _persistentItem = persistentItem; }
 
 	/** Redefined for delegates (painting, etc). */
-	inline int type() const { return LibraryItem::Album; }
+	//inline int type() const { return LibraryItem::Album; }
 
 	inline int year() const { return data(YEAR).isValid() ? data(YEAR).toInt() : -1; }
 	inline void setYear(int year) { setData(year, YEAR); }

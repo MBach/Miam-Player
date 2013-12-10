@@ -13,10 +13,7 @@ LibrarySqlModel::LibrarySqlModel(QObject *parent) :
 
 	_musicSearchEngine = new MusicSearchEngine(this);
 
-	//connect(_musicSearchEngine, &MusicSearchEngine::scannedFiled, this, &LibrarySqlModel::readFile);
-	connect(_musicSearchEngine, &MusicSearchEngine::scannedFiled, [=](const QString &file) {
-		this->readFile(file);
-	});
+	connect(_musicSearchEngine, &MusicSearchEngine::scannedFiled, this, &LibrarySqlModel::readFile);
 
 	// When the scan is complete, save the model in the filesystem
 	connect(_musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, &LibrarySqlModel::saveDB);
@@ -60,7 +57,6 @@ void LibrarySqlModel::rebuild()
 /** Reads a file from the filesystem and adds it into the library. */
 void LibrarySqlModel::readFile(const QString &absFilePath)
 {
-	qDebug() << Q_FUNC_INFO << absFilePath;
 	FileHelper fh(absFilePath);
 	if (fh.isValid()) {
 		QSqlQuery insert;

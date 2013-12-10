@@ -6,12 +6,16 @@
 class MIAMCORE_LIBRARY LibraryItemDiscNumber : public LibraryItem
 {
 public:
-	explicit LibraryItemDiscNumber(int discNumber);
+	LibraryItemDiscNumber(int discNumber);
+
+	inline LibraryItemDiscNumber() : LibraryItem() {}
+
+	inline virtual ~LibraryItemDiscNumber() {}
 
 	/** Redefined for delegates (painting, etc). */
-	inline int type() const { return LibraryItem::Disc; }
+	//inline int type() const { return LibraryItem::Disc; }
 
-	int discNumber() const { return data(DISC_NUMBER).toInt(); }
+	inline int discNumber() const { return data(DISC_NUMBER).toInt(); }
 };
 
 #endif // LIBRARYITEMDISCNUMBER_H

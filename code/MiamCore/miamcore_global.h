@@ -1,6 +1,8 @@
 #ifndef MIAMCORE_GLOBAL_H
 #define MIAMCORE_GLOBAL_H
 
+#include <QtCore/QtGlobal>
+
 #if defined(MIAMCORE_LIBRARY)
 #undef MIAMCORE_LIBRARY
 #define MIAMCORE_LIBRARY Q_DECL_EXPORT

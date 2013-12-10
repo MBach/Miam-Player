@@ -24,8 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	this->setAcceptDrops(true);
-
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
+
 	///FIXME
 //	this->setStyleSheet(settings->styleSheet(this));
 //	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
@@ -47,13 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
 
-	//_libraryModel = new LibraryModel(this);
-
 	/// XXX
 	_uniqueLibrary = new UniqueLibrary(this);
-	//QSharedPointer<LibraryModel> m(_libraryModel);
-	//_uniqueLibrary->setLibraryModel(m);
-
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
 	volumeSlider->setValue(settings->volume());
@@ -80,9 +75,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
-	//library->setModel(_libraryModel);
-	QSharedPointer<LibrarySqlModel> sharedModel(_librarySqlModel);
-	library->init(sharedModel);
+	_librarySqlModel = new LibrarySqlModel(this);
+	library->init(_librarySqlModel);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
@@ -155,8 +149,6 @@ void MainWindow::updateFonts(const QFont &font)
 	}
 }
 
-
-
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
@@ -203,8 +195,8 @@ void MainWindow::setupActions()
 	//connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
 	//connect(actionScanLibrary, &QAction::triggered, _libraryModel->musicSearchEngine(), &MusicSearchEngine::doSearch);
 	//connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
-	_librarySqlModel = new LibrarySqlModel(this);
 	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
+
 
 	// Quick Start
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
