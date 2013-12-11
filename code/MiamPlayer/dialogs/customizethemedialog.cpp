@@ -185,7 +185,7 @@ void CustomizeThemeDialog::setupActions()
 	// Library
 	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
 		settings->setCovers(b);
-		mainWindow->library->beginPopulateTree();
+		mainWindow->library->reset();
 	});
 
 	//connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));

@@ -1,14 +1,7 @@
 #ifndef LIBRARYTREEVIEW_H
 #define LIBRARYTREEVIEW_H
 
-#include <model/libraryitem.h>
-//#include <model/libraryitemalbum.h>
-//#include <model/libraryitemartist.h>
-//#include <model/libraryitemdiscnumber.h>
-//#include <model/libraryitemletter.h>
-//#include <model/libraryitemtrack.h>
 #include <model/librarysqlmodel.h>
-//#include <model/persistentitem.h>
 #include <settings.h>
 
 #include "circleprogressbar.h"
@@ -39,20 +32,13 @@ private:
 
 	Settings::InsertPolicy _currentInsertPolicy;
 
-	//test
-	/*QMap<QString, LibraryItemArtist*> _artists;
-	QHash<QPair<LibraryItemArtist*, QString>, LibraryItemAlbum*> _albums;
-	QHash<QPair<LibraryItemAlbum*, int>, LibraryItemDiscNumber*> _discNumbers;
-	QHash<QString, LibraryItemAlbum*> _albums2;
-	QHash<QString, LibraryItemAlbum*> _albumsAbsPath;
-	QHash<QString, LibraryItemArtist*> _artistsAlbums;*/
-	QMap<QString, LibraryItem*> _artists;
-	QHash<QPair<LibraryItem*, QString>, LibraryItem*> _albums;
-	QHash<QPair<LibraryItem*, int>, LibraryItem*> _discNumbers;
-	QHash<QString, LibraryItem*> _albums2;
-	QHash<QString, LibraryItem*> _albumsAbsPath;
-	QHash<QString, LibraryItem*> _artistsAlbums;
-	QHash<int, LibraryItem*> _years;
+	QMap<QString, QStandardItem*> _artists;
+	QHash<QPair<QStandardItem*, QString>, QStandardItem*> _albums;
+	QHash<QPair<QStandardItem*, int>, QStandardItem*> _discNumbers;
+	QHash<QString, QStandardItem*> _albums2;
+	QHash<QString, QStandardItem*> _albumsAbsPath;
+	QHash<QString, QStandardItem*> _artistsAlbums;
+	QHash<int, QStandardItem*> _years;
 	QSet<QString> _letters;
 
 public:
@@ -87,7 +73,7 @@ private:
 
 public slots:
 	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
-	void beginPopulateTree();
+	void reset();
 
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);

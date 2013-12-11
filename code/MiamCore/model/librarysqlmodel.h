@@ -18,7 +18,7 @@ private:
 public:
 	explicit LibrarySqlModel(QObject *parent = 0);
 
-	void loadFromFile();
+	void loadFromFileDB();
 
 public slots:
 	void rebuild();

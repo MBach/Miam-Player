@@ -17,30 +17,29 @@ LibrarySqlModel::LibrarySqlModel(QObject *parent) :
 
 	// When the scan is complete, save the model in the filesystem
 	connect(_musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, &LibrarySqlModel::saveDB);
-
 }
 
-void LibrarySqlModel::loadFromFile()
+void LibrarySqlModel::loadFromFileDB()
 {
+	this->beginResetModel();
 	_db.open();
 
-	QSqlQuery qLoadFileDB = _db.exec("SELECT * FROM tracks;");
+	QSqlQuery qLoadFileDB = _db.exec("SELECT absPath FROM tracks;");
 	qDebug() << qLoadFileDB.lastError() << qLoadFileDB.size();
 	while (qLoadFileDB.next()) {
-		QString s;
 		QSqlRecord r = qLoadFileDB.record();
-		for (int i = 0; i < r.count(); i++) {
-			s.append(r.field(i).value().toString());
-			s.append(" ");
-		}
-		//qDebug() << "load from hdd: " << s;
+		//qDebug() << Q_FUNC_INFO << r.field(0).value().toString();
+		FileHelper fh(r.field(0).value().toString());
+		emit trackCreated(fh);
 	}
-
 	_db.close();
+	this->endResetModel();
 }
 
 void LibrarySqlModel::rebuild()
 {
+	this->beginResetModel();
+
 	// Open Connection
 	qDebug() << "db open" << _db.open();
 
@@ -66,22 +65,7 @@ void LibrarySqlModel::readFile(const QString &absFilePath)
 		insert.addBindValue(fh.album());
 		insert.addBindValue(fh.title());
 		insert.addBindValue(absFilePath);
-		insert.exec();
-
-		//QPersistentModelIndex p();
-
-		QSqlError e = insert.lastError();
-		//qDebug() << "Error ?" << (e.type() != 0);
-
-		/*fh.artist();
-		fh.title();
-		absFilePath;
-		fh.album();
-		fh.artistAlbum();
-		fh.discNumber();
-		fh.trackNumber().toInt();
-		fh.year().toInt();*/
-		//qDebug() << "about to tell view that" << absFilePath << "was stored in a local database";
+		insert.exec();		
 		emit trackCreated(fh);
 	} else {
 		//qDebug() << "INVALID FILE FOR:" << absFilePath;
@@ -92,4 +76,5 @@ void LibrarySqlModel::saveDB()
 {
 	// Close Connection
 	_db.close();
+	this->endResetModel();
 }

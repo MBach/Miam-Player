@@ -1,7 +1,6 @@
 #include "libraryitemdelegate.h"
 
-#include "settings.h"
-#include <model/libraryitem.h>
+#include <settings.h>
 #include "librarytreeview.h"
 #include "playlists/starrating.h"
 
@@ -11,19 +10,20 @@
 LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 	QStyledItemDelegate(proxy), _proxy(proxy)
 {
-	//_libraryModel = static_cast<LibraryModel*>(_proxy->sourceModel());
+
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	/*LibraryItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
+	/*const QStandardItemModel *model = qobject_cast<const QStandardItemModel*>(_proxy->sourceModel());
+	QStandardItem *item = model->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItemV4 o = option;
 	initStyleOption(&o, index);
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
 	if (item->type() == LibraryItem::Track && Settings::getInstance()->isStarDelegates()) {
-		LibraryItemTrack *track = static_cast<LibraryItemTrack*>(item);
+		QStandardItem *track = static_cast<QStandardItem*>(item);
 		FileHelper fh(track->absoluteFilePath());
 		if (fh.rating() > 0) {
 			StarRating starRating(fh.rating());
@@ -32,7 +32,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	}
 	switch (item->type()) {
 	case LibraryItem::Album:
-		this->drawAlbum(painter, o, static_cast<LibraryItemAlbum*>(item));
+		this->drawAlbum(painter, o, item);
 		break;
 	case LibraryItem::Artist:
 		this->drawArtist(painter, o, index);
@@ -44,7 +44,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->drawLetter(painter, o, index);
 		break;
 	case LibraryItem::Track:
-		this->drawTrack(painter, o, static_cast<const LibraryItemTrack*>(item));
+		this->drawTrack(painter, o, item);
 		break;
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
@@ -64,20 +64,18 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	}*/
 }
 
-/*
-void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, LibraryItemAlbum *item) const
+void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
 {
-	static QImageReader imageReader;
+	/*static QImageReader imageReader;
 	// Albums have covers usually
 	if (item->icon().isNull()) {
 		Settings *settings = Settings::getInstance();
 		imageReader.setFileName(item->absolutePath() + '/' + item->coverFileName());
 		imageReader.setScaledSize(QSize(settings->coverSize(), settings->coverSize()));
 		item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
-	}
+	}*/
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
-*/
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -108,14 +106,12 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	QStyledItemDelegate::paint(painter, option, index);
 }
 
-/*
-void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const LibraryItemTrack *track) const
+void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const
 {
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
-	QString title = QString("%1").arg(track->trackNumber(), 2, 10, QChar('0')).append(". ").append(track->text());
+	/*QString title = QString("%1").arg(track->trackNumber(), 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
-	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
+	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);*/
 }
-*/

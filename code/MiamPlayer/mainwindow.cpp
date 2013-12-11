@@ -429,9 +429,9 @@ void MainWindow::drawLibrary(bool b)
 		if (sender() == actionScanLibrary) {
 			b = true;
 		}
-		//library->beginPopulateTree(b);
-		//_libraryModel->loadFromFile();
-		_librarySqlModel->loadFromFile();
+		qDebug() << Q_FUNC_INFO;
+		library->reset();
+		_librarySqlModel->loadFromFileDB();
 	}
 }
 
