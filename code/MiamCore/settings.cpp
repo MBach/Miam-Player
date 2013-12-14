@@ -164,17 +164,6 @@ bool Settings::hasCustomIcon(QPushButton *b) const
 	return customIcons.value(b->objectName()).toBool();
 }
 
-Settings::InsertPolicy Settings::insertPolicy() const
-{
-	QVariant vPolicy = value("insertPolicy");
-	if (vPolicy.isNull()) {
-		return Artist;
-	} else {
-		int i = vPolicy.toInt();
-		return InsertPolicy(i);
-	}
-}
-
 /** Returns true if covers are displayed in the library. */
 bool Settings::isCoversEnabled() const
 {
@@ -276,11 +265,6 @@ void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
 		customIcons.insert(b->objectName(), iconPath);
 	}
 	setValue("customIcons", customIcons);
-}
-
-void Settings::setInsertPolicy(InsertPolicy policy)
-{
-	setValue("insertPolicy", policy);
 }
 
 void Settings::setLanguage(const QString &lang)

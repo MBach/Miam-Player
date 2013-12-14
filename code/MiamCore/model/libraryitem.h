@@ -9,7 +9,6 @@ class MIAMCORE_LIBRARY LibraryItem : public QStandardItem
 {
 private:
 	Q_ENUMS(CustomType)
-	//Q_ENUMS(MediaType)
 
 public:
 	enum CustomType { TITLE				= Qt::DisplayRole,
@@ -30,15 +29,6 @@ public:
 	LibraryItem(const QString &text);
 
 	virtual ~LibraryItem() {}
-
-	/*enum MediaType { Artist		= QStandardItem::UserType + 1,
-					 Album		= QStandardItem::UserType + 2,
-					 Track		= QStandardItem::UserType + 3,
-					 Letter		= QStandardItem::UserType + 4,
-					 Disc		= QStandardItem::UserType + 5
-				   };*/
-
-	//enum MediaType { Artist, Album, Track, Letter, Disc };
 
 	enum { NormalizedString = Qt::UserRole + 10 };
 

@@ -22,13 +22,13 @@ LibrarySqlModel::LibrarySqlModel(QObject *parent) :
 void LibrarySqlModel::loadFromFileDB()
 {
 	this->beginResetModel();
-	_db.open();
+	qDebug() << "db open success?" << _db.open();
 
-	QSqlQuery qLoadFileDB = _db.exec("SELECT absPath FROM tracks;");
-	qDebug() << qLoadFileDB.lastError() << qLoadFileDB.size();
+	QSqlQuery qLoadFileDB;
+	bool e = qLoadFileDB.exec("SELECT absPath FROM tracks");
+	qDebug() << "exec success?" << e;
 	while (qLoadFileDB.next()) {
 		QSqlRecord r = qLoadFileDB.record();
-		//qDebug() << Q_FUNC_INFO << r.field(0).value().toString();
 		FileHelper fh(r.field(0).value().toString());
 		emit trackCreated(fh);
 	}

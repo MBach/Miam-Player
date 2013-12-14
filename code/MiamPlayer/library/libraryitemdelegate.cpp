@@ -8,67 +8,72 @@
 #include <QImageReader>
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy), _proxy(proxy)
+	QStyledItemDelegate(proxy)
 {
-
+	_proxy = proxy;
+	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	/*const QStandardItemModel *model = qobject_cast<const QStandardItemModel*>(_proxy->sourceModel());
-	QStandardItem *item = model->itemFromIndex(_proxy->mapToSource(index));
+	//QStandardItem *item = _libraryModel.data()->itemFromIndex(index);
 	QStyleOptionViewItemV4 o = option;
 	initStyleOption(&o, index);
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
-	if (item->type() == LibraryItem::Track && Settings::getInstance()->isStarDelegates()) {
-		QStandardItem *track = static_cast<QStandardItem*>(item);
+	/*int type = item->data(Qt::UserRole + 1).toInt();
+	if (type == LibraryTreeView::Track && Settings::getInstance()->isStarDelegates()) {
 		FileHelper fh(track->absoluteFilePath());
 		if (fh.rating() > 0) {
 			StarRating starRating(fh.rating());
 			starRating.paint(painter, o.rect, o.palette, StarRating::ReadOnly);
 		}
-	}
-	switch (item->type()) {
-	case LibraryItem::Album:
-		this->drawAlbum(painter, o, item);
+	}*/
+
+	//qDebug() << "painting" << fh.absFilePath();
+
+	int type = -1;
+	switch (type) {
+	case LibraryTreeView::Album:
+		//this->drawAlbum(painter, o, item);
 		break;
-	case LibraryItem::Artist:
+	case LibraryTreeView::Artist:
 		this->drawArtist(painter, o, index);
 		break;
-	case LibraryItem::Disc:
+	case LibraryTreeView::Disc:
 		this->drawDisc(painter, o, index);
 		break;
-	case LibraryItem::Letter:
+	case LibraryTreeView::Letter:
 		this->drawLetter(painter, o, index);
 		break;
-	case LibraryItem::Track:
-		this->drawTrack(painter, o, item);
+	case LibraryTreeView::Track:
+		//this->drawTrack(painter, o, item);
 		break;
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
 		break;
-	}*/
+	}
 }
 
 /** Redefined to always display the same height for albums, even for those without one. */
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	/*Settings *settings = Settings::getInstance();
+	Settings *settings = Settings::getInstance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	if (settings->isCoversEnabled() && item->type() == LibraryItem::Album) {
+	int type = item->data(Qt::UserRole + 1).toInt();
+	if (settings->isCoversEnabled() && type == LibraryTreeView::Album) {
 		return QSize(settings->coverSize(), settings->coverSize() + 2);
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
-	}*/
+	}
 }
 
 void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
 {
-	/*static QImageReader imageReader;
+	static QImageReader imageReader;
 	// Albums have covers usually
-	if (item->icon().isNull()) {
+	/*if (item->icon().isNull()) {
 		Settings *settings = Settings::getInstance();
 		imageReader.setFileName(item->absolutePath() + '/' + item->coverFileName());
 		imageReader.setScaledSize(QSize(settings->coverSize(), settings->coverSize()));
@@ -111,7 +116,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
-	/*QString title = QString("%1").arg(track->trackNumber(), 2, 10, QChar('0')).append(". ").append(track->text());
-	option.text = title;
-	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);*/
+	//QString title = QString("%1").arg(track->trackNumber(), 2, 10, QChar('0')).append(". ").append(track->text());
+	//option.text = title;
+	//option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
 }

@@ -31,15 +31,9 @@ private:
 	QMap<QString, QVariant> columnStates;
 
 	Q_ENUMS(FontFamily)
-	Q_ENUMS(InsertPolicy)
 
 public:
 	enum FontFamily{PLAYLIST, LIBRARY, MENUS};
-
-	enum InsertPolicy { Artist = 0,
-						Album = 1,
-						ArtistAlbum = 2,
-						Year = 3};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
@@ -75,9 +69,6 @@ public:
 	/** Custom icons in CustomizeTheme */
 	bool hasCustomIcon(QPushButton *) const;
 
-	/** How tracks are insterted and sorted in the library. */
-	InsertPolicy insertPolicy() const;
-
 	/** Returns true if covers are displayed in the library. */
 	bool isCoversEnabled() const;
 
@@ -105,8 +96,6 @@ public:
 
 	/** Custom icons in CustomizeTheme */
 	void setCustomIcon(QPushButton *, const QString &buttonName);
-
-	void setInsertPolicy(InsertPolicy policy);
 
 	/** Sets the language of the application. */
 	void setLanguage(const QString &lang);

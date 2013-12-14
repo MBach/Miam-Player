@@ -43,6 +43,9 @@ FileHelper::FileHelper(const QMediaContent &track)
 FileHelper::FileHelper(const QString &filePath)
 {
 	QFileInfo fileInfo(filePath);
+	if (fileInfo.isFile()) {
+		_absFilePath = filePath;
+	}
 	QString suffix = fileInfo.suffix().toLower();
 	const char *fp = QFile::encodeName(filePath).constData();
 	if (suffix == "ape") {
@@ -75,6 +78,7 @@ FileHelper::FileHelper(const QString &filePath)
 FileHelper::~FileHelper()
 {
 	delete _file;
+	_file = 0;
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -405,7 +409,11 @@ bool FileHelper::isValid() const
 
 QString FileHelper::title() const
 {
-	return QString(_file->tag()->title().toCString(true));
+	if (_file->tag()) {
+		return QString(_file->tag()->title().toCString(true));
+	} else {
+		return QString("Error reading tags");
+	}
 }
 
 QString FileHelper::trackNumber() const
@@ -415,7 +423,11 @@ QString FileHelper::trackNumber() const
 
 QString FileHelper::album() const
 {
-	return QString(_file->tag()->album().toCString(true));
+	if (_file->tag()) {
+		return QString(_file->tag()->album().toCString(true));
+	} else {
+		return QString("Error reading tags");
+	}
 }
 
 QString FileHelper::length() const
@@ -425,7 +437,11 @@ QString FileHelper::length() const
 
 QString FileHelper::artist() const
 {
-	return QString(_file->tag()->artist().toCString(true));
+	if (_file->tag()) {
+		return QString(_file->tag()->artist().toCString(true));
+	} else {
+		return QString("Error reading tags");
+	}
 }
 
 QString FileHelper::year() const
@@ -446,6 +462,11 @@ QString FileHelper::comment() const
 bool FileHelper::save()
 {
 	return _file->save();
+}
+
+QString FileHelper::absFilePath() const
+{
+	return _absFilePath;
 }
 
 QString FileHelper::convertKeyToID3v2Key(QString key)

@@ -67,7 +67,7 @@ public slots:
 	void bindShortcut(const QString&, int keySequence);
 
 private slots:
-	void drawLibrary(bool b = false);
+	//void drawLibrary(bool b = false);
 
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();

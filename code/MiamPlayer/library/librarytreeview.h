@@ -1,6 +1,7 @@
 #ifndef LIBRARYTREEVIEW_H
 #define LIBRARYTREEVIEW_H
 
+#include <filehelper.h>
 #include <model/librarysqlmodel.h>
 #include <settings.h>
 
@@ -21,7 +22,6 @@ class LibraryTreeView : public TreeView
 	Q_OBJECT
 
 private:
-	LibraryOrderDialog *_lod;
 	LibraryFilterProxyModel *proxyModel;
 	CircleProgressBar *circleProgressBar;
 	QPoint currentPos;
@@ -30,16 +30,16 @@ private:
 	QStandardItemModel* _libraryModel;
 	LibrarySqlModel *sqlModel;
 
-	Settings::InsertPolicy _currentInsertPolicy;
-
 	QMap<QString, QStandardItem*> _artists;
 	QHash<QPair<QStandardItem*, QString>, QStandardItem*> _albums;
 	QHash<QPair<QStandardItem*, int>, QStandardItem*> _discNumbers;
 	QHash<QString, QStandardItem*> _albums2;
 	QHash<QString, QStandardItem*> _albumsAbsPath;
 	QHash<QString, QStandardItem*> _artistsAlbums;
-	QHash<int, QStandardItem*> _years;
+	QHash<QString, QStandardItem*> _years;
 	QSet<QString> _letters;
+
+	Q_ENUMS(ItemType)
 
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
@@ -50,9 +50,14 @@ public:
 
 	void insertTrack(const FileHelper &fh);
 
-	inline Settings::InsertPolicy currentInsertPolicy() const { return _currentInsertPolicy; }
-
-	inline void setInsertPolicy(Settings::InsertPolicy policy) { _currentInsertPolicy = policy; }
+	enum ItemType { Artist = 0,
+					Album = 1,
+					ArtistAlbum = 2,
+					Disc = 3,
+					Letter = 4,
+					Track = 5,
+					Year = 6,
+					AbsPath = Qt::UserRole + 1};
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -72,14 +77,11 @@ private:
 	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
 public slots:
-	/** Create the tree from a previously saved flat file, or directly from the hard-drive.*/
+	/** Reimplemented. */
 	void reset();
 
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);
-
-	/** Rebuild a subset of the tree. */
-	//void rebuild(QList<QPersistentModelIndex> indexes);
 
 private slots:
 	void endPopulateTree();

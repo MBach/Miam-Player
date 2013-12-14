@@ -3,7 +3,6 @@
 
 #include <QtMultimedia/QMediaContent>
 #include <QStringList>
-#include <QVariant>
 
 #include "miamcore_global.h"
 
@@ -24,6 +23,8 @@ private:
 	int fileType;
 
 	static const QStringList suff;
+
+	QString _absFilePath;
 
 	Q_ENUMS(extension)
 
@@ -76,6 +77,8 @@ public:
 	QString genre() const;
 	QString comment() const;
 	bool save();
+
+	QString absFilePath() const;
 
 private:
 	QString convertKeyToID3v2Key(QString key);

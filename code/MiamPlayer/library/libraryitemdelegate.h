@@ -7,13 +7,16 @@
 
 #include "libraryfilterproxymodel.h"
 
+#include <QPointer>
 #include <QStandardItem>
 
 class LibraryItemDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 private:
-	LibraryFilterProxyModel* _proxy;
+	QPointer<LibraryFilterProxyModel> _proxy;
+
+	QPointer<QStandardItemModel> _libraryModel;
 
 public:
 	LibraryItemDelegate(LibraryFilterProxyModel *proxy);

@@ -80,7 +80,28 @@ void MainWindow::init()
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
-	this->drawLibrary();
+
+	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
+	quickStart->setVisible(isEmpty);
+	/// XXX For each view
+	library->setHidden(isEmpty);
+	/// XXX
+	actionScanLibrary->setDisabled(isEmpty);
+	widgetSearchBar->setHidden(isEmpty);
+	this->toggleTagEditor(false);
+	if (isEmpty) {
+		quickStart->searchMultimediaFiles();
+	} else {
+		QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
+		QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
+		if (QFileInfo::exists(dbPath)) {
+			qDebug() << "a previous db file was found, just load it";
+			_librarySqlModel->loadFromFileDB();
+		} else {
+			qDebug() << "no db found, scan the hard drive";
+			_librarySqlModel->rebuild();
+		}
+	}
 
 	Settings *settings = Settings::getInstance();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
@@ -153,9 +174,7 @@ void MainWindow::updateFonts(const QFont &font)
 void MainWindow::setupActions()
 {
 	// Load music
-	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=] () {
-		this->drawLibrary(true);
-	});
+	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, _librarySqlModel, &LibrarySqlModel::rebuild);
 
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
@@ -215,7 +234,7 @@ void MainWindow::setupActions()
 			}
 		}
 		Settings::getInstance()->setMusicLocations(newLocations);
-		this->drawLibrary(true);
+		//this->drawLibrary(true);
 		quickStart->hide();
 	});
 
@@ -413,7 +432,7 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 }
 
 /** Draw the library widget by calling subcomponents. */
-void MainWindow::drawLibrary(bool b)
+/*void MainWindow::drawLibrary(bool b)
 {
 	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
@@ -433,7 +452,7 @@ void MainWindow::drawLibrary(bool b)
 		library->reset();
 		_librarySqlModel->loadFromFileDB();
 	}
-}
+}*/
 
 /** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 void MainWindow::aboutM4P()
