@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include <miamuniquelibrary_global.h>
+#include <model/librarysqlmodel.h>
 
 namespace Ui {
 class UniqueLibrary;
@@ -11,27 +12,33 @@ class UniqueLibrary;
 
 class FlowLayout;
 
-class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget/*, public Ui::UniqueLibrary*/
+class AlbumForm;
+
+class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget
 {
 	Q_OBJECT
+
+private:
+	Ui::UniqueLibrary *ui;
+	FlowLayout *_flowLayout;
+	LibrarySqlModel *_sqlModel;
+
+	QMap<QString, AlbumForm*> _albums;
 
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);
 
+	void init(LibrarySqlModel *sql);
+
+	void insertTrackFromRecord(const QSqlRecord &record);
+	void insertTrackFromFile(const FileHelper &fh);
+
 private:
-	Ui::UniqueLibrary *ui;
+	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
+					 int discNumber, const QString &title, int year);
 
-	FlowLayout *_flowLayout;
-
-/// Proof of concept
 private slots:
-	void changeNumberOfButtons(int max);
-	void changeWidthOfButtons(int max);
-	void changeHeightOfButtons(int max);
-
-private:
-	int _maxW;
-	int _maxH;
+	void reset();
 };
 
 #endif // UNIQUELIBRARY_H

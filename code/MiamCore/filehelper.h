@@ -77,7 +77,6 @@ public:
 	QString genre() const;
 	QString comment() const;
 	bool save();
-
 	QString absFilePath() const;
 
 private:

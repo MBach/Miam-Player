@@ -3,10 +3,12 @@
 
 #include <QPushButton>
 
+#include "miamcore_global.h"
+
 /**
 Class for buttons like "Play", "Stop", etc.
 */
-class MediaButton : public QPushButton
+class MIAMCORE_LIBRARY MediaButton : public QPushButton
 {
 	Q_OBJECT
 public:

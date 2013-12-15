@@ -29,17 +29,18 @@ CONFIG(release, debug|release) {
 win32:CONFIG += dll
 
 SOURCES += \
-    settings.cpp \
-    musicsearchengine.cpp \
-    quickstartsearchengine.cpp \
-    filehelper.cpp \
-    cover.cpp \
-    mediaplayer.cpp \
-    libraryfilterlineedit.cpp \
     model/libraryitem.cpp \
     model/persistentitem.cpp \
     model/libraryitemdiscnumber.cpp \
-    model/librarysqlmodel.cpp
+    model/librarysqlmodel.cpp \
+    cover.cpp \
+    filehelper.cpp \
+    mediabutton.cpp \
+    mediaplayer.cpp \
+    libraryfilterlineedit.cpp \
+    musicsearchengine.cpp \
+    quickstartsearchengine.cpp \
+    settings.cpp
 
 HEADERS += \
     settings.h \
@@ -59,7 +60,8 @@ HEADERS += \
     model/libraryitemtrack.h \
     model/persistentitem.h \
     model/libraryitemdiscnumber.h \
-    model/librarysqlmodel.h
+    model/librarysqlmodel.h \
+    mediabutton.h
 
 unix:!symbian {
     target.path = /usr/lib

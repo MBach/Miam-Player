@@ -25,12 +25,10 @@ void LibrarySqlModel::loadFromFileDB()
 	qDebug() << "db open success?" << _db.open();
 
 	QSqlQuery qLoadFileDB;
-	bool e = qLoadFileDB.exec("SELECT absPath FROM tracks");
+	bool e = qLoadFileDB.exec("SELECT * FROM tracks");
 	qDebug() << "exec success?" << e;
 	while (qLoadFileDB.next()) {
-		QSqlRecord r = qLoadFileDB.record();
-		FileHelper fh(r.field(0).value().toString());
-		emit trackCreated(fh);
+		emit trackExtractedFromDB(qLoadFileDB.record());
 	}
 	_db.close();
 	this->endResetModel();
@@ -46,7 +44,7 @@ void LibrarySqlModel::rebuild()
 	_db.exec("DROP TABLE tracks");
 
 	// Create a table in the memory DB
-	QSqlQuery qCreateTable = _db.exec("CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), title varchar(255), absPath varchar(255))");
+	QSqlQuery qCreateTable = _db.exec("CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), title varchar(255), discNumber int, year int, absPath varchar(255))");
 	qDebug() << "create: " << qCreateTable.lastError().type();
 
 	// Foreach file, insert tuple
@@ -59,14 +57,16 @@ void LibrarySqlModel::readFile(const QString &absFilePath)
 	FileHelper fh(absFilePath);
 	if (fh.isValid()) {
 		QSqlQuery insert;
-		insert.prepare("INSERT INTO tracks (artist, artistAlbum, album, title, absPath) VALUES (?, ?, ?, ?, ?);");
+		insert.prepare("INSERT INTO tracks (absPath, album, artist, artistAlbum, discNumber, title, year) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		insert.addBindValue(absFilePath);
+		insert.addBindValue(fh.album());
 		insert.addBindValue(fh.artist());
 		insert.addBindValue(fh.artistAlbum());
-		insert.addBindValue(fh.album());
+		insert.addBindValue(fh.discNumber());
 		insert.addBindValue(fh.title());
-		insert.addBindValue(absFilePath);
+		insert.addBindValue(fh.year());
 		insert.exec();		
-		emit trackCreated(fh);
+		emit trackExtractedFromFS(fh);
 	} else {
 		//qDebug() << "INVALID FILE FOR:" << absFilePath;
 	}

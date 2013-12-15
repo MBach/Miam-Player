@@ -1,7 +1,7 @@
 #include "mediabutton.h"
 
-#include "mainwindow.h"
 #include <settings.h>
+#include <QFile>
 
 #include <QtDebug>
 

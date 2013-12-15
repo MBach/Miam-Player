@@ -312,11 +312,10 @@ int FileHelper::rating() const
 					}
 				}
 			}
-		} else if (mpegFile->ID3v1Tag()) {
-			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";
 		}
 		break;
 	default:
+		qDebug() << "FileHelper::rating: Not implemented";
 		break;
 	}
 	return r;
@@ -468,6 +467,36 @@ QString FileHelper::absFilePath() const
 {
 	return _absFilePath;
 }
+
+/*void FileHelper::setAbsFilePath(const QString &)
+{
+
+}
+
+void FileHelper::setArtist(const QString &)
+{
+
+}
+
+void FileHelper::setArtistAlbum(const QString &)
+{
+
+}
+
+void FileHelper::setDiscNumber(int)
+{
+
+}
+
+void FileHelper::setTitle(const QString &)
+{
+
+}
+
+void FileHelper::setYear(int)
+{
+
+}*/
 
 QString FileHelper::convertKeyToID3v2Key(QString key)
 {

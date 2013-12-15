@@ -36,7 +36,7 @@ private:
 	QHash<QString, QStandardItem*> _albums2;
 	QHash<QString, QStandardItem*> _albumsAbsPath;
 	QHash<QString, QStandardItem*> _artistsAlbums;
-	QHash<QString, QStandardItem*> _years;
+	QHash<int, QStandardItem*> _years;
 	QSet<QString> _letters;
 
 	Q_ENUMS(ItemType)
@@ -46,9 +46,8 @@ public:
 
 	void init(LibrarySqlModel *sql);
 
-	void insertLetter(const QString &letters);
-
-	void insertTrack(const FileHelper &fh);
+	void insertTrackFromRecord(const QSqlRecord &record);
+	void insertTrackFromFile(const FileHelper &fh);
 
 	enum ItemType { Artist = 0,
 					Album = 1,
@@ -67,6 +66,11 @@ protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
+	void insertLetter(const QString &letters);
+
+	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
+					 int discNumber, const QString &title, int year);
+
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
 

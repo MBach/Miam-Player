@@ -17,7 +17,6 @@ SOURCES += \
     library/libraryorderdialog.cpp \
     library/librarytreeview.cpp \
     circleprogressbar.cpp \
-    mediabutton.cpp \
     tracksnotfoundmessagebox.cpp \
     quickstart.cpp \
     timelabel.cpp \
@@ -60,7 +59,6 @@ HEADERS += \
     library/libraryorderdialog.h \
     library/librarytreeview.h \
     circleprogressbar.h \
-    mediabutton.h \
     tracksnotfoundmessagebox.h \
     quickstart.h \
     timelabel.h \

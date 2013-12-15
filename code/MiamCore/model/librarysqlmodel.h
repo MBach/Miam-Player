@@ -30,7 +30,8 @@ private slots:
 	void saveDB();
 
 signals:
-	void trackCreated(const FileHelper &);
+	void trackExtractedFromFS(const FileHelper &);
+	void trackExtractedFromDB(const QSqlRecord &);
 };
 
 #endif // LIBRARYSQLMODEL_H

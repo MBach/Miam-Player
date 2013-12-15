@@ -77,6 +77,7 @@ void MainWindow::init()
 {
 	_librarySqlModel = new LibrarySqlModel(this);
 	library->init(_librarySqlModel);
+	_uniqueLibrary->init(_librarySqlModel);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();

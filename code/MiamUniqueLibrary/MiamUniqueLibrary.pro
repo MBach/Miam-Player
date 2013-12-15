@@ -1,4 +1,4 @@
-QT += widgets
+QT += sql widgets
 
 QMAKE_CXXFLAGS += -std=c++11
 
@@ -8,16 +8,19 @@ TEMPLATE = lib
 DEFINES += MIAMUNIQUELIBRARY_LIBRARY
 
 FORMS += \
-    uniquelibrary.ui
+    uniquelibrary.ui \
+    templateAlbum.ui
 
 HEADERS += \
     uniquelibrary.h \
     miamuniquelibrary_global.h \
-    flowlayout.h
+    flowlayout.h \
+    albumform.h
 
 SOURCES += \
     uniquelibrary.cpp \
-    flowlayout.cpp
+    flowlayout.cpp \
+    albumform.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore

@@ -8,55 +8,70 @@
 
 #include <QtDebug>
 
+#include "albumform.h"
+
 UniqueLibrary::UniqueLibrary(QWidget *parent) :
-	QWidget(parent), ui(new Ui::UniqueLibrary)
+	QWidget(parent), ui(new Ui::UniqueLibrary), _sqlModel(NULL)
 {
 	ui->setupUi(this);
 	_flowLayout = new FlowLayout();
 	ui->scrollArea->setWidgetResizable(true);
 	ui->scrollArea->widget()->setLayout(_flowLayout);
-
-	_maxH = 100;
-	_maxW = 100;
-	//connect(ui->buttonsNumberSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeNumberOfButtons(int)));
-	//connect(ui->hButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeHeightOfButtons(int)));
-	//connect(ui->wButtonsSpinBox, SIGNAL(valueChanged(int)), this, SLOT(changeWidthOfButtons(int)));
 }
 
-void UniqueLibrary::changeNumberOfButtons(int max)
+void UniqueLibrary::init(LibrarySqlModel *sql)
+{
+	_sqlModel = sql;
+
+	connect(_sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &UniqueLibrary::reset);
+	connect(_sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &UniqueLibrary::insertTrackFromFile);
+	connect(_sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &UniqueLibrary::insertTrackFromRecord);
+	//connect(_sqlModel, &LibrarySqlModel::modelReset, this, &UniqueLibrary::endPopulateTree);
+}
+
+void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
+{
+	int i = -1;
+	const QString artist = record.value(++i).toString();
+	const QString artistAlbum = record.value(++i).toString();
+	const QString album = record.value(++i).toString();
+	const QString title = record.value(++i).toString();
+	int discNumber = record.value(++i).toInt();
+	int year = record.value(++i).toInt();
+	const QString absFilePath = record.value(++i).toString();
+	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, year);
+}
+
+void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
+{
+	//this->insertTrack(fh.absFilePath(), fh.artistAlbum(), fh.artist(), fh.album(), fh.discNumber(),
+	//				  fh.title(), fh.year().toInt());
+}
+
+void UniqueLibrary::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
+				 int discNumber, const QString &title, int year)
+{
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	AlbumForm *wAlbum = NULL;
+	//qDebug() << "about to insert" << fh.title();
+	if (_albums.contains(album)) {
+		wAlbum = _albums.value(album);
+	} else {
+		wAlbum = new AlbumForm();
+		//wAlbum->setMinimumWidth(200);
+		wAlbum->setArtist(theArtist);
+		wAlbum->setAlbum(album);
+		wAlbum->setDiscNumber(discNumber);
+		_albums.insert(album, wAlbum);
+		ui->scrollArea->widget()->layout()->addWidget(wAlbum);
+	}
+	wAlbum->appendTrack(title);
+}
+
+void UniqueLibrary::reset()
 {
 	while (QLayoutItem* item = _flowLayout->takeAt(0)) {
 		delete item->widget();
 		delete item;
-	}
-
-	for (int i = 1; i <= max; i++) {
-		QPushButton *w = new QPushButton();
-		w->setStyleSheet("QPushButton { background: yellow } ");
-		w->setMinimumHeight(_maxH);
-		w->setMaximumHeight(_maxH);
-		w->setMinimumWidth(_maxW);
-		w->setMaximumWidth(_maxW);
-		ui->scrollArea->widget()->layout()->addWidget(w);
-	}
-}
-
-void UniqueLibrary::changeHeightOfButtons(int max)
-{
-	_maxH = max;
-	QList<QPushButton*> ws = ui->scrollArea->findChildren<QPushButton*>();
-	foreach (QPushButton *w, ws) {
-		w->setMinimumHeight(_maxH);
-		w->setMaximumHeight(_maxH);
-	}
-}
-
-void UniqueLibrary::changeWidthOfButtons(int max)
-{
-	_maxW = max;
-	QList<QPushButton*> ws = ui->scrollArea->findChildren<QPushButton*>();
-	foreach (QPushButton *w, ws) {
-		w->setMinimumWidth(_maxW);
-		w->setMaximumWidth(_maxW);
 	}
 }
