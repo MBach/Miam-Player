@@ -12,7 +12,7 @@ public:
 	explicit AlbumForm(QWidget *parent = 0);
 
 	void setArtist(const QString &artist);
-	void setAlbum(const QString &album);
+	void setAlbum(const QString &album, int year);
 	void setDiscNumber(int disc);
 	void appendTrack(const QString &track);
 

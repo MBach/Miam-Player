@@ -24,14 +24,16 @@ public slots:
 	void rebuild();
 
 private slots:
-	/** Read a file from the filesystem and adds it into the library. */
-	void readFile(const QString &absFilePath);
+	/** Reads an external picture which is close to multimedia files (same folder). */
+	void saveCoverRef(const QString &coverPath);
 
-	void saveDB();
+	/** Reads a file from the filesystem and adds it into the library. */
+	void saveFileRef(const QString &absFilePath);
 
 signals:
-	void trackExtractedFromFS(const FileHelper &);
+	void coverWasUpdated(const QFileInfo &);
 	void trackExtractedFromDB(const QSqlRecord &);
+	void trackExtractedFromFS(const FileHelper &);
 };
 
 #endif // LIBRARYSQLMODEL_H

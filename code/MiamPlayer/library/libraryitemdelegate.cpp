@@ -1,5 +1,6 @@
 #include "libraryitemdelegate.h"
 
+#include <cover.h>
 #include <settings.h>
 #include "librarytreeview.h"
 #include "playlists/starrating.h"
@@ -16,7 +17,7 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	//QStandardItem *item = _libraryModel.data()->itemFromIndex(index);
+	QStandardItem *item = _libraryModel->itemFromIndex(index);
 	QStyleOptionViewItemV4 o = option;
 	initStyleOption(&o, index);
 
@@ -33,10 +34,10 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 	//qDebug() << "painting" << fh.absFilePath();
 
-	int type = -1;
+	int type = item->data(LibraryTreeView::Type).toInt();
 	switch (type) {
 	case LibraryTreeView::Album:
-		//this->drawAlbum(painter, o, item);
+		this->drawAlbum(painter, o, item);
 		break;
 	case LibraryTreeView::Artist:
 		this->drawArtist(painter, o, index);
@@ -48,7 +49,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->drawLetter(painter, o, index);
 		break;
 	case LibraryTreeView::Track:
-		//this->drawTrack(painter, o, item);
+		this->drawTrack(painter, o, item);
 		break;
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
@@ -60,8 +61,9 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	Settings *settings = Settings::getInstance();
-	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	int type = item->data(Qt::UserRole + 1).toInt();
+	//QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
+	QStandardItem *item = _libraryModel->itemFromIndex(index);
+	int type = item->data(LibraryTreeView::Type).toInt();
 	if (settings->isCoversEnabled() && type == LibraryTreeView::Album) {
 		return QSize(settings->coverSize(), settings->coverSize() + 2);
 	} else {
@@ -69,16 +71,26 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	}
 }
 
+/** Albums have covers usually. */
 void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	static QImageReader imageReader;
-	// Albums have covers usually
-	/*if (item->icon().isNull()) {
-		Settings *settings = Settings::getInstance();
-		imageReader.setFileName(item->absolutePath() + '/' + item->coverFileName());
-		imageReader.setScaledSize(QSize(settings->coverSize(), settings->coverSize()));
-		item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
-	}*/
+	QString file = item->data(LibraryTreeView::CoverPath).toString();
+	if (item->icon().isNull() && !file.isEmpty()) {
+		FileHelper fh(file);
+		QFileInfo f(file);
+		// If it's an inner cover
+		if (FileHelper::suffixes().contains(f.suffix())) {
+			Cover *cover = fh.extractCover();
+			QPixmap p;
+			p.loadFromData(cover->byteArray(), cover->format());
+			item->setIcon(QIcon(p));
+		} else {
+			imageReader.setFileName(QDir::fromNativeSeparators(file));
+			imageReader.setScaledSize(QSize(Settings::getInstance()->coverSize(), Settings::getInstance()->coverSize()));
+			item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
+		}
+	}
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
 

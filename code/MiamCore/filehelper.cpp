@@ -42,11 +42,8 @@ FileHelper::FileHelper(const QMediaContent &track)
 
 FileHelper::FileHelper(const QString &filePath)
 {
-	QFileInfo fileInfo(filePath);
-	if (fileInfo.isFile()) {
-		_absFilePath = filePath;
-	}
-	QString suffix = fileInfo.suffix().toLower();
+	_fileInfo = QFileInfo(filePath);
+	QString suffix = _fileInfo.suffix().toLower();
 	const char *fp = QFile::encodeName(filePath).constData();
 	if (suffix == "ape") {
 		_file = new APE::File(fp);
@@ -462,41 +459,6 @@ bool FileHelper::save()
 {
 	return _file->save();
 }
-
-QString FileHelper::absFilePath() const
-{
-	return _absFilePath;
-}
-
-/*void FileHelper::setAbsFilePath(const QString &)
-{
-
-}
-
-void FileHelper::setArtist(const QString &)
-{
-
-}
-
-void FileHelper::setArtistAlbum(const QString &)
-{
-
-}
-
-void FileHelper::setDiscNumber(int)
-{
-
-}
-
-void FileHelper::setTitle(const QString &)
-{
-
-}
-
-void FileHelper::setYear(int)
-{
-
-}*/
 
 QString FileHelper::convertKeyToID3v2Key(QString key)
 {

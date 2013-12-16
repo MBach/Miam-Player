@@ -40,14 +40,15 @@ private:
 	QSet<QString> _letters;
 
 	Q_ENUMS(ItemType)
+	Q_ENUMS(Field)
 
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
 
 	void init(LibrarySqlModel *sql);
 
-	void insertTrackFromRecord(const QSqlRecord &record);
 	void insertTrackFromFile(const FileHelper &fh);
+	void insertTrackFromRecord(const QSqlRecord &record);
 
 	enum ItemType { Artist = 0,
 					Album = 1,
@@ -55,8 +56,12 @@ public:
 					Disc = 3,
 					Letter = 4,
 					Track = 5,
-					Year = 6,
-					AbsPath = Qt::UserRole + 1};
+					Year = 6 };
+
+	// User defined data types (item->setData(QVariant, Field);)
+	enum Field { Type = Qt::UserRole + 1,
+				 AbsFilePath = Qt::UserRole + 2,
+				 CoverPath = Qt::UserRole + 3};
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -66,11 +71,6 @@ protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
-	void insertLetter(const QString &letters);
-
-	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
-					 int discNumber, const QString &title, int year);
-
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
 
@@ -80,12 +80,19 @@ private:
 	/** Reimplemented. */
 	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
-public slots:
-	/** Reimplemented. */
-	void reset();
+	void insertLetter(const QString &letters);
 
+	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
+					 int discNumber, const QString &title, int year);
+
+	void updateCover(const QFileInfo &coverFileInfo);
+
+public slots:
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);
+
+	/** Reimplemented. */
+	void reset();
 
 private slots:
 	void endPopulateTree();

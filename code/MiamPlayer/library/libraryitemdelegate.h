@@ -27,6 +27,7 @@ public:
 	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
 
 private:
+	/** Albums have covers usually. */
 	void drawAlbum(QPainter *painter, const QStyleOptionViewItem &o, QStandardItem *item) const;
 
 	void drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

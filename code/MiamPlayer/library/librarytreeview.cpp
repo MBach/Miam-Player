@@ -65,7 +65,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	proxyModel->setSourceModel(_libraryModel);
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 
-	//this->setItemDelegate(new LibraryItemDelegate(proxyModel));
+	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
 	//connect(_libraryModel, &LibraryModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
@@ -73,6 +73,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	connect(sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &LibraryTreeView::insertTrackFromFile);
 	connect(sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &LibraryTreeView::insertTrackFromRecord);
 	connect(sqlModel, &LibrarySqlModel::modelReset, this, &LibraryTreeView::endPopulateTree);
+	connect(sqlModel, &LibrarySqlModel::coverWasUpdated, this, &LibraryTreeView::updateCover);
 
 	// One can choose a hierarchical order for drawing the library
 	LibraryOrderDialog *_lod = new LibraryOrderDialog(this);
@@ -83,23 +84,12 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::loadFromFileDB);
 }
 
-void LibraryTreeView::insertLetter(const QString &letters)
+void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
 {
-	if (!letters.isEmpty()) {
-		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
-		QString letter;
-		if (c.contains(QRegExp("\\w"))) {
-			letter = c;
-		} else {
-			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
-			letter = tr(" Various");
-		}
-		if (!_letters.contains(letter)) {
-			_letters.insert(letter);
-			_libraryModel->invisibleRootItem()->appendRow(new QStandardItem(letter));
-		}
-	}
+	this->insertTrack(fh.fileInfo().absoluteFilePath(), fh.artistAlbum(), fh.artist(), fh.album(), fh.discNumber(),
+					  fh.title(), fh.year().toInt());
 }
+
 void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
 {
 	int i = -1;
@@ -112,128 +102,6 @@ void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
 	const QString absFilePath = record.value(++i).toString();
 	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, year);
 }
-
-void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
-{
-	this->insertTrack(fh.absFilePath(), fh.artistAlbum(), fh.artist(), fh.album(), fh.discNumber(),
-					  fh.title(), fh.year().toInt());
-}
-
-void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
-								  const QString &album, int discNumber, const QString &title, int year)
-{
-	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
-
-	QStandardItem *itemArtist = NULL;
-	QStandardItem *itemAlbum = NULL;
-	QStandardItem *itemTrack = NULL;
-	QStandardItem *itemYear = NULL;
-	QStandardItem *itemDiscNumber = NULL;
-
-	//qDebug() << "about to insert" << fh.title();
-
-	static bool existingArtist = true;
-	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
-	case Artist:
-		// Level 1
-		if (_artists.contains(theArtist.toLower())) {
-			itemArtist = _artists.value(theArtist.toLower());
-			existingArtist = true;
-		} else {
-			itemArtist = new QStandardItem(theArtist);
-			itemArtist->setData(Qt::UserRole + 1);
-			_artists.insert(theArtist.toLower(), itemArtist);
-			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
-			this->insertLetter(theArtist);
-			existingArtist = false;
-		}
-		// Level 2
-		if (existingArtist && _albums.contains(QPair<QStandardItem*, QString>(itemArtist, album))) {
-			itemAlbum = _albums.value(QPair<QStandardItem*, QString>(itemArtist, album));
-		} else {
-			itemAlbum = new QStandardItem(album);
-			_albums.insert(QPair<QStandardItem *, QString>(itemArtist, album), itemAlbum);
-			itemArtist->appendRow(itemAlbum);
-		}
-		// Level 3 (option)
-		if (discNumber > 0 && !_discNumbers.contains(QPair<QStandardItem*, int>(itemAlbum, discNumber))) {
-			itemDiscNumber = new QStandardItem(QString::number(discNumber));
-			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, discNumber), itemDiscNumber);
-			itemAlbum->appendRow(itemDiscNumber);
-		}
-		// Level 3
-		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
-			itemTrack = new QStandardItem(title);
-		} else {
-			itemTrack = new QStandardItem(title + " (" + artist + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case Album:
-		// Level 1
-		if (_albums2.contains(album)) {
-			itemAlbum = _albums2.value(album);
-		} else {
-			itemAlbum = new QStandardItem(album);
-			_albums2.insert(album, itemAlbum);
-			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			this->insertLetter(album);
-		}
-		// Level 2
-		itemTrack = new QStandardItem(title);
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case ArtistAlbum:
-		// Level 1
-		if (_albums2.contains(theArtist + album)) {
-			itemAlbum = _albums2.value(theArtist + album);
-		} else {
-			itemAlbum = new QStandardItem(theArtist + " – " + album);
-			_albums2.insert(theArtist + album, itemAlbum);
-			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			this->insertLetter(theArtist);
-		}
-		// Level 2
-		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
-			itemTrack = new QStandardItem(title);
-		} else {
-			itemTrack = new QStandardItem(title + " (" + artist + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case Year:
-		// Level 1
-		if (_years.contains(year)) {
-			itemYear = _years.value(year);
-		} else {
-			if (year > 0) {
-				itemYear = new QStandardItem(year);
-			} else {
-				itemYear = new QStandardItem();
-			}
-			_years.insert(year, itemYear);
-			_libraryModel->invisibleRootItem()->appendRow(itemYear);
-		}
-		// Level 2
-		if (_albums2.contains(theArtist + album)) {
-			itemAlbum = _albums2.value(theArtist + album);
-		} else {
-			itemAlbum = new QStandardItem(theArtist + " – " + album);
-			_albums2.insert(theArtist + album, itemAlbum);
-			itemYear->appendRow(itemAlbum);
-		}
-		// Level 3
-		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
-			itemTrack = new QStandardItem(title);
-		} else {
-			itemTrack = new QStandardItem(title + " (" + artist + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	}
-	itemTrack->setData(absFilePath, AbsPath);
-}
-
 
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
@@ -304,6 +172,186 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 	}*/
 }
 
+void LibraryTreeView::insertLetter(const QString &letters)
+{
+	if (!letters.isEmpty()) {
+		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
+		QString letter;
+		if (c.contains(QRegExp("\\w"))) {
+			letter = c;
+		} else {
+			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
+			letter = tr(" Various");
+		}
+		if (!_letters.contains(letter)) {
+			_letters.insert(letter);
+			_libraryModel->invisibleRootItem()->appendRow(new QStandardItem(letter));
+		}
+	}
+}
+
+void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
+								  const QString &album, int discNumber, const QString &title, int year)
+{
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+
+	QStandardItem *itemArtist = NULL;
+	QStandardItem *itemAlbum = NULL;
+	QStandardItem *itemTrack = NULL;
+	QStandardItem *itemYear = NULL;
+	QStandardItem *itemDiscNumber = NULL;
+
+	static bool existingArtist = true;
+	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
+	case Artist:
+		// Level 1
+		if (_artists.contains(theArtist.toLower())) {
+			itemArtist = _artists.value(theArtist.toLower());
+			existingArtist = true;
+		} else {
+			itemArtist = new QStandardItem(theArtist);
+			itemArtist->setData(Artist, Type);
+			_artists.insert(theArtist.toLower(), itemArtist);
+			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
+			this->insertLetter(theArtist);
+			existingArtist = false;
+		}
+		// Level 2
+		if (existingArtist && _albums.contains(QPair<QStandardItem*, QString>(itemArtist, album))) {
+			itemAlbum = _albums.value(QPair<QStandardItem*, QString>(itemArtist, album));
+		} else {
+			itemAlbum = new QStandardItem(album);
+			itemAlbum->setData(QVariant(Album), Type);
+			QSqlQuery internalCover("SELECT * FROM tracks WHERE album = ? AND internalCover = 1");
+			internalCover.addBindValue(album);
+			internalCover.exec();
+			if (internalCover.next()) {
+				itemAlbum->setData(absFilePath, CoverPath);
+			} else {
+				QSqlQuery externalCover("SELECT coverAbsPath FROM tracks WHERE album = ?");
+				externalCover.addBindValue(album);
+				externalCover.exec();
+				if (externalCover.next()) {
+					itemAlbum->setData(externalCover.record().value(0).toString(), CoverPath);
+				}
+			}
+			_albums.insert(QPair<QStandardItem *, QString>(itemArtist, album), itemAlbum);
+			_albums2.insert(album, itemAlbum);
+			itemArtist->appendRow(itemAlbum);
+		}
+		// Level 3 (option)
+		if (discNumber > 0 && !_discNumbers.contains(QPair<QStandardItem*, int>(itemAlbum, discNumber))) {
+			itemDiscNumber = new QStandardItem(QString::number(discNumber));
+			itemDiscNumber->setData(Disc, Type);
+			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, discNumber), itemDiscNumber);
+			itemAlbum->appendRow(itemDiscNumber);
+		}
+		// Level 3
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new QStandardItem(title);
+		} else {
+			itemTrack = new QStandardItem(title + " (" + artist + ")");
+		}
+		itemTrack->setData(Track, Type);
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case Album:
+		// Level 1
+		if (_albums2.contains(album)) {
+			itemAlbum = _albums2.value(album);
+		} else {
+			itemAlbum = new QStandardItem(album);
+			_albums2.insert(album, itemAlbum);
+			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
+			this->insertLetter(album);
+		}
+		// Level 2
+		itemTrack = new QStandardItem(title);
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case ArtistAlbum:
+		// Level 1
+		if (_albums2.contains(theArtist + album)) {
+			itemAlbum = _albums2.value(theArtist + album);
+		} else {
+			itemAlbum = new QStandardItem(theArtist + " – " + album);
+			_albums2.insert(theArtist + album, itemAlbum);
+			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
+			this->insertLetter(theArtist);
+		}
+		// Level 2
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new QStandardItem(title);
+		} else {
+			itemTrack = new QStandardItem(title + " (" + artist + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case Year:
+		// Level 1
+		if (_years.contains(year)) {
+			itemYear = _years.value(year);
+		} else {
+			if (year > 0) {
+				itemYear = new QStandardItem(year);
+			} else {
+				itemYear = new QStandardItem();
+			}
+			_years.insert(year, itemYear);
+			_libraryModel->invisibleRootItem()->appendRow(itemYear);
+		}
+		// Level 2
+		if (_albums2.contains(theArtist + album)) {
+			itemAlbum = _albums2.value(theArtist + album);
+		} else {
+			itemAlbum = new QStandardItem(theArtist + " – " + album);
+			_albums2.insert(theArtist + album, itemAlbum);
+			itemYear->appendRow(itemAlbum);
+		}
+		// Level 3
+		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
+			itemTrack = new QStandardItem(title);
+		} else {
+			itemTrack = new QStandardItem(title + " (" + artist + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	}
+	itemTrack->setData(absFilePath, AbsFilePath);
+}
+
+void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
+{
+	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?");
+	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
+	externalCover.exec();
+	if (externalCover.next()) {
+		QString album = externalCover.record().value(0).toString();
+		QStandardItem *itemAlbum = _albums2.value(album);
+		itemAlbum->setData(coverFileInfo.absoluteFilePath(), CoverPath);
+	}
+}
+
+/** Reduces the size of the library when the user is typing text. */
+void LibraryTreeView::filterLibrary(const QString &filter)
+{
+	if (filter.isEmpty()) {
+		proxyModel->setFilterRegExp(QRegExp());
+		collapseAll();
+		sortByColumn(0, Qt::AscendingOrder);
+	} else {
+		bool needToSortAgain = false;
+		if (proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
+			needToSortAgain = true;
+		}
+		proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
+		if (needToSortAgain) {
+			collapseAll();
+			sortByColumn(0, Qt::AscendingOrder);
+		}
+	}
+}
+
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
@@ -333,26 +381,6 @@ void LibraryTreeView::reset()
 	case Year:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Years"));
 		break;
-	}
-}
-
-/** Reduces the size of the library when the user is typing text. */
-void LibraryTreeView::filterLibrary(const QString &filter)
-{
-	if (filter.isEmpty()) {
-		proxyModel->setFilterRegExp(QRegExp());
-		collapseAll();
-		sortByColumn(0, Qt::AscendingOrder);
-	} else {
-		bool needToSortAgain = false;
-		if (proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
-			needToSortAgain = true;
-		}
-		proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
-		if (needToSortAgain) {
-			collapseAll();
-			sortByColumn(0, Qt::AscendingOrder);
-		}
 	}
 }
 

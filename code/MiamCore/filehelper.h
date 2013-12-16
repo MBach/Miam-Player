@@ -6,6 +6,8 @@
 
 #include "miamcore_global.h"
 
+#include <QFileInfo>
+
 class Cover;
 
 namespace TagLib {
@@ -24,7 +26,7 @@ private:
 
 	static const QStringList suff;
 
-	QString _absFilePath;
+	QFileInfo _fileInfo;
 
 	Q_ENUMS(extension)
 
@@ -77,7 +79,7 @@ public:
 	QString genre() const;
 	QString comment() const;
 	bool save();
-	QString absFilePath() const;
+	inline QFileInfo fileInfo() const { return _fileInfo; }
 
 private:
 	QString convertKeyToID3v2Key(QString key);

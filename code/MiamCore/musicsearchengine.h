@@ -21,7 +21,7 @@ signals:
 	///FIXME: however, it's not proven this file belongs to a well formed music directory like "<REP> -> Tracks + Cover.JPG"
 	void scannedCover(const QString &);
 
-	void scannedFiled(const QString &);
+	void scannedFile(const QString &);
 
 	void progressChanged(const int &);
 

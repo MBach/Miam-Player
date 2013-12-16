@@ -11,9 +11,10 @@ void AlbumForm::setArtist(const QString &artist)
 	artistPushButton->setText(artist);
 }
 
-void AlbumForm::setAlbum(const QString &album)
+void AlbumForm::setAlbum(const QString &album, int year)
 {
-	albumPushButton->setText(album);
+	QString text = album + " [" + QString::number(year) + "]";
+	albumPushButton->setText(text);
 }
 
 void AlbumForm::setDiscNumber(int discNumber)
