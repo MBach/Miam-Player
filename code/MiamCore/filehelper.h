@@ -8,6 +8,8 @@
 
 #include <QFileInfo>
 
+#include <memory>
+
 class Cover;
 
 namespace TagLib {
@@ -52,13 +54,16 @@ public:
 	/** Field ArtistAlbum if exists (in a compilation for example). */
 	QString artistAlbum() const;
 
-	/** Extract the disc number. */
+	/** Extract field disc number. */
 	int discNumber() const;
 
 	/** Extract the inner picture if exists. */
 	Cover* extractCover();
 
 	bool insert(QString key, const QVariant &value);
+
+	/** Check if file has an inner picture. */
+	bool hasCover() const;
 
 	/** Convert the existing rating number into a smaller range from 1 to 5. */
 	int rating() const;

@@ -13,6 +13,7 @@ public:
 
 	void setArtist(const QString &artist);
 	void setAlbum(const QString &album, int year);
+	void setCover(const QString &coverPath);
 	void setDiscNumber(int disc);
 	void appendTrack(const QString &track);
 

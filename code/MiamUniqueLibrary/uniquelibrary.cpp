@@ -26,6 +26,7 @@ void UniqueLibrary::init(LibrarySqlModel *sql)
 	connect(_sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &UniqueLibrary::reset);
 	connect(_sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &UniqueLibrary::insertTrackFromFile);
 	connect(_sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &UniqueLibrary::insertTrackFromRecord);
+	connect(_sqlModel, &LibrarySqlModel::coverWasUpdated, this, &UniqueLibrary::updateCover);
 }
 
 void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
@@ -51,7 +52,7 @@ void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
 void UniqueLibrary::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
 				 int discNumber, const QString &title, int year)
 {
-	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	/*QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	AlbumForm *wAlbum = NULL;
 	if (_albums.contains(album)) {
 		wAlbum = _albums.value(album);
@@ -63,7 +64,7 @@ void UniqueLibrary::insertTrack(const QString &absFilePath, const QString &artis
 		_albums.insert(album, wAlbum);
 		ui->scrollArea->widget()->layout()->addWidget(wAlbum);
 	}
-	wAlbum->appendTrack(title);
+	wAlbum->appendTrack(title);*/
 }
 
 void UniqueLibrary::reset()
@@ -72,5 +73,17 @@ void UniqueLibrary::reset()
 	while (QLayoutItem* item = _flowLayout->takeAt(0)) {
 		delete item->widget();
 		delete item;
+	}
+}
+
+void UniqueLibrary::updateCover(const QFileInfo &coverFileInfo)
+{
+	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?");
+	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
+	externalCover.exec();
+	if (externalCover.next()) {
+		QString album = externalCover.record().value(0).toString();
+		AlbumForm *albumForm = _albums.value(album);
+		albumForm->setCover(coverFileInfo.absoluteFilePath());
 	}
 }

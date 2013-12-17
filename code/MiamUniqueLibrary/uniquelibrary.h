@@ -39,6 +39,7 @@ private:
 
 private slots:
 	void reset();
+	void updateCover(const QFileInfo &coverFileInfo);
 };
 
 #endif // UNIQUELIBRARY_H

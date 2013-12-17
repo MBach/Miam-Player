@@ -5,8 +5,12 @@
 #include "librarytreeview.h"
 #include "playlists/starrating.h"
 
+#include <memory>
+
 #include <QtDebug>
 #include <QImageReader>
+
+using namespace std;
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 	QStyledItemDelegate(proxy)
@@ -81,10 +85,14 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewIte
 		QFileInfo f(file);
 		// If it's an inner cover
 		if (FileHelper::suffixes().contains(f.suffix())) {
-			Cover *cover = fh.extractCover();
-			QPixmap p;
-			p.loadFromData(cover->byteArray(), cover->format());
-			item->setIcon(QIcon(p));
+			unique_ptr<Cover> cover(fh.extractCover());
+			if (cover) {
+				QPixmap p;
+				p.loadFromData(cover->byteArray(), cover->format());
+				item->setIcon(QIcon(p));
+			} else {
+				item->setIcon(QIcon());
+			}
 		} else {
 			imageReader.setFileName(QDir::fromNativeSeparators(file));
 			imageReader.setScaledSize(QSize(Settings::getInstance()->coverSize(), Settings::getInstance()->coverSize()));
@@ -128,7 +136,8 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
-	//QString title = QString("%1").arg(track->trackNumber(), 2, 10, QChar('0')).append(". ").append(track->text());
-	//option.text = title;
-	//option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
+	int trackNumber = track->data(LibraryTreeView::TrackNumber).toInt();
+	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
+	option.text = title;
+	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
 }

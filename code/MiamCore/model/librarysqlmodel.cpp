@@ -1,6 +1,8 @@
 #include "librarysqlmodel.h"
 #include "filehelper.h"
 
+#include <cover.h>
+
 #include <QtDebug>
 
 LibrarySqlModel::LibrarySqlModel(QObject *parent) :
@@ -47,10 +49,13 @@ void LibrarySqlModel::rebuild()
 
 	_db.exec("DROP TABLE tracks");
 	QString createTable("CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), ");
-	createTable.append("title varchar(255), discNumber INTEGER, year INTEGER, absPath varchar(255), path varchar(255), ");
+	createTable.append("title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, absPath varchar(255) PRIMARY KEY ASC, path varchar(255), ");
 	createTable.append("coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0, externalCover INTEGER DEFAULT 0)");
-	QSqlQuery qCreateTable = _db.exec(createTable);
-	qDebug() << "create: " << qCreateTable.lastError().type();
+	_db.exec(createTable);
+	_db.exec("CREATE INDEX indexArtist ON tracks (artist)");
+	_db.exec("CREATE INDEX indexAlbum ON tracks (album)");
+	_db.exec("CREATE INDEX indexArtistAlbum ON tracks (artistAlbum)");
+	_db.exec("CREATE INDEX indexPath ON tracks (path)");
 
 	// Foreach file, insert tuple
 	_musicSearchEngine->doSearch();
@@ -73,17 +78,17 @@ void LibrarySqlModel::saveFileRef(const QString &absFilePath)
 	FileHelper fh(absFilePath);
 	if (fh.isValid()) {
 		QSqlQuery insert;
-		insert.prepare("INSERT INTO tracks (absPath, album, artist, artistAlbum, discNumber, internalCover, path, title, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.prepare("INSERT INTO tracks (absPath, album, artist, artistAlbum, discNumber, internalCover, path, title, trackNumber, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		insert.addBindValue(QDir::toNativeSeparators(absFilePath));
 		insert.addBindValue(fh.album());
 		insert.addBindValue(fh.artist());
 		insert.addBindValue(fh.artistAlbum());
 		insert.addBindValue(fh.discNumber());
-		Cover *cover = fh.extractCover();
-		insert.addBindValue(cover != NULL);
+		insert.addBindValue(fh.hasCover());
 		insert.addBindValue(QDir::toNativeSeparators(fh.fileInfo().absolutePath()));
 		insert.addBindValue(fh.title());
-		insert.addBindValue(fh.year());
+		insert.addBindValue(fh.trackNumber().toInt());
+		insert.addBindValue(fh.year().toInt());
 		insert.exec();
 		emit trackExtractedFromFS(fh);
 	} else {

@@ -61,7 +61,8 @@ public:
 	// User defined data types (item->setData(QVariant, Field);)
 	enum Field { Type = Qt::UserRole + 1,
 				 AbsFilePath = Qt::UserRole + 2,
-				 CoverPath = Qt::UserRole + 3};
+				 CoverPath = Qt::UserRole + 3,
+				 TrackNumber = Qt::UserRole + 4};
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -71,6 +72,8 @@ protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
 private:
+	void bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath);
+
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
 
@@ -83,7 +86,7 @@ private:
 	void insertLetter(const QString &letters);
 
 	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
-					 int discNumber, const QString &title, int year);
+					 int discNumber, const QString &title, int trackNumber, int year);
 
 	void updateCover(const QFileInfo &coverFileInfo);
 

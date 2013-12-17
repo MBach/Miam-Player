@@ -87,7 +87,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
 {
 	this->insertTrack(fh.fileInfo().absoluteFilePath(), fh.artistAlbum(), fh.artist(), fh.album(), fh.discNumber(),
-					  fh.title(), fh.year().toInt());
+					  fh.title(), fh.trackNumber().toInt(), fh.year().toInt());
 }
 
 void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
@@ -97,23 +97,25 @@ void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
 	const QString artistAlbum = record.value(++i).toString();
 	const QString album = record.value(++i).toString();
 	const QString title = record.value(++i).toString();
+	int trackNumber = record.value(++i).toInt();
 	int discNumber = record.value(++i).toInt();
 	int year = record.value(++i).toInt();
 	const QString absFilePath = record.value(++i).toString();
-	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, year);
+	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, trackNumber, year);
 }
 
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
+	//QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
+	QStandardItem *item = _libraryModel->itemFromIndex(this->indexAt(event->pos()));
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 		}
-		/*if (item->type() != LibraryItem::Letter) {
+		if (item->data(Type).toInt() != Letter) {
 			properties->exec(event->globalPos());
-		}*/
+		}
 	}
 }
 
@@ -125,6 +127,23 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 	// - edit stars to the current track
 	currentPos = event->pos();
 	QTreeView::mouseDoubleClickEvent(event);
+}
+
+void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
+{
+	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1");
+	internalCover.addBindValue(album);
+	internalCover.exec();
+	if (internalCover.next()) {
+		itemAlbum->setData(absFilePath, CoverPath);
+	} else {
+		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?");
+		externalCover.addBindValue(album);
+		externalCover.exec();
+		if (externalCover.next()) {
+			itemAlbum->setData(externalCover.record().value(0).toString(), CoverPath);
+		}
+	}
 }
 
 /** Recursive count for leaves only. */
@@ -191,7 +210,7 @@ void LibraryTreeView::insertLetter(const QString &letters)
 }
 
 void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
-								  const QString &album, int discNumber, const QString &title, int year)
+								  const QString &album, int discNumber, const QString &title, int trackNumber, int year)
 {
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 
@@ -199,7 +218,6 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 	QStandardItem *itemAlbum = NULL;
 	QStandardItem *itemTrack = NULL;
 	QStandardItem *itemYear = NULL;
-	QStandardItem *itemDiscNumber = NULL;
 
 	static bool existingArtist = true;
 	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
@@ -221,27 +239,15 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemAlbum = _albums.value(QPair<QStandardItem*, QString>(itemArtist, album));
 		} else {
 			itemAlbum = new QStandardItem(album);
-			itemAlbum->setData(QVariant(Album), Type);
-			QSqlQuery internalCover("SELECT * FROM tracks WHERE album = ? AND internalCover = 1");
-			internalCover.addBindValue(album);
-			internalCover.exec();
-			if (internalCover.next()) {
-				itemAlbum->setData(absFilePath, CoverPath);
-			} else {
-				QSqlQuery externalCover("SELECT coverAbsPath FROM tracks WHERE album = ?");
-				externalCover.addBindValue(album);
-				externalCover.exec();
-				if (externalCover.next()) {
-					itemAlbum->setData(externalCover.record().value(0).toString(), CoverPath);
-				}
-			}
+			itemAlbum->setData(Album, Type);
+			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums.insert(QPair<QStandardItem *, QString>(itemArtist, album), itemAlbum);
 			_albums2.insert(album, itemAlbum);
 			itemArtist->appendRow(itemAlbum);
 		}
 		// Level 3 (option)
 		if (discNumber > 0 && !_discNumbers.contains(QPair<QStandardItem*, int>(itemAlbum, discNumber))) {
-			itemDiscNumber = new QStandardItem(QString::number(discNumber));
+			QStandardItem *itemDiscNumber = new QStandardItem(QString::number(discNumber));
 			itemDiscNumber->setData(Disc, Type);
 			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, discNumber), itemDiscNumber);
 			itemAlbum->appendRow(itemDiscNumber);
@@ -252,7 +258,6 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		} else {
 			itemTrack = new QStandardItem(title + " (" + artist + ")");
 		}
-		itemTrack->setData(Track, Type);
 		itemAlbum->appendRow(itemTrack);
 		break;
 	case Album:
@@ -261,6 +266,8 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemAlbum = _albums2.value(album);
 		} else {
 			itemAlbum = new QStandardItem(album);
+			itemAlbum->setData(Album, Type);
+			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums2.insert(album, itemAlbum);
 			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
 			this->insertLetter(album);
@@ -275,6 +282,8 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemAlbum = _albums2.value(theArtist + album);
 		} else {
 			itemAlbum = new QStandardItem(theArtist + " – " + album);
+			itemAlbum->setData(Album, Type);
+			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums2.insert(theArtist + album, itemAlbum);
 			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
 			this->insertLetter(theArtist);
@@ -293,10 +302,11 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemYear = _years.value(year);
 		} else {
 			if (year > 0) {
-				itemYear = new QStandardItem(year);
+				itemYear = new QStandardItem(QString::number(year));
 			} else {
 				itemYear = new QStandardItem();
 			}
+			itemYear->setData(Year, Type);
 			_years.insert(year, itemYear);
 			_libraryModel->invisibleRootItem()->appendRow(itemYear);
 		}
@@ -305,6 +315,8 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemAlbum = _albums2.value(theArtist + album);
 		} else {
 			itemAlbum = new QStandardItem(theArtist + " – " + album);
+			itemAlbum->setData(Album, Type);
+			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums2.insert(theArtist + album, itemAlbum);
 			itemYear->appendRow(itemAlbum);
 		}
@@ -317,7 +329,11 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		itemAlbum->appendRow(itemTrack);
 		break;
 	}
+	/// XXX: Is it necessary to create subclasses of QStandardItem for item->type()?
+	// itemTrack always exists
+	itemTrack->setData(Track, Type);
 	itemTrack->setData(absFilePath, AbsFilePath);
+	itemTrack->setData(trackNumber, TrackNumber);
 }
 
 void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
@@ -356,7 +372,7 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 void LibraryTreeView::reset()
 {
 	//circleProgressBar->show();
-	if (_libraryModel->rowCount() > 0) {
+	if (_libraryModel->rowCount() > 0) {		
 		qDebug() << Q_FUNC_INFO;
 		_artists.clear();
 		_albums.clear();

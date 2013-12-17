@@ -11,7 +11,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent)
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
-	this->setSortRole(LibraryItem::NormalizedString);
+	//this->setSortRole(LibraryItem::NormalizedString);
 	this->sort(0, Qt::DescendingOrder);
 }
 

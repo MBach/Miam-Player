@@ -33,6 +33,7 @@ const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" <
 #include <3rdparty/taglib/fileref.h>
 
 using namespace TagLib;
+using namespace std;
 
 FileHelper::FileHelper(const QMediaContent &track)
 	: FileHelper(track.canonicalUrl().toLocalFile())
@@ -75,7 +76,7 @@ FileHelper::FileHelper(const QString &filePath)
 FileHelper::~FileHelper()
 {
 	delete _file;
-	_file = 0;
+	_file = NULL;
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -273,6 +274,29 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		}
 	}
 	return true;
+}
+
+/** Check if file has an inner picture. */
+bool FileHelper::hasCover() const
+{
+	MPEG::File *mpegFile = NULL;
+	bool result = false;
+	switch (fileType) {
+	case MP3:
+		mpegFile = static_cast<MPEG::File*>(_file);
+		if (mpegFile->ID3v2Tag()) {
+			// Look for picture frames only
+			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			// It's possible to have more than one picture per file!
+			result = !listOfMp3Frames.isEmpty();
+		} else if (mpegFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::hasCover: Not implemented for ID3v1Tag";
+		}
+		break;
+	default:
+		break;
+	}
+	return result;
 }
 
 /** Convert the existing rating number into a smaller range from 1 to 5. */
