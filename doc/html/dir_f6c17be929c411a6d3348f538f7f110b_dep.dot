@@ -1,0 +1,12 @@
+digraph "code" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_f6c17be929c411a6d3348f538f7f110b {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_f6c17be929c411a6d3348f538f7f110b.html"];
+    dir_f6c17be929c411a6d3348f538f7f110b [shape=plaintext label="code"];
+    dir_8286ec72a985a42cf2222f74d6469280 [shape=box label="MiamCore" color="red" fillcolor="white" style="filled" URL="dir_8286ec72a985a42cf2222f74d6469280.html"];
+    dir_70ac59aa3659d5e80014ce75245c5a8c [shape=box label="MiamPlayer" color="red" fillcolor="white" style="filled" URL="dir_70ac59aa3659d5e80014ce75245c5a8c.html"];
+    dir_a8f3aed4e215c31d49f79ecfe1153afe [shape=box label="MiamUniqueLibrary" color="black" fillcolor="white" style="filled" URL="dir_a8f3aed4e215c31d49f79ecfe1153afe.html"];
+  }
+}

@@ -129,10 +129,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f3f42451ed60a6fb976f5752d2c564c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f3f42451ed60a6fb976f5752d2c564c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>LibraryItemTrack</b> (const QString &amp;track)</td></tr>
 <tr class="separator:a9f3f42451ed60a6fb976f5752d2c564c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14c4e8b4cea50251b34030769d5da6cb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_item_track.html#a14c4e8b4cea50251b34030769d5da6cb">type</a> () const </td></tr>
-<tr class="separator:a14c4e8b4cea50251b34030769d5da6cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada9d9b0a9de0b3bc2da07b3ed2e579f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada9d9b0a9de0b3bc2da07b3ed2e579f9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setAbsoluteFilePath</b> (const QString &amp;absPath, const QString &amp;file)</td></tr>
+<tr class="memitem:ada9d9b0a9de0b3bc2da07b3ed2e579f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_item_track.html#ada9d9b0a9de0b3bc2da07b3ed2e579f9">setAbsoluteFilePath</a> (const QString &amp;absPath, const QString &amp;file)</td></tr>
 <tr class="separator:ada9d9b0a9de0b3bc2da07b3ed2e579f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6529d4fb90ad31e936cc64570b03d3f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6529d4fb90ad31e936cc64570b03d3f"></a>
 QString&#160;</td><td class="memItemRight" valign="bottom"><b>absoluteFilePath</b> () const </td></tr>
@@ -180,16 +177,6 @@ Additional Inherited Members</h2></td></tr>
 <br/>
  }</td></tr>
 <tr class="separator:a35044cfa2cb89a1b8da51309644e3bfb inherit pub_types_class_library_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a264a60a5c6533f084f7fdeaf45ad6985 inherit pub_types_class_library_item"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>MediaType</b> { <br/>
-&#160;&#160;<b>Artist</b> = QStandardItem::UserType + 1, 
-<b>Album</b> = QStandardItem::UserType + 2, 
-<b>Track</b> = QStandardItem::UserType + 3, 
-<b>Letter</b> = QStandardItem::UserType + 4, 
-<br/>
-&#160;&#160;<b>Disc</b> = QStandardItem::UserType + 5
-<br/>
- }</td></tr>
-<tr class="separator:a264a60a5c6533f084f7fdeaf45ad6985 inherit pub_types_class_library_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0395fcfa812ee23d0ae38fc456cea4a inherit pub_types_class_library_item"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <b>NormalizedString</b> = Qt::UserRole + 10
  }</td></tr>
 <tr class="separator:af0395fcfa812ee23d0ae38fc456cea4a inherit pub_types_class_library_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -198,7 +185,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a4d078ba1004844cc5e3bae70592b0460 inherit pro_methods_class_library_item"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a14c4e8b4cea50251b34030769d5da6cb"></a>
+<a class="anchor" id="ada9d9b0a9de0b3bc2da07b3ed2e579f9"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -206,10 +193,21 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int LibraryItemTrack::type </td>
+          <td class="memname">void LibraryItemTrack::setAbsoluteFilePath </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>absPath</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -223,7 +221,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>code/MiamPlayer/library/<a class="el" href="libraryitemtrack_8h_source.html">libraryitemtrack.h</a></li>
+<li>code/MiamCore/model/<a class="el" href="libraryitemtrack_8h_source.html">libraryitemtrack.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -231,7 +229,7 @@ Additional Inherited Members</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_library_item_track.html">LibraryItemTrack</a></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

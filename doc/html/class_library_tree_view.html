@@ -107,6 +107,7 @@ $(document).ready(function(){initNavTree('class_library_tree_view.html','');});
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
@@ -131,14 +132,32 @@ Inheritance diagram for LibraryTreeView:</div>
 </map>
  </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a08cacf8e7fc2fc576f2f829b9e7d5f91"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>ItemType</b> { <br/>
+&#160;&#160;<b>Artist</b> = 0, 
+<b>Album</b> = 1, 
+<b>ArtistAlbum</b> = 2, 
+<b>Disc</b> = 3, 
+<br/>
+&#160;&#160;<b>Letter</b> = 4, 
+<b>Track</b> = 5, 
+<b>Year</b> = 6
+<br/>
+ }</td></tr>
+<tr class="separator:a08cacf8e7fc2fc576f2f829b9e7d5f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5db7aa11b47d4d058eb820a6352de0a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>Field</b> { <b>Type</b> = Qt::UserRole + 1, 
+<b>AbsFilePath</b> = Qt::UserRole + 2, 
+<b>CoverPath</b> = Qt::UserRole + 3
+ }</td></tr>
+<tr class="separator:aa5db7aa11b47d4d058eb820a6352de0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
-<tr class="memitem:a75d737fdc4d7e1381a90368d2e494332"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_tree_view.html#a75d737fdc4d7e1381a90368d2e494332">beginPopulateTree</a> (bool=false)</td></tr>
-<tr class="separator:a75d737fdc4d7e1381a90368d2e494332"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f6ea547de72f78840a45891c421af21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_tree_view.html#a8f6ea547de72f78840a45891c421af21">filterLibrary</a> (const QString &amp;filter)</td></tr>
 <tr class="separator:a8f6ea547de72f78840a45891c421af21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae59a2b05404fafec6480afe7e18a3bbe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_tree_view.html#ae59a2b05404fafec6480afe7e18a3bbe">rebuild</a> (QList&lt; QPersistentModelIndex &gt; indexes)</td></tr>
-<tr class="separator:ae59a2b05404fafec6480afe7e18a3bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b73695e7985a10ae1b25d55c539cb76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_tree_view.html#a1b73695e7985a10ae1b25d55c539cb76">reset</a> ()</td></tr>
+<tr class="separator:a1b73695e7985a10ae1b25d55c539cb76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_slots_class_tree_view"><td colspan="2" onclick="javascript:toggleInherit('pub_slots_class_tree_view')"><img src="closed.png" alt="-"/>&#160;Public Slots inherited from <a class="el" href="class_tree_view.html">TreeView</a></td></tr>
 <tr class="memitem:a45c0614fd1195c235344204de9e237d1 inherit pub_slots_class_tree_view"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tree_view.html#a45c0614fd1195c235344204de9e237d1">appendToPlaylist</a> ()</td></tr>
 <tr class="separator:a45c0614fd1195c235344204de9e237d1 inherit pub_slots_class_tree_view"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,6 +186,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setTagEditorVisible</
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4caecf12b5654f7868356b3a8159dd00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_library_tree_view.html#a4caecf12b5654f7868356b3a8159dd00">LibraryTreeView</a> (QWidget *parent=0)</td></tr>
 <tr class="separator:a4caecf12b5654f7868356b3a8159dd00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add7ebd78c0785af63d920ef2c19db3df"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add7ebd78c0785af63d920ef2c19db3df"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="class_library_sql_model.html">LibrarySqlModel</a> *sql)</td></tr>
+<tr class="separator:add7ebd78c0785af63d920ef2c19db3df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef6649729a33293b68df58111015fdfb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aef6649729a33293b68df58111015fdfb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insertTrackFromFile</b> (const <a class="el" href="class_file_helper.html">FileHelper</a> &amp;fh)</td></tr>
+<tr class="separator:aef6649729a33293b68df58111015fdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe3c6af83d9e0c3525994750390355ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afe3c6af83d9e0c3525994750390355ff"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insertTrackFromRecord</b> (const QSqlRecord &amp;record)</td></tr>
+<tr class="separator:afe3c6af83d9e0c3525994750390355ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_tree_view"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_tree_view')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_tree_view.html">TreeView</a></td></tr>
 <tr class="memitem:aaa320b060caa0867f629c953b2d242a3 inherit pub_methods_class_tree_view"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa320b060caa0867f629c953b2d242a3"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TreeView</b> (QWidget *parent=0)</td></tr>
@@ -208,31 +236,6 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a75d737fdc4d7e1381a90368d2e494332"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LibraryTreeView::beginPopulateTree </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>musicLocationHasChanged</em> = <code>false</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Create the tree from a previously saved flat file, or directly from the hard-drive. </p>
-
-</div>
-</div>
 <a class="anchor" id="ab6164f499e41031b5c992c1f5ad4196d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -334,7 +337,7 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ae59a2b05404fafec6480afe7e18a3bbe"></a>
+<a class="anchor" id="a1b73695e7985a10ae1b25d55c539cb76"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -342,10 +345,9 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void LibraryTreeView::rebuild </td>
+          <td class="memname">void LibraryTreeView::reset </td>
           <td>(</td>
-          <td class="paramtype">QList&lt; QPersistentModelIndex &gt;&#160;</td>
-          <td class="paramname"><em>indexes</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -355,8 +357,7 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Rebuild a subset of the tree. </p>
-<p>FIXME </p>
+<p>Reimplemented. </p>
 
 </div>
 </div>
@@ -370,7 +371,7 @@ Protected Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_library_tree_view.html">LibraryTreeView</a></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

@@ -4,6 +4,7 @@ var searchData=
   ['addressbarbutton',['AddressBarButton',['../class_address_bar_button.html',1,'']]],
   ['addressbarmenu',['AddressBarMenu',['../class_address_bar_menu.html',1,'']]],
   ['albumcover',['AlbumCover',['../class_album_cover.html',1,'']]],
+  ['albumform',['AlbumForm',['../class_album_form.html',1,'']]],
   ['atom',['Atom',['../class_tag_lib_1_1_m_p4_1_1_atom.html',1,'TagLib::MP4']]],
   ['atomdata',['AtomData',['../struct_tag_lib_1_1_m_p4_1_1_atom_data.html',1,'TagLib::MP4']]],
   ['atoms',['Atoms',['../class_tag_lib_1_1_m_p4_1_1_atoms.html',1,'TagLib::MP4']]],

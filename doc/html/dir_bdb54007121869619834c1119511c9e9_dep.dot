@@ -1,0 +1,9 @@
+digraph "code/MiamCore/interfaces" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_8286ec72a985a42cf2222f74d6469280 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="MiamCore" fontname="Helvetica", fontsize="10", URL="dir_8286ec72a985a42cf2222f74d6469280.html"]
+  dir_bdb54007121869619834c1119511c9e9 [shape=box, label="interfaces", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_bdb54007121869619834c1119511c9e9.html"];
+  }
+}

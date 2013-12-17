@@ -13,15 +13,9 @@ var class_library_item =
       [ "TRACK_NUMBER", "class_library_item.html#a35044cfa2cb89a1b8da51309644e3bfba7880a948cc373e24033f7c3d0d255f10", null ],
       [ "YEAR", "class_library_item.html#a35044cfa2cb89a1b8da51309644e3bfbab9552079a58ed94bed452016ed7a1019", null ]
     ] ],
-    [ "MediaType", "class_library_item.html#a264a60a5c6533f084f7fdeaf45ad6985", [
-      [ "Artist", "class_library_item.html#a264a60a5c6533f084f7fdeaf45ad6985aeb20501260a1d497423b7911ec7794eb", null ],
-      [ "Album", "class_library_item.html#a264a60a5c6533f084f7fdeaf45ad6985a876bc8d15f59c99842544928462fa029", null ],
-      [ "Track", "class_library_item.html#a264a60a5c6533f084f7fdeaf45ad6985a071a381358aed7765f0a2e5726fedb93", null ],
-      [ "Letter", "class_library_item.html#a264a60a5c6533f084f7fdeaf45ad6985a2a22191468d1864907a8119eee4408f1", null ],
-      [ "Disc", "class_library_item.html#a264a60a5c6533f084f7fdeaf45ad6985ac8af153d9443776eff570dd531087640", null ]
-    ] ],
     [ "LibraryItem", "class_library_item.html#a03c2c693b81f131676f8cf1f9bdedeec", null ],
     [ "LibraryItem", "class_library_item.html#a9a9699c1b5b3d526a3c5a57d06eadc0b", null ],
+    [ "~LibraryItem", "class_library_item.html#a4dfd1dd4ae3876f02176018fbd4ae361", null ],
     [ "child", "class_library_item.html#ac249553f42931cb5e374164537340d55", null ],
     [ "data", "class_library_item.html#a4d078ba1004844cc5e3bae70592b0460", null ],
     [ "normalizedString", "class_library_item.html#a1eb29de3edb87d9956620b9706914d87", null ]

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.5"/>
-<title>Madame MiamMiam&#39;s Music Player: code/MiamPlayer/library/libraryitemartist.h Source File</title>
+<title>Madame MiamMiam&#39;s Music Player: code/MiamCore/model/libraryitemartist.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -112,25 +112,30 @@ $(document).ready(function(){initNavTree('libraryitemartist_8h_source.html','');
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;libraryitem.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_library_item_artist.html">    6</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_library_item_artist.html">LibraryItemArtist</a> : <span class="keyword">public</span> <a class="code" href="class_library_item.html">LibraryItem</a></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_library_item_artist.html">LibraryItemArtist</a>(<span class="keyword">const</span> QString &amp;artist) : <a class="code" href="class_library_item.html">LibraryItem</a>(artist) {}</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="class_library_item_artist.html#a656b2838206b07033f849c8d3e90e918">   12</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="class_library_item_artist.html#a656b2838206b07033f849c8d3e90e918">type</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> LibraryItem::Artist; }</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;};</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;miamcore_global.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="class_library_item_artist.html">    8</a></span>&#160;<span class="keyword">class </span>MIAMCORE_LIBRARY <a class="code" href="class_library_item_artist.html">LibraryItemArtist</a> : <span class="keyword">public</span> <a class="code" href="class_library_item.html">LibraryItem</a></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_library_item_artist.html">LibraryItemArtist</a>(<span class="keyword">const</span> QString &amp;artist) : <a class="code" href="class_library_item.html">LibraryItem</a>(artist) {}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_library_item_artist.html">LibraryItemArtist</a>() : <a class="code" href="class_library_item.html">LibraryItem</a>() {}</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#endif // LIBRARYITEMARTIST_H</span></div>
-<div class="ttc" id="class_library_item_artist_html"><div class="ttname"><a href="class_library_item_artist.html">LibraryItemArtist</a></div><div class="ttdef"><b>Definition:</b> libraryitemartist.h:6</div></div>
-<div class="ttc" id="class_library_item_artist_html_a656b2838206b07033f849c8d3e90e918"><div class="ttname"><a href="class_library_item_artist.html#a656b2838206b07033f849c8d3e90e918">LibraryItemArtist::type</a></div><div class="ttdeci">int type() const </div><div class="ttdef"><b>Definition:</b> libraryitemartist.h:12</div></div>
-<div class="ttc" id="class_library_item_html"><div class="ttname"><a href="class_library_item.html">LibraryItem</a></div><div class="ttdef"><b>Definition:</b> libraryitem.h:6</div></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">inline</span> <span class="keyword">virtual</span> ~<a class="code" href="class_library_item_artist.html">LibraryItemArtist</a>() {}</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="comment">//inline int type() const { return LibraryItem::Artist; }</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#endif // LIBRARYITEMARTIST_H</span></div>
+<div class="ttc" id="class_library_item_artist_html"><div class="ttname"><a href="class_library_item_artist.html">LibraryItemArtist</a></div><div class="ttdef"><b>Definition:</b> libraryitemartist.h:8</div></div>
+<div class="ttc" id="class_library_item_html"><div class="ttname"><a href="class_library_item.html">LibraryItem</a></div><div class="ttdef"><b>Definition:</b> libraryitem.h:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_70ac59aa3659d5e80014ce75245c5a8c.html">MiamPlayer</a></li><li class="navelem"><a class="el" href="dir_77d0503431645cfb4ec8512be2dcd24d.html">library</a></li><li class="navelem"><b>libraryitemartist.h</b></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_8286ec72a985a42cf2222f74d6469280.html">MiamCore</a></li><li class="navelem"><a class="el" href="dir_307cbceb1dad0ad2c44b4519d072de27.html">model</a></li><li class="navelem"><b>libraryitemartist.h</b></li>
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

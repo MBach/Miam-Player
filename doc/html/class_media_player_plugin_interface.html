@@ -107,11 +107,10 @@ $(document).ready(function(){initNavTree('class_media_player_plugin_interface.ht
 
 <div class="header">
   <div class="summary">
-<a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="class_media_player_plugin_interface-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">MediaPlayerPluginInterface Class Reference</div>  </div>
+<div class="title">MediaPlayerPluginInterface Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
@@ -120,37 +119,16 @@ Inheritance diagram for MediaPlayerPluginInterface:</div>
  <div class="center">
   <img src="class_media_player_plugin_interface.png" usemap="#MediaPlayerPluginInterface_map" alt=""/>
   <map id="MediaPlayerPluginInterface_map" name="MediaPlayerPluginInterface_map">
-<area href="class_basic_plugin_interface.html" alt="BasicPluginInterface" shape="rect" coords="89,56,258,80"/>
+<area href="class_basic_plugin_interface.html" alt="BasicPluginInterface" shape="rect" coords="0,56,169,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
-Signals</h2></td></tr>
-<tr class="memitem:a7e83f483c023f3d878f3c610c396805d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7e83f483c023f3d878f3c610c396805d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pause</b> ()</td></tr>
-<tr class="separator:a7e83f483c023f3d878f3c610c396805d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a814d9b81a5ef8b65b7aee9a61c3453b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a814d9b81a5ef8b65b7aee9a61c3453b6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>play</b> ()</td></tr>
-<tr class="separator:a814d9b81a5ef8b65b7aee9a61c3453b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a629958693de3860e2902249e3de94262"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a629958693de3860e2902249e3de94262"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>skip</b> (bool forward)</td></tr>
-<tr class="separator:a629958693de3860e2902249e3de94262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae181bf68bd577b41f312c2f72512aab3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae181bf68bd577b41f312c2f72512aab3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
-<tr class="separator:ae181bf68bd577b41f312c2f72512aab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0db58825aa1d2b869b6cfef5486ac86a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0db58825aa1d2b869b6cfef5486ac86a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setMainWindow</b> (QMainWindow *)</td></tr>
-<tr class="separator:a0db58825aa1d2b869b6cfef5486ac86a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d05ce6c635fcb5b33eee4ca35854ab2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1d05ce6c635fcb5b33eee4ca35854ab2"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setMediaPlayer</b> (QMediaPlayer *)</td></tr>
-<tr class="separator:a1d05ce6c635fcb5b33eee4ca35854ab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbb6b1e2d793fe5d50b6ceb9e60f3458"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adbb6b1e2d793fe5d50b6ceb9e60f3458"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setMediaPlayer</b> (QWeakPointer&lt; <a class="el" href="class_media_player.html">MediaPlayer</a> &gt;)=0</td></tr>
+<tr class="separator:adbb6b1e2d793fe5d50b6ceb9e60f3458"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_basic_plugin_interface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_basic_plugin_interface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_basic_plugin_interface.html">BasicPluginInterface</a></td></tr>
-<tr class="memitem:a2cef3b6968eebec82bca8141a0103de3 inherit pub_methods_class_basic_plugin_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cef3b6968eebec82bca8141a0103de3"></a>
-virtual QString&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> () const =0</td></tr>
-<tr class="separator:a2cef3b6968eebec82bca8141a0103de3 inherit pub_methods_class_basic_plugin_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4768b260e6bcfcad09d7e24cf0174c9e inherit pub_methods_class_basic_plugin_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4768b260e6bcfcad09d7e24cf0174c9e"></a>
 virtual QString&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const =0</td></tr>
 <tr class="separator:a4768b260e6bcfcad09d7e24cf0174c9e inherit pub_methods_class_basic_plugin_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -160,9 +138,12 @@ virtual QString&#160;</td><td class="memItemRight" valign="bottom"><b>version</b
 <tr class="memitem:a065a54d9975615044bf58fb310dd0373 inherit pub_methods_class_basic_plugin_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a065a54d9975615044bf58fb310dd0373"></a>
 virtual QWidget *&#160;</td><td class="memItemRight" valign="bottom"><b>configPage</b> ()=0</td></tr>
 <tr class="separator:a065a54d9975615044bf58fb310dd0373 inherit pub_methods_class_basic_plugin_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cef3b6968eebec82bca8141a0103de3 inherit pub_methods_class_basic_plugin_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cef3b6968eebec82bca8141a0103de3"></a>
+virtual QString&#160;</td><td class="memItemRight" valign="bottom"><b>version</b> () const =0</td></tr>
+<tr class="separator:a2cef3b6968eebec82bca8141a0103de3 inherit pub_methods_class_basic_plugin_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>code/MiamPlayer/interfaces/<a class="el" href="mediaplayerplugininterface_8h_source.html">mediaplayerplugininterface.h</a></li>
+<li>code/MiamCore/interfaces/<a class="el" href="mediaplayerplugininterface_8h_source.html">mediaplayerplugininterface.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -170,7 +151,7 @@ virtual QWidget *&#160;</td><td class="memItemRight" valign="bottom"><b>configPa
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_media_player_plugin_interface.html">MediaPlayerPluginInterface</a></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

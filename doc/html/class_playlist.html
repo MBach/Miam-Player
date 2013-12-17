@@ -153,14 +153,17 @@ Public Slots</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9565abd988b2c4ac693cf924cc969a7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_playlist.html#a9565abd988b2c4ac693cf924cc969a7f">Playlist</a> (QWidget *parent)</td></tr>
-<tr class="separator:a9565abd988b2c4ac693cf924cc969a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a188646ddbccf5ae437ec0ba6cdcfd41b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_playlist.html#a188646ddbccf5ae437ec0ba6cdcfd41b">Playlist</a> (QWidget *parent, QWeakPointer&lt; <a class="el" href="class_media_player.html">MediaPlayer</a> &gt; mediaPlayer)</td></tr>
+<tr class="separator:a188646ddbccf5ae437ec0ba6cdcfd41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5d88b94b0d531db3c4f77c6405b8f7b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab5d88b94b0d531db3c4f77c6405b8f7b"></a>
 QMediaPlaylist *&#160;</td><td class="memItemRight" valign="bottom"><b>mediaPlaylist</b> ()</td></tr>
 <tr class="separator:ab5d88b94b0d531db3c4f77c6405b8f7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f43b501521815e8ea8bf1005794e803"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f43b501521815e8ea8bf1005794e803"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>insertMedias</b> (int rowIndex, const QList&lt; QMediaContent &gt; &amp;medias)</td></tr>
 <tr class="separator:a9f43b501521815e8ea8bf1005794e803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e4c9f491ffef54b6f7b12c3273ba3d7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e4c9f491ffef54b6f7b12c3273ba3d7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insertMedias</b> (int rowIndex, const QStringList &amp;tracks)</td></tr>
+<tr class="separator:a3e4c9f491ffef54b6f7b12c3273ba3d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8acc7fc6b8a60db0749546ef619077a0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8acc7fc6b8a60db0749546ef619077a0"></a>
 QSize&#160;</td><td class="memItemRight" valign="bottom"><b>minimumSizeHint</b> () const </td></tr>
 <tr class="separator:a8acc7fc6b8a60db0749546ef619077a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,7 +198,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>showEvent</b> (QShowE
 <tr class="separator:a3e00ceb3c7ebd65715396efac02e2ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a9565abd988b2c4ac693cf924cc969a7f"></a>
+<a class="anchor" id="a188646ddbccf5ae437ec0ba6cdcfd41b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -203,8 +206,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>showEvent</b> (QShowE
           <td class="memname">Playlist::Playlist </td>
           <td>(</td>
           <td class="paramtype">QWidget *&#160;</td>
-          <td class="paramname"><em>parent</em></td><td>)</td>
+          <td class="paramname"><em>parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">QWeakPointer&lt; <a class="el" href="class_media_player.html">MediaPlayer</a> &gt;&#160;</td>
+          <td class="paramname"><em>mediaPlayer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -423,7 +436,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>showEvent</b> (QShowE
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_playlist.html">Playlist</a></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

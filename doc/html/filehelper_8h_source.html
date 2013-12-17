@@ -110,88 +110,97 @@ $(document).ready(function(){initNavTree('filehelper_8h_source.html','');});
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef FILEHELPER_H</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define FILEHELPER_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;cover.h&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;QStringList&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;QVariant&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QtMultimedia/QMediaContent&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;QStringList&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &quot;miamcore_global.h&quot;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;3rdparty/taglib/taglib.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;3rdparty/taglib/fileref.h&gt;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="class_file_helper.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_file_helper.html">FileHelper</a></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="class_tag_lib_1_1_file.html">TagLib::File</a> *f;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keywordtype">int</span> fileType;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> QStringList suff;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    Q_ENUMS(extension)</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="class_file_helper.html">FileHelper</a>(<a class="code" href="class_tag_lib_1_1_file_ref.html">TagLib::FileRef</a> &amp;fileRef, QVariant v);</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;QFileInfo&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">class </span><a class="code" href="class_cover.html">Cover</a>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span>TagLib {</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">class </span><a class="code" href="class_file.html">File</a>;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="class_file_helper.html">   20</a></span>&#160;<span class="keyword">class </span>MIAMCORE_LIBRARY <a class="code" href="class_file_helper.html">FileHelper</a></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;{</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="class_tag_lib_1_1_file.html">TagLib::File</a> *_file;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">int</span> fileType;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> QStringList suff;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">enum</span> extension {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        APE     = 0,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        ASF     = 1,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        FLAC    = 2,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        MP4     = 4,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        MPC     = 5,</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        MP3     = 6,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        OGG     = 7</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    };</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="class_file_helper.html">FileHelper</a>(<span class="keyword">const</span> QString &amp;filePath);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    ~<a class="code" href="class_file_helper.html">FileHelper</a>() {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keyword">delete</span> f;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">inline</span> <span class="keyword">static</span> QStringList suffixes() { <span class="keywordflow">return</span> suff; }</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_tag_lib_1_1_file.html">TagLib::File</a> *file()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> f; }</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    QString <a class="code" href="class_file_helper.html#af7700afb949f00c8819f0c6ad703ebb1">artistAlbum</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    QFileInfo _fileInfo;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    Q_ENUMS(extension)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">enum</span> extension {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        APE     = 0,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        ASF     = 1,</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        FLAC    = 2,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        MP4     = 4,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        MPC     = 5,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        MP3     = 6,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        OGG     = 7</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    };</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="class_file_helper.html">FileHelper</a>(<span class="keyword">const</span> QMediaContent &amp;track);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="class_file_helper.html">FileHelper</a>(<span class="keyword">const</span> QString &amp;filePath);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="class_file_helper.html">FileHelper</a>();</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">inline</span> <span class="keyword">static</span> QStringList suffixes() { <span class="keywordflow">return</span> suff; }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="class_file_helper.html#a0f251930f1b8ccc5258357c91c54110d">discNumber</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <a class="code" href="class_cover.html">Cover</a>* <a class="code" href="class_file_helper.html#a8bef49ced1843f47999bd45fba750403">extractCover</a>();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="class_file_helper.html#a2a82cf1c31a81710879d0952d2490c7c">insert</a>(QString key, <span class="keyword">const</span> QVariant &amp;value);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="class_file_helper.html#ad9868f574fd507a94d9a63747c2d7c22">rating</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_file_helper.html#abeb275fd86624b22c7baba1b738467fa">setCover</a>(<a class="code" href="class_cover.html">Cover</a> *cover);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> setRating(<span class="keywordtype">int</span> rating);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    QString convertKeyToID3v2Key(QString key);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    QString extractFlacFeature(<span class="keyword">const</span> QString &amp;featureToExtract) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    QString extractMpegFeature(<span class="keyword">const</span> QString &amp;featureToExtract) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;};</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif // FILEHELPER_H</span></div>
-<div class="ttc" id="class_file_helper_html_a2a82cf1c31a81710879d0952d2490c7c"><div class="ttname"><a href="class_file_helper.html#a2a82cf1c31a81710879d0952d2490c7c">FileHelper::insert</a></div><div class="ttdeci">bool insert(QString key, const QVariant &amp;value)</div><div class="ttdef"><b>Definition:</b> filehelper.cpp:212</div></div>
-<div class="ttc" id="class_file_helper_html_a8bef49ced1843f47999bd45fba750403"><div class="ttname"><a href="class_file_helper.html#a8bef49ced1843f47999bd45fba750403">FileHelper::extractCover</a></div><div class="ttdeci">Cover * extractCover()</div><div class="ttdef"><b>Definition:</b> filehelper.cpp:182</div></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    QString artistAlbum() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">int</span> discNumber() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="class_cover.html">Cover</a>* extractCover();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">bool</span> insert(QString key, <span class="keyword">const</span> QVariant &amp;value);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">int</span> rating() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> setCover(<a class="code" href="class_cover.html">Cover</a> *cover);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordtype">void</span> setRating(<span class="keywordtype">int</span> rating);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">bool</span> isValid() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    QString title() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    QString trackNumber() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    QString album() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    QString length() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    QString artist() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    QString year() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    QString genre() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    QString comment() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">bool</span> save();</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">inline</span> QFileInfo fileInfo()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _fileInfo; }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    QString convertKeyToID3v2Key(QString key);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    QString extractFlacFeature(<span class="keyword">const</span> QString &amp;featureToExtract) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    QString extractMpegFeature(<span class="keyword">const</span> QString &amp;featureToExtract) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;};</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif // FILEHELPER_H</span></div>
+<div class="ttc" id="class_file_html"><div class="ttname"><a href="class_file.html">File</a></div></div>
 <div class="ttc" id="class_tag_lib_1_1_file_html"><div class="ttname"><a href="class_tag_lib_1_1_file.html">TagLib::File</a></div><div class="ttdoc">A file class with some useful methods for tag manipulation. </div><div class="ttdef"><b>Definition:</b> tfile.h:50</div></div>
-<div class="ttc" id="class_file_helper_html_abeb275fd86624b22c7baba1b738467fa"><div class="ttname"><a href="class_file_helper.html#abeb275fd86624b22c7baba1b738467fa">FileHelper::setCover</a></div><div class="ttdeci">void setCover(Cover *cover)</div><div class="ttdef"><b>Definition:</b> filehelper.cpp:334</div></div>
-<div class="ttc" id="class_cover_html"><div class="ttname"><a href="class_cover.html">Cover</a></div><div class="ttdef"><b>Definition:</b> cover.h:6</div></div>
-<div class="ttc" id="class_tag_lib_1_1_file_ref_html"><div class="ttname"><a href="class_tag_lib_1_1_file_ref.html">TagLib::FileRef</a></div><div class="ttdoc">This class provides a simple abstraction for creating and handling files. </div><div class="ttdef"><b>Definition:</b> fileref.h:59</div></div>
-<div class="ttc" id="class_file_helper_html_ad9868f574fd507a94d9a63747c2d7c22"><div class="ttname"><a href="class_file_helper.html#ad9868f574fd507a94d9a63747c2d7c22">FileHelper::rating</a></div><div class="ttdeci">int rating() const </div><div class="ttdef"><b>Definition:</b> filehelper.cpp:289</div></div>
-<div class="ttc" id="class_file_helper_html_a0f251930f1b8ccc5258357c91c54110d"><div class="ttname"><a href="class_file_helper.html#a0f251930f1b8ccc5258357c91c54110d">FileHelper::discNumber</a></div><div class="ttdeci">int discNumber() const </div><div class="ttdef"><b>Definition:</b> filehelper.cpp:130</div></div>
-<div class="ttc" id="class_file_helper_html"><div class="ttname"><a href="class_file_helper.html">FileHelper</a></div><div class="ttdoc">The FileHelper class is used to extract various but relevant fields in all types of tags (MP3...</div><div class="ttdef"><b>Definition:</b> filehelper.h:15</div></div>
-<div class="ttc" id="class_file_helper_html_af7700afb949f00c8819f0c6ad703ebb1"><div class="ttname"><a href="class_file_helper.html#af7700afb949f00c8819f0c6ad703ebb1">FileHelper::artistAlbum</a></div><div class="ttdeci">QString artistAlbum() const </div><div class="ttdef"><b>Definition:</b> filehelper.cpp:92</div></div>
+<div class="ttc" id="class_cover_html"><div class="ttname"><a href="class_cover.html">Cover</a></div><div class="ttdef"><b>Definition:</b> cover.h:8</div></div>
+<div class="ttc" id="class_file_helper_html"><div class="ttname"><a href="class_file_helper.html">FileHelper</a></div><div class="ttdoc">The FileHelper class is used to extract various but relevant fields in all types of tags (MP3...</div><div class="ttdef"><b>Definition:</b> filehelper.h:20</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_8286ec72a985a42cf2222f74d6469280.html">MiamCore</a></li><li class="navelem"><b>filehelper.h</b></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

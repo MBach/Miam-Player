@@ -1,0 +1,19 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="QObject",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="BasicPluginInterface",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_basic_plugin_interface.html"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="MediaPlayerPluginInterface",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_media_player_plugin_interface.html"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="MusicSearchEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_music_search_engine.html"];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="PlaybackModeWidgetFactory",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_playback_mode_widget_factory.html",tooltip="Factory or helper? "];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="QuickStartSearchEngine",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_quick_start_search_engine.html"];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="StyleSheetUpdater",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_style_sheet_updater.html"];
+}

@@ -1,5 +1,8 @@
 var hierarchy =
 [
+    [ "AlbumForm", null, [
+      [ "AlbumForm", "class_album_form.html", null ]
+    ] ],
     [ "TagLib::MP4::Atom", "class_tag_lib_1_1_m_p4_1_1_atom.html", null ],
     [ "TagLib::MP4::AtomData", "struct_tag_lib_1_1_m_p4_1_1_atom_data.html", null ],
     [ "TagLib::MP4::Atoms", "class_tag_lib_1_1_m_p4_1_1_atoms.html", null ],
@@ -149,12 +152,18 @@ var hierarchy =
     [ "QLabel", null, [
       [ "TimeLabel", "class_time_label.html", null ]
     ] ],
+    [ "QLayout", null, [
+      [ "FlowLayout", "class_flow_layout.html", null ]
+    ] ],
     [ "QLineEdit", null, [
       [ "LibraryFilterLineEdit", "class_library_filter_line_edit.html", null ],
       [ "ShortcutLineEdit", "class_shortcut_line_edit.html", null ]
     ] ],
     [ "QMainWindow", null, [
       [ "MainWindow", "class_main_window.html", null ]
+    ] ],
+    [ "QMediaPlayer", null, [
+      [ "MediaPlayer", "class_media_player.html", null ]
     ] ],
     [ "QMenu", null, [
       [ "AddressBarMenu", "class_address_bar_menu.html", null ]
@@ -166,7 +175,6 @@ var hierarchy =
       [ "BasicPluginInterface", "class_basic_plugin_interface.html", [
         [ "MediaPlayerPluginInterface", "class_media_player_plugin_interface.html", null ]
       ] ],
-      [ "BasicPluginInterface", "class_basic_plugin_interface.html", null ],
       [ "MusicSearchEngine", "class_music_search_engine.html", null ],
       [ "PlaybackModeWidgetFactory", "class_playback_mode_widget_factory.html", null ],
       [ "QuickStartSearchEngine", "class_quick_start_search_engine.html", null ],
@@ -185,6 +193,9 @@ var hierarchy =
     [ "QSortFilterProxyModel", null, [
       [ "LibraryFilterProxyModel", "class_library_filter_proxy_model.html", null ]
     ] ],
+    [ "QSqlTableModel", null, [
+      [ "LibrarySqlModel", "class_library_sql_model.html", null ]
+    ] ],
     [ "QStandardItem", null, [
       [ "LibraryItem", "class_library_item.html", [
         [ "LibraryItemAlbum", "class_library_item_album.html", null ],
@@ -197,7 +208,6 @@ var hierarchy =
       ] ]
     ] ],
     [ "QStandardItemModel", null, [
-      [ "LibraryModel", "class_library_model.html", null ],
       [ "PlaylistModel", "class_playlist_model.html", null ]
     ] ],
     [ "QStyledItemDelegate", null, [
@@ -230,19 +240,21 @@ var hierarchy =
     [ "QWidget", null, [
       [ "AddressBar", "class_address_bar.html", null ],
       [ "AlbumCover", "class_album_cover.html", null ],
+      [ "AlbumForm", "class_album_form.html", null ],
       [ "PlaybackModeWidget", "class_playback_mode_widget.html", null ],
       [ "QuickStart", "class_quick_start.html", null ],
       [ "Reflector", "class_reflector.html", null ],
       [ "ShortcutWidget", "class_shortcut_widget.html", null ],
       [ "StarEditor", "class_star_editor.html", null ],
-      [ "TagEditor", "class_tag_editor.html", null ]
+      [ "TagEditor", "class_tag_editor.html", null ],
+      [ "UniqueLibrary", "class_unique_library.html", null ]
     ] ],
     [ "TagLib::RefCounter", "class_tag_lib_1_1_ref_counter.html", null ],
     [ "TagLib::RefCounterOld", "class_tag_lib_1_1_ref_counter_old.html", null ],
     [ "StarRating", "class_star_rating.html", null ],
     [ "TagLib::String", "class_tag_lib_1_1_string.html", null ],
-    [ "TagLib::ID3v1::StringHandler", "class_tag_lib_1_1_i_d3v1_1_1_string_handler.html", null ],
     [ "TagLib::RIFF::Info::StringHandler", "class_tag_lib_1_1_r_i_f_f_1_1_info_1_1_string_handler.html", null ],
+    [ "TagLib::ID3v1::StringHandler", "class_tag_lib_1_1_i_d3v1_1_1_string_handler.html", null ],
     [ "TagLib::Tag", "class_tag_lib_1_1_tag.html", [
       [ "TagLib::APE::Tag", "class_tag_lib_1_1_a_p_e_1_1_tag.html", null ],
       [ "TagLib::ASF::Tag", "class_tag_lib_1_1_a_s_f_1_1_tag.html", null ],

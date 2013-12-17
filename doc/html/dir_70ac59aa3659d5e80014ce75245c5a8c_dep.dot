@@ -1,0 +1,17 @@
+digraph "code/MiamPlayer" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_f6c17be929c411a6d3348f538f7f110b {
+    graph [ bgcolor="#ddddee", pencolor="black", label="code" fontname="Helvetica", fontsize="10", URL="dir_f6c17be929c411a6d3348f538f7f110b.html"]
+  subgraph clusterdir_70ac59aa3659d5e80014ce75245c5a8c {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_70ac59aa3659d5e80014ce75245c5a8c.html"];
+    dir_70ac59aa3659d5e80014ce75245c5a8c [shape=plaintext label="MiamPlayer"];
+    dir_448066a033b0d8faceeeb8edb4a73d37 [shape=box label="dialogs" color="black" fillcolor="white" style="filled" URL="dir_448066a033b0d8faceeeb8edb4a73d37.html"];
+    dir_93f7335386a4c761ebeac6cdfe820d32 [shape=box label="filesystem" color="black" fillcolor="white" style="filled" URL="dir_93f7335386a4c761ebeac6cdfe820d32.html"];
+    dir_77d0503431645cfb4ec8512be2dcd24d [shape=box label="library" color="black" fillcolor="white" style="filled" URL="dir_77d0503431645cfb4ec8512be2dcd24d.html"];
+    dir_2d7c116019e1f843d9de20f3bada0cf0 [shape=box label="playlists" color="black" fillcolor="white" style="filled" URL="dir_2d7c116019e1f843d9de20f3bada0cf0.html"];
+    dir_5d04ea92810ab4c3288a002579f7b2ce [shape=box label="tageditor" color="black" fillcolor="white" style="filled" URL="dir_5d04ea92810ab4c3288a002579f7b2ce.html"];
+  }
+  }
+}

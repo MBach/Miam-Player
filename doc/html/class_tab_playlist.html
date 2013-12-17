@@ -141,13 +141,6 @@ Public Slots</h2></td></tr>
 <tr class="separator:a98bc4b5631985008f4f8e9253302ecc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa74ba802af73c4d36eea34610a83822"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">removeTabFromCloseButton</a> (int index)</td></tr>
 <tr class="separator:afa74ba802af73c4d36eea34610a83822"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a856c30ae200302d1c4126fea8abc2e02"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tab_playlist.html#a856c30ae200302d1c4126fea8abc2e02">seekBackward</a> ()</td></tr>
-<tr class="memdesc:a856c30ae200302d1c4126fea8abc2e02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Media actions.  <a href="#a856c30ae200302d1c4126fea8abc2e02">More...</a><br/></td></tr>
-<tr class="separator:a856c30ae200302d1c4126fea8abc2e02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a399af45d42c467c3239197f5ca1dcf28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tab_playlist.html#a399af45d42c467c3239197f5ca1dcf28">seekForward</a> ()</td></tr>
-<tr class="separator:a399af45d42c467c3239197f5ca1dcf28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5c79db6a1adf5ebc4c52cad8e2902e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tab_playlist.html#ad5c79db6a1adf5ebc4c52cad8e2902e7">skip</a> (bool forward=true)</td></tr>
-<tr class="separator:ad5c79db6a1adf5ebc4c52cad8e2902e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f9ea075737d6f8bb92a2b478331bd5b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f9ea075737d6f8bb92a2b478331bd5b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>updateRowHeight</b> ()</td></tr>
 <tr class="separator:a8f9ea075737d6f8bb92a2b478331bd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,14 +168,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aef2cb1854ab1bf7c192361b509a0f9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7f4e3aad277092a77dc8607cc2eb178"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_playlist.html">Playlist</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">currentPlayList</a> () const </td></tr>
 <tr class="separator:ad7f4e3aad277092a77dc8607cc2eb178"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab395c19969de3cbeec06f072ecc6838"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab395c19969de3cbeec06f072ecc6838"></a>
-QMediaPlayer *&#160;</td><td class="memItemRight" valign="bottom"><b>mediaPlayer</b> () const </td></tr>
-<tr class="separator:aab395c19969de3cbeec06f072ecc6838"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d854546b60853e056b246a3e87def46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_playlist.html">Playlist</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">playlist</a> (int index)</td></tr>
 <tr class="separator:a2d854546b60853e056b246a3e87def46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa422dc081c1d6051728000d4f203e2ae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa422dc081c1d6051728000d4f203e2ae"></a>
 QList&lt; <a class="el" href="class_playlist.html">Playlist</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>playlists</b> ()</td></tr>
 <tr class="separator:aa422dc081c1d6051728000d4f203e2ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa90da0102f42e94c091f7fc4eafc80b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afa90da0102f42e94c091f7fc4eafc80b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMediaPlayer</b> (QWeakPointer&lt; <a class="el" href="class_media_player.html">MediaPlayer</a> &gt; mediaPlayer)</td></tr>
+<tr class="separator:afa90da0102f42e94c091f7fc4eafc80b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -204,7 +197,8 @@ Protected Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Default constructor. </p>
-<p>FIXME </p>
+<p>FIXME</p>
+<p>TODO </p>
 
 </div>
 </div>
@@ -491,81 +485,6 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a856c30ae200302d1c4126fea8abc2e02"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TabPlaylist::seekBackward </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Media actions. </p>
-<p>Seek backward in the current playing track for a small amount of time. </p>
-
-</div>
-</div>
-<a class="anchor" id="a399af45d42c467c3239197f5ca1dcf28"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TabPlaylist::seekForward </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Seek forward in the current playing track for a small amount of time. </p>
-
-</div>
-</div>
-<a class="anchor" id="ad5c79db6a1adf5ebc4c52cad8e2902e7"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void TabPlaylist::skip </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>forward</em> = <code>true</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Change the current track. </p>
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>code/MiamPlayer/playlists/<a class="el" href="tabplaylist_8h_source.html">tabplaylist.h</a></li>
 <li>code/MiamPlayer/playlists/tabplaylist.cpp</li>
@@ -576,7 +495,7 @@ Protected Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_tab_playlist.html">TabPlaylist</a></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

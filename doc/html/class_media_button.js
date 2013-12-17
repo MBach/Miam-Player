@@ -5,7 +5,5 @@ var class_media_button =
     [ "setIcon", "class_media_button.html#aee5aba8c7775b07c5be33102beedc27b", null ],
     [ "setIconFromTheme", "class_media_button.html#a819dbff4e81724426a3fbeb813d02a56", null ],
     [ "setObjectName", "class_media_button.html#a346a5cd92ad3e31223a76e3f2b36c29b", null ],
-    [ "setSize", "class_media_button.html#add18f74fe554ee2ee5a8fcbe21b6d68e", null ],
-    [ "setVisible", "class_media_button.html#a11739195e494bf4fe812e2a30ac26d4f", null ],
-    [ "visibilityChanged", "class_media_button.html#af5ce0896fa6a09701a6d42553b18a081", null ]
+    [ "setSize", "class_media_button.html#add18f74fe554ee2ee5a8fcbe21b6d68e", null ]
 ];

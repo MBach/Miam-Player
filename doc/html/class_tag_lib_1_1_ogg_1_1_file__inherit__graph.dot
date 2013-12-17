@@ -1,0 +1,17 @@
+digraph "TagLib::Ogg::File"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="TagLib::Ogg::File",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="TagLib::File",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_file.html",tooltip="A file class with some useful methods for tag manipulation. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="TagLib::Ogg::FLAC::File",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_ogg_1_1_f_l_a_c_1_1_file.html",tooltip="An implementation of TagLib::File with Ogg/FLAC specific methods. "];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="TagLib::Ogg::Opus::File",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_ogg_1_1_opus_1_1_file.html",tooltip="An implementation of Ogg::File with Opus specific methods. "];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="TagLib::Ogg::Speex\l::File",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_ogg_1_1_speex_1_1_file.html",tooltip="An implementation of Ogg::File with Speex specific methods. "];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="TagLib::Vorbis::File",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_vorbis_1_1_file.html",tooltip="An implementation of Ogg::File with Vorbis specific methods. "];
+}

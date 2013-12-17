@@ -113,121 +113,107 @@ $(document).ready(function(){initNavTree('tabplaylist_8h_source.html','');});
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QDir&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;QTabWidget&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;QMouseEvent&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;QtMultimedia/QMediaPlayer&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;playlist.h&quot;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;tracksnotfoundmessagebox.h&quot;</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;mediabutton.h&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;QFileSystemWatcher&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;playlist.h&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;tracksnotfoundmessagebox.h&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;mediabutton.h&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//#include &lt;QFileSystemWatcher&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;mediaplayer.h&gt;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
 <div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="class_tab_playlist.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_tab_playlist.html">TabPlaylist</a> : <span class="keyword">public</span> QTabWidget</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    Q_OBJECT</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    QMediaPlayer *_mediaPlayer;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="class_tracks_not_found_message_box.html">TracksNotFoundMessageBox</a> *messageBox;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="class_tracks_not_found_message_box.html">TracksNotFoundMessageBox</a> *messageBox;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    QString _nextAction;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    QFileSystemWatcher *_watcher;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    QString _nextAction;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">//QFileSystemWatcher *_watcher;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">int</span> _tabIndex;</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">int</span> _tabIndex;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="class_tab_playlist.html#aef2cb1854ab1bf7c192361b509a0f9a1">TabPlaylist</a>(QWidget *parent = 0);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">   39</a></span>&#160;    <a class="code" href="class_playlist.html">Playlist</a> *<a class="code" href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">currentPlayList</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> qobject_cast&lt;<a class="code" href="class_playlist.html">Playlist</a> *&gt;(this-&gt;currentWidget()); }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    QMediaPlayer *mediaPlayer()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> this-&gt;_mediaPlayer; }</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    QWeakPointer&lt;MediaPlayer&gt; _mediaPlayer;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="class_tab_playlist.html#aef2cb1854ab1bf7c192361b509a0f9a1">TabPlaylist</a>(QWidget *parent = 0);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">   38</a></span>&#160;    <a class="code" href="class_playlist.html">Playlist</a> *<a class="code" href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">currentPlayList</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> qobject_cast&lt;<a class="code" href="class_playlist.html">Playlist</a> *&gt;(this-&gt;currentWidget()); }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">   41</a></span>&#160;    <a class="code" href="class_playlist.html">Playlist</a> *<a class="code" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">playlist</a>(<span class="keywordtype">int</span> index) { <span class="keywordflow">return</span> qobject_cast&lt;<a class="code" href="class_playlist.html">Playlist</a> *&gt;(this-&gt;widget(index)); }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">   44</a></span>&#160;    <a class="code" href="class_playlist.html">Playlist</a> *<a class="code" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">playlist</a>(<span class="keywordtype">int</span> index) { <span class="keywordflow">return</span> qobject_cast&lt;<a class="code" href="class_playlist.html">Playlist</a> *&gt;(this-&gt;widget(index)); }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    QList&lt;Playlist *&gt; playlists() {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        QList&lt;Playlist*&gt; _playlists;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count() - 1; i++) {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            _playlists.append(this-&gt;<a class="code" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">playlist</a>(i));</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> _playlists;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#aa4dee23cc524644b69d1b58c2207093a">changeEvent</a>(QEvent *event);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">public</span> slots:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#af62e53e5c62816f15778b3bd67dc81c5">restorePlaylists</a>();</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="class_playlist.html">Playlist</a>* <a class="code" href="class_tab_playlist.html#a88a24f63b8a1052967a85acc2ed266bd">addPlaylist</a>();</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a8fd4b035c68e339db5b43a250dcbe2de">addExtFolders</a>(<span class="keyword">const</span> QList&lt;QDir&gt; &amp;folders);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#ae210ebc81a6ece8cf38188a231ea1b24">appendItemToPlaylist</a>(<span class="keyword">const</span> QString &amp;track);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#ab82f170e939603e1dc300d3871ab2290">insertItemsToPlaylist</a>(<span class="keywordtype">int</span> rowIndex, <span class="keyword">const</span> QStringList &amp;tracks);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="class_tab_playlist.html#a98bc4b5631985008f4f8e9253302ecc5">   74</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a98bc4b5631985008f4f8e9253302ecc5">removeCurrentPlaylist</a>() { <a class="code" href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">removeTabFromCloseButton</a>(this-&gt;tabBar()-&gt;currentIndex()); }</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">removeTabFromCloseButton</a>(<span class="keywordtype">int</span> index);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a856c30ae200302d1c4126fea8abc2e02">seekBackward</a>();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a399af45d42c467c3239197f5ca1dcf28">seekForward</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#ad5c79db6a1adf5ebc4c52cad8e2902e7">skip</a>(<span class="keywordtype">bool</span> forward = <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> updateRowHeight();</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">private</span> slots:</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> checkAddPlaylistButton(<span class="keywordtype">int</span> i);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    QList&lt;Playlist *&gt; playlists() {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        QList&lt;Playlist*&gt; _playlists;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; count() - 1; i++) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            _playlists.append(this-&gt;<a class="code" href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">playlist</a>(i));</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">return</span> _playlists;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">void</span> setMediaPlayer(QWeakPointer&lt;MediaPlayer&gt; mediaPlayer);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#aa4dee23cc524644b69d1b58c2207093a">changeEvent</a>(QEvent *event);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">public</span> slots:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#af62e53e5c62816f15778b3bd67dc81c5">restorePlaylists</a>();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="class_playlist.html">Playlist</a>* <a class="code" href="class_tab_playlist.html#a88a24f63b8a1052967a85acc2ed266bd">addPlaylist</a>();</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a8fd4b035c68e339db5b43a250dcbe2de">addExtFolders</a>(<span class="keyword">const</span> QList&lt;QDir&gt; &amp;folders);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#ae210ebc81a6ece8cf38188a231ea1b24">appendItemToPlaylist</a>(<span class="keyword">const</span> QString &amp;track);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#ab82f170e939603e1dc300d3871ab2290">insertItemsToPlaylist</a>(<span class="keywordtype">int</span> rowIndex, <span class="keyword">const</span> QStringList &amp;tracks);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="class_tab_playlist.html#a98bc4b5631985008f4f8e9253302ecc5">   73</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a98bc4b5631985008f4f8e9253302ecc5">removeCurrentPlaylist</a>() { <a class="code" href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">removeTabFromCloseButton</a>(this-&gt;tabBar()-&gt;currentIndex()); }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">removeTabFromCloseButton</a>(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> updateRowHeight();</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">private</span> slots:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> checkAddPlaylistButton(<span class="keywordtype">int</span> i);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordtype">void</span> savePlaylists();</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;signals:</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">void</span> destroyed(<span class="keywordtype">int</span>);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordtype">void</span> created();</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a70c2daf82c3709040cf19117efe37440">aboutToChangeMenuLabels</a>(<span class="keywordtype">int</span>);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> dispatchState(QMediaPlayer::State newState);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">void</span> sendToTagEditor(<span class="keyword">const</span> QList&lt;QPersistentModelIndex&gt; &amp;);</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> savePlaylists();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">void</span> updatePlaybackModeButton();</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;};</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> play(<span class="keyword">const</span> QModelIndex &amp;index);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;signals:</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> destroyed(<span class="keywordtype">int</span>);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordtype">void</span> created();</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_tab_playlist.html#a70c2daf82c3709040cf19117efe37440">aboutToChangeMenuLabels</a>(<span class="keywordtype">int</span>);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">void</span> sendToTagEditor(<span class="keyword">const</span> QList&lt;QPersistentModelIndex&gt; &amp;);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordtype">void</span> updatePlaybackModeButton();</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;};</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif // TABPLAYLIST_H</span></div>
-<div class="ttc" id="class_tab_playlist_html_a399af45d42c467c3239197f5ca1dcf28"><div class="ttname"><a href="class_tab_playlist.html#a399af45d42c467c3239197f5ca1dcf28">TabPlaylist::seekForward</a></div><div class="ttdeci">void seekForward()</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:272</div></div>
-<div class="ttc" id="class_tab_playlist_html_aa4dee23cc524644b69d1b58c2207093a"><div class="ttname"><a href="class_tab_playlist.html#aa4dee23cc524644b69d1b58c2207093a">TabPlaylist::changeEvent</a></div><div class="ttdeci">void changeEvent(QEvent *event)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:82</div></div>
-<div class="ttc" id="class_tab_playlist_html_a98bc4b5631985008f4f8e9253302ecc5"><div class="ttname"><a href="class_tab_playlist.html#a98bc4b5631985008f4f8e9253302ecc5">TabPlaylist::removeCurrentPlaylist</a></div><div class="ttdeci">void removeCurrentPlaylist()</div><div class="ttdef"><b>Definition:</b> tabplaylist.h:74</div></div>
-<div class="ttc" id="class_tab_playlist_html_ad5c79db6a1adf5ebc4c52cad8e2902e7"><div class="ttname"><a href="class_tab_playlist.html#ad5c79db6a1adf5ebc4c52cad8e2902e7">TabPlaylist::skip</a></div><div class="ttdeci">void skip(bool forward=true)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:285</div></div>
-<div class="ttc" id="class_tab_playlist_html_afa74ba802af73c4d36eea34610a83822"><div class="ttname"><a href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">TabPlaylist::removeTabFromCloseButton</a></div><div class="ttdeci">void removeTabFromCloseButton(int index)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:222</div></div>
-<div class="ttc" id="class_playlist_html"><div class="ttname"><a href="class_playlist.html">Playlist</a></div><div class="ttdef"><b>Definition:</b> playlist.h:11</div></div>
-<div class="ttc" id="class_tab_playlist_html_a2d854546b60853e056b246a3e87def46"><div class="ttname"><a href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">TabPlaylist::playlist</a></div><div class="ttdeci">Playlist * playlist(int index)</div><div class="ttdef"><b>Definition:</b> tabplaylist.h:44</div></div>
-<div class="ttc" id="class_tab_playlist_html_a8fd4b035c68e339db5b43a250dcbe2de"><div class="ttname"><a href="class_tab_playlist.html#a8fd4b035c68e339db5b43a250dcbe2de">TabPlaylist::addExtFolders</a></div><div class="ttdeci">void addExtFolders(const QList&lt; QDir &gt; &amp;folders)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:170</div></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif // TABPLAYLIST_H</span></div>
+<div class="ttc" id="class_tab_playlist_html_aa4dee23cc524644b69d1b58c2207093a"><div class="ttname"><a href="class_tab_playlist.html#aa4dee23cc524644b69d1b58c2207093a">TabPlaylist::changeEvent</a></div><div class="ttdeci">void changeEvent(QEvent *event)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:59</div></div>
+<div class="ttc" id="class_tab_playlist_html_a98bc4b5631985008f4f8e9253302ecc5"><div class="ttname"><a href="class_tab_playlist.html#a98bc4b5631985008f4f8e9253302ecc5">TabPlaylist::removeCurrentPlaylist</a></div><div class="ttdeci">void removeCurrentPlaylist()</div><div class="ttdef"><b>Definition:</b> tabplaylist.h:73</div></div>
+<div class="ttc" id="class_tab_playlist_html_afa74ba802af73c4d36eea34610a83822"><div class="ttname"><a href="class_tab_playlist.html#afa74ba802af73c4d36eea34610a83822">TabPlaylist::removeTabFromCloseButton</a></div><div class="ttdeci">void removeTabFromCloseButton(int index)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:178</div></div>
+<div class="ttc" id="class_playlist_html"><div class="ttname"><a href="class_playlist.html">Playlist</a></div><div class="ttdef"><b>Definition:</b> playlist.h:12</div></div>
+<div class="ttc" id="class_tab_playlist_html_a2d854546b60853e056b246a3e87def46"><div class="ttname"><a href="class_tab_playlist.html#a2d854546b60853e056b246a3e87def46">TabPlaylist::playlist</a></div><div class="ttdeci">Playlist * playlist(int index)</div><div class="ttdef"><b>Definition:</b> tabplaylist.h:41</div></div>
+<div class="ttc" id="class_tab_playlist_html_a8fd4b035c68e339db5b43a250dcbe2de"><div class="ttname"><a href="class_tab_playlist.html#a8fd4b035c68e339db5b43a250dcbe2de">TabPlaylist::addExtFolders</a></div><div class="ttdeci">void addExtFolders(const QList&lt; QDir &gt; &amp;folders)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:146</div></div>
 <div class="ttc" id="class_tab_playlist_html"><div class="ttname"><a href="class_tab_playlist.html">TabPlaylist</a></div><div class="ttdef"><b>Definition:</b> tabplaylist.h:16</div></div>
-<div class="ttc" id="class_tab_playlist_html_ab82f170e939603e1dc300d3871ab2290"><div class="ttname"><a href="class_tab_playlist.html#ab82f170e939603e1dc300d3871ab2290">TabPlaylist::insertItemsToPlaylist</a></div><div class="ttdeci">void insertItemsToPlaylist(int rowIndex, const QStringList &amp;tracks)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:196</div></div>
-<div class="ttc" id="class_tab_playlist_html_ad7f4e3aad277092a77dc8607cc2eb178"><div class="ttname"><a href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">TabPlaylist::currentPlayList</a></div><div class="ttdeci">Playlist * currentPlayList() const </div><div class="ttdef"><b>Definition:</b> tabplaylist.h:39</div></div>
+<div class="ttc" id="class_tab_playlist_html_ab82f170e939603e1dc300d3871ab2290"><div class="ttname"><a href="class_tab_playlist.html#ab82f170e939603e1dc300d3871ab2290">TabPlaylist::insertItemsToPlaylist</a></div><div class="ttdeci">void insertItemsToPlaylist(int rowIndex, const QStringList &amp;tracks)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:172</div></div>
+<div class="ttc" id="class_tab_playlist_html_ad7f4e3aad277092a77dc8607cc2eb178"><div class="ttname"><a href="class_tab_playlist.html#ad7f4e3aad277092a77dc8607cc2eb178">TabPlaylist::currentPlayList</a></div><div class="ttdeci">Playlist * currentPlayList() const </div><div class="ttdef"><b>Definition:</b> tabplaylist.h:38</div></div>
 <div class="ttc" id="class_tab_playlist_html_aef2cb1854ab1bf7c192361b509a0f9a1"><div class="ttname"><a href="class_tab_playlist.html#aef2cb1854ab1bf7c192361b509a0f9a1">TabPlaylist::TabPlaylist</a></div><div class="ttdeci">TabPlaylist(QWidget *parent=0)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:16</div></div>
 <div class="ttc" id="class_tracks_not_found_message_box_html"><div class="ttname"><a href="class_tracks_not_found_message_box.html">TracksNotFoundMessageBox</a></div><div class="ttdef"><b>Definition:</b> tracksnotfoundmessagebox.h:7</div></div>
 <div class="ttc" id="class_tab_playlist_html_a70c2daf82c3709040cf19117efe37440"><div class="ttname"><a href="class_tab_playlist.html#a70c2daf82c3709040cf19117efe37440">TabPlaylist::aboutToChangeMenuLabels</a></div><div class="ttdeci">void aboutToChangeMenuLabels(int)</div></div>
-<div class="ttc" id="class_tab_playlist_html_af62e53e5c62816f15778b3bd67dc81c5"><div class="ttname"><a href="class_tab_playlist.html#af62e53e5c62816f15778b3bd67dc81c5">TabPlaylist::restorePlaylists</a></div><div class="ttdeci">void restorePlaylists()</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:98</div></div>
-<div class="ttc" id="class_tab_playlist_html_a856c30ae200302d1c4126fea8abc2e02"><div class="ttname"><a href="class_tab_playlist.html#a856c30ae200302d1c4126fea8abc2e02">TabPlaylist::seekBackward</a></div><div class="ttdeci">void seekBackward()</div><div class="ttdoc">Media actions. </div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:259</div></div>
-<div class="ttc" id="class_tab_playlist_html_ae210ebc81a6ece8cf38188a231ea1b24"><div class="ttname"><a href="class_tab_playlist.html#ae210ebc81a6ece8cf38188a231ea1b24">TabPlaylist::appendItemToPlaylist</a></div><div class="ttdeci">void appendItemToPlaylist(const QString &amp;track)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:188</div></div>
-<div class="ttc" id="class_tab_playlist_html_a88a24f63b8a1052967a85acc2ed266bd"><div class="ttname"><a href="class_tab_playlist.html#a88a24f63b8a1052967a85acc2ed266bd">TabPlaylist::addPlaylist</a></div><div class="ttdeci">Playlist * addPlaylist()</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:145</div></div>
+<div class="ttc" id="class_tab_playlist_html_af62e53e5c62816f15778b3bd67dc81c5"><div class="ttname"><a href="class_tab_playlist.html#af62e53e5c62816f15778b3bd67dc81c5">TabPlaylist::restorePlaylists</a></div><div class="ttdeci">void restorePlaylists()</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:75</div></div>
+<div class="ttc" id="class_tab_playlist_html_ae210ebc81a6ece8cf38188a231ea1b24"><div class="ttname"><a href="class_tab_playlist.html#ae210ebc81a6ece8cf38188a231ea1b24">TabPlaylist::appendItemToPlaylist</a></div><div class="ttdeci">void appendItemToPlaylist(const QString &amp;track)</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:164</div></div>
+<div class="ttc" id="class_tab_playlist_html_a88a24f63b8a1052967a85acc2ed266bd"><div class="ttname"><a href="class_tab_playlist.html#a88a24f63b8a1052967a85acc2ed266bd">TabPlaylist::addPlaylist</a></div><div class="ttdeci">Playlist * addPlaylist()</div><div class="ttdef"><b>Definition:</b> tabplaylist.cpp:122</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_70ac59aa3659d5e80014ce75245c5a8c.html">MiamPlayer</a></li><li class="navelem"><a class="el" href="dir_2d7c116019e1f843d9de20f3bada0cf0.html">playlists</a></li><li class="navelem"><b>tabplaylist.h</b></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

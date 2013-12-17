@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="TagLib::ID3v2::RelativeVolume\lFrame::PeakVolume",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$struct_tag_lib_1_1_i_d3v2_1_1_relative_volume_frame_1_1_peak_volume.html",tooltip="Struct that stores the relevant values for ID3v2 peak volume. "];
+}

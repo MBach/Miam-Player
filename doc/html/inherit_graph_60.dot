@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="TagLib::MPEG::XingHeader",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_m_p_e_g_1_1_xing_header.html",tooltip="An implementation of the Xing VBR headers. "];
+}

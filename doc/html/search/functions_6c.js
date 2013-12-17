@@ -14,7 +14,6 @@ var searchData=
   ['librarytreeview',['LibraryTreeView',['../class_library_tree_view.html#a4caecf12b5654f7868356b3a8159dd00',1,'LibraryTreeView']]],
   ['line',['line',['../class_shortcut_widget.html#a66e147c734cd3187c52dc6fda73e34da',1,'ShortcutWidget']]],
   ['list',['List',['../class_tag_lib_1_1_list.html#a77be67fb7e0ed23550da0cf7295ce512',1,'TagLib::List::List()'],['../class_tag_lib_1_1_list.html#a27406d3e6d701874d6ae84ea566bccc3',1,'TagLib::List::List(const List&lt; T &gt; &amp;l)']]],
-  ['loadedfromfile',['loadedFromFile',['../class_library_model.html#a34d1b5c82d0b547979658a2b059aee6a',1,'LibraryModel']]],
-  ['loadfromfile',['loadFromFile',['../class_library_model.html#a833e7f56f7bb6fd885ef450e16f4217d',1,'LibraryModel']]],
-  ['loadplugins',['loadPlugins',['../class_main_window.html#ad63ce417061edc862704eb68e7a7a2d2',1,'MainWindow']]]
+  ['loadplugins',['loadPlugins',['../class_main_window.html#ad63ce417061edc862704eb68e7a7a2d2',1,'MainWindow']]],
+  ['loadtheme',['loadTheme',['../class_customize_theme_dialog.html#a87f1883416aec151ecbdebbd65b5fdab',1,'CustomizeThemeDialog']]]
 ];

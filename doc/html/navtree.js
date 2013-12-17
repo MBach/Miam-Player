@@ -40,16 +40,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 ".html",
-"class_media_button.html#a346a5cd92ad3e31223a76e3f2b36c29b",
-"class_tab_playlist.html#aba77145ff675d4c21d5159bfd653e184",
-"class_tag_lib_1_1_a_s_f_1_1_tag.html#a45e8a459af948f184ab2a23b4f60c386",
-"class_tag_lib_1_1_file_ref.html#a18ec9d860f666087710bba9d1e9501e6",
-"class_tag_lib_1_1_i_d3v2_1_1_private_frame.html",
-"class_tag_lib_1_1_i_t_1_1_properties.html#afe4d001017dbaa9e8c7a3115015d0753",
-"class_tag_lib_1_1_m_p_e_g_1_1_xing_header.html#a6f04d7a4faa19f30d6450988aa0b2984",
-"class_tag_lib_1_1_r_i_f_f_1_1_a_i_f_f_1_1_properties.html",
-"class_tag_lib_1_1_true_audio_1_1_file.html#a22479a0cebb18e30660c72cb1adbf4f9",
-"libraryitemalbum_8h_source.html"
+"class_library_sql_model.html#ac0a6b7efda0d4343ff1a134dc4babd5d",
+"class_style_sheet_updater.html#a8631d83bc14389c95b984322f80c7c58",
+"class_tag_lib_1_1_a_s_f_1_1_picture.html#aacb0ee9f95e180575ea371bc8a4497aea94e432f52d086354816d2096062aff08",
+"class_tag_lib_1_1_file.html",
+"class_tag_lib_1_1_i_d3v2_1_1_latin1_string_handler.html#a4084bcc19ca3e1918c573b5dc59a7cbf",
+"class_tag_lib_1_1_i_t_1_1_properties.html#a5d93e5df1b01abe241e27538acf4a559",
+"class_tag_lib_1_1_m_p_e_g_1_1_header.html#a419b8f3232df94a9e1c5d4c05405783f",
+"class_tag_lib_1_1_property_map.html#a2cae6733cac7f6484a132d510006018f",
+"class_tag_lib_1_1_string_list.html#a2e2eeb4b33a5c657970c0c9d2e0ee2bc",
+"functions_func_0x6e.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

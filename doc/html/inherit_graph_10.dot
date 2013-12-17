@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="FileHelper",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_file_helper.html",tooltip="The FileHelper class is used to extract various but relevant fields in all types of tags (MP3..."];
+}

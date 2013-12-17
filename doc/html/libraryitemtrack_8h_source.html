@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.5"/>
-<title>Madame MiamMiam&#39;s Music Player: code/MiamPlayer/library/libraryitemtrack.h Source File</title>
+<title>Madame MiamMiam&#39;s Music Player: code/MiamCore/model/libraryitemtrack.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -112,40 +112,42 @@ $(document).ready(function(){initNavTree('libraryitemtrack_8h_source.html','');}
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;libraryitem.h&quot;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_library_item_track.html">    6</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_library_item_track.html">LibraryItemTrack</a> : <span class="keyword">public</span> <a class="code" href="class_library_item.html">LibraryItem</a></div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="class_library_item_track.html">    6</a></span>&#160;<span class="keyword">class </span>MIAMCORE_LIBRARY <a class="code" href="class_library_item_track.html">LibraryItemTrack</a> : <span class="keyword">public</span> <a class="code" href="class_library_item.html">LibraryItem</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    Q_ENUMS(CustomType)</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_library_item_track.html">LibraryItemTrack</a>() : <a class="code" href="class_library_item.html">LibraryItem</a>() {}</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_library_item_track.html">LibraryItemTrack</a>() : <a class="code" href="class_library_item.html">LibraryItem</a>() {}</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="class_library_item_track.html">LibraryItemTrack</a>(<span class="keyword">const</span> QString &amp;track) : <a class="code" href="class_library_item.html">LibraryItem</a>(track) {}</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">inline</span> <a class="code" href="class_library_item_track.html">LibraryItemTrack</a>(<span class="keyword">const</span> QString &amp;track) : <a class="code" href="class_library_item.html">LibraryItem</a>(track) {}</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="class_library_item_track.html#a14c4e8b4cea50251b34030769d5da6cb">   17</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="class_library_item_track.html#a14c4e8b4cea50251b34030769d5da6cb">type</a>()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> LibraryItem::Track; }</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> setAbsoluteFilePath(<span class="keyword">const</span> QString &amp;absPath, <span class="keyword">const</span> QString &amp;file) { setData(absPath, ABSOLUTE_PATH); setData(file, FILENAME); }</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">inline</span> QString absoluteFilePath()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(ABSOLUTE_PATH).toString() + <span class="charliteral">&#39;/&#39;</span> + <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(FILENAME).toString(); }</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> setDiscNumber(<span class="keywordtype">int</span> track) { setData(track, DISC_NUMBER); }</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> discNumber()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(DISC_NUMBER).toInt(); }</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> setTrackNumber(<span class="keywordtype">int</span> track) { setData(track, TRACK_NUMBER); }</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> trackNumber()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(TRACK_NUMBER).toInt(); }</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#endif // LIBRARYITEMTRACK_H</span></div>
-<div class="ttc" id="class_library_item_track_html_a14c4e8b4cea50251b34030769d5da6cb"><div class="ttname"><a href="class_library_item_track.html#a14c4e8b4cea50251b34030769d5da6cb">LibraryItemTrack::type</a></div><div class="ttdeci">int type() const </div><div class="ttdef"><b>Definition:</b> libraryitemtrack.h:17</div></div>
-<div class="ttc" id="class_library_item_html"><div class="ttname"><a href="class_library_item.html">LibraryItem</a></div><div class="ttdef"><b>Definition:</b> libraryitem.h:6</div></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">inline</span> <span class="keyword">virtual</span> ~<a class="code" href="class_library_item_track.html">LibraryItemTrack</a>() {}</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="comment">//inline int type() const { return LibraryItem::Track; }</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="class_library_item_track.html#ada9d9b0a9de0b3bc2da07b3ed2e579f9">   21</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="class_library_item_track.html#ada9d9b0a9de0b3bc2da07b3ed2e579f9">setAbsoluteFilePath</a>(<span class="keyword">const</span> QString &amp;absPath, <span class="keyword">const</span> QString &amp;file) { setData(absPath, ABSOLUTE_PATH); setData(file, FILENAME); }</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">inline</span> QString absoluteFilePath()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(ABSOLUTE_PATH).toString() + <span class="charliteral">&#39;/&#39;</span> + <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(FILENAME).toString(); }</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> setDiscNumber(<span class="keywordtype">int</span> track) { setData(track, DISC_NUMBER); }</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> discNumber()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(DISC_NUMBER).toInt(); }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> setTrackNumber(<span class="keywordtype">int</span> track) { setData(track, TRACK_NUMBER); }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> trackNumber()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <a class="code" href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">data</a>(TRACK_NUMBER).toInt(); }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;};</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif // LIBRARYITEMTRACK_H</span></div>
+<div class="ttc" id="class_library_item_html"><div class="ttname"><a href="class_library_item.html">LibraryItem</a></div><div class="ttdef"><b>Definition:</b> libraryitem.h:8</div></div>
+<div class="ttc" id="class_library_item_track_html_ada9d9b0a9de0b3bc2da07b3ed2e579f9"><div class="ttname"><a href="class_library_item_track.html#ada9d9b0a9de0b3bc2da07b3ed2e579f9">LibraryItemTrack::setAbsoluteFilePath</a></div><div class="ttdeci">void setAbsoluteFilePath(const QString &amp;absPath, const QString &amp;file)</div><div class="ttdef"><b>Definition:</b> libraryitemtrack.h:21</div></div>
 <div class="ttc" id="class_library_item_track_html"><div class="ttname"><a href="class_library_item_track.html">LibraryItemTrack</a></div><div class="ttdef"><b>Definition:</b> libraryitemtrack.h:6</div></div>
-<div class="ttc" id="class_library_item_html_a4d078ba1004844cc5e3bae70592b0460"><div class="ttname"><a href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">LibraryItem::data</a></div><div class="ttdeci">QVariant data(int role) const </div><div class="ttdef"><b>Definition:</b> libraryitem.h:45</div></div>
+<div class="ttc" id="class_library_item_html_a4d078ba1004844cc5e3bae70592b0460"><div class="ttname"><a href="class_library_item.html#a4d078ba1004844cc5e3bae70592b0460">LibraryItem::data</a></div><div class="ttdeci">QVariant data(int role) const </div><div class="ttdef"><b>Definition:</b> libraryitem.h:41</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_70ac59aa3659d5e80014ce75245c5a8c.html">MiamPlayer</a></li><li class="navelem"><a class="el" href="dir_77d0503431645cfb4ec8512be2dcd24d.html">library</a></li><li class="navelem"><b>libraryitemtrack.h</b></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_8286ec72a985a42cf2222f74d6469280.html">MiamCore</a></li><li class="navelem"><a class="el" href="dir_307cbceb1dad0ad2c44b4519d072de27.html">model</a></li><li class="navelem"><b>libraryitemtrack.h</b></li>
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

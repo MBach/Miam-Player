@@ -1,0 +1,9 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="TagLib::List\< String \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_list.html"];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="TagLib::StringList",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_string_list.html",tooltip="A list of strings. "];
+}

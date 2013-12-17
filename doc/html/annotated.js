@@ -8,6 +8,7 @@ var annotated =
     [ "AddressBarButton", "class_address_bar_button.html", "class_address_bar_button" ],
     [ "AddressBarMenu", "class_address_bar_menu.html", "class_address_bar_menu" ],
     [ "AlbumCover", "class_album_cover.html", "class_album_cover" ],
+    [ "AlbumForm", "class_album_form.html", "class_album_form" ],
     [ "BasicPluginInterface", "class_basic_plugin_interface.html", "class_basic_plugin_interface" ],
     [ "CircleProgressBar", "class_circle_progress_bar.html", "class_circle_progress_bar" ],
     [ "ColorDialog", "class_color_dialog.html", "class_color_dialog" ],
@@ -21,6 +22,7 @@ var annotated =
     [ "File", "class_file.html", null ],
     [ "FileHelper", "class_file_helper.html", "class_file_helper" ],
     [ "FileSystemTreeView", "class_file_system_tree_view.html", "class_file_system_tree_view" ],
+    [ "FlowLayout", "class_flow_layout.html", "class_flow_layout" ],
     [ "LibraryFilterLineEdit", "class_library_filter_line_edit.html", "class_library_filter_line_edit" ],
     [ "LibraryFilterProxyModel", "class_library_filter_proxy_model.html", "class_library_filter_proxy_model" ],
     [ "LibraryItem", "class_library_item.html", "class_library_item" ],
@@ -30,11 +32,12 @@ var annotated =
     [ "LibraryItemDiscNumber", "class_library_item_disc_number.html", "class_library_item_disc_number" ],
     [ "LibraryItemLetter", "class_library_item_letter.html", "class_library_item_letter" ],
     [ "LibraryItemTrack", "class_library_item_track.html", "class_library_item_track" ],
-    [ "LibraryModel", "class_library_model.html", "class_library_model" ],
     [ "LibraryOrderDialog", "class_library_order_dialog.html", "class_library_order_dialog" ],
+    [ "LibrarySqlModel", "class_library_sql_model.html", "class_library_sql_model" ],
     [ "LibraryTreeView", "class_library_tree_view.html", "class_library_tree_view" ],
     [ "MainWindow", "class_main_window.html", "class_main_window" ],
     [ "MediaButton", "class_media_button.html", "class_media_button" ],
+    [ "MediaPlayer", "class_media_player.html", "class_media_player" ],
     [ "MediaPlayerPluginInterface", "class_media_player_plugin_interface.html", "class_media_player_plugin_interface" ],
     [ "MusicSearchEngine", "class_music_search_engine.html", "class_music_search_engine" ],
     [ "NoFocusItemDelegate", "class_no_focus_item_delegate.html", "class_no_focus_item_delegate" ],
@@ -65,5 +68,6 @@ var annotated =
     [ "TagLib_Tag", "struct_tag_lib___tag.html", "struct_tag_lib___tag" ],
     [ "TimeLabel", "class_time_label.html", "class_time_label" ],
     [ "TracksNotFoundMessageBox", "class_tracks_not_found_message_box.html", "class_tracks_not_found_message_box" ],
-    [ "TreeView", "class_tree_view.html", "class_tree_view" ]
+    [ "TreeView", "class_tree_view.html", "class_tree_view" ],
+    [ "UniqueLibrary", "class_unique_library.html", "class_unique_library" ]
 ];

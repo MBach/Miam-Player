@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.5"/>
-<title>Madame MiamMiam&#39;s Music Player: code/MiamPlayer/library/libraryfilterlineedit.h Source File</title>
+<title>Madame MiamMiam&#39;s Music Player: code/MiamCore/libraryfilterlineedit.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -111,38 +111,26 @@ $(document).ready(function(){initNavTree('libraryfilterlineedit_8h_source.html',
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define LIBRARYFILTERLINEEDIT_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;QLineEdit&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;QToolButton&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="class_library_filter_line_edit.html">    7</a></span>&#160;<span class="keyword">class </span><a class="code" href="class_library_filter_line_edit.html">LibraryFilterLineEdit</a> : <span class="keyword">public</span> QLineEdit</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    Q_OBJECT</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    QToolButton *clearButton;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <a class="code" href="class_library_filter_line_edit.html#a7ad17471cfc2df96bdff17fe6d2a0e5c">LibraryFilterLineEdit</a>(QWidget *parent = 0);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="class_library_filter_line_edit.html#a664c1b439e4bf8d5ae2e2d1688919f9c">resizeEvent</a>(QResizeEvent *);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">private</span> slots:</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> clear();</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> updateClearButtonStatus(<span class="keyword">const</span> QString &amp;text = QString());</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;};</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#endif // LIBRARYFILTERLINEEDIT_H</span></div>
-<div class="ttc" id="class_library_filter_line_edit_html_a7ad17471cfc2df96bdff17fe6d2a0e5c"><div class="ttname"><a href="class_library_filter_line_edit.html#a7ad17471cfc2df96bdff17fe6d2a0e5c">LibraryFilterLineEdit::LibraryFilterLineEdit</a></div><div class="ttdeci">LibraryFilterLineEdit(QWidget *parent=0)</div><div class="ttdef"><b>Definition:</b> libraryfilterlineedit.cpp:6</div></div>
-<div class="ttc" id="class_library_filter_line_edit_html_a664c1b439e4bf8d5ae2e2d1688919f9c"><div class="ttname"><a href="class_library_filter_line_edit.html#a664c1b439e4bf8d5ae2e2d1688919f9c">LibraryFilterLineEdit::resizeEvent</a></div><div class="ttdeci">void resizeEvent(QResizeEvent *)</div><div class="ttdef"><b>Definition:</b> libraryfilterlineedit.cpp:34</div></div>
-<div class="ttc" id="class_library_filter_line_edit_html"><div class="ttname"><a href="class_library_filter_line_edit.html">LibraryFilterLineEdit</a></div><div class="ttdef"><b>Definition:</b> libraryfilterlineedit.h:7</div></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;miamcore_global.h&quot;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
+<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="class_library_filter_line_edit.html">    8</a></span>&#160;<span class="keyword">class </span>MIAMCORE_LIBRARY <a class="code" href="class_library_filter_line_edit.html">LibraryFilterLineEdit</a> : <span class="keyword">public</span> QLineEdit</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    Q_OBJECT</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="class_library_filter_line_edit.html">LibraryFilterLineEdit</a>(QWidget *parent = 0);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;};</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#endif // LIBRARYFILTERLINEEDIT_H</span></div>
+<div class="ttc" id="class_library_filter_line_edit_html"><div class="ttname"><a href="class_library_filter_line_edit.html">LibraryFilterLineEdit</a></div><div class="ttdef"><b>Definition:</b> libraryfilterlineedit.h:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_70ac59aa3659d5e80014ce75245c5a8c.html">MiamPlayer</a></li><li class="navelem"><a class="el" href="dir_77d0503431645cfb4ec8512be2dcd24d.html">library</a></li><li class="navelem"><b>libraryfilterlineedit.h</b></li>
-    <li class="footer">Generated on Thu Nov 21 2013 21:05:13 for Madame MiamMiam&#39;s Music Player by
+    <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_8286ec72a985a42cf2222f74d6469280.html">MiamCore</a></li><li class="navelem"><b>libraryfilterlineedit.h</b></li>
+    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

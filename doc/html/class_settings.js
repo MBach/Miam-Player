@@ -5,25 +5,20 @@ var class_settings =
       [ "LIBRARY", "class_settings.html#a071dae5f99df5d10dbaf80e91ea10526af78ed1d1381eb249f1a610cc7492f08c", null ],
       [ "MENUS", "class_settings.html#a071dae5f99df5d10dbaf80e91ea10526ad8991a208c99bdaa941c0116e4ac9f5a", null ]
     ] ],
-    [ "InsertPolicy", "class_settings.html#a79620819e5ab2f1ab28dad5c83a58e17", [
-      [ "Artist", "class_settings.html#a79620819e5ab2f1ab28dad5c83a58e17a58a44fc33d7c35eb71da84f0e3209647", null ],
-      [ "Album", "class_settings.html#a79620819e5ab2f1ab28dad5c83a58e17a8d5857f6195ecf70504a025781ef89c1", null ],
-      [ "ArtistAlbum", "class_settings.html#a79620819e5ab2f1ab28dad5c83a58e17a5a32fa6b223e86a4c05874cdbbbd778c", null ],
-      [ "Year", "class_settings.html#a79620819e5ab2f1ab28dad5c83a58e17ad4a4f0f980b883ba59f6689d06f3da90", null ]
-    ] ],
     [ "bufferedCoverSize", "class_settings.html#a35f1cc8dacc96b683351bb8d5c58b41c", null ],
     [ "buttonsFlat", "class_settings.html#af6c315be06430d8fb00fe1a1b4b89e80", null ],
     [ "buttonsSize", "class_settings.html#a60448bcb687cd5c3e3116c257509b845", null ],
     [ "colorsAlternateBG", "class_settings.html#a1a649e91c1d00a6531df2bca95da1261", null ],
     [ "copyTracksFromPlaylist", "class_settings.html#aa2052924f731e39dc6f9fc09b8c5686d", null ],
     [ "coverSize", "class_settings.html#a30b14eb9f9ccd8b1ebf0574ca928554c", null ],
-    [ "customColors", "class_settings.html#add8370bd38b14a44cd0aed1acd2dff0a", null ],
     [ "customIcon", "class_settings.html#ac42378287c49177a595ee76561410943", null ],
-    [ "dragAndDropBehaviour", "class_settings.html#af513e53404dcd3deac043e025ce37122", null ],
+    [ "dragAndDropBehaviour", "class_settings.html#a21c6822f7a484477b0c5d307c82bb4cc", null ],
     [ "font", "class_settings.html#a7bb8fe01d8ad459abd2df909ace8d267", null ],
     [ "fontSize", "class_settings.html#a15cfb8a1ccb9d4226acfa7cf3bb05296", null ],
     [ "hasCustomIcon", "class_settings.html#aaa08d34e6eb9aef7c48770160a0a48ad", null ],
-    [ "insertPolicy", "class_settings.html#a515a43890fbd870d21a9d834d74cfb37", null ],
+    [ "isCoversEnabled", "class_settings.html#afa8e21f05526780065c0b32f501ef6b6", null ],
+    [ "isCustomColors", "class_settings.html#a15948eadd26ce9f25c0780b7fd805553", null ],
+    [ "isMediaButtonVisible", "class_settings.html#a5b3091e07aec6bd4b7818b7e2bbdd5a3", null ],
     [ "isStarDelegates", "class_settings.html#a4073cb917b7c3875206b554f55e85c48", null ],
     [ "language", "class_settings.html#ad9314f238d741abcbe1170a0ea05c712", null ],
     [ "musicLocations", "class_settings.html#a4ab1e50df49189a0bf6dbed5b43c3b4c", null ],
@@ -44,8 +39,8 @@ var class_settings =
     [ "setDragAndDropBehaviour", "class_settings.html#a25292bea0e6b673f1bafe584c59d2efd", null ],
     [ "setFont", "class_settings.html#af1f518c7379df91f9129459b735273e5", null ],
     [ "setFontPointSize", "class_settings.html#a4125b872135c3132fe6af4529833e33d", null ],
-    [ "setInsertPolicy", "class_settings.html#ae21557eac4ed8d5da6381bc8509c4b90", null ],
     [ "setLanguage", "class_settings.html#ab70d7de70fead5b98ccab63bb0bf491a", null ],
+    [ "setMediaButtonVisible", "class_settings.html#a4c0b1803c6f91d6f5bd18cc608126000", null ],
     [ "setMusicLocations", "class_settings.html#a01f76b6bb9ec4aed211962c9bbb800fd", null ],
     [ "setPlaybackKeepPlaylists", "class_settings.html#afbfb15278f9b520669862993ef50e866", null ],
     [ "setPlaybackSeekTime", "class_settings.html#a8ccb60c9c8cdd18a30948b2122dfad9e", null ],
@@ -56,6 +51,5 @@ var class_settings =
     [ "shortcuts", "class_settings.html#a43e4e66a9519f17baf8ef070ff87072b", null ],
     [ "theme", "class_settings.html#a643b0a1e409b44f6090608c20b571f52", null ],
     [ "themeHasChanged", "class_settings.html#a6c5da770945ddad4165f7c71e5362e35", null ],
-    [ "volume", "class_settings.html#a1f3f2bd056244495a2e979ce591ebf2c", null ],
-    [ "withCovers", "class_settings.html#ae75de845df67bb9dba48d57881ae42c0", null ]
+    [ "volume", "class_settings.html#a1f3f2bd056244495a2e979ce591ebf2c", null ]
 ];

@@ -1,0 +1,11 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="TagLib::IOStream",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_i_o_stream.html",tooltip="An abstract class that provides operations on a sequence of bytes. "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="TagLib::ByteVectorStream",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_byte_vector_stream.html",tooltip="In-memory Stream class using ByteVector for its storage. "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="TagLib::FileStream",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_file_stream.html",tooltip="A file class with some useful methods for tag manipulation. "];
+}
