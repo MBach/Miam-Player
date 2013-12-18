@@ -1,6 +1,5 @@
 #include "libraryfilterproxymodel.h"
 
-#include <model/libraryitem.h>
 #include "settings.h"
 
 #include <QtDebug>
@@ -49,89 +48,88 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	return false;
 }
 
+#include "librarytreeview.h"
+
 /** Redefined for custom sorting. */
 bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const
 {
 	bool result = false;
-	/*LibraryModel *model = qobject_cast<LibraryModel *>(this->sourceModel());
-	LibraryItem *left = model->itemFromIndex(idxLeft);
-	LibraryItem *right = model->itemFromIndex(idxRight);
+	QStandardItemModel *model = qobject_cast<QStandardItemModel *>(this->sourceModel());
+	QStandardItem *left = model->itemFromIndex(idxLeft);
+	QStandardItem *right = model->itemFromIndex(idxRight);
 
-	LibraryItemAlbum *leftAlbum = NULL, *rightAlbum = NULL;
-	LibraryItemTrack *leftTrack = NULL, *rightTrack = NULL;
-	LibraryItemDiscNumber *leftDisc = NULL, *rightDisc = NULL;
+	int lType = left->data(LibraryTreeView::Type).toInt();
+	int rType = right->data(LibraryTreeView::Type).toInt();
+	switch (lType) {
 
-	switch (left->type()) {
-
-	case LibraryItem::Artist:
+	case LibraryTreeView::Artist:
 		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		break;
 
-	case LibraryItem::Album:
-		if (right && right->type() == LibraryItem::Album) {
-			leftAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxLeft));
-			rightAlbum = static_cast<LibraryItemAlbum*>(model->itemFromIndex(idxRight));
-			if (Settings::getInstance()->insertPolicy() == Settings::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
-			//if (model->currentInsertPolicy() == Settings::Artist && leftAlbum->year() >= 0 && rightAlbum->year() >= 0) {
+	case LibraryTreeView::Album:
+		rType = right->data(LibraryTreeView::Type).toInt();
+		if (rType == LibraryTreeView::Album) {
+			int lYear = left->data(LibraryTreeView::Year).toInt();
+			int rYear = right->data(LibraryTreeView::Year).toInt();
+			if (Settings::getInstance()->value("insertPolicy").toInt() == LibraryTreeView::Artist && lYear >= 0 && rYear >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
-					if (leftAlbum->year() == rightAlbum->year()) {
+					if (lYear == rYear) {
 						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 					} else {
-						result = leftAlbum->year() < rightAlbum->year();
+						result = lYear < rYear;
 					}
 				} else {
-					result = leftAlbum->year() > rightAlbum->year();
+					result = lYear > rYear;
 				}
 			} else {
 				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 			}
-		} else {
-			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
-	case LibraryItem::Disc:
-		leftDisc = static_cast<LibraryItemDiscNumber *>(model->itemFromIndex(idxLeft));
-		if (model->itemFromIndex(idxRight)->type() == LibraryItem::Disc) {
-			rightDisc = static_cast<LibraryItemDiscNumber *>(model->itemFromIndex(idxRight));
-			result = leftDisc->discNumber() < rightDisc->discNumber();
-		} else if (model->itemFromIndex(idxRight)->type() == LibraryItem::Track) {
-			rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxRight));
-			result = leftDisc->discNumber() < rightTrack->discNumber();
-		}
+	case LibraryTreeView::Disc:
+		if (rType == LibraryTreeView::Disc) {
+			int dLeft = left->data(LibraryTreeView::DataDiscNumber).toInt();
+			int dRight = right->data(LibraryTreeView::DataDiscNumber).toInt();
+			result = dLeft < dRight;
+		} /*else if (model->itemFromIndex(idxRight)->data(LibraryTreeView::Type).toInt() == LibraryTreeView::Track) {
+			int dLeft = leftDisc->data(LibraryTreeView::DataDiscNumber).toInt();
+			int dRight = rightTrack->data(LibraryTreeView::DataDiscNumber).toInt();
+			result = dLeft < dRight;
+		}*/
 		break;
 
-	case LibraryItem::Letter:
+	case LibraryTreeView::Letter:
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
-		if (right && QString::compare(left->normalizedString().left(1), right->normalizedString().left(1)) == 0) {
-			result = (sortOrder() == Qt::AscendingOrder);
+		if (QString::compare(left->text().left(1), right->text().left(1)) == 0) {
+			result = (sortOrder() != Qt::AscendingOrder);
 		} else {
 			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
 	// Sort tracks by their numbers
-	case LibraryItem::Track:
-		leftTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxLeft));
-		rightTrack = static_cast<LibraryItemTrack *>(model->itemFromIndex(idxRight));
-		if (rightTrack) {
-			if (leftTrack->discNumber() == rightTrack->discNumber()) {
+	case LibraryTreeView::Track:
+		/*if (right) {
+			int dLeft = left->data(LibraryTreeView::DataDiscNumber).toInt();
+			int dRight = right->data(LibraryTreeView::DataDiscNumber).toInt();
+			if (dLeft == dRight) {
 				result = (leftTrack->trackNumber() < rightTrack->trackNumber() && sortOrder() == Qt::AscendingOrder) ||
 						(leftTrack->trackNumber() > rightTrack->trackNumber() && sortOrder() == Qt::DescendingOrder);
 			} else {
 				result = (leftTrack->discNumber() < rightTrack->discNumber() && sortOrder() == Qt::AscendingOrder) ||
 						  (leftTrack->discNumber() > rightTrack->discNumber() && sortOrder() == Qt::DescendingOrder);
 			}
-		} else {
+		} else {*/
 			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
-		}
+		//}
 		break;
 
 	default:
 		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		break;
-	}*/
+	}
 	return result;
 }
 

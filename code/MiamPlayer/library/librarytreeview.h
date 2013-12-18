@@ -59,10 +59,11 @@ public:
 					Year = 6 };
 
 	// User defined data types (item->setData(QVariant, Field);)
-	enum Field { Type = Qt::UserRole + 1,
-				 AbsFilePath = Qt::UserRole + 2,
-				 CoverPath = Qt::UserRole + 3,
-				 TrackNumber = Qt::UserRole + 4};
+	enum DataField { Type = Qt::UserRole + 1,
+					 DataAbsFilePath = Qt::UserRole + 2,
+					 DataCoverPath = Qt::UserRole + 3,
+					 DataTrackNumber = Qt::UserRole + 4,
+					 DataDiscNumber = Qt::UserRole + 5};
 
 protected:
 	/** Redefined to display a small context menu in the view. */

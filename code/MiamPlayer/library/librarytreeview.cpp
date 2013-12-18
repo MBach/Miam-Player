@@ -135,13 +135,13 @@ void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &
 	internalCover.addBindValue(album);
 	internalCover.exec();
 	if (internalCover.next()) {
-		itemAlbum->setData(absFilePath, CoverPath);
+		itemAlbum->setData(absFilePath, DataCoverPath);
 	} else {
 		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?");
 		externalCover.addBindValue(album);
 		externalCover.exec();
 		if (externalCover.next()) {
-			itemAlbum->setData(externalCover.record().value(0).toString(), CoverPath);
+			itemAlbum->setData(externalCover.record().value(0).toString(), DataCoverPath);
 		}
 	}
 }
@@ -204,7 +204,9 @@ void LibraryTreeView::insertLetter(const QString &letters)
 		}
 		if (!_letters.contains(letter)) {
 			_letters.insert(letter);
-			_libraryModel->invisibleRootItem()->appendRow(new QStandardItem(letter));
+			QStandardItem *itemLetter = new QStandardItem(letter);
+			itemLetter->setData(Letter, Type);
+			_libraryModel->invisibleRootItem()->appendRow(itemLetter);
 		}
 	}
 }
@@ -249,6 +251,7 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		if (discNumber > 0 && !_discNumbers.contains(QPair<QStandardItem*, int>(itemAlbum, discNumber))) {
 			QStandardItem *itemDiscNumber = new QStandardItem(QString::number(discNumber));
 			itemDiscNumber->setData(Disc, Type);
+			itemDiscNumber->setData(discNumber, DataDiscNumber);
 			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, discNumber), itemDiscNumber);
 			itemAlbum->appendRow(itemDiscNumber);
 		}
@@ -304,7 +307,7 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			if (year > 0) {
 				itemYear = new QStandardItem(QString::number(year));
 			} else {
-				itemYear = new QStandardItem();
+				itemYear = new QStandardItem(tr("Unknown"));
 			}
 			itemYear->setData(Year, Type);
 			_years.insert(year, itemYear);
@@ -332,8 +335,8 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 	/// XXX: Is it necessary to create subclasses of QStandardItem for item->type()?
 	// itemTrack always exists
 	itemTrack->setData(Track, Type);
-	itemTrack->setData(absFilePath, AbsFilePath);
-	itemTrack->setData(trackNumber, TrackNumber);
+	itemTrack->setData(absFilePath, DataAbsFilePath);
+	itemTrack->setData(trackNumber, DataTrackNumber);
 }
 
 void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
@@ -344,7 +347,7 @@ void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 	if (externalCover.next()) {
 		QString album = externalCover.record().value(0).toString();
 		QStandardItem *itemAlbum = _albums2.value(album);
-		itemAlbum->setData(coverFileInfo.absoluteFilePath(), CoverPath);
+		itemAlbum->setData(coverFileInfo.absoluteFilePath(), DataCoverPath);
 	}
 }
 

@@ -29,9 +29,6 @@ CONFIG(release, debug|release) {
 win32:CONFIG += dll
 
 SOURCES += \
-    model/libraryitem.cpp \
-    model/persistentitem.cpp \
-    model/libraryitemdiscnumber.cpp \
     model/librarysqlmodel.cpp \
     cover.cpp \
     filehelper.cpp \
@@ -53,13 +50,6 @@ HEADERS += \
     interfaces/basicplugininterface.h \
     interfaces/mediaplayerplugininterface.h \
     libraryfilterlineedit.h \
-    model/libraryitem.h \
-    model/libraryitemalbum.h \
-    model/libraryitemartist.h \
-    model/libraryitemletter.h \
-    model/libraryitemtrack.h \
-    model/persistentitem.h \
-    model/libraryitemdiscnumber.h \
     model/librarysqlmodel.h \
     mediabutton.h
 

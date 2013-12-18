@@ -79,7 +79,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	static QImageReader imageReader;
-	QString file = item->data(LibraryTreeView::CoverPath).toString();
+	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
 	if (item->icon().isNull() && !file.isEmpty()) {
 		FileHelper fh(file);
 		QFileInfo f(file);
@@ -136,7 +136,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
-	int trackNumber = track->data(LibraryTreeView::TrackNumber).toInt();
+	int trackNumber = track->data(LibraryTreeView::DataTrackNumber).toInt();
 	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
 	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
