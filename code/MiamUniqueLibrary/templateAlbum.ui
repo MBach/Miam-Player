@@ -54,27 +54,10 @@
       <widget class="QWidget" name="cover" native="true">
        <property name="minimumSize">
         <size>
-         <width>48</width>
-         <height>48</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-       </layout>
       </widget>
      </item>
      <item>

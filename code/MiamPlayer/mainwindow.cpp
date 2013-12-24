@@ -18,7 +18,7 @@
 #include <QPluginLoader>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), _librarySqlModel(NULL)
+	QMainWindow(parent), _librarySqlModel(NULL), _viewModeGroup(new QActionGroup(this))
 {
 	setupUi(this);
 	Settings *settings = Settings::getInstance();
@@ -113,6 +113,8 @@ void MainWindow::init()
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 }
 
+#include <QWindow>
+
 /** Plugins OMFG §§§ */
 void MainWindow::loadPlugins()
 {
@@ -145,9 +147,22 @@ void MainWindow::loadPlugins()
 
 				/// XXX Make a dispatcher for other types of plugins?
 				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
-					qDebug() << "MediaPlayerPluginInterface";
+					qDebug() << "MediaPlayerPluginInterface" << mediaPlayerPlugin->name() << mediaPlayerPlugin->version();
 					mediaPlayerPlugin->setMediaPlayer(_mediaPlayer);
-					qDebug() << "MediaPlayerPluginInterface";
+					if (mediaPlayerPlugin->providesView()) {
+						QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), menuView);
+						actionAddViewToMenu->setCheckable(true);
+						actionAddViewToMenu->setActionGroup(_viewModeGroup);
+						menuView->addAction(actionAddViewToMenu);
+						qDebug() << menuView->children().count();
+						actionAddViewToMenu->setData(QVariant(menuView->children().count()));
+						connect(actionAddViewToMenu, &QAction::triggered, [=]() {
+							QWidget *widget = dynamic_cast<QWidget*>(mediaPlayerPlugin);
+							widget->show();
+						});
+						//QWidget *widget = dynamic_cast<QWidget*>(mediaPlayerPlugin);
+						//stackedWidget->addWidget(widget);
+					}
 				}
 			} else {
 				qDebug() << "plugin was NOT loaded !" << it.fileName();
@@ -175,17 +190,27 @@ void MainWindow::updateFonts(const QFont &font)
 void MainWindow::setupActions()
 {
 	// Load music
-	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, _librarySqlModel, &LibrarySqlModel::rebuild);
+	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](bool libraryIsEmpty) {
+		quickStart->setVisible(libraryIsEmpty);
+		library->setHidden(libraryIsEmpty);
+		actionScanLibrary->setDisabled(libraryIsEmpty);
+		widgetSearchBar->setHidden(libraryIsEmpty);
+		if (libraryIsEmpty) {
+			quickStart->searchMultimediaFiles();
+		} else {
+			_librarySqlModel->rebuild();
+		}
+	});
 
 	// Adds a group where view mode are mutually exclusive
-	QActionGroup *viewModeGroup = new QActionGroup(this);
-	actionPlaylistMode->setActionGroup(viewModeGroup);
+	actionPlaylistMode->setActionGroup(_viewModeGroup);
 	actionPlaylistMode->setData(QVariant(0));
-	actionUniqueLibraryMode->setActionGroup(viewModeGroup);
+	actionUniqueLibraryMode->setActionGroup(_viewModeGroup);
 	actionUniqueLibraryMode->setData(QVariant(1));
 
 	/// TODO: A sample plugin to append a new view (let's say in QML with QQuickControls?)
-	connect(viewModeGroup, &QActionGroup::triggered, [=](QAction* action) {
+	connect(_viewModeGroup, &QActionGroup::triggered, [=](QAction* action) {
+		qDebug() << action->data().toInt();
 		stackedWidget->setCurrentIndex(action->data().toInt());
 	});
 

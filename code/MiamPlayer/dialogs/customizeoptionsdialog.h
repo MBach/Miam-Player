@@ -27,7 +27,7 @@ protected:
 
 signals:
 	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged();
+	void musicLocationsHaveChanged(bool libraryIsEmpty);
 
 public slots:
 	/** Adds a new music location in the library. */

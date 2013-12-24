@@ -50,20 +50,21 @@ public:
 	void insertTrackFromFile(const FileHelper &fh);
 	void insertTrackFromRecord(const QSqlRecord &record);
 
-	enum ItemType { Artist = 0,
-					Album = 1,
-					ArtistAlbum = 2,
-					Disc = 3,
-					Letter = 4,
-					Track = 5,
-					Year = 6 };
+	enum ItemType { Artist		= 0,
+					Album		= 1,
+					ArtistAlbum	= 2,
+					Disc		= 3,
+					Letter		= 4,
+					Track		= 5,
+					Year		= 6 };
 
 	// User defined data types (item->setData(QVariant, Field);)
-	enum DataField { Type = Qt::UserRole + 1,
-					 DataAbsFilePath = Qt::UserRole + 2,
-					 DataCoverPath = Qt::UserRole + 3,
-					 DataTrackNumber = Qt::UserRole + 4,
-					 DataDiscNumber = Qt::UserRole + 5};
+	enum DataField { Type					= Qt::UserRole + 1,
+					 DataAbsFilePath		= Qt::UserRole + 2,
+					 DataCoverPath			= Qt::UserRole + 3,
+					 DataTrackNumber		= Qt::UserRole + 4,
+					 DataDiscNumber			= Qt::UserRole + 5,
+					 DataNormalizedString	= Qt::UserRole + 6};
 
 protected:
 	/** Redefined to display a small context menu in the view. */

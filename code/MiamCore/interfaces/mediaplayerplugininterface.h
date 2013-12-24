@@ -11,9 +11,9 @@ class MediaPlayerPluginInterface : public BasicPluginInterface
 public:
 	virtual ~MediaPlayerPluginInterface() {}
 
-	//virtual void setMainWindow(QMainWindow *) = 0;
-
 	virtual void setMediaPlayer(QWeakPointer<MediaPlayer>) = 0;
+
+	virtual bool providesView() const = 0;
 };
 QT_BEGIN_NAMESPACE
 

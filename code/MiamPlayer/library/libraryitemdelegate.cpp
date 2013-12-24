@@ -27,18 +27,17 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
-	/*int type = item->data(Qt::UserRole + 1).toInt();
+	int type = item->data(LibraryTreeView::Type).toInt();
 	if (type == LibraryTreeView::Track && Settings::getInstance()->isStarDelegates()) {
-		FileHelper fh(track->absoluteFilePath());
+		QString absFilePath = item->data(LibraryTreeView::DataAbsFilePath).toString();
+		FileHelper fh(absFilePath);
+		qDebug() << "rating" << fh.rating();
 		if (fh.rating() > 0) {
 			StarRating starRating(fh.rating());
 			starRating.paint(painter, o.rect, o.palette, StarRating::ReadOnly);
 		}
-	}*/
+	}
 
-	//qDebug() << "painting" << fh.absFilePath();
-
-	int type = item->data(LibraryTreeView::Type).toInt();
 	switch (type) {
 	case LibraryTreeView::Album:
 		this->drawAlbum(painter, o, item);

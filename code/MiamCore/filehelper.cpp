@@ -24,6 +24,7 @@
 #include "cover.h"
 
 #include <QDateTime>
+#include <QDir>
 #include <QImage>
 #include <QtDebug>
 
@@ -45,7 +46,7 @@ FileHelper::FileHelper(const QString &filePath)
 {
 	_fileInfo = QFileInfo(filePath);
 	QString suffix = _fileInfo.suffix().toLower();
-	const char *fp = QFile::encodeName(filePath).constData();
+	FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
 	if (suffix == "ape") {
 		_file = new APE::File(fp);
 		fileType = APE;
@@ -69,14 +70,15 @@ FileHelper::FileHelper(const QString &filePath)
 		fileType = OGG;
 	} else {
 		_file = NULL;
-		fileType = -1;
+		fileType = UNKNOWN;
 	}
 }
 
 FileHelper::~FileHelper()
 {
-	delete _file;
-	_file = NULL;
+	if (_file) {
+		delete _file;
+	}
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -177,7 +179,7 @@ Cover* FileHelper::extractCover()
 	switch (fileType) {
 	case MP3:
 		mpegFile = static_cast<MPEG::File*>(_file);
-		if (mpegFile->ID3v2Tag()) {
+		if (mpegFile && mpegFile->ID3v2Tag()) {
 			// Look for picture frames only
 			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
 			// It's possible to have more than one picture per file!
@@ -185,12 +187,14 @@ Cover* FileHelper::extractCover()
 				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
 					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
-					// Performs a deep copy of the cover
-					QByteArray b = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
-					cover = new Cover(b, QString(pictureFrame->mimeType().toCString(true)));
+					if (pictureFrame) {
+						// Performs a deep copy of the cover
+						QByteArray b = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
+						cover = new Cover(b, QString(pictureFrame->mimeType().toCString(true)));
+					}
 				}
 			}
-		} else if (mpegFile->ID3v1Tag()) {
+		} else if (mpegFile && mpegFile->ID3v1Tag()) {
 			qDebug() << "FileHelper::extractCover: Not implemented for ID3v1Tag";
 		}
 		break;
@@ -280,23 +284,29 @@ bool FileHelper::insert(QString key, const QVariant &value)
 bool FileHelper::hasCover() const
 {
 	MPEG::File *mpegFile = NULL;
-	bool result = false;
+	bool atLeastOnePicture = false;
 	switch (fileType) {
 	case MP3:
 		mpegFile = static_cast<MPEG::File*>(_file);
-		if (mpegFile->ID3v2Tag()) {
+		if (mpegFile && mpegFile->ID3v2Tag()) {
 			// Look for picture frames only
 			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
 			// It's possible to have more than one picture per file!
-			result = !listOfMp3Frames.isEmpty();
-		} else if (mpegFile->ID3v1Tag()) {
+			if (!listOfMp3Frames.isEmpty()) {
+				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
+					// Cast a Frame* to AttachedPictureFrame*
+					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
+					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty() && pictureFrame->type() != ID3v2::AttachedPictureFrame::Other);
+				}
+			}
+		} else if (mpegFile && mpegFile->ID3v1Tag()) {
 			qDebug() << "FileHelper::hasCover: Not implemented for ID3v1Tag";
 		}
 		break;
 	default:
 		break;
 	}
-	return result;
+	return atLeastOnePicture;
 }
 
 /** Convert the existing rating number into a smaller range from 1 to 5. */
@@ -424,59 +434,79 @@ void FileHelper::setRating(int rating)
 
 bool FileHelper::isValid() const
 {
-	return _file->isValid();
+	return (_file != NULL && _file->isValid());
 }
 
 QString FileHelper::title() const
 {
-	if (_file->tag()) {
+	if (_file && _file->tag()) {
 		return QString(_file->tag()->title().toCString(true));
 	} else {
-		return QString("Error reading tags");
+		return QString("Error reading title");
 	}
 }
 
 QString FileHelper::trackNumber() const
 {
-	return QString("%1").arg(_file->tag()->track(), 2, 10, QChar('0')).toUpper();
+	if (_file && _file->tag()) {
+		return QString("%1").arg(_file->tag()->track(), 2, 10, QChar('0')).toUpper();
+	} else {
+		return QString("00");
+	}
 }
 
 QString FileHelper::album() const
 {
-	if (_file->tag()) {
+	if (_file && _file->tag()) {
 		return QString(_file->tag()->album().toCString(true));
 	} else {
-		return QString("Error reading tags");
+		return QString("Error reading album");
 	}
 }
 
 QString FileHelper::length() const
 {
-	return QString(QDateTime::fromTime_t(_file->audioProperties()->length()).toString("m:ss"));
+	if (_file && _file->audioProperties()) {
+		return QString(QDateTime::fromTime_t(_file->audioProperties()->length()).toString("m:ss"));
+	} else {
+		return QString("0:00");
+	}
 }
 
 QString FileHelper::artist() const
 {
-	if (_file->tag()) {
+	if (_file && _file->tag()) {
 		return QString(_file->tag()->artist().toCString(true));
 	} else {
-		return QString("Error reading tags");
+		return QString("Error reading artist");
 	}
 }
 
 QString FileHelper::year() const
 {
-	return QString::number(_file->tag()->year());
+	if (_file && _file->tag()) {
+		return QString::number(_file->tag()->year());
+	} else {
+		return "0000";
+	}
 }
 
 QString FileHelper::genre() const
 {
-	return QString(_file->tag()->genre().toCString(true));
+	if (_file && _file->tag()) {
+		return QString(_file->tag()->genre().toCString(true));
+	} else {
+		return "";
+	}
 }
 
 QString FileHelper::comment() const
 {
-	return QString(_file->tag()->comment().toCString(true));
+	if (_file && _file->tag()) {
+		return QString(_file->tag()->comment().toCString(true));
+	} else {
+		return "";
+	}
 }
 
 bool FileHelper::save()

@@ -40,6 +40,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		foreach (QString path, locations) {
 			listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(path), listWidgetMusicLocations));
 		}
+		listWidgetMusicLocations->setCurrentRow(0);
 		pushButtonDeleteLocation->setEnabled(true);
 	}
 
@@ -171,10 +172,10 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent *)
 	}
 
 	if (!musicLocationsAreIdenticals) {
-		qDebug() << newLocations;
+		qDebug() << Q_FUNC_INFO << newLocations.isEmpty();
 		settings->setMusicLocations(newLocations);
 		settings->sync();
-		emit musicLocationsHaveChanged();
+		emit musicLocationsHaveChanged(newLocations.isEmpty());
 	}
 }
 

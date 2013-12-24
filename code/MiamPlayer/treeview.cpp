@@ -17,6 +17,7 @@ int TreeView::beforeSending(const QString &target, QStringList &tracks)
 {
 	// Quick count tracks before anything else
 	int count = this->countAll(selectedIndexes());
+	qDebug() << "tracks to add" << count;
 
 	int ret = QMessageBox::Ok;
     /// XXX: extract magic number (to where?)

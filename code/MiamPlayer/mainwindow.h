@@ -46,6 +46,9 @@ private:
 	UniqueLibrary *_uniqueLibrary;
 	LibrarySqlModel *_librarySqlModel;
 
+	QActionGroup *_viewModeGroup;
+
+
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
@@ -67,8 +70,6 @@ public slots:
 	void bindShortcut(const QString&, int keySequence);
 
 private slots:
-	//void drawLibrary(bool b = false);
-
 	/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 	void aboutM4P();
 

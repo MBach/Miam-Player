@@ -8,8 +8,6 @@
 
 #include <QFileInfo>
 
-#include <memory>
-
 class Cover;
 
 namespace TagLib {
@@ -34,6 +32,7 @@ private:
 
 public:
 	enum extension {
+		UNKNOWN = -1,
 		APE		= 0,
 		ASF		= 1,
 		FLAC	= 2,

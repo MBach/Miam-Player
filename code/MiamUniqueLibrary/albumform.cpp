@@ -19,6 +19,8 @@ void AlbumForm::setAlbum(const QString &album, int year)
 
 #include <QImageReader>
 
+#include "filehelper.h"
+
 void AlbumForm::setCover(const QString &coverPath)
 {
 	static QImageReader imageReader;
@@ -38,6 +40,41 @@ void AlbumForm::setCover(const QString &coverPath)
 		}
 	}*/
 }
+
+#include <QPaintEvent>>
+
+/*void AlbumForm::paintEvent(QPaintEvent *event)
+{
+	//event;
+	//QPainter painter;
+	QWidget::paintEvent(event);
+}*/
+
+/*void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
+{
+	static QImageReader imageReader;
+	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
+	if (item->icon().isNull() && !file.isEmpty()) {
+		FileHelper fh(file);
+		QFileInfo f(file);
+		// If it's an inner cover
+		if (FileHelper::suffixes().contains(f.suffix())) {
+			unique_ptr<Cover> cover(fh.extractCover());
+			if (cover) {
+				QPixmap p;
+				p.loadFromData(cover->byteArray(), cover->format());
+				item->setIcon(QIcon(p));
+			} else {
+				item->setIcon(QIcon());
+			}
+		} else {
+			imageReader.setFileName(QDir::fromNativeSeparators(file));
+			imageReader.setScaledSize(QSize(Settings::getInstance()->coverSize(), Settings::getInstance()->coverSize()));
+			item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
+		}
+	}
+	QStyledItemDelegate::paint(painter, option, item->index());
+}*/
 
 void AlbumForm::setDiscNumber(int discNumber)
 {

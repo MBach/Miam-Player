@@ -32,15 +32,22 @@ void UniqueLibrary::init(LibrarySqlModel *sql)
 void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
 {
 	int i = -1;
+	//coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0, externalCover INTEGER DEFAULT 0)
 	const QString artist = record.value(++i).toString();
 	const QString artistAlbum = record.value(++i).toString();
 	const QString album = record.value(++i).toString();
 	const QString title = record.value(++i).toString();
+	int trackNumber = record.value(++i).toInt();
 	int discNumber = record.value(++i).toInt();
 	int year = record.value(++i).toInt();
 	const QString absPath = record.value(++i).toString();
-	const QString file = record.value(++i).toString();
-	this->insertTrack(absPath + QDir::separator() + file, artistAlbum, artist, album, discNumber, title, year);
+	const QString path = record.value(++i).toString();
+	const QString coverAbsPath = record.value(++i).toString();
+	//qDebug() << coverAbsPath;
+	bool internalCover = record.value(++i).toBool();
+	bool externalCover = record.value(++i).toBool();
+	QString trackTitle = QString::number(trackNumber).append(". ").append(title);
+	this->insertTrack(absPath, artistAlbum, artist, album, discNumber, trackTitle, year);
 }
 
 void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
@@ -52,7 +59,7 @@ void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
 void UniqueLibrary::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
 				 int discNumber, const QString &title, int year)
 {
-	/*QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	AlbumForm *wAlbum = NULL;
 	if (_albums.contains(album)) {
 		wAlbum = _albums.value(album);
@@ -64,7 +71,7 @@ void UniqueLibrary::insertTrack(const QString &absFilePath, const QString &artis
 		_albums.insert(album, wAlbum);
 		ui->scrollArea->widget()->layout()->addWidget(wAlbum);
 	}
-	wAlbum->appendTrack(title);*/
+	wAlbum->appendTrack(title);
 }
 
 void UniqueLibrary::reset()

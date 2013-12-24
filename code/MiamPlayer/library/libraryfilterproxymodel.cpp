@@ -102,10 +102,20 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 	case LibraryTreeView::Letter:
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
-		if (QString::compare(left->text().left(1), right->text().left(1)) == 0) {
-			result = (sortOrder() != Qt::AscendingOrder);
+
+		if (right->data(LibraryTreeView::Type).toInt() == LibraryTreeView::Album) {
+			qDebug() << left->text() << right->data(LibraryTreeView::DataNormalizedString).toString().left(1) << "(" << right->data(LibraryTreeView::DataNormalizedString).toString() << ")";
+			if (QString::compare(left->text().left(1), right->data(LibraryTreeView::DataNormalizedString).toString().left(1)) == 0) {
+				result = (sortOrder() == Qt::AscendingOrder);
+			} else {
+				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+			}
 		} else {
-			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+			if (QString::compare(left->text().left(1), right->text().left(1)) == 0) {
+				result = (sortOrder() == Qt::AscendingOrder);
+			} else {
+				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+			}
 		}
 		break;
 

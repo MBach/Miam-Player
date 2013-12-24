@@ -6,14 +6,12 @@
 #include <QtDebug>
 
 LibrarySqlModel::LibrarySqlModel(QObject *parent) :
-	QSqlTableModel(parent)
+	QSqlTableModel(parent), _musicSearchEngine(new MusicSearchEngine(this))
 {
 	_db = QSqlDatabase::addDatabase("QSQLITE");
 	QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
 	QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
 	_db.setDatabaseName(dbPath);
-
-	_musicSearchEngine = new MusicSearchEngine(this);
 
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &LibrarySqlModel::saveCoverRef);
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedFile, this, &LibrarySqlModel::saveFileRef);
@@ -92,6 +90,6 @@ void LibrarySqlModel::saveFileRef(const QString &absFilePath)
 		insert.exec();
 		emit trackExtractedFromFS(fh);
 	} else {
-		//qDebug() << "INVALID FILE FOR:" << absFilePath;
+		qDebug() << "INVALID FILE FOR:" << absFilePath;
 	}
 }
