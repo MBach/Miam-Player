@@ -15,5 +15,5 @@ var searchData=
   ['movetracksup',['moveTracksUp',['../class_playlist.html#a9ead29fdb0176c0014375395bd2b8dc5',1,'Playlist']]],
   ['mpcversion',['mpcVersion',['../class_tag_lib_1_1_m_p_c_1_1_properties.html#abb8a6883e011f7c61e7148518c84ad51',1,'TagLib::MPC::Properties']]],
   ['musiclocations',['musicLocations',['../class_settings.html#a4ab1e50df49189a0bf6dbed5b43c3b4c',1,'Settings']]],
-  ['musiclocationshavechanged',['musicLocationsHaveChanged',['../class_customize_options_dialog.html#a33d9c9165976df43b5d9052f7931a4f4',1,'CustomizeOptionsDialog']]]
+  ['musiclocationshavechanged',['musicLocationsHaveChanged',['../class_customize_options_dialog.html#a4ccb7368f983fc4a398f6be47bbc63b2',1,'CustomizeOptionsDialog']]]
 ];

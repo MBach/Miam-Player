@@ -124,12 +124,13 @@ $(document).ready(function(){initNavTree('class_file_helper.html','');});
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:abd7c88d281912d3c60f0c77dd300c1fe"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>extension</b> { <br/>
-&#160;&#160;<b>APE</b> = 0, 
+&#160;&#160;<b>UNKNOWN</b> = -1, 
+<b>APE</b> = 0, 
 <b>ASF</b> = 1, 
 <b>FLAC</b> = 2, 
-<b>MP4</b> = 4, 
 <br/>
-&#160;&#160;<b>MPC</b> = 5, 
+&#160;&#160;<b>MP4</b> = 4, 
+<b>MPC</b> = 5, 
 <b>MP3</b> = 6, 
 <b>OGG</b> = 7
 <br/>
@@ -152,6 +153,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8bef49ced1843f47999bd45fba750403"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a82cf1c31a81710879d0952d2490c7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_helper.html#a2a82cf1c31a81710879d0952d2490c7c">insert</a> (QString key, const QVariant &amp;value)</td></tr>
 <tr class="separator:a2a82cf1c31a81710879d0952d2490c7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb487f8e4d1f43c8bb36dd47c9753428"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_helper.html#adb487f8e4d1f43c8bb36dd47c9753428">hasCover</a> () const </td></tr>
+<tr class="separator:adb487f8e4d1f43c8bb36dd47c9753428"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9868f574fd507a94d9a63747c2d7c22"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_helper.html#ad9868f574fd507a94d9a63747c2d7c22">rating</a> () const </td></tr>
 <tr class="separator:ad9868f574fd507a94d9a63747c2d7c22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abeb275fd86624b22c7baba1b738467fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_file_helper.html#abeb275fd86624b22c7baba1b738467fa">setCover</a> (<a class="el" href="class_cover.html">Cover</a> *cover)</td></tr>
@@ -232,7 +235,7 @@ static QStringList&#160;</td><td class="memItemRight" valign="bottom"><b>suffixe
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Extract the disc number. </p>
+<p>Extract field disc number. </p>
 <p>TODO </p>
 
 </div>
@@ -250,6 +253,22 @@ static QStringList&#160;</td><td class="memItemRight" valign="bottom"><b>suffixe
       </table>
 </div><div class="memdoc">
 <p>Extract the inner picture if exists. </p>
+
+</div>
+</div>
+<a class="anchor" id="adb487f8e4d1f43c8bb36dd47c9753428"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool FileHelper::hasCover </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check if file has an inner picture. </p>
 
 </div>
 </div>
@@ -324,7 +343,7 @@ static QStringList&#160;</td><td class="memItemRight" valign="bottom"><b>suffixe
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_file_helper.html">FileHelper</a></li>
-    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Wed Dec 25 2013 20:50:05 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

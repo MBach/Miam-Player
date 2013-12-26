@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-	<?define QtMinGw="C:\Qt\Qt5.2.0\5.2.0-rc1\mingw48_32\bin" ?>
-	<?define QtPlugins="C:\Qt\Qt5.2.0\5.2.0-rc1\mingw48_32\plugins" ?>
+	<?define QtMinGw="C:\Qt\Qt5.2.0\5.2.0\mingw48_32\bin" ?>
+	<?define QtPlugins="C:\Qt\Qt5.2.0\5.2.0\mingw48_32\plugins" ?>
 	<?define MiamProjectSrc="C:\dev\Madame-Miam-Miam-Music-Player" ?>
 	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player\build" ?>
 
@@ -52,6 +52,9 @@
 			<Component Id="miamPlayer" Guid="C7F6E507-4399-45C8-854F-4D822F6EFF59">
 				<File Id="miamPlayer" Source="$(var.MiamProjectBuild)\MiamPlayer\release\MiamPlayer.exe" KeyPath="yes" Checksum="yes"/>
 			</Component>
+			<Component Id="miamUniqueLibrary" Guid="166331FF-988C-4A11-AE7A-63E8914FC657">
+				<File Id="miamUniqueLibrary" Source="$(var.MiamProjectBuild)\MiamUniqueLibrary\release\MiamUniqueLibrary.dll" KeyPath="yes" Checksum="yes"/>
+			</Component>
 			<Component Id="icudt51" Guid="e19b830f-3290-4517-8a8e-97996606ed05">
 				<File Id="icudt51" Source="$(var.QtMinGw)\icudt51.dll" KeyPath="yes"/>
 			</Component>
@@ -88,8 +91,14 @@
 			<Component Id="Qt5OpenGL" Guid="4e5ae58d-93a1-4965-9bbb-ac4bd6f00ad9">
 				<File Id="Qt5OpenGL" Source="$(var.QtMinGw)\Qt5OpenGL.dll" KeyPath="yes"/>
 			</Component>
+			<Component Id="Qt5Sql" Guid="3FB9B9EA-C516-4991-ADCC-A477AD47A660">
+				<File Id="Qt5Sql" Source="$(var.QtMinGw)\Qt5Sql.dll" KeyPath="yes"/>
+			</Component>
 			<Component Id="Qt5Widgets" Guid="3281db32-6ec3-4d18-ad4d-081a16b5c9f2">
 				<File Id="Qt5Widgets" Source="$(var.QtMinGw)\Qt5Widgets.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5WinExtras" Guid="60125338-0FFB-464F-B3FC-1BDE7F7BA96C">
+				<File Id="Qt5WinExtras" Source="$(var.QtMinGw)\Qt5WinExtras.dll" KeyPath="yes"/>
 			</Component>
 		</DirectoryRef>
 
@@ -112,6 +121,7 @@
 			<ComponentRef Id="miamCore" />
 			<ComponentRef Id="libtag" />
 			<ComponentRef Id="miamPlayer" />
+			<ComponentRef Id="miamUniqueLibrary" />
 			<ComponentRef Id="icudt51" />
 			<ComponentRef Id="icuin51" />
 			<ComponentRef Id="icuuc51" />
@@ -124,7 +134,9 @@
 			<ComponentRef Id="Qt5MultimediaWidgets" />
 			<ComponentRef Id="Qt5Network" />
 			<ComponentRef Id="Qt5OpenGL" />
+			<ComponentRef Id="Qt5Sql" />
 			<ComponentRef Id="Qt5Widgets" />
+			<ComponentRef Id="Qt5WinExtras" />
 			<ComponentRef Id="qwindows" />
 			<ComponentRef Id="dsengine" />
 		</Feature>
@@ -133,8 +145,6 @@
 		<Feature Id="Shortcut" Title="Shortcut in Start Menu" Description="Puts a shortcut to Madame MiamMiam's Music Player in the Start Menu" Level="1" AllowAdvertise="no" Absent="allow">
 			<ComponentRef Id="ProgramMenuDir" />
 		</Feature>
-		
-
 
 		<!-- Create a custom action to be able to launch or not the player after setup -->
 		<CustomAction Id="LaunchPlayerAfterInstall" FileKey="miamPlayer" ExeCommand="" Return="asyncNoWait" />

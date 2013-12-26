@@ -120,19 +120,21 @@ $(document).ready(function(){initNavTree('mediaplayerplugininterface_8h_source.h
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="class_media_player_plugin_interface.html">MediaPlayerPluginInterface</a>() {}</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="comment">//virtual void setMainWindow(QMainWindow *) = 0;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setMediaPlayer(QWeakPointer&lt;MediaPlayer&gt;) = 0;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> setMediaPlayer(QWeakPointer&lt;MediaPlayer&gt;) = 0;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;};</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;QT_BEGIN_NAMESPACE</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#define MediaPlayerPluginInterface_iid &quot;MmeMiamMiamMusicPlayer.MediaPlayerPluginInterface&quot;</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;Q_DECLARE_INTERFACE(<a class="code" href="class_media_player_plugin_interface.html">MediaPlayerPluginInterface</a>, MediaPlayerPluginInterface_iid)</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;QT_END_NAMESPACE</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">bool</span> providesView() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> toggleViews(QWidget *) {}</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;};</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;QT_BEGIN_NAMESPACE</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#define MediaPlayerPluginInterface_iid &quot;MmeMiamMiamMusicPlayer.MediaPlayerPluginInterface&quot;</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;Q_DECLARE_INTERFACE(<a class="code" href="class_media_player_plugin_interface.html">MediaPlayerPluginInterface</a>, MediaPlayerPluginInterface_iid)</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif // MEDIAPLAYERPLUGININTERFACE_H</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;QT_END_NAMESPACE</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif // MEDIAPLAYERPLUGININTERFACE_H</span></div>
 <div class="ttc" id="class_media_player_plugin_interface_html"><div class="ttname"><a href="class_media_player_plugin_interface.html">MediaPlayerPluginInterface</a></div><div class="ttdef"><b>Definition:</b> mediaplayerplugininterface.h:9</div></div>
 <div class="ttc" id="class_basic_plugin_interface_html"><div class="ttname"><a href="class_basic_plugin_interface.html">BasicPluginInterface</a></div><div class="ttdef"><b>Definition:</b> basicplugininterface.h:7</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -141,7 +143,7 @@ $(document).ready(function(){initNavTree('mediaplayerplugininterface_8h_source.h
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_f6c17be929c411a6d3348f538f7f110b.html">code</a></li><li class="navelem"><a class="el" href="dir_8286ec72a985a42cf2222f74d6469280.html">MiamCore</a></li><li class="navelem"><a class="el" href="dir_bdb54007121869619834c1119511c9e9.html">interfaces</a></li><li class="navelem"><b>mediaplayerplugininterface.h</b></li>
-    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Wed Dec 25 2013 20:50:04 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

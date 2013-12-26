@@ -177,6 +177,7 @@ var hierarchy =
       ] ],
       [ "MusicSearchEngine", "class_music_search_engine.html", null ],
       [ "PlaybackModeWidgetFactory", "class_playback_mode_widget_factory.html", null ],
+      [ "PluginManager", "class_plugin_manager.html", null ],
       [ "QuickStartSearchEngine", "class_quick_start_search_engine.html", null ],
       [ "StyleSheetUpdater", "class_style_sheet_updater.html", null ]
     ] ],
@@ -195,17 +196,6 @@ var hierarchy =
     ] ],
     [ "QSqlTableModel", null, [
       [ "LibrarySqlModel", "class_library_sql_model.html", null ]
-    ] ],
-    [ "QStandardItem", null, [
-      [ "LibraryItem", "class_library_item.html", [
-        [ "LibraryItemAlbum", "class_library_item_album.html", null ],
-        [ "LibraryItemArtist", "class_library_item_artist.html", null ],
-        [ "LibraryItemDiscNumber", "class_library_item_disc_number.html", null ],
-        [ "LibraryItemLetter", "class_library_item_letter.html", null ],
-        [ "LibraryItemTrack", "class_library_item_track.html", [
-          [ "PersistentItem", "class_persistent_item.html", null ]
-        ] ]
-      ] ]
     ] ],
     [ "QStandardItemModel", null, [
       [ "PlaylistModel", "class_playlist_model.html", null ]

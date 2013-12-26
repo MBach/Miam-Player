@@ -1,6 +1,7 @@
 var class_file_helper =
 [
     [ "extension", "class_file_helper.html#abd7c88d281912d3c60f0c77dd300c1fe", [
+      [ "UNKNOWN", "class_file_helper.html#abd7c88d281912d3c60f0c77dd300c1feaab5db050cefb493275f705f94f5a3d73", null ],
       [ "APE", "class_file_helper.html#abd7c88d281912d3c60f0c77dd300c1fea31c52e8eec817a2184adca7c91df3c69", null ],
       [ "ASF", "class_file_helper.html#abd7c88d281912d3c60f0c77dd300c1fea59416269d731598940c77efd36c8e34e", null ],
       [ "FLAC", "class_file_helper.html#abd7c88d281912d3c60f0c77dd300c1fea865b91cafd5f4d89b3561ee9cc211a5d", null ],
@@ -20,6 +21,7 @@ var class_file_helper =
     [ "extractCover", "class_file_helper.html#a8bef49ced1843f47999bd45fba750403", null ],
     [ "fileInfo", "class_file_helper.html#a69c20ab613222f14fa6334a0260c2d03", null ],
     [ "genre", "class_file_helper.html#a366d6fb33bfe4831af9b62120524880e", null ],
+    [ "hasCover", "class_file_helper.html#adb487f8e4d1f43c8bb36dd47c9753428", null ],
     [ "insert", "class_file_helper.html#a2a82cf1c31a81710879d0952d2490c7c", null ],
     [ "isValid", "class_file_helper.html#a7f7fc6a41aa835071507fb60bccf278d", null ],
     [ "length", "class_file_helper.html#aeff93b685d061e621f78fb5e68f77cdf", null ],

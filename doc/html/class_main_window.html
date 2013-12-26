@@ -141,12 +141,23 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad63ce417061edc862704eb68e7a7a2d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75f6fda9146693679faf8bcdd486fa39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a75f6fda9146693679faf8bcdd486fa39">updateFonts</a> (const QFont &amp;font)</td></tr>
 <tr class="separator:a75f6fda9146693679faf8bcdd486fa39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a662c8f41cd3a06ba5c7e8f6b8063c475"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a662c8f41cd3a06ba5c7e8f6b8063c475"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>loadPlugin</b> (const QString &amp;pluginAbsoluteFilePath)</td></tr>
+<tr class="separator:a662c8f41cd3a06ba5c7e8f6b8063c475"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2334d55084925506d781b8c2c5fed463"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_main_window.html#a2334d55084925506d781b8c2c5fed463">setupActions</a> ()</td></tr>
+<tr class="separator:a2334d55084925506d781b8c2c5fed463"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6e01e421bd04f459c53cfab31b60f45"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6e01e421bd04f459c53cfab31b60f45"></a>
+QWeakPointer&lt; <a class="el" href="class_media_player.html">MediaPlayer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mediaPlayer</b> () const </td></tr>
+<tr class="separator:ae6e01e421bd04f459c53cfab31b60f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ac39fc7bd44fd92bed1e3fa9a09075e87"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac39fc7bd44fd92bed1e3fa9a09075e87"></a>
 QList&lt; <a class="el" href="class_media_button.html">MediaButton</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mediaButtons</b></td></tr>
 <tr class="separator:ac39fc7bd44fd92bed1e3fa9a09075e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a546425caee496e63dcbb051d8aa6ce59"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a546425caee496e63dcbb051d8aa6ce59"></a>
+<a class="el" href="class_customize_options_dialog.html">CustomizeOptionsDialog</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>customizeOptionsDialog</b></td></tr>
+<tr class="separator:a546425caee496e63dcbb051d8aa6ce59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -242,8 +253,28 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>moveEvent</b> (QMoveE
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Plugins OMFG §§§ </p>
-<p>XXX Make a dispatcher for other types of plugins? </p>
+<p>Plugins. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2334d55084925506d781b8c2c5fed463"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MainWindow::setupActions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set up all actions and behaviour. </p>
+<p>TODO: A sample plugin to append a new view (let's say in QML with QQuickControls?)</p>
+<p>TODO Update QMenu when one switches from a playlist to another</p>
+<p>FIXME</p>
+<p>XXX Warning: tabPlaylists-&gt;restorePlaylists() needs to be exactly at this position!</p>
+<p>FIXME Qt5 </p>
 
 </div>
 </div>
@@ -274,7 +305,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>moveEvent</b> (QMoveE
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_main_window.html">MainWindow</a></li>
-    <li class="footer">Generated on Mon Dec 16 2013 21:14:30 for Madame MiamMiam&#39;s Music Player by
+    <li class="footer">Generated on Wed Dec 25 2013 20:50:05 for Madame MiamMiam&#39;s Music Player by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

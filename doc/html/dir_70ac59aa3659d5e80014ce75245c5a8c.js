@@ -12,6 +12,7 @@ var dir_70ac59aa3659d5e80014ce75245c5a8c =
     [ "nofocusitemdelegate.h", "nofocusitemdelegate_8h_source.html", null ],
     [ "playbackmodewidget.h", "playbackmodewidget_8h_source.html", null ],
     [ "playbackmodewidgetfactory.h", "playbackmodewidgetfactory_8h_source.html", null ],
+    [ "pluginmanager.h", "pluginmanager_8h_source.html", null ],
     [ "quickstart.h", "quickstart_8h_source.html", null ],
     [ "timelabel.h", "timelabel_8h_source.html", null ],
     [ "tracksnotfoundmessagebox.h", "tracksnotfoundmessagebox_8h_source.html", null ],

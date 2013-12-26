@@ -23,6 +23,6 @@ var searchData=
   ['moviescreencapture',['MovieScreenCapture',['../class_tag_lib_1_1_a_s_f_1_1_picture.html#aacb0ee9f95e180575ea371bc8a4497aea6d7f02bf21b51ce3e74f89415a5dabdc',1,'TagLib::ASF::Picture::MovieScreenCapture()'],['../class_tag_lib_1_1_i_d3v2_1_1_attached_picture_frame.html#a4b18580229d68adaefac1af09654f9a4a7d792efcfbf5a5f036f308f8806ee748',1,'TagLib::ID3v2::AttachedPictureFrame::MovieScreenCapture()'],['../class_tag_lib_1_1_f_l_a_c_1_1_picture.html#a326e413653566629f9641b09416538fead0bea8595d37e677777bf6e650ea26c4',1,'TagLib::FLAC::Picture::MovieScreenCapture()']]],
   ['mpcversion',['mpcVersion',['../class_tag_lib_1_1_m_p_c_1_1_properties.html#abb8a6883e011f7c61e7148518c84ad51',1,'TagLib::MPC::Properties']]],
   ['musiclocations',['musicLocations',['../class_settings.html#a4ab1e50df49189a0bf6dbed5b43c3b4c',1,'Settings']]],
-  ['musiclocationshavechanged',['musicLocationsHaveChanged',['../class_customize_options_dialog.html#a33d9c9165976df43b5d9052f7931a4f4',1,'CustomizeOptionsDialog']]],
+  ['musiclocationshavechanged',['musicLocationsHaveChanged',['../class_customize_options_dialog.html#a4ccb7368f983fc4a398f6be47bbc63b2',1,'CustomizeOptionsDialog']]],
   ['musicsearchengine',['MusicSearchEngine',['../class_music_search_engine.html',1,'']]]
 ];

@@ -1,9 +1,12 @@
 var class_library_tree_view =
 [
-    [ "Field", "class_library_tree_view.html#aa5db7aa11b47d4d058eb820a6352de0a", [
-      [ "Type", "class_library_tree_view.html#aa5db7aa11b47d4d058eb820a6352de0aa37838858abc9529cc809bf5e912e2997", null ],
-      [ "AbsFilePath", "class_library_tree_view.html#aa5db7aa11b47d4d058eb820a6352de0aa23017a11c1cde8e734e7f97b98ee3c6e", null ],
-      [ "CoverPath", "class_library_tree_view.html#aa5db7aa11b47d4d058eb820a6352de0aaf727335f4b0d8fdff8fd88f7bfd6f2f9", null ]
+    [ "DataField", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7", [
+      [ "Type", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7a37838858abc9529cc809bf5e912e2997", null ],
+      [ "DataAbsFilePath", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7a377674fa9966890838c2c550e2709ae6", null ],
+      [ "DataCoverPath", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7a36ec7c62dfa15d43ff424fa869bfe4c6", null ],
+      [ "DataTrackNumber", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7ae0f7399789200dd941cf2aa69becec48", null ],
+      [ "DataDiscNumber", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7ac34775af2bc4aff4d815bfae55d49025", null ],
+      [ "DataNormalizedString", "class_library_tree_view.html#a702cf02a8d6be33ebe267393f1e404c7a002e2fe3e08112eb67de1638344e19d8", null ]
     ] ],
     [ "ItemType", "class_library_tree_view.html#a08cacf8e7fc2fc576f2f829b9e7d5f91", [
       [ "Artist", "class_library_tree_view.html#a08cacf8e7fc2fc576f2f829b9e7d5f91a50c0196a1c0798a3fdb60d867d3a34e9", null ],
