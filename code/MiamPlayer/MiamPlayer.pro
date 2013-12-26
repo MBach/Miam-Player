@@ -43,7 +43,8 @@ SOURCES += \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
-    tageditor/tageditortablewidget.cpp
+    tageditor/tageditortablewidget.cpp \
+    pluginmanager.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -86,7 +87,8 @@ HEADERS += \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
-    tageditor/tageditortablewidget.h
+    tageditor/tageditortablewidget.h \
+    pluginmanager.h
 
 FORMS += \
     mainwindow.ui \
@@ -112,6 +114,7 @@ RESOURCES += \
 win32 {
     RC_FILE += config/mmmmp.rc
     OTHER_FILES += config/mmmmp.rc
+    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
 }
 
 TRANSLATIONS = translations/m4p_ar.ts \

@@ -4,6 +4,8 @@
 
 #include <QMediaPlaylist>
 
+#include <QtDebug>
+
 MediaPlayer::MediaPlayer(QObject *parent) :
 	QMediaPlayer(parent, QMediaPlayer::StreamPlayback)
 {

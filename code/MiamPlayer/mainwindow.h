@@ -17,42 +17,45 @@
 
 #include "uniquelibrary.h"
 
-/// Need to use this forward declaration (circular inclusion)
 class CustomizeThemeDialog;
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 	Q_OBJECT
-public:
-	// Play, pause, stop, etc.
-	QList<MediaButton*> mediaButtons;
-
-	MainWindow(QWidget *parent = 0);
-
-	void init();
-
-	void loadPlugins();
-
-	/** Update fonts for menu and context menus. */
-	void updateFonts(const QFont &font);
-
 private:
 	CustomizeThemeDialog *customizeThemeDialog;
-	CustomizeOptionsDialog *customizeOptionsDialog;
 	PlaylistManager *playlistManager;
 	DragDropDialog *dragDropDialog;
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 	QSharedPointer<MediaPlayer> _mediaPlayer;
 	UniqueLibrary *_uniqueLibrary;
 	LibrarySqlModel *_librarySqlModel;
-
 	QActionGroup *_viewModeGroup;
+	QAudioOutput *audioOutput;
 
+public:
+	// Play, pause, stop, etc.
+	QList<MediaButton*> mediaButtons;
+	CustomizeOptionsDialog *customizeOptionsDialog;
+
+	MainWindow(QWidget *parent = 0);
+
+	void init();
+
+	/** Plugins. */
+	void loadPlugins();
+
+	/** Update fonts for menu and context menus. */
+	void updateFonts(const QFont &font);
+
+	void loadPlugin(const QString &pluginAbsoluteFilePath);
 
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
-	QAudioOutput *audioOutput;
+	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
+
+	void showError(QMediaPlayer::Error e);
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */

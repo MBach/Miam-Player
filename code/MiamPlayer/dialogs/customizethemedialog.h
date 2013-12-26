@@ -5,12 +5,13 @@
 #include <QDialog>
 
 #include "ui_customizetheme.h"
-#include "mainwindow.h"
 #include "stylesheetupdater.h"
 #include "reflector.h"
 
 #include <QPropertyAnimation>
 #include <QTimer>
+
+class MainWindow;
 
 class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 {

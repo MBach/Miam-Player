@@ -1,21 +1,15 @@
-#include <QtDebug>
+#include "mainwindow.h"
 
-#include <QAction>
-#include <QDirIterator>
+#include "dialogs/customizethemedialog.h"
+#include "playlists/playlist.h"
+#include "pluginmanager.h"
+
 #include <QFileSystemModel>
 #include <QStandardPaths>
-
-#include "mainwindow.h"
-#include "dialogs/customizethemedialog.h"
-#include "interfaces/mediaplayerplugininterface.h"
-#include "playlists/playlist.h"
-
-#include <QtMultimedia/QAudioDeviceInfo>
-#include <QGraphicsScene>
-#include <QGraphicsProxyWidget>
-#include <QLibrary>
 #include <QMessageBox>
-#include <QPluginLoader>
+#include <QtMultimedia/QAudioDeviceInfo>
+
+#include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent), _librarySqlModel(NULL), _viewModeGroup(new QActionGroup(this))
@@ -113,68 +107,15 @@ void MainWindow::init()
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 }
 
-#include <QWindow>
-
-/** Plugins OMFG §§§ */
+/** Plugins. */
 void MainWindow::loadPlugins()
 {
 	QDir appDirPath = QDir(qApp->applicationDirPath());
 	if (!appDirPath.cd("plugins")) {
 		return;
 	}
-	QDirIterator it(appDirPath);
-	while (it.hasNext()) {
-		if (QLibrary::isLibrary(it.next())) {
-			QPluginLoader pluginLoader(appDirPath.absoluteFilePath(it.fileName()), this);
-			QObject *plugin = pluginLoader.instance();
-			if (plugin) {
-				qDebug() << "what plugin is it?";
-				BasicPluginInterface *basic = dynamic_cast<BasicPluginInterface *>(plugin);
-				if (basic) {
-					// Attach a new config page it the plugin provides one
-					if (basic->configPage()) {
-						customizeOptionsDialog->tabPlugins->addTab(basic->configPage(), basic->name());
-					}
-					// Add name, state and version info on a summary page
-					int row = customizeOptionsDialog->pluginSummaryTableWidget->rowCount();
-					customizeOptionsDialog->pluginSummaryTableWidget->insertRow(row);
-					QTableWidgetItem *checkbox = new QTableWidgetItem();
-					checkbox->setCheckState(Qt::Checked);
-					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(basic->name()));
-					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 1, checkbox);
-					customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(basic->version()));
-				}
-
-				/// XXX Make a dispatcher for other types of plugins?
-				if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
-					qDebug() << "MediaPlayerPluginInterface" << mediaPlayerPlugin->name() << mediaPlayerPlugin->version();
-					mediaPlayerPlugin->setMediaPlayer(_mediaPlayer);
-					if (mediaPlayerPlugin->providesView()) {
-						QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), menuView);
-						actionAddViewToMenu->setCheckable(true);
-						actionAddViewToMenu->setActionGroup(_viewModeGroup);
-						menuView->addAction(actionAddViewToMenu);
-						qDebug() << menuView->children().count();
-						actionAddViewToMenu->setData(QVariant(menuView->children().count()));
-						connect(actionAddViewToMenu, &QAction::triggered, [=]() {
-							QWidget *widget = dynamic_cast<QWidget*>(mediaPlayerPlugin);
-							widget->show();
-						});
-						//QWidget *widget = dynamic_cast<QWidget*>(mediaPlayerPlugin);
-						//stackedWidget->addWidget(widget);
-					}
-				}
-			} else {
-				qDebug() << "plugin was NOT loaded !" << it.fileName();
-				QString message = "A plugin was found but was the player was unable to load it :(";
-				QMessageBox *m = new QMessageBox(QMessageBox::Warning, "Warning", message, QMessageBox::Close, this);
-				m->show();
-			}
-		}
-	}
-	if (customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
-		customizeOptionsDialog->listWidget->setRowHidden(5, true);
-	}
+	PluginManager *pluginManager = new PluginManager(this);
+	pluginManager->init(appDirPath);
 }
 
 /** Update fonts for menu and context menus. */
@@ -237,11 +178,7 @@ void MainWindow::setupActions()
 	});
 	connect(actionAboutM4P, &QAction::triggered, this, &MainWindow::aboutM4P);
     connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
-	//connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::drawLibrary);
-	//connect(actionScanLibrary, &QAction::triggered, _libraryModel->musicSearchEngine(), &MusicSearchEngine::doSearch);
-	//connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
 	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
-
 
 	// Quick Start
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
@@ -376,6 +313,13 @@ void MainWindow::setupActions()
 			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});
+
+	connect(_mediaPlayer.data(), SIGNAL(error(QMediaPlayer::Error)), this, SLOT(showError(QMediaPlayer::Error)));
+}
+
+void MainWindow::showError(QMediaPlayer::Error e)
+{
+	qDebug() << e << _mediaPlayer.data()->errorString();
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -456,29 +400,6 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 		}
 	}
 }
-
-/** Draw the library widget by calling subcomponents. */
-/*void MainWindow::drawLibrary(bool b)
-{
-	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
-	quickStart->setVisible(isEmpty);
-	library->setVisible(!isEmpty);
-	actionScanLibrary->setEnabled(!isEmpty);
-	widgetSearchBar->setVisible(!isEmpty);
-	this->toggleTagEditor(false);
-	if (isEmpty) {
-		quickStart->searchMultimediaFiles();
-	} else {
-		// Warning: This function violates the object-oriented principle of modularity.
-		// However, getting access to the sender might be useful when many signals are connected to a single slot.
-		if (sender() == actionScanLibrary) {
-			b = true;
-		}
-		qDebug() << Q_FUNC_INFO;
-		library->reset();
-		_librarySqlModel->loadFromFileDB();
-	}
-}*/
 
 /** Displays a simple message box about MmeMiamMiamMusicPlayer. */
 void MainWindow::aboutM4P()

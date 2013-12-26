@@ -65,7 +65,10 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
 	connect(this, &QTableView::doubleClicked, [=](const QModelIndex &track) {
+		// Prevent the signal "currentMediaChanged" for being emitted twice
+		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setPlaylist(qMediaPlaylist);
+		_mediaPlayer.data()->blockSignals(false);
 		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
 	});

@@ -23,9 +23,6 @@ public slots:
 
 	/** Change the current track. */
 	void skipForward();
-
-signals:
-
 };
 
 #endif // MEDIAPLAYER_H

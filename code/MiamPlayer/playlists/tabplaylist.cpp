@@ -85,6 +85,7 @@ void TabPlaylist::restorePlaylists()
 				Playlist *p = this->addPlaylist();
 				this->setTabText(count(), playlists.at(++i).toString());
 				p->mediaPlaylist()->setPlaybackMode((QMediaPlaylist::PlaybackMode) playlists.at(++i).toInt());
+				_mediaPlayer.data()->setPlaylist(p->mediaPlaylist());
 
 				// For all tracks in current playlist
 				QStringList medias;

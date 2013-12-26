@@ -7,7 +7,7 @@
 
 #include <QGraphicsOpacityEffect>
 
-//#include "settings.h"
+#include "mainwindow.h"
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), _targetedColor(NULL)
