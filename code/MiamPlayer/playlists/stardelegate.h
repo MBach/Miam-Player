@@ -57,7 +57,7 @@ public:
 	StarDelegate(QMediaPlaylist *parent = 0);
 
 	/** Redefined. */
-	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
+	QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
 
 	/** Redefined. */
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

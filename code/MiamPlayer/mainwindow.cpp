@@ -235,8 +235,8 @@ void MainWindow::setupActions()
 
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekBackward);
-	connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &QMediaPlayer::play);
-	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer.data(), &QMediaPlayer::stop);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
+	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
@@ -313,13 +313,6 @@ void MainWindow::setupActions()
 			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});
-
-	connect(_mediaPlayer.data(), SIGNAL(error(QMediaPlayer::Error)), this, SLOT(showError(QMediaPlayer::Error)));
-}
-
-void MainWindow::showError(QMediaPlayer::Error e)
-{
-	qDebug() << e << _mediaPlayer.data()->errorString();
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -341,7 +334,7 @@ void MainWindow::changeEvent(QEvent *event)
 	}
 }
 
-void MainWindow::closeEvent(QCloseEvent */*event*/)
+void MainWindow::closeEvent(QCloseEvent *)
 {
 	Settings *settings = Settings::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());

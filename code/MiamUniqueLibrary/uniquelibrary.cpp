@@ -44,8 +44,10 @@ void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
 	const QString path = record.value(++i).toString();
 	const QString coverAbsPath = record.value(++i).toString();
 	//qDebug() << coverAbsPath;
-	bool internalCover = record.value(++i).toBool();
-	bool externalCover = record.value(++i).toBool();
+	//bool internalCover = record.value(++i).toBool();
+	record.value(++i).toBool();
+	//bool externalCover = record.value(++i).toBool();
+	record.value(++i).toBool();
 	QString trackTitle = QString::number(trackNumber).append(". ").append(title);
 	this->insertTrack(absPath, artistAlbum, artist, album, discNumber, trackTitle, year);
 }
@@ -56,7 +58,7 @@ void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
 					  fh.title(), fh.year().toInt());
 }
 
-void UniqueLibrary::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
+void UniqueLibrary::insertTrack(const QString &, const QString &artistAlbum, const QString &artist, const QString &album,
 				 int discNumber, const QString &title, int year)
 {
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;

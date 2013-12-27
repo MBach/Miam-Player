@@ -7,10 +7,10 @@
 #include <QtDebug>
 
 #include "settings.h"
-#include "library/librarytreeview.h"
-#include "playlists/playlist.h"
-#include "playlists/tabplaylist.h"
-#include "tageditor/tageditor.h"
+#include "../library/librarytreeview.h"
+#include "../playlists/playlist.h"
+#include "../playlists/tabplaylist.h"
+#include "../tageditor/tageditor.h"
 
 #include "reflector.h"
 

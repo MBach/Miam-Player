@@ -14,11 +14,11 @@ StarDelegate::StarDelegate(QMediaPlaylist *parent)
 }
 
 /** Redefined. */
-QWidget *StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
+QWidget* StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
 {
 	StarEditor *editor = new StarEditor(parent);
 	connect(editor, &StarEditor::editingFinished, [=]() {
-		emit commitData(editor);
+		//emit commitData(editor);
 		//qDebug() << "saving file" << index;
 		//FileHelper fh;
 		//fh.file()->save();

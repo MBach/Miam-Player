@@ -7,7 +7,7 @@
 #include <QHeaderView>
 
 #include "tabbar.h"
-#include "treeview.h"
+#include "../treeview.h"
 
 #include <QEventLoop>
 

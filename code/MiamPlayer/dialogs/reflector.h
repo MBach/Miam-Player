@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "dialogs/stylesheetupdater.h"
+#include "stylesheetupdater.h"
 
 class StyleSheetUpdater;
 

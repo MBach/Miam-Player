@@ -16,14 +16,14 @@ DEFINES += MIAMCORE_LIBRARY
 TARGET = MiamCore
 TEMPLATE = lib
 
-QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -std=c++11
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/debug/ -llibtag
+    win32: LIBS += -L$$OUT_PWD/debug/ -ltag
     unix: LIBS += -L$$OUT_PWD -ltag
 }
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/release/ -llibtag
+    win32: LIBS += -L$$OUT_PWD/release/ -ltag
     unix: LIBS += -L$$OUT_PWD -ltag
 }
 win32:CONFIG += dll

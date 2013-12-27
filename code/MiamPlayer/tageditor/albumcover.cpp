@@ -108,7 +108,7 @@ void AlbumCover::dropEvent(QDropEvent *event)
 }
 
 /** Redefined to switch between images very quickly. */
-void AlbumCover::paintEvent(QPaintEvent */*event*/)
+void AlbumCover::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
 	if (_cover == NULL || _cover->byteArray().isEmpty()) {

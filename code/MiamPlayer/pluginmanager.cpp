@@ -7,13 +7,24 @@
 
 #include "mainwindow.h"
 
+/** Constructor with strong coupling. */
 PluginManager::PluginManager(MainWindow *mainWindow) :
 	QObject(mainWindow), _mainWindow(mainWindow)
 {
-	// Load or unload plugins dynamically
+	// Load or unload when a checkbox state has changed
 	connect(_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &PluginManager::loadOrUnload);
 }
 
+/** Explicitly destroys every plugin. */
+PluginManager::~PluginManager()
+{
+	QMapIterator<QString, BasicPluginInterface*> it(_instances);
+	while (it.hasNext()) {
+		delete it.next().value();
+	}
+}
+
+/** Search into the subdir "plugins" where the application is installed.*/
 void PluginManager::init(const QDir &appDirPath)
 {
 	QDirIterator it(appDirPath);
@@ -27,6 +38,7 @@ void PluginManager::init(const QDir &appDirPath)
 	}
 }
 
+/** Load a plugin by its location on the hard drive. */
 void PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
@@ -78,7 +90,9 @@ void PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 				connect(actionAddViewToMenu, &QAction::triggered, [=]() {
 					mediaPlayerPlugin->toggleViews(_mainWindow);
 				});
-				QObjectList objects = { actionAddViewToMenu };
+				//QObjectList objects = { actionAddViewToMenu };
+				QObjectList objects;
+				objects.append(actionAddViewToMenu);
 				_dependencies.insert(basic->name(), objects);
 			}
 		} /// else...
@@ -89,6 +103,7 @@ void PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 	}
 }
 
+/** Unload a plugin by its name. */
 void PluginManager::unloadPlugin(const QString &pluginName)
 {
 	BasicPluginInterface *basic = _instances.value(pluginName);
@@ -113,8 +128,10 @@ void PluginManager::unloadPlugin(const QString &pluginName)
 	basic = NULL;
 }
 
+/** Load or unload a plugin when one is switching a checkbox in the options. */
 void PluginManager::loadOrUnload(QTableWidgetItem *item)
 {
+	// Checkboxes are in the second column
 	if (item->column() == 1) {
 		QString name = _mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->item(item->row(), 0)->text();
 		if (item->checkState() == Qt::Checked) {

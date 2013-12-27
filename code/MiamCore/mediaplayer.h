@@ -23,6 +23,9 @@ public slots:
 
 	/** Change the current track. */
 	void skipForward();
+
+private slots:
+	void showError(QMediaPlayer::Error e);
 };
 
 #endif // MEDIAPLAYER_H

@@ -41,9 +41,9 @@
 #include <QtWidgets>
 
 #include "stareditor.h"
-
-
 #include "starrating.h"
+
+#include <cmath>
 
 #include <QtDebug>
 
@@ -63,7 +63,8 @@ void StarEditor::paintEvent(QPaintEvent *)
 void StarEditor::mouseMoveEvent(QMouseEvent *event)
 {
 	double starWidth = this->rect().width() / StarRating::maxStarCount;
-	_starRating.setStarCount(round(event->x() / (double)starWidth));
+	//_starRating.setStarCount(round(event->x() / (double)starWidth));
+	_starRating.setStarCount(event->x() / (double)starWidth);
 	update();
 }
 

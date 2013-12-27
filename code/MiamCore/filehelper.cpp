@@ -33,46 +33,46 @@ const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" <
 #include <3rdparty/taglib/taglib.h>
 #include <3rdparty/taglib/fileref.h>
 
-using namespace TagLib;
-using namespace std;
-
 FileHelper::FileHelper(const QMediaContent &track)
-	: FileHelper(track.canonicalUrl().toLocalFile())
 {
-
+	init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 }
 
 FileHelper::FileHelper(const QString &filePath)
 {
+	init(filePath);
+}
+
+void FileHelper::init(const QString &filePath)
+{
 	_fileInfo = QFileInfo(filePath);
 	QString suffix = _fileInfo.suffix().toLower();
-	FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
+	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
 	if (suffix == "ape") {
-		_file = new APE::File(fp);
+		_file = new TagLib::APE::File(fp);
 		fileType = APE;
 	} else if (suffix == "asf") {
-		_file = new ASF::File(fp);
+		_file = new TagLib::ASF::File(fp);
 		fileType = ASF;
 	} else if (suffix == "flac") {
-		_file = new FLAC::File(fp);
+		_file = new TagLib::FLAC::File(fp);
 		fileType = FLAC;
 	} else if (suffix == "m4a") {
-		_file = new MP4::File(fp);
+		_file = new TagLib::MP4::File(fp);
 		fileType = MP4;
 	} else if (suffix == "mpc") {
-		_file = new MPC::File(fp);
+		_file = new TagLib::MPC::File(fp);
 		fileType = MPC;
 	} else if (suffix == "mp3") {
-		_file = new MPEG::File(fp);
+		_file = new TagLib::MPEG::File(fp);
 		fileType = MP3;
 	} else if (suffix == "ogg" || suffix == "oga") {
-		_file = new Vorbis::File(fp);
+		_file = new TagLib::Vorbis::File(fp);
 		fileType = OGG;
 	} else {
 		_file = NULL;
 		fileType = UNKNOWN;
 	}
-	//qDebug() << (_file == NULL) << fileType;
 }
 
 FileHelper::~FileHelper()
@@ -175,19 +175,19 @@ int FileHelper::discNumber() const
 
 Cover* FileHelper::extractCover()
 {
-	MPEG::File *mpegFile = NULL;
+	TagLib::MPEG::File *mpegFile = NULL;
 	Cover *cover = NULL;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(_file);
+		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
 			// Look for picture frames only
-			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			TagLib::ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
 			// It's possible to have more than one picture per file!
 			if (!listOfMp3Frames.isEmpty()) {
-				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
+				for (TagLib::ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
-					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
+					TagLib::ID3v2::AttachedPictureFrame *pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
 					if (pictureFrame) {
 						// Performs a deep copy of the cover
 						QByteArray b = QByteArray(pictureFrame->picture().data(), pictureFrame->picture().size());
@@ -208,7 +208,7 @@ Cover* FileHelper::extractCover()
 bool FileHelper::insert(QString key, const QVariant &value)
 {
 	// Standard tags
-	String v = value.toString().toStdString();
+	TagLib::String v = value.toString().toStdString();
 
 	/// XXX Create an enumeration somewhere
 	if (key == "ALBUM") {
@@ -232,7 +232,7 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		//FLAC::File *flacFile = NULL;
 		//MP4::File *mp4File = NULL;
 		//MPC::File *mpcFile = NULL;
-		MPEG::File *mpegFile = NULL;
+		TagLib::MPEG::File *mpegFile = NULL;
 
 		switch (fileType) {
 		case APE:
@@ -256,15 +256,15 @@ bool FileHelper::insert(QString key, const QVariant &value)
 			qDebug() << "MPC file";
 			break;
 		case MP3:
-			mpegFile = static_cast<MPEG::File*>(_file);
+			mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 			if (mpegFile->hasID3v2Tag()) {
-				ID3v2::Tag *tag = mpegFile->ID3v2Tag();
+				TagLib::ID3v2::Tag *tag = mpegFile->ID3v2Tag();
 				QString convertedKey = this->convertKeyToID3v2Key(key);
-				ID3v2::FrameList l = tag->frameListMap()[convertedKey.toStdString().data()];
+				TagLib::ID3v2::FrameList l = tag->frameListMap()[convertedKey.toStdString().data()];
 				if (!l.isEmpty()) {
 					tag->removeFrame(l.front());
 				}
-				ID3v2::TextIdentificationFrame *tif = new ID3v2::TextIdentificationFrame(ByteVector(convertedKey.toStdString().data()));
+				TagLib::ID3v2::TextIdentificationFrame *tif = new TagLib::ID3v2::TextIdentificationFrame(TagLib::ByteVector(convertedKey.toStdString().data()));
 				tif->setText(value.toString().toStdString().data());
 				tag->addFrame(tif);
 			} else if (mpegFile->hasID3v1Tag()) {
@@ -282,20 +282,20 @@ bool FileHelper::insert(QString key, const QVariant &value)
 /** Check if file has an inner picture. */
 bool FileHelper::hasCover() const
 {
-	MPEG::File *mpegFile = NULL;
+	TagLib::MPEG::File *mpegFile = NULL;
 	bool atLeastOnePicture = false;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(_file);
+		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
 			// Look for picture frames only
-			ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			TagLib::ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
 			// It's possible to have more than one picture per file!
 			if (!listOfMp3Frames.isEmpty()) {
-				for (ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
+				for (TagLib::ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
-					ID3v2::AttachedPictureFrame *pictureFrame = static_cast<ID3v2::AttachedPictureFrame*>(*it);
-					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty() && pictureFrame->type() != ID3v2::AttachedPictureFrame::Other);
+					TagLib::ID3v2::AttachedPictureFrame *pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
+					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty() && pictureFrame->type() != TagLib::ID3v2::AttachedPictureFrame::Other);
 				}
 			}
 		} else if (mpegFile && mpegFile->hasID3v1Tag()) {
@@ -311,17 +311,17 @@ bool FileHelper::hasCover() const
 /** Convert the existing rating number into a smaller range from 1 to 5. */
 int FileHelper::rating() const
 {
-	MPEG::File *mpegFile = NULL;
+	TagLib::MPEG::File *mpegFile = NULL;
 	int r = -1;
 
 	/// TODO other types?
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(_file);
+		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
-			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
+			TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
 			if (!l.isEmpty()) {
-				ID3v2::PopularimeterFrame *pf = static_cast<ID3v2::PopularimeterFrame*>(l.front());
+				TagLib::ID3v2::PopularimeterFrame *pf = static_cast<TagLib::ID3v2::PopularimeterFrame*>(l.front());
 				if (pf) {
 					switch (pf->rating()) {
 					case 1:
@@ -355,15 +355,15 @@ int FileHelper::rating() const
 void FileHelper::setCover(Cover *cover)
 {
 	qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);
-	MPEG::File *mpegFile = NULL;
+	TagLib::MPEG::File *mpegFile = NULL;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(_file);
+		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
 			// Look for picture frames only
-			ID3v2::FrameList mp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
+			TagLib::ID3v2::FrameList mp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
 			if (!mp3Frames.isEmpty()) {
-				for (ID3v2::FrameList::Iterator it = mp3Frames.begin(); it != mp3Frames.end() ; it++) {
+				for (TagLib::ID3v2::FrameList::Iterator it = mp3Frames.begin(); it != mp3Frames.end() ; it++) {
 					// Removing a frame will invalidate any pointers on the list
 					mpegFile->ID3v2Tag()->removeFrame(*it);
 					qDebug() << "removing a frame";
@@ -371,9 +371,9 @@ void FileHelper::setCover(Cover *cover)
 				}
 			}
 			if (cover != NULL) {
-				ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
+				TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
 				qDebug() << "cover->hasChanged()" << cover->hasChanged();
-				ID3v2::AttachedPictureFrame *pictureFrame = new ID3v2::AttachedPictureFrame();
+				TagLib::ID3v2::AttachedPictureFrame *pictureFrame = new TagLib::ID3v2::AttachedPictureFrame();
 				qDebug() << "cover.mimeType()" << QString(cover->mimeType());
 				pictureFrame->setMimeType(cover->mimeType());
 				pictureFrame->setPicture(bv);
@@ -391,22 +391,22 @@ void FileHelper::setCover(Cover *cover)
 
 void FileHelper::setRating(int rating)
 {
-	MPEG::File *mpegFile = NULL;
+	TagLib::MPEG::File *mpegFile = NULL;
 	switch (fileType) {
 	case MP3:
-		mpegFile = static_cast<MPEG::File*>(_file);
+		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
-			ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
+			TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
 			// If one wants to remove the existing rating
 			if (rating == 0 && !l.isEmpty()) {
 				mpegFile->ID3v2Tag()->removeFrame(l.front());
 			} else {
-				ID3v2::PopularimeterFrame *pf = NULL;
+				TagLib::ID3v2::PopularimeterFrame *pf = NULL;
 				if (l.isEmpty()) {
-					pf = new ID3v2::PopularimeterFrame();
+					pf = new TagLib::ID3v2::PopularimeterFrame();
 					mpegFile->ID3v2Tag()->addFrame(pf);
 				} else {
-					pf = static_cast<ID3v2::PopularimeterFrame*>(l.front());
+					pf = static_cast<TagLib::ID3v2::PopularimeterFrame*>(l.front());
 				}
 				switch (rating) {
 				case 1:
@@ -516,11 +516,11 @@ QString FileHelper::comment() const
 bool FileHelper::save()
 {
 	if (fileType == MP3) {
-		MPEG::File *mpegFile = static_cast<MPEG::File*>(_file);
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		// TagLib updates tags with the latest version (ID3v2.4)
 		// We just want to save the file with the exact same version!
 		if (mpegFile->hasID3v2Tag()) {
-			return mpegFile->save(MPEG::File::AllTags, false, mpegFile->ID3v2Tag()->header()->majorVersion());
+			return mpegFile->save(TagLib::MPEG::File::AllTags, false, mpegFile->ID3v2Tag()->header()->majorVersion());
 		}
 	}
 	return _file->save();
@@ -539,16 +539,16 @@ QString FileHelper::convertKeyToID3v2Key(QString key)
 QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	FLAC::File *flacFile = static_cast<FLAC::File*>(_file);
+	TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
 	if (flacFile->ID3v2Tag()) {
-		ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+		TagLib::ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
 		if (!l.isEmpty()) {
 			feature = QString(l.front()->toString().toCString(true));
 		}
 	} else if (flacFile->ID3v1Tag()) {
 		qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for ID3v1Tag FLAC file";
 	} else if (flacFile->xiphComment()) {
-		const Ogg::FieldListMap map = flacFile->xiphComment()->fieldListMap();
+		const TagLib::Ogg::FieldListMap map = flacFile->xiphComment()->fieldListMap();
 		if (!map[featureToExtract.toStdString().data()].isEmpty()) {
 			feature = QString(map[featureToExtract.toStdString().data()].front().toCString(true));
 		}
@@ -559,13 +559,13 @@ QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	MPEG::File *mpegFile = static_cast<MPEG::File*>(_file);
+	TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 	if (mpegFile->hasID3v2Tag()) {
-		ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+		TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
 		if (!l.isEmpty()) {
 			feature = QString(l.front()->toString().toCString(true));
 		}
-	} else if (mpegFile->ID3v1Tag()) {
+	} else if (mpegFile->hasID3v1Tag()) {
 		qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
 	}
 	return feature;

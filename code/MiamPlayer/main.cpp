@@ -8,6 +8,8 @@
 
 int main(int argc, char *argv[])
 {
+	Q_INIT_RESOURCE(mmmmp);
+
 	qRegisterMetaType<QFileInfo>();
 
 	QApplication app(argc, argv);

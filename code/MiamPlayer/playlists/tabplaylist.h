@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 
 #include "playlist.h"
-#include "tracksnotfoundmessagebox.h"
+#include "../tracksnotfoundmessagebox.h"
 
 #include "mediabutton.h"
 

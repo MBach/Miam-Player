@@ -1,7 +1,7 @@
 #ifndef FILESYSTEMTREEVIEW_H
 #define FILESYSTEMTREEVIEW_H
 
-#include "treeview.h"
+#include "../treeview.h"
 
 #include <QContextMenuEvent>
 #include <QFileSystemModel>

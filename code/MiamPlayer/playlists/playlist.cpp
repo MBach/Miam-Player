@@ -9,10 +9,10 @@
 //#include <fileref.h>
 //#include <tag.h>
 
-#include "columnutils.h"
+#include "../columnutils.h"
 #include "settings.h"
-#include "nofocusitemdelegate.h"
-#include "library/librarytreeview.h"
+#include "../nofocusitemdelegate.h"
+#include "../library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "stardelegate.h"
 #include "stareditor.h"
@@ -133,6 +133,10 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 {
 	QList<QMediaContent> medias;
 	foreach (QString track, tracks) {
+		//qDebug() << "inserting" << QUrl::fromLocalFile(QFile::decodeName(track.toLocal8Bit()));
+		//const ushort *data = track.utf16();
+		//QString encodedTrack = QString::fromUtf16(data);
+		//medias.append(QMediaContent(QUrl::fromLocalFile(encodedTrack)));
 		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
 	}
 	// If the track needs to be appended at the end

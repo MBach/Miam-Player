@@ -12,7 +12,7 @@
 
 #include <QtDebug>
 
-#include "library/libraryitemdelegate.h"
+#include "../library/libraryitemdelegate.h"
 
 #include <filehelper.h>
 

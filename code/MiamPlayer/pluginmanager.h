@@ -8,6 +8,12 @@
 
 class MainWindow;
 
+/**
+ * \brief		The PluginManager class can dynamically load or unload plugins without restarting the application
+ * \author      Matthieu Bachelier
+ * \version     1.0
+ * \copyright   GNU General Public License v3
+ */
 class PluginManager : public QObject
 {
 	Q_OBJECT
@@ -18,16 +24,24 @@ private:
 	QMap<QString, QObjectList> _dependencies;
 
 public:
+	/** Constructor with strong coupling. */
 	explicit PluginManager(MainWindow *mainWindow);
 
+	/** Explicitly destroys every plugin. */
+	virtual ~PluginManager();
+
+	/** Search into the subdir "plugins" where the application is installed.*/
 	void init(const QDir &appDirPath);
 
 private:
+	/** Load a plugin by its location on the hard drive. */
 	void loadPlugin(const QFileInfo &pluginFileInfo);
 
+	/** Unload a plugin by its name. */
 	void unloadPlugin(const QString &pluginName);
 
 private slots:
+	/** Load or unload a plugin when one is switching a checkbox in the options. */
 	void loadOrUnload(QTableWidgetItem *item);
 };
 

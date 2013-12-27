@@ -5,7 +5,7 @@
 
 #include "ui_playlistmanager.h"
 
-#include "playlists/tabplaylist.h"
+#include "../playlists/tabplaylist.h"
 
 #include <QStandardItem>
 

@@ -55,8 +55,6 @@ public:
 
 	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
-	void showError(QMediaPlayer::Error e);
-
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	void changeEvent(QEvent *event);

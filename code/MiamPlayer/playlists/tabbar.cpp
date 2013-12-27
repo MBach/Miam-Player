@@ -1,7 +1,7 @@
 #include "tabbar.h"
 #include "settings.h"
 #include "playlist.h"
-#include "treeview.h"
+#include "../treeview.h"
 
 #include <QtDebug>
 

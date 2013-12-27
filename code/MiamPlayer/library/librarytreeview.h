@@ -5,10 +5,10 @@
 #include <model/librarysqlmodel.h>
 #include <settings.h>
 
-#include "circleprogressbar.h"
+#include "../circleprogressbar.h"
 #include "libraryfilterproxymodel.h"
-#include "treeview.h"
-#include "library/libraryorderdialog.h"
+#include "../treeview.h"
+#include "../library/libraryorderdialog.h"
 
 #include <QMenu>
 #include <QSortFilterProxyModel>

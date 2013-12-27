@@ -1,5 +1,10 @@
 #include "albumform.h"
 
+#include <QImageReader>
+#include <QPaintEvent>
+
+#include "filehelper.h"
+
 AlbumForm::AlbumForm(QWidget *parent) :
 	QWidget(parent)
 {
@@ -17,13 +22,9 @@ void AlbumForm::setAlbum(const QString &album, int year)
 	albumPushButton->setText(text);
 }
 
-#include <QImageReader>
-
-#include "filehelper.h"
-
-void AlbumForm::setCover(const QString &coverPath)
+void AlbumForm::setCover(const QString &)
 {
-	static QImageReader imageReader;
+	//static QImageReader imageReader;
 	/*if (item->icon().isNull() && !file.isEmpty()) {
 		FileHelper fh(file);
 		QFileInfo f(file);
@@ -40,8 +41,6 @@ void AlbumForm::setCover(const QString &coverPath)
 		}
 	}*/
 }
-
-#include <QPaintEvent>>
 
 /*void AlbumForm::paintEvent(QPaintEvent *event)
 {

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include <miamuniquelibrary_global.h>
+#include "miamuniquelibrary_global.h"
 #include <model/librarysqlmodel.h>
 
 namespace Ui {

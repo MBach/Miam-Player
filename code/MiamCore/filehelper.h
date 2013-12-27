@@ -46,6 +46,10 @@ public:
 
 	FileHelper(const QString &filePath);
 
+private:
+	void init(const QString &filePath);
+
+public:
 	virtual ~FileHelper();
 
 	inline static QStringList suffixes() { return suff; }

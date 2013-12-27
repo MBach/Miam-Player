@@ -1,6 +1,6 @@
 QT += sql widgets
 
-QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -std=c++11
 
 TARGET = MiamUniqueLibrary
 TEMPLATE = lib

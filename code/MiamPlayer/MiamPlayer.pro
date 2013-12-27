@@ -2,7 +2,8 @@ QT += widgets multimedia sql
 
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -std=c++11
+#QMAKE_CXXFLAGS += -std=c++11
+CONFIG += c++11
 
 SOURCES += \
     main.cpp \
@@ -114,7 +115,6 @@ RESOURCES += \
 win32 {
     RC_FILE += config/mmmmp.rc
     OTHER_FILES += config/mmmmp.rc
-    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
 }
 
 TRANSLATIONS = translations/m4p_ar.ts \
@@ -132,22 +132,28 @@ TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_zh.ts
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -llibtag -lMiamCore -lMiamUniqueLibrary
+    win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -ltag -lMiamCore -lMiamUniqueLibrary
+    win32: QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
+    UI_DIR = $$PWD
 }
 
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -L$$OUT_PWD/../MiamUniqueLibrary/release/ -llibtag -lMiamCore -lMiamUniqueLibrary
+    win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -L$$OUT_PWD/../MiamUniqueLibrary/release/ -ltag -lMiamCore -lMiamUniqueLibrary
+    win32: QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
+    UI_DIR = $$PWD
 }
 unix: LIBS += -L$$OUT_PWD/../MiamCore/ -L$$OUT_PWD/../MiamUniqueLibrary/ -ltag -lMiamCore -lMiamUniqueLibrary
 
 INCLUDEPATH += $$PWD/../MiamCore
+INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/library $$PWD/playlists $$PWD/tageditor
 INCLUDEPATH += $$PWD/../MiamUniqueLibrary
 
 DEPENDPATH += $$PWD/../MiamCore
+DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/library $$PWD/playlists $$PWD/tageditor
 DEPENDPATH += $$PWD/../MiamUniqueLibrary

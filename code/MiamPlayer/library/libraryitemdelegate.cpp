@@ -3,14 +3,12 @@
 #include <cover.h>
 #include <settings.h>
 #include "librarytreeview.h"
-#include "playlists/starrating.h"
+#include "../playlists/starrating.h"
 
 #include <memory>
 
 #include <QtDebug>
 #include <QImageReader>
-
-using namespace std;
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 	QStyledItemDelegate(proxy)
@@ -84,7 +82,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewIte
 		QFileInfo f(file);
 		// If it's an inner cover
 		if (FileHelper::suffixes().contains(f.suffix())) {
-			unique_ptr<Cover> cover(fh.extractCover());
+			std::unique_ptr<Cover> cover(fh.extractCover());
 			if (cover) {
 				QPixmap p;
 				p.loadFromData(cover->byteArray(), cover->format());

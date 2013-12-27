@@ -4,8 +4,8 @@
 #include <filehelper.h>
 #include <3rdparty/taglib/fileref.h>
 
-#include "nofocusitemdelegate.h"
-#include "treeview.h"
+#include "../nofocusitemdelegate.h"
+#include "../treeview.h"
 
 #include <QScrollBar>
 
