@@ -6,6 +6,8 @@
 
 #include <QTableWidgetItem>
 
+#include "plugininfo.h"
+
 class MainWindow;
 
 /**
@@ -34,8 +36,10 @@ public:
 	void init(const QDir &appDirPath);
 
 private:
+	void insertRow(const PluginInfo &pluginInfo);
+
 	/** Load a plugin by its location on the hard drive. */
-	void loadPlugin(const QFileInfo &pluginFileInfo);
+	BasicPluginInterface *loadPlugin(const QFileInfo &pluginFileInfo);
 
 	/** Unload a plugin by its name. */
 	void unloadPlugin(const QString &pluginName);

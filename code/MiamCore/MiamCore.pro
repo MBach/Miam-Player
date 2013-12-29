@@ -1,9 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-11-19T19:50:21
-#
-#-------------------------------------------------
-
 QT       += widgets multimedia sql
 
 TagLibDirectory = $$PWD/3rdparty/taglib
@@ -11,12 +5,10 @@ INCLUDEPATH += $$PWD
 INCLUDEPATH += $$TagLibDirectory
 DEPENDPATH += $$TagLibDirectory
 
-DEFINES += MIAMCORE_LIBRARY
+DEFINES += MIAM_PLUGIN
 
 TARGET = MiamCore
 TEMPLATE = lib
-
-#QMAKE_CXXFLAGS += -std=c++11
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/debug/ -ltag
@@ -26,7 +18,8 @@ CONFIG(release, debug|release) {
     win32: LIBS += -L$$OUT_PWD/release/ -ltag
     unix: LIBS += -L$$OUT_PWD -ltag
 }
-win32:CONFIG += dll
+win32: CONFIG += dll
+unix: QMAKE_CXXFLAGS += -std=c++11
 
 SOURCES += \
     model/librarysqlmodel.cpp \

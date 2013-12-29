@@ -4,7 +4,9 @@
 #include <QString>
 #include <QtPlugin>
 
-class BasicPluginInterface
+#include "miamcore_global.h"
+
+class MIAMCORE_LIBRARY BasicPluginInterface
 {
 public:
 	virtual ~BasicPluginInterface() {}

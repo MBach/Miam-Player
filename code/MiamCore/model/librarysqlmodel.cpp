@@ -11,6 +11,10 @@ LibrarySqlModel::LibrarySqlModel(QObject *parent) :
 	_db = QSqlDatabase::addDatabase("QSQLITE");
 	QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
 	QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
+	QDir userDataPath(path);
+	if (!userDataPath.exists(path)) {
+		userDataPath.mkpath(path);
+	}
 	_db.setDatabaseName(dbPath);
 
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &LibrarySqlModel::saveCoverRef);

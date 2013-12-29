@@ -6,11 +6,15 @@
 #define SOFT "MmeMiamMiamMusicPlayer"
 #define VERSION "0.5.0"
 
+#include "plugininfo.h"
+
 int main(int argc, char *argv[])
 {
 	Q_INIT_RESOURCE(mmmmp);
 
 	qRegisterMetaType<QFileInfo>();
+	qRegisterMetaType<PluginInfo>();
+	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 
 	QApplication app(argc, argv);
 	app.setOrganizationName(COMPANY);

@@ -6,6 +6,7 @@
 #include <QPluginLoader>
 
 #include "mainwindow.h"
+#include "settings.h"
 
 /** Constructor with strong coupling. */
 PluginManager::PluginManager(MainWindow *mainWindow) :
@@ -28,9 +29,24 @@ PluginManager::~PluginManager()
 void PluginManager::init(const QDir &appDirPath)
 {
 	QDirIterator it(appDirPath);
+	Settings *settings = Settings::getInstance();
 	while (it.hasNext()) {
 		if (QLibrary::isLibrary(it.next())) {
-			this->loadPlugin(it.fileInfo());
+			QString pluginFileName = it.fileName();
+			QVariant vPluginInfo = settings->value(pluginFileName);
+			if (vPluginInfo.isNull()) {
+				this->loadPlugin(it.fileInfo());
+			} else {
+				PluginInfo pluginInfo = vPluginInfo.value<PluginInfo>();
+				if (pluginInfo.isEnabled()) {
+					this->loadPlugin(it.fileInfo());
+				} else {
+					this->insertRow(pluginInfo);
+					QWidget *fakeConfigPage = new QWidget();
+					int tab = _mainWindow->customizeOptionsDialog->tabPlugins->addTab(fakeConfigPage, pluginInfo.pluginName());
+					_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(tab, false);
+				}
+			}
 		}
 	}
 	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
@@ -38,8 +54,31 @@ void PluginManager::init(const QDir &appDirPath)
 	}
 }
 
+void PluginManager::insertRow(const PluginInfo &pluginInfo)
+{
+	// Add name, state and version info on a summary page
+	int row = _mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount();
+	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->insertRow(row);
+	QTableWidgetItem *checkbox = new QTableWidgetItem();
+	if (pluginInfo.isEnabled()) {
+		checkbox->setCheckState(Qt::Checked);
+	} else {
+		checkbox->setCheckState(Qt::Unchecked);
+	}
+	checkbox->setData(Qt::EditRole, QVariant::fromValue(pluginInfo));
+
+	// Temporarily disconnects signals to prevent infinite recursion!
+	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(true);
+	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(pluginInfo.pluginName()));
+	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 1, checkbox);
+	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(pluginInfo.version()));
+	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(false);
+
+	Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
+}
+
 /** Load a plugin by its location on the hard drive. */
-void PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
+BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
 	QObject *plugin = pluginLoader.instance();
@@ -55,25 +94,17 @@ void PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 					}
 				}
 			} else {
-				// Attach a new config page it the plugin provides one
+				PluginInfo pluginInfo;
+				pluginInfo.setFileName(pluginFileInfo.fileName());
+				pluginInfo.setPluginName(basic->name());
+				pluginInfo.setVersion(basic->version());
+				pluginInfo.setConfigPage(basic->configPage() != NULL);
+				this->insertRow(pluginInfo);
+				_plugins.insert(basic->name(), pluginFileInfo);
+
 				if (basic->configPage()) {
 					_mainWindow->customizeOptionsDialog->tabPlugins->addTab(basic->configPage(), basic->name());
 				}
-
-				// Add name, state and version info on a summary page
-				int row = _mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount();
-				_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->insertRow(row);
-				QTableWidgetItem *checkbox = new QTableWidgetItem();
-				checkbox->setCheckState(Qt::Checked);
-
-				// Temporarily disconnects signals to prevent infinite recursion!
-				_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(true);
-				_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(basic->name()));
-				_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 1, checkbox);
-				_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(basic->version()));
-				_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(false);
-
-				_plugins.insert(basic->name(), pluginFileInfo);
 			}
 			// Keep references of loaded plugins, to be able to unload them later
 			_instances.insert(basic->name(), basic);
@@ -96,11 +127,13 @@ void PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 				_dependencies.insert(basic->name(), objects);
 			}
 		} /// else...
+		return basic;
 	} else {
 		QString message = QString(tr("A plugin was found but was the player was unable to load it (file %1)")).arg(pluginFileInfo.fileName());
 		QMessageBox *m = new QMessageBox(QMessageBox::Warning, "Warning", message, QMessageBox::Close, _mainWindow);
 		m->show();
 	}
+	return NULL;
 }
 
 /** Unload a plugin by its name. */
@@ -139,5 +172,10 @@ void PluginManager::loadOrUnload(QTableWidgetItem *item)
 		} else {
 			this->unloadPlugin(name);
 		}
+		// Keep in settings if the plugin is enabled. Useful when starting the application for unwanted plugins
+		QVariant vPluginInfo = item->data(Qt::EditRole);
+		PluginInfo pluginInfo = vPluginInfo.value<PluginInfo>();
+		pluginInfo.setEnabled(item->checkState() == Qt::Checked);
+		Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 	}
 }

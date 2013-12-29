@@ -2,9 +2,6 @@ QT += widgets multimedia sql
 
 TEMPLATE = app
 
-#QMAKE_CXXFLAGS += -std=c++11
-CONFIG += c++11
-
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
@@ -45,7 +42,8 @@ SOURCES += \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
-    pluginmanager.cpp
+    pluginmanager.cpp \
+    plugininfo.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -89,7 +87,8 @@ HEADERS += \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
-    pluginmanager.h
+    pluginmanager.h \
+    plugininfo.h
 
 FORMS += \
     mainwindow.ui \
@@ -115,7 +114,9 @@ RESOURCES += \
 win32 {
     RC_FILE += config/mmmmp.rc
     OTHER_FILES += config/mmmmp.rc
+    CONFIG += c++11
 }
+unix: QMAKE_CXXFLAGS += -std=c++11
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \

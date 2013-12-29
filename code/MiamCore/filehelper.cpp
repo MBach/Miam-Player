@@ -28,10 +28,10 @@
 #include <QImage>
 #include <QtDebug>
 
-const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
-
 #include <3rdparty/taglib/taglib.h>
 #include <3rdparty/taglib/fileref.h>
+
+const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
 
 FileHelper::FileHelper(const QMediaContent &track)
 {

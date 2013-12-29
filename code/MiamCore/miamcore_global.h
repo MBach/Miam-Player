@@ -1,13 +1,12 @@
 #ifndef MIAMCORE_GLOBAL_H
 #define MIAMCORE_GLOBAL_H
 
-#include <QtCore/QtGlobal>
+#include <QtCore/qglobal.h>
 
-#if defined(MIAMCORE_LIBRARY)
-#undef MIAMCORE_LIBRARY
-#define MIAMCORE_LIBRARY Q_DECL_EXPORT
+#ifdef MIAM_PLUGIN
+# define MIAMCORE_LIBRARY Q_DECL_EXPORT
 #else
-#define MIAMCORE_LIBRARY Q_DECL_IMPORT
+# define MIAMCORE_LIBRARY Q_DECL_IMPORT
 #endif
 
 #endif // MIAMCORE_GLOBAL_H
