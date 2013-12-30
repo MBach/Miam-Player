@@ -14,6 +14,12 @@ PluginManager::PluginManager(MainWindow *mainWindow) :
 {
 	// Load or unload when a checkbox state has changed
 	connect(_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &PluginManager::loadOrUnload);
+
+	QDir appDirPath = QDir(qApp->applicationDirPath());
+	if (appDirPath.cd("plugins")) {
+		_pluginPath = appDirPath.absolutePath();
+		this->init();
+	}
 }
 
 /** Explicitly destroys every plugin. */
@@ -26,14 +32,15 @@ PluginManager::~PluginManager()
 }
 
 /** Search into the subdir "plugins" where the application is installed.*/
-void PluginManager::init(const QDir &appDirPath)
+void PluginManager::init()
 {
-	QDirIterator it(appDirPath);
+	QDirIterator it(_pluginPath);
 	Settings *settings = Settings::getInstance();
 	while (it.hasNext()) {
 		if (QLibrary::isLibrary(it.next())) {
 			QString pluginFileName = it.fileName();
 			QVariant vPluginInfo = settings->value(pluginFileName);
+			// If it is the first time we trying to load the plugin
 			if (vPluginInfo.isNull()) {
 				this->loadPlugin(it.fileInfo());
 			} else {
@@ -41,19 +48,26 @@ void PluginManager::init(const QDir &appDirPath)
 				if (pluginInfo.isEnabled()) {
 					this->loadPlugin(it.fileInfo());
 				} else {
+					// Plugin exists in Settings, but one has chosen to disable it at startup
 					this->insertRow(pluginInfo);
-					QWidget *fakeConfigPage = new QWidget();
-					int tab = _mainWindow->customizeOptionsDialog->tabPlugins->addTab(fakeConfigPage, pluginInfo.pluginName());
-					_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(tab, false);
+					if (pluginInfo.isConfigurable()) {
+						QWidget *fakeConfigPage = new QWidget();
+						int tab = _mainWindow->customizeOptionsDialog->tabPlugins->addTab(fakeConfigPage, pluginInfo.pluginName());
+						_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(tab, false);
+					}
+					_plugins.insert(pluginInfo.pluginName(), it.fileInfo());
 				}
 			}
 		}
 	}
+	// No shared lib was found, so it is useless to keep a plugin page empty
 	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
 		_mainWindow->customizeOptionsDialog->listWidget->setRowHidden(5, true);
+		_mainWindow->customizeOptionsDialog->stackedWidget->widget(5)->deleteLater();
 	}
 }
 
+/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
 void PluginManager::insertRow(const PluginInfo &pluginInfo)
 {
 	// Add name, state and version info on a summary page
@@ -86,11 +100,17 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 		BasicPluginInterface *basic = dynamic_cast<BasicPluginInterface *>(plugin);
 		if (basic) {
 			// If one has previoulsy unloaded a plugin, and now wants to reload it (yeah, I know...), we don't need to append items once again
+			///FIXME
+			int idx = _mainWindow->customizeOptionsDialog->tabPlugins->count();
 			if (_plugins.contains(basic->name())) {
-				for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
-					if (_mainWindow->customizeOptionsDialog->tabPlugins->tabText(i) == basic->name()) {
-						_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(i, true);
-						break;
+				if (basic->isConfigurable()) {
+					for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
+						if (_mainWindow->customizeOptionsDialog->tabPlugins->tabText(i) == basic->name()) {
+							_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(i, true);
+							_mainWindow->customizeOptionsDialog->tabPlugins->widget(i)->deleteLater();
+							idx = i;
+							break;
+						}
 					}
 				}
 			} else {
@@ -98,13 +118,13 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				pluginInfo.setFileName(pluginFileInfo.fileName());
 				pluginInfo.setPluginName(basic->name());
 				pluginInfo.setVersion(basic->version());
-				pluginInfo.setConfigPage(basic->configPage() != NULL);
+				pluginInfo.setConfigPage(basic->isConfigurable());
+				pluginInfo.setEnabled(true);
 				this->insertRow(pluginInfo);
 				_plugins.insert(basic->name(), pluginFileInfo);
-
-				if (basic->configPage()) {
-					_mainWindow->customizeOptionsDialog->tabPlugins->addTab(basic->configPage(), basic->name());
-				}
+			}
+			if (basic->isConfigurable()) {
+				_mainWindow->customizeOptionsDialog->tabPlugins->insertTab(idx, basic->configPage(), basic->name());
 			}
 			// Keep references of loaded plugins, to be able to unload them later
 			_instances.insert(basic->name(), basic);
@@ -129,7 +149,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 		} /// else...
 		return basic;
 	} else {
-		QString message = QString(tr("A plugin was found but was the player was unable to load it (file %1)")).arg(pluginFileInfo.fileName());
+		QString message = QString(tr("A plugin was found but was the player was unable to load it (file %1)").arg(pluginFileInfo.fileName()));
 		QMessageBox *m = new QMessageBox(QMessageBox::Warning, "Warning", message, QMessageBox::Close, _mainWindow);
 		m->show();
 	}
@@ -147,7 +167,7 @@ void PluginManager::unloadPlugin(const QString &pluginName)
 		} /// else...
 	}
 	// Search and disable the config page in options page
-	if (basic->configPage()) {
+	if (basic->isConfigurable()) {
 		for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
 			if (_mainWindow->customizeOptionsDialog->tabPlugins->tabText(i) == basic->name()) {
 				_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(i, false);
@@ -166,15 +186,16 @@ void PluginManager::loadOrUnload(QTableWidgetItem *item)
 {
 	// Checkboxes are in the second column
 	if (item->column() == 1) {
-		QString name = _mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->item(item->row(), 0)->text();
-		if (item->checkState() == Qt::Checked) {
-			this->loadPlugin(_plugins.value(name));
-		} else {
-			this->unloadPlugin(name);
-		}
-		// Keep in settings if the plugin is enabled. Useful when starting the application for unwanted plugins
 		QVariant vPluginInfo = item->data(Qt::EditRole);
 		PluginInfo pluginInfo = vPluginInfo.value<PluginInfo>();
+		if (item->checkState() == Qt::Checked) {
+			QString pluginAbsPath = QDir::toNativeSeparators(_pluginPath + "/" + pluginInfo.fileName());
+			QFileInfo fileInfo(pluginAbsPath);
+			this->loadPlugin(fileInfo);
+		} else {
+			this->unloadPlugin(pluginInfo.pluginName());
+		}
+		// Keep in settings if the plugin is enabled. Useful when starting the application for unwanted plugins
 		pluginInfo.setEnabled(item->checkState() == Qt::Checked);
 		Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 	}

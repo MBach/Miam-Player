@@ -110,12 +110,7 @@ void MainWindow::init()
 /** Plugins. */
 void MainWindow::loadPlugins()
 {
-	QDir appDirPath = QDir(qApp->applicationDirPath());
-	if (!appDirPath.cd("plugins")) {
-		return;
-	}
-	PluginManager *pluginManager = new PluginManager(this);
-	pluginManager->init(appDirPath);
+	new PluginManager(this);
 }
 
 /** Update fonts for menu and context menus. */

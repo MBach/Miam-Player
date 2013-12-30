@@ -9,9 +9,9 @@ class MIAMCORE_LIBRARY MediaPlayerPluginInterface : public BasicPluginInterface
 public:
 	virtual ~MediaPlayerPluginInterface() {}
 
-	virtual void setMediaPlayer(QWeakPointer<MediaPlayer>) = 0;
-
 	virtual bool providesView() const = 0;
+
+	virtual void setMediaPlayer(QWeakPointer<MediaPlayer>) = 0;
 
 	virtual void toggleViews(QWidget *) {}
 };

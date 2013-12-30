@@ -10,7 +10,6 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 	QMediaPlayer(parent, QMediaPlayer::StreamPlayback)
 {
 	this->setNotifyInterval(100);
-	connect(this, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(showError(QMediaPlayer::Error)));
 }
 
 /** Seek backward in the current playing track for a small amount of time. */
@@ -53,9 +52,4 @@ void MediaPlayer::skipForward()
 		playlist()->next();
 		play();
 	}
-}
-
-void MediaPlayer::showError(QMediaPlayer::Error e)
-{
-	qDebug() << e;
 }
