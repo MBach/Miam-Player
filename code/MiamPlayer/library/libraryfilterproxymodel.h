@@ -7,8 +7,13 @@ class LibraryFilterProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT
 
+private:
+	QMultiHash<QModelIndex, QModelIndex> *_topLevelItems;
+
 public:
 	LibraryFilterProxyModel(QObject *parent = 0);
+
+	inline void setTopLevelItems(QMultiHash<QModelIndex, QModelIndex> *topLevelItems) { _topLevelItems = topLevelItems; }
 
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 

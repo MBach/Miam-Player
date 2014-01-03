@@ -32,6 +32,7 @@ private slots:
 
 signals:
 	void coverWasUpdated(const QFileInfo &);
+	void progressChanged(const int &);
 	void trackExtractedFromDB(const QSqlRecord &);
 	void trackExtractedFromFS(const FileHelper &);
 };

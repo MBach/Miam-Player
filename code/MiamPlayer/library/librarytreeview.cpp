@@ -23,7 +23,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	_libraryModel->setColumnCount(1);
 	_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
-	this->setModel(_libraryModel);
 
 	///FIXME
 	//this->setStyleSheet(settings->styleSheet(this));
@@ -36,6 +35,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	proxyModel = new LibraryFilterProxyModel(this);
+	proxyModel->setSourceModel(_libraryModel);
+	proxyModel->setTopLevelItems(&_topLevelItems);
 
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
@@ -62,18 +63,17 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 
 	Settings *settings = Settings::getInstance();
 
-	proxyModel->setSourceModel(_libraryModel);
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
-
+	this->setModel(proxyModel);
 	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
-	//connect(_libraryModel, &LibraryModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &LibraryTreeView::reset);
-	connect(sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &LibraryTreeView::insertTrackFromFile);
-	connect(sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &LibraryTreeView::insertTrackFromRecord);
-	connect(sqlModel, &LibrarySqlModel::modelReset, this, &LibraryTreeView::endPopulateTree);
 	connect(sqlModel, &LibrarySqlModel::coverWasUpdated, this, &LibraryTreeView::updateCover);
+	connect(sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &LibraryTreeView::reset);
+	connect(sqlModel, &LibrarySqlModel::modelReset, this, &LibraryTreeView::endPopulateTree);
+	connect(sqlModel, &LibrarySqlModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
+	connect(sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &LibraryTreeView::insertTrackFromRecord);
+	connect(sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &LibraryTreeView::insertTrackFromFile);
 
 	// One can choose a hierarchical order for drawing the library
 	LibraryOrderDialog *_lod = new LibraryOrderDialog(this);
@@ -107,8 +107,7 @@ void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	//QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
-	QStandardItem *item = _libraryModel->itemFromIndex(this->indexAt(event->pos()));
+	QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
@@ -151,8 +150,7 @@ int LibraryTreeView::count(const QModelIndex &index) const
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
-		//QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
-		QStandardItem *item = _libraryModel->itemFromIndex(index);
+		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		int tmp = 0;
 		for (int i = 0; i < item->rowCount(); i++) {
 			tmp += count(index.child(i, 0));
@@ -177,7 +175,7 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 {
 	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
 	if (delegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(index);
+		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
@@ -189,24 +187,34 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 	}
 }
 
-void LibraryTreeView::insertLetter(const QString &letters)
+QStandardItem* LibraryTreeView::insertLetter(const QString &letters)
 {
 	if (!letters.isEmpty()) {
 		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		QString letter;
+		bool topLevelLetter = false;
 		if (c.contains(QRegExp("\\w"))) {
 			letter = c;
 		} else {
-			/// How can I stick "Various" at the top of the tree view? (and NOT using this ugly trick)
-			letter = tr(" Various");
+			letter = tr("Various");
+			topLevelLetter = true;
 		}
-		if (!_letters.contains(letter)) {
-			_letters.insert(letter);
+		if (_letters.contains(letter)) {
+			return _letters.value(letter);
+		} else {
 			QStandardItem *itemLetter = new QStandardItem(letter);
 			itemLetter->setData(Letter, Type);
+			if (topLevelLetter) {
+				itemLetter->setData("", DataNormalizedString);
+			} else {
+				itemLetter->setData(letter, DataNormalizedString);
+			}
 			_libraryModel->invisibleRootItem()->appendRow(itemLetter);
+			_letters.insert(letter, itemLetter);
+			return itemLetter;
 		}
 	}
+	return NULL;
 }
 
 void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
@@ -219,6 +227,8 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 	QStandardItem *itemTrack = NULL;
 	QStandardItem *itemYear = NULL;
 
+	QString art = artist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
+	QString theArtistNorm = theArtist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 	QString alb = album.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 
 	static bool existingArtist = true;
@@ -231,9 +241,13 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		} else {
 			itemArtist = new QStandardItem(theArtist);
 			itemArtist->setData(Artist, Type);
+			itemArtist->setData(art, DataNormalizedString);
 			_artists.insert(theArtist.toLower(), itemArtist);
 			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
-			this->insertLetter(theArtist);
+			QStandardItem *letter = this->insertLetter(art);
+			if (letter) {
+				_topLevelItems.insert(letter->index(), itemArtist->index());
+			}
 			existingArtist = false;
 		}
 		// Level 2
@@ -243,6 +257,7 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemAlbum = new QStandardItem(album);
 			itemAlbum->setData(Album, Type);
 			itemAlbum->setData(alb, DataNormalizedString);
+			itemAlbum->setData(year, DataYear);
 			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums.insert(QPair<QStandardItem *, QString>(itemArtist, alb), itemAlbum);
 			_albums2.insert(alb, itemAlbum);
@@ -272,10 +287,14 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemAlbum = new QStandardItem(album);
 			itemAlbum->setData(Album, Type);
 			itemAlbum->setData(alb, DataNormalizedString);
+			itemAlbum->setData(year, DataYear);
 			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums2.insert(alb, itemAlbum);
 			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			this->insertLetter(alb);
+			QStandardItem *letter = this->insertLetter(alb);
+			if (letter) {
+				_topLevelItems.insert(letter->index(), itemAlbum->index());
+			}
 		}
 		// Level 2
 		itemTrack = new QStandardItem(title);
@@ -283,16 +302,20 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		break;
 	case ArtistAlbum:
 		// Level 1
-		if (_albums2.contains(theArtist + alb)) {
-			itemAlbum = _albums2.value(theArtist + alb);
+		if (_albums2.contains(theArtistNorm + alb)) {
+			itemAlbum = _albums2.value(theArtistNorm + alb);
 		} else {
 			itemAlbum = new QStandardItem(theArtist + " – " + album);
 			itemAlbum->setData(Album, Type);
-			itemAlbum->setData(alb, DataNormalizedString);
+			itemAlbum->setData(theArtistNorm + alb, DataNormalizedString);
+			itemAlbum->setData(year, DataYear);
 			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
-			_albums2.insert(theArtist + alb, itemAlbum);
+			_albums2.insert(theArtistNorm + alb, itemAlbum);
 			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			this->insertLetter(theArtist);
+			QStandardItem *letter = this->insertLetter(theArtistNorm + alb);
+			if (letter) {
+				_topLevelItems.insert(letter->index(), itemAlbum->index());
+			}
 		}
 		// Level 2
 		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
@@ -313,6 +336,7 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 				itemYear = new QStandardItem(tr("Unknown"));
 			}
 			itemYear->setData(Year, Type);
+			itemYear->setData(year, DataNormalizedString);
 			_years.insert(year, itemYear);
 			_libraryModel->invisibleRootItem()->appendRow(itemYear);
 		}
@@ -322,7 +346,8 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		} else {
 			itemAlbum = new QStandardItem(theArtist + " – " + album);
 			itemAlbum->setData(Album, Type);
-			itemAlbum->setData(alb, DataNormalizedString);
+			itemAlbum->setData(art.append("|").append(alb), DataNormalizedString);
+			itemAlbum->setData(year, DataYear);
 			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
 			_albums2.insert(theArtist + alb, itemAlbum);
 			itemYear->appendRow(itemAlbum);
@@ -362,7 +387,7 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 	if (filter.isEmpty()) {
 		proxyModel->setFilterRegExp(QRegExp());
 		collapseAll();
-		sortByColumn(0, Qt::AscendingOrder);
+		proxyModel->sort(0, proxyModel->sortOrder());
 	} else {
 		bool needToSortAgain = false;
 		if (proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
@@ -371,7 +396,7 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 		proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
 		if (needToSortAgain) {
 			collapseAll();
-			sortByColumn(0, Qt::AscendingOrder);
+			proxyModel->sort(0, proxyModel->sortOrder());
 		}
 	}
 }
@@ -379,9 +404,8 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
-	//circleProgressBar->show();
+	circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {		
-		qDebug() << Q_FUNC_INFO;
 		_artists.clear();
 		_albums.clear();
 		_discNumbers.clear();
@@ -391,6 +415,7 @@ void LibraryTreeView::reset()
 		_years.clear();
 		_letters.clear();
 		_libraryModel->removeRows(0, _libraryModel->rowCount());
+		_topLevelItems.clear();
 	}
 	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
 	case Artist:

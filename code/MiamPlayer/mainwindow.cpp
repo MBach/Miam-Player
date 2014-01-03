@@ -105,6 +105,8 @@ void MainWindow::init()
 
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+
+	playlistManager->init();
 }
 
 /** Plugins. */
@@ -268,13 +270,10 @@ void MainWindow::setupActions()
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 
 	// Playback
-	/// XXX
-	/// Warning: tabPlaylists->restorePlaylists() needs to be exactly at this position!
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
-	tabPlaylists->restorePlaylists();
-	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::removeSelectedTracks);
-	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksUp);
-	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists->currentPlayList(), &Playlist::moveTracksDown);
+	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
+	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
+	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &QDialog::open);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);

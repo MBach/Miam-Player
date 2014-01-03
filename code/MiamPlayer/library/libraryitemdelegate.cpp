@@ -19,23 +19,13 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	QStandardItem *item = _libraryModel->itemFromIndex(index);
+	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItemV4 o = option;
 	initStyleOption(&o, index);
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
 	int type = item->data(LibraryTreeView::Type).toInt();
-	if (type == LibraryTreeView::Track && Settings::getInstance()->isStarDelegates()) {
-		QString absFilePath = item->data(LibraryTreeView::DataAbsFilePath).toString();
-		FileHelper fh(absFilePath);
-		qDebug() << "rating" << fh.rating();
-		if (fh.rating() > 0) {
-			StarRating starRating(fh.rating());
-			starRating.paint(painter, o.rect, o.palette, StarRating::ReadOnly);
-		}
-	}
-
 	switch (type) {
 	case LibraryTreeView::Album:
 		this->drawAlbum(painter, o, item);
@@ -62,8 +52,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	Settings *settings = Settings::getInstance();
-	//QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	QStandardItem *item = _libraryModel->itemFromIndex(index);
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	int type = item->data(LibraryTreeView::Type).toInt();
 	if (settings->isCoversEnabled() && type == LibraryTreeView::Album) {
 		return QSize(settings->coverSize(), settings->coverSize() + 2);
@@ -133,6 +122,16 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
+	if (Settings::getInstance()->isStarDelegates()) {
+		QString absFilePath = track->data(LibraryTreeView::DataAbsFilePath).toString();
+		/// XXX: query the sqlmodel instead?
+		FileHelper fh(absFilePath);
+		//qDebug() << "rating" << fh.rating();
+		if (fh.rating() > 0) {
+			StarRating starRating(fh.rating());
+			starRating.paint(painter, option.rect, option.palette, StarRating::ReadOnly);
+		}
+	}
 	int trackNumber = track->data(LibraryTreeView::DataTrackNumber).toInt();
 	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;

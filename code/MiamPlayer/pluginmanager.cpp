@@ -20,6 +20,11 @@ PluginManager::PluginManager(MainWindow *mainWindow) :
 		_pluginPath = appDirPath.absolutePath();
 		this->init();
 	}
+	// If no shared lib was found, it's useless to keep a plugin page empty
+	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
+		_mainWindow->customizeOptionsDialog->listWidget->setRowHidden(5, true);
+		_mainWindow->customizeOptionsDialog->stackedWidget->widget(5)->deleteLater();
+	}
 }
 
 /** Explicitly destroys every plugin. */
@@ -54,16 +59,12 @@ void PluginManager::init()
 						QWidget *fakeConfigPage = new QWidget();
 						int tab = _mainWindow->customizeOptionsDialog->tabPlugins->addTab(fakeConfigPage, pluginInfo.pluginName());
 						_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(tab, false);
+						_mainWindow->customizeOptionsDialog->tabPlugins->setTabToolTip(tab, tr("You have chosen to disable this plugin, therefore you cannot access to its configuration page right now."));
 					}
 					_plugins.insert(pluginInfo.pluginName(), it.fileInfo());
 				}
 			}
 		}
-	}
-	// No shared lib was found, so it is useless to keep a plugin page empty
-	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
-		_mainWindow->customizeOptionsDialog->listWidget->setRowHidden(5, true);
-		_mainWindow->customizeOptionsDialog->stackedWidget->widget(5)->deleteLater();
 	}
 }
 

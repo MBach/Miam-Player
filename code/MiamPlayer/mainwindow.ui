@@ -511,6 +511,9 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Open...</string>
    </property>
@@ -546,6 +549,9 @@
    </property>
   </action>
   <action name="actionCheckNewRelease">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Check for a new version is available</string>
    </property>
@@ -566,6 +572,9 @@
    </property>
   </action>
   <action name="actionShowHelp">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Show &amp;help...</string>
    </property>
@@ -641,16 +650,25 @@
    </property>
   </action>
   <action name="actionMute">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Mute</string>
    </property>
   </action>
   <action name="actionIncreaseVolume">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Increase volume</string>
    </property>
   </action>
   <action name="actionDecreaseVolume">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>&amp;Decrease volume</string>
    </property>

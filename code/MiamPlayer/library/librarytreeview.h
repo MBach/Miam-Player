@@ -30,17 +30,20 @@ private:
 	QStandardItemModel* _libraryModel;
 	LibrarySqlModel *sqlModel;
 
-	QMap<QString, QStandardItem*> _artists;
+	QHash<QString, QStandardItem*> _artists;
 	QHash<QPair<QStandardItem*, QString>, QStandardItem*> _albums;
 	QHash<QPair<QStandardItem*, int>, QStandardItem*> _discNumbers;
 	QHash<QString, QStandardItem*> _albums2;
 	QHash<QString, QStandardItem*> _albumsAbsPath;
 	QHash<QString, QStandardItem*> _artistsAlbums;
 	QHash<int, QStandardItem*> _years;
-	QSet<QString> _letters;
+	QHash<QString, QStandardItem*> _letters;
+
+	// Letter L returns all Artists (e.g.) starting with L
+	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
 
 	Q_ENUMS(ItemType)
-	Q_ENUMS(Field)
+	Q_ENUMS(DataField)
 
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
@@ -64,7 +67,8 @@ public:
 					 DataCoverPath			= Qt::UserRole + 3,
 					 DataTrackNumber		= Qt::UserRole + 4,
 					 DataDiscNumber			= Qt::UserRole + 5,
-					 DataNormalizedString	= Qt::UserRole + 6};
+					 DataNormalizedString	= Qt::UserRole + 6,
+					 DataYear				= Qt::UserRole + 7};
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -85,7 +89,7 @@ private:
 	/** Reimplemented. */
 	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
-	void insertLetter(const QString &letters);
+	QStandardItem* insertLetter(const QString &letters);
 
 	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
 					 int discNumber, const QString &title, int trackNumber, int year);

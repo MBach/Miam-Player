@@ -17,6 +17,7 @@ LibrarySqlModel::LibrarySqlModel(QObject *parent) :
 	}
 	_db.setDatabaseName(dbPath);
 
+	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &LibrarySqlModel::progressChanged);
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &LibrarySqlModel::saveCoverRef);
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedFile, this, &LibrarySqlModel::saveFileRef);
 
