@@ -4,9 +4,6 @@
 #include <settings.h>
 #include "starrating.h"
 
-//#include <fileref.h>
-//#include <tag.h>
-
 #include <QFile>
 #include <QTime>
 #include <QUrl>
@@ -14,8 +11,10 @@
 #include <QtDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(0, 7, parent)
-{}
+	QStandardItemModel(0, 7, parent), _mediaPlaylist(new QMediaPlaylist(this))
+{
+
+}
 
 /** Clear the content of playlist. */
 void PlaylistModel::clear()
@@ -25,8 +24,36 @@ void PlaylistModel::clear()
 	}
 }
 
+void PlaylistModel::highlightCurrentTrack()
+{
+	QStandardItem *it = NULL;
+	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	if (rowCount() > 0) {
+		for (int i=0; i < rowCount(); i++) {
+			for (int j = 0; j < columnCount(); j++) {
+				it = item(i, j);
+				QFont itemFont = font;
+				itemFont.setBold(false);
+				itemFont.setItalic(false);
+				it->setFont(itemFont);
+			}
+		}
+		for (int j=0; j < columnCount(); j++) {
+			it = item(_mediaPlaylist->currentIndex(), j);
+			// If there is actually one selected track in the playlist
+			if (it != NULL) {
+				QFont itemFont = font;
+				itemFont.setBold(true);
+				itemFont.setItalic(true);
+				it->setFont(itemFont);
+			}
+		}
+	}
+}
+
 void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
+	_mediaPlaylist->insertMedia(rowIndex, tracks);
 	foreach (QMediaContent track, tracks) {
 		this->insertMedia(rowIndex++, track);
 	}
@@ -98,4 +125,11 @@ void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 		item->setFont(font);
 	}
 	QStandardItemModel::insertRow(row, items);
+}
+
+/** Redefined. */
+void PlaylistModel::removeRow(int row)
+{
+	QStandardItemModel::removeRow(row);
+	_mediaPlaylist->removeMedia(row);
 }

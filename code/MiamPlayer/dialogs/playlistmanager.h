@@ -19,9 +19,11 @@ private:
 	QMap<int, QStandardItem *> map;
 
 public:
-	PlaylistManager(TabPlaylist *tabPlaylist, QWidget *parent = 0);
+	PlaylistManager(TabPlaylist *tabPlaylist);
 
 	bool eventFilter(QObject *obj, QEvent *event);
+
+	void init();
 
 private:
 	void loadPreviewPlaylist(QListView *list);
@@ -31,6 +33,7 @@ public slots:
 
 private slots:
 	void clearPlaylist(int i);
+	void savePlaylists();
 	void updatePlaylists();
 
 	void deleteSavedPlaylists();
@@ -38,7 +41,7 @@ private slots:
 	void feedPreviewFromUnsaved(QItemSelection, QItemSelection);
 	void loadSavedPlaylists();
 
-	void test(const QModelIndex &, int, int);
+	void test(const QModelIndex &, int start, int end);
 
 };
 

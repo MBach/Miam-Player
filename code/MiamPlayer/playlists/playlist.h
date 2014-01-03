@@ -9,26 +9,34 @@
 
 #include <mediaplayer.h>
 
+/**
+ * \brief		The Playlist class is used to display tracks in the MainWindow class.
+ * \details		The QTableView uses a small custom model to manage tracks: the PlaylistModel class. Tracks can be moved from one playlist
+ *		to another, or in the same playlist. You can also drop external files or folder into this table to create a new playlist.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class Playlist : public QTableView
 {
 	Q_OBJECT
 
 private:
-	//QMenu *columns;
-	QMenu *trackProperties;
+	/** TEST: a very basic context menu with one action: remove selected tracks. */
+	QMenu *_trackProperties;
 
 	/** Model to store basic fields on a track. Mostly used to create or move rows. */
 	PlaylistModel *_playlistModel;
 
-	/** Each instance of Playlist has its own QMediaPlaylist*/
-	QMediaPlaylist *qMediaPlaylist;
-
+	/** Reference to the unique instance of MediaPlayer class in the application. */
 	QWeakPointer<MediaPlayer> _mediaPlayer;
 
+	/** TEST: for drag & drop events: when moving tracks, displays a thin line under the cursor. */
 	QModelIndex *_dropDownIndex;
 
+	/** TEST. */
 	QPoint _dragStartPosition;
 
+	/** TEST: for star ratings. */
 	QModelIndexList _previouslySelectedRows;
 
 	Q_ENUMS(Columns)
@@ -44,7 +52,7 @@ public:
 
 	Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer);
 
-	QMediaPlaylist *mediaPlaylist() { return qMediaPlaylist; }
+	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 

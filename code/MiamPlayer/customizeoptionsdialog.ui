@@ -536,8 +536,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>350</width>
-            <height>150</height>
+            <width>553</width>
+            <height>490</height>
            </rect>
           </property>
           <attribute name="label">
@@ -877,7 +877,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>351</width>
+            <width>353</width>
             <height>260</height>
            </rect>
           </property>
@@ -1533,7 +1533,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>374</width>
+            <width>379</width>
             <height>196</height>
            </rect>
           </property>
@@ -1953,7 +1953,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>451</width>
+            <width>454</width>
             <height>116</height>
            </rect>
           </property>
@@ -2227,6 +2227,21 @@
           <string>Playlists</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
+          <item row="5" column="0">
+           <widget class="QLabel" name="labelClosePlaylist">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>What should I do when you're closing a playlist?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="labelKeepPlaylists">
             <property name="font">
@@ -2235,33 +2250,136 @@
              </font>
             </property>
             <property name="text">
-             <string>Would you like to keep your playlists in memory before exiting and restore them later?</string>
+             <string>Would you like to keep your playlists in memory before exiting?</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
             </property>
            </widget>
           </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="labelRestorePlaylists">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Would you like to restore existing playlists at startup?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QWidget" name="widgetRestorePlaylists" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="radioButtonRestorePlaylists">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonDontRestorePlaylists">
+               <property name="text">
+                <string>No</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item row="1" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayoutKeepPlaylists">
-            <item>
-             <widget class="QRadioButton" name="radioButtonKeepPlaylists">
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonClearPlaylists">
-              <property name="text">
-               <string>No</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <widget class="QWidget" name="widgetKeepPlaylists" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="radioButtonKeepPlaylists">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonClearPlaylists">
+               <property name="text">
+                <string>No</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QWidget" name="widgetClosePlaylist" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="radioButtonAskAction">
+               <property name="text">
+                <string>Let me decide</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonSavePlaylist">
+               <property name="text">
+                <string>Save</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonDiscardPlaylist">
+               <property name="text">
+                <string>Discard</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>

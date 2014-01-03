@@ -23,9 +23,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	//_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
 
-	// Keep playlists on drive before exit
-	connect(qApp, &QCoreApplication::aboutToQuit, this, &TabPlaylist::savePlaylists);
-
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
 
@@ -67,54 +64,6 @@ void TabPlaylist::changeEvent(QEvent *event)
 			}
 			playlist(i)->horizontalHeader();
 		}
-	}
-}
-
-/** Restore playlists at startup. */
-void TabPlaylist::restorePlaylists()
-{
-	Settings *settings = Settings::getInstance();
-	if (settings->playbackKeepPlaylists()) {
-		QList<QVariant> playlists = settings->value("playlists").toList();
-		if (!playlists.isEmpty()) {
-			QList<QMediaContent> tracksNotFound;
-
-			// For all playlists (p : { QList<QVariant[Str=track]> ; QVariant[Str=playlist name] ; QVariant[QMediaPlaylist::PlaybackMode] }
-			for (int i = 0, j = 0; i < playlists.size(); i++) {
-				QList<QVariant> vTracks = playlists.at(i).toList();
-				Playlist *p = this->addPlaylist();
-				this->setTabText(count(), playlists.at(++i).toString());
-				p->mediaPlaylist()->setPlaybackMode((QMediaPlaylist::PlaybackMode) playlists.at(++i).toInt());
-				_mediaPlayer.data()->setPlaylist(p->mediaPlaylist());
-
-				// For all tracks in current playlist
-				QStringList medias;
-				foreach (QVariant vTrack, vTracks) {
-					QUrl url = vTrack.toUrl();
-					if (url.isLocalFile()) {
-						medias.append(url.toLocalFile());
-					} else {
-						tracksNotFound.append(QMediaContent(url));
-					}
-				}
-				this->insertItemsToPlaylist(0, medias);
-				if (i == playlists.size() - 1) {
-					emit updatePlaybackModeButton();
-				}
-
-				// Restore columnState for each playlist too
-				p->horizontalHeader()->restoreState(settings->restoreColumnStateForPlaylist(j));
-				j++;
-			}
-			// Error handling
-			if (!tracksNotFound.isEmpty()) {
-				messageBox->displayError(TracksNotFoundMessageBox::RESTORE_AT_STARTUP, tracksNotFound);
-			}
-		} else {
-			this->addPlaylist();
-		}
-	} else {
-		this->addPlaylist();
 	}
 }
 
@@ -174,6 +123,27 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	currentPlayList()->insertMedias(rowIndex, tracks);
 }
 
+void TabPlaylist::moveTracksDown()
+{
+	if (currentPlayList()) {
+		currentPlayList()->moveTracksDown();
+	}
+}
+
+void TabPlaylist::moveTracksUp()
+{
+	if (currentPlayList()) {
+		currentPlayList()->moveTracksUp();
+	}
+}
+
+void TabPlaylist::removeSelectedTracks()
+{
+	if (currentPlayList()) {
+		currentPlayList()->removeSelectedTracks();
+	}
+}
+
 /** Remove a playlist when clicking on a close button in the corner. */
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
@@ -213,31 +183,5 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 	} else {
 		//currentPlayList()->countSelectedItems();
 		emit updatePlaybackModeButton();
-	}
-}
-
-/** Save playlists before exit. */
-void TabPlaylist::savePlaylists()
-{
-	Settings *settings = Settings::getInstance();
-	if (settings->playbackKeepPlaylists()) {
-		QList<QVariant> vPlaylists;
-		// Iterate on all playlists, except empty ones and the last one (the (+) button)
-		for (int i = 0; i < count() - 1; i++) {
-			Playlist *p = playlist(i);
-
-			if (!p->mediaPlaylist()->isEmpty()) {
-				QList<QVariant> vTracks;
-				for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
-					vTracks.append(p->mediaPlaylist()->media(j).canonicalUrl());
-				}
-				vPlaylists.append(QVariant(vTracks));
-				vPlaylists.append(QVariant(tabBar()->tabText(i)));
-				vPlaylists.append(p->mediaPlaylist()->playbackMode());
-			}
-		}
-		// Tracks are stored in QList< QList<QVariant> >
-		settings->setValue("playlists", vPlaylists);
-		settings->sync();
 	}
 }

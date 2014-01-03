@@ -25,7 +25,6 @@
 Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL)
 {
-	qMediaPlaylist = new QMediaPlaylist(this);
 	_playlistModel = new PlaylistModel(this);
 
 	this->setModel(_playlistModel);
@@ -41,7 +40,7 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 	// Replace the default delegate with a custom StarDelegate for ratings
-	StarDelegate *starDelegate = new StarDelegate(qMediaPlaylist);
+	StarDelegate *starDelegate = new StarDelegate(_playlistModel->mediaPlaylist());
 	this->setItemDelegateForColumn(5, starDelegate);
 	/*connect(starDelegate, &StarDelegate::aboutToUpdateRatings, [=] (const QModelIndex &index) {
 		qDebug() << "ratings to update" << qMediaPlaylist->media(index.row()).canonicalUrl();
@@ -67,7 +66,7 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 	connect(this, &QTableView::doubleClicked, [=](const QModelIndex &track) {
 		// Prevent the signal "currentMediaChanged" for being emitted twice
 		_mediaPlayer.data()->blockSignals(true);
-		_mediaPlayer.data()->setPlaylist(qMediaPlaylist);
+		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
 		_mediaPlayer.data()->blockSignals(false);
 		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
@@ -82,9 +81,21 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 		}
 	});
 
+	// Load a playlist at startup
+	connect(_playlistModel->mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
+		QList<QMediaContent> medias;
+		for (int i = 0; i < _playlistModel->mediaPlaylist()->mediaCount(); i++) {
+			medias.append(_playlistModel->mediaPlaylist()->media(i));
+		}
+		_playlistModel->insertMedias(0, medias);
+		this->resizeColumnToContents(TRACK_NUMBER);
+		this->resizeColumnToContents(RATINGS);
+		this->resizeColumnToContents(YEAR);
+	});
+
 	// Context menu on tracks
-	trackProperties = new QMenu(this);
-	QAction *removeFromCurrentPlaylist = trackProperties->addAction(tr("Remove from playlist"));
+	_trackProperties = new QMenu(this);
+	QAction *removeFromCurrentPlaylist = _trackProperties->addAction(tr("Remove from playlist"));
     connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 
 	// Set row height
@@ -122,7 +133,6 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
-	qMediaPlaylist->insertMedia(rowIndex, medias);
 	_playlistModel->insertMedias(rowIndex, medias);
 	this->resizeColumnToContents(TRACK_NUMBER);
 	this->resizeColumnToContents(RATINGS);
@@ -133,15 +143,11 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 {
 	QList<QMediaContent> medias;
 	foreach (QString track, tracks) {
-		//qDebug() << "inserting" << QUrl::fromLocalFile(QFile::decodeName(track.toLocal8Bit()));
-		//const ushort *data = track.utf16();
-		//QString encodedTrack = QString::fromUtf16(data);
-		//medias.append(QMediaContent(QUrl::fromLocalFile(encodedTrack)));
 		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
 	}
 	// If the track needs to be appended at the end
 	if (rowIndex == -1) {
-		rowIndex = qMediaPlaylist->mediaCount();
+		rowIndex = _playlistModel->rowCount();
 	}
 	this->insertMedias(rowIndex, medias);
 }
@@ -166,10 +172,10 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 	QModelIndex index = this->indexAt(event->pos());
 	QStandardItem *item = _playlistModel->itemFromIndex(index);
 	if (item != NULL) {
-		foreach (QAction *action, trackProperties->actions()) {
+		foreach (QAction *action, _trackProperties->actions()) {
 			action->setText(tr(action->text().toStdString().data()));
 		}
-		trackProperties->exec(event->globalPos());
+		_trackProperties->exec(event->globalPos());
 	}
 }
 
@@ -214,7 +220,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		} else if (target && target != this) {
 			// If the drop occurs at the end of the playlist, indexAt is invalid
 			if (row == -1) {
-				row = qMediaPlaylist->mediaCount();
+				row = _playlistModel->rowCount();
 			}
 			QList<QMediaContent> medias;
 			foreach (QModelIndex index, target->selectionModel()->selectedRows()) {
@@ -324,14 +330,13 @@ void Playlist::removeSelectedTracks()
 	for (int i = indexes.size() - 1; i >= 0; i--) {
 		int row = indexes.at(i).row();
 		_playlistModel->removeRow(row);
-		qMediaPlaylist->removeMedia(row);
 	}
 }
 
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 void Playlist::highlightCurrentTrack()
 {
-	QStandardItem *it = NULL;
+	/*QStandardItem *it = NULL;
 	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
 	if (_playlistModel->rowCount() > 0) {
 		for (int i=0; i < _playlistModel->rowCount(); i++) {
@@ -344,7 +349,7 @@ void Playlist::highlightCurrentTrack()
 			}
 		}
 		for (int j=0; j < _playlistModel->columnCount(); j++) {
-			it = _playlistModel->item(qMediaPlaylist->currentIndex(), j);
+			it = _playlistModel->item(_mediaPlaylist->currentIndex(), j);
 			// If there is actually one selected track in the playlist
 			if (it != NULL) {
 				QFont itemFont = font;
@@ -353,5 +358,6 @@ void Playlist::highlightCurrentTrack()
 				it->setFont(itemFont);
 			}
 		}
-	}
+	}*/
+	_playlistModel->highlightCurrentTrack();
 }

@@ -35,12 +35,14 @@ public:
 	TabPlaylist(QWidget *parent = 0);
 
 	/** Get the current playlist. */
-	Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
+	inline Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
+
+	inline QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
 	/** Get the playlist at index. */
-	Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
+	inline Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
 
-	QList<Playlist *> playlists() {
+	inline QList<Playlist *> playlists() {
 		QList<Playlist*> _playlists;
 		for (int i = 0; i < count() - 1; i++) {
 			_playlists.append(this->playlist(i));
@@ -55,8 +57,6 @@ protected:
 	void changeEvent(QEvent *event);
 
 public slots:
-	void restorePlaylists();
-
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist();
 
@@ -69,8 +69,14 @@ public slots:
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 	void insertItemsToPlaylist(int rowIndex, const QStringList &tracks);
 
+	void moveTracksDown();
+
+	void moveTracksUp();
+
 	/** Action sent from the menu. */
-	void removeCurrentPlaylist() { removeTabFromCloseButton(this->tabBar()->currentIndex()); }
+	inline void removeCurrentPlaylist() { removeTabFromCloseButton(this->tabBar()->currentIndex()); }
+
+	void removeSelectedTracks();
 
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
@@ -80,9 +86,6 @@ public slots:
 private slots:
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
-
-	/** Save playlists before exit. */
-	void savePlaylists();
 
 signals:
 	void destroyed(int);

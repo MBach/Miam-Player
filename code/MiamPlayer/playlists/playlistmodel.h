@@ -2,6 +2,7 @@
 #define PLAYLISTMODEL_H
 
 #include <QMediaContent>
+#include <QMediaPlaylist>
 #include <QMenu>
 #include <QStandardItemModel>
 
@@ -11,11 +12,17 @@
 class PlaylistModel : public QStandardItemModel
 {
 	Q_OBJECT
+private:
+	/** Each instance of PlaylistModel has its own QMediaPlaylist. */
+	QMediaPlaylist *_mediaPlaylist;
+
 public:
 	explicit PlaylistModel(QObject *parent);
 
 	/** Clear the content of playlist. */
 	void clear();
+
+	void highlightCurrentTrack();
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
@@ -26,6 +33,11 @@ public:
 
 	/** Redefined. */
 	void insertRow(int row, const QList<QStandardItem *> & items);
+
+	inline QMediaPlaylist* mediaPlaylist() const { return _mediaPlaylist; }
+
+	/** Redefined. */
+	void removeRow(int row);
 
 };
 

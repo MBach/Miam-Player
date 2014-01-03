@@ -1443,58 +1443,6 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBoxInternalCovers">
-         <property name="title">
-          <string>About internal covers</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <widget class="QLabel" name="labelInternateCovers">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Should I use them?</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QRadioButton" name="radioButtonActivateIntCovers">
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonDesactivateIntCovers">
-              <property name="text">
-               <string>No, always use external file (if available)</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBoxLibraryDelegates">
          <property name="title">
           <string>Manage favorites</string>
