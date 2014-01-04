@@ -13,10 +13,10 @@ TEMPLATE = lib
 win32 {
     CONFIG += dll
     CONFIG(debug, debug|release) {
-        LIBS += -L$$OUT_PWD/debug/ -ltag
+       LIBS += -L$$PWD/../../lib/debug/ -ltag
     }
     CONFIG(release, debug|release) {
-        LIBS += -L$$OUT_PWD/release/ -ltag
+       LIBS += -L$$PWD/../../lib/release/ -ltag
     }
 }
 unix {

@@ -138,7 +138,7 @@ TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_zh.ts
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -ltag -lMiamCore -lMiamUniqueLibrary
+    win32: LIBS += -L$$PWD/../../lib/debug/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
     win32: QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
@@ -147,7 +147,7 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -L$$OUT_PWD/../MiamUniqueLibrary/release/ -ltag -lMiamCore -lMiamUniqueLibrary
+    win32: LIBS += -L$$PWD/../../lib/release/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
     win32: QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc

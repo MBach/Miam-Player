@@ -1,3 +1,12 @@
-This DLL for Windows is to help you to build the project.
-It's better to build taglib directly from source.
-This library has been build with Qt 5.2.0 beta and MinGW 4.8
+This folder contains precompiled library TagLib (http://taglib.github.io/)
+
+* File tag.lib:
+** Built with MSVC2012
+** For Windows only. Used for compiling subproject MiamCore
+
+* Folders debug and release:
+** Files tag.dll
+** For Windows only. Used for linking subproject MiamPlayer in order to produce final Executable
+
+* File libtag.dylib
+** For OS X only. Used for compiling subproject MiamCore
