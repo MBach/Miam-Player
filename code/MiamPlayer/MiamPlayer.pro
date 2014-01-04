@@ -114,9 +114,14 @@ RESOURCES += \
 win32 {
     RC_FILE += config/mmmmp.rc
     OTHER_FILES += config/mmmmp.rc
-    CONFIG += c++11
 }
-unix: QMAKE_CXXFLAGS += -std=c++11
+unix {
+    CONFIG += c++11
+    QMAKE_CXXFLAGS += -std=c++11
+}
+macx {
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
+}
 
 TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_de.ts \
@@ -149,7 +154,23 @@ CONFIG(release, debug|release) {
     RCC_DIR = release/.rcc
     UI_DIR = $$PWD
 }
-unix: LIBS += -L$$OUT_PWD/../MiamCore/ -L$$OUT_PWD/../MiamUniqueLibrary/ -ltag -lMiamCore -lMiamUniqueLibrary
+unix:!macx {
+    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/ -lMiamUniqueLibrary
+}
+macx {
+    LIBS += -L$$PWD/../../lib/ -ltag -L$$OUT_PWD/../MiamCore/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/ -lMiamUniqueLibrary
+    ICON = $$PWD/mmmmp.icns
+    QMAKE_INFO_PLIST = $$PWD/../../packaging/osx/Info.plist
+    #1 create Framework directory
+    #2 copy third party library: TagLib
+    #3 copy own libs
+    #4 execute macdeploy to create a nice bundle
+    QMAKE_POST_LINK += $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+      $${QMAKE_COPY} $$shell_path($$PWD/../../lib/libtag.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamCore/libMiamCore.1.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamUniqueLibrary/libMiamUniqueLibrary.1.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+      $${QMAKESPEC}/../../bin/macdeployqt $$OUT_PWD/MiamPlayer.app
+}
 
 INCLUDEPATH += $$PWD/../MiamCore
 INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/library $$PWD/playlists $$PWD/tageditor

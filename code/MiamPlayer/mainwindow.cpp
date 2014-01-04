@@ -106,7 +106,7 @@ void MainWindow::init()
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 
-	playlistManager->init();
+	//playlistManager->init();
 }
 
 /** Plugins. */

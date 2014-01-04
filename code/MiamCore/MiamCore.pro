@@ -10,16 +10,26 @@ DEFINES += MIAM_PLUGIN
 TARGET = MiamCore
 TEMPLATE = lib
 
-CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/debug/ -ltag
-    unix: LIBS += -L$$OUT_PWD -ltag
+win32 {
+    CONFIG += dll
+    CONFIG(debug, debug|release) {
+        LIBS += -L$$OUT_PWD/debug/ -ltag
+    }
+    CONFIG(release, debug|release) {
+        LIBS += -L$$OUT_PWD/release/ -ltag
+    }
 }
-CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/release/ -ltag
-    unix: LIBS += -L$$OUT_PWD -ltag
+unix {
+    CONFIG += c++11
+    QMAKE_CXXFLAGS += -std=c++11
 }
-win32: CONFIG += dll
-unix: QMAKE_CXXFLAGS += -std=c++11
+unix:!macx {
+    LIBS += -L$$OUT_PWD -ltag
+}
+macx {
+    LIBS += -L$$PWD/../../lib/ -ltag
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
+}
 
 SOURCES += \
     model/librarysqlmodel.cpp \
@@ -45,8 +55,3 @@ HEADERS += \
     libraryfilterlineedit.h \
     model/librarysqlmodel.h \
     mediabutton.h
-
-unix:!symbian {
-    target.path = /usr/lib
-    INSTALLS += target
-}

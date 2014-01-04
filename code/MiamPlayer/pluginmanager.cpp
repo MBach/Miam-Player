@@ -23,7 +23,6 @@ PluginManager::PluginManager(MainWindow *mainWindow) :
 	// If no shared lib was found, it's useless to keep a plugin page empty
 	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
 		_mainWindow->customizeOptionsDialog->listWidget->setRowHidden(5, true);
-		_mainWindow->customizeOptionsDialog->stackedWidget->widget(5)->deleteLater();
 	}
 }
 
