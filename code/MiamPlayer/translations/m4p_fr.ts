@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR" sourcelanguage="en_US">
+<TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
     <name>AlbumCover</name>
     <message>
@@ -252,10 +252,6 @@
         <translation>Listes de lecture </translation>
     </message>
     <message>
-        <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
-        <translation>Souhaitez-vous conserver vos listes de lecture avant de quitter, puis de les restaurer plus tard ?</translation>
-    </message>
-    <message>
         <source>Remove selected track(s)</source>
         <translation>Retirer les pistes sélectionnées</translation>
     </message>
@@ -302,6 +298,50 @@
     <message>
         <source>What should I do when you&apos;re dropping here items from another application?</source>
         <translation>Que devrais-je faire lorsque vous déposez ici des éléments provenant d&apos;une autre application ?</translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation>Extensions</translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re closing a playlist?</source>
+        <translation>Que devrais-je faire lorsque vous fermez une liste de lecture ?</translation>
+    </message>
+    <message>
+        <source>Would you like to keep your playlists in memory before exiting?</source>
+        <translation>Souhaitez-vous garder en mémoire les listes de lectures avant de quitter l&apos;application ?</translation>
+    </message>
+    <message>
+        <source>Would you like to restore existing playlists at startup?</source>
+        <translation>Souhaitez-vous restaurer les listes de lecture au démarrage du lecteur ?</translation>
+    </message>
+    <message>
+        <source>Let me decide</source>
+        <translation>Me demander quoi faire</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Sauvegarder</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation>Rejeter</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Récapitulatif</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Nom</translation>
+    </message>
+    <message>
+        <source>Loaded</source>
+        <translation>Chargé</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
     </message>
 </context>
 <context>
@@ -431,10 +471,6 @@
         <translation>Toujours afficher des étoiles à droite des titres, même s&apos;il n&apos;existe pas encore de note.</translation>
     </message>
     <message>
-        <source>Show alphabetical separators</source>
-        <translation>Afficher les séparateurs alphabétiques</translation>
-    </message>
-    <message>
         <source>Customize selected theme</source>
         <translation>Modifier le thème sélectionné</translation>
     </message>
@@ -455,18 +491,6 @@
         <translation>Aléatoire</translation>
     </message>
     <message>
-        <source>About internal covers</source>
-        <translation>À propos des pochettes internes</translation>
-    </message>
-    <message>
-        <source>No, always use external file (if available)</source>
-        <translation>Non, toujours utiliser un fichier externe (s&apos;il existe)</translation>
-    </message>
-    <message>
-        <source>Should I use them?</source>
-        <translation>Devrais-je les utiliser ?</translation>
-    </message>
-    <message>
         <source>Make buttons flat</source>
         <translation>Rendre les boutons plats</translation>
     </message>
@@ -477,10 +501,6 @@
     <message>
         <source>Alternative colors</source>
         <translation>Couleurs alternées</translation>
-    </message>
-    <message>
-        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
-        <translation>Note : une pochette interne est une image dans votre fichier musical. Vous pouvez parfois l&apos;apercevoir en tant que miniature dans un explorateur de fichiers.</translation>
     </message>
     <message>
         <source>Global background</source>
@@ -582,10 +602,46 @@
     </message>
 </context>
 <context>
-    <name>LibraryModel</name>
+    <name>LibraryOrderDialog</name>
     <message>
-        <source> Various</source>
-        <translation> Divers</translation>
+        <source>Dialog</source>
+        <translation>Boîte de dialogue</translation>
+    </message>
+    <message>
+        <source>Select how to display your library</source>
+        <translation>Sélectionnez comment afficher votre bibliothèque</translation>
+    </message>
+    <message>
+        <source>Artists \ Albums</source>
+        <translation>Artistes \ Albums</translation>
+    </message>
+    <message>
+        <source>Albums</source>
+        <translation>Albums</translation>
+    </message>
+    <message>
+        <source>Artists – Albums</source>
+        <translation>Artistes – Albums</translation>
+    </message>
+    <message>
+        <source>Years</source>
+        <translation>Année</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artiste</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation>Album</translation>
+    </message>
+    <message>
+        <source>Artist – Album</source>
+        <translation>Artiste – Album</translation>
+    </message>
+    <message>
+        <source>0%1. track #%1</source>
+        <translation>0%1. piste #%1</translation>
     </message>
 </context>
 <context>
@@ -601,6 +657,26 @@
     <message>
         <source>  Artists \ Albums</source>
         <translation>  Artistes \ Albums</translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation>Divers</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Inconnu</translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation>  Albums</translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation>  Artistes – Albums</translation>
+    </message>
+    <message>
+        <source>  Years</source>
+        <translation>  Année</translation>
     </message>
 </context>
 <context>
@@ -794,6 +870,18 @@
             <numerusform>Déplacer vers le &amp;bas les pistes sélectionnées</numerusform>
         </translation>
     </message>
+    <message>
+        <source>View</source>
+        <translation>Vue</translation>
+    </message>
+    <message>
+        <source>Playlist Mode</source>
+        <translation>Type Liste de lecture</translation>
+    </message>
+    <message>
+        <source>Unique library Mode</source>
+        <translation>Type Bibliothèque Unique</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -854,6 +942,17 @@
     <message>
         <source>Preview playlist</source>
         <translation>Aperçu de la liste de lecture</translation>
+    </message>
+</context>
+<context>
+    <name>PluginManager</name>
+    <message>
+        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
+        <translation>Vous avez choisi de désactiver cette extension. Par conséquent, vous ne pouvez accéder à sa page de configuration pour le moment.</translation>
+    </message>
+    <message>
+        <source>A plugin was found but was the player was unable to load it (file %1)</source>
+        <translation>Une extension a été trouvée mais le lecteur n&apos;a pu la charger (fichier %1)</translation>
     </message>
 </context>
 <context>
@@ -976,11 +1075,11 @@
     </message>
     <message>
         <source>#Track</source>
-        <translation type="unfinished"></translation>
+        <translation># Piste</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation type="unfinished">Titre</translation>
+        <translation>Titre</translation>
     </message>
 </context>
 <context>

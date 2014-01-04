@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US" sourcelanguage="en_US">
+<TS version="2.1" language="en_US" sourcelanguage="en_US">
 <context>
     <name>AlbumCover</name>
     <message>
@@ -252,10 +252,6 @@
         <translation>Playlists</translation>
     </message>
     <message>
-        <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
-        <translation>Would you like to keep your playlists in memory before exiting and restore them later?</translation>
-    </message>
-    <message>
         <source>Remove selected track(s)</source>
         <translation>Remove selected track(s)</translation>
     </message>
@@ -302,6 +298,50 @@
     <message>
         <source>What should I do when you&apos;re dropping here items from another application?</source>
         <translation>What should I do when you&apos;re dropping here items from another application?</translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation>Plugins</translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re closing a playlist?</source>
+        <translation>What should I do when you&apos;re closing a playlist?</translation>
+    </message>
+    <message>
+        <source>Would you like to keep your playlists in memory before exiting?</source>
+        <translation>Would you like to keep your playlists in memory before exiting?</translation>
+    </message>
+    <message>
+        <source>Would you like to restore existing playlists at startup?</source>
+        <translation>Would you like to restore existing playlists at startup?</translation>
+    </message>
+    <message>
+        <source>Let me decide</source>
+        <translation>Let me decide</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation>Discard</translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation>Summary</translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation>Name</translation>
+    </message>
+    <message>
+        <source>Loaded</source>
+        <translation>Loaded</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Version</translation>
     </message>
 </context>
 <context>
@@ -431,10 +471,6 @@
         <translation>Always display stars right to the track name, even if there&apos;s no rating yet.</translation>
     </message>
     <message>
-        <source>Show alphabetical separators</source>
-        <translation>Show alphabetical separators</translation>
-    </message>
-    <message>
         <source>Customize selected theme</source>
         <translation>Customize selected theme</translation>
     </message>
@@ -455,18 +491,6 @@
         <translation>Shuffle</translation>
     </message>
     <message>
-        <source>About internal covers</source>
-        <translation>About internal covers</translation>
-    </message>
-    <message>
-        <source>No, always use external file (if available)</source>
-        <translation>No, always use external file (if available)</translation>
-    </message>
-    <message>
-        <source>Should I use them?</source>
-        <translation>Should I use them ?</translation>
-    </message>
-    <message>
         <source>Make buttons flat</source>
         <translation>Make buttons flat</translation>
     </message>
@@ -477,10 +501,6 @@
     <message>
         <source>Alternative colors</source>
         <translation>Alternative colors</translation>
-    </message>
-    <message>
-        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
-        <translation>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</translation>
     </message>
     <message>
         <source>Global background</source>
@@ -582,10 +602,46 @@
     </message>
 </context>
 <context>
-    <name>LibraryModel</name>
+    <name>LibraryOrderDialog</name>
     <message>
-        <source> Various</source>
-        <translation> Various</translation>
+        <source>Dialog</source>
+        <translation>Dialog</translation>
+    </message>
+    <message>
+        <source>Select how to display your library</source>
+        <translation>Select how to display your library</translation>
+    </message>
+    <message>
+        <source>Artists \ Albums</source>
+        <translation>Artists \ Albums</translation>
+    </message>
+    <message>
+        <source>Albums</source>
+        <translation>Albums</translation>
+    </message>
+    <message>
+        <source>Artists – Albums</source>
+        <translation>Artists – Albums</translation>
+    </message>
+    <message>
+        <source>Years</source>
+        <translation>Years</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artist</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation>Album</translation>
+    </message>
+    <message>
+        <source>Artist – Album</source>
+        <translation>Artist – Album</translation>
+    </message>
+    <message>
+        <source>0%1. track #%1</source>
+        <translation>0%1. track #%1</translation>
     </message>
 </context>
 <context>
@@ -601,6 +657,26 @@
     <message>
         <source>  Artists \ Albums</source>
         <translation>  Artists \ Albums</translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation>Various</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Unknown</translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation>  Albums</translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation>  Artists – Albums</translation>
+    </message>
+    <message>
+        <source>  Years</source>
+        <translation>  Years</translation>
     </message>
 </context>
 <context>
@@ -793,6 +869,18 @@
             <numerusform>Move selected tracks &amp;down</numerusform>
         </translation>
     </message>
+    <message>
+        <source>View</source>
+        <translation>View</translation>
+    </message>
+    <message>
+        <source>Playlist Mode</source>
+        <translation>Playlist Mode</translation>
+    </message>
+    <message>
+        <source>Unique library Mode</source>
+        <translation>Unique library Mode</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -853,6 +941,17 @@
     <message>
         <source>Preview playlist</source>
         <translation>Preview playlist</translation>
+    </message>
+</context>
+<context>
+    <name>PluginManager</name>
+    <message>
+        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
+        <translation>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</translation>
+    </message>
+    <message>
+        <source>A plugin was found but was the player was unable to load it (file %1)</source>
+        <translation>A plugin was found but was the player was unable to load it (file %1)</translation>
     </message>
 </context>
 <context>
@@ -975,11 +1074,11 @@
     </message>
     <message>
         <source>#Track</source>
-        <translation type="unfinished"></translation>
+        <translation>#Track</translation>
     </message>
     <message>
         <source>Title</source>
-        <translation type="unfinished">Title</translation>
+        <translation>Title</translation>
     </message>
 </context>
 <context>

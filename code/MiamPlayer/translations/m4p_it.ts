@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="it" sourcelanguage="en_US">
+<TS version="2.1" language="it" sourcelanguage="en_US">
 <context>
     <name>AlbumCover</name>
     <message>
@@ -252,10 +252,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Would you like to keep your playlists in memory before exiting and restore them later?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Remove selected track(s)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -301,6 +297,50 @@
     </message>
     <message>
         <source>What should I do when you&apos;re dropping here items from another application?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What should I do when you&apos;re closing a playlist?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to keep your playlists in memory before exiting?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to restore existing playlists at startup?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Let me decide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Summary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -431,10 +471,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show alphabetical separators</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Customize selected theme</source>
         <translation type="unfinished"></translation>
     </message>
@@ -455,18 +491,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>About internal covers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No, always use external file (if available)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Should I use them?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Make buttons flat</source>
         <translation type="unfinished"></translation>
     </message>
@@ -476,10 +500,6 @@
     </message>
     <message>
         <source>Alternative colors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Note: an internal cover is a picture inside your music file. You can see it sometimes as a thumbnail in a file explorer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -582,9 +602,45 @@
     </message>
 </context>
 <context>
-    <name>LibraryModel</name>
+    <name>LibraryOrderDialog</name>
     <message>
-        <source> Various</source>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select how to display your library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artists \ Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artists – Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist – Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0%1. track #%1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -600,6 +656,26 @@
     </message>
     <message>
         <source>  Artists \ Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>  Years</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -790,6 +866,18 @@
             <numerusform></numerusform>
         </translation>
     </message>
+    <message>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playlist Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unique library Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -849,6 +937,17 @@
     </message>
     <message>
         <source>Preview playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PluginManager</name>
+    <message>
+        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
