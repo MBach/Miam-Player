@@ -121,9 +121,13 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &Settings::setCopyTracksFromPlaylist);
 
 	// Load the language of the application
-	QString lang = languages.value(Settings::getInstance()->language());
-	t.load(lang);
-	QApplication::installTranslator(&t);
+	customTranslator.load(languages.value(Settings::getInstance()->language()));
+
+	// Translate standard buttons (OK, Cancel, ...)
+	defaultQtTranslator.load("qt_" + Settings::getInstance()->language(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+
+	QApplication::installTranslator(&customTranslator);
+	QApplication::installTranslator(&defaultQtTranslator);
 }
 
 /** Is it necessary to redefined this from the UI class just for this init label? */
@@ -245,9 +249,11 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 	Settings *settings = Settings::getInstance();
 
 	// If the language is successfully loaded, tells every widget that they need to be redisplayed
-	if (!lang.isEmpty() && lang != settings->language() && t.load(lang)) {
-		settings->setLanguage(index.data().toString());
-		QApplication::installTranslator(&t);
+	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
+		settings->setLanguage(lang);
+		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+		QApplication::installTranslator(&customTranslator);
+		QApplication::installTranslator(&defaultQtTranslator);
 	} else {
 		labelStatusLanguage->setText(tr("No translation is available for this language :("));
 	}

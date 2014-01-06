@@ -49,6 +49,25 @@
     </message>
 </context>
 <context>
+    <name>ClosePlaylistPopup</name>
+    <message>
+        <source>Your attention is required</source>
+        <translation>Your attention is required</translation>
+    </message>
+    <message>
+        <source>You&apos;re about to close a playlist. What would you like to do?</source>
+        <translation>You&apos;re about to close a playlist. What would you like to do?</translation>
+    </message>
+    <message>
+        <source>This can be changed in options</source>
+        <translation>This can be changed in options</translation>
+    </message>
+    <message>
+        <source>Remember my choice in the future</source>
+        <translation>Remember my choice in the future</translation>
+    </message>
+</context>
+<context>
     <name>CustomizeOptionsDialog</name>
     <message>
         <source>Customize general options</source>
@@ -627,22 +646,6 @@
         <source>Years</source>
         <translation>Years</translation>
     </message>
-    <message>
-        <source>Artist</source>
-        <translation>Artist</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation>Album</translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation>Artist – Album</translation>
-    </message>
-    <message>
-        <source>0%1. track #%1</source>
-        <translation>0%1. track #%1</translation>
-    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
@@ -942,6 +945,10 @@
         <source>Preview playlist</source>
         <translation>Preview playlist</translation>
     </message>
+    <message>
+        <source>Export...</source>
+        <translation>Export...</translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1056,6 +1063,10 @@
     <message>
         <source>Playlist </source>
         <translation>Playlist </translation>
+    </message>
+    <message>
+        <source>Playlist %1</source>
+        <translation>Playlist %1</translation>
     </message>
 </context>
 <context>

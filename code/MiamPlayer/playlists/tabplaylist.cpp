@@ -78,8 +78,8 @@ void TabPlaylist::changeEvent(QEvent *event)
 			if (tabText(i) == playlistName) {
 				this->setTabText(i, playlistName);
 			}
-			playlist(i)->horizontalHeader();
 		}
+		_closePlaylistPopup->retranslateUi(_closePlaylistPopup);
 	}
 }
 
@@ -184,6 +184,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		// Clear the content of first tab
 		currentPlayList()->mediaPlaylist()->clear();
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount());
+		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
 	}
 }
 

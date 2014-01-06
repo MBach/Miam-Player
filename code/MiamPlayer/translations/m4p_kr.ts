@@ -49,6 +49,25 @@
     </message>
 </context>
 <context>
+    <name>ClosePlaylistPopup</name>
+    <message>
+        <source>Your attention is required</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You&apos;re about to close a playlist. What would you like to do?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This can be changed in options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remember my choice in the future</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CustomizeOptionsDialog</name>
     <message>
         <source>Customize general options</source>
@@ -627,22 +646,6 @@
         <source>Years</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0%1. track #%1</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
@@ -939,6 +942,10 @@
         <source>Preview playlist</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1052,6 +1059,10 @@
     <name>TabPlaylist</name>
     <message>
         <source>Playlist </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playlist %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

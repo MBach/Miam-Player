@@ -49,6 +49,25 @@
     </message>
 </context>
 <context>
+    <name>ClosePlaylistPopup</name>
+    <message>
+        <source>Your attention is required</source>
+        <translation>Votre attention est requise</translation>
+    </message>
+    <message>
+        <source>You&apos;re about to close a playlist. What would you like to do?</source>
+        <translation>Vous êtes sur le point de fermer une liste de lecture. Que souhaitez-vous faire ?</translation>
+    </message>
+    <message>
+        <source>This can be changed in options</source>
+        <translation>Cette option peut être changée ultérieurement dans les options</translation>
+    </message>
+    <message>
+        <source>Remember my choice in the future</source>
+        <translation>Se souvenir de mon choix à l&apos;avenir</translation>
+    </message>
+</context>
+<context>
     <name>CustomizeOptionsDialog</name>
     <message>
         <source>Customize general options</source>
@@ -627,22 +646,6 @@
         <source>Years</source>
         <translation>Année</translation>
     </message>
-    <message>
-        <source>Artist</source>
-        <translation>Artiste</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation>Album</translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation>Artiste – Album</translation>
-    </message>
-    <message>
-        <source>0%1. track #%1</source>
-        <translation>0%1. piste #%1</translation>
-    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
@@ -943,6 +946,10 @@
         <source>Preview playlist</source>
         <translation>Aperçu de la liste de lecture</translation>
     </message>
+    <message>
+        <source>Export...</source>
+        <translation>Exporter...</translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1057,6 +1064,10 @@
     <message>
         <source>Playlist </source>
         <translation>Liste de lecture </translation>
+    </message>
+    <message>
+        <source>Playlist %1</source>
+        <translation>Liste de lecture %1</translation>
     </message>
 </context>
 <context>
