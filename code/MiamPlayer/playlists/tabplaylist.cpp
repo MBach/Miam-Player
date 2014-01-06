@@ -1,5 +1,4 @@
 #include "tabplaylist.h"
-#include "settings.h"
 
 #include <QAudio>
 #include <QApplication>
@@ -8,12 +7,13 @@
 
 #include "tabbar.h"
 #include "../treeview.h"
+#include "settings.h"
 
 #include <QEventLoop>
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _tabIndex(-1)
+	QTabWidget(parent), _tabIndex(-1), _closePlaylistPopup(new ClosePlaylistPopup(this))
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
@@ -23,20 +23,36 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	//_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
 
+	Settings *settings = Settings::getInstance();
+
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
 
-	// Removing a playlist
-	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::removeTabFromCloseButton);
-
 	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
-		Settings *settings = Settings::getInstance();
 		if (playlists().size() == 1 && playlist(0)->mediaPlaylist()->isEmpty()) {
 			settings->remove("columnStateForPlaylist");
 		} else {
 			for (int i = 0; i < playlists().size(); i++) {
 				settings->saveColumnStateForPlaylist(i, playlist(i)->horizontalHeader()->saveState());
 			}
+		}
+	});
+
+	// Removing a playlist
+	connect(_closePlaylistPopup->buttonBox, &QDialogButtonBox::clicked, this, &TabPlaylist::execActionFromClosePopup);
+
+	connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
+		Settings::PlaylistDefaultAction action = settings->playbackDefaultActionForClose();
+		switch (action) {
+		case Settings::AskUserForAction:
+			_closePlaylistPopup->show();
+			break;
+		case Settings::SaveOnClose:
+			emit aboutToSavePlaylist(index);
+			break;
+		case Settings::DiscardOnClose:
+			this->removeTabFromCloseButton(index);
+			break;
 		}
 	});
 
@@ -137,6 +153,12 @@ void TabPlaylist::moveTracksUp()
 	}
 }
 
+void TabPlaylist::removeCurrentPlaylist()
+{
+	// Simulate a click on the close button
+	emit tabCloseRequested(this->tabBar()->currentIndex());
+}
+
 void TabPlaylist::removeSelectedTracks()
 {
 	if (currentPlayList()) {
@@ -147,6 +169,7 @@ void TabPlaylist::removeSelectedTracks()
 /** Remove a playlist when clicking on a close button in the corner. */
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
+	qDebug() << Q_FUNC_INFO;
 	// Don't delete the first tab, if it's the last one remaining
 	if (index > 0 || (index == 0 && count() > 2)) {
 		// If the playlist we want to delete has no more right tab, then pick the left tab
@@ -183,5 +206,29 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 	} else {
 		//currentPlayList()->countSelectedItems();
 		emit updatePlaybackModeButton();
+	}
+}
+
+void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
+{
+	switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
+	case QDialogButtonBox::Save:
+		qDebug() << "save and delete";
+		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
+			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::SaveOnClose);
+		}
+		emit aboutToSavePlaylist(this->tabBar()->currentIndex());
+		break;
+	case QDialogButtonBox::Discard:
+		qDebug() << "discard and delete";
+		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
+			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::DiscardOnClose);
+		}
+		this->removeTabFromCloseButton(this->tabBar()->currentIndex());
+		_closePlaylistPopup->hide();
+		break;
+	default:
+		qDebug() << "cancel and keep";
+		break;
 	}
 }

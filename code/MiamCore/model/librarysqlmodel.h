@@ -1,22 +1,22 @@
 #ifndef LIBRARYSQLMODEL_H
 #define LIBRARYSQLMODEL_H
 
-#include <QtSql>
-
 #include "musicsearchengine.h"
 
 #include "filehelper.h"
+
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+#include <QWeakPointer>
 
 class MIAMCORE_LIBRARY LibrarySqlModel : public QSqlTableModel
 {
 	Q_OBJECT
 private:
-	QSqlDatabase _db;
-
 	MusicSearchEngine *_musicSearchEngine;
 
 public:
-	explicit LibrarySqlModel(QObject *parent = 0);
+	explicit LibrarySqlModel(QSqlDatabase *db, QObject *parent = 0);
 
 	void loadFromFileDB();
 

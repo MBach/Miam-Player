@@ -40,18 +40,19 @@ SOURCES += \
     libraryfilterlineedit.cpp \
     musicsearchengine.cpp \
     quickstartsearchengine.cpp \
-    settings.cpp
+    settings.cpp \
+    sqldatabase.cpp
 
-HEADERS += \
-    settings.h \
+HEADERS += interfaces/basicplugininterface.h \
+    interfaces/mediaplayerplugininterface.h \
+    model/librarysqlmodel.h \
+    cover.h \
+    filehelper.h \
+    libraryfilterlineedit.h \
+    mediabutton.h \
+    mediaplayer.h \
+    miamcore_global.h \
     musicsearchengine.h \
     quickstartsearchengine.h \
-    filehelper.h \
-    cover.h \
-    miamcore_global.h \
-    mediaplayer.h \
-    interfaces/basicplugininterface.h \
-    interfaces/mediaplayerplugininterface.h \
-    libraryfilterlineedit.h \
-    model/librarysqlmodel.h \
-    mediabutton.h
+    settings.h \
+    sqldatabase.h

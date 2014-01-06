@@ -9,11 +9,15 @@
 
 #include <QtDebug>
 
-PlaylistManager::PlaylistManager(TabPlaylist *tabPlaylist) :
-	QDialog(tabPlaylist), playlists(tabPlaylist)
+PlaylistManager::PlaylistManager(QSqlDatabase *db, TabPlaylist *tabPlaylist) :
+	QDialog(tabPlaylist), _db(db), playlists(tabPlaylist)
 {
 	setupUi(this);
 	this->setWindowFlags(Qt::Tool);
+
+	loadPlaylists->setIcon(this->style()->standardIcon(QStyle::SP_DialogOpenButton));
+	deletePlaylists->setIcon(this->style()->standardIcon(QStyle::SP_DialogCloseButton));
+	exportPlaylists->setIcon(this->style()->standardIcon(QStyle::SP_DialogSaveButton));
 
 	unsavedPlaylists->installEventFilter(this);
 	savedPlaylists->installEventFilter(this);
@@ -49,61 +53,66 @@ void PlaylistManager::clearPlaylist(int i)
 	map.remove(i);
 }
 
+//#include <QCryptographicHash>
+
 #include <QDateTime>
+#include <QSqlQuery>
 
 void PlaylistManager::savePlaylists()
 {
 	Settings *settings = Settings::getInstance();
 	if (settings->playbackKeepPlaylists()) {
 		QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
+
+		_db->open();
 		for (int i = 0; i < playlists->count(); i++) {
 			Playlist *p = playlists->playlist(i);
-			if (p && !p->mediaPlaylist()->isEmpty()) {
-				QString playlistName = playlists->tabBar()->tabText(i);
-				QVariant playlistData = playlists->tabBar()->tabData(i);
-
-				// New playlists have no existing file stored as Data member
-				if (playlistData.isNull()) {
-					QString newPlaylistPath = path + QDir::separator() + playlistName + ".m3u8";
-					int count = 0;
-					// In case one has decided to create at least two playlists with the same name
-					while (QFile::exists(newPlaylistPath)) {
-						newPlaylistPath = path + QDir::separator() + playlistName + " (%1).m3u8";
-						newPlaylistPath = newPlaylistPath.arg(++count);
-					}
-					QFile playlistFile(newPlaylistPath);
-					playlistFile.open(QIODevice::WriteOnly);
-					if (p->mediaPlaylist()->save(&playlistFile, "m3u8")) {
-						settings->setValue(newPlaylistPath, playlistName);
-						playlistFile.close();
-						settings->setValue(newPlaylistPath + "_lastModified", QFileInfo(playlistFile).lastModified());
-					}
-				} else {
-					// Ensure that file still exists meanwhile
-					QString existingPath = playlistData.toString();
-					if (QFile::exists(existingPath)) {
-
-						// Ensure that previous playlist wasn't modified to avoid overwriting every time the player is closed
-						QFileInfo playlistFileInfo(existingPath);
-						QDateTime lastModified = settings->value(existingPath + "_lastModified").toDateTime();
-
-						// We need to replace content if the date was modified
-						qDebug() << lastModified << playlistFileInfo.lastModified();
-						if (lastModified != playlistFileInfo.lastModified()) {
-							QFile existingFile(existingPath);
-							existingFile.open(QIODevice::ReadWrite | QIODevice::Truncate);
-							if (p->mediaPlaylist()->save(&existingFile, "m3u8")) {
-								settings->setValue(existingPath, playlistName);
-								existingFile.close();
-								settings->setValue(existingPath + "_lastModified", QFileInfo(existingPath).lastModified());
-							}
-						}
-					} else {
-						qDebug() << "you have deleted the playlist!";
-					}
+			uint hash = 0;
+			if (p) {
+				QString files;
+				for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
+					files.append(p->mediaPlaylist()->media(j).canonicalUrl().toLocalFile());
 				}
+				//QByteArray byteArray(files);
+				//QByteArray hashed = QCryptographicHash::hash(byteArray, QCryptographicHash::Md5);
+				//qDebug() << "playlist" << i << hashed.toHex();
+				hash = qHash(files);
+				qDebug() << qHash(files);
+			}
+
+			QString playlistName = playlists->tabBar()->tabText(i);
+			QVariant playlistData = playlists->tabBar()->tabData(i);
+
+			// New playlists have no existing file stored as Data member
+			if (playlistData.isNull()) {
+				QString newPlaylistPath = path + QDir::separator() + playlistName + ".m3u8";
+				int count = 0;
+				// In case one has decided to create at least two playlists with the same name
+				while (QFile::exists(newPlaylistPath)) {
+					newPlaylistPath = path + QDir::separator() + playlistName + " (%1).m3u8";
+					newPlaylistPath = newPlaylistPath.arg(++count);
+				}
+				QFile playlistFile(newPlaylistPath);
+				playlistFile.open(QIODevice::WriteOnly);
+				if (p->mediaPlaylist()->save(&playlistFile, "m3u8")) {
+
+					playlistFile.close();
+					QFileInfo fileInfo(playlistFile);
+					QSqlQuery insertNewPlaylist("INSERT INTO playlists VALUES(?, ?, ?)", *_db);
+					insertNewPlaylist.addBindValue(fileInfo.absoluteFilePath());
+					insertNewPlaylist.addBindValue(playlistName);
+					//insertNewPlaylist.addBindValue(fileInfo.lastModified());
+					insertNewPlaylist.addBindValue(hash);
+
+					bool b = insertNewPlaylist.exec();
+					qDebug() << "inserting new playlist?" << b;
+				}
+			} else {
+
 			}
 		}
+		_db->close();
+		//settings->playlistCleanRemoved();
 	}
 }
 
@@ -163,25 +172,33 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 
 void PlaylistManager::init()
 {
-	QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-	QDir dataLocation(path);
-	QDirIterator it(dataLocation);
-	QStringList supportedPlaylistTypes = QStringList() << "m3u" << "m3u8";
-	while (it.hasNext()) {
-		it.next();
-		QFileInfo fileInfo(it.fileInfo());
-		if (supportedPlaylistTypes.contains(fileInfo.suffix())) {
-			Playlist *playlist = playlists->addPlaylist();
-			QString absFilePath = fileInfo.absoluteFilePath();
-			QString playlistName = Settings::getInstance()->value(absFilePath).toString();
-			playlists->tabBar()->setTabText(playlists->playlists().count() - 1, playlistName);
-			playlists->tabBar()->setTabData(playlists->playlists().count() - 1, absFilePath);
-			playlist->mediaPlaylist()->load(QUrl::fromLocalFile(absFilePath), fileInfo.suffix().toStdString().data());
+	if (Settings::getInstance()->playbackRestorePlaylistsAtStartup()) {
+		QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
+		QDir dataLocation(path);
+		QDirIterator it(dataLocation);
+		QStringList supportedPlaylistTypes = QStringList() << "m3u" << "m3u8";
+		while (it.hasNext()) {
+			it.next();
+			QFileInfo fileInfo(it.fileInfo());
+			if (supportedPlaylistTypes.contains(fileInfo.suffix())) {
+				Playlist *playlist = playlists->addPlaylist();
+				QString absFilePath = fileInfo.absoluteFilePath();
+				//QString playlistName = Settings::getInstance()->playlistLoad(fileInfo);
+				//playlists->tabBar()->setTabText(playlists->playlists().count() - 1, playlistName);
+				//playlists->tabBar()->setTabData(playlists->playlists().count() - 1, absFilePath);
+				//playlist->mediaPlaylist()->load(QUrl::fromLocalFile(absFilePath), fileInfo.suffix().toStdString().data());
+			}
 		}
 	}
 	if (playlists->playlists().isEmpty()) {
 		playlists->addPlaylist();
 	}
+}
+
+void PlaylistManager::savePlaylist(int index)
+{
+	qDebug() << Q_FUNC_INFO << index;
+	emit playlistSaved(index);
 }
 
 void PlaylistManager::open()
@@ -213,12 +230,14 @@ void PlaylistManager::feedPreviewFromSaved(QItemSelection, QItemSelection)
 
 		loadPlaylists->setEnabled(true);
 		deletePlaylists->setEnabled(true);
+		exportPlaylists->setEnabled(true);
 		this->loadPreviewPlaylist(savedPlaylists);
 
 	} else if (savedPlaylists->selectionModel()->selectedIndexes().isEmpty()) {
 
 		loadPlaylists->setEnabled(false);
 		deletePlaylists->setEnabled(false);
+		exportPlaylists->setEnabled(false);
 
 	}
 }

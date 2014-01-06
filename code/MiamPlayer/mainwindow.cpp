@@ -3,6 +3,9 @@
 #include "dialogs/customizethemedialog.h"
 #include "playlists/playlist.h"
 #include "pluginmanager.h"
+#include "settings.h"
+
+#include <memory>
 
 #include <QFileSystemModel>
 #include <QStandardPaths>
@@ -59,7 +62,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeThemeDialog->loadTheme();
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
-	playlistManager = new PlaylistManager(tabPlaylists);
+
+	/// free memory
+	_sqlDatabase = new SqlDatabase();
+	///
+	playlistManager = new PlaylistManager(_sqlDatabase, tabPlaylists);
+	_librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
 	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
@@ -67,9 +75,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	tagEditor->hide();
 }
 
+MainWindow::~MainWindow()
+{
+	delete _sqlDatabase;
+}
+
 void MainWindow::init()
 {
-	_librarySqlModel = new LibrarySqlModel(this);
 	library->init(_librarySqlModel);
 	_uniqueLibrary->init(_librarySqlModel);
 
@@ -106,7 +118,7 @@ void MainWindow::init()
 	// Init the address bar
 	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
 
-	//playlistManager->init();
+    playlistManager->init();
 }
 
 /** Plugins. */
@@ -159,7 +171,6 @@ void MainWindow::setupActions()
 
 	/// TODO
 	/// Update QMenu when one switches from a playlist to another
-
 	// Link user interface
 	// Actions from the menu
     connect(actionExit, &QAction::triggered, &QApplication::quit);
@@ -270,11 +281,15 @@ void MainWindow::setupActions()
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 
 	// Playback
-	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+    connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
 	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &QDialog::open);
+
+	// Save playlist on close (if enabled)
+	connect(tabPlaylists, &TabPlaylist::aboutToSavePlaylist, playlistManager, &PlaylistManager::savePlaylist);
+	connect(playlistManager, &PlaylistManager::playlistSaved, tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::pathChanged, filesystem, &FileSystemTreeView::reloadWithNewPath);
@@ -307,8 +322,6 @@ void MainWindow::setupActions()
 			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});
-
-    playlistManager->init();
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */

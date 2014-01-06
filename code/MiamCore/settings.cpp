@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include <QDateTime>
 #include <QFile>
 #include <QGuiApplication>
 #include <QHeaderView>
@@ -234,6 +235,11 @@ qint64 Settings::playbackSeekTime() const
 	}
 }
 
+Settings::PlaylistDefaultAction Settings::playbackDefaultActionForClose() const
+{
+	return static_cast<Settings::PlaylistDefaultAction>(value("playbackDefaultActionForClose").toInt());
+}
+
 bool Settings::playbackKeepPlaylists() const
 {
 	QVariant b = value("playbackKeepPlaylists");
@@ -243,6 +249,60 @@ bool Settings::playbackKeepPlaylists() const
 		return true;
 	}
 }
+
+bool Settings::playbackRestorePlaylistsAtStartup() const
+{
+	QVariant b = value("playbackRestorePlaylistsAtStartup");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
+/*QString Settings::playlistLoad(const QFileInfo &file) const
+{
+	return value("playlists").toMap().value(file.absoluteFilePath()).toString();
+}
+
+void Settings::playlistCleanRemoved()
+{
+	QMap<QString, QVariant> playlists = this->value("playlists").toMap();
+	QMapIterator<QString, QVariant> it(playlists);
+	while (it.hasNext()) {
+		it.next();
+		QString path = it.key();
+		if (!QFile::exists(path)) {
+			playlists.remove(path);
+			playlists.remove(path + "_lastModified");
+		}
+	}
+	if (playlists.isEmpty()) {
+		this->remove("playlists");
+	}
+}
+
+bool Settings::playlistSave(const QFileInfo &fileInfo, const QString &name)
+{
+	QMap<QString, QVariant> playlists = this->value("playlists").toMap();
+	QString path = fileInfo.absoluteFilePath();
+	if (playlists.contains(path)) {
+		QDateTime previousDateTime = playlists.value(path + "_lastModified").toDateTime();
+		if (previousDateTime == fileInfo.lastModified()) {
+			return false;
+		} else {
+			playlists.insert(path, name);
+			playlists.insert(path + "_lastModified", fileInfo.lastModified());
+			this->setValue("playlists", playlists);
+			return true;
+		}
+	} else {
+		playlists.insert(path, name);
+		playlists.insert(path + "_lastModified", fileInfo.lastModified());
+		this->setValue("playlists", playlists);
+		return true;
+	}
+}*/
 
 QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
 {
@@ -407,9 +467,19 @@ void Settings::setPlaybackSeekTime(int t)
 	setValue("playbackSeekTime", t*1000);
 }
 
+void Settings::setPlaybackDefaultActionForClose(PlaylistDefaultAction action)
+{
+	setValue("playbackDefaultActionForClose", action);
+}
+
 void Settings::setPlaybackKeepPlaylists(bool b)
 {
 	setValue("playbackKeepPlaylists", b);
+}
+
+void Settings::setPlaybackRestorePlaylistsAtStartup(bool b)
+{
+	setValue("playbackRestorePlaylistsAtStartup", b);
 }
 
 void Settings::setThemeName(const QString &theme)

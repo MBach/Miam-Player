@@ -16,6 +16,7 @@
 #include <model/librarysqlmodel.h>
 
 #include "uniquelibrary.h"
+#include "sqldatabase.h"
 
 class CustomizeThemeDialog;
 
@@ -32,6 +33,7 @@ private:
 	LibrarySqlModel *_librarySqlModel;
 	QActionGroup *_viewModeGroup;
 	QAudioOutput *audioOutput;
+	SqlDatabase *_sqlDatabase;
 
 public:
 	// Play, pause, stop, etc.
@@ -39,6 +41,8 @@ public:
 	CustomizeOptionsDialog *customizeOptionsDialog;
 
 	MainWindow(QWidget *parent = 0);
+
+	virtual ~MainWindow();
 
 	void init();
 

@@ -5,6 +5,8 @@
 #include "flowlayout.h"
 
 #include <QPushButton>
+#include <QSqlRecord>
+#include <QSqlQuery>
 
 #include <QtDebug>
 
@@ -87,8 +89,11 @@ void UniqueLibrary::reset()
 
 void UniqueLibrary::updateCover(const QFileInfo &coverFileInfo)
 {
-	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?");
+	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", _sqlModel->database());
 	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
+	if (!_sqlModel->database().isOpen()) {
+		_sqlModel->database().open();
+	}
 	externalCover.exec();
 	if (externalCover.next()) {
 		QString album = externalCover.record().value(0).toString();

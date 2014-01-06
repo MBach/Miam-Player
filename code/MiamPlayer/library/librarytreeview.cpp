@@ -7,6 +7,8 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <QSqlRecord>
+#include <QSqlQuery>
 #include <QStandardPaths>
 #include <QThread>
 
@@ -130,13 +132,16 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
 {
-	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1");
+	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", sqlModel->database());
 	internalCover.addBindValue(album);
+	if (!sqlModel->database().isOpen()) {
+		sqlModel->database().open();
+	}
 	internalCover.exec();
 	if (internalCover.next()) {
 		itemAlbum->setData(absFilePath, DataCoverPath);
 	} else {
-		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?");
+		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", sqlModel->database());
 		externalCover.addBindValue(album);
 		externalCover.exec();
 		if (externalCover.next()) {
@@ -370,8 +375,11 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 
 void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 {
-	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?");
+	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", sqlModel->database());
 	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
+	if (!sqlModel->database().isOpen()) {
+		sqlModel->database().open();
+	}
 	externalCover.exec();
 	if (externalCover.next()) {
 		QString album = externalCover.record().value(0).toString();

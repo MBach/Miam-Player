@@ -39,11 +39,13 @@ public slots:
 	void changeLanguage(QModelIndex);
 
 	/** Redefined to initialize theme from settings. */
-	void open();
+	void show();
 
 	void setExternalDragDropPreference(QToolButton *toolButton);
 
 private slots:
+	void initCloseActionForPlaylists();
+
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();
 

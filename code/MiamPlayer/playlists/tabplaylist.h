@@ -5,6 +5,7 @@
 #include <QTabWidget>
 #include <QMouseEvent>
 
+#include "dialogs/closeplaylistpopup.h"
 #include "playlist.h"
 #include "../tracksnotfoundmessagebox.h"
 
@@ -29,6 +30,8 @@ private:
 	int _tabIndex;
 
 	QWeakPointer<MediaPlayer> _mediaPlayer;
+
+	ClosePlaylistPopup *_closePlaylistPopup;
 
 public:
 	/** Default constructor. */
@@ -74,7 +77,7 @@ public slots:
 	void moveTracksUp();
 
 	/** Action sent from the menu. */
-	inline void removeCurrentPlaylist() { removeTabFromCloseButton(this->tabBar()->currentIndex()); }
+	void removeCurrentPlaylist();
 
 	void removeSelectedTracks();
 
@@ -87,13 +90,17 @@ private slots:
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
 
+	void execActionFromClosePopup(QAbstractButton *action);
+
 signals:
-	void destroyed(int);
+	/** Forward the signal. */
+	void aboutToChangeMenuLabels(int);
 
 	void created();
 
-	/** Forward the signal. */
-	void aboutToChangeMenuLabels(int);
+	void destroyed(int);
+
+	void aboutToSavePlaylist(int);
 
 	void sendToTagEditor(const QList<QPersistentModelIndex> &);
 

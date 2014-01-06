@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	MainWindow window;
 	window.init();
 	window.show();
-	//window.loadPlugins();
+	window.loadPlugins();
 
 	return app.exec();
 }

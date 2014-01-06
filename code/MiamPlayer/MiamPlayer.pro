@@ -29,6 +29,7 @@ SOURCES += \
     playlists/starrating.cpp \
     playlists/tabbar.cpp \
     playlists/tabplaylist.cpp \
+    dialogs/closeplaylistpopup.cpp \
     dialogs/colordialog.cpp \
     dialogs/customizeoptionsdialog.cpp \
     dialogs/customizethemedialog.cpp \
@@ -74,6 +75,7 @@ HEADERS += \
     playlists/starrating.h \
     playlists/tabbar.h \
     playlists/tabplaylist.h \
+    dialogs/closeplaylistpopup.h \
     dialogs/colordialog.h \
     dialogs/customizeoptionsdialog.h \
     dialogs/customizethemedialog.h \
@@ -99,7 +101,8 @@ FORMS += \
     playlistmanager.ui \
     quickstart.ui \
     tagconverter.ui \
-    tageditor.ui
+    tageditor.ui \
+    closeplaylistpopup.ui
 
 OTHER_FILES += \
     stylesheets/qscrollbar.qss \

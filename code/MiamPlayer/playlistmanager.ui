@@ -14,7 +14,7 @@
    <string>Playlist Manager</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="mmmmp.qrc">
+   <iconset>
     <normaloff>:/icons/mmmmp.ico</normaloff>:/icons/mmmmp.ico</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -106,6 +106,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="exportPlaylists">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Export...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -143,8 +153,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="mmmmp.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

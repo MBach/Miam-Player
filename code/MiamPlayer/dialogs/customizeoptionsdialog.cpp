@@ -81,14 +81,32 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	}
 
 	// Fourth panel: playback
-	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
-	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackKeepPlaylists);
-
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
+	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
+
+	this->initCloseActionForPlaylists();
+	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackDefaultActionForClose(Settings::AskUserForAction); });
+	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackDefaultActionForClose(Settings::SaveOnClose); });
+	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackDefaultActionForClose(Settings::DiscardOnClose); });
+
 	if (settings->playbackKeepPlaylists()) {
 		radioButtonKeepPlaylists->setChecked(true);
 	} else {
 		radioButtonClearPlaylists->setChecked(true);
+	}
+	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackKeepPlaylists);
+
+	if (settings->playbackRestorePlaylistsAtStartup()) {
+		radioButtonRestorePlaylists->setChecked(true);
+	} else {
+		radioButtonDontRestorePlaylists->setChecked(true);
+	}
+	connect(radioButtonRestorePlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackRestorePlaylistsAtStartup);
+
+	// Fifth panel: drag and drop
+	QRadioButton *radioButtonDD = this->findChild<QRadioButton*>(settings->dragAndDropBehaviour());
+	if (radioButtonDD) {
+		radioButtonDD->setChecked(true);
 	}
 
 	if (settings->copyTracksFromPlaylist()) {
@@ -97,16 +115,10 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		radioButtonDDMovePlaylistTracks->setChecked(true);
 	}
 
-	// Fifth panel: drag and drop
 	connect(radioButtonDDOpenPopup, &QRadioButton::toggled, settings, &Settings::setDragAndDropBehaviour);
 	connect(radioButtonDDAddToLibrary, &QRadioButton::toggled, settings, &Settings::setDragAndDropBehaviour);
 	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, settings, &Settings::setDragAndDropBehaviour);
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &Settings::setCopyTracksFromPlaylist);
-
-	QRadioButton *radioButtonDD = this->findChild<QRadioButton*>(settings->dragAndDropBehaviour());
-	if (radioButtonDD) {
-		radioButtonDD->setChecked(true);
-	}
 
 	// Load the language of the application
 	QString lang = languages.value(Settings::getInstance()->language());
@@ -242,7 +254,7 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 }
 
 /** Redefined to initialize theme from settings. */
-void CustomizeOptionsDialog::open()
+void CustomizeOptionsDialog::show()
 {
 	foreach(MediaButton *b, parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
@@ -252,8 +264,9 @@ void CustomizeOptionsDialog::open()
 			button->setChecked(b->isChecked());
 		}
 	}
+	this->initCloseActionForPlaylists();
 	retranslateUi(this);
-	QDialog::open();
+	QDialog::show();
 }
 
 void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButton)
@@ -262,6 +275,22 @@ void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButt
 		radioButtonDDAddToLibrary->toggle();
 	} else {
 		radioButtonDDAddToPlaylist->toggle();
+	}
+}
+
+void CustomizeOptionsDialog::initCloseActionForPlaylists()
+{
+	qDebug() << Q_FUNC_INFO;
+	switch (Settings::getInstance()->playbackDefaultActionForClose()) {
+	case Settings::AskUserForAction:
+		radioButtonAskAction->setChecked(true);
+		break;
+	case Settings::SaveOnClose:
+		radioButtonSavePlaylist->setChecked(true);
+		break;
+	case Settings::DiscardOnClose:
+		radioButtonDiscardPlaylist->setChecked(true);
+		break;
 	}
 }
 
