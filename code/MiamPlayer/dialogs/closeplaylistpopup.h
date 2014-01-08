@@ -8,13 +8,15 @@
 class ClosePlaylistPopup : public QDialog, public Ui::ClosePlaylistPopup
 {
 	Q_OBJECT
+private:
+	int _index;
+
 public:
 	explicit ClosePlaylistPopup(QWidget *parent = 0);
 
-signals:
+	inline void setTabToClose(int index) { _index = index; }
 
-public slots:
-
+	inline const int index() const { return _index; }
 };
 
 #endif // CLOSEPLAYLISTPOPUP_H

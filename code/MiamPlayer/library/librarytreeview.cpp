@@ -83,7 +83,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 		_lod->move(mapToGlobal(pos));
 		_lod->show();
 	});
-	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::loadFromFileDB);
+	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)

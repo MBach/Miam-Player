@@ -45,6 +45,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		Settings::PlaylistDefaultAction action = settings->playbackDefaultActionForClose();
 		switch (action) {
 		case Settings::AskUserForAction:
+			_closePlaylistPopup->setTabToClose(index);
 			_closePlaylistPopup->show();
 			break;
 		case Settings::SaveOnClose:
@@ -218,14 +219,14 @@ void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
 			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::SaveOnClose);
 		}
-		emit aboutToSavePlaylist(this->tabBar()->currentIndex());
+		emit aboutToSavePlaylist(_closePlaylistPopup->index());
 		break;
 	case QDialogButtonBox::Discard:
 		qDebug() << "discard and delete";
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
 			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::DiscardOnClose);
 		}
-		this->removeTabFromCloseButton(this->tabBar()->currentIndex());
+		this->removeTabFromCloseButton(_closePlaylistPopup->index());
 		_closePlaylistPopup->hide();
 		break;
 	default:

@@ -18,9 +18,11 @@ private:
 public:
 	explicit LibrarySqlModel(QSqlDatabase *db, QObject *parent = 0);
 
+private:
 	void loadFromFileDB();
 
 public slots:
+	void load();
 	void rebuild();
 
 private slots:

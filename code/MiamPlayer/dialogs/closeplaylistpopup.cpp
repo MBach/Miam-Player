@@ -3,7 +3,7 @@
 #include <QPushButton>
 
 ClosePlaylistPopup::ClosePlaylistPopup(QWidget *parent) :
-	QDialog(parent)
+	QDialog(parent), _index(0)
 {
 	setupUi(this);
 

@@ -9,7 +9,7 @@
 #include <QtDebug>
 
 LibrarySqlModel::LibrarySqlModel(QSqlDatabase *db, QObject *parent) :
-	QSqlTableModel(parent, *db), _musicSearchEngine(new MusicSearchEngine(this))
+	QSqlTableModel(parent, *db), _musicSearchEngine(new MusicSearchEngine())
 {
 	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &LibrarySqlModel::progressChanged);
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &LibrarySqlModel::saveCoverRef);
@@ -26,7 +26,9 @@ LibrarySqlModel::LibrarySqlModel(QSqlDatabase *db, QObject *parent) :
 void LibrarySqlModel::loadFromFileDB()
 {
 	this->beginResetModel();
-	database().open();
+	if (!database().isOpen()) {
+		database().open();
+	}
 
 	QSqlQuery qLoadFileDB = database().exec("SELECT * FROM tracks");
 	while (qLoadFileDB.next()) {
@@ -35,6 +37,8 @@ void LibrarySqlModel::loadFromFileDB()
 	database().close();
 	this->endResetModel();
 }
+
+#include <QThread>
 
 void LibrarySqlModel::rebuild()
 {
@@ -54,7 +58,18 @@ void LibrarySqlModel::rebuild()
 	database().exec("CREATE INDEX indexPath ON tracks (path)");
 
 	// Foreach file, insert tuple
+	QThread t;
+	_musicSearchEngine->moveToThread(&t);
 	_musicSearchEngine->doSearch();
+}
+
+void LibrarySqlModel::load()
+{
+	if (database().open() && database().tables().contains("tracks")) {
+		this->loadFromFileDB();
+	} else {
+		this->rebuild();
+	}
 }
 
 /** Reads an external picture which is close to multimedia files (same folder). */

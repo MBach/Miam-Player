@@ -162,11 +162,7 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 void CustomizeOptionsDialog::closeEvent(QCloseEvent *)
 {
 	Settings *settings = Settings::getInstance();
-    QString libraryPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation).append(QDir::separator()).append("library.mmmmp");
-	if (settings->musicLocations().isEmpty() && QFile::exists(libraryPath)) {
-        QFile::remove(libraryPath);
-	}
-
+	QStringList savedLocations = settings->musicLocations();
 	QStringList newLocations;
 	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
 		QString newLocation = listWidgetMusicLocations->item(i)->text();
@@ -175,10 +171,9 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent *)
 		}
 	}
 	newLocations.sort();
+	savedLocations.sort();
 
 	bool musicLocationsAreIdenticals = true;
-	QStringList savedLocations = settings->musicLocations();
-	savedLocations.sort();
 	if (savedLocations.size() == newLocations.size()) {
 		for (int i = 0; i < savedLocations.count() && musicLocationsAreIdenticals; i++) {
 			musicLocationsAreIdenticals = (QString::compare(savedLocations.at(i), newLocations.at(i)) == 0);
@@ -188,7 +183,6 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent *)
 	}
 
 	if (!musicLocationsAreIdenticals) {
-		qDebug() << Q_FUNC_INFO << newLocations.isEmpty();
 		settings->setMusicLocations(newLocations);
 		settings->sync();
 		emit musicLocationsHaveChanged(newLocations.isEmpty());
@@ -210,7 +204,6 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 	if (existingItem >= 0) {
 		delete listWidgetMusicLocations->takeItem(existingItem);
 	}
-	qDebug() << "adding:" << musicLocation;
 	listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
 	pushButtonDeleteLocation->setEnabled(true);
 }
