@@ -6,6 +6,8 @@
 
 #include <QtDebug>
 
+#include <QSqlRecord>
+
 SqlDatabase::SqlDatabase()
 	: QSqlDatabase("QSQLITE")
 {
@@ -18,7 +20,12 @@ SqlDatabase::SqlDatabase()
 	setDatabaseName(dbPath);
 
 	if (open()) {
-		exec("CREATE TABLE IF NOT EXISTS playlists (absPath varchar(255), name varchar(255), lastModified datetime, hash varchar(255))");
+		exec("CREATE TABLE IF NOT EXISTS playlists (absPath varchar(255), name varchar(255), hash varchar(255))");
 		close();
+	}
+	open();
+	QSqlQuery qLoadFileDB = exec("SELECT * FROM playlists");
+	while (qLoadFileDB.next()) {
+		qDebug() << "SqlDatabase::SqlDatabase() saved playlist reference" << qLoadFileDB.record().value(0).toString() << qLoadFileDB.record().value(1).toString() << qLoadFileDB.record().value(2).toString();
 	}
 }

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStack>
 #include <QtMultimedia/QAudioOutput>
 
 #include "ui_mainwindow.h"
@@ -33,7 +34,9 @@ private:
 	LibrarySqlModel *_librarySqlModel;
 	QActionGroup *_viewModeGroup;
 	QAudioOutput *audioOutput;
-	SqlDatabase *_sqlDatabase;
+	SqlDatabase _sqlDatabase;
+
+	QStack<int> _keys;
 
 public:
 	// Play, pause, stop, etc.
@@ -42,7 +45,7 @@ public:
 
 	MainWindow(QWidget *parent = 0);
 
-	virtual ~MainWindow();
+	//virtual ~MainWindow();
 
 	void init();
 
@@ -62,13 +65,10 @@ public:
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	void changeEvent(QEvent *event);
-
 	void closeEvent(QCloseEvent *event);
-
 	void dropEvent(QDropEvent *event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dragMoveEvent(QDragMoveEvent *event);
-
 	void moveEvent(QMoveEvent *);
 
 public slots:

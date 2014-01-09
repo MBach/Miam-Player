@@ -5,11 +5,10 @@
 #include "pluginmanager.h"
 #include "settings.h"
 
-#include <memory>
-
 #include <QFileSystemModel>
-#include <QStandardPaths>
 #include <QMessageBox>
+#include <QSqlQuery>
+#include <QStandardPaths>
 #include <QtMultimedia/QAudioDeviceInfo>
 
 #include <QtDebug>
@@ -64,8 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
 	/// free memory
-	_sqlDatabase = new SqlDatabase();
-	///
+	//_sqlDatabase(SqlDatabase());
 	playlistManager = new PlaylistManager(_sqlDatabase, tabPlaylists);
 	_librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
 	dragDropDialog = new DragDropDialog(this);
@@ -75,10 +73,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	tagEditor->hide();
 }
 
-MainWindow::~MainWindow()
+/*MainWindow::~MainWindow()
 {
 	delete _sqlDatabase;
-}
+}*/
 
 void MainWindow::init()
 {
@@ -99,15 +97,7 @@ void MainWindow::init()
 	if (isEmpty) {
 		quickStart->searchMultimediaFiles();
 	} else {
-		QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-		QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
-		if (QFileInfo::exists(dbPath)) {
-			qDebug() << "a previous db file was found, just load it";
-			_librarySqlModel->loadFromFileDB();
-		} else {
-			qDebug() << "no db found, scan the hard drive";
-			_librarySqlModel->rebuild();
-		}
+		_librarySqlModel->load();
 	}
 
 	Settings *settings = Settings::getInstance();
@@ -146,6 +136,11 @@ void MainWindow::setupActions()
 		actionScanLibrary->setDisabled(libraryIsEmpty);
 		widgetSearchBar->setHidden(libraryIsEmpty);
 		if (libraryIsEmpty) {
+			// Delete table tracks if such a previous one was found
+			if (_sqlDatabase.open()) {
+				_sqlDatabase.exec("DROP TABLE tracks");
+				_sqlDatabase.close();
+			}
 			quickStart->searchMultimediaFiles();
 		} else {
 			_librarySqlModel->rebuild();
@@ -288,7 +283,7 @@ void MainWindow::setupActions()
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &QDialog::open);
 
 	// Save playlist on close (if enabled)
-	connect(tabPlaylists, &TabPlaylist::aboutToSavePlaylist, playlistManager, &PlaylistManager::savePlaylist);
+	connect(tabPlaylists, &TabPlaylist::aboutToSavePlaylist, playlistManager, &PlaylistManager::saveAndRemovePlaylist);
 	connect(playlistManager, &PlaylistManager::playlistSaved, tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);

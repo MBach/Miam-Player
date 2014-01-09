@@ -36,13 +36,12 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButto
 		}
 
 		// Also, send to the playlist the right enumeration
-		/// FIXME
-		/*connect(i.value(), &QPushButton::clicked, [=]() {
-			if (_tabPlaylists->mediaPlayer()->playlist() == NULL) {
-				_tabPlaylists->mediaPlayer()->setPlaylist(_tabPlaylists->currentPlayList()->mediaPlaylist());
+		connect(i.value(), &QPushButton::clicked, [=]() {
+			if (_tabPlaylists->mediaPlayer().data()->playlist() == NULL) {
+				_tabPlaylists->mediaPlayer().data()->setPlaylist(_tabPlaylists->currentPlayList()->mediaPlaylist());
 			}
-			_tabPlaylists->mediaPlayer()->playlist()->setPlaybackMode(i.key()->mode());
-		});*/
+			_tabPlaylists->mediaPlayer().data()->playlist()->setPlaybackMode(i.key()->mode());
+		});
 	}
 }
 

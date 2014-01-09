@@ -10,6 +10,9 @@
 #include <QSqlDatabase>
 #include <QStandardItem>
 
+/**
+ * \brief The PlaylistManager class can save, load and export playlists in m3u format.
+ */
 class PlaylistManager : public QDialog, public Ui::PlaylistManager
 {
 	Q_OBJECT
@@ -19,19 +22,19 @@ private:
 
 	QMap<int, QStandardItem *> map;
 
-	QSqlDatabase *_db;
+	QSqlDatabase _db;
 
 public:
-	PlaylistManager(QSqlDatabase *db, TabPlaylist *tabPlaylist);
+	explicit PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylist);
 
 	bool eventFilter(QObject *obj, QEvent *event);
 
 	void init();
 
-	void savePlaylist(int index);
+	void saveAndRemovePlaylist(int index);
 
 private:
-	void loadPreviewPlaylist(QListView *list);
+	bool savePlaylist(int index);
 
 public slots:
 	void open();

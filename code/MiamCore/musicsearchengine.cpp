@@ -37,6 +37,7 @@ void MusicSearchEngine::doSearch()
 	bool aCoverWasFound = false;
 	QString coverPath;
 
+	///XXX: improve with setNameFilters (*.mp3 != entry in FileHelper::suffixes())
 	foreach (QDir location, savedLocations) {
 		QDirIterator it(location, QDirIterator::Subdirectories);
 		while (it.hasNext()) {

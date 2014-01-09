@@ -42,18 +42,22 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(_closePlaylistPopup->buttonBox, &QDialogButtonBox::clicked, this, &TabPlaylist::execActionFromClosePopup);
 
 	connect(this, &QTabWidget::tabCloseRequested, [=] (int index) {
-		Settings::PlaylistDefaultAction action = settings->playbackDefaultActionForClose();
-		switch (action) {
-		case Settings::AskUserForAction:
-			_closePlaylistPopup->setTabToClose(index);
-			_closePlaylistPopup->show();
-			break;
-		case Settings::SaveOnClose:
-			emit aboutToSavePlaylist(index);
-			break;
-		case Settings::DiscardOnClose:
+		if (playlists().at(index)->mediaPlaylist()->isEmpty()) {
 			this->removeTabFromCloseButton(index);
-			break;
+		} else {
+			Settings::PlaylistDefaultAction action = settings->playbackDefaultActionForClose();
+			switch (action) {
+			case Settings::AskUserForAction:
+				_closePlaylistPopup->setTabToClose(index);
+				_closePlaylistPopup->show();
+				break;
+			case Settings::SaveOnClose:
+				emit aboutToSavePlaylist(index);
+				break;
+			case Settings::DiscardOnClose:
+				this->removeTabFromCloseButton(index);
+				break;
+			}
 		}
 	});
 

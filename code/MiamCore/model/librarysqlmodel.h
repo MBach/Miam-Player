@@ -16,7 +16,7 @@ private:
 	MusicSearchEngine *_musicSearchEngine;
 
 public:
-	explicit LibrarySqlModel(QSqlDatabase *db, QObject *parent = 0);
+	explicit LibrarySqlModel(const QSqlDatabase &db, QObject *parent = 0);
 
 private:
 	void loadFromFileDB();

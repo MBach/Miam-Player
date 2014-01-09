@@ -8,8 +8,8 @@
 
 #include <QtDebug>
 
-LibrarySqlModel::LibrarySqlModel(QSqlDatabase *db, QObject *parent) :
-	QSqlTableModel(parent, *db), _musicSearchEngine(new MusicSearchEngine())
+LibrarySqlModel::LibrarySqlModel(const QSqlDatabase &db, QObject *parent) :
+	QSqlTableModel(parent, db), _musicSearchEngine(new MusicSearchEngine())
 {
 	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &LibrarySqlModel::progressChanged);
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &LibrarySqlModel::saveCoverRef);
