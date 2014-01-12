@@ -1,15 +1,10 @@
 #include "tabplaylist.h"
 
-#include <QAudio>
-#include <QApplication>
 #include <QFileSystemModel>
-#include <QHeaderView>
+#include <QStackedLayout>
 
 #include "tabbar.h"
-#include "../treeview.h"
 #include "settings.h"
-
-#include <QEventLoop>
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
@@ -67,6 +62,34 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	//});
 }
 
+/** Get the current playlist. */
+Playlist* TabPlaylist::currentPlayList() const
+{
+	return this->widget(this->tabBar()->currentIndex())->findChild<Playlist*>();
+}
+
+/** Redefined to forward events to children. */
+bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
+{
+	//qDebug() << Q_FUNC_INFO << obj->objectName() << event->type();
+	if (event->type() == QEvent::DragEnter) {
+		event->accept();
+		return true;
+	} else if (event->type() == QEvent::Drop) {
+		/// FIXME
+		currentPlayList()->forceDrop(static_cast<QDropEvent*>(event));
+		return true;
+	}
+	return QTabWidget::eventFilter(obj, event);
+}
+
+/** Get the playlist at index. */
+Playlist* TabPlaylist::playlist(int index)
+{
+	return this->widget(index)->findChild<Playlist*>();
+}
+
+/** Setter. */
 void TabPlaylist::setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer)
 {
 	_mediaPlayer = mediaPlayer;
@@ -91,23 +114,41 @@ void TabPlaylist::changeEvent(QEvent *event)
 /** Add a new playlist tab. */
 Playlist* TabPlaylist::addPlaylist()
 {
-	QString newPlaylistName = tr("Playlist ").append(QString::number(count()));
+	QString newPlaylistName = tr("Playlist %1").arg(count());
 
 	// Then append a new empty playlist to the others
-	Playlist *p = new Playlist(this, _mediaPlayer);
-	int i = insertTab(count(), p, newPlaylistName);
+	QWidget *stackedWidget = new QWidget(this);
+	stackedWidget->setObjectName("stackedWidget");
+	stackedWidget->setAcceptDrops(true);
+	stackedWidget->installEventFilter(this);
+	Playlist *p = new Playlist(_mediaPlayer, this);
+	p->setAcceptDrops(true);
+	p->installEventFilter(this);
 
-	// If there's a custom stylesheet on the playlist, copy it from the previous one
-	if (i > 1) {
-		Playlist *previous = this->playlist(i - 1);
-		p->setStyleSheet(previous->styleSheet());
-		/// FIXME: stylesheet should be for Class, not instances
-		p->horizontalHeader()->setStyleSheet(previous->horizontalHeader()->styleSheet());
-	}
+	QStackedLayout *stackedLayout = new QStackedLayout(stackedWidget);
+	stackedLayout->setStackingMode(QStackedLayout::StackAll);
+
+	QLabel *icon = new QLabel;
+	icon->setAlignment(Qt::AlignCenter);
+	icon->setPixmap(QPixmap(":/icons/emptyPlaylist"));
+
+	QLabel *label = new QLabel(tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
+	label->setAlignment(Qt::AlignCenter);
+
+	QWidget *w = new QWidget(this);
+	QVBoxLayout *vboxLayout = new QVBoxLayout(w);
+	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	vboxLayout->addWidget(icon);
+	vboxLayout->addWidget(label);
+	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+
+	stackedLayout->addWidget(w);
+	stackedLayout->addWidget(p);
+
+	int i = insertTab(count(), stackedWidget, newPlaylistName);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
-	emit created();
 	return p;
 }
 
@@ -141,6 +182,9 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
+	QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
+	stackedLayout->setCurrentIndex(1);
+	stackedLayout->setStackingMode(QStackedLayout::StackOne);
 	currentPlayList()->insertMedias(rowIndex, tracks);
 }
 
@@ -168,13 +212,17 @@ void TabPlaylist::removeSelectedTracks()
 {
 	if (currentPlayList()) {
 		currentPlayList()->removeSelectedTracks();
+		if (currentPlayList()->mediaPlaylist()->isEmpty()) {
+			QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
+			stackedLayout->setCurrentIndex(0);
+			stackedLayout->setStackingMode(QStackedLayout::StackAll);
+		}
 	}
 }
 
 /** Remove a playlist when clicking on a close button in the corner. */
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
-	qDebug() << Q_FUNC_INFO;
 	// Don't delete the first tab, if it's the last one remaining
 	if (index > 0 || (index == 0 && count() > 2)) {
 		// If the playlist we want to delete has no more right tab, then pick the left tab
@@ -184,12 +232,14 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		Playlist *p = playlist(index);
 		this->removeTab(index);
 		delete p;
-		emit destroyed(index);
 	} else {
 		// Clear the content of first tab
 		currentPlayList()->mediaPlaylist()->clear();
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount());
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
+		QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(0)->layout());
+		stackedLayout->setCurrentIndex(0);
+		stackedLayout->setStackingMode(QStackedLayout::StackAll);
 	}
 }
 

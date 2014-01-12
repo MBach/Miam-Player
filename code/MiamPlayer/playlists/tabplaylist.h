@@ -14,6 +14,11 @@
 //#include <QFileSystemWatcher>
 #include <mediaplayer.h>
 
+/**
+ * \brief		The TabPlaylist class is used to manage mutiple playlists in the MainWindow class.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class TabPlaylist : public QTabWidget
 {
 	Q_OBJECT
@@ -21,8 +26,6 @@ class TabPlaylist : public QTabWidget
 private:
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
-
-	QString _nextAction;
 
 	//QFileSystemWatcher *_watcher;
 
@@ -38,12 +41,15 @@ public:
 	TabPlaylist(QWidget *parent = 0);
 
 	/** Get the current playlist. */
-	inline Playlist *currentPlayList() const { return qobject_cast<Playlist *>(this->currentWidget()); }
+	Playlist *currentPlayList() const;
+
+	/** Redefined to forward events to children. */
+	virtual bool eventFilter(QObject *obj, QEvent *event);
 
 	inline QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
 	/** Get the playlist at index. */
-	inline Playlist *playlist(int index) { return qobject_cast<Playlist *>(this->widget(index)); }
+	Playlist *playlist(int index);
 
 	inline QList<Playlist *> playlists() {
 		QList<Playlist*> _playlists;
@@ -53,6 +59,7 @@ public:
 		return _playlists;
 	}
 
+	/** Setter. */
 	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
 protected:
@@ -95,10 +102,6 @@ private slots:
 signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
-
-	void created();
-
-	void destroyed(int);
 
 	void aboutToSavePlaylist(int);
 

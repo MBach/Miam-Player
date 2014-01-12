@@ -50,7 +50,7 @@ public:
 				 RATINGS = 5,
 				 YEAR = 6};
 
-	Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer);
+	Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
 	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
 
@@ -59,6 +59,8 @@ public:
 	void insertMedias(int rowIndex, const QStringList &tracks);
 
 	QSize minimumSizeHint() const;
+
+	inline void forceDrop(QDropEvent *e) { this->dropEvent(e); }
 
 protected:
 	/** Redefined to display a small context menu in the view. */

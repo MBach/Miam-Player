@@ -22,7 +22,7 @@
 
 #include <QApplication>
 
-Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
+Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL)
 {
 	_playlistModel = new PlaylistModel(this);
@@ -82,7 +82,7 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 	});
 
 	// Load a playlist at startup
-	connect(_playlistModel->mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
+	/*connect(_playlistModel->mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
 		QList<QMediaContent> medias;
 		for (int i = 0; i < _playlistModel->mediaPlaylist()->mediaCount(); i++) {
 			medias.append(_playlistModel->mediaPlaylist()->media(i));
@@ -91,7 +91,7 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 		this->resizeColumnToContents(TRACK_NUMBER);
 		this->resizeColumnToContents(RATINGS);
 		this->resizeColumnToContents(YEAR);
-	});
+	});*/
 
 	// Context menu on tracks
 	_trackProperties = new QMenu(this);
@@ -128,6 +128,16 @@ Playlist::Playlist(QWidget *parent, QWeakPointer<MediaPlayer> mediaPlayer) :
 				_previouslySelectedRows.append(i);
 			}
 		}
+	});
+
+	connect(mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
+		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
+			qDebug() << "creating new row for" << mediaPlaylist()->media(i).canonicalUrl();
+			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
+		}
+	});
+	connect(mediaPlaylist(), &QMediaPlaylist::loadFailed, [=] () {
+		qDebug() << "unable to load playlist :(";
 	});
 }
 

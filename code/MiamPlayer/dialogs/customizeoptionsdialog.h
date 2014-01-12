@@ -39,7 +39,7 @@ public slots:
 	void changeLanguage(QModelIndex);
 
 	/** Redefined to initialize theme from settings. */
-	void show();
+	void open();
 
 	void setExternalDragDropPreference(QToolButton *toolButton);
 

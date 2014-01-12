@@ -364,6 +364,7 @@ void CustomizeThemeDialog::open()
 		labelLibraryDelegatesState->setText(tr("Favorites are currently disabled"));
 	}
 	QDialog::open();
+	this->activateWindow();
 }
 
 void CustomizeThemeDialog::openChooseIconDialog()

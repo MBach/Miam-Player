@@ -8,6 +8,7 @@
 #include "../playlists/tabplaylist.h"
 
 #include <QSqlDatabase>
+#include <QStackedLayout>
 #include <QStandardItem>
 
 /**
@@ -20,9 +21,9 @@ class PlaylistManager : public QDialog, public Ui::PlaylistManager
 private:
 	TabPlaylist *playlists;
 
-	QMap<int, QStandardItem *> map;
-
 	QSqlDatabase _db;
+
+	QStackedLayout *_stackLayout;
 
 public:
 	explicit PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylist);
@@ -34,26 +35,38 @@ public:
 	void saveAndRemovePlaylist(int index);
 
 private:
+	void clearPreview(bool aboutToInsertItems = true);
+
+	QString getPlaylistName(const QString &path);
+
+	void loadPlaylist(const QString &path);
+
 	bool savePlaylist(int index);
 
 public slots:
+	/** Redefined: clean preview area, populate once again lists. */
 	void open();
 
 private slots:
-	void clearPlaylist(int i);
-	void savePlaylists();
-	void updatePlaylists();
-
 	void deleteSavedPlaylists();
+
+	void dropAutoSavePlaylists(const QModelIndex &, int start, int end);
+
 	void feedPreviewFromSaved(QItemSelection, QItemSelection);
+
 	void feedPreviewFromUnsaved(QItemSelection, QItemSelection);
+
+	/** Load every selected playlists. */
 	void loadSavedPlaylists();
 
-	void test(const QModelIndex &, int start, int end);
+	/** Save all playlists when exiting the application (if enabled). */
+	void savePlaylists();
+
+	/** Update saved and unsaved playlists when one is adding a new one. Also used at startup. */
+	void updatePlaylists();
 
 signals:
 	void playlistSaved(int);
-
 };
 
 #endif // PLAYLISTMANAGER_H

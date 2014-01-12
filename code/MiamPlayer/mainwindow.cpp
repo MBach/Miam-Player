@@ -73,11 +73,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	tagEditor->hide();
 }
 
-/*MainWindow::~MainWindow()
-{
-	delete _sqlDatabase;
-}*/
-
 void MainWindow::init()
 {
 	library->init(_librarySqlModel);
@@ -171,23 +166,17 @@ void MainWindow::setupActions()
     connect(actionExit, &QAction::triggered, &QApplication::quit);
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
-	connect(actionShowCustomize, &QAction::triggered, [=] {
-		customizeThemeDialog->show();
-		customizeThemeDialog->activateWindow();
+	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &CustomizeThemeDialog::open);
+	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
+	connect(actionAboutM4P, &QAction::triggered, [=] () {
+		QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
+		QMessageBox::about(this, QString("Madame MiamMiam's Music Player v").append(qApp->applicationVersion()), message);
 	});
-	connect(actionShowOptions, &QAction::triggered, [=] {
-		customizeOptionsDialog->show();
-		customizeOptionsDialog->activateWindow();
-	});
-	connect(actionAboutM4P, &QAction::triggered, this, &MainWindow::aboutM4P);
     connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
 
 	// Quick Start
-	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, [=] () {
-		customizeOptionsDialog->listWidget->setCurrentRow(0);
-		customizeOptionsDialog->open();
-	});
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::show);
 
 	// Select only folders that are checked by one
 	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
@@ -280,7 +269,7 @@ void MainWindow::setupActions()
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
 	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
-	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &QDialog::open);
+	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
 
 	// Save playlist on close (if enabled)
 	connect(tabPlaylists, &TabPlaylist::aboutToSavePlaylist, playlistManager, &PlaylistManager::saveAndRemovePlaylist);
@@ -396,13 +385,6 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 			button->setShortcut(QKeySequence(keySequence));
 		}
 	}
-}
-
-/** Displays a simple message box about MmeMiamMiamMusicPlayer. */
-void MainWindow::aboutM4P()
-{
-	QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
-	QMessageBox::about(this, QString("Madame MiamMiam's Music Player v").append(qApp->applicationVersion()), message);
 }
 
 void MainWindow::toggleTagEditor(bool b)

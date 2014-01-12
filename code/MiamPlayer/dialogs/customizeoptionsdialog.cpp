@@ -253,8 +253,9 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 }
 
 /** Redefined to initialize theme from settings. */
-void CustomizeOptionsDialog::show()
+void CustomizeOptionsDialog::open()
 {
+	listWidget->setCurrentRow(0);
 	foreach(MediaButton *b, parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
 		if (button) {
@@ -265,7 +266,8 @@ void CustomizeOptionsDialog::show()
 	}
 	this->initCloseActionForPlaylists();
 	retranslateUi(this);
-	QDialog::show();
+	QDialog::open();
+	this->activateWindow();
 }
 
 void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButton)
