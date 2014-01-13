@@ -853,6 +853,8 @@
         <comment>Number of tracks to remove</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -860,12 +862,16 @@
         <comment>Move upward</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
@@ -879,6 +885,14 @@
     </message>
     <message>
         <source>Unique library Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Hide menus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Make the player borderless</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -944,6 +958,19 @@
     </message>
     <message>
         <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1058,11 +1085,12 @@
 <context>
     <name>TabPlaylist</name>
     <message>
-        <source>Playlist </source>
+        <source>Playlist %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playlist %1</source>
+        <source>This playlist is empty.
+Select or drop tracks from your library or any external location.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

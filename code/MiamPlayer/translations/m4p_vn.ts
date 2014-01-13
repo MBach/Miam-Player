@@ -881,6 +881,14 @@
         <source>Unique library Mode</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Hide menus</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Make the player borderless</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -944,6 +952,19 @@
     </message>
     <message>
         <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1058,11 +1079,12 @@
 <context>
     <name>TabPlaylist</name>
     <message>
-        <source>Playlist </source>
+        <source>Playlist %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Playlist %1</source>
+        <source>This playlist is empty.
+Select or drop tracks from your library or any external location.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

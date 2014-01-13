@@ -885,6 +885,14 @@
         <source>Unique library Mode</source>
         <translation>Type Bibliothèque Unique</translation>
     </message>
+    <message>
+        <source>&amp;Hide menus</source>
+        <translation>&amp;Cacher la barre de menus</translation>
+    </message>
+    <message>
+        <source>&amp;Make the player borderless</source>
+        <translation>&amp;Enlever les bords de la fenêtre</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -949,6 +957,20 @@
     <message>
         <source>Export...</source>
         <translation>Exporter...</translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation>Titre (Artiste - Album)</translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation>La zone de prévisualisation est vide.
+Sélectionnez une liste de lecteur pour afficher ses 30 premières pistes.</translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
+        <translation>Et d&apos;autres pistes...</translation>
     </message>
 </context>
 <context>
@@ -1062,12 +1084,14 @@
 <context>
     <name>TabPlaylist</name>
     <message>
-        <source>Playlist </source>
-        <translation>Liste de lecture </translation>
-    </message>
-    <message>
         <source>Playlist %1</source>
         <translation>Liste de lecture %1</translation>
+    </message>
+    <message>
+        <source>This playlist is empty.
+Select or drop tracks from your library or any external location.</source>
+        <translation>Cette liste de lecture est vide.
+Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une application externe.</translation>
     </message>
 </context>
 <context>
