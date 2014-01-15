@@ -853,7 +853,6 @@
         <comment>Number of tracks to remove</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
-            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -861,14 +860,12 @@
         <comment>Move upward</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
-            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation type="unfinished">
-            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
@@ -968,6 +965,33 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>And more tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot export the selected playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

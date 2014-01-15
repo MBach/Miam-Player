@@ -63,9 +63,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		}
 
 		// Add a new country flag
-		QStandardItem *languageItem = new QStandardItem();
-		languageItem->setData(i, Qt::DisplayRole);
-		languageItem->setData(i, Qt::UserRole+1);
+		QStandardItem *languageItem = new QStandardItem(i);
 		languageItem->setIcon(QIcon(dir.filePath(i)));
 		languageModel->appendRow(languageItem);
 
@@ -243,7 +241,7 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 
 	// If the language is successfully loaded, tells every widget that they need to be redisplayed
 	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
-		settings->setLanguage(lang);
+		settings->setLanguage(index.data().toString());
 		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 		QApplication::installTranslator(&customTranslator);
 		QApplication::installTranslator(&defaultQtTranslator);
@@ -281,7 +279,6 @@ void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButt
 
 void CustomizeOptionsDialog::initCloseActionForPlaylists()
 {
-	qDebug() << Q_FUNC_INFO;
 	switch (Settings::getInstance()->playbackDefaultActionForClose()) {
 	case Settings::AskUserForAction:
 		radioButtonAskAction->setChecked(true);

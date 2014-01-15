@@ -63,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
 	/// free memory
-	//_sqlDatabase(SqlDatabase());
 	playlistManager = new PlaylistManager(_sqlDatabase, tabPlaylists);
 	_librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
 	dragDropDialog = new DragDropDialog(this);
@@ -306,16 +305,19 @@ void MainWindow::setupActions()
 			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});
+
+	connect(qApp, &QApplication::aboutToQuit, [=] { _sqlDatabase.cleanBeforeQuit(); });
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
 void MainWindow::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
-		retranslateUi(this);
-		quickStart->retranslateUi(quickStart);
-		customizeThemeDialog->retranslateUi(customizeThemeDialog);
+		this->retranslateUi(this);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
+		customizeThemeDialog->retranslateUi(customizeThemeDialog);
+		quickStart->retranslateUi(quickStart);
+		playlistManager->retranslateUi(playlistManager);
 		tagEditor->retranslateUi(tagEditor);
 
 		// (need to be tested with Arabic language)

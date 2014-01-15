@@ -1,12 +1,12 @@
 #include "sqldatabase.h"
 
+#include <QApplication>
 #include <QDir>
+#include <QSqlRecord>
 #include <QSqlQuery>
 #include <QStandardPaths>
 
 #include <QtDebug>
-
-#include <QSqlRecord>
 
 SqlDatabase::SqlDatabase()
 	: QSqlDatabase("QSQLITE")
@@ -23,9 +23,28 @@ SqlDatabase::SqlDatabase()
 		exec("CREATE TABLE IF NOT EXISTS playlists (absPath varchar(255), name varchar(255), hash varchar(255))");
 		close();
 	}
-	open();
-	QSqlQuery qLoadFileDB = exec("SELECT * FROM playlists");
-	while (qLoadFileDB.next()) {
-		qDebug() << "SqlDatabase::SqlDatabase() saved playlist reference" << qLoadFileDB.record().value(0).toString() << qLoadFileDB.record().value(1).toString() << qLoadFileDB.record().value(2).toString();
+}
+
+/** Resynchronize table Playlists in case one has deleted some files. */
+void SqlDatabase::cleanBeforeQuit()
+{
+	if (!open()) {
+		open();
 	}
+	QSqlQuery qLoadFileDB = exec("SELECT absPath FROM playlists");
+	QStringList deletedPlaylists;
+	while (qLoadFileDB.next()) {
+		qDebug() << "saved playlist reference" << qLoadFileDB.record().value(0).toString();
+		QString playlist = qLoadFileDB.record().value(0).toString();
+		if (!QFile::exists(playlist)) {
+			deletedPlaylists << QString("'" + playlist + "'");
+		}
+	}
+	if (!deletedPlaylists.isEmpty()) {
+		exec("DELETE FROM playlists WHERE absPath IN (" + deletedPlaylists.join(',') + ")");
+		qDebug() << "delete usless references";
+	} else {
+		qDebug() << "ok, db is clean";
+	}
+	close();
 }

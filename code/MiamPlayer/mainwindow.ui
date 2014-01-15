@@ -509,6 +509,9 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
   </action>
   <action name="actionOpen">
    <property name="enabled">
@@ -569,6 +572,9 @@
   <action name="actionDeleteCurrentPlaylist">
    <property name="text">
     <string>&amp;Delete current playlist</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionShowHelp">

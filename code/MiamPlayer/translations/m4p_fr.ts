@@ -972,6 +972,35 @@ Sélectionnez une liste de lecteur pour afficher ses 30 premières pistes.</tran
         <source>And more tracks...</source>
         <translation>Et d&apos;autres pistes...</translation>
     </message>
+    <message numerus="yes">
+        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
+        <translation>
+            <numerusform>Vous êtes sur le point de supprimer %n liste de lecture. Êtes-vous sûr de vouloir continuer ?</numerusform>
+            <numerusform>Vous êtes sur le point de supprimer %n listes de lecture. Êtes-vous sûr de vouloir continuer ?</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation>Exporter des listes de lecture</translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation>Liste de lecture (*.m3u8)</translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation>Malheureusement, une erreur s&apos;est produite lorsque MmeMiamMiam a essayé d&apos;exporter vers &apos;%2&apos; la liste de lecture &apos;%1&apos;.
+Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&apos;il vous plaît ?</translation>
+    </message>
+    <message>
+        <source>Cannot export the selected playlist</source>
+        <translation>Impossible d&apos;exporter la liste de lecture sélectionnée</translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>

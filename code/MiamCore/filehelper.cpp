@@ -37,7 +37,6 @@ FileHelper::FileHelper(const QMediaContent &track)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 	if (!b) {
-		qDebug() << "second chance to load" << track.canonicalUrl();
 		init(QDir::toNativeSeparators(track.canonicalUrl().toLocalFile()));
 	}
 }
@@ -52,7 +51,6 @@ bool FileHelper::init(const QString &filePath)
 	_fileInfo = QFileInfo(filePath);
 	QString suffix = _fileInfo.suffix().toLower();
 	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
-	qDebug() << "init" << filePath << fp;
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
 		fileType = APE;

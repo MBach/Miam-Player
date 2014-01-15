@@ -62,6 +62,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	//});
 }
 
+
 /** Get the current playlist. */
 Playlist* TabPlaylist::currentPlayList() const
 {
@@ -100,14 +101,14 @@ void TabPlaylist::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
 		// No translation for the (+) tab button
-		for (int i = 0; i < count() - 1; i++) {
-			QString playlistName = tr("Playlist ");
-			playlistName.append(QString::number(i + 1));
-			if (tabText(i) == playlistName) {
-				this->setTabText(i, playlistName);
+		for (int i = 0; i < playlists().count(); i ++) {
+			foreach (QLabel *label, widget(i)->findChildren<QLabel*>()) {
+				if (label && !label->text().isEmpty()) {
+					label->setText(QApplication::translate("TabPlaylist", label->text().toStdString().data()));
+				}
 			}
 		}
-		_closePlaylistPopup->retranslateUi(_closePlaylistPopup);
+		_closePlaylistPopup->retranslateUi(_closePlaylistPopup);		
 	}
 }
 
@@ -118,7 +119,6 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Then append a new empty playlist to the others
 	QWidget *stackedWidget = new QWidget(this);
-	stackedWidget->setObjectName("stackedWidget");
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
@@ -134,6 +134,7 @@ Playlist* TabPlaylist::addPlaylist()
 
 	QLabel *label = new QLabel(tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
 	label->setAlignment(Qt::AlignCenter);
+	label->setWordWrap(true);
 
 	QWidget *w = new QWidget(this);
 	QVBoxLayout *vboxLayout = new QVBoxLayout(w);
@@ -146,6 +147,14 @@ Playlist* TabPlaylist::addPlaylist()
 	stackedLayout->addWidget(p);
 
 	int i = insertTab(count(), stackedWidget, newPlaylistName);
+
+	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaAboutToBeInserted, [=]() {
+		if (p->mediaPlaylist()->isEmpty()) {
+			QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
+			stackedLayout->setCurrentIndex(1);
+			stackedLayout->setStackingMode(QStackedLayout::StackOne);
+		}
+	});
 
 	// Select the new empty playlist
 	setCurrentIndex(i);
@@ -182,9 +191,7 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
-	QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
-	stackedLayout->setCurrentIndex(1);
-	stackedLayout->setStackingMode(QStackedLayout::StackOne);
+	qDebug() << Q_FUNC_INFO;
 	currentPlayList()->insertMedias(rowIndex, tracks);
 }
 
@@ -258,7 +265,7 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 {
 	// The (+) button is the last tab
 	if (i == count() - 1) {
-		addPlaylist();
+		this->addPlaylist();
 	} else {
 		//currentPlayList()->countSelectedItems();
 		emit updatePlaybackModeButton();

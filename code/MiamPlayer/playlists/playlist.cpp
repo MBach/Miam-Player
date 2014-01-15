@@ -81,18 +81,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		}
 	});
 
-	// Load a playlist at startup
-	/*connect(_playlistModel->mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
-		QList<QMediaContent> medias;
-		for (int i = 0; i < _playlistModel->mediaPlaylist()->mediaCount(); i++) {
-			medias.append(_playlistModel->mediaPlaylist()->media(i));
-		}
-		_playlistModel->insertMedias(0, medias);
-		this->resizeColumnToContents(TRACK_NUMBER);
-		this->resizeColumnToContents(RATINGS);
-		this->resizeColumnToContents(YEAR);
-	});*/
-
 	// Context menu on tracks
 	_trackProperties = new QMenu(this);
 	QAction *removeFromCurrentPlaylist = _trackProperties->addAction(tr("Remove from playlist"));
@@ -132,13 +120,12 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	connect(mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
-			qDebug() << "creating new row for" << mediaPlaylist()->media(i).canonicalUrl();
 			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
 		}
 	});
-	connect(mediaPlaylist(), &QMediaPlaylist::loadFailed, [=] () {
-		qDebug() << "unable to load playlist :(";
-	});
+	//connect(mediaPlaylist(), &QMediaPlaylist::loadFailed, [=] () {
+	//	qDebug() << "unable to load playlist :(";
+	//});
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)

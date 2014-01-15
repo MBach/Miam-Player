@@ -25,7 +25,12 @@ private:
 
 	QStackedLayout *_stackLayout;
 
+	Q_ENUMS(PlaylistRoles)
+
 public:
+	enum PlaylistRoles { PlaylistPath			= Qt::UserRole + 1,
+						 IsPlaylistRegistered	= Qt::UserRole + 2 };
+
 	explicit PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylist);
 
 	bool eventFilter(QObject *obj, QEvent *event);
@@ -37,9 +42,12 @@ public:
 private:
 	void clearPreview(bool aboutToInsertItems = true);
 
+	/** Remove all special characters for Windows, Unix, OSX. */
+	QString convertNameToValidFileName(QString &name);
+
 	QString getPlaylistName(const QString &path);
 
-	void loadPlaylist(const QString &path);
+	void loadPlaylist(const QString &path, bool isRegistered = true);
 
 	bool savePlaylist(int index);
 
@@ -48,9 +56,15 @@ public slots:
 	void open();
 
 private slots:
+	void checkPlaylistIntegrity();
+
+	/** Delete from the file system every selected playlists. Cannot be canceled. */
 	void deleteSavedPlaylists();
 
 	void dropAutoSavePlaylists(const QModelIndex &, int start, int end);
+
+	/** Export one playlist at a time. */
+	void exportSelectedPlaylist();
 
 	void feedPreviewFromSaved(QItemSelection, QItemSelection);
 

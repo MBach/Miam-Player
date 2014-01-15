@@ -443,7 +443,6 @@ void LibraryTreeView::reset()
 
 void LibraryTreeView::endPopulateTree()
 {
-	qDebug() << Q_FUNC_INFO;
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);

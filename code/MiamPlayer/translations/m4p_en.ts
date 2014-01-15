@@ -971,6 +971,36 @@ Select a playlist to display the first 30 tracks.</translation>
         <source>And more tracks...</source>
         <translation>And more tracks...</translation>
     </message>
+    <message numerus="yes">
+        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
+        <translatorcomment>How many playlists does one want to remove?</translatorcomment>
+        <translation>
+            <numerusform>You&apos;re about to delete %n playlist. Are you sure you want to continue?</numerusform>
+            <numerusform>You&apos;re about to delete %n playlists. Are you sure you want to continue?</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation>Export playlist</translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation>Playlist (*.m3u8)</translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</translation>
+    </message>
+    <message>
+        <source>Cannot export the selected playlist</source>
+        <translation>Cannot export the selected playlist</translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
