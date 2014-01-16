@@ -43,6 +43,8 @@ public:
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const;
 
+	static QIcon defaultIcon(QIcon::Mode mode = QIcon::Normal);
+
 	/** Redefined to forward events to children. */
 	virtual bool eventFilter(QObject *obj, QEvent *event);
 
@@ -65,6 +67,9 @@ public:
 protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	void changeEvent(QEvent *event);
+
+private:
+	void displayEmptyArea(bool isEmpty = true);
 
 public slots:
 	/** Add a new playlist tab. */

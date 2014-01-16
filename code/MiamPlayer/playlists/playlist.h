@@ -39,6 +39,8 @@ private:
 	/** TEST: for star ratings. */
 	QModelIndexList _previouslySelectedRows;
 
+	uint _hash;
+
 	Q_ENUMS(Columns)
 
 public:
@@ -54,6 +56,8 @@ public:
 
 	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
 
+	inline uint hash() const { return _hash; }
+
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
 	void insertMedias(int rowIndex, const QStringList &tracks);
@@ -61,6 +65,8 @@ public:
 	QSize minimumSizeHint() const;
 
 	inline void forceDrop(QDropEvent *e) { this->dropEvent(e); }
+
+	inline void setHash(uint hash) { _hash = hash; }
 
 protected:
 	/** Redefined to display a small context menu in the view. */

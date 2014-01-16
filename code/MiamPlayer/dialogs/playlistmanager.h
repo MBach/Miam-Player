@@ -19,17 +19,23 @@ class PlaylistManager : public QDialog, public Ui::PlaylistManager
 	Q_OBJECT
 
 private:
+	/** Volatile models in the Dialog to separate which playlists were save or not. */
+	QStandardItemModel *_unsavedPlaylistModel, *_savedPlaylistModel;
+
+	/** Reference to TabPlaylist used a lot to know what we are manipulating. */
 	TabPlaylist *playlists;
 
 	QSqlDatabase _db;
 
+	/** Display an icon when the Preview Area is empty. */
 	QStackedLayout *_stackLayout;
 
 	Q_ENUMS(PlaylistRoles)
 
 public:
 	enum PlaylistRoles { PlaylistPath			= Qt::UserRole + 1,
-						 IsPlaylistRegistered	= Qt::UserRole + 2 };
+						 IsPlaylistRegistered	= Qt::UserRole + 2,
+						 PlaylistObjectPointer	= Qt::UserRole + 3};
 
 	explicit PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylist);
 
@@ -47,7 +53,8 @@ private:
 
 	QString getPlaylistName(const QString &path);
 
-	void loadPlaylist(const QString &path, bool isRegistered = true);
+	/** Load a playlist (*.m3u8) saved on the filesystem. */
+	void loadPlaylist(const QString &path);
 
 	bool savePlaylist(int index);
 
@@ -56,8 +63,6 @@ public slots:
 	void open();
 
 private slots:
-	void checkPlaylistIntegrity();
-
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
 	void deleteSavedPlaylists();
 
@@ -66,12 +71,12 @@ private slots:
 	/** Export one playlist at a time. */
 	void exportSelectedPlaylist();
 
-	void feedPreviewFromSaved(QItemSelection, QItemSelection);
+	/** Load every saved playlists. */
+	void loadSelectedPlaylists();
 
-	void feedPreviewFromUnsaved(QItemSelection, QItemSelection);
+	void populatePreviewFromSaved(QItemSelection, QItemSelection);
 
-	/** Load every selected playlists. */
-	void loadSavedPlaylists();
+	void populatePreviewFromUnsaved(QItemSelection, QItemSelection);
 
 	/** Save all playlists when exiting the application (if enabled). */
 	void savePlaylists();

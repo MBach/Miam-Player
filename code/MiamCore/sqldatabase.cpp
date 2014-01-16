@@ -21,6 +21,7 @@ SqlDatabase::SqlDatabase()
 
 	if (open()) {
 		exec("CREATE TABLE IF NOT EXISTS playlists (absPath varchar(255), name varchar(255), hash varchar(255))");
+		exec("CREATE INDEX indexPlaylists ON playlists (absPath)");
 		close();
 	}
 }
@@ -42,9 +43,6 @@ void SqlDatabase::cleanBeforeQuit()
 	}
 	if (!deletedPlaylists.isEmpty()) {
 		exec("DELETE FROM playlists WHERE absPath IN (" + deletedPlaylists.join(',') + ")");
-		qDebug() << "delete usless references";
-	} else {
-		qDebug() << "ok, db is clean";
 	}
 	close();
 }

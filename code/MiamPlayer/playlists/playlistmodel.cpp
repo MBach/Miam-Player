@@ -97,15 +97,18 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 {
 	// After moving rows, selection is lost. We need to keep a track on previously selected indexes
 	QList<QStandardItem*> rowsToHiglight;
+	QList<QMediaContent> mediasToMove;
 
 	// Sort in reverse lexical order for correctly taking rows
 	qSort(selectedIndexes.begin(), selectedIndexes.end(), qGreater<QModelIndex>());
-
 	QList<QList<QStandardItem*> > removedRows;
 	foreach (QModelIndex selectedIndex, selectedIndexes) {
-		QList<QStandardItem*> row = this->takeRow(selectedIndex.row());
+		int rowNumber = selectedIndex.row();
+		QList<QStandardItem*> row = this->takeRow(rowNumber);
 		rowsToHiglight << row.at(0);
 		removedRows.append(row);
+		mediasToMove.prepend(_mediaPlaylist->media(rowNumber));
+		_mediaPlaylist->removeMedia(rowNumber);
 	}
 
 	// Dest equals -1 when rows are dropped at the bottom of the playlist
@@ -113,6 +116,9 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	for (int i = 0; i < removedRows.count(); i++) {
 		this->insertRow(insertPoint, removedRows.at(i));
 	}
+	// Finally, reorder the inner QMediaPlaylist
+	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
+
 	return rowsToHiglight;
 }
 

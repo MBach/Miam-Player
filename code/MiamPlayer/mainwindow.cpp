@@ -270,10 +270,6 @@ void MainWindow::setupActions()
 	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
 
-	// Save playlist on close (if enabled)
-	connect(tabPlaylists, &TabPlaylist::aboutToSavePlaylist, playlistManager, &PlaylistManager::saveAndRemovePlaylist);
-	connect(playlistManager, &PlaylistManager::playlistSaved, tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
-
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::pathChanged, filesystem, &FileSystemTreeView::reloadWithNewPath);
 

@@ -23,7 +23,7 @@
 #include <QApplication>
 
 Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
-	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL)
+	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL), _hash(0)
 {
 	_playlistModel = new PlaylistModel(this);
 
@@ -123,9 +123,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
 		}
 	});
-	//connect(mediaPlaylist(), &QMediaPlaylist::loadFailed, [=] () {
-	//	qDebug() << "unable to load playlist :(";
-	//});
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -205,6 +202,7 @@ void Playlist::dropEvent(QDropEvent *event)
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
 		view->insertToPlaylist(row);
 	} else if (Playlist *target = qobject_cast<Playlist*>(source)) {
+		// Internal drag and drop (moving tracks)
 		if (target && target == this) {
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			// Highlight rows that were just moved
@@ -333,28 +331,5 @@ void Playlist::removeSelectedTracks()
 /** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
 void Playlist::highlightCurrentTrack()
 {
-	/*QStandardItem *it = NULL;
-	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-	if (_playlistModel->rowCount() > 0) {
-		for (int i=0; i < _playlistModel->rowCount(); i++) {
-			for (int j = 0; j < _playlistModel->columnCount(); j++) {
-				it = _playlistModel->item(i, j);
-				QFont itemFont = font;
-				itemFont.setBold(false);
-				itemFont.setItalic(false);
-				it->setFont(itemFont);
-			}
-		}
-		for (int j=0; j < _playlistModel->columnCount(); j++) {
-			it = _playlistModel->item(_mediaPlaylist->currentIndex(), j);
-			// If there is actually one selected track in the playlist
-			if (it != NULL) {
-				QFont itemFont = font;
-				itemFont.setBold(true);
-				itemFont.setItalic(true);
-				it->setFont(itemFont);
-			}
-		}
-	}*/
 	_playlistModel->highlightCurrentTrack();
 }
