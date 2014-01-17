@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-	<?define QtMinGw="C:\Qt\Qt5.2.0\5.2.0\mingw48_32\bin" ?>
-	<?define QtPlugins="C:\Qt\Qt5.2.0\5.2.0\mingw48_32\plugins" ?>
+	<?define QtMSVC2012="C:\Qt\Qt5.2.0\5.2.0\msvc2012_64\bin" ?>
+	<?define QtPlugins="C:\Qt\Qt5.2.0\5.2.0\msvc2012_64\plugins" ?>
 	<?define MiamProjectSrc="C:\dev\Madame-Miam-Miam-Music-Player" ?>
 	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player\build" ?>
+	<?define TagLib="C:\dev\Madame-Miam-Miam-Music-Player\lib\release" ?>
 
 	<Product Name="MmeMiamMiamMusicPlayer" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
 	Language="1033" Codepage="1252" Version="0.5.0" Manufacturer="MmeMiamMiam">
@@ -47,7 +48,7 @@
 				<File Id="miamCore" Source="$(var.MiamProjectBuild)\MiamCore\release\MiamCore.dll" KeyPath="yes" Checksum="yes"/>
 			</Component>
 			<Component Id="libtag" Guid="2acca2df-d460-43e2-886e-510777804699">
-				<File Id="libtag" Source="$(var.MiamProjectBuild)\MiamCore\release\libtag.dll" KeyPath="yes"/>
+				<File Id="libtag" Source="$(var.TagLib)\tag.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="miamPlayer" Guid="C7F6E507-4399-45C8-854F-4D822F6EFF59">
 				<File Id="miamPlayer" Source="$(var.MiamProjectBuild)\MiamPlayer\release\MiamPlayer.exe" KeyPath="yes" Checksum="yes"/>
@@ -56,49 +57,40 @@
 				<File Id="miamUniqueLibrary" Source="$(var.MiamProjectBuild)\MiamUniqueLibrary\release\MiamUniqueLibrary.dll" KeyPath="yes" Checksum="yes"/>
 			</Component>
 			<Component Id="icudt51" Guid="e19b830f-3290-4517-8a8e-97996606ed05">
-				<File Id="icudt51" Source="$(var.QtMinGw)\icudt51.dll" KeyPath="yes"/>
+				<File Id="icudt51" Source="$(var.QtMSVC2012)\icudt51.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="icuin51" Guid="f2f0574f-9ba6-4aae-81cb-c9baa90ad608">
-				<File Id="icuin51" Source="$(var.QtMinGw)\icuin51.dll" KeyPath="yes"/>
+				<File Id="icuin51" Source="$(var.QtMSVC2012)\icuin51.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="icuuc51" Guid="04322ac7-7c7b-4b93-aabf-6108d035210d">
-				<File Id="icuuc51" Source="$(var.QtMinGw)\icuuc51.dll" KeyPath="yes"/>
-			</Component>
-			<Component Id="libgcc_s_dw" Guid="0131d2cf-93f9-49e6-8830-2f2e85b624c3">
-				<File Id="libgcc_s_dw" Source="$(var.QtMinGw)\libgcc_s_dw2-1.dll" KeyPath="yes"/>
-			</Component>
-			<Component Id="libstdc" Guid="a03409bb-3e5b-48ae-bb3a-49bb3647825f">
-				<File Id="libstdc" Source="$(var.QtMinGw)\libstdc++-6.dll" KeyPath="yes"/>
-			</Component>
-			<Component Id="libwinpthread" Guid="c219c7d1-6f76-478b-a417-79e67e16e99a">
-				<File Id="libwinpthread" Source="$(var.QtMinGw)\libwinpthread-1.dll" KeyPath="yes"/>
+				<File Id="icuuc51" Source="$(var.QtMSVC2012)\icuuc51.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Core" Guid="f0452c60-1ba1-4b8e-bbbe-cfaa842667fb">
-				<File Id="Qt5Core" Source="$(var.QtMinGw)\Qt5Core.dll" KeyPath="yes"/>
+				<File Id="Qt5Core" Source="$(var.QtMSVC2012)\Qt5Core.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Gui" Guid="22180b57-7d37-492b-bb2c-da387ee1c1b0">
-				<File Id="Qt5Gui" Source="$(var.QtMinGw)\Qt5Gui.dll" KeyPath="yes"/>
+				<File Id="Qt5Gui" Source="$(var.QtMSVC2012)\Qt5Gui.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Multimedia" Guid="ebc7da0f-52b2-4ade-a6f8-d71060d7b096">
-				<File Id="Qt5Multimedia" Source="$(var.QtMinGw)\Qt5Multimedia.dll" KeyPath="yes"/>
+				<File Id="Qt5Multimedia" Source="$(var.QtMSVC2012)\Qt5Multimedia.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5MultimediaWidgets" Guid="f32aa24a-2718-4207-af8b-482038ae0788">
-				<File Id="Qt5MultimediaWidgets" Source="$(var.QtMinGw)\Qt5MultimediaWidgets.dll" KeyPath="yes"/>
+				<File Id="Qt5MultimediaWidgets" Source="$(var.QtMSVC2012)\Qt5MultimediaWidgets.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Network" Guid="c06823d0-94ae-4ee5-acb2-a0eb19e39b9b">
-				<File Id="Qt5Network" Source="$(var.QtMinGw)\Qt5Network.dll" KeyPath="yes"/>
+				<File Id="Qt5Network" Source="$(var.QtMSVC2012)\Qt5Network.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5OpenGL" Guid="4e5ae58d-93a1-4965-9bbb-ac4bd6f00ad9">
-				<File Id="Qt5OpenGL" Source="$(var.QtMinGw)\Qt5OpenGL.dll" KeyPath="yes"/>
+				<File Id="Qt5OpenGL" Source="$(var.QtMSVC2012)\Qt5OpenGL.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Sql" Guid="3FB9B9EA-C516-4991-ADCC-A477AD47A660">
-				<File Id="Qt5Sql" Source="$(var.QtMinGw)\Qt5Sql.dll" KeyPath="yes"/>
+				<File Id="Qt5Sql" Source="$(var.QtMSVC2012)\Qt5Sql.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Widgets" Guid="3281db32-6ec3-4d18-ad4d-081a16b5c9f2">
-				<File Id="Qt5Widgets" Source="$(var.QtMinGw)\Qt5Widgets.dll" KeyPath="yes"/>
+				<File Id="Qt5Widgets" Source="$(var.QtMSVC2012)\Qt5Widgets.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5WinExtras" Guid="60125338-0FFB-464F-B3FC-1BDE7F7BA96C">
-				<File Id="Qt5WinExtras" Source="$(var.QtMinGw)\Qt5WinExtras.dll" KeyPath="yes"/>
+				<File Id="Qt5WinExtras" Source="$(var.QtMSVC2012)\Qt5WinExtras.dll" KeyPath="yes"/>
 			</Component>
 		</DirectoryRef>
 
@@ -125,9 +117,6 @@
 			<ComponentRef Id="icudt51" />
 			<ComponentRef Id="icuin51" />
 			<ComponentRef Id="icuuc51" />
-			<ComponentRef Id="libgcc_s_dw" />
-			<ComponentRef Id="libstdc" />
-			<ComponentRef Id="libwinpthread" />
 			<ComponentRef Id="Qt5Core" />
 			<ComponentRef Id="Qt5Gui" />
 			<ComponentRef Id="Qt5Multimedia" />

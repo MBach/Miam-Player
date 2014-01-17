@@ -57,7 +57,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	QStandardItemModel *yearModel = new QStandardItemModel(this);
 	yearModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Years")));
 	yearModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::Year, Qt::UserRole + 1);
-	QStandardItem *year = new QStandardItem("2013");
+	QStandardItem *year = new QStandardItem("2014");
 	yearModel->appendRow(year);
 	QStandardItem *artistAlbum_2 = new QStandardItem("Artist – Album");
 	year->appendRow(artistAlbum_2);
