@@ -18,13 +18,7 @@ QuickStart::QuickStart(QWidget *parent) :
 
 	quickStartTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
 
-	connect(quickStartTableWidget, &QTableWidget::cellClicked, this, &QuickStart::checkRow);
-	connect(quickStartTableWidget, &QTableWidget::itemClicked, [=] (QTableWidgetItem *i) {
-		if (i->column() == 0) {
-			this->checkRow(i->row(), i->column());
-		}
-	});
-
+	connect(quickStartTableWidget, &QTableWidget::itemClicked, this, &QuickStart::checkRow);
 	this->installEventFilter(this);
 }
 
@@ -48,40 +42,42 @@ void QuickStart::searchMultimediaFiles()
 		quickStartGroupBox->hide();
 		otherwiseLabel->hide();
 	} else {
-		_worker = new QThread(this);
+		QThread *worker = new QThread(this);
 		_qsse = new QuickStartSearchEngine();
-		_qsse->moveToThread(_worker);
-		//connect(_qsse, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
+		_qsse->moveToThread(worker);
 		connect(_qsse, SIGNAL(folderScanned(QFileInfo,int)), this, SLOT(insertRow(QFileInfo,int)));
-		connect(_worker, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
-		connect(_worker, &QThread::finished, this, &QuickStart::insertFirstRow);
-		_worker->start();
+		connect(worker, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
+		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
+		worker->start();
 	}
-	//this->setStyleSheet("QuickStart#" + objectName() + " { border-top: 0; border-left: #ACACAC; border-bottom: #ACACAC;
-	//border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }");
+	//this->setStyleSheet("QuickStart#" + objectName() + " { border-top: 0; border-left: #ACACAC; border-bottom: #ACACAC;" \
+	//	"border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }");
 }
 
-void QuickStart::checkRow(int row, int)
+void QuickStart::checkRow(QTableWidgetItem *i)
 {
+	int row = i->row();
+	bool invertBehaviour = i->column() == 0;
+	// First row is the master checkbox
+	Qt::CheckState state = quickStartTableWidget->item(row, 0)->checkState();
 	if (row == 0) {
-		if (quickStartTableWidget->item(0, 0)->checkState() == Qt::Checked) {
-			for (int r = 1; r < quickStartTableWidget->rowCount(); r++) {
-				quickStartTableWidget->item(r, 0)->setCheckState(Qt::Unchecked);
-			}
+		if (invertBehaviour) {
+			(state == Qt::Checked || state == Qt::PartiallyChecked) ? state = Qt::Checked : state = Qt::Unchecked;
 		} else {
-			for (int r = 0; r < quickStartTableWidget->rowCount(); r++) {
-				quickStartTableWidget->item(r, 0)->setCheckState(Qt::Checked);
-			}
+			(state == Qt::Checked || state == Qt::PartiallyChecked) ? state = Qt::Unchecked : state = Qt::Checked;
 		}
-	} else {
-		if (quickStartTableWidget->item(row, 0)->checkState() == Qt::Checked) {
+		for (int r = 1; r < quickStartTableWidget->rowCount(); r++) {
+			quickStartTableWidget->item(r, 0)->setCheckState(state);
+		}
+	} else if (!invertBehaviour) {
+		if (state == Qt::Checked) {
 			quickStartTableWidget->item(row, 0)->setCheckState(Qt::Unchecked);
 		} else {
 			quickStartTableWidget->item(row, 0)->setCheckState(Qt::Checked);
 		}
 	}
 
-	// Each time one clicks on a row, it's necessary to check if the apply button has to va enabled
+	// Each time one clicks on a row, it's necessary to check if the apply button has to be enabled
 	bool atLeastOneFolderIsSelected = false;
 	bool allFoldersAreSelected = true;
 	for (int r = 1; r < quickStartTableWidget->rowCount(); r++) {
@@ -110,14 +106,23 @@ void QuickStart::insertFirstRow()
 
 		QTableWidgetItem *masterCheckBox = new QTableWidgetItem;
 		masterCheckBox->setFlags(masterCheckBox->flags() | Qt::ItemIsTristate | Qt::ItemIsUserCheckable);
-		masterCheckBox->setCheckState(Qt::Checked);
 
-		QTableWidgetItem *totalFiles = new QTableWidgetItem(tr("%1 elements").arg(_totalMusicFiles));
+		bool atLeastOneFolderIsEmpty = false;
+		for (int r = 0; r < quickStartTableWidget->rowCount(); r++) {
+			atLeastOneFolderIsEmpty = atLeastOneFolderIsEmpty || quickStartTableWidget->item(r, 0)->checkState() == Qt::Unchecked;
+		}
+		if (atLeastOneFolderIsEmpty) {
+			masterCheckBox->setCheckState(Qt::PartiallyChecked);
+		} else {
+			masterCheckBox->setCheckState(Qt::Checked);
+		}
+
+		QTableWidgetItem *totalFiles = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
 		totalFiles->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
 		quickStartTableWidget->insertRow(0);
 		quickStartTableWidget->setItem(0, 0, masterCheckBox);
-		quickStartTableWidget->setItem(0, 1, new QTableWidgetItem(tr("%1 folders").arg(quickStartTableWidget->rowCount() - 1)));
+		quickStartTableWidget->setItem(0, 1, new QTableWidgetItem(tr("%n folders", "", quickStartTableWidget->rowCount() - 1)));
 		quickStartTableWidget->setItem(0, 2, totalFiles);
 
 		quickStartApplyButton->setEnabled(true);
@@ -125,14 +130,13 @@ void QuickStart::insertFirstRow()
 		_totalMusicFiles = 0;
 	}
 	_qsse->deleteLater();
-	_worker->deleteLater();
+	//_worker->deleteLater();
+	sender()->deleteLater();
 }
 
 /** Insert a row with a checkbox with folder's name and the number of files in this folder. */
 void QuickStart::insertRow(const QFileInfo &fileInfo, const int & musicFileNumber)
 {
-	QString elements = tr("%1 elements");
-
 	// A subfolder is displayed with its number of files on the right
 	QTableWidgetItem *checkBox = new QTableWidgetItem;
 	checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
@@ -141,7 +145,13 @@ void QuickStart::insertRow(const QFileInfo &fileInfo, const int & musicFileNumbe
 	QTableWidgetItem *musicSubFolderName = new QTableWidgetItem(fileInfo.baseName());
 	musicSubFolderName->setData(Qt::UserRole, fileInfo.absoluteFilePath());
 
-	QTableWidgetItem *musicSubFolderCount = new QTableWidgetItem(elements.arg(musicFileNumber));
+	QTableWidgetItem *musicSubFolderCount;
+	if (musicFileNumber == 0) {
+		musicSubFolderCount = new QTableWidgetItem(tr("empty folder"));
+		checkBox->setCheckState(Qt::Unchecked);
+	} else {
+		musicSubFolderCount = new QTableWidgetItem(tr("%n elements", "", musicFileNumber));
+	}
 	musicSubFolderCount->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
 	int rowCount = quickStartTableWidget->rowCount();

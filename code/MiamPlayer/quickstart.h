@@ -28,7 +28,7 @@ public:
 	void searchMultimediaFiles();
 
 private slots:
-	void checkRow(int row, int);
+	void checkRow(QTableWidgetItem *i);
 
 public slots:
 	/** Insert above other rows a new one with a Master checkbox to select/unselect all. */

@@ -246,7 +246,7 @@ bool Settings::playbackKeepPlaylists() const
 	if (b.isValid()) {
 		return b.toBool();
 	} else {
-		return true;
+		return false;
 	}
 }
 
@@ -256,7 +256,7 @@ bool Settings::playbackRestorePlaylistsAtStartup() const
 	if (b.isValid()) {
 		return b.toBool();
 	} else {
-		return true;
+		return false;
 	}
 }
 

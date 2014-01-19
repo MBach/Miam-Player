@@ -893,6 +893,14 @@
         <source>&amp;Make the player borderless</source>
         <translation>&amp;Enlever les bords de la fenêtre</translation>
     </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1028,16 +1036,26 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
         <translation>Cliquez ici pour rechercher des dossiers musicaux</translation>
     </message>
     <message>
-        <source>%1 elements</source>
-        <translation>%1 éléments</translation>
-    </message>
-    <message>
-        <source>%1 folders</source>
-        <translation>%1 dossiers</translation>
-    </message>
-    <message>
         <source>The following items were found in your default music folder</source>
         <translation>Les dossiers suivants ont été trouvés dans votre bibliothèque musicale</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n elements</source>
+        <translation>
+            <numerusform>%n élément</numerusform>
+            <numerusform>%n éléments</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n folders</source>
+        <translation>
+            <numerusform>%n dossier</numerusform>
+            <numerusform>%n dossiers</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>empty folder</source>
+        <translation>dossier vide</translation>
     </message>
 </context>
 <context>

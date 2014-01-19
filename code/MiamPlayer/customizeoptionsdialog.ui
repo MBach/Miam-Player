@@ -2320,7 +2320,7 @@
                 <string>Yes</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -2328,6 +2328,9 @@
               <widget class="QRadioButton" name="radioButtonClearPlaylists">
                <property name="text">
                 <string>No</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
@@ -2367,7 +2370,7 @@
                 <string>Yes</string>
                </property>
                <property name="checked">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -2375,6 +2378,9 @@
               <widget class="QRadioButton" name="radioButtonDontRestorePlaylists">
                <property name="text">
                 <string>No</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
                </property>
               </widget>
              </item>

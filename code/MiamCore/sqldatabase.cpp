@@ -11,12 +11,16 @@
 SqlDatabase::SqlDatabase()
 	: QSqlDatabase("QSQLITE")
 {
-	QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
+	QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 	QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
 	QDir userDataPath(path);
+	// Init a new database file for settings
+	QFile db(dbPath);
 	if (!userDataPath.exists(path)) {
 		userDataPath.mkpath(path);
 	}
+	db.open(QIODevice::ReadWrite);
+	db.close();
 	setDatabaseName(dbPath);
 
 	if (open()) {

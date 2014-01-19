@@ -892,6 +892,14 @@
         <source>&amp;Make the player borderless</source>
         <translation>&amp;Make the player borderless</translation>
     </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+W</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1028,16 +1036,26 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</tra
         <translation>Click here to manually search for music</translation>
     </message>
     <message>
-        <source>%1 elements</source>
-        <translation>%1 elements</translation>
-    </message>
-    <message>
-        <source>%1 folders</source>
-        <translation>%1 folders</translation>
-    </message>
-    <message>
         <source>The following items were found in your default music folder</source>
         <translation>The following items were found in your default music folder</translation>
+    </message>
+    <message numerus="yes">
+        <source>%n elements</source>
+        <translation>
+            <numerusform>%n element</numerusform>
+            <numerusform>%n elements</numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <source>%n folders</source>
+        <translation>
+            <numerusform>%n folder</numerusform>
+            <numerusform>%n folders</numerusform>
+        </translation>
+    </message>
+    <message>
+        <source>empty folder</source>
+        <translation>empty folder</translation>
     </message>
 </context>
 <context>

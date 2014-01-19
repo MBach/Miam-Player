@@ -175,7 +175,7 @@ void MainWindow::setupActions()
 	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
 
 	// Quick Start
-	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::show);
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 
 	// Select only folders that are checked by one
 	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
@@ -183,13 +183,17 @@ void MainWindow::setupActions()
 		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
 				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
+				musicLocation = QDir::toNativeSeparators(musicLocation);
 				customizeOptionsDialog->addMusicLocation(musicLocation);
 				newLocations.append(musicLocation);
 			}
 		}
 		Settings::getInstance()->setMusicLocations(newLocations);
-		//this->drawLibrary(true);
 		quickStart->hide();
+		library->setHidden(false);
+		widgetSearchBar->setHidden(false);
+		actionScanLibrary->setEnabled(true);
+		actionScanLibrary->trigger();
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {

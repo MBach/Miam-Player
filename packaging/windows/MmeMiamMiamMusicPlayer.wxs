@@ -6,26 +6,33 @@
 	<?define MiamProjectSrc="C:\dev\Madame-Miam-Miam-Music-Player" ?>
 	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player\build" ?>
 	<?define TagLib="C:\dev\Madame-Miam-Miam-Music-Player\lib\release" ?>
+	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
 
 	<Product Name="MmeMiamMiamMusicPlayer" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
-	Language="1033" Codepage="1252" Version="0.5.0" Manufacturer="MmeMiamMiam">
+	Language="1033" Codepage="1252" Version="0.5.1" Manufacturer="MmeMiamMiam">
 
-		<Package Id="*" Keywords="Installer" Description="MadameMiamMiam 1.0 Installer" Comments="Free and Open Source Software" Manufacturer="MmeMiamMiam"
-	InstallerVersion="100" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
+		<Package Id="*" Keywords="Installer" Description="Installer for Madame Miam-Miam's Music Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
+			InstallPrivileges="elevated" InstallScope="perMachine" InstallerVersion="405" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 		<Media Id="1" Cabinet="myapplication.cab" EmbedCab="yes" />
 
-		<Icon Id="MiamPlayerIcon" SourceFile="$(var.MiamProjectSrc)\code\MiamPlayer\mmmmp.ico" />
 		<!-- Add an icon in Add/Remove program -->
+		<Icon Id="MiamPlayerIcon" SourceFile="$(var.MiamProjectSrc)\code\MiamPlayer\mmmmp.ico" />
 		<Property Id="ARPPRODUCTICON" Value="MiamPlayerIcon" />
 
 		<!-- Directory tree -->
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
+			<Directory Id="ProgramFiles64Folder">
 				<Directory Id="APPLICATIONROOTDIRECTORY" Name="Madame MiamMiam's Music Player">
-					<Directory Id="platforms" Name="platforms" />
+					<Directory Id="imageformats" Name="imageformats" />
 					<Directory Id="mediaservice" Name="mediaservice" />
+					<Directory Id="platforms" Name="platforms" />
+					<Directory Id="playlistformats" Name="playlistformats" />
+					<Directory Id="sqldrivers" Name="sqldrivers" />
 				</Directory>
 			</Directory>
+			
+			<!-- Behold, keeper -->
+			<Merge Id="VCRedist" Language="0" DiskId="1" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC110_CRT_x64.msm" />
 
 			<!-- Start menu -->
 			<Directory Id="ProgramMenuFolder" Name="Programs Menu Folder">
@@ -65,6 +72,12 @@
 			<Component Id="icuuc51" Guid="04322ac7-7c7b-4b93-aabf-6108d035210d">
 				<File Id="icuuc51" Source="$(var.QtMSVC2012)\icuuc51.dll" KeyPath="yes"/>
 			</Component>
+			<Component Id="libEGL" Guid="bad70be1-595d-45e1-b027-0ec1ed6b8402">
+				<File Id="libEGL" Source="$(var.QtMSVC2012)\libEGL.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="libGLESv2" Guid="c5ec55f9-444d-4cf3-9b64-1d238c938954">
+				<File Id="libGLESv2" Source="$(var.QtMSVC2012)\libGLESv2.dll" KeyPath="yes"/>
+			</Component>
 			<Component Id="Qt5Core" Guid="f0452c60-1ba1-4b8e-bbbe-cfaa842667fb">
 				<File Id="Qt5Core" Source="$(var.QtMSVC2012)\Qt5Core.dll" KeyPath="yes"/>
 			</Component>
@@ -93,18 +106,42 @@
 				<File Id="Qt5WinExtras" Source="$(var.QtMSVC2012)\Qt5WinExtras.dll" KeyPath="yes"/>
 			</Component>
 		</DirectoryRef>
+		
+		<!-- Subdirectory with imageformats for reading covers (only jpeg and png right now) -->
+		<DirectoryRef Id="imageformats">
+			<Component Id="qjpeg" Guid="ffb232fe-abe2-4e63-979e-f5d487362c6c">
+				<File Id="qjpeg" Source="$(var.QtPlugins)\imageformats\qjpeg.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
 
+		<!-- Subdirectory with mediaservice -->
+		<DirectoryRef Id="mediaservice">
+			<Component Id="wmfengine" Guid="b24a388c-e78a-492d-8fcb-dedf5f0bfd2d">
+				<File Id="wmfengine" Source="$(var.QtPlugins)\mediaservice\wmfengine.dll" KeyPath="yes" />
+			</Component>
+			<Component Id="qtmedia_audioengine" Guid="17c25fcc-b5eb-4e98-a7b1-5cf393f4a8b2">
+				<File Id="qtmedia_audioengine" Source="$(var.QtPlugins)\mediaservice\qtmedia_audioengine.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+		
 		<!-- Subdirectory with plugins for windows -->
 		<DirectoryRef Id="platforms">
 			<Component Id="qwindows" Guid="420BE34D-CCCF-4318-B519-E09823A521D4">
 				<File Id="qwindows" Source="$(var.QtPlugins)\platforms\qwindows.dll" KeyPath="yes" />
 			</Component>
 		</DirectoryRef>
-
-		<!-- Subdirectory with mediaservice -->
-		<DirectoryRef Id="mediaservice">
-			<Component Id="dsengine" Guid="b24a388c-e78a-492d-8fcb-dedf5f0bfd2d">
-				<File Id="dsengine" Source="$(var.QtPlugins)\mediaservice\dsengine.dll" KeyPath="yes" />
+		
+		<!-- Subdirectory with playlistformats -->
+		<DirectoryRef Id="playlistformats">
+			<Component Id="qtmultimedia_m3u" Guid="4d0631cd-0f77-4c81-9319-2ba7691edeae">
+				<File Id="qtmultimedia_m3u" Source="$(var.QtPlugins)\playlistformats\qtmultimedia_m3u.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with sqldrivers -->
+		<DirectoryRef Id="sqldrivers">
+			<Component Id="qsqlite" Guid="14bff8eb-4692-4c3f-b072-398ab319c75c">
+				<File Id="qsqlite" Source="$(var.QtPlugins)\sqldrivers\qsqlite.dll" KeyPath="yes"/>
 			</Component>
 		</DirectoryRef>
 
@@ -117,6 +154,8 @@
 			<ComponentRef Id="icudt51" />
 			<ComponentRef Id="icuin51" />
 			<ComponentRef Id="icuuc51" />
+			<ComponentRef Id="libEGL" />
+			<ComponentRef Id="libGLESv2" />
 			<ComponentRef Id="Qt5Core" />
 			<ComponentRef Id="Qt5Gui" />
 			<ComponentRef Id="Qt5Multimedia" />
@@ -127,12 +166,21 @@
 			<ComponentRef Id="Qt5Widgets" />
 			<ComponentRef Id="Qt5WinExtras" />
 			<ComponentRef Id="qwindows" />
-			<ComponentRef Id="dsengine" />
+			<ComponentRef Id="wmfengine" />
+			<ComponentRef Id="qtmedia_audioengine" />
+			<ComponentRef Id="qtmultimedia_m3u" />
+			<ComponentRef Id="qsqlite" />
+			<ComponentRef Id="qjpeg" />
 		</Feature>
 
 		<!-- The shortcut in the start menu can be unchoose by one -->
 		<Feature Id="Shortcut" Title="Shortcut in Start Menu" Description="Puts a shortcut to Madame MiamMiam's Music Player in the Start Menu" Level="1" AllowAdvertise="no" Absent="allow">
 			<ComponentRef Id="ProgramMenuDir" />
+		</Feature>
+		
+		<!-- MSVC2012 Redistributable in case one has a super clean computer -->
+		<Feature Id="VCRedist" Title="Visual C++ 11.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+			<MergeRef Id="VCRedist"/>
 		</Feature>
 
 		<!-- Create a custom action to be able to launch or not the player after setup -->
