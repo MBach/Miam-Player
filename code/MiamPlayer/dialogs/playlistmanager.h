@@ -19,16 +19,16 @@ class PlaylistManager : public QDialog, public Ui::PlaylistManager
 	Q_OBJECT
 
 private:
-	/** Volatile models in the Dialog to separate which playlists were save or not. */
-	QStandardItemModel *_unsavedPlaylistModel, *_savedPlaylistModel;
+	QSqlDatabase _db;
 
 	/** Reference to TabPlaylist used a lot to know what we are manipulating. */
 	TabPlaylist *playlists;
 
-	QSqlDatabase _db;
-
 	/** Display an icon when the Preview Area is empty. */
 	QStackedLayout *_stackLayout;
+
+	/** Volatile models in the Dialog to separate which playlists were save or not. */
+	QStandardItemModel *_unsavedPlaylistModel, *_savedPlaylistModel;
 
 	Q_ENUMS(PlaylistRoles)
 

@@ -5,6 +5,7 @@
 
 #include <QDirIterator>
 #include <QFileDialog>
+#include <QRegularExpression>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QStandardItemModel>

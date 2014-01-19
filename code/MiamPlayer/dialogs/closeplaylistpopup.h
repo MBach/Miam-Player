@@ -16,7 +16,7 @@ public:
 
 	inline void setTabToClose(int index) { _index = index; }
 
-	inline const int index() const { return _index; }
+	inline int index() { return _index; }
 };
 
 #endif // CLOSEPLAYLISTPOPUP_H

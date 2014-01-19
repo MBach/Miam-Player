@@ -6,6 +6,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QRegularExpression>
 #include <QScrollBar>
 #include <QSqlRecord>
 #include <QSqlQuery>

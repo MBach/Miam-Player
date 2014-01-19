@@ -5,7 +5,8 @@ PluginInfo::PluginInfo(QObject *parent) :
 {}
 
 /** Copy constructor required for converting in QVariant. */
-PluginInfo::PluginInfo(const PluginInfo &pluginInfo)
+PluginInfo::PluginInfo(const PluginInfo &pluginInfo) :
+	QObject(pluginInfo.parent())
 {
 	_fileName = pluginInfo.fileName();
 	_pluginName = pluginInfo.pluginName();

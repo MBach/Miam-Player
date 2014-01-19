@@ -83,9 +83,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
 
 	this->initCloseActionForPlaylists();
-	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackDefaultActionForClose(Settings::AskUserForAction); });
-	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackDefaultActionForClose(Settings::SaveOnClose); });
-	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackDefaultActionForClose(Settings::DiscardOnClose); });
+	connect(radioButtonAskAction, &QRadioButton::toggled, [=]() { settings->setPlaybackDefaultActionForClose(Settings::AskUserForAction); });
+	connect(radioButtonSavePlaylist, &QRadioButton::toggled, [=]() { settings->setPlaybackDefaultActionForClose(Settings::SaveOnClose); });
+	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, [=]() { settings->setPlaybackDefaultActionForClose(Settings::DiscardOnClose); });
 
 	if (settings->playbackKeepPlaylists()) {
 		radioButtonKeepPlaylists->setChecked(true);
