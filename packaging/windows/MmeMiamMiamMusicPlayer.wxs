@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-	<?define QtMSVC2012="C:\Qt\Qt5.2.0\5.2.0\msvc2012_64\bin" ?>
-	<?define QtPlugins="C:\Qt\Qt5.2.0\5.2.0\msvc2012_64\plugins" ?>
+	<?define Qt="C:\Qt\Qt5.2.0\5.2.0\msvc2012_64" ?>
 	<?define MiamProjectSrc="C:\dev\Madame-Miam-Miam-Music-Player" ?>
 	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player\build" ?>
 	<?define TagLib="C:\dev\Madame-Miam-Miam-Music-Player\lib\release" ?>
@@ -28,6 +27,7 @@
 					<Directory Id="platforms" Name="platforms" />
 					<Directory Id="playlistformats" Name="playlistformats" />
 					<Directory Id="sqldrivers" Name="sqldrivers" />
+					<Directory Id="translations" Name="translations" />
 				</Directory>
 			</Directory>
 			
@@ -64,84 +64,104 @@
 				<File Id="miamUniqueLibrary" Source="$(var.MiamProjectBuild)\MiamUniqueLibrary\release\MiamUniqueLibrary.dll" KeyPath="yes" Checksum="yes"/>
 			</Component>
 			<Component Id="icudt51" Guid="e19b830f-3290-4517-8a8e-97996606ed05">
-				<File Id="icudt51" Source="$(var.QtMSVC2012)\icudt51.dll" KeyPath="yes"/>
+				<File Id="icudt51" Source="$(var.Qt)\bin\icudt51.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="icuin51" Guid="f2f0574f-9ba6-4aae-81cb-c9baa90ad608">
-				<File Id="icuin51" Source="$(var.QtMSVC2012)\icuin51.dll" KeyPath="yes"/>
+				<File Id="icuin51" Source="$(var.Qt)\bin\icuin51.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="icuuc51" Guid="04322ac7-7c7b-4b93-aabf-6108d035210d">
-				<File Id="icuuc51" Source="$(var.QtMSVC2012)\icuuc51.dll" KeyPath="yes"/>
+				<File Id="icuuc51" Source="$(var.Qt)\bin\icuuc51.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="libEGL" Guid="bad70be1-595d-45e1-b027-0ec1ed6b8402">
-				<File Id="libEGL" Source="$(var.QtMSVC2012)\libEGL.dll" KeyPath="yes"/>
+				<File Id="libEGL" Source="$(var.Qt)\bin\libEGL.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="libGLESv2" Guid="c5ec55f9-444d-4cf3-9b64-1d238c938954">
-				<File Id="libGLESv2" Source="$(var.QtMSVC2012)\libGLESv2.dll" KeyPath="yes"/>
+				<File Id="libGLESv2" Source="$(var.Qt)\bin\libGLESv2.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Core" Guid="f0452c60-1ba1-4b8e-bbbe-cfaa842667fb">
-				<File Id="Qt5Core" Source="$(var.QtMSVC2012)\Qt5Core.dll" KeyPath="yes"/>
+				<File Id="Qt5Core" Source="$(var.Qt)\bin\Qt5Core.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Gui" Guid="22180b57-7d37-492b-bb2c-da387ee1c1b0">
-				<File Id="Qt5Gui" Source="$(var.QtMSVC2012)\Qt5Gui.dll" KeyPath="yes"/>
+				<File Id="Qt5Gui" Source="$(var.Qt)\bin\Qt5Gui.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Multimedia" Guid="ebc7da0f-52b2-4ade-a6f8-d71060d7b096">
-				<File Id="Qt5Multimedia" Source="$(var.QtMSVC2012)\Qt5Multimedia.dll" KeyPath="yes"/>
+				<File Id="Qt5Multimedia" Source="$(var.Qt)\bin\Qt5Multimedia.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5MultimediaWidgets" Guid="f32aa24a-2718-4207-af8b-482038ae0788">
-				<File Id="Qt5MultimediaWidgets" Source="$(var.QtMSVC2012)\Qt5MultimediaWidgets.dll" KeyPath="yes"/>
+				<File Id="Qt5MultimediaWidgets" Source="$(var.Qt)\bin\Qt5MultimediaWidgets.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Network" Guid="c06823d0-94ae-4ee5-acb2-a0eb19e39b9b">
-				<File Id="Qt5Network" Source="$(var.QtMSVC2012)\Qt5Network.dll" KeyPath="yes"/>
+				<File Id="Qt5Network" Source="$(var.Qt)\bin\Qt5Network.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5OpenGL" Guid="4e5ae58d-93a1-4965-9bbb-ac4bd6f00ad9">
-				<File Id="Qt5OpenGL" Source="$(var.QtMSVC2012)\Qt5OpenGL.dll" KeyPath="yes"/>
+				<File Id="Qt5OpenGL" Source="$(var.Qt)\bin\Qt5OpenGL.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Sql" Guid="3FB9B9EA-C516-4991-ADCC-A477AD47A660">
-				<File Id="Qt5Sql" Source="$(var.QtMSVC2012)\Qt5Sql.dll" KeyPath="yes"/>
+				<File Id="Qt5Sql" Source="$(var.Qt)\bin\Qt5Sql.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5Widgets" Guid="3281db32-6ec3-4d18-ad4d-081a16b5c9f2">
-				<File Id="Qt5Widgets" Source="$(var.QtMSVC2012)\Qt5Widgets.dll" KeyPath="yes"/>
+				<File Id="Qt5Widgets" Source="$(var.Qt)\bin\Qt5Widgets.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="Qt5WinExtras" Guid="60125338-0FFB-464F-B3FC-1BDE7F7BA96C">
-				<File Id="Qt5WinExtras" Source="$(var.QtMSVC2012)\Qt5WinExtras.dll" KeyPath="yes"/>
+				<File Id="Qt5WinExtras" Source="$(var.Qt)\bin\Qt5WinExtras.dll" KeyPath="yes"/>
+			</Component>
+			<!-- Override hardcoded paths in Qt Libraries -->
+			<Component Id="qtconf" Guid="0011a84d-044e-4ddb-b8e4-03f35b075814">
+				<File Id="qtconf" Source="qt.conf" KeyPath="yes"/>
 			</Component>
 		</DirectoryRef>
 		
 		<!-- Subdirectory with imageformats for reading covers (only jpeg and png right now) -->
 		<DirectoryRef Id="imageformats">
 			<Component Id="qjpeg" Guid="ffb232fe-abe2-4e63-979e-f5d487362c6c">
-				<File Id="qjpeg" Source="$(var.QtPlugins)\imageformats\qjpeg.dll" KeyPath="yes" />
+				<File Id="qjpeg" Source="$(var.Qt)\plugins\imageformats\qjpeg.dll" KeyPath="yes" />
 			</Component>
 		</DirectoryRef>
 
 		<!-- Subdirectory with mediaservice -->
 		<DirectoryRef Id="mediaservice">
 			<Component Id="wmfengine" Guid="b24a388c-e78a-492d-8fcb-dedf5f0bfd2d">
-				<File Id="wmfengine" Source="$(var.QtPlugins)\mediaservice\wmfengine.dll" KeyPath="yes" />
+				<File Id="wmfengine" Source="$(var.Qt)\plugins\mediaservice\wmfengine.dll" KeyPath="yes" />
 			</Component>
 			<Component Id="qtmedia_audioengine" Guid="17c25fcc-b5eb-4e98-a7b1-5cf393f4a8b2">
-				<File Id="qtmedia_audioengine" Source="$(var.QtPlugins)\mediaservice\qtmedia_audioengine.dll" KeyPath="yes" />
+				<File Id="qtmedia_audioengine" Source="$(var.Qt)\plugins\mediaservice\qtmedia_audioengine.dll" KeyPath="yes" />
 			</Component>
 		</DirectoryRef>
 		
 		<!-- Subdirectory with plugins for windows -->
 		<DirectoryRef Id="platforms">
 			<Component Id="qwindows" Guid="420BE34D-CCCF-4318-B519-E09823A521D4">
-				<File Id="qwindows" Source="$(var.QtPlugins)\platforms\qwindows.dll" KeyPath="yes" />
+				<File Id="qwindows" Source="$(var.Qt)\plugins\platforms\qwindows.dll" KeyPath="yes" />
 			</Component>
 		</DirectoryRef>
 		
 		<!-- Subdirectory with playlistformats -->
 		<DirectoryRef Id="playlistformats">
 			<Component Id="qtmultimedia_m3u" Guid="4d0631cd-0f77-4c81-9319-2ba7691edeae">
-				<File Id="qtmultimedia_m3u" Source="$(var.QtPlugins)\playlistformats\qtmultimedia_m3u.dll" KeyPath="yes" />
+				<File Id="qtmultimedia_m3u" Source="$(var.Qt)\plugins\playlistformats\qtmultimedia_m3u.dll" KeyPath="yes" />
 			</Component>
 		</DirectoryRef>
 		
 		<!-- Subdirectory with sqldrivers -->
 		<DirectoryRef Id="sqldrivers">
 			<Component Id="qsqlite" Guid="14bff8eb-4692-4c3f-b072-398ab319c75c">
-				<File Id="qsqlite" Source="$(var.QtPlugins)\sqldrivers\qsqlite.dll" KeyPath="yes"/>
+				<File Id="qsqlite" Source="$(var.Qt)\plugins\sqldrivers\qsqlite.dll" KeyPath="yes"/>
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with translations -->
+		<DirectoryRef Id="translations">
+			<Component Id="qtTranslation" Guid="3b3c9a73-8b4f-4c63-97e3-6125da958688">
+				<File Id="qtTranslationAR" Source="$(var.Qt)\translations\qt_ar.qm" KeyPath="yes"/>
+				<File Id="qtTranslationDE" Source="$(var.Qt)\translations\qt_de.qm"/>
+				<File Id="qtTranslationES" Source="$(var.Qt)\translations\qt_es.qm"/>
+				<File Id="qtTranslationFR" Source="$(var.Qt)\translations\qt_fr.qm"/>
+				<File Id="qtTranslationIT" Source="$(var.Qt)\translations\qt_it.qm"/>
+				<File Id="qtTranslationJA" Source="$(var.Qt)\translations\qt_ja.qm"/>
+				<File Id="qtTranslationKO" Source="$(var.Qt)\translations\qt_ko.qm"/>
+				<File Id="qtTranslationPT" Source="$(var.Qt)\translations\qt_pt.qm"/>
+				<File Id="qtTranslationRU" Source="$(var.Qt)\translations\qt_ru.qm"/>
+				<File Id="qtTranslationZH" Source="$(var.Qt)\translations\qt_zh_CN.qm"/>
 			</Component>
 		</DirectoryRef>
 
@@ -171,6 +191,8 @@
 			<ComponentRef Id="qtmultimedia_m3u" />
 			<ComponentRef Id="qsqlite" />
 			<ComponentRef Id="qjpeg" />
+			<ComponentRef Id="qtconf" />
+			<ComponentRef Id="qtTranslation" />
 		</Feature>
 
 		<!-- The shortcut in the start menu can be unchoose by one -->

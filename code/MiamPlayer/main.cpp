@@ -4,7 +4,7 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MmeMiamMiamMusicPlayer"
-#define VERSION "0.5.1"
+#define VERSION "0.5.2"
 
 #include "plugininfo.h"
 
