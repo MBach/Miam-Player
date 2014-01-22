@@ -8,7 +8,7 @@
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
 
 	<Product Name="MmeMiamMiamMusicPlayer" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
-	Language="1033" Codepage="1252" Version="0.5.1" Manufacturer="MmeMiamMiam">
+	Language="1033" Codepage="1252" Version="0.5.2" Manufacturer="MmeMiamMiam">
 
 		<Package Id="*" Keywords="Installer" Description="Installer for Madame Miam-Miam's Music Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
 			InstallPrivileges="elevated" InstallScope="perMachine" InstallerVersion="405" Languages="1033" Compressed="yes" SummaryCodepage="1252" />

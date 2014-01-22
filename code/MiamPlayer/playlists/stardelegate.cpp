@@ -40,13 +40,19 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	opt.state &= ~QStyle::State_HasFocus;
 
 	///XXX
-	QLinearGradient linearGradient(opt.rect.x(), opt.rect.y(), opt.rect.x(), opt.rect.y() + opt.rect.height());
-	linearGradient.setColorAt(0, QColor::fromRgb(221, 236, 251));
-	linearGradient.setColorAt(1, QColor::fromRgb(202, 224, 251));
-	QBrush brush(linearGradient);
+	//QLinearGradient linearGradient(opt.rect.x(), opt.rect.y(), opt.rect.x(), opt.rect.y() + opt.rect.height());
+	//linearGradient.setColorAt(0, QColor::fromRgb(221, 236, 251));
+	//linearGradient.setColorAt(1, QColor::fromRgb(202, 224, 251));
+	//QBrush brush(linearGradient);
 
-	if (opt.state & QStyle::State_Selected) {
-		painter->fillRect(opt.rect, brush);
+	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active)) {
+		painter->fillRect(opt.rect, option.palette.highlight());
+	} else {
+		if (!Settings::getInstance()->colorsAlternateBG() || index.row() % 2 == 0) {
+			painter->fillRect(opt.rect, option.palette.base());
+		} else {
+			painter->fillRect(opt.rect, option.palette.alternateBase());
+		}
 	}
 	if (index.data().canConvert<StarRating>()) {
 		StarRating starRating = qvariant_cast<StarRating>(index.data());

@@ -3,6 +3,7 @@
 
 #include <cover.h>
 
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
 
@@ -17,6 +18,11 @@ LibrarySqlModel::LibrarySqlModel(const QSqlDatabase &db, QObject *parent) :
 
 	// When the scan is complete, save the model in the filesystem
 	connect(_musicSearchEngine, &MusicSearchEngine::searchHasEnded, [=] () {
+		database().exec("COMMIT TRANSACTION");
+		database().exec("CREATE INDEX indexArtist ON tracks (artist)");
+		database().exec("CREATE INDEX indexAlbum ON tracks (album)");
+		database().exec("CREATE INDEX indexArtistAlbum ON tracks (artistAlbum)");
+		database().exec("CREATE INDEX indexPath ON tracks (path)");
 		// Close Connection
 		database().close();
 		this->endResetModel();
@@ -47,15 +53,15 @@ void LibrarySqlModel::rebuild()
 	// Open Connection
 	database().open();
 
+	database().exec("PRAGMA synchronous = OFF");
+	database().exec("PRAGMA journal_mode = MEMORY");
 	database().exec("DROP TABLE tracks");
 	QString createTable("CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), ");
 	createTable.append("title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, absPath varchar(255) PRIMARY KEY ASC, path varchar(255), ");
 	createTable.append("coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0, externalCover INTEGER DEFAULT 0)");
 	database().exec(createTable);
-	database().exec("CREATE INDEX indexArtist ON tracks (artist)");
-	database().exec("CREATE INDEX indexAlbum ON tracks (album)");
-	database().exec("CREATE INDEX indexArtistAlbum ON tracks (artistAlbum)");
-	database().exec("CREATE INDEX indexPath ON tracks (path)");
+
+	database().exec("BEGIN TRANSACTION");
 
 	// Foreach file, insert tuple
 	QThread t;

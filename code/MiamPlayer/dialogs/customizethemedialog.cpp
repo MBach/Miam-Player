@@ -173,7 +173,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(_timer, &QTimer::timeout, [=]() { this->animate(0.5, 1.0); });
 
 	// Colors
-	connect(enableCustomColorsRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleCustomColors(bool)));
+	connect(enableCustomColorsRadioButton, &QCheckBox::toggled, this, &CustomizeThemeDialog::toggleCustomColors);
 	connect(enableAlternateBGRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleAlternativeBackgroundColor(bool)));
 	foreach (QToolButton *b, findChildren<QToolButton*>()) {
 		connect(b, SIGNAL(clicked()), this, SLOT(showColorDialog()));
@@ -347,6 +347,7 @@ void CustomizeThemeDialog::loadTheme()
 		enableCustomColorsRadioButton->setChecked(true);
 	} else {
 		disableCustomColorsRadioButton->setChecked(true);
+		this->toggleCustomColors(false);
 	}
 }
 

@@ -386,7 +386,9 @@ void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 		QString album = externalCover.record().value(0).toString();
 		QString alb = album.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 		QStandardItem *itemAlbum = _albums2.value(alb);
-		itemAlbum->setData(coverFileInfo.absoluteFilePath(), DataCoverPath);
+		if (itemAlbum) {
+			itemAlbum->setData(coverFileInfo.absoluteFilePath(), DataCoverPath);
+		}
 	}
 }
 
