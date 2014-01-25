@@ -139,6 +139,7 @@ public slots:
 	void setCopyTracksFromPlaylist(bool b);
 
 	void setCovers(bool b);
+	void setCoverSize(int s);
 
 	void setCustomColors(bool b);
 

@@ -419,6 +419,11 @@ void Settings::setCovers(bool b)
 	setValue("covers", b);
 }
 
+void Settings::setCoverSize(int s)
+{
+	setValue("coverSize", s);
+}
+
 void Settings::setCustomColors(bool b)
 {
 	setValue("customColors", b);

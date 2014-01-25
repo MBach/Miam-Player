@@ -70,7 +70,7 @@ public:
 					 DataNormalizedString	= Qt::UserRole + 6,
 					 DataYear				= Qt::UserRole + 7};
 
-protected:
+protected:	
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
 

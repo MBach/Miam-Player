@@ -8,6 +8,7 @@
 #include "libraryfilterproxymodel.h"
 
 #include <QPointer>
+#include <QPropertyAnimation>
 #include <QStandardItem>
 
 class LibraryItemDelegate : public QStyledItemDelegate
@@ -17,6 +18,11 @@ private:
 	QPointer<LibraryFilterProxyModel> _proxy;
 
 	QPointer<QStandardItemModel> _libraryModel;
+
+	bool _showCovers;
+	bool _animateIcons;
+
+	QPropertyAnimation *_animation;
 
 public:
 	LibraryItemDelegate(LibraryFilterProxyModel *proxy);
@@ -37,6 +43,9 @@ private:
 	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
+
+public slots:
+	void displayIcon(bool b);
 };
 
 #endif // LIBRARYITEMDELEGATE_H

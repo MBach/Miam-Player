@@ -13,6 +13,7 @@ SOURCES += \
     library/libraryfilterproxymodel.cpp \
     library/libraryitemdelegate.cpp \
     library/libraryorderdialog.cpp \
+	library/libraryscrollbar.cpp \
     library/librarytreeview.cpp \
     circleprogressbar.cpp \
     tracksnotfoundmessagebox.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     library/libraryfilterproxymodel.h \
     library/libraryitemdelegate.h \
     library/libraryorderdialog.h \
+	library/libraryscrollbar.h \
     library/librarytreeview.h \
     circleprogressbar.h \
     tracksnotfoundmessagebox.h \

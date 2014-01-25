@@ -11,10 +11,13 @@
 #include <QImageReader>
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy)
+	QStyledItemDelegate(proxy), _showCovers(true), _animateIcons(false), _animation(NULL)
 {
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
+	//_animation = new QPropertyAnimation(, "windowOpacity");
+	//_animation->setDuration(200);
+	//_animation->setTargetObject(this);
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -61,29 +64,42 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	}
 }
 
+#include <QStylePainter>
+
 /** Albums have covers usually. */
 void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	static QImageReader imageReader;
+	int coverSize = Settings::getInstance()->coverSize();
+
 	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
-	if (item->icon().isNull() && !file.isEmpty()) {
-		FileHelper fh(file);
-		QFileInfo f(file);
-		// If it's an inner cover
-		if (FileHelper::suffixes().contains(f.suffix())) {
-			std::unique_ptr<Cover> cover(fh.extractCover());
-			if (cover) {
-				QPixmap p;
-				p.loadFromData(cover->byteArray(), cover->format());
-				item->setIcon(QIcon(p));
-			} else {
-				item->setIcon(QIcon());
-			}
-		} else {
-			imageReader.setFileName(QDir::fromNativeSeparators(file));
-			imageReader.setScaledSize(QSize(Settings::getInstance()->coverSize(), Settings::getInstance()->coverSize()));
-			item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
+	if (_showCovers) {
+		if (_animateIcons) {
+
 		}
+		if ((item->icon().isNull() || item->data(Qt::UserRole + 20).toBool() == 1) && !file.isEmpty()) {
+			FileHelper fh(file);
+			QFileInfo f(file);
+			// If it's an inner cover
+			if (FileHelper::suffixes().contains(f.suffix())) {
+				std::unique_ptr<Cover> cover(fh.extractCover());
+				if (cover) {
+					QPixmap p;
+					p.loadFromData(cover->byteArray(), cover->format());
+					p = p.scaled(coverSize, coverSize);
+					item->setIcon(QIcon(p));
+				}
+			} else {
+				imageReader.setFileName(QDir::fromNativeSeparators(file));
+				imageReader.setScaledSize(QSize(Settings::getInstance()->coverSize(), Settings::getInstance()->coverSize()));
+				item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
+			}
+		}
+	} else {
+		QPixmap pixmap(coverSize, coverSize);
+		pixmap.fill(option.palette.base().color());
+		item->setIcon(QIcon(pixmap));
+		item->setData(1, Qt::UserRole + 20);
 	}
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
@@ -136,4 +152,13 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
 	option.widget->style()->drawControl(QStyle::CE_ItemViewItem, &option, painter, option.widget);
+}
+
+void LibraryItemDelegate::displayIcon(bool b)
+{
+	_showCovers = b;
+	if (_showCovers) {
+		_animateIcons = true;
+
+	}
 }

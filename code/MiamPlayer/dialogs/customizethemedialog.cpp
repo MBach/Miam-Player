@@ -188,7 +188,7 @@ void CustomizeThemeDialog::setupActions()
 		mainWindow->library->reset();
 	});
 
-	//connect(spinBoxCoverSize, SIGNAL(valueChanged(int)), mainWindow->library, SLOT(setCoverSize(int)));
+	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setCoverSize);
 }
 
 void CustomizeThemeDialog::fade()

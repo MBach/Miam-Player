@@ -19,6 +19,8 @@
 
 #include <filehelper.h>
 
+#include "libraryscrollbar.h"
+
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), sqlModel(NULL)
 {
@@ -68,7 +70,16 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
-	this->setItemDelegate(new LibraryItemDelegate(proxyModel));
+	LibraryItemDelegate *itemDelegate = new LibraryItemDelegate(proxyModel);
+	this->setItemDelegate(itemDelegate);
+
+	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
+	this->setVerticalScrollBar(vScrollBar);
+
+	connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, this, [=](bool b) {
+		qDebug() << "display?" << b;
+		itemDelegate->displayIcon(b);
+	});
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
 	connect(sqlModel, &LibrarySqlModel::coverWasUpdated, this, &LibraryTreeView::updateCover);
