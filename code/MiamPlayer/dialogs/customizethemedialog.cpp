@@ -132,8 +132,6 @@ void CustomizeThemeDialog::setupActions()
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(Settings::LIBRARY, font);
-		//mainWindow->library->model()->layoutChanged();
-		//mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, font, Qt::FontRole);
 		mainWindow->searchBar->setFont(font);
 		this->fade();
 	});
@@ -188,7 +186,12 @@ void CustomizeThemeDialog::setupActions()
 		mainWindow->library->reset();
 	});
 
-	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setCoverSize);
+	// Covers
+	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
+		settings->setCoverSize(cs);
+		//mainWindow->library->setIconSize(QSize(cs, cs));
+		//mainWindow->library->
+	});
 }
 
 void CustomizeThemeDialog::fade()

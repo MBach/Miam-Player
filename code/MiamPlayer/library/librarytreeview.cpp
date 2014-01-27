@@ -62,6 +62,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	sortByColumn(0, Qt::AscendingOrder);
 }
 
+#include <QTimer>
+
 void LibraryTreeView::init(LibrarySqlModel *sql)
 {
 	sqlModel = sql;
@@ -76,9 +78,30 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	this->setVerticalScrollBar(vScrollBar);
 
-	connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, this, [=](bool b) {
-		qDebug() << "display?" << b;
+	QTimer *timer = new QTimer(this);
+	timer->setTimerType(Qt::PreciseTimer);
+	timer->setInterval(10);
+	//connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, itemDelegate, &LibraryItemDelegate::displayIcon);
+	connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, [=](bool b) {
 		itemDelegate->displayIcon(b);
+		if (b) {
+			connect(timer, &QTimer::timeout, [=]() {
+				static qreal r = 0;
+				r += 0.01;
+				//qDebug() << "repainting indefinitely" << r;
+				if (timer->isActive()) {
+					if (r > 1) {
+						timer->stop();
+					}
+					itemDelegate->setIconOpacity(r);
+					this->viewport()->repaint();
+				} else {
+					itemDelegate->setIconOpacity(1.0);
+					r = 0;
+				}
+			});
+			timer->start();
+		}
 	});
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
@@ -116,6 +139,15 @@ void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
 	int year = record.value(++i).toInt();
 	const QString absFilePath = record.value(++i).toString();
 	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, trackNumber, year);
+}
+
+void LibraryTreeView::setIconSize(const QSize &size)
+{
+	/*LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
+	if (delegate) {
+		delegate->iconSizeChanged();
+	}*/
+	TreeView::setIconSize(size);
 }
 
 /** Redefined to display a small context menu in the view. */

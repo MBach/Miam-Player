@@ -39,16 +39,6 @@ Settings* Settings::getInstance()
 	return settings;
 }
 
-/** Returns the size of the buffer for a cover. */
-int Settings::bufferedCoverSize() const
-{
-	int buffer = value("bufferedCoverSize").toInt();
-	if (buffer == 0) {
-		buffer = 128;
-	}
-	return buffer;
-}
-
 /** Return the actual size of media buttons. */
 int Settings::buttonsSize() const
 {
@@ -385,12 +375,6 @@ int Settings::volume() const
 }
 
 /// SLOTS
-
-/** Sets the size of the buffer for a cover. */
-void Settings::setBufferedCoverSize(int i)
-{
-	setValue("bufferedCoverSize", i);
-}
 
 /** Sets a new button size. */
 void Settings::setButtonsSize(const int &s)

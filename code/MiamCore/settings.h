@@ -43,9 +43,6 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
 
-	/** Returns the size of the buffer for a cover. */
-	int bufferedCoverSize() const;
-
 	/** Returns the actual size of media buttons. */
 	int buttonsSize() const;
 
@@ -125,9 +122,6 @@ public:
 	int volume() const;
 
 public slots:
-
-	/** Sets the size of the buffer for a cover. */
-	void setBufferedCoverSize(int i);
 
 	/** Sets a new button size. */
 	void setButtonsSize(const int &s);

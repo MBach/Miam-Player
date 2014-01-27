@@ -235,6 +235,8 @@ void Playlist::dropEvent(QDropEvent *event)
 				target->removeSelectedTracks();
 			}
 		}
+	} else if (source == NULL) {
+		event->ignore();
 	}
 }
 

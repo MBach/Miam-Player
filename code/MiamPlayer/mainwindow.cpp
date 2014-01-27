@@ -349,7 +349,7 @@ void MainWindow::dropEvent(QDropEvent *event)
 
 	QRadioButton *radioButtonDD = customizeOptionsDialog->findChild<QRadioButton*>(Settings::getInstance()->dragAndDropBehaviour());
 	if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToLibrary) {
-		// TODO
+		/// TODO
 	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToPlaylist) {
 		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
 	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDOpenPopup) {

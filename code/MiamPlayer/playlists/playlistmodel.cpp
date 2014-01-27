@@ -63,6 +63,7 @@ void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
 	FileHelper f(track);
 	if (f.isValid()) {
+		qDebug() << "inserting" << track.canonicalUrl();
 		QString title(f.title());
 
 		// Then, construct a new row with correct informations
@@ -89,6 +90,8 @@ void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 		QList<QStandardItem *> widgetItems;
 		widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
 		this->insertRow(rowIndex, widgetItems);
+	} else {
+		qDebug() << "f is invalid" << track.canonicalUrl();
 	}
 }
 

@@ -10,6 +10,7 @@ LibraryScrollBar::LibraryScrollBar(QWidget *parent) :
 void LibraryScrollBar::mouseMoveEvent(QMouseEvent *e)
 {
 	if (_hasNotEmittedYet) {
+		qDebug() << "hide covers when moving";
 		emit displayItemDelegate(false);
 		_hasNotEmittedYet = false;
 	}
@@ -19,6 +20,7 @@ void LibraryScrollBar::mouseMoveEvent(QMouseEvent *e)
 void LibraryScrollBar::mouseReleaseEvent(QMouseEvent *e)
 {
 	if (!_hasNotEmittedYet) {
+		qDebug() << "show covers when stopped moving";
 		emit displayItemDelegate(true);
 		_hasNotEmittedYet = true;
 	}

@@ -130,6 +130,12 @@ void TabPlaylist::changeEvent(QEvent *event)
 	}
 }
 
+void TabPlaylist::dropEvent(QDropEvent *event)
+{
+	qDebug() << (event->source() == NULL);
+	QTabWidget::dropEvent(event);
+}
+
 void TabPlaylist::displayEmptyArea(bool isEmpty)
 {
 	if (isEmpty) {
@@ -203,19 +209,25 @@ Playlist* TabPlaylist::addPlaylist()
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
-	/*bool isEmpty = */ this->currentPlayList()->mediaPlaylist()->isEmpty();
+	qDebug() << Q_FUNC_INFO;
+	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
-		QList<QMediaContent> medias;
+		//QList<QMediaContent> medias;
+		QStringList tracks;
 		while (it.hasNext()) {
-			medias.append(QMediaContent(QUrl::fromLocalFile(it.next())));
+			//medias.append(QMediaContent(QUrl::fromLocalFile(it.next())));
+			tracks << it.next();
 		}
-		this->currentPlayList()->insertMedias(currentPlayList()->model()->rowCount(), medias);
+		qDebug() << "ici";
+		//this->currentPlayList()->insertMedias(currentPlayList()->model()->rowCount(), medias);
+		this->insertItemsToPlaylist(currentPlayList()->model()->rowCount(), tracks);
 	}
 	// Automatically plays the first track
-	/*if (isEmpty) {
-		this->skip();
-	}*/
+	if (isEmpty) {
+		this->mediaPlayer().data()->setPlaylist(this->currentPlayList()->mediaPlaylist());
+		this->mediaPlayer().data()->play();
+	}
 }
 
 /** Append a single track chosen by one from the library or the filesystem into the active playlist. */

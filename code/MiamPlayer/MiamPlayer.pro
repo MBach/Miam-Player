@@ -45,7 +45,8 @@ SOURCES += \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
     pluginmanager.cpp \
-    plugininfo.cpp
+    plugininfo.cpp \
+    library/iconengine.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -92,7 +93,8 @@ HEADERS += \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
     pluginmanager.h \
-    plugininfo.h
+    plugininfo.h \
+    library/iconengine.h
 
 FORMS += \
     mainwindow.ui \

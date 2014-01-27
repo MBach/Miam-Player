@@ -64,7 +64,7 @@ void DragDropDialog::addExternalFoldersToPlaylist()
 	if (checkBoxRememberChoice->isChecked()) {
 		emit rememberDragDrop(toolButtonPlaylist);
 	}
-	qDebug() << _externalLocations.size();
+	qDebug() << Q_FUNC_INFO << _externalLocations.size();
 	emit aboutToAddExtFoldersToPlaylist(_externalLocations);
 	this->accept();
 }
