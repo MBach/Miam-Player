@@ -29,19 +29,19 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_libraryModel->setColumnCount(1);
 	_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
 
-	///FIXME
-	//this->setStyleSheet(settings->styleSheet(this));
-	//this->header()->setStyleSheet(settings->styleSheet(this->header()));
-	//this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
-
 	int iconSize = settings->coverSize();
 	this->setIconSize(QSize(iconSize, iconSize));
-
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	proxyModel = new LibraryFilterProxyModel(this);
 	proxyModel->setSourceModel(_libraryModel);
 	proxyModel->setTopLevelItems(&_topLevelItems);
+	_itemDelegate = new LibraryItemDelegate(proxyModel);
+	this->setItemDelegate(_itemDelegate);
+
+	_timer = new QTimer(this);
+	_timer->setTimerType(Qt::PreciseTimer);
+	_timer->setInterval(10);
 
 	circleProgressBar = new CircleProgressBar(this);
 	circleProgressBar->setTransparentCenter(true);
@@ -60,49 +60,38 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
     connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 
 	sortByColumn(0, Qt::AscendingOrder);
+	setTextElideMode(Qt::ElideRight);
 }
 
-#include <QTimer>
+void LibraryTreeView::repaintIcons()
+{
+	static qreal r = 0;
+	if (_timer->isActive()) {
+		r += 0.01;
+		_itemDelegate->setIconOpacity(r);
+		if (r >= 1) {
+			_timer->stop();
+			r = 0;
+		}
+		this->viewport()->repaint();
+	}
+}
 
 void LibraryTreeView::init(LibrarySqlModel *sql)
 {
 	sqlModel = sql;
-
 	Settings *settings = Settings::getInstance();
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
-	LibraryItemDelegate *itemDelegate = new LibraryItemDelegate(proxyModel);
-	this->setItemDelegate(itemDelegate);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	this->setVerticalScrollBar(vScrollBar);
-
-	QTimer *timer = new QTimer(this);
-	timer->setTimerType(Qt::PreciseTimer);
-	timer->setInterval(10);
-	//connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, itemDelegate, &LibraryItemDelegate::displayIcon);
 	connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, [=](bool b) {
-		itemDelegate->displayIcon(b);
-		if (b) {
-			connect(timer, &QTimer::timeout, [=]() {
-				static qreal r = 0;
-				r += 0.01;
-				//qDebug() << "repainting indefinitely" << r;
-				if (timer->isActive()) {
-					if (r > 1) {
-						timer->stop();
-					}
-					itemDelegate->setIconOpacity(r);
-					this->viewport()->repaint();
-				} else {
-					itemDelegate->setIconOpacity(1.0);
-					r = 0;
-				}
-			});
-			timer->start();
-		}
+		_itemDelegate->displayIcon(b);
+		b ? _timer->start() : _timer->stop();
 	});
+	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
 	connect(sqlModel, &LibrarySqlModel::coverWasUpdated, this, &LibraryTreeView::updateCover);
@@ -197,8 +186,7 @@ void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &
 /** Recursive count for leaves only. */
 int LibraryTreeView::count(const QModelIndex &index) const
 {
-	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
-	if (delegate) {
+	if (_itemDelegate) {
 		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		int tmp = 0;
 		for (int i = 0; i < item->rowCount(); i++) {
@@ -222,8 +210,7 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 /** Reimplemented. */
 void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &tracks)
 {
-	LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
-	if (delegate) {
+	if (_itemDelegate) {
 		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		if (item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {

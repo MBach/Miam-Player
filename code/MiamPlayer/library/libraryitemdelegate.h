@@ -35,11 +35,16 @@ public:
 
 	inline void iconSizeChanged() { _iconSizeChanged = true; }
 
-	inline void setIconOpacity(qreal opacity) { _iconOpacity = opacity; }
+	inline void setIconOpacity(qreal opacity) {
+		_iconOpacity = opacity;
+		if (_iconOpacity == 1.0) {
+			_animateIcons = false;
+		}
+	}
 
 private:
 	/** Albums have covers usually. */
-	void drawAlbum(QPainter *painter, const QStyleOptionViewItem &o, QStandardItem *item) const;
+	void drawAlbum(QPainter *painter, QStyleOptionViewItem &o, QStandardItem *item) const;
 
 	void drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 

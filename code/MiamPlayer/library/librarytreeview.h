@@ -9,10 +9,12 @@
 #include "libraryfilterproxymodel.h"
 #include "../treeview.h"
 #include "../library/libraryorderdialog.h"
+#include "libraryitemdelegate.h"
 
 #include <QMenu>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QTimer>
 
 /**
  * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
@@ -29,6 +31,8 @@ private:
 
 	QStandardItemModel* _libraryModel;
 	LibrarySqlModel *sqlModel;
+	LibraryItemDelegate *_itemDelegate;
+	QTimer *_timer;
 
 	QHash<QString, QStandardItem*> _artists;
 	QHash<QPair<QStandardItem*, QString>, QStandardItem*> _albums;
@@ -97,6 +101,8 @@ private:
 					 int discNumber, const QString &title, int trackNumber, int year);
 
 	void updateCover(const QFileInfo &coverFileInfo);
+
+	void repaintIcons();
 
 public slots:
 	/** Reduce the size of the library when the user is typing text. */

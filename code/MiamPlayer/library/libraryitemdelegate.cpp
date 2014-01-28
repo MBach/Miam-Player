@@ -22,6 +22,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 {
 	//qDebug() << Q_FUNC_INFO;
 	painter->save();
+	painter->setFont(Settings::getInstance()->font(Settings::LIBRARY));
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
@@ -59,67 +60,63 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	int type = item->data(LibraryTreeView::Type).toInt();
 	if (settings->isCoversEnabled() && type == LibraryTreeView::Album) {
-		return QSize(settings->coverSize(), settings->coverSize() + 2);
+		QFontMetrics fmf(settings->font(Settings::LIBRARY));
+		//qDebug() << QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
+		//return QStyledItemDelegate::sizeHint(option, index);
+		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
 }
 
-#include "library/iconengine.h"
-
 /** Albums have covers usually. */
-void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewItem &option, QStandardItem *item) const
+void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	static QImageReader imageReader;
-	int coverSize = Settings::getInstance()->coverSize();
+	static int coverSize = Settings::getInstance()->coverSize();
 	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
+	// Display a light selection rectangle when one is moving the cursor
 	if (option.state & QStyle::State_MouseOver && ~option.state & QStyle::State_Selected) {
 		painter->save();
-		qDebug() << option.palette.color(QPalette::Active, QPalette::Highlight).name(QColor::HexArgb);
 		painter->setPen(option.palette.highlight().color());
 		painter->setBrush(option.palette.highlight().color().lighter(175));
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	} else if (option.state & QStyle::State_Selected) {
+		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		painter->save();
-		qDebug() << option.palette.color(QPalette::Active, QPalette::Highlight).name(QColor::HexArgb);
 		painter->setPen(option.palette.highlight().color());
 		painter->setBrush(option.palette.highlight().color().lighter(160));
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	}
 	if (_showCovers) {
-		if ((item->icon().isNull() || item->data(Qt::UserRole + 20).toBool() == 1) && !file.isEmpty()) {
+		// Qt::UserRole + 20 == false => pixmap not loaded ; == true => pixmap loaded
+		/// XXX: extract this elsewhere
+		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
 			FileHelper fh(file);
 			QFileInfo f(file);
 			qDebug() << "loading cover from harddrive";
-			// If it's an inner cover
+			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(f.suffix())) {
 				std::unique_ptr<Cover> cover(fh.extractCover());
 				if (cover) {
 					QPixmap p;
 					p.loadFromData(cover->byteArray(), cover->format());
 					p = p.scaled(coverSize, coverSize);
-					item->setIcon(QIcon(p));
+					item->setIcon(p);
+					item->setData(true, Qt::UserRole + 20);
 				}
 			} else {
 				imageReader.setFileName(QDir::fromNativeSeparators(file));
 				imageReader.setScaledSize(QSize(coverSize, coverSize));
-				item->setIcon(QIcon(QPixmap::fromImage(imageReader.read())));
+				item->setIcon(QPixmap::fromImage(imageReader.read()));
+				item->setData(true, Qt::UserRole + 20);
 			}
 		}
 	}
-	if (_showCovers && item->icon().isNull()) {
-		QPixmap pixmap(coverSize, coverSize);
-		pixmap.fill(option.palette.alternateBase().color());
-		QIcon ico(pixmap);
-		ico.addPixmap(pixmap);
-		item->setIcon(ico);
-		// Mark this item with empty pixmap
-		/// XXX: extract somewhere
-		item->setData(1, Qt::UserRole + 20);
-	}
-	if (_showCovers) {
+	bool b = item->data(Qt::UserRole + 20).toBool();
+	if (_showCovers && b) {
 		QPixmap p = option.icon.pixmap(QSize(coverSize, coverSize));
 		QRect cover(option.rect.x() + 1, option.rect.y() + 1, coverSize, coverSize);
 		if (_animateIcons) {
@@ -131,9 +128,13 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, const QStyleOptionViewIte
 			painter->drawPixmap(cover, p);
 		}
 	}
-	QPoint topLeft(option.rect.x() + coverSize, option.rect.y());
-	QRect rectCoverSize(topLeft, option.rect.bottomRight());
-	painter->drawText(rectCoverSize, option.text);
+	// It's possible to have missing covers in your library, so we need to keep alignment.
+	QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
+	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
+	QRect rectText(topLeft, option.rect.bottomRight());
+	option.textElideMode = Qt::ElideRight;
+	QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+	painter->drawText(rectText, Qt::AlignVCenter, s);
 }
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -189,8 +190,8 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 void LibraryItemDelegate::displayIcon(bool b)
 {
 	qDebug() << Q_FUNC_INFO;
-	if (b) {
-		_showCovers = true;
+	_showCovers = b;
+	if (_showCovers) {
 		_animateIcons = true;
 	} else {
 		this->setIconOpacity(0);

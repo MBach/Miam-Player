@@ -332,7 +332,9 @@ void CustomizeThemeDialog::loadTheme()
 	fontComboBoxLibrary->setCurrentFont(settings->font(Settings::LIBRARY));
 	fontComboBoxMenus->setCurrentFont(settings->font(Settings::MENUS));
 	spinBoxPlaylist->setValue(settings->fontSize(Settings::PLAYLIST));
+	spinBoxLibrary->blockSignals(true);
 	spinBoxLibrary->setValue(settings->fontSize(Settings::LIBRARY));
+	spinBoxLibrary->blockSignals(false);
 	spinBoxMenus->setValue(settings->fontSize(Settings::MENUS));
 
 	// Library
