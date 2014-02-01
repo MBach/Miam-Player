@@ -76,6 +76,8 @@ public:
 
 	void setIconSize(const QSize & size);
 
+	inline QHash<QString, QStandardItem*> letters() const { return _letters; }
+
 protected:	
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);

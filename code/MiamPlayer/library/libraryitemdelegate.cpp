@@ -26,6 +26,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
+	o.rect.adjust(0, 0, -19, 0);
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
@@ -163,6 +164,7 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	p2.setX(p2.x() - 2);
 	painter->setPen(Qt::gray);
 	painter->drawLine(p1, p2);
+	emit aboutToShowLetter(index);
 	QStyledItemDelegate::paint(painter, option, index);
 }
 

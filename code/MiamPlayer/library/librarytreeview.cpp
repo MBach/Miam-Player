@@ -108,6 +108,8 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 		_lod->show();
 	});
 	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
+
+	connect(_itemDelegate, &LibraryItemDelegate::aboutToShowLetter, vScrollBar, &LibraryScrollBar::highlightLetter);
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)

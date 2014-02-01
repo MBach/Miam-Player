@@ -56,6 +56,10 @@ private:
 
 public slots:
 	void displayIcon(bool b);
+
+
+signals:
+	void aboutToShowLetter(const QModelIndex &) const;
 };
 
 #endif // LIBRARYITEMDELEGATE_H
