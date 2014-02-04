@@ -16,6 +16,8 @@
 #include <QStandardItemModel>
 #include <QTimer>
 
+#include "library/jumptowidget.h"
+
 /**
  * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
  */
@@ -46,11 +48,16 @@ private:
 	// Letter L returns all Artists (e.g.) starting with L
 	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
 
+	JumpToWidget *_jumpToWidget;
+	QModelIndex _currentLetter;
+
 	Q_ENUMS(ItemType)
 	Q_ENUMS(DataField)
 
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
+
+	QChar currentLetter() const;
 
 	void init(LibrarySqlModel *sql);
 
@@ -76,14 +83,14 @@ public:
 
 	void setIconSize(const QSize & size);
 
-	inline QHash<QString, QStandardItem*> letters() const { return _letters; }
-
 protected:	
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
 
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
+
+	virtual void paintEvent(QPaintEvent *);
 
 private:
 	void bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath);
@@ -115,6 +122,8 @@ public slots:
 
 private slots:
 	void endPopulateTree();
+
+	void jumpTo(const QString &letter);
 
 signals:
 	/** (Dis|En)able covers.*/

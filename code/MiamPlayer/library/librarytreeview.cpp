@@ -61,6 +61,19 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
+
+	_jumpToWidget = new JumpToWidget(this);
+	_jumpToWidget->setBackgroundRole(QPalette::Button);
+}
+
+QChar LibraryTreeView::currentLetter() const
+{
+	if (_currentLetter.isValid()) {
+
+		return _currentLetter.data().toString().at(0);
+	} else {
+		return QChar();
+	}
 }
 
 void LibraryTreeView::repaintIcons()
@@ -109,7 +122,9 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	});
 	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
 
-	connect(_itemDelegate, &LibraryItemDelegate::aboutToShowLetter, vScrollBar, &LibraryScrollBar::highlightLetter);
+	connect(_itemDelegate, &LibraryItemDelegate::aboutToShowLetter, [=] (const QModelIndex &index) {
+		_currentLetter = index;
+	});
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
@@ -163,6 +178,27 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 	// - edit stars to the current track
 	currentPos = event->pos();
 	QTreeView::mouseDoubleClickEvent(event);
+}
+
+void LibraryTreeView::paintEvent(QPaintEvent *event)
+{
+	qDebug() << "paint";
+	if (verticalScrollBar()->isVisible()) {
+		_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());
+	} else {
+		_jumpToWidget->move(frameGeometry().right() - 19, 1 + header()->height());
+	}
+	/*if (_currentLetter.isValid()) {
+
+		QLabel *l = _jumpToWidget->findChild<QLabel*>(_currentLetter.data().toString());
+		if (l) {
+			qDebug() << "need to highlight" << _currentLetter.data().toString();
+			QPalette p = l->palette();
+			p.setBrush(QPalette::Text, p.alternateBase());
+			l->setPalette(p);
+		}
+	}*/
+	TreeView::paintEvent(event);
 }
 
 void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
@@ -481,4 +517,13 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
+}
+
+void LibraryTreeView::jumpTo(const QString &letter)
+{
+	QStandardItem *item = _letters.value(letter);
+	if (item) {
+		QModelIndex index = proxyModel->mapFromSource(item->index());
+		this->scrollTo(index, QAbstractItemView::PositionAtTop);
+	}
 }
