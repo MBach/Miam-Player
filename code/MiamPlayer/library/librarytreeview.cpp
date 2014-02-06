@@ -68,8 +68,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 QChar LibraryTreeView::currentLetter() const
 {
-	if (_currentLetter.isValid()) {
-
+	qDebug() << "valid?" << _currentLetter.isValid();
+	if (_currentLetter.isValid() && _currentLetter.data().toString().length() == 1) {
 		return _currentLetter.data().toString().at(0);
 	} else {
 		return QChar();
@@ -121,10 +121,6 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 		_lod->show();
 	});
 	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
-
-	connect(_itemDelegate, &LibraryItemDelegate::aboutToShowLetter, [=] (const QModelIndex &index) {
-		_currentLetter = index;
-	});
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
@@ -145,15 +141,6 @@ void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
 	int year = record.value(++i).toInt();
 	const QString absFilePath = record.value(++i).toString();
 	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, trackNumber, year);
-}
-
-void LibraryTreeView::setIconSize(const QSize &size)
-{
-	/*LibraryItemDelegate *delegate = qobject_cast<LibraryItemDelegate *>(itemDelegate());
-	if (delegate) {
-		delegate->iconSizeChanged();
-	}*/
-	TreeView::setIconSize(size);
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -182,22 +169,29 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
-	qDebug() << "paint";
+	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
+	QModelIndex iBottom = indexAt(viewport()->rect().bottomLeft());
+	if (iTop.data().toString().at(0) == iBottom.data().toString().at(0)) {
+		qDebug() << "top and bottom are equals" << iTop.data().toString().at(0);
+		_currentLetter = iTop;
+		//_jumpToWidget->update();
+	} else {
+		qDebug() << "top and bottom are different" << iTop.data().toString().at(0) << iBottom.data().toString().at(0);
+	}
+	QChar curL = iTop.data().toString().at(0);
+	/*int occurrences = 1;
+	while (iTop != iBottom) {
+		iTop = indexBelow(iTop);
+		if (iTop.data().toString().at(0) == curL) {
+
+		}
+	}*/
+	qDebug() << "top" << iTop.data().toString() << "bottom" << iBottom.data().toString();
 	if (verticalScrollBar()->isVisible()) {
 		_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());
 	} else {
 		_jumpToWidget->move(frameGeometry().right() - 19, 1 + header()->height());
 	}
-	/*if (_currentLetter.isValid()) {
-
-		QLabel *l = _jumpToWidget->findChild<QLabel*>(_currentLetter.data().toString());
-		if (l) {
-			qDebug() << "need to highlight" << _currentLetter.data().toString();
-			QPalette p = l->palette();
-			p.setBrush(QPalette::Text, p.alternateBase());
-			l->setPalette(p);
-		}
-	}*/
 	TreeView::paintEvent(event);
 }
 
@@ -480,6 +474,15 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 	}
 }
 
+void LibraryTreeView::jumpTo(const QString &letter)
+{
+	QStandardItem *item = _letters.value(letter);
+	if (item) {
+		QModelIndex index = proxyModel->mapFromSource(item->index());
+		this->scrollTo(index, QAbstractItemView::PositionAtTop);
+	}
+}
+
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
@@ -517,13 +520,4 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
-}
-
-void LibraryTreeView::jumpTo(const QString &letter)
-{
-	QStandardItem *item = _letters.value(letter);
-	if (item) {
-		QModelIndex index = proxyModel->mapFromSource(item->index());
-		this->scrollTo(index, QAbstractItemView::PositionAtTop);
-	}
 }

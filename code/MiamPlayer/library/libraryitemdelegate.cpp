@@ -164,7 +164,7 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	p2.setX(p2.x() - 2);
 	painter->setPen(Qt::gray);
 	painter->drawLine(p1, p2);
-	emit aboutToShowLetter(index);
+	//emit aboutToShowLetter(index);
 	QStyledItemDelegate::paint(painter, option, index);
 }
 

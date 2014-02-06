@@ -81,8 +81,6 @@ public:
 					 DataNormalizedString	= Qt::UserRole + 6,
 					 DataYear				= Qt::UserRole + 7};
 
-	void setIconSize(const QSize & size);
-
 protected:	
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
@@ -117,13 +115,13 @@ public slots:
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);
 
+	void jumpTo(const QString &letter);
+
 	/** Reimplemented. */
 	void reset();
 
 private slots:
 	void endPopulateTree();
-
-	void jumpTo(const QString &letter);
 
 signals:
 	/** (Dis|En)able covers.*/

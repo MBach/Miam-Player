@@ -11,6 +11,8 @@ class JumpToWidget : public QWidget
 private:
 	LibraryTreeView *_libraryTreeView;
 
+	QPoint _pos;
+
 public:
 	explicit JumpToWidget(LibraryTreeView *treeView);
 
@@ -19,7 +21,13 @@ public:
 	virtual QSize sizeHint() const;
 
 protected:
+	void leaveEvent(QEvent *e);
+
+	void mouseMoveEvent(QMouseEvent *e);
+
 	void paintEvent(QPaintEvent *event);
+
+	void resizeEvent(QResizeEvent * event);
 };
 
 #endif // JUMPTOWIDGET_H
