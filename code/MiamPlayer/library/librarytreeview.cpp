@@ -68,11 +68,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 QChar LibraryTreeView::currentLetter() const
 {
-	qDebug() << "valid?" << _currentLetter.isValid();
-	if (_currentLetter.isValid() && _currentLetter.data().toString().length() == 1) {
-		return _currentLetter.data().toString().at(0);
-	} else {
+	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
+	if (iTop.data(Type).toInt() == Letter && iTop.row() == 0 && proxyModel->sortOrder() == Qt::AscendingOrder) {
 		return QChar();
+	} else {
+		return iTop.data(DataNormalizedString).toString().toUpper().at(0);
 	}
 }
 
@@ -169,24 +169,7 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
-	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-	QModelIndex iBottom = indexAt(viewport()->rect().bottomLeft());
-	if (iTop.data().toString().at(0) == iBottom.data().toString().at(0)) {
-		qDebug() << "top and bottom are equals" << iTop.data().toString().at(0);
-		_currentLetter = iTop;
-		//_jumpToWidget->update();
-	} else {
-		qDebug() << "top and bottom are different" << iTop.data().toString().at(0) << iBottom.data().toString().at(0);
-	}
-	QChar curL = iTop.data().toString().at(0);
-	/*int occurrences = 1;
-	while (iTop != iBottom) {
-		iTop = indexBelow(iTop);
-		if (iTop.data().toString().at(0) == curL) {
-
-		}
-	}*/
-	qDebug() << "top" << iTop.data().toString() << "bottom" << iBottom.data().toString();
+	//qDebug() << Q_FUNC_INFO;
 	if (verticalScrollBar()->isVisible()) {
 		_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());
 	} else {

@@ -10,13 +10,11 @@
 #include "librarytreeview.h"
 
 JumpToWidget::JumpToWidget(LibraryTreeView *treeView) :
-	QWidget(treeView), _libraryTreeView(treeView)
+	QWidget(treeView), _libraryTreeView(treeView), _pos(-1, -1)
 {
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
 }
-
-#include <QMouseEvent>
 
 bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 {
@@ -50,16 +48,16 @@ void JumpToWidget::leaveEvent(QEvent *e)
 void JumpToWidget::mouseMoveEvent(QMouseEvent *e)
 {
 	_pos = e->pos();
-	qDebug() << _pos;
 	QWidget::mouseMoveEvent(e);
 	this->update();
 }
 
-void JumpToWidget::paintEvent(QPaintEvent *e)
+void JumpToWidget::paintEvent(QPaintEvent *)
 {
+	//qDebug() << Q_FUNC_INFO;
 	//if (this->height() < _libraryTreeView->height()) {
-		this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-		this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
+	this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
+	this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
 	//} else {
 	//	this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
 	//	this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
@@ -81,12 +79,4 @@ void JumpToWidget::paintEvent(QPaintEvent *e)
 		p.drawText(r, Qt::AlignCenter, qc);
 		p.restore();
 	}
-}
-
-void JumpToWidget::resizeEvent(QResizeEvent * event)
-{
-	//qDebug() << Q_FUNC_INFO;
-	//this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-	//this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-	QWidget::resizeEvent(event);
 }

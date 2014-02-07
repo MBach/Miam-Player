@@ -1,6 +1,7 @@
 #ifndef JUMPTOWIDGET_H
 #define JUMPTOWIDGET_H
 
+#include <QMouseEvent>
 #include <QWidget>
 
 class LibraryTreeView;
@@ -26,8 +27,6 @@ protected:
 	void mouseMoveEvent(QMouseEvent *e);
 
 	void paintEvent(QPaintEvent *event);
-
-	void resizeEvent(QResizeEvent * event);
 };
 
 #endif // JUMPTOWIDGET_H

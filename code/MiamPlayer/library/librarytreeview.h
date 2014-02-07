@@ -49,7 +49,6 @@ private:
 	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
 
 	JumpToWidget *_jumpToWidget;
-	QModelIndex _currentLetter;
 
 	Q_ENUMS(ItemType)
 	Q_ENUMS(DataField)
