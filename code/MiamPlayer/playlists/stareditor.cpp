@@ -57,7 +57,11 @@ StarEditor::StarEditor(QWidget *parent)
 void StarEditor::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
-	_starRating.paint(&painter, rect(), this->palette(), StarRating::Editable);
+	//_starRating.paint(&painter, rect(), this->palette(), StarRating::Editable);
+	QStyleOptionViewItem o;
+	o.rect = rect();
+	o.palette = this->palette();
+	_starRating.paint(&painter, o, StarRating::Editable);
 }
 
 void StarEditor::mouseMoveEvent(QMouseEvent *event)

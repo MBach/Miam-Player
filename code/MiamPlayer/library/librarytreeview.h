@@ -114,6 +114,7 @@ public slots:
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);
 
+	/** Find index from current letter then scrolls to it. */
 	void jumpTo(const QString &letter);
 
 	/** Reimplemented. */

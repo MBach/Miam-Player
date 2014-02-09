@@ -46,7 +46,8 @@ SOURCES += \
     tageditor/tageditortablewidget.cpp \
     pluginmanager.cpp \
     plugininfo.cpp \
-    library/jumptowidget.cpp
+    library/jumptowidget.cpp \
+    volumeslider.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -94,7 +95,8 @@ HEADERS += \
     tageditor/tageditortablewidget.h \
     pluginmanager.h \
     plugininfo.h \
-    library/jumptowidget.h
+    library/jumptowidget.h \
+    volumeslider.h
 
 FORMS += \
     mainwindow.ui \

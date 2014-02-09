@@ -39,12 +39,6 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	QStyleOptionViewItem opt = option;
 	opt.state &= ~QStyle::State_HasFocus;
 
-	///XXX
-	//QLinearGradient linearGradient(opt.rect.x(), opt.rect.y(), opt.rect.x(), opt.rect.y() + opt.rect.height());
-	//linearGradient.setColorAt(0, QColor::fromRgb(221, 236, 251));
-	//linearGradient.setColorAt(1, QColor::fromRgb(202, 224, 251));
-	//QBrush brush(linearGradient);
-
 	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active)) {
 		painter->fillRect(opt.rect, option.palette.highlight());
 	} else {
@@ -56,10 +50,10 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	}
 	if (index.data().canConvert<StarRating>()) {
 		StarRating starRating = qvariant_cast<StarRating>(index.data());
-		starRating.paint(painter, opt.rect, opt.palette, StarRating::ReadOnly);
+		starRating.paint(painter, opt, StarRating::ReadOnly);
 	} else if (opt.state & QStyle::State_Selected) {
 		StarRating starRating(StarRating::maxStarCount);
-		starRating.paint(painter, opt.rect, opt.palette, StarRating::NoStarsYet);
+		starRating.paint(painter, opt, StarRating::NoStarsYet);
 	}
 }
 

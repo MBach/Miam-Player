@@ -25,7 +25,9 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 		if (mouseEvent) {
 			int v = mouseEvent->y() * 26 / height();
 			QString s(v + 65);
+			emit displayItemDelegate(false);
 			_libraryTreeView->jumpTo(s);
+			emit displayItemDelegate(true);
 		}
 		return false;
 	} else {
@@ -66,16 +68,25 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	QStyleOptionViewItem o;
 	o.initFrom(_libraryTreeView);
 	p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
+
+	// Reduce the font if this widget is too small
+	QFont f = p.font();
+	f.setPixelSize(height() / 26);
 	for (int i = 0; i < 26; i++) {
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 19, height() / 26);
 		if (_libraryTreeView->currentLetter() == qc) {
+			// Display a bright selection rectangle corresponding to the top letter in the library
 			p.fillRect(r, o.palette.highlight());
 		} else if (o.state & QStyle::State_MouseOver && r.contains(_pos)) {
+			// Display a light rectangle under the mouse pointer
 			p.fillRect(r, o.palette.highlight().color().lighter(160));
 		}
 		p.save();
 		p.setBrush(o.palette.color(QPalette::WindowText));
+		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
+			p.setFont(f);
+		}
 		p.drawText(r, Qt::AlignCenter, qc);
 		p.restore();
 	}

@@ -27,6 +27,9 @@ protected:
 	void mouseMoveEvent(QMouseEvent *e);
 
 	void paintEvent(QPaintEvent *event);
+
+signals:
+	void displayItemDelegate(bool);
 };
 
 #endif // JUMPTOWIDGET_H

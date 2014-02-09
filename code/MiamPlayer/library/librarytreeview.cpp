@@ -104,6 +104,10 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 		_itemDelegate->displayIcon(b);
 		b ? _timer->start() : _timer->stop();
 	});
+	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, [=](bool b) {
+		_itemDelegate->displayIcon(b);
+		b ? _timer->start() : _timer->stop();
+	});
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
@@ -457,12 +461,12 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 	}
 }
 
+/** Find index from current letter then scrolls to it. */
 void LibraryTreeView::jumpTo(const QString &letter)
 {
 	QStandardItem *item = _letters.value(letter);
 	if (item) {
-		QModelIndex index = proxyModel->mapFromSource(item->index());
-		this->scrollTo(index, QAbstractItemView::PositionAtTop);
+		scrollTo(proxyModel->mapFromSource(item->index()), PositionAtTop);
 	}
 }
 

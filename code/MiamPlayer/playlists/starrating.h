@@ -43,6 +43,7 @@
 
 #include <QMetaType>
 #include <QPointF>
+#include <QStyleOptionViewItem>
 #include <QVector>
 
 class StarRating
@@ -59,7 +60,7 @@ public:
 
 	explicit StarRating(int starCount = 1);
 
-	void paint(QPainter *painter, const QRect &rect, const QPalette &palette, EditMode mode) const;
+	void paint(QPainter *painter, const QStyleOptionViewItem &item, EditMode mode) const;
 
 	inline void setStarCount(int starCount) { _starCount = starCount; }
 
