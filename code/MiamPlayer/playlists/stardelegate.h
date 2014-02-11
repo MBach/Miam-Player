@@ -44,6 +44,8 @@
 #include <QStyledItemDelegate>
 #include <QMediaPlaylist>
 
+class Playlist;
+
 /**
  * @brief The StarDelegate class is used to draw stars for ratings.
  */
@@ -51,10 +53,19 @@ class StarDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 private:
+	Playlist *_playlist;
 	QMediaPlaylist *_mediaPlaylist;
 
+	QPolygonF starPolygon;
+	QPolygonF diamondPolygon;
+	int _starCount;
+
 public:
-	StarDelegate(QMediaPlaylist *parent = 0);
+	static int maxStarCount;
+
+	enum EditMode { Editable, NoStarsYet, ReadOnly };
+
+	StarDelegate(Playlist *playlist, QMediaPlaylist *parent = 0);
 
 	/** Redefined. */
 	QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;

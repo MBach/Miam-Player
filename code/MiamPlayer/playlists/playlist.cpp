@@ -17,6 +17,7 @@
 #include "stardelegate.h"
 #include "stareditor.h"
 #include "playlistheaderview.h"
+#include "playlistitemdelegate.h"
 
 #include <QtDebug>
 
@@ -38,9 +39,10 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
-	this->setItemDelegate(new NoFocusItemDelegate(this));
+	this->setItemDelegate(new PlaylistItemDelegate(this));
+
 	// Replace the default delegate with a custom StarDelegate for ratings
-	StarDelegate *starDelegate = new StarDelegate(_playlistModel->mediaPlaylist());
+	StarDelegate *starDelegate = new StarDelegate(this, _playlistModel->mediaPlaylist());
 	this->setItemDelegateForColumn(5, starDelegate);
 	/*connect(starDelegate, &StarDelegate::aboutToUpdateRatings, [=] (const QModelIndex &index) {
 		qDebug() << "ratings to update" << qMediaPlaylist->media(index.row()).canonicalUrl();
@@ -55,11 +57,8 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
 	this->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	this->setShowGrid(false);
-	///FIXME
-	//this->setStyleSheet(settings->styleSheet(this));
 
 	// Init child members
-	//verticalScrollBar()->setStyleSheet(settings->styleSheet(this->verticalScrollBar()));
 	verticalHeader()->hide();
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
@@ -122,6 +121,11 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
 			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
 		}
+	});
+
+	// No pity: marks everything as a dirty region
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=]() {
+		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 	});
 }
 
@@ -275,23 +279,16 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	QTableView::mousePressEvent(event);
 }
 
-#include <QStylePainter>
-
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
 	QTableView::paintEvent(event);
-	//QStyleOptionViewItem o;
-	//o.initFrom(this);
-	//p.drawControl(QStyle::CE_ItemViewItem, o);
-	//p.drawPrimitive(QStyle::PE_PanelItemViewItem, o);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line
 		int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
 		int height = this->rowHeight(0);
 		/// TODO computes color from user defined settings
-		//QPainter painter(viewport());
-		QStylePainter p(viewport());
+		QPainter p(viewport());
 		p.setPen(Qt::black);
 		p.drawLine(viewport()->rect().left(), rowDest * height,
 				   viewport()->rect().right(), rowDest * height);

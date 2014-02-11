@@ -77,7 +77,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	static int coverSize = Settings::getInstance()->coverSize();
 	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
 	// Display a light selection rectangle when one is moving the cursor
-	if (option.state & QStyle::State_MouseOver && ~option.state & QStyle::State_Selected) {
+	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
 		painter->setPen(option.palette.highlight().color());
 		painter->setBrush(option.palette.highlight().color().lighter(175));
