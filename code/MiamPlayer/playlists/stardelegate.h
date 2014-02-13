@@ -58,7 +58,7 @@ private:
 
 	QPolygonF starPolygon;
 	QPolygonF diamondPolygon;
-	int _starCount;
+	bool _editorIsOpened;
 
 public:
 	static int maxStarCount;
@@ -81,6 +81,12 @@ public:
 
 	/** Redefined. */
 	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+protected:
+	bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+
+private:
+	void paintStars(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 //signals:
 //	void aboutToUpdateRatings(const QModelIndex &);

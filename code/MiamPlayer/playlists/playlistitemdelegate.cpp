@@ -27,12 +27,11 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		if (!top.isValid() || !_playlist->selectionModel()->selectedIndexes().contains(top)) {
 			p->drawLine(opt.rect.topLeft(), opt.rect.topRight());
 		}
-		if (index.column() == 0) {
+		if (opt.rect.left() == 0) {
 			p->drawLine(opt.rect.topLeft(), opt.rect.bottomLeft());
-		} else if (index.column() + 1 == index.model()->columnCount()) {
+		} else if (opt.rect.right() == _playlist->viewport()->rect().right()) {
 			p->drawLine(opt.rect.topRight(), opt.rect.bottomRight());
 		}
-
 		// Don't display the bottom line is the track underneath is selected
 		QModelIndex bottom = index.sibling(index.row() + 1, index.column());
 		if (!bottom.isValid() || !_playlist->selectionModel()->selectedIndexes().contains(bottom)) {

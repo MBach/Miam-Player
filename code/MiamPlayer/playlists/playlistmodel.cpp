@@ -12,9 +12,7 @@
 
 PlaylistModel::PlaylistModel(QObject *parent) :
 	QStandardItemModel(0, 7, parent), _mediaPlaylist(new QMediaPlaylist(this))
-{
-
-}
+{}
 
 /** Clear the content of playlist. */
 void PlaylistModel::clear()

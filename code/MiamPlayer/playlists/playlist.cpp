@@ -6,16 +6,12 @@
 #include <QScrollBar>
 #include <QTime>
 
-//#include <fileref.h>
-//#include <tag.h>
-
 #include "../columnutils.h"
 #include "settings.h"
 #include "../nofocusitemdelegate.h"
 #include "../library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "stardelegate.h"
-#include "stareditor.h"
 #include "playlistheaderview.h"
 #include "playlistitemdelegate.h"
 
@@ -271,11 +267,11 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 		_dragStartPosition = event->pos();
 	}
 	// For star ratings: close every opened editor!
-	foreach (StarEditor *starEditor, this->findChildren<StarEditor*>()) {
+	/// FIXME
+	/*foreach (StarEditor *starEditor, this->findChildren<StarEditor*>()) {
 		commitData(starEditor);
 		delete starEditor;
-	}
-
+	}*/
 	QTableView::mousePressEvent(event);
 }
 

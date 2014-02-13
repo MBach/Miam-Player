@@ -2,7 +2,6 @@
 
 #include "playlist.h"
 #include "stardelegate.h"
-#include "stareditor.h"
 #include "starrating.h"
 
 #include <settings.h>
@@ -11,9 +10,8 @@
 int StarDelegate::maxStarCount = 5;
 
 StarDelegate::StarDelegate(Playlist *playlist, QMediaPlaylist *parent)
-	: QStyledItemDelegate(parent), _playlist(playlist), _mediaPlaylist(parent)
+	: QStyledItemDelegate(parent), _playlist(playlist), _mediaPlaylist(parent), _editorIsOpened(false)
 {
-	//_starCount = starCount;
 	for (int i = 0; i < 5; ++i) {
 		QLineF l(0.5, 0.5, 0.5, 0);
 		l.setAngle(i * 72 + 18);
@@ -29,20 +27,16 @@ StarDelegate::StarDelegate(Playlist *playlist, QMediaPlaylist *parent)
 /** Redefined. */
 QWidget* StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
 {
-	StarEditor *editor = new StarEditor(parent);
+	/*StarEditor *editor = new StarEditor(parent);
 	connect(editor, &StarEditor::editingFinished, [=]() {
-		//emit commitData(editor);
-		//qDebug() << "saving file" << index;
-		//FileHelper fh;
-		//fh.file()->save();
-		//emit aboutToUpdateRatings(index);
 		qDebug() << "ratings to update" << _mediaPlaylist->media(index.row()).canonicalUrl();
 		QMediaContent mediaContent = _mediaPlaylist->media(index.row());
 		FileHelper fh(QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile())));
 		fh.setRating(editor->starRating().starCount());
 		delete editor;
 	});
-	return editor;
+	return editor;*/
+	return parent;
 }
 
 /** Redefined. */
@@ -54,7 +48,6 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active)) {
 		painter->save();
 		painter->setPen(opt.palette.highlight().color());
-		//painter->fillRect(opt.rect.adjusted(0, 1, 0, -1), opt.palette.highlight().color().lighter());
 		painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());
 		painter->restore();
 	} else {
@@ -65,24 +58,36 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 		}
 	}
 
-	////
-	////
-	painter->save();
-
 	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active) ) {
+		painter->save();
 		painter->setPen(opt.palette.highlight().color());
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
 		if (!top.isValid() || !_playlist->selectionModel()->selectedIndexes().contains(top)) {
 			painter->drawLine(opt.rect.topLeft(), opt.rect.topRight());
 		}
+		if (opt.rect.left() == 0) {
+			painter->drawLine(opt.rect.topLeft(), opt.rect.bottomLeft());
+		} else if (opt.rect.right() == _playlist->viewport()->rect().right()) {
+			painter->drawLine(opt.rect.topRight(), opt.rect.bottomRight());
+		}
 		// Don't display the bottom line is the track underneath is selected
 		QModelIndex bottom = index.sibling(index.row() + 1, index.column());
 		if (!bottom.isValid() || !_playlist->selectionModel()->selectedIndexes().contains(bottom)) {
 			painter->drawLine(opt.rect.bottomLeft(), opt.rect.bottomRight());
 		}
+		painter->restore();
 	}
 
+	if (index.data().canConvert<StarRating>()) {
+		this->paintStars(painter, option, index);
+	}
+}
+
+void StarDelegate::paintStars(QPainter *painter, const QStyleOptionViewItem &opt, const QModelIndex &index) const
+{
+	//qDebug() << Q_FUNC_INFO;
+	painter->save();
 	painter->setRenderHint(QPainter::Antialiasing, true);
 
 	/// XXX: extract this somewhere?
@@ -124,7 +129,7 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	}
 	painter->setPen(pen);
 
-	opt.rect.adjust(0, 3, 0, -3);
+	//opt.rect.adjust(0, 3, 0, -3);
 
 	int yOffset = (opt.rect.height() - opt.rect.height() * starPolygon.boundingRect().height()) / 2;
 	painter->translate(opt.rect.x(), opt.rect.y() + yOffset);
@@ -134,8 +139,9 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 		painter->scale(opt.rect.width() / maxStarCount, opt.rect.width() / maxStarCount);
 	}
 
+	//qDebug() << index.data();
 	for (int i = 0; i < maxStarCount; ++i) {
-		if (i < _starCount) {
+		if (i < index.data().toInt()) {
 			painter->drawPolygon(starPolygon);
 		} else if (mode == Editable) {
 			painter->drawPolygon(diamondPolygon, Qt::WindingFill);
@@ -144,8 +150,6 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 	}
 
 	painter->restore();
-	////
-	////
 }
 
 /** Redefined. */
@@ -153,16 +157,16 @@ void StarDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
 {
 	qDebug() << Q_FUNC_INFO << editor;
 	StarRating starRating = qvariant_cast<StarRating>(index.data());
-	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-	starEditor->setStarRating(starRating);
+	//StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+	//starEditor->setStarRating(starRating);
 }
 
 /** Redefined. */
 void StarDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
 	qDebug() << Q_FUNC_INFO;
-	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-	model->setData(index, QVariant::fromValue(starEditor->starRating()));
+	//StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+	//model->setData(index, QVariant::fromValue(starEditor->starRating()));
 }
 
 /** Redefined. */
@@ -173,4 +177,13 @@ QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
+}
+
+bool StarDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+	qDebug() << Q_FUNC_INFO << event->type();
+	if (event->type() == QEvent::MouseButtonRelease) {
+		_editorIsOpened = true;
+	}
+	return QStyledItemDelegate::editorEvent(event, model, option, index);
 }

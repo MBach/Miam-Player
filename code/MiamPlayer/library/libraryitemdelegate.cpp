@@ -178,8 +178,8 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 		FileHelper fh(absFilePath);
 		//qDebug() << "rating" << fh.rating();
 		if (fh.rating() > 0) {
-			StarRating starRating(fh.rating());
-			starRating.paint(painter, option, StarRating::ReadOnly);
+			//StarRating starRating(fh.rating());
+			//starRating.paint(painter, option, StarRating::ReadOnly);
 		}
 	}
 	int trackNumber = track->data(LibraryTreeView::DataTrackNumber).toInt();

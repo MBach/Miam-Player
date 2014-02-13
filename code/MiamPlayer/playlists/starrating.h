@@ -60,8 +60,6 @@ public:
 
 	explicit StarRating(int starCount = 1);
 
-	void paint(QPainter *painter, const QStyleOptionViewItem &item, EditMode mode) const;
-
 	inline void setStarCount(int starCount) { _starCount = starCount; }
 
 	inline int starCount() const { return _starCount; }

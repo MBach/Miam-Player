@@ -26,7 +26,6 @@ SOURCES += \
     playlists/playlistheaderview.cpp \
     playlists/playlistmodel.cpp \
     playlists/stardelegate.cpp \
-    playlists/stareditor.cpp \
     playlists/tabbar.cpp \
     playlists/tabplaylist.cpp \
     dialogs/closeplaylistpopup.cpp \
@@ -76,7 +75,6 @@ HEADERS += \
     playlists/playlistheaderview.h \
     playlists/playlistmodel.h \
     playlists/stardelegate.h \
-    playlists/stareditor.h \
     playlists/tabbar.h \
     playlists/tabplaylist.h \
     dialogs/closeplaylistpopup.h \
