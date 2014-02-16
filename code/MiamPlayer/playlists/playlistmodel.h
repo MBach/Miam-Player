@@ -22,8 +22,6 @@ public:
 	/** Clear the content of playlist. */
 	void clear();
 
-	void highlightCurrentTrack();
-
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
 	void insertMedia(int rowIndex, const QMediaContent &track);

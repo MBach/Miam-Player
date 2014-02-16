@@ -25,7 +25,6 @@ SOURCES += \
     playlists/playlist.cpp \
     playlists/playlistheaderview.cpp \
     playlists/playlistmodel.cpp \
-    playlists/stardelegate.cpp \
     playlists/tabbar.cpp \
     playlists/tabplaylist.cpp \
     dialogs/closeplaylistpopup.cpp \
@@ -47,7 +46,8 @@ SOURCES += \
     library/jumptowidget.cpp \
     volumeslider.cpp \
     playlists/playlistitemdelegate.cpp \
-    playlists/starrating.cpp
+    playlists/starrating.cpp \
+    playlists/stareditor.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -74,7 +74,6 @@ HEADERS += \
     playlists/playlist.h \
     playlists/playlistheaderview.h \
     playlists/playlistmodel.h \
-    playlists/stardelegate.h \
     playlists/tabbar.h \
     playlists/tabplaylist.h \
     dialogs/closeplaylistpopup.h \
@@ -96,7 +95,8 @@ HEADERS += \
     library/jumptowidget.h \
     volumeslider.h \
     playlists/playlistitemdelegate.h \
-    playlists/starrating.h
+    playlists/starrating.h \
+    playlists/stareditor.h
 
 FORMS += \
     mainwindow.ui \

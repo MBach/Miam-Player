@@ -301,7 +301,6 @@ void TabPlaylist::updateRowHeight()
 	for (int i = 0; i < count() - 1; i++) {
 		Playlist *p = playlist(i);
 		p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
-		p->highlightCurrentTrack();
 	}
 }
 

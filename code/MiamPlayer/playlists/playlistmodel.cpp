@@ -22,33 +22,6 @@ void PlaylistModel::clear()
 	}
 }
 
-void PlaylistModel::highlightCurrentTrack()
-{
-	QStandardItem *it = NULL;
-	const QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
-	if (rowCount() > 0) {
-		for (int i=0; i < rowCount(); i++) {
-			for (int j = 0; j < columnCount(); j++) {
-				it = item(i, j);
-				QFont itemFont = font;
-				itemFont.setBold(false);
-				itemFont.setItalic(false);
-				it->setFont(itemFont);
-			}
-		}
-		for (int j=0; j < columnCount(); j++) {
-			it = item(_mediaPlaylist->currentIndex(), j);
-			// If there is actually one selected track in the playlist
-			if (it != NULL) {
-				QFont itemFont = font;
-				itemFont.setBold(true);
-				itemFont.setItalic(true);
-				it->setFont(itemFont);
-			}
-		}
-	}
-}
-
 void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
 	_mediaPlaylist->insertMedia(rowIndex, tracks);
@@ -65,7 +38,6 @@ void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 		QString title(f.title());
 
 		// Then, construct a new row with correct informations
-		//QStandardItem *trackItem = new QStandardItem(QString::number(f->file()->tag()->track()));
 		QStandardItem *trackItem = new QStandardItem(f.trackNumber());
 		trackItem->setData(track.canonicalUrl());
 		QStandardItem *titleItem = new QStandardItem(title);

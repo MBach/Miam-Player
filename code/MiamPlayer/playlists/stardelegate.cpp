@@ -3,6 +3,7 @@
 #include "playlist.h"
 #include "stardelegate.h"
 #include "starrating.h"
+#include "stareditor.h"
 
 #include <settings.h>
 #include <filehelper.h>
@@ -27,22 +28,21 @@ StarDelegate::StarDelegate(Playlist *playlist, QMediaPlaylist *parent)
 /** Redefined. */
 QWidget* StarDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
 {
-	/*StarEditor *editor = new StarEditor(parent);
-	connect(editor, &StarEditor::editingFinished, [=]() {
+	StarEditor *editor = new StarEditor(index.data().value<StarRating>(), parent);
+	/*connect(editor, &StarEditor::editingFinished, [=]() {
 		qDebug() << "ratings to update" << _mediaPlaylist->media(index.row()).canonicalUrl();
 		QMediaContent mediaContent = _mediaPlaylist->media(index.row());
 		FileHelper fh(QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile())));
 		fh.setRating(editor->starRating().starCount());
 		delete editor;
-	});
-	return editor;*/
-	return parent;
+	});*/
+	return editor;
 }
 
 /** Redefined. */
 void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	// Removes the dotted rectangle
+	// Removes the dotted rectangle on the selected cell because the entire row is selected
 	QStyleOptionViewItem opt = option;
 	opt.state &= ~QStyle::State_HasFocus;
 	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active)) {
@@ -58,7 +58,7 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 		}
 	}
 
-	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active) ) {
+	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active)) {
 		painter->save();
 		painter->setPen(opt.palette.highlight().color());
 		// Don't display the upper line is the track above is selected
@@ -79,14 +79,15 @@ void StarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
 		painter->restore();
 	}
 
-	if (index.data().canConvert<StarRating>()) {
+	// Don't paint anything if index cannot be converted in rating and item isn't selected
+	// Otherwise, paint color filled stars for existing rating, or "wireframe" stars for selected items
+	if (index.data().canConvert<StarRating>() || opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active)) {
 		this->paintStars(painter, option, index);
 	}
 }
 
 void StarDelegate::paintStars(QPainter *painter, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
-	//qDebug() << Q_FUNC_INFO;
 	painter->save();
 	painter->setRenderHint(QPainter::Antialiasing, true);
 
@@ -97,7 +98,16 @@ void StarDelegate::paintStars(QPainter *painter, const QStyleOptionViewItem &opt
 
 	pen.setWidthF(pen.widthF() / opt.rect.height());
 
-	EditMode mode = ReadOnly;
+	EditMode mode;
+	int stars = 0;
+	if (index.data().canConvert<StarRating>()) {
+		/// XXX
+		mode = ReadOnly;
+		StarRating sr = index.data().value<StarRating>();
+		stars = sr.starCount();
+	} else {
+		mode = NoStarsYet;
+	}
 	switch (mode) {
 	case Editable:
 		painter->fillRect(opt.rect, QApplication::style()->standardPalette().highlight().color().lighter());
@@ -139,16 +149,14 @@ void StarDelegate::paintStars(QPainter *painter, const QStyleOptionViewItem &opt
 		painter->scale(opt.rect.width() / maxStarCount, opt.rect.width() / maxStarCount);
 	}
 
-	//qDebug() << index.data();
 	for (int i = 0; i < maxStarCount; ++i) {
-		if (i < index.data().toInt()) {
+		if (i < stars || mode == NoStarsYet) {
 			painter->drawPolygon(starPolygon);
 		} else if (mode == Editable) {
 			painter->drawPolygon(diamondPolygon, Qt::WindingFill);
 		}
 		painter->translate(1.0, 0);
 	}
-
 	painter->restore();
 }
 
@@ -181,8 +189,8 @@ QSize StarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
 
 bool StarDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
-	qDebug() << Q_FUNC_INFO << event->type();
 	if (event->type() == QEvent::MouseButtonRelease) {
+		qDebug() << "editor can be opened";
 		_editorIsOpened = true;
 	}
 	return QStyledItemDelegate::editorEvent(event, model, option, index);

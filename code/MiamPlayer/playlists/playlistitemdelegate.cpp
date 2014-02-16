@@ -2,6 +2,8 @@
 
 #include "playlist.h"
 #include "settings.h"
+#include "stareditor.h"
+#include "filehelper.h"
 
 #include <QPainter>
 #include <QApplication>
@@ -12,13 +14,40 @@ PlaylistItemDelegate::PlaylistItemDelegate(Playlist *playlist) :
 	QStyledItemDelegate(playlist), _playlist(playlist)
 {}
 
+/** Redefined. */
+QWidget* PlaylistItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
+{
+	StarEditor *editor = new StarEditor(index, parent);
+	editor->setFocus();
+	connect(editor, &StarEditor::editingFinished, [=]() {
+		qDebug() << "ratings to update" << _playlist->mediaPlaylist()->media(index.row()).canonicalUrl();
+		QMediaContent mediaContent = _playlist->mediaPlaylist()->media(index.row());
+		FileHelper fh(QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile())));
+		fh.setRating(editor->starRating.starCount());
+		editor->close();
+	});
+	return editor;
+}
+
+/** Redefined. */
+void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+	qDebug() << Q_FUNC_INFO;
+	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
+	qDebug() << starEditor << starEditor->starRating.starCount();
+	model->setData(index, QVariant::fromValue(starEditor->starRating));
+	delete starEditor;
+}
+
+/** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
 	QStyleOptionViewItem o(opt);
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
-	if (opt.state.testFlag(QStyle::State_Selected) && opt.state.testFlag(QStyle::State_Active) ) {
+	if (opt.state.testFlag(QStyle::State_Selected) ||
+		_editors.value(index.row()) && _editors.value(index.row())->isVisible()) {
 		p->fillRect(o.rect, opt.palette.highlight().color().lighter());
 		p->setPen(opt.palette.highlight().color());
 
@@ -43,7 +72,32 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	}
 	p->restore();
 
+	// Highlight the current playing item
+	QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	if (_playlist->mediaPlaylist()->currentIndex() == index.row()) {
+		font.setBold(true);
+		font.setItalic(true);
+	}
+	p->setFont(font);
+
 	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
-	p->setFont(Settings::getInstance()->font(Settings::PLAYLIST));
-	style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, index.data().toString());
+	switch (index.column()) {
+	case Playlist::TRACK_NUMBER:
+	case Playlist::LENGTH:
+	case Playlist::YEAR:
+		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, index.data().toString());
+		break;
+	case Playlist::TITLE:
+	case Playlist::ALBUM:
+	case Playlist::ARTIST:
+		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, index.data().toString());
+		break;
+	case Playlist::RATINGS:
+		if (index.data().canConvert<StarRating>() || opt.state.testFlag(QStyle::State_Selected)) {
+			StarRating r = index.data().value<StarRating>();
+			r.paintStars(p, opt);
+		}
+		break;
+	}
 }
+

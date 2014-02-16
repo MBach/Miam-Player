@@ -38,35 +38,46 @@
 **
 ****************************************************************************/
 
-#ifndef STARRATING_H
-#define STARRATING_H
+#include <QtWidgets>
 
-#include <QMetaType>
-#include <QPointF>
-#include <QStyleOptionViewItem>
-#include <QVector>
+#include "stareditor.h"
+#include "starrating.h"
 
-class StarRating
+#include <cmath>
+
+#include <QtDebug>
+
+StarEditor::StarEditor(const QModelIndex &index, QWidget *parent)
+	: QWidget(parent)
 {
-private:
-	QPolygonF starPolygon;
-	QPolygonF diamondPolygon;
-	int _starCount;
+	starRating = index.data().value<StarRating>();
+	_index = index;
+	this->installEventFilter(this);
+	this->setMouseTracking(true);
+}
 
-public:
-	static int maxStarCount;
+bool StarEditor::eventFilter(QObject *obj, QEvent *e)
+{
+	return QWidget::eventFilter(obj, e);
+}
 
-	enum EditMode { Editable, NoStarsYet, ReadOnly };
+void StarEditor::mouseMoveEvent(QMouseEvent *event)
+{
+	double starWidth = this->rect().height();
+	starRating.setStarCount(std::floor(event->x() / starWidth + 0.5));
+	update();
+}
 
-	explicit StarRating(int starCount = 0);
+void StarEditor::mousePressEvent(QMouseEvent *)
+{
+	emit editingFinished(this);
+}
 
-	void setStarCount(int starCount);
-
-	inline int starCount() const { return _starCount; }
-
-	void paintStars(QPainter *painter, const QStyleOptionViewItem &option, EditMode mode = ReadOnly) const;
-};
-
-Q_DECLARE_METATYPE(StarRating)
-
-#endif
+void StarEditor::paintEvent(QPaintEvent *)
+{
+	QPainter painter(this);
+	QStyleOptionViewItem o;
+	o.rect = rect();
+	o.palette = this->palette();
+	starRating.paintStars(&painter, o, StarRating::Editable);
+}

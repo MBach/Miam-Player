@@ -38,35 +38,34 @@
 **
 ****************************************************************************/
 
-#ifndef STARRATING_H
-#define STARRATING_H
+#ifndef STAREDITOR_H
+#define STAREDITOR_H
 
-#include <QMetaType>
-#include <QPointF>
-#include <QStyleOptionViewItem>
-#include <QVector>
+#include <QAbstractItemDelegate>
+#include <QWidget>
 
-class StarRating
+#include "starrating.h"
+
+class StarEditor : public QWidget
 {
-private:
-	QPolygonF starPolygon;
-	QPolygonF diamondPolygon;
-	int _starCount;
-
+	Q_OBJECT
 public:
-	static int maxStarCount;
+	StarEditor(const QModelIndex &index, QWidget *parent = 0);
 
-	enum EditMode { Editable, NoStarsYet, ReadOnly };
+	QModelIndex _index;
+	StarRating starRating;
 
-	explicit StarRating(int starCount = 0);
+	virtual bool eventFilter(QObject *obj, QEvent *e);
 
-	void setStarCount(int starCount);
+	inline QModelIndex index() const { return _index; }
 
-	inline int starCount() const { return _starCount; }
+protected:
+	void mouseMoveEvent(QMouseEvent *event);
+	void mousePressEvent(QMouseEvent *);
+	void paintEvent(QPaintEvent *);
 
-	void paintStars(QPainter *painter, const QStyleOptionViewItem &option, EditMode mode = ReadOnly) const;
+signals:
+	void editingFinished(StarEditor *);
 };
-
-Q_DECLARE_METATYPE(StarRating)
 
 #endif

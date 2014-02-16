@@ -8,16 +8,12 @@
 
 #include "../columnutils.h"
 #include "settings.h"
-#include "../nofocusitemdelegate.h"
 #include "../library/librarytreeview.h"
 #include "tabplaylist.h"
-#include "stardelegate.h"
 #include "playlistheaderview.h"
 #include "playlistitemdelegate.h"
 
 #include <QtDebug>
-
-#include <QApplication>
 
 Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL), _hash(0)
@@ -36,18 +32,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
 	this->setItemDelegate(new PlaylistItemDelegate(this));
-
-	// Replace the default delegate with a custom StarDelegate for ratings
-	StarDelegate *starDelegate = new StarDelegate(this, _playlistModel->mediaPlaylist());
-	this->setItemDelegateForColumn(5, starDelegate);
-	/*connect(starDelegate, &StarDelegate::aboutToUpdateRatings, [=] (const QModelIndex &index) {
-		qDebug() << "ratings to update" << qMediaPlaylist->media(index.row()).canonicalUrl();
-		QMediaContent mediaContent = qMediaPlaylist->media(index.row());
-		TagLib::FileRef file(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile()).data());
-		bool b = file.save();
-		file.audioProperties();
-		qDebug() << "file was saved:" << b;
-	});*/
 
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -69,11 +53,12 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	// Link core multimedia actions
 	connect(_mediaPlayer.data(), &QMediaPlayer::mediaStatusChanged, [=] (QMediaPlayer::MediaStatus status) {
-		if (status == QMediaPlayer::BufferedMedia) {
-			this->highlightCurrentTrack();
-		} else if (status == QMediaPlayer::EndOfMedia) {
+		if (status == QMediaPlayer::EndOfMedia) {
 			_mediaPlayer.data()->skipForward();
 		}
+	});
+	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, [=] () {
+		this->update();
 	});
 
 	// Context menu on tracks
@@ -88,30 +73,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	///XXX : why setEditTriggers(QAbstractItemView::SelectedClicked) isn't opening the editor?
 	///FIXME: clicked is only for mouse, what about keyboard event >_< ?
-	connect(this, &QTableView::clicked, [=](const QModelIndex &index) {
-		if (index.column() == RATINGS) {
-			if (_previouslySelectedRows.contains(index)) {
-				foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-					qDebug() << "openPersistentEditor" << i;
-					this->openPersistentEditor(i);
-				}
-			} else {
-				if (_previouslySelectedRows.isEmpty()) {
-					foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-						_previouslySelectedRows.append(i);
-					}
-				} else {
-					_previouslySelectedRows.clear();
-
-				}
-			}
-		} else {
-			_previouslySelectedRows.clear();
-			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-				_previouslySelectedRows.append(i);
-			}
-		}
-	});
+	connect(this, &QTableView::clicked, this, &Playlist::aboutToOpenStarEditor);
 
 	connect(mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
@@ -123,6 +85,28 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=]() {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 	});
+}
+
+void Playlist::aboutToOpenStarEditor(const QModelIndex &index)
+{
+	if (index.column() == RATINGS) {
+		if (_previouslySelectedRows.contains(index)) {
+			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+				this->openPersistentEditor(i);
+			}
+		} else if (_previouslySelectedRows.isEmpty()) {
+			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+				_previouslySelectedRows.append(i);
+			}
+		} else {
+			_previouslySelectedRows.clear();
+		}
+	} else {
+		_previouslySelectedRows.clear();
+		foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+			_previouslySelectedRows.append(i);
+		}
+	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -266,12 +250,6 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	if (event->button() == Qt::LeftButton) {
 		_dragStartPosition = event->pos();
 	}
-	// For star ratings: close every opened editor!
-	/// FIXME
-	/*foreach (StarEditor *starEditor, this->findChildren<StarEditor*>()) {
-		commitData(starEditor);
-		delete starEditor;
-	}*/
 	QTableView::mousePressEvent(event);
 }
 
@@ -328,10 +306,4 @@ void Playlist::removeSelectedTracks()
 		int row = indexes.at(i).row();
 		_playlistModel->removeRow(row);
 	}
-}
-
-/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
-void Playlist::highlightCurrentTrack()
-{
-	_playlistModel->highlightCurrentTrack();
 }

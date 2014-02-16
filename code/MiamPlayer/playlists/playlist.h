@@ -101,8 +101,8 @@ public slots:
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();
 
-	/** Change the style of the current track. Moreover, this function is reused when the user is changing fonts in the settings. */
-	void highlightCurrentTrack();
+private slots:
+	void aboutToOpenStarEditor(const QModelIndex &index);
 };
 
 #endif // PLAYLIST_H
