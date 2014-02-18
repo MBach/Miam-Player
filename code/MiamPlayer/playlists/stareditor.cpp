@@ -54,6 +54,7 @@ StarEditor::StarEditor(const QModelIndex &index, QWidget *parent)
 	_index = index;
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
+	qDebug() << "Editor for" << index;
 }
 
 bool StarEditor::eventFilter(QObject *obj, QEvent *e)
@@ -70,7 +71,7 @@ void StarEditor::mouseMoveEvent(QMouseEvent *event)
 
 void StarEditor::mousePressEvent(QMouseEvent *)
 {
-	emit editingFinished(this);
+	emit editingFinished();
 }
 
 void StarEditor::paintEvent(QPaintEvent *)

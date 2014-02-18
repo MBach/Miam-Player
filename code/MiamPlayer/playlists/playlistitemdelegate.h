@@ -29,6 +29,9 @@ public:
 protected:
 	/** Redefined. */
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+private slots:
+	void commitAndClose();
 };
 
 #endif // PLAYLISTITEMDELEGATE_H

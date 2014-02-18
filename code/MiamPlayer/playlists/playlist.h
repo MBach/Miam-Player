@@ -100,9 +100,6 @@ public slots:
 
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();
-
-private slots:
-	void aboutToOpenStarEditor(const QModelIndex &index);
 };
 
 #endif // PLAYLIST_H

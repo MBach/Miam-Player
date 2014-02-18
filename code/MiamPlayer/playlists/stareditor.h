@@ -65,7 +65,7 @@ protected:
 	void paintEvent(QPaintEvent *);
 
 signals:
-	void editingFinished(StarEditor *);
+	void editingFinished();
 };
 
 #endif

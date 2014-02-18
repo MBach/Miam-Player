@@ -77,7 +77,8 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	painter->setRenderHint(QPainter::Antialiasing, true);
 
 	/// XXX: extract this somewhere?
-	QPen pen(QColor(171, 122, 77));
+	QColor penColor(171, 122, 77);
+	QPen pen(penColor);
 	QLinearGradient linearGradientBrush(0, 0, 0, 1);
 	QLinearGradient linearGradientPen(0, 0, 0, 1);
 
@@ -86,6 +87,9 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 
 	pen.setWidthF(pen.widthF() / opt.rect.height());
 
+	if (_starCount == 0 && mode == ReadOnly && opt.state.testFlag(QStyle::State_Selected)) {
+		mode = NoStarsYet;
+	}
 	switch (mode) {
 	case Editable:
 		painter->fillRect(opt.rect, QApplication::style()->standardPalette().highlight().color().lighter());
@@ -96,12 +100,13 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 		linearGradientPen.setColorAt(0, QColor(227, 178, 94));
 		linearGradientPen.setColorAt(1, QColor(166, 122, 87));
 
-		pen.setColor(QColor(171, 122, 77));
+		pen.setColor(penColor);
 		pen.setBrush(QBrush(linearGradientPen));
 		painter->setBrush(QBrush(linearGradientBrush));
 		break;
 	case NoStarsYet:
-		painter->setBrush(QBrush(QColor::fromRgbF(1, 1, 1, 0.9)));
+		pen.setColor(penColor.lighter(135));
+		painter->setBrush(QApplication::style()->standardPalette().highlight().color().lighter(165));
 		break;
 	case ReadOnly:
 		linearGradientBrush.setColorAt(0, Qt::white);
@@ -110,7 +115,7 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 		linearGradientPen.setColorAt(0, QColor(227, 178, 94));
 		linearGradientPen.setColorAt(1, QColor(166, 122, 87));
 
-		pen.setColor(QColor(171, 122, 77));
+		pen.setColor(penColor);
 		pen.setBrush(QBrush(linearGradientPen));
 		painter->setBrush(QBrush(linearGradientBrush));
 		break;

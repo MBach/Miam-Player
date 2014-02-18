@@ -15,6 +15,8 @@
 
 #include <QtDebug>
 
+#include <QItemSelection>
+
 Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL), _hash(0)
 {
@@ -31,6 +33,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
+	this->setEditTriggers(QTableView::SelectedClicked);
 	this->setItemDelegate(new PlaylistItemDelegate(this));
 
 	// Select only by rows, not cell by cell
@@ -69,12 +72,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
 
-	this->setEditTriggers(QTableView::SelectedClicked);
-
-	///XXX : why setEditTriggers(QAbstractItemView::SelectedClicked) isn't opening the editor?
-	///FIXME: clicked is only for mouse, what about keyboard event >_< ?
-	connect(this, &QTableView::clicked, this, &Playlist::aboutToOpenStarEditor);
-
 	connect(mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
 			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
@@ -82,31 +79,11 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	});
 
 	// No pity: marks everything as a dirty region
-	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=]() {
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &old) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
+		_previouslySelectedRows = selected.indexes();
+		qDebug() << "previouslySelectedRows" << _previouslySelectedRows;
 	});
-}
-
-void Playlist::aboutToOpenStarEditor(const QModelIndex &index)
-{
-	if (index.column() == RATINGS) {
-		if (_previouslySelectedRows.contains(index)) {
-			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-				this->openPersistentEditor(i);
-			}
-		} else if (_previouslySelectedRows.isEmpty()) {
-			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-				_previouslySelectedRows.append(i);
-			}
-		} else {
-			_previouslySelectedRows.clear();
-		}
-	} else {
-		_previouslySelectedRows.clear();
-		foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-			_previouslySelectedRows.append(i);
-		}
-	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -228,8 +205,13 @@ void Playlist::dropEvent(QDropEvent *event)
 void Playlist::keyPressEvent(QKeyEvent *event)
 {
 	if (event->key() == Qt::Key_Escape) {
-		for (int row = 0; row < _playlistModel->rowCount(); row++) {
-			this->closePersistentEditor(_playlistModel->index(row, RATINGS));
+		// Two level escape: if there are editors or not
+		if (findChildren<StarEditor*>().isEmpty()) {
+			selectionModel()->clearSelection();
+		} else {
+			for (int row = 0; row < _playlistModel->rowCount(); row++) {
+				closePersistentEditor(_playlistModel->index(row, RATINGS));
+			}
 		}
 	}
 	QTableView::keyPressEvent(event);
@@ -250,7 +232,15 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	if (event->button() == Qt::LeftButton) {
 		_dragStartPosition = event->pos();
 	}
-	QTableView::mousePressEvent(event);
+	QModelIndex index = indexAt(event->pos());
+	if (index.column() == RATINGS && _previouslySelectedRows.contains(index)) {
+		//qDebug() << "clic on " << index;
+		foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+			this->openPersistentEditor(i);
+		}
+	} else {
+		QTableView::mousePressEvent(event);
+	}
 }
 
 /** Redefined to display a thin line to help user for dropping tracks. */

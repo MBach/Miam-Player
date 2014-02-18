@@ -15,18 +15,23 @@ PlaylistItemDelegate::PlaylistItemDelegate(Playlist *playlist) :
 {}
 
 /** Redefined. */
-QWidget* PlaylistItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const
+QWidget* PlaylistItemDelegate::createEditor(QWidget *p, const QStyleOptionViewItem &, const QModelIndex &index) const
 {
-	StarEditor *editor = new StarEditor(index, parent);
-	editor->setFocus();
-	connect(editor, &StarEditor::editingFinished, [=]() {
-		qDebug() << "ratings to update" << _playlist->mediaPlaylist()->media(index.row()).canonicalUrl();
-		QMediaContent mediaContent = _playlist->mediaPlaylist()->media(index.row());
-		FileHelper fh(QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile())));
-		fh.setRating(editor->starRating.starCount());
-		editor->close();
-	});
+	StarEditor *editor = new StarEditor(index, p);
+	connect(editor, &StarEditor::editingFinished, this, &PlaylistItemDelegate::commitAndClose);
 	return editor;
+}
+
+void PlaylistItemDelegate::commitAndClose()
+{
+	// Multiple editors might have been opened by one, therefore it's required to commit and close all of them
+	foreach (StarEditor *se, parent()->findChildren<StarEditor*>()) {
+		QMediaContent mediaContent = _playlist->mediaPlaylist()->media(se->index().row());
+		FileHelper fh(QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile())));
+		fh.setRating(se->starRating.starCount());
+		commitData(se);
+		closeEditor(se);
+	}
 }
 
 /** Redefined. */
@@ -36,7 +41,7 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
 	qDebug() << starEditor << starEditor->starRating.starCount();
 	model->setData(index, QVariant::fromValue(starEditor->starRating));
-	delete starEditor;
+	starEditor->deleteLater();
 }
 
 /** Redefined. */
@@ -46,8 +51,8 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
-	if (opt.state.testFlag(QStyle::State_Selected) ||
-		_editors.value(index.row()) && _editors.value(index.row())->isVisible()) {
+	if (opt.state.testFlag(QStyle::State_Selected) /*||
+		_editors.value(index.row()) != NULL && _editors.value(index.row())->isVisible()*/) {
 		p->fillRect(o.rect, opt.palette.highlight().color().lighter());
 		p->setPen(opt.palette.highlight().color());
 
