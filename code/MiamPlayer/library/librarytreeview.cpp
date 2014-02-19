@@ -175,9 +175,17 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
 	//qDebug() << Q_FUNC_INFO;
 	if (verticalScrollBar()->isVisible()) {
-		_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());
+		if (QGuiApplication::isLeftToRight()) {
+			_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());
+		} else {
+			_jumpToWidget->move(frameGeometry().left() + verticalScrollBar()->width(), 1 + header()->height());
+		}
 	} else {
-		_jumpToWidget->move(frameGeometry().right() - 19, 1 + header()->height());
+		if (QGuiApplication::isLeftToRight()) {
+			_jumpToWidget->move(frameGeometry().right() - 19, 1 + header()->height());
+		} else {
+			_jumpToWidget->move(frameGeometry().left(), 1 + header()->height());
+		}
 	}
 	TreeView::paintEvent(event);
 }

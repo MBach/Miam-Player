@@ -853,6 +853,7 @@
         <comment>Number of tracks to remove</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -860,12 +861,14 @@
         <comment>Move upward</comment>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation type="unfinished">
+            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
@@ -979,6 +982,7 @@ Select a playlist to display the first 30 tracks.</source>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
@@ -1036,11 +1040,13 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
         <source>%n elements</source>
         <translation type="unfinished">
             <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message numerus="yes">
         <source>%n folders</source>
         <translation type="unfinished">
+            <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
     </message>

@@ -26,7 +26,11 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
-	o.rect.adjust(0, 0, -19, 0);
+	if (QGuiApplication::isLeftToRight()) {
+		o.rect.adjust(0, 0, -19, 0);
+	} else {
+		o.rect.adjust(19, 0, 0, 0);
+	}
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
@@ -119,7 +123,12 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	bool b = item->data(Qt::UserRole + 20).toBool();
 	if (_showCovers && b) {
 		QPixmap p = option.icon.pixmap(QSize(coverSize, coverSize));
-		QRect cover(option.rect.x() + 1, option.rect.y() + 1, coverSize, coverSize);
+		QRect cover;
+		if (QGuiApplication::isLeftToRight()) {
+			cover = QRect(option.rect.x() + 1, option.rect.y() + 1, coverSize, coverSize);
+		} else {
+			cover = QRect(option.rect.width() + 19 - coverSize - 1, option.rect.y() + 1, coverSize, coverSize);
+		}
 		if (_animateIcons) {
 			painter->save();
 			painter->setOpacity(_iconOpacity);
@@ -130,12 +139,18 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		}
 	}
 	// It's possible to have missing covers in your library, so we need to keep alignment.
-	QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
-	QRect rectText(topLeft, option.rect.bottomRight());
 	option.textElideMode = Qt::ElideRight;
-	QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-	painter->drawText(rectText, Qt::AlignVCenter, s);
+	if (QGuiApplication::isLeftToRight()) {
+		QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
+		QRect rectText(topLeft, option.rect.bottomRight());
+		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		painter->drawText(rectText, Qt::AlignVCenter, s);
+	} else {
+		QRect rectText(option.rect.x(), option.rect.y(), option.rect.width() - coverSize - 5, option.rect.height());
+		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		painter->drawText(rectText, Qt::AlignVCenter, s);
+	}
 }
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
