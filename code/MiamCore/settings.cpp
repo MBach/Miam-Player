@@ -14,21 +14,7 @@ Settings* Settings::settings = NULL;
 /** Private constructor. */
 Settings::Settings(const QString &organization, const QString &application)
 	: QSettings(organization, application)
-{
-	QStringList filenames;
-	filenames << ":/stylesheets/playlist";
-	filenames << ":/stylesheets/librarytreeview";
-	filenames << ":/stylesheets/tageditor";
-	filenames << ":/stylesheets/qscrollbar";
-	filenames << ":/stylesheets/qslider";
-
-	foreach (QString filename, filenames) {
-		QFile f(filename);
-		f.open(QFile::ReadOnly);
-		stylesheets.insert(filename, f.readAll());
-		f.close();
-	}
-}
+{}
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
 Settings* Settings::getInstance()
@@ -85,6 +71,12 @@ int Settings::coverSize() const
 		size = 48;
 	}
 	return size;
+}
+
+QColor Settings::customColors(CustomColors cc) const
+{
+	QMap<QString, QVariant> customCo = value("customColorsMap").toMap();
+	return customCo.value(QString(cc)).value<QColor>();
 }
 
 const QString Settings::customIcon(QPushButton *b, bool toggled) const
@@ -250,50 +242,6 @@ bool Settings::playbackRestorePlaylistsAtStartup() const
 	}
 }
 
-/*QString Settings::playlistLoad(const QFileInfo &file) const
-{
-	return value("playlists").toMap().value(file.absoluteFilePath()).toString();
-}
-
-void Settings::playlistCleanRemoved()
-{
-	QMap<QString, QVariant> playlists = this->value("playlists").toMap();
-	QMapIterator<QString, QVariant> it(playlists);
-	while (it.hasNext()) {
-		it.next();
-		QString path = it.key();
-		if (!QFile::exists(path)) {
-			playlists.remove(path);
-			playlists.remove(path + "_lastModified");
-		}
-	}
-	if (playlists.isEmpty()) {
-		this->remove("playlists");
-	}
-}
-
-bool Settings::playlistSave(const QFileInfo &fileInfo, const QString &name)
-{
-	QMap<QString, QVariant> playlists = this->value("playlists").toMap();
-	QString path = fileInfo.absoluteFilePath();
-	if (playlists.contains(path)) {
-		QDateTime previousDateTime = playlists.value(path + "_lastModified").toDateTime();
-		if (previousDateTime == fileInfo.lastModified()) {
-			return false;
-		} else {
-			playlists.insert(path, name);
-			playlists.insert(path + "_lastModified", fileInfo.lastModified());
-			this->setValue("playlists", playlists);
-			return true;
-		}
-	} else {
-		playlists.insert(path, name);
-		playlists.insert(path + "_lastModified", fileInfo.lastModified());
-		this->setValue("playlists", playlists);
-		return true;
-	}
-}*/
-
 QByteArray Settings::restoreColumnStateForPlaylist(int playlistIndex) const
 {
 	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
@@ -304,6 +252,13 @@ void Settings::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &s
 	columnStates = this->value("columnStateForPlaylist").toMap();
 	columnStates.insert(QString::number(playlistIndex), state);
 	this->setValue("columnStateForPlaylist", columnStates);
+}
+
+void Settings::setCustomColors(CustomColors cc, const QColor &color)
+{
+	QMap<QString, QVariant> colors = value("customColorsMap").toMap();
+	colors.insert(QString(cc), color);
+	setValue("customColorsMap", colors);
 }
 
 void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)

@@ -72,3 +72,18 @@ void PlaylistHeaderView::contextMenuEvent(QContextMenuEvent *event)
 	}
 	columns->exec(mapToGlobal(event->pos()));
 }
+
+#include <QStylePainter>
+
+void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logicalIndex) const
+{
+	QStylePainter p(this->viewport());
+	QStyleOptionHeader opt;
+	opt.initFrom(this);
+	QLinearGradient vLinearGradient(rect.topLeft(), rect.bottomLeft());
+	vLinearGradient.setColorAt(0, Qt::red);
+	vLinearGradient.setColorAt(1, Qt::green);
+	//p.fillRect(rect, QBrush(vLinearGradient));
+	p.drawText(rect, Qt::AlignCenter, model()->headerData(logicalIndex, Qt::Horizontal).toString());
+}
+

@@ -44,6 +44,8 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	starEditor->deleteLater();
 }
 
+#include <QStylePainter>
+
 /** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
@@ -51,10 +53,16 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
-	if (opt.state.testFlag(QStyle::State_Selected) /*||
-		_editors.value(index.row()) != NULL && _editors.value(index.row())->isVisible()*/) {
-		p->fillRect(o.rect, opt.palette.highlight().color().lighter());
-		p->setPen(opt.palette.highlight().color());
+	if (opt.state.testFlag(QStyle::State_Selected)) {
+		Settings *settings = Settings::getInstance();
+		if (settings->isCustomColors()) {
+			QColor highlight = settings->customColors(Settings::ColorHighlight);
+			p->setPen(highlight);
+			p->fillRect(o.rect, highlight.lighter(110));
+		} else {
+			p->setPen(opt.palette.highlight().color());
+			p->fillRect(o.rect, opt.palette.highlight().color().lighter());
+		}
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
@@ -84,18 +92,20 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		font.setItalic(true);
 	}
 	p->setFont(font);
-
 	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
+	QString text;
 	switch (index.column()) {
 	case Playlist::TRACK_NUMBER:
 	case Playlist::LENGTH:
 	case Playlist::YEAR:
-		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, index.data().toString());
+		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
 		break;
 	case Playlist::TITLE:
 	case Playlist::ALBUM:
 	case Playlist::ARTIST:
-		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, index.data().toString());
+		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, text);
 		break;
 	case Playlist::RATINGS:
 		if (index.data().canConvert<StarRating>() || opt.state.testFlag(QStyle::State_Selected)) {

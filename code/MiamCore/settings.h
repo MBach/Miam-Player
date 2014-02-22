@@ -32,6 +32,8 @@ private:
 	QMap<QString, QVariant> columnStates;
 
 	Q_ENUMS(FontFamily)
+	Q_ENUMS(PlaylistDefaultAction)
+	Q_ENUMS(CustomColors)
 
 public:
 	enum FontFamily{PLAYLIST, LIBRARY, MENUS};
@@ -39,6 +41,11 @@ public:
 	enum PlaylistDefaultAction{AskUserForAction	= 0,
 							   SaveOnClose		= 1,
 							   DiscardOnClose	= 2};
+
+	enum CustomColors{ColorHighlight,
+					  ColorBackground,
+					  ColorGlobalBackground,
+					  ColorFonts};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
@@ -56,6 +63,8 @@ public:
 
 	/** Returns the size of a cover. */
 	int coverSize() const;
+
+	QColor customColors(CustomColors cc) const;
 
 	/** Custom icons in CustomizeTheme */
 	const QString customIcon(QPushButton *, bool toggled = false) const;
@@ -100,6 +109,8 @@ public:
 	QByteArray restoreColumnStateForPlaylist(int playlistIndex) const;
 
 	void saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state);
+
+	void setCustomColors(CustomColors cc, const QColor &color);
 
 	/** Custom icons in CustomizeTheme */
 	void setCustomIcon(QPushButton *, const QString &buttonName);

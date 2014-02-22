@@ -36,7 +36,6 @@ SOURCES += \
     dialogs/reflector.cpp \
     dialogs/shortcutlineedit.cpp \
     dialogs/shortcutwidget.cpp \
-    dialogs/stylesheetupdater.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
@@ -85,7 +84,6 @@ HEADERS += \
     dialogs/reflector.h \
     dialogs/shortcutlineedit.h \
     dialogs/shortcutwidget.h \
-    dialogs/stylesheetupdater.h \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \

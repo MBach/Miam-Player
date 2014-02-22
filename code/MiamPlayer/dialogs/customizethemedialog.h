@@ -5,7 +5,6 @@
 #include <QDialog>
 
 #include "ui_customizetheme.h"
-#include "stylesheetupdater.h"
 #include "reflector.h"
 
 #include <QPropertyAnimation>
@@ -20,11 +19,7 @@ class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 private:
 	MainWindow *mainWindow;
 
-	ColorDialog *_colorDialog;
-
 	Reflector *_targetedColor;
-
-	StyleSheetUpdater *_styleSheetUpdater;
 
 	/** Used to make this dialog transparent to have a nice fading effect. */
 	QPropertyAnimation *_animation;
@@ -39,7 +34,7 @@ public:
 	void loadTheme();
 
 private:
-	void associatePaintableElements();
+	//void associatePaintableElements();
 	void fade();
 	void setupActions();
 

@@ -19,6 +19,9 @@ public:
 
 protected:
 	void closeEvent(QCloseEvent *);
+
+signals:
+	void aboutToBeClosed();
 };
 
 #endif // COLORDIALOG_H

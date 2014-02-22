@@ -56,14 +56,8 @@ void JumpToWidget::mouseMoveEvent(QMouseEvent *e)
 
 void JumpToWidget::paintEvent(QPaintEvent *)
 {
-	//qDebug() << Q_FUNC_INFO;
-	//if (this->height() < _libraryTreeView->height()) {
 	this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
 	this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-	//} else {
-	//	this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-	//	this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-	//}
 	QStylePainter p(this);
 	QStyleOptionViewItem o;
 	o.initFrom(_libraryTreeView);
@@ -75,12 +69,21 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	for (int i = 0; i < 26; i++) {
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 19, height() / 26);
+		Settings *settings = Settings::getInstance();
 		if (_libraryTreeView->currentLetter() == qc) {
 			// Display a bright selection rectangle corresponding to the top letter in the library
-			p.fillRect(r, o.palette.highlight());
+			if (settings->isCustomColors()) {
+				p.fillRect(r, settings->customColors(Settings::ColorHighlight));
+			} else {
+				p.fillRect(r, o.palette.highlight());
+			}
 		} else if (o.state & QStyle::State_MouseOver && r.contains(_pos)) {
 			// Display a light rectangle under the mouse pointer
-			p.fillRect(r, o.palette.highlight().color().lighter(160));
+			if (settings->isCustomColors()) {
+				p.fillRect(r, settings->customColors(Settings::ColorHighlight).lighter());
+			} else {
+				p.fillRect(r, o.palette.highlight().color().lighter(160));
+			}
 		}
 		p.save();
 		p.setBrush(o.palette.color(QPalette::WindowText));

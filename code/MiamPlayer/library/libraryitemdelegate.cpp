@@ -80,18 +80,31 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	static QImageReader imageReader;
 	static int coverSize = Settings::getInstance()->coverSize();
 	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
+	Settings *settings = Settings::getInstance();
 	// Display a light selection rectangle when one is moving the cursor
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
-		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter(175));
+		if (settings->isCustomColors()) {
+			QColor highlight = settings->customColors(Settings::ColorHighlight);
+			painter->setPen(highlight);
+			painter->setBrush(highlight.lighter());
+		} else {
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(option.palette.highlight().color().lighter(175));
+		}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	} else if (option.state & QStyle::State_Selected) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		painter->save();
-		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter(160));
+		if (settings->isCustomColors()) {
+			QColor highlight = settings->customColors(Settings::ColorHighlight);
+			painter->setPen(highlight);
+			painter->setBrush(highlight.lighter(125));
+		} else {
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(option.palette.highlight().color().lighter(160));
+		}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	}

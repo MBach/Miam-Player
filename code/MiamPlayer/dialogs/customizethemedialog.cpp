@@ -17,8 +17,6 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	this->setModal(true);
 
 	mainWindow = qobject_cast<MainWindow *>(parent);
-	_colorDialog = new ColorDialog(this);
-	_styleSheetUpdater = new StyleSheetUpdater(this);
 	buttonsListBox->setVisible(false);
 
 	spinBoxLibrary->installEventFilter(this);
@@ -38,64 +36,18 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	_animation->setTargetObject(this);
 
 	this->setupActions();
-	this->associatePaintableElements();
-}
-
-void CustomizeThemeDialog::associatePaintableElements()
-{
-	// There are 4 kinds of paintables elements
-	bgPrimaryColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::BACKGROUND);
-	globalBackgroundColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::GLOBAL_BACKGROUND);
-	itemColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::TEXT);
-	selectedItemColorWidget->setStyleSheetUpdater(_styleSheetUpdater, StyleSheetUpdater::HOVER);
-
-	// Associate instances of Classes to their "preview pane" to dynamically change colors
-	/// FIXME: should be class for Playlist because there are some problems when adding/removing playlists during color change
-	/// I know this is not really the correct way to use the player, but still, there's a fraking crash!
-	QList<QWidget *> bgElements, itemElements;
-	for (int i = 0; i < mainWindow->tabPlaylists->count() - 1; i++) {
-		Playlist *p = mainWindow->tabPlaylists->playlist(i);
-		itemElements << p;
-		itemElements << p->horizontalHeader();
-		bgElements << p->verticalScrollBar();
-	}
-	bgElements << mainWindow->library << mainWindow->library->verticalScrollBar() << mainWindow->library->header();
-	bgElements << mainWindow->tagEditor->tagEditorWidget << mainWindow->tagEditor->tagEditorWidget->horizontalHeader();
-	//bgElements << mainWindow->tagEditor->tagEditorWidget->horizontalScrollBar() << mainWindow->tagEditor->tagEditorWidget->verticalScrollBar();
-	itemElements << mainWindow->tabPlaylists << mainWindow->library << mainWindow->widgetSearchBar << mainWindow->leftTabs;
-	itemElements << mainWindow->volumeSlider << mainWindow->seekSlider;
-
-	// Background of elements
-	bgPrimaryColorWidget->addInstances(bgElements);
-	bgPrimaryColorWidget->addInstances(itemElements);
-
-	// General background
-	globalBackgroundColorWidget->addInstance(mainWindow);
-	globalBackgroundColorWidget->addInstance(mainWindow->splitter);
-
-	// Text
-	itemColorWidget->addInstances(itemElements);
-
-	// Background of selected elements
-	selectedItemColorWidget->addInstances(bgElements);
-	foreach (MediaButton *b, mainWindow->mediaButtons) {
-		itemElements << b;
-	}
-	selectedItemColorWidget->addInstances(itemElements);
-
-	//qDebug() << mainWindow->library->verticalScrollBar()->styleSheet();
 }
 
 void CustomizeThemeDialog::setupActions()
 {
+	Settings *settings = Settings::getInstance();
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
-		connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), b, SLOT(setSize(int)));
+		connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), b, &MediaButton::setSize);
 	}
 
 	// Select button theme and size
-	Settings *settings = Settings::getInstance();
 	connect(themeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &CustomizeThemeDialog::setThemeNameAndDialogButtons);
-	connect(sizeButtonsSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setButtonsSize(int)));
+	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setButtonsSize);
 
 	// Hide buttons or not
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
@@ -172,13 +124,10 @@ void CustomizeThemeDialog::setupActions()
 
 	// Colors
 	connect(enableCustomColorsRadioButton, &QCheckBox::toggled, this, &CustomizeThemeDialog::toggleCustomColors);
-	connect(enableAlternateBGRadioButton, SIGNAL(toggled(bool)), this, SLOT(toggleAlternativeBackgroundColor(bool)));
-	foreach (QToolButton *b, findChildren<QToolButton*>()) {
-		connect(b, SIGNAL(clicked()), this, SLOT(showColorDialog()));
+	connect(enableAlternateBGRadioButton, &QRadioButton::toggled, this, &CustomizeThemeDialog::toggleAlternativeBackgroundColor);
+	foreach (QToolButton *b, groupBoxCustomColors->findChildren<QToolButton*>()) {
+		connect(b, &QToolButton::clicked, this, &CustomizeThemeDialog::showColorDialog);
 	}
-	connect(_colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
-		_styleSheetUpdater->replace(_targetedColor, selectedColor);
-	});
 
 	// Library
 	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
@@ -189,8 +138,6 @@ void CustomizeThemeDialog::setupActions()
 	// Covers
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
 		settings->setCoverSize(cs);
-		//mainWindow->library->setIconSize(QSize(cs, cs));
-		//mainWindow->library->
 	});
 }
 
@@ -256,19 +203,29 @@ void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)
  * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 void CustomizeThemeDialog::showColorDialog()
 {
+	Settings *settings = Settings::getInstance();
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
-		// Very important: gets at runtime the elements that will be repaint by one
-		_colorDialog->setPaintableElements(_targetedColor);
-		_colorDialog->setCurrentColor(_targetedColor->color());
+		ColorDialog *colorDialog = new ColorDialog(this);
+		colorDialog->setPaintableElements(_targetedColor);
+		colorDialog->setCurrentColor(_targetedColor->color());
+
+		connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
+			/// FIXME Settings::ColorHighlight hardcoded for proof of concept
+			settings->setCustomColors(Settings::ColorHighlight, selectedColor);
+			mainWindow->update();
+		});
+		connect(colorDialog, &ColorDialog::aboutToBeClosed, [=] () {
+			_targetedColor->setColor(colorDialog->currentColor());
+		});
 
 		// Moves the color dialog right to the mainWindow
-		if (parentWidget()->width() + 20 + _colorDialog->width() < qApp->desktop()->availableGeometry().width()) {
+		if (parentWidget()->width() + 20 + colorDialog->width() < qApp->desktop()->availableGeometry().width()) {
 			int desktopWidth = qApp->desktop()->availableGeometry().width();
-			int w = (desktopWidth - (parentWidget()->width() + 20 + _colorDialog->width())) / 2;
+			int w = (desktopWidth - (parentWidget()->width() + 20 + colorDialog->width())) / 2;
 			parentWidget()->move(QPoint(w, parentWidget()->pos().y()));
-			int h = parentWidget()->y() + parentWidget()->height() / 2 - _colorDialog->height() / 2;
-			_colorDialog->move(parentWidget()->x() + 40 + parentWidget()->width(), h);
+			int h = parentWidget()->y() + parentWidget()->height() / 2 - colorDialog->height() / 2;
+			colorDialog->move(parentWidget()->x() + 40 + parentWidget()->width(), h);
 		}
 		this->hide();
 	}
@@ -350,6 +307,7 @@ void CustomizeThemeDialog::loadTheme()
 
 	if (settings->isCustomColors()) {
 		enableCustomColorsRadioButton->setChecked(true);
+		selectedItemColorWidget->setColor(settings->customColors(Settings::ColorHighlight));
 	} else {
 		disableCustomColorsRadioButton->setChecked(true);
 		this->toggleCustomColors(false);

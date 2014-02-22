@@ -22,10 +22,14 @@ public:
 
 protected:
 	/** Redefined for dynamic translation. */
-	void changeEvent(QEvent *event);
+	virtual void changeEvent(QEvent *event);
 
 	/** Redefined. */
-	void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event);
+
+	/** Redefined. */
+	virtual void paintSection(QPainter * painter, const QRect & rect, int logicalIndex) const;
+
 };
 
 #endif // PLAYLISTHEADERVIEW_H

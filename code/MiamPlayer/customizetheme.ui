@@ -1128,7 +1128,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="groupBoxCustomColors">
          <property name="title">
           <string>Custom colors</string>
          </property>
