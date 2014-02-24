@@ -107,13 +107,6 @@
         <file alias="fr">translations/m4p_fr.qm</file>
         <file alias="ar">translations/m4p_ar.qm</file>
     </qresource>
-    <qresource prefix="/stylesheets">
-        <file alias="qscrollbar">stylesheets/qscrollbar.qss</file>
-        <file alias="librarytreeview">stylesheets/librarytreeview.qss</file>
-        <file alias="qslider">stylesheets/qslider.qss</file>
-        <file alias="playlist">stylesheets/playlist.qss</file>
-        <file alias="tageditor">stylesheets/tageditor.qss</file>
-    </qresource>
     <qresource prefix="/icons/win">
         <file alias="closeTabsHover">config/windows/close_tabs_hover.png</file>
     </qresource>

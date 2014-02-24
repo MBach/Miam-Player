@@ -15,8 +15,6 @@ private:
 public:
 	ColorDialog(QWidget *parent);
 
-	void setPaintableElements(Reflector *reflector);
-
 protected:
 	void closeEvent(QCloseEvent *);
 

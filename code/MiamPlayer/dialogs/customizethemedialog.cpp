@@ -207,13 +207,13 @@ void CustomizeThemeDialog::showColorDialog()
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
 		ColorDialog *colorDialog = new ColorDialog(this);
-		colorDialog->setPaintableElements(_targetedColor);
+		colorDialog->show();
 		colorDialog->setCurrentColor(_targetedColor->color());
 
 		connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
-			/// FIXME Settings::ColorHighlight hardcoded for proof of concept
-			settings->setCustomColors(Settings::ColorHighlight, selectedColor);
-			mainWindow->update();
+			settings->setCustomColors(_targetedColor->customColor(), selectedColor);
+			//mainWindow->setFocus();
+			//mainWindow->repaint();
 		});
 		connect(colorDialog, &ColorDialog::aboutToBeClosed, [=] () {
 			_targetedColor->setColor(colorDialog->currentColor());
@@ -307,11 +307,19 @@ void CustomizeThemeDialog::loadTheme()
 
 	if (settings->isCustomColors()) {
 		enableCustomColorsRadioButton->setChecked(true);
-		selectedItemColorWidget->setColor(settings->customColors(Settings::ColorHighlight));
 	} else {
 		disableCustomColorsRadioButton->setChecked(true);
 		this->toggleCustomColors(false);
+		//int gray = qGray(settings->customColors(Settings::ColorBackground).rgb());
+		//bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
+		//globalBackgroundColorWidget->setColor(settings->customColors(Settings::ColorGlobalBackground));
+		//itemColorWidget->setColor(settings->customColors(Settings::ColorFonts));
+		//selectedItemColorWidget->setColor(settings->customColors(Settings::ColorHighlight));
 	}
+	bgPrimaryColorWidget->setColor(settings->customColors(Settings::ColorBackground));
+	globalBackgroundColorWidget->setColor(settings->customColors(Settings::ColorGlobalBackground));
+	itemColorWidget->setColor(settings->customColors(Settings::ColorFonts));
+	selectedItemColorWidget->setColor(settings->customColors(Settings::ColorHighlight));
 }
 
 /** Redefined to initialize favorites from settings. */

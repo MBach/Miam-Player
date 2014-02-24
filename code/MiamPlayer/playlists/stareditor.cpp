@@ -76,7 +76,7 @@ void StarEditor::mousePressEvent(QMouseEvent *)
 
 void StarEditor::paintEvent(QPaintEvent *)
 {
-	QPainter painter(this);
+	QStylePainter painter(this);
 	QStyleOptionViewItem o;
 	o.rect = rect();
 	o.palette = this->palette();

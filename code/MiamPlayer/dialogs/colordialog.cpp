@@ -10,6 +10,10 @@ ColorDialog::ColorDialog(QWidget *parent) :
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	this->setOptions(QColorDialog::NoButtons);
 	this->setWindowIcon(QIcon(":config/palette"));
+	Qt::WindowFlags flags = this->windowFlags();
+	flags |= Qt::ForeignWindow;
+	this->setWindowFlags(flags);
+
 }
 
 void ColorDialog::closeEvent(QCloseEvent *event)
@@ -17,13 +21,4 @@ void ColorDialog::closeEvent(QCloseEvent *event)
 	emit aboutToBeClosed();
 	parentWidget()->show();
 	QColorDialog::closeEvent(event);
-	/*foreach(QWidget *w, reflector->associatedInstances()) {
-		Settings::getInstance()->setCustomStyleSheet(w);
-	}*/
-}
-
-void ColorDialog::setPaintableElements(Reflector *r)
-{
-	this->reflector = r;
-	this->show();
 }

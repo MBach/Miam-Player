@@ -1,8 +1,0 @@
-TagEditorTableWidget {
-    border: 1px solid grey;
-    color: #000000;
-    background-color: #ffffff;
-    alternate-background-color: #f6f6f6;
-    selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop:0 rgba(198,226,255,80), stop:1 rgba(163,204,255,80));
-    selection-color: #000000;
-}

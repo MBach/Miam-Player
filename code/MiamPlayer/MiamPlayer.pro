@@ -108,13 +108,6 @@ FORMS += \
     tageditor.ui \
     closeplaylistpopup.ui
 
-OTHER_FILES += \
-    stylesheets/qscrollbar.qss \
-    stylesheets/librarytreeview.qss \
-    stylesheets/qslider.qss \
-    stylesheets/tageditor.qss \
-    stylesheets/playlist.qss
-
 RESOURCES += \
     mmmmp.qrc
 

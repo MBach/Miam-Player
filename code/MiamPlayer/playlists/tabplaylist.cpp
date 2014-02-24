@@ -12,8 +12,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
-	///FIXME
-	//this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 	this->setDocumentMode(true);
 	//_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
@@ -174,6 +172,11 @@ Playlist* TabPlaylist::addPlaylist()
 	QLabel *label = new QLabel(tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
 	label->setAlignment(Qt::AlignCenter);
 	label->setWordWrap(true);
+	if (Settings::getInstance()->isCustomColors()) {
+		QPalette p = this->palette();
+		p.setColor(QPalette::WindowText, Settings::getInstance()->customColors(Settings::ColorFonts));
+		label->setPalette(p);
+	}
 
 	QWidget *w = new QWidget(this);
 	QVBoxLayout *vboxLayout = new QVBoxLayout(w);

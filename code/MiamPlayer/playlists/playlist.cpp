@@ -79,7 +79,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	});
 
 	// No pity: marks everything as a dirty region
-	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &old) {
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 		_previouslySelectedRows = selected.indexes();
 		qDebug() << "previouslySelectedRows" << _previouslySelectedRows;
@@ -246,6 +246,10 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
+	QPainter pp(viewport());
+	if (Settings::getInstance()->isCustomColors()) {
+		pp.fillRect(viewport()->rect(), Settings::getInstance()->customColors(Settings::ColorBackground));
+	}
 	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line

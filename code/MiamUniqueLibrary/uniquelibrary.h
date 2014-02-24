@@ -34,8 +34,7 @@ public:
 	void insertTrackFromFile(const FileHelper &fh);
 
 private:
-	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
-					 int discNumber, const QString &title, int year);
+	void insertTrack(const QString &absFilePath, const QString &, const QString &, const QString &, int, const QString &, int year);
 
 private slots:
 	void reset();

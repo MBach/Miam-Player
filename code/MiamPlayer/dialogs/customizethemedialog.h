@@ -34,7 +34,6 @@ public:
 	void loadTheme();
 
 private:
-	//void associatePaintableElements();
 	void fade();
 	void setupActions();
 

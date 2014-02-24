@@ -42,10 +42,10 @@ public:
 							   SaveOnClose		= 1,
 							   DiscardOnClose	= 2};
 
-	enum CustomColors{ColorHighlight,
-					  ColorBackground,
-					  ColorGlobalBackground,
-					  ColorFonts};
+	enum CustomColors{ColorHighlight = 0,
+					  ColorBackground = 1,
+					  ColorGlobalBackground = 2,
+					  ColorFonts = 3};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
@@ -180,5 +180,7 @@ public slots:
 signals:
 	void themeHasChanged();
 };
+
+Q_DECLARE_METATYPE(Settings::CustomColors)
 
 #endif // SETTINGS_H

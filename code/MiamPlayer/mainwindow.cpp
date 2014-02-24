@@ -20,22 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	this->setAcceptDrops(true);
+	//this->setAttribute(Qt::WA_OpaquePaintEvent);
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
-
-	///FIXME
-//	this->setStyleSheet(settings->styleSheet(this));
-//	leftTabs->setStyleSheet(settings->styleSheet(leftTabs));
-//	widgetSearchBar->setStyleSheet(settings->styleSheet(0));
-//	splitter->setStyleSheet(settings->styleSheet(splitter));
-//	volumeSlider->setStyleSheet(settings->styleSheet(volumeSlider));
-//	seekSlider->setStyleSheet(settings->styleSheet(seekSlider));
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton;
 	mediaButtons << seekForwardButton << skipForwardButton << playbackModeButton;
-	/*foreach (MediaButton *b, mediaButtons) {
-		b->setStyleSheet(settings->styleSheet(b));
-	}*/
 
 	// Init the audio module
 	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());

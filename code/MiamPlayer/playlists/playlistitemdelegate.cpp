@@ -53,8 +53,8 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
+	Settings *settings = Settings::getInstance();
 	if (opt.state.testFlag(QStyle::State_Selected)) {
-		Settings *settings = Settings::getInstance();
 		if (settings->isCustomColors()) {
 			QColor highlight = settings->customColors(Settings::ColorHighlight);
 			p->setPen(highlight);
@@ -81,7 +81,11 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		}
 	} else {
 		p->setPen(Qt::NoPen);
-		style->drawPrimitive(QStyle::PE_PanelItemViewItem, &o, p, o.widget);
+		if (settings->isCustomColors()) {
+			p->fillRect(o.rect, settings->customColors(Settings::ColorBackground));
+		} else {
+			style->drawPrimitive(QStyle::PE_PanelItemViewItem, &o, p, o.widget);
+		}
 	}
 	p->restore();
 
@@ -94,6 +98,10 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	p->setFont(font);
 	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
 	QString text;
+	if (settings->isCustomColors()) {
+		//o.palette.setBrush(QPalette::Text, settings->customColors(Settings::ColorFonts));
+		p->setPen(settings->customColors(Settings::ColorFonts));
+	}
 	switch (index.column()) {
 	case Playlist::TRACK_NUMBER:
 	case Playlist::LENGTH:
