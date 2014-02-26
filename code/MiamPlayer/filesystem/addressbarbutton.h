@@ -6,22 +6,17 @@
 class AddressBarButton : public QPushButton
 {
 	Q_OBJECT
-	Q_ENUMS(ButtonType)
-
-public:
-	enum ButtonType { Folder, Arrow };
-
 private:
-	ButtonType _type;
-
 	QString path;
 
 	int idx;
 
-public:
-	explicit AddressBarButton(ButtonType type, const QString &newPath, int index = -1, QWidget *parent = 0);
+	QRect _textRect;
+	QRect _arrowRect;
+	bool _atLeastOneSubDir;
 
-	inline ButtonType type() const { return _type; }
+public:
+	explicit AddressBarButton(const QString &newPath, int index = -1, QWidget *parent = 0);
 
 	QString currentPath() const;
 
@@ -29,8 +24,15 @@ public:
 
 	inline void setIndex(const int &index) { idx = index; }
 
-//protected:
-//	void mouseMoveEvent(QMouseEvent * e);
+protected:
+	/** Redefined. */
+	virtual void mouseMoveEvent(QMouseEvent *);
+
+	/** Redefined. */
+	virtual void mousePressEvent(QMouseEvent *);
+
+	/** Redefined. */
+	virtual void paintEvent(QPaintEvent *);
 };
 
 #endif // ADDRESSBARBUTTON_H

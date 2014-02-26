@@ -2,10 +2,11 @@
 
 #include <QDir>
 #include <QFileIconProvider>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QSpacerItem>
 
 #include <QtDebug>
-#include <QMouseEvent>
 
 AddressBar::AddressBar(QWidget *parent) :
 	QWidget(parent)
@@ -21,46 +22,53 @@ AddressBar::AddressBar(QWidget *parent) :
 	this->createRoot();
 
 	menu = new AddressBarMenu(this);
-	connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(appendSubDir(QAction*)));
+	connect(menu, &QMenu::triggered, this, &AddressBar::appendSubDir);
 
 	this->setMouseTracking(true);
 }
 
-/// The idea is to programmatically highlight 2 AddressBarButton instances
-/// Unfortunately, that's seems really difficult to proceed...
-/// Is there any chance to succeed?
-/*void AddressBar::mouseMoveEvent(QMouseEvent * e)
+void AddressBar::mouseMoveEvent(QMouseEvent *)
 {
-	for (int i = 0; i < hBoxLayout->count() - 2; i++) {
-		QWidget *w = hBoxLayout->itemAt(i)->widget();
-		if (w->frameGeometry().contains(w->mapFromParent(e->pos()))) {
-			AddressBarButton *b = qobject_cast<AddressBarButton*>(w);
-			if (b->type() == AddressBarButton::Folder) {
-				AddressBarButton *arrow = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(++i)->widget());
-				qDebug() << b->currentPath() << b->index() << arrow->index();
-				arrow->setAttribute(Qt::WA_Hover);
-			}
-			break;
-		}
+	this->update();
+}
+
+void AddressBar::paintEvent(QPaintEvent *)
+{
+	QPainter p(this);
+
+	// Light gray frame
+	QRect r = this->rect().adjusted(2, 2, -4, -4);
+	QLinearGradient lg(r.topLeft(), r.bottomLeft());
+	lg.setColorAt(0, QColor(83, 89, 94));
+	lg.setColorAt(1, QColor(169, 180, 191));
+	p.setPen(QPen(QBrush(lg), 1.0));
+	p.drawRect(r);
+
+	// White rect between frame and blue rect
+	p.fillRect(r.adjusted(1, 1, -1, -1), QColor(250, 252, 254));
+
+	// Light blue rect
+	if (r.contains(mapFromGlobal(QCursor::pos()))) {
+		p.fillRect(r.adjusted(2, 2, -2, -2), Qt::white);
+	} else {
+		p.fillRect(r.adjusted(2, 2, -2, -2), QColor(236, 242, 249));
 	}
-	QWidget::mouseMoveEvent(e);
-}*/
+}
+
+#include <QStyle>
 
 /** Create a special root arrow button.*/
 void AddressBar::createRoot()
 {
-	AddressBarButton *buttonArrow = new AddressBarButton(AddressBarButton::Arrow, "/", -1, this);
-	buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
-	buttonArrow->setIconSize(QSize(17, 7));
-	connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showDrivesAndPreviousFolders()));
+	AddressBarButton *buttonArrow = new AddressBarButton(QDir::separator(), -1, this);
+	connect(buttonArrow, &QPushButton::clicked, this, &AddressBar::showDrivesAndPreviousFolders);
 	hBoxLayout->insertWidget(0, buttonArrow);
 }
 
 /** Append 2 buttons to the address bar to navigate through the filesystem. */
 void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 {
-	AddressBarButton *buttonDir = new AddressBarButton(AddressBarButton::Folder, path.absolutePath(), hBoxLayout->count() - 1, this);
-	buttonDir->setFlat(true);
+	AddressBarButton *buttonDir = new AddressBarButton(path.absolutePath(), hBoxLayout->count() - 1, this);
 	buttonDir->setIcon(QFileIconProvider().icon(QFileInfo(path.absolutePath())));
 	// Special case for the root directory
 	if (path.isRoot()) {
@@ -72,27 +80,13 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 	} else {
 		buttonDir->setText(path.dirName());
 	}
-	connect(buttonDir, SIGNAL(clicked()), this, SLOT(deleteFromNamedFolder()));
+	connect(buttonDir, &QPushButton::clicked, this, &AddressBar::deleteFromNamedFolder);
 
 	if (insertFirst) {
 		hBoxLayout->insertWidget(1, buttonDir);
 	} else {
 		this->hideFirstButtons(buttonDir);
 		hBoxLayout->insertWidget(hBoxLayout->count() - 1, buttonDir);
-	}
-
-	// Create an arrow only if there's at least one subfolder
-	if (!path.entryInfoList(QStringList(), QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks).isEmpty()) {
-		AddressBarButton *buttonArrow = new AddressBarButton(AddressBarButton::Arrow, path.absolutePath(), hBoxLayout->count() - 1, this);
-		buttonArrow->setIcon(QIcon(":/icons/right-arrow"));
-		buttonArrow->setIconSize(QSize(17, 7));
-		buttonArrow->setFlat(true);
-		connect(buttonArrow, SIGNAL(clicked()), this, SLOT(showSubDirMenu()));
-		if (insertFirst) {
-			hBoxLayout->insertWidget(2, buttonArrow);
-		} else {
-			hBoxLayout->insertWidget(hBoxLayout->count() - 1, buttonArrow);
-		}
 	}
 }
 

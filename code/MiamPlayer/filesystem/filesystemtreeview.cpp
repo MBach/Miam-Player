@@ -25,15 +25,12 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
 	this->setColumnHidden(1, true);
 	this->setColumnHidden(3, true);
-	/// FIXME Qt5
-	//this->header()->setResizeMode(QHeaderView::ResizeToContents);
+	this->header()->setSectionResizeMode(QHeaderView::Interactive);
 
 	properties = new QMenu(this);
 	toPlaylist = tr("Add \"%1\" to playlist");
 	toLibrary = tr("Add \"%1\" to library");
 	toTagEditor = tr("Send \"%1\" to the tag editor");
-
-	header()->setSectionResizeMode(QHeaderView::Stretch);
 
 	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertToFolder);
 }
