@@ -1,26 +1,28 @@
 #include "addressbarbutton.h"
 
 #include <QDir>
+#include <QMouseEvent>
 #include <QStyleOption>
 #include <QStylePainter>
 
 #include <QtDebug>
 
 AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *parent) :
-	QPushButton(parent), path(QDir::toNativeSeparators(newPath)), idx(index), _atLeastOneSubDir(false)
+	QPushButton(parent), _path(QDir::toNativeSeparators(newPath)), idx(index), _atLeastOneSubDir(true)
 {
-	if (path.right(1) != QDir::separator()) {
-		path += QDir::separator();
+	if (_path.right(1) != QDir::separator()) {
+		_path += QDir::separator();
 	}
 	this->setFlat(true);
 	this->setMouseTracking(true);
-	QDir d = QDir(path);
-	foreach (QFileInfo fileInfo, d.entryInfoList()) {
+	QDir d = QDir(_path);
+	/*foreach (QFileInfo fileInfo, d.entryInfoList(QStringList(), QDir::NoDotAndDotDot)) {
+		qDebug() << fileInfo.absoluteFilePath();
 		if (fileInfo.isDir()) {
 			_atLeastOneSubDir = true;
-			break;
+			//break;
 		}
-	}
+	}*/
 	// padding + text + (space + arrow + space) if current dir has subdirectories
 	int width = fontMetrics().width(d.dirName());
 	if (_atLeastOneSubDir) {
@@ -33,10 +35,10 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 QString AddressBarButton::currentPath() const
 {
 	// Removes the last directory separator, unless for the root on windows which is like C:\. It's not possible to do "cd C:"
-	if (QDir(path).isRoot()) {
-		return path;
+	if (QDir(_path).isRoot()) {
+		return _path;
 	} else {
-		return path.left(path.length() - 1);
+		return _path.left(_path.length() - 1);
 	}
 }
 
@@ -44,13 +46,19 @@ QString AddressBarButton::currentPath() const
 void AddressBarButton::mouseMoveEvent(QMouseEvent *)
 {
 	qobject_cast<QWidget *>(this->parent())->repaint();
+	qDebug() << "over" << _path;
 }
 
 /** Redefined. */
-void AddressBarButton::mousePressEvent(QMouseEvent *)
+void AddressBarButton::mousePressEvent(QMouseEvent *event)
 {
 	// mouse press in arrow rect => immediate popup menu
 	// in text rect => goto dir, mouse release not relevant
+
+	if (_arrowRect.contains(event->pos())) {
+		//_arrowPressed = true;
+		emit aboutToShowMenu();
+	}
 }
 
 /** Redefined. */
@@ -58,11 +66,13 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
 	QRect r = rect().adjusted(0, 1, -1, -2);
-	_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());
 	if (_atLeastOneSubDir) {
 		_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());
+		_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());
+	} else {
+		_textRect = r;
 	}
-	QDir dir(path);
+	QDir dir(_path);
 
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
@@ -100,8 +110,8 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	if (dir.isRoot()) {
 		bool absRoot = true;
 		foreach (QFileInfo fileInfo, QDir::drives()) {
-			if (QDir::toNativeSeparators(fileInfo.absolutePath()) == path) {
-				p.drawText(_textRect, Qt::AlignLeft | Qt::AlignVCenter, path);
+			if (QDir::toNativeSeparators(fileInfo.absolutePath()) == _path) {
+				p.drawText(_textRect, Qt::AlignLeft | Qt::AlignVCenter, _path);
 				absRoot = false;
 				break;
 			}

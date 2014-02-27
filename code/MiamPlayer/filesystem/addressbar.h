@@ -9,18 +9,25 @@
 #include "addressbarbutton.h"
 #include "addressbarmenu.h"
 
+#include <QLineEdit>
+
 class AddressBar : public QWidget
 {
 	Q_OBJECT
 private:
 	QHBoxLayout *hBoxLayout;
 	AddressBarMenu *menu;
+	QLineEdit *_lineEdit;
 
 public:
 	explicit AddressBar(QWidget *parent = 0);
 
+	virtual bool eventFilter(QObject *obj, QEvent *e);
+
 protected:
 	virtual void mouseMoveEvent(QMouseEvent *);
+
+	virtual void mousePressEvent(QMouseEvent *);
 
 	virtual void paintEvent(QPaintEvent *);
 

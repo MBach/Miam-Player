@@ -8,17 +8,24 @@
 
 #include <QtDebug>
 
+#include <QLineEdit>
+
 AddressBar::AddressBar(QWidget *parent) :
 	QWidget(parent)
 {
+	_lineEdit = new QLineEdit(this);
+	_lineEdit->installEventFilter(this);
+	_lineEdit->setFrame(false);
+
 	hBoxLayout = new QHBoxLayout(this);
+	this->setContentsMargins(5, 2, 2, 2);
 	hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	hBoxLayout->setSpacing(0);
 
 	this->setLayout(hBoxLayout);
 	this->setMinimumHeight(30);
 
-	hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
+
 	this->createRoot();
 
 	menu = new AddressBarMenu(this);
@@ -27,9 +34,37 @@ AddressBar::AddressBar(QWidget *parent) :
 	this->setMouseTracking(true);
 }
 
+bool AddressBar::eventFilter(QObject *obj, QEvent *e)
+{
+	if (obj == _lineEdit && e->type() == QEvent::FocusOut) {
+		qDebug() << "here ?";
+		this->createRoot();
+		this->init(_lineEdit->text());
+		_lineEdit->hide();
+	}
+	return QWidget::eventFilter(obj, e);
+}
+
 void AddressBar::mouseMoveEvent(QMouseEvent *)
 {
 	this->update();
+}
+
+void AddressBar::mousePressEvent(QMouseEvent *)
+{
+	foreach (AddressBarButton *abb, findChildren<AddressBarButton*>()) {
+		abb->hide();
+	}
+	_lineEdit->setGeometry(this->contentsRect());
+	QLayoutItem *item = hBoxLayout->itemAt(hBoxLayout->count() - 2);
+	_lineEdit->setText(qobject_cast<AddressBarButton*>(item->widget())->path());
+	_lineEdit->selectAll();
+	while (hBoxLayout->count() != 0) {
+		delete hBoxLayout->takeAt(0);
+	}
+	hBoxLayout->insertWidget(0, _lineEdit);
+	_lineEdit->show();
+	_lineEdit->setFocus();
 }
 
 void AddressBar::paintEvent(QPaintEvent *)
@@ -37,25 +72,13 @@ void AddressBar::paintEvent(QPaintEvent *)
 	QPainter p(this);
 
 	// Light gray frame
-	QRect r = this->rect().adjusted(2, 2, -4, -4);
-	QLinearGradient lg(r.topLeft(), r.bottomLeft());
-	lg.setColorAt(0, QColor(83, 89, 94));
-	lg.setColorAt(1, QColor(169, 180, 191));
-	p.setPen(QPen(QBrush(lg), 1.0));
+	QRect r = this->rect();//.adjusted(2, 2, -4, -4);
+	p.setPen(QPen(QColor(169, 180, 191), 1.0));
 	p.drawRect(r);
 
 	// White rect between frame and blue rect
-	p.fillRect(r.adjusted(1, 1, -1, -1), QColor(250, 252, 254));
-
-	// Light blue rect
-	if (r.contains(mapFromGlobal(QCursor::pos()))) {
-		p.fillRect(r.adjusted(2, 2, -2, -2), Qt::white);
-	} else {
-		p.fillRect(r.adjusted(2, 2, -2, -2), QColor(236, 242, 249));
-	}
+	p.fillRect(r.adjusted(1, 1, -1, -1), Qt::white);
 }
-
-#include <QStyle>
 
 /** Create a special root arrow button.*/
 void AddressBar::createRoot()
@@ -80,7 +103,7 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 	} else {
 		buttonDir->setText(path.dirName());
 	}
-	connect(buttonDir, &QPushButton::clicked, this, &AddressBar::deleteFromNamedFolder);
+	connect(buttonDir, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showSubDirMenu);
 
 	if (insertFirst) {
 		hBoxLayout->insertWidget(1, buttonDir);
@@ -164,8 +187,11 @@ void AddressBar::init(const QString &initPath)
 	// Re-order index buttons because they were inserted backward (/path/to/music, /path/to, /path, /)
 	for (int i = 0; i < hBoxLayout->count() - 1; i++) {
 		AddressBarButton *b = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i)->widget());
-		b->setIndex(i);
+		if (b) {
+			b->setIndex(i);
+		}
 	}
+	hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
 	emit pathChanged(initPath);
 }
 
@@ -205,8 +231,10 @@ void AddressBar::deleteFromArrowFolder(int after)
 		// Delete items from the end (excluding the spacer)
 		for (int i = hBoxLayout->count() - 2; i > after; i--) {
 			QLayoutItem *item = hBoxLayout->takeAt(i);
-			delete item->widget();
-			delete item;
+			if (item && item->widget()) {
+				delete item->widget();
+				delete item;
+			}
 		}
 
 		// Special case for the root button
@@ -283,6 +311,6 @@ void AddressBar::showSubDirMenu()
 	}
 
 	// Then display the menu
-	QPoint p(button->geometry().x() - 20, button->geometry().y() + button->geometry().height() - 1);
-	menu->exec(mapToGlobal(p), 0);
+	QPoint p(button->geometry().right() - 36, button->geometry().y() + button->geometry().height() - 1);
+	menu->popup(mapToGlobal(p), 0);
 }

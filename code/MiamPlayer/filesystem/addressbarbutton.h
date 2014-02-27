@@ -7,7 +7,7 @@ class AddressBarButton : public QPushButton
 {
 	Q_OBJECT
 private:
-	QString path;
+	QString _path;
 
 	int idx;
 
@@ -24,6 +24,8 @@ public:
 
 	inline void setIndex(const int &index) { idx = index; }
 
+	inline const QString & path() const { return _path; }
+
 protected:
 	/** Redefined. */
 	virtual void mouseMoveEvent(QMouseEvent *);
@@ -33,6 +35,9 @@ protected:
 
 	/** Redefined. */
 	virtual void paintEvent(QPaintEvent *);
+
+signals:
+	void aboutToShowMenu();
 };
 
 #endif // ADDRESSBARBUTTON_H
