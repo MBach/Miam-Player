@@ -211,7 +211,7 @@ void CustomizeThemeDialog::showColorDialog()
 		colorDialog->setCurrentColor(_targetedColor->color());
 
 		connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
-			settings->setCustomColors(_targetedColor->customColor(), selectedColor);
+			settings->setCustomColorRole(_targetedColor->colorRole(), selectedColor);
 			//mainWindow->setFocus();
 			//mainWindow->repaint();
 		});
@@ -242,7 +242,8 @@ void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {
-	Settings::getInstance()->setCustomColors(b);
+	Settings *settings = Settings::getInstance();
+	settings->setCustomColors(b);
 	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
 		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
 			QLayoutItem *item = customColorsGridLayout->itemAtPosition(i, j);
@@ -250,6 +251,21 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 				item->widget()->setEnabled(b);
 			}
 		}
+	}
+	if (b) {
+		bgPrimaryColorWidget->setColor(settings->customColors(QPalette::Base));
+		globalBackgroundColorWidget->setColor(settings->customColors(QPalette::Window));
+		itemColorWidget->setColor(settings->customColors(QPalette::WindowText));
+		selectedItemColorWidget->setColor(settings->customColors(QPalette::Highlight));
+	} else {
+		int gray = qGray(settings->customColors(QPalette::Base).rgb());
+		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
+		gray = qGray(settings->customColors(QPalette::Window).rgb());
+		globalBackgroundColorWidget->setColor(QColor(gray, gray, gray));
+		gray = qGray(settings->customColors(QPalette::WindowText).rgb());
+		itemColorWidget->setColor(QColor(gray, gray, gray));
+		gray = qGray(settings->customColors(QPalette::Highlight).rgb());
+		selectedItemColorWidget->setColor(QColor(gray, gray, gray));
 	}
 }
 
@@ -309,17 +325,9 @@ void CustomizeThemeDialog::loadTheme()
 		enableCustomColorsRadioButton->setChecked(true);
 	} else {
 		disableCustomColorsRadioButton->setChecked(true);
-		this->toggleCustomColors(false);
-		//int gray = qGray(settings->customColors(Settings::ColorBackground).rgb());
-		//bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
-		//globalBackgroundColorWidget->setColor(settings->customColors(Settings::ColorGlobalBackground));
-		//itemColorWidget->setColor(settings->customColors(Settings::ColorFonts));
-		//selectedItemColorWidget->setColor(settings->customColors(Settings::ColorHighlight));
 	}
-	bgPrimaryColorWidget->setColor(settings->customColors(Settings::ColorBackground));
-	globalBackgroundColorWidget->setColor(settings->customColors(Settings::ColorGlobalBackground));
-	itemColorWidget->setColor(settings->customColors(Settings::ColorFonts));
-	selectedItemColorWidget->setColor(settings->customColors(Settings::ColorHighlight));
+	this->toggleCustomColors(settings->isCustomColors());
+
 }
 
 /** Redefined to initialize favorites from settings. */

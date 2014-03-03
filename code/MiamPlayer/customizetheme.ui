@@ -1183,7 +1183,7 @@
                <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
               </property>
               <property name="CustomColors" stdset="0">
-               <string notr="true">Settings::ColorBackground</string>
+               <string notr="true" extracomment="QPalette::Base">9</string>
               </property>
              </widget>
             </item>
@@ -1247,7 +1247,7 @@
                <string notr="true">Reflector { border: 1px solid #707070; background-color: #f0f0f0; }</string>
               </property>
               <property name="CustomColors" stdset="0">
-               <string notr="true">Settings::ColorGlobalBackground</string>
+               <string notr="true" extracomment="QPalette::Window">10</string>
               </property>
              </widget>
             </item>
@@ -1263,7 +1263,7 @@
                <string notr="true">Reflector { border: 1px solid #707070; background-color: #000000; }</string>
               </property>
               <property name="CustomColors" stdset="0">
-               <string notr="true">Settings::ColorFonts</string>
+               <string notr="true" extracomment="QPalette::WindowText">0</string>
               </property>
              </widget>
             </item>
@@ -1279,7 +1279,7 @@
                <string notr="true">Reflector { border: 1px solid #707070; background-color: #d6eefb; }</string>
               </property>
               <property name="CustomColors" stdset="0">
-               <string notr="true">Settings::ColorHighlight</string>
+               <string notr="true" extracomment="QPalette::Highlight">12</string>
               </property>
              </widget>
             </item>

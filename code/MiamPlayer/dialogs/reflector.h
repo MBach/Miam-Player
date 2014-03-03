@@ -22,7 +22,7 @@ public:
 	/** Getter to the color used in the preview pane in the Customize Theme Dialog. */
 	inline QColor color() const { return this->backgroundColor; }
 
-	Settings::CustomColors customColor() const;
+	QPalette::ColorRole colorRole() const;
 
 	/** Setter to the color used in the preview pane in the Customize Theme Dialog. */
 	inline void setColor(const QColor &color) { this->backgroundColor = color; }

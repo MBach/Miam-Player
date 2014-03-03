@@ -30,6 +30,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
 
 	int iconSize = settings->coverSize();
+	//this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -66,12 +67,17 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_jumpToWidget->setBackgroundRole(QPalette::Button);
 }
 
+/** For every item in the library, gets the top level letter attached to it. */
 QChar LibraryTreeView::currentLetter() const
 {
 	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
 	if (iTop.data(Type).toInt() == Letter && iTop.row() == 0 && proxyModel->sortOrder() == Qt::AscendingOrder) {
 		return QChar();
 	} else {
+		// An item without a valid parent is a top level item, therefore we can extract the letter.
+		while (iTop.parent().isValid()) {
+			iTop = iTop.parent();
+		}
 		return iTop.data(DataNormalizedString).toString().toUpper().at(0);
 	}
 }
@@ -173,7 +179,6 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
-	//qDebug() << Q_FUNC_INFO;
 	if (verticalScrollBar()->isVisible()) {
 		if (QGuiApplication::isLeftToRight()) {
 			_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());

@@ -20,12 +20,12 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	//qDebug() << Q_FUNC_INFO;
 	painter->save();
 	painter->setFont(Settings::getInstance()->font(Settings::LIBRARY));
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
+	o.palette = QGuiApplication::palette();
 	if (QGuiApplication::isLeftToRight()) {
 		o.rect.adjust(0, 0, -19, 0);
 	} else {
@@ -40,7 +40,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->drawAlbum(painter, o, item);
 		break;
 	case LibraryTreeView::Artist:
-		this->drawArtist(painter, o, index);
+		this->drawArtist(painter, o);
 		break;
 	case LibraryTreeView::Disc:
 		this->drawDisc(painter, o, index);
@@ -66,8 +66,6 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	int type = item->data(LibraryTreeView::Type).toInt();
 	if (settings->isCoversEnabled() && type == LibraryTreeView::Album) {
 		QFontMetrics fmf(settings->font(Settings::LIBRARY));
-		//qDebug() << QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
-		//return QStyledItemDelegate::sizeHint(option, index);
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
@@ -80,31 +78,31 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	static QImageReader imageReader;
 	static int coverSize = Settings::getInstance()->coverSize();
 	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
-	Settings *settings = Settings::getInstance();
+	//Settings *settings = Settings::getInstance();
 	// Display a light selection rectangle when one is moving the cursor
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
-		if (settings->isCustomColors()) {
+		/*if (settings->isCustomColors()) {
 			QColor highlight = settings->customColors(Settings::ColorHighlight);
 			painter->setPen(highlight);
 			painter->setBrush(highlight.lighter());
-		} else {
+		} else {*/
 			painter->setPen(option.palette.highlight().color());
 			painter->setBrush(option.palette.highlight().color().lighter(175));
-		}
+		//}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	} else if (option.state & QStyle::State_Selected) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		painter->save();
-		if (settings->isCustomColors()) {
+		/*if (settings->isCustomColors()) {
 			QColor highlight = settings->customColors(Settings::ColorHighlight);
 			painter->setPen(highlight);
 			painter->setBrush(highlight.lighter(125));
-		} else {
+		} else {*/
 			painter->setPen(option.palette.highlight().color());
 			painter->setBrush(option.palette.highlight().color().lighter(160));
-		}
+		//}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	}
@@ -166,9 +164,50 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	}
 }
 
-void LibraryItemDelegate::drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option) const
 {
-	QStyledItemDelegate::paint(painter, option, index);
+	//Settings *settings = Settings::getInstance();
+	// Display a light selection rectangle when one is moving the cursor
+	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
+		painter->save();
+		/*if (settings->isCustomColors()) {
+			QColor highlight = settings->customColors(Settings::ColorHighlight);
+			painter->setPen(highlight);
+			painter->setBrush(highlight.lighter());
+		} else {*/
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(option.palette.highlight().color().lighter(175));
+		//}
+		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
+		painter->restore();
+	} else if (option.state & QStyle::State_Selected) {
+		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
+		painter->save();
+		/*if (settings->isCustomColors()) {
+			QColor highlight = settings->customColors(Settings::ColorHighlight);
+			painter->setPen(highlight);
+			painter->setBrush(highlight.lighter(125));
+		} else {*/
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(option.palette.highlight().color().lighter(160));
+		//}
+		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
+		painter->restore();
+	}
+
+	// It's possible to have missing covers in your library, so we need to keep alignment.
+	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
+	option.textElideMode = Qt::ElideRight;
+	if (QGuiApplication::isLeftToRight()) {
+		QPoint topLeft(option.rect.x() + 5, option.rect.y());
+		QRect rectText(topLeft, option.rect.bottomRight());
+		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		painter->drawText(rectText, Qt::AlignVCenter, s);
+	} else {
+		QRect rectText(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
+		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		painter->drawText(rectText, Qt::AlignVCenter, s);
+	}
 }
 
 void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const

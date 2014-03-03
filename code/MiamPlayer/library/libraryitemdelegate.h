@@ -46,7 +46,7 @@ private:
 	/** Albums have covers usually. */
 	void drawAlbum(QPainter *painter, QStyleOptionViewItem &o, QStandardItem *item) const;
 
-	void drawArtist(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	void drawArtist(QPainter *painter, QStyleOptionViewItem &option) const;
 
 	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
 

@@ -1,6 +1,5 @@
 #include "reflector.h"
 
-#include <QMetaEnum>
 #include <QStylePainter>
 
 #include <QtDebug>
@@ -9,11 +8,9 @@ Reflector::Reflector(QWidget *parent) :
 	QWidget(parent), backgroundColor(QColor())
 {}
 
-Settings::CustomColors Reflector::customColor() const
+QPalette::ColorRole Reflector::colorRole() const
 {
-	int idxEnum = Settings::staticMetaObject.indexOfEnumerator("CustomColors");
-	int i = Settings::staticMetaObject.enumerator(idxEnum).keyToValue(property("CustomColors").toString().toStdString().data());
-	return static_cast<Settings::CustomColors>(i);
+	return static_cast<QPalette::ColorRole>(property("CustomColors").toInt());
 }
 
 /** Redefined to be able to reflect the color of the elements in the Customize Theme Dialog. */

@@ -246,10 +246,10 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
-	QPainter pp(viewport());
-	if (Settings::getInstance()->isCustomColors()) {
-		pp.fillRect(viewport()->rect(), Settings::getInstance()->customColors(Settings::ColorBackground));
-	}
+	//QPainter pp(viewport());
+	//if (Settings::getInstance()->isCustomColors()) {
+	//	pp.fillRect(viewport()->rect(), Settings::getInstance()->customColors(Settings::ColorBackground));
+	//}
 	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line

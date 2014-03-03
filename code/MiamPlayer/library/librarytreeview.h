@@ -56,6 +56,7 @@ private:
 public:
 	explicit LibraryTreeView(QWidget *parent = 0);
 
+	/** For every item in the library, gets the top level letter attached to it. */
 	QChar currentLetter() const;
 
 	void init(LibrarySqlModel *sql);

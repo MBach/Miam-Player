@@ -61,6 +61,8 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 	}
 }
 
+#include <QApplication>
+
 /** Redefined. */
 void AddressBarButton::paintEvent(QPaintEvent *)
 {
@@ -77,16 +79,16 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
 	if (_textRect.contains(pos)) {
-		p.setPen(palette().highlight().color());
-		p.setBrush(palette().highlight().color().lighter());
+		p.setPen(QApplication::palette().highlight().color());
+		p.setBrush(QApplication::palette().highlight().color().lighter());
 		p.drawRect(_textRect);
 		if (_atLeastOneSubDir) {
 			p.drawRect(_arrowRect);
 		}
 	} else if (_arrowRect.contains(pos)) {
-		p.setPen(palette().highlight().color());
+		p.setPen(QApplication::palette().highlight().color());
 		p.drawRect(_textRect);
-		p.setBrush(palette().highlight().color().lighter());
+		p.setBrush(QApplication::palette().highlight().color().lighter());
 		if (_atLeastOneSubDir) {
 			p.drawRect(_arrowRect);
 		}

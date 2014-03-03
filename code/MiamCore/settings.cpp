@@ -73,10 +73,17 @@ int Settings::coverSize() const
 	return size;
 }
 
-QColor Settings::customColors(CustomColors cc) const
+#include <QApplication>
+
+QColor Settings::customColors(QPalette::ColorRole cr) const
 {
 	QMap<QString, QVariant> customCo = value("customColorsMap").toMap();
-	return customCo.value(QString(cc)).value<QColor>();
+	QColor color = customCo.value(QString(cr)).value<QColor>();
+	if (color.isValid()) {
+		return color;
+	} else {
+		return QApplication::palette().color(cr);
+	}
 }
 
 const QString Settings::customIcon(QPushButton *b, bool toggled) const
@@ -163,7 +170,7 @@ bool Settings::isCustomColors() const
 	if (b.isValid()) {
 		return b.toBool();
 	} else {
-		return true;
+		return false;
 	}
 }
 
@@ -254,11 +261,16 @@ void Settings::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &s
 	this->setValue("columnStateForPlaylist", columnStates);
 }
 
-void Settings::setCustomColors(CustomColors cc, const QColor &color)
+void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QMap<QString, QVariant> colors = value("customColorsMap").toMap();
-	colors.insert(QString(cc), color);
+	colors.insert(QString(cr), color);
 	setValue("customColorsMap", colors);
+	QPalette palette = QGuiApplication::palette();
+	palette.setColor(cr, color);
+	if (isCustomColors()) {
+		QGuiApplication::setPalette(palette);
+	}
 }
 
 void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
