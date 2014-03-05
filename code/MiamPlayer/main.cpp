@@ -17,6 +17,10 @@ int main(int argc, char *argv[])
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 
 	QApplication app(argc, argv);
+	Settings *settings = Settings::getInstance();
+	if (settings->isCustomColors()) {
+		app.setPalette(settings->value("customPalette").value<QPalette>());
+	}
 	app.setOrganizationName(COMPANY);
 	app.setApplicationName(SOFT);
 	app.setApplicationVersion(VERSION);

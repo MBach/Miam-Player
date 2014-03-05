@@ -54,6 +54,8 @@ private:
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
 
+	void paintRect(QPainter *painter, QStyleOptionViewItem &option) const;
+
 public slots:
 	void displayIcon(bool b);
 };

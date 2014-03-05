@@ -61,7 +61,10 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	QStylePainter p(this);
 	QStyleOptionViewItem o;
 	o.initFrom(_libraryTreeView);
+	o.palette = QApplication::palette();
 	p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
+
+	QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
 
 	// Reduce the font if this widget is too small
 	QFont f = p.font();
@@ -69,33 +72,23 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	for (int i = 0; i < 26; i++) {
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 19, height() / 26);
-		//Settings *settings = Settings::getInstance();
 		if (_libraryTreeView->currentLetter() == qc) {
 			// Display a bright selection rectangle corresponding to the top letter in the library
-			//if (settings->isCustomColors()) {
-			//	p.fillRect(r, settings->customColors(Settings::ColorHighlight));
-			//} else {
-				p.fillRect(r, o.palette.highlight());
-			//}
-		} else if (o.state & QStyle::State_MouseOver && r.contains(_pos)) {
+			p.fillRect(r, o.palette.highlight());
+		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
 			// Display a light rectangle under the mouse pointer
-			//if (settings->isCustomColors()) {
-			//	p.fillRect(r, settings->customColors(Settings::ColorHighlight).lighter());
-			//} else {
-				p.fillRect(r, o.palette.highlight().color().lighter(160));
-			//}
+			p.fillRect(r, o.palette.highlight().color().lighter(160));
 		}
-		p.save();
+
+
 		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
 			p.setFont(f);
 		}
-		//Check if selected color and QPalette::WindowText has poor contrast
-		/*QColor hiColor = settings->customColors(Settings::ColorHighlight);
-		if (hiColor.value() > 128) {
-			p.setPen(o.palette.windowText().color());
-		} else {
+		//
+		p.save();
+		if (hiColor.value() < 128 && (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos) || _libraryTreeView->currentLetter() == qc)) {
 			p.setPen(o.palette.highlightedText().color());
-		}*/
+		}
 		p.drawText(r, Qt::AlignCenter, qc);
 		p.restore();
 	}

@@ -5,8 +5,9 @@
 #include "stareditor.h"
 #include "filehelper.h"
 
-#include <QPainter>
 #include <QApplication>
+#include <QPainter>
+#include <QStylePainter>
 
 #include <QtDebug>
 
@@ -44,8 +45,6 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	starEditor->deleteLater();
 }
 
-#include <QStylePainter>
-
 /** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
@@ -53,16 +52,9 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
-	//Settings *settings = Settings::getInstance();
 	if (opt.state.testFlag(QStyle::State_Selected)) {
-		/*if (settings->isCustomColors()) {
-			QColor highlight = settings->customColors(Settings::ColorHighlight);
-			p->setPen(highlight);
-			p->fillRect(o.rect, highlight.lighter(110));
-		} else {*/
 		p->setPen(opt.palette.highlight().color());
 		p->fillRect(o.rect, opt.palette.highlight().color().lighter());
-		//}
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
@@ -81,11 +73,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		}
 	} else {
 		p->setPen(Qt::NoPen);
-		/*if (settings->isCustomColors()) {
-			p->fillRect(o.rect, settings->customColors(Settings::ColorBackground));
-		} else {*/
 		style->drawPrimitive(QStyle::PE_PanelItemViewItem, &o, p, o.widget);
-		//}
 	}
 	p->restore();
 

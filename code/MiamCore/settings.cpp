@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QFile>
+#include <QApplication>
 #include <QGuiApplication>
 #include <QHeaderView>
 #include <QScrollBar>
@@ -14,7 +15,23 @@ Settings* Settings::settings = NULL;
 /** Private constructor. */
 Settings::Settings(const QString &organization, const QString &application)
 	: QSettings(organization, application)
-{}
+{
+	if (isCustomColors()) {
+		QMapIterator<QString, QVariant> it(value("customColorsMap").toMap());
+		QPalette p = QApplication::palette();
+		while (it.hasNext()) {
+			it.next();
+			QColor color = it.value().value<QColor>();
+			if (color.isValid()) {
+				p.setColor(static_cast<QPalette::ColorRole>(it.key().toInt()), color);
+			}
+		}
+		QApplication::setPalette(p);
+		setValue("customPalette", p);
+	} else {
+		setValue("defaultPalette", QApplication::palette());
+	}
+}
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
 Settings* Settings::getInstance()
@@ -72,8 +89,6 @@ int Settings::coverSize() const
 	}
 	return size;
 }
-
-#include <QApplication>
 
 QColor Settings::customColors(QPalette::ColorRole cr) const
 {
@@ -264,13 +279,11 @@ void Settings::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &s
 void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QMap<QString, QVariant> colors = value("customColorsMap").toMap();
-	colors.insert(QString(cr), color);
+	colors.insert(QString::number(cr), color);
 	setValue("customColorsMap", colors);
 	QPalette palette = QGuiApplication::palette();
 	palette.setColor(cr, color);
-	if (isCustomColors()) {
-		QGuiApplication::setPalette(palette);
-	}
+	QApplication::setPalette(palette);
 }
 
 void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
@@ -378,6 +391,11 @@ void Settings::setCoverSize(int s)
 void Settings::setCustomColors(bool b)
 {
 	setValue("customColors", b);
+	if (b) {
+		QApplication::setPalette(value("customPalette").value<QPalette>());
+	} else {
+		QApplication::setPalette(value("defaultPalette").value<QPalette>());
+	}
 }
 
 void Settings::setCustomStyleSheet(QWidget *w)
