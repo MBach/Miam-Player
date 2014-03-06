@@ -54,7 +54,10 @@ private:
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
 
-	void paintRect(QPainter *painter, QStyleOptionViewItem &option) const;
+	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;
+
+	/** Check if color needs to be inverted then paint text. */
+	void paintText(QPainter *painter, const QStyleOptionViewItem &option, const QRect &rectText, const QString &text) const;
 
 public slots:
 	void displayIcon(bool b);

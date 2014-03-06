@@ -492,10 +492,10 @@ QString FileHelper::artist() const
 
 QString FileHelper::year() const
 {
-	if (_file && _file->tag()) {
+	if (_file && _file->tag() && _file->tag()->year() > 0) {
 		return QString::number(_file->tag()->year());
 	} else {
-		return "0000";
+		return "";
 	}
 }
 

@@ -108,7 +108,12 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum());
 		QTableWidgetItem *album = new QTableWidgetItem(fh.album());
 		QTableWidgetItem *trackNumber = new QTableWidgetItem(fh.trackNumber());
-		QTableWidgetItem *disc = new QTableWidgetItem(QString::number(fh.discNumber()));
+		QTableWidgetItem *disc;
+		if (fh.discNumber() == 0) {
+			disc = new QTableWidgetItem;
+		} else {
+			disc = new QTableWidgetItem(QString::number(fh.discNumber()));
+		}
 		QTableWidgetItem *year = new QTableWidgetItem(fh.year());
 		QTableWidgetItem *genre = new QTableWidgetItem(fh.genre());
 		QTableWidgetItem *comment = new QTableWidgetItem(fh.comment());

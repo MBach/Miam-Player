@@ -129,16 +129,17 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	// It's possible to have missing covers in your library, so we need to keep alignment.
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
 	option.textElideMode = Qt::ElideRight;
+	QRect rectText;
+	QString s;
 	if (QGuiApplication::isLeftToRight()) {
 		QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
-		QRect rectText(topLeft, option.rect.bottomRight());
-		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-		painter->drawText(rectText, Qt::AlignVCenter, s);
+		rectText = QRect(topLeft, option.rect.bottomRight());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	} else {
-		QRect rectText(option.rect.x(), option.rect.y(), option.rect.width() - coverSize - 5, option.rect.height());
-		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-		painter->drawText(rectText, Qt::AlignVCenter, s);
+		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - coverSize - 5, option.rect.height());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
+	this->paintText(painter, option, rectText, s);
 }
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option) const
@@ -146,16 +147,17 @@ void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &op
 	// It's possible to have missing covers in your library, so we need to keep alignment.
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
 	option.textElideMode = Qt::ElideRight;
+	QRect rectText;
+	QString s;
 	if (QGuiApplication::isLeftToRight()) {
 		QPoint topLeft(option.rect.x() + 5, option.rect.y());
-		QRect rectText(topLeft, option.rect.bottomRight());
-		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-		painter->drawText(rectText, Qt::AlignVCenter, s);
+		rectText = QRect(topLeft, option.rect.bottomRight());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	} else {
-		QRect rectText(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
-		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-		painter->drawText(rectText, Qt::AlignVCenter, s);
+		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
+	this->paintText(painter, option, rectText, s);
 }
 
 void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -202,35 +204,60 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	option.text = title;
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
 	option.textElideMode = Qt::ElideRight;
+	QString s;
+	QRect rectText;
 	if (QGuiApplication::isLeftToRight()) {
 		QPoint topLeft(option.rect.x() + 5, option.rect.y());
-		QRect rectText(topLeft, option.rect.bottomRight());
-		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-		painter->drawText(rectText, Qt::AlignVCenter, s);
+		rectText = QRect(topLeft, option.rect.bottomRight());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	} else {
-		QRect rectText(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
-		QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-		painter->drawText(rectText, Qt::AlignVCenter, s);
+		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
+	this->paintText(painter, option, rectText, s);
 }
 
-void LibraryItemDelegate::paintRect(QPainter *painter, QStyleOptionViewItem &option) const
+void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewItem &option) const
 {
 	// Display a light selection rectangle when one is moving the cursor
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
-		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter(175));
+		if (Settings::getInstance()->isCustomColors()) {
+			painter->setPen(option.palette.highlight().color().darker(100));
+			painter->setBrush(option.palette.highlight().color().lighter());
+		} else {
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(option.palette.highlight().color().lighter(170));
+		}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
-	} else if (option.state & QStyle::State_Selected) {
+	} else if (option.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		painter->save();
-		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter());
+		if (Settings::getInstance()->isCustomColors()) {
+			painter->setPen(option.palette.highlight().color().darker(150));
+			painter->setBrush(option.palette.highlight().color());
+		} else {
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(option.palette.highlight().color().lighter(160));
+		}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	}
+}
+
+/** Check if color needs to be inverted then paint text. */
+void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text) const
+{
+	QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
+	p->save();
+	if (hiColor.value() < 128 && opt.state.testFlag(QStyle::State_Selected)) {
+		p->setPen(opt.palette.highlightedText().color());
+	} else if (hiColor.lighter().value() < 128 && opt.state.testFlag(QStyle::State_MouseOver)) {
+		p->setPen(opt.palette.highlightedText().color());
+	}
+	p->drawText(rectText, Qt::AlignVCenter, text);
+	p->restore();
 }
 
 void LibraryItemDelegate::displayIcon(bool b)

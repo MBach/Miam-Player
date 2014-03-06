@@ -16,6 +16,7 @@ AddressBar::AddressBar(QWidget *parent) :
 	_lineEdit = new QLineEdit(this);
 	_lineEdit->installEventFilter(this);
 	_lineEdit->setFrame(false);
+	_lineEdit->setVisible(false);
 
 	hBoxLayout = new QHBoxLayout(this);
 	this->setContentsMargins(5, 2, 2, 2);

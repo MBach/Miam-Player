@@ -53,8 +53,8 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
 	if (opt.state.testFlag(QStyle::State_Selected)) {
-		p->setPen(opt.palette.highlight().color());
-		p->fillRect(o.rect, opt.palette.highlight().color().lighter());
+		p->setPen(opt.palette.highlight().color().darker(150));
+		p->fillRect(o.rect, opt.palette.highlight().color());
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
@@ -78,18 +78,23 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	p->restore();
 
 	// Highlight the current playing item
-	QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	Settings *settings = Settings::getInstance();
+	QFont font = settings->font(Settings::PLAYLIST);
 	if (_playlist->mediaPlaylist()->currentIndex() == index.row()) {
 		font.setBold(true);
 		font.setItalic(true);
 	}
 	p->setFont(font);
+
+	// Check if font color should be inverted
+	QColor hiColor = settings->customColors(QPalette::Highlight);
+	p->save();
+	if (hiColor.value() < 128 && o.state.testFlag(QStyle::State_Selected)) {
+		p->setPen(o.palette.highlightedText().color());
+	}
+
 	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
 	QString text;
-	/*if (settings->isCustomColors()) {
-		//o.palette.setBrush(QPalette::Text, settings->customColors(Settings::ColorFonts));
-		p->setPen(settings->customColors(Settings::ColorFonts));
-	}*/
 	switch (index.column()) {
 	case Playlist::TRACK_NUMBER:
 	case Playlist::LENGTH:
@@ -110,5 +115,6 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		}
 		break;
 	}
+	p->restore();
 }
 
