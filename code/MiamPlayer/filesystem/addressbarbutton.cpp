@@ -16,17 +16,17 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 	this->setFlat(true);
 	this->setMouseTracking(true);
 	QDir d = QDir(_path);
-	/*foreach (QFileInfo fileInfo, d.entryInfoList(QStringList(), QDir::NoDotAndDotDot)) {
+	foreach (QFileInfo fileInfo, d.entryInfoList(QStringList(), QDir::NoDotAndDotDot)) {
 		qDebug() << fileInfo.absoluteFilePath();
 		if (fileInfo.isDir()) {
 			_atLeastOneSubDir = true;
-			//break;
+			break;
 		}
-	}*/
+	}
 	// padding + text + (space + arrow + space) if current dir has subdirectories
 	int width = fontMetrics().width(d.dirName());
 	if (_atLeastOneSubDir) {
-		width += 30;
+		width += 40;
 	}
 	this->setMinimumWidth(width);
 	this->setMaximumWidth(width);
@@ -119,7 +119,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			}
 		}
 		if (absRoot) {
-			p.drawPixmap(QRect(0, 0, 20, 20), style()->standardPixmap(QStyle::SP_ComputerIcon), QRect(0, 0, 20, 20));
+			p.drawPixmap(QRect(0, 5, 20, 20), style()->standardPixmap(QStyle::SP_ComputerIcon), QRect(0, 0, 20, 20));
 		}
 	} else {
 		if (!dir.dirName().isEmpty()) {

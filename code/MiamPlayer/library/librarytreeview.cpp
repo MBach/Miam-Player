@@ -30,7 +30,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
 
 	int iconSize = settings->coverSize();
-	//this->setFrameShape(QFrame::NoFrame);
+	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -179,18 +179,14 @@ void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
+	int wVerticalScrollBar = 0;
 	if (verticalScrollBar()->isVisible()) {
-		if (QGuiApplication::isLeftToRight()) {
-			_jumpToWidget->move(frameGeometry().right() - 19 - verticalScrollBar()->width(), 1 + header()->height());
-		} else {
-			_jumpToWidget->move(frameGeometry().left() + verticalScrollBar()->width(), 1 + header()->height());
-		}
+		wVerticalScrollBar = verticalScrollBar()->width();
+	}
+	if (QGuiApplication::isLeftToRight()) {
+		_jumpToWidget->move(frameGeometry().right() - 19 - wVerticalScrollBar, 1 + header()->height());
 	} else {
-		if (QGuiApplication::isLeftToRight()) {
-			_jumpToWidget->move(frameGeometry().right() - 19, 1 + header()->height());
-		} else {
-			_jumpToWidget->move(frameGeometry().left(), 1 + header()->height());
-		}
+		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, 1 + header()->height());
 	}
 	TreeView::paintEvent(event);
 }

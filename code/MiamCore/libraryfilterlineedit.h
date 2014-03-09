@@ -11,6 +11,9 @@ class MIAMCORE_LIBRARY LibraryFilterLineEdit : public QLineEdit
 
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
+
+protected:
+	virtual void paintEvent(QPaintEvent *);
 };
 
 #endif // LIBRARYFILTERLINEEDIT_H

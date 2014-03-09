@@ -96,6 +96,21 @@
                 </size>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_5">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
                  <widget class="LibraryFilterLineEdit" name="searchBar">
                   <property name="maxLength">
@@ -380,7 +395,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
+                  <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
                 </property>
                 <property name="iconSize">
                  <size>

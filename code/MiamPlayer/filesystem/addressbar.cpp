@@ -20,7 +20,7 @@ AddressBar::AddressBar(QWidget *parent) :
 
 	hBoxLayout = new QHBoxLayout(this);
 	this->setContentsMargins(5, 2, 2, 2);
-	hBoxLayout->setContentsMargins(0, 0, 0, 0);
+	hBoxLayout->setContentsMargins(5, 2, 2, 2);
 	hBoxLayout->setSpacing(0);
 
 	this->setLayout(hBoxLayout);
@@ -53,15 +53,15 @@ void AddressBar::mouseMoveEvent(QMouseEvent *)
 
 void AddressBar::mousePressEvent(QMouseEvent *)
 {
-	foreach (AddressBarButton *abb, findChildren<AddressBarButton*>()) {
-		abb->hide();
-	}
 	_lineEdit->setGeometry(this->contentsRect());
 	QLayoutItem *item = hBoxLayout->itemAt(hBoxLayout->count() - 2);
 	_lineEdit->setText(qobject_cast<AddressBarButton*>(item->widget())->path());
 	_lineEdit->selectAll();
-	while (hBoxLayout->count() != 0) {
-		delete hBoxLayout->takeAt(0);
+	QLayoutItem *layoutItem;
+	while ((layoutItem = hBoxLayout->takeAt(0)) != 0) {
+		qDebug() << item->widget();
+		delete item->widget();
+		delete layoutItem;
 	}
 	hBoxLayout->insertWidget(0, _lineEdit);
 	_lineEdit->show();
