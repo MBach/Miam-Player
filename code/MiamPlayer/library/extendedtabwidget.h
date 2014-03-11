@@ -10,7 +10,6 @@ class ExtendedTabWidget : public QTabWidget
 	Q_OBJECT
 public:
 	explicit ExtendedTabWidget(QWidget *parent = 0) : QTabWidget(parent) { setTabBar(new ExtendedTabBar(this)); }
-
 };
 
 #endif // EXTENDEDTAB_H

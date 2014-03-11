@@ -62,7 +62,8 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	QStyleOptionViewItem o;
 	o.initFrom(_libraryTreeView);
 	o.palette = QApplication::palette();
-	p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
+	//p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
+	p.fillRect(rect(), o.palette.base());
 
 	QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
 
@@ -88,6 +89,8 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		p.save();
 		if (hiColor.value() < 128 && (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos) || _libraryTreeView->currentLetter() == qc)) {
 			p.setPen(o.palette.highlightedText().color());
+		} else if (abs(o.palette.windowText().color().value() - o.palette.base().color().value()) < 128) {
+			p.setPen(o.palette.brightText().color());
 		}
 		p.drawText(r, Qt::AlignCenter, qc);
 		p.restore();

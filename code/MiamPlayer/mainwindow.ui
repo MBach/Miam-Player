@@ -65,9 +65,6 @@
             <bool>true</bool>
            </property>
            <widget class="QWidget" name="tabLibrary">
-            <property name="styleSheet">
-             <string notr="true">QWidget#tabLibrary { background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #ffffff, stop:1 #f0f0f0); }</string>
-            </property>
             <attribute name="title">
              <string>Library</string>
             </attribute>
@@ -808,12 +805,6 @@
    <header>timelabel.h</header>
   </customwidget>
   <customwidget>
-   <class>ExtendedTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>library/extendedtabwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>TabPlaylist</class>
    <extends>QTabWidget</extends>
    <header>playlists/tabplaylist.h</header>
@@ -823,6 +814,12 @@
    <class>VolumeSlider</class>
    <extends>QSlider</extends>
    <header>volumeslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ExtendedTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>extendedtabwidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

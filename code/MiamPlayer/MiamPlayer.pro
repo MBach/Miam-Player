@@ -46,7 +46,8 @@ SOURCES += \
     volumeslider.cpp \
     playlists/playlistitemdelegate.cpp \
     playlists/starrating.cpp \
-    playlists/stareditor.cpp
+    playlists/stareditor.cpp \
+    library/extendedtabbar.cpp
 
 HEADERS += \
     mainwindow.h \

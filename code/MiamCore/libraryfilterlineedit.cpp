@@ -28,7 +28,6 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	QStyleOption o;
 	o.initFrom(this);
 	o.palette = QApplication::palette();
-	//o.rect.adjust(10, 10, -25, -10);
 	o.rect.adjust(10, 10, -20, -20);
 
 	// Border of this widget
@@ -39,11 +38,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 	}
 
-	//
-	//int startAngle = 110 * 16;
-	//int spanAngle = 140 * 16;
-	//QRect rLeft = QRect(10, 15, 30, 25);
-	//QRect rRight = QRect(rect().width() - 40, 15, 30, 25);
+	p.fillRect(rect(), o.palette.base());
 
 	int startAngle = 90 * 16;
 	int spanAngle = 180 * 16;

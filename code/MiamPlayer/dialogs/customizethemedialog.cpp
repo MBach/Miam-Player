@@ -24,8 +24,14 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	fontComboBoxLibrary->installEventFilter(this);
 	fontComboBoxPlaylist->installEventFilter(this);
 
-	groupBoxFonts->setMouseTracking(true);
+	/*groupBoxFonts->setMouseTracking(true);
 	groupBoxFonts->installEventFilter(this);
+	foreach (QObject *obj, groupBoxFonts->children()) {
+		obj->installEventFilter(this);
+	}*/
+	//groupBoxFonts->setAttribute(Qt::WA_TransparentForMouseEvents);
+	//groupBoxFonts->setMouseTracking(true);
+	spinBoxLibrary->setMouseTracking(true);
 
 	// Animates this Dialog
 	_timer = new QTimer(this);
@@ -171,24 +177,30 @@ void CustomizeThemeDialog::mouseMoveEvent(QMouseEvent *event)
 
 bool CustomizeThemeDialog::eventFilter(QObject *obj, QEvent *event)
 {
-	if (event->type() == QEvent::FocusOut) {
+	/*if (event->type() == QEvent::FocusOut) {
 		if (_timer->isActive()) {
 			_timer->stop();
 			this->animate(0.5, 1.0);
 		}
 		event->accept();
-	} else if (event->type() == QEvent::MouseMove) {
+	} else
+	if (event->type() == QEvent::MouseMove) {
 		QWidget *childWidget = focusWidget();
-		if (childWidget->parent() == obj) {
+		//if (childWidget->parent() == obj) {
 			QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 			QPoint point = childWidget->mapToParent(childWidget->rect().center()) - mouseEvent->pos();
-			qDebug() << childWidget->mapToParent(childWidget->rect().center()) << mouseEvent->pos() << point.manhattanLength();
-		}
-		/*if (widget->hasFocus() && _timer->isActive() && point.manhattanLength() > 300) {
+			qDebug() << point.manhattanLength() << point << childWidget->rect().center();
+			//if (childWidget->hasFocus() && _timer->isActive() && point.manhattanLength() > 100) {
+			//qDebug() << "stop animation" << childWidget->objectName();
+			//	_timer->stop();
+			//	this->animate(0.5, 1.0);
+			//}
+		//}
+		if (childWidget->hasFocus() && _timer->isActive() && point.manhattanLength() > 300) {
 			_timer->stop();
 			this->animate(0.5, 1.0);
-		}*/
-	}
+		}
+	}*/
 	return QDialog::eventFilter(obj, event);
 }
 
@@ -212,8 +224,6 @@ void CustomizeThemeDialog::showColorDialog()
 
 		connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
 			settings->setCustomColorRole(_targetedColor->colorRole(), selectedColor);
-			//mainWindow->setFocus();
-			//mainWindow->repaint();
 		});
 		connect(colorDialog, &ColorDialog::aboutToBeClosed, [=] () {
 			_targetedColor->setColor(colorDialog->currentColor());
