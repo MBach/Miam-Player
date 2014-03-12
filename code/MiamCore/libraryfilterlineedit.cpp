@@ -38,7 +38,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 	}
 
-	p.fillRect(rect(), o.palette.base());
+	p.fillRect(rect(), o.palette.base().color().lighter(110));
 
 	int startAngle = 90 * 16;
 	int spanAngle = 180 * 16;

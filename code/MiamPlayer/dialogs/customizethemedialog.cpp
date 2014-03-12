@@ -264,16 +264,10 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 	}
 	if (b) {
 		bgPrimaryColorWidget->setColor(settings->customColors(QPalette::Base));
-		globalBackgroundColorWidget->setColor(settings->customColors(QPalette::Window));
-		itemColorWidget->setColor(settings->customColors(QPalette::WindowText));
 		selectedItemColorWidget->setColor(settings->customColors(QPalette::Highlight));
 	} else {
 		int gray = qGray(settings->customColors(QPalette::Base).rgb());
 		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
-		gray = qGray(settings->customColors(QPalette::Window).rgb());
-		globalBackgroundColorWidget->setColor(QColor(gray, gray, gray));
-		gray = qGray(settings->customColors(QPalette::WindowText).rgb());
-		itemColorWidget->setColor(QColor(gray, gray, gray));
 		gray = qGray(settings->customColors(QPalette::Highlight).rgb());
 		selectedItemColorWidget->setColor(QColor(gray, gray, gray));
 	}

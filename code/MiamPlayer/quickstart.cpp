@@ -50,8 +50,6 @@ void QuickStart::searchMultimediaFiles()
 		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
 		worker->start();
 	}
-	//this->setStyleSheet("QuickStart#" + objectName() + " { border-top: 0; border-left: #ACACAC; border-bottom: #ACACAC;" \
-	//	"border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }");
 }
 
 void QuickStart::checkRow(QTableWidgetItem *i)

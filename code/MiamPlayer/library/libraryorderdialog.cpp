@@ -73,8 +73,8 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		connect(treeView, &QTreeView::clicked, [=]() {
 			foreach (QTreeView *treeView_2, findChildren<QTreeView*>()) {
 				if (treeView == treeView_2) {
-					treeView_2->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
-					treeView_2->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
+					//treeView_2->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
+					//treeView_2->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
 					treeView_2->clearSelection();
 					int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole + 1).toInt();
 					LibraryTreeView::ItemType insertPolicy = (LibraryTreeView::ItemType) i;
@@ -84,8 +84,8 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 						emit aboutToRedrawLibrary();
 					}
 				} else {
-					treeView_2->setStyleSheet("");
-					treeView_2->header()->setStyleSheet("");
+					//treeView_2->setStyleSheet("");
+					//treeView_2->header()->setStyleSheet("");
 				}
 			}
 			this->close();
@@ -108,8 +108,8 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		initialTreeView = artistTreeView;
 		break;
 	}
-	initialTreeView->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
-	initialTreeView->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
+	//initialTreeView->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
+	//initialTreeView->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
 }
 
 //#include <QPropertyAnimation>
@@ -131,4 +131,9 @@ void LibraryOrderDialog::show()
 	artistAlbumTreeView->raise();
 	albumTreeView->raise();
 	artistTreeView->raise();*/
+}
+
+void LibraryOrderDialog::paintEvent(QPaintEvent *)
+{
+
 }

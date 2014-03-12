@@ -21,10 +21,6 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 	if (drawBase())
 		p.drawPrimitive(QStyle::PE_FrameTabBarBase, o);
 
-	if (abs(o.palette.windowText().color().value() - o.palette.base().color().value()) < 128) {
-		p.setPen(o.palette.brightText().color());
-	}
-
 	for (int i = 0; i < count(); ++i) {
 		QStyleOptionTab tab;
 		initStyleOption(&tab, i);
@@ -47,7 +43,7 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		QStyleOptionTab tab;
 		initStyleOption(&tab, selected);
 		tab.palette = QApplication::palette();
-		p.fillRect(tab.rect, tab.palette.base());
+		p.fillRect(tab.rect, tab.palette.base().color().lighter(110));
 		p.drawText(tab.rect, Qt::AlignCenter, tab.text);
 	}
 }

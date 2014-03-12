@@ -63,7 +63,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	o.initFrom(_libraryTreeView);
 	o.palette = QApplication::palette();
 	//p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
-	p.fillRect(rect(), o.palette.base());
+	p.fillRect(rect(), o.palette.window());
 
 	QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
 
@@ -81,11 +81,10 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 			p.fillRect(r, o.palette.highlight().color().lighter(160));
 		}
 
-
 		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
 			p.setFont(f);
 		}
-		//
+		// Check if colors need to be inverted
 		p.save();
 		if (hiColor.value() < 128 && (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos) || _libraryTreeView->currentLetter() == qc)) {
 			p.setPen(o.palette.highlightedText().color());

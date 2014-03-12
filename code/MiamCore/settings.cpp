@@ -280,10 +280,35 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QMap<QString, QVariant> colors = value("customColorsMap").toMap();
 	colors.insert(QString::number(cr), color);
-	setValue("customColorsMap", colors);
 	QPalette palette = QGuiApplication::palette();
 	palette.setColor(cr, color);
+	if (cr == QPalette::Base) {
+		// Check if text color should be inverted when the base is too dark
+		if (abs(color.value() - palette.windowText().color().value()) < 128) {
+			QBrush tmp = palette.windowText();
+			palette.setColor(QPalette::WindowText, palette.brightText().color());
+			palette.setColor(QPalette::Text, palette.brightText().color());
+			//palette.setColor(QPalette::ButtonText, palette.brightText().color());
+			palette.setColor(QPalette::BrightText, tmp.color());
+
+			colors.insert(QString::number(QPalette::WindowText), palette.brightText().color());
+			colors.insert(QString::number(QPalette::Text), palette.brightText().color());
+			//colors.insert(QString::number(QPalette::ButtonText), palette.brightText().color());
+			colors.insert(QString::number(QPalette::BrightText), tmp.color());
+		}
+
+		// Automatically create a window color from the base one
+		QColor windowColor = color;
+		if (windowColor.value() > 128) {
+			windowColor = windowColor.darker(115);
+		} else {
+			windowColor = windowColor.lighter(115);
+		}
+		palette.setColor(QPalette::Window, windowColor);
+		colors.insert(QString::number(QPalette::Window), windowColor);
+	}
 	QApplication::setPalette(palette);
+	setValue("customColorsMap", colors);
 }
 
 void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
@@ -396,13 +421,6 @@ void Settings::setCustomColors(bool b)
 	} else {
 		QApplication::setPalette(value("defaultPalette").value<QPalette>());
 	}
-}
-
-void Settings::setCustomStyleSheet(QWidget *w)
-{
-	QMap<QString, QVariant> map = value("styleSheet").toMap();
-	map.insert(w->metaObject()->className(), w->styleSheet());
-	this->setValue("styleSheet", map);
 }
 
 /** Sets if stars are visible and active. */

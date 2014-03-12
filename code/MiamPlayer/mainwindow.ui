@@ -154,9 +154,6 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="styleSheet">
-                <string notr="true">#quickStart { border-left: #ACACAC; border-bottom: #ACACAC; border-right: #ACACAC; border-width: 1; border-style: solid; background-color: white; }</string>
-               </property>
               </widget>
              </item>
             </layout>
@@ -186,9 +183,6 @@
              </item>
              <item>
               <widget class="FileSystemTreeView" name="filesystem">
-               <property name="styleSheet">
-                <string notr="true">margin: -1px;</string>
-               </property>
                <property name="dragEnabled">
                 <bool>true</bool>
                </property>
@@ -442,7 +436,7 @@
      <x>0</x>
      <y>0</y>
      <width>537</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="nativeMenuBar">

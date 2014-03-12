@@ -142,9 +142,6 @@ public slots:
 
 	void setCustomColors(bool b);
 
-	/// StyleSheets
-	void setCustomStyleSheet(QWidget *w);
-
 	/** Sets if stars are visible and active. */
 	void setDelegates(const bool &value);
 

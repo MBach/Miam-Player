@@ -19,8 +19,6 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	this->setSectionsMovable(true);
 	this->setSectionResizeMode(QHeaderView::Interactive);
 	this->setStretchLastSection(true);
-	///FIXME
-	//this->setStyleSheet(Settings::getInstance()->styleSheet(this));
 
 	// Context menu on header of columns
 	columns = new QMenu(this);

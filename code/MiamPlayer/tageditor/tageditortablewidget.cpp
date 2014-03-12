@@ -14,11 +14,6 @@
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
 {
-	/// FIXME: not displayed using styleSheet...
-	//Settings *settings = Settings::getInstance();
-	//this->setStyleSheet(settings->styleSheet(this));
-    //this->horizontalScrollBar()->setStyleSheet(settings->styleSheet(horizontalScrollBar()));
-	//this->verticalScrollBar()->setStyleSheet(settings->styleSheet(verticalScrollBar()));
 	this->setItemDelegate(new NoFocusItemDelegate(this));
 }
 

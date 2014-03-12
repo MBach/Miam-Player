@@ -12,6 +12,9 @@ class LibraryOrderDialog : public QDialog, public Ui::LibraryOrderDialog
 public:
 	explicit LibraryOrderDialog(QWidget *parent = 0);
 
+protected:
+	virtual void paintEvent(QPaintEvent *);
+
 public slots:
 	void show();
 

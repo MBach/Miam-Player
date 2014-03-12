@@ -20,6 +20,7 @@
 #include <filehelper.h>
 
 #include "libraryscrollbar.h"
+#include "libraryheaderview.h"
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), sqlModel(NULL)
@@ -32,6 +33,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	int iconSize = settings->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
+    this->setHeader(new LibraryHeaderView(this));
 	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	proxyModel = new LibraryFilterProxyModel(this);
@@ -130,7 +132,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 		_lod->move(mapToGlobal(pos));
 		_lod->show();
 	});
-	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
+    connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
