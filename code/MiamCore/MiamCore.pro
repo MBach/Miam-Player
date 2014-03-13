@@ -41,7 +41,8 @@ SOURCES += \
     musicsearchengine.cpp \
     quickstartsearchengine.cpp \
     settings.cpp \
-    sqldatabase.cpp
+    sqldatabase.cpp \
+    libraryheader.cpp
 
 HEADERS += interfaces/basicplugininterface.h \
     interfaces/mediaplayerplugininterface.h \
@@ -55,4 +56,5 @@ HEADERS += interfaces/basicplugininterface.h \
     musicsearchengine.h \
     quickstartsearchengine.h \
     settings.h \
-    sqldatabase.h
+    sqldatabase.h \
+    libraryheader.h

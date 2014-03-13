@@ -20,7 +20,7 @@ private:
 	bool _hasNotEmittedYet;
 
 public:
-	explicit LibraryScrollBar(QWidget *parent) : QScrollBar(parent), _hasNotEmittedYet(true) {}
+	explicit LibraryScrollBar(QWidget *parent);
 
 protected:
 	/** Redefined to temporarily hide covers when moving. */
@@ -31,6 +31,8 @@ protected:
 
 	/** Redefined to restore covers when move events are finished. */
 	virtual void mouseReleaseEvent(QMouseEvent *e);
+
+	virtual void paintEvent(QPaintEvent *);
 
 signals:
 	/** Tell the view to toggle covers. */

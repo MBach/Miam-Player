@@ -20,7 +20,6 @@
 #include <filehelper.h>
 
 #include "libraryscrollbar.h"
-#include "libraryheaderview.h"
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), sqlModel(NULL)
@@ -28,13 +27,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	_libraryModel->setColumnCount(1);
-	_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
+	//_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
 
 	int iconSize = settings->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
-    this->setHeader(new LibraryHeaderView(this));
-	this->header()->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	proxyModel = new LibraryFilterProxyModel(this);
 	proxyModel->setSourceModel(_libraryModel);
@@ -105,6 +102,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
+	qDebug() << Q_FUNC_INFO << viewport()->geometry();
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	this->setVerticalScrollBar(vScrollBar);
@@ -127,12 +125,12 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	connect(sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &LibraryTreeView::insertTrackFromFile);
 
 	// One can choose a hierarchical order for drawing the library
-	LibraryOrderDialog *_lod = new LibraryOrderDialog(this);
+	/*LibraryOrderDialog *_lod = new LibraryOrderDialog(this);
 	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
 		_lod->move(mapToGlobal(pos));
 		_lod->show();
 	});
-    connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);
+	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);*/
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)

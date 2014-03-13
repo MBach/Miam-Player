@@ -122,6 +122,16 @@
               </widget>
              </item>
              <item>
+              <widget class="LibraryHeader" name="libraryHeader">
+               <property name="text">
+                <string>Artist \ Album</string>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="LibraryTreeView" name="library">
                <property name="editTriggers">
                 <set>QAbstractItemView::NoEditTriggers</set>
@@ -141,8 +151,8 @@
                <property name="expandsOnDoubleClick">
                 <bool>false</bool>
                </property>
-               <attribute name="headerShowSortIndicator" stdset="0">
-                <bool>true</bool>
+               <attribute name="headerVisible">
+                <bool>false</bool>
                </attribute>
               </widget>
              </item>
@@ -258,9 +268,6 @@
               </property>
               <item>
                <widget class="MediaButton" name="skipBackwardButton">
-                <property name="styleSheet">
-                 <string notr="true"/>
-                </property>
                 <property name="text">
                  <string notr="true"/>
                 </property>
@@ -436,7 +443,7 @@
      <x>0</x>
      <y>0</y>
      <width>537</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -814,6 +821,11 @@
    <extends>QTabWidget</extends>
    <header>extendedtabwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LibraryHeader</class>
+   <extends>QPushButton</extends>
+   <header location="global">libraryheader.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -30,14 +30,6 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	o.palette = QApplication::palette();
 	o.rect.adjust(10, 10, -20, -20);
 
-	// Border of this widget
-	p.setPen(o.palette.mid().color());
-	if (QApplication::isLeftToRight()) {
-		p.drawLine(rect().topRight(), rect().bottomRight());
-	} else {
-		p.drawLine(rect().topLeft(), rect().bottomLeft());
-	}
-
 	p.fillRect(rect(), o.palette.base().color().lighter(110));
 
 	int startAngle = 90 * 16;
@@ -71,5 +63,15 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	} else {
 		p.setPen(o.palette.mid().color());
 		p.drawText(o.rect.adjusted(5, 0, 0, 0), placeholderText());
+	}
+
+	// Border of this widget
+	p.setPen(o.palette.mid().color());
+	if (QApplication::isLeftToRight()) {
+		p.drawLine(QPoint(rect().center().x() + 1, 0), rect().topRight());
+		p.drawLine(rect().topRight(), rect().bottomRight());
+	} else {
+		p.drawLine(QPoint(rect().center().x() + 1, 0), rect().topLeft());
+		p.drawLine(rect().topLeft(), rect().bottomLeft());
 	}
 }
