@@ -59,6 +59,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
     connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 
+	proxyModel->sortOrder();
+
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
 
@@ -448,6 +450,22 @@ void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 			itemAlbum->setData(coverFileInfo.absoluteFilePath(), DataCoverPath);
 		}
 	}
+}
+
+/** Invert the current sort order. */
+void LibraryTreeView::changeSortOrder()
+{
+	if (proxyModel->sortOrder() == Qt::AscendingOrder) {
+		sortByColumn(0, Qt::DescendingOrder);
+	} else {
+		sortByColumn(0, Qt::AscendingOrder);
+	}
+}
+
+/** Redraw the treeview with a new display mode. */
+void LibraryTreeView::changeHierarchyOrder()
+{
+	sqlModel->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */

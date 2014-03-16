@@ -2,26 +2,23 @@
 
 #include "settings.h"
 #include <QApplication>
+#include <QContextMenuEvent>
 #include <QLinearGradient>
 #include <QStylePainter>
 
 #include <QtDebug>
 
 LibraryHeader::LibraryHeader(QWidget *parent) :
-	QPushButton(parent)
+	QPushButton(parent), _lod(new LibraryOrderDialog(this))
 {
-
+	connect(this, &QPushButton::clicked, this, &LibraryHeader::aboutToChangeSortOrder);
+	connect(_lod, &LibraryOrderDialog::accepted, this, &LibraryHeader::aboutToChangeHierarchyOrder);
 }
 
-void LibraryHeader::contextMenuEvent(QContextMenuEvent *event)
+void LibraryHeader::contextMenuEvent(QContextMenuEvent *e)
 {
-	qDebug() << Q_FUNC_INFO;
-	/*LibraryOrderDialog *_lod = new LibraryOrderDialog(this);
-	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
-		_lod->move(mapToGlobal(pos));
-		_lod->show();
-	});
-	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);*/
+	_lod->move(mapToGlobal(e->pos()));
+	_lod->show();
 }
 
 void LibraryHeader::paintEvent(QPaintEvent *)
@@ -37,7 +34,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Text
 	//model()->headerData(logicalIndex, Qt::Horizontal).toString();
-	QString header = QString("test");
+	QString header = _lod->headerValue();
 	QFont f = Settings::getInstance()->font(Settings::LIBRARY);
 	p.setFont(f);
 	QFontMetrics fm(f);

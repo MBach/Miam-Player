@@ -28,7 +28,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	initStyleOption(&o, index);
 	o.palette = QApplication::palette();
 	if (QGuiApplication::isLeftToRight()) {
-		o.rect.adjust(0, 0, -19, 0);
+		o.rect.adjust(0, 0, -20, 0);
 	} else {
 		o.rect.adjust(19, 0, 0, 0);
 	}

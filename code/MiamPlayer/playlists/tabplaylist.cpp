@@ -3,8 +3,8 @@
 #include <QFileSystemModel>
 #include <QStackedLayout>
 
-#include "tabbar.h"
 #include "settings.h"
+#include "tabbar.h"
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
@@ -40,7 +40,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		for (int i = 0; i < p->mediaPlaylist()->mediaCount(); i++) {
 			hash += p->mediaPlaylist()->media(i).canonicalUrl().toLocalFile();
 		}
-		qDebug() << "actual hash" << qHash(hash);
 		// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
 		if (p->hash() == qHash(hash) || playlists().at(index)->mediaPlaylist()->isEmpty()) {
 			this->removeTabFromCloseButton(index);
@@ -156,6 +155,7 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Then append a new empty playlist to the others
 	QWidget *stackedWidget = new QWidget(this);
+
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
@@ -172,13 +172,8 @@ Playlist* TabPlaylist::addPlaylist()
 	QLabel *label = new QLabel(tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
 	label->setAlignment(Qt::AlignCenter);
 	label->setWordWrap(true);
-	/*if (Settings::getInstance()->isCustomColors()) {
-		QPalette p = this->palette();
-		p.setColor(QPalette::WindowText, Settings::getInstance()->customColors(Settings::ColorFonts));
-		label->setPalette(p);
-	}*/
 
-	QWidget *w = new QWidget(this);
+	PlaylistFrame *w = new PlaylistFrame(this);
 	QVBoxLayout *vboxLayout = new QVBoxLayout(w);
 	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	vboxLayout->addWidget(icon);
@@ -194,11 +189,9 @@ Playlist* TabPlaylist::addPlaylist()
 
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaInserted, [=]() {
 		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
-		qDebug() << "inserted";
 	});
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, [=]() {
 		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
-		qDebug() << "removed";
 	});
 
 	// Select the new empty playlist
@@ -208,7 +201,6 @@ Playlist* TabPlaylist::addPlaylist()
 	return p;
 }
 
-
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
@@ -216,14 +208,10 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder, QDirIterator::Subdirectories);
-		//QList<QMediaContent> medias;
 		QStringList tracks;
 		while (it.hasNext()) {
-			//medias.append(QMediaContent(QUrl::fromLocalFile(it.next())));
 			tracks << it.next();
 		}
-		qDebug() << "ici";
-		//this->currentPlayList()->insertMedias(currentPlayList()->model()->rowCount(), medias);
 		this->insertItemsToPlaylist(currentPlayList()->model()->rowCount(), tracks);
 	}
 	// Automatically plays the first track
@@ -244,7 +232,6 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
-	qDebug() << Q_FUNC_INFO;
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon());
 }
@@ -323,14 +310,12 @@ void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 {
 	switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
 	case QDialogButtonBox::Save:
-		qDebug() << "save and delete";
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
 			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::SaveOnClose);
 		}
 		emit aboutToSavePlaylist(_closePlaylistPopup->index());
 		break;
 	case QDialogButtonBox::Discard:
-		qDebug() << "discard and delete";
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
 			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::DiscardOnClose);
 		}
@@ -338,7 +323,6 @@ void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 		_closePlaylistPopup->hide();
 		break;
 	default:
-		qDebug() << "cancel and keep";
 		break;
 	}
 }

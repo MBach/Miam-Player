@@ -13,9 +13,10 @@
 #include "playlistheaderview.h"
 #include "playlistitemdelegate.h"
 
-#include <QtDebug>
-
 #include <QItemSelection>
+#include <QStylePainter>
+
+#include <QtDebug>
 
 Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL), _hash(0)
@@ -34,6 +35,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
 	this->setEditTriggers(QTableView::SelectedClicked);
+	this->setFrameShape(QFrame::NoFrame);
 	this->setItemDelegate(new PlaylistItemDelegate(this));
 
 	// Select only by rows, not cell by cell
@@ -84,6 +86,13 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		_previouslySelectedRows = selected.indexes();
 		qDebug() << "previouslySelectedRows" << _previouslySelectedRows;
 	});
+
+	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
+	foreach (QScrollBar *scrollBar, scrollBars) {
+		connect(scrollBar, &QScrollBar::sliderPressed, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderMoved, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
+	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
@@ -243,13 +252,11 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	}
 }
 
+#include <QPaintEngine>
+
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
-	//QPainter pp(viewport());
-	//if (Settings::getInstance()->isCustomColors()) {
-	//	pp.fillRect(viewport()->rect(), Settings::getInstance()->customColors(Settings::ColorBackground));
-	//}
 	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line

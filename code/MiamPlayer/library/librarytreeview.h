@@ -112,6 +112,12 @@ private:
 	void repaintIcons();
 
 public slots:
+	/** Invert the current sort order. */
+	void changeSortOrder();
+
+	/** Redraw the treeview with a new display mode. */
+	void changeHierarchyOrder();
+
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);
 

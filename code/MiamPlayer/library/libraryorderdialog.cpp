@@ -73,19 +73,14 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		connect(treeView, &QTreeView::clicked, [=]() {
 			foreach (QTreeView *treeView_2, findChildren<QTreeView*>()) {
 				if (treeView == treeView_2) {
-					//treeView_2->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
-					//treeView_2->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
 					treeView_2->clearSelection();
 					int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole + 1).toInt();
 					LibraryTreeView::ItemType insertPolicy = (LibraryTreeView::ItemType) i;
 					// Rebuild library only if the click was on another treeview
 					if (insertPolicy != settings->value("insertPolicy").toInt()) {
 						settings->setValue("insertPolicy", insertPolicy);
-						emit aboutToRedrawLibrary();
+						emit accept();
 					}
-				} else {
-					//treeView_2->setStyleSheet("");
-					//treeView_2->header()->setStyleSheet("");
 				}
 			}
 			this->close();
@@ -108,8 +103,21 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		initialTreeView = artistTreeView;
 		break;
 	}
-	//initialTreeView->setStyleSheet("border: 1px solid #66A7E8; background-color: #D1E8FF;");
-	//initialTreeView->header()->setStyleSheet("QHeaderView::section { margin-left: 3px; margin-top: 4px; margin-right: 3px; margin-bottom: 4px; border: 0px; background-color: #D1E8FF; }");
+}
+
+QString LibraryOrderDialog::headerValue() const
+{
+	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
+	case LibraryTreeView::Album:
+		return tr("Album");
+	case LibraryTreeView::ArtistAlbum:
+		return tr("Artist – Album");
+	case LibraryTreeView::Year:
+		return tr("Year");
+	case LibraryTreeView::Artist:
+	default:
+		return tr("Artist \\ Album");
+	}
 }
 
 //#include <QPropertyAnimation>

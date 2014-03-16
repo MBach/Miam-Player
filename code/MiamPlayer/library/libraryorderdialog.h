@@ -12,14 +12,13 @@ class LibraryOrderDialog : public QDialog, public Ui::LibraryOrderDialog
 public:
 	explicit LibraryOrderDialog(QWidget *parent = 0);
 
+	QString headerValue() const;
+
 protected:
 	virtual void paintEvent(QPaintEvent *);
 
 public slots:
 	void show();
-
-signals:
-	void aboutToRedrawLibrary();
 };
 
 #endif // LIBRARYORDERDIALOG_H

@@ -52,7 +52,7 @@ public:
 				 RATINGS = 5,
 				 YEAR = 6};
 
-	Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
+	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
 	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
 

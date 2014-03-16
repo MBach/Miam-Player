@@ -11,24 +11,29 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	QLineEdit(parent)
 {
 	// Remove text when clicked
-	this->setClearButtonEnabled(true);
-	connect(this, &QLineEdit::cursorPositionChanged, [=](int, int newP){
-		if (newP == 0) {
-			emit textEdited(QString());
+	//this->setClearButtonEnabled(true);
+	connect(this, &QLineEdit::textEdited, [=](const QString &t){
+		if (t.isEmpty()) {
+			//emit textEdited(QString());
 		}
 	});
 	this->setMinimumHeight(QFontMetrics(Settings::getInstance()->font(Settings::LIBRARY)).height() * 2);
 }
 
+#include <QRect>
+
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {
-	this->setMinimumHeight(QFontMetrics(Settings::getInstance()->font(Settings::LIBRARY)).height() * 2);
+	QFont f = Settings::getInstance()->font(Settings::LIBRARY);
+	this->setFont(f);
+	this->setMinimumHeight(fontMetrics().height() * 1.6);
 
 	QStylePainter p(this);
-	QStyleOption o;
-	o.initFrom(this);
+	QStyleOptionFrame o;
+	//o.initFrom(this);
+	initStyleOption(&o);
 	o.palette = QApplication::palette();
-	o.rect.adjust(10, 10, -20, -20);
+	o.rect.adjust(10, 10, -10, -15);
 
 	p.fillRect(rect(), o.palette.base().color().lighter(110));
 
@@ -42,6 +47,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 						 o.rect.y() + 1,
 						 o.rect.height(),
 						 o.rect.y() + o.rect.height() - 2);
+	QRect rText = QRect(rLeft.topRight(), rRight.bottomLeft()).adjusted(0, 1, 0, -1);
 
 	p.save();
 	if (o.state.testFlag(QStyle::State_HasFocus)) {
@@ -56,13 +62,53 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	p.drawLine(QPoint(rLeft.center().x(), rLeft.y() - 1), QPoint(rRight.center().x(), rRight.y() - 1));
 	p.drawLine(QPoint(rLeft.center().x(), rLeft.bottom() + 1), QPoint(rRight.center().x(), rRight.bottom() + 1));
 	p.restore();
-	if (o.state.testFlag(QStyle::State_HasFocus) && !text().isEmpty()) {
+
+	// Paint text and cursor
+	if (o.state.testFlag(QStyle::State_HasFocus) || !text().isEmpty()) {
+
+		// Highlight selected text
+		p.setPen(o.palette.text().color());
+		/*if (hasSelectedText()) {
+
+			QRect rectTextLeft, rectTextMid, rectTextRight;
+			QString leftText, midText, rightText;
+			int sStart = selectionStart();
+			int sEnd = selectedText().length() - 1;
+
+			if (sStart == 0) {
+				midText = rText;
+				rectTextMid = rText;
+				rectTextMid.setWidth(fontMetrics().width(midText));
+			} else if (sEnd == text().length() - 1) {
+
+			} else {
+				leftText = text().left(sStart);
+				rectTextLeft = rText;
+				rectTextLeft.setWidth(fontMetrics().width(leftText));
+			}
+
+			p.drawText(rectTextLeft, Qt::AlignLeft | Qt::AlignVCenter, leftText);
+
+			p.fillRect(rectTextMid, o.palette.highlight());
+			p.setPen(o.palette.highlightedText().color());
+			p.drawText(rectTextMid, Qt::AlignLeft | Qt::AlignVCenter, midText);
+
+			p.setPen(o.palette.text().color());
+			p.drawText(rectTextRight, Qt::AlignLeft | Qt::AlignVCenter, rightText);
+		} else {
+			p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
+		}*/
+		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
+		QPoint pTop, pBottom;
+		pTop = rText.topLeft();
+		pTop.rx() += fontMetrics().width(text(), cursorPosition());
+		pBottom = rText.bottomLeft();
+		pBottom.rx() += fontMetrics().width(text(), cursorPosition());
 		p.setPen(Qt::black);
-		p.drawText(o.rect.adjusted(5, 0, 0, 0), text());
-		p.drawLine(cursorRect().topRight(), cursorRect().bottomRight());
+		p.drawLine(pTop, pBottom);
 	} else {
 		p.setPen(o.palette.mid().color());
-		p.drawText(o.rect.adjusted(5, 0, 0, 0), placeholderText());
+		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, placeholderText());
 	}
 
 	// Border of this widget

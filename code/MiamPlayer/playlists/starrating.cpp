@@ -93,7 +93,11 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	}
 	switch (mode) {
 	case Editable:
-		painter->fillRect(opt.rect, opt.palette.highlight().color());
+		if (Settings::getInstance()->isCustomColors()) {
+			painter->fillRect(opt.rect, opt.palette.highlight().color());
+		} else {
+			painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());
+		}
 
 		linearGradientBrush.setColorAt(0, Qt::white);
 		linearGradientBrush.setColorAt(1, QColor(253, 230, 116));
@@ -107,7 +111,11 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 		break;
 	case NoStarsYet:
 		pen.setColor(penColor.lighter(135));
-		painter->setBrush(opt.palette.highlight().color());
+		if (Settings::getInstance()->isCustomColors()) {
+			painter->fillRect(opt.rect, opt.palette.highlight().color());
+		} else {
+			painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());
+		}
 		break;
 	case ReadOnly:
 		linearGradientBrush.setColorAt(0, Qt::white);

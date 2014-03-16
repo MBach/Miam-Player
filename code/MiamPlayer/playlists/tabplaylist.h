@@ -8,6 +8,7 @@
 #include "dialogs/closeplaylistpopup.h"
 #include "playlist.h"
 #include "../tracksnotfoundmessagebox.h"
+#include "playlistframe.h"
 
 #include "mediabutton.h"
 

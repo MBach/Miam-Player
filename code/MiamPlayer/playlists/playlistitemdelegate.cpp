@@ -52,9 +52,19 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
+	p->setPen(o.palette.mid().color());
+	if (QApplication::isLeftToRight() && index.column() == 0) {
+		p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
+	} else if (!QApplication::isLeftToRight() && index.column() == 0) {
+		p->drawLine(o.rect.topRight(), o.rect.bottomRight());
+	}
 	if (opt.state.testFlag(QStyle::State_Selected)) {
 		p->setPen(opt.palette.highlight().color().darker(150));
-		p->fillRect(o.rect, opt.palette.highlight().color());
+		if (Settings::getInstance()->isCustomColors()) {
+			p->fillRect(o.rect, opt.palette.highlight().color());
+		} else {
+			p->fillRect(o.rect, opt.palette.highlight().color().lighter());
+		}
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
@@ -72,7 +82,6 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 			p->drawLine(opt.rect.bottomLeft(), opt.rect.bottomRight());
 		}
 	} else {
-		p->setPen(Qt::NoPen);
 		style->drawPrimitive(QStyle::PE_PanelItemViewItem, &o, p, o.widget);
 	}
 	p->restore();

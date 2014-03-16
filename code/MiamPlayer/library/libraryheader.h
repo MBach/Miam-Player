@@ -3,11 +3,14 @@
 
 #include <QPushButton>
 
-#include "miamcore_global.h"
+#include "libraryorderdialog.h"
 
-class MIAMCORE_LIBRARY LibraryHeader : public QPushButton
+class LibraryHeader : public QPushButton
 {
 	Q_OBJECT
+private:
+	LibraryOrderDialog *_lod;
+
 public:
 	explicit LibraryHeader(QWidget *parent = 0);
 
@@ -15,6 +18,10 @@ protected:
 	virtual void contextMenuEvent(QContextMenuEvent *);
 
 	virtual void paintEvent(QPaintEvent *);
+
+signals:
+	void aboutToChangeHierarchyOrder();
+	void aboutToChangeSortOrder();
 };
 
 #endif // LIBRARYHEADER_H
