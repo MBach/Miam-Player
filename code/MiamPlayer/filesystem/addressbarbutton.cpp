@@ -67,6 +67,7 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 void AddressBarButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
+    p.fillRect(rect(), QApplication::palette().window());
 	QRect r = rect().adjusted(0, 1, -1, -2);
 	if (_atLeastOneSubDir) {
 		_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());

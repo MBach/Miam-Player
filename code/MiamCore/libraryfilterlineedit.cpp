@@ -114,10 +114,10 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	// Border of this widget
 	p.setPen(o.palette.mid().color());
 	if (QApplication::isLeftToRight()) {
-		p.drawLine(QPoint(rect().center().x() + 1, 0), rect().topRight());
+		p.drawLine(QPoint(rect().center().x() - 1, 0), rect().topRight());
 		p.drawLine(rect().topRight(), rect().bottomRight());
 	} else {
-		p.drawLine(QPoint(rect().center().x() + 1, 0), rect().topLeft());
+        p.drawLine(QPoint(rect().center().x() - 1, 0), rect().topLeft());
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 	}
 }

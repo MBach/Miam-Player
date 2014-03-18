@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QStylePainter>
 #include <QStyleOptionTabBarBase>
+#include "settings.h"
 
 #include <QtDebug>
 
@@ -33,9 +34,13 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		if (i == selected)
 			continue;
 
-		p.drawControl(QStyle::CE_TabBarTab, tab);
-		//p.fillRect(tab.rect, tab.palette.base());
-		//p.drawText(tab.rect, Qt::AlignCenter, tab.text);
+		tab.rect.adjust(1, 3, -3, 0);
+		if (Settings::getInstance()->isCustomColors()) {
+			p.fillRect(tab.rect, tab.palette.base());
+		} else {
+			p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
+		}
+		p.drawText(tab.rect, Qt::AlignCenter, tab.text);
 	}
 
 	// Draw the selected tab last to get it "on top"
@@ -45,5 +50,18 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		tab.palette = QApplication::palette();
 		p.fillRect(tab.rect, tab.palette.base().color().lighter(110));
 		p.drawText(tab.rect, Qt::AlignCenter, tab.text);
+		p.setPen(tab.palette.mid().color());
+		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
+		if (isLeftToRight()) {
+			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+			if (selected > 0) {
+				p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
+			}
+		} else {
+			p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
+			if (selected > 0) {
+				p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+			}
+		}
 	}
 }

@@ -68,17 +68,24 @@ void AddressBar::mousePressEvent(QMouseEvent *)
 	_lineEdit->setFocus();
 }
 
+#include <QApplication>
+
 void AddressBar::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 
 	// Light gray frame
-	QRect r = this->rect();//.adjusted(2, 2, -4, -4);
-	p.setPen(QPen(QColor(169, 180, 191), 1.0));
-	p.drawRect(r);
-
-	// White rect between frame and blue rect
-	p.fillRect(r.adjusted(1, 1, -1, -1), Qt::white);
+	QRect r = this->rect();
+	//p.setPen(QPen(QColor(169, 180, 191), 1.0));
+    p.fillRect(r, QApplication::palette().window());
+	p.setPen(QApplication::palette().mid().color());
+	if (isLeftToRight()) {
+		p.drawLine(rect().topRight(), rect().bottomRight());
+		p.drawLine(0, 0, rect().center().x(), 0);
+	} else {
+		p.drawLine(rect().topLeft(), rect().bottomLeft());
+		p.drawLine(rect().width() - 1, 0, rect().center().x() - 2, 0);
+	}
 }
 
 /** Create a special root arrow button.*/
