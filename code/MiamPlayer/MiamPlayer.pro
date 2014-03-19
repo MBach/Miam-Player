@@ -48,7 +48,8 @@ SOURCES += \
     playlists/starrating.cpp \
     playlists/stareditor.cpp \
     library/extendedtabbar.cpp \
-    library/libraryheader.cpp
+    library/libraryheader.cpp \
+    headerview.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -98,7 +99,8 @@ HEADERS += \
     playlists/starrating.h \
     playlists/stareditor.h \
     library/libraryheader.h \
-    playlists/playlistframe.h
+    playlists/playlistframe.h \
+    headerview.h
 
 FORMS += \
     mainwindow.ui \

@@ -62,13 +62,25 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 }
 
 #include <QApplication>
+#include "settings.h"
 
 /** Redefined. */
 void AddressBarButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
-    p.fillRect(rect(), QApplication::palette().window());
-	QRect r = rect().adjusted(0, 1, -1, -2);
+	QRect r = rect().adjusted(0, 1, -1, -1);
+
+	QPalette palette = QApplication::palette();
+	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
+	if (Settings::getInstance()->isCustomColors()) {
+		g.setColorAt(0, palette.base().color().lighter(110));
+		g.setColorAt(1, palette.base().color());
+	} else {
+		g.setColorAt(0, palette.base().color());
+		g.setColorAt(1, palette.window().color());
+	}
+	p.fillRect(r, g);
+	//p.fillRect(r, QApplication::palette().base().color().lighter(110));
 	if (_atLeastOneSubDir) {
 		_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());
 		_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());

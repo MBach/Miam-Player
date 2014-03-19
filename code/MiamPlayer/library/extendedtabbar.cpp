@@ -34,11 +34,39 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		if (i == selected)
 			continue;
 
-		tab.rect.adjust(1, 3, -3, 0);
-		if (Settings::getInstance()->isCustomColors()) {
-			p.fillRect(tab.rect, tab.palette.base());
+		if (i > 0) {
+			if (isLeftToRight()) {
+				tab.rect.adjust(1, 3, -3, 0);
+			} else {
+				tab.rect.adjust(1, 3, 0, 0);
+			}
 		} else {
-			p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
+			if (isLeftToRight()) {
+				tab.rect.adjust(3, 3, 0, 0);
+			} else {
+				tab.rect.adjust(0, 3, 0, 0);
+			}
+		}
+		if (Settings::getInstance()->isCustomColors()) {
+			if (tab.state.testFlag(QStyle::State_MouseOver)) {
+				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());
+			} else {
+				p.fillRect(tab.rect, tab.palette.base());
+			}
+		} else {
+			p.save();
+			if (tab.state.testFlag(QStyle::State_MouseOver)) {
+				p.setPen(o.palette.highlight().color());
+				p.fillRect(tab.rect, tab.palette.highlight().color().lighter(170));
+			} else {
+				p.setPen(o.palette.midlight().color());
+				p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
+			}
+			//p.setPen(Qt::red);
+			p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
+			p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
+			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+			p.restore();
 		}
 		p.drawText(tab.rect, Qt::AlignCenter, tab.text);
 	}
@@ -53,11 +81,13 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		p.setPen(tab.palette.mid().color());
 		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
 		if (isLeftToRight()) {
+			tab.rect.adjust(0, 0, 1, 0);
 			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
 			if (selected > 0) {
 				p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
 			}
 		} else {
+			tab.rect.adjust(1, 0, 0, 0);
 			p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
 			if (selected > 0) {
 				p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());

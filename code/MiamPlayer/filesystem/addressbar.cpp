@@ -19,13 +19,12 @@ AddressBar::AddressBar(QWidget *parent) :
 	_lineEdit->setVisible(false);
 
 	hBoxLayout = new QHBoxLayout(this);
-	this->setContentsMargins(5, 2, 2, 2);
-	hBoxLayout->setContentsMargins(5, 2, 2, 2);
+	//this->setContentsMargins(5, 2, 2, 2);
+	hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	hBoxLayout->setSpacing(0);
 
 	this->setLayout(hBoxLayout);
-	this->setMinimumHeight(30);
-
+	//this->setMinimumHeight(10);
 
 	this->createRoot();
 
@@ -69,16 +68,26 @@ void AddressBar::mousePressEvent(QMouseEvent *)
 }
 
 #include <QApplication>
+#include <QLinearGradient>
+#include "settings.h"
 
 void AddressBar::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 
-	// Light gray frame
-	QRect r = this->rect();
-	//p.setPen(QPen(QColor(169, 180, 191), 1.0));
-    p.fillRect(r, QApplication::palette().window());
-	p.setPen(QApplication::palette().mid().color());
+	// Gradient
+	QPalette palette = QApplication::palette();
+	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
+	if (Settings::getInstance()->isCustomColors()) {
+		g.setColorAt(0, palette.base().color().lighter(110));
+		g.setColorAt(1, palette.base().color());
+	} else {
+		g.setColorAt(0, palette.base().color());
+		g.setColorAt(1, palette.window().color());
+	}
+	p.fillRect(rect(), g);
+
+	p.setPen(palette.mid().color());
 	if (isLeftToRight()) {
 		p.drawLine(rect().topRight(), rect().bottomRight());
 		p.drawLine(0, 0, rect().center().x(), 0);

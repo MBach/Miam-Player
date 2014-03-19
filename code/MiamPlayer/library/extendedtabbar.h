@@ -7,7 +7,9 @@ class ExtendedTabBar : public QTabBar
 {
 	Q_OBJECT
 public:
-	explicit ExtendedTabBar(QWidget *parent = 0) : QTabBar(parent) {}
+	explicit ExtendedTabBar(QWidget *parent = 0) : QTabBar(parent) {
+		setMouseTracking(true);
+	}
 
 protected:
 	QSize tabSizeHint(int) const { return QSize(rect().width() / 2, rect().height()); }
