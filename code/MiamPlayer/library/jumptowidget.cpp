@@ -23,7 +23,9 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 	} else if (event->type() == QEvent::MouseButtonRelease) {
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 		if (mouseEvent) {
+			// The A-Z order has been chosen arbitrarily
 			int v = mouseEvent->y() * 26 / height();
+			// in ASCII, the A letter is 65
 			QString s(v + 65);
 			emit displayItemDelegate(false);
 			_libraryTreeView->jumpTo(s);

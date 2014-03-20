@@ -436,8 +436,10 @@ void Settings::setDragAndDropBehaviour()
 
 void Settings::setFont(const FontFamily &fontFamily, const QFont &font)
 {
+	qDebug() << Q_FUNC_INFO;
 	fontFamilyMap.insert(QString(fontFamily), font.family());
 	setValue("fontFamilyMap", fontFamilyMap);
+	emit fontHasChanged(fontFamily, font);
 }
 
 /** Sets the font size of a part of the application. */
@@ -445,6 +447,7 @@ void Settings::setFontPointSize(const FontFamily &fontFamily, int i)
 {
 	fontPointSizeMap.insert(QString(fontFamily), i);
 	setValue("fontPointSizeMap", fontPointSizeMap);
+	emit fontHasChanged(fontFamily, font(fontFamily));
 }
 
 /** Sets if the button in parameter is visible or not. */

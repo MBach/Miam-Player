@@ -170,6 +170,8 @@ public slots:
 
 signals:
 	void themeHasChanged();
+
+	void fontHasChanged(const FontFamily &fontFamily, const QFont &font);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

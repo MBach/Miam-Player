@@ -19,13 +19,10 @@ AddressBar::AddressBar(QWidget *parent) :
 	_lineEdit->setVisible(false);
 
 	hBoxLayout = new QHBoxLayout(this);
-	//this->setContentsMargins(5, 2, 2, 2);
 	hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	hBoxLayout->setSpacing(0);
 
 	this->setLayout(hBoxLayout);
-	//this->setMinimumHeight(10);
-
 	this->createRoot();
 
 	menu = new AddressBarMenu(this);

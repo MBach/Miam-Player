@@ -7,6 +7,22 @@
 
 #include <QtDebug>
 
+ExtendedTabBar::ExtendedTabBar(QWidget *parent)
+	: QTabBar(parent)
+{
+	Settings *settings = Settings::getInstance();
+	QFont f = settings->font(Settings::LIBRARY);
+	this->setFont(f);
+	this->setMouseTracking(true);
+
+	connect(settings, &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
+		if (ff == Settings::LIBRARY) {
+			this->setFont(newFont);
+			this->setMinimumHeight(fontMetrics().height());
+		}
+	});
+}
+
 void ExtendedTabBar::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
@@ -34,6 +50,7 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		if (i == selected)
 			continue;
 
+		// Reduces the size of the tab
 		if (i > 0) {
 			if (isLeftToRight()) {
 				tab.rect.adjust(1, 3, -3, 0);
@@ -47,6 +64,7 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 				tab.rect.adjust(0, 3, 0, 0);
 			}
 		}
+		/// XXX: custom/default colors shouldn't be treated here
 		if (Settings::getInstance()->isCustomColors()) {
 			if (tab.state.testFlag(QStyle::State_MouseOver)) {
 				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());
@@ -62,13 +80,14 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 				p.setPen(o.palette.midlight().color());
 				p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
 			}
-			//p.setPen(Qt::red);
 			p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
 			p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
 			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
 			p.restore();
 		}
-		p.drawText(tab.rect, Qt::AlignCenter, tab.text);
+
+		// If the rectangle is smaller than the text, shrink it
+		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
 	}
 
 	// Draw the selected tab last to get it "on top"
@@ -77,11 +96,10 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		initStyleOption(&tab, selected);
 		tab.palette = QApplication::palette();
 		p.fillRect(tab.rect, tab.palette.base().color().lighter(110));
-		p.drawText(tab.rect, Qt::AlignCenter, tab.text);
+		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
 		p.setPen(tab.palette.mid().color());
 		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
 		if (isLeftToRight()) {
-			tab.rect.adjust(0, 0, 1, 0);
 			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
 			if (selected > 0) {
 				p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());

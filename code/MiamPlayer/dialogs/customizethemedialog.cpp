@@ -90,7 +90,6 @@ void CustomizeThemeDialog::setupActions()
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(Settings::LIBRARY, font);
-		mainWindow->searchBar->setFont(font);
 		this->fade();
 	});
 	connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
@@ -116,7 +115,6 @@ void CustomizeThemeDialog::setupActions()
 		QFont lowerFont = settings->font(Settings::LIBRARY);
 		lowerFont.setPointSize(lowerFont.pointSizeF() * 0.7);
 		mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, lowerFont, Qt::FontRole);
-		mainWindow->searchBar->setFont(lowerFont);
 		this->fade();
 	});
 	connect(spinBoxMenus, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {

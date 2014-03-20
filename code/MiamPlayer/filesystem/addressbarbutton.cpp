@@ -80,7 +80,6 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		g.setColorAt(1, palette.window().color());
 	}
 	p.fillRect(r, g);
-	//p.fillRect(r, QApplication::palette().base().color().lighter(110));
 	if (_atLeastOneSubDir) {
 		_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());
 		_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());
@@ -119,7 +118,11 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		QStyleOptionButton o;
 		o.initFrom(this);
 		o.rect = _arrowRect.adjusted(4, 7, -2, -4);
-		p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
+		if (isLeftToRight()) {
+			p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
+		} else {
+			p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
+		}
 	}
 
 	if (dir.isRoot()) {

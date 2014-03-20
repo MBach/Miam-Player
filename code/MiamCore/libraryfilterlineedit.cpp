@@ -2,6 +2,7 @@
 
 #include "settings.h"
 #include <QApplication>
+#include <QRect>
 #include <QStyleOption>
 #include <QStylePainter>
 
@@ -17,20 +18,19 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 			//emit textEdited(QString());
 		}
 	});
-	this->setMinimumHeight(QFontMetrics(Settings::getInstance()->font(Settings::LIBRARY)).height() * 2);
-}
 
-#include <QRect>
+	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
+		if (ff == Settings::LIBRARY) {
+			this->setFont(newFont);
+			this->setMinimumHeight(fontMetrics().height() * 1.6);
+		}
+	});
+}
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {
-	QFont f = Settings::getInstance()->font(Settings::LIBRARY);
-	this->setFont(f);
-	this->setMinimumHeight(fontMetrics().height() * 1.6);
-
 	QStylePainter p(this);
 	QStyleOptionFrame o;
-	//o.initFrom(this);
 	initStyleOption(&o);
 	o.palette = QApplication::palette();
 	o.rect.adjust(10, 10, -10, -15);
