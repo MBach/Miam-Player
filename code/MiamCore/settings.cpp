@@ -282,18 +282,18 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 	colors.insert(QString::number(cr), color);
 	QPalette palette = QGuiApplication::palette();
 	palette.setColor(cr, color);
+
 	if (cr == QPalette::Base) {
+
 		// Check if text color should be inverted when the base is too dark
 		if (abs(color.value() - palette.windowText().color().value()) < 128) {
 			QBrush tmp = palette.windowText();
 			palette.setColor(QPalette::WindowText, palette.brightText().color());
 			palette.setColor(QPalette::Text, palette.brightText().color());
-			//palette.setColor(QPalette::ButtonText, palette.brightText().color());
 			palette.setColor(QPalette::BrightText, tmp.color());
 
 			colors.insert(QString::number(QPalette::WindowText), palette.brightText().color());
 			colors.insert(QString::number(QPalette::Text), palette.brightText().color());
-			//colors.insert(QString::number(QPalette::ButtonText), palette.brightText().color());
 			colors.insert(QString::number(QPalette::BrightText), tmp.color());
 		}
 

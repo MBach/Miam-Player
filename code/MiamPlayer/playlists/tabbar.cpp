@@ -153,6 +153,81 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 	}
 }
 
+void TabBar::paintEvent(QPaintEvent *)
+{
+	QStylePainter p(this);
+	QStyleOptionTab o;
+
+	static const QPointF plus[13] = {
+		QPointF(1, 2), QPointF(2, 2), QPointF(2, 1),
+		QPointF(3, 1), QPointF(3, 2), QPointF(4, 2),
+		QPointF(4, 3), QPointF(3, 3), QPointF(3, 4),
+		QPointF(2, 4), QPointF(2, 3), QPointF(1, 3),
+		QPointF(1, 2),
+	};
+	/*static const QPointF plus[13] = {
+		QPointF(0, 1), QPointF(1, 1), QPointF(1, 0),
+		QPointF(2, 0), QPointF(2, 1), QPointF(3, 1),
+		QPointF(3, 2), QPointF(2, 2), QPointF(2, 3),
+		QPointF(1, 3), QPointF(1, 2), QPointF(0, 2),
+		QPointF(0, 1),
+	};*/
+
+	for (int i = 0; i < count(); i++) {
+		initStyleOption(&o, i);
+
+		// Frame color
+		p.setPen(o.palette.mid().color());
+
+		// Background color
+		if (i == currentIndex()) {
+			p.setBrush(o.palette.base().color().lighter(110));
+		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
+			o.rect.adjust(0, 2, 0, 0);
+			p.setPen(o.palette.highlight().color());
+			p.setBrush(o.palette.highlight().color().lighter());
+		} else {
+			o.rect.adjust(0, 2, 0, 0);
+			p.setBrush(o.palette.base());
+		}
+
+		if (i + 1 == count()) {
+			o.rect.setWidth(o.rect.height());
+			o.rect.adjust(2, 2, -2, -2);
+			p.drawRect(o.rect);
+			p.save();
+			p.translate(o.rect.topLeft());
+			p.scale(o.rect.height() / 5.0, o.rect.height() / 5.0);
+			p.setPen(QPen(o.palette.mid(), 1.0 / 5.0));
+			p.setBrush(QColor(253, 230, 116));
+			p.drawPolygon(plus, 13);
+			//p.fillPath();
+			p.restore();
+		} else {
+			p.drawRect(o.rect);
+		}
+
+		// Icon
+		/*QRect r = tabRect(i).adjusted(3, 3, 0, 0);
+		qDebug() << i << r << r.left();
+		p.save();
+		p.translate(r.left(), 0);
+		int w = o.iconSize.width(), h = o.iconSize.height();
+		p.drawPixmap(0, r.top(), w, h, o.icon.pixmap(w, h));
+		p.restore();*/
+
+		// Playlist name
+		if (i == currentIndex()) {
+			p.setPen(o.palette.windowText().color());
+		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlightedText().color());
+		} else {
+			p.setPen(o.palette.mid().color());
+		}
+		p.drawText(o.rect, Qt::AlignCenter, o.text);
+	}
+}
+
 /** Rename a tab. */
 void TabBar::renameTab()
 {

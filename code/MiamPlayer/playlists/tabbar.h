@@ -43,6 +43,8 @@ protected:
 	/** Redefined to validate new tab name without pressing return. */
 	void mousePressEvent(QMouseEvent *);
 
+	void paintEvent(QPaintEvent *);
+
 private slots:
 	/** Rename a tab. */
 	void renameTab();

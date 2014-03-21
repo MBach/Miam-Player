@@ -12,13 +12,18 @@ ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 {
 	Settings *settings = Settings::getInstance();
 	QFont f = settings->font(Settings::LIBRARY);
+	f.setPointSizeF(f.pointSizeF() * 0.8);
 	this->setFont(f);
 	this->setMouseTracking(true);
 
+
 	connect(settings, &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
 		if (ff == Settings::LIBRARY) {
-			this->setFont(newFont);
-			this->setMinimumHeight(fontMetrics().height());
+			this->setMinimumHeight(fontMetrics().height() * 1.25);
+			this->setMaximumHeight(fontMetrics().height() * 1.25);
+			QFont font = newFont;
+			font.setPointSizeF(font.pointSizeF() * 0.8);
+			this->setFont(font);
 		}
 	});
 }
