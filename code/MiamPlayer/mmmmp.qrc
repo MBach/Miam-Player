@@ -14,7 +14,6 @@
         <file alias="drop-arrow">config/drop-arrow.png</file>
         <file alias="closeButton">config/closeButton.png</file>
         <file alias="closeTabs">config/close_tabs.png</file>
-        <file alias="plusIcon">config/plus_icon.png</file>
         <file alias="plugin">config/plugin.png</file>
         <file alias="emptyPlaylist">config/empty_playlists_32.png</file>
         <file alias="playlistIcon">config/playlist_icon.png</file>

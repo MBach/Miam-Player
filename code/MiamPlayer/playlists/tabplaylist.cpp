@@ -10,9 +10,8 @@
 TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent), _tabIndex(-1), _closePlaylistPopup(new ClosePlaylistPopup(this))
 {
-	TabBar *tabBar = new TabBar(this);
-	this->setTabBar(tabBar);
 	this->setDocumentMode(true);
+	this->setTabBar(new TabBar(this));
 	//_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
 

@@ -8,14 +8,14 @@
 #include <QIcon>
 
 TabBar::TabBar(TabPlaylist *parent) :
-	QTabBar(parent), tabPlaylist(parent)
+	QTabBar(parent), lineEdit(new QLineEdit(this)), tabPlaylist(parent)
 {
 	this->setTabsClosable(true);
-	this->addTab(QIcon(":/icons/plusIcon"), QString());
-	this->setTabButton(count()-1, QTabBar::RightSide, 0);
+	this->addTab(QString());
 	this->setAcceptDrops(true);
+	this->setDocumentMode(true);
+	this->setTabButton(count()-1, QTabBar::RightSide, 0);
 
-	lineEdit = new QLineEdit(this);
 	lineEdit->setVisible(false);
 	lineEdit->setAlignment(Qt::AlignCenter);
 	lineEdit->setFrame(false);
@@ -30,6 +30,22 @@ TabBar::TabBar(TabPlaylist *parent) :
 	connect(_timer, &QTimer::timeout, [=]() {
 		this->setCurrentIndex(tabAt(_targetRect.center()));
 		_targetRect = tabRect(currentIndex());
+	});
+
+	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
+		if (ff == Settings::PLAYLIST) {
+			QFont font = newFont;
+			font.setPointSizeF(font.pointSizeF() * 0.8);
+			this->setFont(font);
+			int h = fontMetrics().height() * 1.25;
+			if (h >= 30) {
+				this->setMinimumHeight(h);
+				this->setMaximumHeight(h);
+			} else {
+				this->setMinimumHeight(30);
+				this->setMaximumHeight(30);
+			}
+		}
 	});
 }
 
@@ -155,9 +171,7 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
-	QStylePainter p(this);
-	QStyleOptionTab o;
-
+	// A "[+]" button on the right
 	static const QPointF plus[13] = {
 		QPointF(1, 2), QPointF(2, 2), QPointF(2, 1),
 		QPointF(3, 1), QPointF(3, 2), QPointF(4, 2),
@@ -165,21 +179,21 @@ void TabBar::paintEvent(QPaintEvent *)
 		QPointF(2, 4), QPointF(2, 3), QPointF(1, 3),
 		QPointF(1, 2),
 	};
-	/*static const QPointF plus[13] = {
-		QPointF(0, 1), QPointF(1, 1), QPointF(1, 0),
-		QPointF(2, 0), QPointF(2, 1), QPointF(3, 1),
-		QPointF(3, 2), QPointF(2, 2), QPointF(2, 3),
-		QPointF(1, 3), QPointF(1, 2), QPointF(0, 2),
-		QPointF(0, 1),
-	};*/
+
+	static const qreal penScaleFactor = 0.2;
+
+	QStylePainter p(this);
+	QStyleOptionTab o;
 
 	for (int i = 0; i < count(); i++) {
 		initStyleOption(&o, i);
+		//o.rect.adjust(0, 0, 0, -1);
 
 		// Frame color
 		p.setPen(o.palette.mid().color());
 
 		// Background color
+		p.save();
 		if (i == currentIndex()) {
 			p.setBrush(o.palette.base().color().lighter(110));
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
@@ -193,38 +207,59 @@ void TabBar::paintEvent(QPaintEvent *)
 
 		if (i + 1 == count()) {
 			o.rect.setWidth(o.rect.height());
-			o.rect.adjust(2, 2, -2, -2);
+			o.rect.adjust(2, 1, -2, -3);
 			p.drawRect(o.rect);
-			p.save();
 			p.translate(o.rect.topLeft());
-			p.scale(o.rect.height() / 5.0, o.rect.height() / 5.0);
-			p.setPen(QPen(o.palette.mid(), 1.0 / 5.0));
+			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
+			if (o.state.testFlag(QStyle::State_MouseOver)) {
+				p.setPen(QPen(o.palette.highlight(), penScaleFactor));
+			} else {
+				p.setPen(QPen(o.palette.mid(), penScaleFactor));
+			}
 			p.setBrush(QColor(253, 230, 116));
 			p.drawPolygon(plus, 13);
-			//p.fillPath();
-			p.restore();
 		} else {
 			p.drawRect(o.rect);
 		}
+		p.restore();
 
 		// Icon
-		/*QRect r = tabRect(i).adjusted(3, 3, 0, 0);
+		/// FIXME
+		QRect r = tabRect(i).adjusted(3, 3, 0, 0);
 		qDebug() << i << r << r.left();
 		p.save();
 		p.translate(r.left(), 0);
 		int w = o.iconSize.width(), h = o.iconSize.height();
 		p.drawPixmap(0, r.top(), w, h, o.icon.pixmap(w, h));
-		p.restore();*/
+		p.restore();
 
 		// Playlist name
 		if (i == currentIndex()) {
 			p.setPen(o.palette.windowText().color());
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.highlightedText().color());
+			p.setPen(o.palette.windowText().color());
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
 		p.drawText(o.rect, Qt::AlignCenter, o.text);
+	}
+
+	// Bottom frame border
+	int h = tabRect(0).height();
+	p.setPen(o.palette.mid().color());
+	if (count() > 2) {
+		if (currentIndex() == 0) {
+			p.drawLine(tabRect(0).right() + 1, h, rect().right(), h);
+		} else {
+			p.drawLine(rect().left(), h, tabRect(currentIndex()).left(), h);
+			p.drawLine(tabRect(currentIndex()).right() + 1, h, rect().right(), h);
+		}
+	} else {
+		if (isLeftToRight()) {
+			p.drawLine(tabRect(0).width(), h, rect().right(), h);
+		} else {
+			p.drawLine(rect().left(), h, tabRect(0).left(), h);
+		}
 	}
 }
 

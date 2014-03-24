@@ -11,14 +11,6 @@
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	QLineEdit(parent)
 {
-	// Remove text when clicked
-	//this->setClearButtonEnabled(true);
-	connect(this, &QLineEdit::textEdited, [=](const QString &t){
-		if (t.isEmpty()) {
-			//emit textEdited(QString());
-		}
-	});
-
 	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
 		if (ff == Settings::LIBRARY) {
 			this->setFont(newFont);

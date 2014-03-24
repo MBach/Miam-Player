@@ -1,11 +1,11 @@
 #ifndef PLAYLISTHEADERVIEW_H
 #define PLAYLISTHEADERVIEW_H
 
-#include "headerview.h"
 #include <QContextMenuEvent>
+#include <QHeaderView>
 #include <QMenu>
 
-class PlaylistHeaderView : public HeaderView
+class PlaylistHeaderView : public QHeaderView
 {
 	Q_OBJECT
 
@@ -26,6 +26,9 @@ protected:
 
 	/** Redefined. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
+
+	/** Redefined. */
+	virtual void paintSection(QPainter *, const QRect &rect, int logicalIndex) const;
 };
 
 #endif // PLAYLISTHEADERVIEW_H

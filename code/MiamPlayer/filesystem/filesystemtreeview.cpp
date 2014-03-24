@@ -6,7 +6,6 @@
 #include <QStandardItemModel>
 
 #include "filehelper.h"
-#include "headerview.h"
 
 #include <QtDebug>
 

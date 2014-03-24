@@ -1,6 +1,8 @@
 #include "playlistheaderview.h"
 
 #include "settings.h"
+#include <QApplication>
+#include <QStylePainter>
 
 #include <QtDebug>
 
@@ -13,7 +15,7 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Year");
 
 PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
-	HeaderView(parent)
+	QHeaderView(Qt::Horizontal, parent)
 {
 	this->setHighlightSections(false);
 	this->setSectionsMovable(true);
@@ -26,6 +28,25 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	connect(columns, &QMenu::triggered, [=](const QAction *action) {
 		int columnIndex = action->data().toInt();
 		this->setSectionHidden(columnIndex, !this->isSectionHidden(columnIndex));
+	});
+
+	Settings *settings = Settings::getInstance();
+	this->setFont(settings->font(Settings::PLAYLIST));
+
+	connect(settings, &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
+		if (ff == Settings::PLAYLIST) {
+			QFont font = newFont;
+			font.setPointSizeF(font.pointSizeF() * 0.8);
+			this->setFont(font);
+			int h = fontMetrics().height() * 1.25;
+			if (h >= 30) {
+				this->setMinimumHeight(h);
+				this->setMaximumHeight(h);
+			} else {
+				this->setMinimumHeight(30);
+				this->setMaximumHeight(30);
+			}
+		}
 	});
 }
 
@@ -70,4 +91,42 @@ void PlaylistHeaderView::contextMenuEvent(QContextMenuEvent *event)
 		columns->actions().at(i)->setChecked(!this->isSectionHidden(i));
 	}
 	columns->exec(mapToGlobal(event->pos()));
+}
+
+/** Redefined. */
+void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logicalIndex) const
+{
+	QStylePainter p(this->viewport());
+	QStyleOptionHeader opt;
+	opt.initFrom(this);
+	QLinearGradient vLinearGradient(rect.topLeft(), rect.bottomLeft());
+	/// XXX
+	QPalette palette = QApplication::palette();
+	if (Settings::getInstance()->isCustomColors()) {
+		vLinearGradient.setColorAt(0, palette.base().color().lighter(110));
+		vLinearGradient.setColorAt(1, palette.base().color());
+	} else {
+		vLinearGradient.setColorAt(0, palette.base().color());
+		vLinearGradient.setColorAt(1, palette.window().color());
+	}
+	p.fillRect(rect, QBrush(vLinearGradient));
+	p.drawText(rect.adjusted(5, 0, 0, 0), Qt::AlignCenter, model()->headerData(logicalIndex, Qt::Horizontal).toString());
+
+	if (rect.contains(mapFromGlobal(QCursor::pos()))) {
+		p.save();
+		p.setPen(palette.highlight().color());
+		p.drawLine(rect.topLeft(), rect.bottomLeft());
+		p.drawLine(rect.topRight(), rect.bottomRight());
+		p.restore();
+	}
+
+	// Frame line
+	p.setPen(QApplication::palette().mid().color());
+	p.drawLine(rect.bottomLeft(), rect.bottomRight());
+
+	if (isLeftToRight() && logicalIndex == 0) {
+		p.drawLine(rect.topLeft(), rect.bottomLeft());
+	} else if (!isLeftToRight() && logicalIndex == count() - 1){
+		p.drawLine(rect.topLeft(), rect.bottomLeft());
+	}
 }
