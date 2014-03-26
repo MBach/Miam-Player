@@ -24,12 +24,9 @@
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), sqlModel(NULL)
 {
-	Settings *settings = Settings::getInstance();
-
 	_libraryModel->setColumnCount(1);
-	//_libraryModel->setHorizontalHeaderItem(0, new QStandardItem(tr("  Artists \\ Albums")));
 
-	int iconSize = settings->coverSize();
+	int iconSize = Settings::getInstance()->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 

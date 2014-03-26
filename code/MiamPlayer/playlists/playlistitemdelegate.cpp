@@ -49,6 +49,7 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
 	QStyleOptionViewItem o(opt);
+	initStyleOption(&o, index);
 	QStyle *style = o.widget ? o.widget->style() : QApplication::style();
 	o.state &= ~QStyle::State_HasFocus;
 	p->save();
@@ -58,9 +59,19 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	} else if (!QApplication::isLeftToRight() && index.column() == 0) {
 		p->drawLine(o.rect.topRight(), o.rect.bottomRight());
 	}
-	if (opt.state.testFlag(QStyle::State_Selected)) {
+	Settings *settings = Settings::getInstance();
+	// Light color when mouse is over
+	if (o.state.testFlag(QStyle::State_MouseOver) && !o.state.testFlag(QStyle::State_Selected)) {
+		qDebug() << "ici";
 		p->setPen(opt.palette.highlight().color().darker(150));
-		if (Settings::getInstance()->isCustomColors()) {
+		if (settings->isCustomColors()) {
+			p->fillRect(o.rect, opt.palette.highlight().color().lighter(160));
+		} else {
+			p->fillRect(o.rect, opt.palette.highlight().color().lighter(170));
+		}
+	} else if (opt.state.testFlag(QStyle::State_Selected)) {
+		p->setPen(opt.palette.highlight().color().darker(150));
+		if (settings->isCustomColors()) {
 			p->fillRect(o.rect, opt.palette.highlight().color());
 		} else {
 			p->fillRect(o.rect, opt.palette.highlight().color().lighter());
@@ -87,7 +98,6 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	p->restore();
 
 	// Highlight the current playing item
-	Settings *settings = Settings::getInstance();
 	QFont font = settings->font(Settings::PLAYLIST);
 	if (_playlist->mediaPlaylist()->currentIndex() == index.row()) {
 		font.setBold(true);

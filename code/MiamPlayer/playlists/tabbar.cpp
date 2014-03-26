@@ -15,6 +15,7 @@ TabBar::TabBar(TabPlaylist *parent) :
 	this->setAcceptDrops(true);
 	this->setDocumentMode(true);
 	this->setTabButton(count()-1, QTabBar::RightSide, 0);
+	this->setUsesScrollButtons(false);
 
 	lineEdit->setVisible(false);
 	lineEdit->setAlignment(Qt::AlignCenter);
@@ -49,6 +50,16 @@ TabBar::TabBar(TabPlaylist *parent) :
 	});
 }
 
+/** Redefined to return a square for the last tab which is the [+] button. */
+QSize TabBar::tabSizeHint(int index) const
+{
+	if (index == count() - 1) {
+		return QSize(height(), height());
+	} else {
+		return QTabBar::tabSizeHint(index);
+	}
+}
+
 /** Redefined to validate new tab name if the focus is lost. */
 bool TabBar::eventFilter(QObject *obj, QEvent *event)
 {
@@ -70,7 +81,7 @@ void TabBar::dropEvent(QDropEvent *event)
 	int tab = this->tabAt(event->pos());
 	if (Playlist *origin = qobject_cast<Playlist*>(event->source())) {
 		Playlist *target;
-		// Tracks were dropped on the (+) button
+		// Tracks were dropped on the [+] button
 		if (tab == this->count() - 1) {
 			target = tabPlaylist->addPlaylist();
 		} else {
@@ -89,7 +100,7 @@ void TabBar::dropEvent(QDropEvent *event)
 			origin->removeSelectedTracks();
 		}
 	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
-		// Tracks were dropped on the (+) button
+		// Tracks were dropped on the [+] button
 		if (tab == this->count() - 1) {
 			tabPlaylist->addPlaylist();
 		} else {
@@ -187,39 +198,65 @@ void TabBar::paintEvent(QPaintEvent *)
 
 	for (int i = 0; i < count(); i++) {
 		initStyleOption(&o, i);
-		//o.rect.adjust(0, 0, 0, -1);
-
-		// Frame color
-		p.setPen(o.palette.mid().color());
 
 		// Background color
 		p.save();
-		if (i == currentIndex()) {
-			p.setBrush(o.palette.base().color().lighter(110));
-		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
+		if (i != currentIndex() && i != count() - 1) {
 			o.rect.adjust(0, 2, 0, 0);
-			p.setPen(o.palette.highlight().color());
-			p.setBrush(o.palette.highlight().color().lighter());
-		} else {
-			o.rect.adjust(0, 2, 0, 0);
-			p.setBrush(o.palette.base());
+		} else if (i == count() - 1) {
+			o.rect.adjust(2, 2, -4, -4);
 		}
 
-		if (i + 1 == count()) {
-			o.rect.setWidth(o.rect.height());
-			o.rect.adjust(2, 1, -2, -3);
-			p.drawRect(o.rect);
-			p.translate(o.rect.topLeft());
-			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
-			if (o.state.testFlag(QStyle::State_MouseOver)) {
-				p.setPen(QPen(o.palette.highlight(), penScaleFactor));
+		if (o.state.testFlag(QStyle::State_MouseOver) && i != currentIndex()) {
+			p.setPen(QPen(o.palette.highlight(), penScaleFactor));
+			p.fillRect(o.rect, o.palette.highlight().color().lighter());
+		} else {
+			p.setPen(QPen(o.palette.mid(), penScaleFactor));
+			if (i == currentIndex()) {
+				if (Settings::getInstance()->isCustomColors()) {
+					p.fillRect(o.rect, o.palette.base().color().lighter(110));
+				} else {
+					p.fillRect(o.rect, o.palette.base());
+				}
 			} else {
-				p.setPen(QPen(o.palette.mid(), penScaleFactor));
+				p.fillRect(o.rect, o.palette.window());
 			}
-			p.setBrush(QColor(253, 230, 116));
+		}
+
+		if (i == count() - 1) {
+			//p.setPen(o.palette.mid().color());
+
+			QPen plusPen;
+			if (o.state.testFlag(QStyle::State_MouseOver)) {
+				plusPen = QPen(o.palette.highlight(), penScaleFactor);
+				p.setPen(o.palette.highlight().color());
+				p.setBrush(o.palette.highlight().color().lighter());
+			} else {
+				plusPen = QPen(o.palette.mid(), penScaleFactor);
+				p.setPen(o.palette.mid().color());
+				p.setBrush(o.palette.base());
+			}
+			p.drawRect(o.rect);
+
+			p.translate(o.rect.topLeft());
+			plusPen.setJoinStyle(Qt::MiterJoin);
+			p.setPen(plusPen);
+
+			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
+			QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
+			linearGradient.setColorAt(0, Qt::white);
+			linearGradient.setColorAt(1, QColor(253, 230, 116));
+			p.setBrush(linearGradient);
 			p.drawPolygon(plus, 13);
 		} else {
-			p.drawRect(o.rect);
+			if (o.state.testFlag(QStyle::State_MouseOver)) {
+				p.setPen(o.palette.highlight().color());
+			} else {
+				p.setPen(o.palette.mid().color());
+			}
+			p.drawLine(o.rect.topLeft(), o.rect.bottomLeft());
+			p.drawLine(o.rect.topRight(), o.rect.bottomRight());
+			p.drawLine(o.rect.topLeft(), o.rect.topRight());
 		}
 		p.restore();
 
@@ -244,8 +281,8 @@ void TabBar::paintEvent(QPaintEvent *)
 		p.drawText(o.rect, Qt::AlignCenter, o.text);
 	}
 
-	// Bottom frame border
-	int h = tabRect(0).height();
+	// Global bottom frame border
+	int h = tabRect(0).height() - 1;
 	p.setPen(o.palette.mid().color());
 	if (count() > 2) {
 		if (currentIndex() == 0) {

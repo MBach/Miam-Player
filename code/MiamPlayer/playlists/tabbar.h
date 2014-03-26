@@ -29,21 +29,24 @@ public:
 
 protected:
 	/** Redefined to accept D&D from another playlist or the library. */
-	void dropEvent(QDropEvent *event);
+	virtual void dropEvent(QDropEvent *event);
 
 	/** Redefined to accept D&D from another playlist or the library. */
-	void dragEnterEvent(QDragEnterEvent *event);
+	virtual void dragEnterEvent(QDragEnterEvent *event);
 
 	/** Redefined to accept D&D from another playlist or the library. */
-	void dragMoveEvent(QDragMoveEvent *event);
+	virtual void dragMoveEvent(QDragMoveEvent *event);
+
+	/** Redefined to return a square for the last tab which is the [+] button. */
+	virtual QSize tabSizeHint(int index) const;
 
 	/** Redefined to display an editable area. */
-	void mouseDoubleClickEvent(QMouseEvent *);
+	virtual void mouseDoubleClickEvent(QMouseEvent *);
 
 	/** Redefined to validate new tab name without pressing return. */
-	void mousePressEvent(QMouseEvent *);
+	virtual void mousePressEvent(QMouseEvent *);
 
-	void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *);
 
 private slots:
 	/** Rename a tab. */

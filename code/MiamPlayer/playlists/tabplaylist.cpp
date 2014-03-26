@@ -132,6 +132,11 @@ void TabPlaylist::dropEvent(QDropEvent *event)
 	QTabWidget::dropEvent(event);
 }
 
+void TabPlaylist::paintEvent(QPaintEvent *event)
+{
+
+}
+
 void TabPlaylist::displayEmptyArea(bool isEmpty)
 {
 	if (isEmpty) {

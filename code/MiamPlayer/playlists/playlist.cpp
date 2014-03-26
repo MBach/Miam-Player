@@ -37,6 +37,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setEditTriggers(QTableView::SelectedClicked);
 	this->setFrameShape(QFrame::NoFrame);
 	this->setItemDelegate(new PlaylistItemDelegate(this));
+	this->setMouseTracking(true);
 
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);

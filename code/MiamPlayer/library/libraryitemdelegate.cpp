@@ -16,7 +16,7 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_showCovers = Settings::getInstance()->isCoversEnabled();
-	this->installEventFilter(this);
+	//this->installEventFilter(this);
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

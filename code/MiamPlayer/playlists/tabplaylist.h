@@ -67,9 +67,11 @@ public:
 
 protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
-	void changeEvent(QEvent *event);
+	virtual void changeEvent(QEvent *event);
 
-	void dropEvent(QDropEvent *event);
+	virtual void dropEvent(QDropEvent *event);
+
+	virtual void paintEvent(QPaintEvent *event);
 
 private:
 	void displayEmptyArea(bool isEmpty = true);

@@ -70,14 +70,16 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 			}
 		}
 		/// XXX: custom/default colors shouldn't be treated here
+		p.save();
 		if (Settings::getInstance()->isCustomColors()) {
 			if (tab.state.testFlag(QStyle::State_MouseOver)) {
+				p.setPen(tab.palette.highlight().color());
 				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());
 			} else {
+				p.setPen(tab.palette.mid().color());
 				p.fillRect(tab.rect, tab.palette.base());
 			}
 		} else {
-			p.save();
 			if (tab.state.testFlag(QStyle::State_MouseOver)) {
 				p.setPen(o.palette.highlight().color());
 				p.fillRect(tab.rect, tab.palette.highlight().color().lighter(170));
@@ -85,11 +87,11 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 				p.setPen(o.palette.midlight().color());
 				p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
 			}
-			p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
-			p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
-			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
-			p.restore();
 		}
+		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
+		p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
+		p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+		p.restore();
 
 		// If the rectangle is smaller than the text, shrink it
 		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
