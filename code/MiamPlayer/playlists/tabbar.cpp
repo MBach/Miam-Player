@@ -207,12 +207,14 @@ void TabBar::paintEvent(QPaintEvent *)
 			o.rect.adjust(2, 2, -4, -4);
 		}
 
+		// Highlight the tab under the cursor
 		if (o.state.testFlag(QStyle::State_MouseOver) && i != currentIndex()) {
 			p.setPen(QPen(o.palette.highlight(), penScaleFactor));
 			p.fillRect(o.rect, o.palette.highlight().color().lighter());
 		} else {
 			p.setPen(QPen(o.palette.mid(), penScaleFactor));
 			if (i == currentIndex()) {
+				/// XXX
 				if (Settings::getInstance()->isCustomColors()) {
 					p.fillRect(o.rect, o.palette.base().color().lighter(110));
 				} else {
@@ -224,8 +226,6 @@ void TabBar::paintEvent(QPaintEvent *)
 		}
 
 		if (i == count() - 1) {
-			//p.setPen(o.palette.mid().color());
-
 			QPen plusPen;
 			if (o.state.testFlag(QStyle::State_MouseOver)) {
 				plusPen = QPen(o.palette.highlight(), penScaleFactor);
@@ -242,6 +242,8 @@ void TabBar::paintEvent(QPaintEvent *)
 			plusPen.setJoinStyle(Qt::MiterJoin);
 			p.setPen(plusPen);
 
+			// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
+			// Should I disable this gradient when height is small?
 			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
 			QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
 			linearGradient.setColorAt(0, Qt::white);
@@ -254,6 +256,7 @@ void TabBar::paintEvent(QPaintEvent *)
 			} else {
 				p.setPen(o.palette.mid().color());
 			}
+			// Frame tab, it is not a rectangle but only 3 lines
 			p.drawLine(o.rect.topLeft(), o.rect.bottomLeft());
 			p.drawLine(o.rect.topRight(), o.rect.bottomRight());
 			p.drawLine(o.rect.topLeft(), o.rect.topRight());
@@ -261,14 +264,12 @@ void TabBar::paintEvent(QPaintEvent *)
 		p.restore();
 
 		// Icon
-		/// FIXME
-		QRect r = tabRect(i).adjusted(3, 3, 0, 0);
-		qDebug() << i << r << r.left();
-		p.save();
-		p.translate(r.left(), 0);
-		int w = o.iconSize.width(), h = o.iconSize.height();
-		p.drawPixmap(0, r.top(), w, h, o.icon.pixmap(w, h));
-		p.restore();
+		QRect r = tabRect(i);
+		r.setHeight(fontMetrics().ascent());
+		r.translate(3, (height() - r.height()) / 2);
+		r.setWidth(r.height() / 2);
+		p.setRenderHint(QPainter::SmoothPixmapTransform);
+		o.icon.paint(&p, r, Qt::AlignLeft | Qt::AlignVCenter);
 
 		// Playlist name
 		if (i == currentIndex()) {
@@ -278,7 +279,8 @@ void TabBar::paintEvent(QPaintEvent *)
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
-		p.drawText(o.rect, Qt::AlignCenter, o.text);
+		o.rect.adjust(r.width() + 10, 0, 0, 0);
+		p.drawText(o.rect, Qt::AlignLeft | Qt::AlignVCenter, o.text);
 	}
 
 	// Global bottom frame border

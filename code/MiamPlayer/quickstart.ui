@@ -20,17 +20,10 @@
    <string notr="true"/>
   </property>
   <property name="autoFillBackground">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">#QuickStart {
-border-left: #ACACAC;
-border-bottom: #ACACAC;
-border-right: #ACACAC;
-border-width: 1;
-border-style: solid;
-background-color: white;
-}</string>
+   <string notr="true">QWidget#QuickStart { background-color: #ffffff; }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

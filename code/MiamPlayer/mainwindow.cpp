@@ -72,6 +72,7 @@ void MainWindow::init()
 
 	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
+	libraryHeader->setVisible(!isEmpty);
 	/// XXX For each view
 	library->setHidden(isEmpty);
 	/// XXX

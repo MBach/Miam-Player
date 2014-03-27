@@ -172,7 +172,7 @@ void PlaylistManager::loadPlaylist(const QString &path)
 			playlists->tabBar()->setTabData(playlists->count() - 2, path);
 		}
 		connect(playlist->mediaPlaylist(), &QMediaPlaylist::loaded, [=]() {
-			playlists->setTabIcon(playlists->currentIndex(), TabPlaylist::defaultIcon(QIcon::Disabled));
+			playlists->setTabIcon(playlists->currentIndex(), playlists->defaultIcon(QIcon::Disabled));
 		});
 
 		playlist->mediaPlaylist()->load(QUrl::fromLocalFile(path), "m3u8");

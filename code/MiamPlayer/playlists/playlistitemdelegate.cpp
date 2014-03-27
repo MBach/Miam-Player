@@ -61,7 +61,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	}
 	Settings *settings = Settings::getInstance();
 	// Light color when mouse is over
-	if (o.state.testFlag(QStyle::State_MouseOver) && !o.state.testFlag(QStyle::State_Selected)) {
+	/*if (o.state.testFlag(QStyle::State_MouseOver) && !o.state.testFlag(QStyle::State_Selected)) {
 		qDebug() << "ici";
 		p->setPen(opt.palette.highlight().color().darker(150));
 		if (settings->isCustomColors()) {
@@ -69,7 +69,8 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		} else {
 			p->fillRect(o.rect, opt.palette.highlight().color().lighter(170));
 		}
-	} else if (opt.state.testFlag(QStyle::State_Selected)) {
+	} else*/
+	if (opt.state.testFlag(QStyle::State_Selected)) {
 		p->setPen(opt.palette.highlight().color().darker(150));
 		if (settings->isCustomColors()) {
 			p->fillRect(o.rect, opt.palette.highlight().color());

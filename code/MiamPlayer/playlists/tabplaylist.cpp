@@ -75,7 +75,7 @@ Playlist* TabPlaylist::currentPlayList() const
 QIcon TabPlaylist::defaultIcon(QIcon::Mode mode)
 {
 	static QIcon icon(":/icons/playlistIcon");
-	static QIcon grayIcon(icon.pixmap(QSize(16, 16), QIcon::Disabled));
+	QIcon grayIcon(icon.pixmap(QSize(tabBar()->fontMetrics().ascent(), tabBar()->fontMetrics().ascent()), QIcon::Disabled));
 	if (mode == QIcon::Normal) {
 		return icon;
 	} else {
