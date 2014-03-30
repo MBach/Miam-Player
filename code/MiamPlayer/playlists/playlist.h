@@ -70,26 +70,26 @@ public:
 
 protected:
 	/** Redefined to display a small context menu in the view. */
-	void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event);
 
-	void dragEnterEvent(QDragEnterEvent *event);
-	void dragMoveEvent(QDragMoveEvent *event);
+	virtual void dragEnterEvent(QDragEnterEvent *event);
+	virtual void dragMoveEvent(QDragMoveEvent *event);
 
 	/** Redefined to be able to move tracks between playlists or internally. */
-	void dropEvent(QDropEvent *event);
+	virtual void dropEvent(QDropEvent *event);
 
 	/** Redefined to handle escape key when editing ratings. */
-	void keyPressEvent(QKeyEvent *event);
+	virtual void keyPressEvent(QKeyEvent *event);
 
-	void mouseMoveEvent(QMouseEvent *event);
-	void mousePressEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event);
+	virtual void mousePressEvent(QMouseEvent *event);
 
 	/** Redefined to display a thin line to help user for dropping tracks. */
-	void paintEvent(QPaintEvent *e);
+	virtual void paintEvent(QPaintEvent *e);
 
-	int sizeHintForColumn(int column) const;
+	virtual int sizeHintForColumn(int column) const;
 
-	void showEvent(QShowEvent *event);
+	virtual void showEvent(QShowEvent *event);
 
 public slots:
 	/** Move selected tracks downward. */

@@ -115,8 +115,8 @@ void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logical
 	if (rect.contains(mapFromGlobal(QCursor::pos()))) {
 		p.save();
 		p.setPen(palette.highlight().color());
-		p.drawLine(rect.topLeft(), rect.bottomLeft());
-		p.drawLine(rect.topRight(), rect.bottomRight());
+		p.drawLine(rect.x(), rect.y() + rect.height() / 4, rect.x(), rect.y() + 3 * rect.height() / 4);
+		p.drawLine(rect.x() + rect.width() - 1, rect.y() + rect.height() / 4, rect.x() + rect.width() - 1, rect.y() + 3 * rect.height() / 4);
 		p.restore();
 	}
 

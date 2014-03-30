@@ -87,6 +87,8 @@ protected:
 
 	virtual void drawBranches(QPainter * painter, const QRect & rect, const QModelIndex & index) const;
 
+	virtual void drawRow(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
@@ -95,6 +97,7 @@ protected:
 private:
 	void bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath);
 
+	// Thanks StackOverflow for this algorithm (works like a charm without any changes)
 	QImage blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly = false) const;
 
 	/** Recursive count for leaves only. */

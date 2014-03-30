@@ -44,11 +44,11 @@ Settings* Settings::getInstance()
 
 qreal Settings::bigCoverOpacity() const
 {
-	qreal o = value("bigCoverOpacity").toReal();
-	if (o == 0) {
+	QVariant vOpacity = value("bigCoverOpacity");
+	if (vOpacity.isNull()) {
 		return 0.66;
 	} else {
-		return o;
+		return vOpacity.toReal();
 	}
 }
 

@@ -258,13 +258,22 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
+	QPainter p(viewport());
+	p.setPen(QApplication::palette().mid().color());
+	if (isLeftToRight()) {
+		p.drawLine(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
+	} else {
+		p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
+	}
+	/// FIXME: why do I have this ghost line?
+	//p.drawLine(viewport()->rect().bottomLeft(), viewport()->rect().bottomRight());
 	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line
 		int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
 		int height = this->rowHeight(0);
 		/// TODO computes color from user defined settings
-		QPainter p(viewport());
+
 		p.setPen(Qt::black);
 		p.drawLine(viewport()->rect().left(), rowDest * height,
 				   viewport()->rect().right(), rowDest * height);

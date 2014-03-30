@@ -11,6 +11,8 @@
 #include <QPropertyAnimation>
 #include <QStandardItem>
 
+class LibraryTreeView;
+
 class LibraryItemDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
@@ -25,8 +27,10 @@ private:
 
 	qreal _iconOpacity;
 
+	LibraryTreeView *_libraryTreeView;
+
 public:
-	LibraryItemDelegate(LibraryFilterProxyModel *proxy);
+	LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy);
 
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 

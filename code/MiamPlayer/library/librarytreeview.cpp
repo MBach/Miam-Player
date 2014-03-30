@@ -33,7 +33,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	proxyModel = new LibraryFilterProxyModel(this);
 	proxyModel->setSourceModel(_libraryModel);
 	proxyModel->setTopLevelItems(&_topLevelItems);
-	_itemDelegate = new LibraryItemDelegate(proxyModel);
+	_itemDelegate = new LibraryItemDelegate(this, proxyModel);
 	this->setItemDelegate(_itemDelegate);
 
 	_timer = new QTimer(this);
@@ -101,7 +101,6 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
-	qDebug() << Q_FUNC_INFO << viewport()->geometry();
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	this->setVerticalScrollBar(vScrollBar);
@@ -122,14 +121,6 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	connect(sqlModel, &LibrarySqlModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
 	connect(sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &LibraryTreeView::insertTrackFromRecord);
 	connect(sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &LibraryTreeView::insertTrackFromFile);
-
-	// One can choose a hierarchical order for drawing the library
-	/*LibraryOrderDialog *_lod = new LibraryOrderDialog(this);
-	connect(header(), &QHeaderView::customContextMenuRequested, [=](const QPoint &pos) {
-		_lod->move(mapToGlobal(pos));
-		_lod->show();
-	});
-	connect(_lod, &LibraryOrderDialog::aboutToRedrawLibrary, sqlModel, &LibrarySqlModel::load);*/
 }
 
 void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
@@ -166,6 +157,110 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	}
 }
 
+void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QModelIndex &proxyIndex) const
+{
+	Settings *settings = Settings::getInstance();
+	if (settings->isBigCoverEnabled()) {
+		QModelIndex index2 = proxyIndex;
+		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(proxyIndex));
+		//if (item->data(Type).toInt() == Track) {
+		//	item = item->parent();
+		//	index2 = proxyIndex.parent();
+		//}
+		//QRect r2 = visualRect(index2);
+		if (item && item->data(Type).toInt() == Album && isExpanded(index2)) {
+			QString cover = item->data(DataCoverPath).toString();
+			// Get the area to display cover
+			int w, h;
+			w = rect().width() - (r.width() + 2 * verticalScrollBar()->width());
+			h = item->rowCount() * this->indexRowSizeHint(index2.child(0, 0));
+			QPixmap pixmap(cover);
+
+			w = qMin(h, qMin(w, pixmap.width()));
+			QPixmap leftBorder = pixmap.copy(0, 0, 3, pixmap.height());
+			leftBorder = leftBorder.scaled(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), w);
+			// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
+			// The second one is a computer generated gradient focused on alpha channel
+			if (!leftBorder.isNull()) {
+				QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
+				linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
+				linearAlphaBrush.setColorAt(1, Qt::transparent);
+
+				painter->save();
+				// Because the expanded border can look strange to one, is blurred with some gaussian function
+				QImage img = this->blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
+				painter->drawImage(0, r.y() + r.height(), img);
+				painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+				painter->setPen(Qt::NoPen);
+				painter->setBrush(linearAlphaBrush);
+				painter->drawRect(0, r.y() + r.height(), leftBorder.width(), leftBorder.height());
+				painter->drawPixmap(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), r.y() + r.height(), w, w, pixmap);
+
+				painter->setOpacity(settings->bigCoverOpacity());
+				painter->fillRect(0, r.y() + r.height(), rect().width() - 2 * verticalScrollBar()->width(), leftBorder.height(), QApplication::palette().base());
+				painter->restore();
+			}
+		}
+	}
+	TreeView::drawBranches(painter, r, proxyIndex);
+}
+
+void LibraryTreeView::drawRow(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+{
+	/// FIXME
+	/*if (index.data(Type).toInt() == Track) {
+
+	} else {
+
+	}*/
+	TreeView::drawRow(painter, option, index);
+}
+
+/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
+void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+	// Save the position of the mouse, to be able to choose the correct action :
+	// - add an item to the playlist
+	// - edit stars to the current track
+	currentPos = event->pos();
+	QTreeView::mouseDoubleClickEvent(event);
+}
+
+void LibraryTreeView::paintEvent(QPaintEvent *event)
+{
+	int wVerticalScrollBar = 0;
+	if (verticalScrollBar()->isVisible()) {
+		wVerticalScrollBar = verticalScrollBar()->width();
+	}
+	if (QGuiApplication::isLeftToRight()) {
+		_jumpToWidget->move(frameGeometry().right() - 19 - wVerticalScrollBar, 1 + header()->height());
+	} else {
+		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, 1 + header()->height());
+	}
+	TreeView::paintEvent(event);
+}
+
+void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
+{
+	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", sqlModel->database());
+	internalCover.addBindValue(album);
+	if (!sqlModel->database().isOpen()) {
+		sqlModel->database().open();
+	}
+	internalCover.exec();
+	if (internalCover.next()) {
+		itemAlbum->setData(absFilePath, DataCoverPath);
+	} else {
+		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", sqlModel->database());
+		externalCover.addBindValue(album);
+		externalCover.exec();
+		if (externalCover.next()) {
+			itemAlbum->setData(externalCover.record().value(0).toString(), DataCoverPath);
+		}
+	}
+}
+
+// Thanks StackOverflow for this algorithm (works like a charm without any changes)
 QImage LibraryTreeView::blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly) const
 {
 	int tab[] = { 14, 10, 8, 6, 5, 5, 4, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2 };
@@ -232,96 +327,6 @@ QImage LibraryTreeView::blurred(const QImage& image, const QRect& rect, int radi
 	}
 
 	return result;
-}
-
-void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QModelIndex &proxyIndex) const
-{
-	Settings *settings = Settings::getInstance();
-	if (settings->isBigCoverEnabled()) {
-		QModelIndex index2 = proxyIndex;
-		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(proxyIndex));
-		/*if (item->data(Type).toInt() == Track) {
-			item = item->parent();
-			index2 = proxyIndex.parent();
-			qDebug() << "ok";
-		}*/
-		if (item && item->data(Type).toInt() == Album && isExpanded(index2)) {
-			QString cover = item->data(DataCoverPath).toString();
-			// Get the area to display cover
-			int w, h;
-			w = rect().width() - (r.width() + 2 * verticalScrollBar()->width());
-			h = item->rowCount() * this->indexRowSizeHint(index2.child(0, 0));
-			QPixmap pixmap(cover);
-
-			w = qMin(h, qMin(w, pixmap.width()));
-			QPixmap leftBorder = pixmap.copy(0, 0, 3, pixmap.height());
-			leftBorder = leftBorder.scaled(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), w);
-			if (!leftBorder.isNull()) {
-				QImage img = this->blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
-				QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
-				linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
-				linearAlphaBrush.setColorAt(1, Qt::transparent);
-
-				painter->save();
-				painter->drawImage(0, r.y() + r.height(), img);
-				painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(linearAlphaBrush);
-				painter->drawRect(0, r.y() + r.height(), leftBorder.width(), leftBorder.height());
-
-				painter->drawPixmap(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), r.y() + r.height(), w, w, pixmap);
-
-				painter->setOpacity(settings->bigCoverOpacity());
-				painter->fillRect(0, r.y() + r.height(), rect().width() - 2 * verticalScrollBar()->width(), leftBorder.height(), QApplication::palette().base());
-				painter->restore();
-			}
-		}
-	}
-	TreeView::drawBranches(painter, r, proxyIndex);
-}
-
-/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
-void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
-{
-	// Save the position of the mouse, to be able to choose the correct action :
-	// - add an item to the playlist
-	// - edit stars to the current track
-	currentPos = event->pos();
-	QTreeView::mouseDoubleClickEvent(event);
-}
-
-void LibraryTreeView::paintEvent(QPaintEvent *event)
-{
-	int wVerticalScrollBar = 0;
-	if (verticalScrollBar()->isVisible()) {
-		wVerticalScrollBar = verticalScrollBar()->width();
-	}
-	if (QGuiApplication::isLeftToRight()) {
-		_jumpToWidget->move(frameGeometry().right() - 19 - wVerticalScrollBar, 1 + header()->height());
-	} else {
-		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, 1 + header()->height());
-	}
-	TreeView::paintEvent(event);
-}
-
-void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
-{
-	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", sqlModel->database());
-	internalCover.addBindValue(album);
-	if (!sqlModel->database().isOpen()) {
-		sqlModel->database().open();
-	}
-	internalCover.exec();
-	if (internalCover.next()) {
-		itemAlbum->setData(absFilePath, DataCoverPath);
-	} else {
-		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", sqlModel->database());
-		externalCover.addBindValue(album);
-		externalCover.exec();
-		if (externalCover.next()) {
-			itemAlbum->setData(externalCover.record().value(0).toString(), DataCoverPath);
-		}
-	}
 }
 
 /** Recursive count for leaves only. */

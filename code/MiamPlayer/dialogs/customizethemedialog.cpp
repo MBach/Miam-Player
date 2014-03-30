@@ -129,7 +129,7 @@ void CustomizeThemeDialog::setupActions()
 	// Library
 	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
 		settings->setCovers(b);
-		mainWindow->library->reset();
+		//mainWindow->library->reset();
 	});
 
 	// Covers
@@ -144,7 +144,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=](int v) {
 		settings->setBigCoverOpacity(v);
 		this->fade();
-		mainWindow->library->repaint();
+		mainWindow->repaint();
 	});
 }
 

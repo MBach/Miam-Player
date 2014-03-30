@@ -10,13 +10,12 @@
 #include <QtDebug>
 #include <QImageReader>
 
-LibraryItemDelegate::LibraryItemDelegate(LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy), _animateIcons(false), _iconSizeChanged(false), _iconOpacity(1.0)
+LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy) :
+	QStyledItemDelegate(proxy), _animateIcons(false), _iconSizeChanged(false), _iconOpacity(1.0), _libraryTreeView(libraryTreeView)
 {
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_showCovers = Settings::getInstance()->isCoversEnabled();
-	//this->installEventFilter(this);
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -62,6 +61,8 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	}
 	painter->restore();
 }
+
+
 
 /** Redefined to always display the same height for albums, even for those without one. */
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const

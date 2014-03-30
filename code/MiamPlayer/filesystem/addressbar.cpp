@@ -1,14 +1,11 @@
 #include "addressbar.h"
 
-#include <QDir>
+#include "settings.h"
+#include <QApplication>
 #include <QFileIconProvider>
-#include <QMouseEvent>
 #include <QPainter>
-#include <QSpacerItem>
 
 #include <QtDebug>
-
-#include <QLineEdit>
 
 AddressBar::AddressBar(QWidget *parent) :
 	QWidget(parent)
@@ -63,10 +60,6 @@ void AddressBar::mousePressEvent(QMouseEvent *)
 	_lineEdit->show();
 	_lineEdit->setFocus();
 }
-
-#include <QApplication>
-#include <QLinearGradient>
-#include "settings.h"
 
 void AddressBar::paintEvent(QPaintEvent *)
 {
