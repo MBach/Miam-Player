@@ -199,8 +199,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>429</width>
-               <height>540</height>
+               <width>421</width>
+               <height>542</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1275,43 +1275,107 @@
          <property name="title">
           <string>Artist and albums lists</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="checkBoxDisplayCovers">
-            <property name="text">
-             <string/>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="labelDisplayCovers">
+              <property name="text">
+               <string>Show covers</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBoxDisplayCovers">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="bottomMargin">
+             <number>9</number>
             </property>
-            <property name="checked">
-             <bool>true</bool>
+            <item>
+             <widget class="QLabel" name="labelCoverSize">
+              <property name="text">
+               <string>Size of covers</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinBoxCoverSize">
+              <property name="minimum">
+               <number>24</number>
+              </property>
+              <property name="maximum">
+               <number>512</number>
+              </property>
+              <property name="value">
+               <number>48</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelOpacity">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Should I display a large and faded cover when you're expanding an album?</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="labelCoverSize">
-            <property name="text">
-             <string>Size of covers</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="spinBoxCoverSize">
-            <property name="minimum">
-             <number>24</number>
-            </property>
-            <property name="maximum">
-             <number>512</number>
-            </property>
-            <property name="value">
-             <number>48</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="labelDisplayCovers">
-            <property name="text">
-             <string>Show covers</string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="1">
+             <widget class="QRadioButton" name="radioButtonEnableBigCover">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QRadioButton" name="radioButtonDisableBigCover">
+              <property name="text">
+               <string>No</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLabel" name="labelBigCoverOpacity">
+              <property name="text">
+               <string>Opacity</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QSpinBox" name="spinBoxBigCoverOpacity">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>66</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

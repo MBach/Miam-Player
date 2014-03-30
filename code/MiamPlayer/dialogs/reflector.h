@@ -3,11 +3,8 @@
 
 #include <QWidget>
 
-#include "settings.h"
-
 /**
  * Reflector Class is only designed to help the way one can customize colors.
- * It keeps a list of objects that can be repainted. Those instances are grouped by category.
  */
 class Reflector : public QWidget
 {

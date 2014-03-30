@@ -24,13 +24,6 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	fontComboBoxLibrary->installEventFilter(this);
 	fontComboBoxPlaylist->installEventFilter(this);
 
-	/*groupBoxFonts->setMouseTracking(true);
-	groupBoxFonts->installEventFilter(this);
-	foreach (QObject *obj, groupBoxFonts->children()) {
-		obj->installEventFilter(this);
-	}*/
-	//groupBoxFonts->setAttribute(Qt::WA_TransparentForMouseEvents);
-	//groupBoxFonts->setMouseTracking(true);
 	spinBoxLibrary->setMouseTracking(true);
 
 	// Animates this Dialog
@@ -142,6 +135,16 @@ void CustomizeThemeDialog::setupActions()
 	// Covers
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
 		settings->setCoverSize(cs);
+	});
+	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
+		settings->setBigCovers(b);
+		labelBigCoverOpacity->setVisible(b);
+		spinBoxBigCoverOpacity->setVisible(b);
+	});
+	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=](int v) {
+		settings->setBigCoverOpacity(v);
+		this->fade();
+		mainWindow->library->repaint();
 	});
 }
 

@@ -13,7 +13,6 @@ class CustomizeOptionsDialog : public QDialog, public Ui::CustomizeOptionsDialog
 private:
 	QTranslator customTranslator, defaultQtTranslator;
 	QMap<QString, QString> languages;
-	//bool musicLocationsChanged;
 
 public:
 	CustomizeOptionsDialog(QWidget *parent = 0);

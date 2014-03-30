@@ -71,8 +71,6 @@ protected:
 
 	virtual void dropEvent(QDropEvent *event);
 
-	virtual void paintEvent(QPaintEvent *event);
-
 private:
 	void displayEmptyArea(bool isEmpty = true);
 

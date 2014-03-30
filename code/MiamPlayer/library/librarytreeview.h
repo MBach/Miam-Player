@@ -85,6 +85,8 @@ protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
 
+	virtual void drawBranches(QPainter * painter, const QRect & rect, const QModelIndex & index) const;
+
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
@@ -92,6 +94,8 @@ protected:
 
 private:
 	void bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath);
+
+	QImage blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly = false) const;
 
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;

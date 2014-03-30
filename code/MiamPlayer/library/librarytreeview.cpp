@@ -166,6 +166,120 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	}
 }
 
+QImage LibraryTreeView::blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly) const
+{
+	int tab[] = { 14, 10, 8, 6, 5, 5, 4, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2 };
+	int alpha = (radius < 1)  ? 16 : (radius > 17) ? 1 : tab[radius-1];
+
+	QImage result = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+	int r1 = rect.top();
+	int r2 = rect.bottom();
+	int c1 = rect.left();
+	int c2 = rect.right();
+
+	int bpl = result.bytesPerLine();
+	int rgba[4];
+	unsigned char* p;
+
+	int i1 = 0;
+	int i2 = 3;
+
+	if (alphaOnly)
+		i1 = i2 = (QSysInfo::ByteOrder == QSysInfo::BigEndian ? 0 : 3);
+
+	for (int col = c1; col <= c2; col++) {
+		p = result.scanLine(r1) + col * 4;
+		for (int i = i1; i <= i2; i++)
+			rgba[i] = p[i] << 4;
+
+		p += bpl;
+		for (int j = r1; j < r2; j++, p += bpl)
+			for (int i = i1; i <= i2; i++)
+				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
+	}
+
+	for (int row = r1; row <= r2; row++) {
+		p = result.scanLine(row) + c1 * 4;
+		for (int i = i1; i <= i2; i++)
+			rgba[i] = p[i] << 4;
+
+		p += 4;
+		for (int j = c1; j < c2; j++, p += 4)
+			for (int i = i1; i <= i2; i++)
+				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
+	}
+
+	for (int col = c1; col <= c2; col++) {
+		p = result.scanLine(r2) + col * 4;
+		for (int i = i1; i <= i2; i++)
+			rgba[i] = p[i] << 4;
+
+		p -= bpl;
+		for (int j = r1; j < r2; j++, p -= bpl)
+			for (int i = i1; i <= i2; i++)
+				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
+	}
+
+	for (int row = r1; row <= r2; row++) {
+		p = result.scanLine(row) + c2 * 4;
+		for (int i = i1; i <= i2; i++)
+			rgba[i] = p[i] << 4;
+
+		p -= 4;
+		for (int j = c1; j < c2; j++, p -= 4)
+			for (int i = i1; i <= i2; i++)
+				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
+	}
+
+	return result;
+}
+
+void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QModelIndex &proxyIndex) const
+{
+	Settings *settings = Settings::getInstance();
+	if (settings->isBigCoverEnabled()) {
+		QModelIndex index2 = proxyIndex;
+		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(proxyIndex));
+		/*if (item->data(Type).toInt() == Track) {
+			item = item->parent();
+			index2 = proxyIndex.parent();
+			qDebug() << "ok";
+		}*/
+		if (item && item->data(Type).toInt() == Album && isExpanded(index2)) {
+			QString cover = item->data(DataCoverPath).toString();
+			// Get the area to display cover
+			int w, h;
+			w = rect().width() - (r.width() + 2 * verticalScrollBar()->width());
+			h = item->rowCount() * this->indexRowSizeHint(index2.child(0, 0));
+			QPixmap pixmap(cover);
+
+			w = qMin(h, qMin(w, pixmap.width()));
+			QPixmap leftBorder = pixmap.copy(0, 0, 3, pixmap.height());
+			leftBorder = leftBorder.scaled(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), w);
+			if (!leftBorder.isNull()) {
+				QImage img = this->blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
+				QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
+				linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
+				linearAlphaBrush.setColorAt(1, Qt::transparent);
+
+				painter->save();
+				painter->drawImage(0, r.y() + r.height(), img);
+				painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+				painter->setPen(Qt::NoPen);
+				painter->setBrush(linearAlphaBrush);
+				painter->drawRect(0, r.y() + r.height(), leftBorder.width(), leftBorder.height());
+
+				painter->drawPixmap(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), r.y() + r.height(), w, w, pixmap);
+
+				painter->setOpacity(settings->bigCoverOpacity());
+				painter->fillRect(0, r.y() + r.height(), rect().width() - 2 * verticalScrollBar()->width(), leftBorder.height(), QApplication::palette().base());
+				painter->restore();
+			}
+		}
+	}
+	TreeView::drawBranches(painter, r, proxyIndex);
+}
+
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 {

@@ -44,6 +44,8 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
 
+	qreal bigCoverOpacity() const;
+
 	/** Returns the actual size of media buttons. */
 	int buttonsSize() const;
 
@@ -73,6 +75,9 @@ public:
 
 	/** Custom icons in CustomizeTheme */
 	bool hasCustomIcon(QPushButton *) const;
+
+	/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
+	bool isBigCoverEnabled() const;
 
 	/** Returns true if covers are displayed in the library. */
 	bool isCoversEnabled() const;
@@ -127,6 +132,10 @@ public:
 	int volume() const;
 
 public slots:
+
+	void setBigCoverOpacity(int v);
+
+	void setBigCovers(bool b);
 
 	/** Sets a new button size. */
 	void setButtonsSize(const int &s);

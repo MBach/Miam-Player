@@ -3,8 +3,6 @@
 #include <QApplication>
 #include <QStylePainter>
 
-#include <QtDebug>
-
 Reflector::Reflector(QWidget *parent) :
 	QWidget(parent), backgroundColor(QColor())
 {}

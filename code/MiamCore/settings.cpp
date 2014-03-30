@@ -42,6 +42,16 @@ Settings* Settings::getInstance()
 	return settings;
 }
 
+qreal Settings::bigCoverOpacity() const
+{
+	qreal o = value("bigCoverOpacity").toReal();
+	if (o == 0) {
+		return 0.66;
+	} else {
+		return o;
+	}
+}
+
 /** Return the actual size of media buttons. */
 int Settings::buttonsSize() const
 {
@@ -167,6 +177,16 @@ bool Settings::hasCustomIcon(QPushButton *b) const
 {
 	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
 	return customIcons.value(b->objectName()).toBool();
+}
+
+/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
+bool Settings::isBigCoverEnabled() const
+{
+	if (value("bigCovers").isNull()) {
+		return true;
+	} else {
+		return value("bigCovers").toBool();
+	}
 }
 
 /** Returns true if covers are displayed in the library. */
@@ -380,6 +400,15 @@ int Settings::volume() const
 }
 
 /// SLOTS
+void Settings::setBigCoverOpacity(int v)
+{
+	setValue("bigCoverOpacity", (qreal)(v / 100.0));
+}
+
+void Settings::setBigCovers(bool b)
+{
+	setValue("bigCovers", b);
+}
 
 /** Sets a new button size. */
 void Settings::setButtonsSize(const int &s)
