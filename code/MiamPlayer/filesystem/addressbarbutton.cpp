@@ -1,6 +1,8 @@
 #include "addressbarbutton.h"
 
-#include <QDir>
+#include "settings.h"
+#include <QApplication>
+#include <QDirIterator>
 #include <QMouseEvent>
 #include <QStyleOption>
 #include <QStylePainter>
@@ -8,21 +10,25 @@
 #include <QtDebug>
 
 AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *parent) :
-	QPushButton(parent), _path(QDir::toNativeSeparators(newPath)), idx(index), _atLeastOneSubDir(true)
+	QPushButton(parent), _path(QDir::toNativeSeparators(newPath)), idx(index),
+	_atLeastOneSubDir(false), _subMenuOpened(false)
 {
 	if (_path.right(1) != QDir::separator()) {
 		_path += QDir::separator();
 	}
 	this->setFlat(true);
 	this->setMouseTracking(true);
+
 	QDir d = QDir(_path);
-	foreach (QFileInfo fileInfo, d.entryInfoList(QStringList(), QDir::NoDotAndDotDot)) {
-		qDebug() << fileInfo.absoluteFilePath();
-		if (fileInfo.isDir()) {
+	QDirIterator it(d.absolutePath(), QDir::Dirs | QDir::NoDotAndDotDot);
+	while (it.hasNext()) {
+		it.next();
+		if (it.fileInfo().isDir()) {
 			_atLeastOneSubDir = true;
 			break;
 		}
 	}
+
 	// padding + text + (space + arrow + space) if current dir has subdirectories
 	int width = fontMetrics().width(d.dirName());
 	if (_atLeastOneSubDir) {
@@ -42,11 +48,19 @@ QString AddressBarButton::currentPath() const
 	}
 }
 
+void AddressBarButton::setHighlighted(bool b)
+{
+	_subMenuOpened = b;
+	if (b) {
+		emit aboutToShowMenu();
+	}
+	repaint();
+}
+
 /** Redefined. */
 void AddressBarButton::mouseMoveEvent(QMouseEvent *)
 {
 	qobject_cast<QWidget *>(this->parent())->repaint();
-	qDebug() << "over" << _path;
 }
 
 /** Redefined. */
@@ -54,15 +68,11 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 {
 	// mouse press in arrow rect => immediate popup menu
 	// in text rect => goto dir, mouse release not relevant
-
 	if (_arrowRect.contains(event->pos())) {
-		//_arrowPressed = true;
+		this->setHighlighted(true);
 		emit aboutToShowMenu();
 	}
 }
-
-#include <QApplication>
-#include "settings.h"
 
 /** Redefined. */
 void AddressBarButton::paintEvent(QPaintEvent *)
@@ -90,14 +100,14 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
-	if (_textRect.contains(pos)) {
+	if (_subMenuOpened || _textRect.contains(pos)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.setBrush(QApplication::palette().highlight().color().lighter());
 		p.drawRect(_textRect);
 		if (_atLeastOneSubDir) {
 			p.drawRect(_arrowRect);
 		}
-	} else if (_arrowRect.contains(pos)) {
+	} else if (_subMenuOpened || _arrowRect.contains(pos)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.drawRect(_textRect);
 		p.setBrush(QApplication::palette().highlight().color().lighter());
@@ -118,10 +128,14 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		QStyleOptionButton o;
 		o.initFrom(this);
 		o.rect = _arrowRect.adjusted(4, 7, -2, -4);
-		if (isLeftToRight()) {
-			p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
+		if (_subMenuOpened) {
+			p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
 		} else {
-			p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
+			if (isLeftToRight()) {
+				p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
+			} else {
+				p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
+			}
 		}
 	}
 
@@ -129,13 +143,13 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		bool absRoot = true;
 		foreach (QFileInfo fileInfo, QDir::drives()) {
 			if (QDir::toNativeSeparators(fileInfo.absolutePath()) == _path) {
-				p.drawText(_textRect, Qt::AlignLeft | Qt::AlignVCenter, _path);
+				p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, _path);
 				absRoot = false;
 				break;
 			}
 		}
 		if (absRoot) {
-			p.drawPixmap(QRect(0, 5, 20, 20), style()->standardPixmap(QStyle::SP_ComputerIcon), QRect(0, 0, 20, 20));
+			p.drawPixmap(QRect(4, 5, 20, 20), style()->standardPixmap(QStyle::SP_ComputerIcon), QRect(0, 0, 20, 20));
 		}
 	} else {
 		if (!dir.dirName().isEmpty()) {

@@ -465,7 +465,6 @@ void Settings::setDragAndDropBehaviour()
 
 void Settings::setFont(const FontFamily &fontFamily, const QFont &font)
 {
-	qDebug() << Q_FUNC_INFO;
 	fontFamilyMap.insert(QString(fontFamily), font.family());
 	setValue("fontFamilyMap", fontFamilyMap);
 	emit fontHasChanged(fontFamily, font);

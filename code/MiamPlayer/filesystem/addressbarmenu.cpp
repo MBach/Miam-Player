@@ -1,13 +1,42 @@
 #include "addressbarmenu.h"
 
+#include <QAction>
 #include <QDir>
+#include <QMouseEvent>
 #include <QFileIconProvider>
 
 #include <QtDebug>
 
-AddressBarMenu::AddressBarMenu(QWidget *parent) :
-	QMenu(parent)
-{}
+#include "addressbar.h"
+
+#include <QApplication>
+
+AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
+	QListWidget(addressBar), _addressBar(addressBar)
+{
+	this->installEventFilter(this);
+	//this->setMaximumWidth(300);
+	this->setMouseTracking(true);
+	this->setUniformItemSizes(true);
+	this->setWindowFlags(Qt::Popup);
+
+	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
+		this->clear();
+		this->close();
+		//_addressBar->createSubDirButtons();
+	});
+}
+
+bool AddressBarMenu::eventFilter(QObject *, QEvent *event)
+{
+	if (event->type() == QEvent::MouseMove) {
+		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+		if (!rect().contains(mouseEvent->pos())) {
+			_addressBar->findAndHighlightButton(mapToGlobal(mouseEvent->pos()));
+		}
+	}
+	return false;
+}
 
 void AddressBarMenu::appendSubfolder(AddressBarButton *button)
 {
@@ -38,22 +67,16 @@ void AddressBarMenu::removeSubfolder(AddressBarButton *button)
 	}
 }
 
-void AddressBarMenu::clear()
+void AddressBarMenu::show()
 {
-	QMenu::clear();
-}
-
-QAction * AddressBarMenu::exec(const QPoint &p, bool showSubfolers, QAction *action)
-{
-	QAction *firstAction = NULL;
-	if (showSubfolers && !this->actions().isEmpty()) {
-		firstAction = this->actions().first();
-		foreach (AddressBarButton *button, subfolders) {
-			QAction *action = new QAction(QFileIconProvider().icon(button->currentPath()), button->text(), this);
-			this->insertAction(firstAction, action);
-			button->insertAction(firstAction, action);
-		}
-		this->insertSeparator(firstAction);
+	static const int maxBeforeScrolling = 18;
+	static const int margin = 4;
+	if (count() < maxBeforeScrolling) {
+		this->setMinimumHeight(count() * sizeHintForRow(0) + margin);
+		this->setMaximumHeight(count() * sizeHintForRow(0) + margin);
+	} else {
+		this->setMinimumHeight(maxBeforeScrolling * sizeHintForRow(0) + margin);
+		this->setMaximumHeight(maxBeforeScrolling * sizeHintForRow(0) + margin);
 	}
-	return QMenu::exec(p, action);
+	QListWidget::show();
 }

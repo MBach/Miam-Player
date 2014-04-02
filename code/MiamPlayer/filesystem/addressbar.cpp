@@ -2,6 +2,7 @@
 
 #include "settings.h"
 #include <QApplication>
+#include <QDirIterator>
 #include <QFileIconProvider>
 #include <QPainter>
 
@@ -14,16 +15,18 @@ AddressBar::AddressBar(QWidget *parent) :
 	_lineEdit->installEventFilter(this);
 	_lineEdit->setFrame(false);
 	_lineEdit->setVisible(false);
+	_lineEdit->setContentsMargins(1, 1, 1, 1);
 
 	hBoxLayout = new QHBoxLayout(this);
 	hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	hBoxLayout->setSpacing(0);
-
 	this->setLayout(hBoxLayout);
+
+	// Create a special button with a computer icon, and shows a menu where previous items are stacked
 	this->createRoot();
 
 	menu = new AddressBarMenu(this);
-	connect(menu, &QMenu::triggered, this, &AddressBar::appendSubDir);
+	connect(menu, &AddressBarMenu::triggered, this, &AddressBar::appendSubDir);
 
 	this->setMouseTracking(true);
 }
@@ -31,7 +34,6 @@ AddressBar::AddressBar(QWidget *parent) :
 bool AddressBar::eventFilter(QObject *obj, QEvent *e)
 {
 	if (obj == _lineEdit && e->type() == QEvent::FocusOut) {
-		qDebug() << "here ?";
 		this->createRoot();
 		this->init(_lineEdit->text());
 		_lineEdit->hide();
@@ -39,33 +41,57 @@ bool AddressBar::eventFilter(QObject *obj, QEvent *e)
 	return QWidget::eventFilter(obj, e);
 }
 
-void AddressBar::mouseMoveEvent(QMouseEvent *)
+void AddressBar::findAndHighlightButton(const QPoint &p)
 {
-	this->update();
+	foreach (AddressBarButton *b, findChildren<AddressBarButton*>()) {
+		if (b->rect().contains(b->mapFromGlobal(p))) {
+			if (!b->isHighlighted()) {
+				b->setHighlighted(true);
+			}
+			QPoint globalButtonPos = b->mapToGlobal(b->rect().bottomRight());
+			globalButtonPos.rx() -= 2 * b->arrowRect().width();
+			globalButtonPos.ry() += 2;
+			menu->move(globalButtonPos);
+		} else {
+			b->setHighlighted(false);
+		}
+	}
 }
 
 void AddressBar::mousePressEvent(QMouseEvent *)
 {
 	_lineEdit->setGeometry(this->contentsRect());
 	QLayoutItem *item = hBoxLayout->itemAt(hBoxLayout->count() - 2);
-	_lineEdit->setText(qobject_cast<AddressBarButton*>(item->widget())->path());
-	_lineEdit->selectAll();
-	QLayoutItem *layoutItem;
-	while ((layoutItem = hBoxLayout->takeAt(0)) != 0) {
-		qDebug() << item->widget();
-		delete item->widget();
-		delete layoutItem;
+
+	AddressBarButton *button = qobject_cast<AddressBarButton*>(item->widget());
+	if (button) {
+		_lineEdit->setText(button->path());
 	}
+	_lineEdit->selectAll();
+	while (hBoxLayout->count() > 0) {
+		if (QLayoutItem *layoutItem = hBoxLayout->takeAt(0)) {
+			if (layoutItem->widget()) {
+				delete layoutItem->widget();
+			} else if (layoutItem->spacerItem()) {
+				delete layoutItem->spacerItem();
+			} else if (layoutItem->layout()) {
+				delete layoutItem->layout();
+			}
+		}
+	}
+
 	hBoxLayout->insertWidget(0, _lineEdit);
+	_lineEdit->setMinimumHeight(this->rect().height());
 	_lineEdit->show();
 	_lineEdit->setFocus();
+	qDebug() << hBoxLayout->count();
 }
 
 void AddressBar::paintEvent(QPaintEvent *)
 {
 	QPainter p(this);
 
-	// Gradient
+	// Light gradient
 	QPalette palette = QApplication::palette();
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
 	if (Settings::getInstance()->isCustomColors()) {
@@ -77,6 +103,7 @@ void AddressBar::paintEvent(QPaintEvent *)
 	}
 	p.fillRect(rect(), g);
 
+	// Frame
 	p.setPen(palette.mid().color());
 	if (isLeftToRight()) {
 		p.drawLine(rect().topRight(), rect().bottomRight());
@@ -91,11 +118,11 @@ void AddressBar::paintEvent(QPaintEvent *)
 void AddressBar::createRoot()
 {
 	AddressBarButton *buttonArrow = new AddressBarButton(QDir::separator(), -1, this);
-	connect(buttonArrow, &QPushButton::clicked, this, &AddressBar::showDrivesAndPreviousFolders);
+	connect(buttonArrow, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showDrivesAndPreviousFolders);
 	hBoxLayout->insertWidget(0, buttonArrow);
 }
 
-/** Append 2 buttons to the address bar to navigate through the filesystem. */
+/** Append a button to the address bar to navigate through the filesystem. */
 void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 {
 	AddressBarButton *buttonDir = new AddressBarButton(path.absolutePath(), hBoxLayout->count() - 1, this);
@@ -110,6 +137,8 @@ void AddressBar::createSubDirButtons(const QDir &path, bool insertFirst)
 	} else {
 		buttonDir->setText(path.dirName());
 	}
+
+	// Actions in lambda-style because some object's geometry information is required
 	connect(buttonDir, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showSubDirMenu);
 
 	if (insertFirst) {
@@ -183,6 +212,7 @@ void AddressBar::showFirstButtons(AddressBarButton *buttonDir)
 /** Init with an absolute path. Also used as a callback to a view. */
 void AddressBar::init(const QString &initPath)
 {
+	qDebug() << Q_FUNC_INFO;
 	this->deleteFromArrowFolder(0);
 	QDir dir(initPath);
 	while (!dir.isRoot()) {
@@ -223,10 +253,11 @@ void AddressBar::appendSubDir(QAction *action)
 		} else {
 			subDir.setPath(button->currentPath());
 		}
-		subDir.cd(action->text() + QDir::separator());
-		this->deleteFromArrowFolder(button->index());
-		this->createSubDirButtons(subDir);
-		emit pathChanged(subDir.absolutePath());
+		if (subDir.cd(action->text() + QDir::separator())) {
+			this->deleteFromArrowFolder(button->index());
+			this->createSubDirButtons(subDir);
+			emit pathChanged(subDir.absolutePath());
+		}
 	}
 }
 
@@ -240,7 +271,6 @@ void AddressBar::deleteFromArrowFolder(int after)
 			QLayoutItem *item = hBoxLayout->takeAt(i);
 			if (item && item->widget()) {
 				delete item->widget();
-				delete item;
 			}
 		}
 
@@ -277,20 +307,24 @@ void AddressBar::showDrivesAndPreviousFolders()
 		if (driveName.length() > 1) {
 			driveName.remove(QDir::separator());
 		}
-		QAction *action = new QAction(QFileIconProvider().icon(drive), driveName, menu);
-		// Check if the new submenu has one of its items already displayed, then make it bold
-		if (nextButton != NULL && action->text() == nextButton->text()) {
-			QFont font = action->font();
-			font.setBold(true);
-			action->setFont(font);
+		QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(drive), driveName, menu);
+		if (!QDir(driveName).isReadable()) {
+			item->setFlags(Qt::NoItemFlags);
 		}
-		menu->addAction(action);
-		firstButton->addAction(action);
+		// Check if the new submenu has one of its items already displayed, then make it bold
+		if (nextButton != NULL && item->text() == nextButton->text()) {
+			QFont font = item->font();
+			font.setBold(true);
+			item->setFont(font);
+		}
 	}
 
 	// Then display the menu and the possibly empty list of folders before the first visible folder
-	QPoint p(firstButton->geometry().x() - 20, firstButton->geometry().y() + firstButton->geometry().height() - 1);
-	menu->exec(mapToGlobal(p), firstButton->index() == 0);
+	QPoint globalButtonPos = firstButton->mapToGlobal(firstButton->rect().bottomRight());
+	globalButtonPos.rx() -= 2 * firstButton->arrowRect().width();
+	globalButtonPos.ry() += 2;
+	menu->move(globalButtonPos);
+	menu->show();
 }
 
 /** Show a popup menu with the content of the selected directory. */
@@ -298,26 +332,24 @@ void AddressBar::showSubDirMenu()
 {
 	// Delete existing entries
 	menu->clear();
-
-	// Create new entries
 	AddressBarButton *button = qobject_cast<AddressBarButton*>(sender());
 	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(button->index() + 1)->widget());
 
-	QDir d(button->currentPath());
-	foreach (QFileInfo folder, d.entryInfoList(QStringList(), QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks)) {
-
-		QAction *action = new QAction(QFileIconProvider().icon(folder), folder.fileName(), menu);
+	QDirIterator it(button->currentPath(), QDir::NoDotAndDotDot | QDir::Dirs | QDir::NoSymLinks);
+	while (it.hasNext()) {
+		it.next();
+		QIcon icon = QFileIconProvider().icon(it.fileInfo());
+		QListWidgetItem *item =  new QListWidgetItem(icon, it.fileName(), menu);
 		// Check if the new submenu has one of its items already displayed, then make it bold
-		if (nextButton != NULL && action->text() == nextButton->text()) {
-			QFont font = action->font();
+		if (nextButton != NULL && item->text() == nextButton->text()) {
+			QFont font = item->font();
 			font.setBold(true);
-			action->setFont(font);
+			item->setFont(font);
 		}
-		menu->addAction(action);
-		button->addAction(action);
 	}
-
-	// Then display the menu
-	QPoint p(button->geometry().right() - 36, button->geometry().y() + button->geometry().height() - 1);
-	menu->popup(mapToGlobal(p), 0);
+	QPoint globalButtonPos = button->mapToGlobal(button->rect().bottomRight());
+	globalButtonPos.rx() -= 2 * button->arrowRect().width();
+	globalButtonPos.ry() += 2;
+	menu->move(globalButtonPos);
+	menu->show();
 }

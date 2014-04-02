@@ -1,27 +1,34 @@
 #ifndef ADDRESSBARMENU_H
 #define ADDRESSBARMENU_H
 
-#include <QMenu>
+#include <QListWidget>
 
 #include "addressbarbutton.h"
 
-class AddressBarMenu : public QMenu
+class AddressBar;
+
+class AddressBarMenu : public QListWidget
 {
 	Q_OBJECT
 private:
 	QList<AddressBarButton*> subfolders;
 
+	AddressBar *_addressBar;
+
 public:
-	explicit AddressBarMenu(QWidget *parent = 0);
+	explicit AddressBarMenu(AddressBar *addressBar);
+
+	bool eventFilter(QObject *, QEvent *e);
 
 	void appendSubfolder(AddressBarButton *button);
 
 	void removeSubfolder(AddressBarButton *button);
 
-	QAction * exec(const QPoint &p, bool showSubfolers, QAction *action = 0);
-
 public slots:
-	void clear();
+	void show();
+
+signals:
+	void triggered(QAction *action);
 };
 
 #endif // ADDRESSBARMENU_H

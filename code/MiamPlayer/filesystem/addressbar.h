@@ -24,9 +24,9 @@ public:
 
 	virtual bool eventFilter(QObject *obj, QEvent *e);
 
-protected:
-	virtual void mouseMoveEvent(QMouseEvent *);
+	void findAndHighlightButton(const QPoint &p);
 
+protected:
 	virtual void mousePressEvent(QMouseEvent *);
 
 	virtual void paintEvent(QPaintEvent *);
@@ -35,7 +35,7 @@ private:
 	/** Create a special root arrow button.*/
 	void createRoot();
 
-	/** Append 2 buttons to the address bar to navigate through the filesystem. */
+	/** Append a button to the address bar to navigate through the filesystem. */
 	void createSubDirButtons(const QDir &path, bool insertFirst = false);
 
 	void hideFirstButtons(AddressBarButton *buttonDir);

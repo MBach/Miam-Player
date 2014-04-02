@@ -14,6 +14,7 @@ private:
 	QRect _textRect;
 	QRect _arrowRect;
 	bool _atLeastOneSubDir;
+	bool _subMenuOpened;
 
 public:
 	explicit AddressBarButton(const QString &newPath, int index = -1, QWidget *parent = 0);
@@ -25,6 +26,12 @@ public:
 	inline void setIndex(const int &index) { idx = index; }
 
 	inline const QString & path() const { return _path; }
+
+	void setHighlighted(bool b);
+
+	inline bool isHighlighted() const { return _subMenuOpened; }
+
+	inline QRect arrowRect() const { return _arrowRect; }
 
 protected:
 	/** Redefined. */
