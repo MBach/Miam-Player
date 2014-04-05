@@ -15,20 +15,26 @@ private:
 
 	AddressBar *_addressBar;
 
+	/** Used for root button. */
+	bool _hasSeparator;
+
 public:
 	explicit AddressBarMenu(AddressBar *addressBar);
 
+	void appendSubfolder(AddressBarButton *button);
+
 	bool eventFilter(QObject *, QEvent *e);
 
-	void appendSubfolder(AddressBarButton *button);
+	bool hasSeparator() const;
+
+	void insertSeparator() const;
+
+	void moveOrHide(const AddressBarButton *b);
 
 	void removeSubfolder(AddressBarButton *button);
 
 public slots:
 	void show();
-
-signals:
-	void triggered(QAction *action);
 };
 
 #endif // ADDRESSBARMENU_H

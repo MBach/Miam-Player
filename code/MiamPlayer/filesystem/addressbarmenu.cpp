@@ -12,18 +12,17 @@
 #include <QApplication>
 
 AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
-	QListWidget(addressBar), _addressBar(addressBar)
+	QListWidget(addressBar), _addressBar(addressBar), _hasSeparator(false)
 {
 	this->installEventFilter(this);
-	//this->setMaximumWidth(300);
 	this->setMouseTracking(true);
 	this->setUniformItemSizes(true);
 	this->setWindowFlags(Qt::Popup);
 
 	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
+		_addressBar->init(item->data(Qt::UserRole).toString());
 		this->clear();
 		this->close();
-		//_addressBar->createSubDirButtons();
 	});
 }
 
@@ -36,6 +35,17 @@ bool AddressBarMenu::eventFilter(QObject *, QEvent *event)
 		}
 	}
 	return false;
+}
+
+
+bool AddressBarMenu::hasSeparator() const
+{
+	return _hasSeparator;
+}
+
+void AddressBarMenu::insertSeparator() const
+{
+	/// TODO
 }
 
 void AddressBarMenu::appendSubfolder(AddressBarButton *button)
@@ -67,6 +77,16 @@ void AddressBarMenu::removeSubfolder(AddressBarButton *button)
 	}
 }
 
+void AddressBarMenu::moveOrHide(const AddressBarButton *b)
+{
+	QPoint globalButtonPos = b->mapToGlobal(b->rect().bottomRight());
+	globalButtonPos.rx() -= 2 * b->arrowRect().width();
+	globalButtonPos.ry() += 2;
+	//_sender = b;
+	this->move(globalButtonPos);
+	this->show();
+}
+
 void AddressBarMenu::show()
 {
 	static const int maxBeforeScrolling = 18;
@@ -78,5 +98,9 @@ void AddressBarMenu::show()
 		this->setMinimumHeight(maxBeforeScrolling * sizeHintForRow(0) + margin);
 		this->setMaximumHeight(maxBeforeScrolling * sizeHintForRow(0) + margin);
 	}
-	QListWidget::show();
+	if (count() > 0) {
+		QListWidget::show();
+	} else {
+		QListWidget::hide();
+	}
 }

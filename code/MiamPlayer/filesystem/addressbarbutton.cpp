@@ -29,10 +29,15 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 		}
 	}
 
-	// padding + text + (space + arrow + space) if current dir has subdirectories
+	// Text + (space + arrow + space) if current dir has subdirectories
 	int width = fontMetrics().width(d.dirName());
 	if (_atLeastOneSubDir) {
-		width += 40;
+		// Special root folders like "/" or "D:\" are empty
+		if (d.dirName().isEmpty()) {
+			width += 40;
+		} else {
+			width += 25;
+		}
 	}
 	this->setMinimumWidth(width);
 	this->setMaximumWidth(width);
@@ -71,6 +76,8 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 	if (_arrowRect.contains(event->pos())) {
 		this->setHighlighted(true);
 		emit aboutToShowMenu();
+	} else if (_textRect.contains(event->pos())) {
+		emit cdTo(QDir::fromNativeSeparators(_path));
 	}
 }
 
@@ -90,13 +97,14 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		g.setColorAt(1, palette.window().color());
 	}
 	p.fillRect(r, g);
+
+	QDir dir(_path);
 	if (_atLeastOneSubDir) {
 		_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());
 		_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());
 	} else {
 		_textRect = r;
 	}
-	QDir dir(_path);
 
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
@@ -153,6 +161,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		}
 	} else {
 		if (!dir.dirName().isEmpty()) {
+			/// FIXME: long directory name > rect().width(), elide text
 			p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, dir.dirName());
 		}
 	}

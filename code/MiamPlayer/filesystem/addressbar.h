@@ -10,6 +10,7 @@
 #include "addressbarmenu.h"
 
 #include <QLineEdit>
+#include <QStack>
 
 class AddressBar : public QWidget
 {
@@ -18,6 +19,8 @@ private:
 	QHBoxLayout *hBoxLayout;
 	AddressBarMenu *menu;
 	QLineEdit *_lineEdit;
+
+	QStack<QDir> _hiddenFolders;
 
 public:
 	explicit AddressBar(QWidget *parent = 0);
@@ -31,36 +34,31 @@ protected:
 
 	virtual void paintEvent(QPaintEvent *);
 
+	virtual void resizeEvent(QResizeEvent *event);
+
 private:
 	/** Create a special root arrow button.*/
 	void createRoot();
 
 	/** Append a button to the address bar to navigate through the filesystem. */
-	void createSubDirButtons(const QDir &path, bool insertFirst = false);
-
-	void hideFirstButtons(AddressBarButton *buttonDir);
-
-	void showFirstButtons(AddressBarButton *buttonDir);
+	int createSubDirButtons(const QDir &path);
 
 public slots:
 	/** Init with an absolute path. Also used as a callback to a view. */
 	void init(const QString &initPath);
 
 private slots:
-	/** Change the selected path then create subdirectories. */
-	void appendSubDir(QAction *action);
-
 	/** Delete subdirectories located after the arrow button. */
-	void deleteFromArrowFolder(int after);
-
-	/** Delete subdirectories when one clicks in the middle of this address bar. */
-	void deleteFromNamedFolder();
+	void clear();
 
 	/** Show a popup menu with the content of the selected directory. */
 	void showSubDirMenu();
 
 	/** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */
 	void showDrivesAndPreviousFolders();
+
+	void appendDirToRootButton(const QDir &previousDir);
+
 
 signals:
 	void pathChanged(const QString &);

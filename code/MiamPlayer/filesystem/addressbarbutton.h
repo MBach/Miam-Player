@@ -45,6 +45,8 @@ protected:
 
 signals:
 	void aboutToShowMenu();
+
+	void cdTo(const QString &pathToGo);
 };
 
 #endif // ADDRESSBARBUTTON_H
