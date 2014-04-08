@@ -91,7 +91,7 @@ void MainWindow::init()
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	// Init the address bar
-	addressBar->init(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first());
+	addressBar->init(QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()));
 
     playlistManager->init();
 }
@@ -266,7 +266,7 @@ void MainWindow::setupActions()
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
-	connect(addressBar, &AddressBar::pathChanged, filesystem, &FileSystemTreeView::reloadWithNewPath);
+	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
 	// Drag & Drop actions
     connect(dragDropDialog, &DragDropDialog::rememberDragDrop, customizeOptionsDialog, &CustomizeOptionsDialog::setExternalDragDropPreference);

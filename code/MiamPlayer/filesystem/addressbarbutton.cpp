@@ -3,19 +3,17 @@
 #include "settings.h"
 #include <QApplication>
 #include <QDirIterator>
+#include <QFileIconProvider>
 #include <QMouseEvent>
 #include <QStyleOption>
 #include <QStylePainter>
 
 #include <QtDebug>
 
-AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *parent) :
-	QPushButton(parent), _path(QDir::toNativeSeparators(newPath)), idx(index),
+AddressBarButton::AddressBarButton(const QDir &newPath, QWidget *parent) :
+	QPushButton(parent), _path(newPath),
 	_atLeastOneSubDir(false), _subMenuOpened(false)
 {
-	if (_path.right(1) != QDir::separator()) {
-		_path += QDir::separator();
-	}
 	this->setFlat(true);
 	this->setMouseTracking(true);
 
@@ -39,18 +37,15 @@ AddressBarButton::AddressBarButton(const QString &newPath, int index, QWidget *p
 			width += 25;
 		}
 	}
+	this->setText(d.dirName());
 	this->setMinimumWidth(width);
 	this->setMaximumWidth(width);
 }
 
-QString AddressBarButton::currentPath() const
+QSize AddressBarButton::minimumSizeHint() const
 {
-	// Removes the last directory separator, unless for the root on windows which is like C:\. It's not possible to do "cd C:"
-	if (QDir(_path).isRoot()) {
-		return _path;
-	} else {
-		return _path.left(_path.length() - 1);
-	}
+	//if ()
+	return QSize();
 }
 
 void AddressBarButton::setHighlighted(bool b)
@@ -65,19 +60,18 @@ void AddressBarButton::setHighlighted(bool b)
 /** Redefined. */
 void AddressBarButton::mouseMoveEvent(QMouseEvent *)
 {
-	qobject_cast<QWidget *>(this->parent())->repaint();
+	qobject_cast<QWidget *>(this->parent())->update();
 }
 
 /** Redefined. */
 void AddressBarButton::mousePressEvent(QMouseEvent *event)
 {
 	// mouse press in arrow rect => immediate popup menu
-	// in text rect => goto dir, mouse release not relevant
+	// in text rect => goto dir, mouse release event is not relevant
 	if (_arrowRect.contains(event->pos())) {
 		this->setHighlighted(true);
-		emit aboutToShowMenu();
 	} else if (_textRect.contains(event->pos())) {
-		emit cdTo(QDir::fromNativeSeparators(_path));
+		emit cdTo(_path);
 	}
 }
 
@@ -100,68 +94,75 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 
 	QDir dir(_path);
 	if (_atLeastOneSubDir) {
-		_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());
-		_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());
+		if (isLeftToRight()) {
+			_arrowRect = QRect(r.width() - 15, r.y(), 15, r.height());
+			_textRect = QRect(r.x(), r.y(), r.width() - 15, r.height());
+		} else {
+			_arrowRect = QRect(r.x(), r.y(), 15, r.height());
+			_textRect = QRect(r.x() + 15, r.y(), r.width() - 15, r.height());
+		}
 	} else {
 		_textRect = r;
 	}
 
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
+	qDebug() << "repainting" << _subMenuOpened;
 	if (_subMenuOpened || _textRect.contains(pos)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.setBrush(QApplication::palette().highlight().color().lighter());
 		p.drawRect(_textRect);
-		if (_atLeastOneSubDir) {
-			p.drawRect(_arrowRect);
-		}
 	} else if (_subMenuOpened || _arrowRect.contains(pos)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.drawRect(_textRect);
 		p.setBrush(QApplication::palette().highlight().color().lighter());
-		if (_atLeastOneSubDir) {
-			p.drawRect(_arrowRect);
-		}
 	} else {
 		p.setPen(Qt::NoPen);
 		p.setBrush(Qt::NoBrush);
 		p.drawRect(_textRect);
-		if (_atLeastOneSubDir) {
-			p.drawRect(_arrowRect);
-		}
+	}
+	if (_atLeastOneSubDir) {
+		p.drawRect(_arrowRect);
 	}
 	p.restore();
 
 	if (_atLeastOneSubDir) {
 		QStyleOptionButton o;
 		o.initFrom(this);
-		o.rect = _arrowRect.adjusted(4, 7, -2, -4);
+		if (isLeftToRight()) {
+			o.rect = _arrowRect.adjusted(4, 7, -2, -4);
+		} else {
+			o.rect = _arrowRect.adjusted(2, 7, -4, -4);
+		}
+		/// TODO subclass for root button with special arrow when folders are hidden?
 		if (_subMenuOpened) {
 			p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
+		} else if (isLeftToRight()) {
+			p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
 		} else {
-			if (isLeftToRight()) {
-				p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
-			} else {
-				p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
-			}
+			p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
 		}
 	}
 
 	if (dir.isRoot()) {
 		bool absRoot = true;
 		foreach (QFileInfo fileInfo, QDir::drives()) {
-			if (QDir::toNativeSeparators(fileInfo.absolutePath()) == _path) {
-				p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, _path);
+			if (fileInfo.absolutePath() == _path.absolutePath()) {
+				p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, QDir::toNativeSeparators(_path.absolutePath()));
 				absRoot = false;
 				break;
 			}
 		}
 		if (absRoot) {
-			p.drawPixmap(QRect(4, 5, 20, 20), style()->standardPixmap(QStyle::SP_ComputerIcon), QRect(0, 0, 20, 20));
+			QPixmap computer = QFileIconProvider().icon(QFileIconProvider::Computer).pixmap(20, 20);
+			if (isLeftToRight()) {
+				p.drawPixmap(2, 3, 20, 20, computer);
+			} else {
+				p.drawPixmap(18, 3, 20, 20, computer);
+			}
 		}
 	} else {
 		if (!dir.dirName().isEmpty()) {
-			/// FIXME: long directory name > rect().width(), elide text
 			p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, dir.dirName());
 		}
 	}

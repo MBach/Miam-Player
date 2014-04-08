@@ -34,7 +34,7 @@ private:
 
 public slots:
 	/** Reload tree when the path has changed in the address bar. */
-	void reloadWithNewPath(const QString &path);
+	void reloadWithNewPath(const QDir &path);
 
 private slots:
 	/** Send one folder to the existing music locations. */

@@ -96,9 +96,9 @@ void FileSystemTreeView::findAll(const QPersistentModelIndex &index, QStringList
 }
 
 /** Reload tree when the path has changed in the address bar. */
-void FileSystemTreeView::reloadWithNewPath(const QString &path)
+void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 {
-	theIndex = fileSystemModel->setRootPath(path);
+	theIndex = fileSystemModel->setRootPath(path.absolutePath());
 	this->setRootIndex(theIndex);
 	this->collapseAll();
 	this->update(theIndex);

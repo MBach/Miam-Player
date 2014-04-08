@@ -1,15 +1,13 @@
 #include "addressbarmenu.h"
 
-#include <QAction>
-#include <QDir>
-#include <QMouseEvent>
-#include <QFileIconProvider>
-
-#include <QtDebug>
-
 #include "addressbar.h"
 
 #include <QApplication>
+#include <QMouseEvent>
+#include <QScrollBar>
+#include <QStylePainter>
+
+#include <QtDebug>
 
 AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
 	QListWidget(addressBar), _addressBar(addressBar), _hasSeparator(false)
@@ -20,18 +18,30 @@ AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
 	this->setWindowFlags(Qt::Popup);
 
 	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
-		_addressBar->init(item->data(Qt::UserRole).toString());
+		_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
 		this->clear();
 		this->close();
 	});
+
+	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 bool AddressBarMenu::eventFilter(QObject *, QEvent *event)
 {
 	if (event->type() == QEvent::MouseMove) {
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+		/// XXX: wtf notify() is not working?
 		if (!rect().contains(mouseEvent->pos())) {
 			_addressBar->findAndHighlightButton(mapToGlobal(mouseEvent->pos()));
+		}
+	} else if (event->type() == QEvent::MouseButtonPress) {
+		// Close this popup when one is clicking outside the menu (otherwise this widget stays on top)
+		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+		if (!rect().contains(mouseEvent->pos())) {
+			this->close();
+			foreach (AddressBarButton *b, _addressBar->findChildren<AddressBarButton*>()) {
+				b->setHighlighted(false);
+			}
 		}
 	}
 	return false;
@@ -43,48 +53,97 @@ bool AddressBarMenu::hasSeparator() const
 	return _hasSeparator;
 }
 
-void AddressBarMenu::insertSeparator() const
+void AddressBarMenu::insertSeparator()
 {
-	/// TODO
+	QListWidgetItem *s = new QListWidgetItem(this);
+	s->setSizeHint(QSize(width(), 1));
+	s->setData(Qt::UserRole + 1, 1);
+	_hasSeparator = true;
 }
 
-void AddressBarMenu::appendSubfolder(AddressBarButton *button)
+/** Redefined to force update the viewport. */
+void AddressBarMenu::mouseMoveEvent(QMouseEvent *e)
 {
-	foreach (QFileInfo drive, QDir::drives()) {
-		if (QDir::toNativeSeparators(drive.absolutePath()).remove(QDir::separator()) != button->text()) {
-			subfolders.prepend(button);
-		}
-		break;
-	}
+	this->viewport()->update();
+	QListWidget::mouseMoveEvent(e);
 }
 
-void AddressBarMenu::removeSubfolder(AddressBarButton *button)
+/** Redefined to be able to display items with the current theme. */
+void AddressBarMenu::paintEvent(QPaintEvent *)
 {
-	for (int i = 0; i < subfolders.length(); i++) {
-		if (button->currentPath() == subfolders.at(i)->currentPath()) {
-			subfolders.removeAt(i);
-			break;
-		}
+	QStylePainter p(this->viewport());
+	// Vertical frame between icons and text
+	p.save();
+	p.setPen(QApplication::palette().midlight().color());
+	p.drawLine(33, 0, 33, rect().height());
+	p.restore();
+
+	int offsetSB = 0;
+	if (verticalScrollBar()->isVisible()) {
+		offsetSB = verticalScrollBar()->width() - 1;
 	}
-	// Remove the separator
-	if (subfolders.isEmpty()) {
-		foreach (QAction *action, actions()) {
-			if (action->isSeparator()) {
-				delete action;
-				break;
+
+	// Subdirectories in the popup menu
+	for (int i = 0; i < count(); i ++) {
+		QListWidgetItem *it = item(i);
+		QRect r = this->visualItemRect(it);
+		//QSize s = it->sizeHint();
+		//QRect r(0, i * s.height(), );
+		r.setWidth(r.width() - offsetSB);
+
+		if (it->data(Qt::UserRole + 1).toInt() == 1) {
+			p.save();
+			p.setPen(QApplication::palette().midlight().color());
+			p.drawLine(r.x(), r.y(), r.width(), r.y());
+			p.restore();
+			continue;
+		}
+		r.adjust(1, 1, -4, -1);
+		// Draw: Highlight, Icon, Text
+		if (r.isValid()) {
+			p.save();
+			if (r.contains(mapFromGlobal(QCursor::pos()))) {
+				p.setPen(QApplication::palette().highlight().color());
+				p.setBrush(QApplication::palette().highlight().color().lighter());
+				p.drawRect(r);
+				p.setPen(QColor(192, 192, 192, 128));
+				p.drawLine(33, r.top() + 1, 33, r.bottom());
 			}
+			p.restore();
+
+			QRect iconRect(r.x() + 6, r.y() + 2, 19, 19);
+			p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19)));
+
+			QRect textRect = r.adjusted(37, 0, 0, 0);
+			QString text = fontMetrics().elidedText(it->text(), Qt::ElideRight, textRect.width());
+			p.save();
+			//qDebug() << text << it->data(Qt::FontRole);
+			p.setFont(it->font());
+			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
+			p.restore();
 		}
 	}
 }
 
 void AddressBarMenu::moveOrHide(const AddressBarButton *b)
 {
-	QPoint globalButtonPos = b->mapToGlobal(b->rect().bottomRight());
-	globalButtonPos.rx() -= 2 * b->arrowRect().width();
-	globalButtonPos.ry() += 2;
-	//_sender = b;
+	QPoint globalButtonPos;
+	if (isLeftToRight()) {
+		globalButtonPos = b->mapToGlobal(b->rect().bottomRight());
+		globalButtonPos.rx() -= 2 * b->arrowRect().width();
+	} else {
+		globalButtonPos = b->mapToGlobal(b->rect().bottomLeft());
+		globalButtonPos.rx() -= (this->width() - 2 * b->arrowRect().width());
+	}
+	globalButtonPos.ry() += 1;
 	this->move(globalButtonPos);
 	this->show();
+}
+
+void AddressBarMenu::clear()
+{
+	_hasSeparator = false;
+	QListWidget::clear();
 }
 
 void AddressBarMenu::show()

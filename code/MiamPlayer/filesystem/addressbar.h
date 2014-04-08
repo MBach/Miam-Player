@@ -18,25 +18,25 @@ class AddressBar : public QWidget
 private:
 	QHBoxLayout *hBoxLayout;
 	AddressBarMenu *menu;
-	QLineEdit *_lineEdit;
-
 	QStack<QDir> _hiddenFolders;
+
+	AddressBarButton *_lastHighlightedButton;
 
 public:
 	explicit AddressBar(QWidget *parent = 0);
 
-	virtual bool eventFilter(QObject *obj, QEvent *e);
-
+	/** Called by the popup menu when one is moving the mouse cursor. */
 	void findAndHighlightButton(const QPoint &p);
 
 protected:
-	virtual void mousePressEvent(QMouseEvent *);
-
 	virtual void paintEvent(QPaintEvent *);
 
 	virtual void resizeEvent(QResizeEvent *event);
 
 private:
+	/** Delete subdirectories located after the arrow button. */
+	void clear();
+
 	/** Create a special root arrow button.*/
 	void createRoot();
 
@@ -45,23 +45,17 @@ private:
 
 public slots:
 	/** Init with an absolute path. Also used as a callback to a view. */
-	void init(const QString &initPath);
+	void init(const QDir &initDir);
 
 private slots:
-	/** Delete subdirectories located after the arrow button. */
-	void clear();
-
 	/** Show a popup menu with the content of the selected directory. */
-	void showSubDirMenu();
+	void showSubDirMenu(AddressBarButton *button);
 
 	/** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */
 	void showDrivesAndPreviousFolders();
 
-	void appendDirToRootButton(const QDir &previousDir);
-
-
 signals:
-	void pathChanged(const QString &);
+	void aboutToChangePath(const QDir &);
 };
 
 #endif // ADDRESSBAR_H

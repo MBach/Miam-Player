@@ -1,15 +1,14 @@
 #ifndef ADDRESSBARBUTTON_H
 #define ADDRESSBARBUTTON_H
 
+#include <QDir>
 #include <QPushButton>
 
 class AddressBarButton : public QPushButton
 {
 	Q_OBJECT
 private:
-	QString _path;
-
-	int idx;
+	QDir _path;
 
 	QRect _textRect;
 	QRect _arrowRect;
@@ -17,15 +16,11 @@ private:
 	bool _subMenuOpened;
 
 public:
-	explicit AddressBarButton(const QString &newPath, int index = -1, QWidget *parent = 0);
+	explicit AddressBarButton(const QDir &newPath, QWidget *parent = 0);
 
-	QString currentPath() const;
+	inline const QDir & path() const { return _path; }
 
-	inline int index() const { return idx; }
-
-	inline void setIndex(const int &index) { idx = index; }
-
-	inline const QString & path() const { return _path; }
+	virtual QSize minimumSizeHint() const;
 
 	void setHighlighted(bool b);
 
@@ -46,7 +41,7 @@ protected:
 signals:
 	void aboutToShowMenu();
 
-	void cdTo(const QString &pathToGo);
+	void cdTo(const QDir &dir);
 };
 
 #endif // ADDRESSBARBUTTON_H
