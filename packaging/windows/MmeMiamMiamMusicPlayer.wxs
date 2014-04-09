@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
-	<?define Qt="C:\Qt\Qt5.2.1\5.2.1\msvc2012_64" ?>
+	<?define Qt="C:\Qt\Qt5.3.0\5.3\msvc2013_64" ?>
 	<?define MiamProjectSrc="C:\dev\Madame-Miam-Miam-Music-Player" ?>
-	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player\build" ?>
+	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player-build" ?>
 	<?define TagLib="C:\dev\Madame-Miam-Miam-Music-Player\lib\release" ?>
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
 
@@ -63,14 +63,14 @@
 			<Component Id="miamUniqueLibrary" Guid="166331FF-988C-4A11-AE7A-63E8914FC657">
 				<File Id="miamUniqueLibrary" Source="$(var.MiamProjectBuild)\MiamUniqueLibrary\release\MiamUniqueLibrary.dll" KeyPath="yes" Checksum="yes"/>
 			</Component>
-			<Component Id="icudt51" Guid="e19b830f-3290-4517-8a8e-97996606ed05">
-				<File Id="icudt51" Source="$(var.Qt)\bin\icudt51.dll" KeyPath="yes"/>
+			<Component Id="icudt52" Guid="e19b830f-3290-4517-8a8e-97996606ed05">
+				<File Id="icudt52" Source="$(var.Qt)\bin\icudt52.dll" KeyPath="yes"/>
 			</Component>
-			<Component Id="icuin51" Guid="f2f0574f-9ba6-4aae-81cb-c9baa90ad608">
-				<File Id="icuin51" Source="$(var.Qt)\bin\icuin51.dll" KeyPath="yes"/>
+			<Component Id="icuin52" Guid="f2f0574f-9ba6-4aae-81cb-c9baa90ad608">
+				<File Id="icuin52" Source="$(var.Qt)\bin\icuin52.dll" KeyPath="yes"/>
 			</Component>
-			<Component Id="icuuc51" Guid="04322ac7-7c7b-4b93-aabf-6108d035210d">
-				<File Id="icuuc51" Source="$(var.Qt)\bin\icuuc51.dll" KeyPath="yes"/>
+			<Component Id="icuuc52" Guid="04322ac7-7c7b-4b93-aabf-6108d035210d">
+				<File Id="icuuc52" Source="$(var.Qt)\bin\icuuc52.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="libEGL" Guid="bad70be1-595d-45e1-b027-0ec1ed6b8402">
 				<File Id="libEGL" Source="$(var.Qt)\bin\libEGL.dll" KeyPath="yes"/>
@@ -171,9 +171,9 @@
 			<ComponentRef Id="libtag" />
 			<ComponentRef Id="miamPlayer" />
 			<ComponentRef Id="miamUniqueLibrary" />
-			<ComponentRef Id="icudt51" />
-			<ComponentRef Id="icuin51" />
-			<ComponentRef Id="icuuc51" />
+			<ComponentRef Id="icudt52" />
+			<ComponentRef Id="icuin52" />
+			<ComponentRef Id="icuuc52" />
 			<ComponentRef Id="libEGL" />
 			<ComponentRef Id="libGLESv2" />
 			<ComponentRef Id="Qt5Core" />
