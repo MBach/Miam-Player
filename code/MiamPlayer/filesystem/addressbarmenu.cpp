@@ -87,6 +87,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 	for (int i = 0; i < count(); i ++) {
 		QListWidgetItem *it = item(i);
 		QRect r = this->visualItemRect(it);
+		/// FIXME
 		//QSize s = it->sizeHint();
 		//QRect r(0, i * s.height(), );
 		r.setWidth(r.width() - offsetSB);
@@ -117,7 +118,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 			QRect textRect = r.adjusted(37, 0, 0, 0);
 			QString text = fontMetrics().elidedText(it->text(), Qt::ElideRight, textRect.width());
 			p.save();
-			//qDebug() << text << it->data(Qt::FontRole);
+			/// FXIME
 			p.setFont(it->font());
 			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
 			p.restore();

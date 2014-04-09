@@ -55,6 +55,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		_mediaPlayer.data()->blockSignals(false);
 		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
+		//this->viewport()->update();
 	});
 
 	// Link core multimedia actions
@@ -64,7 +65,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		}
 	});
 	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, [=] () {
-		this->update();
+		this->viewport()->update();
 	});
 
 	// Context menu on tracks

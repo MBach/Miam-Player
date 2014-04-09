@@ -33,14 +33,11 @@ void AddressBar::findAndHighlightButton(const QPoint &p)
 			if (!b->isHighlighted()) {
 				b->setHighlighted(true);
 				_lastHighlightedButton = b;
-				//qDebug() << "findAndHighlightButton true" << b->path().absolutePath();
 			}
 			menu->moveOrHide(b);
 		} else {
-			//qDebug() << "findAndHighlightButton false" << b->path().absolutePath();
 			if (b != _lastHighlightedButton || menu->isHidden()) {
 				b->setHighlighted(false);
-				//_lastHighlightedButton = NULL;
 			}
 		}
 	}
@@ -137,6 +134,11 @@ void AddressBar::clear()
 			}
 		}
 	}
+	// Remove focus on root button
+	AddressBarButton *root = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(0)->widget());
+	if (root->isHighlighted()) {
+		root->setHighlighted(false);
+	}
 
 	// Delete hidden folders too
 	if (!_hiddenFolders.isEmpty()) {
@@ -157,7 +159,6 @@ int AddressBar::createSubDirButtons(const QDir &path)
 {
 	AddressBarButton *buttonDir = new AddressBarButton(path.absolutePath(), this);
 	buttonDir->setIcon(QFileIconProvider().icon(QFileInfo(path.absolutePath())));
-	connect(buttonDir, &AddressBarButton::cdTo, this, &AddressBar::init);
 	connect(buttonDir, &AddressBarButton::aboutToShowMenu, this, [=]() {
 		this->showSubDirMenu(buttonDir);
 	});
@@ -194,7 +195,7 @@ void AddressBar::init(const QDir &initDir)
 				}
 			}
 			if (hasSubDir) {
-				qDebug() << "width" << dir.dirName();
+				//qDebug() << "width" << dir.dirName();
 				listDirWidth.append(margin + fontMetrics().width(dir.dirName()) + margin + arrowRectWidth);
 			} else {
 				listDirWidth.append(margin + fontMetrics().width(dir.dirName()));
@@ -208,27 +209,30 @@ void AddressBar::init(const QDir &initDir)
 		simulatedWidth += listDirWidth.at(i);
 	}
 
-	qDebug() << "simulatedWidth" << simulatedWidth;
+	qDebug() << "simulatedWidth before inserting buttons" << simulatedWidth;
+	qDebug() << "real width" << width();
 
 	// Check if we need to create buttons or not
 	dir = dirTmp;
-	int availableWidthForNewButtons = width() - simulatedWidth;
+	int availableWidthForNewButtons = width() - 40 - 40; // (root + drive)
 	while (!dir.isRoot()) {
 		if (availableWidthForNewButtons > 0) {
 			// Just append a new button to the address bar
 			availableWidthForNewButtons -= this->createSubDirButtons(dir);
 		} else {
 			// Insert last item (or truncate if too large) first, and concatenate previous folders
-			_hiddenFolders.append(dir);
+			//_hiddenFolders.append(dir);
+			_hiddenFolders.prepend(dir);
 		}
-		qDebug() << "init (while)" << dir.path() << availableWidthForNewButtons;
+		qDebug() << "init (while)" << dir.path() << "availableWidthForNewButtons" << availableWidthForNewButtons;
 		dir.cdUp();
+		//availableWidthForNewButtons = simulatedWidth;
 	}
 	qDebug() << "init (end)" << dir.path() << availableWidthForNewButtons;
 	if (availableWidthForNewButtons > 0) {
 		this->createSubDirButtons(dir);
 	} else {
-		_hiddenFolders.append(dir);
+		_hiddenFolders.prepend(dir);
 	}
 	emit aboutToChangePath(dirTmp);
 }
@@ -239,7 +243,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 	// Delete existing entries
 	menu->clear();
 
-	for (int i = 0; i < _hiddenFolders.count(); i++) {
+	for (int i = _hiddenFolders.count() - 1; i >= 0; i--) {
 		QDir d = _hiddenFolders.at(i);
 		QString text = d.dirName().isEmpty() ? QDir::toNativeSeparators(d.absolutePath()) : d.dirName();
 		QListWidgetItem *item = new QListWidgetItem(QFileIconProvider().icon(QFileInfo(d.absolutePath())), text, menu);
@@ -290,10 +294,7 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 			nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i + 1)->widget());
 			break;
 		}
-		qDebug() << "layoutItem?" << (layoutItem == NULL);
 	}
-
-	qDebug() << "next button is NULL?" << (nextButton == NULL);
 
 	QDirIterator it(button->path().absolutePath(), QDir::NoDotAndDotDot | QDir::Dirs | QDir::NoSymLinks);
 	while (it.hasNext()) {
@@ -304,16 +305,12 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 		item->setSizeHint(QSize(menu->viewport()->width(), 24));
 		item->setData(Qt::UserRole, absDirPath);
 
-		if (nextButton != NULL) {
-			qDebug() << "item in my menu text:" << item->text() << "with path:" << absDirPath << "nextbutton Text:" << nextButton->text() << nextButton->path().absolutePath();
-		}
 		// Check if the new submenu has one of its items already displayed, then make it bold
 		if (nextButton != NULL && absDirPath == nextButton->path().absolutePath()) {
 			QFont font = item->font();
 			font.setBold(true);
-			//item->setFont(font);
-			item->setData(Qt::FontRole, font);
-			//qDebug() << item->text() << item->data(Qt::FontRole);
+			/// FXIME
+			item->setFont(font);
 		}
 	}
 	menu->moveOrHide(button);

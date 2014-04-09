@@ -4,6 +4,9 @@
 #include <QDir>
 #include <QPushButton>
 
+/// Forward declaration
+class AddressBar;
+
 class AddressBarButton : public QPushButton
 {
 	Q_OBJECT
@@ -13,10 +16,12 @@ private:
 	QRect _textRect;
 	QRect _arrowRect;
 	bool _atLeastOneSubDir;
-	bool _subMenuOpened;
+	bool _highlighted;
+
+	AddressBar *_addressBar;
 
 public:
-	explicit AddressBarButton(const QDir &newPath, QWidget *parent = 0);
+	explicit AddressBarButton(const QDir &newPath, AddressBar *parent);
 
 	inline const QDir & path() const { return _path; }
 
@@ -24,7 +29,7 @@ public:
 
 	void setHighlighted(bool b);
 
-	inline bool isHighlighted() const { return _subMenuOpened; }
+	inline bool isHighlighted() const { return _highlighted; }
 
 	inline QRect arrowRect() const { return _arrowRect; }
 
@@ -40,8 +45,6 @@ protected:
 
 signals:
 	void aboutToShowMenu();
-
-	void cdTo(const QDir &dir);
 };
 
 #endif // ADDRESSBARBUTTON_H

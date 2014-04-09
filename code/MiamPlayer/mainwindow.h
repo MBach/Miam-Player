@@ -62,12 +62,19 @@ public:
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
-	void changeEvent(QEvent *event);
-	void closeEvent(QCloseEvent *event);
-	void dropEvent(QDropEvent *event);
-	void dragEnterEvent(QDragEnterEvent *event);
-	void dragMoveEvent(QDragMoveEvent *event);
-	void moveEvent(QMoveEvent *);
+	virtual void changeEvent(QEvent *event);
+
+	virtual void closeEvent(QCloseEvent *event);
+
+	virtual void dropEvent(QDropEvent *event);
+
+	virtual void dragEnterEvent(QDragEnterEvent *event);
+
+	virtual void dragMoveEvent(QDragMoveEvent *event);
+
+	virtual bool event(QEvent *event);
+
+	virtual void moveEvent(QMoveEvent *);
 
 public slots:
 	void bindShortcut(const QString&, int keySequence);

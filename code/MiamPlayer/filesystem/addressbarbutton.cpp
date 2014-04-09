@@ -1,5 +1,7 @@
 #include "addressbarbutton.h"
 
+#include "addressbar.h"
+
 #include "settings.h"
 #include <QApplication>
 #include <QDirIterator>
@@ -10,9 +12,9 @@
 
 #include <QtDebug>
 
-AddressBarButton::AddressBarButton(const QDir &newPath, QWidget *parent) :
+AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent) :
 	QPushButton(parent), _path(newPath),
-	_atLeastOneSubDir(false), _subMenuOpened(false)
+	_atLeastOneSubDir(false), _highlighted(false), _addressBar(parent)
 {
 	this->setFlat(true);
 	this->setMouseTracking(true);
@@ -50,7 +52,7 @@ QSize AddressBarButton::minimumSizeHint() const
 
 void AddressBarButton::setHighlighted(bool b)
 {
-	_subMenuOpened = b;
+	_highlighted = b;
 	if (b) {
 		emit aboutToShowMenu();
 	}
@@ -71,7 +73,7 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 	if (_arrowRect.contains(event->pos())) {
 		this->setHighlighted(true);
 	} else if (_textRect.contains(event->pos())) {
-		emit cdTo(_path);
+		_addressBar->init(_path);
 	}
 }
 
@@ -107,12 +109,11 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
-	qDebug() << "repainting" << _subMenuOpened;
-	if (_subMenuOpened || _textRect.contains(pos)) {
+	if (_highlighted || _textRect.contains(pos)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.setBrush(QApplication::palette().highlight().color().lighter());
 		p.drawRect(_textRect);
-	} else if (_subMenuOpened || _arrowRect.contains(pos)) {
+	} else if (_highlighted || _arrowRect.contains(pos)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.drawRect(_textRect);
 		p.setBrush(QApplication::palette().highlight().color().lighter());
@@ -135,7 +136,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			o.rect = _arrowRect.adjusted(2, 7, -4, -4);
 		}
 		/// TODO subclass for root button with special arrow when folders are hidden?
-		if (_subMenuOpened) {
+		if (_highlighted) {
 			p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
 		} else if (isLeftToRight()) {
 			p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);

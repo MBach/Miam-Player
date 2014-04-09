@@ -20,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	this->setAcceptDrops(true);
-	//this->setAttribute(Qt::WA_OpaquePaintEvent);
 	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
 
 	// Special behaviour for media buttons
@@ -89,9 +88,6 @@ void MainWindow::init()
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	splitter->restoreState(settings->value("splitterState").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
-
-	// Init the address bar
-	addressBar->init(QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()));
 
     playlistManager->init();
 }
@@ -359,6 +355,19 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
+}
+
+bool MainWindow::event(QEvent *e)
+{
+	bool b = QMainWindow::event(e);
+	// Init the address bar. It's really important to have the exact on screen width
+	if (e->type() == QEvent::Show) {
+		if (!filesystem->isVisible()) {
+			addressBar->setMinimumWidth(leftTabs->width());
+		}
+		addressBar->init(QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()));
+	}
+	return b;
 }
 
 void MainWindow::moveEvent(QMoveEvent *event)
