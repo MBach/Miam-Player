@@ -209,9 +209,6 @@ void AddressBar::init(const QDir &initDir)
 		simulatedWidth += listDirWidth.at(i);
 	}
 
-	qDebug() << "simulatedWidth before inserting buttons" << simulatedWidth;
-	qDebug() << "real width" << width();
-
 	// Check if we need to create buttons or not
 	dir = dirTmp;
 	int availableWidthForNewButtons = width() - 40 - 40; // (root + drive)
@@ -221,14 +218,10 @@ void AddressBar::init(const QDir &initDir)
 			availableWidthForNewButtons -= this->createSubDirButtons(dir);
 		} else {
 			// Insert last item (or truncate if too large) first, and concatenate previous folders
-			//_hiddenFolders.append(dir);
 			_hiddenFolders.prepend(dir);
 		}
-		qDebug() << "init (while)" << dir.path() << "availableWidthForNewButtons" << availableWidthForNewButtons;
 		dir.cdUp();
-		//availableWidthForNewButtons = simulatedWidth;
 	}
-	qDebug() << "init (end)" << dir.path() << availableWidthForNewButtons;
 	if (availableWidthForNewButtons > 0) {
 		this->createSubDirButtons(dir);
 	} else {
@@ -266,11 +259,11 @@ void AddressBar::showDrivesAndPreviousFolders()
 		QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(drive), driveName, menu);
 		item->setSizeHint(QSize(menu->viewport()->width(), 24));
 		item->setData(Qt::UserRole, drive.absoluteFilePath());
-		if (!QDir(driveName).isReadable()) {
+		if (!drive.isReadable()) {
 			item->setFlags(Qt::NoItemFlags);
 		}
 		// Check if the new submenu has one of its items already displayed, then make it bold
-		if (nextButton != NULL && item->text() == nextButton->text()) {
+		if (nextButton != NULL && drive.dir() == nextButton->path()) {
 			QFont font = item->font();
 			font.setBold(true);
 			item->setFont(font);
@@ -291,10 +284,12 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 	for (int i = 1; i < hBoxLayout->count() - 2; i++) {
 		QLayoutItem *layoutItem = hBoxLayout->itemAt(i);
 		if (layoutItem != NULL && layoutItem->widget() != NULL && layoutItem->widget() == this) {
-			nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i + 1)->widget());
+			nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i - 1)->widget());
 			break;
 		}
 	}
+
+	qDebug() << button->text() << (nextButton == NULL);
 
 	QDirIterator it(button->path().absolutePath(), QDir::NoDotAndDotDot | QDir::Dirs | QDir::NoSymLinks);
 	while (it.hasNext()) {

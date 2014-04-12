@@ -25,8 +25,6 @@ public:
 
 	inline const QDir & path() const { return _path; }
 
-	virtual QSize minimumSizeHint() const;
-
 	void setHighlighted(bool b);
 
 	inline bool isHighlighted() const { return _highlighted; }

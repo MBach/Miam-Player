@@ -38,16 +38,12 @@ AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent) :
 		} else {
 			width += 25;
 		}
+		this->setMinimumWidth(width);
+	} else {
+		this->setMinimumWidth(width + 15);
 	}
 	this->setText(d.dirName());
-	this->setMinimumWidth(width);
 	this->setMaximumWidth(width);
-}
-
-QSize AddressBarButton::minimumSizeHint() const
-{
-	//if ()
-	return QSize();
 }
 
 void AddressBarButton::setHighlighted(bool b)
@@ -104,7 +100,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			_textRect = QRect(r.x() + 15, r.y(), r.width() - 15, r.height());
 		}
 	} else {
-		_textRect = r;
+		_textRect = r.adjusted(0, 0, -5, 0);
 	}
 
 	QPoint pos = mapFromGlobal(QCursor::pos());

@@ -18,9 +18,11 @@ AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
 	this->setWindowFlags(Qt::Popup);
 
 	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
-		_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
-		this->clear();
-		this->close();
+		if (!item->flags().testFlag(Qt::NoItemFlags)) {
+			_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
+			this->clear();
+			this->close();
+		}
 	});
 
 	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -102,23 +104,30 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 		r.adjust(1, 1, -4, -1);
 		// Draw: Highlight, Icon, Text
 		if (r.isValid()) {
-			p.save();
-			if (r.contains(mapFromGlobal(QCursor::pos()))) {
-				p.setPen(QApplication::palette().highlight().color());
-				p.setBrush(QApplication::palette().highlight().color().lighter());
-				p.drawRect(r);
-				p.setPen(QColor(192, 192, 192, 128));
-				p.drawLine(33, r.top() + 1, 33, r.bottom());
-			}
-			p.restore();
-
 			QRect iconRect(r.x() + 6, r.y() + 2, 19, 19);
-			p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19)));
+			bool itemIsEnabled = true;
+			if (it->flags().testFlag(Qt::NoItemFlags)) {
+				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19), QIcon::Disabled));
+				itemIsEnabled = false;
+			} else {
+				p.save();
+				if (r.contains(mapFromGlobal(QCursor::pos()))) {
+					p.setPen(QApplication::palette().highlight().color());
+					p.setBrush(QApplication::palette().highlight().color().lighter());
+					p.drawRect(r);
+					p.setPen(QColor(192, 192, 192, 128));
+					p.drawLine(33, r.top() + 1, 33, r.bottom());
+				}
+				p.restore();
+				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19)));
+			}
 
 			QRect textRect = r.adjusted(37, 0, 0, 0);
 			QString text = fontMetrics().elidedText(it->text(), Qt::ElideRight, textRect.width());
 			p.save();
-			/// FXIME
+			if (!itemIsEnabled) {
+				p.setPen(QApplication::palette().color(QPalette::Disabled, QPalette::WindowText));
+			}
 			p.setFont(it->font());
 			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
 			p.restore();
