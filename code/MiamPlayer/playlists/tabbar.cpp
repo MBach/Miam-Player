@@ -10,17 +10,19 @@
 TabBar::TabBar(TabPlaylist *parent) :
 	QTabBar(parent), lineEdit(new QLineEdit(this)), tabPlaylist(parent)
 {
-	this->setTabsClosable(true);
 	this->addTab(QString());
+	this->setTabsClosable(true);
 	this->setAcceptDrops(true);
 	this->setDocumentMode(true);
-	this->setTabButton(count()-1, QTabBar::RightSide, 0);
+	QWidget *w = this->tabButton(count() - 1, RightSide);
+	this->setTabButton(count()-1, RightSide, NULL);
 	this->setUsesScrollButtons(false);
 
 	lineEdit->setVisible(false);
 	lineEdit->setAlignment(Qt::AlignCenter);
 	lineEdit->setFrame(false);
 	lineEdit->installEventFilter(this);
+	lineEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	_timer = new QTimer(this);
 	_timer->setInterval(300);
@@ -48,6 +50,7 @@ TabBar::TabBar(TabPlaylist *parent) :
 			}
 		}
 	});
+	w->deleteLater();
 }
 
 /** Redefined to return a square for the last tab which is the [+] button. */

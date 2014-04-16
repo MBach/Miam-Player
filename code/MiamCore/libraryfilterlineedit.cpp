@@ -17,6 +17,8 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 			this->setMinimumHeight(fontMetrics().height() * 1.6);
 		}
 	});
+
+	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)

@@ -10,6 +10,7 @@
 TreeView::TreeView(QWidget *parent) :
 	QTreeView(parent)
 {
+	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 /** Alerts the user if there's too many tracks to add. */
