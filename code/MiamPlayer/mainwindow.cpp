@@ -178,6 +178,7 @@ void MainWindow::setupActions()
 		Settings::getInstance()->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->setHidden(false);
+		libraryHeader->setHidden(false);
 		widgetSearchBar->setHidden(false);
 		actionScanLibrary->setEnabled(true);
 		actionScanLibrary->trigger();

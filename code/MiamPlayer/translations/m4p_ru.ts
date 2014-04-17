@@ -362,6 +362,18 @@
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>What is the behaviour for columns?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resize columns to contents</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep all columns visible</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -522,14 +534,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Global background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Text of items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Background for playlists and the library</source>
         <translation type="unfinished"></translation>
     </message>
@@ -579,6 +583,14 @@
     </message>
     <message>
         <source>Current item in loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I display a large and faded cover when you&apos;re expanding an album?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Opacity</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -644,6 +656,22 @@
     </message>
     <message>
         <source>Years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist – Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist \ Album</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -901,6 +929,10 @@
     </message>
     <message>
         <source>Ctrl+W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist \ Album</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

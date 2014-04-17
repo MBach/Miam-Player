@@ -6,9 +6,10 @@
 	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player-build" ?>
 	<?define TagLib="C:\dev\Madame-Miam-Miam-Music-Player\lib\release" ?>
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
+	<?define PluginPath="C:\dev\windows-toolbar\build\release" ?>
 
 	<Product Name="MmeMiamMiamMusicPlayer" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
-	Language="1033" Codepage="1252" Version="0.6.0" Manufacturer="MmeMiamMiam">
+	Language="1033" Codepage="1252" Version="0.6.1" Manufacturer="MmeMiamMiam">
 
 		<Package Id="*" Keywords="Installer" Description="Installer for Madame Miam-Miam's Music Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
 			InstallPrivileges="elevated" InstallScope="perMachine" InstallerVersion="405" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
@@ -26,6 +27,7 @@
 					<Directory Id="mediaservice" Name="mediaservice" />
 					<Directory Id="platforms" Name="platforms" />
 					<Directory Id="playlistformats" Name="playlistformats" />
+					<Directory Id="plugins" Name="plugins" />
 					<Directory Id="sqldrivers" Name="sqldrivers" />
 					<Directory Id="translations" Name="translations" />
 				</Directory>
@@ -165,6 +167,13 @@
 				<File Id="qtTranslationZH" Source="$(var.Qt)\translations\qt_zh_CN.qm"/>
 			</Component>
 		</DirectoryRef>
+		
+		<!-- Subdirectory with plugins -->
+		<DirectoryRef Id="plugins">
+			<Component Id="plugins" Guid="a3bcfb13-ac0b-499c-a486-14d7617de3ab">
+				<File Id="windowsToolbar" Source="$(var.PluginPath)\windows-toolbar.dll" KeyPath="yes"/>
+			</Component>
+		</DirectoryRef>
 
 		<!-- The core player cannot be unchoose during install -->
 		<Feature Id="MainApplication" ConfigurableDirectory="APPLICATIONROOTDIRECTORY" Title="The music player" Description="Madame MiamMiam's Music Player" Level="1" AllowAdvertise="no" Absent="disallow">
@@ -177,6 +186,7 @@
 			<ComponentRef Id="icuuc52" />
 			<ComponentRef Id="libEGL" />
 			<ComponentRef Id="libGLESv2" />
+			<ComponentRef Id="plugins" />
 			<ComponentRef Id="Qt5Core" />
 			<ComponentRef Id="Qt5Gui" />
 			<ComponentRef Id="Qt5Multimedia" />

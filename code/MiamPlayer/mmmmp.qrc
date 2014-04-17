@@ -100,11 +100,13 @@
         <file alias="kr">language/kr.png</file>
         <file alias="th">language/th.png</file>
         <file alias="vn">language/vn.png</file>
+        <file alias="cs">language/cs.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="en">translations/m4p_en.qm</file>
         <file alias="fr">translations/m4p_fr.qm</file>
         <file alias="ar">translations/m4p_ar.qm</file>
+        <file alias="cs">translations/m4p_cs.qm</file>
     </qresource>
     <qresource prefix="/icons/win">
         <file alias="closeTabsHover">config/windows/close_tabs_hover.png</file>
@@ -112,4 +114,5 @@
     <qresource prefix="/icons/unix">
         <file alias="closeTabsHover">config/unix/close_tabs_hover.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

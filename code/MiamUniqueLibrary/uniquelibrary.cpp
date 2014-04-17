@@ -60,10 +60,10 @@ void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
 					  fh.title(), fh.year().toInt());
 }
 
-void UniqueLibrary::insertTrack(const QString &, const QString &/*artistAlbum*/, const QString &/*artist*/, const QString &/*album*/,
-				 int /*discNumber*/, const QString &/*title*/, int /*year*/)
+void UniqueLibrary::insertTrack(const QString &, const QString &artistAlbum, const QString &artist, const QString &album,
+				 int discNumber, const QString &title, int year)
 {
-	/*QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	AlbumForm *wAlbum = NULL;
 	if (_albums.contains(album)) {
 		wAlbum = _albums.value(album);
@@ -75,7 +75,7 @@ void UniqueLibrary::insertTrack(const QString &, const QString &/*artistAlbum*/,
 		_albums.insert(album, wAlbum);
 		ui->scrollArea->widget()->layout()->addWidget(wAlbum);
 	}
-	wAlbum->appendTrack(title);*/
+	wAlbum->appendTrack(title);
 }
 
 void UniqueLibrary::reset()

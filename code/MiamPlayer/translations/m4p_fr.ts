@@ -362,6 +362,18 @@
         <source>Version</source>
         <translation>Version</translation>
     </message>
+    <message>
+        <source>What is the behaviour for columns?</source>
+        <translation>Quel comportement adopter pour les colonnes ?</translation>
+    </message>
+    <message>
+        <source>Resize columns to contents</source>
+        <translation>Redimensionner les colonnes par rapport au contenu</translation>
+    </message>
+    <message>
+        <source>Keep all columns visible</source>
+        <translation>Garder toutes les colonnes visibles</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -522,14 +534,6 @@
         <translation>Couleurs alternées</translation>
     </message>
     <message>
-        <source>Global background</source>
-        <translation>Couleur globale du fond</translation>
-    </message>
-    <message>
-        <source>Text of items</source>
-        <translation>Texte des éléments musicaux</translation>
-    </message>
-    <message>
         <source>Background for playlists and the library</source>
         <translation>Couleur du fond des listes de lecture et de la bibliothèque</translation>
     </message>
@@ -580,6 +584,14 @@
     <message>
         <source>Current item in loop</source>
         <translation>Une piste, toujours en boucle</translation>
+    </message>
+    <message>
+        <source>Should I display a large and faded cover when you&apos;re expanding an album?</source>
+        <translation>Devrais-je afficher une grande pochette transparente lorsque vous dépliez un album ?</translation>
+    </message>
+    <message>
+        <source>Opacity</source>
+        <translation>Transparence</translation>
     </message>
 </context>
 <context>
@@ -645,6 +657,22 @@
     <message>
         <source>Years</source>
         <translation>Année</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation>Album</translation>
+    </message>
+    <message>
+        <source>Artist – Album</source>
+        <translation>Artiste – Album</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation>Année</translation>
+    </message>
+    <message>
+        <source>Artist \ Album</source>
+        <translation>Artiste \ Album</translation>
     </message>
 </context>
 <context>
@@ -900,6 +928,10 @@
     <message>
         <source>Ctrl+W</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Artist \ Album</source>
+        <translation>Artiste \ Album</translation>
     </message>
 </context>
 <context>

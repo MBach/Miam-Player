@@ -3,30 +3,6 @@ QT += widgets multimedia sql
 TEMPLATE = app
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp \
-    filesystem/addressbar.cpp \
-    filesystem/addressbarbutton.cpp \
-    filesystem/addressbarmenu.cpp \
-    filesystem/filesystemtreeview.cpp \
-    treeview.cpp \
-    library/libraryfilterproxymodel.cpp \
-    library/libraryitemdelegate.cpp \
-    library/libraryorderdialog.cpp \
-    library/libraryscrollbar.cpp \
-    library/librarytreeview.cpp \
-    circleprogressbar.cpp \
-    tracksnotfoundmessagebox.cpp \
-    quickstart.cpp \
-    timelabel.cpp \
-    columnutils.cpp \
-    playbackmodewidget.cpp \
-    playbackmodewidgetfactory.cpp \
-    playlists/playlist.cpp \
-    playlists/playlistheaderview.cpp \
-    playlists/playlistmodel.cpp \
-    playlists/tabbar.cpp \
-    playlists/tabplaylist.cpp \
     dialogs/closeplaylistpopup.cpp \
     dialogs/colordialog.cpp \
     dialogs/customizeoptionsdialog.cpp \
@@ -36,19 +12,43 @@ SOURCES += \
     dialogs/reflector.cpp \
     dialogs/shortcutlineedit.cpp \
     dialogs/shortcutwidget.cpp \
+    filesystem/addressbar.cpp \
+    filesystem/addressbarbutton.cpp \
+    filesystem/addressbarmenu.cpp \
+    filesystem/filesystemtreeview.cpp \
+    library/extendedtabbar.cpp \
+    library/jumptowidget.cpp \
+    library/libraryfilterproxymodel.cpp \
+    library/libraryheader.cpp \
+    library/libraryitemdelegate.cpp \
+    library/libraryorderdialog.cpp \
+    library/libraryscrollbar.cpp \
+    library/librarytreeview.cpp \
+    playlists/playlist.cpp \
+    playlists/playlistheaderview.cpp \
+    playlists/playlistmodel.cpp \
+    playlists/tabbar.cpp \
+    playlists/tabplaylist.cpp \
+    playlists/playlistitemdelegate.cpp \
+    playlists/starrating.cpp \
+    playlists/stareditor.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
     tageditor/tageditortablewidget.cpp \
-    pluginmanager.cpp \
+    circleprogressbar.cpp \
+    columnutils.cpp \
+    main.cpp \
+    mainwindow.cpp \
+    playbackmodewidget.cpp \
+    playbackmodewidgetfactory.cpp \
     plugininfo.cpp \
-    library/jumptowidget.cpp \
-    volumeslider.cpp \
-    playlists/playlistitemdelegate.cpp \
-    playlists/starrating.cpp \
-    playlists/stareditor.cpp \
-    library/extendedtabbar.cpp \
-    library/libraryheader.cpp
+    pluginmanager.cpp \
+    quickstart.cpp \
+    timelabel.cpp \
+    tracksnotfoundmessagebox.cpp \
+    treeview.cpp \
+    volumeslider.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -128,6 +128,7 @@ macx {
 }
 
 TRANSLATIONS = translations/m4p_ar.ts \
+    translations/m4p_cs.ts \
     translations/m4p_de.ts \
     translations/m4p_en.ts \
     translations/m4p_es.ts \

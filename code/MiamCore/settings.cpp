@@ -183,7 +183,7 @@ bool Settings::hasCustomIcon(QPushButton *b) const
 bool Settings::isBigCoverEnabled() const
 {
 	if (value("bigCovers").isNull()) {
-		return true;
+		return false;
 	} else {
 		return value("bigCovers").toBool();
 	}

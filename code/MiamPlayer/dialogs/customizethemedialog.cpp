@@ -138,8 +138,8 @@ void CustomizeThemeDialog::setupActions()
 	});
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
 		settings->setBigCovers(b);
-		labelBigCoverOpacity->setVisible(b);
-		spinBoxBigCoverOpacity->setVisible(b);
+		labelBigCoverOpacity->setEnabled(b);
+		spinBoxBigCoverOpacity->setEnabled(b);
 	});
 	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=](int v) {
 		settings->setBigCoverOpacity(v);

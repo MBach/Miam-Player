@@ -51,7 +51,7 @@
        <string>Buttons</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/music</normaloff>:/config/music</iconset>
       </property>
      </item>
@@ -60,7 +60,7 @@
        <string>Fonts</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/fonts</normaloff>:/config/fonts</iconset>
       </property>
      </item>
@@ -69,7 +69,7 @@
        <string>Colors</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/colors</normaloff>:/config/colors</iconset>
       </property>
      </item>
@@ -78,7 +78,7 @@
        <string>Library</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/music-library</normaloff>:/config/music-library</iconset>
       </property>
      </item>
@@ -113,7 +113,7 @@
               <string notr="true">Fairytale</string>
              </property>
              <property name="icon">
-              <iconset resource="mmmmp.qrc">
+              <iconset>
                <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
              </property>
             </item>
@@ -122,7 +122,7 @@
               <string notr="true">Gnome</string>
              </property>
              <property name="icon">
-              <iconset resource="mmmmp.qrc">
+              <iconset>
                <normaloff>:/player/gnome/play</normaloff>:/player/gnome/play</iconset>
              </property>
             </item>
@@ -131,7 +131,7 @@
               <string notr="true">Nuvola</string>
              </property>
              <property name="icon">
-              <iconset resource="mmmmp.qrc">
+              <iconset>
                <normaloff>:/player/nuvola/play</normaloff>:/player/nuvola/play</iconset>
              </property>
             </item>
@@ -140,7 +140,7 @@
               <string notr="true">Oxygen</string>
              </property>
              <property name="icon">
-              <iconset resource="mmmmp.qrc">
+              <iconset>
                <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
              </property>
             </item>
@@ -149,7 +149,7 @@
               <string notr="true">Tango</string>
              </property>
              <property name="icon">
-              <iconset resource="mmmmp.qrc">
+              <iconset>
                <normaloff>:/player/tango/play</normaloff>:/player/tango/play</iconset>
              </property>
             </item>
@@ -254,7 +254,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/stop</normaloff>:/player/fairytale/stop</iconset>
                   </property>
                   <property name="iconSize">
@@ -339,7 +339,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/skipForward</normaloff>:/player/fairytale/skipForward</iconset>
                   </property>
                   <property name="iconSize">
@@ -392,7 +392,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/seekForward</normaloff>:/player/fairytale/seekForward</iconset>
                   </property>
                   <property name="iconSize">
@@ -445,7 +445,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/seekBackward</normaloff>:/player/fairytale/seekBackward</iconset>
                   </property>
                   <property name="iconSize">
@@ -534,7 +534,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/skipBackward</normaloff>:/player/fairytale/skipBackward</iconset>
                   </property>
                   <property name="iconSize">
@@ -626,7 +626,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
                   </property>
                   <property name="iconSize">
@@ -649,7 +649,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/fairytale/pause</normaloff>:/player/fairytale/pause</iconset>
                   </property>
                   <property name="iconSize">
@@ -683,7 +683,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
                   </property>
                   <property name="iconSize">
@@ -717,7 +717,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/oxygen/repeat</normaloff>:/player/oxygen/repeat</iconset>
                   </property>
                   <property name="iconSize">
@@ -754,7 +754,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
                   </property>
                   <property name="iconSize">
@@ -781,7 +781,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/oxygen/itemOnce</normaloff>:/player/oxygen/itemOnce</iconset>
                   </property>
                   <property name="iconSize">
@@ -871,7 +871,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="mmmmp.qrc">
+                   <iconset>
                     <normaloff>:/player/oxygen/itemLoop</normaloff>:/player/oxygen/itemLoop</iconset>
                   </property>
                   <property name="iconSize">
@@ -1200,7 +1200,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="mmmmp.qrc">
+               <iconset>
                 <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
               </property>
               <property name="iconSize">
@@ -1237,7 +1237,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="mmmmp.qrc">
+               <iconset>
                 <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
               </property>
               <property name="iconSize">
@@ -1344,7 +1344,7 @@
                <string>Yes</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -1353,10 +1353,16 @@
               <property name="text">
                <string>No</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item row="1" column="1">
              <widget class="QLabel" name="labelBigCoverOpacity">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Opacity</string>
               </property>
@@ -1364,6 +1370,9 @@
             </item>
             <item row="1" column="2">
              <widget class="QSpinBox" name="spinBoxBigCoverOpacity">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="minimum">
                <number>0</number>
               </property>
@@ -1520,9 +1529,7 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="mmmmp.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>listWidget</sender>
