@@ -106,10 +106,6 @@
         <translation>No</translation>
     </message>
     <message>
-        <source>Language of MmeMiamMiam&apos;s Music Player</source>
-        <translation>Language of MmeMiamMiam&apos;s Music Player</translation>
-    </message>
-    <message>
         <source>No translation is available for this language :(</source>
         <translation>No translation is available for this language :(</translation>
     </message>
@@ -373,6 +369,10 @@
     <message>
         <source>Keep all columns visible</source>
         <translation>Keep all columns visible</translation>
+    </message>
+    <message>
+        <source>Language of Miam Player</source>
+        <translation>Language of Miam Player</translation>
     </message>
 </context>
 <context>
@@ -713,10 +713,6 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Madame MiamMiam&apos;s Music Player</source>
-        <translation>Madame MiamMiam&apos;s Music Player</translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Library</translation>
     </message>
@@ -803,10 +799,6 @@
     <message>
         <source>Customize general &amp;options...</source>
         <translation>Customize general &amp;options...</translation>
-    </message>
-    <message>
-        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
-        <translation>&amp;About MmeMiamMiamMusicPlayer...</translation>
     </message>
     <message>
         <source>&amp;Delete current playlist</source>
@@ -932,6 +924,10 @@
         <source>Artist \ Album</source>
         <translation>Artist \ Album</translation>
     </message>
+    <message>
+        <source>&amp;About Miam Player...</source>
+        <translation>&amp;About Miam Player...</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1032,14 +1028,14 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>Playlist (*.m3u8)</translation>
     </message>
     <message>
-        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</translation>
-    </message>
-    <message>
         <source>Cannot export the selected playlist</source>
         <translation>Cannot export the selected playlist</translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</translation>
     </message>
 </context>
 <context>

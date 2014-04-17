@@ -318,7 +318,7 @@ void PlaylistManager::exportSelectedPlaylist()
 	if (QFile::copy(pPath, newName)) {
 		settings->setValue("locationForExportedPlaylist", QFileInfo(newName).absolutePath());
 	} else {
-		QString error = tr("Unfortunately, an error occured when MmeMiamMiam tried to export playlist '%1' to '%2'.\n"\
+		QString error = tr("Unfortunately, an error occured when Miam Player tried to export playlist '%1' to '%2'.\n"\
 						   "Please, would you be nice to check if the file isn't opened elsewhere?")
 				.arg(item->data(Qt::DisplayRole).toString(), QDir::toNativeSeparators(newName));
 		QMessageBox::warning(this, tr("Cannot export the selected playlist"), error);

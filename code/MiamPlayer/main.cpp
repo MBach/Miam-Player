@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 
 #define COMPANY "MmeMiamMiam"
-#define SOFT "MmeMiamMiamMusicPlayer"
+#define SOFT "MiamPlayer"
 #define VERSION "0.6.1"
 
 #include "plugininfo.h"

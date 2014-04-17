@@ -114,10 +114,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Language of MmeMiamMiam&apos;s Music Player</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>No translation is available for this language :(</source>
         <translation type="unfinished"></translation>
     </message>
@@ -372,6 +368,10 @@
     </message>
     <message>
         <source>Keep all columns visible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language of Miam Player</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -713,10 +713,6 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Madame MiamMiam&apos;s Music Player</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
@@ -802,10 +798,6 @@
     </message>
     <message>
         <source>Customize general &amp;options...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -932,6 +924,10 @@
         <source>Artist \ Album</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;About Miam Player...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1030,12 +1026,12 @@ Select a playlist to display the first 30 tracks.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <source>Cannot export the selected playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cannot export the selected playlist</source>
+        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Madame MiamMiam's Music Player</string>
+   <string notr="true">Miam Player</string>
   </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
@@ -165,7 +165,7 @@
                 </sizepolicy>
                </property>
                <property name="autoFillBackground">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="styleSheet">
                 <string notr="true">QWidget { background-color: #ffffff; }</string>
@@ -278,7 +278,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
                 </property>
                 <property name="iconSize">
@@ -298,7 +298,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
                 </property>
                 <property name="iconSize">
@@ -318,7 +318,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
                 </property>
                 <property name="iconSize">
@@ -338,7 +338,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
                 </property>
                 <property name="iconSize">
@@ -358,7 +358,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
                 </property>
                 <property name="iconSize">
@@ -378,7 +378,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
                 </property>
                 <property name="iconSize">
@@ -398,7 +398,7 @@
                  <string notr="true"/>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset>
                   <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
                 </property>
                 <property name="iconSize">
@@ -591,7 +591,7 @@
   </action>
   <action name="actionAboutM4P">
    <property name="text">
-    <string>&amp;About MmeMiamMiamMusicPlayer...</string>
+    <string>&amp;About Miam Player...</string>
    </property>
   </action>
   <action name="actionDeleteCurrentPlaylist">
@@ -834,8 +834,6 @@
    <header location="global">libraryheader.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="mmmmp.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

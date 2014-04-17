@@ -17,7 +17,7 @@ private:
 
 	/** Private constructor. */
 	Settings(const QString &organization = "MmeMiamMiam",
-			 const QString &application = "MmeMiamMiamMusicPlayer");
+			 const QString &application = "MiamPlayer");
 
 	/** Store the size of each font used in the app. */
 	QMap<QString, QVariant> fontPointSizeMap;

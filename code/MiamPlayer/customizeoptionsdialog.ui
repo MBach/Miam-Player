@@ -75,7 +75,7 @@
        <string>Library</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/music-library</normaloff>:/config/music-library</iconset>
       </property>
      </item>
@@ -84,7 +84,7 @@
        <string>Languages</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/gnome-globe</normaloff>:/config/gnome-globe</iconset>
       </property>
      </item>
@@ -93,7 +93,7 @@
        <string>Shortcuts</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/keyboard-shortcuts</normaloff>:/config/keyboard-shortcuts</iconset>
       </property>
      </item>
@@ -102,7 +102,7 @@
        <string>Playback</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/config/music</normaloff>:/config/music</iconset>
       </property>
      </item>
@@ -111,7 +111,7 @@
        <string>Drag &amp; Drop</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/icons/drop-arrow</normaloff>:/icons/drop-arrow</iconset>
       </property>
      </item>
@@ -120,7 +120,7 @@
        <string>Plugins</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset>
         <normaloff>:/icons/plugin</normaloff>:/icons/plugin</iconset>
       </property>
      </item>
@@ -330,7 +330,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap>:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -355,7 +355,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap>:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -380,7 +380,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap>:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -405,7 +405,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap>:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -430,7 +430,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap>:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -493,7 +493,7 @@
        <item>
         <widget class="QGroupBox" name="groupBoxLanguage">
          <property name="title">
-          <string>Language of MmeMiamMiam's Music Player</string>
+          <string>Language of Miam Player</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
@@ -1048,7 +1048,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/skipBackward</normaloff>:/player/fairytale/skipBackward</iconset>
                </property>
                <property name="flat">
@@ -1124,7 +1124,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/seekBackward</normaloff>:/player/fairytale/seekBackward</iconset>
                </property>
                <property name="flat">
@@ -1159,7 +1159,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/stop</normaloff>:/player/fairytale/stop</iconset>
                </property>
                <property name="flat">
@@ -1287,7 +1287,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
                </property>
                <property name="flat">
@@ -1326,7 +1326,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/seekForward</normaloff>:/player/fairytale/seekForward</iconset>
                </property>
                <property name="flat">
@@ -1365,7 +1365,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/skipForward</normaloff>:/player/fairytale/skipForward</iconset>
                </property>
                <property name="flat">
@@ -1404,7 +1404,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset>
                  <normaloff>:/player/fairytale/repeat</normaloff>:/player/fairytale/repeat</iconset>
                </property>
                <property name="flat">
@@ -2642,9 +2642,7 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="mmmmp.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>radioButtonDesactivateDelegates</sender>

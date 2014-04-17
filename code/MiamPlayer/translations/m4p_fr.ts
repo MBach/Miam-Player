@@ -106,10 +106,6 @@
         <translation>Non</translation>
     </message>
     <message>
-        <source>Language of MmeMiamMiam&apos;s Music Player</source>
-        <translation>Langue de MmeMiamMiamMusicPlayer</translation>
-    </message>
-    <message>
         <source>No translation is available for this language :(</source>
         <translation>Aucune traduction n&apos;est disponible pour cette langue :(</translation>
     </message>
@@ -373,6 +369,10 @@
     <message>
         <source>Keep all columns visible</source>
         <translation>Garder toutes les colonnes visibles</translation>
+    </message>
+    <message>
+        <source>Language of Miam Player</source>
+        <translation>Langue du Miam Player</translation>
     </message>
 </context>
 <context>
@@ -713,11 +713,6 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Madame MiamMiam&apos;s Music Player</source>
-        <translatorcomment>Le lecteur de musique pour Madame MiamMiam</translatorcomment>
-        <translation>Madame MiamMiam&apos;s Music Player</translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Bibliothèque</translation>
     </message>
@@ -804,10 +799,6 @@
     <message>
         <source>Customize general &amp;options...</source>
         <translation>Personnaliser les &amp;options générales...</translation>
-    </message>
-    <message>
-        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
-        <translation>&amp;À propos de MmeMiamMiamMusicPlayer...</translation>
     </message>
     <message>
         <source>&amp;Delete current playlist</source>
@@ -933,6 +924,10 @@
         <source>Artist \ Album</source>
         <translation>Artiste \ Album</translation>
     </message>
+    <message>
+        <source>&amp;About Miam Player...</source>
+        <translation>&amp;À propos de Miam Player...</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1032,14 +1027,14 @@ Sélectionnez une liste de lecteur pour afficher ses 30 premières pistes.</tran
         <translation>Liste de lecture (*.m3u8)</translation>
     </message>
     <message>
-        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation>Malheureusement, une erreur s&apos;est produite lorsque MmeMiamMiam a essayé d&apos;exporter vers &apos;%2&apos; la liste de lecture &apos;%1&apos;.
-Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&apos;il vous plaît ?</translation>
-    </message>
-    <message>
         <source>Cannot export the selected playlist</source>
         <translation>Impossible d&apos;exporter la liste de lecture sélectionnée</translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation>Malheureusement, une erreur s&apos;est produite lorsque Miam Player a essayé d&apos;exporter vers &apos;%2&apos; la liste de lecture &apos;%1&apos;.
+Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&apos;il vous plaît ?</translation>
     </message>
 </context>
 <context>

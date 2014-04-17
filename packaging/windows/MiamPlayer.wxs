@@ -8,7 +8,7 @@
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
 	<?define PluginPath="C:\dev\windows-toolbar\build\release" ?>
 
-	<Product Name="MmeMiamMiamMusicPlayer" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
+	<Product Name="Miam Player" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
 	Language="1033" Codepage="1252" Version="0.6.1" Manufacturer="MmeMiamMiam">
 
 		<Package Id="*" Keywords="Installer" Description="Installer for Madame Miam-Miam's Music Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
@@ -39,11 +39,11 @@
 
 			<!-- Start menu -->
 			<Directory Id="ProgramMenuFolder" Name="Programs Menu Folder">
-				<Directory Id="ProgramMenuDir" Name="Madame MiamMiam's Music Player">
+				<Directory Id="ProgramMenuDir" Name="Miam Player">
 					<Component Id="ProgramMenuDir" Guid="CC0DACF5-4295-4DE7-91B3-AA6E60D1A828">
 						<RemoveFolder Id="ProgramMenuDir" On="uninstall" />
 						<RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="shortcut in start menu" KeyPath="yes" />
-						<Shortcut Id="startmenuMiamPlayer" Target="[APPLICATIONROOTDIRECTORY]MiamPlayer.exe" Directory="ProgramMenuDir" Name="Madame MiamMiam's Music Player" WorkingDirectory="APPLICATIONROOTDIRECTORY" Icon="MiamPlayerIcon" IconIndex="0">
+						<Shortcut Id="startmenuMiamPlayer" Target="[APPLICATIONROOTDIRECTORY]MiamPlayer.exe" Directory="ProgramMenuDir" Name="Miam Player" WorkingDirectory="APPLICATIONROOTDIRECTORY" Icon="MiamPlayerIcon" IconIndex="0">
 							<ShortcutProperty Key="System.AppUserModel.ID" Value="bb"></ShortcutProperty>
 							<ShortcutProperty Key="System.AppUserModel.StartPinOption" Value="2"></ShortcutProperty>
 						</Shortcut> 

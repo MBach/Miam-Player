@@ -114,10 +114,6 @@
         <translation>Ne</translation>
     </message>
     <message>
-        <source>Language of MmeMiamMiam&apos;s Music Player</source>
-        <translation>Jazyk hudebního přehrávače Madam Miam</translation>
-    </message>
-    <message>
         <source>No translation is available for this language :(</source>
         <translation>Pro tento jazyk není dostupný žádný překlad</translation>
     </message>
@@ -373,6 +369,10 @@
     <message>
         <source>Keep all columns visible</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language of Miam Player</source>
+        <translation>Jazyk hudebního přehrávače Miam</translation>
     </message>
 </context>
 <context>
@@ -713,10 +713,6 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Madame MiamMiam&apos;s Music Player</source>
-        <translation>Hudební přehrávač Madam Miam</translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Knihovna</translation>
     </message>
@@ -803,10 +799,6 @@
     <message>
         <source>Customize general &amp;options...</source>
         <translation>Přizpůsobit obecné &amp;volby...</translation>
-    </message>
-    <message>
-        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
-        <translation>&amp;O programu MmeMiamMiamMusicPlayer...</translation>
     </message>
     <message>
         <source>&amp;Delete current playlist</source>
@@ -935,6 +927,10 @@
         <source>Artist \ Album</source>
         <translation>Umělci / Alba</translation>
     </message>
+    <message>
+        <source>&amp;About Miam Player...</source>
+        <translation>&amp;O programu Miam Player...</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1035,14 +1031,14 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
         <translation>Seznam skladeb (*.m3u8)</translation>
     </message>
     <message>
-        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation>Bohužel se při pokusu MmeMiamMiam o vyvedení seznamu skladeb &apos;%1&apos; do &apos;%2&apos; vyskytla chyba.
-Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě někde jinde?</translation>
-    </message>
-    <message>
         <source>Cannot export the selected playlist</source>
         <translation>Nelze vyvést vybraný seznam skladeb</translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation>Bohužel se při pokusu Miam o vyvedení seznamu skladeb &apos;%1&apos; do &apos;%2&apos; vyskytla chyba.
+Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě někde jinde?</translation>
     </message>
 </context>
 <context>

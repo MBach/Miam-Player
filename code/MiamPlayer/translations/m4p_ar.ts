@@ -102,10 +102,6 @@
         <translation>لا</translation>
     </message>
     <message>
-        <source>Language of MmeMiamMiam&apos;s Music Player</source>
-        <translation>MmeMiamMiamMusicPlayer لُغَةْ</translation>
-    </message>
-    <message>
         <source>No translation is available for this language :(</source>
         <translation>لاتُوجَد ثَرْجَمَة إلى هذِهِ اللُغَة :(</translation>
     </message>
@@ -373,6 +369,10 @@
     <message>
         <source>Keep all columns visible</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language of Miam Player</source>
+        <translation>MiamPlayer لُغَةْ</translation>
     </message>
 </context>
 <context>
@@ -660,19 +660,19 @@
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Artist – Album</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Artist \ Album</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -712,11 +712,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Madame MiamMiam&apos;s Music Player</source>
-        <translatorcomment>Le lecteur de musique pour Madame MiamMiam</translatorcomment>
-        <translation>قارئ الموسيقى لمدام ميام ميام</translation>
-    </message>
     <message>
         <source>Library</source>
         <translation>المكتبة</translation>
@@ -804,10 +799,6 @@
     <message>
         <source>Customize general &amp;options...</source>
         <translation>&amp;خوصصة الخيارات العامة...</translation>
-    </message>
-    <message>
-        <source>&amp;About MmeMiamMiamMusicPlayer...</source>
-        <translation type="unfinished">... MmeMiamMiamMusicPlayer فيما يخص&amp;</translation>
     </message>
     <message>
         <source>&amp;Delete current playlist</source>
@@ -945,6 +936,10 @@
         <source>Artist \ Album</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;About Miam Player...</source>
+        <translation>Miam Player فيما يخص&amp;...</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1047,13 +1042,13 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>(*.m3u8)قائمة القِراءة</translation>
     </message>
     <message>
-        <source>Unfortunately, an error occured when MmeMiamMiam tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation type="unfinished">   للأسف، حدث خطأ عندما حاولت تصدير قائمة القراءة. هل يمكن أن تحقق من أن الملف غير مفتوح في مكان آخر، من فضلك؟</translation>
-    </message>
-    <message>
         <source>Cannot export the selected playlist</source>
         <translation> مستحيل تصدير قائمة القراءة المختارة</translation>
+    </message>
+    <message>
+        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
+Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
+        <translation>   للأسف، حدث خطأ عندما حاولت تصدير قائمة القراءة. هل يمكن أن تحقق من أن الملف غير مفتوح في مكان آخر، من فضلك؟</translation>
     </message>
 </context>
 <context>

@@ -17,7 +17,7 @@ public:
 };
 QT_BEGIN_NAMESPACE
 
-#define MediaPlayerPluginInterface_iid "MmeMiamMiamMusicPlayer.MediaPlayerPluginInterface"
+#define MediaPlayerPluginInterface_iid "MiamPlayer.MediaPlayerPluginInterface"
 
 Q_DECLARE_INTERFACE(MediaPlayerPluginInterface, MediaPlayerPluginInterface_iid)
 

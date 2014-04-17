@@ -2,7 +2,7 @@ IDI_ICON1               ICON    DISCARDABLE     "../mmmmp.ico"
 // Executable version information.
 1 VERSIONINFO
  FILEVERSION 1,0,0,0
- PRODUCTVERSION 0,6,1,20140417
+ PRODUCTVERSION 0,6,2,20140418
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -18,12 +18,12 @@ BEGIN
         BLOCK "040904E4"
 	BEGIN
 	    VALUE "CompanyName", "Matthieu BACHELIER"
-            VALUE "FileDescription", "The music player designed for Madame MiamMiam"
-            VALUE "InternalName", "MmeMiamMiamMusicPlayer"
+            VALUE "FileDescription", "The music player designed for Madame Miam-Miam"
+            VALUE "InternalName", "MiamPlayer"
             VALUE "LegalCopyright", "Copyleft 2014 Matthieu BACHELIER"
-	    VALUE "OriginalFilename", "MmeMiamMiamMusicPlayer.exe"
-	    VALUE "ProductName", "Madame MiamMiam's Music Player"
-            VALUE "ProductVersion", "0.6.1.20140417"
+            VALUE "OriginalFilename", "MiamPlayer.exe"
+            VALUE "ProductName", "Miam Player"
+            VALUE "ProductVersion", "0.6.2.20140418"
 	END
     END
     BLOCK "VarFileInfo"

@@ -22,7 +22,7 @@ public:
 
 QT_BEGIN_NAMESPACE
 
-#define BasicPluginInterface_iid "MmeMiamMiamMusicPlayer.BasicPluginInterface"
+#define BasicPluginInterface_iid "MiamPlayer.BasicPluginInterface"
 
 Q_DECLARE_INTERFACE(BasicPluginInterface, BasicPluginInterface_iid)
 
