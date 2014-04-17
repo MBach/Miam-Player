@@ -9,9 +9,9 @@
 	<?define PluginPath="C:\dev\windows-toolbar\build\release" ?>
 
 	<Product Name="Miam Player" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
-	Language="1033" Codepage="1252" Version="0.6.1" Manufacturer="MmeMiamMiam">
+	Language="1033" Codepage="1252" Version="0.6.2" Manufacturer="MmeMiamMiam">
 
-		<Package Id="*" Keywords="Installer" Description="Installer for Madame Miam-Miam's Music Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
+		<Package Id="*" Keywords="Installer" Description="Installer for Miam Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
 			InstallPrivileges="elevated" InstallScope="perMachine" InstallerVersion="405" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 		<Media Id="1" Cabinet="myapplication.cab" EmbedCab="yes" />
 
@@ -22,7 +22,7 @@
 		<!-- Directory tree -->
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFiles64Folder">
-				<Directory Id="APPLICATIONROOTDIRECTORY" Name="Madame MiamMiam's Music Player">
+				<Directory Id="APPLICATIONROOTDIRECTORY" Name="Miam Player">
 					<Directory Id="imageformats" Name="imageformats" />
 					<Directory Id="mediaservice" Name="mediaservice" />
 					<Directory Id="platforms" Name="platforms" />
@@ -176,7 +176,7 @@
 		</DirectoryRef>
 
 		<!-- The core player cannot be unchoose during install -->
-		<Feature Id="MainApplication" ConfigurableDirectory="APPLICATIONROOTDIRECTORY" Title="The music player" Description="Madame MiamMiam's Music Player" Level="1" AllowAdvertise="no" Absent="disallow">
+		<Feature Id="MainApplication" ConfigurableDirectory="APPLICATIONROOTDIRECTORY" Title="The music player" Description="Miam Player" Level="1" AllowAdvertise="no" Absent="disallow">
 			<ComponentRef Id="miamCore" />
 			<ComponentRef Id="libtag" />
 			<ComponentRef Id="miamPlayer" />
@@ -207,7 +207,7 @@
 		</Feature>
 
 		<!-- The shortcut in the start menu can be unchoose by one -->
-		<Feature Id="Shortcut" Title="Shortcut in Start Menu" Description="Puts a shortcut to Madame MiamMiam's Music Player in the Start Menu" Level="1" AllowAdvertise="no" Absent="allow">
+		<Feature Id="Shortcut" Title="Shortcut in Start Menu" Description="Puts a shortcut to Miam Player in the Start Menu" Level="1" AllowAdvertise="no" Absent="allow">
 			<ComponentRef Id="ProgramMenuDir" />
 		</Feature>
 		
@@ -221,7 +221,7 @@
 
 		<!-- Create a custom action to be able to launch or not the player after setup -->
 		<CustomAction Id="LaunchPlayerAfterInstall" FileKey="miamPlayer" ExeCommand="" Return="asyncNoWait" />
-		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Madame MiamMiam's Music Player" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Miam Player" />
 		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
 
 		<UI>

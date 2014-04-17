@@ -1,4 +1,4 @@
-MadameMiamMiamMusicPlayer is an all new MP3 player. Yet another player?
+Miam Player is an all new MP3 player. Yet another player?
 
 What's inside?
 * Read .mp3, .m4a (MP4), .flac, .ogg, .oga (OGG Vorbis), .asf, .ape (Monkey Audio)
