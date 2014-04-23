@@ -12,7 +12,10 @@ public:
 protected:
 	virtual void mousePressEvent(QMouseEvent *event);
 
-	virtual void paintEvent(QPaintEvent *event);
+	virtual void paintEvent(QPaintEvent *);
+
+	virtual void wheelEvent(QWheelEvent *event);
+
 };
 
 #endif // VOLUMESLIDER_H
