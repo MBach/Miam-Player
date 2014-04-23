@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QSharedMemory>
 
 #include "mainwindow.h"
 
@@ -17,6 +18,22 @@ int main(int argc, char *argv[])
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 
 	QApplication app(argc, argv);
+	MainWindow window;
+
+	QSharedMemory sharedMemory;
+	sharedMemory.setKey("MIAMPLAYER");
+	sharedMemory.attach();
+
+	qDebug() << argc;
+	for (int i = 0; i < argc; i++) {
+		qDebug() << i << argv[i];
+	}
+
+	// Exit already a process running
+	if (!sharedMemory.create(1)) {
+		return 0;
+	}
+
 	Settings *settings = Settings::getInstance();
 	if (settings->isCustomColors()) {
 		app.setPalette(settings->value("customPalette").value<QPalette>());
@@ -25,7 +42,6 @@ int main(int argc, char *argv[])
 	app.setApplicationName(SOFT);
 	app.setApplicationVersion(VERSION);
 
-	MainWindow window;
 	window.init();
 	window.show();
 	window.loadPlugins();
