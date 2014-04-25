@@ -70,6 +70,10 @@ void CustomizeThemeDialog::setupActions()
 
 	connect(flatButtonsCheckBox, &QCheckBox::toggled, settings, &Settings::setButtonsFlat);
 
+	// Volume bar
+	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &Settings::setVolumeBarTextAlwaysVisible);
+	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setVolumeBarHideAfter);
+
 	// Fonts	
 	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(Settings::PLAYLIST, font);
@@ -304,6 +308,10 @@ void CustomizeThemeDialog::loadTheme()
 			pushButton->setIcon(b->icon());
 		}
 	}
+
+	// Volume bar
+	radioButtonShowVolume->setChecked(settings->isVolumeBarTextAlwaysVisible());
+	spinBoxHideVolumeLabel->setValue(settings->volumeBarHideAfter());
 
 	// Fonts
 	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::PLAYLIST));

@@ -1,6 +1,7 @@
 #include "jumptowidget.h"
 
 #include <QLabel>
+#include <QScrollBar>
 #include <QStylePainter>
 #include <QStyleOptionViewItem>
 #include <QVBoxLayout>
@@ -39,7 +40,7 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 
 QSize JumpToWidget::sizeHint() const
 {
-	return QSize(19, _libraryTreeView->height());
+	return QSize(20, _libraryTreeView->height());
 }
 
 void JumpToWidget::leaveEvent(QEvent *e)
@@ -58,8 +59,8 @@ void JumpToWidget::mouseMoveEvent(QMouseEvent *e)
 
 void JumpToWidget::paintEvent(QPaintEvent *)
 {
-	this->setMinimumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
-	this->setMaximumSize(19, _libraryTreeView->height() - 2 - _libraryTreeView->header()->height());
+	this->setMinimumSize(20, _libraryTreeView->height() - _libraryTreeView->header()->height());
+	this->setMaximumSize(20, _libraryTreeView->height() - _libraryTreeView->header()->height());
 	QStylePainter p(this);
 	QStyleOptionViewItem o;
 	o.initFrom(_libraryTreeView);
@@ -94,6 +95,18 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 			p.setPen(o.palette.brightText().color());
 		}
 		p.drawText(r, Qt::AlignCenter, qc);
+		p.restore();
+	}
+
+	// Draw a vertical line if there are few items in the library
+	if (!_libraryTreeView->verticalScrollBar()->isVisible()) {
+		p.save();
+		p.setPen(o.palette.mid().color());
+		if (isLeftToRight()) {
+			p.drawLine(rect().topRight(), rect().bottomRight());
+		} else {
+			p.drawLine(rect().topLeft(), rect().bottomLeft());
+		}
 		p.restore();
 	}
 }

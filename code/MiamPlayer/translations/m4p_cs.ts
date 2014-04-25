@@ -382,10 +382,6 @@
         <translation>Přizpůsobit vzhled</translation>
     </message>
     <message>
-        <source>Buttons</source>
-        <translation>Tlačítka</translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation>Písma</translation>
     </message>
@@ -428,10 +424,6 @@
     <message>
         <source>Skip forward</source>
         <translation>Skočit vpřed</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation>Zobrazit</translation>
     </message>
     <message>
         <source>Button size</source>
@@ -591,6 +583,26 @@
     </message>
     <message>
         <source>Opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buttons &amp; Bars</source>
+        <translation type="unfinished">Tlačítka</translation>
+    </message>
+    <message>
+        <source>Media buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Volume bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I display the value in the upper left corner permanently?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, hide it after:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

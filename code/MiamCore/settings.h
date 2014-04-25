@@ -90,6 +90,9 @@ public:
 	/** Returns true if stars are visible and active. */
 	bool isStarDelegates() const;
 
+	/** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
+	bool isVolumeBarTextAlwaysVisible() const;
+
 	/** Returns the language of the application. */
 	QString language();
 
@@ -130,6 +133,8 @@ public:
 
 	/** Returns volume from the slider. */
 	int volume() const;
+
+	int volumeBarHideAfter() const;
 
 public slots:
 
@@ -176,6 +181,9 @@ public slots:
 
 	/** Sets volume from the slider. */
 	void setVolume(int v);
+
+	void setVolumeBarHideAfter(int seconds);
+	void setVolumeBarTextAlwaysVisible(bool b);
 
 signals:
 	void themeHasChanged();

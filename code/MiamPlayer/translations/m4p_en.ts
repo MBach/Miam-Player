@@ -390,10 +390,6 @@
         <translation>Customize appearance</translation>
     </message>
     <message>
-        <source>Buttons</source>
-        <translation>Buttons</translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation>Fonts</translation>
     </message>
@@ -432,10 +428,6 @@
     <message>
         <source>Skip forward</source>
         <translation>Skip forward</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation>Display</translation>
     </message>
     <message>
         <source>Button size</source>
@@ -592,6 +584,26 @@
     <message>
         <source>Opacity</source>
         <translation>Opacity</translation>
+    </message>
+    <message>
+        <source>Buttons &amp; Bars</source>
+        <translation>Buttons &amp; Bars</translation>
+    </message>
+    <message>
+        <source>Media buttons</source>
+        <translation>Media buttons</translation>
+    </message>
+    <message>
+        <source>Volume bar</source>
+        <translation>Volume bar</translation>
+    </message>
+    <message>
+        <source>Should I display the value in the upper left corner permanently?</source>
+        <translation>Should I display the value in the upper left corner permanently?</translation>
+    </message>
+    <message>
+        <source>No, hide it after:</source>
+        <translation>No, hide it after:</translation>
     </message>
 </context>
 <context>

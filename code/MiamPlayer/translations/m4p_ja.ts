@@ -382,10 +382,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Buttons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -427,10 +423,6 @@
     </message>
     <message>
         <source>Skip forward</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -591,6 +583,26 @@
     </message>
     <message>
         <source>Opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buttons &amp; Bars</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Media buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Volume bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I display the value in the upper left corner permanently?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, hide it after:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

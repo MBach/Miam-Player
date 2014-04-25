@@ -390,10 +390,6 @@
         <translation>Personnaliser l&apos;apparence</translation>
     </message>
     <message>
-        <source>Buttons</source>
-        <translation>Boutons</translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation>Polices</translation>
     </message>
@@ -432,10 +428,6 @@
     <message>
         <source>Skip forward</source>
         <translation>Piste suivante</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation>Affichage</translation>
     </message>
     <message>
         <source>Button size</source>
@@ -592,6 +584,26 @@
     <message>
         <source>Opacity</source>
         <translation>Transparence</translation>
+    </message>
+    <message>
+        <source>Buttons &amp; Bars</source>
+        <translation>Boutons et barres</translation>
+    </message>
+    <message>
+        <source>Media buttons</source>
+        <translation>Boutons de lecture</translation>
+    </message>
+    <message>
+        <source>Volume bar</source>
+        <translation>Barre de volume</translation>
+    </message>
+    <message>
+        <source>Should I display the value in the upper left corner permanently?</source>
+        <translation>Devrais-je afficher une valeur dans le coin supérieur gauche de façon permanente ?</translation>
+    </message>
+    <message>
+        <source>No, hide it after:</source>
+        <translation>Non, la masquer après : </translation>
     </message>
 </context>
 <context>

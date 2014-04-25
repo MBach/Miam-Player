@@ -390,10 +390,6 @@
         <translation>تخصيص مظهر</translation>
     </message>
     <message>
-        <source>Buttons</source>
-        <translation>أزرار</translation>
-    </message>
-    <message>
         <source>Fonts</source>
         <translation>الخطوط</translation>
     </message>
@@ -432,10 +428,6 @@
     <message>
         <source>Skip forward</source>
         <translation>المسار التالي</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation>عرض</translation>
     </message>
     <message>
         <source>Button size</source>
@@ -591,6 +583,26 @@
     </message>
     <message>
         <source>Opacity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Buttons &amp; Bars</source>
+        <translation type="unfinished">أزرار</translation>
+    </message>
+    <message>
+        <source>Media buttons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Volume bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I display the value in the upper left corner permanently?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, hide it after:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

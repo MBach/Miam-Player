@@ -233,9 +233,9 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 		wVerticalScrollBar = verticalScrollBar()->width();
 	}
 	if (QGuiApplication::isLeftToRight()) {
-		_jumpToWidget->move(frameGeometry().right() - 19 - wVerticalScrollBar, 1 + header()->height());
+		_jumpToWidget->move(frameGeometry().right() - 19 - wVerticalScrollBar, header()->height());
 	} else {
-		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, 1 + header()->height());
+		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, header()->height());
 	}
 	TreeView::paintEvent(event);
 }

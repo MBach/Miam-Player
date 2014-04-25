@@ -2,9 +2,9 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 	<?define Qt="C:\Qt\Qt5.3.0\5.3\msvc2013_64" ?>
-	<?define MiamProjectSrc="C:\dev\Madame-Miam-Miam-Music-Player" ?>
-	<?define MiamProjectBuild="C:\dev\Madame-Miam-Miam-Music-Player-build" ?>
-	<?define TagLib="C:\dev\Madame-Miam-Miam-Music-Player\lib\release" ?>
+	<?define MiamProjectSrc="C:\dev\Miam-Player" ?>
+	<?define MiamProjectBuild="C:\dev\Miam-Player-build" ?>
+	<?define TagLib="C:\dev\Miam-Player\lib\release" ?>
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
 	<?define PluginPath="C:\dev\windows-toolbar\build\release" ?>
 

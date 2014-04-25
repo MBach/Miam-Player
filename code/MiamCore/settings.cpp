@@ -221,11 +221,17 @@ bool Settings::isMediaButtonVisible(const QString & buttonName) const
    }
 }
 
+/** Returns true if stars are visible and active. */
 bool Settings::isStarDelegates() const
 {
 	return value("delegates").toBool();
 }
 
+/** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
+bool Settings::isVolumeBarTextAlwaysVisible() const
+{
+	return value("volumeBarTextAlwaysVisible").toBool();
+}
 /** Returns the language of the application. */
 QString Settings::language()
 {
@@ -399,6 +405,15 @@ int Settings::volume() const
    }
 }
 
+int Settings::volumeBarHideAfter() const
+{
+	if (value("volumeBarHideAfter").isNull()) {
+		return 1;
+	} else {
+		return value("volumeBarHideAfter").toInt();
+	}
+}
+
 /// SLOTS
 void Settings::setBigCoverOpacity(int v)
 {
@@ -514,4 +529,14 @@ void Settings::setThemeName(const QString &theme)
 void Settings::setVolume(int v)
 {
 	setValue("volume", v);
+}
+
+void Settings::setVolumeBarHideAfter(int seconds)
+{
+	setValue("volumeBarHideAfter", seconds);
+}
+
+void Settings::setVolumeBarTextAlwaysVisible(bool b)
+{
+	setValue("volumeBarTextAlwaysVisible", b);
 }
