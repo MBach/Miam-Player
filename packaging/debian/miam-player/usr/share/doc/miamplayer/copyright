@@ -1,10 +1,10 @@
 Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
-Name: Madame Miam-Miam's Music Player
+Name: Miam-Player
 Maintainer: Matthieu Bachelier <bachelier.matthieu@gmail.com>
 Source: http://sourceforge.net/projects/miammusicplayer/
 
 Files: *
-Copyright: 2013, Matthieu Bachelier <bachelier.matthieu@gmail.com>
+Copyright: 2014, Matthieu Bachelier <bachelier.matthieu@gmail.com>
 License: GPL-3
 
 Files: 3rdparty/taglib/*

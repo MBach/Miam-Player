@@ -1,14 +1,14 @@
 Source: miamplayer
 Package: miamplayer
 Section: sound
-Version: 0.4.2
+Version: 
 Priority: optional
 Architecture: amd64
-Depends: libc6, libqt5widgets5, libqt5multimedia5
+Depends: libc6, libqt5widgets5, libqt5multimedia5, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5sql5
 Maintainer: Matthieu BACHELIER <bachelier.matthieu@gmail.com>
-Installed-Size: 2412
-Description: Madame MiamMiam's Music Player
- Madame MiamMiam's Music Player is an all new audio player. Yet another player?
+Installed-Size: 3431
+Description: Miam-Player
+ Miam Player is an all new audio player. Yet another player?
  .
  * What's inside? 
   * Read MP3, MP4, Flac, OGG Vorbis, Monkey Audio and ASF files
@@ -23,5 +23,6 @@ Description: Madame MiamMiam's Music Player
  Wikipedia
   * Well, it's just reading audio files, but it's doing it well!
  .
- * This software was developped using Qt and Taglib.
-Homepage: https://sourceforge.net/projects/miammusicplayer/
+ * This software was developped using Qt5 and Taglib
+ * Project page: https://sourceforge.net/projects/miammusicplayer/
+ * Github page: http://mbach.github.io/Miam-Player/
