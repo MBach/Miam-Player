@@ -31,8 +31,8 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 
 	p.fillRect(rect(), o.palette.base().color().lighter(110));
 
-	int startAngle = 90 * 16;
-	int spanAngle = 180 * 16;
+	static const int startAngle = 90 * 16;
+	static const int spanAngle = 180 * 16;
 	QRect rLeft = QRect(o.rect.x(),
 						o.rect.y() + 1,
 						o.rect.height(),
