@@ -48,7 +48,8 @@ SOURCES += \
     timelabel.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp
+    volumeslider.cpp \
+    seekbar.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -98,7 +99,8 @@ HEADERS += \
     playlists/starrating.h \
     playlists/stareditor.h \
     library/libraryheader.h \
-    playlists/playlistframe.h
+    playlists/playlistframe.h \
+    seekbar.h
 
 FORMS += \
     mainwindow.ui \
