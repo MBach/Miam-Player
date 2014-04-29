@@ -13,10 +13,18 @@ TEMPLATE = lib
 win32 {
     CONFIG += dll
     CONFIG(debug, debug|release) {
-       LIBS += -L$$PWD/../../lib/debug/ -ltag
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag
+        } else {
+            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
+        }
     }
     CONFIG(release, debug|release) {
-       LIBS += -L$$PWD/../../lib/release/ -ltag
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag
+        } else {
+            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
+        }
     }
 }
 unix {

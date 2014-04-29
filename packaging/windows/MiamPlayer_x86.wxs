@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<?define Qt="C:\Qt\Qt5.3.0\5.3\msvc2013" ?>
+	<?define MiamProjectSrc="C:\dev\Miam-Player" ?>
+	<?define MiamProjectBuild="C:\dev\Miam-Player-build-x86" ?>
+	<?define TagLib="C:\dev\Miam-Player\lib\release\win-x86" ?>
+	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
+	<?define PluginPath="C:\dev\windows-toolbar-build-x86\release" ?>
+
+	<Product Name="Miam Player" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
+	Language="1033" Codepage="1252" Version="0.6.2" Manufacturer="MmeMiamMiam">
+
+		<Package Id="*" Keywords="Installer" Description="Installer for Miam Player" Comments="Free and Open Source Software" Manufacturer="Matthieu Bachelier"
+			InstallPrivileges="elevated" InstallScope="perMachine" InstallerVersion="405" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
+		<Media Id="1" Cabinet="myapplication.cab" EmbedCab="yes" />
+
+		<!-- Add an icon in Add/Remove program -->
+		<Icon Id="MiamPlayerIcon" SourceFile="$(var.MiamProjectSrc)\code\MiamPlayer\mmmmp.ico" />
+		<Property Id="ARPPRODUCTICON" Value="MiamPlayerIcon" />
+
+		<!-- Directory tree -->
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="APPLICATIONROOTDIRECTORY" Name="Miam Player">
+					<Directory Id="imageformats" Name="imageformats" />
+					<Directory Id="mediaservice" Name="mediaservice" />
+					<Directory Id="platforms" Name="platforms" />
+					<Directory Id="playlistformats" Name="playlistformats" />
+					<Directory Id="plugins" Name="plugins" />
+					<Directory Id="sqldrivers" Name="sqldrivers" />
+					<Directory Id="translations" Name="translations" />
+				</Directory>
+			</Directory>
+			
+			<!-- Behold, keeper -->
+			<Merge Id="VCRedist11" Language="0" DiskId="1" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC110_CRT_x86.msm" />
+			<Merge Id="VCRedist12" Language="0" DiskId="1" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC120_CRT_x86.msm" />
+
+			<!-- Start menu -->
+			<Directory Id="ProgramMenuFolder" Name="Programs Menu Folder">
+				<Directory Id="ProgramMenuDir" Name="Miam Player">
+					<Component Id="ProgramMenuDir" Guid="CC0DACF5-4295-4DE7-91B3-AA6E60D1A828">
+						<RemoveFolder Id="ProgramMenuDir" On="uninstall" />
+						<RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="shortcut in start menu" KeyPath="yes" />
+						<Shortcut Id="startmenuMiamPlayer" Target="[APPLICATIONROOTDIRECTORY]MiamPlayer.exe" Directory="ProgramMenuDir" Name="Miam Player" WorkingDirectory="APPLICATIONROOTDIRECTORY" Icon="MiamPlayerIcon" IconIndex="0">
+							<ShortcutProperty Key="System.AppUserModel.ID" Value="bb"></ShortcutProperty>
+							<ShortcutProperty Key="System.AppUserModel.StartPinOption" Value="2"></ShortcutProperty>
+						</Shortcut> 
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+
+		<!-- Main directory -->
+		<DirectoryRef Id="APPLICATIONROOTDIRECTORY">
+			<Component Id="miamCore" Guid="0CD7238C-2FBD-409A-8A9F-F882569F42F2">
+				<File Id="miamCore" Source="$(var.MiamProjectBuild)\MiamCore\release\MiamCore.dll" KeyPath="yes" Checksum="yes"/>
+			</Component>
+			<Component Id="libtag" Guid="2acca2df-d460-43e2-886e-510777804699">
+				<File Id="libtag" Source="$(var.TagLib)\tag.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="miamPlayer" Guid="C7F6E507-4399-45C8-854F-4D822F6EFF59">
+				<File Id="miamPlayer" Source="$(var.MiamProjectBuild)\MiamPlayer\release\MiamPlayer.exe" KeyPath="yes" Checksum="yes"/>
+			</Component>
+			<Component Id="miamUniqueLibrary" Guid="166331FF-988C-4A11-AE7A-63E8914FC657">
+				<File Id="miamUniqueLibrary" Source="$(var.MiamProjectBuild)\MiamUniqueLibrary\release\MiamUniqueLibrary.dll" KeyPath="yes" Checksum="yes"/>
+			</Component>
+			<Component Id="icudt52" Guid="e19b830f-3290-4517-8a8e-97996606ed05">
+				<File Id="icudt52" Source="$(var.Qt)\bin\icudt52.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="icuin52" Guid="f2f0574f-9ba6-4aae-81cb-c9baa90ad608">
+				<File Id="icuin52" Source="$(var.Qt)\bin\icuin52.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="icuuc52" Guid="04322ac7-7c7b-4b93-aabf-6108d035210d">
+				<File Id="icuuc52" Source="$(var.Qt)\bin\icuuc52.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="libEGL" Guid="bad70be1-595d-45e1-b027-0ec1ed6b8402">
+				<File Id="libEGL" Source="$(var.Qt)\bin\libEGL.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="libGLESv2" Guid="c5ec55f9-444d-4cf3-9b64-1d238c938954">
+				<File Id="libGLESv2" Source="$(var.Qt)\bin\libGLESv2.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5Core" Guid="f0452c60-1ba1-4b8e-bbbe-cfaa842667fb">
+				<File Id="Qt5Core" Source="$(var.Qt)\bin\Qt5Core.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5Gui" Guid="22180b57-7d37-492b-bb2c-da387ee1c1b0">
+				<File Id="Qt5Gui" Source="$(var.Qt)\bin\Qt5Gui.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5Multimedia" Guid="ebc7da0f-52b2-4ade-a6f8-d71060d7b096">
+				<File Id="Qt5Multimedia" Source="$(var.Qt)\bin\Qt5Multimedia.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5MultimediaWidgets" Guid="f32aa24a-2718-4207-af8b-482038ae0788">
+				<File Id="Qt5MultimediaWidgets" Source="$(var.Qt)\bin\Qt5MultimediaWidgets.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5Network" Guid="c06823d0-94ae-4ee5-acb2-a0eb19e39b9b">
+				<File Id="Qt5Network" Source="$(var.Qt)\bin\Qt5Network.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5OpenGL" Guid="4e5ae58d-93a1-4965-9bbb-ac4bd6f00ad9">
+				<File Id="Qt5OpenGL" Source="$(var.Qt)\bin\Qt5OpenGL.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5Sql" Guid="3FB9B9EA-C516-4991-ADCC-A477AD47A660">
+				<File Id="Qt5Sql" Source="$(var.Qt)\bin\Qt5Sql.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5Widgets" Guid="3281db32-6ec3-4d18-ad4d-081a16b5c9f2">
+				<File Id="Qt5Widgets" Source="$(var.Qt)\bin\Qt5Widgets.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="Qt5WinExtras" Guid="60125338-0FFB-464F-B3FC-1BDE7F7BA96C">
+				<File Id="Qt5WinExtras" Source="$(var.Qt)\bin\Qt5WinExtras.dll" KeyPath="yes"/>
+			</Component>
+			<!-- Override hardcoded paths in Qt Libraries -->
+			<Component Id="qtconf" Guid="0011a84d-044e-4ddb-b8e4-03f35b075814">
+				<File Id="qtconf" Source="qt.conf" KeyPath="yes"/>
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with imageformats for reading covers (only jpeg and png right now) -->
+		<DirectoryRef Id="imageformats">
+			<Component Id="qjpeg" Guid="ffb232fe-abe2-4e63-979e-f5d487362c6c">
+				<File Id="qjpeg" Source="$(var.Qt)\plugins\imageformats\qjpeg.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+
+		<!-- Subdirectory with mediaservice -->
+		<DirectoryRef Id="mediaservice">
+			<Component Id="wmfengine" Guid="b24a388c-e78a-492d-8fcb-dedf5f0bfd2d">
+				<File Id="wmfengine" Source="$(var.Qt)\plugins\mediaservice\wmfengine.dll" KeyPath="yes" />
+			</Component>
+			<Component Id="qtmedia_audioengine" Guid="17c25fcc-b5eb-4e98-a7b1-5cf393f4a8b2">
+				<File Id="qtmedia_audioengine" Source="$(var.Qt)\plugins\mediaservice\qtmedia_audioengine.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with plugins for windows -->
+		<DirectoryRef Id="platforms">
+			<Component Id="qwindows" Guid="420BE34D-CCCF-4318-B519-E09823A521D4">
+				<File Id="qwindows" Source="$(var.Qt)\plugins\platforms\qwindows.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with playlistformats -->
+		<DirectoryRef Id="playlistformats">
+			<Component Id="qtmultimedia_m3u" Guid="4d0631cd-0f77-4c81-9319-2ba7691edeae">
+				<File Id="qtmultimedia_m3u" Source="$(var.Qt)\plugins\playlistformats\qtmultimedia_m3u.dll" KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with sqldrivers -->
+		<DirectoryRef Id="sqldrivers">
+			<Component Id="qsqlite" Guid="14bff8eb-4692-4c3f-b072-398ab319c75c">
+				<File Id="qsqlite" Source="$(var.Qt)\plugins\sqldrivers\qsqlite.dll" KeyPath="yes"/>
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with translations -->
+		<DirectoryRef Id="translations">
+			<Component Id="qtTranslation" Guid="3b3c9a73-8b4f-4c63-97e3-6125da958688">
+				<File Id="qtTranslationAR" Source="$(var.Qt)\translations\qt_ar.qm" KeyPath="yes"/>
+				<File Id="qtTranslationCS" Source="$(var.Qt)\translations\qt_cs.qm"/>
+				<File Id="qtTranslationDE" Source="$(var.Qt)\translations\qt_de.qm"/>
+				<File Id="qtTranslationES" Source="$(var.Qt)\translations\qt_es.qm"/>
+				<File Id="qtTranslationFR" Source="$(var.Qt)\translations\qt_fr.qm"/>
+				<File Id="qtTranslationIT" Source="$(var.Qt)\translations\qt_it.qm"/>
+				<File Id="qtTranslationJA" Source="$(var.Qt)\translations\qt_ja.qm"/>
+				<File Id="qtTranslationKO" Source="$(var.Qt)\translations\qt_ko.qm"/>
+				<File Id="qtTranslationPT" Source="$(var.Qt)\translations\qt_pt.qm"/>
+				<File Id="qtTranslationRU" Source="$(var.Qt)\translations\qt_ru.qm"/>
+				<File Id="qtTranslationZH" Source="$(var.Qt)\translations\qt_zh_CN.qm"/>
+			</Component>
+		</DirectoryRef>
+		
+		<!-- Subdirectory with plugins -->
+		<DirectoryRef Id="plugins">
+			<Component Id="plugins" Guid="a3bcfb13-ac0b-499c-a486-14d7617de3ab">
+				<File Id="windowsToolbar" Source="$(var.PluginPath)\windows-toolbar.dll" KeyPath="yes"/>
+			</Component>
+		</DirectoryRef>
+
+		<!-- The core player cannot be unchoose during install -->
+		<Feature Id="MainApplication" ConfigurableDirectory="APPLICATIONROOTDIRECTORY" Title="The music player" Description="Miam Player" Level="1" AllowAdvertise="no" Absent="disallow">
+			<ComponentRef Id="miamCore" />
+			<ComponentRef Id="libtag" />
+			<ComponentRef Id="miamPlayer" />
+			<ComponentRef Id="miamUniqueLibrary" />
+			<ComponentRef Id="icudt52" />
+			<ComponentRef Id="icuin52" />
+			<ComponentRef Id="icuuc52" />
+			<ComponentRef Id="libEGL" />
+			<ComponentRef Id="libGLESv2" />
+			<ComponentRef Id="plugins" />
+			<ComponentRef Id="Qt5Core" />
+			<ComponentRef Id="Qt5Gui" />
+			<ComponentRef Id="Qt5Multimedia" />
+			<ComponentRef Id="Qt5MultimediaWidgets" />
+			<ComponentRef Id="Qt5Network" />
+			<ComponentRef Id="Qt5OpenGL" />
+			<ComponentRef Id="Qt5Sql" />
+			<ComponentRef Id="Qt5Widgets" />
+			<ComponentRef Id="Qt5WinExtras" />
+			<ComponentRef Id="qwindows" />
+			<ComponentRef Id="wmfengine" />
+			<ComponentRef Id="qtmedia_audioengine" />
+			<ComponentRef Id="qtmultimedia_m3u" />
+			<ComponentRef Id="qsqlite" />
+			<ComponentRef Id="qjpeg" />
+			<ComponentRef Id="qtconf" />
+			<ComponentRef Id="qtTranslation" />
+		</Feature>
+
+		<!-- The shortcut in the start menu can be unchoose by one -->
+		<Feature Id="Shortcut" Title="Shortcut in Start Menu" Description="Puts a shortcut to Miam Player in the Start Menu" Level="1" AllowAdvertise="no" Absent="allow">
+			<ComponentRef Id="ProgramMenuDir" />
+		</Feature>
+		
+		<!-- MSVC2012 and MSVC2013 Redistributable in case one has a super clean computer -->
+		<Feature Id="VCRedist11" Title="Visual C++ 11 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+			<MergeRef Id="VCRedist11"/>
+		</Feature>
+		<Feature Id="VCRedist12" Title="Visual C++ 12 Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+			<MergeRef Id="VCRedist12"/>
+		</Feature>
+
+		<!-- Create a custom action to be able to launch or not the player after setup -->
+		<CustomAction Id="LaunchPlayerAfterInstall" FileKey="miamPlayer" ExeCommand="" Return="asyncNoWait" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Start Miam Player" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
+
+		<UI>
+			<UIRef Id="WixUI_Mondo" />
+			<Publish Dialog="ExitDialog" Control="Finish" Order="1" Event="DoAction" Value="LaunchPlayerAfterInstall">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+		</UI>
+		<UIRef Id="WixUI_ErrorProgressText" />
+
+		<!-- This software is a free software -->
+		<WixVariable Id="WixUILicenseRtf" Value="gpl_v3.rtf" />
+		<WixVariable Id="WixUIDialogBmp" Value="cupcake_dialog.jpg" />
+		<WixVariable Id="WixUIBannerBmp" Value="cupcake_banner.jpg" />
+	</Product>
+</Wix>

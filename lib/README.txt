@@ -1,7 +1,7 @@
 This folder contains precompiled library TagLib (http://taglib.github.io/)
 
 * File tag.lib:
-** Built with MSVC2012
+** Built with MSVC2013
 ** For Windows only. Used for compiling subproject MiamCore
 
 * Folders debug and release:

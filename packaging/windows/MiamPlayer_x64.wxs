@@ -3,10 +3,10 @@
 
 	<?define Qt="C:\Qt\Qt5.3.0\5.3\msvc2013_64" ?>
 	<?define MiamProjectSrc="C:\dev\Miam-Player" ?>
-	<?define MiamProjectBuild="C:\dev\Miam-Player-build" ?>
-	<?define TagLib="C:\dev\Miam-Player\lib\release" ?>
+	<?define MiamProjectBuild="C:\dev\Miam-Player-build-x64" ?>
+	<?define TagLib="C:\dev\Miam-Player\lib\release\win-x64" ?>
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
-	<?define PluginPath="C:\dev\windows-toolbar\build\release" ?>
+	<?define PluginPath="C:\dev\windows-toolbar-build-x64\release" ?>
 
 	<Product Name="Miam Player" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
 	Language="1033" Codepage="1252" Version="0.6.2" Manufacturer="MmeMiamMiam">
@@ -156,6 +156,7 @@
 		<DirectoryRef Id="translations">
 			<Component Id="qtTranslation" Guid="3b3c9a73-8b4f-4c63-97e3-6125da958688">
 				<File Id="qtTranslationAR" Source="$(var.Qt)\translations\qt_ar.qm" KeyPath="yes"/>
+				<File Id="qtTranslationCS" Source="$(var.Qt)\translations\qt_cs.qm"/>
 				<File Id="qtTranslationDE" Source="$(var.Qt)\translations\qt_de.qm"/>
 				<File Id="qtTranslationES" Source="$(var.Qt)\translations\qt_es.qm"/>
 				<File Id="qtTranslationFR" Source="$(var.Qt)\translations\qt_fr.qm"/>

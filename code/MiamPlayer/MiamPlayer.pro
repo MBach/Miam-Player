@@ -145,8 +145,15 @@ TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_zh.ts
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$PWD/../../lib/debug/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-    win32: QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
+    win32 {
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
+        } else {
+            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
+        }
+    }
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -154,8 +161,15 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$PWD/../../lib/release/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-    win32: QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
+    win32 {
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
+        } else {
+            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
+        }
+    }
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
