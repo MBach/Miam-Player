@@ -18,6 +18,9 @@ protected:
 	virtual void mousePressEvent(QMouseEvent *event);
 
 	virtual void paintEvent(QPaintEvent *);
+
+private:
+	QLinearGradient interpolatedLinearGradient(const QPointF &start, const QPointF &end, QStyleOptionSlider &o);
 };
 
 #endif // SEEKBAR_H

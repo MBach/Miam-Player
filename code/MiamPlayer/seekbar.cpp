@@ -2,6 +2,7 @@
 #include "settings.h"
 
 #include <QApplication>
+#include <QPropertyAnimation>
 #include <QStyleOptionSlider>
 #include <QStylePainter>
 
@@ -11,7 +12,6 @@ SeekBar::SeekBar(QWidget *parent) :
     QSlider(parent)
 {
 	this->setMinimumHeight(30);
-	//this->setValue(500);
 }
 
 void SeekBar::mousePressEvent(QMouseEvent *event)
@@ -36,14 +36,9 @@ void SeekBar::paintEvent(QPaintEvent *)
 	float posButton = (float) value() / 1000 * w;
 	//qDebug() << posButton;
 
-	QPen pen(o.palette.mid().color(), 0.66);
-	p.setPen(pen);
-	//p.setPen(o.palette.mid().color());
+	p.setPen(o.palette.mid().color());
 
-	//static const int startAngle = 90 * 16;
-	//static const int spanAngle = 180 * 16;
-
-	qDebug() << o.rect.x();
+	//qDebug() << o.rect.x();
 
 	QRectF rLeft = QRectF(o.rect.x(),
 						o.rect.y() + h,
@@ -55,7 +50,9 @@ void SeekBar::paintEvent(QPaintEvent *)
 						 h);
 	QRectF rMid = QRectF(rLeft.topRight(), rRight.bottomLeft());
 
-	//p.setRenderHint(QPainter::Antialiasing, true);
+	// Fill the seek bar with highlighted color
+	QRectF rPlayed(QPoint(rMid.left(), rMid.top() + 1), QPoint(posButton, rMid.bottom()));
+
 	QPainterPath path;
 	path.moveTo(o.rect.x() + h, h);
 	path.cubicTo(o.rect.x(), h, o.rect.x(), 2*h, o.rect.x() + h, 2*h);
@@ -67,9 +64,11 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.fillPath(path, o.palette.base());
 	p.drawPath(path);
 
+	QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
+	p.fillRect(rPlayed, linearGradient);
+
 	p.save();
 	p.setRenderHint(QPainter::Antialiasing, true);
-	pen.setWidth(1.0);
 	QPointF center(posButton, height() * 0.5);
 	QConicalGradient cGrad(center, 0.0);
 	cGrad.setColorAt(0.0, o.palette.highlight().color());
@@ -77,4 +76,24 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.setBrush(cGrad);
 	p.drawEllipse(center, height() * 0.3, height() * 0.3);
 	p.restore();
+}
+
+QLinearGradient SeekBar::interpolatedLinearGradient(const QPointF &start, const QPointF &end, QStyleOptionSlider &o)
+{
+	QPropertyAnimation interpolator;
+	interpolator.setEasingCurve(QEasingCurve::Linear);
+
+	const qreal granularity = 1000.0;
+	QColor startColor = o.palette.highlight().color().lighter();
+	interpolator.setStartValue(startColor);
+	interpolator.setEndValue(o.palette.highlight().color());
+	interpolator.setDuration(granularity) ;
+	interpolator.setCurrentTime(value()) ;
+	QColor c = interpolator.currentValue().value<QColor>();
+
+	QLinearGradient linearGradient(start, end);
+	linearGradient.setColorAt(0.0, startColor);
+	linearGradient.setColorAt(1.0, c);
+
+	return linearGradient;
 }
