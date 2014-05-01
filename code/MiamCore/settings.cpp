@@ -221,6 +221,17 @@ bool Settings::isMediaButtonVisible(const QString & buttonName) const
    }
 }
 
+/** Returns true if tabs should be displayed like rectangles. */
+bool Settings::isRectTabs() const
+{
+	QVariant b = value("rectangularTabs");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
 /** Returns true if stars are visible and active. */
 bool Settings::isStarDelegates() const
 {

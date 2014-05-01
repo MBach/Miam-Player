@@ -65,12 +65,12 @@
     <qresource prefix="/config">
         <file alias="fonts">config/fonts.png</file>
         <file alias="music">config/music.png</file>
-        <file alias="colors">config/appearance.png</file>
         <file alias="music-library">config/music-library.png</file>
-        <file alias="gnome-globe">config/gnome-globe.png</file>
         <file alias="keyboard-shortcuts">config/keyboard-shortcuts.png</file>
         <file alias="closeButton">config/closeButton.png</file>
-        <file alias="palette">config/palette.png</file>
+        <file alias="colors">config/colors.png</file>
+        <file alias="tabs">config/tabs.png</file>
+        <file alias="translate">config/translate.png</file>
     </qresource>
     <qresource prefix="/player/oxygen">
         <file alias="pause">player/oxygen/pause.png</file>

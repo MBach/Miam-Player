@@ -34,6 +34,8 @@ private slots:
 	void display();
 
 signals:
+	void aboutToChangeTime(int);
+
 	/** Sent when time has changed to update the label.*/
 	void timeChanged();
 };

@@ -185,6 +185,15 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
+	if (Settings::getInstance()->isRectTabs()) {
+		paintRectTabs();
+	} else {
+		paintRoundedTabs();
+	}
+}
+
+void TabBar::paintRectTabs()
+{
 	// A "[+]" button on the right
 	static const QPointF plus[13] = {
 		QPointF(1, 2), QPointF(2, 2), QPointF(2, 1),
@@ -228,6 +237,7 @@ void TabBar::paintEvent(QPaintEvent *)
 			}
 		}
 
+		// Draw last tab frame (which is the [+] button)
 		if (i == count() - 1) {
 			QPen plusPen;
 			if (o.state.testFlag(QStyle::State_MouseOver)) {
@@ -303,6 +313,11 @@ void TabBar::paintEvent(QPaintEvent *)
 			p.drawLine(rect().left(), h, tabRect(0).left(), h);
 		}
 	}
+}
+
+void TabBar::paintRoundedTabs()
+{
+
 }
 
 /** Rename a tab. */

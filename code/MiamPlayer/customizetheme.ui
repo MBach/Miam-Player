@@ -24,7 +24,7 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>134</width>
+       <width>148</width>
        <height>0</height>
       </size>
      </property>
@@ -33,6 +33,9 @@
        <width>200</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
      </property>
      <property name="sizeAdjustPolicy">
       <enum>QAbstractScrollArea::AdjustToContents</enum>
@@ -119,6 +122,18 @@
       <property name="icon">
        <iconset resource="mmmmp.qrc">
         <normaloff>:/config/music-library</normaloff>:/config/music-library</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Tabs</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+      </property>
+      <property name="icon">
+       <iconset resource="mmmmp.qrc">
+        <normaloff>:/config/tabs</normaloff>:/config/tabs</iconset>
       </property>
      </item>
     </widget>
@@ -237,7 +252,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-406</y>
+               <y>0</y>
                <width>390</width>
                <height>542</height>
               </rect>
@@ -1297,7 +1312,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="mmmmp.qrc">
+               <iconset>
                 <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
               </property>
               <property name="iconSize">
@@ -1334,7 +1349,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="mmmmp.qrc">
+               <iconset>
                 <normaloff>:/config/palette</normaloff>:/config/palette</iconset>
               </property>
               <property name="iconSize">
@@ -1601,6 +1616,97 @@
        </item>
        <item>
         <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page">
+      <layout class="QVBoxLayout" name="verticalLayout_13">
+       <item>
+        <widget class="QGroupBox" name="groupBoxTabs">
+         <property name="title">
+          <string>Tabs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>What kind of shape do you want for displaying tabs?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonTabsRect">
+            <property name="text">
+             <string>Rectangle</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonTabsRounded">
+            <property name="text">
+             <string>Rounded tabs</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QLabel" name="labelOverlapTabs">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Overlap on other tabs with</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="overlapTabsSpinBox">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="suffix">
+               <string>px</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_5">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -1899,6 +2005,38 @@
     <hint type="destinationlabel">
      <x>507</x>
      <y>471</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonTabsRect</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelOverlapTabs</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>403</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonTabsRect</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>overlapTabsSpinBox</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>403</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>507</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>

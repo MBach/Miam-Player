@@ -48,6 +48,11 @@ protected:
 
 	virtual void paintEvent(QPaintEvent *);
 
+private:
+	void paintRectTabs();
+
+	void paintRoundedTabs();
+
 private slots:
 	/** Rename a tab. */
 	void renameTab();

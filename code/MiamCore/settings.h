@@ -87,6 +87,9 @@ public:
 	/** Returns true if the button in parameter is visible or not. */
 	bool isMediaButtonVisible(const QString & buttonName) const;
 
+	/** Returns true if tabs should be displayed like rectangles. */
+	bool isRectTabs() const;
+
 	/** Returns true if stars are visible and active. */
 	bool isStarDelegates() const;
 

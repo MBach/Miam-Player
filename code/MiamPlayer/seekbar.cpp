@@ -20,7 +20,7 @@ void SeekBar::mousePressEvent(QMouseEvent *event)
 	int posButton = (float) xPox / width() * 1000;
 	qDebug() << "mousePressEvent" << xPox << width() << posButton;
 	this->setValue(posButton);
-	emit valueChanged(posButton);
+	emit sliderMoved(posButton);
 	QSlider::mousePressEvent(event);
 }
 

@@ -10,6 +10,11 @@ TimeLabel::TimeLabel(QWidget *parent) :
 {
 	this->installEventFilter(this);
 	connect(this, &TimeLabel::timeChanged, this, &TimeLabel::display);
+
+	connect(this, &TimeLabel::aboutToChangeTime, [=]() {
+		qDebug() << Q_FUNC_INFO;
+		emit timeChanged();
+	});
 }
 
 /** Setter. */

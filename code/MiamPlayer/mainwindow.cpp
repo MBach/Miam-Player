@@ -246,10 +246,7 @@ void MainWindow::setupActions()
 		_mediaPlayer.data()->blockSignals(false);
 	});
 
-	// Time label
-	//connect()
-
-	// Volume
+	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &QMediaPlayer::setVolume);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
