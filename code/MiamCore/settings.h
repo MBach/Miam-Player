@@ -102,6 +102,8 @@ public:
 	/** Returns all music locations. */
 	QStringList musicLocations() const;
 
+	int tabsOverlappingLength() const;
+
 	/// PlayBack options
 	qint64 playbackSeekTime() const;
 
@@ -178,6 +180,10 @@ public slots:
 	void setPlaybackDefaultActionForClose(PlaylistDefaultAction action);
 	void setPlaybackKeepPlaylists(bool b);
 	void setPlaybackRestorePlaylistsAtStartup(bool b);
+
+	void setTabsOverlappingLength(int l);
+
+	void setTabsRect(bool b);
 
 	/** Sets a new theme. */
 	void setThemeName(const QString &theme);

@@ -59,7 +59,12 @@ QSize TabBar::tabSizeHint(int index) const
 	if (index == count() - 1) {
 		return QSize(height(), height());
 	} else {
-		return QTabBar::tabSizeHint(index);
+		//return QTabBar::tabSizeHint(index);
+		QSize s = QTabBar::tabSizeHint(index);
+		if (!Settings::getInstance()->isRectTabs()) {
+			s.setWidth(s.width() + Settings::getInstance()->tabsOverlappingLength() * 2);
+		}
+		return s;
 	}
 }
 
@@ -185,14 +190,37 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
+	QStylePainter p(this);
+	QStyleOptionTab o;
+
+	int dist = Settings::getInstance()->tabsOverlappingLength();
+
 	if (Settings::getInstance()->isRectTabs()) {
-		paintRectTabs();
+		paintRectTabs(p, o);
 	} else {
-		paintRoundedTabs();
+		paintRoundedTabs(p, o, dist);
+	}
+
+	// Global bottom frame border
+	int h = tabRect(0).height() - 1;
+	p.setPen(o.palette.mid().color());
+	if (count() > 2) {
+		if (currentIndex() == 0) {
+			p.drawLine(tabRect(0).right() + 1 + dist, h, rect().right(), h);
+		} else {
+			p.drawLine(rect().left(), h, tabRect(currentIndex()).left(), h);
+			p.drawLine(tabRect(currentIndex()).right() + 1 + dist, h, rect().right(), h);
+		}
+	} else {
+		if (isLeftToRight()) {
+			p.drawLine(tabRect(0).width() + dist, h, rect().right(), h);
+		} else {
+			p.drawLine(rect().left(), h, tabRect(0).left(), h);
+		}
 	}
 }
 
-void TabBar::paintRectTabs()
+void TabBar::paintRectTabs(QStylePainter &p, QStyleOptionTab &o)
 {
 	// A "[+]" button on the right
 	static const QPointF plus[13] = {
@@ -204,9 +232,6 @@ void TabBar::paintRectTabs()
 	};
 
 	static const qreal penScaleFactor = 0.2;
-
-	QStylePainter p(this);
-	QStyleOptionTab o;
 
 	for (int i = 0; i < count(); i++) {
 		initStyleOption(&o, i);
@@ -295,29 +320,106 @@ void TabBar::paintRectTabs()
 		o.rect.adjust(r.width() + 10, 0, 0, 0);
 		p.drawText(o.rect, Qt::AlignLeft | Qt::AlignVCenter, o.text);
 	}
-
-	// Global bottom frame border
-	int h = tabRect(0).height() - 1;
-	p.setPen(o.palette.mid().color());
-	if (count() > 2) {
-		if (currentIndex() == 0) {
-			p.drawLine(tabRect(0).right() + 1, h, rect().right(), h);
-		} else {
-			p.drawLine(rect().left(), h, tabRect(currentIndex()).left(), h);
-			p.drawLine(tabRect(currentIndex()).right() + 1, h, rect().right(), h);
-		}
-	} else {
-		if (isLeftToRight()) {
-			p.drawLine(tabRect(0).width(), h, rect().right(), h);
-		} else {
-			p.drawLine(rect().left(), h, tabRect(0).left(), h);
-		}
-	}
 }
 
-void TabBar::paintRoundedTabs()
+void TabBar::paintRoundedTabs(QStylePainter &p, QStyleOptionTab &o, int dist)
 {
+	// A "\+\" button on the right
+	static const QPointF plus[13] = {
+		QPointF(1, 2), QPointF(2, 2), QPointF(2, 1),
+		QPointF(3, 1), QPointF(3, 2), QPointF(4, 2),
+		QPointF(4, 3), QPointF(3, 3), QPointF(3, 4),
+		QPointF(2, 4), QPointF(2, 3), QPointF(1, 3),
+		QPointF(1, 2),
+	};
 
+	static const qreal penScaleFactor = 0.15;
+
+	for (int i = 0; i < count(); i++) {
+		initStyleOption(&o, i);
+
+		// Background color
+		p.save();
+		if (i != currentIndex() && i != count() - 1) {
+			o.rect.adjust(0, 2, 0, 0);
+		} else if (i == count() - 1) {
+			o.rect.adjust(2, 2, -4, -4);
+		}
+
+		// Highlight the tab under the cursor
+		/// TODO
+
+		// Draw last tab frame (which is the [+] button)
+		if (i == count() - 1) {
+			QPen plusPen;
+			if (o.state.testFlag(QStyle::State_MouseOver)) {
+				plusPen = QPen(o.palette.highlight(), penScaleFactor);
+				p.setPen(o.palette.highlight().color());
+				p.setBrush(o.palette.highlight().color().lighter());
+			} else {
+				plusPen = QPen(o.palette.mid(), penScaleFactor);
+				p.setPen(o.palette.mid().color());
+				p.setBrush(o.palette.base());
+			}
+			p.drawRect(o.rect);
+
+			p.translate(o.rect.topLeft());
+			plusPen.setJoinStyle(Qt::MiterJoin);
+			p.setPen(plusPen);
+
+			// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
+			// Should I disable this gradient when height is small?
+			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
+			QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
+			linearGradient.setColorAt(0, Qt::white);
+			linearGradient.setColorAt(1, QColor(253, 230, 116));
+			p.setBrush(linearGradient);
+			p.drawPolygon(plus, 13);
+		} else {
+			if (o.state.testFlag(QStyle::State_MouseOver)) {
+				p.setPen(o.palette.highlight().color());
+			} else {
+				p.setPen(o.palette.mid().color());
+			}
+			// Rounded frame tab
+
+			QPainterPath pp;
+			pp.moveTo(o.rect.x() + dist * 0, o.rect.y() + o.rect.height());
+			pp.cubicTo(o.rect.x() + dist * 1, o.rect.y() + o.rect.height(),
+					   o.rect.x() + dist * 1, o.rect.y(),
+					   o.rect.x() + dist * 2, o.rect.y());
+			pp.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
+			pp.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y(),
+					   o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height(),
+					   o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
+			if (i == currentIndex()) {
+				p.fillPath(pp, o.palette.base());
+			}
+			p.setRenderHint(QPainter::Antialiasing, true);
+			p.drawPath(pp);
+			p.setRenderHint(QPainter::Antialiasing, false);
+		}
+		p.restore();
+
+		// Icon
+		QRect r = tabRect(i);
+		r.setHeight(fontMetrics().ascent());
+		r.translate(3 + dist, (height() - r.height()) / 2);
+		r.setWidth(r.height() / 2);
+		p.setRenderHint(QPainter::SmoothPixmapTransform);
+		o.icon.paint(&p, r, Qt::AlignLeft | Qt::AlignVCenter);
+
+		// Playlist name
+		if (i == currentIndex()) {
+			p.setPen(o.palette.windowText().color());
+		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.windowText().color());
+		} else {
+			p.setPen(o.palette.mid().color());
+		}
+		o.rect.adjust(2 * dist, 0, 0, 0);
+		p.drawText(o.rect, Qt::AlignLeft | Qt::AlignVCenter, o.text);
+	}
 }
 
 /** Rename a tab. */

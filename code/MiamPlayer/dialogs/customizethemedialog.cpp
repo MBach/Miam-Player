@@ -145,8 +145,20 @@ void CustomizeThemeDialog::setupActions()
 		labelBigCoverOpacity->setEnabled(b);
 		spinBoxBigCoverOpacity->setEnabled(b);
 	});
-	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=](int v) {
+	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int v) {
 		settings->setBigCoverOpacity(v);
+		this->fade();
+		mainWindow->repaint();
+	});
+
+	// Tabs
+	connect(radioButtonTabsRect, &QRadioButton::toggled, [=](bool b) {
+		settings->setTabsRect(b);
+		this->fade();
+		mainWindow->repaint();
+	});
+	connect(overlapTabsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int v) {
+		settings->setTabsOverlappingLength(v);
 		this->fade();
 		mainWindow->repaint();
 	});
@@ -341,6 +353,9 @@ void CustomizeThemeDialog::loadTheme()
 	}
 	this->toggleCustomColors(settings->isCustomColors());
 
+	// Tabs
+	radioButtonTabsRect->setChecked(settings->isRectTabs());
+	overlapTabsSpinBox->setValue(settings->tabsOverlappingLength());
 }
 
 /** Redefined to initialize favorites from settings. */
