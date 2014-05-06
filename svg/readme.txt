@@ -25,3 +25,7 @@ Licence: Public domain
 File: 'tabs.svg'
 Copyright: Matthieu Bachelier
 Licence: Public domain
+
+File 'translate.svg'
+Copyright: David Vignoni, Nuvola Team
+Modifications: flat render
