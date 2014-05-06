@@ -100,7 +100,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 
 	// Highlight the current playing item
 	QFont font = settings->font(Settings::PLAYLIST);
-	if (_playlist->mediaPlaylist()->currentIndex() == index.row()) {
+	if (_playlist->mediaPlaylist()->currentIndex() == index.row() && _playlist->mediaPlayer().data()->state() != QMediaPlayer::StoppedState) {
 		font.setBold(true);
 		font.setItalic(true);
 	}

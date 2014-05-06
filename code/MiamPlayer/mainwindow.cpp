@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
 	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
+	seekSlider->setMediaPlayer(_mediaPlayer);
 
 	/// XXX
 	_uniqueLibrary = new UniqueLibrary(this);
@@ -181,7 +182,7 @@ void MainWindow::setupActions()
 		libraryHeader->setHidden(false);
 		widgetSearchBar->setHidden(false);
 		actionScanLibrary->setEnabled(true);
-		actionScanLibrary->trigger();
+		_librarySqlModel->rebuild();
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
@@ -214,6 +215,8 @@ void MainWindow::setupActions()
 			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
 			seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		}
+		// Remove bold font when player has stopped
+		tabPlaylists->currentPlayList()->viewport()->update();
 	});
 
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);

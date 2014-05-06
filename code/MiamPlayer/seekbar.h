@@ -3,6 +3,8 @@
 
 #include <QSlider>
 
+#include "mediaplayer.h"
+
 /**
  * \brief       The SeekBar class is used to display a nice seek bar instead of default slider.
  * \author		Matthieu Bachelier
@@ -11,8 +13,16 @@
 class SeekBar : public QSlider
 {
     Q_OBJECT
+private:
+	/** Reference to the unique instance of MediaPlayer class in the application. */
+	QWeakPointer<MediaPlayer> _mediaPlayer;
+
 public:
     explicit SeekBar(QWidget *parent = 0);
+
+	inline void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer) {
+		_mediaPlayer = mediaPlayer;
+	}
 
 protected:
 	virtual void mousePressEvent(QMouseEvent *event);
