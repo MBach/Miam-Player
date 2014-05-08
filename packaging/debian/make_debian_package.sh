@@ -7,13 +7,13 @@ build=$HOME/Miam-Player-build
 version=0.6.2
 
 # Temporary folder
-mkdir $HOME/miam-player-$version
-dest=$HOME/miam-player-$version
+mkdir $HOME/miam-player_$version
+dest=$HOME/miam-player_$version
 
 # Copy the binary file and shared libs:
-cp -f $build/MiamCore/libMiamCore.so* ./miam-player/usr/lib
-cp -f $build/MiamUniqueLibrary/libMiamUniqueLibrary.so* ./miam-player/usr/lib
-cp -f $build/MiamPlayer/MiamPlayer ./miam-player/usr/bin
+cp -f $build/MiamCore/libMiamCore.so* ./miam-player/usr/lib/
+cp -f $build/MiamUniqueLibrary/libMiamUniqueLibrary.so* ./miam-player/usr/lib/
+cp -f $build/MiamPlayer/MiamPlayer ./miam-player/usr/bin/
 
 # Rename executable (lowercase)
 sudo cp $build/MiamPlayer/MiamPlayer ./miam-player/usr/bin/miamplayer
@@ -25,13 +25,13 @@ cp -Rf ./miam-player/* $dest/
 sed -i "s/Version: /Version: $version/g" $dest/DEBIAN/control
 
 # Change chmod
-sudo chmod 755 $dest/DEBIAN/p*
-sudo chmod 644 $dest/usr/lib/*
-sudo chmod 755 $dest/usr/bin/*
+chmod 755 $dest/DEBIAN/p*
+chmod 644 $dest/usr/lib/*
+chmod 755 $dest/usr/bin/*
 
 # Change chown
-sudo chown root:root $dest/usr/lib/*
-sudo chown root:root $dest/usr/bin/*
+chown root:root $dest/usr/lib/*
+chown root:root $dest/usr/bin/*
 
 # Create package
 dpkg-deb --build $dest
