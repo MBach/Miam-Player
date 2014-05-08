@@ -4,7 +4,7 @@
 build=$HOME/Miam-Player-build
 
 # Current release
-version=0.6.2
+version=0.6.3
 
 # Temporary folder
 mkdir $HOME/miam-player-$version

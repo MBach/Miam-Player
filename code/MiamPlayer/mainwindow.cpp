@@ -199,6 +199,11 @@ void MainWindow::setupActions()
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
+	//connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, tagEditor, &TagEditor::addUrlsToEditor);
+	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
+		this->toggleTagEditor(true);
+		tagEditor->addUrlsToEditor(tracks);
+	});
 
 	// Rebuild the treeview when tracks have changed using the tag editor
 	//connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
@@ -217,6 +222,7 @@ void MainWindow::setupActions()
 		}
 		// Remove bold font when player has stopped
 		tabPlaylists->currentPlayList()->viewport()->update();
+		seekSlider->update();
 	});
 
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);

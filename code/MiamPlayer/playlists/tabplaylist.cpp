@@ -192,6 +192,8 @@ Playlist* TabPlaylist::addPlaylist()
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, [=]() {
 		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
 	});
+	// Forward from inner class to MainWindow the signal
+	connect(p, &Playlist::aboutToSendToTagEditor, this, &TabPlaylist::aboutToSendToTagEditor);
 
 	// Select the new empty playlist
 	setCurrentIndex(i);

@@ -113,7 +113,7 @@ signals:
 
 	void aboutToSavePlaylist(int);
 
-	void sendToTagEditor(const QList<QPersistentModelIndex> &);
+	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 
 	void updatePlaybackModeButton();
 };

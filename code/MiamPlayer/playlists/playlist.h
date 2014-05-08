@@ -102,6 +102,9 @@ public slots:
 
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();
+
+signals:
+	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 };
 
 #endif // PLAYLIST_H

@@ -2,8 +2,8 @@
 Encoding=UTF-8
 Type=Application
 Name=Miam-Player
-GenericName=The music player designed for Madam Yum-Yum!
-GenericName[fr]=Le lecteur de musique spécialement conçu pour Madame Miam-Miam !
+GenericName=Miam-Player
+GenericName[fr]=Miam-Player
 Version=1.0
 Exec=miamplayer %U
 TryExec=miamplayer
