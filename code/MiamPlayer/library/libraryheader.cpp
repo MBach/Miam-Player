@@ -9,9 +9,17 @@
 #include <QtDebug>
 
 LibraryHeader::LibraryHeader(QWidget *parent) :
-	QPushButton(parent), _lod(new LibraryOrderDialog(this))
+	QPushButton(parent), _lod(new LibraryOrderDialog(this)), _order(Qt::AscendingOrder)
 {
-	connect(this, &QPushButton::clicked, this, &LibraryHeader::aboutToChangeSortOrder);
+	connect(this, &QPushButton::clicked, [=]() {
+		if (_order == Qt::AscendingOrder) {
+			_order = Qt::DescendingOrder;
+		} else {
+			_order = Qt::AscendingOrder;
+		}
+		this->update();
+		emit aboutToChangeSortOrder();
+	});
 	connect(_lod, &LibraryOrderDialog::accepted, this, &LibraryHeader::aboutToChangeHierarchyOrder);
 }
 
@@ -38,15 +46,11 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	p.fillRect(rect(), g);
 
 	// Text
-	//model()->headerData(logicalIndex, Qt::Horizontal).toString();
 	QString header = _lod->headerValue();
 	QFont f = Settings::getInstance()->font(Settings::LIBRARY);
 	p.setFont(f);
 	QFontMetrics fm(f);
-	if (fm.height() > height()) {
-		this->setMinimumHeight(fm.height());
-		return;
-	}
+	this->setMinimumHeight(fm.height());
 
 	// Check if label should be elided (in case of large font and small area on screen)
 	QString elided = fm.elidedText(header, Qt::ElideRight, parentWidget()->width());
@@ -59,15 +63,15 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	p.restore();
 
 	// Draw sort indicator
-	static const QPoint sortIndicatorDown[3] = {
-		QPoint(0.0, 0.0),
-		QPoint(2.0, 0.0),
-		QPoint(1.0, 1.0)
+	static const QPointF sortIndicatorDown[3] = {
+		QPointF(0.0, 0.0),
+		QPointF(2.0, 0.0),
+		QPointF(1.0, 1.0)
 	};
-	static const QPoint sortIndicatorUp[3] = {
-		QPoint(0.0, 1.0),
-		QPoint(1.0, 0.0),
-		QPoint(2.0, 1.0)
+	static const QPointF sortIndicatorUp[3] = {
+		QPointF(0.0, 1.0),
+		QPointF(1.0, 0.0),
+		QPointF(2.0, 1.0)
 	};
 
 	int minX = rect().center().x() - (rect().height() / 2);
@@ -77,27 +81,33 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	}
 	p.save();
 	p.translate(minX, rect().height() / 2.5);
-	p.scale(rect().height() / 6, rect().height() / 6);
 
 	// Highlight the sort indicator if needed
 	if (rect().contains(mapFromGlobal(QCursor::pos()))) {
-		p.setPen(QPen(QApplication::palette().highlight(), (6.0 / rect().height())));
+		p.setPen(QApplication::palette().highlight().color());
 		p.setBrush(QApplication::palette().highlight().color().lighter());
 	} else {
-		p.setPen(QPen(QApplication::palette().mid(), (6.0 / rect().height())));
+		p.setPen(QApplication::palette().mid().color());
 		p.setBrush(Qt::NoBrush);
 	}
-	//if (Qt::AscendingOrder == sortIndicatorOrder()) {
-	if (1) {
-		p.drawPolygon(sortIndicatorDown, 3);
+	QTransform t;
+	float ratio = (float) rect().height() / 6.0;
+	t.scale(ratio, ratio);
+	QPolygonF sortIndicator;
+	if (Qt::AscendingOrder == _order) {
+		sortIndicator.append(t.map(sortIndicatorDown[0]));
+		sortIndicator.append(t.map(sortIndicatorDown[1]));
+		sortIndicator.append(t.map(sortIndicatorDown[2]));
 	} else {
-		p.drawPolygon(sortIndicatorUp, 3);
+		sortIndicator.append(t.map(sortIndicatorUp[0]));
+		sortIndicator.append(t.map(sortIndicatorUp[1]));
+		sortIndicator.append(t.map(sortIndicatorUp[2]));
 	}
+	p.drawPolygon(sortIndicator);
 	p.restore();
 
 	// Border
 	p.setPen(QApplication::palette().mid().color());
-	//p.fillRect(rect(), base);
 	if (isLeftToRight()) {
 		p.drawLine(rect().topRight(), rect().bottomRight());
 	} else {

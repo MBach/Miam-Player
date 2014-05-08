@@ -49,7 +49,8 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
     volumeslider.cpp \
-    seekbar.cpp
+    seekbar.cpp \
+    scrollbar.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -100,7 +101,8 @@ HEADERS += \
     playlists/stareditor.h \
     library/libraryheader.h \
     playlists/playlistframe.h \
-    seekbar.h
+    seekbar.h \
+    scrollbar.h
 
 FORMS += \
     mainwindow.ui \

@@ -1,7 +1,7 @@
 #ifndef LIBRARYSCROLLBAR_H
 #define LIBRARYSCROLLBAR_H
 
-#include <QScrollBar>
+#include "scrollbar.h"
 
 /**
  * \brief		The LibraryScrollBar class is used to hide covers when scrolling.
@@ -11,7 +11,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class LibraryScrollBar : public QScrollBar
+class LibraryScrollBar : public ScrollBar
 {
 	Q_OBJECT
 

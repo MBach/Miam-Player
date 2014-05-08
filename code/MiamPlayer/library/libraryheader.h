@@ -11,6 +11,8 @@ class LibraryHeader : public QPushButton
 private:
 	LibraryOrderDialog *_lod;
 
+	Qt::SortOrder _order;
+
 public:
 	explicit LibraryHeader(QWidget *parent = 0);
 
