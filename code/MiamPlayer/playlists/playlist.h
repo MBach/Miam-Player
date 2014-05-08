@@ -68,6 +68,8 @@ public:
 
 	inline void setHash(uint hash) { _hash = hash; }
 
+	inline QWeakPointer<MediaPlayer> mediaPlayer() { return _mediaPlayer; }
+
 protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
@@ -100,6 +102,9 @@ public slots:
 
 	/** Remove selected tracks from the playlist. */
 	void removeSelectedTracks();
+
+signals:
+	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 };
 
 #endif // PLAYLIST_H

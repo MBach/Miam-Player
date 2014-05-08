@@ -55,7 +55,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		_mediaPlayer.data()->blockSignals(false);
 		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
-		//this->viewport()->update();
 	});
 
 	// Link core multimedia actions
@@ -64,14 +63,35 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 			_mediaPlayer.data()->skipForward();
 		}
 	});
+
+	// Ensure current item in the playlist is visible when track has just changed to another one
 	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, [=] () {
-		this->viewport()->update();
+		int row = _mediaPlayer.data()->playlist()->currentIndex();
+		this->scrollTo(_playlistModel->index(row, 0));
 	});
 
 	// Context menu on tracks
+	/// TODO: sub menu tag -> send playlist to editor, edit in-line
 	_trackProperties = new QMenu(this);
 	QAction *removeFromCurrentPlaylist = _trackProperties->addAction(tr("Remove from playlist"));
-    connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
+	QMenu *subMenuTag = new QMenu(tr("Edit tags"), this);
+	_trackProperties->addMenu(subMenuTag);
+	QAction *actionEditTagsInEditor = subMenuTag->addAction(tr("in tag editor"));
+	QAction *actionInlineTag = subMenuTag->addAction(tr("inline"));
+	actionInlineTag->setToolTip("Not yet implemented");
+	actionInlineTag->setDisabled(true);
+
+	connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
+	//connect(actionEditTagsInEditor, &QAction::triggered, this, &Playlist::editTagsInEditor);
+	connect(actionEditTagsInEditor, &QAction::triggered, [=]() {
+		QList<QUrl> selectedTracks;
+		foreach (QModelIndex index, selectionModel()->selectedRows()) {
+			QMediaContent mc = _playlistModel->mediaPlaylist()->media(index.row());
+			selectedTracks.append(mc.canonicalUrl());
+		}
+		emit aboutToSendToTagEditor(selectedTracks);
+	});
+	//connect(actionInlineTag, &QAction::triggered, this, &Playlist::editTagInline);
 
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());

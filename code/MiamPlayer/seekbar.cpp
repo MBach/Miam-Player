@@ -17,7 +17,7 @@ SeekBar::SeekBar(QWidget *parent) :
 void SeekBar::mousePressEvent(QMouseEvent *event)
 {
 	int xPox = mapFromGlobal(QCursor::pos()).x();
-	int posButton = (float) xPox / width() * 1000;
+	int posButton = (float) xPox / (width() - 20) * 1000;
 	qDebug() << "mousePressEvent" << xPox << width() << posButton;
 	this->setValue(posButton);
 	emit sliderMoved(posButton);
@@ -64,18 +64,28 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.fillPath(path, o.palette.base());
 	p.drawPath(path);
 
-	QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
-	p.fillRect(rPlayed, linearGradient);
-
-	p.save();
-	p.setRenderHint(QPainter::Antialiasing, true);
-	QPointF center(posButton, height() * 0.5);
-	QConicalGradient cGrad(center, 0.0);
-	cGrad.setColorAt(0.0, o.palette.highlight().color());
-	cGrad.setColorAt(1.0, o.palette.highlight().color().lighter());
-	p.setBrush(cGrad);
-	p.drawEllipse(center, height() * 0.3, height() * 0.3);
-	p.restore();
+	if (_mediaPlayer.data()->state() != QMediaPlayer::StoppedState) {
+		if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState) {
+			QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
+			p.fillRect(rPlayed, linearGradient);
+		} else {
+			p.fillRect(rPlayed, o.palette.mid());
+		}
+		p.save();
+		p.setRenderHint(QPainter::Antialiasing, true);
+		QPointF center(posButton, height() * 0.5);
+		QConicalGradient cGrad(center, 360 - 4 * (value() % 360));
+		if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState) {
+			cGrad.setColorAt(0.0, o.palette.highlight().color());
+			cGrad.setColorAt(1.0, o.palette.highlight().color().lighter());
+		} else {
+			cGrad.setColorAt(0.0, o.palette.mid().color());
+			cGrad.setColorAt(1.0, o.palette.mid().color().lighter());
+		}
+		p.setBrush(cGrad);
+		p.drawEllipse(center, height() * 0.3, height() * 0.3);
+		p.restore();
+	}
 }
 
 QLinearGradient SeekBar::interpolatedLinearGradient(const QPointF &start, const QPointF &end, QStyleOptionSlider &o)

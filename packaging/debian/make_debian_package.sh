@@ -4,7 +4,7 @@
 build=$HOME/Miam-Player-build
 
 # Current release
-version=0.6.2
+version=0.6.3
 
 # Temporary folder
 mkdir $HOME/miam-player_$version
@@ -16,7 +16,7 @@ cp -f $build/MiamUniqueLibrary/libMiamUniqueLibrary.so* ./miam-player/usr/lib/
 cp -f $build/MiamPlayer/MiamPlayer ./miam-player/usr/bin/
 
 # Rename executable (lowercase)
-sudo cp $build/MiamPlayer/MiamPlayer ./miam-player/usr/bin/miamplayer
+cp $build/MiamPlayer/MiamPlayer ./miam-player/usr/bin/miamplayer
 
 # Prepare final copy
 cp -Rf ./miam-player/* $dest/

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
 	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
+	seekSlider->setMediaPlayer(_mediaPlayer);
 
 	/// XXX
 	_uniqueLibrary = new UniqueLibrary(this);
@@ -181,7 +182,7 @@ void MainWindow::setupActions()
 		libraryHeader->setHidden(false);
 		widgetSearchBar->setHidden(false);
 		actionScanLibrary->setEnabled(true);
-		actionScanLibrary->trigger();
+		_librarySqlModel->rebuild();
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
@@ -198,6 +199,11 @@ void MainWindow::setupActions()
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
+	//connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, tagEditor, &TagEditor::addUrlsToEditor);
+	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
+		this->toggleTagEditor(true);
+		tagEditor->addUrlsToEditor(tracks);
+	});
 
 	// Rebuild the treeview when tracks have changed using the tag editor
 	//connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
@@ -214,6 +220,9 @@ void MainWindow::setupActions()
 			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
 			seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		}
+		// Remove bold font when player has stopped
+		tabPlaylists->currentPlayList()->viewport()->update();
+		seekSlider->update();
 	});
 
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);

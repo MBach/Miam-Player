@@ -49,9 +49,9 @@ protected:
 	virtual void paintEvent(QPaintEvent *);
 
 private:
-	void paintRectTabs();
+	void paintRectTabs(QStylePainter &p, QStyleOptionTab &o);
 
-	void paintRoundedTabs();
+	void paintRoundedTabs(QStylePainter &p, QStyleOptionTab &o, int dist);
 
 private slots:
 	/** Rename a tab. */

@@ -8,6 +8,8 @@
 
 #include "ui_tageditor.h"
 
+#include <QUrl>
+
 class TagEditor : public QWidget, public Ui::TagEditor
 {
 	Q_OBJECT
@@ -36,6 +38,9 @@ private:
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
 	void addItemsToEditor(const QStringList &tracks);
+
+	/** Wrapper for addItemsToEditor. */
+	void addUrlsToEditor(const QList<QUrl> &tracks);
 
 	/** Clears all rows and comboboxes. */
 	void clear();

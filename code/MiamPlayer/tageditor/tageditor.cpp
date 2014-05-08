@@ -122,6 +122,18 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 	tagEditorWidget->resizeColumnsToContents();
 }
 
+/** Wrapper for addItemsToEditor. */
+void TagEditor::addUrlsToEditor(const QList<QUrl> &tracks)
+{
+	QStringList localFiles;
+	foreach (QUrl url, tracks) {
+		if (url.isLocalFile()) {
+			localFiles.append(url.toLocalFile());
+		}
+	}
+	this->addItemsToEditor(localFiles);
+}
+
 /** Clears all rows and comboboxes. */
 void TagEditor::clear()
 {

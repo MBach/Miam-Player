@@ -228,7 +228,7 @@ bool Settings::isRectTabs() const
 	if (b.isValid()) {
 		return b.toBool();
 	} else {
-		return true;
+		return false;
 	}
 }
 
@@ -263,6 +263,16 @@ QStringList Settings::musicLocations() const
 		list.append(v.toString());
 	}
 	return list;
+}
+
+int Settings::tabsOverlappingLength() const
+{
+	QVariant v = value("tabsOverlappingLength");
+	if (v.isValid()) {
+		return v.toInt();
+	} else {
+		return 10;
+	}
 }
 
 /// PlayBack options
@@ -529,6 +539,16 @@ void Settings::setPlaybackKeepPlaylists(bool b)
 void Settings::setPlaybackRestorePlaylistsAtStartup(bool b)
 {
 	setValue("playbackRestorePlaylistsAtStartup", b);
+}
+
+void Settings::setTabsOverlappingLength(int l)
+{
+	setValue("tabsOverlappingLength", l);
+}
+
+void Settings::setTabsRect(bool b)
+{
+	setValue("rectangularTabs", b);
 }
 
 void Settings::setThemeName(const QString &theme)
