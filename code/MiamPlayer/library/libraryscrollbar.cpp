@@ -7,7 +7,7 @@
 #include <QtDebug>
 
 LibraryScrollBar::LibraryScrollBar(QWidget *parent)
-	: ScrollBar(parent), _hasNotEmittedYet(true)
+	: ScrollBar(Qt::Vertical, parent), _hasNotEmittedYet(true)
 {}
 
 /** Redefined to temporarily hide covers when moving. */
@@ -17,7 +17,7 @@ void LibraryScrollBar::mouseMoveEvent(QMouseEvent *e)
 		emit displayItemDelegate(false);
 		_hasNotEmittedYet = false;
 	}
-	QScrollBar::mouseMoveEvent(e);
+	ScrollBar::mouseMoveEvent(e);
 }
 
 /** Redefined to temporarily hide covers when moving. */
@@ -27,7 +27,7 @@ void LibraryScrollBar::mousePressEvent(QMouseEvent *e)
 		emit displayItemDelegate(false);
 		_hasNotEmittedYet = false;
 	}
-	QScrollBar::mousePressEvent(e);
+	ScrollBar::mousePressEvent(e);
 }
 
 /** Redefined to restore covers when move events are finished. */
@@ -37,17 +37,5 @@ void LibraryScrollBar::mouseReleaseEvent(QMouseEvent *e)
 		emit displayItemDelegate(true);
 		_hasNotEmittedYet = true;
 	}
-	QScrollBar::mouseReleaseEvent(e);
-}
-
-void LibraryScrollBar::paintEvent(QPaintEvent *e)
-{
-	ScrollBar::paintEvent(e);
-	QStylePainter p(this);
-	p.setPen(QApplication::palette().mid().color());
-	if (isLeftToRight()) {
-		p.drawLine(rect().topRight(), rect().bottomRight());
-	} else {
-		p.drawLine(rect().topLeft(), rect().bottomLeft());
-	}
+	ScrollBar::mouseReleaseEvent(e);
 }

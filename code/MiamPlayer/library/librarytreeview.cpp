@@ -103,6 +103,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	this->setModel(proxyModel);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
+	vScrollBar->setFrameBorder(false, false, false, true);
 	this->setVerticalScrollBar(vScrollBar);
 	connect(vScrollBar, &LibraryScrollBar::displayItemDelegate, [=](bool b) {
 		_itemDelegate->displayIcon(b);

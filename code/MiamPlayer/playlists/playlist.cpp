@@ -12,6 +12,7 @@
 #include "tabplaylist.h"
 #include "playlistheaderview.h"
 #include "playlistitemdelegate.h"
+#include "scrollbar.h"
 
 #include <QItemSelection>
 #include <QStylePainter>
@@ -38,6 +39,10 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setFrameShape(QFrame::NoFrame);
 	this->setItemDelegate(new PlaylistItemDelegate(this));
 	this->setMouseTracking(true);
+	ScrollBar *hScrollBar = new ScrollBar(Qt::Vertical, this);
+	hScrollBar->setFrameBorder(false, true, true, false);
+	this->setHorizontalScrollBar(hScrollBar);
+	this->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 
 	// Select only by rows, not cell by cell
 	this->setSelectionBehavior(QAbstractItemView::SelectRows);

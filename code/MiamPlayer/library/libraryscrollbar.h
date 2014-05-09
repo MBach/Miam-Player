@@ -32,8 +32,6 @@ protected:
 	/** Redefined to restore covers when move events are finished. */
 	virtual void mouseReleaseEvent(QMouseEvent *e);
 
-	virtual void paintEvent(QPaintEvent *);
-
 signals:
 	/** Tell the view to toggle covers. */
 	void displayItemDelegate(bool);

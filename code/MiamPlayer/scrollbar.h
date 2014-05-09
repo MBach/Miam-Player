@@ -6,10 +6,22 @@
 class ScrollBar : public QScrollBar
 {
 	Q_OBJECT
+private:
+	bool _hasVerticalFrame;
+	int _isDown;
+
+	bool _top, _left, _bottom, _right;
+
 public:
-	explicit ScrollBar(QWidget *parent = 0);
+	explicit ScrollBar(Qt::Orientation orientation, QWidget *parent = 0);
+
+	void setFrameBorder(bool top, bool left, bool bottom, bool right);
 
 protected:
+	virtual void mousePressEvent(QMouseEvent *e);
+
+	virtual void mouseReleaseEvent(QMouseEvent *e);
+
 	virtual void paintEvent(QPaintEvent *e);
 };
 
