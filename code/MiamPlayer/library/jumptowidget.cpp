@@ -68,7 +68,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	//p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
 	p.fillRect(rect(), o.palette.window());
 
-	QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
+	//QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
 
 	// Reduce the font if this widget is too small
 	QFont f = p.font();
@@ -87,26 +87,23 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
 			p.setFont(f);
 		}
-		// Check if colors need to be inverted
-		p.save();
-		if (hiColor.value() < 128 && (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos) || _libraryTreeView->currentLetter() == qc)) {
+		if (o.state.testFlag(QStyle::State_Selected)) {
 			p.setPen(o.palette.highlightedText().color());
-		} else if (abs(o.palette.windowText().color().value() - o.palette.base().color().value()) < 128) {
-			p.setPen(o.palette.brightText().color());
+		} else if ((o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos) || _libraryTreeView->currentLetter() == qc)) {
+			p.setPen(o.palette.highlightedText().color());
+		} else {
+			p.setPen(o.palette.windowText().color());
 		}
 		p.drawText(r, Qt::AlignCenter, qc);
-		p.restore();
 	}
 
 	// Draw a vertical line if there are few items in the library
 	if (!_libraryTreeView->verticalScrollBar()->isVisible()) {
-		p.save();
 		p.setPen(o.palette.mid().color());
 		if (isLeftToRight()) {
 			p.drawLine(rect().topRight(), rect().bottomRight());
 		} else {
 			p.drawLine(rect().topLeft(), rect().bottomLeft());
 		}
-		p.restore();
 	}
 }

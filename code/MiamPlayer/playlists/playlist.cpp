@@ -32,6 +32,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
+	this->viewport()->setContentsMargins(100, 100, 100, 100);
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
@@ -125,9 +126,13 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	_playlistModel->insertMedias(rowIndex, medias);
-	this->resizeColumnToContents(TRACK_NUMBER);
-	this->resizeColumnToContents(RATINGS);
-	this->resizeColumnToContents(YEAR);
+	if (Settings::getInstance()->isPlaylistResizeColumns()) {
+		this->resizeColumnsToContents();
+	} else {
+		this->resizeColumnToContents(TRACK_NUMBER);
+		this->resizeColumnToContents(RATINGS);
+		this->resizeColumnToContents(YEAR);
+	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
@@ -284,6 +289,7 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
+	QTableView::paintEvent(event);
 	QPainter p(viewport());
 	p.setPen(QApplication::palette().mid().color());
 	if (isLeftToRight()) {
@@ -291,9 +297,6 @@ void Playlist::paintEvent(QPaintEvent *event)
 	} else {
 		p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
 	}
-	/// FIXME: why do I have this ghost line?
-	//p.drawLine(viewport()->rect().bottomLeft(), viewport()->rect().bottomRight());
-	QTableView::paintEvent(event);
 	if (_dropDownIndex) {
 		// Where to draw the indicator line
 		int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();

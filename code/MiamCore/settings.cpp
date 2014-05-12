@@ -221,6 +221,16 @@ bool Settings::isMediaButtonVisible(const QString & buttonName) const
    }
 }
 
+bool Settings::isPlaylistResizeColumns() const
+{
+	QVariant b = value("playlistResizeColumns");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
 /** Returns true if tabs should be displayed like rectangles. */
 bool Settings::isRectTabs() const
 {
@@ -332,17 +342,22 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 
 	if (cr == QPalette::Base) {
 
+		//qDebug() << "base color" << color.value();
 		// Check if text color should be inverted when the base is too dark
-		if (abs(color.value() - palette.windowText().color().value()) < 128) {
-			QBrush tmp = palette.windowText();
-			palette.setColor(QPalette::WindowText, palette.brightText().color());
-			palette.setColor(QPalette::Text, palette.brightText().color());
-			palette.setColor(QPalette::BrightText, tmp.color());
-
-			colors.insert(QString::number(QPalette::WindowText), palette.brightText().color());
-			colors.insert(QString::number(QPalette::Text), palette.brightText().color());
-			colors.insert(QString::number(QPalette::BrightText), tmp.color());
+		QColor text;
+		if (color.value() < 128) {
+			text = Qt::white;
+		} else {
+			text = Qt::black;
 		}
+		//qDebug() << "base" << color.value() << "windowText" << palette.windowText().color().value();
+		palette.setColor(QPalette::WindowText, text);
+		palette.setColor(QPalette::Text, text);
+		palette.setColor(QPalette::BrightText, text);
+
+		colors.insert(QString::number(QPalette::WindowText), text);
+		colors.insert(QString::number(QPalette::Text), text);
+		colors.insert(QString::number(QPalette::BrightText), text);
 
 		// Automatically create a window color from the base one
 		QColor windowColor = color;
@@ -353,6 +368,15 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 		}
 		palette.setColor(QPalette::Window, windowColor);
 		colors.insert(QString::number(QPalette::Window), windowColor);
+	} else if (cr == QPalette::Highlight) {
+		QColor highlightedText;
+		if (qAbs(color.value() - QColor(Qt::white).value()) < 128) {
+			highlightedText = Qt::black;
+		} else {
+			highlightedText = Qt::white;
+		}
+		palette.setColor(QPalette::HighlightedText, highlightedText);
+		colors.insert(QString::number(QPalette::HighlightedText), highlightedText);
 	}
 	QApplication::setPalette(palette);
 	setValue("customColorsMap", colors);

@@ -68,7 +68,7 @@
       <enum>QListView::IconMode</enum>
      </property>
      <property name="currentRow">
-      <number>-1</number>
+      <number>0</number>
      </property>
      <item>
       <property name="text">
@@ -2431,7 +2431,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton">
+              <widget class="QRadioButton" name="radioButtonKeepAllColumnsVisible">
                <property name="text">
                 <string>Keep all columns visible</string>
                </property>

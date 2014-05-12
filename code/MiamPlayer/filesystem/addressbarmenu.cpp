@@ -106,6 +106,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 		if (r.isValid()) {
 			QRect iconRect(r.x() + 6, r.y() + 2, 19, 19);
 			bool itemIsEnabled = true;
+			bool isHighLighted = false;
 			if (it->flags().testFlag(Qt::NoItemFlags)) {
 				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19), QIcon::Disabled));
 				itemIsEnabled = false;
@@ -117,6 +118,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 					p.drawRect(r);
 					p.setPen(QColor(192, 192, 192, 128));
 					p.drawLine(33, r.top() + 1, 33, r.bottom());
+					isHighLighted = true;
 				}
 				p.restore();
 				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19)));
@@ -129,6 +131,9 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 				p.setPen(QApplication::palette().color(QPalette::Disabled, QPalette::WindowText));
 			}
 			p.setFont(it->font());
+			if (isHighLighted) {
+				p.setPen(QApplication::palette().highlightedText().color());
+			}
 			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
 			p.restore();
 		}

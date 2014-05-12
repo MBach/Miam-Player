@@ -50,7 +50,8 @@ SOURCES += \
     treeview.cpp \
     volumeslider.cpp \
     seekbar.cpp \
-    scrollbar.cpp
+    scrollbar.cpp \
+    miamstyle.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -102,7 +103,8 @@ HEADERS += \
     library/libraryheader.h \
     playlists/playlistframe.h \
     seekbar.h \
-    scrollbar.h
+    scrollbar.h \
+    miamstyle.h
 
 FORMS += \
     mainwindow.ui \

@@ -9,6 +9,8 @@
 
 #include "plugininfo.h"
 
+#include "miamstyle.h"
+
 int main(int argc, char *argv[])
 {
 	Q_INIT_RESOURCE(mmmmp);
@@ -18,6 +20,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 
 	QApplication app(argc, argv);
+	app.setStyle(new MiamStyle());
 	MainWindow window;
 
 	QSharedMemory sharedMemory;

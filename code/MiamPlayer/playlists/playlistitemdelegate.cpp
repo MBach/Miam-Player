@@ -106,10 +106,8 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	}
 	p->setFont(font);
 
-	// Check if font color should be inverted
-	QColor hiColor = settings->customColors(QPalette::Highlight);
 	p->save();
-	if (hiColor.value() < 128 && o.state.testFlag(QStyle::State_Selected)) {
+	if (o.state.testFlag(QStyle::State_Selected)) {
 		p->setPen(o.palette.highlightedText().color());
 	}
 

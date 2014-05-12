@@ -106,13 +106,13 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
 	if (_highlighted || _textRect.contains(pos)) {
-		p.setPen(QApplication::palette().highlight().color());
-		p.setBrush(QApplication::palette().highlight().color().lighter());
+		p.setPen(palette.highlight().color());
+		p.setBrush(palette.highlight().color().lighter());
 		p.drawRect(_textRect);
 	} else if (_highlighted || _arrowRect.contains(pos)) {
-		p.setPen(QApplication::palette().highlight().color());
+		p.setPen(palette.highlight().color());
 		p.drawRect(_textRect);
-		p.setBrush(QApplication::palette().highlight().color().lighter());
+		p.setBrush(palette.highlight().color().lighter());
 	} else {
 		p.setPen(Qt::NoPen);
 		p.setBrush(Qt::NoBrush);
@@ -141,6 +141,13 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		}
 	}
 
+	if (_highlighted || _textRect.contains(pos)) {
+		p.setPen(palette.highlightedText().color());
+	} else if (_highlighted || _arrowRect.contains(pos)) {
+		p.setPen(palette.windowText().color());
+	} else {
+		p.setPen(palette.windowText().color());
+	}
 	if (dir.isRoot()) {
 		bool absRoot = true;
 		foreach (QFileInfo fileInfo, QDir::drives()) {

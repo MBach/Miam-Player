@@ -110,6 +110,7 @@ void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logical
 		vLinearGradient.setColorAt(1, palette.window().color());
 	}
 	p.fillRect(rect, QBrush(vLinearGradient));
+	p.setPen(opt.palette.windowText().color());
 	p.drawText(rect.adjusted(5, 0, 0, 0), Qt::AlignCenter, model()->headerData(logicalIndex, Qt::Horizontal).toString());
 
 	if (rect.contains(mapFromGlobal(QCursor::pos()))) {

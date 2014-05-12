@@ -88,11 +88,18 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 				p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
 			}
 		}
+
+
 		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
 		p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
 		p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
 		p.restore();
 
+		/*if (tab.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlightedText().color());
+		} else {
+			p.setPen(o.palette.windowText().color());
+		}*/
 		// If the rectangle is smaller than the text, shrink it
 		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
 	}
@@ -103,6 +110,11 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		initStyleOption(&tab, selected);
 		tab.palette = QApplication::palette();
 		p.fillRect(tab.rect, tab.palette.base().color().lighter(110));
+		/*if (tab.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlightedText().color());
+		} else {
+			p.setPen(o.palette.windowText().color());
+		}*/
 		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
 		p.setPen(tab.palette.mid().color());
 		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());

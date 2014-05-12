@@ -87,6 +87,8 @@ public:
 	/** Returns true if the button in parameter is visible or not. */
 	bool isMediaButtonVisible(const QString & buttonName) const;
 
+	bool isPlaylistResizeColumns() const;
+
 	/** Returns true if tabs should be displayed like rectangles. */
 	bool isRectTabs() const;
 

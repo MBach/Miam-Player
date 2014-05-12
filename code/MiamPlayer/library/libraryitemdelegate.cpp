@@ -250,11 +250,8 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 /** Check if color needs to be inverted then paint text. */
 void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text) const
 {
-	QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
 	p->save();
-	if (hiColor.value() < 128 && opt.state.testFlag(QStyle::State_Selected)) {
-		p->setPen(opt.palette.highlightedText().color());
-	} else if (hiColor.lighter().value() < 128 && opt.state.testFlag(QStyle::State_MouseOver)) {
+	if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
 		p->setPen(opt.palette.highlightedText().color());
 	}
 	p->drawText(rectText, Qt::AlignVCenter, text);
