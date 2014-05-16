@@ -27,9 +27,6 @@ public:
 	/** The first time the player is launched, this function will scan for multimedia files. */
 	void searchMultimediaFiles();
 
-protected:
-    virtual void paintEvent(QPaintEvent *);
-
 private slots:
 	void checkRow(QTableWidgetItem *i);
 

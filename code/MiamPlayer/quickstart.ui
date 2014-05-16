@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>452</width>
-    <height>408</height>
+    <width>381</width>
+    <height>369</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,6 +21,9 @@
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#QuickStart { background-color: #ffffff; }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

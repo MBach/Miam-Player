@@ -2,8 +2,6 @@
 #define LIBRARYFILTERLINEEDIT_H
 
 #include <QLineEdit>
-#include <QPropertyAnimation>
-#include <QTimer>
 
 #include "miamcore_global.h"
 
@@ -11,19 +9,10 @@ class MIAMCORE_LIBRARY LibraryFilterLineEdit : public QLineEdit
 {
 	Q_OBJECT
 
-private:
-	QTimer *_timer;
-	int _fps;
-	QPropertyAnimation _fade;
-
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
 
 protected:
-	virtual void focusInEvent(QFocusEvent *e);
-
-	virtual void focusOutEvent(QFocusEvent *e);
-
 	virtual void paintEvent(QPaintEvent *);
 };
 
