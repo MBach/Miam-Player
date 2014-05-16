@@ -11,6 +11,8 @@ public:
 
 	virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
 
+	virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;
+
 private:
 	void drawScrollBar(QPainter *p, const QWidget *widget) const;
 

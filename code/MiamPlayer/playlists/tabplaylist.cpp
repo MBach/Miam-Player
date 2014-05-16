@@ -1,6 +1,6 @@
 #include "tabplaylist.h"
 
-#include <QFileSystemModel>
+#include <QDirIterator>
 #include <QStackedLayout>
 
 #include "settings.h"
@@ -12,7 +12,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 {
 	this->setDocumentMode(true);
 	this->setTabBar(new TabBar(this));
-	//_watcher = new QFileSystemWatcher(this);
 	messageBox = new TracksNotFoundMessageBox(this);
 
 	Settings *settings = Settings::getInstance();
@@ -58,11 +57,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			}
 		}
 	});
-
-	/// TODO
-	//connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &file) {
-	//	qDebug() << "file has changed:" << file;
-	//});
 }
 
 

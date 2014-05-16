@@ -153,6 +153,25 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 	//	break;
 	default:
 		QProxyStyle::drawComplexControl(control, option, p, widget);
+	}
+}
+
+void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+{
+	switch (element) {
+	/*case PE_IndicatorArrowDown: {
+	break;
+	}*/
+	case PE_IndicatorTabClose: {
+		QIcon icon(":/icons/win/closeTabsHover");
+		if (option->state.testFlag(State_MouseOver)) {
+			painter->drawPixmap(0, 0, 16, 16, icon.pixmap(16, 16, QIcon::Normal));
+		} else {
+			painter->drawPixmap(0, 0, 16, 16, icon.pixmap(16, 16, QIcon::Disabled));
+		}
 		break;
+	}
+	default:
+		QProxyStyle::drawPrimitive(element, option, painter, widget);
 	}
 }
