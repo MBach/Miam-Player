@@ -5,7 +5,6 @@
 #include "pluginmanager.h"
 #include "settings.h"
 
-#include <QFileSystemModel>
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QStandardPaths>
@@ -87,7 +86,7 @@ void MainWindow::init()
 
 	Settings *settings = Settings::getInstance();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
-	splitter->restoreState(settings->value("splitterState").toByteArray());
+	//splitter->restoreState(settings->value("splitterState").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
     playlistManager->init();
@@ -114,9 +113,10 @@ void MainWindow::setupActions()
 	// Load music
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](bool libraryIsEmpty) {
 		quickStart->setVisible(libraryIsEmpty);
-		library->setHidden(libraryIsEmpty);
+		library->setVisible(!libraryIsEmpty);
+		libraryHeader->setVisible(!libraryIsEmpty);
 		actionScanLibrary->setDisabled(libraryIsEmpty);
-		widgetSearchBar->setHidden(libraryIsEmpty);
+		widgetSearchBar->setVisible(!libraryIsEmpty);
 		if (libraryIsEmpty) {
 			// Delete table tracks if such a previous one was found
 			if (_sqlDatabase.open()) {
@@ -330,7 +330,7 @@ void MainWindow::closeEvent(QCloseEvent *)
 {
 	Settings *settings = Settings::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
-	settings->setValue("splitterState", splitter->saveState());
+	//settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 	settings->setVolume(volumeSlider->value());
 	settings->sync();

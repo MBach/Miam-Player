@@ -164,12 +164,6 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="autoFillBackground">
-                <bool>false</bool>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QWidget { background-color: #ffffff; }</string>
-               </property>
               </widget>
              </item>
             </layout>
