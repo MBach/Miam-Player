@@ -2,7 +2,6 @@
 
 #include "settings.h"
 
-#include <QFileSystemModel>
 #include <QMessageBox>
 
 #include <QtDebug>

@@ -64,8 +64,7 @@ void LibrarySqlModel::rebuild()
 	database().exec("BEGIN TRANSACTION");
 
 	// Foreach file, insert tuple
-	QThread t;
-	_musicSearchEngine->moveToThread(&t);
+	_musicSearchEngine->moveToThread(&_workerThread);
 	_musicSearchEngine->doSearch();
 }
 

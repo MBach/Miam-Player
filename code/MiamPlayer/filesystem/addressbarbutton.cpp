@@ -132,6 +132,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			o.rect = _arrowRect.adjusted(2, 7, -4, -4);
 		}
 		/// TODO subclass for root button with special arrow when folders are hidden?
+		p.setBrush(o.palette.highlight());
 		if (_highlighted) {
 			p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
 		} else if (isLeftToRight()) {

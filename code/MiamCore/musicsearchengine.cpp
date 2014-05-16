@@ -2,6 +2,7 @@
 #include "filehelper.h"
 #include "settings.h"
 
+#include <QDateTime>
 #include <QDirIterator>
 #include <QFileInfo>
 #include <QThread>
@@ -9,8 +10,22 @@
 #include <QtDebug>
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-	QObject(parent)
-{}
+	QObject(parent), _watcher(new QFileSystemWatcher(this))
+{
+	_watcher->addPaths(Settings::getInstance()->musicLocations());
+
+	connect(_watcher, &QFileSystemWatcher::directoryChanged, [=](const QString &path) {
+		qDebug() << "directory has changed:" << path;
+		QDirIterator it(path, QDirIterator::NoIteratorFlags);
+		while (it.hasNext()) {
+			it.next();
+			qDebug() << "d:" << it.fileInfo().absoluteFilePath() << it.fileInfo().lastModified();
+		}
+	});
+	connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &path) {
+		qDebug() << "file has changed:" << path;
+	});
+}
 
 void MusicSearchEngine::doSearch()
 {
@@ -18,16 +33,23 @@ void MusicSearchEngine::doSearch()
 	QList<QDir> savedLocations;
 	foreach (QString musicPath, Settings::getInstance()->musicLocations()) {
 		QDir location(musicPath);
-		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden);
+		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
 		savedLocations.append(location);
 	}
 
 	int fileNumber = 0;
 	// QDirIterator class is very fast to scan large directories
+	QMultiHash<QDir, QDir> dirs;
 	foreach (QDir location, savedLocations) {
 		QDirIterator it(location, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
+			if (it.fileInfo().isDir()) {
+				QDir d = it.fileInfo().dir();
+				QFileInfoList fil = d.entryInfoList(QDir::AllDirs | QDir::Hidden | QDir::NoDotAndDotDot);
+				qDebug() << "observing" << it.filePath();
+				//dirs.insert();
+			}
 			fileNumber++;
 		}
 	}

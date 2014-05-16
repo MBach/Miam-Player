@@ -7,12 +7,15 @@
 
 #include <QSqlDatabase>
 #include <QSqlTableModel>
+#include <QThread>
 #include <QWeakPointer>
 
 class MIAMCORE_LIBRARY LibrarySqlModel : public QSqlTableModel
 {
 	Q_OBJECT
 private:
+	QThread _workerThread;
+
 	MusicSearchEngine *_musicSearchEngine;
 
 public:

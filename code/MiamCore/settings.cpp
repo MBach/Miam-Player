@@ -29,7 +29,11 @@ Settings::Settings(const QString &organization, const QString &application)
 		QApplication::setPalette(p);
 		setValue("customPalette", p);
 	} else {
-		setValue("defaultPalette", QApplication::palette());
+		QPalette p = QApplication::palette();
+		if ((p.highlight().color().lighter(160).value() - p.highlightedText().color().value()) < 128) {
+			p.setColor(QPalette::HighlightedText, Qt::black);
+		}
+		setValue("defaultPalette", p);
 	}
 }
 
@@ -342,22 +346,40 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 
 	if (cr == QPalette::Base) {
 
+		palette.setColor(QPalette::Button, color);
+		colors.insert(QString::number(QPalette::Button), color);
+
 		//qDebug() << "base color" << color.value();
 		// Check if text color should be inverted when the base is too dark
 		QColor text;
 		if (color.value() < 128) {
 			text = Qt::white;
+
+			/*palette.setColor(QPalette::Light, color);
+			palette.setColor(QPalette::Midlight, color);
+			palette.setColor(QPalette::Dark, color);
+			palette.setColor(QPalette::Mid, color);
+			palette.setColor(QPalette::Shadow, color);
+
+			colors.insert(QString::number(QPalette::Light), color);
+			colors.insert(QString::number(QPalette::Midlight), color);
+			colors.insert(QString::number(QPalette::Dark), color);
+			colors.insert(QString::number(QPalette::Mid), color);
+			colors.insert(QString::number(QPalette::Shadow), color);*/
+
 		} else {
 			text = Qt::black;
 		}
 		//qDebug() << "base" << color.value() << "windowText" << palette.windowText().color().value();
-		palette.setColor(QPalette::WindowText, text);
-		palette.setColor(QPalette::Text, text);
 		palette.setColor(QPalette::BrightText, text);
+		palette.setColor(QPalette::ButtonText, text);
+		palette.setColor(QPalette::Text, text);
+		palette.setColor(QPalette::WindowText, text);
 
-		colors.insert(QString::number(QPalette::WindowText), text);
-		colors.insert(QString::number(QPalette::Text), text);
 		colors.insert(QString::number(QPalette::BrightText), text);
+		colors.insert(QString::number(QPalette::ButtonText), text);
+		colors.insert(QString::number(QPalette::Text), text);
+		colors.insert(QString::number(QPalette::WindowText), text);
 
 		// Automatically create a window color from the base one
 		QColor windowColor = color;
@@ -378,6 +400,7 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 		palette.setColor(QPalette::HighlightedText, highlightedText);
 		colors.insert(QString::number(QPalette::HighlightedText), highlightedText);
 	}
+
 	QApplication::setPalette(palette);
 	setValue("customColorsMap", colors);
 }
