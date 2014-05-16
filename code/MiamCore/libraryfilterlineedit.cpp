@@ -8,8 +8,10 @@
 
 #include <QtDebug>
 
+#include <QPropertyAnimation>
+
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-	QLineEdit(parent)
+	QLineEdit(parent), _timer(new QTimer(this)), _fps(0)
 {
 	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
 		if (ff == Settings::LIBRARY) {
@@ -19,6 +21,34 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	});
 
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
+
+	_timer->setInterval(40);
+	connect(_timer, &QTimer::timeout, [=]() {
+		_fps++;
+		if (_fps == 25) {
+			_fps = 0;
+		}
+		this->repaint();
+	});
+
+	_fade.setEasingCurve(QEasingCurve::InQuad);
+	QColor black(Qt::black), white(Qt::white);
+	_fade.setStartValue(black);
+	_fade.setEndValue(white);
+	_fade.setDuration(1000);
+}
+
+void LibraryFilterLineEdit::focusInEvent(QFocusEvent *e)
+{
+	_timer->start();
+	QLineEdit::focusInEvent(e);
+}
+
+void LibraryFilterLineEdit::focusOutEvent(QFocusEvent *e)
+{
+	_fps = 25;
+	_timer->stop();
+	QLineEdit::focusOutEvent(e);
 }
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
@@ -98,7 +128,8 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		pTop.rx() += fontMetrics().width(text(), cursorPosition());
 		pBottom = rText.bottomLeft();
 		pBottom.rx() += fontMetrics().width(text(), cursorPosition());
-		p.setPen(Qt::black);
+		_fade.setCurrentTime(_fps * _timer->interval());
+		p.setPen(_fade.currentValue().value<QColor>());
 		p.drawLine(pTop, pBottom);
 	} else {
 		p.setPen(o.palette.mid().color());
