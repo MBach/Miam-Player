@@ -89,10 +89,12 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 			}
 		}
 
-
-		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
-		p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
-		p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+		p.drawLine(tab.rect.x(), tab.rect.y(),
+				   tab.rect.x() + tab.rect.width(), tab.rect.y());
+		p.drawLine(tab.rect.x(), tab.rect.y(),
+				   tab.rect.x(), tab.rect.y() + tab.rect.height());
+		p.drawLine(tab.rect.x() + tab.rect.width(), tab.rect.y(),
+				   tab.rect.x() + tab.rect.width(), tab.rect.y() + tab.rect.height());
 		p.restore();
 
 		/*if (tab.state.testFlag(QStyle::State_MouseOver)) {
@@ -117,11 +119,14 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		}*/
 		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
 		p.setPen(tab.palette.mid().color());
-		p.drawLine(tab.rect.topLeft(), tab.rect.topRight());
+		p.drawLine(tab.rect.x(), tab.rect.y(),
+				   tab.rect.x() + tab.rect.width(), tab.rect.y());
 		if (isLeftToRight()) {
-			p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+			p.drawLine(tab.rect.x() + tab.rect.width(), tab.rect.y(),
+					   tab.rect.x() + tab.rect.width(), tab.rect.y() + tab.rect.height());
 			if (selected > 0) {
-				p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
+				p.drawLine(tab.rect.x(), tab.rect.y(),
+						   tab.rect.x(), tab.rect.y() + tab.rect.height());
 			}
 		} else {
 			tab.rect.adjust(1, 0, 0, 0);

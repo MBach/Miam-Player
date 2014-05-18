@@ -118,6 +118,11 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		} else {
 			cover = QRect(option.rect.width() + 19 - coverSize - 1, option.rect.y() + 1, coverSize, coverSize);
 		}
+		// If font size is greater than the cover, align it
+		painter->save();
+		if (coverSize < option.rect.height() - 2) {
+			painter->translate(0, (option.rect.height() - 1 - coverSize) / 2);
+		}
 		if (_animateIcons) {
 			painter->save();
 			painter->setOpacity(_iconOpacity);
@@ -126,6 +131,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		} else {
 			painter->drawPixmap(cover, p);
 		}
+		painter->restore();
 	}
 	// It's possible to have missing covers in your library, so we need to keep alignment.
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));

@@ -135,11 +135,17 @@ void ScrollBar::paintEvent(QPaintEvent *)
 
 	// Arrows
 	p.save();
-	p.setPen(scrollbar.palette.base().color().darker());
-	p.setBrush(scrollbar.palette.base().color().darker());
+	if (scrollbar.palette.windowText().color().value() < 128) {
+		p.setPen(scrollbar.palette.dark().color());
+		p.setBrush(scrollbar.palette.dark());
+	} else {
+		p.setPen(scrollbar.palette.mid().color());
+		p.setBrush(scrollbar.palette.mid());
+	}
 
 	QTransform t;
 	float ratio = (float) subLineRect.height() / 4.0;
+	qDebug() << "ratio" << ratio;
 	t.scale(ratio, ratio);
 
 	if (orientation() == Qt::Vertical) {
@@ -151,6 +157,7 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		down.append(t.map(downArrow[1]));
 		down.append(t.map(downArrow[2]));
 		p.translate(subLineRect.width() / 4.0, subLineRect.height() / 3.0);
+		qDebug() << up << up.toPolygon();
 		p.drawPolygon(up);
 		p.translate(0, addLineRect.y());
 		p.drawPolygon(down);
