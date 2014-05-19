@@ -51,7 +51,8 @@ SOURCES += \
     volumeslider.cpp \
     seekbar.cpp \
     scrollbar.cpp \
-    miamstyle.cpp
+    miamstyle.cpp \
+    styling/miamstyleditemdelegate.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -104,7 +105,8 @@ HEADERS += \
     playlists/playlistframe.h \
     seekbar.h \
     scrollbar.h \
-    miamstyle.h
+    miamstyle.h \
+    styling/miamstyleditemdelegate.h
 
 FORMS += \
     mainwindow.ui \

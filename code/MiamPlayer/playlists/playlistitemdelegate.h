@@ -1,13 +1,13 @@
 #ifndef PLAYLISTITEMDELEGATE_H
 #define PLAYLISTITEMDELEGATE_H
 
-#include <QStyledItemDelegate>
+#include "../styling/miamstyleditemdelegate.h"
 
 #include "stareditor.h"
 
 class Playlist;
 
-class PlaylistItemDelegate : public QStyledItemDelegate
+class PlaylistItemDelegate : public MiamStyledItemDelegate
 {
 	Q_OBJECT
 private:

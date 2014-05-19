@@ -4,7 +4,7 @@
 #include <filehelper.h>
 #include <3rdparty/taglib/fileref.h>
 
-#include "../nofocusitemdelegate.h"
+#include "../styling/miamstyleditemdelegate.h"
 #include "../treeview.h"
 
 #include <QScrollBar>
@@ -14,7 +14,17 @@
 TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
 {
-	this->setItemDelegate(new NoFocusItemDelegate(this));
+	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &) {
+		this->setDirtyRegion(QRegion(this->viewport()->rect()));
+	});
+
+	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
+	foreach (QScrollBar *scrollBar, scrollBars) {
+		connect(scrollBar, &QScrollBar::sliderPressed, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderMoved, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
+	}
 }
 
 /** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
