@@ -15,16 +15,18 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
 {
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
+
+	/// XXX delegate should be improved because this piece of code has to be duplicated
 	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 	});
-
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
 	foreach (QScrollBar *scrollBar, scrollBars) {
 		connect(scrollBar, &QScrollBar::sliderPressed, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderMoved, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
 	}
+	///
 }
 
 /** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
@@ -100,13 +102,10 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 
 		// The first two columns are not editable
 		// It may changes in the future for the first one (the filename)
-		//QFileInfo qFileInfo(absFilePath);
-		QFileInfo qFileInfo;
-		QTableWidgetItem *fileName = new QTableWidgetItem(qFileInfo.fileName());
-		fileName->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-		//fileName->setData(LibraryItem::SUFFIX, fh.type());
-		QTableWidgetItem *absPath = new QTableWidgetItem(qFileInfo.absolutePath());
-		absPath->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+		QTableWidgetItem *fileName = new QTableWidgetItem(fh.fileInfo().fileName());
+		QTableWidgetItem *absPath = new QTableWidgetItem(fh.fileInfo().path());
+		fileName->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		absPath->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
 		QTableWidgetItem *title = new QTableWidgetItem(fh.title());
 		QTableWidgetItem *artist = new QTableWidgetItem(fh.artist());

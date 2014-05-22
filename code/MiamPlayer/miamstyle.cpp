@@ -14,68 +14,64 @@ MiamStyle::MiamStyle(QStyle *parent) :
 }
 
 /// XXX
-void MiamStyle::drawScrollBar(QPainter *painter, const QWidget *widget) const
+void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 {
 	QStyleOptionSlider scrollbar;
-	scrollbar.initFrom(widget);
 	scrollbar.palette = QApplication::palette();
 
-	QRect subLineRect = subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSubLine, widget);
-	QRect addLineRect = subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarAddLine, widget);
-	QRect sliderRect = subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSlider, widget);
+	const QScrollBar *sc = qobject_cast<const QScrollBar *>(widget);
+	scrollbar.initFrom(sc);
 
-	const QScrollBar *scoll = qobject_cast<const QScrollBar*>(widget);
-	if (scoll->orientation() == Qt::Vertical) {
+
+	QRect subLineRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSubLine, sc);
+	QRect addLineRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarAddLine, sc);
+	QRect sliderRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSlider, sc);
+
+	qDebug() << subLineRect << sliderRect << addLineRect;
+
+
+	if (sc->orientation() == Qt::Vertical) {
 		subLineRect.adjust(0, 0, -1, 0);
 		addLineRect.adjust(0, 0, -1, 0);
 		sliderRect.adjust(0, 0, -1, 0);
-	} else if (scoll->orientation() == Qt::Horizontal) {
+	} else {
 		subLineRect.adjust(0, 0, 0, -1);
 		addLineRect.adjust(0, 0, 0, -1);
 		sliderRect.adjust(0, 0, 0, -1);
 	}
 
-	qDebug() << Q_FUNC_INFO << scoll->orientation();
+	p->setPen(Qt::NoPen);
+	p->setBrush(scrollbar.palette.window());
+	p->drawRect(sc->rect());
 
-	painter->setPen(Qt::NoPen);
-	painter->setBrush(scrollbar.palette.window());
-	painter->drawRect(scoll->rect());
-
-	painter->setBrush(scrollbar.palette.base().color().darker(125));
-	painter->drawRect(sliderRect);
-
-	// Frame border
-	painter->setPen(QApplication::palette().mid().color());
-	//if (_top) painter->drawLine(rect().topLeft(), rect().topRight());
-	//if (_bottom) painter->drawLine(rect().bottomLeft(), rect().bottomRight());
-	//if (_left) painter->drawLine(rect().topLeft(), rect().bottomLeft());
-	//if (_right) painter->drawLine(rect().topRight(), rect().bottomRight());
+	p->setBrush(scrollbar.palette.base().color().darker(125));
+	p->drawRect(sliderRect);
 
 	// Highlight
-	painter->save();
-	QPoint pos = scoll->mapFromGlobal(QCursor::pos());
-	painter->setPen(scrollbar.palette.highlight().color());
+	p->save();
+	QPoint pos = sc->mapFromGlobal(QCursor::pos());
+	p->setPen(scrollbar.palette.highlight().color());
 
-	if (!scoll->isSliderDown()) {
-		painter->setBrush(scrollbar.palette.highlight().color().lighter());
+	if (!sc->isSliderDown()) {
+		p->setBrush(scrollbar.palette.highlight().color().lighter());
 		if (subLineRect.contains(pos)) {
-			painter->drawRect(subLineRect);
+			p->drawRect(subLineRect);
 		} else if (sliderRect.contains(pos)) {
-			painter->drawRect(sliderRect);
+			p->drawRect(sliderRect);
 		} else if (addLineRect.contains(pos)) {
-			painter->drawRect(addLineRect);
+			p->drawRect(addLineRect);
 		}
 	} else {
-		painter->setBrush(scrollbar.palette.highlight().color());
+		p->setBrush(scrollbar.palette.highlight().color());
 		//if (_isDown == 0) {
-			painter->drawRect(subLineRect);
+		//	p->drawRect(subLineRect);
 		//} else if (_isDown == 1) {
-			painter->drawRect(sliderRect);
+		//	p->drawRect(sliderRect);
 		//} else if (_isDown == 2) {
-			painter->drawRect(addLineRect);
+		//	p->drawRect(addLineRect);
 		//}
 	}
-	painter->restore();
+	p->restore();
 
 	// Draw sort indicator
 	static const QPointF upArrow[3] = {
@@ -100,15 +96,20 @@ void MiamStyle::drawScrollBar(QPainter *painter, const QWidget *widget) const
 	};
 
 	// Arrows
-	painter->save();
-	painter->setPen(scrollbar.palette.base().color().darker());
-	painter->setBrush(scrollbar.palette.base().color().darker());
-
+	p->save();
+	if (scrollbar.palette.windowText().color().value() < 128) {
+		p->setPen(scrollbar.palette.dark().color());
+		p->setBrush(scrollbar.palette.dark());
+	} else {
+		p->setPen(scrollbar.palette.mid().color());
+		p->setBrush(scrollbar.palette.mid());
+	}
 
 	QTransform t;
+	float ratio = (float) subLineRect.height() / 4.0;
+	t.scale(ratio, ratio);
 
-	if (scoll->orientation() == Qt::Vertical) {
-		t.scale((float) subLineRect.width() / 4.0, (float) subLineRect.width() / 4.0);
+	if (sc->orientation() == Qt::Vertical) {
 		QPolygonF up, down;
 		up.append(t.map(upArrow[0]));
 		up.append(t.map(upArrow[1]));
@@ -116,12 +117,11 @@ void MiamStyle::drawScrollBar(QPainter *painter, const QWidget *widget) const
 		down.append(t.map(downArrow[0]));
 		down.append(t.map(downArrow[1]));
 		down.append(t.map(downArrow[2]));
-		painter->translate(subLineRect.width() / 3.0, subLineRect.height() / 4.0);
-		painter->drawPolygon(up);
-		painter->translate(0, addLineRect.y());
-		painter->drawPolygon(down);
-	} else if (scoll->orientation() == Qt::Horizontal) {
-		t.scale((float) subLineRect.height() / 4.0, (float) subLineRect.height() / 4.0);
+		p->translate(subLineRect.width() / 4.0, subLineRect.height() / 3.0);
+		p->drawPolygon(up);
+		p->translate(0, addLineRect.y());
+		p->drawPolygon(down);
+	} else {
 		QPolygonF left, right;
 		left.append(t.map(leftArrow[0]));
 		left.append(t.map(leftArrow[1]));
@@ -129,12 +129,12 @@ void MiamStyle::drawScrollBar(QPainter *painter, const QWidget *widget) const
 		right.append(t.map(rightArrow[0]));
 		right.append(t.map(rightArrow[1]));
 		right.append(t.map(rightArrow[2]));
-		painter->translate(subLineRect.height() / 3.0, subLineRect.width() / 4.0);
-		painter->drawPolygon(left);
-		painter->translate(addLineRect.x(), 0);
-		painter->drawPolygon(right);
+		p->translate(subLineRect.height() / 3.0, subLineRect.width() / 4.0);
+		p->drawPolygon(left);
+		p->translate(addLineRect.x(), 0);
+		p->drawPolygon(right);
 	}
-	painter->restore();
+	p->restore();
 }
 
 void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *p, const QWidget *widget) const
@@ -160,9 +160,6 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *painter, const QWidget *widget) const
 {
 	switch (element) {
-	/*case PE_IndicatorArrowDown: {
-	break;
-	}*/
 	case PE_IndicatorTabClose: {
 		if (opt->state.testFlag(State_MouseOver)) {
 			painter->drawPixmap(0, 0, 16, 16, QPixmap(":/icons/win/closeTabsHover"));

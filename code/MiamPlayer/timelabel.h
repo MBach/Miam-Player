@@ -23,19 +23,19 @@ public:
 	/** Default constructor. */
 	explicit TimeLabel(QWidget *parent = 0);
 
-	/** Setter. */
-	void setTime(qint64 time, qint64 total);
-
 	/** Redefined to filter mouse press event. */
 	bool eventFilter(QObject *obj, QEvent *event);
+
+	QSize minimumSizeHint() const;
+
+	/** Setter. */
+	void setTime(qint64 time, qint64 total);
 
 private slots:
 	/** Display track length using the selected mode. */
 	void display();
 
 signals:
-	void aboutToChangeTime(int);
-
 	/** Sent when time has changed to update the label.*/
 	void timeChanged();
 };

@@ -50,8 +50,9 @@ void ScrollBar::mouseReleaseEvent(QMouseEvent *e)
 	this->update();
 }
 
-void ScrollBar::paintEvent(QPaintEvent *)
+void ScrollBar::paintEvent(QPaintEvent *e)
 {
+	//QScrollBar::paintEvent(e);
 	QStylePainter p(this);
 	QStyleOptionSlider scrollbar;
 	initStyleOption(&scrollbar);
@@ -77,13 +78,6 @@ void ScrollBar::paintEvent(QPaintEvent *)
 
 	p.setBrush(scrollbar.palette.base().color().darker(125));
 	p.drawRect(sliderRect);
-
-	// Frame border
-	p.setPen(QApplication::palette().mid().color());
-	if (_top) p.drawLine(rect().topLeft(), rect().topRight());
-	if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());
-	if (_left) p.drawLine(rect().topLeft(), rect().bottomLeft());
-	if (_right) p.drawLine(rect().topRight(), rect().bottomRight());
 
 	// Highlight
 	p.save();
@@ -145,7 +139,6 @@ void ScrollBar::paintEvent(QPaintEvent *)
 
 	QTransform t;
 	float ratio = (float) subLineRect.height() / 4.0;
-	qDebug() << "ratio" << ratio;
 	t.scale(ratio, ratio);
 
 	if (orientation() == Qt::Vertical) {
@@ -157,7 +150,6 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		down.append(t.map(downArrow[1]));
 		down.append(t.map(downArrow[2]));
 		p.translate(subLineRect.width() / 4.0, subLineRect.height() / 3.0);
-		qDebug() << up << up.toPolygon();
 		p.drawPolygon(up);
 		p.translate(0, addLineRect.y());
 		p.drawPolygon(down);
@@ -175,4 +167,11 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		p.drawPolygon(right);
 	}
 	p.restore();
+
+	// Frame border
+	p.setPen(QApplication::palette().mid().color());
+	if (_top) p.drawLine(rect().topLeft(), rect().topRight());
+	if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());
+	if (_left) p.drawLine(rect().topLeft(), rect().bottomLeft());
+	if (_right) p.drawLine(rect().topRight(), rect().bottomRight());
 }

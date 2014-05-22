@@ -3,26 +3,18 @@
 #include <QDateTime>
 #include <QEvent>
 
+#include "settings.h"
+
 #include <QtDebug>
 
 TimeLabel::TimeLabel(QWidget *parent) :
-	QLabel(parent), _mode(0)
+	QLabel(parent)
 {
 	this->installEventFilter(this);
+	this->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 	connect(this, &TimeLabel::timeChanged, this, &TimeLabel::display);
 
-	connect(this, &TimeLabel::aboutToChangeTime, [=]() {
-		qDebug() << Q_FUNC_INFO;
-		emit timeChanged();
-	});
-}
-
-/** Setter. */
-void TimeLabel::setTime(qint64 time, qint64 total)
-{
-	_time = time;
-	_total = total;
-	emit timeChanged();
+	_mode = Settings::getInstance()->value("timeMode").toInt();
 }
 
 /** Redefined to filter mouse press event. */
@@ -31,11 +23,32 @@ bool TimeLabel::eventFilter(QObject *obj, QEvent *event)
 	if (event->type() == QEvent::MouseButtonPress) {
 		// Only 3 modes (might be overkill to create an Enum just for this)
 		_mode < 2 ? _mode++ : _mode = 0;
+		Settings::getInstance()->setValue("timeMode", _mode);
 
 		// Need to force update the label
 		emit timeChanged();
 	}
 	return QLabel::eventFilter(obj, event);
+}
+
+QSize TimeLabel::minimumSizeHint() const
+{
+	QSize s = QLabel::minimumSizeHint();
+	QDateTime::fromTime_t((_total - _time) / 1000).toString("-mm:ss");
+	static const QString text("-00:00");
+	if (fontMetrics().width(text) > s.width()) {
+		s.setWidth(fontMetrics().width(text));
+	}
+	return s;
+}
+
+
+/** Setter. */
+void TimeLabel::setTime(qint64 time, qint64 total)
+{
+	_time = time;
+	_total = total;
+	emit timeChanged();
 }
 
 /** Display track length using the selected mode. */
