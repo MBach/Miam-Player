@@ -242,17 +242,23 @@ void MainWindow::setupActions()
 	});
 
 	connect(seekSlider, &QSlider::sliderPressed, [=] () {
-		_mediaPlayer.data()->blockSignals(true);
-		_mediaPlayer.data()->setMuted(true);
+		qDebug() << "sliderPressed";
+		//seekSlider->blockSignals(true);
+		//_mediaPlayer.data()->blockSignals(true);
+		//_mediaPlayer.data()->setMuted(true);
 	});
 
-	connect(seekSlider, &QSlider::sliderMoved, [=] (int pos) {
-		_mediaPlayer.data()->setPosition(pos * _mediaPlayer.data()->duration() / 1000);
+	connect(seekSlider, &QSlider::sliderMoved, [=] (int p) {
+		qDebug() << "sliderMoved";
+		//_mediaPlayer.data()->setPosition(p * _mediaPlayer.data()->duration() / 1000);
+		//seekSlider->setValue(1000 * p / _mediaPlayer.data()->duration());
 	});
 
 	connect(seekSlider, &QSlider::sliderReleased, [=] () {
-		_mediaPlayer.data()->setMuted(false);
-		_mediaPlayer.data()->blockSignals(false);
+		qDebug() << "sliderReleased";
+		//_mediaPlayer.data()->setMuted(false);
+		//_mediaPlayer.data()->blockSignals(false);
+		//seekSlider->blockSignals(false);
 	});
 
 	// Volume bar
