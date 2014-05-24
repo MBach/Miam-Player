@@ -12,10 +12,18 @@
 #include <QtDebug>
 
 AlbumCover::AlbumCover(QWidget *parent) :
-	QWidget(parent), _cover(NULL)
+	QWidget(parent), _cover(NULL), _subMenuApplyTo(NULL)
 {
-	setAcceptDrops(true);
-	imageMenu = new QMenu(this);
+	this->setAcceptDrops(true);
+	_imageMenu = new QMenu(this);
+
+	// Actions displayed in any context
+	QAction *loadCoverAction = _imageMenu->addAction(tr("Load a new cover..."));
+	_extractCoverAction = _imageMenu->addAction(tr("Extract current cover..."));
+	_removeCoverAction = _imageMenu->addAction(tr("Remove cover"));
+	connect(loadCoverAction, &QAction::triggered, this, &AlbumCover::loadCover);
+	connect(_extractCoverAction, &QAction::triggered, this, &AlbumCover::extractCover);
+	connect(_removeCoverAction, &QAction::triggered, this, &AlbumCover::removeCover);
 }
 
 /** Displays a cover in the tag editor. */
@@ -49,38 +57,32 @@ void AlbumCover::createPixmapFromFile(const QString &fileName)
 /** Redefined to display a small context menu in the view. */
 void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 {
-	if (!imageMenu->isEmpty()) {
-		imageMenu->clear();
-	}
-
-	// Actions displayed in any context
-	QAction *loadCoverAction = imageMenu->addAction(tr("Load a new cover..."));
-	QAction *extractCoverAction = imageMenu->addAction(tr("Extract current cover..."));
-	QAction *removeCoverAction = imageMenu->addAction(tr("Remove cover"));
-	connect(loadCoverAction, SIGNAL(triggered()), this, SLOT(loadCover()));
-	connect(extractCoverAction, SIGNAL(triggered()), this, SLOT(extractCover()));
-	connect(removeCoverAction, SIGNAL(triggered()), this, SLOT(removeCover()));
-
 	bool isDefaultCover = (_cover == NULL);
-	removeCoverAction->setDisabled(isDefaultCover);
-	extractCoverAction->setDisabled(isDefaultCover);
+	_removeCoverAction->setDisabled(isDefaultCover);
+	_extractCoverAction->setDisabled(isDefaultCover);
 
 	// Adapt the context menu to the content of the table
 	if (isCoverForUniqueAlbum) {
-		QAction *applyCoverToCurrentAlbumAction = imageMenu->addAction(tr("Apply cover to '%1'").arg(_album));
-		applyCoverToCurrentAlbumAction->setDisabled(isDefaultCover);
+		if (_applyCoverToCurrentAlbumAction) {
+			delete _applyCoverToCurrentAlbumAction;
+		}
+		_applyCoverToCurrentAlbumAction = _imageMenu->addAction(tr("Apply cover to '%1'").arg(_album));
+		_applyCoverToCurrentAlbumAction->setDisabled(isDefaultCover);
 
-		connect(applyCoverToCurrentAlbumAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
+		connect(_applyCoverToCurrentAlbumAction, &QAction::triggered, this, &AlbumCover::applyCoverToAll);
 	} else {
-		QMenu *subMenuApplyTo = imageMenu->addMenu(tr("Apply cover"));
-		QAction *applyCoverToAlbumOnlyAction = subMenuApplyTo->addAction(tr("to '%1' only").arg(_album));
-		QAction *applyCoverToAllAction = subMenuApplyTo->addAction(tr("to every tracks"));
-		subMenuApplyTo->setDisabled(isDefaultCover);
+		if (_subMenuApplyTo) {
+			delete _subMenuApplyTo;
+		}
+		_subMenuApplyTo = _imageMenu->addMenu(tr("Apply cover"));
+		QAction *applyCoverToAlbumOnlyAction = _subMenuApplyTo->addAction(tr("to '%1' only").arg(_album));
+		QAction *applyCoverToAllAction = _subMenuApplyTo->addAction(tr("to every tracks"));
+		_subMenuApplyTo->setDisabled(isDefaultCover);
 
-		connect(applyCoverToAllAction, SIGNAL(triggered()), this, SLOT(applyCoverToAll()));
-		connect(applyCoverToAlbumOnlyAction, SIGNAL(triggered()), this, SLOT(applyCoverToAlbumOnly()));
+		connect(applyCoverToAllAction, &QAction::triggered, this, &AlbumCover::applyCoverToAll);
+		connect(applyCoverToAlbumOnlyAction, &QAction::triggered, this, &AlbumCover::applyCoverToAlbumOnly);
 	}
-	imageMenu->exec(event->globalPos());
+	_imageMenu->exec(event->globalPos());
 }
 
 /** Redefined. */

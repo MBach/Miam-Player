@@ -10,14 +10,20 @@
  */
 class AlbumCover : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 private:
-	QMenu *imageMenu;
+	QMenu *_imageMenu;
 
 	bool isCoverForUniqueAlbum;
 
 	Cover *_cover;
 	QString _album;
+
+	QMenu *_subMenuApplyTo;
+
+	QAction *_extractCoverAction;
+	QAction *_removeCoverAction;
+	QAction *_applyCoverToCurrentAlbumAction;
 
 public:
 	AlbumCover(QWidget *parent = 0);
@@ -33,6 +39,8 @@ public:
 	void setAlbum(const QString &album) { _album = album; }
 
 	QString album() const { return _album; }
+
+	inline QMenu * contextMenu() const { return _imageMenu; }
 
 private:
 	/** Creates a picture after one has chosen a picture on it's filesystem. */

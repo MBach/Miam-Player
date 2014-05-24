@@ -74,6 +74,8 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, [=] () {
 		int row = _mediaPlayer.data()->playlist()->currentIndex();
 		this->scrollTo(_playlistModel->index(row, 0));
+		this->viewport()->update();
+		//qDebug() << _mediaPlayer.data()->playlist()->playbackMode();
 	});
 
 	// Context menu on tracks

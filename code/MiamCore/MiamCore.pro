@@ -63,4 +63,5 @@ HEADERS += interfaces/basicplugininterface.h \
     musicsearchengine.h \
     quickstartsearchengine.h \
     settings.h \
-    sqldatabase.h
+    sqldatabase.h \
+    interfaces/itemviewplugininterface.h

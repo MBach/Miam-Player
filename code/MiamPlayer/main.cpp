@@ -27,10 +27,10 @@ int main(int argc, char *argv[])
 	sharedMemory.setKey("MIAMPLAYER");
 	sharedMemory.attach();
 
-	qDebug() << argc;
-	for (int i = 0; i < argc; i++) {
-		qDebug() << i << argv[i];
-	}
+//	qDebug() << argc;
+//	for (int i = 0; i < argc; i++) {
+//		qDebug() << i << argv[i];
+//	}
 
 	// Exit already a process running
 	if (!sharedMemory.create(1)) {

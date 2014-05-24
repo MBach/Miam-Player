@@ -17,7 +17,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
 
 	/// XXX delegate should be improved because this piece of code has to be duplicated
-	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &) {
+    connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 	});
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();

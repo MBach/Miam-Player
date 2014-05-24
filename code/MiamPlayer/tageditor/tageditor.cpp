@@ -1,6 +1,7 @@
 #include "tageditor.h"
 #include "filehelper.h"
 #include "settings.h"
+#include "pluginmanager.h"
 
 #include <3rdparty/taglib/tpropertymap.h>
 #include <QDir>
@@ -43,20 +44,23 @@ TagEditor::TagEditor(QWidget *parent) :
 		combo->setCurrentIndex(-1);
 	}
 	// Quit this widget when a request was send from this button
-	connect(closeTagEditorButton, SIGNAL(clicked()), this, SLOT(close()));
+	connect(closeTagEditorButton, &QPushButton::clicked, this, &TagEditor::close);
 
-	connect(saveChangesButton, SIGNAL(clicked()), this, SLOT(commitChanges()));
-	connect(cancelButton, SIGNAL(clicked()), this, SLOT(rollbackChanges()));
+	connect(saveChangesButton, &QPushButton::clicked, this, &TagEditor::commitChanges);
+	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
 
 	// General case: when one is selecting multiple items
-	connect(tagEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(displayCover()));
-	connect(tagEditorWidget, SIGNAL(itemSelectionChanged()), this, SLOT(displayTags()));
+	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayCover);
+	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayTags);
 
 	// Open the TagConverter to help tagging from Tag to File, or vice-versa
-	connect(convertPushButton, SIGNAL(toggled(bool)), this, SLOT(toggleTagConverter(bool)));
+	connect(convertPushButton, &QPushButton::toggled, this, &TagEditor::toggleTagConverter);
 
-	connect(albumCover, SIGNAL(coverHasChanged(Cover*)), this, SLOT(replaceCover(Cover*)));
-	connect(albumCover, SIGNAL(aboutToApplyCoverToAll(bool, Cover*)), this, SLOT(applyCoverToAll(bool, Cover*)));
+	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
+	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
+
+	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << tagEditorWidget->selectionModel();
+	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);
 }

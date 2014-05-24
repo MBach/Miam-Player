@@ -95,7 +95,8 @@ void MainWindow::init()
 /** Plugins. */
 void MainWindow::loadPlugins()
 {
-	new PluginManager(this);
+	PluginManager *pm = PluginManager::getInstance();
+	pm->setMainWindow(this);
 }
 
 /** Update fonts for menu and context menus. */

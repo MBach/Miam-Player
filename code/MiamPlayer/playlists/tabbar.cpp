@@ -56,7 +56,6 @@ TabBar::TabBar(TabPlaylist *parent) :
 /** Redefined to return a square for the last tab which is the [+] button. */
 QSize TabBar::tabSizeHint(int index) const
 {
-	qDebug() << Q_FUNC_INFO;
 	if (index == count() - 1) {
 		if (Settings::getInstance()->isRectTabs()) {
 			return QSize(height(), height());
@@ -194,7 +193,7 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
-	qDebug() << Q_FUNC_INFO;
+	//qDebug() << Q_FUNC_INFO;
 	QStylePainter p(this);
 
 	Settings *settings = Settings::getInstance();

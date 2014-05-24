@@ -45,7 +45,7 @@ void QuickStart::searchMultimediaFiles()
 		QThread *worker = new QThread(this);
 		_qsse = new QuickStartSearchEngine();
 		_qsse->moveToThread(worker);
-		connect(_qsse, SIGNAL(folderScanned(QFileInfo,int)), this, SLOT(insertRow(QFileInfo,int)));
+		connect(_qsse, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
 		connect(worker, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
 		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
 		worker->start();

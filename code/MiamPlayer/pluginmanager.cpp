@@ -8,10 +8,19 @@
 #include "mainwindow.h"
 #include "settings.h"
 
+PluginManager* PluginManager::_pluginManager = NULL;
+
 /** Constructor with strong coupling. */
-PluginManager::PluginManager(MainWindow *mainWindow) :
-	QObject(mainWindow), _mainWindow(mainWindow)
+PluginManager::PluginManager(QObject *parent) :
+	QObject(parent)
 {
+
+}
+
+void PluginManager::setMainWindow(MainWindow *mainWindow)
+{
+	_mainWindow = mainWindow;
+	this->setParent(mainWindow);
 	// Load or unload when a checkbox state has changed
 	connect(_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &PluginManager::loadOrUnload);
 
@@ -26,12 +35,29 @@ PluginManager::PluginManager(MainWindow *mainWindow) :
 	}
 }
 
+/** Singleton pattern to be able to easily use settings everywhere in the app. */
+PluginManager * PluginManager::getInstance()
+{
+	if (_pluginManager == NULL) {
+		_pluginManager = new PluginManager;
+	}
+	return _pluginManager;
+}
+
 /** Explicitly destroys every plugin. */
 PluginManager::~PluginManager()
 {
 	QMapIterator<QString, BasicPluginInterface*> it(_instances);
 	while (it.hasNext()) {
 		delete it.next().value();
+	}
+}
+
+/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
+void PluginManager::registerExtensionPoint(const char *className, QObjectList source)
+{
+	foreach (QObject *object, source) {
+		_extensionPoints.insert(QString(className), object);
 	}
 }
 
@@ -132,7 +158,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 
 		/// XXX Make a dispatcher for other types of plugins?
 		if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
-			qDebug() << "MediaPlayerPluginInterface" << mediaPlayerPlugin->name() << mediaPlayerPlugin->version();
+
 			mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 			if (mediaPlayerPlugin->providesView()) {
 				QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
@@ -141,10 +167,35 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				connect(actionAddViewToMenu, &QAction::triggered, [=]() {
 					mediaPlayerPlugin->toggleViews(_mainWindow);
 				});
-				//QObjectList objects = { actionAddViewToMenu };
 				QObjectList objects;
 				objects.append(actionAddViewToMenu);
 				_dependencies.insert(basic->name(), objects);
+			}
+		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {
+
+			// Each View Plugin can extend multiple instances
+			foreach (QString view, itemViewPlugin->classesToExtend()) {
+
+				// Instances of classes which can be extended at runtime
+				foreach (QObject *obj, _extensionPoints.values(view)) {
+					qDebug() << "for" << view << "," << obj << "has been registered";
+					if (QMenu *menu = qobject_cast<QMenu *>(obj)) {
+						QObjectList objects;
+						if (itemViewPlugin->hasSubMenu(view)) {
+							QMenu *subMenu = itemViewPlugin->menu(view, menu);
+							menu->addMenu(subMenu);
+							objects.append(subMenu);
+						} else {
+							QAction *action = itemViewPlugin->action(view, menu);
+							menu->addAction(action);
+							objects.append(action);
+						}
+						/// XXX -> move to multimap
+						_dependencies.insert(basic->name(), objects);
+					} else if (QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(obj)) {
+						itemViewPlugin->setSelectionModel(view, selectionModel);
+					}
+				}
 			}
 		} /// else...
 		return basic;

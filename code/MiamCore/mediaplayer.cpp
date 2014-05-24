@@ -49,6 +49,9 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {
 	if (playlist()) {
+		if (playlist()->playbackMode() == QMediaPlaylist::Sequential && playlist()->nextIndex() < playlist()->currentIndex()) {
+			return;
+		}
 		playlist()->next();
 		play();
 	}

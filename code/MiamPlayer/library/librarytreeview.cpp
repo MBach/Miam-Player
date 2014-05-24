@@ -16,6 +16,7 @@
 #include <QtDebug>
 
 #include "../library/libraryitemdelegate.h"
+#include "pluginmanager.h"
 
 #include <filehelper.h>
 
@@ -44,7 +45,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	circleProgressBar->setTransparentCenter(true);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
-	QAction *actionOpenTagEditor = new QAction(tr("Properties"), this);
+	QAction *actionOpenTagEditor = new QAction(tr("Send to the tag editor"), this);
 	properties = new QMenu(this);
 	properties->addAction(actionSendToCurrentPlaylist);
 	properties->addSeparator();
@@ -54,7 +55,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
-    connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
+	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 
 	proxyModel->sortOrder();
 
@@ -101,6 +102,9 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
+
+	QObjectList objetsToExtend = QObjectList() << properties << this->selectionModel();
+	PluginManager::getInstance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	vScrollBar->setFrameBorder(false, false, false, true);
@@ -335,11 +339,13 @@ int LibraryTreeView::count(const QModelIndex &index) const
 {
 	if (_itemDelegate) {
 		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
-		int tmp = 0;
-		for (int i = 0; i < item->rowCount(); i++) {
-			tmp += count(index.child(i, 0));
+		if (item) {
+			int tmp = 0;
+			for (int i = 0; i < item->rowCount(); i++) {
+				tmp += count(index.child(i, 0));
+			}
+			return (tmp == 0) ? 1 : tmp;
 		}
-		return (tmp == 0) ? 1 : tmp;
 	}
 	return 0;
 }
@@ -359,12 +365,12 @@ void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &t
 {
 	if (_itemDelegate) {
 		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
-		if (item->hasChildren()) {
+		if (item && item->hasChildren()) {
 			for (int i=0; i < item->rowCount(); i++) {
 				// Recursive call on children
 				this->findAll(index.child(i, 0), tracks);
 			}
-		} else if (item->data(Type).toInt() == Track) {
+		} else if (item && item->data(Type).toInt() == Track) {
 			tracks.append(item->data(DataAbsFilePath).toString());
 		}
 	}
@@ -618,7 +624,7 @@ void LibraryTreeView::jumpTo(const QString &letter)
 void LibraryTreeView::reset()
 {
 	circleProgressBar->show();
-	if (_libraryModel->rowCount() > 0) {		
+	if (_libraryModel->rowCount() > 0) {
 		_artists.clear();
 		_albums.clear();
 		_discNumbers.clear();

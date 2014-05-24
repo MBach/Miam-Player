@@ -50,7 +50,7 @@ void ScrollBar::mouseReleaseEvent(QMouseEvent *e)
 	this->update();
 }
 
-void ScrollBar::paintEvent(QPaintEvent *e)
+void ScrollBar::paintEvent(QPaintEvent *)
 {
 	//QScrollBar::paintEvent(e);
 	QStylePainter p(this);

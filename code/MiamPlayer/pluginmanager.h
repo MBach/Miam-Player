@@ -2,6 +2,8 @@
 #define PLUGINMANAGER_H
 
 #include <interfaces/mediaplayerplugininterface.h>
+#include <interfaces/itemviewplugininterface.h>
+
 #include <QDir>
 
 #include <QTableWidgetItem>
@@ -19,7 +21,10 @@ class PluginManager : public QObject
 {
 	Q_OBJECT
 private:
-	/** Reference to the MainWindow instance. */
+	/** The unique instance of this class. */
+	static PluginManager *_pluginManager;
+
+	/** Reference to the MainWindow instance (strong coupling). */
 	MainWindow *_mainWindow;
 
 	/** Every plugin can be located on the hard drive by its complete filename. */
@@ -34,12 +39,24 @@ private:
 	/** Plugins are stored in a subdirectory called "plugins" under the application path. */
 	QString _pluginPath;
 
+	/** Some instances in the software can be modified (menus, buttons, widgets, etc). */
+	QMultiMap<QString, QObject*> _extensionPoints;
+
+	QMap<QAbstractItemView*, QObject*> _test;
+
+	PluginManager(QObject *parent = 0);
+
 public:
-	/** Constructor with strong coupling. */
-	explicit PluginManager(MainWindow *mainWindow);
+	/** Singleton Pattern to easily use Settings everywhere in the app. */
+	static PluginManager* getInstance();
+
+	void setMainWindow(MainWindow *mainWindow);
 
 	/** Explicitly destroys every plugin. */
 	virtual ~PluginManager();
+
+	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
+	void registerExtensionPoint(const char *className, QObjectList target);
 
 private:
 	/** Search into the subdir "plugins" where the application is installed.*/
