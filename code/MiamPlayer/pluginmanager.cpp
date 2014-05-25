@@ -167,9 +167,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				connect(actionAddViewToMenu, &QAction::triggered, [=]() {
 					mediaPlayerPlugin->toggleViews(_mainWindow);
 				});
-				QObjectList objects;
-				objects.append(actionAddViewToMenu);
-				_dependencies.insert(basic->name(), objects);
+				_dependencies.insert(basic->name(), actionAddViewToMenu);
 			}
 		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {
 
@@ -178,20 +176,17 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 
 				// Instances of classes which can be extended at runtime
 				foreach (QObject *obj, _extensionPoints.values(view)) {
-					qDebug() << "for" << view << "," << obj << "has been registered";
+					// QMenu and QItemSelectionModel are the 2 kinds of class which can be extended
 					if (QMenu *menu = qobject_cast<QMenu *>(obj)) {
-						QObjectList objects;
 						if (itemViewPlugin->hasSubMenu(view)) {
 							QMenu *subMenu = itemViewPlugin->menu(view, menu);
 							menu->addMenu(subMenu);
-							objects.append(subMenu);
+							_dependencies.insert(basic->name(), subMenu);
 						} else {
 							QAction *action = itemViewPlugin->action(view, menu);
 							menu->addAction(action);
-							objects.append(action);
+							_dependencies.insert(basic->name(), action);
 						}
-						/// XXX -> move to multimap
-						_dependencies.insert(basic->name(), objects);
 					} else if (QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(obj)) {
 						itemViewPlugin->setSelectionModel(view, selectionModel);
 					}
@@ -211,11 +206,13 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 void PluginManager::unloadPlugin(const QString &pluginName)
 {
 	BasicPluginInterface *basic = _instances.value(pluginName);
-	foreach (QObject *dependency, _dependencies.value(pluginName)) {
+	foreach (QObject *dependency, _dependencies.values(pluginName)) {
 		if (QAction *action = qobject_cast<QAction*>(dependency)) {
 			QMenu *menu = qobject_cast<QMenu*>(action->parent());
 			menu->removeAction(action);
-		} /// else...
+		} else if (QMenu *menu = qobject_cast<QMenu*>(dependency)) {
+			delete menu;
+		}
 	}
 	// Search and disable the config page in options page
 	if (basic->isConfigurable()) {

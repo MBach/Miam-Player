@@ -4,6 +4,7 @@
 #include <settings.h>
 #include "librarytreeview.h"
 #include "../playlists/starrating.h"
+#include <QDir>
 
 #include <memory>
 

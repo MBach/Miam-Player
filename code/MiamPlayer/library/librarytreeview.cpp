@@ -155,6 +155,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
+			action->setFont(Settings::getInstance()->font(Settings::MENUS));
 		}
 		if (item->data(Type).toInt() != Letter) {
 			properties->exec(event->globalPos());

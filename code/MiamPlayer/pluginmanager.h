@@ -34,7 +34,7 @@ private:
 	QMap<QString, BasicPluginInterface*> _instances;
 
 	/** Every plugin might instanciate objects that we need to be able to delete later (especially for unloading). */
-	QMap<QString, QObjectList> _dependencies;
+	QMultiMap<QString, QObject*> _dependencies;
 
 	/** Plugins are stored in a subdirectory called "plugins" under the application path. */
 	QString _pluginPath;

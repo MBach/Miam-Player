@@ -1,11 +1,13 @@
 #include "librarysqlmodel.h"
 #include "filehelper.h"
+#include "musicsearchengine.h"
 
 #include <cover.h>
 
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QThread>
 
 #include <QtDebug>
 
@@ -43,8 +45,6 @@ void LibrarySqlModel::loadFromFileDB()
 	database().close();
 	this->endResetModel();
 }
-
-#include <QThread>
 
 void LibrarySqlModel::rebuild()
 {

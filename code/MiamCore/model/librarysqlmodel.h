@@ -1,14 +1,16 @@
 #ifndef LIBRARYSQLMODEL_H
 #define LIBRARYSQLMODEL_H
 
-#include "musicsearchengine.h"
-
-#include "filehelper.h"
-
+#include <QFileInfo>
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QThread>
 #include <QWeakPointer>
+
+class FileHelper;
+class MusicSearchEngine;
+
+#include "miamcore_global.h"
 
 class MIAMCORE_LIBRARY LibrarySqlModel : public QSqlTableModel
 {
