@@ -13,7 +13,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), _librarySqlModel(NULL), _viewModeGroup(new QActionGroup(this))
+	QMainWindow(parent), _librarySqlModel(NULL)
 {
 	setupUi(this);
 	Settings *settings = Settings::getInstance();
@@ -89,7 +89,7 @@ void MainWindow::init()
 	//splitter->restoreState(settings->value("splitterState").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
-    playlistManager->init();
+	playlistManager->init();
 }
 
 /** Plugins. */
@@ -131,13 +131,14 @@ void MainWindow::setupActions()
 	});
 
 	// Adds a group where view mode are mutually exclusive
-	actionPlaylistMode->setActionGroup(_viewModeGroup);
+	QActionGroup *viewModeGroup = new QActionGroup(this);
+	actionPlaylistMode->setActionGroup(viewModeGroup);
 	actionPlaylistMode->setData(QVariant(0));
-	actionUniqueLibraryMode->setActionGroup(_viewModeGroup);
+	actionUniqueLibraryMode->setActionGroup(viewModeGroup);
 	actionUniqueLibraryMode->setData(QVariant(1));
 
 	/// TODO: A sample plugin to append a new view (let's say in QML with QQuickControls?)
-	connect(_viewModeGroup, &QActionGroup::triggered, [=](QAction* action) {
+	connect(viewModeGroup, &QActionGroup::triggered, [=](QAction* action) {
 		qDebug() << action->data().toInt();
 		stackedWidget->setCurrentIndex(action->data().toInt());
 	});
@@ -151,7 +152,7 @@ void MainWindow::setupActions()
 	/// Update QMenu when one switches from a playlist to another
 	// Link user interface
 	// Actions from the menu
-    connect(actionExit, &QAction::triggered, &QApplication::quit);
+	connect(actionExit, &QAction::triggered, &QApplication::quit);
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &CustomizeThemeDialog::open);
@@ -160,7 +161,7 @@ void MainWindow::setupActions()
 		QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
 		QMessageBox::about(this, QString("Miam Player v").append(qApp->applicationVersion()), message);
 	});
-    connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
+	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
 
 	// Quick Start
@@ -269,7 +270,7 @@ void MainWindow::setupActions()
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 
 	// Playback
-    connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
 	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
@@ -279,11 +280,11 @@ void MainWindow::setupActions()
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
 	// Drag & Drop actions
-    connect(dragDropDialog, &DragDropDialog::rememberDragDrop, customizeOptionsDialog, &CustomizeOptionsDialog::setExternalDragDropPreference);
-    /// FIXME Qt5
+	connect(dragDropDialog, &DragDropDialog::rememberDragDrop, customizeOptionsDialog, &CustomizeOptionsDialog::setExternalDragDropPreference);
+	/// FIXME Qt5
 	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
 	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
-    connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
+	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
 
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 

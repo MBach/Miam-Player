@@ -25,7 +25,7 @@ SqlDatabase::SqlDatabase()
 
 	if (open()) {
 		exec("CREATE TABLE IF NOT EXISTS playlists (absPath varchar(255), name varchar(255), hash varchar(255))");
-		exec("CREATE INDEX indexPlaylists ON playlists (absPath)");
+		exec("CREATE INDEX IF NOT EXISTS indexPlaylists ON playlists (absPath)");
 		close();
 	}
 }

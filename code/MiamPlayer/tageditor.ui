@@ -208,14 +208,77 @@
       </widget>
      </item>
      <item>
-      <layout class="QGridLayout" name="gridLayout" columnstretch="1,2,1,6">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="1,3,1,3">
        <property name="rightMargin">
         <number>6</number>
        </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelTitle">
+         <property name="text">
+          <string>Title: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="labelArtistAlbum">
+         <property name="text">
+          <string>Artist Album: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="2" alignment="Qt::AlignRight">
         <widget class="QLabel" name="labelDisc">
          <property name="text">
           <string>Disc: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="labelAlbum">
+         <property name="text">
+          <string>Album: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="artistAlbumComboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertAlphabetically</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QLabel" name="labelComment_2">
+         <property name="text">
+          <string>Cover path:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="albumComboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertAlphabetically</enum>
          </property>
         </widget>
        </item>
@@ -239,10 +302,23 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0" alignment="Qt::AlignRight">
-        <widget class="QLabel" name="labelArtist">
+       <item row="3" column="3">
+        <widget class="QComboBox" name="coverPathComboBox">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="insertPolicy">
+          <enum>QComboBox::InsertAlphabetically</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2" alignment="Qt::AlignRight|Qt::AlignTop">
+        <widget class="QLabel" name="labelComment">
          <property name="text">
-          <string>Artist: </string>
+          <string>Comment: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -251,12 +327,18 @@
          <property name="text">
           <string>Track: </string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
        </item>
-       <item row="2" column="2" alignment="Qt::AlignRight|Qt::AlignTop">
-        <widget class="QLabel" name="labelComment">
+       <item row="1" column="0" alignment="Qt::AlignRight">
+        <widget class="QLabel" name="labelArtist">
          <property name="text">
-          <string>Comment: </string>
+          <string>Artist: </string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -277,59 +359,13 @@
            <property name="text">
             <string>Year: </string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
           </widget>
          </item>
          <item>
           <widget class="QComboBox" name="yearComboBox">
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-           <property name="insertPolicy">
-            <enum>QComboBox::InsertAlphabetically</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="0" alignment="Qt::AlignRight">
-        <widget class="QLabel" name="labelTitle">
-         <property name="text">
-          <string>Title: </string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelArtistAlbum">
-           <property name="text">
-            <string>Artist Album: </string>
-           </property>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignRight">
-          <widget class="QLabel" name="labelAlbum">
-           <property name="text">
-            <string>Album: </string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="1">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QComboBox" name="artistAlbumComboBox">
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-           <property name="insertPolicy">
-            <enum>QComboBox::InsertAlphabetically</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="albumComboBox">
            <property name="editable">
             <bool>true</bool>
            </property>
@@ -366,6 +402,9 @@
           <widget class="QLabel" name="labelGenre">
            <property name="text">
             <string>Genre: </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -407,8 +446,6 @@
   <tabstop>tagEditorWidget</tabstop>
   <tabstop>titleComboBox</tabstop>
   <tabstop>artistComboBox</tabstop>
-  <tabstop>artistAlbumComboBox</tabstop>
-  <tabstop>albumComboBox</tabstop>
   <tabstop>trackComboBox</tabstop>
   <tabstop>discComboBox</tabstop>
   <tabstop>yearComboBox</tabstop>

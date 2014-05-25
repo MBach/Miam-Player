@@ -67,6 +67,10 @@ QSize TabBar::tabSizeHint(int index) const
 		if (!Settings::getInstance()->isRectTabs()) {
 			s.setWidth(s.width() + Settings::getInstance()->tabsOverlappingLength() * 2);
 		}
+		// Adjust height to the minimum otherwise a small gap might appear between tab and header (depending of font size)
+		if (s.height() > height()) {
+			s.setHeight(height());
+		}
 		return s;
 	}
 }
@@ -193,13 +197,11 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
-	//qDebug() << Q_FUNC_INFO;
 	QStylePainter p(this);
-
 	Settings *settings = Settings::getInstance();
 	int dist = 0;
 
-	if (Settings::getInstance()->isRectTabs()) {
+	if (settings->isRectTabs()) {
 		paintRectTabs(p);
 	} else {
 		dist = settings->tabsOverlappingLength();

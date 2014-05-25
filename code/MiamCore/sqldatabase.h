@@ -1,7 +1,6 @@
 #ifndef SQLDATABASE_H
 #define SQLDATABASE_H
 
-#include <QObject>
 #include <QSqlDatabase>
 
 #include "miamcore_global.h"

@@ -226,7 +226,17 @@
              </widget>
             </item>
             <item>
-             <widget class="TabPlaylist" name="tabPlaylists"/>
+             <widget class="TabPlaylist" name="tabPlaylists">
+              <property name="usesScrollButtons">
+               <bool>false</bool>
+              </property>
+              <property name="documentMode">
+               <bool>true</bool>
+              </property>
+              <property name="tabsClosable">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
             <item>
              <layout class="QHBoxLayout" name="seekSliderLayout">

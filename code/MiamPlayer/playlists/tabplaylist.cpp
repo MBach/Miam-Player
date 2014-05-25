@@ -10,7 +10,6 @@
 TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent), _tabIndex(-1), _closePlaylistPopup(new ClosePlaylistPopup(this))
 {
-	this->setDocumentMode(true);
 	this->setTabBar(new TabBar(this));
 	messageBox = new TracksNotFoundMessageBox(this);
 
@@ -116,7 +115,7 @@ void TabPlaylist::changeEvent(QEvent *event)
 				}
 			}
 		}
-		_closePlaylistPopup->retranslateUi(_closePlaylistPopup);		
+		_closePlaylistPopup->retranslateUi(_closePlaylistPopup);
 	}
 }
 

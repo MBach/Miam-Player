@@ -32,7 +32,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
-	this->viewport()->setContentsMargins(100, 100, 100, 100);
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
@@ -151,10 +150,8 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 
 QSize Playlist::minimumSizeHint() const
 {
+	QFontMetrics fm(Settings::getInstance()->font(Settings::PLAYLIST));
 	int width = 0;
-	Settings *settings = Settings::getInstance();
-	QFont font = settings->font(Settings::PLAYLIST);
-	QFontMetrics fm(font);
 	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		if (!isColumnHidden(c)) {
 			width += fm.width(_playlistModel->headerData(c, Qt::Horizontal).toString());

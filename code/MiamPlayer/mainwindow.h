@@ -21,22 +21,39 @@
 
 class CustomizeThemeDialog;
 
+/**
+ * \brief The MainWindow class is the entry point of this audio player.
+ */
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 	Q_OBJECT
 private:
+	/** Dialog for with lots of different sections to customize the look of MiamPlayer. */
 	CustomizeThemeDialog *customizeThemeDialog;
-	PlaylistManager *playlistManager;
-	DragDropDialog *dragDropDialog;
-	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
-	QSharedPointer<MediaPlayer> _mediaPlayer;
-	UniqueLibrary *_uniqueLibrary;
-	LibrarySqlModel *_librarySqlModel;
-	QActionGroup *_viewModeGroup;
-	QAudioOutput *audioOutput;
-	SqlDatabase _sqlDatabase;
 
-	QStack<int> _keys;
+	/** Dialog to organize your playlists: saving, exporting, loading. */
+	PlaylistManager *playlistManager;
+
+	/** Popup shown to one when tracks are dropped from another application to MiamPlayer. */
+	DragDropDialog *dragDropDialog;
+
+	/** Displays and animates the media button "PlaybackMode". */
+	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
+
+	/** The MediaPlayer manipulates audio tracks. */
+	QSharedPointer<MediaPlayer> _mediaPlayer;
+
+	/** WIP. View object: display all your tracks in a huge and page. */
+	UniqueLibrary *_uniqueLibrary;
+
+	/** Model for the Table "tracks". */
+	LibrarySqlModel *_librarySqlModel;
+
+	/** Unique interface for outputing audio.*/
+	QAudioOutput *audioOutput;
+
+	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
+	SqlDatabase _sqlDatabase;
 
 public:
 	// Play, pause, stop, etc.

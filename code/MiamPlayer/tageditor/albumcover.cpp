@@ -9,6 +9,8 @@
 #include <QStandardPaths>
 #include <QUrl>
 
+#include "settings.h"
+
 #include <QtDebug>
 
 AlbumCover::AlbumCover(QWidget *parent) :
@@ -81,6 +83,9 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 
 		connect(applyCoverToAllAction, &QAction::triggered, this, &AlbumCover::applyCoverToAll);
 		connect(applyCoverToAlbumOnlyAction, &QAction::triggered, this, &AlbumCover::applyCoverToAlbumOnly);
+	}
+	foreach (QAction *action, _imageMenu->actions()) {
+		action->setFont(Settings::getInstance()->font(Settings::MENUS));
 	}
 	_imageMenu->exec(event->globalPos());
 }

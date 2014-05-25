@@ -2,8 +2,10 @@
 
 #include "ui_uniquelibrary.h"
 
+#include "filehelper.h"
 #include "flowlayout.h"
 
+#include <QDir>
 #include <QPushButton>
 #include <QSqlRecord>
 #include <QSqlQuery>
