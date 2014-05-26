@@ -53,7 +53,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	verticalHeader()->hide();
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
-	connect(this, &QTableView::doubleClicked, [=](const QModelIndex &track) {
+	connect(this, &QTableView::doubleClicked, this, [=](const QModelIndex &track) {
 		// Prevent the signal "currentMediaChanged" for being emitted twice
 		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
@@ -63,18 +63,19 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	});
 
 	// Link core multimedia actions
-	connect(_mediaPlayer.data(), &QMediaPlayer::mediaStatusChanged, [=] (QMediaPlayer::MediaStatus status) {
+	connect(_mediaPlayer.data(), &QMediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
 		if (status == QMediaPlayer::EndOfMedia) {
 			_mediaPlayer.data()->skipForward();
 		}
 	});
 
 	// Ensure current item in the playlist is visible when track has just changed to another one
-	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, [=] () {
-		int row = _mediaPlayer.data()->playlist()->currentIndex();
-		this->scrollTo(_playlistModel->index(row, 0));
-		this->viewport()->update();
-		//qDebug() << _mediaPlayer.data()->playlist()->playbackMode();
+	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, this, [=] (const QMediaContent &media) {
+		if (!media.isNull()) {
+			int row = _mediaPlayer.data()->playlist()->currentIndex();
+			this->scrollTo(_playlistModel->index(row, 0));
+			this->viewport()->update();
+		}
 	});
 
 	// Context menu on tracks
@@ -103,23 +104,23 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
 
-	connect(mediaPlaylist(), &QMediaPlaylist::loaded, [=] () {
+	connect(mediaPlaylist(), &QMediaPlaylist::loaded, this, [=] () {
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
 			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
 		}
 	});
 
 	// No pity: marks everything as a dirty region
-	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection & selected, const QItemSelection &) {
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, [=](const QItemSelection & selected, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 		_previouslySelectedRows = selected.indexes();
 	});
 
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
 	foreach (QScrollBar *scrollBar, scrollBars) {
-		connect(scrollBar, &QScrollBar::sliderPressed, [=]() { viewport()->update(); });
-		connect(scrollBar, &QScrollBar::sliderMoved, [=]() { viewport()->update(); });
-		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderPressed, this, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderMoved, this, [=]() { viewport()->update(); });
+		connect(scrollBar, &QScrollBar::sliderReleased, this, [=]() { viewport()->update(); });
 	}
 }
 

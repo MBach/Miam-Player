@@ -143,8 +143,8 @@ QString PlaylistManager::getPlaylistName(const QString &path)
 {
 	_db.open();
 	QSqlQuery selectName(_db);
-	selectName.prepare("SELECT name FROM playlists WHERE absPath = :path");
-	selectName.bindValue(":path", path);
+	selectName.prepare("SELECT name FROM playlists WHERE absPath = ?");
+	selectName.addBindValue(path);
 	QString name = "";
 	if (selectName.exec() && selectName.next()) {
 		name = selectName.record().value(0).toString();
@@ -219,8 +219,8 @@ bool PlaylistManager::savePlaylist(int index)
 			qDebug() << "overwriting" << playlistName << playlistPath;
 
 			QSqlQuery deleteExistingPlaylist(_db);
-			deleteExistingPlaylist.prepare("DELETE FROM playlists WHERE absPath = :path");
-			deleteExistingPlaylist.bindValue(":path", playlistPath);
+			deleteExistingPlaylist.prepare("DELETE FROM playlists WHERE absPath = ?");
+			deleteExistingPlaylist.addBindValue(playlistPath);
 			deleteExistingPlaylist.exec();
 		}
 
