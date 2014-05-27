@@ -33,13 +33,18 @@ private:
 
 	Q_ENUMS(FontFamily)
 	Q_ENUMS(PlaylistDefaultAction)
+	Q_ENUMS(DragDropAction)
 
 public:
 	enum FontFamily{PLAYLIST, LIBRARY, MENUS};
 
-	enum PlaylistDefaultAction{AskUserForAction	= 0,
-							   SaveOnClose		= 1,
-							   DiscardOnClose	= 2};
+	enum PlaylistDefaultAction{PL_AskUserForAction	= 0,
+							   PL_SaveOnClose		= 1,
+							   PL_DiscardOnClose	= 2};
+
+	enum DragDropAction{DD_OpenPopup		= 0,
+						DD_AddToLibrary		= 1,
+						DD_AddToPlaylist	= 2};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* getInstance();
@@ -65,7 +70,7 @@ public:
 	/** Custom icons in CustomizeTheme */
 	const QString customIcon(QPushButton *, bool toggled = false) const;
 
-	const QString dragAndDropBehaviour() const;
+	DragDropAction dragDropAction() const;
 
 	/** Returns the font of the application. */
 	QFont font(const FontFamily fontFamily);
@@ -166,7 +171,7 @@ public slots:
 	/** Sets if stars are visible and active. */
 	void setDelegates(const bool &value);
 
-	void setDragAndDropBehaviour();
+	void setDragDropAction(DragDropAction action);
 
 	/** Sets the font of a part of the application. */
 	void setFont(const FontFamily &fontFamily, const QFont &font);
@@ -179,7 +184,7 @@ public slots:
 
 	/// PlayBack options
 	void setPlaybackSeekTime(int t);
-	void setPlaybackDefaultActionForClose(PlaylistDefaultAction action);
+	void setPlaybackCloseAction(PlaylistDefaultAction action);
 	void setPlaybackKeepPlaylists(bool b);
 	void setPlaybackRestorePlaylistsAtStartup(bool b);
 

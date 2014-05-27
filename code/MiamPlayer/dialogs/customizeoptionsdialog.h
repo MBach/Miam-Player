@@ -49,6 +49,7 @@ private slots:
 	void deleteSelectedLocation();
 
 	void initCloseActionForPlaylists();
+	void initDragDropAction();
 
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();

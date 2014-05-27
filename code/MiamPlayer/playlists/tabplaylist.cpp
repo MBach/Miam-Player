@@ -44,14 +44,14 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		} else {
 			Settings::PlaylistDefaultAction action = settings->playbackDefaultActionForClose();
 			switch (action) {
-			case Settings::AskUserForAction:
+			case Settings::PL_AskUserForAction:
 				_closePlaylistPopup->setTabToClose(index);
 				_closePlaylistPopup->show();
 				break;
-			case Settings::SaveOnClose:
+			case Settings::PL_SaveOnClose:
 				emit aboutToSavePlaylist(index);
 				break;
-			case Settings::DiscardOnClose:
+			case Settings::PL_DiscardOnClose:
 				this->removeTabFromCloseButton(index);
 				break;
 			}
@@ -330,13 +330,13 @@ void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 	switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
 	case QDialogButtonBox::Save:
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::SaveOnClose);
+			Settings::getInstance()->setPlaybackCloseAction(Settings::PL_SaveOnClose);
 		}
 		emit aboutToSavePlaylist(_closePlaylistPopup->index());
 		break;
 	case QDialogButtonBox::Discard:
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-			Settings::getInstance()->setPlaybackDefaultActionForClose(Settings::DiscardOnClose);
+			Settings::getInstance()->setPlaybackCloseAction(Settings::PL_DiscardOnClose);
 		}
 		this->removeTabFromCloseButton(_closePlaylistPopup->index());
 		_closePlaylistPopup->hide();

@@ -125,9 +125,9 @@ const QString Settings::customIcon(QPushButton *b, bool toggled) const
 	}
 }
 
-const QString Settings::dragAndDropBehaviour() const
+Settings::DragDropAction Settings::dragDropAction() const
 {
-	return value("dragAndDropBehaviour").toString();
+	return static_cast<Settings::DragDropAction>(value("dragDropAction").toInt());
 }
 
 /** Returns the font of the application. */
@@ -541,9 +541,9 @@ void Settings::setDelegates(const bool &value)
 	setValue("delegates", value);
 }
 
-void Settings::setDragAndDropBehaviour()
+void Settings::setDragDropAction(DragDropAction action)
 {
-	setValue("dragAndDropBehaviour", sender()->objectName());
+	setValue("dragDropAction", action);
 }
 
 void Settings::setFont(const FontFamily &fontFamily, const QFont &font)
@@ -573,7 +573,7 @@ void Settings::setPlaybackSeekTime(int t)
 	setValue("playbackSeekTime", t*1000);
 }
 
-void Settings::setPlaybackDefaultActionForClose(PlaylistDefaultAction action)
+void Settings::setPlaybackCloseAction(PlaylistDefaultAction action)
 {
 	setValue("playbackDefaultActionForClose", action);
 }

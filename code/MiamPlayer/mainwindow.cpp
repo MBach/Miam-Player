@@ -352,14 +352,16 @@ void MainWindow::dropEvent(QDropEvent *event)
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	dragDropDialog->setMimeData(event->mimeData());
-	QRadioButton *radioButtonDD = customizeOptionsDialog->findChild<QRadioButton*>(Settings::getInstance()->dragAndDropBehaviour());
-	if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToLibrary) {
-		customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
-	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToPlaylist) {
-		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
-		event->accept();
-	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDOpenPopup) {
+	switch (Settings::getInstance()->dragDropAction()) {
+	case Settings::DD_OpenPopup:
 		dragDropDialog->show();
+		break;
+	case Settings::DD_AddToLibrary:
+		customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
+		break;
+	case Settings::DD_AddToPlaylist:
+		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
+		break;
 	}
 }
 
