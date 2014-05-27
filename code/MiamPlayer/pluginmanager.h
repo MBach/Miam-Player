@@ -58,6 +58,8 @@ public:
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 	void registerExtensionPoint(const char *className, QObjectList target);
 
+	inline QList<BasicPluginInterface*> plugins() const { return _instances.values(); }
+
 private:
 	/** Search into the subdir "plugins" where the application is installed.*/
 	void init();

@@ -18,6 +18,8 @@ private:
 public:
 	explicit DragDropDialog(QWidget *parent = 0);
 
+	void retranslateUi(DragDropDialog *dialog);
+
 	void setMimeData(const QMimeData *mimeData);
 
 	inline QList<QDir> externalLocations() const { return _externalLocations; }

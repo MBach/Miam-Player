@@ -77,6 +77,8 @@ public:
 
 	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
+	void dispatchDrop(QDropEvent *event);
+
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event);

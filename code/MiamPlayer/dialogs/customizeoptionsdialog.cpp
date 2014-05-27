@@ -1,17 +1,16 @@
 #include "customizeoptionsdialog.h"
 
 #include "mainwindow.h"
+#include "pluginmanager.h"
 #include "settings.h"
+#include "shortcutwidget.h"
 
 #include <QDir>
 #include <QFileDialog>
+#include <QLibraryInfo>
 #include <QStandardPaths>
 
 #include <QtDebug>
-
-#include <QLibraryInfo>
-
-#include "shortcutwidget.h"
 
 CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDialog(parent)
@@ -157,34 +156,11 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 }
 
 /** Redefined to add custom behaviour. */
-void CustomizeOptionsDialog::closeEvent(QCloseEvent *)
+void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
 {
-	Settings *settings = Settings::getInstance();
-	QStringList savedLocations = settings->musicLocations();
-	QStringList newLocations;
-	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
-		QString newLocation = listWidgetMusicLocations->item(i)->text();
-		if (QString::compare(newLocation, tr("Add some music locations here")) != 0) {
-			newLocations << newLocation;
-		}
-	}
-	newLocations.sort();
-	savedLocations.sort();
-
-	bool musicLocationsAreIdenticals = true;
-	if (savedLocations.size() == newLocations.size()) {
-		for (int i = 0; i < savedLocations.count() && musicLocationsAreIdenticals; i++) {
-			musicLocationsAreIdenticals = (QString::compare(savedLocations.at(i), newLocations.at(i)) == 0);
-		}
-	} else {
-		musicLocationsAreIdenticals = false;
-	}
-
-	if (!musicLocationsAreIdenticals) {
-		settings->setMusicLocations(newLocations);
-		settings->sync();
-		emit musicLocationsHaveChanged(newLocations.isEmpty());
-	}
+	QDialog::closeEvent(e);
+	// Drive is scanned only when the popup is closed
+	this->updateMusicLocations();
 }
 
 /** Adds a new music location in the library. */
@@ -204,6 +180,33 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 	}
 	listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
 	pushButtonDeleteLocation->setEnabled(true);
+}
+
+/** Adds a external music locations in the library (Drag & Drop). */
+void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
+{
+	foreach (QDir folder, dirs) {
+		this->addMusicLocation(folder.absolutePath());
+	}
+	this->updateMusicLocations();
+}
+
+/** Change language at runtime. */
+void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
+{
+	QString lang = languages.value(index.data().toString());
+	Settings *settings = Settings::getInstance();
+
+	// If the language is successfully loaded, tells every widget that they need to be redisplayed
+	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
+		settings->setLanguage(index.data().toString());
+		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+		QApplication::installTranslator(&customTranslator);
+		/// TODO: reload plugin UI
+		QApplication::installTranslator(&defaultQtTranslator);
+	} else {
+		labelStatusLanguage->setText(tr("No translation is available for this language :("));
+	}
 }
 
 void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
@@ -233,23 +236,6 @@ void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, in
 	}
 }
 
-/** Change language at runtime. */
-void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
-{
-	QString lang = languages.value(index.data().toString());
-	Settings *settings = Settings::getInstance();
-
-	// If the language is successfully loaded, tells every widget that they need to be redisplayed
-	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
-		settings->setLanguage(index.data().toString());
-		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-		QApplication::installTranslator(&customTranslator);
-		QApplication::installTranslator(&defaultQtTranslator);
-	} else {
-		labelStatusLanguage->setText(tr("No translation is available for this language :("));
-	}
-}
-
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()
 {
@@ -268,12 +254,23 @@ void CustomizeOptionsDialog::open()
 	this->activateWindow();
 }
 
-void CustomizeOptionsDialog::setExternalDragDropPreference(QToolButton *toolButton)
+/** Delete a music location previously chosen by the user. */
+void CustomizeOptionsDialog::deleteSelectedLocation()
 {
-	if (toolButton->objectName().toLower().contains("library")) {
-		radioButtonDDAddToLibrary->toggle();
-	} else {
-		radioButtonDDAddToPlaylist->toggle();
+	// If the user didn't click on an item before activating delete button
+	int row = listWidgetMusicLocations->currentRow();
+	if (row == -1) {
+		row = 0;
+	}
+
+	Settings *settings = Settings::getInstance();
+	if (!settings->musicLocations().isEmpty()) {
+		delete listWidgetMusicLocations->takeItem(row);
+
+		if (listWidgetMusicLocations->count() == 0) {
+			pushButtonDeleteLocation->setEnabled(false);
+			listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
+		}
 	}
 }
 
@@ -302,22 +299,32 @@ void CustomizeOptionsDialog::openLibraryDialog()
 	}
 }
 
-/** Delete a music location previously chosen by the user. */
-void CustomizeOptionsDialog::deleteSelectedLocation()
+void CustomizeOptionsDialog::updateMusicLocations()
 {
-	// If the user didn't click on an item before activating delete button
-	int row = listWidgetMusicLocations->currentRow();
-	if (row == -1) {
-		row = 0;
+	Settings *settings = Settings::getInstance();
+	QStringList savedLocations = settings->musicLocations();
+	QStringList newLocations;
+	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
+		QString newLocation = listWidgetMusicLocations->item(i)->text();
+		if (QString::compare(newLocation, tr("Add some music locations here")) != 0) {
+			newLocations << newLocation;
+		}
+	}
+	newLocations.sort();
+	savedLocations.sort();
+
+	bool musicLocationsAreIdenticals = true;
+	if (savedLocations.size() == newLocations.size()) {
+		for (int i = 0; i < savedLocations.count() && musicLocationsAreIdenticals; i++) {
+			musicLocationsAreIdenticals = (QString::compare(savedLocations.at(i), newLocations.at(i)) == 0);
+		}
+	} else {
+		musicLocationsAreIdenticals = false;
 	}
 
-	Settings *settings = Settings::getInstance();
-	if (!settings->musicLocations().isEmpty()) {
-		delete listWidgetMusicLocations->takeItem(row);
-
-		if (listWidgetMusicLocations->count() == 0) {
-			pushButtonDeleteLocation->setEnabled(false);
-			listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
-		}
+	if (!musicLocationsAreIdenticals) {
+		settings->setMusicLocations(newLocations);
+		settings->sync();
+		emit musicLocationsHaveChanged(newLocations.isEmpty());
 	}
 }

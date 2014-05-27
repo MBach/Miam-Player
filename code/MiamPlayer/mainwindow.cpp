@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
 	_mediaPlayer->setVolume(settings->volume());
+	tabPlaylists->setMainWindow(this);
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
 
@@ -194,10 +195,7 @@ void MainWindow::setupActions()
 	}
 
 	// Send one folder to the music locations
-	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocation, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocation);
-	/// FIXME
-	//connect(filesystem, &QAbstractItemView::doubleClicked, tabPlaylists, &TabPlaylist::appendItemToPlaylist);
-	//connect(filesystem, &QAbstractItemView::doubleClicked, [=](const QModelIndex &index){});
+	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
@@ -280,10 +278,7 @@ void MainWindow::setupActions()
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
 	// Drag & Drop actions
-	connect(dragDropDialog, &DragDropDialog::rememberDragDrop, customizeOptionsDialog, &CustomizeOptionsDialog::setExternalDragDropPreference);
-	/// FIXME Qt5
-	//connect(dragDropDialog, SIGNAL(aboutToAddExtFoldersToLibrary(QList<QDir>)), library->searchEngine(), SLOT(setLocations(QList<QDir>)));
-	//connect(dragDropDialog, SIGNAL(reDrawLibrary()), this, SLOT(drawLibrary()));
+	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
 	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
 
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
@@ -324,6 +319,7 @@ void MainWindow::changeEvent(QEvent *event)
 		quickStart->retranslateUi(quickStart);
 		playlistManager->retranslateUi(playlistManager);
 		tagEditor->retranslateUi(tagEditor);
+		dragDropDialog->retranslateUi(dragDropDialog);
 
 		// (need to be tested with Arabic language)
 		if (tr("LTR") == "RTL") {
@@ -350,13 +346,18 @@ void MainWindow::dropEvent(QDropEvent *event)
 	if (event->source() != NULL) {
 		return;
 	}
-	dragDropDialog->setMimeData(event->mimeData());
+	this->dispatchDrop(event);
+}
 
+void MainWindow::dispatchDrop(QDropEvent *event)
+{
+	dragDropDialog->setMimeData(event->mimeData());
 	QRadioButton *radioButtonDD = customizeOptionsDialog->findChild<QRadioButton*>(Settings::getInstance()->dragAndDropBehaviour());
 	if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToLibrary) {
-		/// TODO
+		customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
 	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDAddToPlaylist) {
 		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
+		event->accept();
 	} else if (radioButtonDD == customizeOptionsDialog->radioButtonDDOpenPopup) {
 		dragDropDialog->show();
 	}
@@ -375,7 +376,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 bool MainWindow::event(QEvent *e)
 {
 	bool b = QMainWindow::event(e);
-	// Init the address bar. It's really important to have the exact on screen width
+	// Init the address bar. It's really important to have the exact width on screen
 	if (e->type() == QEvent::Show) {
 		if (!filesystem->isVisible()) {
 			addressBar->setMinimumWidth(leftTabs->width());

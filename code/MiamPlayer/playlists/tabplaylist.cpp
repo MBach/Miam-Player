@@ -3,12 +3,13 @@
 #include <QDirIterator>
 #include <QStackedLayout>
 
+#include "mainwindow.h"
 #include "settings.h"
 #include "tabbar.h"
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _tabIndex(-1), _closePlaylistPopup(new ClosePlaylistPopup(this))
+	QTabWidget(parent), _tabIndex(-1), _closePlaylistPopup(new ClosePlaylistPopup(this)), _mainWindow(NULL)
 {
 	this->setTabBar(new TabBar(this));
 	messageBox = new TracksNotFoundMessageBox(this);
@@ -56,6 +57,8 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			}
 		}
 	});
+
+	this->setAcceptDrops(true);
 }
 
 
@@ -79,14 +82,21 @@ QIcon TabPlaylist::defaultIcon(QIcon::Mode mode)
 /** Redefined to forward events to children. */
 bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 {
-	//qDebug() << Q_FUNC_INFO << obj->objectName() << event->type();
 	if (event->type() == QEvent::DragEnter) {
 		event->accept();
 		return true;
 	} else if (event->type() == QEvent::Drop) {
-		/// FIXME
-		currentPlayList()->forceDrop(static_cast<QDropEvent*>(event));
-		return true;
+		QDropEvent *de = static_cast<QDropEvent*>(event);
+		if (de->source() == NULL) {
+			// Drag & Drop comes from another application but has landed in the playlist area
+			de->ignore();
+			QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
+			_mainWindow->dispatchDrop(d);
+			return true;
+		} else {
+			currentPlayList()->forceDrop(de);
+			return true;
+		}
 	}
 	return QTabWidget::eventFilter(obj, event);
 }
@@ -101,6 +111,11 @@ Playlist* TabPlaylist::playlist(int index)
 void TabPlaylist::setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer)
 {
 	_mediaPlayer = mediaPlayer;
+}
+
+void TabPlaylist::setMainWindow(MainWindow *mainWindow)
+{
+	_mainWindow = mainWindow;
 }
 
 /** Retranslate tabs' name and all playlists in this widget. */
@@ -119,11 +134,11 @@ void TabPlaylist::changeEvent(QEvent *event)
 	}
 }
 
-void TabPlaylist::dropEvent(QDropEvent *event)
+/*void TabPlaylist::dropEvent(QDropEvent *event)
 {
-	qDebug() << (event->source() == NULL);
+	qDebug() << Q_FUNC_INFO << (event->source() == NULL);
 	QTabWidget::dropEvent(event);
-}
+}*/
 
 void TabPlaylist::displayEmptyArea(bool isEmpty)
 {
@@ -147,7 +162,6 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Then append a new empty playlist to the others
 	QWidget *stackedWidget = new QWidget(this);
-
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
@@ -198,16 +212,26 @@ Playlist* TabPlaylist::addPlaylist()
 /** Add external folders (from a drag and drop) to the current playlist. */
 void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
-	qDebug() << Q_FUNC_INFO;
 	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
-	foreach (QDir folder, folders) {
-		QDirIterator it(folder, QDirIterator::Subdirectories);
-		QStringList tracks;
-		while (it.hasNext()) {
-			tracks << it.next();
-		}
-		this->insertItemsToPlaylist(currentPlayList()->model()->rowCount(), tracks);
+
+	// Create filters
+	QStringList suffixes;
+	foreach (QString suffix, FileHelper::suffixes()) {
+		suffixes.append("*." + suffix);
 	}
+
+	QStringList tracks;
+	foreach (QDir folder, folders) {
+		QDirIterator it(folder.absolutePath(), suffixes, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+		while (it.hasNext()) {
+			it.next();
+			if (it.fileInfo().isFile()) {
+				tracks << it.fileInfo().absoluteFilePath();
+			}
+		}
+	}
+	this->insertItemsToPlaylist(-1, tracks);
+
 	// Automatically plays the first track
 	if (isEmpty) {
 		this->mediaPlayer().data()->setPlaylist(this->currentPlayList()->mediaPlaylist());
@@ -226,6 +250,7 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
+	qDebug() << tracks;
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon());
 }

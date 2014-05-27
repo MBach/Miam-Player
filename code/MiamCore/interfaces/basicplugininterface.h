@@ -2,6 +2,7 @@
 #define BASICPLUGININTERFACE_H
 
 #include <QString>
+#include <QTranslator>
 #include <QtPlugin>
 
 #include "miamcore_global.h"
@@ -9,6 +10,8 @@
 class MIAMCORE_LIBRARY BasicPluginInterface
 {
 public:
+	QTranslator translator;
+
 	virtual ~BasicPluginInterface() {}
 
 	virtual QWidget* configPage() = 0;

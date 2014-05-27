@@ -1,6 +1,7 @@
 #ifndef CUSTOMIZEOPTIONSDIALOG_H
 #define CUSTOMIZEOPTIONSDIALOG_H
 
+#include <QDir>
 #include <QDialog>
 #include <QToolButton>
 #include <QTranslator>
@@ -22,7 +23,7 @@ public:
 
 protected:
 	/** Redefined to add custom behaviour. */
-	void closeEvent(QCloseEvent *);
+	virtual void closeEvent(QCloseEvent *);
 
 signals:
 	/** Signal sent whether the music locations have changed or not. */
@@ -32,24 +33,27 @@ public slots:
 	/** Adds a new music location in the library. */
 	void addMusicLocation(const QString &musicLocation);
 
-	void checkShortcut(ShortcutWidget *, int typedKey);
+	/** Adds a external music locations in the library (Drag & Drop). */
+	void addMusicLocations(const QList<QDir> &dirs);
 
 	/** Change language at runtime. */
 	void changeLanguage(QModelIndex);
 
+	void checkShortcut(ShortcutWidget *, int typedKey);
+
 	/** Redefined to initialize theme from settings. */
 	void open();
 
-	void setExternalDragDropPreference(QToolButton *toolButton);
-
 private slots:
+	/** Delete a music location previously chosen by the user. */
+	void deleteSelectedLocation();
+
 	void initCloseActionForPlaylists();
 
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();
 
-	/** Delete a music location previously chosen by the user. */
-	void deleteSelectedLocation();
+	void updateMusicLocations();
 };
 
 #endif // CUSTOMIZEOPTIONSDIALOG_H

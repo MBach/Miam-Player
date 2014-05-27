@@ -140,7 +140,10 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 {
 	QList<QMediaContent> medias;
 	foreach (QString track, tracks) {
-		medias.append(QMediaContent(QUrl::fromLocalFile(track)));
+		QMediaContent media(QUrl::fromLocalFile(track));
+		if (!media.isNull()) {
+			medias.append(media);
+		}
 	}
 	// If the track needs to be appended at the end
 	if (rowIndex == -1) {
@@ -198,6 +201,7 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 /** Redefined to be able to move tracks between playlists or internally. */
 void Playlist::dropEvent(QDropEvent *event)
 {
+	qDebug() << Q_FUNC_INFO;
 	QObject *source = event->source();
 	int row = this->indexAt(event->pos()).row();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
@@ -238,6 +242,8 @@ void Playlist::dropEvent(QDropEvent *event)
 		}
 	} else if (source == NULL) {
 		event->ignore();
+		qDebug() << "source is null, ignore event?" << this->parent() << this->objectName();
+		return;
 	}
 }
 

@@ -150,6 +150,10 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				_plugins.insert(basic->name(), pluginFileInfo);
 			}
 			if (basic->isConfigurable()) {
+				QString pluginLang(":/translations/" + basic->name() + "_" + Settings::getInstance()->language());
+				if (basic->translator.load(pluginLang)) {
+					QApplication::installTranslator(&basic->translator);
+				}
 				_mainWindow->customizeOptionsDialog->tabPlugins->insertTab(idx, basic->configPage(), basic->name());
 			}
 			// Keep references of loaded plugins, to be able to unload them later

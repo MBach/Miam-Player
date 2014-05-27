@@ -18,6 +18,13 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 	originalLabel = labelHowToProceed->text();
 }
 
+/** Is it necessary to redefined this from the UI class just for this init label? */
+void DragDropDialog::retranslateUi(DragDropDialog *dialog)
+{
+	labelHowToProceed->setText("What would you like to do with %1?");
+	Ui::DragDropDialog::retranslateUi(dialog);
+}
+
 void DragDropDialog::setMimeData(const QMimeData *mimeData)
 {
 	if (mimeData->hasUrls()) {

@@ -37,15 +37,12 @@ public slots:
 	void reloadWithNewPath(const QDir &path);
 
 private slots:
-	/** Send one folder to the existing music locations. */
-	void addFolderToLibrary();
-
 	/** Get the folder which is the target of one's double-click. */
-	void convertToFolder(const QModelIndex &index);
+	void convertIndex(const QModelIndex &index);
 
 signals:
 	/** Append the selected folder to the existing music locations. */
-	void aboutToAddMusicLocation(const QString &);
+	void aboutToAddMusicLocations(const QList<QDir> &);
 
 	void folderChanged(const QString &);
 };

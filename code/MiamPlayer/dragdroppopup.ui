@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>241</height>
+    <width>460</width>
+    <height>258</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,9 +41,6 @@
      </item>
      <item>
       <widget class="QToolButton" name="toolButtonLibrary">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <property name="minimumSize">
         <size>
          <width>128</width>

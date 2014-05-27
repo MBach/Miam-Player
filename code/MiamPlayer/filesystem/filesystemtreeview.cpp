@@ -33,7 +33,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	toLibrary = tr("Add \"%1\" to library");
 	toTagEditor = tr("Send \"%1\" to the tag editor");
 
-	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertToFolder);
+	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertIndex);
 }
 
 /** Reimplemented to display up to 3 actions. */
@@ -50,13 +50,16 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 	// Same thing for the tag editor
 	QAction *actionSendToTagEditor = new QAction(toTagEditor.arg(fileInfo.baseName()), properties);
-    connect(actionSendToTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
+	connect(actionSendToTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 	properties->addAction(actionSendToTagEditor);
 
 	// But restricts for the library. It is not wished to add single file as placeholder
 	if (fileInfo.isDir()) {
 		QAction *actionAddToLibrary = new QAction(toLibrary.arg(fileInfo.baseName()), properties);
-		connect(actionAddToLibrary, &QAction::triggered, this, &FileSystemTreeView::addFolderToLibrary);
+		connect(actionAddToLibrary, &QAction::triggered, this, [=]() {
+			QList<QDir> dirs = QList<QDir>() << fileSystemModel->fileInfo(currentIndex()).absoluteFilePath();
+			emit aboutToAddMusicLocations(dirs);
+		});
 		properties->addAction(actionAddToLibrary);
 	}
 	properties->exec(event->globalPos());
@@ -104,19 +107,13 @@ void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 	this->update(theIndex);
 }
 
-/** Send one folder to the existing music locations. */
-void FileSystemTreeView::addFolderToLibrary()
-{
-	QFileSystemModel *standardItemModel = qobject_cast<QFileSystemModel*>(model());
-	QString absFilePath = standardItemModel->fileInfo(this->currentIndex()).absoluteFilePath();
-	emit aboutToAddMusicLocation(absFilePath);
-}
-
 /** Get the folder which is the target of one's double-click. */
-void FileSystemTreeView::convertToFolder(const QModelIndex &index)
+void FileSystemTreeView::convertIndex(const QModelIndex &index)
 {
 	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
 	if (fileInfo.isDir()) {
 		emit folderChanged(fileSystemModel->filePath(index));
+	} else {
+		emit aboutToInsertToPlaylist(-1, QStringList(fileInfo.absoluteFilePath()));
 	}
 }

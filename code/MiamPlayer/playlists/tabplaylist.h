@@ -14,6 +14,8 @@
 
 #include <mediaplayer.h>
 
+class MainWindow;
+
 /**
  * \brief		The TabPlaylist class is used to manage mutiple playlists in the MainWindow class.
  * \author      Matthieu Bachelier
@@ -31,6 +33,7 @@ private:
 	int _tabIndex;
 
 	QWeakPointer<MediaPlayer> _mediaPlayer;
+	MainWindow *_mainWindow;
 
 	ClosePlaylistPopup *_closePlaylistPopup;
 
@@ -62,11 +65,13 @@ public:
 	/** Setter. */
 	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
+	void setMainWindow(MainWindow *mainWindow);
+
 protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	virtual void changeEvent(QEvent *event);
 
-	virtual void dropEvent(QDropEvent *event);
+	//virtual void dropEvent(QDropEvent *event);
 
 private:
 	void displayEmptyArea(bool isEmpty = true);
