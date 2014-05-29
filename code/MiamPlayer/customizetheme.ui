@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>520</height>
+    <width>721</width>
+    <height>571</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,7 +68,7 @@
       <enum>QListView::IconMode</enum>
      </property>
      <property name="uniformItemSizes">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="currentRow">
       <number>0</number>
@@ -253,8 +253,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>390</width>
-               <height>542</height>
+               <width>465</width>
+               <height>588</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
