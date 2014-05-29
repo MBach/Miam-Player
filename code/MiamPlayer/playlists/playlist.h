@@ -105,6 +105,8 @@ public slots:
 
 signals:
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
+
+	void selectionChanged(bool isEmpty);
 };
 
 #endif // PLAYLIST_H

@@ -8,11 +8,11 @@ class MiamStyledItemDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 private:
-	QTableView *_tableView;
+	QAbstractItemView *_itemView;
 	bool _fallback;
 
 public:
-	explicit MiamStyledItemDelegate(QTableView *parent, bool fallback);
+	explicit MiamStyledItemDelegate(QAbstractItemView *parent, bool fallback);
 
 	virtual void paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const;
 };

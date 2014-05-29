@@ -7,7 +7,6 @@
 #include <QTime>
 
 #include "../columnutils.h"
-#include "settings.h"
 #include "../library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "playlistheaderview.h"
@@ -15,6 +14,7 @@
 #include "scrollbar.h"
 
 #include <QItemSelection>
+#include <QPaintEngine>
 #include <QStylePainter>
 
 #include <QtDebug>
@@ -114,6 +114,8 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, [=](const QItemSelection & selected, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 		_previouslySelectedRows = selected.indexes();
+		qDebug() << Q_FUNC_INFO;
+		emit selectionChanged(selected.isEmpty());
 	});
 
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
@@ -193,7 +195,8 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 	_dropDownIndex = new QModelIndex();
 	// Kind of hack to keep track of position?
 	*_dropDownIndex = indexAt(event->pos());
-	repaint();
+	//qDebug() << "DDI" << _dropDownIndex->row();
+	//repaint();
 	delete _dropDownIndex;
 	_dropDownIndex = NULL;
 }
@@ -265,7 +268,7 @@ void Playlist::keyPressEvent(QKeyEvent *event)
 
 void Playlist::mouseMoveEvent(QMouseEvent *event)
 {
-	if (!(event->buttons() & Qt::LeftButton))
+	if (!event->buttons().testFlag(Qt::LeftButton))
 		return;
 	if ((event->pos() - _dragStartPosition).manhattanLength() < QApplication::startDragDistance())
 		return;
@@ -288,8 +291,6 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 		QTableView::mousePressEvent(event);
 	}
 }
-
-#include <QPaintEngine>
 
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
@@ -347,8 +348,21 @@ void Playlist::moveTracksUp()
 void Playlist::removeSelectedTracks()
 {
 	QModelIndexList indexes = this->selectionModel()->selectedRows();
+	int firstIndex = INT_MAX;
+	foreach (QModelIndex idx, indexes) {
+		if (idx.row() < firstIndex) {
+			firstIndex = idx.row();
+		}
+	}
+	// Remove discontiguous rows
 	for (int i = indexes.size() - 1; i >= 0; i--) {
 		int row = indexes.at(i).row();
 		_playlistModel->removeRow(row);
+	}
+	if (firstIndex < _playlistModel->rowCount()) {
+		this->selectRow(firstIndex);
+	} else {
+		// Select the last one otherwise: it still can be possible to erase all
+		this->selectRow(_playlistModel->rowCount() - 1);
 	}
 }

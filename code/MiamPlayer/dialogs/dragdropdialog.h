@@ -22,7 +22,7 @@ public:
 
 	void setMimeData(const QMimeData *mimeData);
 
-	inline QList<QDir> externalLocations() const { return _externalLocations; }
+	inline const QList<QDir> & externalLocations() const { return _externalLocations; }
 
 private slots:
 	void addExternalFoldersToLibrary();
@@ -31,8 +31,6 @@ private slots:
 signals:
 	void aboutToAddExtFoldersToLibrary(const QList<QDir> &);
 	void aboutToAddExtFoldersToPlaylist(const QList<QDir> &);
-
-	void rememberDragDrop(QToolButton*);
 };
 
 #endif // DRAGDROPDIALOG_H

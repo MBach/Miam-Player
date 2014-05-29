@@ -5,8 +5,13 @@
 #include <QApplication>
 #include <QPainter>
 
-MiamStyledItemDelegate::MiamStyledItemDelegate(QTableView *parent, bool fallback) :
-	QStyledItemDelegate(parent), _tableView(parent), _fallback(fallback)
+#include <QtDebug>
+
+#include <QTreeView>
+#include <QTableView>
+
+MiamStyledItemDelegate::MiamStyledItemDelegate(QAbstractItemView *parent, bool fallback) :
+	QStyledItemDelegate(parent), _itemView(parent), _fallback(fallback)
 {
 }
 
@@ -48,17 +53,26 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
-		if (!top.isValid() || !_tableView->selectionModel()->selectedIndexes().contains(top)) {
+		if (!top.isValid() || !_itemView->selectionModel()->selectedIndexes().contains(top)) {
 			p->drawLine(o.rect.topLeft(), o.rect.topRight());
 		}
-		if (o.rect.left() == 0) {
+		// Table -> displays only left border for first column, right border for last column
+		// Tree -> displays both left and right borders
+		if (qobject_cast<QTreeView*>(_itemView)) {
 			p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
-		} else if (o.rect.right() == _tableView->viewport()->rect().right()) {
 			p->drawLine(o.rect.topRight(), o.rect.bottomRight());
+		} else {
+			if (o.rect.left() == 0) {
+				//p->drawLine(o.rect.x() + 1, o.rect.y(), o.rect.x() + 1, o.rect.bottom());
+				p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
+			} else if (o.rect.right() == _itemView->viewport()->rect().right()) {
+				p->drawLine(o.rect.topRight(), o.rect.bottomRight());
+			}
 		}
+
 		// Don't display the bottom line is the track underneath is selected
 		QModelIndex bottom = index.sibling(index.row() + 1, index.column());
-		if (!bottom.isValid() || !_tableView->selectionModel()->selectedIndexes().contains(bottom)) {
+		if (!bottom.isValid() || !_itemView->selectionModel()->selectedIndexes().contains(bottom)) {
 			p->drawLine(o.rect.bottomLeft(), o.rect.bottomRight());
 		}
 	} else {
@@ -71,7 +85,16 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 		} else {
 			p->setPen(o.palette.text().color());
 		}
-		p->drawText(o.rect, Qt::AlignLeft | Qt::AlignVCenter,
-					p->fontMetrics().elidedText(index.data().toString(), Qt::ElideRight, o.rect.width()));
+		if (o.icon.isNull()) {
+			p->drawText(o.rect, Qt::AlignLeft | Qt::AlignVCenter,
+						p->fontMetrics().elidedText(index.data().toString(), Qt::ElideRight, o.rect.width()));
+		} else {
+			// Display icon (file system tree for example)
+			QPixmap pm(o.icon.pixmap(18, 18));
+			QRect iconRect(o.rect.x() + 1, o.rect.y() + 2, 18, 18);
+			p->drawPixmap(iconRect, pm);
+			p->drawText(o.rect.adjusted(iconRect.width() + 1, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter,
+						p->fontMetrics().elidedText(index.data().toString(), Qt::ElideRight, o.rect.width()));
+		}
 	}
 }

@@ -6,6 +6,8 @@
 #include <QStandardItemModel>
 
 #include "filehelper.h"
+#include "nofocusitemdelegate.h"
+#include "styling/miamstyleditemdelegate.h"
 
 #include <QtDebug>
 
@@ -20,13 +22,16 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 		filters.append("*." + suffix);
 	}
 	fileSystemModel->setNameFilters(filters);
+
 	this->setModel(fileSystemModel);
 
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
 	this->setColumnHidden(1, true);
 	this->setColumnHidden(2, true);
 	this->setColumnHidden(3, true);
+
 	this->header()->hide();
+	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
 
 	properties = new QMenu(this);
 	toPlaylist = tr("Add \"%1\" to playlist");

@@ -33,9 +33,8 @@ private:
 	int _tabIndex;
 
 	QWeakPointer<MediaPlayer> _mediaPlayer;
-	MainWindow *_mainWindow;
-
 	ClosePlaylistPopup *_closePlaylistPopup;
+	MainWindow *_mainWindow;
 
 public:
 	/** Default constructor. */
@@ -116,6 +115,8 @@ signals:
 	void aboutToSavePlaylist(int);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
+
+	void selectionChanged(bool isEmpty);
 
 	void updatePlaybackModeButton();
 };

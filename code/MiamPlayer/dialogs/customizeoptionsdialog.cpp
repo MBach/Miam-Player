@@ -250,6 +250,7 @@ void CustomizeOptionsDialog::open()
 		}
 	}
 	this->initCloseActionForPlaylists();
+	this->initDragDropAction();
 	retranslateUi(this);
 	QDialog::open();
 	this->activateWindow();

@@ -12,8 +12,8 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 {
 	setupUi(this);
 
-	connect(toolButtonLibrary, SIGNAL(clicked()), this, SLOT(addExternalFoldersToLibrary()));
-	connect(toolButtonPlaylist, SIGNAL(clicked()), this, SLOT(addExternalFoldersToPlaylist()));
+	connect(toolButtonLibrary, &QToolButton::clicked, this, &DragDropDialog::addExternalFoldersToLibrary);
+	connect(toolButtonPlaylist, &QToolButton::clicked, this, &DragDropDialog::addExternalFoldersToPlaylist);
 
 	originalLabel = labelHowToProceed->text();
 }
@@ -60,7 +60,7 @@ void DragDropDialog::setMimeData(const QMimeData *mimeData)
 void DragDropDialog::addExternalFoldersToLibrary()
 {
 	if (checkBoxRememberChoice->isChecked()) {
-		emit rememberDragDrop(toolButtonLibrary);
+		Settings::getInstance()->setDragDropAction(Settings::DD_AddToLibrary);
 	}
 	emit aboutToAddExtFoldersToLibrary(_externalLocations);
 	this->accept();
@@ -69,9 +69,8 @@ void DragDropDialog::addExternalFoldersToLibrary()
 void DragDropDialog::addExternalFoldersToPlaylist()
 {
 	if (checkBoxRememberChoice->isChecked()) {
-		emit rememberDragDrop(toolButtonPlaylist);
+		Settings::getInstance()->setDragDropAction(Settings::DD_AddToPlaylist);
 	}
-	qDebug() << Q_FUNC_INFO << _externalLocations.size();
 	emit aboutToAddExtFoldersToPlaylist(_externalLocations);
 	this->accept();
 }

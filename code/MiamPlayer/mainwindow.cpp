@@ -283,24 +283,32 @@ void MainWindow::setupActions()
 
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
-	connect(menuPlayback, &QMenu::aboutToShow, [=](){
+	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
 		QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
 		const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
 		QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
 		QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
 		action->setChecked(true);
 	});
-	connect(menuPlaylist, &QMenu::aboutToShow, [=]() {
-		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
+
+	auto updateActions = [this] (bool b) {
 		actionRemoveSelectedTracks->setEnabled(b);
 		actionMoveTrackUp->setEnabled(b);
 		actionMoveTrackDown->setEnabled(b);
+	};
+
+	connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
+		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
+		updateActions(b);
 		if (b) {
 			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
 			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
 			actionMoveTrackUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
 			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
+	});
+	connect(tabPlaylists, &TabPlaylist::selectionChanged, this, [=](bool isEmpty) {
+		updateActions(!isEmpty);
 	});
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
