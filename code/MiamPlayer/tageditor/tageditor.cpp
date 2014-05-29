@@ -3,6 +3,7 @@
 #include "settings.h"
 #include "pluginmanager.h"
 
+#include <3rdparty/taglib/tfile.h>
 #include <3rdparty/taglib/tpropertymap.h>
 #include <QDir>
 
@@ -114,10 +115,10 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
-	disconnect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
+	disconnect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, covers);
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
-	connect(tagEditorWidget, SIGNAL(itemChanged(QTableWidgetItem*)), this, SLOT(recordSingleItemChange(QTableWidgetItem*)));
+	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 
 	// Sort by path
 	tagEditorWidget->setSortingEnabled(true);
@@ -196,8 +197,6 @@ void TagEditor::commitChanges()
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
 		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
 		QString absPath(itemPath->text() + QDir::separator() + itemFileName->text());
-		//FileRef file(QFile::encodeName(absPath).data());
-		//FileHelper fh(file, itemFileName->data(LibraryItem::SUFFIX).toInt());
 		FileHelper fh(absPath);
 		bool trackWasModified = false;
 		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
@@ -209,12 +208,12 @@ void TagEditor::commitChanges()
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
 				/// FIXME
-				/*if (fh.file()->tag()) {
-					PropertyMap pm = fh.file()->tag()->properties();
+				if (fh.file()->tag()) {
+					TagLib::PropertyMap pm = fh.file()->tag()->properties();
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
 					if (pm.contains(key.toStdString())) {
-						bool b = pm.replace(key.toStdString(), String(item->text().toStdString()));
+						bool b = pm.replace(key.toStdString(), TagLib::String(item->text().toStdString()));
 						if (b) {
 							fh.file()->tag()->setProperties(pm);
 							if (fh.file()->tag()) {
@@ -226,7 +225,7 @@ void TagEditor::commitChanges()
 					}
 				} else {
 					qDebug() << "no valid tag for this file";
-				}*/
+				}
 			}
 		}
 
@@ -314,7 +313,7 @@ void TagEditor::displayTags()
 		QComboBox *combo = combos.value(it.key());
 		if (combo) {
 
-			disconnect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
+			disconnect(combo, &QComboBox::editTextChanged, this, &TagEditor::updateCells);
 			combo->clear();
 			combo->insertItem(0, tr("(Keep)"));
 			// Map the combobox object with the number of the column in the table to dynamically reflect changes
@@ -354,7 +353,7 @@ void TagEditor::displayTags()
 			} else {
 				combo->setCurrentIndex(0);
 			}
-			connect(combo, SIGNAL(editTextChanged(QString)), this, SLOT(updateCells(QString)));
+			connect(combo, &QComboBox::editTextChanged, this, &TagEditor::updateCells);
 		}
 	}
 }
@@ -407,9 +406,9 @@ void TagEditor::updateCells(QString text)
 	combo->blockSignals(true);
 
 	// Special behaviour for "Keep" and "Delete" items
-	// Keep
-	if (combo->currentIndex() == 0) {
-
+	switch (combo->currentIndex()) {
+	// "(Keep)" item
+	case 0: {
 		QModelIndexList list = tagEditorWidget->selectionModel()->selectedRows(idxColumnInTable);
 		for (int i = 0; i < list.size(); i++) {
 			QModelIndex index = list.at(i);
@@ -423,13 +422,16 @@ void TagEditor::updateCells(QString text)
 			}
 			tagEditorWidget->item(index.row(), idxColumnInTable)->setData(TagEditorTableWidget::MODIFIED, true);
 		}
-
-	// Delete
-	} else if (combo->currentIndex() == 1) {
+		break;
+	}
+	// "(Delete)" item
+	case 1:
 		tagEditorWidget->updateColumnData(idxColumnInTable, "");
+		break;
 	// A regular item
-	} else {
+	default:
 		tagEditorWidget->updateColumnData(idxColumnInTable, text);
+		break;
 	}
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);

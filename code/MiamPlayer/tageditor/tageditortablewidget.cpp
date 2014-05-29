@@ -17,7 +17,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
 
 	/// XXX delegate should be improved because this piece of code has to be duplicated
-    connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
+	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 	});
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
@@ -33,9 +33,9 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 void TagEditorTableWidget::init()
 {
 	// Always keep the same number of columns with this taglist
-	QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM");
-	//keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
-	keys << "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT";
+	static const QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM"
+		//<< "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
+		<< "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT");
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = new QTableWidgetItem();
 		header->setData(KEY, keys.at(column));

@@ -34,9 +34,9 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 	layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 	setLayout(layout);
 
-	connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(showPlusLabel(int)));
-	connect(lineEdit, SIGNAL(editingFinished()), this, SLOT(createKeySequence()));
-	connect(reset, SIGNAL(clicked()), this, SLOT(deleteKeySequence()));
+	connect(comboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ShortcutWidget::showPlusLabel);
+	connect(lineEdit, &QLineEdit::editingFinished, this, &ShortcutWidget::createKeySequence);
+	connect(reset, &QPushButton::clicked, this, &ShortcutWidget::deleteKeySequence);
 }
 
 void ShortcutWidget::setObjectName(const QString &name)

@@ -7,7 +7,7 @@
 ShortcutLineEdit::ShortcutLineEdit(QWidget *parent) :
 	QLineEdit(parent), typedKey(0)
 {
-	connect(this, SIGNAL(textEdited(QString)), this, SLOT(format(QString)));
+	connect(this, &QLineEdit::textEdited, this, &ShortcutLineEdit::format);
 }
 
 QString ShortcutLineEdit::setKey(int key)

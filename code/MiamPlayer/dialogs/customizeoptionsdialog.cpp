@@ -79,7 +79,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	// Fourth panel: playback
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
-	connect(seekTimeSpinBox, SIGNAL(valueChanged(int)), settings, SLOT(setPlaybackSeekTime(int)));
+	connect(seekTimeSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setPlaybackSeekTime);
 
 	this->initCloseActionForPlaylists();
 	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(Settings::PL_AskUserForAction); });

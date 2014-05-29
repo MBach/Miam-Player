@@ -199,7 +199,6 @@ void MainWindow::setupActions()
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
-	//connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, tagEditor, &TagEditor::addUrlsToEditor);
 	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
 		this->toggleTagEditor(true);
 		tagEditor->addUrlsToEditor(tracks);
@@ -291,6 +290,7 @@ void MainWindow::setupActions()
 		action->setChecked(true);
 	});
 
+	// Lambda function to reduce duplicate code
 	auto updateActions = [this] (bool b) {
 		actionRemoveSelectedTracks->setEnabled(b);
 		actionMoveTrackUp->setEnabled(b);
