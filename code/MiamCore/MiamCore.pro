@@ -49,7 +49,8 @@ SOURCES += \
     musicsearchengine.cpp \
     quickstartsearchengine.cpp \
     settings.cpp \
-    sqldatabase.cpp
+    sqldatabase.cpp \
+    timelabel.cpp
 
 HEADERS += interfaces/basicplugininterface.h \
     interfaces/mediaplayerplugininterface.h \
@@ -64,4 +65,5 @@ HEADERS += interfaces/basicplugininterface.h \
     quickstartsearchengine.h \
     settings.h \
     sqldatabase.h \
-    interfaces/itemviewplugininterface.h
+    interfaces/itemviewplugininterface.h \
+    timelabel.h

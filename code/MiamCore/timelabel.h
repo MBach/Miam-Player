@@ -2,11 +2,12 @@
 #define TIMELABEL_H
 
 #include <QLabel>
+#include "miamcore_global.h"
 
 /**
-* @brief Display up to three modes for the length of a track.
+* \brief Display up to three modes for the length of a track.
 */
-class TimeLabel : public QLabel
+class MIAMCORE_LIBRARY TimeLabel : public QLabel
 {
 	Q_OBJECT
 private:
