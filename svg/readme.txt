@@ -4,6 +4,11 @@ File 'colors.svg':
 Original file name: 'application_x_kcsrc.svg'
 Copyright: Oxygen Team
 
+File 'disc.svg':
+Original file name: 'cdaudio_mount.svg'
+Copyright: Oxygen Team
+Modifications: flat render
+
 File 'keyboard-shortcuts.svg':
 Original file name: 'Gnome-preferences-desktop-keyboard-shortcuts.svg'
 Copyright: Gnome Team
