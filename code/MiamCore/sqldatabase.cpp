@@ -8,10 +8,16 @@
 
 #include <QtDebug>
 
+#include "settings.h"
+
 SqlDatabase::SqlDatabase()
 	: QSqlDatabase("QSQLITE")
 {
-	QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+	Settings *settings = Settings::getInstance();
+	QString path("%1/%2/%3");
+	path = path.arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation),
+					settings->organizationName(),
+					settings->applicationName());
 	QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
 	QDir userDataPath(path);
 	// Init a new database file for settings

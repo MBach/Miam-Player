@@ -114,7 +114,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, [=](const QItemSelection & selected, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 		_previouslySelectedRows = selected.indexes();
-		qDebug() << Q_FUNC_INFO;
 		emit selectionChanged(selected.isEmpty());
 	});
 
