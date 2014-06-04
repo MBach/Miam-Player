@@ -57,8 +57,8 @@ void LibrarySqlModel::rebuild()
 	database().exec("PRAGMA journal_mode = MEMORY");
 	database().exec("DROP TABLE tracks");
 	QString createTable("CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), ");
-	createTable.append("title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, absPath varchar(255) PRIMARY KEY ASC, path varchar(255), ");
-	createTable.append("coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0, externalCover INTEGER DEFAULT 0)");
+	createTable.append("title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, absPath varchar(255) PRIMARY KEY ASC, ");
+	createTable.append("path varchar(255), coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0)");
 	database().exec(createTable);
 
 	database().exec("BEGIN TRANSACTION");

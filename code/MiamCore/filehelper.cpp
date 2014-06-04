@@ -31,8 +31,6 @@
 #include <3rdparty/taglib/taglib.h>
 #include <3rdparty/taglib/fileref.h>
 
-const QStringList FileHelper::suff = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
-
 FileHelper::FileHelper(const QMediaContent &track)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
@@ -84,6 +82,11 @@ FileHelper::~FileHelper()
 	if (_file) {
 		delete _file;
 	}
+}
+
+const QStringList FileHelper::suffixes()
+{
+	return QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -299,7 +302,8 @@ bool FileHelper::hasCover() const
 				for (TagLib::ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
 					TagLib::ID3v2::AttachedPictureFrame *pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
-					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty() && pictureFrame->type() != TagLib::ID3v2::AttachedPictureFrame::Other);
+					//atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty() && pictureFrame->type() != TagLib::ID3v2::AttachedPictureFrame::Other);
+					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty());
 				}
 			}
 		} else if (mpegFile && mpegFile->hasID3v1Tag()) {
@@ -378,9 +382,11 @@ void FileHelper::setCover(Cover *cover)
 				TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
 				qDebug() << "cover->hasChanged()" << cover->hasChanged();
 				TagLib::ID3v2::AttachedPictureFrame *pictureFrame = new TagLib::ID3v2::AttachedPictureFrame();
-				qDebug() << "cover.mimeType()" << QString(cover->mimeType());
+				//qDebug() << "cover.mimeType()" << QString(cover->mimeType());
+				//qDebug() << "cover.mimeType2()" << QString::fromUtf8(cover->mimeType2().c_str());
 				pictureFrame->setMimeType(cover->mimeType());
 				pictureFrame->setPicture(bv);
+				pictureFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
 				mpegFile->ID3v2Tag()->addFrame(pictureFrame);
 				qDebug() << "adding a frame";
 			}
@@ -389,6 +395,7 @@ void FileHelper::setCover(Cover *cover)
 		}
 		break;
 	default:
+		qDebug() << "FileHelper::setCover: Not implemented for" << fileType;
 		break;
 	}
 }

@@ -27,16 +27,16 @@ void UniqueLibrary::init(LibrarySqlModel *sql)
 {
 	_sqlModel = sql;
 
-	connect(_sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &UniqueLibrary::reset);
-	connect(_sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &UniqueLibrary::insertTrackFromFile);
-	connect(_sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &UniqueLibrary::insertTrackFromRecord);
-	connect(_sqlModel, &LibrarySqlModel::coverWasUpdated, this, &UniqueLibrary::updateCover);
+	/// XXX: do this later
+	//connect(_sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &UniqueLibrary::reset);
+	//connect(_sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &UniqueLibrary::insertTrackFromFile);
+	//connect(_sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &UniqueLibrary::insertTrackFromRecord);
+	//connect(_sqlModel, &LibrarySqlModel::coverWasUpdated, this, &UniqueLibrary::updateCover);
 }
 
 void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
 {
 	int i = -1;
-	//coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0, externalCover INTEGER DEFAULT 0)
 	const QString artist = record.value(++i).toString();
 	const QString artistAlbum = record.value(++i).toString();
 	const QString album = record.value(++i).toString();

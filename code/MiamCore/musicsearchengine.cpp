@@ -12,8 +12,7 @@
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 	QObject(parent), _watcher(new QFileSystemWatcher(this))
 {
-	_watcher->addPaths(Settings::getInstance()->musicLocations());
-
+	/*_watcher->addPaths(Settings::getInstance()->musicLocations());
 	connect(_watcher, &QFileSystemWatcher::directoryChanged, [=](const QString &path) {
 		qDebug() << "directory has changed:" << path;
 		QDirIterator it(path, QDirIterator::NoIteratorFlags);
@@ -24,7 +23,7 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 	});
 	connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &path) {
 		qDebug() << "file has changed:" << path;
-	});
+	});*/
 }
 
 void MusicSearchEngine::doSearch()

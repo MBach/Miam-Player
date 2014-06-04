@@ -334,17 +334,16 @@ void TabBar::paintRectTabs(QStylePainter &p)
 void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 {
 	// A "\+\" button on the right
-	static const QPointF plus[13] = {
-		QPointF(1, 2), QPointF(2, 2), QPointF(2, 1),
-		QPointF(3, 1), QPointF(3, 2), QPointF(4, 2),
-		QPointF(4, 3), QPointF(3, 3), QPointF(3, 4),
-		QPointF(2, 4), QPointF(2, 3), QPointF(1, 3),
-		QPointF(1, 2),
-	};
-
 	static const qreal penScaleFactor = 0.15;
 
-	for (int i = 0; i < count(); i++) {
+	// Draw all tabs before the selected tab
+	QList<int> tabs;
+	for (int i = 0; i < count(); i++)
+		if (currentIndex() != i) tabs.append(i);
+	tabs.append(currentIndex());
+
+	for (int idx = 0; idx < count(); idx++) {
+		int i = tabs.at(idx);
 		QStyleOptionTab o;
 		initStyleOption(&o, i);
 
@@ -384,9 +383,9 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 						   o.rect.x() + 7.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.3 + oDiag));
 				pp.lineTo(o.rect.x() + o.rect.width(),
 						  o.rect.y() + o.rect.height() - oH - oDiag);
-				pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15 + oDiag,
-						   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.1 + oDiag,
-						   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.3 + oDiag);
+				pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15,
+						   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.1,
+						   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.3);
 				pp.lineTo(o.rect.x() + oDiag,
 						  o.rect.y() + oH);
 			} else {

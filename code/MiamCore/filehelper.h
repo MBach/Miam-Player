@@ -24,12 +24,9 @@ private:
 
 	int fileType;
 
-	static const QStringList suff;
-
 	QFileInfo _fileInfo;
 
 	Q_ENUMS(extension)
-	Q_ENUMS(MetaData)
 
 public:
 	enum extension {
@@ -43,15 +40,6 @@ public:
 		OGG		= 7
 	};
 
-	enum MetaData { ALBUM		= 0,
-					ARTIST		= 1,
-					COMMENT		= 2,
-					GENRE		= 3,
-					TITLE		= 4,
-					TRACKNUMBER	= 5,
-					YEAR		= 6,
-					UNCOMMON	= 7};
-
 	FileHelper(const QMediaContent &track);
 
 	FileHelper(const QString &filePath);
@@ -62,7 +50,7 @@ private:
 public:
 	virtual ~FileHelper();
 
-	inline static QStringList suffixes() { return suff; }
+	static const QStringList suffixes();
 
 	/** Field ArtistAlbum if exists (in a compilation for example). */
 	QString artistAlbum() const;
@@ -99,7 +87,7 @@ public:
 	bool save();
 	inline QFileInfo fileInfo() const { return _fileInfo; }
 
-	inline TagLib::File* file() const { return _file; }
+	inline TagLib::File *file() { return _file; }
 
 private:
 	QString convertKeyToID3v2Key(QString key);

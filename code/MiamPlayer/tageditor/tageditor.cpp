@@ -160,7 +160,7 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 			Cover *c = covers.value(row);
 			if (c == NULL) {
-				unsavedCovers.insert(row, new Cover(cover->byteArray(), cover->mimeType()));
+				unsavedCovers.insert(row, new Cover(cover->byteArray(), QString::fromUtf8(cover->mimeType().c_str())));
 			} else {
 				// Do not replace the cover for the caller
 				if (c != cover) {
