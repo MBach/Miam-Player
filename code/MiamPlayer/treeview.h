@@ -2,6 +2,7 @@
 #define TREEVIEW_H
 
 #include <QTreeView>
+#include "model/selectedtracksmodel.h"
 
 /**
  * @brief The TreeView class is the base class for displaying trees in the player.
@@ -9,15 +10,20 @@
 class TreeView : public QTreeView
 {
 	Q_OBJECT
+private:
+	SelectedTracksModel *_selectedTracksModel;
+
 public:
 	explicit TreeView(QWidget *parent = 0);
+
+	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) = 0;
+
+	virtual SelectedTracksModel* selectedTracksModel() const;
 
 protected:
 	/** Explore items to count leaves (tracks). */
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
-
-	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
-	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks) = 0;
 
 private:
 	/** Alerts the user if there's too many tracks to add. */

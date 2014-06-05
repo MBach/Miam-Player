@@ -133,12 +133,19 @@ void CustomizeThemeDialog::setupActions()
 	// Library
 	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
 		settings->setCovers(b);
-		//mainWindow->library->reset();
+		if (mainWindow->library->model()) {
+			mainWindow->library->model()->layoutChanged();
+			this->fade();
+		}
 	});
 
 	// Covers
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
 		settings->setCoverSize(cs);
+		if (mainWindow->library->model()) {
+			mainWindow->library->model()->layoutChanged();
+			this->fade();
+		}
 	});
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
 		settings->setBigCovers(b);

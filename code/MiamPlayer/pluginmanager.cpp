@@ -7,6 +7,7 @@
 
 #include "mainwindow.h"
 #include "settings.h"
+#include "model/selectedtracksmodel.h"
 
 PluginManager* PluginManager::_pluginManager = NULL;
 
@@ -191,8 +192,8 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 							menu->addAction(action);
 							_dependencies.insert(basic->name(), action);
 						}
-					} else if (QItemSelectionModel *selectionModel = qobject_cast<QItemSelectionModel*>(obj)) {
-						itemViewPlugin->setSelectionModel(view, selectionModel);
+					} else if (SelectedTracksModel *selectedTracksModel = qobject_cast<SelectedTracksModel*>(obj)) {
+						itemViewPlugin->setSelectedTracksModel(view, selectedTracksModel);
 					}
 				}
 			}

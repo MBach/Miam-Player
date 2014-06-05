@@ -15,12 +15,16 @@
 
 #include <QtDebug>
 
+#include "../circleprogressbar.h"
 #include "../library/libraryitemdelegate.h"
+#include "../library/libraryorderdialog.h"
+#include "jumptowidget.h"
+#include "libraryfilterproxymodel.h"
+#include "libraryitemdelegate.h"
+#include "libraryscrollbar.h"
 #include "pluginmanager.h"
 
 #include <filehelper.h>
-
-#include "libraryscrollbar.h"
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), sqlModel(NULL)
@@ -81,6 +85,22 @@ QChar LibraryTreeView::currentLetter() const
 	}
 }
 
+/** Reimplemented. */
+void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks)
+{
+	if (_itemDelegate) {
+		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		if (item && item->hasChildren()) {
+			for (int i=0; i < item->rowCount(); i++) {
+				// Recursive call on children
+				this->findAll(index.child(i, 0), tracks);
+			}
+		} else if (item && item->data(Type).toInt() == Track) {
+			tracks.append(item->data(DataAbsFilePath).toString());
+		}
+	}
+}
+
 void LibraryTreeView::repaintIcons()
 {
 	static qreal r = 0;
@@ -103,7 +123,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
 
-	QObjectList objetsToExtend = QObjectList() << properties << this->selectionModel();
+	QObjectList objetsToExtend = QObjectList() << properties << selectedTracksModel();
 	PluginManager::getInstance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
@@ -184,6 +204,7 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 
 			w = qMin(h, qMin(w, pixmap.width()));
 			QPixmap leftBorder = pixmap.copy(0, 0, 3, pixmap.height());
+			qDebug() << "leftBorder" << leftBorder.isNull();
 			leftBorder = leftBorder.scaled(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), w);
 			// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
 			// The second one is a computer generated gradient focused on alpha channel
@@ -359,22 +380,6 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 		c += this->count(index);
 	}
 	return c;
-}
-
-/** Reimplemented. */
-void LibraryTreeView::findAll(const QPersistentModelIndex &index, QStringList &tracks)
-{
-	if (_itemDelegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
-		if (item && item->hasChildren()) {
-			for (int i=0; i < item->rowCount(); i++) {
-				// Recursive call on children
-				this->findAll(index.child(i, 0), tracks);
-			}
-		} else if (item && item->data(Type).toInt() == Track) {
-			tracks.append(item->data(DataAbsFilePath).toString());
-		}
-	}
 }
 
 QStandardItem* LibraryTreeView::insertLetter(const QString &letters)

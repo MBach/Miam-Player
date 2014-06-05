@@ -4,12 +4,14 @@
 #include <settings.h>
 #include "librarytreeview.h"
 #include "../playlists/starrating.h"
+
+#include <QApplication>
 #include <QDir>
+#include <QImageReader>
 
 #include <memory>
 
 #include <QtDebug>
-#include <QImageReader>
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy) :
 	QStyledItemDelegate(proxy), _animateIcons(false), _iconSizeChanged(false), _iconOpacity(1.0), _libraryTreeView(libraryTreeView)
@@ -82,10 +84,12 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 /** Albums have covers usually. */
 void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
+	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
-	static int coverSize = Settings::getInstance()->coverSize();
-	QString file = item->data(LibraryTreeView::DataCoverPath).toString();
-	if (_showCovers) {
+	Settings *settings = Settings::getInstance();
+	int coverSize = settings->coverSize();
+	if (settings->isCoversEnabled()) {
+		QString file = item->data(LibraryTreeView::DataCoverPath).toString();
 		// Qt::UserRole + 20 == false => pixmap not loaded ; == true => pixmap loaded
 		/// XXX: extract this elsewhere
 		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
@@ -95,12 +99,13 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(f.suffix())) {
 				std::unique_ptr<Cover> cover(fh.extractCover());
-				if (cover) {
-					QPixmap p;
-					p.loadFromData(cover->byteArray(), cover->format());
+				QPixmap p;
+				if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
 					p = p.scaled(coverSize, coverSize);
-					item->setIcon(p);
-					item->setData(true, Qt::UserRole + 20);
+					if (!p.isNull()) {
+						item->setIcon(p);
+						item->setData(true, Qt::UserRole + 20);
+					}
 				}
 			} else {
 				imageReader.setFileName(QDir::fromNativeSeparators(file));
@@ -109,9 +114,12 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 				item->setData(true, Qt::UserRole + 20);
 			}
 		}
+	} else {
+		item->setIcon(QIcon());
+		item->setData(false, Qt::UserRole + 20);
 	}
 	bool b = item->data(Qt::UserRole + 20).toBool();
-	if (_showCovers && b) {
+	if (settings->isCoversEnabled() && b) {
 		QPixmap p = option.icon.pixmap(QSize(coverSize, coverSize));
 		QRect cover;
 		if (QGuiApplication::isLeftToRight()) {
@@ -134,25 +142,27 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		}
 		painter->restore();
 	}
-	// It's possible to have missing covers in your library, so we need to keep alignment.
-	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
+	QFontMetrics fmf(settings->font(Settings::LIBRARY));
 	option.textElideMode = Qt::ElideRight;
-	QRect rectText;
 	QString s;
-	if (QGuiApplication::isLeftToRight()) {
-		QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
-		rectText = QRect(topLeft, option.rect.bottomRight());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+	QRect rectText;
+	if (settings->isCoversEnabled()) {
+		// It's possible to have missing covers in your library, so we need to keep alignment.
+		if (QGuiApplication::isLeftToRight()) {
+			QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
+			rectText = QRect(topLeft, option.rect.bottomRight());
+		} else {
+			rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - coverSize - 5, option.rect.height());
+		}
 	} else {
-		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - coverSize - 5, option.rect.height());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		rectText = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - 5, option.rect.height());
 	}
+	s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	this->paintText(painter, option, rectText, s);
 }
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option) const
 {
-	// It's possible to have missing covers in your library, so we need to keep alignment.
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
 	option.textElideMode = Qt::ElideRight;
 	QRect rectText;

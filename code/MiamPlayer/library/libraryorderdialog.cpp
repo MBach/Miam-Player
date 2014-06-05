@@ -3,14 +3,15 @@
 #include <qstandarditemmodel.h>
 #include "settings.h"
 
-#include <QtDebug>
-
+#include "ui_libraryorderdialog.h"
 #include "librarytreeview.h"
 
+#include <QtDebug>
+
 LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
-	QDialog(parent, Qt::Popup)
+	QDialog(parent, Qt::Popup), _ui(new Ui::LibraryOrderDialog)
 {
-	setupUi(this);
+	_ui->setupUi(this);
 
 	// Artists \ Albums \ Tracks
 	QStandardItemModel *artistModel = new QStandardItemModel(this);
@@ -25,7 +26,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 			album->appendRow(new QStandardItem("0" + QString::number(j) + ". track #" + QString::number(j)));
 		}
 	}
-	artistTreeView->setModel(artistModel);
+	_ui->artistTreeView->setModel(artistModel);
 
 	bool disabled = false;
 
@@ -38,8 +39,8 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	for (int i = 1; i <= 2; i++) {
 		album->appendRow(new QStandardItem("0" + QString::number(i) + ". track #" + QString::number(i)));
 	}
-	albumTreeView->setModel(albumModel);
-	albumTreeView->setDisabled(disabled);
+	_ui->albumTreeView->setModel(albumModel);
+	_ui->albumTreeView->setDisabled(disabled);
 
 	// Artists - Albums \ Tracks
 	QStandardItemModel *artistAlbumModel = new QStandardItemModel(this);
@@ -50,8 +51,8 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	for (int i = 1; i <= 2; i++) {
 		artistAlbum_1->appendRow(new QStandardItem("0" + QString::number(i) + ". track #" + QString::number(i)));
 	}
-	artistAlbumTreeView->setModel(artistAlbumModel);
-	artistAlbumTreeView->setDisabled(disabled);
+	_ui->artistAlbumTreeView->setModel(artistAlbumModel);
+	_ui->artistAlbumTreeView->setDisabled(disabled);
 
 	// Year \ Artist - Album \ Tracks
 	QStandardItemModel *yearModel = new QStandardItemModel(this);
@@ -64,8 +65,8 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	for (int j = 1; j <= 2; j++) {
 		artistAlbum_2->appendRow(new QStandardItem("0" + QString::number(j) + ". track #" + QString::number(j)));
 	}
-	yearTreeView->setModel(yearModel);
-	yearTreeView->setDisabled(disabled);
+	_ui->yearTreeView->setModel(yearModel);
+	_ui->yearTreeView->setDisabled(disabled);
 
 	Settings *settings = Settings::getInstance();
 	foreach (QTreeView *treeView, findChildren<QTreeView*>()) {
@@ -90,17 +91,17 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	QTreeView *initialTreeView;
 	switch (settings->value("insertPolicy").toInt()) {
 	case LibraryTreeView::Album:
-		initialTreeView = albumTreeView;
+		initialTreeView = _ui->albumTreeView;
 		break;
 	case LibraryTreeView::ArtistAlbum:
-		initialTreeView = artistAlbumTreeView;
+		initialTreeView = _ui->artistAlbumTreeView;
 		break;
 	case LibraryTreeView::Year:
-		initialTreeView = yearTreeView;
+		initialTreeView = _ui->yearTreeView;
 		break;
 	case LibraryTreeView::Artist:
 	default:
-		initialTreeView = artistTreeView;
+		initialTreeView = _ui->artistTreeView;
 		break;
 	}
 }

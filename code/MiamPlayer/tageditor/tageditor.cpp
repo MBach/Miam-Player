@@ -60,7 +60,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
 	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
 
-	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << tagEditorWidget->selectionModel();
+	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << tagEditorWidget->selectedTracksModel();
 	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);

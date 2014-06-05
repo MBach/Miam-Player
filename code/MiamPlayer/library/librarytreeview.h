@@ -5,18 +5,17 @@
 #include <model/librarysqlmodel.h>
 #include <settings.h>
 
-#include "../circleprogressbar.h"
-#include "libraryfilterproxymodel.h"
 #include "../treeview.h"
-#include "../library/libraryorderdialog.h"
-#include "libraryitemdelegate.h"
 
 #include <QMenu>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTimer>
 
-#include "library/jumptowidget.h"
+class LibraryFilterProxyModel;
+class CircleProgressBar;
+class LibraryItemDelegate;
+class JumpToWidget;
 
 /**
  * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
@@ -59,6 +58,9 @@ public:
 	/** For every item in the library, gets the top level letter attached to it. */
 	QChar currentLetter() const;
 
+	/** Reimplemented. */
+	virtual void findAll(const QModelIndex &index, QStringList &tracks);
+
 	void init(LibrarySqlModel *sql);
 
 	void insertTrackFromFile(const FileHelper &fh);
@@ -81,7 +83,7 @@ public:
 					 DataNormalizedString	= Qt::UserRole + 6,
 					 DataYear				= Qt::UserRole + 7};
 
-protected:	
+protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
 
@@ -105,9 +107,6 @@ private:
 
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;
-
-	/** Reimplemented. */
-	virtual void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
 	QStandardItem* insertLetter(const QString &letters);
 

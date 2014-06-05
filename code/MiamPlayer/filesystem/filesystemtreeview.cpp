@@ -41,6 +41,24 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertIndex);
 }
 
+/** Reimplemented with a QDirIterator to gather informations about tracks. */
+void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks)
+{
+	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
+	if (fileInfo.isFile()) {
+		tracks.append(fileInfo.absoluteFilePath());
+	} else {
+		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
+		while (dirIterator.hasNext()) {
+			QString entry = dirIterator.next();
+			QFileInfo fileInfo(entry);
+			if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
+				tracks.append(fileInfo.absoluteFilePath());
+			}
+		}
+	}
+}
+
 /** Reimplemented to display up to 3 actions. */
 void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
@@ -84,25 +102,6 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 	}
 	return files;
 }
-
-/** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAll(const QPersistentModelIndex &index, QStringList &tracks)
-{
-	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
-	if (fileInfo.isFile()) {
-		tracks.append(fileInfo.absoluteFilePath());
-	} else {
-		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
-		while (dirIterator.hasNext()) {
-			QString entry = dirIterator.next();
-			QFileInfo fileInfo(entry);
-			if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
-				tracks.append(fileInfo.absoluteFilePath());
-			}
-		}
-	}
-}
-
 /** Reload tree when the path has changed in the address bar. */
 void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 {

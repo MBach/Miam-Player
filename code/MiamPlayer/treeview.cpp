@@ -10,6 +10,12 @@ TreeView::TreeView(QWidget *parent) :
 	QTreeView(parent)
 {
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
+	_selectedTracksModel = new SelectedTracksModel(this->selectionModel());
+}
+
+SelectedTracksModel* TreeView::selectedTracksModel() const
+{
+	return _selectedTracksModel;
 }
 
 /** Alerts the user if there's too many tracks to add. */
@@ -20,7 +26,7 @@ int TreeView::beforeSending(const QString &target, QStringList &tracks)
 	qDebug() << "tracks to add" << count;
 
 	int ret = QMessageBox::Ok;
-    /// XXX: extract magic number (to where?)
+	/// XXX: extract magic number (to where?)
 	if (count > 300) {
 		QMessageBox msgBox;
 		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
@@ -33,7 +39,7 @@ int TreeView::beforeSending(const QString &target, QStringList &tracks)
 
 	if (ret == QMessageBox::Ok) {
 		// Gather all items (pure virtual call, this function must be reimplemented in subclasses: custom tree, file system, etc.)
-		foreach (QPersistentModelIndex index, selectedIndexes()) {
+		foreach (QModelIndex index, selectedIndexes()) {
 			this->findAll(index, tracks);
 		}
 	}

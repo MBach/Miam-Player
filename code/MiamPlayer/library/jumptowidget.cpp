@@ -1,5 +1,7 @@
 #include "jumptowidget.h"
 
+#include <QApplication>
+#include <QHeaderView>
 #include <QLabel>
 #include <QScrollBar>
 #include <QStylePainter>

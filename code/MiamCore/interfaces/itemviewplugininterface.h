@@ -2,6 +2,7 @@
 #define ITEMVIEWPLUGININTERFACE_H
 
 #include "basicplugininterface.h"
+#include "model/selectedtracksmodel.h"
 
 #include <QItemSelectionModel>
 #include <QMenu>
@@ -19,7 +20,7 @@ public:
 
 	virtual QAction * action(const QString & /*view*/, QMenu * /*parent*/) { return NULL; }
 
-	virtual void setSelectionModel(const QString &view, QItemSelectionModel *) = 0;
+	virtual void setSelectedTracksModel(const QString &view, SelectedTracksModel *) = 0;
 };
 QT_BEGIN_NAMESPACE
 

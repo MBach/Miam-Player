@@ -27,6 +27,8 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
 	}
 	///
+
+	_selectedTracksModel = new SelectedTracksModel(this->selectionModel());
 }
 
 /** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */

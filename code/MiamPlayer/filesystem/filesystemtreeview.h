@@ -21,6 +21,9 @@ private:
 public:
 	explicit FileSystemTreeView(QWidget *parent = 0);
 
+	/** Reimplemented with a QDirIterator to gather informations about tracks. */
+	void findAll(const QModelIndex &index, QStringList &tracks);
+
 protected:
 	/** Reimplemented to display up to 3 actions. */
 	void contextMenuEvent(QContextMenuEvent *event);
@@ -28,9 +31,6 @@ protected:
 private:
 	/** Reimplemented with a QDirIterator to quick count tracks. */
 	int countAll(const QModelIndexList &indexes) const;
-
-	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	void findAll(const QPersistentModelIndex &index, QStringList &tracks);
 
 public slots:
 	/** Reload tree when the path has changed in the address bar. */
