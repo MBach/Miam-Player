@@ -6,7 +6,9 @@
 	<?define MiamProjectBuild="C:\dev\Miam-Player-build-x64" ?>
 	<?define TagLib="C:\dev\Miam-Player\lib\release\win-x64" ?>
 	<?define MergeModuleDirPath="C:\Program Files (x86)\Common Files\Merge Modules" ?>
-	<?define PluginPath="C:\dev\windows-toolbar-build-x64\release" ?>
+	<?define PluginCoverFetcher="C:\dev\cover-fetcher-build-x64\release" ?>
+	<?define PluginMiniMode="C:\dev\mini-mode-build-x64\release" ?>
+	<?define PluginWindowsToolbar="C:\dev\windows-toolbar-build-x64\release" ?>
 
 	<Product Name="Miam Player" Id="8712D8A2-02A9-4CD9-817F-4C6A0D21A592" UpgradeCode="E6B7F641-6FEB-4CB0-8A27-E3A53602D4FB"
 	Language="1033" Codepage="1252" Version="0.6.3" Manufacturer="MmeMiamMiam">
@@ -171,8 +173,14 @@
 		
 		<!-- Subdirectory with plugins -->
 		<DirectoryRef Id="plugins">
-			<Component Id="plugins" Guid="a3bcfb13-ac0b-499c-a486-14d7617de3ab">
-				<File Id="windowsToolbar" Source="$(var.PluginPath)\windows-toolbar.dll" KeyPath="yes"/>
+			<Component Id="pluginCoverFetcher" Guid="f759c6dc-dc2a-46b4-9d01-2b0f787a00f5">
+				<File Id="coverFetcherDLL" Source="$(var.PluginCoverFetcher)\cover-fetcher.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="pluginMiniMode" Guid="6a439640-98a6-4d2b-9487-f47a941e07de">
+				<File Id="miniModeDLL" Source="$(var.PluginMiniMode)\mini-mode.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="pluginWindowsToolbar" Guid="a3bcfb13-ac0b-499c-a486-14d7617de3ab">
+				<File Id="windowsToolbarDLL" Source="$(var.PluginWindowsToolbar)\windows-toolbar.dll" KeyPath="yes"/>
 			</Component>
 		</DirectoryRef>
 
@@ -187,7 +195,9 @@
 			<ComponentRef Id="icuuc52" />
 			<ComponentRef Id="libEGL" />
 			<ComponentRef Id="libGLESv2" />
-			<ComponentRef Id="plugins" />
+			<ComponentRef Id="pluginCoverFetcher" />
+			<ComponentRef Id="pluginMiniMode" />
+			<ComponentRef Id="pluginWindowsToolbar" />
 			<ComponentRef Id="Qt5Core" />
 			<ComponentRef Id="Qt5Gui" />
 			<ComponentRef Id="Qt5Multimedia" />
