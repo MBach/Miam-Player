@@ -605,6 +605,30 @@
         <source>No, hide it after:</source>
         <translation>No, hide it after:</translation>
     </message>
+    <message>
+        <source>Tabs</source>
+        <translation>Tabs</translation>
+    </message>
+    <message>
+        <source>What kind of shape do you want for displaying tabs?</source>
+        <translation>What kind of shape do you want for displaying tabs?</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>Rectangle</translation>
+    </message>
+    <message>
+        <source>Rounded tabs</source>
+        <translation>Rounded tabs</translation>
+    </message>
+    <message>
+        <source>Overlap on other tabs with</source>
+        <translation>Overlap on other tabs with</translation>
+    </message>
+    <message>
+        <source>px</source>
+        <translation>px</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -695,7 +719,7 @@
     </message>
     <message>
         <source>Properties</source>
-        <translation>Properties</translation>
+        <translation type="vanished">Properties</translation>
     </message>
     <message>
         <source>  Artists \ Albums</source>
@@ -720,6 +744,10 @@
     <message>
         <source>  Years</source>
         <translation>  Years</translation>
+    </message>
+    <message>
+        <source>Send to the tag editor</source>
+        <translation>Send to the tag editor</translation>
     </message>
 </context>
 <context>
@@ -946,6 +974,18 @@
     <message>
         <source>Remove from playlist</source>
         <translation>Remove from playlist</translation>
+    </message>
+    <message>
+        <source>Edit tags</source>
+        <translation>Edit tags</translation>
+    </message>
+    <message>
+        <source>in tag editor</source>
+        <translation>in tag editor</translation>
+    </message>
+    <message>
+        <source>inline</source>
+        <translation>inline</translation>
     </message>
 </context>
 <context>
@@ -1313,6 +1353,10 @@ Select or drop tracks from your library or any external location.</translation>
     <message>
         <source>(Delete)</source>
         <translation>(Delete)</translation>
+    </message>
+    <message>
+        <source>Cover path:</source>
+        <translation>Cover path:</translation>
     </message>
 </context>
 <context>

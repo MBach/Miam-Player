@@ -605,6 +605,30 @@
         <source>No, hide it after:</source>
         <translation>Non, la masquer après : </translation>
     </message>
+    <message>
+        <source>Tabs</source>
+        <translation>Onglets</translation>
+    </message>
+    <message>
+        <source>What kind of shape do you want for displaying tabs?</source>
+        <translation>Quelle type de forme souhaitez-vous choisir pour afficher les onglets ?</translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation>Des rectangles</translation>
+    </message>
+    <message>
+        <source>Rounded tabs</source>
+        <translation>Des bords arrondis</translation>
+    </message>
+    <message>
+        <source>Overlap on other tabs with</source>
+        <translation>Déborder sur les autres onglets de</translation>
+    </message>
+    <message>
+        <source>px</source>
+        <translation>px</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -695,7 +719,7 @@
     </message>
     <message>
         <source>Properties</source>
-        <translation>Propriétés</translation>
+        <translation type="vanished">Propriétés</translation>
     </message>
     <message>
         <source>  Artists \ Albums</source>
@@ -720,6 +744,10 @@
     <message>
         <source>  Years</source>
         <translation>  Année</translation>
+    </message>
+    <message>
+        <source>Send to the tag editor</source>
+        <translation>Envoyer à l&apos;éditeur de tags</translation>
     </message>
 </context>
 <context>
@@ -946,6 +974,18 @@
     <message>
         <source>Remove from playlist</source>
         <translation>Retirer de la liste de lecture</translation>
+    </message>
+    <message>
+        <source>Edit tags</source>
+        <translation>Modifier les tags</translation>
+    </message>
+    <message>
+        <source>in tag editor</source>
+        <translation>dans l&apos;éditeur</translation>
+    </message>
+    <message>
+        <source>inline</source>
+        <translation>ici</translation>
     </message>
 </context>
 <context>
@@ -1312,6 +1352,10 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     <message>
         <source>(Delete)</source>
         <translation>(Supprimer)</translation>
+    </message>
+    <message>
+        <source>Cover path:</source>
+        <translation>Chemin de la pochette : </translation>
     </message>
 </context>
 <context>

@@ -605,6 +605,30 @@
         <source>No, hide it after:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Tabs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What kind of shape do you want for displaying tabs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rounded tabs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlap on other tabs with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>px</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -694,10 +718,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Properties</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>  Artists \ Albums</source>
         <translation type="unfinished"></translation>
     </message>
@@ -719,6 +739,10 @@
     </message>
     <message>
         <source>  Years</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send to the tag editor</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -945,6 +969,18 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>in tag editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>inline</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1308,6 +1344,10 @@ Select or drop tracks from your library or any external location.</source>
     </message>
     <message>
         <source>(Delete)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cover path:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

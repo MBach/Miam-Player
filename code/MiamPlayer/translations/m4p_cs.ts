@@ -605,6 +605,30 @@
         <source>No, hide it after:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Tabs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>What kind of shape do you want for displaying tabs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rectangle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rounded tabs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overlap on other tabs with</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>px</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -695,7 +719,7 @@
     </message>
     <message>
         <source>Properties</source>
-        <translation>Vlastnosti</translation>
+        <translation type="vanished">Vlastnosti</translation>
     </message>
     <message>
         <source>  Artists \ Albums</source>
@@ -720,6 +744,10 @@
     <message>
         <source>  Years</source>
         <translation>  Roky</translation>
+    </message>
+    <message>
+        <source>Send to the tag editor</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -949,6 +977,18 @@
     <message>
         <source>Remove from playlist</source>
         <translation>Odstranit ze seznamu skladeb</translation>
+    </message>
+    <message>
+        <source>Edit tags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>in tag editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>inline</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1318,6 +1358,10 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     <message>
         <source>(Delete)</source>
         <translation>(Smazat)</translation>
+    </message>
+    <message>
+        <source>Cover path:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
