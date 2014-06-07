@@ -7,19 +7,16 @@
 /**
  * @brief The TreeView class is the base class for displaying trees in the player.
  */
-class TreeView : public QTreeView
+class TreeView : public QTreeView, public SelectedTracksModel
 {
 	Q_OBJECT
-private:
-	SelectedTracksModel *_selectedTracksModel;
-
 public:
 	explicit TreeView(QWidget *parent = 0);
 
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks) = 0;
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) const = 0;
 
-	virtual SelectedTracksModel* selectedTracksModel() const;
+	virtual QStringList selectedTracks() const;
 
 protected:
 	/** Explore items to count leaves (tracks). */

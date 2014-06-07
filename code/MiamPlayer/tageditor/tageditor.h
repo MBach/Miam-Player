@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+#include "model/selectedtracksmodel.h"
 #include "cover.h"
 #include "tagconverter.h"
 
@@ -10,7 +11,7 @@
 
 #include <QUrl>
 
-class TagEditor : public QWidget, public Ui::TagEditor
+class TagEditor : public QWidget, public Ui::TagEditor, public SelectedTracksModel
 {
 	Q_OBJECT
 
@@ -27,6 +28,8 @@ private:
 
 public:
 	TagEditor(QWidget *parent = 0);
+
+	virtual QStringList selectedTracks() const;
 
 protected:
 	/** Redefined to filter context menu event for the cover album object. */

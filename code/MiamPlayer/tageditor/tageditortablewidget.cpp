@@ -27,8 +27,6 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
 	}
 	///
-
-	_selectedTracksModel = new SelectedTracksModel(this->selectionModel());
 }
 
 /** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
@@ -42,15 +40,6 @@ void TagEditorTableWidget::init()
 		QTableWidgetItem *header = new QTableWidgetItem();
 		header->setData(KEY, keys.at(column));
 		this->setHorizontalHeaderItem(column, header);
-	}
-}
-
-void TagEditorTableWidget::updateColumnData(int column, const QString &text)
-{
-	foreach (QModelIndex index, selectionModel()->selectedRows(column)) {
-		QTableWidgetItem *item = itemFromIndex(index);
-		item->setText(text);
-		item->setData(MODIFIED, true);
 	}
 }
 
@@ -95,6 +84,15 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
+void TagEditorTableWidget::updateColumnData(int column, const QString &text)
+{
+	foreach (QModelIndex index, selectionModel()->selectedRows(column)) {
+		QTableWidgetItem *item = itemFromIndex(index);
+		item->setText(text);
+		item->setData(MODIFIED, true);
+	}
+}
+
 /** Add items to the table in order to edit them. */
 bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int, Cover*> &covers)
 {
@@ -107,6 +105,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		QTableWidgetItem *fileName = new QTableWidgetItem(fh.fileInfo().fileName());
 		QTableWidgetItem *absPath = new QTableWidgetItem(fh.fileInfo().path());
 		fileName->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		fileName->setData(Qt::UserRole, track);
 		absPath->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
 		QTableWidgetItem *title = new QTableWidgetItem(fh.title());

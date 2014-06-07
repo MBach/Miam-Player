@@ -181,7 +181,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 
 				// Instances of classes which can be extended at runtime
 				foreach (QObject *obj, _extensionPoints.values(view)) {
-					// QMenu and QItemSelectionModel are the 2 kinds of class which can be extended
+					// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
 					if (QMenu *menu = qobject_cast<QMenu *>(obj)) {
 						if (itemViewPlugin->hasSubMenu(view)) {
 							QMenu *subMenu = itemViewPlugin->menu(view, menu);
@@ -192,7 +192,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 							menu->addAction(action);
 							_dependencies.insert(basic->name(), action);
 						}
-					} else if (SelectedTracksModel *selectedTracksModel = qobject_cast<SelectedTracksModel*>(obj)) {
+					} else if (SelectedTracksModel *selectedTracksModel = dynamic_cast<SelectedTracksModel*>(obj)) {
 						itemViewPlugin->setSelectedTracksModel(view, selectedTracksModel);
 					}
 				}

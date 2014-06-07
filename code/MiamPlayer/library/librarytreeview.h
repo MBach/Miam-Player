@@ -59,7 +59,7 @@ public:
 	QChar currentLetter() const;
 
 	/** Reimplemented. */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks);
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
 	void init(LibrarySqlModel *sql);
 

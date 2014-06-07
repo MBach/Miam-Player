@@ -42,7 +42,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 }
 
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks)
+void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
 	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
 	if (fileInfo.isFile()) {
@@ -57,6 +57,7 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks)
 			}
 		}
 	}
+	tracks.removeDuplicates();
 }
 
 /** Reimplemented to display up to 3 actions. */

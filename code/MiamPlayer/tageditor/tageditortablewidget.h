@@ -6,10 +6,8 @@
 
 #include <cover.h>
 
-#include "model/selectedtracksmodel.h"
-
 /**
- * @brief The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
+ * \brief The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
  */
 class TagEditorTableWidget : public QTableWidget
 {
@@ -17,8 +15,6 @@ class TagEditorTableWidget : public QTableWidget
 private:
 	/** An absolute file path is mapped with an item in the library. It's used to detect changes in tags. */
 	QMap<QString, QPersistentModelIndex> indexes;
-
-	SelectedTracksModel *_selectedTracksModel;
 
 public:
 	//enum Columns { ALBUM_COL = 5,
@@ -36,11 +32,9 @@ public:
 
 	inline QPersistentModelIndex index(const QString &absFilePath) const { return indexes.value(absFilePath); }
 
-	void updateColumnData(int column, const QString &text);
-
 	void resetTable();
 
-	inline SelectedTracksModel* selectedTracksModel() const { return _selectedTracksModel; }
+	void updateColumnData(int column, const QString &text);
 
 public slots:
 	/** Add items to the table in order to edit them. */

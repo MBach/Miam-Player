@@ -60,10 +60,20 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
 	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
 
-	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << tagEditorWidget->selectedTracksModel();
+	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << this;
 	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);
+}
+
+QStringList TagEditor::selectedTracks() const
+{
+	QStringList tracks;
+	qDebug() << (tagEditorWidget->selectionModel() == NULL);
+	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(0)) {
+		tracks << index.data(Qt::UserRole).toString();
+	}
+	return tracks;
 }
 
 /** Redefined to filter context menu event for the cover album object. */

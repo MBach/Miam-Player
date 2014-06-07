@@ -10,12 +10,15 @@ TreeView::TreeView(QWidget *parent) :
 	QTreeView(parent)
 {
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
-	_selectedTracksModel = new SelectedTracksModel(this->selectionModel());
 }
 
-SelectedTracksModel* TreeView::selectedTracksModel() const
+QStringList TreeView::selectedTracks() const
 {
-	return _selectedTracksModel;
+	QStringList list;
+	foreach (QModelIndex index, this->selectionModel()->selectedIndexes()) {
+		this->findAll(index, list);
+	}
+	return list;
 }
 
 /** Alerts the user if there's too many tracks to add. */
@@ -23,7 +26,6 @@ int TreeView::beforeSending(const QString &target, QStringList &tracks)
 {
 	// Quick count tracks before anything else
 	int count = this->countAll(selectedIndexes());
-	qDebug() << "tracks to add" << count;
 
 	int ret = QMessageBox::Ok;
 	/// XXX: extract magic number (to where?)

@@ -86,15 +86,16 @@ QChar LibraryTreeView::currentLetter() const
 }
 
 /** Reimplemented. */
-void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks)
+void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
 	if (_itemDelegate) {
 		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
 		if (item && item->hasChildren()) {
-			for (int i=0; i < item->rowCount(); i++) {
+			for (int i = 0; i < item->rowCount(); i++) {
 				// Recursive call on children
 				this->findAll(index.child(i, 0), tracks);
 			}
+			tracks.removeDuplicates();
 		} else if (item && item->data(Type).toInt() == Track) {
 			tracks.append(item->data(DataAbsFilePath).toString());
 		}
@@ -123,7 +124,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
 	this->setModel(proxyModel);
 
-	QObjectList objetsToExtend = QObjectList() << properties << selectedTracksModel();
+	QObjectList objetsToExtend = QObjectList() << properties << this;
 	PluginManager::getInstance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);

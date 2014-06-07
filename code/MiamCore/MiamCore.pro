@@ -41,7 +41,6 @@ macx {
 
 SOURCES += \
     model/librarysqlmodel.cpp \
-    model/selectedtracksmodel.cpp \
     cover.cpp \
     filehelper.cpp \
     libraryfilterlineedit.cpp \
