@@ -23,7 +23,6 @@ private:
 
 	bool _showCovers;
 	bool _animateIcons;
-	bool _iconSizeChanged;
 
 	qreal _iconOpacity;
 
@@ -32,12 +31,12 @@ private:
 public:
 	LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy);
 
+	//void invalidate(const QModelIndex &index);
+
 	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 	/** Redefined to always display the same height for albums, even for those without one. */
 	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
-
-	inline void iconSizeChanged() { _iconSizeChanged = true; }
 
 	inline void setIconOpacity(qreal opacity) {
 		_iconOpacity = opacity;

@@ -41,6 +41,11 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertIndex);
 }
 
+/*FileSystemTreeView::~FileSystemTreeView()
+{
+	qDebug() << Q_FUNC_INFO;
+}*/
+
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
 void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
@@ -110,6 +115,11 @@ void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 	this->setRootIndex(theIndex);
 	this->collapseAll();
 	this->update(theIndex);
+}
+
+void FileSystemTreeView::updateSelectedTracks()
+{
+	qDebug() << "FileSystemTreeView::updateSelectedTracks does nothing";
 }
 
 /** Get the folder which is the target of one's double-click. */

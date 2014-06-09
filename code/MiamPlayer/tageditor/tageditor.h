@@ -26,10 +26,19 @@ private:
 	QMap<int, Cover*> covers;
 	QMap<int, Cover*> unsavedCovers;
 
-public:
-	TagEditor(QWidget *parent = 0);
+	/** Cache from other views to be able to update these views after commiting data. */
+	QModelIndexList _sourceIndexes;
 
-	virtual QStringList selectedTracks() const;
+	LibrarySqlModel *_sqlModel;
+
+public:
+	explicit TagEditor(QWidget *parent = 0);
+
+	virtual void init(LibrarySqlModel *sqlModel);
+
+	virtual QStringList selectedTracks();
+
+	virtual void updateSelectedTracks();
 
 protected:
 	/** Redefined to filter context menu event for the cover album object. */
@@ -40,7 +49,7 @@ private:
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
-	void addItemsToEditor(const QStringList &tracks);
+	void addItemsToEditor(const QModelIndexList &sourceIndexes, const QStringList &tracks);
 
 	/** Wrapper for addItemsToEditor. */
 	void addUrlsToEditor(const QList<QUrl> &tracks);
@@ -76,8 +85,6 @@ private slots:
 
 signals:
 	void closeTagEditor(bool);
-
-	void rebuildTreeView(QList<QPersistentModelIndex>);
 };
 
 #endif // TAGEDITOR_H

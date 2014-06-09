@@ -16,11 +16,13 @@ public:
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const = 0;
 
-	virtual QStringList selectedTracks() const;
+	virtual QStringList selectedTracks();
 
 protected:
 	/** Explore items to count leaves (tracks). */
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
+
+	QModelIndexList _cacheSelectedIndexes;
 
 private:
 	/** Alerts the user if there's too many tracks to add. */
@@ -41,7 +43,7 @@ signals:
 	void aboutToInsertToPlaylist(int rowIndex, const QStringList &tracks);
 
 	/** Adds tracks to the tag editor. */
-	void sendToTagEditor(const QStringList &tracks);
+	void sendToTagEditor(const QModelIndexList indexes, const QStringList &tracks);
 
 	void setTagEditorVisible(bool);
 };

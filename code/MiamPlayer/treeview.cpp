@@ -7,15 +7,17 @@
 #include <QtDebug>
 
 TreeView::TreeView(QWidget *parent) :
-	QTreeView(parent)
+	QTreeView(parent), SelectedTracksModel()
 {
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
-QStringList TreeView::selectedTracks() const
+QStringList TreeView::selectedTracks()
 {
 	QStringList list;
+	_cacheSelectedIndexes.clear();
 	foreach (QModelIndex index, this->selectionModel()->selectedIndexes()) {
+		_cacheSelectedIndexes << index;
 		this->findAll(index, list);
 	}
 	return list;
@@ -63,6 +65,6 @@ void TreeView::openTagEditor()
 	QStringList tracks;
 	if (this->beforeSending(tr("tag editor"), tracks) == QMessageBox::Ok) {
 		emit setTagEditorVisible(true);
-		emit sendToTagEditor(tracks);
+		emit sendToTagEditor(selectedIndexes(), tracks);
 	}
 }

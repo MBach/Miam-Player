@@ -64,8 +64,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::init()
 {
+	// Link database and views
 	library->init(_librarySqlModel);
 	_uniqueLibrary->init(_librarySqlModel);
+	tagEditor->init(_librarySqlModel);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();

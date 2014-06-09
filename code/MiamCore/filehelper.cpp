@@ -41,14 +41,21 @@ FileHelper::FileHelper(const QMediaContent &track)
 
 FileHelper::FileHelper(const QString &filePath)
 {
-	init(filePath);
+	if (!init(filePath)) {
+		//qDebug() << "second chance for" << filePath;
+		init(filePath.toStdString().c_str());
+		//init(filePath.toUtf8());
+	}
 }
 
 bool FileHelper::init(const QString &filePath)
 {
 	_fileInfo = QFileInfo(filePath);
 	QString suffix = _fileInfo.suffix().toLower();
-	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
+	//TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
+	//qDebug() << "FileHelper::init" << filePath;
+	QByteArray ba = QDir::toNativeSeparators(filePath).toLocal8Bit();
+	TagLib::FileName fp(ba.data());
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
 		fileType = APE;

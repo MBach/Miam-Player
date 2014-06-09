@@ -61,7 +61,7 @@ public:
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
-	void init(LibrarySqlModel *sql);
+	virtual void init(LibrarySqlModel *sql);
 
 	void insertTrackFromFile(const FileHelper &fh);
 	void insertTrackFromRecord(const QSqlRecord &record);
@@ -117,6 +117,9 @@ private:
 
 	void repaintIcons();
 
+	/** Reimplemented. */
+	virtual void updateSelectedTracks();
+
 public slots:
 	/** Invert the current sort order. */
 	void changeSortOrder();
@@ -131,7 +134,7 @@ public slots:
 	void jumpTo(const QString &letter);
 
 	/** Reimplemented. */
-	void reset();
+	virtual void reset();
 
 private slots:
 	void endPopulateTree();

@@ -17,9 +17,17 @@ private:
 	QMap<QString, QPersistentModelIndex> indexes;
 
 public:
-	//enum Columns { ALBUM_COL = 5,
-	//			   COVER_COL = 11};
-	enum Columns { ALBUM_COL = 5 };
+	enum Columns { COL_Filename = 0,
+				   COL_Path = 1,
+				   COL_Title = 2,
+				   COL_Artist = 3,
+				   COL_ArtistAlbum = 4,
+				   COL_Album = 5,
+				   COL_Track = 6,
+				   COL_Disc = 7,
+				   COL_Year = 8,
+				   COL_Genre = 9,
+				   COL_Comment = 10 };
 
 	TagEditorTableWidget(QWidget *parent = 0);
 

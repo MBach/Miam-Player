@@ -14,12 +14,34 @@
 #include <QtDebug>
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy), _animateIcons(false), _iconSizeChanged(false), _iconOpacity(1.0), _libraryTreeView(libraryTreeView)
+	QStyledItemDelegate(proxy), _animateIcons(false), _iconOpacity(1.0), _libraryTreeView(libraryTreeView)
 {
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_showCovers = Settings::getInstance()->isCoversEnabled();
 }
+
+/*void LibraryItemDelegate::invalidate(const QModelIndex &index)
+{
+	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
+	int type = item->data(LibraryTreeView::Type).toInt();
+	switch (type) {
+	case LibraryTreeView::Album:
+		qDebug() << "invalidating" << item->text();
+		item->setData(false, Qt::UserRole + 20);
+		break;
+	case LibraryTreeView::Artist:
+		break;
+	case LibraryTreeView::Disc:
+		break;
+	case LibraryTreeView::Letter:
+		break;
+	case LibraryTreeView::Track:
+		break;
+	default:
+		break;
+	}
+}*/
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -84,6 +106,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 /** Albums have covers usually. */
 void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
+	//qDebug() << "LibraryItemDelegate::drawAlbum, cover?" << item->data(Qt::UserRole + 20).toBool() << item->data(Qt::DisplayRole).toString();
 	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
 	Settings *settings = Settings::getInstance();
@@ -95,9 +118,9 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
 			FileHelper fh(file);
 			QFileInfo f(file);
-			qDebug() << "loading cover from harddrive";
 			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(f.suffix())) {
+				qDebug() << "loading internal cover from file";
 				std::unique_ptr<Cover> cover(fh.extractCover());
 				QPixmap p;
 				if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
@@ -108,6 +131,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 					}
 				}
 			} else {
+				qDebug() << "loading external cover from harddrive";
 				imageReader.setFileName(QDir::fromNativeSeparators(file));
 				imageReader.setScaledSize(QSize(coverSize, coverSize));
 				item->setIcon(QPixmap::fromImage(imageReader.read()));

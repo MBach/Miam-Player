@@ -50,7 +50,8 @@ SOURCES += \
     quickstartsearchengine.cpp \
     settings.cpp \
     sqldatabase.cpp \
-    timelabel.cpp
+    timelabel.cpp \
+    model/selectedtracksmodel.cpp
 
 HEADERS += interfaces/basicplugininterface.h \
     interfaces/itemviewplugininterface.h \

@@ -2,6 +2,7 @@
 #include "filehelper.h"
 #include "settings.h"
 #include "pluginmanager.h"
+#include "model/librarysqlmodel.h"
 
 #include <3rdparty/taglib/tfile.h>
 #include <3rdparty/taglib/tpropertymap.h>
@@ -21,7 +22,7 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 	<< "Rock & Roll" << "Hard Rock");
 
 TagEditor::TagEditor(QWidget *parent) :
-	QWidget(parent)
+	QWidget(parent), SelectedTracksModel(), _sqlModel(NULL)
 {
 	setupUi(this);
 
@@ -38,6 +39,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	combos.insert(++i, yearComboBox);
 	combos.insert(++i, genreComboBox);
 	combos.insert(++i, commentComboBox);
+	coverPathComboBox->setEditable(false);
 
 	foreach (QComboBox *combo, combos.values()) {
 		combo->addItem(tr("(Keep)"));
@@ -60,20 +62,30 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
 	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
 
+	// The context menu in the area displaying a cover can be extended by third party
 	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << this;
 	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);
 }
 
-QStringList TagEditor::selectedTracks() const
+void TagEditor::init(LibrarySqlModel *sqlModel)
+{
+	_sqlModel = sqlModel;
+}
+
+QStringList TagEditor::selectedTracks()
 {
 	QStringList tracks;
-	qDebug() << (tagEditorWidget->selectionModel() == NULL);
-	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(0)) {
+	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename)) {
 		tracks << index.data(Qt::UserRole).toString();
 	}
 	return tracks;
+}
+
+void TagEditor::updateSelectedTracks()
+{
+	qDebug() << "TagEditor: model has been updated, redraw selected tracks";
 }
 
 /** Redefined to filter context menu event for the cover album object. */
@@ -117,8 +129,11 @@ void TagEditor::replaceCover(Cover *newCover)
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
-void TagEditor::addItemsToEditor(const QStringList &tracks)
+void TagEditor::addItemsToEditor(const QModelIndexList &sourceIndexes, const QStringList &tracks)
 {
+	this->tagEditorWidget->setFocus();
+	_sourceIndexes = sourceIndexes;
+
 	this->clear();
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
@@ -126,14 +141,15 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
+	//qDebug() << "TagEditor::addItemsToEditor" << tracks;
 	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, covers);
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
 	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 
 	// Sort by path
 	tagEditorWidget->setSortingEnabled(true);
-	tagEditorWidget->sortItems(0);
-	tagEditorWidget->sortItems(1);
+	tagEditorWidget->sortItems(TagEditorTableWidget::COL_Filename);
+	tagEditorWidget->sortItems(TagEditorTableWidget::COL_Path);
 	tagEditorWidget->resizeColumnsToContents();
 }
 
@@ -146,7 +162,7 @@ void TagEditor::addUrlsToEditor(const QList<QUrl> &tracks)
 			localFiles.append(url.toLocalFile());
 		}
 	}
-	this->addItemsToEditor(localFiles);
+	this->addItemsToEditor(QModelIndexList(), localFiles);
 }
 
 /** Clears all rows and comboboxes. */
@@ -199,14 +215,14 @@ void TagEditor::close()
 void TagEditor::commitChanges()
 {
 	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
-	QList<QPersistentModelIndex> tracksToRescan;
+	QList<QModelIndex> tracksToRescan;
+	QStringList tracksToRescan2;
 
 	// Detect changes
 	for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
 		// A physical and unique file per row
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
-		QTableWidgetItem *itemPath = tagEditorWidget->item(i, 1);
-		QString absPath(itemPath->text() + QDir::separator() + itemFileName->text());
+		QString absPath = itemFileName->data(Qt::UserRole).toString();
 		FileHelper fh(absPath);
 		bool trackWasModified = false;
 		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
@@ -217,7 +233,6 @@ void TagEditor::commitChanges()
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
-				/// FIXME
 				if (fh.file()->tag()) {
 					TagLib::PropertyMap pm = fh.file()->tag()->properties();
 
@@ -255,11 +270,14 @@ void TagEditor::commitChanges()
 				qDebug() << "tag wasn't saved :(";
 			}
 			tracksToRescan.append(tagEditorWidget->index(absPath));
+			tracksToRescan2 << absPath;
 		}
 	}
 
 	if (!tracksToRescan.isEmpty()) {
-		emit rebuildTreeView(tracksToRescan);
+		//emit rebuildTreeView(_sourceIndexes);
+		/// TODO: possibility to rename file and path!
+		_sqlModel->updateLibrary(tracksToRescan2, tracksToRescan2);
 	}
 
 	// Reset buttons state
@@ -267,13 +285,18 @@ void TagEditor::commitChanges()
 	cancelButton->setEnabled(false);
 }
 
+#include <QSqlQuery>
+#include <QSqlRecord>
+
 /** Displays a cover only if all the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
+	static Cover *_cover = NULL;
+
 	QMap<int, Cover*> selectedCovers;
 	QMap<int, QString> selectedAlbums;
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
-	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::ALBUM_COL)) {
+	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
 		Cover *cover = NULL;
 		// Check if there's a cover in a temporary state (to allow rollback action)
 		if (unsavedCovers.value(item.row()) != NULL) {
@@ -290,9 +313,35 @@ void TagEditor::displayCover()
 		selectedAlbums.insert(item.row(), item.data().toString());
 	}
 
+	// Fill the comboBox for the absolute path to the cover (if exists)
+	_sqlModel->database().open();
+	QSet<QString> coversPath;
+	foreach (QString track, selectedTracks()) {
+		QSqlQuery coverPathQuery(_sqlModel->database());
+		coverPathQuery.prepare("SELECT coverAbsPath FROM tracks WHERE absPath = ?");
+		coverPathQuery.addBindValue(track);
+		if (coverPathQuery.exec()) {
+			coverPathQuery.next();
+			coversPath << coverPathQuery.record().value(0).toString();
+		}
+	}
+	coverPathComboBox->clear();
+	if (coversPath.size() > 1) {
+		coverPathComboBox->addItem(tr("(Incompatible tracks selected)"));
+		coverPathComboBox->addItems(coversPath.toList());
+	} else if (coversPath.size() == 1) {
+		coverPathComboBox->addItems(coversPath.toList());
+	}
+	_sqlModel->database().close();
+
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
 	if (selectedCovers.size() == 1) {
-		albumCover->setCover(selectedCovers.values().first());
+		_cover = selectedCovers.values().first();
+		albumCover->setCover(_cover);
+	} else if (coversPath.size() == 1) {
+		delete _cover;
+		_cover = new Cover(coversPath.toList().first());
+		albumCover->setCover(_cover);
 	} else {
 		albumCover->resetCover();
 	}

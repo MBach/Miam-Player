@@ -21,8 +21,14 @@ private:
 public:
 	explicit FileSystemTreeView(QWidget *parent = 0);
 
+	//virtual ~FileSystemTreeView();
+
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
 	void findAll(const QModelIndex &index, QStringList &tracks) const;
+
+	inline virtual void init(LibrarySqlModel *) {}
+
+	virtual void updateSelectedTracks();
 
 protected:
 	/** Reimplemented to display up to 3 actions. */
@@ -35,6 +41,7 @@ private:
 public slots:
 	/** Reload tree when the path has changed in the address bar. */
 	void reloadWithNewPath(const QDir &path);
+
 
 private slots:
 	/** Get the folder which is the target of one's double-click. */

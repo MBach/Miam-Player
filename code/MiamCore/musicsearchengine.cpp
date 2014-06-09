@@ -28,7 +28,7 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 
 void MusicSearchEngine::doSearch()
 {
-	qDebug() << Q_FUNC_INFO;
+	//qDebug() << Q_FUNC_INFO;
 	QList<QDir> savedLocations;
 	foreach (QString musicPath, Settings::getInstance()->musicLocations()) {
 		QDir location(musicPath);
@@ -46,7 +46,7 @@ void MusicSearchEngine::doSearch()
 			if (it.fileInfo().isDir()) {
 				QDir d = it.fileInfo().dir();
 				QFileInfoList fil = d.entryInfoList(QDir::AllDirs | QDir::Hidden | QDir::NoDotAndDotDot);
-				qDebug() << "observing" << it.filePath();
+				//qDebug() << "observing" << it.filePath();
 				//dirs.insert();
 			}
 			fileNumber++;
@@ -69,7 +69,7 @@ void MusicSearchEngine::doSearch()
 				coverPath = qFileInfo.absoluteFilePath();
 				aCoverWasFound = true;
 			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
-				emit scannedFile(qFileInfo.absoluteFilePath());
+				emit scannedFile(qFileInfo.absoluteFilePath(), true);
 			} else { // unknown filetype, could be a directory, or anything else
 				// if it's a directory, but excluding special folders, like "." and ".." then
 				// we have to be sure that a we have found a cover before scanning a new directory

@@ -7,6 +7,7 @@
 #include "../styling/miamstyleditemdelegate.h"
 #include "../treeview.h"
 
+#include <QDir>
 #include <QScrollBar>
 
 #include <QtDebug>
@@ -76,7 +77,6 @@ void TagEditorTableWidget::resetTable()
 		year->setText(fh.year());
 		genre->setText(fh.genre());
 		comment->setText(fh.comment());
-		//}
 		row++;
 	}
 	this->setSortingEnabled(true);
@@ -103,9 +103,9 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		// The first two columns are not editable
 		// It may changes in the future for the first one (the filename)
 		QTableWidgetItem *fileName = new QTableWidgetItem(fh.fileInfo().fileName());
-		QTableWidgetItem *absPath = new QTableWidgetItem(fh.fileInfo().path());
+		QTableWidgetItem *absPath = new QTableWidgetItem(QDir::toNativeSeparators(fh.fileInfo().path()));
 		fileName->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		fileName->setData(Qt::UserRole, track);
+		fileName->setData(Qt::UserRole, QDir::toNativeSeparators(track));
 		absPath->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
 		QTableWidgetItem *title = new QTableWidgetItem(fh.title());
