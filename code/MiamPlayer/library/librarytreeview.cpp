@@ -442,7 +442,6 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 	case Artist:
 		// Level 1
 		if (_artists.contains(theArtist.toLower())) {
-			qDebug() << "existingArtist" << theArtist;
 			itemArtist = _artists.value(theArtist.toLower());
 			existingArtist = true;
 		} else {
@@ -450,7 +449,6 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			itemArtist->setData(Artist, Type);
 			itemArtist->setData(art, DataNormalizedString);
 			_artists.insert(theArtist.toLower(), itemArtist);
-			qDebug() << "inserting artist" << theArtist;
 			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
 			QStandardItem *letter = this->insertLetter(art);
 			if (letter) {
@@ -461,9 +459,7 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		// Level 2
 		if (existingArtist && _albums.contains(QPair<QStandardItem*, QString>(itemArtist, alb))) {
 			itemAlbum = _albums.value(QPair<QStandardItem*, QString>(itemArtist, alb));
-			qDebug() << "ex Album" << alb;
 		} else {
-			qDebug() << "new Album" << album << "itemArtist ok ?" << (itemArtist == NULL);
 			itemAlbum = new QStandardItem(album);
 			itemAlbum->setData(Album, Type);
 			itemAlbum->setData(alb, DataNormalizedString);

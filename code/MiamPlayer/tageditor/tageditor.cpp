@@ -86,6 +86,7 @@ QStringList TagEditor::selectedTracks()
 void TagEditor::updateSelectedTracks()
 {
 	qDebug() << "TagEditor: model has been updated, redraw selected tracks";
+	_sqlModel->load();
 }
 
 /** Redefined to filter context menu event for the cover album object. */
@@ -277,7 +278,7 @@ void TagEditor::commitChanges()
 	if (!tracksToRescan.isEmpty()) {
 		//emit rebuildTreeView(_sourceIndexes);
 		/// TODO: possibility to rename file and path!
-		_sqlModel->updateLibrary(tracksToRescan2, tracksToRescan2);
+		_sqlModel->updateLibrary(tracksToRescan2);
 	}
 
 	// Reset buttons state
