@@ -151,8 +151,6 @@ void MainWindow::setupActions()
 		actionPlaybackGroup->addAction(actionPlayBack);
 	}
 
-	/// TODO
-	/// Update QMenu when one switches from a playlist to another
 	// Link user interface
 	// Actions from the menu
 	connect(actionExit, &QAction::triggered, &QApplication::quit);
@@ -206,11 +204,9 @@ void MainWindow::setupActions()
 		tagEditor->addUrlsToEditor(tracks);
 	});
 
-	// Rebuild the treeview when tracks have changed using the tag editor
-	//connect(tagEditor, &TagEditor::rebuildTreeView, library, &LibraryTreeView::rebuild);
-
 	// Media buttons
-	connect(_mediaPlayer.data(), &QMediaPlayer::stateChanged, [=] (QMediaPlayer::State state) {
+	connect(_mediaPlayer.data(), &MediaPlayer::stateChanged, this, [=] (QMediaPlayer::State state) {
+		qDebug() << "MediaPlayer::stateChanged" << state;
 		playButton->disconnect();
 		if (state == QMediaPlayer::PlayingState) {
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
@@ -235,7 +231,7 @@ void MainWindow::setupActions()
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	// Sliders
-	connect(_mediaPlayer.data(), &QMediaPlayer::positionChanged, [=] (qint64 pos) {
+	connect(_mediaPlayer.data(), &MediaPlayer::positionChanged, [=] (qint64 pos) {
 		if (_mediaPlayer.data()->duration() > 0) {
 			seekSlider->setValue(1000 * pos / _mediaPlayer.data()->duration());
 			timeLabel->setTime(pos, _mediaPlayer.data()->duration());
@@ -263,7 +259,7 @@ void MainWindow::setupActions()
 	});
 
 	// Volume bar
-	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &QMediaPlayer::setVolume);
+	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &MediaPlayer::setVolume);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);

@@ -1,9 +1,10 @@
 QT       += widgets multimedia sql
 
-TagLibDirectory = $$PWD/3rdparty/taglib
+3rdpartyDir  = $$PWD/3rdparty
+
 INCLUDEPATH += $$PWD
-INCLUDEPATH += $$TagLibDirectory
-DEPENDPATH += $$TagLibDirectory
+INCLUDEPATH += $$3rdpartyDir
+DEPENDPATH += $$3rdpartyDir
 
 DEFINES += MIAM_PLUGIN
 
@@ -14,16 +15,18 @@ win32 {
     CONFIG += dll
     CONFIG(debug, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag
+            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
+            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	}
     }
     CONFIG(release, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag
+            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+            LIBS += -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
+            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+            LIBS += -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	}
     }
 }

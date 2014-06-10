@@ -73,7 +73,7 @@ void TimeLabel::display()
 		if (_time == 0) {
 			this->setText("--:-- / --:--");
 		} else {
-			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss").append(" / ").append(QDateTime::fromTime_t(_total / 1000).toString("mm:ss")));
+			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss").append(" / ").append(QDateTime::fromTime_t(round(_total / 1000)).toString("mm:ss")));
 		}
 		break;
 	}

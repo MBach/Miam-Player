@@ -276,7 +276,6 @@ void TagEditor::commitChanges()
 	}
 
 	if (!tracksToRescan.isEmpty()) {
-		//emit rebuildTreeView(_sourceIndexes);
 		/// TODO: possibility to rename file and path!
 		_sqlModel->updateLibrary(tracksToRescan2);
 	}

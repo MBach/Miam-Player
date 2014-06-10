@@ -24,7 +24,8 @@ void PlaylistModel::clear()
 
 void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
-	_mediaPlaylist->insertMedia(rowIndex, tracks);
+	bool b = _mediaPlaylist->insertMedia(rowIndex, tracks);
+	qDebug() << "media was inserted" << b;
 	foreach (QMediaContent track, tracks) {
 		this->insertMedia(rowIndex++, track);
 	}
@@ -34,7 +35,6 @@ void PlaylistModel::insertMedia(int rowIndex, const QMediaContent &track)
 {
 	FileHelper f(track);
 	if (f.isValid()) {
-		//qDebug() << "inserting" << track.canonicalUrl();
 		QString title(f.title());
 
 		// Then, construct a new row with correct informations

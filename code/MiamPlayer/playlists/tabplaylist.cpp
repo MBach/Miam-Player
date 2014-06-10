@@ -61,7 +61,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setAcceptDrops(true);
 }
 
-
 /** Get the current playlist. */
 Playlist* TabPlaylist::currentPlayList() const
 {
@@ -251,7 +250,6 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
-	qDebug() << tracks;
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon());
 }

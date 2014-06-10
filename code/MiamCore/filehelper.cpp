@@ -2,24 +2,25 @@
 
 #include <QFileInfo>
 
-// Taglib headers
-#include <apefile.h>
-#include <asffile.h>
-#include <flacfile.h>
-#include <mpcfile.h>
-#include <mp4file.h>
-#include <mpegfile.h>
-#include <vorbisfile.h>
+#include <taglib/taglib.h>
+#include <taglib/fileref.h>
+#include <taglib/apefile.h>
+#include <taglib/asffile.h>
+#include <taglib/flacfile.h>
+#include <taglib/mpcfile.h>
+#include <taglib/mp4file.h>
+#include <taglib/mpegfile.h>
+#include <taglib/vorbisfile.h>
 
-#include <id3v2tag.h>
-#include <id3v2frame.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/id3v2frame.h>
 
-#include <attachedpictureframe.h>
-#include <popularimeterframe.h>
-#include <tag.h>
-#include <tlist.h>
-#include <textidentificationframe.h>
-#include <tstring.h>
+#include <taglib/attachedpictureframe.h>
+#include <taglib/popularimeterframe.h>
+#include <taglib/tag.h>
+#include <taglib/tlist.h>
+#include <taglib/textidentificationframe.h>
+#include <taglib/tstring.h>
 
 #include "cover.h"
 
@@ -28,8 +29,7 @@
 #include <QImage>
 #include <QtDebug>
 
-#include <3rdparty/taglib/taglib.h>
-#include <3rdparty/taglib/fileref.h>
+
 
 FileHelper::FileHelper(const QMediaContent &track)
 {
@@ -52,10 +52,10 @@ bool FileHelper::init(const QString &filePath)
 {
 	_fileInfo = QFileInfo(filePath);
 	QString suffix = _fileInfo.suffix().toLower();
-	//TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
+	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
 	//qDebug() << "FileHelper::init" << filePath;
-	QByteArray ba = QDir::toNativeSeparators(filePath).toLocal8Bit();
-	TagLib::FileName fp(ba.data());
+	//QByteArray ba = QDir::toNativeSeparators(filePath).toLocal8Bit();
+	//TagLib::FileName fp(ba.data());
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
 		fileType = APE;

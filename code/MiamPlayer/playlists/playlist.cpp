@@ -58,19 +58,20 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
 		_mediaPlayer.data()->blockSignals(false);
+		qDebug() << "about to set current index";
 		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
 	});
 
 	// Link core multimedia actions
-	connect(_mediaPlayer.data(), &QMediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
+	connect(_mediaPlayer.data(), &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
 		if (status == QMediaPlayer::EndOfMedia) {
 			_mediaPlayer.data()->skipForward();
 		}
 	});
 
 	// Ensure current item in the playlist is visible when track has just changed to another one
-	connect(_mediaPlayer.data(), &QMediaPlayer::currentMediaChanged, this, [=] (const QMediaContent &media) {
+	connect(_mediaPlayer.data(), &MediaPlayer::currentMediaChanged, this, [=] (const QMediaContent &media) {
 		if (!media.isNull()) {
 			int row = _mediaPlayer.data()->playlist()->currentIndex();
 			this->scrollTo(_playlistModel->index(row, 0));
@@ -99,6 +100,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		}
 		emit aboutToSendToTagEditor(selectedTracks);
 	});
+	/// TODO
 	//connect(actionInlineTag, &QAction::triggered, this, &Playlist::editTagInline);
 
 	// Set row height

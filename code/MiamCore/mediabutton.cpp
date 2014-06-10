@@ -27,7 +27,6 @@ void MediaButton::setIcon(const QIcon &icon, bool toggled)
 	if (path.isEmpty()) {
 		QPushButton::setIcon(icon);
 	} else if (QFile::exists(path)) {
-		qDebug() << "la";
 		QPushButton::setIcon(QIcon(path));
 	} else {
 		settings->setCustomIcon(this, QString());
