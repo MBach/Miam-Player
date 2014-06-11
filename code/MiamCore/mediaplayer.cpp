@@ -14,53 +14,45 @@
 MediaPlayer::MediaPlayer(QObject *parent) :
 	QObject(parent), _media(NULL), _playlist(NULL)
 {
-	/// FIXME
+	/// FIXME ?
 	//this->setNotifyInterval(100);
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
 
-	connect(_player, &VlcMediaPlayer::stateChanged, this, [=]() {
-		qDebug() << "VlcMediaPlayer::stateChanged";
-		switch (_player->state()) {
-		case Vlc::Idle:
-			qDebug() << "Idle";
-			break;
-		case Vlc::Opening:
-			emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
-			qDebug() << "Opening";
-			break;
-		case Vlc::Buffering:
-			emit mediaStatusChanged(QMediaPlayer::BufferingMedia);
-			qDebug() << "Buffering";
-			break;
-		case Vlc::Playing: {
-			qDebug() << "Playing";
-			/// XXX: prevent multiple signals bug?
+	connect(_player, &VlcMediaPlayer::opening, this, [=]() {
+		emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
+	});
+
+	connect(_player, &VlcMediaPlayer::playing, this, [=]() {
+		// Prevent multiple signals bug?
+		if (_state != QMediaPlayer::PlayingState) {
 			emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
 			_state = QMediaPlayer::PlayingState;
 			emit stateChanged(QMediaPlayer::PlayingState);
-			break;
 		}
-		case Vlc::Paused:
-			qDebug() << "Paused";
-			_state = QMediaPlayer::PausedState;
-			emit stateChanged(QMediaPlayer::PausedState);
-			break;
-		case Vlc::Stopped:
-			qDebug() << "Stopped";
-			emit mediaStatusChanged(QMediaPlayer::NoMedia);
-			_state = QMediaPlayer::StoppedState;
-			emit stateChanged(QMediaPlayer::StoppedState);
-			break;
-		case Vlc::Ended:
-			qDebug() << "Ended";
-			emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
-			break;
-		case Vlc::Error:
-			qDebug() << "Error";
-			emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
-			break;
-		}
+	});
+
+	connect(_player, &VlcMediaPlayer::stopped, this, [=]() {
+		emit mediaStatusChanged(QMediaPlayer::NoMedia);
+		_state = QMediaPlayer::StoppedState;
+		emit stateChanged(QMediaPlayer::StoppedState);
+	});
+
+	connect(_player, &VlcMediaPlayer::paused, this, [=]() {
+		_state = QMediaPlayer::PausedState;
+		emit stateChanged(QMediaPlayer::PausedState);
+	});
+
+	connect(_player, &VlcMediaPlayer::buffering, this, [=]() {
+		emit mediaStatusChanged(QMediaPlayer::BufferingMedia);
+	});
+
+	connect(_player, &VlcMediaPlayer::end, this, [=]() {
+		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
+	});
+
+	connect(_player, &VlcMediaPlayer::error, this, [=]() {
+		emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
 	});
 
 	connect(_player, &VlcMediaPlayer::positionChanged, this, [=](float f) {
@@ -75,8 +67,6 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 		emit currentMediaChanged(mc);
 	});*/
 	connect(_player, SIGNAL(mediaChanged(libvlc_media_t*)), this, SLOT(convertMedia(libvlc_media_t*)));
-
-
 }
 
 QMediaPlaylist * MediaPlayer::playlist()
@@ -88,10 +78,11 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 {
 	_playlist = playlist;
 	connect(_playlist, &QMediaPlaylist::currentIndexChanged, this, [=]() {
+		qDebug() << "currentIndexChanged";
 		_state = QMediaPlayer::StoppedState;
 	});
 	connect(_playlist, &QMediaPlaylist::mediaRemoved, this, [=](int start, int end) {
-		qDebug() << "mediaRemoved" << start << end;
+		qDebug() << "mediaRemoved" << start << end << _playlist->currentIndex();
 		if (_playlist->isEmpty() || _playlist->currentIndex() == start) {
 			_player->stop();
 		}
@@ -116,33 +107,29 @@ QMediaPlayer::State MediaPlayer::state() const
 /** Seek backward in the current playing track for a small amount of time. */
 void MediaPlayer::seekBackward()
 {
-	/*if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
-		qint64 time = (qint64)_player->length() - Settings::getInstance()->playbackSeekTime();
-		int p = _player->length() * _player->position();
-		qDebug() << "length" << _player->length() << "pos" << _player->position() << "p" << p;
-		float pos = (p - time) / (float)_player->length();
-		qDebug() << "new pos" << pos;
-		if (pos < 0) {
-			//_player->setTime(1);
+	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
+		int currentPos = _player->position() * _player->length();
+		int time = currentPos - Settings::getInstance()->playbackSeekTime();
+		if (time < 0) {
 			_player->setPosition(0.0);
 		} else {
-
-			_player->setPosition(pos);
+			_player->setPosition(time / (float)_player->length());
 		}
-	}*/
+	}
 }
 
 /** Seek forward in the current playing track for a small amount of time. */
 void MediaPlayer::seekForward()
 {
-	/*if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
-		qint64 time = position() + Settings::getInstance()->playbackSeekTime();
-		if (time > duration()) {
+	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
+		int currentPos = _player->position() * _player->length();
+		int time = currentPos + Settings::getInstance()->playbackSeekTime();
+		if (time > _player->length()) {
 			skipForward();
 		} else {
-			setPosition(time);
+			_player->setPosition(time / (float)_player->length());
 		}
-	}*/
+	}
 }
 
 void MediaPlayer::skipBackward()

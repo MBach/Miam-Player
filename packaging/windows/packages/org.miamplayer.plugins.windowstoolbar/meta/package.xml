@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Windows Toolbars plugin</DisplayName>
+    <Description>This plugin adds a nice progress bar in the taskbar when playing music. There are also buttons in the thumbnails to control playback.</Description>
+    <Version>1.0</Version>
+    <ReleaseDate>2014-06-12</ReleaseDate>
+    <Name>org.miamplayer.plugins.windowstoolbar</Name>
+    <Default>true</Default>
+	<SortingPriority>10</SortingPriority>
+</Package>

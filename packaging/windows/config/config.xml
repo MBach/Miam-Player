@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Miam-Player</Name>
+	<RunProgram>MiamPlayer.exe</RunProgram>
+    <Version>0.6.3</Version>
+    <Title>Miam-Player Installer</Title>
+	<InstallerApplicationIcon>installerApplicationIcon.png</InstallerApplicationIcon>
+	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
+	<Logo>logo.png</Logo>
+    <Publisher>Matthieu Bachelier</Publisher>
+    <StartMenuDir>Audio\Miam-Player</StartMenuDir>
+	<AllowSpaceInPath>true</AllowSpaceInPath>
+	<UninstallerName>Uninstall MiamPlayer</UninstallerName>
+</Installer>

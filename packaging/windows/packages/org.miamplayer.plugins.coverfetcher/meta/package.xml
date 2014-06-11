@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Cover Fetcher plugin</DisplayName>
+    <Description>This plugin is able to connect an Internet Repository (MusicBrainz) to get missing covers in your library.</Description>
+    <Version>0.5</Version>
+    <ReleaseDate>2014-06-12</ReleaseDate>
+    <Name>org.miamplayer.plugins.coverfetcher</Name>
+    <Default>true</Default>
+	<SortingPriority>12</SortingPriority>
+</Package>
