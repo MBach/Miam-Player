@@ -41,24 +41,36 @@
 
 function Component()
 {
-    // constructor
-    var programFiles = installer.environmentVariable("PROGRAMW6432");
-    if (programFiles !== "")
-        installer.setValue("TargetDir", programFiles + "/MiamPlayer");
+	// constructor
+	var programFiles = installer.environmentVariable("PROGRAMW6432");
+	if (programFiles !== "") {
+		installer.setValue("TargetDir", programFiles + "/MiamPlayer");
+	}
+	installer.overwriteTargetDirectory = QMessageBox.Yes;
 }
 
 Component.prototype.isDefault = function()
 {
-    // select the component by default
-    return true;
+	// select the component by default
+	return true;
 }
 
 Component.prototype.createOperations = function()
 {
-    try {
-        // call the base create operations function
-        component.createOperations();
-    } catch (e) {
-        print(e);
-    }
+	try {
+		// call the base create operations function
+		component.createOperations();
+
+		// Always clear registry after install (should be improved)
+		if (installer.value("os") == "win") { 
+			try {
+				component.addOperation("CreateShortcut", "@TargetDir@/MiamPlayer.exe", "@StartMenuDir@/MiamPlayer.lnk");
+				component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
+			} catch (e) {
+				// Do nothing if key doesn't exist
+			}
+		}
+	} catch (e) {
+		print(e);
+	}
 }
