@@ -2,10 +2,12 @@
 # QT CREATOR
 #############
 
-build*/
 *.pro.user*
 *.wixobj
 *.wixpdb
 *ui_*.h
-
-packaging/windows/*.msi
+packaging/windows/*.exe
+packaging/windows/packages/org.miamplayer.core/data/*
+packaging/windows/packages/org.miamplayer.plugins.coverfetcher/data/*
+packaging/windows/packages/org.miamplayer.plugins.minimode/data/*
+packaging/windows/packages/org.miamplayer.plugins.windowstoolbar/data/*
