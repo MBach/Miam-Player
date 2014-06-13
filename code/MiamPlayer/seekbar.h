@@ -20,14 +20,14 @@ private:
 public:
     explicit SeekBar(QWidget *parent = 0);
 
-	inline void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer) {
-		_mediaPlayer = mediaPlayer;
-	}
+	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
 protected:
-	virtual void mousePressEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *);
 
-	virtual void mouseReleaseEvent(QMouseEvent *event);
+	virtual void mousePressEvent(QMouseEvent *);
+
+	virtual void mouseReleaseEvent(QMouseEvent *);
 
 	virtual void paintEvent(QPaintEvent *);
 

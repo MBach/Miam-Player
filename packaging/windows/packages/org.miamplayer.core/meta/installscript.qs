@@ -65,7 +65,7 @@ Component.prototype.createOperations = function()
 		if (installer.value("os") == "win") { 
 			try {
 				component.addOperation("CreateShortcut", "@TargetDir@/MiamPlayer.exe", "@StartMenuDir@/MiamPlayer.lnk");
-				component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
+				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
 			} catch (e) {
 				// Do nothing if key doesn't exist
 			}

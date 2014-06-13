@@ -92,6 +92,8 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 void MediaPlayer::setVolume(int v)
 {
 	_player->audio()->setVolume(v);
+	/// XXX not working ?
+	qDebug() << "new volume" << v << _player->audio()->volume();
 }
 
 qint64 MediaPlayer::duration()
@@ -102,6 +104,20 @@ qint64 MediaPlayer::duration()
 QMediaPlayer::State MediaPlayer::state() const
 {
 	return _state;
+}
+
+void MediaPlayer::setPosition(float pos)
+{
+	if (pos == 1.0) {
+		pos -= 0.001f;
+	}
+	_player->setPosition(pos);
+}
+
+void MediaPlayer::setMute(int i) const
+{
+	_player->audio()->setTrack(i);
+	//return _player->audio()->toggleMute();
 }
 
 /** Seek backward in the current playing track for a small amount of time. */

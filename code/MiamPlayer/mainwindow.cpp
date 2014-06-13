@@ -26,9 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	mediaButtons << seekForwardButton << skipForwardButton << playbackModeButton;
 
 	// Init the audio module
-	audioOutput = new QAudioOutput(QAudioDeviceInfo::defaultOutputDevice());
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
-	_mediaPlayer->setVolume(settings->volume());
 	tabPlaylists->setMainWindow(this);
 	tabPlaylists->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
@@ -37,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	_uniqueLibrary = new UniqueLibrary(this);
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
-	volumeSlider->setValue(settings->volume());
 
 	// Init shortcuts
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
@@ -238,28 +235,9 @@ void MainWindow::setupActions()
 		}
 	});
 
-	connect(seekSlider, &QSlider::sliderPressed, [=] () {
-		qDebug() << "sliderPressed";
-		//seekSlider->blockSignals(true);
-		//_mediaPlayer.data()->blockSignals(true);
-		//_mediaPlayer.data()->setMuted(true);
-	});
-
-	connect(seekSlider, &QSlider::sliderMoved, [=] (int p) {
-		qDebug() << "sliderMoved";
-		//_mediaPlayer.data()->setPosition(p * _mediaPlayer.data()->duration() / 1000);
-		//seekSlider->setValue(1000 * p / _mediaPlayer.data()->duration());
-	});
-
-	connect(seekSlider, &QSlider::sliderReleased, [=] () {
-		qDebug() << "sliderReleased";
-		//_mediaPlayer.data()->setMuted(false);
-		//_mediaPlayer.data()->blockSignals(false);
-		//seekSlider->blockSignals(false);
-	});
-
 	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &MediaPlayer::setVolume);
+	volumeSlider->setValue(Settings::getInstance()->volume());
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);

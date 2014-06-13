@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QStack>
-#include <QtMultimedia/QAudioOutput>
 
 #include "ui_mainwindow.h"
 #include "dialogs/customizeoptionsdialog.h"
@@ -48,9 +47,6 @@ private:
 
 	/** Model for the Table "tracks". */
 	LibrarySqlModel *_librarySqlModel;
-
-	/** Unique interface for outputing audio.*/
-	QAudioOutput *audioOutput;
 
 	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
 	SqlDatabase _sqlDatabase;

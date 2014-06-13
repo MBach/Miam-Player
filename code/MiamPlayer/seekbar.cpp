@@ -12,35 +12,52 @@ SeekBar::SeekBar(QWidget *parent) :
     QSlider(parent)
 {
 	this->setMinimumHeight(30);
+	this->setSingleStep(0);
+	this->setPageStep(0);
 }
 
-void SeekBar::mousePressEvent(QMouseEvent *event)
+void SeekBar::setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer)
+{
+	_mediaPlayer = mediaPlayer;
+}
+
+void SeekBar::mouseMoveEvent(QMouseEvent *)
+{
+	int xPos = mapFromGlobal(QCursor::pos()).x();
+	static const int bound = 12;
+	if (xPos >= bound && xPos <= width() - 2 * bound) {
+		float p = (float) xPos / (width() - 2 * bound);
+		qDebug() << "position" << p;
+		float posButton = p * 1000;
+		_mediaPlayer.data()->setPosition(p);
+		this->setValue(posButton);
+	}
+}
+
+void SeekBar::mousePressEvent(QMouseEvent *)
 {
 	int xPos = mapFromGlobal(QCursor::pos()).x();
 	static const int bound = 12;
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
 		qDebug() << "mousePressEvent inside clickable area";
-		int posButton = (float) xPos / (width() - 2 * bound) * 1000;
+		float p = (float) xPos / (width() - 2 * bound);
+		float posButton = p * 1000;
 		qDebug() << "mousePressEvent" << "xPos" << xPos << "width()" << width() << "posButton" << posButton;
-		//this->setValue(posButton);
-		emit sliderPressed();
-		QSlider::mousePressEvent(event);
-		this->repaint();
-	} /*else {
-		qDebug() << "mousePressEvent OUTSIDE clickable area";
-	}*/
+		_mediaPlayer.data()->setMute(-1);
+		_mediaPlayer.data()->setPosition(p);
+		this->setValue(posButton);
+	}
 }
 
-void SeekBar::mouseReleaseEvent(QMouseEvent *e)
+void SeekBar::mouseReleaseEvent(QMouseEvent *)
 {
-	emit sliderMoved(value());
-	QSlider::mouseReleaseEvent(e);
+	_mediaPlayer.data()->setMute(0);
 }
 
 void SeekBar::paintEvent(QPaintEvent *)
 {
 	//qDebug() << "paintEvent" << value();
-	static const int h = height() / 3.0;
+	int h = height() / 3.0;
 	QStylePainter p(this);
 	QStyleOptionSlider o;
 	initStyleOption(&o);
@@ -48,8 +65,10 @@ void SeekBar::paintEvent(QPaintEvent *)
 
 	o.rect.adjust(10, 0, -10, 0);
 	static const int bound = 12;
+
+	// Inner rectangle
 	int w = width() - 2 * bound;
-	float posButton = (float) value() / 1000 * w;
+	float posButton = (float) value() / 1000 * w + bound;
 
 	p.fillRect(rect(), o.palette.window());
 
@@ -79,7 +98,8 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.drawLine(QPoint(rLeft.center().x(), rLeft.bottom()), QPoint(rRight.center().x() - 1, rRight.bottom()));
 	p.restore();
 
-	if (_mediaPlayer.data()->state() != QMediaPlayer::StoppedState) {
+	// Exclude ErrorState from painting
+	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState || _mediaPlayer.data()->state() == QMediaPlayer::PausedState) {
 		QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
 		p.fillRect(rPlayed, linearGradient);
 		p.save();

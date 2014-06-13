@@ -32,9 +32,14 @@ public:
 	void setPlaylist(QMediaPlaylist *playlist);
 
 	void setVolume(int v);
+
 	qint64 duration();
 
 	QMediaPlayer::State state() const;
+
+	void setPosition(float pos);
+
+	void setMute(int i) const;
 
 public slots:
 	/** Seek backward in the current playing track for a small amount of time. */

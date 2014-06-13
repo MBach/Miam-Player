@@ -2,13 +2,13 @@
 <Installer>
     <Name>Miam-Player</Name>
 	<RunProgram>@InstallerDirPath@\MiamPlayer.exe</RunProgram>
-    <Version>0.6.4</Version>
+    <Version>0.6.5</Version>
     <Title>Miam-Player Installer</Title>
 	<InstallerApplicationIcon>installerApplicationIcon.png</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
 	<Logo>logo.png</Logo>
     <Publisher>Matthieu Bachelier</Publisher>
-    <StartMenuDir>Miam-Player\SubDir\SecondSubDir</StartMenuDir>
+    <StartMenuDir>Miam-Player</StartMenuDir>
 	<AllowNonAsciiCharacters>true</AllowNonAsciiCharacters>
 	<AllowSpaceInPath>true</AllowSpaceInPath>
 	<UninstallerName>Uninstall MiamPlayer</UninstallerName>
