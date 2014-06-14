@@ -64,7 +64,9 @@ Component.prototype.createOperations = function()
 		// Always clear registry after install (should be improved)
 		if (installer.value("os") == "win") { 
 			try {
-				component.addOperation("CreateShortcut", "@TargetDir@/MiamPlayer.exe", "@StartMenuDir@/MiamPlayer.lnk");
+				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
+				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2012_redist_x64.exe", "/norestart", "/q");
+				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
 				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
 			} catch (e) {
 				// Do nothing if key doesn't exist
