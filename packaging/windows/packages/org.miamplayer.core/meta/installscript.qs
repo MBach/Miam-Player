@@ -39,14 +39,60 @@
 **
 **************************************************************************/
 
+// Constructor
 function Component()
 {
-	// constructor
+	component.loaded.connect(this, Component.prototype.installerLoaded);
+	installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
 	var programFiles = installer.environmentVariable("PROGRAMW6432");
 	if (programFiles !== "") {
 		installer.setValue("TargetDir", programFiles + "/MiamPlayer");
 	}
-	installer.overwriteTargetDirectory = QMessageBox.Yes;
+}
+
+//Component.prototype.copyToClipboard = function()
+//{
+	//component.userInterface("CopyBitcoinAddressForm").labelThanks.text = "Thank you!";
+	//var text = component.userInterface("CopyBitcoinAddressForm").lineEdit.text;
+	//if (installer.value("os") == "win") { 
+	//QInstaller.execute("cmd", "/C echo " + text + " | clip");
+	//installer.executeDetached("set", "/p=" + text + "<NUL|clip");
+	//installer.execute("start", "https://www.bitcoin.org");
+	//component.addElevatedOperation("Execute", "cmd /C echo " + text + " | clip");
+	//component.beginInstallation();
+	//}
+	//component.userInterface("CopyBitcoinAddressForm").lineEdit.copy(this);
+//}
+
+// Utility function
+var Dir = new function () {
+    this.toNativeSparator = function (path) {
+        if (installer.value("os") == "win")
+            return path.replace(/\//g, '\\');
+        return path;
+    }
+};
+
+// called as soon as the component was loaded
+Component.prototype.installerLoaded = function()
+{
+	if (installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory)) {
+        var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+        if (widget != null) {
+            widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
+            widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
+
+            widget.windowTitle = "Installation Folder";
+            widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
+        }
+    }
+
+	// don't show when updating / de-installing
+	if (installer.isInstaller()) {
+		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
+		//component.userInterface("CopyBitcoinAddressForm").copyAddress.clicked.connect(this, Component.prototype.copyToClipboard);
+		//component.userInterface("CopyBitcoinAddressForm").copyAddress.clicked.connect(component.userInterface("CopyBitcoinAddressForm").lineEdit, "copy");
+	}
 }
 
 Component.prototype.isDefault = function()
@@ -55,18 +101,54 @@ Component.prototype.isDefault = function()
 	return true;
 }
 
+// called after everything is set up, but before any file is written
+Component.prototype.beginInstallation = function()
+{
+    // call default implementation which is necessary for most hooks in beginInstallation case it makes nothing
+    component.beginInstallation();
+}
+
+Component.prototype.chooseTarget = function () {
+    var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+    if (widget != null) {
+        var newTarget = QFileDialog.getExistingDirectory("Choose your target directory.", widget.targetDirectory.text);
+        if (newTarget != "") {
+            widget.targetDirectory.text = Dir.toNativeSparator(newTarget);
+		}
+    }
+}
+
+Component.prototype.targetChanged = function (text) {
+    var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+    if (widget != null) {
+        if (text != "") {
+			widget.complete = true;
+			installer.setValue("TargetDir", text);
+			if (installer.fileExists(text + "/components.xml")) {
+				var warning = "<font color='red'>" + qsTr("A previous installation exists in this folder. If you wish to continue, everything will be overwritten.") + "</font>";
+				widget.labelOverwrite.text = warning;
+			} else {
+				widget.labelOverwrite.text = "";
+			}
+			return;
+        }
+        widget.complete = false;
+    }
+}
+
 Component.prototype.createOperations = function()
 {
 	try {
 		// call the base create operations function
 		component.createOperations();
-
-		// Always clear registry after install (should be improved)
+		
 		if (installer.value("os") == "win") { 
 			try {
 				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
 				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2012_redist_x64.exe", "/norestart", "/q");
 				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
+				
+				// Always clear registry after install (should be improved)
 				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
 			} catch (e) {
 				// Do nothing if key doesn't exist
