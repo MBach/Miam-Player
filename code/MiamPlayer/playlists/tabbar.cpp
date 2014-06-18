@@ -82,10 +82,18 @@ bool TabBar::eventFilter(QObject *obj, QEvent *event)
 	if (obj == lineEdit && event->type() == QEvent::KeyPress) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 		if (keyEvent->key() == Qt::Key_Escape) {
+			lineEdit->releaseMouse();
 			lineEdit->close();
 		}
 	} else if (obj == lineEdit && event->type() == QEvent::FocusOut) {
+		lineEdit->releaseMouse();
 		renameTab();
+	} else if (obj == lineEdit && event->type() == QEvent::MouseButtonPress) {
+		QMouseEvent *me = static_cast<QMouseEvent*>(event);
+		if (!lineEdit->rect().contains(me->pos())) {
+			lineEdit->releaseMouse();
+			lineEdit->close();
+		}
 	}
 	return false;
 }
@@ -162,8 +170,14 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 	int c = currentIndex();
 	if (-1 < tabIndex && tabIndex < count()-1 && c == tabIndex) {
 		QRect visualRect = tabRect(tabIndex);
-		visualRect.setLeft(visualRect.left() + 1);
-		visualRect.setRight(visualRect.right() - 1);
+		Settings *settings = Settings::getInstance();
+		if (settings->isRectTabs()) {
+			visualRect.setLeft(visualRect.left() + 1);
+			visualRect.setRight(visualRect.right() - 1);
+		} else {
+			visualRect.setLeft(3 + settings->tabsOverlappingLength() * 1.25 + height() / 2);
+			visualRect.setRight(visualRect.right() - settings->tabsOverlappingLength());
+		}
 		visualRect.setTop(visualRect.top() + 1);
 
 		// Disable close buttons in case of unfortunate click
@@ -180,6 +194,7 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 		lineEdit->setFocus();
 		lineEdit->setGeometry(visualRect);
 		lineEdit->setVisible(true);
+		lineEdit->grabMouse();
 	}
 	QTabBar::mouseDoubleClickEvent(event);
 }
@@ -333,7 +348,7 @@ void TabBar::paintRectTabs(QStylePainter &p)
 
 void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 {
-	// A "\+\" button on the right
+	// A "\_\" button on the right
 	static const qreal penScaleFactor = 0.15;
 
 	// Draw all tabs before the selected tab
@@ -459,8 +474,8 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
-		QRect rText(r.x() + r.width() + 5, r.y(),
-					o.rect.width() - (r.width() + 5), r.height());
+		QRect rText(r.x() + r.width() + 5, this->rect().y(),
+					o.rect.width() - (r.width() + 5), this->height() - 2);
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, o.text);
 	}
 }

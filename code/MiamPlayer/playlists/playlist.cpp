@@ -42,6 +42,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	ScrollBar *hScrollBar = new ScrollBar(Qt::Vertical, this);
 	hScrollBar->setFrameBorder(false, true, true, false);
 	this->setHorizontalScrollBar(hScrollBar);
+	this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 	this->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 
 	// Select only by rows, not cell by cell

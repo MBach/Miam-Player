@@ -58,6 +58,18 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		}
 	});
 
+	connect(settings, &Settings::fontHasChanged, this, [=](const Settings::FontFamily ff, const QFont &) {
+		if (ff == Settings::PLAYLIST) {
+			for (int i = 0; i < count() - 1; i++) {
+				if (playlist(i)->mediaPlaylist()->isEmpty()) {
+					this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
+				} else {
+					this->setTabIcon(i, this->defaultIcon(QIcon::Normal));
+				}
+			}
+		}
+	});
+
 	this->setAcceptDrops(true);
 }
 
@@ -69,13 +81,9 @@ Playlist* TabPlaylist::currentPlayList() const
 
 QIcon TabPlaylist::defaultIcon(QIcon::Mode mode)
 {
-	static QIcon icon(":/icons/playlistIcon");
-	QIcon grayIcon(icon.pixmap(QSize(tabBar()->fontMetrics().ascent(), tabBar()->fontMetrics().ascent()), QIcon::Disabled));
-	if (mode == QIcon::Normal) {
-		return icon;
-	} else {
-		return grayIcon;
-	}
+	QIcon icon(":/icons/playlistIcon");
+	QIcon displayedIcon(icon.pixmap(QSize(tabBar()->fontMetrics().ascent(), tabBar()->fontMetrics().ascent()), mode));
+	return displayedIcon;
 }
 
 /** Redefined to forward events to children. */
@@ -150,7 +158,7 @@ void TabPlaylist::displayEmptyArea(bool isEmpty)
 		QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
 		stackedLayout->setCurrentIndex(1);
 		stackedLayout->setStackingMode(QStackedLayout::StackOne);
-		setTabIcon(currentIndex(), this->defaultIcon());
+		setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	}
 }
 
@@ -184,6 +192,7 @@ Playlist* TabPlaylist::addPlaylist()
 	vboxLayout->addWidget(icon);
 	vboxLayout->addWidget(label);
 	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+	w->setMinimumHeight(vboxLayout->sizeHint().height() + p->horizontalHeader()->height());
 
 	stackedLayout->addWidget(w);
 	stackedLayout->addWidget(p);
@@ -251,7 +260,7 @@ void TabPlaylist::appendItemToPlaylist(const QString &track)
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
 	currentPlayList()->insertMedias(rowIndex, tracks);
-	this->setTabIcon(currentIndex(), this->defaultIcon());
+	this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 }
 
 void TabPlaylist::moveTracksDown()
