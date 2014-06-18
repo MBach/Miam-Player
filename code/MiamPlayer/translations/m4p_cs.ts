@@ -360,15 +360,15 @@
     </message>
     <message>
         <source>What is the behaviour for columns?</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaké chování přijmout pro sloupce?</translation>
     </message>
     <message>
         <source>Resize columns to contents</source>
-        <translation type="unfinished"></translation>
+        <translation>Změnit velikost sloupců vzhledem k obsahu</translation>
     </message>
     <message>
         <source>Keep all columns visible</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponechat všechny sloupce viditelné</translation>
     </message>
     <message>
         <source>Language of Miam Player</source>
@@ -579,55 +579,55 @@
     </message>
     <message>
         <source>Should I display a large and faded cover when you&apos;re expanding an album?</source>
-        <translation type="unfinished"></translation>
+        <translation>Má se zobrazit velký průhledný obal, když rozbalíte album?</translation>
     </message>
     <message>
         <source>Opacity</source>
-        <translation type="unfinished"></translation>
+        <translation>Neprůhlednost</translation>
     </message>
     <message>
         <source>Buttons &amp; Bars</source>
-        <translation type="unfinished">Tlačítka</translation>
+        <translation>Tlačítka a pruhy</translation>
     </message>
     <message>
         <source>Media buttons</source>
-        <translation type="unfinished"></translation>
+        <translation>Tlačítka pro přehrávání</translation>
     </message>
     <message>
         <source>Volume bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Pruh pro hlasitost</translation>
     </message>
     <message>
         <source>Should I display the value in the upper left corner permanently?</source>
-        <translation type="unfinished"></translation>
+        <translation>Má se zobrazit hodnota v horním levém rohu trvale?</translation>
     </message>
     <message>
         <source>No, hide it after:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne. Skrýt ji po:</translation>
     </message>
     <message>
         <source>Tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>Karty</translation>
     </message>
     <message>
         <source>What kind of shape do you want for displaying tabs?</source>
-        <translation type="unfinished"></translation>
+        <translation>Jaký typ tvaru si přejete pro zobrazení karet?</translation>
     </message>
     <message>
         <source>Rectangle</source>
-        <translation type="unfinished"></translation>
+        <translation>Obdélník</translation>
     </message>
     <message>
         <source>Rounded tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakulacené okraje</translation>
     </message>
     <message>
         <source>Overlap on other tabs with</source>
-        <translation type="unfinished"></translation>
+        <translation>Překrývat na jiných kartách</translation>
     </message>
     <message>
         <source>px</source>
-        <translation type="unfinished"></translation>
+        <translation>px</translation>
     </message>
 </context>
 <context>
@@ -747,7 +747,7 @@
     </message>
     <message>
         <source>Send to the tag editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Poslat do editoru značek</translation>
     </message>
 </context>
 <context>
@@ -980,15 +980,15 @@
     </message>
     <message>
         <source>Edit tags</source>
-        <translation type="unfinished"></translation>
+        <translation>Upravit značky</translation>
     </message>
     <message>
         <source>in tag editor</source>
-        <translation type="unfinished"></translation>
+        <translation>v editoru značek</translation>
     </message>
     <message>
         <source>inline</source>
-        <translation type="unfinished"></translation>
+        <translation>zde</translation>
     </message>
 </context>
 <context>
@@ -1361,6 +1361,10 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     </message>
     <message>
         <source>Cover path:</source>
+        <translation>Cesta k obalu:</translation>
+    </message>
+    <message>
+        <source>(Incompatible tracks selected)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

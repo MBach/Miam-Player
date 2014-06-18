@@ -1357,6 +1357,10 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
         <source>Cover path:</source>
         <translation>Chemin de la pochette : </translation>
     </message>
+    <message>
+        <source>(Incompatible tracks selected)</source>
+        <translation>(Pistes incompatibles sélectionnées)</translation>
+    </message>
 </context>
 <context>
     <name>TracksNotFoundMessageBox</name>

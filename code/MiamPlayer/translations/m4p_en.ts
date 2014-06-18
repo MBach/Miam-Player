@@ -1358,6 +1358,10 @@ Select or drop tracks from your library or any external location.</translation>
         <source>Cover path:</source>
         <translation>Cover path:</translation>
     </message>
+    <message>
+        <source>(Incompatible tracks selected)</source>
+        <translation>(Incompatible tracks selected)</translation>
+    </message>
 </context>
 <context>
     <name>TracksNotFoundMessageBox</name>
