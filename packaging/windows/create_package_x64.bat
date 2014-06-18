@@ -51,9 +51,9 @@ set CoverFetcher-build="C:\dev\cover-fetcher-build-x64\release"
 set MiniMode-build="C:\dev\mini-mode-build-x64\release"
 set WindowsToolbar-build="C:\dev\windows-toolbar-build-x64\release"
 
-xcopy %CoverFetcher-build%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\ /y/e
-xcopy %MiniMode-build%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\ /y/e
-xcopy %WindowsToolbar-build%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\ /y/e
+xcopy %CoverFetcher-build%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
+xcopy %MiniMode-build%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
+xcopy %WindowsToolbar-build%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
 
 rem vc redist 2012 and 2013 are required too
 xcopy vcredist packages\org.miamplayer.core\data\vcredist /y/i/e
