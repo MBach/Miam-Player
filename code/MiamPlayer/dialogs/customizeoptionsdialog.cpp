@@ -126,6 +126,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	QApplication::installTranslator(&customTranslator);
 	QApplication::installTranslator(&defaultQtTranslator);
+
+	// Restore geometry
+	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
 }
 
 /** Is it necessary to redefined this from the UI class just for this init label? */
@@ -240,7 +243,6 @@ void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, in
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()
 {
-	listWidget->setCurrentRow(0);
 	foreach(MediaButton *b, parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
 		if (button) {

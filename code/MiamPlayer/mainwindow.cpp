@@ -97,6 +97,12 @@ void MainWindow::loadPlugins()
 {
 	PluginManager *pm = PluginManager::getInstance();
 	pm->setMainWindow(this);
+	int row = Settings::getInstance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
+	if (customizeOptionsDialog->listWidget->isRowHidden(5) && row == 5) {
+		customizeOptionsDialog->listWidget->setCurrentRow(0);
+	} else {
+		customizeOptionsDialog->listWidget->setCurrentRow(row);
+	}
 }
 
 /** Update fonts for menu and context menus. */
@@ -290,7 +296,9 @@ void MainWindow::setupActions()
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
 	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
 
-	connect(qApp, &QApplication::aboutToQuit, [=] { _sqlDatabase.cleanBeforeQuit(); });
+	connect(qApp, &QApplication::aboutToQuit, [=] {
+		_sqlDatabase.cleanBeforeQuit();
+	});
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -318,6 +326,8 @@ void MainWindow::closeEvent(QCloseEvent *)
 {
 	Settings *settings = Settings::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
+	settings->setValue("customizeOptionsDialogGeometry", customizeOptionsDialog->saveGeometry());
+	settings->setValue("customizeOptionsDialogCurrentTab", customizeOptionsDialog->listWidget->currentRow());
 	//settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 	settings->setVolume(volumeSlider->value());
