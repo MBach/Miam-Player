@@ -84,7 +84,7 @@ private slots:
 	void updateCells(QString text);
 
 signals:
-	void closeTagEditor(bool);
+	void aboutToCloseTagEditor();
 };
 
 #endif // TAGEDITOR_H

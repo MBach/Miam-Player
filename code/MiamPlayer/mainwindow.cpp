@@ -54,9 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	_librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
 	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-
-	// Tag Editor
-	tagEditor->hide();
 }
 
 void MainWindow::init()
@@ -77,7 +74,7 @@ void MainWindow::init()
 	/// XXX
 	actionScanLibrary->setDisabled(isEmpty);
 	widgetSearchBar->setHidden(isEmpty);
-	this->toggleTagEditor(false);
+	this->showTabPlaylists();
 	if (isEmpty) {
 		quickStart->searchMultimediaFiles();
 	} else {
@@ -139,14 +136,21 @@ void MainWindow::setupActions()
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
 	actionPlaylistMode->setActionGroup(viewModeGroup);
-	actionPlaylistMode->setData(QVariant(0));
 	actionUniqueLibraryMode->setActionGroup(viewModeGroup);
-	actionUniqueLibraryMode->setData(QVariant(1));
+	actionTagEditor->setActionGroup(viewModeGroup);
 
-	/// TODO: A sample plugin to append a new view (let's say in QML with QQuickControls?)
-	connect(viewModeGroup, &QActionGroup::triggered, [=](QAction* action) {
-		qDebug() << action->data().toInt();
-		stackedWidget->setCurrentIndex(action->data().toInt());
+	connect(actionPlaylistMode, &QAction::triggered, this, [=]() {
+		qDebug() << "actionPlaylistMode";
+		stackedWidget->setCurrentIndex(0);
+		stackedWidgetRight->setCurrentIndex(0);
+	});
+	connect(actionUniqueLibraryMode, &QAction::triggered, this, [=]() {
+		stackedWidget->setCurrentIndex(1);
+	});
+	connect(actionTagEditor, &QAction::triggered, this, [=]() {
+		qDebug() << "actionTagEditor";
+		stackedWidget->setCurrentIndex(0);
+		stackedWidgetRight->setCurrentIndex(1);
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
@@ -192,18 +196,20 @@ void MainWindow::setupActions()
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
-		connect(tab, &TreeView::setTagEditorVisible, this, &MainWindow::toggleTagEditor);
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::sendToTagEditor, tagEditor, &TagEditor::addItemsToEditor);
+		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList indexes, const QStringList &tracks) {
+			this->showTagEditor();
+			tagEditor->addItemsToEditor(indexes, tracks);
+		});
 	}
 
 	// Send one folder to the music locations
 	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
 
 	// Send music to the tag editor
-	connect(tagEditor, &TagEditor::closeTagEditor, this, &MainWindow::toggleTagEditor);
+	connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
 	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
-		this->toggleTagEditor(true);
+		this->showTagEditor();
 		tagEditor->addUrlsToEditor(tracks);
 	});
 
@@ -404,14 +410,12 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 	}
 }
 
-void MainWindow::toggleTagEditor(bool b)
+void MainWindow::showTabPlaylists()
 {
-	tagEditor->setVisible(b);
-	tabPlaylists->setVisible(!b);
-	seekSlider->setVisible(!b);
-	timeLabel->setVisible(!b);
-	foreach (MediaButton *button, mediaButtons) {
-		button->setVisible(!b && Settings::getInstance()->isMediaButtonVisible(button->objectName()));
-	}
-	volumeSlider->setVisible(!b);
+	stackedWidgetRight->setCurrentIndex(0);
+}
+
+void MainWindow::showTagEditor()
+{
+	stackedWidgetRight->setCurrentIndex(1);
 }

@@ -64,7 +64,6 @@ void TreeView::openTagEditor()
 {
 	QStringList tracks;
 	if (this->beforeSending(tr("tag editor"), tracks) == QMessageBox::Ok) {
-		emit setTagEditorVisible(true);
 		emit sendToTagEditor(selectedIndexes(), tracks);
 	}
 }

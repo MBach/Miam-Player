@@ -166,6 +166,10 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 
 			mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 			if (mediaPlayerPlugin->providesView()) {
+				// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
+				if (_mainWindow->menuView->actions().count() == 3) {
+					_mainWindow->menuView->addSeparator();
+				}
 				QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
 				_mainWindow->menuView->addAction(actionAddViewToMenu);
 				_mainWindow->updateFonts(Settings::getInstance()->font(Settings::MENUS));

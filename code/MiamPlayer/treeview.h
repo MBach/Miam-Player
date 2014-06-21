@@ -44,8 +44,6 @@ signals:
 
 	/** Adds tracks to the tag editor. */
 	void sendToTagEditor(const QModelIndexList indexes, const QStringList &tracks);
-
-	void setTagEditorVisible(bool);
 };
 
 #endif // TREEVIEW_H

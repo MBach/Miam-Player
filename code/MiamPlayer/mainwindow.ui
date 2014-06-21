@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>681</width>
-    <height>300</height>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,7 +59,7 @@
           </property>
           <widget class="ExtendedTabWidget" name="leftTabs">
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>true</bool>
@@ -219,257 +219,273 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="TagEditor" name="tagEditor" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QStackedWidget" name="stackedWidgetRight">
+              <property name="currentIndex">
+               <number>1</number>
               </property>
+              <widget class="QWidget" name="tabPlaylistPage">
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                 <widget class="TabPlaylist" name="tabPlaylists">
+                  <property name="usesScrollButtons">
+                   <bool>false</bool>
+                  </property>
+                  <property name="documentMode">
+                   <bool>true</bool>
+                  </property>
+                  <property name="tabsClosable">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="seekSliderLayout">
+                  <property name="rightMargin">
+                   <number>10</number>
+                  </property>
+                  <item>
+                   <widget class="SeekBar" name="seekSlider">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="maximum">
+                     <number>999</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>10</number>
+                    </property>
+                    <property name="pageStep">
+                     <number>100</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="TimeLabel" name="timeLabel">
+                    <property name="text">
+                     <string notr="true">--:--</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+                  <property name="rightMargin">
+                   <number>10</number>
+                  </property>
+                  <item>
+                   <widget class="MediaButton" name="skipBackwardButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="MediaButton" name="seekBackwardButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="MediaButton" name="playButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="MediaButton" name="stopButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="MediaButton" name="seekForwardButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="MediaButton" name="skipForwardButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="MediaButton" name="playbackModeButton">
+                    <property name="text">
+                     <string notr="true"/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="mmmmp.qrc">
+                      <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>36</width>
+                      <height>36</height>
+                     </size>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="VolumeSlider" name="volumeSlider">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>50</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>100</height>
+                     </size>
+                    </property>
+                    <property name="maximum">
+                     <number>100</number>
+                    </property>
+                    <property name="pageStep">
+                     <number>0</number>
+                    </property>
+                    <property name="value">
+                     <number>100</number>
+                    </property>
+                    <property name="tracking">
+                     <bool>false</bool>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tagEditorPage">
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <item>
+                 <widget class="TagEditor" name="tagEditor" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_4"/>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
-            </item>
-            <item>
-             <widget class="TabPlaylist" name="tabPlaylists">
-              <property name="usesScrollButtons">
-               <bool>false</bool>
-              </property>
-              <property name="documentMode">
-               <bool>true</bool>
-              </property>
-              <property name="tabsClosable">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="seekSliderLayout">
-              <property name="rightMargin">
-               <number>10</number>
-              </property>
-              <item>
-               <widget class="SeekBar" name="seekSlider">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximum">
-                 <number>999</number>
-                </property>
-                <property name="singleStep">
-                 <number>10</number>
-                </property>
-                <property name="pageStep">
-                 <number>100</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="TimeLabel" name="timeLabel">
-                <property name="text">
-                 <string notr="true">--:--</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_buttons">
-              <property name="rightMargin">
-               <number>10</number>
-              </property>
-              <item>
-               <widget class="MediaButton" name="skipBackwardButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="MediaButton" name="seekBackwardButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="MediaButton" name="playButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="MediaButton" name="stopButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="MediaButton" name="seekForwardButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="MediaButton" name="skipForwardButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="MediaButton" name="playbackModeButton">
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="icon">
-                 <iconset resource="mmmmp.qrc">
-                  <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>36</width>
-                  <height>36</height>
-                 </size>
-                </property>
-                <property name="flat">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="VolumeSlider" name="volumeSlider">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>50</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximum">
-                 <number>100</number>
-                </property>
-                <property name="pageStep">
-                 <number>0</number>
-                </property>
-                <property name="value">
-                 <number>100</number>
-                </property>
-                <property name="tracking">
-                 <bool>false</bool>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </item>
            </layout>
           </widget>
@@ -560,6 +576,7 @@
     </property>
     <addaction name="actionPlaylistMode"/>
     <addaction name="actionUniqueLibraryMode"/>
+    <addaction name="actionTagEditor"/>
    </widget>
    <addaction name="menuMenu"/>
    <addaction name="menuOptions"/>
@@ -805,6 +822,11 @@
    </property>
    <property name="text">
     <string>&amp;Make the player borderless</string>
+   </property>
+  </action>
+  <action name="actionTagEditor">
+   <property name="text">
+    <string>Tag Editor</string>
    </property>
   </action>
  </widget>

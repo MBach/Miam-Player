@@ -166,8 +166,12 @@ void AddressBarMenu::show()
 	static const int maxBeforeScrolling = 18;
 	static const int margin = 4;
 	if (count() < maxBeforeScrolling) {
-		this->setMinimumHeight(count() * sizeHintForRow(0) + margin);
-		this->setMaximumHeight(count() * sizeHintForRow(0) + margin);
+		int h = count() * sizeHintForRow(0) + margin;
+		/*if (_hasSeparator) {
+			h -= 19; // sizeHintForRow(0) == 22, height(separator) == 3
+		}*/
+		this->setMinimumHeight(h);
+		this->setMaximumHeight(h);
 	} else {
 		this->setMinimumHeight(maxBeforeScrolling * sizeHintForRow(0) + margin);
 		this->setMaximumHeight(maxBeforeScrolling * sizeHintForRow(0) + margin);

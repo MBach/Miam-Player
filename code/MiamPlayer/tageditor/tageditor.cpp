@@ -205,11 +205,10 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 /** Closes this Widget and tells its parent to switch views. */
 void TagEditor::close()
 {
-	emit closeTagEditor(false);
+	emit aboutToCloseTagEditor();
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 	this->clear();
-	QWidget::close();
 }
 
 /** Saves all fields in the media. */

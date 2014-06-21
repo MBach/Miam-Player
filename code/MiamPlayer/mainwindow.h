@@ -95,7 +95,8 @@ public slots:
 	void bindShortcut(const QString&, int keySequence);
 
 private slots:
-	void toggleTagEditor(bool b);
+	void showTabPlaylists();
+	void showTagEditor();
 };
 
 #endif // MAINWINDOW_H
