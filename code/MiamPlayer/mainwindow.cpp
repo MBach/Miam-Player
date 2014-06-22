@@ -140,7 +140,6 @@ void MainWindow::setupActions()
 	actionTagEditor->setActionGroup(viewModeGroup);
 
 	connect(actionPlaylistMode, &QAction::triggered, this, [=]() {
-		qDebug() << "actionPlaylistMode";
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(0);
 	});
@@ -148,9 +147,9 @@ void MainWindow::setupActions()
 		stackedWidget->setCurrentIndex(1);
 	});
 	connect(actionTagEditor, &QAction::triggered, this, [=]() {
-		qDebug() << "actionTagEditor";
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(1);
+		actionTagEditor->setChecked(true);
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
@@ -340,15 +339,6 @@ void MainWindow::closeEvent(QCloseEvent *)
 	settings->sync();
 }
 
-void MainWindow::dropEvent(QDropEvent *event)
-{
-	// Ignore Drag & Drop if the source is a part of this player
-	if (event->source() != NULL) {
-		return;
-	}
-	this->dispatchDrop(event);
-}
-
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	dragDropDialog->setMimeData(event->mimeData());
@@ -373,6 +363,15 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+	// Ignore Drag & Drop if the source is a part of this player
+	if (event->source() != NULL) {
+		return;
+	}
+	this->dispatchDrop(event);
 }
 
 bool MainWindow::event(QEvent *e)
@@ -412,10 +411,16 @@ void MainWindow::bindShortcut(const QString &objectName, int keySequence)
 
 void MainWindow::showTabPlaylists()
 {
+	if (!actionPlaylistMode->isChecked()) {
+		actionPlaylistMode->setChecked(true);
+	}
 	stackedWidgetRight->setCurrentIndex(0);
 }
 
 void MainWindow::showTagEditor()
 {
+	if (!actionTagEditor->isChecked()) {
+		actionTagEditor->setChecked(true);
+	}
 	stackedWidgetRight->setCurrentIndex(1);
 }

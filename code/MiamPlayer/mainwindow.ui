@@ -807,6 +807,9 @@
    <property name="text">
     <string>Unique library Mode</string>
    </property>
+   <property name="toolTip">
+    <string>This mode is currently under development</string>
+   </property>
   </action>
   <action name="actionHideMenus">
    <property name="checkable">
@@ -825,6 +828,9 @@
    </property>
   </action>
   <action name="actionTagEditor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Tag Editor</string>
    </property>

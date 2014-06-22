@@ -3,10 +3,12 @@
 #include "settings.h"
 #include "pluginmanager.h"
 #include "model/librarysqlmodel.h"
+#include "treeview.h"
 
 #include <3rdparty/taglib/tfile.h>
 #include <3rdparty/taglib/tpropertymap.h>
 #include <QDir>
+#include <QDragEnterEvent>
 
 #include <QtDebug>
 
@@ -25,6 +27,8 @@ TagEditor::TagEditor(QWidget *parent) :
 	QWidget(parent), SelectedTracksModel(), _sqlModel(NULL)
 {
 	setupUi(this);
+
+	this->setAcceptDrops(true);
 
 	tagConverter = new TagConverter(this);
 	tagEditorWidget->init();
@@ -87,6 +91,24 @@ void TagEditor::updateSelectedTracks()
 {
 	qDebug() << "TagEditor: model has been updated, redraw selected tracks";
 	_sqlModel->load();
+}
+
+void TagEditor::dragEnterEvent(QDragEnterEvent *event)
+{
+	event->acceptProposedAction();
+}
+
+void TagEditor::dragMoveEvent(QDragMoveEvent *event)
+{
+	event->acceptProposedAction();
+}
+
+void TagEditor::dropEvent(QDropEvent *event)
+{
+	QObject *source = event->source();
+	if (TreeView *view = qobject_cast<TreeView*>(source)) {
+		view->openTagEditor();
+	}
 }
 
 /** Redefined to filter context menu event for the cover album object. */

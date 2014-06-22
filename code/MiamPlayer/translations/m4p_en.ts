@@ -968,6 +968,14 @@
         <source>&amp;About Miam Player...</source>
         <translation>&amp;About Miam Player...</translation>
     </message>
+    <message>
+        <source>This mode is currently under development</source>
+        <translation>This mode is currently under development</translation>
+    </message>
+    <message>
+        <source>Tag Editor</source>
+        <translation>Tag Editor</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>

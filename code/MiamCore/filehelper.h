@@ -40,6 +40,10 @@ public:
 		OGG		= 7
 	};
 
+	enum TagKey {
+		Artist
+	};
+
 	FileHelper(const QMediaContent &track);
 
 	FileHelper(const QString &filePath);
@@ -54,6 +58,7 @@ public:
 
 	/** Field ArtistAlbum if exists (in a compilation for example). */
 	QString artistAlbum() const;
+	void setArtistAlbum(const QString &artistAlbum);
 
 	/** Extract field disc number. */
 	int discNumber() const;
@@ -93,6 +98,8 @@ private:
 	QString convertKeyToID3v2Key(QString key);
 
 	QString extractFlacFeature(const QString &featureToExtract) const;
+
+	QString extractMp4Feature(const QString &featureToExtract) const;
 
 	QString extractMpegFeature(const QString &featureToExtract) const;
 };

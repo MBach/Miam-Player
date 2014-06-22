@@ -41,8 +41,14 @@ public:
 	virtual void updateSelectedTracks();
 
 protected:
+	virtual void dragEnterEvent(QDragEnterEvent *event);
+
+	virtual void dragMoveEvent(QDragMoveEvent *event);
+
+	virtual void dropEvent(QDropEvent *event);
+
 	/** Redefined to filter context menu event for the cover album object. */
-	bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event);
 
 private:
 	void clearCovers(QMap<int, Cover *> &coversToRemove);

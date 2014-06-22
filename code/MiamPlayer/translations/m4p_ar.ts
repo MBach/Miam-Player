@@ -980,6 +980,14 @@
         <source>&amp;About Miam Player...</source>
         <translation>Miam Player فيما يخص&amp;...</translation>
     </message>
+    <message>
+        <source>This mode is currently under development</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tag Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>

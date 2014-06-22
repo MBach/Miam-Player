@@ -176,6 +176,9 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				connect(actionAddViewToMenu, &QAction::triggered, [=]() {
 					mediaPlayerPlugin->toggleViews(_mainWindow);
 				});
+				// Link the view to the existing ActionGroup
+				actionAddViewToMenu->setCheckable(true);
+				actionAddViewToMenu->setActionGroup(_mainWindow->actionPlaylistMode->actionGroup());
 				_dependencies.insert(basic->name(), actionAddViewToMenu);
 			}
 		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {

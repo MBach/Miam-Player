@@ -81,11 +81,11 @@ protected:
 
 	virtual void closeEvent(QCloseEvent *event);
 
-	virtual void dropEvent(QDropEvent *event);
-
 	virtual void dragEnterEvent(QDragEnterEvent *event);
 
 	virtual void dragMoveEvent(QDragMoveEvent *event);
+
+	virtual void dropEvent(QDropEvent *event);
 
 	virtual bool event(QEvent *event);
 
