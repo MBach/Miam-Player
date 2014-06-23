@@ -9,6 +9,9 @@
 #include <3rdparty/taglib/tpropertymap.h>
 #include <QDir>
 #include <QDragEnterEvent>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlError>
 
 #include <QtDebug>
 
@@ -57,7 +60,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
 
 	// General case: when one is selecting multiple items
-	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayCover);
+	//connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayCover);
 	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayTags);
 
 	// Open the TagConverter to help tagging from Tag to File, or vice-versa
@@ -71,6 +74,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);
+	tagEditorWidget->viewport()->installEventFilter(this);
 }
 
 void TagEditor::init(LibrarySqlModel *sqlModel)
@@ -114,8 +118,19 @@ void TagEditor::dropEvent(QDropEvent *event)
 /** Redefined to filter context menu event for the cover album object. */
 bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 {
+	/// TEST
+	if (obj == tagEditorWidget->viewport() && event->type() == QEvent::KeyRelease) {
+
+	}
+
 	if (obj == albumCover && event->type() == QEvent::ContextMenu) {
 		return tagEditorWidget->selectedItems().isEmpty();
+	} else if (obj == tagEditorWidget->viewport() && event->type() == QEvent::MouseButtonPress) {
+		if (tagEditorWidget->selectionModel()->hasSelection()) {
+			qDebug() << "selection";
+			this->displayCover();
+		}
+		return QWidget::eventFilter(obj, event);
 	} else {
 		return QWidget::eventFilter(obj, event);
 	}
@@ -306,9 +321,6 @@ void TagEditor::commitChanges()
 	cancelButton->setEnabled(false);
 }
 
-#include <QSqlQuery>
-#include <QSqlRecord>
-
 /** Displays a cover only if all the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
@@ -316,7 +328,9 @@ void TagEditor::displayCover()
 
 	QMap<int, Cover*> selectedCovers;
 	QMap<int, QString> selectedAlbums;
+	QString joinedTracks;
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
+	tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename);
 	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
 		Cover *cover = NULL;
 		// Check if there's a cover in a temporary state (to allow rollback action)
@@ -332,20 +346,20 @@ void TagEditor::displayCover()
 			selectedCovers.insert(item.row(), cover);
 		}
 		selectedAlbums.insert(item.row(), item.data().toString());
+		QModelIndex track = item.sibling(item.row(), TagEditorTableWidget::COL_Filename);
+		joinedTracks += "\"" + track.data(Qt::UserRole).toString() + "\",";
 	}
+	joinedTracks.append("\"\"");
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
 	_sqlModel->database().open();
+
+	QSqlQuery coverPathQuery = _sqlModel->database().exec("SELECT DISTINCT coverAbsPath FROM tracks WHERE absPath IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
-	foreach (QString track, selectedTracks()) {
-		QSqlQuery coverPathQuery(_sqlModel->database());
-		coverPathQuery.prepare("SELECT coverAbsPath FROM tracks WHERE absPath = ?");
-		coverPathQuery.addBindValue(track);
-		if (coverPathQuery.exec()) {
-			coverPathQuery.next();
-			coversPath << coverPathQuery.record().value(0).toString();
-		}
+	while (coverPathQuery.next()) {
+		coversPath << coverPathQuery.record().value(0).toString();
 	}
+
 	coverPathComboBox->clear();
 	if (coversPath.size() > 1) {
 		coverPathComboBox->addItem(tr("(Incompatible tracks selected)"));

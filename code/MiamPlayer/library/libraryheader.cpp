@@ -95,7 +95,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	float ratio = (float) rect().height() / 6.0;
 	t.scale(ratio, ratio);
 	QPolygonF sortIndicator;
-	if (Qt::AscendingOrder == _order) {
+	if (Qt::DescendingOrder == _order) {
 		sortIndicator.append(t.map(sortIndicatorDown[0]));
 		sortIndicator.append(t.map(sortIndicatorDown[1]));
 		sortIndicator.append(t.map(sortIndicatorDown[2]));

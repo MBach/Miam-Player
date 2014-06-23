@@ -234,6 +234,9 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>Currently under development</string>
+         </property>
          <property name="title">
           <string>Search bar</string>
          </property>
@@ -264,8 +267,21 @@
             </item>
             <item row="0" column="1">
              <widget class="QRadioButton" name="radioButtonSearchAndKeep">
+              <property name="toolTip">
+               <string>Currently under development</string>
+              </property>
               <property name="text">
                <string>Highlight only matching text</string>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -281,6 +297,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Currently under development</string>
          </property>
          <property name="title">
           <string>Artists and albums list</string>
@@ -310,8 +329,21 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="toolTip">
+                 <string>Currently under development</string>
+                </property>
                 <property name="text">
                  <string>Yes</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="mmmmp.qrc">
+                  <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
                 </property>
                 <property name="checked">
                  <bool>true</bool>
@@ -2438,8 +2470,21 @@
              </item>
              <item>
               <widget class="QRadioButton" name="radioButtonKeepAllColumnsVisible">
+               <property name="toolTip">
+                <string>Currently under development</string>
+               </property>
                <property name="text">
                 <string>Keep all columns visible</string>
+               </property>
+               <property name="icon">
+                <iconset resource="mmmmp.qrc">
+                 <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
                </property>
               </widget>
              </item>

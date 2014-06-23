@@ -16,7 +16,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Artists \ Albums \ Tracks
 	QStandardItemModel *artistModel = new QStandardItemModel(this);
 	artistModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Artists \\ Albums")));
-	artistModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::Artist, Qt::UserRole + 1);
+	artistModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_Artist, Qt::UserRole + 1);
 	QStandardItem *artist = new QStandardItem("Artist");
 	artistModel->appendRow(artist);
 	for (int i = 1; i <= 1; i++) {
@@ -33,7 +33,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Albums \ Tracks
 	QStandardItemModel *albumModel = new QStandardItemModel(this);
 	albumModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Albums")));
-	albumModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::Album, Qt::UserRole + 1);
+	albumModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_Album, Qt::UserRole + 1);
 	QStandardItem *album = new QStandardItem("Album");
 	albumModel->appendRow(album);
 	for (int i = 1; i <= 2; i++) {
@@ -45,7 +45,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Artists - Albums \ Tracks
 	QStandardItemModel *artistAlbumModel = new QStandardItemModel(this);
 	artistAlbumModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Artists – Albums")));
-	artistAlbumModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::ArtistAlbum, Qt::UserRole + 1);
+	artistAlbumModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_ArtistAlbum, Qt::UserRole + 1);
 	QStandardItem *artistAlbum_1 = new QStandardItem("Artist – Album");
 	artistAlbumModel->appendRow(artistAlbum_1);
 	for (int i = 1; i <= 2; i++) {
@@ -57,7 +57,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Year \ Artist - Album \ Tracks
 	QStandardItemModel *yearModel = new QStandardItemModel(this);
 	yearModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Years")));
-	yearModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::Year, Qt::UserRole + 1);
+	yearModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_Year, Qt::UserRole + 1);
 	QStandardItem *year = new QStandardItem("2014");
 	yearModel->appendRow(year);
 	QStandardItem *artistAlbum_2 = new QStandardItem("Artist – Album");
@@ -90,16 +90,16 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 
 	QTreeView *initialTreeView;
 	switch (settings->value("insertPolicy").toInt()) {
-	case LibraryTreeView::Album:
+	case LibraryTreeView::IT_Album:
 		initialTreeView = _ui->albumTreeView;
 		break;
-	case LibraryTreeView::ArtistAlbum:
+	case LibraryTreeView::IT_ArtistAlbum:
 		initialTreeView = _ui->artistAlbumTreeView;
 		break;
-	case LibraryTreeView::Year:
+	case LibraryTreeView::IT_Year:
 		initialTreeView = _ui->yearTreeView;
 		break;
-	case LibraryTreeView::Artist:
+	case LibraryTreeView::IT_Artist:
 	default:
 		initialTreeView = _ui->artistTreeView;
 		break;
@@ -109,13 +109,13 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 QString LibraryOrderDialog::headerValue() const
 {
 	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
-	case LibraryTreeView::Album:
+	case LibraryTreeView::IT_Album:
 		return tr("Album");
-	case LibraryTreeView::ArtistAlbum:
+	case LibraryTreeView::IT_ArtistAlbum:
 		return tr("Artist – Album");
-	case LibraryTreeView::Year:
+	case LibraryTreeView::IT_Year:
 		return tr("Year");
-	case LibraryTreeView::Artist:
+	case LibraryTreeView::IT_Artist:
 	default:
 		return tr("Artist \\ Album");
 	}

@@ -253,8 +253,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>465</width>
-               <height>588</height>
+               <width>432</width>
+               <height>542</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1452,8 +1452,21 @@
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="1">
              <widget class="QRadioButton" name="radioButtonEnableBigCover">
+              <property name="toolTip">
+               <string>Currently under development</string>
+              </property>
               <property name="text">
                <string>Yes</string>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
               </property>
               <property name="checked">
                <bool>false</bool>
@@ -1475,6 +1488,9 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="toolTip">
+               <string>Currently under development</string>
+              </property>
               <property name="text">
                <string>Opacity</string>
               </property>
@@ -1484,6 +1500,9 @@
              <widget class="QSpinBox" name="spinBoxBigCoverOpacity">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>Currently under development</string>
               </property>
               <property name="minimum">
                <number>0</number>
@@ -1503,6 +1522,9 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBoxSortingLibrary">
+         <property name="toolTip">
+          <string>Currently under development</string>
+         </property>
          <property name="title">
           <string>Sorting the library</string>
          </property>
@@ -1528,6 +1550,16 @@
               </property>
               <property name="text">
                <string>Yes</string>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -1555,6 +1587,9 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBoxLibraryDelegates">
+         <property name="toolTip">
+          <string>Currently under development</string>
+         </property>
          <property name="title">
           <string>Manage favorites</string>
          </property>
@@ -1593,6 +1628,16 @@
               </property>
               <property name="text">
                <string>Yes</string>
+              </property>
+              <property name="icon">
+               <iconset resource="mmmmp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -1633,6 +1678,9 @@
       <layout class="QVBoxLayout" name="verticalLayout_13">
        <item>
         <widget class="QGroupBox" name="groupBoxTabs">
+         <property name="toolTip">
+          <string>Currently under development</string>
+         </property>
          <property name="title">
           <string>Tabs</string>
          </property>
@@ -1661,8 +1709,21 @@
           </item>
           <item>
            <widget class="QRadioButton" name="radioButtonTabsRounded">
+            <property name="toolTip">
+             <string>Currently under development</string>
+            </property>
             <property name="text">
              <string>Rounded tabs</string>
+            </property>
+            <property name="icon">
+             <iconset resource="mmmmp.qrc">
+              <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
             </property>
             <property name="checked">
              <bool>true</bool>

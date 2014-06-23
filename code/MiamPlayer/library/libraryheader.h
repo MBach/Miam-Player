@@ -21,6 +21,9 @@ protected:
 
 	virtual void paintEvent(QPaintEvent *);
 
+public slots:
+	inline void resetSortOrder() { _order = Qt::AscendingOrder; }
+
 signals:
 	void aboutToChangeHierarchyOrder();
 	void aboutToChangeSortOrder();

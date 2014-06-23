@@ -59,24 +59,24 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
-	int type = item->data(LibraryTreeView::Type).toInt();
+	int type = item->data(LibraryTreeView::DF_ItemType).toInt();
 	switch (type) {
-	case LibraryTreeView::Album:
+	case LibraryTreeView::IT_Album:
 		this->paintRect(painter, o);
 		this->drawAlbum(painter, o, item);
 		break;
-	case LibraryTreeView::Artist:
+	case LibraryTreeView::IT_Artist:
 		this->paintRect(painter, o);
 		this->drawArtist(painter, o);
 		break;
-	case LibraryTreeView::Disc:
+	case LibraryTreeView::IT_Disc:
 		this->paintRect(painter, o);
 		this->drawDisc(painter, o, index);
 		break;
-	case LibraryTreeView::Letter:
+	case LibraryTreeView::IT_Letter:
 		this->drawLetter(painter, o, index);
 		break;
-	case LibraryTreeView::Track:
+	case LibraryTreeView::IT_Track:
 		this->paintRect(painter, o);
 		this->drawTrack(painter, o, item);
 		break;
@@ -94,8 +94,8 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 {
 	Settings *settings = Settings::getInstance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	int type = item->data(LibraryTreeView::Type).toInt();
-	if (settings->isCoversEnabled() && type == LibraryTreeView::Album) {
+	int type = item->data(LibraryTreeView::DF_ItemType).toInt();
+	if (settings->isCoversEnabled() && type == LibraryTreeView::IT_Album) {
 		QFontMetrics fmf(settings->font(Settings::LIBRARY));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
@@ -112,7 +112,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	Settings *settings = Settings::getInstance();
 	int coverSize = settings->coverSize();
 	if (settings->isCoversEnabled()) {
-		QString file = item->data(LibraryTreeView::DataCoverPath).toString();
+		QString file = item->data(LibraryTreeView::DF_CoverPath).toString();
 		// Qt::UserRole + 20 == false => pixmap not loaded ; == true => pixmap loaded
 		/// XXX: extract this elsewhere
 		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
@@ -232,7 +232,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
 	if (Settings::getInstance()->isStarDelegates()) {
-		QString absFilePath = track->data(LibraryTreeView::DataAbsFilePath).toString();
+		QString absFilePath = track->data(LibraryTreeView::DF_AbsFilePath).toString();
 		/// XXX: query the sqlmodel instead?
 		FileHelper fh(absFilePath);
 		//qDebug() << "rating" << fh.rating();
@@ -241,7 +241,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 			//starRating.paint(painter, option, StarRating::ReadOnly);
 		}
 	}
-	int trackNumber = track->data(LibraryTreeView::DataTrackNumber).toInt();
+	int trackNumber = track->data(LibraryTreeView::DF_TrackNumber).toInt();
 	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));

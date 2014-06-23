@@ -133,6 +133,8 @@ void MainWindow::setupActions()
 		}
 	});
 
+	connect(_librarySqlModel, &LibrarySqlModel::modelAboutToBeReset, libraryHeader, &LibraryHeader::resetSortOrder);
+
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
 	actionPlaylistMode->setActionGroup(viewModeGroup);
