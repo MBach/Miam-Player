@@ -1,16 +1,9 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="mmmmp_win32">mmmmp.ico</file>
         <file alias="favorite">config/favorite.png</file>
-        <file alias="down-arrow">config/down-arrow.png</file>
-        <file alias="up-arrow">config/up-arrow.png</file>
-        <file alias="handle">config/handle.png</file>
         <file alias="rename">config/rename.png</file>
         <file alias="save">config/save.png</file>
         <file alias="disc">config/disc.png</file>
-        <file alias="left-arrow">config/left-arrow.png</file>
-        <file alias="right-arrow">config/right-arrow.png</file>
-        <file alias="mmmmp_osx">mmmmp.icns</file>
         <file alias="drop-arrow">config/drop-arrow.png</file>
         <file alias="closeButton">config/closeButton.png</file>
         <file alias="closeTabs">config/close_tabs.png</file>
@@ -18,6 +11,8 @@
         <file alias="emptyPlaylist">config/empty_playlists_32.png</file>
         <file alias="playlistIcon">config/playlist_icon.png</file>
         <file alias="warning">config/warning.png</file>
+        <file alias="mp_win32">mp.ico</file>
+        <file alias="mp_osx">mp.icns</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

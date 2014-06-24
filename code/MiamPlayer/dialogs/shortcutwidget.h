@@ -17,8 +17,6 @@ private:
 	QComboBox *comboBox;
 	QLabel *plusLabel;
 	ShortcutLineEdit *lineEdit;
-	QPushButton *reset;
-	QIcon *closeButton;
 
 public:
 	ShortcutWidget(QWidget *parent = 0);

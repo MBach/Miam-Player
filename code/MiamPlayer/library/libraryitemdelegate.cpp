@@ -67,7 +67,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		break;
 	case LibraryTreeView::IT_Artist:
 		this->paintRect(painter, o);
-		this->drawArtist(painter, o);
+		this->drawArtist(painter, o, item);
 		break;
 	case LibraryTreeView::IT_Disc:
 		this->paintRect(painter, o);
@@ -182,10 +182,10 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		rectText = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - 5, option.rect.height());
 	}
 	s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-	this->paintText(painter, option, rectText, s);
+	this->paintText(painter, option, rectText, s, item);
 }
 
-void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option) const
+void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
 	option.textElideMode = Qt::ElideRight;
@@ -199,7 +199,7 @@ void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &op
 		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
 		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
-	this->paintText(painter, option, rectText, s);
+	this->paintText(painter, option, rectText, s, item);
 }
 
 void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -256,7 +256,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
 		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
-	this->paintText(painter, option, rectText, s);
+	this->paintText(painter, option, rectText, s, track);
 }
 
 void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewItem &option) const
@@ -289,11 +289,17 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 }
 
 /** Check if color needs to be inverted then paint text. */
-void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text) const
+void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text, const QStandardItem *item) const
 {
 	p->save();
 	if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
 		p->setPen(opt.palette.highlightedText().color());
+	}
+	//qDebug() << item->data(LibraryTreeView::DF_Highlighted).toBool();
+	if (item->data(LibraryTreeView::DF_Highlighted).toBool()) {
+		QFont f = p->font();
+		f.setBold(true);
+		p->setFont(f);
 	}
 	p->drawText(rectText, Qt::AlignVCenter, text);
 	p->restore();

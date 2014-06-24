@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>643</width>
     <height>600</height>
    </rect>
   </property>
@@ -54,7 +54,7 @@
         <string>Converter</string>
        </property>
        <property name="icon">
-        <iconset resource="mmmmp.qrc">
+        <iconset resource="mp.qrc">
          <normaloff>:/icons/rename</normaloff>:/icons/rename</iconset>
        </property>
        <property name="checkable">
@@ -71,7 +71,7 @@
         <string>Save changes</string>
        </property>
        <property name="icon">
-        <iconset resource="mmmmp.qrc">
+        <iconset resource="mp.qrc">
          <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
        </property>
       </widget>
@@ -200,7 +200,7 @@
         <string notr="true"/>
        </property>
        <property name="pixmap" stdset="0">
-        <pixmap resource="mmmmp.qrc">:/icons/disc</pixmap>
+        <pixmap resource="mp.qrc">:/icons/disc</pixmap>
        </property>
        <property name="scaledContents" stdset="0">
         <bool>true</bool>
@@ -453,7 +453,7 @@
   <tabstop>commentComboBox</tabstop>
  </tabstops>
  <resources>
-  <include location="mmmmp.qrc"/>
+  <include location="mp.qrc"/>
  </resources>
  <connections/>
 </ui>

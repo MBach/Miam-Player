@@ -22,15 +22,13 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	// First panel: library
+	connect(radioButtonSearchAndExclude, &QRadioButton::toggled, settings, &Settings::setSearchAndExcludeLibrary);
 	connect(radioButtonActivateDelegates, &QRadioButton::toggled, settings, &Settings::setDelegates);
 	connect(pushButtonAddLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::openLibraryDialog);
 	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteSelectedLocation);
 
-	if (settings->isStarDelegates()) {
-		radioButtonActivateDelegates->setChecked(true);
-	} else {
-		radioButtonDesactivateDelegates->setChecked(true);
-	}
+	settings->isSearchAndExcludeLibrary() ? radioButtonSearchAndExclude->setChecked(true) : radioButtonSearchAndKeep->setChecked(true);
+	settings->isStarDelegates() ? radioButtonActivateDelegates->setChecked(true) : radioButtonDesactivateDelegates->setChecked(true);
 
 	QStringList locations = settings->musicLocations();
 	if (locations.isEmpty()) {
@@ -73,9 +71,10 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	}
 
 	// Third panel: shorcuts
-	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
+	/// FIXME
+	/*foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
 		connect(shortcutWidget, &ShortcutWidget::shortcutChanged, this, &CustomizeOptionsDialog::checkShortcut);
-	}
+	}*/
 
 	// Fourth panel: playback
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
@@ -86,32 +85,16 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(Settings::PL_SaveOnClose); });
 	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(Settings::PL_DiscardOnClose); });
 
-	if (settings->playbackKeepPlaylists()) {
-		radioButtonKeepPlaylists->setChecked(true);
-	} else {
-		radioButtonClearPlaylists->setChecked(true);
-	}
+	settings->playbackKeepPlaylists() ? radioButtonKeepPlaylists->setChecked(true) : radioButtonClearPlaylists->setChecked(true);
 	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackKeepPlaylists);
 
-	if (settings->playbackRestorePlaylistsAtStartup()) {
-		radioButtonRestorePlaylists->setChecked(true);
-	} else {
-		radioButtonDontRestorePlaylists->setChecked(true);
-	}
+	settings->playbackRestorePlaylistsAtStartup() ? radioButtonRestorePlaylists->setChecked(true) : radioButtonDontRestorePlaylists->setChecked(true);
 	connect(radioButtonRestorePlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackRestorePlaylistsAtStartup);
 
 	// Fifth panel: drag and drop
 	this->initDragDropAction();
-	//QRadioButton *radioButtonDD = this->findChild<QRadioButton*>(settings->dragAndDropBehaviour());
-	//if (radioButtonDD) {
-	//	radioButtonDD->setChecked(true);
-	//}
 
-	if (settings->copyTracksFromPlaylist()) {
-		radioButtonDDCopyPlaylistTracks->setChecked(true);
-	} else {
-		radioButtonDDMovePlaylistTracks->setChecked(true);
-	}
+	settings->copyTracksFromPlaylist() ? radioButtonDDCopyPlaylistTracks->setChecked(true) : radioButtonDDMovePlaylistTracks->setChecked(true);
 
 	connect(radioButtonDDOpenPopup, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(Settings::DD_OpenPopup); });
 	connect(radioButtonDDAddToLibrary, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(Settings::DD_AddToLibrary); });
@@ -213,7 +196,7 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 	}
 }
 
-void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
+/*void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
 {
 	QMap<int, ShortcutWidget *> inverted;
 	foreach(ShortcutWidget *sw, findChildren<ShortcutWidget*>()) {
@@ -238,7 +221,7 @@ void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, in
 			inverted.value(i.key())->line()->setStyleSheet(QString());
 		}
 	}
-}
+}*/
 
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()

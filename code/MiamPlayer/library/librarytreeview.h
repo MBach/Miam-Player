@@ -81,7 +81,9 @@ public:
 					 DF_TrackNumber			= Qt::UserRole + 4,
 					 DF_DiscNumber			= Qt::UserRole + 5,
 					 DF_NormalizedString	= Qt::UserRole + 6,
-					 DF_Year				= Qt::UserRole + 7};
+					 DF_Year				= Qt::UserRole + 7,
+				   /// TEST QSortFilterProxyModel
+					 DF_Highlighted			= Qt::UserRole + 8};
 
 protected:
 	/** Redefined to display a small context menu in the view. */

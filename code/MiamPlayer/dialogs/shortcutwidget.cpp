@@ -12,31 +12,25 @@ ShortcutWidget::ShortcutWidget(QWidget *parent) :
 	comboBox = new QComboBox(this);
 	plusLabel = new QLabel(this);
 	lineEdit = new ShortcutLineEdit(this);
-	reset = new QPushButton(this);
+	lineEdit->setClearButtonEnabled(true);
 
 	comboBox->addItem(QString(), 0);
 	comboBox->addItem(tr("Ctrl"), Qt::CTRL);
 	comboBox->addItem(tr("Shift"), Qt::SHIFT);
 	comboBox->addItem(tr("Alt"), Qt::ALT);
+	comboBox->addItem(tr("Ctrl + Shift"), Qt::CTRL | Qt::SHIFT);
 
 	plusLabel->setMinimumWidth(10);
-
-	reset->setFlat(true);
-	closeButton = new QIcon(":/config/closeButton");
-	reset->setIcon(*closeButton);
-	reset->setMaximumSize(20, 20);
-	reset->hide();
 
 	layout->addWidget(comboBox);
 	layout->addWidget(plusLabel);
 	layout->addWidget(lineEdit);
-	layout->addWidget(reset);
 	layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 	setLayout(layout);
 
 	connect(comboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ShortcutWidget::showPlusLabel);
 	connect(lineEdit, &QLineEdit::editingFinished, this, &ShortcutWidget::createKeySequence);
-	connect(reset, &QPushButton::clicked, this, &ShortcutWidget::deleteKeySequence);
+	connect(lineEdit, &QLineEdit::clear, this, &ShortcutWidget::deleteKeySequence);
 }
 
 void ShortcutWidget::setObjectName(const QString &name)
@@ -55,8 +49,6 @@ void ShortcutWidget::setObjectName(const QString &name)
 			keySequence = QKeySequence(shortcut);
 		}
 		lineEdit->setKey(shortcut);
-		reset->setIcon(*closeButton);
-		reset->show();
 	}
 	QObject::setObjectName(name);
 }
@@ -66,8 +58,6 @@ void ShortcutWidget::createKeySequence()
 {
 	if (!lineEdit->text().isEmpty()) {
 		int modifier = comboBox->itemData(comboBox->currentIndex()).toInt();
-		reset->setIcon(*closeButton);
-		reset->show();
 		emit shortcutChanged(this, modifier + lineEdit->key());
 	}
 }
@@ -78,7 +68,6 @@ void ShortcutWidget::deleteKeySequence()
 	comboBox->setCurrentIndex(0);
 	lineEdit->setKey(0);
 	lineEdit->setStyleSheet(QString());
-	reset->setIcon(QIcon());
 	emit shortcutChanged(this);
 }
 

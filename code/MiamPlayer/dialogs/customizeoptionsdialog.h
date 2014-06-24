@@ -39,7 +39,7 @@ public slots:
 	/** Change language at runtime. */
 	void changeLanguage(QModelIndex);
 
-	void checkShortcut(ShortcutWidget *, int typedKey);
+	//void checkShortcut(ShortcutWidget *, int typedKey);
 
 	/** Redefined to initialize theme from settings. */
 	void open();

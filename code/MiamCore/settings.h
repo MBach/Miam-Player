@@ -97,6 +97,8 @@ public:
 	/** Returns true if tabs should be displayed like rectangles. */
 	bool isRectTabs() const;
 
+	bool isSearchAndExcludeLibrary() const;
+
 	/** Returns true if stars are visible and active. */
 	bool isStarDelegates() const;
 
@@ -187,6 +189,8 @@ public slots:
 	void setPlaybackCloseAction(PlaylistDefaultAction action);
 	void setPlaybackKeepPlaylists(bool b);
 	void setPlaybackRestorePlaylistsAtStartup(bool b);
+
+	void setSearchAndExcludeLibrary(bool b);
 
 	void setTabsOverlappingLength(int l);
 

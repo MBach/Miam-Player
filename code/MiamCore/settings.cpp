@@ -246,6 +246,16 @@ bool Settings::isRectTabs() const
 	}
 }
 
+bool Settings::isSearchAndExcludeLibrary() const
+{
+	QVariant b = value("searchAndExcludeLibrary");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
 /** Returns true if stars are visible and active. */
 bool Settings::isStarDelegates() const
 {
@@ -581,6 +591,11 @@ void Settings::setPlaybackCloseAction(PlaylistDefaultAction action)
 void Settings::setPlaybackKeepPlaylists(bool b)
 {
 	setValue("playbackKeepPlaylists", b);
+}
+
+void Settings::setSearchAndExcludeLibrary(bool b)
+{
+	setValue("searchAndExcludeLibrary", b);
 }
 
 void Settings::setPlaybackRestorePlaylistsAtStartup(bool b)

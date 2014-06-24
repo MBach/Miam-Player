@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 
 	this->setAcceptDrops(true);
-	this->setWindowIcon(QIcon(":/icons/mmmmp.ico"));
+	this->setWindowIcon(QIcon(":/icons/mp_win32"));
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton;

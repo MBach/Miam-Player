@@ -81,7 +81,7 @@
        <string>Library</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset resource="mp.qrc">
         <normaloff>:/config/music-library</normaloff>:/config/music-library</iconset>
       </property>
      </item>
@@ -90,7 +90,7 @@
        <string>Languages</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset resource="mp.qrc">
         <normaloff>:/config/translate</normaloff>:/config/translate</iconset>
       </property>
      </item>
@@ -99,7 +99,7 @@
        <string>Shortcuts</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset resource="mp.qrc">
         <normaloff>:/config/keyboard-shortcuts</normaloff>:/config/keyboard-shortcuts</iconset>
       </property>
      </item>
@@ -108,7 +108,7 @@
        <string>Playback</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset resource="mp.qrc">
         <normaloff>:/config/music</normaloff>:/config/music</iconset>
       </property>
      </item>
@@ -117,7 +117,7 @@
        <string>Drag &amp; Drop</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset resource="mp.qrc">
         <normaloff>:/icons/drop-arrow</normaloff>:/icons/drop-arrow</iconset>
       </property>
      </item>
@@ -126,7 +126,7 @@
        <string>Plugins</string>
       </property>
       <property name="icon">
-       <iconset resource="mmmmp.qrc">
+       <iconset resource="mp.qrc">
         <normaloff>:/icons/plugin</normaloff>:/icons/plugin</iconset>
       </property>
      </item>
@@ -274,7 +274,7 @@
                <string>Highlight only matching text</string>
               </property>
               <property name="icon">
-               <iconset resource="mmmmp.qrc">
+               <iconset resource="mp.qrc">
                 <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
               </property>
               <property name="iconSize">
@@ -336,7 +336,7 @@
                  <string>Yes</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="mmmmp.qrc">
+                 <iconset resource="mp.qrc">
                   <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
                 </property>
                 <property name="iconSize">
@@ -368,7 +368,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -393,7 +393,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -418,7 +418,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -443,7 +443,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -468,7 +468,7 @@
                  <string/>
                 </property>
                 <property name="pixmap">
-                 <pixmap resource="mmmmp.qrc">:/icons/favorite</pixmap>
+                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
                 </property>
                 <property name="scaledContents">
                  <bool>true</bool>
@@ -577,8 +577,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>352</width>
-            <height>150</height>
+            <width>444</width>
+            <height>476</height>
            </rect>
           </property>
           <attribute name="label">
@@ -586,117 +586,45 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QLabel" name="labelAction_1">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
+            <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0">
+             <item row="4" column="2">
+              <widget class="QLineEdit" name="showOptions">
                <property name="text">
-                <string>Action</string>
+                <string>F12</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item>
-              <spacer name="horizontalSpacer_6">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelModifier_1">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Modifier</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelKey_1">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Key</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_8">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Preferred</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
-             <item row="5" column="0">
-              <widget class="QLabel" name="labelShowOptions">
-               <property name="text">
-                <string>Open general options</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="labelShowCustomize">
                <property name="text">
                 <string>Open appearance</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="labelRescanLibrary">
+             <item row="5" column="0">
+              <spacer name="spacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="labelShowOptions">
                <property name="text">
-                <string>Rescan library</string>
+                <string>Open general options</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="1" column="0">
               <widget class="QLabel" name="labelExit">
                <property name="text">
                 <string>Exit</string>
@@ -707,6 +635,88 @@
               <widget class="QLabel" name="labelOpenFile">
                <property name="text">
                 <string>Open a file...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="labelRescanLibrary">
+               <property name="text">
+                <string>Rescan library</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QPushButton" name="openFileReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="openFile">
+               <property name="text">
+                <string>Ctrl+O</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLineEdit" name="scanLibrary">
+               <property name="text">
+                <string>Ctrl+Shift+R</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3">
+              <widget class="QPushButton" name="showOptionsReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="exit">
+               <property name="text">
+                <string>Ctrl+Q</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QPushButton" name="scanLibraryReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="showCustomize">
+               <property name="text">
+                <string>F9</string>
+               </property>
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="exitReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QPushButton" name="showCustomizeReset">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
@@ -726,189 +736,6 @@
                </property>
               </spacer>
              </item>
-             <item row="6" column="0">
-              <spacer name="spacer_5">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="2" column="2">
-              <widget class="ShortcutWidget" name="exit" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2">
-              <widget class="ShortcutWidget" name="openFile" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="2">
-              <widget class="ShortcutWidget" name="showOptions" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="2">
-              <widget class="ShortcutWidget" name="showCustomize" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="ShortcutWidget" name="scanLibrary" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
             </layout>
            </item>
           </layout>
@@ -918,8 +745,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>353</width>
-            <height>260</height>
+            <width>425</width>
+            <height>510</height>
            </rect>
           </property>
           <attribute name="label">
@@ -927,149 +754,9 @@
           </attribute>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <widget class="QLabel" name="labelAction_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Action</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelModifier_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Modifier</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelKey_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Key</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Preferred</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
             <layout class="QGridLayout" name="gridLayout_9">
-             <item row="0" column="0">
-              <widget class="QLabel" name="labelSkipBackward">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Skip backward</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="labelSeekBackward">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Seek backward</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="labelPlayPause">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Play / Pause</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="labelStop">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Stop</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QPushButton" name="skipBackwardButton">
+             <item row="2" column="1">
+              <widget class="QPushButton" name="playButton">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1086,61 +773,76 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/skipBackward</normaloff>:/player/fairytale/skipBackward</iconset>
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
                </property>
                <property name="flat">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
-              <spacer name="horizontalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Expanding</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="0" column="3">
-              <widget class="ShortcutWidget" name="skipBackward" native="true">
+             <item row="4" column="0">
+              <widget class="QLabel" name="labelSeekForward">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
+               <property name="text">
+                <string>Seek forward</string>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="labelSkipBackward">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+               <property name="text">
+                <string>Skip backward</string>
                </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="labelStop">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Stop</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="labelSeekBackward">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Seek backward</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="labelSequential">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Normal</string>
                </property>
               </widget>
              </item>
@@ -1162,8 +864,34 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/seekBackward</normaloff>:/player/fairytale/seekBackward</iconset>
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QPushButton" name="seekForwardButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>200</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
                </property>
                <property name="flat">
                 <bool>true</bool>
@@ -1197,8 +925,8 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/stop</normaloff>:/player/fairytale/stop</iconset>
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
                </property>
                <property name="flat">
                 <bool>true</bool>
@@ -1206,182 +934,9 @@
               </widget>
              </item>
              <item row="1" column="3">
-              <widget class="ShortcutWidget" name="seekBackward" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="3">
-              <widget class="ShortcutWidget" name="play" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="3">
-              <widget class="ShortcutWidget" name="stop" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QPushButton" name="playButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>200</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
-               </property>
-               <property name="flat">
+              <widget class="QLineEdit" name="seekBackward">
+               <property name="clearButtonEnabled">
                 <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="labelSeekForward">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Seek forward</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QPushButton" name="seekForwardButton">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>200</width>
-                 <height>24</height>
-                </size>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/seekForward</normaloff>:/player/fairytale/seekForward</iconset>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="labelSkipForward">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Skip forward</string>
                </property>
               </widget>
              </item>
@@ -1403,16 +958,23 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/skipForward</normaloff>:/player/fairytale/skipForward</iconset>
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
                </property>
                <property name="flat">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="labelRepeat">
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="skipBackward">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="labelSkipForward">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -1420,11 +982,206 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Repeat</string>
+                <string>Skip forward</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
+             <item row="7" column="1">
+              <widget class="QPushButton" name="sequentialButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>200</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="16" column="0">
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="4" column="4">
+              <widget class="QPushButton" name="seekForwardReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QLineEdit" name="play">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QLineEdit" name="stop">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QLineEdit" name="skipForward">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3">
+              <widget class="QLineEdit" name="seekForward">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="4">
+              <widget class="QPushButton" name="shuffleReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="4">
+              <widget class="QPushButton" name="currentItemInLoopReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="4">
+              <widget class="QPushButton" name="currentItemOnceReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="labelCurrentItemInLoop">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Current item in loop</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="4">
+              <widget class="QPushButton" name="sequentialReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="4">
+              <widget class="QPushButton" name="stopReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="3">
+              <widget class="QLineEdit" name="shuffle">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="1">
+              <widget class="QPushButton" name="currentItemOnceButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>200</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/itemOnce</normaloff>:/player/oxygen/itemOnce</iconset>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="3">
+              <widget class="QLineEdit" name="repeat">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QPushButton" name="shuffleButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>200</width>
+                 <height>24</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QPushButton" name="skipBackwardReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
               <widget class="QPushButton" name="repeatButton">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1442,130 +1199,288 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
-                 <normaloff>:/player/fairytale/repeat</normaloff>:/player/fairytale/repeat</iconset>
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/repeat</normaloff>:/player/oxygen/repeat</iconset>
                </property>
                <property name="flat">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="4" column="3">
-              <widget class="ShortcutWidget" name="seekForward" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="11" column="3">
+              <widget class="QLineEdit" name="currentItemInLoop">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
                </property>
               </widget>
              </item>
-             <item row="5" column="3">
-              <widget class="ShortcutWidget" name="skipForward" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="8" column="4">
+              <widget class="QPushButton" name="repeatReset">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="3">
-              <widget class="ShortcutWidget" name="repeat" native="true">
+             <item row="11" column="1">
+              <widget class="QPushButton" name="currentItemInLoopButton">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
-               <property name="minimumSize">
+               <property name="maximumSize">
                 <size>
                  <width>200</width>
-                 <height>1</height>
+                 <height>24</height>
                 </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/itemLoop</normaloff>:/player/oxygen/itemLoop</iconset>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="3">
+              <widget class="QLineEdit" name="currentItemOnce">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="3">
+              <widget class="QLineEdit" name="sequential">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="4">
+              <widget class="QPushButton" name="playReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="4">
+              <widget class="QPushButton" name="skipForwardReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="labelShuffle">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Shuffle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLabel" name="labelMute">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Mute</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="0">
+              <widget class="QLabel" name="labelIncreaseVolume">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Increase volume</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="labelCurrentItemOnce">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Current item once</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="labelRepeat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Repeat</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>14</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="13" column="3">
+              <widget class="QLineEdit" name="mute">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="4">
+              <widget class="QPushButton" name="muteReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="0">
+              <widget class="QLabel" name="labelDecreaseVolume">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Decrease volume</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="3">
+              <widget class="QLineEdit" name="decreaseVolume">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>14</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="14" column="3">
+              <widget class="QLineEdit" name="increaseVolume">
+               <property name="clearButtonEnabled">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="4">
+              <widget class="QPushButton" name="increaseVolumeReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="4">
+              <widget class="QPushButton" name="decreaseVolumeReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="labelPlayPause">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Play / Pause</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="4">
+              <widget class="QPushButton" name="seekBackwardReset">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="skipBackwardButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>250</width>
-                 <height>40</height>
+                 <width>200</width>
+                 <height>24</height>
                 </size>
                </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+               <property name="text">
+                <string/>
                </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+               <property name="icon">
+                <iconset resource="mp.qrc">
+                 <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
                </property>
               </widget>
+             </item>
+             <item row="0" column="2">
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </spacer>
              </item>
             </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -1574,99 +1489,23 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>379</width>
-            <height>196</height>
+            <width>444</width>
+            <height>476</height>
            </rect>
           </property>
           <attribute name="label">
            <string>Playlist</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <widget class="QLabel" name="labelAction_3">
-               <property name="text">
-                <string>Action</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_10">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelModifier_3">
-               <property name="text">
-                <string>Modifier</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_11">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelKey_3">
-               <property name="text">
-                <string>Key</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_12">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Preferred</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item row="14" column="0">
-            <spacer name="verticalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item row="13" column="0">
             <layout class="QGridLayout" name="gridLayout_3">
+             <item row="3" column="0">
+              <widget class="QLabel" name="labelRemoveSelectedTracks">
+               <property name="text">
+                <string>Remove selected track(s)</string>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="0">
               <widget class="QLabel" name="labelAddPlaylist">
                <property name="sizePolicy">
@@ -1680,50 +1519,10 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="0" column="2">
-              <widget class="ShortcutWidget" name="addPlaylist" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="5" column="0">
+              <widget class="QLabel" name="labelMoveTrackUp">
+               <property name="text">
+                <string>Move selected track down</string>
                </property>
               </widget>
              </item>
@@ -1740,27 +1539,6 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="labelRemoveSelectedTracks">
-               <property name="text">
-                <string>Remove selected track(s)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="labelMoveTrackUp">
-               <property name="text">
-                <string>Move selected track down</string>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="labelDeleteCurrentPlaylist_5">
-               <property name="text">
-                <string>Open playlist manager...</string>
-               </property>
-              </widget>
-             </item>
              <item row="4" column="0">
               <widget class="QLabel" name="labelMoveTrackDown">
                <property name="text">
@@ -1768,139 +1546,10 @@
                </property>
               </widget>
              </item>
-             <item row="2" column="2">
-              <widget class="ShortcutWidget" name="deleteCurrentPlaylist" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="2">
-              <widget class="ShortcutWidget" name="removeSelectedTracks" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="2">
-              <widget class="ShortcutWidget" name="moveTrackDown" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="2">
-              <widget class="ShortcutWidget" name="moveTrackUp" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="6" column="0">
+              <widget class="QLabel" name="labelDeleteCurrentPlaylist_5">
+               <property name="text">
+                <string>Open playlist manager...</string>
                </property>
               </widget>
              </item>
@@ -1917,71 +1566,99 @@
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="ShortcutWidget" name="clearCurrentPlaylist" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="lineEdit_4"/>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLineEdit" name="lineEdit_6"/>
+             </item>
+             <item row="6" column="2">
+              <widget class="QLineEdit" name="lineEdit_7"/>
+             </item>
+             <item row="4" column="2">
+              <widget class="QLineEdit" name="lineEdit_5"/>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="lineEdit"/>
+             </item>
+             <item row="0" column="3">
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="2">
-              <widget class="ShortcutWidget" name="showPlaylistManager" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="lineEdit_2"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLineEdit" name="lineEdit_3"/>
+             </item>
+             <item row="7" column="0">
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
                </property>
-               <property name="minimumSize">
+               <property name="sizeHint" stdset="0">
                 <size>
-                 <width>200</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
+                 <width>20</width>
                  <height>40</height>
                 </size>
                </property>
-               <property name="sizeIncrement">
+              </spacer>
+             </item>
+             <item row="0" column="1">
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
                 <size>
-                 <width>1</width>
-                 <height>1</height>
+                 <width>0</width>
+                 <height>0</height>
                 </size>
                </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+              </spacer>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3">
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="text">
+                <string>Reset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QPushButton" name="pushButton_7">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
@@ -1994,97 +1671,27 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>454</width>
-            <height>116</height>
+            <width>444</width>
+            <height>476</height>
            </rect>
           </property>
           <attribute name="label">
            <string>Library</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
-             <item>
-              <widget class="QLabel" name="labelAction_4">
-               <property name="text">
-                <string>Action</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_15">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelModifier_4">
-               <property name="text">
-                <string>Modifier</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_13">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QLabel" name="labelKey_4">
-               <property name="text">
-                <string>Key</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_14">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Preferred</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>70</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
            <item row="3" column="0">
             <layout class="QGridLayout" name="gridLayout_4">
-             <item row="0" column="0">
-              <widget class="QLabel" name="labelShowLibrary">
-               <property name="text">
-                <string>Show library tab</string>
-               </property>
-              </widget>
-             </item>
              <item row="1" column="0">
               <widget class="QLabel" name="labelShowFileExplorer">
                <property name="text">
                 <string>Show file explorer tab</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="labelShowLibrary">
+               <property name="text">
+                <string>Show library tab</string>
                </property>
               </widget>
              </item>
@@ -2095,135 +1702,57 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <spacer name="horizontalSpacer_9">
+             <item row="3" column="0">
+              <spacer name="verticalSpacer_6">
                <property name="orientation">
-                <enum>Qt::Horizontal</enum>
+                <enum>Qt::Vertical</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>40</width>
-                 <height>20</height>
+                 <width>20</width>
+                 <height>40</height>
                 </size>
                </property>
               </spacer>
              </item>
              <item row="0" column="2">
-              <widget class="ShortcutWidget" name="showLibrary" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
+              <widget class="QLineEdit" name="lineEdit_8"/>
+             </item>
+             <item row="0" column="1">
+              <spacer name="horizontalSpacer_15">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
                </property>
-               <property name="minimumSize">
+               <property name="sizeHint" stdset="0">
                 <size>
-                 <width>250</width>
-                 <height>1</height>
+                 <width>0</width>
+                 <height>0</height>
                 </size>
                </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+              </spacer>
+             </item>
+             <item row="0" column="3">
+              <widget class="QPushButton" name="pushButton_8">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="2">
-              <widget class="ShortcutWidget" name="showFileExplorer" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>250</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="pushButton_9">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="2">
-              <widget class="ShortcutWidget" name="addSelectedItems" native="true">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>250</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>250</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="sizeIncrement">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
-               </property>
-               <property name="baseSize">
-                <size>
-                 <width>1</width>
-                 <height>1</height>
-                </size>
+             <item row="2" column="3">
+              <widget class="QPushButton" name="pushButton_10">
+               <property name="text">
+                <string>Reset</string>
                </property>
               </widget>
              </item>
             </layout>
-           </item>
-           <item row="9" column="0">
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
           </layout>
          </widget>
@@ -2477,7 +2006,7 @@
                 <string>Keep all columns visible</string>
                </property>
                <property name="icon">
-                <iconset resource="mmmmp.qrc">
+                <iconset resource="mp.qrc">
                  <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
                </property>
                <property name="iconSize">
@@ -2685,16 +2214,8 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ShortcutWidget</class>
-   <extends>QWidget</extends>
-   <header>./dialogs/shortcutwidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
-  <include location="mmmmp.qrc"/>
+  <include location="mp.qrc"/>
  </resources>
  <connections>
   <connection>

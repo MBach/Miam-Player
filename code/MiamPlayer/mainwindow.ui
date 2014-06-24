@@ -59,7 +59,7 @@
           </property>
           <widget class="ExtendedTabWidget" name="leftTabs">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>true</bool>
@@ -282,7 +282,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
                     </property>
                     <property name="iconSize">
@@ -302,7 +302,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
                     </property>
                     <property name="iconSize">
@@ -322,7 +322,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
                     </property>
                     <property name="iconSize">
@@ -342,7 +342,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
                     </property>
                     <property name="iconSize">
@@ -362,7 +362,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
                     </property>
                     <property name="iconSize">
@@ -382,7 +382,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
                     </property>
                     <property name="iconSize">
@@ -402,7 +402,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="icon">
-                     <iconset resource="mmmmp.qrc">
+                     <iconset resource="mp.qrc">
                       <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
                     </property>
                     <property name="iconSize">
@@ -503,7 +503,7 @@
      <x>0</x>
      <y>0</y>
      <width>681</width>
-     <height>25</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -909,7 +909,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="mmmmp.qrc"/>
+  <include location="mp.qrc"/>
  </resources>
  <connections/>
 </ui>

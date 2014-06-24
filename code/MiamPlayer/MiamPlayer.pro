@@ -119,11 +119,11 @@ FORMS += \
     closeplaylistpopup.ui
 
 RESOURCES += \
-    mmmmp.qrc
+    mp.qrc
 
 win32 {
-    RC_FILE += config/mmmmp.rc
-    OTHER_FILES += config/mmmmp.rc
+    RC_FILE += config/mp.rc
+    OTHER_FILES +=
 }
 unix {
     CONFIG += c++11
@@ -152,10 +152,10 @@ CONFIG(debug, debug|release) {
     win32 {
 	!contains(QMAKE_TARGET.arch, x86_64) {
 	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	} else {
 	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/debug/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	}
     }
     OBJECTS_DIR = debug/.obj
@@ -168,10 +168,10 @@ CONFIG(release, debug|release) {
     win32 {
 	!contains(QMAKE_TARGET.arch, x86_64) {
 	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
 	} else {
 	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mmmmp.ico) $$shell_path($$OUT_PWD/release/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
 	}
     }
     OBJECTS_DIR = release/.obj
@@ -184,7 +184,7 @@ unix:!macx {
 }
 macx {
     LIBS += -L$$PWD/../../lib/ -ltag -L$$OUT_PWD/../MiamCore/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/ -lMiamUniqueLibrary
-    ICON = $$PWD/mmmmp.icns
+    ICON = $$PWD/mp.icns
     QMAKE_INFO_PLIST = $$PWD/../../packaging/osx/Info.plist
     #1 create Framework directory
     #2 copy third party library: TagLib
@@ -204,3 +204,6 @@ INCLUDEPATH += $$PWD/../MiamUniqueLibrary
 DEPENDPATH += $$PWD/../MiamCore
 DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/library $$PWD/playlists $$PWD/tageditor
 DEPENDPATH += $$PWD/../MiamUniqueLibrary
+
+OTHER_FILES += \
+    config/mp.rc

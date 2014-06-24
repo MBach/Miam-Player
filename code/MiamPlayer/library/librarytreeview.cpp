@@ -56,6 +56,16 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addAction(actionOpenTagEditor);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
+	connect(proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
+		if (!Settings::getInstance()->isSearchAndExcludeLibrary()) {
+			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
+				if (b) {
+					qDebug() << item->text();
+				}
+				item->setData(b, DF_Highlighted);
+			}
+		}
+	});
 
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
@@ -74,7 +84,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 QChar LibraryTreeView::currentLetter() const
 {
 	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-	if (iTop.data(DF_ItemType).toInt() == IT_Letter && iTop.row() == 0 && proxyModel->sortOrder() == Qt::AscendingOrder) {
+	// Special item "Various" (on top) has no Normalized String
+	if (iTop.data(DF_ItemType).toInt() == IT_Letter && iTop.data(DF_NormalizedString).toString().isEmpty()) {
 		return QChar();
 	} else {
 		// An item without a valid parent is a top level item, therefore we can extract the letter.
@@ -614,8 +625,7 @@ void LibraryTreeView::changeHierarchyOrder()
 void LibraryTreeView::filterLibrary(const QString &filter)
 {
 	if (filter.isEmpty()) {
-		proxyModel->setFilterRegExp(QRegExp());
-		collapseAll();
+		proxyModel->invalidate();
 		proxyModel->sort(0, proxyModel->sortOrder());
 	} else {
 		bool needToSortAgain = false;
@@ -624,7 +634,6 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 		}
 		proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
 		if (needToSortAgain) {
-			collapseAll();
 			proxyModel->sort(0, proxyModel->sortOrder());
 		}
 	}

@@ -18,7 +18,7 @@ SqlDatabase::SqlDatabase()
 	path = path.arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation),
 					settings->organizationName(),
 					settings->applicationName());
-	QString dbPath = QDir::toNativeSeparators(path + "/mmmmp.db");
+	QString dbPath = QDir::toNativeSeparators(path + "/mp.db");
 	QDir userDataPath(path);
 	// Init a new database file for settings
 	QFile db(dbPath);

@@ -5,7 +5,7 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MiamPlayer"
-#define VERSION "0.6.7"
+#define VERSION "0.6.8"
 
 #include "plugininfo.h"
 
@@ -13,7 +13,7 @@
 
 int main(int argc, char *argv[])
 {
-	Q_INIT_RESOURCE(mmmmp);
+	Q_INIT_RESOURCE(mp);
 
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();

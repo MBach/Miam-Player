@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>288</width>
-    <height>175</height>
+    <width>320</width>
+    <height>195</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
        </property>
        <property name="iconSize">
@@ -42,7 +42,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
        </property>
        <property name="iconSize">
@@ -62,7 +62,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
        </property>
        <property name="iconSize">
@@ -82,7 +82,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
        </property>
        <property name="iconSize">
@@ -102,7 +102,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
        </property>
        <property name="iconSize">
@@ -122,7 +122,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
        </property>
        <property name="iconSize">
@@ -142,7 +142,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mmmmp.qrc">
+        <iconset resource="../MiamPlayer/mp.qrc">
          <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
        </property>
        <property name="iconSize">
@@ -197,8 +197,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>268</width>
-        <height>93</height>
+        <width>296</width>
+        <height>97</height>
        </rect>
       </property>
      </widget>
@@ -219,7 +219,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../MiamPlayer/mmmmp.qrc"/>
+  <include location="../MiamPlayer/mp.qrc"/>
  </resources>
  <connections/>
 </ui>

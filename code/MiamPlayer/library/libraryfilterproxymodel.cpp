@@ -13,6 +13,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	this->sort(0, Qt::AscendingOrder);
 }
 
+/** Redefined to override Qt::FontRole. */
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 {
 	if (role == Qt::FontRole) {
@@ -25,9 +26,7 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	if (filterAcceptsRowItself(sourceRow, sourceParent)) {
-		if (!filterRegExp().isEmpty()) {
-			emit aboutToExpand(mapFromSource(sourceParent));
-		}
+		emit aboutToHighlight(sourceParent, true);
 		return true;
 	}
 
@@ -35,6 +34,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	QModelIndex parent = sourceParent;
 	while (parent.isValid()) {
 		if (filterAcceptsRowItself(parent.row(), parent.parent())) {
+			emit aboutToHighlight(sourceParent, true);
 			return true;
 		}
 		parent = parent.parent();
@@ -42,7 +42,10 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 
 	// Accept if any of the children is accepted on it's own merits
 	if (hasAcceptedChildren(sourceRow, sourceParent)) {
+		emit aboutToHighlight(sourceParent, true);
 		return true;
+	} else {
+		emit aboutToHighlight(sourceParent, false);
 	}
 
 	// Accept separators if any top level items and its children are accepted
@@ -51,11 +54,17 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	if (item && item->data(LibraryTreeView::DF_ItemType).toInt() == LibraryTreeView::IT_Letter) {
 		foreach (QModelIndex index, _topLevelItems->values(item->index())) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
+				emit aboutToHighlight(index, true);
 				return true;
 			}
 		}
 	}
-	return false;
+	if (Settings::getInstance()->isSearchAndExcludeLibrary()) {
+		return false;
+	} else {
+		emit aboutToHighlight(sourceParent, false);
+		return true;
+	}
 }
 
 /** Redefined for custom sorting. */
@@ -153,6 +162,12 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 
 bool LibraryFilterProxyModel::filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const
 {
+	/*if (QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent)) {
+		emit aboutToHighlight(sourceParent, true);
+		return true;
+	} else {
+		return false;
+	}*/
 	return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
 
@@ -160,23 +175,28 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 {
 	QModelIndex item = sourceModel()->index(sourceRow, 0, sourceParent);
 	if (!item.isValid()) {
+		emit aboutToHighlight(item, false);
 		return false;
 	}
 
 	// Check if there are children
 	int childCount = item.model()->rowCount(item);
 	if (childCount == 0) {
+		emit aboutToHighlight(item, false);
 		return false;
 	}
 
 	for (int i = 0; i < childCount; ++i) {
 		if (filterAcceptsRowItself(i, item)) {
+			emit aboutToHighlight(item, true);
 			return true;
 		}
 		// Recursive call
 		if (hasAcceptedChildren(i, item)) {
+			emit aboutToHighlight(item, true);
 			return true;
 		}
 	}
+	emit aboutToHighlight(item, false);
 	return false;
 }

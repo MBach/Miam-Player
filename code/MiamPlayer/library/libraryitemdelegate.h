@@ -49,7 +49,7 @@ private:
 	/** Albums have covers usually. */
 	void drawAlbum(QPainter *painter, QStyleOptionViewItem &o, QStandardItem *item) const;
 
-	void drawArtist(QPainter *painter, QStyleOptionViewItem &option) const;
+	void drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const;
 
 	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
 
@@ -60,7 +60,7 @@ private:
 	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;
 
 	/** Check if color needs to be inverted then paint text. */
-	void paintText(QPainter *painter, const QStyleOptionViewItem &option, const QRect &rectText, const QString &text) const;
+	void paintText(QPainter *painter, const QStyleOptionViewItem &option, const QRect &rectText, const QString &text, const QStandardItem *item) const;
 
 public slots:
 	void displayIcon(bool b);
