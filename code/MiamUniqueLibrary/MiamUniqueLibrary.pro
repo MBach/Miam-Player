@@ -12,12 +12,10 @@ FORMS += \
 HEADERS += \
     uniquelibrary.h \
     miamuniquelibrary_global.h \
-    flowlayout.h \
     albumform.h
 
 SOURCES += \
     uniquelibrary.cpp \
-    flowlayout.cpp \
     albumform.cpp
 
 CONFIG(debug, debug|release) {

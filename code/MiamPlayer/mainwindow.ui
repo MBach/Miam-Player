@@ -221,10 +221,22 @@
             <item>
              <widget class="QStackedWidget" name="stackedWidgetRight">
               <property name="currentIndex">
-               <number>1</number>
+               <number>0</number>
               </property>
               <widget class="QWidget" name="tabPlaylistPage">
                <layout class="QVBoxLayout" name="verticalLayout">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
                  <widget class="TabPlaylist" name="tabPlaylists">
                   <property name="usesScrollButtons">
@@ -472,6 +484,21 @@
               </widget>
               <widget class="QWidget" name="tagEditorPage">
                <layout class="QVBoxLayout" name="verticalLayout_3">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
                  <widget class="TagEditor" name="tagEditor" native="true">
                   <property name="sizePolicy">
@@ -480,7 +507,23 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_4"/>
+                  <layout class="QVBoxLayout" name="verticalLayout_4">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                  </layout>
                  </widget>
                 </item>
                </layout>
@@ -503,7 +546,7 @@
      <x>0</x>
      <y>0</y>
      <width>681</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -513,7 +556,8 @@
     <property name="title">
      <string>&amp;Menu</string>
     </property>
-    <addaction name="actionOpen"/>
+    <addaction name="actionOpenFiles"/>
+    <addaction name="actionOpenFolders"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -525,8 +569,8 @@
     <addaction name="actionDeleteCurrentPlaylist"/>
     <addaction name="separator"/>
     <addaction name="actionRemoveSelectedTracks"/>
-    <addaction name="actionMoveTrackUp"/>
-    <addaction name="actionMoveTrackDown"/>
+    <addaction name="actionMoveTracksUp"/>
+    <addaction name="actionMoveTracksDown"/>
     <addaction name="separator"/>
     <addaction name="actionShowPlaylistManager"/>
    </widget>
@@ -546,7 +590,7 @@
     <addaction name="actionShowHelp"/>
     <addaction name="actionCheckNewRelease"/>
     <addaction name="separator"/>
-    <addaction name="actionAboutM4P"/>
+    <addaction name="actionAboutMiamPlayer"/>
     <addaction name="actionAboutQt"/>
    </widget>
    <widget class="QMenu" name="menuPlayback">
@@ -574,9 +618,9 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="actionPlaylistMode"/>
-    <addaction name="actionUniqueLibraryMode"/>
-    <addaction name="actionTagEditor"/>
+    <addaction name="actionViewPlaylists"/>
+    <addaction name="actionViewUniqueLibrary"/>
+    <addaction name="actionViewTagEditor"/>
    </widget>
    <addaction name="menuMenu"/>
    <addaction name="menuOptions"/>
@@ -589,16 +633,13 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
-   </property>
   </action>
-  <action name="actionOpen">
+  <action name="actionOpenFiles">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>&amp;Open...</string>
+    <string>&amp;Open files...</string>
    </property>
   </action>
   <action name="actionAddPlaylist">
@@ -644,7 +685,7 @@
     <string>Customize general &amp;options...</string>
    </property>
   </action>
-  <action name="actionAboutM4P">
+  <action name="actionAboutMiamPlayer">
    <property name="text">
     <string>&amp;About Miam Player...</string>
    </property>
@@ -652,9 +693,6 @@
   <action name="actionDeleteCurrentPlaylist">
    <property name="text">
     <string>&amp;Delete current playlist</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionShowHelp">
@@ -719,7 +757,7 @@
     <string>&amp;Remove selected track</string>
    </property>
   </action>
-  <action name="actionMoveTrackUp">
+  <action name="actionMoveTracksUp">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -727,7 +765,7 @@
     <string>Move selected track &amp;up</string>
    </property>
   </action>
-  <action name="actionMoveTrackDown">
+  <action name="actionMoveTracksDown">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -736,25 +774,16 @@
    </property>
   </action>
   <action name="actionMute">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>&amp;Mute</string>
    </property>
   </action>
   <action name="actionIncreaseVolume">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>&amp;Increase volume</string>
    </property>
   </action>
   <action name="actionDecreaseVolume">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>&amp;Decrease volume</string>
    </property>
@@ -786,7 +815,7 @@
     <string>Current item in &amp;loop</string>
    </property>
   </action>
-  <action name="actionPlaylistMode">
+  <action name="actionViewPlaylists">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -797,7 +826,7 @@
     <string>Playlist Mode</string>
    </property>
   </action>
-  <action name="actionUniqueLibraryMode">
+  <action name="actionViewUniqueLibrary">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -827,12 +856,20 @@
     <string>&amp;Make the player borderless</string>
    </property>
   </action>
-  <action name="actionTagEditor">
+  <action name="actionViewTagEditor">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>Tag Editor</string>
+   </property>
+  </action>
+  <action name="actionOpenFolders">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Open folders...</string>
    </property>
   </action>
  </widget>

@@ -36,14 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
 
-	// Init shortcuts
-	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
-	QMapIterator<QString, QVariant> it(shortcutMap);
-	while (it.hasNext()) {
-		it.next();
-		this->bindShortcut(it.key(), it.value().toInt());
-	}
-
 	// Instantiate dialogs
 	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeThemeDialog->loadTheme();
@@ -87,6 +79,9 @@ void MainWindow::init()
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	playlistManager->init();
+
+	// Load shortcuts
+	customizeOptionsDialog->initShortcuts();
 }
 
 /** Plugins. */
@@ -137,21 +132,21 @@ void MainWindow::setupActions()
 
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
-	actionPlaylistMode->setActionGroup(viewModeGroup);
-	actionUniqueLibraryMode->setActionGroup(viewModeGroup);
-	actionTagEditor->setActionGroup(viewModeGroup);
+	actionViewPlaylists->setActionGroup(viewModeGroup);
+	actionViewUniqueLibrary->setActionGroup(viewModeGroup);
+	actionViewTagEditor->setActionGroup(viewModeGroup);
 
-	connect(actionPlaylistMode, &QAction::triggered, this, [=]() {
+	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(0);
 	});
-	connect(actionUniqueLibraryMode, &QAction::triggered, this, [=]() {
+	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(1);
 	});
-	connect(actionTagEditor, &QAction::triggered, this, [=]() {
+	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(1);
-		actionTagEditor->setChecked(true);
+		actionViewTagEditor->setChecked(true);
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
@@ -166,7 +161,7 @@ void MainWindow::setupActions()
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &CustomizeThemeDialog::open);
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
-	connect(actionAboutM4P, &QAction::triggered, [=] () {
+	connect(actionAboutMiamPlayer, &QAction::triggered, [=] () {
 		QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
 		QMessageBox::about(this, QString("Miam Player v").append(qApp->applicationVersion()), message);
 	});
@@ -258,9 +253,16 @@ void MainWindow::setupActions()
 	// Playback
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
-	connect(actionMoveTrackUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
-	connect(actionMoveTrackDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
+	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
+	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
+	connect(actionMute, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::toggleMute);
+	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
+		volumeSlider->setValue(volumeSlider->value() + 5);
+	});
+	connect(actionDecreaseVolume, &QAction::triggered, this, [=]() {
+		volumeSlider->setValue(volumeSlider->value() - 5);
+	});
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
@@ -282,8 +284,8 @@ void MainWindow::setupActions()
 	// Lambda function to reduce duplicate code
 	auto updateActions = [this] (bool b) {
 		actionRemoveSelectedTracks->setEnabled(b);
-		actionMoveTrackUp->setEnabled(b);
-		actionMoveTrackDown->setEnabled(b);
+		actionMoveTracksUp->setEnabled(b);
+		actionMoveTracksDown->setEnabled(b);
 	};
 
 	connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
@@ -292,8 +294,8 @@ void MainWindow::setupActions()
 		if (b) {
 			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
 			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
-			actionMoveTrackUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
-			actionMoveTrackDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
+			actionMoveTracksUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
+			actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});
 	connect(tabPlaylists, &TabPlaylist::selectionChanged, this, [=](bool isEmpty) {
@@ -306,6 +308,9 @@ void MainWindow::setupActions()
 	connect(qApp, &QApplication::aboutToQuit, [=] {
 		_sqlDatabase.cleanBeforeQuit();
 	});
+
+	// Shortcuts
+	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -395,34 +400,38 @@ void MainWindow::moveEvent(QMoveEvent *event)
 	QMainWindow::moveEvent(event);
 }
 
-void MainWindow::bindShortcut(const QString &objectName, int keySequence)
+void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
-	Settings::getInstance()->setShortcut(objectName, keySequence);
+	qDebug() << Q_FUNC_INFO << objectName;
 	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
 	// Connect actions first
 	if (action) {
-		action->setShortcut(QKeySequence(keySequence));
+		action->setShortcut(keySequence);
+		if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
+			action->setShortcutContext(Qt::WidgetShortcut);
+		}
 	} else {
 		// Is this really necessary? Everything should be in the menu
-		MediaButton *button = findChild<MediaButton*>(objectName + "Button");
+		/*MediaButton *button = findChild<MediaButton*>(objectName + "Button");
 		if (button) {
 			button->setShortcut(QKeySequence(keySequence));
-		}
+		}*/
+		qDebug() << "action was not found for" << objectName;
 	}
 }
 
 void MainWindow::showTabPlaylists()
 {
-	if (!actionPlaylistMode->isChecked()) {
-		actionPlaylistMode->setChecked(true);
+	if (!actionViewPlaylists->isChecked()) {
+		actionViewPlaylists->setChecked(true);
 	}
 	stackedWidgetRight->setCurrentIndex(0);
 }
 
 void MainWindow::showTagEditor()
 {
-	if (!actionTagEditor->isChecked()) {
-		actionTagEditor->setChecked(true);
+	if (!actionViewTagEditor->isChecked()) {
+		actionViewTagEditor->setChecked(true);
 	}
 	stackedWidgetRight->setCurrentIndex(1);
 }

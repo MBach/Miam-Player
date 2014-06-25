@@ -136,9 +136,9 @@ public:
 
 	void setMusicLocations(const QStringList &locations);
 
-	void setShortcut(const QString &objectName, int keySequence);
+	void setShortcut(const QString &objectName, const QKeySequence &keySequence);
 
-	int shortcut(const QString &objectName) const;
+	QKeySequence shortcut(const QString &objectName) const;
 
 	QMap<QString, QVariant> shortcuts() const;
 

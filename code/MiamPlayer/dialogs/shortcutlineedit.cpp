@@ -66,7 +66,8 @@ QString ShortcutLineEdit::setKey(int key)
 /** Redefined to enable special keys like Space. */
 void ShortcutLineEdit::keyPressEvent(QKeyEvent *keyEvent)
 {
-	QString shortcut = setKey(keyEvent->key());
+	qDebug() << keyEvent->key() << keyEvent->modifiers();
+	QString shortcut = this->setKey(keyEvent->key());
 	if (shortcut.isEmpty()) {
 		QLineEdit::keyPressEvent(keyEvent);
 	} else {

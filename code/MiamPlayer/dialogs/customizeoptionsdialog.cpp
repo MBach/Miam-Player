@@ -1,9 +1,9 @@
 #include "customizeoptionsdialog.h"
 
+#include "flowlayout.h"
 #include "mainwindow.h"
 #include "pluginmanager.h"
 #include "settings.h"
-#include "shortcutwidget.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -42,12 +42,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	}
 
 	// Second panel: languages
-	connect(listViewLanguages, &QAbstractItemView::clicked, this, &CustomizeOptionsDialog::changeLanguage);
-
-	QStandardItemModel *languageModel = new QStandardItemModel(this);
-	listViewLanguages->setModel(languageModel);
-	listViewLanguages->setGridSize(QSize(150, 64));
-	listViewLanguages->setUniformItemSizes(true);
+	FlowLayout *flowLayout = new FlowLayout(widgetLanguages, 30, 75, 75);
+	widgetLanguages->setLayout(flowLayout);
 
 	QDir dir(":/languages");
 	QStringList fileNames = dir.entryList();
@@ -60,21 +56,28 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		}
 
 		// Add a new country flag
-		QStandardItem *languageItem = new QStandardItem(i);
-		languageItem->setIcon(QIcon(dir.filePath(i)));
-		languageModel->appendRow(languageItem);
+		QToolButton *languageButton = new QToolButton(this);
+		languageButton->setIconSize(QSize(48, 32));
+		languageButton->setIcon(QIcon(dir.filePath(i)));
+		languageButton->setText(i);
+		languageButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+		languageButton->setAutoRaise(true);
+		flowLayout->addWidget(languageButton);
+		connect(languageButton, &QToolButton::clicked, this, [=]() {
+			this->changeLanguage(languageButton->text());
+			foreach (QToolButton *b, this->findChildren<QToolButton*>()) {
+				b->setDown(false);
+			}
+			languageButton->setDown(true);
+		});
 
 		// Pick the right button in User Interface
 		if (i == settings->language()) {
-			listViewLanguages->setCurrentIndex(languageModel->indexFromItem(languageItem));
+			languageButton->setDown(true);
 		}
 	}
 
-	// Third panel: shorcuts
-	/// FIXME
-	/*foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
-		connect(shortcutWidget, &ShortcutWidget::shortcutChanged, this, &CustomizeOptionsDialog::checkShortcut);
-	}*/
+	// Third panel: @see initShortcuts
 
 	// Fourth panel: playback
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
@@ -114,6 +117,39 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
 }
 
+void CustomizeOptionsDialog::initShortcuts()
+{
+	// Third panel: shorcuts
+	Settings *settings = Settings::getInstance();
+	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
+	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
+	foreach(QKeySequenceEdit *shortcut, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+		QKeySequence sequence = shortcut->keySequence();
+		defaultShortcuts->insert(shortcut, sequence);
+
+		// Init shortcuts: merge default shortcuts with existing ones in settings
+		QString shortCutName = shortcut->objectName();
+		if (shortcutMap.contains(shortCutName)) {
+			sequence = QKeySequence(shortcutMap.value(shortCutName).toString());
+		}
+		emit aboutToBindShortcut(shortCutName, sequence);
+
+		// Forward signal to MainWindow
+		connect(shortcut, &QKeySequenceEdit::editingFinished, this, [=]() {
+			settings->setShortcut(shortcut->objectName(), shortcut->keySequence());
+			emit aboutToBindShortcut(shortcut->objectName(), shortcut->keySequence());
+		});
+	}
+
+	// Add the possibility to restore defaults shortcuts.
+	foreach(QPushButton *resetShortcut, shortcutsToolBox->findChildren<QPushButton*>()) {
+		QKeySequenceEdit *shortcut = shortcutsToolBox->findChild<QKeySequenceEdit*>(resetShortcut->objectName().remove("Reset"));
+		connect(resetShortcut, &QPushButton::clicked, this, [=]() {
+			shortcut->setKeySequence(defaultShortcuts->value(shortcut));
+		});
+	}
+}
+
 /** Is it necessary to redefined this from the UI class just for this init label? */
 void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 {
@@ -122,24 +158,13 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 		listWidgetMusicLocations->item(0)->setText(QApplication::translate(
 			"CustomizeOptionsDialog", "Add some music locations here"));
 	}
-	// Retranslate the key if it's a special key like 'Space', 'Return' and so on...
-	// And the modifiers 'Ctrl', 'Shift' and 'Alt'
-	foreach(ShortcutWidget *shortcutWidget, findChildren<ShortcutWidget*>()) {
-
-		QString source = QKeySequence(shortcutWidget->line()->key()).toString();
-		QString translation = QApplication::translate("ShortcutLineEdit", source.toStdString().data());
-		shortcutWidget->line()->setText(translation);
-
-		// Item 0 is empty
-		for (int i=1; i < shortcutWidget->modifiers()->count(); i++) {
-			source = shortcutWidget->modifiers()->itemText(i);
-			translation = QApplication::translate("ShortcutWidget", source.toStdString().data());
-			/// bug with modifiers!
-			shortcutWidget->modifiers()->setItemText(i, translation);
-		}
-	}
-
 	Ui::CustomizeOptionsDialog::retranslateUi(dialog);
+	qDebug() << "bind shortcuts";
+
+	/*foreach(QLineEdit *shortcut, shortcutsToolBox->findChildren<QLineEdit*>()) {
+		qDebug() << shortcut->objectName();
+		emit aboutToBindShortcut(shortcut->objectName(), QKeySequence(shortcut->text()));
+	}*/
 }
 
 /** Redefined to add custom behaviour. */
@@ -179,14 +204,14 @@ void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 }
 
 /** Change language at runtime. */
-void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
+void CustomizeOptionsDialog::changeLanguage(const QString &language)
 {
-	QString lang = languages.value(index.data().toString());
+	QString lang = languages.value(language);
 	Settings *settings = Settings::getInstance();
 
 	// If the language is successfully loaded, tells every widget that they need to be redisplayed
 	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
-		settings->setLanguage(index.data().toString());
+		settings->setLanguage(language);
 		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 		QApplication::installTranslator(&customTranslator);
 		/// TODO: reload plugin UI
@@ -195,33 +220,6 @@ void CustomizeOptionsDialog::changeLanguage(QModelIndex index)
 		labelStatusLanguage->setText(tr("No translation is available for this language :("));
 	}
 }
-
-/*void CustomizeOptionsDialog::checkShortcut(ShortcutWidget *newShortcutAction, int typedKey)
-{
-	QMap<int, ShortcutWidget *> inverted;
-	foreach(ShortcutWidget *sw, findChildren<ShortcutWidget*>()) {
-		inverted.insertMulti(sw->key(), sw);
-	}
-	inverted.insertMulti(typedKey, newShortcutAction);
-
-	Settings *settings = Settings::getInstance();
-	MainWindow *mainWindow = qobject_cast<MainWindow *>(parent());
-	QMapIterator<int, ShortcutWidget *> i(inverted);
-	while (i.hasNext()) {
-		i.next();
-		if (i.key() != 0 && inverted.values(i.key()).size() > 2) {
-			qDebug() << "parsing (1):";
-			foreach (ShortcutWidget *sw, inverted.values(i.key())) {
-				qDebug() << sw->objectName();
-				sw->line()->setStyleSheet("QLineEdit { color: red }");
-			}
-		} else {
-			mainWindow->bindShortcut(i.value()->objectName(), i.key());
-			settings->setShortcut(i.value()->objectName(), i.key());
-			inverted.value(i.key())->line()->setStyleSheet(QString());
-		}
-	}
-}*/
 
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()

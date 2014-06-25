@@ -147,14 +147,6 @@
         <translation>Sélectionner un endroit contenant votre musique</translation>
     </message>
     <message>
-        <source>Action</source>
-        <translation>Action</translation>
-    </message>
-    <message>
-        <source>Key</source>
-        <translation>Touche</translation>
-    </message>
-    <message>
         <source>Open a file...</source>
         <translation>Ouvrir un fichier...</translation>
     </message>
@@ -205,14 +197,6 @@
     <message>
         <source>Delete current playlist</source>
         <translation>Supprimer la liste de lecture courante</translation>
-    </message>
-    <message>
-        <source>Menus &amp;&amp; Options</source>
-        <translation>Menus &amp;&amp; Options</translation>
-    </message>
-    <message>
-        <source>Modifier</source>
-        <translation>Modificateur</translation>
     </message>
     <message>
         <source>Open general options</source>
@@ -373,6 +357,138 @@
     <message>
         <source>Language of Miam Player</source>
         <translation>Langue du Miam Player</translation>
+    </message>
+    <message>
+        <source>Currently under development</source>
+        <translation>En cours de développement</translation>
+    </message>
+    <message>
+        <source>Menu &amp;&amp; Options</source>
+        <translation>Menu &amp;&amp; Options</translation>
+    </message>
+    <message>
+        <source>F12</source>
+        <translation>F12</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Par défaut</translation>
+    </message>
+    <message>
+        <source>Ctrl+O</source>
+        <translation>Ctrl+O</translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+R</source>
+        <translation>Ctrl+Maj+R</translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation>Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>F9</source>
+        <translation>F9</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation>Normal</translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation>X</translation>
+    </message>
+    <message>
+        <source>Z</source>
+        <translation>W</translation>
+    </message>
+    <message>
+        <source>C</source>
+        <translation>C</translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation>V</translation>
+    </message>
+    <message>
+        <source>N</source>
+        <translation>N</translation>
+    </message>
+    <message>
+        <source>B</source>
+        <translation>B</translation>
+    </message>
+    <message>
+        <source>Current item in loop</source>
+        <translation>Une piste, toujours en boucle</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>K</source>
+        <translation>K</translation>
+    </message>
+    <message>
+        <source>Shuffle</source>
+        <translation>Aléatoire</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation>Muet</translation>
+    </message>
+    <message>
+        <source>Increase volume</source>
+        <translation>Augmenter le volume</translation>
+    </message>
+    <message>
+        <source>Current item once</source>
+        <translation>Une piste, une seule fois</translation>
+    </message>
+    <message>
+        <source>M</source>
+        <translation>M</translation>
+    </message>
+    <message>
+        <source>Decrease volume</source>
+        <translation>Diminuer le volume</translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Bas</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Haut</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Suppr.</translation>
+    </message>
+    <message>
+        <source>Shift+Down</source>
+        <translation>Maj+Bas</translation>
+    </message>
+    <message>
+        <source>Shift+Up</source>
+        <translation>Maj+Haut</translation>
+    </message>
+    <message>
+        <source>Crtl+T</source>
+        <translation>Crtl+T</translation>
+    </message>
+    <message>
+        <source>Crtl+W</source>
+        <translation>Crtl+W</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
     </message>
 </context>
 <context>
@@ -629,6 +745,10 @@
         <source>px</source>
         <translation>px</translation>
     </message>
+    <message>
+        <source>Currently under development</source>
+        <translation type="unfinished">En cours de développement</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -716,10 +836,6 @@
     <message>
         <source>Send to the current playlist</source>
         <translation>Envoyer à la liste de lecture courante</translation>
-    </message>
-    <message>
-        <source>Properties</source>
-        <translation type="vanished">Propriétés</translation>
     </message>
     <message>
         <source>  Artists \ Albums</source>
@@ -954,7 +1070,7 @@
     </message>
     <message>
         <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ctrl+Q</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
@@ -1213,6 +1329,10 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
     <message>
         <source>Alt</source>
         <translation>Alt</translation>
+    </message>
+    <message>
+        <source>Ctrl + Shift</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

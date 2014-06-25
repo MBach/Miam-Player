@@ -92,8 +92,6 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 void MediaPlayer::setVolume(int v)
 {
 	_player->audio()->setVolume(v);
-	/// XXX not working ?
-	qDebug() << "new volume" << v << _player->audio()->volume();
 }
 
 qint64 MediaPlayer::duration()
@@ -106,6 +104,11 @@ QMediaPlayer::State MediaPlayer::state() const
 	return _state;
 }
 
+void MediaPlayer::setMute(bool b) const
+{
+	b ? _player->audio()->setTrack(-1) : _player->audio()->setTrack(0);
+}
+
 void MediaPlayer::setPosition(float pos)
 {
 	if (pos == 1.0) {
@@ -114,10 +117,9 @@ void MediaPlayer::setPosition(float pos)
 	_player->setPosition(pos);
 }
 
-void MediaPlayer::setMute(int i) const
+int MediaPlayer::volume() const
 {
-	_player->audio()->setTrack(i);
-	//return _player->audio()->toggleMute();
+	return _player->audio()->volume();
 }
 
 /** Seek backward in the current playing track for a small amount of time. */
@@ -199,6 +201,15 @@ void MediaPlayer::play()
 void MediaPlayer::stop()
 {
 	_player->stop();
+}
+
+void MediaPlayer::toggleMute() const
+{
+	if (_player->audio()->track() == 0) {
+		_player->audio()->setTrack(-1);
+	} else {
+		_player->audio()->setTrack(0);
+	}
 }
 
 void MediaPlayer::convertMedia(libvlc_media_t *)

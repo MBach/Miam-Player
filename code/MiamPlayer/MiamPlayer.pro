@@ -11,7 +11,6 @@ SOURCES += \
     dialogs/playlistmanager.cpp \
     dialogs/reflector.cpp \
     dialogs/shortcutlineedit.cpp \
-    dialogs/shortcutwidget.cpp \
     filesystem/addressbar.cpp \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
@@ -32,6 +31,7 @@ SOURCES += \
     playlists/playlistitemdelegate.cpp \
     playlists/starrating.cpp \
     playlists/stareditor.cpp \
+    styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
@@ -40,45 +40,19 @@ SOURCES += \
     columnutils.cpp \
     main.cpp \
     mainwindow.cpp \
+    miamstyle.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
     plugininfo.cpp \
     pluginmanager.cpp \
     quickstart.cpp \
+    scrollbar.cpp \
+    seekbar.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp \
-    seekbar.cpp \
-    scrollbar.cpp \
-    miamstyle.cpp \
-    styling/miamstyleditemdelegate.cpp
+    volumeslider.cpp
 
 HEADERS += \
-    mainwindow.h \
-    filesystem/addressbar.h \
-    filesystem/addressbarbutton.h \
-    filesystem/addressbarmenu.h \
-    filesystem/filesystemtreeview.h \
-    treeview.h \
-    library/extendedtabbar.h \
-    library/extendedtabwidget.h \
-    library/libraryfilterproxymodel.h \
-    library/libraryitemdelegate.h \
-    library/libraryorderdialog.h \
-    library/libraryscrollbar.h \
-    library/librarytreeview.h \
-    circleprogressbar.h \
-    tracksnotfoundmessagebox.h \
-    quickstart.h \
-    columnutils.h \
-    nofocusitemdelegate.h \
-    playbackmodewidget.h \
-    playbackmodewidgetfactory.h \
-    playlists/playlist.h \
-    playlists/playlistheaderview.h \
-    playlists/playlistmodel.h \
-    playlists/tabbar.h \
-    playlists/tabplaylist.h \
     dialogs/closeplaylistpopup.h \
     dialogs/colordialog.h \
     dialogs/customizeoptionsdialog.h \
@@ -86,25 +60,50 @@ HEADERS += \
     dialogs/dragdropdialog.h \
     dialogs/playlistmanager.h \
     dialogs/reflector.h \
+    dialogs/paintablewidget.h \
     dialogs/shortcutlineedit.h \
-    dialogs/shortcutwidget.h \
+    filesystem/addressbar.h \
+    filesystem/addressbarbutton.h \
+    filesystem/addressbarmenu.h \
+    filesystem/filesystemtreeview.h \
+    library/extendedtabbar.h \
+    library/extendedtabwidget.h \
+    library/libraryfilterproxymodel.h \
+    library/libraryitemdelegate.h \
+    library/libraryorderdialog.h \
+    library/libraryscrollbar.h \
+    library/librarytreeview.h \
+    library/libraryheader.h \
+    library/jumptowidget.h \
+    playlists/playlist.h \
+    playlists/playlistheaderview.h \
+    playlists/playlistmodel.h \
+    playlists/tabbar.h \
+    playlists/tabplaylist.h \
+    playlists/playlistitemdelegate.h \
+    playlists/starrating.h \
+    playlists/stareditor.h \
+    playlists/playlistframe.h \
+    styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
     tageditor/tageditortablewidget.h \
+    circleprogressbar.h \
+    columnutils.h \
+    mainwindow.h \
+    miamstyle.h \
+    nofocusitemdelegate.h \
+    playbackmodewidget.h \
+    playbackmodewidgetfactory.h \
     pluginmanager.h \
     plugininfo.h \
-    library/jumptowidget.h \
-    volumeslider.h \
-    playlists/playlistitemdelegate.h \
-    playlists/starrating.h \
-    playlists/stareditor.h \
-    library/libraryheader.h \
-    playlists/playlistframe.h \
-    seekbar.h \
+    quickstart.h \
     scrollbar.h \
-    miamstyle.h \
-    styling/miamstyleditemdelegate.h
+    seekbar.h \
+    tracksnotfoundmessagebox.h \
+    treeview.h \
+    volumeslider.h
 
 FORMS += \
     mainwindow.ui \

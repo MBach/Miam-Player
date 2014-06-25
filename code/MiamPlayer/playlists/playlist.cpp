@@ -259,6 +259,7 @@ void Playlist::keyPressEvent(QKeyEvent *event)
 		// Two level escape: if there are editors or not
 		if (findChildren<StarEditor*>().isEmpty()) {
 			selectionModel()->clearSelection();
+			parentWidget()->parentWidget()->setFocus();
 		} else {
 			for (int row = 0; row < _playlistModel->rowCount(); row++) {
 				closePersistentEditor(_playlistModel->index(row, RATINGS));

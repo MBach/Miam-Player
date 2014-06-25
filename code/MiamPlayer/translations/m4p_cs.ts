@@ -147,14 +147,6 @@
         <translation>Vyberte umístění s hudbou</translation>
     </message>
     <message>
-        <source>Action</source>
-        <translation>Činnost</translation>
-    </message>
-    <message>
-        <source>Key</source>
-        <translation>Klávesa</translation>
-    </message>
-    <message>
         <source>Open a file...</source>
         <translation>Otevřít soubor...</translation>
     </message>
@@ -205,14 +197,6 @@
     <message>
         <source>Delete current playlist</source>
         <translation>Smazat nynější seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Menus &amp;&amp; Options</source>
-        <translation>Nabídky a volby</translation>
-    </message>
-    <message>
-        <source>Modifier</source>
-        <translation>Modifikátor</translation>
     </message>
     <message>
         <source>Open general options</source>
@@ -373,6 +357,138 @@
     <message>
         <source>Language of Miam Player</source>
         <translation>Jazyk hudebního přehrávače Miam</translation>
+    </message>
+    <message>
+        <source>Currently under development</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Menu &amp;&amp; Options</source>
+        <translation>Nabídky a volby</translation>
+    </message>
+    <message>
+        <source>F12</source>
+        <translation>F12</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+R</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation type="unfinished">Ctrl+Q</translation>
+    </message>
+    <message>
+        <source>F9</source>
+        <translation type="unfinished">F9</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z</source>
+        <translation>Y</translation>
+    </message>
+    <message>
+        <source>C</source>
+        <translation>C</translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation>V</translation>
+    </message>
+    <message>
+        <source>N</source>
+        <translation>N</translation>
+    </message>
+    <message>
+        <source>B</source>
+        <translation>B</translation>
+    </message>
+    <message>
+        <source>Current item in loop</source>
+        <translation>Současnou položku pořád dokola</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation>L</translation>
+    </message>
+    <message>
+        <source>K</source>
+        <translation>K</translation>
+    </message>
+    <message>
+        <source>Shuffle</source>
+        <translation>Zamíchat</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item once</source>
+        <translation>Současnou položku jednou</translation>
+    </message>
+    <message>
+        <source>M</source>
+        <translation>M</translation>
+    </message>
+    <message>
+        <source>Decrease volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation>Dolů</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation>Nahoru</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift+Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift+Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crtl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crtl+W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation>1</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation>2</translation>
     </message>
 </context>
 <context>
@@ -629,6 +745,10 @@
         <source>px</source>
         <translation>px</translation>
     </message>
+    <message>
+        <source>Currently under development</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -716,10 +836,6 @@
     <message>
         <source>Send to the current playlist</source>
         <translation>Poslat do nynějšího seznamu skladeb</translation>
-    </message>
-    <message>
-        <source>Properties</source>
-        <translation type="vanished">Vlastnosti</translation>
     </message>
     <message>
         <source>  Artists \ Albums</source>
@@ -1219,6 +1335,10 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
     <message>
         <source>Alt</source>
         <translation>Alt</translation>
+    </message>
+    <message>
+        <source>Ctrl + Shift</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

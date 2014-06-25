@@ -37,9 +37,11 @@ public:
 
 	QMediaPlayer::State state() const;
 
+	void setMute(bool b) const;
+
 	void setPosition(float pos);
 
-	void setMute(int i) const;
+	int volume() const;
 
 public slots:
 	/** Seek backward in the current playing track for a small amount of time. */
@@ -57,6 +59,8 @@ public slots:
 	void pause();
 	void play();
 	void stop();
+
+	void toggleMute() const;
 
 private slots:
 	void convertMedia(libvlc_media_t *);

@@ -54,7 +54,8 @@ SOURCES += \
     settings.cpp \
     sqldatabase.cpp \
     timelabel.cpp \
-    model/selectedtracksmodel.cpp
+    model/selectedtracksmodel.cpp \
+    flowlayout.cpp
 
 HEADERS += interfaces/basicplugininterface.h \
     interfaces/itemviewplugininterface.h \
@@ -71,4 +72,5 @@ HEADERS += interfaces/basicplugininterface.h \
     quickstartsearchengine.h \
     settings.h \
     sqldatabase.h \
-    timelabel.h
+    timelabel.h \
+    flowlayout.h

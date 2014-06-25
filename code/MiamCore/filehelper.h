@@ -16,6 +16,9 @@ namespace TagLib {
 
 /**
  * \brief The FileHelper class is used to extract various but relevant fields in all types of tags (MP3, Flac, etc)
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class MIAMCORE_LIBRARY FileHelper
 {

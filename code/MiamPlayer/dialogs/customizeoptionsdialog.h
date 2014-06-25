@@ -8,6 +8,12 @@
 
 #include "ui_customizeoptionsdialog.h"
 
+/**
+ * \brief		The CustomizeOptionsDialog class is a very important class. It is designed to help one to customize options of Miam-Player.
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class CustomizeOptionsDialog : public QDialog, public Ui::CustomizeOptionsDialog
 {
 	Q_OBJECT
@@ -18,16 +24,14 @@ private:
 public:
 	CustomizeOptionsDialog(QWidget *parent = 0);
 
+	void initShortcuts();
+
 	/** Is it necessary to redefined this from the UI class just for this init label? */
 	void retranslateUi(CustomizeOptionsDialog *dialog);
 
 protected:
 	/** Redefined to add custom behaviour. */
 	virtual void closeEvent(QCloseEvent *);
-
-signals:
-	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged(bool libraryIsEmpty);
 
 public slots:
 	/** Adds a new music location in the library. */
@@ -37,9 +41,7 @@ public slots:
 	void addMusicLocations(const QList<QDir> &dirs);
 
 	/** Change language at runtime. */
-	void changeLanguage(QModelIndex);
-
-	//void checkShortcut(ShortcutWidget *, int typedKey);
+	void changeLanguage(const QString &language);
 
 	/** Redefined to initialize theme from settings. */
 	void open();
@@ -55,6 +57,12 @@ private slots:
 	void openLibraryDialog();
 
 	void updateMusicLocations();
+
+signals:
+	/** Signal sent whether the music locations have changed or not. */
+	void musicLocationsHaveChanged(bool libraryIsEmpty);
+
+	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);
 };
 
 #endif // CUSTOMIZEOPTIONSDIALOG_H

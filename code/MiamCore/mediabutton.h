@@ -6,8 +6,10 @@
 #include "miamcore_global.h"
 
 /**
-Class for buttons like "Play", "Stop", etc.
-*/
+ * \brief		The MediaButton class is useful for buttons like "Play", "Stop", etc.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY MediaButton : public QPushButton
 {
 	Q_OBJECT

@@ -43,7 +43,7 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 		float p = (float) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
 		qDebug() << "mousePressEvent" << "xPos" << xPos << "width()" << width() << "posButton" << posButton;
-		_mediaPlayer.data()->setMute(-1);
+		_mediaPlayer.data()->setMute(true);
 		_mediaPlayer.data()->setPosition(p);
 		this->setValue(posButton);
 	}
@@ -51,7 +51,7 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 
 void SeekBar::mouseReleaseEvent(QMouseEvent *)
 {
-	_mediaPlayer.data()->setMute(0);
+	_mediaPlayer.data()->setMute(false);
 }
 
 void SeekBar::paintEvent(QPaintEvent *)

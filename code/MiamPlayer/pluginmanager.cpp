@@ -178,7 +178,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				});
 				// Link the view to the existing ActionGroup
 				actionAddViewToMenu->setCheckable(true);
-				actionAddViewToMenu->setActionGroup(_mainWindow->actionPlaylistMode->actionGroup());
+				actionAddViewToMenu->setActionGroup(_mainWindow->actionPlaybackSequential->actionGroup());
 				_dependencies.insert(basic->name(), actionAddViewToMenu);
 			}
 		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {

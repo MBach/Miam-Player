@@ -143,14 +143,6 @@
         <translation>اختر مكان المُسِيقى الخاصة بك</translation>
     </message>
     <message>
-        <source>Action</source>
-        <translation>عمل</translation>
-    </message>
-    <message>
-        <source>Key</source>
-        <translation>مفتاح</translation>
-    </message>
-    <message>
         <source>Open a file...</source>
         <translation>افتح ملف...</translation>
     </message>
@@ -201,14 +193,6 @@
     <message>
         <source>Delete current playlist</source>
         <translation>إمسح قائمة القِراءاتْ الحالية</translation>
-    </message>
-    <message>
-        <source>Menus &amp;&amp; Options</source>
-        <translation>قوائم&amp;&amp;خيارات </translation>
-    </message>
-    <message>
-        <source>Modifier</source>
-        <translation>مبدل</translation>
     </message>
     <message>
         <source>Open general options</source>
@@ -373,6 +357,138 @@
     <message>
         <source>Language of Miam Player</source>
         <translation>MiamPlayer لُغَةْ</translation>
+    </message>
+    <message>
+        <source>Currently under development</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Menu &amp;&amp; Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F12</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+O</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Shift+R</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>F9</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>N</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item in loop</source>
+        <translation type="unfinished">المسار الحالي ، مكرر</translation>
+    </message>
+    <message>
+        <source>L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>K</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shuffle</source>
+        <translation type="unfinished">عشوائي</translation>
+    </message>
+    <message>
+        <source>Mute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Increase volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item once</source>
+        <translation type="unfinished">المسار الحالي  ، مرة واحدة</translation>
+    </message>
+    <message>
+        <source>M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decrease volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation type="unfinished">أسفل</translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation type="unfinished">أعلى</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift+Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift+Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crtl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crtl+W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -629,6 +745,10 @@
         <source>px</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Currently under development</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -716,10 +836,6 @@
     <message>
         <source>Send to the current playlist</source>
         <translation>أرسل إلي قائِمة القراءة الحالية</translation>
-    </message>
-    <message>
-        <source>Properties</source>
-        <translation type="vanished">خصائص</translation>
     </message>
     <message>
         <source>  Artists \ Albums</source>
@@ -1235,6 +1351,10 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
     <message>
         <source>Alt</source>
         <translation>بديل</translation>
+    </message>
+    <message>
+        <source>Ctrl + Shift</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

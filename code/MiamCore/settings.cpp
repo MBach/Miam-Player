@@ -436,13 +436,13 @@ void Settings::setMusicLocations(const QStringList &locations)
 	setValue("musicLocations", locations);
 }
 
-void Settings::setShortcut(const QString &objectName, int keySequence)
+void Settings::setShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
 	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
-	if (keySequence == 0) {
+	if (keySequence.isEmpty()) {
 		shortcuts.remove(objectName);
 	} else {
-		shortcuts.insert(objectName, keySequence);
+		shortcuts.insert(objectName, keySequence.toString());
 	}
 	if (shortcuts.isEmpty()) {
 		remove("shortcuts");
@@ -451,10 +451,10 @@ void Settings::setShortcut(const QString &objectName, int keySequence)
 	}
 }
 
-int Settings::shortcut(const QString &objectName) const
+QKeySequence Settings::shortcut(const QString &objectName) const
 {
 	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
-	return shortcuts.value(objectName).toInt();
+	return QKeySequence(shortcuts.value(objectName).toString());
 }
 
 QMap<QString, QVariant> Settings::shortcuts() const

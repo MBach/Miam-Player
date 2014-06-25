@@ -12,6 +12,12 @@
 
 class MainWindow;
 
+/**
+ * \brief		The CustomizeThemeDialog class is a very important class. It is designed to help one to customize theme of Miam-Player.
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 {
 	Q_OBJECT

@@ -91,11 +91,11 @@ protected:
 
 	virtual void moveEvent(QMoveEvent *);
 
-public slots:
-	void bindShortcut(const QString&, int keySequence);
-
 private slots:
+	void bindShortcut(const QString&, const QKeySequence &keySequence);
+
 	void showTabPlaylists();
+
 	void showTagEditor();
 };
 
