@@ -24,6 +24,7 @@ private:
 public:
 	CustomizeOptionsDialog(QWidget *parent = 0);
 
+	/** Third panel in this dialog: shorcuts has to be initialized in the end. */
 	void initShortcuts();
 
 	/** Is it necessary to redefined this from the UI class just for this init label? */
@@ -32,6 +33,9 @@ public:
 protected:
 	/** Redefined to add custom behaviour. */
 	virtual void closeEvent(QCloseEvent *);
+
+	/** Redefined to inspect shortcuts. */
+	virtual bool eventFilter(QObject *obj, QEvent *e);
 
 public slots:
 	/** Adds a new music location in the library. */
@@ -47,6 +51,8 @@ public slots:
 	void open();
 
 private slots:
+	void checkShortcutsIntegrity();
+
 	/** Delete a music location previously chosen by the user. */
 	void deleteSelectedLocation();
 

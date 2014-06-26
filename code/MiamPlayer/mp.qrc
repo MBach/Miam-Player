@@ -67,6 +67,7 @@
         <file alias="colors">config/colors.png</file>
         <file alias="tabs">config/tabs.png</file>
         <file alias="translate">config/translate.png</file>
+        <file alias="resetButton">config/reset.png</file>
     </qresource>
     <qresource prefix="/player/oxygen">
         <file alias="pause">player/oxygen/pause.png</file>

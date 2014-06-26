@@ -132,7 +132,9 @@ void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	_playlistModel->insertMedias(rowIndex, medias);
 	if (Settings::getInstance()->isPlaylistResizeColumns()) {
+		this->horizontalHeader()->setStretchLastSection(false);
 		this->resizeColumnsToContents();
+		this->horizontalHeader()->setStretchLastSection(true);
 	} else {
 		this->resizeColumnToContents(TRACK_NUMBER);
 		this->resizeColumnToContents(RATINGS);

@@ -3,6 +3,7 @@
 
 #include <QLineEdit>
 #include <QPropertyAnimation>
+#include <QShortcut>
 #include <QTimer>
 
 #include "miamcore_global.h"
@@ -21,9 +22,12 @@ private:
 	QTimer *_timer;
 	int _fps;
 	QPropertyAnimation _fade;
+	QShortcut *_shortcut;
 
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
+
+	QShortcut * shortcut();
 
 protected:
 	virtual void focusInEvent(QFocusEvent *e);

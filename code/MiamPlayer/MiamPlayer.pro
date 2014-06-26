@@ -10,7 +10,6 @@ SOURCES += \
     dialogs/dragdropdialog.cpp \
     dialogs/playlistmanager.cpp \
     dialogs/reflector.cpp \
-    dialogs/shortcutlineedit.cpp \
     filesystem/addressbar.cpp \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
@@ -61,7 +60,6 @@ HEADERS += \
     dialogs/playlistmanager.h \
     dialogs/reflector.h \
     dialogs/paintablewidget.h \
-    dialogs/shortcutlineedit.h \
     filesystem/addressbar.h \
     filesystem/addressbarbutton.h \
     filesystem/addressbarmenu.h \

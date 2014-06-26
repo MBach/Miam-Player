@@ -34,16 +34,6 @@ void MediaButton::setIcon(const QIcon &icon, bool toggled)
 	}
 }
 
-/** Redefined to set shortcuts from settings at startup. */
-void MediaButton::setObjectName(const QString &name)
-{
-	QKeySequence shortcut = Settings::getInstance()->shortcut(name.left(name.size() - QString("Button").size()));
-	if (!shortcut.isEmpty()) {
-		setShortcut(shortcut);
-	}
-	QObject::setObjectName(name);
-}
-
 /** Load an icon from a chosen theme in options. */
 void MediaButton::setIconFromTheme(const QString &theme)
 {

@@ -576,6 +576,13 @@
            <string>Menu &amp;&amp; Options</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_3">
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelOpenFolders">
+             <property name="text">
+              <string>Open folders...</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="labelOpenFile">
              <property name="text">
@@ -599,40 +606,17 @@
              </property>
             </spacer>
            </item>
-           <item row="0" column="3">
-            <widget class="QPushButton" name="openFilesReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+           <item row="0" column="2">
+            <widget class="QKeySequenceEdit" name="openFiles">
+             <property name="keySequence">
+              <string notr="true">Ctrl+O</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelOpenFolders">
-             <property name="text">
-              <string>Open folders...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QPushButton" name="openFoldersReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+           <item row="1" column="2">
+            <widget class="QKeySequenceEdit" name="openFolders">
+             <property name="keySequence">
+              <string notr="true">Ctrl+Shift+O</string>
              </property>
             </widget>
            </item>
@@ -649,25 +633,29 @@
              </property>
             </spacer>
            </item>
-           <item row="2" column="3">
-            <widget class="QPushButton" name="exitReset">
+           <item row="2" column="0">
+            <widget class="QLabel" name="labelExit">
+             <property name="text">
+              <string>Exit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="4">
+            <widget class="QPushButton" name="showOptionsReset">
              <property name="font">
               <font>
                <pointsize>7</pointsize>
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="labelExit">
-             <property name="text">
-              <string>Exit</string>
              </property>
             </widget>
            </item>
@@ -678,33 +666,17 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="3">
-            <widget class="QPushButton" name="showCustomizeReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
+           <item row="5" column="0">
+            <widget class="QLabel" name="labelShowOptions">
              <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+              <string>Open general options</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="3">
-            <widget class="QPushButton" name="scanLibraryReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+           <item row="4" column="2">
+            <widget class="QKeySequenceEdit" name="showCustomize">
+             <property name="keySequence">
+              <string notr="true">F9</string>
              </property>
             </widget>
            </item>
@@ -715,67 +687,233 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="labelShowOptions">
-             <property name="text">
-              <string>Open general options</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="3">
-            <widget class="QPushButton" name="showOptionsReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+           <item row="3" column="2">
+            <widget class="QKeySequenceEdit" name="scanLibrary">
+             <property name="keySequence">
+              <string notr="true">Ctrl+Shift+R</string>
              </property>
             </widget>
            </item>
            <item row="5" column="2">
             <widget class="QKeySequenceEdit" name="showOptions">
              <property name="keySequence">
-              <string>F12</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QKeySequenceEdit" name="showCustomize">
-             <property name="keySequence">
-              <string>F9</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QKeySequenceEdit" name="scanLibrary">
-             <property name="keySequence">
-              <string>Ctrl+Shift+R</string>
+              <string notr="true">F12</string>
              </property>
             </widget>
            </item>
            <item row="2" column="2">
             <widget class="QKeySequenceEdit" name="exit">
              <property name="keySequence">
-              <string>Ctrl+Shift+R</string>
+              <string notr="true">Ctrl+Q</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QKeySequenceEdit" name="openFolders">
-             <property name="keySequence">
-              <string>Ctrl+Shift+O</string>
+           <item row="5" column="3">
+            <widget class="QPushButton" name="showOptionsClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QKeySequenceEdit" name="openFiles">
-             <property name="keySequence">
-              <string>Ctrl+O</string>
+           <item row="4" column="3">
+            <widget class="QPushButton" name="showCustomizeClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QPushButton" name="scanLibraryClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QPushButton" name="exitClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="openFoldersClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="openFilesClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QPushButton" name="showCustomizeReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="4">
+            <widget class="QPushButton" name="scanLibraryReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QPushButton" name="exitReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
+            <widget class="QPushButton" name="openFoldersReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="openFilesReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -786,47 +924,18 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>686</width>
-            <height>476</height>
+            <width>208</width>
+            <height>540</height>
            </rect>
           </property>
           <attribute name="label">
            <string>View</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="2">
-            <widget class="QKeySequenceEdit" name="viewPlaylists">
-             <property name="keySequence">
-              <string>H</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QKeySequenceEdit" name="showTabLibrary">
-             <property name="keySequence">
-              <string>1</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="2">
             <widget class="QKeySequenceEdit" name="showTabFilesystem">
              <property name="keySequence">
-              <string>2</string>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="3">
-            <widget class="QPushButton" name="viewUniqueLibraryReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+              <string notr="true">2</string>
              </property>
             </widget>
            </item>
@@ -843,7 +952,50 @@
              </property>
             </spacer>
            </item>
-           <item row="11" column="3">
+           <item row="1" column="2">
+            <widget class="QKeySequenceEdit" name="showTabLibrary">
+             <property name="keySequence">
+              <string notr="true">1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="4">
+            <widget class="QPushButton" name="viewUniqueLibraryReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QKeySequenceEdit" name="viewPlaylists">
+             <property name="keySequence">
+              <string notr="true">H</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="labelSendToTagEditor">
+             <property name="text">
+              <string>Add selected items to Tag Editor</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="4">
             <widget class="QPushButton" name="viewTagEditorReset">
              <property name="font">
               <font>
@@ -851,7 +1003,30 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="4">
+            <widget class="QPushButton" name="sendToCurrentPlaylistReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -868,22 +1043,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="3">
-            <widget class="QPushButton" name="sendToCurrentPlaylistReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
+           <item row="1" column="4">
             <widget class="QPushButton" name="showTabLibraryReset">
              <property name="font">
               <font>
@@ -891,74 +1051,13 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="labelSendToTagEditor">
-             <property name="text">
-              <string>Add selected items to Tag Editor</string>
-             </property>
-             <property name="wordWrap">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QPushButton" name="viewPlaylistsReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QPushButton" name="showTabFilesystemReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="3">
-            <widget class="QPushButton" name="sendToTagEditorReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelViewPlaylists">
-             <property name="text">
-              <string>Show view Playlists</string>
-             </property>
-             <property name="wordWrap">
               <bool>true</bool>
              </property>
             </widget>
@@ -976,20 +1075,77 @@
              </property>
             </spacer>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelShowLibrary">
+           <item row="3" column="4">
+            <widget class="QPushButton" name="showTabFilesystemReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Switch to Library tab</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="viewPlaylistsReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelViewPlaylists">
+             <property name="text">
+              <string>Show view Playlists</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="labelShowFileExplorer">
+           <item row="7" column="4">
+            <widget class="QPushButton" name="sendToTagEditorReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
              <property name="text">
-              <string>Switch to File Explorer tab</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelShowLibrary">
+             <property name="text">
+              <string>Switch to Library tab</string>
              </property>
              <property name="wordWrap">
               <bool>true</bool>
@@ -1006,6 +1162,16 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelShowFileExplorer">
+             <property name="text">
+              <string>Switch to File Explorer tab</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="11" column="0">
             <widget class="QLabel" name="labelViewTagEditor">
              <property name="text">
@@ -1016,21 +1182,221 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="2">
-            <widget class="QKeySequenceEdit" name="viewTagEditor">
+           <item row="9" column="2">
+            <widget class="QKeySequenceEdit" name="viewUniqueLibrary">
              <property name="keySequence">
-              <string>J</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
-           <item row="9" column="2">
-            <widget class="QKeySequenceEdit" name="viewUniqueLibrary"/>
+           <item row="11" column="2">
+            <widget class="QKeySequenceEdit" name="viewTagEditor">
+             <property name="keySequence">
+              <string notr="true">J</string>
+             </property>
+            </widget>
            </item>
            <item row="7" column="2">
-            <widget class="QKeySequenceEdit" name="sendToTagEditor"/>
+            <widget class="QKeySequenceEdit" name="sendToTagEditor">
+             <property name="keySequence">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QPushButton" name="searchReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item row="5" column="2">
-            <widget class="QKeySequenceEdit" name="sendToCurrentPlaylist"/>
+            <widget class="QKeySequenceEdit" name="sendToCurrentPlaylist">
+             <property name="keySequence">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelSearch">
+             <property name="text">
+              <string>Search</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QKeySequenceEdit" name="search">
+             <property name="keySequence">
+              <string notr="true">Ctrl+F</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="viewPlaylistsClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="showTabLibraryClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QPushButton" name="showTabFilesystemClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QPushButton" name="searchClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="3">
+            <widget class="QPushButton" name="sendToCurrentPlaylistClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="3">
+            <widget class="QPushButton" name="sendToTagEditorClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="3">
+            <widget class="QPushButton" name="viewUniqueLibraryClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="3">
+            <widget class="QPushButton" name="viewTagEditorClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1038,7 +1404,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-32</y>
+            <y>0</y>
             <width>667</width>
             <height>508</height>
            </rect>
@@ -1047,108 +1413,19 @@
            <string>Playback</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="8" column="4">
-            <widget class="QPushButton" name="seekForwardReset">
+           <item row="0" column="4">
+            <widget class="QPushButton" name="skipBackwardClear">
              <property name="font">
               <font>
                <pointsize>7</pointsize>
               </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="4">
-            <widget class="QPushButton" name="playbackSequentialReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="23" column="0">
-            <widget class="QLabel" name="labelMute">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Mute</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="labelSkipForward">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Skip forward</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="1">
-            <widget class="QLabel" name="skipForwardButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>22</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>22</width>
-               <height>22</height>
-              </size>
              </property>
              <property name="text">
               <string notr="true"/>
              </property>
-             <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/skipForward</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="textInteractionFlags">
-              <set>Qt::NoTextInteraction</set>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="4">
-            <widget class="QPushButton" name="skipForwardReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -1156,180 +1433,78 @@
             </widget>
            </item>
            <item row="2" column="4">
-            <widget class="QPushButton" name="seekBackwardReset">
+            <widget class="QPushButton" name="seekBackwardClear">
              <property name="font">
               <font>
                <pointsize>7</pointsize>
               </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="4">
-            <widget class="QPushButton" name="playbackLoopReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="27" column="0">
-            <widget class="QLabel" name="labelDecreaseVolume">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Decrease volume</string>
-             </property>
-            </widget>
-           </item>
-           <item row="16" column="0">
-            <widget class="QLabel" name="labelShuffle">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Shuffle</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="4">
-            <widget class="QPushButton" name="stopReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="22" column="0">
-            <spacer name="vs_playback_fixed_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>0</width>
-               <height>14</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="labelPlayPause">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Play / Pause</string>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="1">
-            <widget class="QLabel" name="seekForwardButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>22</width>
-               <height>22</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>22</width>
-               <height>22</height>
-              </size>
              </property>
              <property name="text">
               <string notr="true"/>
              </property>
-             <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/seekForward</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="textInteractionFlags">
-              <set>Qt::NoTextInteraction</set>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="0">
-            <widget class="QLabel" name="labelSeekForward">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Seek forward</string>
-             </property>
-            </widget>
-           </item>
-           <item row="21" column="4">
-            <widget class="QPushButton" name="playbackCurrentItemInLoopReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="19" column="0">
-            <widget class="QLabel" name="labelCurrentItemOnce">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
+           <item row="6" column="4">
+            <widget class="QPushButton" name="stopClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
              </property>
              <property name="text">
-              <string>Current item once</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="4">
+            <widget class="QPushButton" name="seekForwardClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QPushButton" name="playClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1370,6 +1545,19 @@
              </property>
             </widget>
            </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelStop">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Stop</string>
+             </property>
+            </widget>
+           </item>
            <item row="4" column="1">
             <widget class="QLabel" name="playButton">
              <property name="sizePolicy">
@@ -1407,20 +1595,7 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="labelStop">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Stop</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="4">
+           <item row="4" column="5">
             <widget class="QPushButton" name="playReset">
              <property name="font">
               <font>
@@ -1428,12 +1603,32 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
              </property>
             </widget>
+           </item>
+           <item row="11" column="0">
+            <spacer name="vs_playback_fixed_1">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>14</height>
+              </size>
+             </property>
+            </spacer>
            </item>
            <item row="6" column="1">
             <widget class="QLabel" name="stopButton">
@@ -1472,22 +1667,6 @@
              </property>
             </widget>
            </item>
-           <item row="11" column="0">
-            <spacer name="vs_playback_fixed_1">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>0</width>
-               <height>14</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item row="0" column="1">
             <widget class="QLabel" name="skipBackwardButton">
              <property name="sizePolicy">
@@ -1525,19 +1704,6 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelSkipBackward">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Skip backward</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="2">
             <spacer name="hs_playback">
              <property name="orientation">
@@ -1551,18 +1717,16 @@
              </property>
             </spacer>
            </item>
-           <item row="0" column="4">
-            <widget class="QPushButton" name="skipBackwardReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelSkipBackward">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
              <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+              <string>Skip backward</string>
              </property>
             </widget>
            </item>
@@ -1589,6 +1753,64 @@
              </property>
              <property name="text">
               <string>Seek backward</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QPushButton" name="skipBackwardReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="23" column="5">
+            <widget class="QPushButton" name="muteReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="28" column="0">
+            <spacer name="vs_playback">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="21" column="3">
+            <widget class="QKeySequenceEdit" name="playbackCurrentItemInLoop">
+             <property name="keySequence">
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -1629,22 +1851,7 @@
              </property>
             </widget>
            </item>
-           <item row="23" column="4">
-            <widget class="QPushButton" name="muteReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="25" column="4">
+           <item row="25" column="5">
             <widget class="QPushButton" name="increaseVolumeReset">
              <property name="font">
               <font>
@@ -1652,88 +1859,103 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="28" column="0">
-            <spacer name="vs_playback">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="21" column="3">
-            <widget class="QKeySequenceEdit" name="playbackCurrentItemInLoop"/>
-           </item>
-           <item row="12" column="3">
-            <widget class="QKeySequenceEdit" name="playbackSequential">
-             <property name="keySequence">
-              <string>K</string>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="3">
-            <widget class="QKeySequenceEdit" name="playbackLoop"/>
-           </item>
            <item row="16" column="3">
             <widget class="QKeySequenceEdit" name="playbackRandom">
              <property name="keySequence">
-              <string>L</string>
+              <string notr="true">L</string>
              </property>
             </widget>
            </item>
            <item row="19" column="3">
-            <widget class="QKeySequenceEdit" name="playbackCurrentItemOnce"/>
+            <widget class="QKeySequenceEdit" name="playbackCurrentItemOnce">
+             <property name="keySequence">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="3">
+            <widget class="QKeySequenceEdit" name="playbackLoop">
+             <property name="keySequence">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="3">
+            <widget class="QKeySequenceEdit" name="playbackSequential">
+             <property name="keySequence">
+              <string notr="true">K</string>
+             </property>
+            </widget>
            </item>
            <item row="4" column="3">
             <widget class="QKeySequenceEdit" name="play">
              <property name="keySequence">
-              <string>C, Space</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QKeySequenceEdit" name="seekBackward">
-             <property name="keySequence">
-              <string>X</string>
+              <string notr="true">C</string>
              </property>
             </widget>
            </item>
            <item row="0" column="3">
             <widget class="QKeySequenceEdit" name="skipBackward">
              <property name="keySequence">
-              <string>Z</string>
+              <string notr="true">Z</string>
              </property>
             </widget>
            </item>
            <item row="6" column="3">
             <widget class="QKeySequenceEdit" name="stop">
              <property name="keySequence">
-              <string>V</string>
+              <string notr="true">V</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QKeySequenceEdit" name="seekBackward">
+             <property name="keySequence">
+              <string notr="true">X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="19" column="5">
+            <widget class="QPushButton" name="playbackCurrentItemOnceReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
            <item row="10" column="3">
             <widget class="QKeySequenceEdit" name="skipForward">
              <property name="keySequence">
-              <string>N</string>
+              <string notr="true">N</string>
              </property>
             </widget>
            </item>
            <item row="8" column="3">
             <widget class="QKeySequenceEdit" name="seekForward">
              <property name="keySequence">
-              <string>B</string>
+              <string notr="true">B</string>
              </property>
             </widget>
            </item>
@@ -1774,7 +1996,7 @@
              </property>
             </widget>
            </item>
-           <item row="27" column="4">
+           <item row="27" column="5">
             <widget class="QPushButton" name="decreaseVolumeReset">
              <property name="font">
               <font>
@@ -1782,29 +2004,18 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="19" column="4">
-            <widget class="QPushButton" name="playbackCurrentItemOnceReset">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string>Reset</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="16" column="4">
+           <item row="16" column="5">
             <widget class="QPushButton" name="playbackRandomReset">
              <property name="font">
               <font>
@@ -1812,7 +2023,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -1919,19 +2134,6 @@
              </property>
             </widget>
            </item>
-           <item row="21" column="0">
-            <widget class="QLabel" name="labelCurrentItemInLoop">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Current item in loop</string>
-             </property>
-            </widget>
-           </item>
            <item row="14" column="1">
             <widget class="QLabel" name="repeatButton">
              <property name="sizePolicy">
@@ -1969,24 +2171,522 @@
              </property>
             </widget>
            </item>
-           <item row="23" column="3">
-            <widget class="QKeySequenceEdit" name="mute">
-             <property name="keySequence">
-              <string>M</string>
+           <item row="21" column="0">
+            <widget class="QLabel" name="labelCurrentItemInLoop">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Current item in loop</string>
              </property>
             </widget>
            </item>
-           <item row="27" column="3">
-            <widget class="QKeySequenceEdit" name="decreaseVolume">
+           <item row="23" column="3">
+            <widget class="QKeySequenceEdit" name="mute">
              <property name="keySequence">
-              <string>Down</string>
+              <string notr="true">M</string>
              </property>
             </widget>
            </item>
            <item row="25" column="3">
             <widget class="QKeySequenceEdit" name="increaseVolume">
              <property name="keySequence">
-              <string>Up</string>
+              <string notr="true">Up</string>
+             </property>
+            </widget>
+           </item>
+           <item row="27" column="3">
+            <widget class="QKeySequenceEdit" name="decreaseVolume">
+             <property name="keySequence">
+              <string notr="true">Down</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="5">
+            <widget class="QPushButton" name="playbackSequentialReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="23" column="0">
+            <widget class="QLabel" name="labelMute">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Mute</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="5">
+            <widget class="QPushButton" name="seekForwardReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="labelSkipForward">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Skip forward</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="5">
+            <widget class="QPushButton" name="playbackLoopReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLabel" name="skipForwardButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>22</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>22</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="mp.qrc">:/player/oxygen/skipForward</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="5">
+            <widget class="QPushButton" name="skipForwardReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="5">
+            <widget class="QPushButton" name="seekBackwardReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="5">
+            <widget class="QPushButton" name="stopReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="22" column="0">
+            <spacer name="vs_playback_fixed_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>0</width>
+               <height>14</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="16" column="0">
+            <widget class="QLabel" name="labelShuffle">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Shuffle</string>
+             </property>
+            </widget>
+           </item>
+           <item row="27" column="0">
+            <widget class="QLabel" name="labelDecreaseVolume">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Decrease volume</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="labelSeekForward">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Seek forward</string>
+             </property>
+            </widget>
+           </item>
+           <item row="21" column="5">
+            <widget class="QPushButton" name="playbackCurrentItemInLoopReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="19" column="0">
+            <widget class="QLabel" name="labelCurrentItemOnce">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Current item once</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="labelPlayPause">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Play / Pause</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLabel" name="seekForwardButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>22</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>22</width>
+               <height>22</height>
+              </size>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="mp.qrc">:/player/oxygen/seekForward</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="4">
+            <widget class="QPushButton" name="skipForwardClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="4">
+            <widget class="QPushButton" name="playbackSequentialClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="4">
+            <widget class="QPushButton" name="playbackLoopClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="16" column="4">
+            <widget class="QPushButton" name="playbackRandomClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="19" column="4">
+            <widget class="QPushButton" name="playbackCurrentItemOnceClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="21" column="4">
+            <widget class="QPushButton" name="playbackCurrentItemInLoopClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="23" column="4">
+            <widget class="QPushButton" name="muteClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="25" column="4">
+            <widget class="QPushButton" name="increaseVolumeClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="27" column="4">
+            <widget class="QPushButton" name="decreaseVolumeClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1997,8 +2697,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>686</width>
-            <height>476</height>
+            <width>307</width>
+            <height>212</height>
            </rect>
           </property>
           <attribute name="label">
@@ -2047,7 +2747,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -2062,7 +2766,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -2097,7 +2805,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -2125,7 +2837,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -2140,7 +2856,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -2155,7 +2875,11 @@
               </font>
              </property>
              <property name="text">
-              <string>Reset</string>
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -2178,38 +2902,156 @@
            <item row="1" column="2">
             <widget class="QKeySequenceEdit" name="addPlaylist">
              <property name="keySequence">
-              <string>Ctrl+T</string>
+              <string notr="true">Ctrl+T</string>
              </property>
             </widget>
            </item>
            <item row="3" column="2">
             <widget class="QKeySequenceEdit" name="deleteCurrentPlaylist">
              <property name="keySequence">
-              <string>Ctrl+W</string>
+              <string notr="true">Ctrl+W</string>
              </property>
             </widget>
            </item>
            <item row="5" column="2">
-            <widget class="QKeySequenceEdit" name="openPlaylistManager"/>
+            <widget class="QKeySequenceEdit" name="openPlaylistManager">
+             <property name="keySequence">
+              <string notr="true"/>
+             </property>
+            </widget>
            </item>
            <item row="7" column="2">
             <widget class="QKeySequenceEdit" name="moveTracksUp">
              <property name="keySequence">
-              <string>Shift+Up</string>
+              <string notr="true">Shift+Up</string>
              </property>
             </widget>
            </item>
            <item row="9" column="2">
             <widget class="QKeySequenceEdit" name="moveTracksDown">
              <property name="keySequence">
-              <string>Shift+Down</string>
+              <string notr="true">Shift+Down</string>
              </property>
             </widget>
            </item>
            <item row="11" column="2">
             <widget class="QKeySequenceEdit" name="removeSelectedTracks">
              <property name="keySequence">
-              <string>Del</string>
+              <string notr="true">Del</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="addPlaylistClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QPushButton" name="deleteCurrentPlaylistClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="3">
+            <widget class="QPushButton" name="openPlaylistManagerClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="3">
+            <widget class="QPushButton" name="moveTracksUpClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="3">
+            <widget class="QPushButton" name="moveTracksDownClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="3">
+            <widget class="QPushButton" name="removeSelectedTracksClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>

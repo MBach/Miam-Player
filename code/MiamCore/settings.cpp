@@ -439,16 +439,8 @@ void Settings::setMusicLocations(const QStringList &locations)
 void Settings::setShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
 	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
-	if (keySequence.isEmpty()) {
-		shortcuts.remove(objectName);
-	} else {
-		shortcuts.insert(objectName, keySequence.toString());
-	}
-	if (shortcuts.isEmpty()) {
-		remove("shortcuts");
-	} else {
-		setValue("shortcuts", shortcuts);
-	}
+	shortcuts.insert(objectName, keySequence.toString());
+	setValue("shortcuts", shortcuts);
 }
 
 QKeySequence Settings::shortcut(const QString &objectName) const

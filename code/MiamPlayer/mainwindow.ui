@@ -452,7 +452,7 @@
                     <property name="minimumSize">
                      <size>
                       <width>50</width>
-                      <height>0</height>
+                      <height>35</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -572,7 +572,7 @@
     <addaction name="actionMoveTracksUp"/>
     <addaction name="actionMoveTracksDown"/>
     <addaction name="separator"/>
-    <addaction name="actionShowPlaylistManager"/>
+    <addaction name="actionOpenPlaylistManager"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -657,7 +657,7 @@
     <string>About &amp;Qt...</string>
    </property>
   </action>
-  <action name="actionShowPlaylistManager">
+  <action name="actionOpenPlaylistManager">
    <property name="text">
     <string>&amp;Playlist manager...</string>
    </property>

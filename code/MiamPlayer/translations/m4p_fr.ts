@@ -147,24 +147,12 @@
         <translation>Sélectionner un endroit contenant votre musique</translation>
     </message>
     <message>
-        <source>Open a file...</source>
-        <translation>Ouvrir un fichier...</translation>
-    </message>
-    <message>
-        <source>Add selected item(s) to playlist</source>
-        <translation>Ajouter les éléments sélectionnés à la liste de lecture</translation>
-    </message>
-    <message>
         <source>Playlist</source>
         <translation>Liste de lecture</translation>
     </message>
     <message>
         <source>Add a new playlist</source>
         <translation>Ajouter une liste de lecture</translation>
-    </message>
-    <message>
-        <source>Clear current playlist</source>
-        <translation>Effacer la liste de lecture courante</translation>
     </message>
     <message>
         <source>Stop</source>
@@ -219,14 +207,6 @@
         <translation>Lecture</translation>
     </message>
     <message>
-        <source>Show library tab</source>
-        <translation>Montrer l&apos;onglet bibliothèque</translation>
-    </message>
-    <message>
-        <source>Show file explorer tab</source>
-        <translation>Montrer l&apos;onglet explorateur</translation>
-    </message>
-    <message>
         <source>Move selected track down</source>
         <translation>Déplacer vers le bas la piste sélectionnée</translation>
     </message>
@@ -249,10 +229,6 @@
     <message>
         <source>Playlists</source>
         <translation>Listes de lecture </translation>
-    </message>
-    <message>
-        <source>Remove selected track(s)</source>
-        <translation>Retirer les pistes sélectionnées</translation>
     </message>
     <message>
         <source>Drag &amp; Drop</source>
@@ -367,68 +343,12 @@
         <translation>Menu &amp;&amp; Options</translation>
     </message>
     <message>
-        <source>F12</source>
-        <translation>F12</translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation>Par défaut</translation>
-    </message>
-    <message>
-        <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+R</source>
-        <translation>Ctrl+Maj+R</translation>
-    </message>
-    <message>
-        <source>Ctrl+Q</source>
-        <translation>Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>F9</source>
-        <translation>F9</translation>
-    </message>
-    <message>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <source>X</source>
-        <translation>X</translation>
-    </message>
-    <message>
-        <source>Z</source>
-        <translation>W</translation>
-    </message>
-    <message>
-        <source>C</source>
-        <translation>C</translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation>V</translation>
-    </message>
-    <message>
-        <source>N</source>
-        <translation>N</translation>
-    </message>
-    <message>
-        <source>B</source>
-        <translation>B</translation>
-    </message>
-    <message>
         <source>Current item in loop</source>
         <translation>Une piste, toujours en boucle</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation>L</translation>
-    </message>
-    <message>
-        <source>K</source>
-        <translation>K</translation>
     </message>
     <message>
         <source>Shuffle</source>
@@ -447,48 +367,56 @@
         <translation>Une piste, une seule fois</translation>
     </message>
     <message>
-        <source>M</source>
-        <translation>M</translation>
-    </message>
-    <message>
         <source>Decrease volume</source>
         <translation>Diminuer le volume</translation>
     </message>
     <message>
-        <source>Down</source>
-        <translation>Bas</translation>
+        <source>Open folders...</source>
+        <translation>Ouvrir des dossiers...</translation>
     </message>
     <message>
-        <source>Up</source>
-        <translation>Haut</translation>
+        <source>Open files...</source>
+        <translation>Ouvrir des fichiers...</translation>
     </message>
     <message>
-        <source>Delete</source>
-        <translation>Suppr.</translation>
+        <source>View</source>
+        <translation>Vue</translation>
     </message>
     <message>
-        <source>Shift+Down</source>
-        <translation>Maj+Bas</translation>
+        <source>Show view Unique Library</source>
+        <translation>Vue Bibliothèque Unique</translation>
     </message>
     <message>
-        <source>Shift+Up</source>
-        <translation>Maj+Haut</translation>
+        <source>Add selected items to Tag Editor</source>
+        <translation>Envoyer les éléments sélectionnés à l&apos;Éditeur de tags</translation>
     </message>
     <message>
-        <source>Crtl+T</source>
-        <translation>Crtl+T</translation>
+        <source>Show view Playlists</source>
+        <translation>Vue Listes de lecture</translation>
     </message>
     <message>
-        <source>Crtl+W</source>
-        <translation>Crtl+W</translation>
+        <source>Switch to Library tab</source>
+        <translation>Basculer vers l&apos;onglet Bibliothèque</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation>1</translation>
+        <source>Switch to File Explorer tab</source>
+        <translation>Basculer vers l&apos;onglet Explorateur de fichiers</translation>
     </message>
     <message>
-        <source>2</source>
-        <translation>2</translation>
+        <source>Add selected items to current playlist</source>
+        <translation>Envoyer à la liste de lecture courante</translation>
+    </message>
+    <message>
+        <source>Show view Tag Editor</source>
+        <translation>Vue Éditeur de tags</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Rechercher</translation>
+    </message>
+    <message>
+        <source>Remove selected tracks</source>
+        <translation>Retirer les pistes sélectionnées</translation>
     </message>
 </context>
 <context>
@@ -747,7 +675,7 @@
     </message>
     <message>
         <source>Currently under development</source>
-        <translation type="unfinished">En cours de développement</translation>
+        <translation>En cours de développement</translation>
     </message>
 </context>
 <context>
@@ -869,16 +797,8 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Library</source>
-        <translation>Bibliothèque</translation>
-    </message>
-    <message>
         <source>Search...</source>
         <translation>Rechercher...</translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation>Explorateur de fichiers</translation>
     </message>
     <message>
         <source>Customize library...</source>
@@ -923,10 +843,6 @@
     <message>
         <source>E&amp;xit</source>
         <translation>&amp;Quitter</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <translation>&amp;Ouvrir...</translation>
     </message>
     <message>
         <source>&amp;Add a playlist</source>
@@ -1069,14 +985,6 @@
         <translation>&amp;Enlever les bords de la fenêtre</translation>
     </message>
     <message>
-        <source>Ctrl+Q</source>
-        <translation type="unfinished">Ctrl+Q</translation>
-    </message>
-    <message>
-        <source>Ctrl+W</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation>Artiste \ Album</translation>
     </message>
@@ -1091,6 +999,22 @@
     <message>
         <source>Tag Editor</source>
         <translation>Éditeur de tags</translation>
+    </message>
+    <message>
+        <source>&amp;Open files...</source>
+        <translation>&amp;Ouvrir des fichiers...</translation>
+    </message>
+    <message>
+        <source>Open folders...</source>
+        <translation>Ouvrir des dossiers...</translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation>Bibliothèque</translation>
+    </message>
+    <message>
+        <source>File explorer</source>
+        <translation>Explorateur de fichiers</translation>
     </message>
 </context>
 <context>
@@ -1259,80 +1183,6 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
     <message>
         <source>empty folder</source>
         <translation>dossier vide</translation>
-    </message>
-</context>
-<context>
-    <name>ShortcutLineEdit</name>
-    <message>
-        <source>Backspace</source>
-        <translation>Retour Arrière</translation>
-    </message>
-    <message>
-        <source>Return</source>
-        <translation>Entrée</translation>
-    </message>
-    <message>
-        <source>Space</source>
-        <translation>Espace</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>Gauche</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>Droite</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation>Haut</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation>Bas</translation>
-    </message>
-    <message>
-        <source>Home</source>
-        <translation>Début</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <translation>Fin</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Suppr</translation>
-    </message>
-    <message>
-        <source>Page Up</source>
-        <translation>Page préc.</translation>
-    </message>
-    <message>
-        <source>Page Down</source>
-        <translation>Page suiv.</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation>Inser</translation>
-    </message>
-</context>
-<context>
-    <name>ShortcutWidget</name>
-    <message>
-        <source>Ctrl</source>
-        <translation>Ctrl</translation>
-    </message>
-    <message>
-        <source>Shift</source>
-        <translation>Maj</translation>
-    </message>
-    <message>
-        <source>Alt</source>
-        <translation>Alt</translation>
-    </message>
-    <message>
-        <source>Ctrl + Shift</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -55,6 +55,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	properties->addSeparator();
 	properties->addAction(actionOpenTagEditor);
 
+	sendToCurrentPlaylist = new QShortcut(this);
+	openTagEditor = new QShortcut(this);
+
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
 		if (!Settings::getInstance()->isSearchAndExcludeLibrary()) {
@@ -67,9 +70,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 		}
 	});
 
-	// Context menu
+	// Context menu and shortcuts
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
+	connect(sendToCurrentPlaylist, &QShortcut::activated, this, &TreeView::appendToPlaylist);
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
+	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
 	proxyModel->sortOrder();
 
@@ -625,7 +630,7 @@ void LibraryTreeView::changeHierarchyOrder()
 void LibraryTreeView::filterLibrary(const QString &filter)
 {
 	if (filter.isEmpty()) {
-		proxyModel->invalidate();
+		proxyModel->setFilterRegExp(QRegExp());
 		proxyModel->sort(0, proxyModel->sortOrder());
 	} else {
 		bool needToSortAgain = false;
@@ -653,6 +658,7 @@ void LibraryTreeView::reset()
 {
 	circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
+		proxyModel->setFilterRegExp(QString());
 		_artists.clear();
 		_albums.clear();
 		_discNumbers.clear();

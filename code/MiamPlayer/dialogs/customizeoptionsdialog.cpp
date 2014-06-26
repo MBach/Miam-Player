@@ -117,9 +117,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
 }
 
+/** Third panel in this dialog: shorcuts has to be initialized in the end. */
 void CustomizeOptionsDialog::initShortcuts()
 {
-	// Third panel: shorcuts
 	Settings *settings = Settings::getInstance();
 	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
@@ -127,25 +127,34 @@ void CustomizeOptionsDialog::initShortcuts()
 		QKeySequence sequence = shortcut->keySequence();
 		defaultShortcuts->insert(shortcut, sequence);
 
-		// Init shortcuts: merge default shortcuts with existing ones in settings
+		// Init shortcuts: override default shortcuts with existing ones in settings
 		QString shortCutName = shortcut->objectName();
 		if (shortcutMap.contains(shortCutName)) {
 			sequence = QKeySequence(shortcutMap.value(shortCutName).toString());
+			shortcut->setKeySequence(sequence);
 		}
+
+		// Load current shortcut
 		emit aboutToBindShortcut(shortCutName, sequence);
 
 		// Forward signal to MainWindow
-		connect(shortcut, &QKeySequenceEdit::editingFinished, this, [=]() {
-			settings->setShortcut(shortcut->objectName(), shortcut->keySequence());
-			emit aboutToBindShortcut(shortcut->objectName(), shortcut->keySequence());
-		});
+		connect(shortcut, &QKeySequenceEdit::editingFinished, this, &CustomizeOptionsDialog::checkShortcutsIntegrity);
+
+		// Watch all instances of QKeySequenceEdit in case of ambiguously defined shortcut
+		shortcut->installEventFilter(this);
 	}
 
-	// Add the possibility to restore defaults shortcuts.
-	foreach(QPushButton *resetShortcut, shortcutsToolBox->findChildren<QPushButton*>()) {
-		QKeySequenceEdit *shortcut = shortcutsToolBox->findChild<QKeySequenceEdit*>(resetShortcut->objectName().remove("Reset"));
-		connect(resetShortcut, &QPushButton::clicked, this, [=]() {
+	// Clear current shortcut or restore default one
+	foreach(QKeySequenceEdit *shortcut, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+		QPushButton *clear = shortcutsToolBox->findChild<QPushButton*>(shortcut->objectName().append("Clear"));
+		QPushButton *reset = shortcutsToolBox->findChild<QPushButton*>(shortcut->objectName().append("Reset"));
+		connect(clear, &QPushButton::clicked, this, [=]() {
+			shortcut->clear();
+			emit shortcut->editingFinished();
+		});
+		connect(reset, &QPushButton::clicked, this, [=]() {
 			shortcut->setKeySequence(defaultShortcuts->value(shortcut));
+			emit shortcut->editingFinished();
 		});
 	}
 }
@@ -159,12 +168,6 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 			"CustomizeOptionsDialog", "Add some music locations here"));
 	}
 	Ui::CustomizeOptionsDialog::retranslateUi(dialog);
-	qDebug() << "bind shortcuts";
-
-	/*foreach(QLineEdit *shortcut, shortcutsToolBox->findChildren<QLineEdit*>()) {
-		qDebug() << shortcut->objectName();
-		emit aboutToBindShortcut(shortcut->objectName(), QKeySequence(shortcut->text()));
-	}*/
 }
 
 /** Redefined to add custom behaviour. */
@@ -173,6 +176,29 @@ void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
 	QDialog::closeEvent(e);
 	// Drive is scanned only when the popup is closed
 	this->updateMusicLocations();
+}
+
+/** Redefined to inspect shortcuts. */
+bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
+{
+	QKeySequenceEdit *edit = qobject_cast<QKeySequenceEdit*>(obj);
+
+	// When one is clicking outside the area which is marked as dirty, just remove what has been typed
+	if (edit && e->type() == QEvent::FocusOut && edit->property("ambiguous").toBool()) {
+		edit->setProperty("ambiguous", false);
+		edit->setStyleSheet("");
+		edit->clear();
+		emit edit->editingFinished();
+
+		// Don't forget to clear ambiguous status for other QKeySequenceEdit widget
+		foreach (QKeySequenceEdit *other, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+			if (other->property("ambiguous").toBool()) {
+				other->setProperty("ambiguous", false);
+				other->setStyleSheet("");
+			}
+		}
+	}
+	return QDialog::eventFilter(obj, e);
 }
 
 /** Adds a new music location in the library. */
@@ -237,6 +263,38 @@ void CustomizeOptionsDialog::open()
 	retranslateUi(this);
 	QDialog::open();
 	this->activateWindow();
+}
+
+void CustomizeOptionsDialog::checkShortcutsIntegrity()
+{
+	bool ok = true;
+
+	// Find ambiguous shortcuts
+	QMultiMap<int, QKeySequenceEdit*> map;
+	foreach (QKeySequenceEdit *edit, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+		// Each sequence can has up to 4 keys
+		for (int i = 0; i < edit->keySequence().count(); i++) {
+			map.insert(edit->keySequence()[i], edit);
+		}
+	}
+	QMapIterator<int, QKeySequenceEdit*> it(map);
+	while (it.hasNext()) {
+		it.next();
+		QKeySequenceEdit *edit = it.value();
+
+		// Shortcut is defined for more than 1 action -> mark it dirty
+		if (map.values(it.key()).size() > 1) {
+			edit->setStyleSheet("color: red");
+			edit->setProperty("ambiguous", true);
+			ok = false;
+		}
+	}
+
+	if (ok) {
+		QKeySequenceEdit *shortcut = qobject_cast<QKeySequenceEdit*>(sender());
+		Settings::getInstance()->setShortcut(shortcut->objectName(), shortcut->keySequence());
+		emit aboutToBindShortcut(shortcut->objectName(), shortcut->keySequence());
+	}
 }
 
 /** Delete a music location previously chosen by the user. */

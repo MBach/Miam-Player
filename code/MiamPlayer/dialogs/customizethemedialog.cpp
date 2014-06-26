@@ -19,11 +19,6 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	mainWindow = qobject_cast<MainWindow *>(parent);
 	buttonsListBox->setVisible(false);
 
-	spinBoxLibrary->installEventFilter(this);
-	spinBoxPlaylist->installEventFilter(this);
-	fontComboBoxLibrary->installEventFilter(this);
-	fontComboBoxPlaylist->installEventFilter(this);
-
 	spinBoxLibrary->setMouseTracking(true);
 
 	// Animates this Dialog
@@ -197,35 +192,6 @@ void CustomizeThemeDialog::mouseMoveEvent(QMouseEvent *event)
 {
 	qDebug() << event->pos();
 	QDialog::mouseMoveEvent(event);
-}
-
-bool CustomizeThemeDialog::eventFilter(QObject *obj, QEvent *event)
-{
-	/*if (event->type() == QEvent::FocusOut) {
-		if (_timer->isActive()) {
-			_timer->stop();
-			this->animate(0.5, 1.0);
-		}
-		event->accept();
-	} else
-	if (event->type() == QEvent::MouseMove) {
-		QWidget *childWidget = focusWidget();
-		//if (childWidget->parent() == obj) {
-			QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-			QPoint point = childWidget->mapToParent(childWidget->rect().center()) - mouseEvent->pos();
-			qDebug() << point.manhattanLength() << point << childWidget->rect().center();
-			//if (childWidget->hasFocus() && _timer->isActive() && point.manhattanLength() > 100) {
-			//qDebug() << "stop animation" << childWidget->objectName();
-			//	_timer->stop();
-			//	this->animate(0.5, 1.0);
-			//}
-		//}
-		if (childWidget->hasFocus() && _timer->isActive() && point.manhattanLength() > 300) {
-			_timer->stop();
-			this->animate(0.5, 1.0);
-		}
-	}*/
-	return QDialog::eventFilter(obj, event);
 }
 
 void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)

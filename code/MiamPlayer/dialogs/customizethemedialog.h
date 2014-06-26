@@ -14,7 +14,9 @@ class MainWindow;
 
 /**
  * \brief		The CustomizeThemeDialog class is a very important class. It is designed to help one to customize theme of Miam-Player.
- * \details
+ * \details		Almost everything can be customize: buttons, volume bar, fonts, colors, library and tabs. Lots of efforts have been made
+ * to apply these effects at runtime, in real time, without classic "Apply button". Also, no buttons to reset defaults are present. It is a choice
+ * and it won't be changed. Except for rare cases (colors) because it can be absolutely awful.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -47,11 +49,9 @@ private:
 
 protected:
 	/** Automatically centers the parent window when closing this dialog. */
-	void closeEvent(QCloseEvent *e);
+	virtual void closeEvent(QCloseEvent *e);
 
-	void mouseMoveEvent(QMouseEvent *event);
-
-	bool eventFilter(QObject *obj, QEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event);
 
 public slots:
 	/** Redefined to initialize favorites from settings. */
@@ -69,9 +69,6 @@ private slots:
 
 	/** Changes the current theme and updates this dialog too. */
 	void setThemeNameAndDialogButtons(QString);
-
-//signals:
-	//void aboutToFade();
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

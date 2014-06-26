@@ -19,9 +19,6 @@ public:
 	/** Redefined to load custom icons saved in settings. */
 	void setIcon(const QIcon &, bool toggled = false);
 
-	/** Redefined to set shortcuts from settings at startup. */
-	void setObjectName(const QString &);
-
 signals:
 	void mediaButtonChanged();
 

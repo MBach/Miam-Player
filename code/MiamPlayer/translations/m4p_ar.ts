@@ -143,24 +143,12 @@
         <translation>اختر مكان المُسِيقى الخاصة بك</translation>
     </message>
     <message>
-        <source>Open a file...</source>
-        <translation>افتح ملف...</translation>
-    </message>
-    <message>
-        <source>Add selected item(s) to playlist</source>
-        <translation>إضافة العناصر المحددة إلى عناصر قائمة القِراءاتْ</translation>
-    </message>
-    <message>
         <source>Playlist</source>
         <translation> قائمة القِراءاتْ </translation>
     </message>
     <message>
         <source>Add a new playlist</source>
         <translation> أضِفْ  قائمة جديدة مِن القِراءاتْ</translation>
-    </message>
-    <message>
-        <source>Clear current playlist</source>
-        <translation>إمسح محتوى قائمة القِراءاتْ الحالية</translation>
     </message>
     <message>
         <source>Stop</source>
@@ -215,14 +203,6 @@
         <translation>تشغيل</translation>
     </message>
     <message>
-        <source>Show library tab</source>
-        <translation> أظهِر بُوابة المكتبة</translation>
-    </message>
-    <message>
-        <source>Show file explorer tab</source>
-        <translation>إظهارْ بوابة المستكشِف</translation>
-    </message>
-    <message>
         <source>Move selected track down</source>
         <translation>إسحب إلى الأسفل المسار المُختار</translation>
     </message>
@@ -245,10 +225,6 @@
     <message>
         <source>Playlists</source>
         <translation>مجْموعة القِراءات </translation>
-    </message>
-    <message>
-        <source>Remove selected track(s)</source>
-        <translation>إزالة المسارات المحددة</translation>
     </message>
     <message>
         <source>Drag &amp; Drop</source>
@@ -367,68 +343,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>F12</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+Shift+R</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>F9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Z</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>C</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>N</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current item in loop</source>
         <translation type="unfinished">المسار الحالي ، مكرر</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>K</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Shuffle</source>
@@ -447,47 +367,55 @@
         <translation type="unfinished">المسار الحالي  ، مرة واحدة</translation>
     </message>
     <message>
-        <source>M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Decrease volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Down</source>
-        <translation type="unfinished">أسفل</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation type="unfinished">أعلى</translation>
-    </message>
-    <message>
-        <source>Delete</source>
+        <source>Open folders...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shift+Down</source>
+        <source>Open files...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Shift+Up</source>
+        <source>View</source>
+        <translation type="unfinished">مظهر</translation>
+    </message>
+    <message>
+        <source>Show view Unique Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Crtl+T</source>
+        <source>Add selected items to Tag Editor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Crtl+W</source>
+        <source>Show view Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>1</source>
+        <source>Switch to Library tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>2</source>
+        <source>Switch to File Explorer tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add selected items to current playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show view Tag Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove selected tracks</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -869,16 +797,8 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Library</source>
-        <translation>المكتبة</translation>
-    </message>
-    <message>
         <source>Search...</source>
         <translation>بحث...</translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation>مستكشف الملفات</translation>
     </message>
     <message>
         <source>Customize library...</source>
@@ -923,10 +843,6 @@
     <message>
         <source>E&amp;xit</source>
         <translation>&amp;مغادرة</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <translation>&amp;فتحْ...</translation>
     </message>
     <message>
         <source>&amp;Add a playlist</source>
@@ -1081,14 +997,6 @@
         <translation>إزالة حواف النافذة&amp;</translation>
     </message>
     <message>
-        <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ctrl+W</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1102,6 +1010,22 @@
     </message>
     <message>
         <source>Tag Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Open files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open folders...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File explorer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1280,80 +1204,6 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
     </message>
     <message>
         <source>empty folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ShortcutLineEdit</name>
-    <message>
-        <source>Backspace</source>
-        <translation>عودة للخلف</translation>
-    </message>
-    <message>
-        <source>Return</source>
-        <translation>عودة</translation>
-    </message>
-    <message>
-        <source>Space</source>
-        <translation>مِساحة</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation>يسار</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation>يمين</translation>
-    </message>
-    <message>
-        <source>Up</source>
-        <translation>أعلى</translation>
-    </message>
-    <message>
-        <source>Down</source>
-        <translation>أسفل</translation>
-    </message>
-    <message>
-        <source>Home</source>
-        <translation>بداية</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <translation>نهاية</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>مسحْ</translation>
-    </message>
-    <message>
-        <source>Page Up</source>
-        <translation>الصفحة السابقة</translation>
-    </message>
-    <message>
-        <source>Page Down</source>
-        <translation>الصفحة الموالية</translation>
-    </message>
-    <message>
-        <source>Insert</source>
-        <translation>أدخل</translation>
-    </message>
-</context>
-<context>
-    <name>ShortcutWidget</name>
-    <message>
-        <source>Ctrl</source>
-        <translation>تحكم</translation>
-    </message>
-    <message>
-        <source>Shift</source>
-        <translation>تغير</translation>
-    </message>
-    <message>
-        <source>Alt</source>
-        <translation>بديل</translation>
-    </message>
-    <message>
-        <source>Ctrl + Shift</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

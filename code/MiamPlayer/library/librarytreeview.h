@@ -8,6 +8,7 @@
 #include "../treeview.h"
 
 #include <QMenu>
+#include <QShortcut>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTimer>
@@ -18,7 +19,10 @@ class LibraryItemDelegate;
 class JumpToWidget;
 
 /**
- * @brief The LibraryTreeView class is displaying tracks in a tree, where items are sorted in Artists > Albums > Tracks.
+ * \brief		The LibraryTreeView class is displaying tracks in a tree.
+ * \details     Multiple hierarchies can be chosen by one with a right click on the header: Artist \ Album \ Track, Year \ Artist - Album, etc.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class LibraryTreeView : public TreeView
 {
@@ -53,6 +57,9 @@ private:
 	Q_ENUMS(DataField)
 
 public:
+	QShortcut *sendToCurrentPlaylist;
+	QShortcut *openTagEditor;
+
 	explicit LibraryTreeView(QWidget *parent = 0);
 
 	/** For every item in the library, gets the top level letter attached to it. */

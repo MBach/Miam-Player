@@ -27,6 +27,7 @@ PlaylistManager::PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylis
 
 	QLabel *label = new QLabel(tr("This preview area is empty.\nSelect a playlist to display the first 30 tracks."));
 	label->setAlignment(Qt::AlignCenter);
+	label->setWordWrap(true);
 
 	QVBoxLayout *vboxLayout = new QVBoxLayout();
 	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));

@@ -16,14 +16,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent), _librarySqlModel(NULL)
 {
 	setupUi(this);
-	Settings *settings = Settings::getInstance();
 
 	this->setAcceptDrops(true);
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
 
 	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton;
-	mediaButtons << seekForwardButton << skipForwardButton << playbackModeButton;
+	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
+				 << seekForwardButton << skipForwardButton << playbackModeButton;
 
 	// Init the audio module
 	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
@@ -161,12 +160,15 @@ void MainWindow::setupActions()
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &CustomizeThemeDialog::open);
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
-	connect(actionAboutMiamPlayer, &QAction::triggered, [=] () {
+	connect(actionAboutMiamPlayer, &QAction::triggered, this, [=] () {
 		QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
 		QMessageBox::about(this, QString("Miam Player v").append(qApp->applicationVersion()), message);
 	});
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
-	connect(actionScanLibrary, &QAction::triggered, _librarySqlModel, &LibrarySqlModel::rebuild);
+	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
+		searchBar->clear();
+		_librarySqlModel->rebuild();
+	});
 
 	// Quick Start
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
@@ -213,13 +215,16 @@ void MainWindow::setupActions()
 	connect(_mediaPlayer.data(), &MediaPlayer::stateChanged, this, [=] (QMediaPlayer::State state) {
 		qDebug() << "MediaPlayer::stateChanged" << state;
 		playButton->disconnect();
+		actionPlay->disconnect();
 		if (state == QMediaPlayer::PlayingState) {
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
 			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::pause);
+			connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::pause);
 			seekSlider->setEnabled(true);
 		} else {
 			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
 			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
+			connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
 			seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		}
 		// Remove bold font when player has stopped
@@ -227,11 +232,17 @@ void MainWindow::setupActions()
 		seekSlider->update();
 	});
 
+	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);
+	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekBackward);
+	connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
 	connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
+	connect(actionStop, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::stop);
 	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::stop);
+	connect(actionSeekForward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekForward);
 	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekForward);
+	connect(actionSkipForward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
@@ -255,7 +266,7 @@ void MainWindow::setupActions()
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
 	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
-	connect(actionShowPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
+	connect(actionOpenPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
 	connect(actionMute, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::toggleMute);
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
@@ -402,20 +413,24 @@ void MainWindow::moveEvent(QMoveEvent *event)
 
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
-	qDebug() << Q_FUNC_INFO << objectName;
 	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
 	// Connect actions first
 	if (action) {
 		action->setShortcut(keySequence);
+		// Some default shortcuts might interfer with other widgets, so we need to restrict where it applies
 		if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
 			action->setShortcutContext(Qt::WidgetShortcut);
 		}
+	// Specific actions not defined in main menu
+	} else if (objectName == "showTabLibrary" || objectName == "showTabFilesystem") {
+		leftTabs->setShortcut(objectName, keySequence);
+	} else if (objectName == "sendToCurrentPlaylist") {
+		library->sendToCurrentPlaylist->setKey(keySequence);
+	} else if (objectName == "sendToTagEditor") {
+		library->openTagEditor->setKey(keySequence);
+	} else if (objectName == "search") {
+		searchBar->shortcut()->setKey(keySequence);
 	} else {
-		// Is this really necessary? Everything should be in the menu
-		/*MediaButton *button = findChild<MediaButton*>(objectName + "Button");
-		if (button) {
-			button->setShortcut(QKeySequence(keySequence));
-		}*/
 		qDebug() << "action was not found for" << objectName;
 	}
 }
