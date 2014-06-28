@@ -172,13 +172,13 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				}
 				QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
 				_mainWindow->menuView->addAction(actionAddViewToMenu);
-				_mainWindow->updateFonts(Settings::getInstance()->font(Settings::MENUS));
+				_mainWindow->updateFonts(Settings::getInstance()->font(Settings::FF_Menu));
 				connect(actionAddViewToMenu, &QAction::triggered, [=]() {
 					mediaPlayerPlugin->toggleViews(_mainWindow);
 				});
 				// Link the view to the existing ActionGroup
 				actionAddViewToMenu->setCheckable(true);
-				actionAddViewToMenu->setActionGroup(_mainWindow->actionPlaybackSequential->actionGroup());
+				actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
 				_dependencies.insert(basic->name(), actionAddViewToMenu);
 			}
 		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {

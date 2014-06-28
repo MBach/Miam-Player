@@ -97,7 +97,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 
 void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 {
-	QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	QFont font = Settings::getInstance()->font(Settings::FF_Playlist);
 	for (int i=0; i < items.length(); i++) {
 		QStandardItem *item = items.at(i);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);

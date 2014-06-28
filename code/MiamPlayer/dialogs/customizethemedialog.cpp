@@ -30,6 +30,10 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	_animation->setTargetObject(this);
 
 	this->setupActions();
+
+	Settings *settings = Settings::getInstance();
+	this->restoreGeometry(settings->value("customizeThemeDialogGeometry").toByteArray());
+	listWidget->setCurrentRow(settings->value("customizeThemeDialogCurrentTab").toInt());
 }
 
 void CustomizeThemeDialog::setupActions()
@@ -41,6 +45,17 @@ void CustomizeThemeDialog::setupActions()
 
 	// Select button theme and size
 	connect(themeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &CustomizeThemeDialog::setThemeNameAndDialogButtons);
+	connect(customizeThemeCheckBox, &QCheckBox::toggled, this, [=](bool b) {
+		settings->setThemeCustomized(b);
+		if (!b) {
+			// Restore all buttons when unchecked
+			foreach (QCheckBox *button, customizeButtonsScrollArea->findChildren<QCheckBox*>()) {
+				if (!button->isChecked()) {
+					button->toggle();
+				}
+			}
+		}
+	});
 	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setButtonsSize);
 
 	// Hide buttons or not
@@ -52,26 +67,28 @@ void CustomizeThemeDialog::setupActions()
 				settings->setMediaButtonVisible(b->objectName(), visible);
 			});
 		}
-
-		// Connect a file dialog to every button if one wants to customize everything
-		QPushButton *pushButton = buttonsListBox->findChild<QPushButton *>(b->objectName().remove("Button"));
-		if (pushButton) {
-			connect(flatButtonsCheckBox, &QCheckBox::toggled, [=] (bool flat) { b->setFlat(flat); });
-		}
 	}
+
+	// Make buttons flat
+	connect(flatButtonsCheckBox, &QCheckBox::toggled, this, [=] (bool isFlat) {
+		settings->setButtonsFlat(isFlat);
+		foreach(MediaButton *b, mainWindow->mediaButtons) {
+			b->setFlat(isFlat);
+		}
+	});
+
+	// Connect a file dialog to every button if one wants to customize everything
 	foreach (QPushButton *pushButton, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
 	}
-
-	connect(flatButtonsCheckBox, &QCheckBox::toggled, settings, &Settings::setButtonsFlat);
 
 	// Volume bar
 	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &Settings::setVolumeBarTextAlwaysVisible);
 	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setVolumeBarHideAfter);
 
-	// Fonts	
+	// Fonts
 	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-		settings->setFont(Settings::PLAYLIST, font);
+		settings->setFont(Settings::FF_Playlist, font);
 		mainWindow->tabPlaylists->updateRowHeight();
 		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
 			for (int i = 0; i < playlist->model()->columnCount(); i++) {
@@ -81,37 +98,37 @@ void CustomizeThemeDialog::setupActions()
 		this->fade();
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-		settings->setFont(Settings::LIBRARY, font);
+		settings->setFont(Settings::FF_Library, font);
 		this->fade();
 	});
 	connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-		settings->setFont(Settings::MENUS, font);
+		settings->setFont(Settings::FF_Menu, font);
 		mainWindow->updateFonts(font);
 		this->fade();
 	});
 
 	// And fonts size
 	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		settings->setFontPointSize(Settings::PLAYLIST, i);
+		settings->setFontPointSize(Settings::FF_Playlist, i);
 		mainWindow->tabPlaylists->updateRowHeight();
 		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
 			for (int i = 0; i < playlist->model()->columnCount(); i++) {
-				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(Settings::PLAYLIST), Qt::FontRole);
+				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(Settings::FF_Playlist), Qt::FontRole);
 			}
 		}
 		this->fade();
 	});
 	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		settings->setFontPointSize(Settings::LIBRARY, i);
+		settings->setFontPointSize(Settings::FF_Library, i);
 		mainWindow->library->model()->layoutChanged();
-		QFont lowerFont = settings->font(Settings::LIBRARY);
+		QFont lowerFont = settings->font(Settings::FF_Library);
 		lowerFont.setPointSize(lowerFont.pointSizeF() * 0.7);
 		mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, lowerFont, Qt::FontRole);
 		this->fade();
 	});
 	connect(spinBoxMenus, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		settings->setFontPointSize(Settings::MENUS, i);
-		mainWindow->updateFonts(settings->font(Settings::MENUS));
+		settings->setFontPointSize(Settings::FF_Menu, i);
+		mainWindow->updateFonts(settings->font(Settings::FF_Menu));
 		this->fade();
 	});
 
@@ -267,6 +284,8 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 void CustomizeThemeDialog::loadTheme()
 {
 	Settings *settings = Settings::getInstance();
+	customizeThemeCheckBox->setChecked(settings->isThemeCustomized());
+
 	sizeButtonsSpinBox->setValue(settings->buttonsSize());
 	flatButtonsCheckBox->setChecked(settings->buttonsFlat());
 
@@ -299,31 +318,22 @@ void CustomizeThemeDialog::loadTheme()
 	spinBoxHideVolumeLabel->setValue(settings->volumeBarHideAfter());
 
 	// Fonts
-	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::PLAYLIST));
-	fontComboBoxLibrary->setCurrentFont(settings->font(Settings::LIBRARY));
-	fontComboBoxMenus->setCurrentFont(settings->font(Settings::MENUS));
-	spinBoxPlaylist->setValue(settings->fontSize(Settings::PLAYLIST));
+	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::FF_Playlist));
+	fontComboBoxLibrary->setCurrentFont(settings->font(Settings::FF_Library));
+	fontComboBoxMenus->setCurrentFont(settings->font(Settings::FF_Menu));
+	spinBoxPlaylist->setValue(settings->fontSize(Settings::FF_Playlist));
 	spinBoxLibrary->blockSignals(true);
-	spinBoxLibrary->setValue(settings->fontSize(Settings::LIBRARY));
+	spinBoxLibrary->setValue(settings->fontSize(Settings::FF_Library));
 	spinBoxLibrary->blockSignals(false);
-	spinBoxMenus->setValue(settings->fontSize(Settings::MENUS));
+	spinBoxMenus->setValue(settings->fontSize(Settings::FF_Menu));
 
 	// Library
 	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
 	spinBoxCoverSize->setValue(settings->coverSize());
 
 	// Colors
-	if (settings->colorsAlternateBG()) {
-		enableAlternateBGRadioButton->setChecked(true);
-	} else {
-		disableAlternateBGRadioButton->setChecked(true);
-	}
-
-	if (settings->isCustomColors()) {
-		enableCustomColorsRadioButton->setChecked(true);
-	} else {
-		disableCustomColorsRadioButton->setChecked(true);
-	}
+	settings->colorsAlternateBG() ? enableAlternateBGRadioButton->setChecked(true) : disableAlternateBGRadioButton->setChecked(true);
+	settings->isCustomColors() ? enableCustomColorsRadioButton->setChecked(true) : disableCustomColorsRadioButton->setChecked(true);
 	this->toggleCustomColors(settings->isCustomColors());
 
 	// Tabs
@@ -351,18 +361,32 @@ void CustomizeThemeDialog::open()
 void CustomizeThemeDialog::openChooseIconDialog()
 {
 	QPushButton *button = qobject_cast<QPushButton *>(sender());
-	MediaButton *b = mainWindow->findChild<MediaButton*>(button->objectName()+"Button");
-	if (b) {
-		QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first(), tr("Pictures (*.jpg *.jpeg *.png)"));
+	Settings *settings = Settings::getInstance();
 
-		Settings *settings = Settings::getInstance();
-		settings->setCustomIcon(b, path);
-		// Reset the custom icon
-		if (path.isEmpty()) {
-			path = ":/player/" + settings->theme() + "/" + button->objectName();
+	// It's always more convenient when the dialog re-open at the same location
+	QString openPath;
+	QVariant variantOpenPath = settings->value("customIcons/lastOpenPath");
+	if (variantOpenPath.isValid()) {
+		openPath = variantOpenPath.toString();
+	} else {
+		openPath = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+	}
+
+	QString path = QFileDialog::getOpenFileName(this, tr("Choose your custom icon"), openPath, tr("Pictures (*.jpg *.jpeg *.png)"));
+
+	// Reset custom icon if path is empty (delete key in settings too)
+	settings->setCustomIcon(button->objectName() + "Button", path);
+
+	foreach (MediaButton *b, mainWindow->findChildren<MediaButton*>(button->objectName() + "Button")) {
+		if (b) {
+			b->setIcon(QIcon(path));
 		}
+	}
+	if (path.isEmpty()) {
+		button->setIcon(QIcon(":/player/" + settings->theme() + "/" + button->objectName()));
+	} else {
+		settings->setValue("customIcons/lastOpenPath", QFileInfo(path).absolutePath());
 		button->setIcon(QIcon(path));
-		b->setIcon(QIcon(path));
 	}
 }
 
@@ -374,14 +398,15 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 	foreach(QPushButton *button, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		if (button) {
 			// Keep the custom icon provided by one
-			if (settings->hasCustomIcon(button)) {
-				button->setIcon(QIcon(settings->customIcon(button)));
+			if (settings->hasCustomIcon(button->objectName())) {
+				button->setIcon(QIcon(settings->customIcon(button->objectName())));
 			} else {
 				button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
 			}
 		}
 	}
 	settings->setThemeName(newTheme);
+	qDebug() << Q_FUNC_INFO << "wtf ?";
 	foreach(MediaButton *m, mainWindow->mediaButtons) {
 		m->setIconFromTheme(newTheme);
 	}

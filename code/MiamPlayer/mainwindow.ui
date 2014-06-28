@@ -740,6 +740,9 @@
    <property name="text">
     <string>&amp;Repeat</string>
    </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::Loop</string>
+   </property>
   </action>
   <action name="actionPlaybackRandom">
    <property name="checkable">
@@ -747,6 +750,9 @@
    </property>
    <property name="text">
     <string>S&amp;huffle</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::Random</string>
    </property>
   </action>
   <action name="actionRemoveSelectedTracks">
@@ -795,6 +801,9 @@
    <property name="text">
     <string>Current item &amp;once</string>
    </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::CurrentItemOnce</string>
+   </property>
   </action>
   <action name="actionPlaybackSequential">
    <property name="checkable">
@@ -806,6 +815,9 @@
    <property name="text">
     <string>&amp;Normal</string>
    </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::Sequential</string>
+   </property>
   </action>
   <action name="actionPlaybackCurrentItemInLoop">
    <property name="checkable">
@@ -813,6 +825,9 @@
    </property>
    <property name="text">
     <string>Current item in &amp;loop</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::CurrentItemInLoop</string>
    </property>
   </action>
   <action name="actionViewPlaylists">

@@ -54,7 +54,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	initStyleOption(&o, index);
 
 	// Highlight the current playing item
-	QFont font = Settings::getInstance()->font(Settings::PLAYLIST);
+	QFont font = Settings::getInstance()->font(Settings::FF_Playlist);
 	if (_playlist->mediaPlaylist()->currentIndex() == index.row() && _playlist->mediaPlayer().data()->state() != QMediaPlayer::StoppedState) {
 		font.setBold(true);
 		font.setItalic(true);

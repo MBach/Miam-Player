@@ -17,7 +17,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 {
 	if (role == Qt::FontRole) {
-		return Settings::getInstance()->font(Settings::LIBRARY);
+		return Settings::getInstance()->font(Settings::FF_Library);
 	} else {
 		return QSortFilterProxyModel::data(index, role);
 	}
@@ -26,7 +26,6 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	if (filterAcceptsRowItself(sourceRow, sourceParent)) {
-		emit aboutToHighlight(sourceParent, true);
 		return true;
 	}
 
@@ -35,6 +34,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	while (parent.isValid()) {
 		if (filterAcceptsRowItself(parent.row(), parent.parent())) {
 			emit aboutToHighlight(sourceParent, true);
+			qDebug() << "accepting 1" << parent.data().toString();
 			return true;
 		}
 		parent = parent.parent();
@@ -42,9 +42,11 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 
 	// Accept if any of the children is accepted on it's own merits
 	if (hasAcceptedChildren(sourceRow, sourceParent)) {
+		qDebug() << "accepting 2" << sourceParent.data().toString();
 		emit aboutToHighlight(sourceParent, true);
 		return true;
 	} else {
+		qDebug() << "refusing 1" << sourceParent.data().toString();
 		emit aboutToHighlight(sourceParent, false);
 	}
 
@@ -54,6 +56,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	if (item && item->data(LibraryTreeView::DF_ItemType).toInt() == LibraryTreeView::IT_Letter) {
 		foreach (QModelIndex index, _topLevelItems->values(item->index())) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
+				qDebug() << "accepting Letter" << index.data().toString();
 				emit aboutToHighlight(index, true);
 				return true;
 			}
@@ -62,6 +65,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	if (Settings::getInstance()->isSearchAndExcludeLibrary()) {
 		return false;
 	} else {
+		qDebug() << "refusing 2" << sourceParent.data().toString();
 		emit aboutToHighlight(sourceParent, false);
 		return true;
 	}
@@ -175,6 +179,7 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 {
 	QModelIndex item = sourceModel()->index(sourceRow, 0, sourceParent);
 	if (!item.isValid()) {
+		qDebug() << "refusing A" << item.data().toString();
 		emit aboutToHighlight(item, false);
 		return false;
 	}
@@ -182,21 +187,25 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 	// Check if there are children
 	int childCount = item.model()->rowCount(item);
 	if (childCount == 0) {
+		qDebug() << "refusing B" << item.data().toString();
 		emit aboutToHighlight(item, false);
 		return false;
 	}
 
 	for (int i = 0; i < childCount; ++i) {
 		if (filterAcceptsRowItself(i, item)) {
-			emit aboutToHighlight(item, true);
+			qDebug() << "accepting A" << item.child(i, 0).data().toString();
+			emit aboutToHighlight(item.child(i, 0), true);
 			return true;
 		}
 		// Recursive call
 		if (hasAcceptedChildren(i, item)) {
+			qDebug() << "accepting B" << item.data().toString();
 			emit aboutToHighlight(item, true);
 			return true;
 		}
 	}
+	qDebug() << "refusing C" << item.data().toString();
 	emit aboutToHighlight(item, false);
 	return false;
 }

@@ -17,7 +17,7 @@ public:
 	MediaButton(QWidget *parent = 0);
 
 	/** Redefined to load custom icons saved in settings. */
-	void setIcon(const QIcon &, bool toggled = false);
+	void setIcon(const QIcon &);
 
 signals:
 	void mediaButtonChanged();

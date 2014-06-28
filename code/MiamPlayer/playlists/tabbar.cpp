@@ -36,7 +36,7 @@ TabBar::TabBar(TabPlaylist *parent) :
 	});
 
 	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::PLAYLIST) {
+		if (ff == Settings::FF_Playlist) {
 			QFont font = newFont;
 			font.setPointSizeF(font.pointSizeF() * 0.8);
 			this->setFont(font);

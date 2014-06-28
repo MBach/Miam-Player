@@ -56,6 +56,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	connect(this, &QTableView::doubleClicked, this, [=](const QModelIndex &track) {
 		// Prevent the signal "currentMediaChanged" for being emitted twice
+		/// XXX is this comment still valid with VLC backend now?
 		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
 		_mediaPlayer.data()->blockSignals(false);
@@ -92,7 +93,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	actionInlineTag->setDisabled(true);
 
 	connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
-	//connect(actionEditTagsInEditor, &QAction::triggered, this, &Playlist::editTagsInEditor);
 	connect(actionEditTagsInEditor, &QAction::triggered, [=]() {
 		QList<QUrl> selectedTracks;
 		foreach (QModelIndex index, selectionModel()->selectedRows()) {
@@ -105,7 +105,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	//connect(actionInlineTag, &QAction::triggered, this, &Playlist::editTagInline);
 
 	// Set row height
-	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
+	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::FF_Playlist)).height());
 
 	connect(mediaPlaylist(), &QMediaPlaylist::loaded, this, [=] () {
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
@@ -160,7 +160,7 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 
 QSize Playlist::minimumSizeHint() const
 {
-	QFontMetrics fm(Settings::getInstance()->font(Settings::PLAYLIST));
+	QFontMetrics fm(Settings::getInstance()->font(Settings::FF_Playlist));
 	int width = 0;
 	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		if (!isColumnHidden(c)) {

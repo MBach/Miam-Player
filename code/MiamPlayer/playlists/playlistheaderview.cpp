@@ -31,10 +31,10 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	});
 
 	Settings *settings = Settings::getInstance();
-	this->setFont(settings->font(Settings::PLAYLIST));
+	this->setFont(settings->font(Settings::FF_Playlist));
 
 	connect(settings, &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::PLAYLIST) {
+		if (ff == Settings::FF_Playlist) {
 			QFont font = newFont;
 			font.setPointSizeF(font.pointSizeF() * 0.8);
 			this->setFont(font);

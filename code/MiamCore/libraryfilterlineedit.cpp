@@ -10,10 +10,10 @@
 #include <QtDebug>
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-	QLineEdit(parent), _timer(new QTimer(this)), _fps(0), _shortcut(new QShortcut(this))
+	QLineEdit(parent), _timer(new QTimer(this)), _fps(0), shortcut(new QShortcut(this))
 {
 	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::LIBRARY) {
+		if (ff == Settings::FF_Library) {
 			this->setFont(newFont);
 			this->setMinimumHeight(fontMetrics().height() * 1.6);
 		}
@@ -21,8 +21,8 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 
 	// Add the possibility to grab focus if it's in library, tag editor, or a playlist
 	// Do not work if widget is hidden (splitter or 2nd tab: file explorer)
-	_shortcut->setContext(Qt::ApplicationShortcut);
-	connect(_shortcut, &QShortcut::activated, this, [=]() {
+	shortcut->setContext(Qt::ApplicationShortcut);
+	connect(shortcut, &QShortcut::activated, this, [=]() {
 		this->setFocus(Qt::ShortcutFocusReason);
 	});
 
@@ -51,11 +51,6 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	_fade.setKeyValueAt(0.5, opposite);
 	_fade.setEndValue(c);
 	_fade.setDuration(1000);
-}
-
-QShortcut * LibraryFilterLineEdit::shortcut()
-{
-	return _shortcut;
 }
 
 void LibraryFilterLineEdit::focusInEvent(QFocusEvent *e)

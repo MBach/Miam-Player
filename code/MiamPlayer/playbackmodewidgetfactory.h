@@ -34,6 +34,8 @@ private:
 	Edge _previousEdge;
 
 public slots:
+	void setPlaybackMode(QMediaPlaylist::PlaybackMode mode);
+
 	void togglePlaybackModes();
 
 	void update();

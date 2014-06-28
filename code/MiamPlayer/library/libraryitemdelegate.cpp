@@ -46,7 +46,7 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, Libra
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	painter->save();
-	painter->setFont(Settings::getInstance()->font(Settings::LIBRARY));
+	painter->setFont(Settings::getInstance()->font(Settings::FF_Library));
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
@@ -96,7 +96,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	int type = item->data(LibraryTreeView::DF_ItemType).toInt();
 	if (settings->isCoversEnabled() && type == LibraryTreeView::IT_Album) {
-		QFontMetrics fmf(settings->font(Settings::LIBRARY));
+		QFontMetrics fmf(settings->font(Settings::FF_Library));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
@@ -166,7 +166,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		}
 		painter->restore();
 	}
-	QFontMetrics fmf(settings->font(Settings::LIBRARY));
+	QFontMetrics fmf(settings->font(Settings::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
 	QRect rectText;
@@ -187,7 +187,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
-	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
+	QFontMetrics fmf(Settings::getInstance()->font(Settings::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QRect rectText;
 	QString s;
@@ -244,7 +244,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	int trackNumber = track->data(LibraryTreeView::DF_TrackNumber).toInt();
 	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
-	QFontMetrics fmf(Settings::getInstance()->font(Settings::LIBRARY));
+	QFontMetrics fmf(Settings::getInstance()->font(Settings::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
 	QRect rectText;

@@ -147,7 +147,7 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	sqlModel = sql;
 	Settings *settings = Settings::getInstance();
 
-	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::MENUS), Qt::FontRole);
+	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::FF_Menu), Qt::FontRole);
 	this->setModel(proxyModel);
 
 	QObjectList objetsToExtend = QObjectList() << properties << this;
@@ -202,7 +202,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
-			action->setFont(Settings::getInstance()->font(Settings::MENUS));
+			action->setFont(Settings::getInstance()->font(Settings::FF_Menu));
 		}
 		if (item->data(DF_ItemType).toInt() != IT_Letter) {
 			properties->exec(event->globalPos());

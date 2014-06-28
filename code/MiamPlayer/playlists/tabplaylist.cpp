@@ -59,7 +59,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	});
 
 	connect(settings, &Settings::fontHasChanged, this, [=](const Settings::FontFamily ff, const QFont &) {
-		if (ff == Settings::PLAYLIST) {
+		if (ff == Settings::FF_Playlist) {
 			for (int i = 0; i < count() - 1; i++) {
 				if (playlist(i)->mediaPlaylist()->isEmpty()) {
 					this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
@@ -317,7 +317,7 @@ void TabPlaylist::updateRowHeight()
 	Settings *settings = Settings::getInstance();
 	for (int i = 0; i < count() - 1; i++) {
 		Playlist *p = playlist(i);
-		p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::PLAYLIST)).height());
+		p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::FF_Playlist)).height());
 	}
 }
 

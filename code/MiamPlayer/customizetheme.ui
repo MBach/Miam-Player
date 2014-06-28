@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>721</width>
-    <height>571</height>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -150,7 +150,13 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="buttonsPage">
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,100,0,0,1">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="buttonThemeBox">
          <property name="title">
@@ -233,6 +239,12 @@
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <widget class="QLabel" name="customizeIconsLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <italic>true</italic>
@@ -245,6 +257,18 @@
           </item>
           <item>
            <widget class="QScrollArea" name="customizeButtonsScrollArea">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>590</height>
+             </size>
+            </property>
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
@@ -276,6 +300,12 @@
               </item>
               <item row="4" column="1">
                <widget class="QLabel" name="stopLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Stop</string>
                 </property>
@@ -283,19 +313,6 @@
               </item>
               <item row="4" column="5">
                <layout class="QHBoxLayout" name="hl_stop">
-                <item>
-                 <spacer name="hs_left_stop">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item>
                  <widget class="QPushButton" name="stop">
                   <property name="sizePolicy">
@@ -318,19 +335,6 @@
                    </size>
                   </property>
                  </widget>
-                </item>
-                <item>
-                 <spacer name="hs_right_stop">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
                 </item>
                </layout>
               </item>
@@ -369,19 +373,6 @@
               <item row="6" column="5">
                <layout class="QHBoxLayout" name="hl_skipF">
                 <item>
-                 <spacer name="hs_left_skipF">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
                  <widget class="QPushButton" name="skipForward">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -404,36 +395,10 @@
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="hs_right_seekF_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                </layout>
               </item>
               <item row="5" column="5">
                <layout class="QHBoxLayout" name="hl_seekF">
-                <item>
-                 <spacer name="hs_left_seekF">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item>
                  <widget class="QPushButton" name="seekForward">
                   <property name="sizePolicy">
@@ -457,36 +422,10 @@
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="hs_right_seekF">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                </layout>
               </item>
               <item row="2" column="5">
                <layout class="QHBoxLayout" name="hl_seekB">
-                <item>
-                 <spacer name="hs_left_seekB">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item>
                  <widget class="QPushButton" name="seekBackward">
                   <property name="sizePolicy">
@@ -510,19 +449,6 @@
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="hs_right_seekB">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                </layout>
               </item>
               <item row="6" column="0">
@@ -544,7 +470,7 @@
               <item row="0" column="1">
                <widget class="QLabel" name="skipBackwardLabel">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
@@ -556,6 +482,12 @@
               </item>
               <item row="5" column="1">
                <widget class="QLabel" name="seekForwardLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Seek forword</string>
                 </property>
@@ -563,19 +495,6 @@
               </item>
               <item row="0" column="5">
                <layout class="QHBoxLayout" name="hl_skipB">
-                <item>
-                 <spacer name="hs_left_skipB">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item>
                  <widget class="QPushButton" name="skipBackward">
                   <property name="sizePolicy">
@@ -598,19 +517,6 @@
                    </size>
                   </property>
                  </widget>
-                </item>
-                <item>
-                 <spacer name="hs_right_skipB">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
                 </item>
                </layout>
               </item>
@@ -645,6 +551,12 @@
               </item>
               <item row="3" column="1">
                <widget class="QLabel" name="playLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Play / Pause</string>
                 </property>
@@ -718,6 +630,12 @@
               </item>
               <item row="6" column="1">
                <widget class="QLabel" name="skipForwardLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Skip forward</string>
                 </property>
@@ -752,6 +670,12 @@
               </item>
               <item row="2" column="1">
                <widget class="QLabel" name="seekBackwardLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Seek backbard</string>
                 </property>
@@ -786,6 +710,12 @@
               </item>
               <item row="9" column="2">
                <widget class="QLabel" name="loopLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Loop</string>
                 </property>
@@ -850,6 +780,12 @@
               </item>
               <item row="8" column="1">
                <widget class="QLabel" name="playbackModeLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Playback Mode</string>
                 </property>
@@ -873,6 +809,12 @@
               </item>
               <item row="8" column="2">
                <widget class="QLabel" name="sequentialLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Sequential</string>
                 </property>
@@ -883,6 +825,12 @@
               </item>
               <item row="11" column="2">
                <widget class="QLabel" name="itemOnceLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Current item once</string>
                 </property>
@@ -893,6 +841,12 @@
               </item>
               <item row="14" column="2">
                <widget class="QLabel" name="itemLoopLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Current item in loop</string>
                 </property>
@@ -903,6 +857,12 @@
               </item>
               <item row="10" column="2">
                <widget class="QLabel" name="shuffleLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string>Shuffle</string>
                 </property>
@@ -1057,6 +1017,9 @@
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::MinimumExpanding</enum>
+         </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>0</width>
@@ -1068,13 +1031,26 @@
       </layout>
      </widget>
      <widget class="QWidget" name="fontsPage">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_14">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBoxFonts">
          <property name="title">
           <string>Fonts</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="2">
+           <widget class="QLabel" name="labelFontSize">
+            <property name="text">
+             <string>Size</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
            <widget class="QLabel" name="labelFontFamily">
             <property name="text">
@@ -1082,10 +1058,16 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Playlist</string>
+          <item row="1" column="2">
+           <widget class="QSpinBox" name="spinBoxLibrary">
+            <property name="minimum">
+             <number>4</number>
+            </property>
+            <property name="maximum">
+             <number>72</number>
+            </property>
+            <property name="value">
+             <number>12</number>
             </property>
            </widget>
           </item>
@@ -1095,6 +1077,36 @@
              <font>
               <family>Arial</family>
              </font>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QFontComboBox" name="fontComboBoxLibrary">
+            <property name="currentFont">
+             <font>
+              <family>Arial</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QSpinBox" name="spinBoxPlaylist">
+            <property name="minimum">
+             <number>4</number>
+            </property>
+            <property name="maximum">
+             <number>72</number>
+            </property>
+            <property name="value">
+             <number>12</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Playlist</string>
             </property>
            </widget>
           </item>
@@ -1113,39 +1125,6 @@
              </font>
             </property>
            </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QSpinBox" name="spinBoxPlaylist">
-            <property name="minimum">
-             <number>4</number>
-            </property>
-            <property name="maximum">
-             <number>72</number>
-            </property>
-            <property name="value">
-             <number>12</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="labelFontSize">
-            <property name="text">
-             <string>Size</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item row="4" column="2">
            <widget class="QSpinBox" name="spinBoxMenus">
@@ -1167,36 +1146,32 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QFontComboBox" name="fontComboBoxLibrary">
-            <property name="currentFont">
-             <font>
-              <family>Arial</family>
-              <pointsize>8</pointsize>
-             </font>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QSpinBox" name="spinBoxLibrary">
-            <property name="minimum">
-             <number>4</number>
-            </property>
-            <property name="maximum">
-             <number>72</number>
-            </property>
-            <property name="value">
-             <number>12</number>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="colorsPage">
       <layout class="QVBoxLayout" name="verticalLayout_12">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBox_4">
          <property name="title">
@@ -1382,6 +1357,12 @@
      </widget>
      <widget class="QWidget" name="libraryPage">
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBoxLibraryCovers">
          <property name="title">
@@ -1674,8 +1655,14 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page">
+     <widget class="QWidget" name="tabsPage">
       <layout class="QVBoxLayout" name="verticalLayout_13">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBoxTabs">
          <property name="toolTip">
@@ -1846,50 +1833,50 @@
    </hints>
   </connection>
   <connection>
-   <sender>seekForwardCheckBox</sender>
+   <sender>radioButtonShowVolume</sender>
    <signal>toggled(bool)</signal>
-   <receiver>seekForward</receiver>
-   <slot>setEnabled(bool)</slot>
+   <receiver>spinBoxHideVolumeLabel</receiver>
+   <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>471</y>
+     <x>403</x>
+     <y>445</y>
     </hint>
     <hint type="destinationlabel">
-     <x>502</x>
+     <x>507</x>
      <y>471</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>playCheckBox</sender>
+   <sender>radioButtonTabsRect</sender>
    <signal>toggled(bool)</signal>
-   <receiver>play</receiver>
-   <slot>setEnabled(bool)</slot>
+   <receiver>labelOverlapTabs</receiver>
+   <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>327</y>
+     <x>403</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
-     <x>502</x>
-     <y>327</y>
+     <x>299</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>stopCheckBox</sender>
+   <sender>radioButtonTabsRect</sender>
    <signal>toggled(bool)</signal>
-   <receiver>stop</receiver>
-   <slot>setEnabled(bool)</slot>
+   <receiver>overlapTabsSpinBox</receiver>
+   <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>423</y>
+     <x>403</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
-     <x>502</x>
-     <y>423</y>
+     <x>507</x>
+     <y>123</y>
     </hint>
    </hints>
   </connection>
@@ -1942,22 +1929,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>skipForwardCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>skipForward</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>164</x>
-     <y>519</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>502</x>
-     <y>519</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>skipBackwardCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>skipBackward</receiver>
@@ -1986,6 +1957,22 @@
     <hint type="destinationlabel">
      <x>505</x>
      <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>skipForwardCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>skipForward</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>519</y>
     </hint>
    </hints>
   </connection>
@@ -2022,6 +2009,54 @@
    </hints>
   </connection>
   <connection>
+   <sender>seekForwardCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>seekForward</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>471</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>471</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>playCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>play</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stopCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>stop</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>423</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>423</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>playbackModeCheckBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>itemOnce</receiver>
@@ -2050,54 +2085,6 @@
     <hint type="destinationlabel">
      <x>505</x>
      <y>391</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonShowVolume</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>spinBoxHideVolumeLabel</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>403</x>
-     <y>445</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>507</x>
-     <y>471</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonTabsRect</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>labelOverlapTabs</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>403</x>
-     <y>73</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>123</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonTabsRect</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>overlapTabsSpinBox</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>403</x>
-     <y>73</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>507</x>
-     <y>123</y>
     </hint>
    </hints>
   </connection>

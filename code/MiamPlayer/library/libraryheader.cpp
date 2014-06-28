@@ -47,7 +47,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Text
 	QString header = _lod->headerValue();
-	QFont f = Settings::getInstance()->font(Settings::LIBRARY);
+	QFont f = Settings::getInstance()->font(Settings::FF_Library);
 	p.setFont(f);
 	QFontMetrics fm(f);
 	this->setMinimumHeight(fm.height());

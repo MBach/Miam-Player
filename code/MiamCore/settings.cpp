@@ -115,14 +115,9 @@ QColor Settings::customColors(QPalette::ColorRole cr) const
 	}
 }
 
-const QString Settings::customIcon(QPushButton *b, bool toggled) const
+const QString Settings::customIcon(const QString &buttonName) const
 {
-	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
-	if (toggled) {
-		return customIcons.value("pauseButton").toString();
-	} else {
-		return customIcons.value(b->objectName()).toString();
-	}
+	return value("customIcons/" + buttonName).toString();
 }
 
 Settings::DragDropAction Settings::dragDropAction() const
@@ -137,7 +132,7 @@ QFont Settings::font(const FontFamily fontFamily)
 	QFont font;
 	QVariant vFont;
 	switch(fontFamily) {
-	case LIBRARY:
+	case FF_Library:
 		vFont = fontFamilyMap.value(QString(fontFamily));
 		if (vFont.isNull()) {
 			#ifdef Q_OS_WIN
@@ -149,8 +144,8 @@ QFont Settings::font(const FontFamily fontFamily)
 			font = QFont(vFont.toString());
 		}
 		break;
-	case MENUS:
-	case PLAYLIST:
+	case FF_Menu:
+	case FF_Playlist:
 		vFont = fontFamilyMap.value(QString(fontFamily));
 		if (vFont.isNull()) {
 			#ifdef Q_OS_WIN
@@ -177,10 +172,9 @@ int Settings::fontSize(const FontFamily fontFamily)
 	return pointSize;
 }
 
-bool Settings::hasCustomIcon(QPushButton *b) const
+bool Settings::hasCustomIcon(const QString &buttonName) const
 {
-	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
-	return customIcons.value(b->objectName()).toBool();
+	return value("customIcons/" + buttonName).isValid() && value("customIcons/" + buttonName).toBool();
 }
 
 /** Returns true if big and faded covers are displayed in the library when an album is expanded. */
@@ -260,6 +254,12 @@ bool Settings::isSearchAndExcludeLibrary() const
 bool Settings::isStarDelegates() const
 {
 	return value("delegates").toBool();
+}
+
+/** Returns true if a user has modified one of defaults theme. */
+bool Settings::isThemeCustomized() const
+{
+	return value("themeCustomized").toBool();
 }
 
 /** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
@@ -415,15 +415,13 @@ void Settings::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 	setValue("customColorsMap", colors);
 }
 
-void Settings::setCustomIcon(QPushButton *b, const QString &iconPath)
+void Settings::setCustomIcon(const QString &buttonName, const QString &iconPath)
 {
-	QMap<QString, QVariant> customIcons = value("customIcons").toMap();
 	if (iconPath.isEmpty()) {
-		customIcons.remove(b->objectName());
+		remove("customIcons/" + buttonName);
 	} else {
-		customIcons.insert(b->objectName(), iconPath);
+		setValue("customIcons/" + buttonName, iconPath);
 	}
-	setValue("customIcons", customIcons);
 }
 
 void Settings::setLanguage(const QString &lang)
@@ -603,6 +601,11 @@ void Settings::setTabsOverlappingLength(int l)
 void Settings::setTabsRect(bool b)
 {
 	setValue("rectangularTabs", b);
+}
+
+void Settings::setThemeCustomized(bool b)
+{
+	setValue("themeCustomized", b);
 }
 
 void Settings::setThemeName(const QString &theme)

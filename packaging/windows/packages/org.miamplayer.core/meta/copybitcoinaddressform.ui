@@ -17,7 +17,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>If you like this software, please donate a few hundreds satoshi (0.00000001 BTC) or more to :</string>
+      <string>If you like this software, please donate a few hundreds satoshi (1 satoshi = 0.00000001 BTC) or more to :</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

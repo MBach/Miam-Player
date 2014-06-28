@@ -151,6 +151,12 @@ void MainWindow::setupActions()
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
 	foreach(QAction *actionPlayBack, findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
 		actionPlaybackGroup->addAction(actionPlayBack);
+		connect(actionPlayBack, &QAction::triggered, this, [=]() {
+			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+			QString enu = actionPlayBack->property("PlaybackMode").toString();
+			playbackModeWidgetFactory->setPlaybackMode((QMediaPlaylist::PlaybackMode)metaEnum.keyToValue(enu.toStdString().data()));
+		});
 	}
 
 	// Link user interface
@@ -213,11 +219,17 @@ void MainWindow::setupActions()
 
 	// Media buttons
 	connect(_mediaPlayer.data(), &MediaPlayer::stateChanged, this, [=] (QMediaPlayer::State state) {
-		qDebug() << "MediaPlayer::stateChanged" << state;
+		//qDebug() << "MediaPlayer::stateChanged" << state;
 		playButton->disconnect();
 		actionPlay->disconnect();
 		if (state == QMediaPlayer::PlayingState) {
-			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/pause"));
+			QString iconPath;
+			if (Settings::getInstance()->hasCustomIcon("pauseButton")) {
+				iconPath = Settings::getInstance()->customIcon("pauseButton");
+			} else {
+				iconPath = ":/player/" + Settings::getInstance()->theme() + "/pause";
+			}
+			playButton->setIcon(QIcon(iconPath));
 			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::pause);
 			connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::pause);
 			seekSlider->setEnabled(true);
@@ -282,6 +294,9 @@ void MainWindow::setupActions()
 	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
 	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
 
+	// Playback modes
+
+
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
@@ -316,9 +331,7 @@ void MainWindow::setupActions()
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
 	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
 
-	connect(qApp, &QApplication::aboutToQuit, [=] {
-		_sqlDatabase.cleanBeforeQuit();
-	});
+	connect(qApp, &QApplication::aboutToQuit, [=] { _sqlDatabase.cleanBeforeQuit(); });
 
 	// Shortcuts
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
@@ -349,6 +362,8 @@ void MainWindow::closeEvent(QCloseEvent *)
 {
 	Settings *settings = Settings::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
+	settings->setValue("customizeThemeDialogGeometry", customizeThemeDialog->saveGeometry());
+	settings->setValue("customizeThemeDialogCurrentTab", customizeThemeDialog->listWidget->currentRow());
 	settings->setValue("customizeOptionsDialogGeometry", customizeOptionsDialog->saveGeometry());
 	settings->setValue("customizeOptionsDialogCurrentTab", customizeOptionsDialog->listWidget->currentRow());
 	//settings->setValue("splitterState", splitter->saveState());
@@ -429,9 +444,7 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "sendToTagEditor") {
 		library->openTagEditor->setKey(keySequence);
 	} else if (objectName == "search") {
-		searchBar->shortcut()->setKey(keySequence);
-	} else {
-		qDebug() << "action was not found for" << objectName;
+		searchBar->shortcut->setKey(keySequence);
 	}
 }
 
