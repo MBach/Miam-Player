@@ -89,6 +89,8 @@ public:
 
 	bool isCustomColors() const;
 
+	bool isLibraryFilteredByArticles() const;
+
 	/** Returns true if the button in parameter is visible or not. */
 	bool isMediaButtonVisible(const QString & buttonName) const;
 
@@ -110,6 +112,8 @@ public:
 
 	/** Returns the language of the application. */
 	QString language();
+
+	QStringList libraryFilteredByArticles() const;
 
 	/** Returns all music locations. */
 	QStringList musicLocations() const;
@@ -154,7 +158,6 @@ public:
 	int volumeBarHideAfter() const;
 
 public slots:
-
 	void setBigCoverOpacity(int v);
 
 	void setBigCovers(bool b);
@@ -183,6 +186,10 @@ public slots:
 
 	/** Sets the font size of a part of the application. */
 	void setFontPointSize(const FontFamily &fontFamily, int i);
+
+	void setIsLibraryFilteredByArticles(bool b);
+
+	void setLibraryFilteredByArticles(const QStringList &tagList);
 
 	/** Sets if the button in parameter is visible or not. */
 	void setMediaButtonVisible(const QString & buttonName, const bool &value);

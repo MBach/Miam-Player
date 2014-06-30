@@ -13,6 +13,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), _targetedColor(NULL)
 {
 	setupUi(this);
+	articlesLineEdit->setAutoTransform(true);
 	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
 
@@ -150,6 +151,8 @@ void CustomizeThemeDialog::setupActions()
 			this->fade();
 		}
 	});
+	connect(radioButtonEnableArticles, &QRadioButton::toggled, settings, &Settings::setIsLibraryFilteredByArticles);
+	connect(articlesLineEdit, &TagLineEdit::taglistHasChanged, mainWindow->library, &LibraryTreeView::sortByArtists);
 
 	// Covers
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
@@ -339,6 +342,9 @@ void CustomizeThemeDialog::loadTheme()
 	// Tabs
 	radioButtonTabsRect->setChecked(settings->isRectTabs());
 	overlapTabsSpinBox->setValue(settings->tabsOverlappingLength());
+
+	// Articles
+	radioButtonEnableArticles->setChecked(settings->isLibraryFilteredByArticles());
 }
 
 /** Redefined to initialize favorites from settings. */
@@ -354,8 +360,16 @@ void CustomizeThemeDialog::open()
 	} else {
 		labelLibraryDelegatesState->setText(tr("Favorites are currently disabled"));
 	}
+
 	QDialog::open();
 	this->activateWindow();
+
+	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
+	/// Is it impossible to compute real size even if dialog is hidden?
+	// Add grammatical articles
+	foreach (QString article, Settings::getInstance()->libraryFilteredByArticles()) {
+		articlesLineEdit->addTag(article);
+	}
 }
 
 void CustomizeThemeDialog::openChooseIconDialog()

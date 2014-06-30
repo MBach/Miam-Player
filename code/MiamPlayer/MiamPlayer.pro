@@ -49,7 +49,11 @@ SOURCES += \
     seekbar.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp
+    volumeslider.cpp \
+    taglineedit.cpp \
+    tagbutton.cpp \
+    styling/lineedit.cpp \
+    libraryfilterlineedit.cpp
 
 HEADERS += \
     dialogs/closeplaylistpopup.h \
@@ -101,7 +105,11 @@ HEADERS += \
     seekbar.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h
+    volumeslider.h \
+    taglineedit.h \
+    tagbutton.h \
+    styling/lineedit.h \
+    libraryfilterlineedit.h
 
 FORMS += \
     mainwindow.ui \

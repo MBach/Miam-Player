@@ -172,7 +172,7 @@
     </layout>
    </item>
    <item>
-    <widget class="LibraryFilterLineEdit" name="searchBar">
+    <widget class="QLineEdit" name="searchBar">
      <property name="maxLength">
       <number>100</number>
      </property>
@@ -207,11 +207,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>LibraryFilterLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">libraryfilterlineedit.h</header>
-  </customwidget>
   <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>

@@ -15,18 +15,18 @@ win32 {
     CONFIG += dll
     CONFIG(debug, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	} else {
-            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	}
     }
     CONFIG(release, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
-            LIBS += -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	} else {
-            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
-            LIBS += -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
 	}
     }
 }
@@ -46,7 +46,6 @@ SOURCES += \
     model/librarysqlmodel.cpp \
     cover.cpp \
     filehelper.cpp \
-    libraryfilterlineedit.cpp \
     mediabutton.cpp \
     mediaplayer.cpp \
     musicsearchengine.cpp \
@@ -64,7 +63,6 @@ HEADERS += interfaces/basicplugininterface.h \
     model/selectedtracksmodel.h \
     cover.h \
     filehelper.h \
-    libraryfilterlineedit.h \
     mediabutton.h \
     mediaplayer.h \
     miamcore_global.h \

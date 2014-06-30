@@ -145,6 +145,9 @@ public slots:
 	/** Reimplemented. */
 	virtual void reset();
 
+	/** Sort library by artists and ignore grammatical articles at the beginning. */
+	void sortByArtists(const QStringList &articles);
+
 private slots:
 	void endPopulateTree();
 

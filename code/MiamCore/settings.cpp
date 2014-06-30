@@ -207,6 +207,16 @@ bool Settings::isCustomColors() const
 	}
 }
 
+bool Settings::isLibraryFilteredByArticles() const
+{
+	QVariant b = value("isLibraryFilteredByArticles");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return false;
+	}
+}
+
 /** Returns true if the button in parameter is visible or not. */
 bool Settings::isMediaButtonVisible(const QString & buttonName) const
 {
@@ -277,6 +287,16 @@ QString Settings::language()
 		return l;
 	} else {
 		return l;
+	}
+}
+
+QStringList Settings::libraryFilteredByArticles() const
+{
+	QVariant vArticles = value("libraryFilteredByArticles");
+	if (vArticles.isValid()) {
+		return vArticles.toStringList();
+	} else {
+		return QStringList();
 	}
 }
 
@@ -561,10 +581,20 @@ void Settings::setFontPointSize(const FontFamily &fontFamily, int i)
 	emit fontHasChanged(fontFamily, font(fontFamily));
 }
 
+void Settings::setIsLibraryFilteredByArticles(bool b)
+{
+	setValue("isLibraryFilteredByArticles", b);
+}
+
+void Settings::setLibraryFilteredByArticles(const QStringList &tagList)
+{
+	setValue("libraryFilteredByArticles", tagList);
+}
+
 /** Sets if the button in parameter is visible or not. */
 void Settings::setMediaButtonVisible(const QString & buttonName, const bool &value)
 {
-	this->setValue(buttonName, value);
+	setValue(buttonName, value);
 }
 
 /// PlayBack options

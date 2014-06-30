@@ -1,7 +1,7 @@
 #ifndef LIBRARYFILTERLINEEDIT_H
 #define LIBRARYFILTERLINEEDIT_H
 
-#include <QLineEdit>
+#include "styling/lineedit.h"
 #include <QPropertyAnimation>
 #include <QShortcut>
 #include <QTimer>
@@ -14,14 +14,9 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMCORE_LIBRARY LibraryFilterLineEdit : public QLineEdit
+class LibraryFilterLineEdit : public LineEdit
 {
 	Q_OBJECT
-
-private:
-	QTimer *_timer;
-	int _fps;
-	QPropertyAnimation _fade;
 
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
@@ -29,10 +24,6 @@ public:
 	QShortcut *shortcut;
 
 protected:
-	virtual void focusInEvent(QFocusEvent *e);
-
-	virtual void focusOutEvent(QFocusEvent *e);
-
 	virtual void paintEvent(QPaintEvent *);
 };
 

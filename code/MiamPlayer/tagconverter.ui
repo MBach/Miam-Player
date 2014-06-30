@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>168</height>
+    <width>502</width>
+    <height>186</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -20,16 +20,51 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QToolButton" name="toolButton_2">
+         <widget class="QToolButton" name="trackTB">
           <property name="text">
            <string>#Track</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton">
+         <widget class="QToolButton" name="artistTB">
+          <property name="text">
+           <string>Artist</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="albumTB">
+          <property name="text">
+           <string>Album</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="discTB">
+          <property name="text">
+           <string>Disc</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="artistAlbumTB">
+          <property name="text">
+           <string>ArtistAlbum</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="titleTB">
           <property name="text">
            <string>Title</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="yearTB">
+          <property name="text">
+           <string>Year</string>
           </property>
          </widget>
         </item>
@@ -49,11 +84,14 @@
        </layout>
       </item>
       <item>
-       <widget class="QLineEdit" name="tagPattern">
+       <widget class="TagLineEdit" name="tagPattern">
         <property name="font">
          <font>
           <pointsize>16</pointsize>
          </font>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -93,6 +131,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TagLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>taglineedit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

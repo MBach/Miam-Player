@@ -277,8 +277,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>465</width>
-               <height>588</height>
+               <width>432</width>
+               <height>542</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1518,16 +1518,19 @@
              </font>
             </property>
             <property name="text">
-             <string>Should I ignore the grammatical pronouns found in the names of artists?</string>
+             <string>If there is an article at the beginning of an artist's name, should I ignore it?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QRadioButton" name="radioButtonDesactivatePronouns">
+             <widget class="QRadioButton" name="radioButtonEnableArticles">
               <property name="toolTip">
-               <string>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</string>
+               <string>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</string>
               </property>
               <property name="text">
                <string>Yes</string>
@@ -1543,23 +1546,41 @@
                </size>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="radioButtonActivatePronouns">
+             <widget class="QRadioButton" name="radioButtonDisableArticles">
               <property name="text">
                <string>No</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEditFilterPronouns">
+           <widget class="TagLineEdit" name="articlesLineEdit">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>24</height>
+             </size>
+            </property>
             <property name="text">
-             <string notr="true">the, le, la, les</string>
+             <string notr="true"/>
+            </property>
+            <property name="maxLength">
+             <number>128</number>
+            </property>
+            <property name="placeholderText">
+             <string>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</string>
             </property>
            </widget>
           </item>
@@ -1779,6 +1800,11 @@
    <header>dialogs/reflector.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>TagLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>taglineedit.h</header>
+  </customwidget>
  </customwidgets>
  <resources>
   <include location="mp.qrc"/>
@@ -1817,10 +1843,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>radioButtonDesactivatePronouns</sender>
+   <sender>radioButtonEnableArticles</sender>
    <signal>toggled(bool)</signal>
-   <receiver>lineEditFilterPronouns</receiver>
-   <slot>setVisible(bool)</slot>
+   <receiver>articlesLineEdit</receiver>
+   <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>279</x>

@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Instantiate dialogs
 	customizeThemeDialog = new CustomizeThemeDialog(this);
-	customizeThemeDialog->loadTheme();
+	//customizeThemeDialog->loadTheme();
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
 	/// free memory
@@ -295,8 +295,6 @@ void MainWindow::setupActions()
 	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
 
 	// Playback modes
-
-
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
@@ -416,6 +414,7 @@ bool MainWindow::event(QEvent *e)
 			addressBar->setMinimumWidth(leftTabs->width());
 		}
 		addressBar->init(QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()));
+		customizeThemeDialog->loadTheme();
 	}
 	return b;
 }

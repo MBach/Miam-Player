@@ -16,13 +16,10 @@ void MediaButton::setIcon(const QIcon &icon)
 {
 	Settings *settings = Settings::getInstance();
 	if (settings->isThemeCustomized() && settings->hasCustomIcon(objectName())) {
-		qDebug() << Q_FUNC_INFO << "loading custom icon";
 		QPushButton::setIcon(QIcon(settings->customIcon(objectName())));
 	} else if (icon.isNull()){
-		qDebug() << Q_FUNC_INFO << "icon is null, load from theme";
 		setIconFromTheme(settings->theme());
 	} else {
-		qDebug() << Q_FUNC_INFO << objectName();
 		QPushButton::setIcon(icon);
 	}
 }
@@ -34,7 +31,6 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
 	QIcon icon(iconFile);
 	if (!icon.isNull()) {
-		qDebug() << Q_FUNC_INFO << objectName();
 		QPushButton::setIcon(QIcon(iconFile));
 	}
 	emit mediaButtonChanged();

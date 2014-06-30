@@ -63,7 +63,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 		if (!Settings::getInstance()->isSearchAndExcludeLibrary()) {
 			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
 				if (b) {
-					qDebug() << item->text();
+					//qDebug() << item->text();
 				}
 				item->setData(b, DF_Highlighted);
 			}
@@ -442,19 +442,32 @@ QStandardItem* LibraryTreeView::insertLetter(const QString &letters)
 void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
 								  const QString &album, int discNumber, const QString &title, int trackNumber, int year)
 {
+	Settings *settings = Settings::getInstance();
+
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
+	if (settings->isLibraryFilteredByArticles()) {
+		QStringList articles = settings->libraryFilteredByArticles();
+		qDebug() << articles;
+		foreach (QString article, articles) {
+			if (theArtist.startsWith(article + " ", Qt::CaseInsensitive)) {
+				QString reorderedName = theArtist.remove(QRegularExpression("^" + article + " ", QRegularExpression::CaseInsensitiveOption)).append(", ").append(article);
+				qDebug() << theArtist << reorderedName;
+				theArtist = reorderedName;
+				break;
+			}
+		}
+	}
 
 	QStandardItem *itemArtist = NULL;
 	QStandardItem *itemAlbum = NULL;
 	QStandardItem *itemTrack = NULL;
-	QStandardItem *itemYear = NULL;
 
 	QString art = artist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 	QString theArtistNorm = theArtist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 	QString alb = album.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 
 	static bool existingArtist = true;
-	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
+	switch (settings->value("insertPolicy").toInt()) {
 	case IT_Artist:
 		// Level 1
 		if (_artists.contains(theArtist.toLower())) {
@@ -463,7 +476,11 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		} else {
 			itemArtist = new QStandardItem(theArtist);
 			itemArtist->setData(IT_Artist, DF_ItemType);
-			itemArtist->setData(art, DF_NormalizedString);
+			if (settings->isLibraryFilteredByArticles()) {
+				itemArtist->setData(theArtist, DF_NormalizedString);
+			} else {
+				itemArtist->setData(art, DF_NormalizedString);
+			}
 			_artists.insert(theArtist.toLower(), itemArtist);
 			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
 			QStandardItem *letter = this->insertLetter(art);
@@ -490,7 +507,7 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 			QStandardItem *itemDiscNumber = new QStandardItem(QString::number(discNumber));
 			itemDiscNumber->setData(IT_Disc, DF_ItemType);
 			itemDiscNumber->setData(discNumber, DF_DiscNumber);
-			qDebug() << title << discNumber;
+			//qDebug() << title << discNumber;
 			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, discNumber), itemDiscNumber);
 			itemAlbum->appendRow(itemDiscNumber);
 		}
@@ -548,8 +565,9 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		}
 		itemAlbum->appendRow(itemTrack);
 		break;
-	case IT_Year:
+	case IT_Year:{
 		// Level 1
+		QStandardItem *itemYear = NULL;
 		if (_years.contains(year)) {
 			itemYear = _years.value(year);
 		} else {
@@ -584,7 +602,9 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		itemAlbum->appendRow(itemTrack);
 		break;
 	}
+	}
 	/// XXX: Is it necessary to create subclasses of QStandardItem for item->type()?
+	/// YES! (07/14)
 	// itemTrack always exists
 	itemTrack->setData(IT_Track, DF_ItemType);
 	itemTrack->setData(absFilePath, DF_AbsFilePath);
@@ -684,6 +704,16 @@ void LibraryTreeView::reset()
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Years"));
 		break;
 	}
+}
+
+/** Sort library by artists and ignore grammatical articles at the beginning. */
+void LibraryTreeView::sortByArtists(const QStringList &articles)
+{
+	Settings *settings = Settings::getInstance();
+	if (!settings->isLibraryFilteredByArticles()) {
+		return;
+	}
+	qDebug() << Q_FUNC_INFO << "TODO" << articles;
 }
 
 void LibraryTreeView::endPopulateTree()

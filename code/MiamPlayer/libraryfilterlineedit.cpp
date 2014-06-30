@@ -10,7 +10,7 @@
 #include <QtDebug>
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-	QLineEdit(parent), _timer(new QTimer(this)), _fps(0), shortcut(new QShortcut(this))
+	LineEdit(parent), shortcut(new QShortcut(this))
 {
 	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
 		if (ff == Settings::FF_Library) {
@@ -25,47 +25,6 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	connect(shortcut, &QShortcut::activated, this, [=]() {
 		this->setFocus(Qt::ShortcutFocusReason);
 	});
-
-	this->setAttribute(Qt::WA_MacShowFocusRect, false);
-
-	_timer->setInterval(40);
-	connect(_timer, &QTimer::timeout, [=]() {
-		_fps++;
-		if (_fps == 25) {
-			_fps = 0;
-		}
-		this->repaint();
-	});
-
-	_fade.setEasingCurve(QEasingCurve::InOutCubic);
-	QColor black(Qt::black), white(Qt::white);
-	QColor c, opposite;
-	if (QApplication::palette().windowText().color() == black) {
-		c = black;
-		opposite = white;
-	} else {
-		c = white;
-		opposite = black;
-	}
-	_fade.setStartValue(c);
-	_fade.setKeyValueAt(0.5, opposite);
-	_fade.setEndValue(c);
-	_fade.setDuration(1000);
-}
-
-void LibraryFilterLineEdit::focusInEvent(QFocusEvent *e)
-{
-	_fps = 0;
-	_timer->start();
-	QLineEdit::focusInEvent(e);
-}
-
-void LibraryFilterLineEdit::focusOutEvent(QFocusEvent *e)
-{
-	_fps = 25;
-	_timer->stop();
-	this->update();
-	QLineEdit::focusOutEvent(e);
 }
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
@@ -105,7 +64,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	p.restore();
 
 	// Paint text and cursor
-	if (o.state.testFlag(QStyle::State_HasFocus) || !text().isEmpty()) {
+	if (hasFocus() || !text().isEmpty()) {
 
 		// Highlight selected text
 		p.setPen(o.palette.text().color());
@@ -140,14 +99,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 			p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
 		}*/
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
-		QPoint pTop, pBottom;
-		pTop = rText.topLeft();
-		pTop.rx() += fontMetrics().width(text(), cursorPosition());
-		pBottom = rText.bottomLeft();
-		pBottom.rx() += fontMetrics().width(text(), cursorPosition());
-		_fade.setCurrentTime(_fps * _timer->interval());
-		p.setPen(_fade.currentValue().value<QColor>());
-		p.drawLine(pTop, pBottom);
+		this->drawCursor(&p, rText);
 	} else {
 		p.setPen(o.palette.mid().color());
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, placeholderText());
@@ -163,3 +115,5 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 	}
 }
+
+
