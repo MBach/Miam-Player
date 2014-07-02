@@ -582,14 +582,6 @@
         <translation>Tri de la bibliothèque</translation>
     </message>
     <message>
-        <source>Should I ignore the grammatical pronouns found in the names of artists?</source>
-        <translation>Devrais-je ignorer les pronons grammaticaux que l&apos;on trouve dans le nom des artistes ?</translation>
-    </message>
-    <message>
-        <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
-        <translation>Cette option va filtrer les pronoms grammaticaux. Par exemple, &quot;The Beatles&quot; sera considéré comme &quot;Beatles, the&quot;</translation>
-    </message>
-    <message>
         <source>Custom colors</source>
         <translation>Couleurs personnalisées</translation>
     </message>
@@ -676,6 +668,18 @@
     <message>
         <source>Currently under development</source>
         <translation>En cours de développement</translation>
+    </message>
+    <message>
+        <source>If there is an article at the beginning of an artist&apos;s name, should I ignore it?</source>
+        <translation>S&apos;il y a un article au début du nom de l&apos;artiste, devrais-je l&apos;ignorer ?</translation>
+    </message>
+    <message>
+        <source>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
+        <translation>Cette option va filtrer les articles grammaticaux. Par exemple, &quot;The Beatles&quot; sera traité comme &quot;Beatles, the&quot;</translation>
+    </message>
+    <message>
+        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
+        <translation>&quot;The&quot; est un article très commun en anglais, comme dans &quot;The Beatles&quot;</translation>
     </message>
 </context>
 <context>
@@ -1219,6 +1223,26 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     <message>
         <source>Title</source>
         <translation>Titre</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished">Artiste</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished">Album</translation>
+    </message>
+    <message>
+        <source>Disc</source>
+        <translation type="unfinished">Disque</translation>
+    </message>
+    <message>
+        <source>ArtistAlbum</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished">Année</translation>
     </message>
 </context>
 <context>

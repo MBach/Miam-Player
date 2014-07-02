@@ -582,14 +582,6 @@
         <translation>ترتيب المكتبة</translation>
     </message>
     <message>
-        <source>Should I ignore the grammatical pronouns found in the names of artists?</source>
-        <translation>هل أتجاهل ضمائر النحو الموجودة في أسماء الفنانين ؟</translation>
-    </message>
-    <message>
-        <source>This option will filter grammatical pronouns. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
-        <translation>هذا الخيار يقوم بترشيح الضمائر النحوية</translation>
-    </message>
-    <message>
         <source>Custom colors</source>
         <translation>ألوان خاصة</translation>
     </message>
@@ -675,6 +667,18 @@
     </message>
     <message>
         <source>Currently under development</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If there is an article at the beginning of an artist&apos;s name, should I ignore it?</source>
+        <translation>هل أتجاهل ضمائر النحو الموجودة في أسماء الفنانين ؟</translation>
+    </message>
+    <message>
+        <source>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
+        <translation>هذا الخيار يقوم بترشيح الضمائر النحوية</translation>
+    </message>
+    <message>
+        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1241,6 +1245,26 @@ Select or drop tracks from your library or any external location.</source>
     <message>
         <source>Title</source>
         <translation>عنوان</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disc</source>
+        <translation type="unfinished">أسطوانة</translation>
+    </message>
+    <message>
+        <source>ArtistAlbum</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
