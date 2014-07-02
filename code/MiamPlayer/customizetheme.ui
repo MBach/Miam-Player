@@ -1503,9 +1503,6 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBoxSortingLibrary">
-         <property name="toolTip">
-          <string>Currently under development</string>
-         </property>
          <property name="title">
           <string>Sorting the library</string>
          </property>
@@ -1534,10 +1531,6 @@
               </property>
               <property name="text">
                <string>Yes</string>
-              </property>
-              <property name="icon">
-               <iconset resource="mp.qrc">
-                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
               </property>
               <property name="iconSize">
                <size>

@@ -16,8 +16,6 @@ TagLineEdit::TagLineEdit(QWidget *parent) :
 	_timerTag->setSingleShot(true);
 
 	connect(_timerTag, &QTimer::timeout, this, &TagLineEdit::createTag);
-	Settings *settings = Settings::getInstance();
-	connect(this, &TagLineEdit::taglistHasChanged, settings, &Settings::setLibraryFilteredByArticles);
 
 	this->installEventFilter(this);
 

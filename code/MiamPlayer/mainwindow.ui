@@ -59,7 +59,7 @@
           </property>
           <widget class="ExtendedTabWidget" name="leftTabs">
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="documentMode">
             <bool>true</bool>
@@ -221,7 +221,7 @@
             <item>
              <widget class="QStackedWidget" name="stackedWidgetRight">
               <property name="currentIndex">
-               <number>0</number>
+               <number>1</number>
               </property>
               <widget class="QWidget" name="tabPlaylistPage">
                <layout class="QVBoxLayout" name="verticalLayout">
@@ -507,23 +507,6 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_4">
-                   <property name="spacing">
-                    <number>0</number>
-                   </property>
-                   <property name="leftMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="rightMargin">
-                    <number>0</number>
-                   </property>
-                   <property name="bottomMargin">
-                    <number>0</number>
-                   </property>
-                  </layout>
                  </widget>
                 </item>
                </layout>

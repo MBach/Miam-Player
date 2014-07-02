@@ -447,11 +447,11 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	if (settings->isLibraryFilteredByArticles()) {
 		QStringList articles = settings->libraryFilteredByArticles();
-		qDebug() << articles;
+		//qDebug() << articles;
 		foreach (QString article, articles) {
 			if (theArtist.startsWith(article + " ", Qt::CaseInsensitive)) {
 				QString reorderedName = theArtist.remove(QRegularExpression("^" + article + " ", QRegularExpression::CaseInsensitiveOption)).append(", ").append(article);
-				qDebug() << theArtist << reorderedName;
+				//qDebug() << theArtist << reorderedName;
 				theArtist = reorderedName;
 				break;
 			}
@@ -713,7 +713,7 @@ void LibraryTreeView::sortByArtists(const QStringList &articles)
 	if (!settings->isLibraryFilteredByArticles()) {
 		return;
 	}
-	qDebug() << Q_FUNC_INFO << "TODO" << articles;
+	this->changeHierarchyOrder();
 }
 
 void LibraryTreeView::endPopulateTree()

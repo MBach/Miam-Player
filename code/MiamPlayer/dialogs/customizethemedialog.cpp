@@ -143,7 +143,7 @@ void CustomizeThemeDialog::setupActions()
 		connect(b, &QToolButton::clicked, this, &CustomizeThemeDialog::showColorDialog);
 	}
 
-	// Library
+	// Show covers in the Library
 	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
 		settings->setCovers(b);
 		if (mainWindow->library->model()) {
@@ -151,10 +151,21 @@ void CustomizeThemeDialog::setupActions()
 			this->fade();
 		}
 	});
-	connect(radioButtonEnableArticles, &QRadioButton::toggled, settings, &Settings::setIsLibraryFilteredByArticles);
-	connect(articlesLineEdit, &TagLineEdit::taglistHasChanged, mainWindow->library, &LibraryTreeView::sortByArtists);
 
-	// Covers
+	// Filter library
+	connect(radioButtonEnableArticles, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setIsLibraryFilteredByArticles(b);
+		// Don't reorder the library if one hasn't typed an article yet
+		if (!b && !settings->libraryFilteredByArticles().isEmpty()) {
+			mainWindow->library->changeHierarchyOrder();
+		}
+	});
+	connect(articlesLineEdit, &TagLineEdit::taglistHasChanged, this, [=](const QStringList &articles) {
+		settings->setLibraryFilteredByArticles(articles);
+		mainWindow->library->sortByArtists(articles);
+	});
+
+	// Change cover size
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
 		settings->setCoverSize(cs);
 		if (mainWindow->library->model()) {
