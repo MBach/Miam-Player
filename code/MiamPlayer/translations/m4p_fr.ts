@@ -1009,16 +1009,28 @@
         <translation>&amp;Ouvrir des fichiers...</translation>
     </message>
     <message>
-        <source>Open folders...</source>
-        <translation>Ouvrir des dossiers...</translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Bibliothèque</translation>
     </message>
     <message>
         <source>File explorer</source>
         <translation>Explorateur de fichiers</translation>
+    </message>
+    <message>
+        <source>Open folder...</source>
+        <translation>Ouvrir un dossier...</translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation>Fichiers audio</translation>
+    </message>
+    <message>
+        <source>Choose some files to open</source>
+        <translation>Choisissez des fichiers à ouvrir</translation>
+    </message>
+    <message>
+        <source>Choose a folder to open</source>
+        <translation>Choisissez un dossier à ouvrir</translation>
     </message>
 </context>
 <context>

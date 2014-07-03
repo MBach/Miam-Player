@@ -5,7 +5,6 @@
 #include "pluginmanager.h"
 #include "settings.h"
 
-#include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QStandardPaths>
@@ -162,8 +161,6 @@ void MainWindow::setupActions()
 
 	// Link user interface
 	// Actions from the menu
-	connect(actionOpenFiles, &QAction::triggered, this, &MainWindow::openFiles);
-	connect(actionOpenFolder, &QAction::triggered, this, &MainWindow::openFolder);
 	connect(actionExit, &QAction::triggered, &QApplication::quit);
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
@@ -247,8 +244,6 @@ void MainWindow::setupActions()
 		seekSlider->update();
 	});
 
-	// Media buttons and their shortcuts
-	/// XXX: can this be factorized with meta object system?
 	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekBackward);
@@ -449,55 +444,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 		library->openTagEditor->setKey(keySequence);
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
-	}
-}
-
-void MainWindow::openFiles()
-{
-	QString audioFiles = tr("Audio files");
-	Settings *settings = Settings::getInstance();
-	QString lastOpenedLocation;
-	QString defaultMusicLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-	if (settings->value("lastOpenedLocation").toString().isEmpty()) {
-		lastOpenedLocation = defaultMusicLocation;
-	} else {
-		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
-	}
-	QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose some files to open"), lastOpenedLocation,
-													 audioFiles.append(" (" + FileHelper::suffixes(true).join(" ") + ")"));
-	if (files.isEmpty()) {
-		settings->setValue("lastOpenedLocation", defaultMusicLocation);
-	} else {
-		QFileInfo fileInfo(files.first());
-		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
-		tabPlaylists->insertItemsToPlaylist(-1, files);
-	}
-}
-
-void MainWindow::openFolder()
-{
-	Settings *settings = Settings::getInstance();
-	QString lastOpenedLocation;
-	QString defaultMusicLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-	if (settings->value("lastOpenedLocation").toString().isEmpty()) {
-		lastOpenedLocation = defaultMusicLocation;
-	} else {
-		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
-	}
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose a folder to open"), lastOpenedLocation);
-	if (dir.isEmpty()) {
-		settings->setValue("lastOpenedLocation", defaultMusicLocation);
-	} else {
-		QDirIterator it(dir, QDirIterator::Subdirectories);
-		QStringList suffixes = FileHelper::suffixes();
-		QStringList files;
-		while (it.hasNext()) {
-			it.next();
-			if (suffixes.contains(it.fileInfo().suffix())) {
-				files << it.filePath();
-			}
-		}
-		tabPlaylists->insertItemsToPlaylist(-1, files);
 	}
 }
 

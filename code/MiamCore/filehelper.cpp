@@ -29,8 +29,6 @@
 #include <QImage>
 #include <QtDebug>
 
-
-
 FileHelper::FileHelper(const QMediaContent &track)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
@@ -91,9 +89,18 @@ FileHelper::~FileHelper()
 	}
 }
 
-const QStringList FileHelper::suffixes()
+const QStringList FileHelper::suffixes(bool withPrefix)
 {
-	return QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
+	QStringList suffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
+	if (withPrefix) {
+		QStringList filters;
+		foreach (QString filter, suffixes) {
+			filters.append("*." + filter);
+		}
+		return filters;
+	} else {
+		return suffixes;
+	}
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */
@@ -363,7 +370,7 @@ int FileHelper::rating() const
 /** Sets the inner picture. */
 void FileHelper::setCover(Cover *cover)
 {
-	qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);
+	//qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);
 	TagLib::MPEG::File *mpegFile = NULL;
 	switch (fileType) {
 	case MP3:

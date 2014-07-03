@@ -59,7 +59,7 @@
           </property>
           <widget class="ExtendedTabWidget" name="leftTabs">
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <property name="documentMode">
             <bool>true</bool>
@@ -540,7 +540,7 @@
      <string>&amp;Menu</string>
     </property>
     <addaction name="actionOpenFiles"/>
-    <addaction name="actionOpenFolders"/>
+    <addaction name="actionOpenFolder"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -618,9 +618,6 @@
    </property>
   </action>
   <action name="actionOpenFiles">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>&amp;Open files...</string>
    </property>
@@ -862,12 +859,9 @@
     <string>Tag Editor</string>
    </property>
   </action>
-  <action name="actionOpenFolders">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
+  <action name="actionOpenFolder">
    <property name="text">
-    <string>Open folders...</string>
+    <string>Open folder...</string>
    </property>
   </action>
  </widget>

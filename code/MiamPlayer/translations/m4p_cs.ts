@@ -1012,15 +1012,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Open folders...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Knihovna</translation>
     </message>
     <message>
         <source>File explorer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open folder...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose some files to open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose a folder to open</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -476,14 +476,17 @@ void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &art
 		} else {
 			itemArtist = new QStandardItem(theArtist);
 			itemArtist->setData(IT_Artist, DF_ItemType);
+			QStandardItem *letter = NULL;
 			if (settings->isLibraryFilteredByArticles()) {
-				itemArtist->setData(theArtist, DF_NormalizedString);
+				itemArtist->setData(theArtistNorm, DF_NormalizedString);
+				letter = this->insertLetter(theArtistNorm);
 			} else {
 				itemArtist->setData(art, DF_NormalizedString);
+				letter = this->insertLetter(art);
 			}
 			_artists.insert(theArtist.toLower(), itemArtist);
 			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
-			QStandardItem *letter = this->insertLetter(art);
+
 			if (letter) {
 				_topLevelItems.insert(letter->index(), itemArtist->index());
 			}
@@ -704,16 +707,6 @@ void LibraryTreeView::reset()
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Years"));
 		break;
 	}
-}
-
-/** Sort library by artists and ignore grammatical articles at the beginning. */
-void LibraryTreeView::sortByArtists(const QStringList &articles)
-{
-	Settings *settings = Settings::getInstance();
-	if (!settings->isLibraryFilteredByArticles()) {
-		return;
-	}
-	this->changeHierarchyOrder();
 }
 
 void LibraryTreeView::endPopulateTree()

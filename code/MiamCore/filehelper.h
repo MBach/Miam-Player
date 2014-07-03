@@ -57,7 +57,7 @@ private:
 public:
 	virtual ~FileHelper();
 
-	static const QStringList suffixes();
+	static const QStringList suffixes(bool withPrefix = false);
 
 	/** Field ArtistAlbum if exists (in a compilation for example). */
 	QString artistAlbum() const;

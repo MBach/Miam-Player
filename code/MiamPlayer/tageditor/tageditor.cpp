@@ -275,7 +275,7 @@ void TagEditor::commitChanges()
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
 					if (pm.contains(key.toStdString())) {
-						bool b = pm.replace(key.toStdString(), TagLib::String(item->text().toStdString()));
+						bool b = pm.replace(key.toStdString(), TagLib::String(item->text().toStdString(), TagLib::String::UTF8));
 						if (b) {
 							fh.file()->tag()->setProperties(pm);
 							if (fh.file()->tag()) {
@@ -293,8 +293,9 @@ void TagEditor::commitChanges()
 
 		Cover *cover = unsavedCovers.value(i);
 		if (cover == NULL || (cover != NULL && cover->hasChanged())) {
-			qDebug() << "setCover(" << i << ")";
-			fh.setCover(cover);
+			/// FIXME
+			//qDebug() << "setCover(" << i << ")";
+			//fh.setCover(cover);
 			trackWasModified = true;
 		}
 

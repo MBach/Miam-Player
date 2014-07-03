@@ -94,6 +94,10 @@ protected:
 private slots:
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
 
+	void openFiles();
+
+	void openFolder();
+
 	void showTabPlaylists();
 
 	void showTagEditor();

@@ -223,15 +223,9 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
 	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
 
-	// Create filters
-	QStringList suffixes;
-	foreach (QString suffix, FileHelper::suffixes()) {
-		suffixes.append("*." + suffix);
-	}
-
 	QStringList tracks;
 	foreach (QDir folder, folders) {
-		QDirIterator it(folder.absolutePath(), suffixes, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			if (it.fileInfo().isFile()) {

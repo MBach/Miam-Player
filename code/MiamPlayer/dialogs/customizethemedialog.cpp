@@ -156,13 +156,13 @@ void CustomizeThemeDialog::setupActions()
 	connect(radioButtonEnableArticles, &QRadioButton::toggled, this, [=](bool b) {
 		settings->setIsLibraryFilteredByArticles(b);
 		// Don't reorder the library if one hasn't typed an article yet
-		if (!b && !settings->libraryFilteredByArticles().isEmpty()) {
+		if (b || !b && !settings->libraryFilteredByArticles().isEmpty()) {
 			mainWindow->library->changeHierarchyOrder();
 		}
 	});
 	connect(articlesLineEdit, &TagLineEdit::taglistHasChanged, this, [=](const QStringList &articles) {
 		settings->setLibraryFilteredByArticles(articles);
-		mainWindow->library->sortByArtists(articles);
+		mainWindow->library->changeHierarchyOrder();
 	});
 
 	// Change cover size

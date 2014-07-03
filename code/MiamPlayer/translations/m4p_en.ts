@@ -1009,16 +1009,28 @@
         <translation>&amp;Open files...</translation>
     </message>
     <message>
-        <source>Open folders...</source>
-        <translation>Open folders...</translation>
-    </message>
-    <message>
         <source>Library</source>
         <translation>Library</translation>
     </message>
     <message>
         <source>File explorer</source>
         <translation>File explorer</translation>
+    </message>
+    <message>
+        <source>Open folder...</source>
+        <translation>Open folder...</translation>
+    </message>
+    <message>
+        <source>Audio files</source>
+        <translation>Audio files</translation>
+    </message>
+    <message>
+        <source>Choose some files to open</source>
+        <translation>Choose some files to open</translation>
+    </message>
+    <message>
+        <source>Choose a folder to open</source>
+        <translation>Choose a folder to open</translation>
     </message>
 </context>
 <context>

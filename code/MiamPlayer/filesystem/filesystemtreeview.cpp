@@ -17,11 +17,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	fileSystemModel = new QFileSystemModel(this);
 	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
-	QStringList filters;
-	foreach (QString suffix, FileHelper::suffixes()) {
-		filters.append("*." + suffix);
-	}
-	fileSystemModel->setNameFilters(filters);
+	fileSystemModel->setNameFilters(FileHelper::suffixes(true));
 
 	this->setModel(fileSystemModel);
 
