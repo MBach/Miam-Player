@@ -153,6 +153,9 @@ void MediaPlayer::seekForward()
 void MediaPlayer::skipBackward()
 {
 	if (playlist()) {
+		if (playlist()->playbackMode() == QMediaPlaylist::Sequential && playlist()->previousIndex() < 0) {
+			return;
+		}
 		playlist()->previous();
 		play();
 	}

@@ -1035,6 +1035,18 @@
         <source>Choose a folder to open</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
+        <translation>Více než tři sta souborů k přidání do %1 (%2 k přidání).</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to continue? This might take some time.</source>
+        <translation>Jste si jistý, že chcete pokračovat? Může to chvíli trvat.</translation>
+    </message>
+    <message>
+        <source>playlist</source>
+        <translation>Seznam skladeb</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1403,14 +1415,6 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
 </context>
 <context>
     <name>TreeView</name>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>Více než tři sta souborů k přidání do %1 (%2 k přidání).</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>Jste si jistý, že chcete pokračovat? Může to chvíli trvat.</translation>
-    </message>
     <message>
         <source>tag editor</source>
         <translation>Editor značek</translation>

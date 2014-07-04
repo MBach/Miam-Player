@@ -1,5 +1,6 @@
 #include "treeview.h"
 
+#include "mainwindow.h"
 #include "settings.h"
 
 #include <QMessageBox>
@@ -24,22 +25,12 @@ QStringList TreeView::selectedTracks()
 }
 
 /** Alerts the user if there's too many tracks to add. */
-int TreeView::beforeSending(const QString &target, QStringList &tracks)
+QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QStringList &tracks)
 {
 	// Quick count tracks before anything else
 	int count = this->countAll(selectedIndexes());
 
-	int ret = QMessageBox::Ok;
-	/// XXX: extract magic number (to where?)
-	if (count > 300) {
-		QMessageBox msgBox;
-		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
-		msgBox.setText(totalFiles.arg(target).arg(count));
-		msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
-		msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-		msgBox.setDefaultButton(QMessageBox::Ok);
-		ret = msgBox.exec();
-	}
+	QMessageBox::StandardButton ret = MainWindow::showWarning(target, count);
 
 	if (ret == QMessageBox::Ok) {
 		// Gather all items (pure virtual call, this function must be reimplemented in subclasses: custom tree, file system, etc.)

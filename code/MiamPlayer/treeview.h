@@ -1,6 +1,7 @@
 #ifndef TREEVIEW_H
 #define TREEVIEW_H
 
+#include <QMessageBox>
 #include <QTreeView>
 #include "model/selectedtracksmodel.h"
 
@@ -26,7 +27,7 @@ protected:
 
 private:
 	/** Alerts the user if there's too many tracks to add. */
-	int beforeSending(const QString &target, QStringList &tracks);
+	QMessageBox::StandardButton beforeSending(const QString &target, QStringList &tracks);
 
 public slots:
 	/** Sends folders or tracks to the end of a playlist. */

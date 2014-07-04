@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	_librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
 	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-}
+	}
 
 void MainWindow::init()
 {
@@ -391,6 +391,22 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	}
 }
 
+QMessageBox::StandardButton MainWindow::showWarning(const QString &target, int count)
+{
+	QMessageBox::StandardButton ret = QMessageBox::Ok;
+	/// XXX: extract magic number (to where?)
+	if (count > 300) {
+		QMessageBox msgBox;
+		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
+		msgBox.setText(totalFiles.arg(target).arg(count));
+		msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
+		msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		ret = (QMessageBox::StandardButton) msgBox.exec();
+	}
+	return ret;
+}
+
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
 	event->acceptProposedAction();
@@ -488,6 +504,7 @@ void MainWindow::openFolder()
 	if (dir.isEmpty()) {
 		settings->setValue("lastOpenedLocation", defaultMusicLocation);
 	} else {
+		settings->setValue("lastOpenedLocation", dir);
 		QDirIterator it(dir, QDirIterator::Subdirectories);
 		QStringList suffixes = FileHelper::suffixes();
 		QStringList files;
@@ -497,7 +514,9 @@ void MainWindow::openFolder()
 				files << it.filePath();
 			}
 		}
-		tabPlaylists->insertItemsToPlaylist(-1, files);
+		if (showWarning(tr("playlist"), files.count()) == QMessageBox::Ok) {
+			tabPlaylists->insertItemsToPlaylist(-1, files);
+		}
 	}
 }
 

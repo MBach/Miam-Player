@@ -1044,6 +1044,18 @@
         <source>Choose a folder to open</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
+        <translation type="unfinished">هناك أكثر مِن ثلاثمائة مِلف يمكن إظافتها</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to continue? This might take some time.</source>
+        <translation type="unfinished">هل أنت متأكد أنك تريد المتابعة؟ هذا قد يستغرق بعض الوقت.</translation>
+    </message>
+    <message>
+        <source>playlist</source>
+        <translation type="unfinished">قائمة القرائة</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1419,14 +1431,6 @@ Select or drop tracks from your library or any external location.</source>
 </context>
 <context>
     <name>TreeView</name>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>هناك أكثر مِن ثلاثمائة مِلف يمكن إظافتها</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>هل أنت متأكد أنك تريد المتابعة؟ هذا قد يستغرق بعض الوقت.</translation>
-    </message>
     <message>
         <source>tag editor</source>
         <translation>محرِرْ الكامات الدلالية</translation>

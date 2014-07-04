@@ -75,6 +75,8 @@ public:
 
 	void dispatchDrop(QDropEvent *event);
 
+	static QMessageBox::StandardButton showWarning(const QString &target, int count);
+
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event);

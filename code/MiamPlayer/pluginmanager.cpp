@@ -118,11 +118,14 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 	Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }
 
+#include <QWindow>
+
 /** Load a plugin by its location on the hard drive. */
 BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
 	QObject *plugin = pluginLoader.instance();
+	Settings *settings = Settings::getInstance();
 	if (plugin) {
 		BasicPluginInterface *basic = dynamic_cast<BasicPluginInterface *>(plugin);
 		if (basic) {
@@ -151,7 +154,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				_plugins.insert(basic->name(), pluginFileInfo);
 			}
 			if (basic->isConfigurable()) {
-				QString pluginLang(":/translations/" + basic->name() + "_" + Settings::getInstance()->language());
+				QString pluginLang(":/translations/" + basic->name() + "_" + settings->language());
 				if (basic->translator.load(pluginLang)) {
 					QApplication::installTranslator(&basic->translator);
 				}
@@ -165,17 +168,20 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 		if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
 
 			mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
-			if (mediaPlayerPlugin->providesView()) {
+			QWidget *view = mediaPlayerPlugin->providesView();
+			if (view != NULL) {
 				// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
 				if (_mainWindow->menuView->actions().count() == 3) {
 					_mainWindow->menuView->addSeparator();
 				}
 				QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
 				_mainWindow->menuView->addAction(actionAddViewToMenu);
-				_mainWindow->updateFonts(Settings::getInstance()->font(Settings::FF_Menu));
-				connect(actionAddViewToMenu, &QAction::triggered, [=]() {
-					mediaPlayerPlugin->toggleViews(_mainWindow);
+				_mainWindow->updateFonts(settings->font(Settings::FF_Menu));
+				connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
+					_mainWindow->close();
+					view->show();
 				});
+
 				// Link the view to the existing ActionGroup
 				actionAddViewToMenu->setCheckable(true);
 				actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());

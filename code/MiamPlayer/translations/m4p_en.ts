@@ -1032,6 +1032,18 @@
         <source>Choose a folder to open</source>
         <translation>Choose a folder to open</translation>
     </message>
+    <message>
+        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
+        <translation>There are more than 300 files to add to the %1 (%2 to add).</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to continue? This might take some time.</source>
+        <translation>Are you sure you want to continue? This might take some time.</translation>
+    </message>
+    <message>
+        <source>playlist</source>
+        <translation>playlist</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1398,14 +1410,6 @@ Select or drop tracks from your library or any external location.</translation>
 </context>
 <context>
     <name>TreeView</name>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>There are more than 300 files to add to the %1 (%2 to add).</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>Are you sure you want to continue? This might take some time.</translation>
-    </message>
     <message>
         <source>tag editor</source>
         <translation>tag editor</translation>
