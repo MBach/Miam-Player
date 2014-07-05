@@ -58,22 +58,22 @@ public:
 
 	MainWindow(QWidget *parent = 0);
 
+	void appendToCurrentPlaylist(const QStringList &files);
+
+	void dispatchDrop(QDropEvent *event);
+
 	void init();
 
 	/** Plugins. */
 	void loadPlugins();
 
-	/** Update fonts for menu and context menus. */
-	void updateFonts(const QFont &font);
-
-	void loadPlugin(const QString &pluginAbsoluteFilePath);
+	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
-	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
-
-	void dispatchDrop(QDropEvent *event);
+	/** Update fonts for menu and context menus. */
+	void updateFonts(const QFont &font);
 
 	static QMessageBox::StandardButton showWarning(const QString &target, int count);
 
@@ -92,6 +92,9 @@ protected:
 	virtual bool event(QEvent *event);
 
 	virtual void moveEvent(QMoveEvent *);
+
+public slots:
+	void processArgs(const QStringList &args);
 
 private slots:
 	void bindShortcut(const QString&, const QKeySequence &keySequence);

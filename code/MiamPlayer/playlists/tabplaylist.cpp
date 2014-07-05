@@ -141,12 +141,6 @@ void TabPlaylist::changeEvent(QEvent *event)
 	}
 }
 
-/*void TabPlaylist::dropEvent(QDropEvent *event)
-{
-	qDebug() << Q_FUNC_INFO << (event->source() == NULL);
-	QTabWidget::dropEvent(event);
-}*/
-
 void TabPlaylist::displayEmptyArea(bool isEmpty)
 {
 	if (isEmpty) {
@@ -242,14 +236,6 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 	}
 }
 
-/** Append a single track chosen by one from the library or the filesystem into the active playlist. */
-void TabPlaylist::appendItemToPlaylist(const QString &track)
-{
-	QList<QString> tracks;
-	tracks.append(track);
-	this->insertItemsToPlaylist(-1, tracks);
-}
-
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
@@ -322,7 +308,6 @@ void TabPlaylist::checkAddPlaylistButton(int i)
 	if (i == count() - 1) {
 		this->addPlaylist();
 	} else {
-		//currentPlayList()->countSelectedItems();
 		emit updatePlaybackModeButton();
 	}
 }

@@ -50,20 +50,6 @@ function Component()
 	}
 }
 
-//Component.prototype.copyToClipboard = function()
-//{
-	//component.userInterface("CopyBitcoinAddressForm").labelThanks.text = "Thank you!";
-	//var text = component.userInterface("CopyBitcoinAddressForm").lineEdit.text;
-	//if (installer.value("os") == "win") { 
-	//QInstaller.execute("cmd", "/C echo " + text + " | clip");
-	//installer.executeDetached("set", "/p=" + text + "<NUL|clip");
-	//installer.execute("start", "https://www.bitcoin.org");
-	//component.addElevatedOperation("Execute", "cmd /C echo " + text + " | clip");
-	//component.beginInstallation();
-	//}
-	//component.userInterface("CopyBitcoinAddressForm").lineEdit.copy(this);
-//}
-
 // Utility function
 var Dir = new function () {
     this.toNativeSparator = function (path) {
@@ -90,8 +76,6 @@ Component.prototype.installerLoaded = function()
 	// don't show when updating / de-installing
 	if (installer.isInstaller()) {
 		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
-		//component.userInterface("CopyBitcoinAddressForm").copyAddress.clicked.connect(this, Component.prototype.copyToClipboard);
-		//component.userInterface("CopyBitcoinAddressForm").copyAddress.clicked.connect(component.userInterface("CopyBitcoinAddressForm").lineEdit, "copy");
 	}
 }
 
@@ -147,6 +131,15 @@ Component.prototype.createOperations = function()
 				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
 				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2012_redist_x64.exe", "/norestart", "/q");
 				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
+				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
+				component.addElevatedOperation("RegisterFileType", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
+				component.addOperation("RegisterFileType",
+                               "mp3",
+                               "@TargetDir@\\MiamPlayer.exe -f '%1'",
+                               "Miam-Player media file (*.mp3)",
+                               "audio/mpeg",
+                               "@TargetDir@\\MiamPlayer.exe," + 0,
+                               "ProgId=MiamPlayer.mp3");
 				
 				// Always clear registry after install (should be improved)
 				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');

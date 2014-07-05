@@ -70,8 +70,6 @@ protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	virtual void changeEvent(QEvent *event);
 
-	//virtual void dropEvent(QDropEvent *event);
-
 private:
 	void displayEmptyArea(bool isEmpty = true);
 
@@ -81,9 +79,6 @@ public slots:
 
 	/** Add external folders (from a drag and drop) to the current playlist. */
 	void addExtFolders(const QList<QDir> &folders);
-
-	/** Append a single track chosen by one from the library or the filesystem into the active playlist. */
-	void appendItemToPlaylist(const QString &track);
 
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 	void insertItemsToPlaylist(int rowIndex, const QStringList &tracks);

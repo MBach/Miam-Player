@@ -5,11 +5,11 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MiamPlayer"
-#define VERSION "0.6.9"
-
-#include "plugininfo.h"
+#define VERSION "0.6.10"
 
 #include "miamstyle.h"
+#include "plugininfo.h"
+#include "singleapplication.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,23 +19,16 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 
-	QApplication app(argc, argv);
-	app.setStyle(new MiamStyle());
-	MainWindow window;
+	SingleApplication app(argc, argv);
 
-	QSharedMemory sharedMemory;
-	sharedMemory.setKey("MIAMPLAYER");
-	sharedMemory.attach();
-
-//	qDebug() << argc;
-//	for (int i = 0; i < argc; i++) {
-//		qDebug() << i << argv[i];
-//	}
-
-	// Exit already a process running
-	if (!sharedMemory.create(1)) {
+	// Is another instance of the program is already running
+	if (!app.shouldContinue()) {
 		return 0;
 	}
+
+	app.setStyle(new MiamStyle());
+	MainWindow window;
+	app.setActivationWindow(&window);
 
 	Settings *settings = Settings::getInstance();
 	if (settings->isCustomColors()) {
@@ -49,5 +42,13 @@ int main(int argc, char *argv[])
 	window.show();
 	window.loadPlugins();
 
+	// It this application was started from a file (for example)
+	if (argc > 1) {
+		QStringList args;
+		for (int i = 0; i < argc; i++) {
+			args << argv[i];
+		}
+		window.processArgs(args);
+	}
 	return app.exec();
 }

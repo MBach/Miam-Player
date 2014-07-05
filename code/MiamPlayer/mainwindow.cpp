@@ -46,7 +46,28 @@ MainWindow::MainWindow(QWidget *parent) :
 	_librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
 	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
+}
+
+void MainWindow::appendToCurrentPlaylist(const QStringList &files)
+{
+	tabPlaylists->insertItemsToPlaylist(-1, files);
+}
+
+void MainWindow::dispatchDrop(QDropEvent *event)
+{
+	dragDropDialog->setMimeData(event->mimeData());
+	switch (Settings::getInstance()->dragDropAction()) {
+	case Settings::DD_OpenPopup:
+		dragDropDialog->show();
+		break;
+	case Settings::DD_AddToLibrary:
+		customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
+		break;
+	case Settings::DD_AddToPlaylist:
+		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
+		break;
 	}
+}
 
 void MainWindow::init()
 {
@@ -94,15 +115,6 @@ void MainWindow::loadPlugins()
 		customizeOptionsDialog->listWidget->setCurrentRow(0);
 	} else {
 		customizeOptionsDialog->listWidget->setCurrentRow(row);
-	}
-}
-
-/** Update fonts for menu and context menus. */
-void MainWindow::updateFonts(const QFont &font)
-{
-	menuBar()->setFont(font);
-	foreach (QAction *action, findChildren<QAction*>()) {
-		action->setFont(font);
 	}
 }
 
@@ -340,6 +352,31 @@ void MainWindow::setupActions()
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 }
 
+/** Update fonts for menu and context menus. */
+void MainWindow::updateFonts(const QFont &font)
+{
+	menuBar()->setFont(font);
+	foreach (QAction *action, findChildren<QAction*>()) {
+		action->setFont(font);
+	}
+}
+
+QMessageBox::StandardButton MainWindow::showWarning(const QString &target, int count)
+{
+	QMessageBox::StandardButton ret = QMessageBox::Ok;
+	/// XXX: extract magic number (to where?)
+	if (count > 300) {
+		QMessageBox msgBox;
+		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
+		msgBox.setText(totalFiles.arg(target).arg(count));
+		msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
+		msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		ret = (QMessageBox::StandardButton) msgBox.exec();
+	}
+	return ret;
+}
+
 /** Redefined to be able to retransltate User Interface at runtime. */
 void MainWindow::changeEvent(QEvent *event)
 {
@@ -373,38 +410,6 @@ void MainWindow::closeEvent(QCloseEvent *)
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 	settings->setVolume(volumeSlider->value());
 	settings->sync();
-}
-
-void MainWindow::dispatchDrop(QDropEvent *event)
-{
-	dragDropDialog->setMimeData(event->mimeData());
-	switch (Settings::getInstance()->dragDropAction()) {
-	case Settings::DD_OpenPopup:
-		dragDropDialog->show();
-		break;
-	case Settings::DD_AddToLibrary:
-		customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
-		break;
-	case Settings::DD_AddToPlaylist:
-		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
-		break;
-	}
-}
-
-QMessageBox::StandardButton MainWindow::showWarning(const QString &target, int count)
-{
-	QMessageBox::StandardButton ret = QMessageBox::Ok;
-	/// XXX: extract magic number (to where?)
-	if (count > 300) {
-		QMessageBox msgBox;
-		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
-		msgBox.setText(totalFiles.arg(target).arg(count));
-		msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
-		msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-		msgBox.setDefaultButton(QMessageBox::Ok);
-		ret = (QMessageBox::StandardButton) msgBox.exec();
-	}
-	return ret;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -444,6 +449,22 @@ void MainWindow::moveEvent(QMoveEvent *event)
 {
 	playbackModeWidgetFactory->move();
 	QMainWindow::moveEvent(event);
+}
+
+void MainWindow::processArgs(const QStringList &args)
+{
+	// First arg is the location of the application
+	// Second arg is generally what to do. Let's begin with a single command: '-f' and files
+	if (args.count() > 2) {
+		QString command = args.at(1);
+		if (command == "-f") {
+			QStringList files;
+			for (int i = 2; i < args.count(); i++) {
+				files << args.at(i);
+			}
+			this->appendToCurrentPlaylist(files);
+		}
+	}
 }
 
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)

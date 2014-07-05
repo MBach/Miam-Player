@@ -53,7 +53,9 @@ SOURCES += \
     taglineedit.cpp \
     tagbutton.cpp \
     styling/lineedit.cpp \
-    libraryfilterlineedit.cpp
+    libraryfilterlineedit.cpp \
+    localserver.cpp \
+    singleapplication.cpp
 
 HEADERS += \
     dialogs/closeplaylistpopup.h \
@@ -109,7 +111,9 @@ HEADERS += \
     taglineedit.h \
     tagbutton.h \
     styling/lineedit.h \
-    libraryfilterlineedit.h
+    libraryfilterlineedit.h \
+    localserver.h \
+    singleapplication.h
 
 FORMS += \
     mainwindow.ui \
