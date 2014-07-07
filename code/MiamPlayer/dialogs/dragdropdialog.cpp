@@ -25,36 +25,43 @@ void DragDropDialog::retranslateUi(DragDropDialog *dialog)
 	Ui::DragDropDialog::retranslateUi(dialog);
 }
 
-void DragDropDialog::setMimeData(const QMimeData *mimeData)
+bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 {
-	if (mimeData->hasUrls()) {
-		QList<QUrl> urlList = mimeData->urls();
-		QString newLabel;
-		int folders = 0;
-		int maxDisplayedInLabel = 3;
+	_externalLocations.clear();
+	if (!mimeData->hasUrls()) {
+		return false;
+	}
+	bool onlyFiles = true;
+	QList<QUrl> urlList = mimeData->urls();
+	QString newLabel;
+	int folders = 0;
+	int maxDisplayedInLabel = 3;
 
-		_externalLocations.clear();
-		labelHowToProceed->setText(originalLabel);
+	labelHowToProceed->setText(originalLabel);
 
-		for (int i = 0; i < urlList.size(); i++) {
-			QFileInfo fileInfo = urlList.at(i).toLocalFile();
-			if (fileInfo.isDir()) {
-				// Builds the label as a concatenation of folders' name
-				if (folders < maxDisplayedInLabel) {
-					newLabel.append(fileInfo.fileName()).append(", ");
-					folders++;
-				}
-				_externalLocations.append(fileInfo.absoluteFilePath());
+	for (int i = 0; i < urlList.size(); i++) {
+		QFileInfo fileInfo = urlList.at(i).toLocalFile();
+		if (fileInfo.isDir()) {
+			// Builds the label as a concatenation of folders' name
+			if (folders < maxDisplayedInLabel) {
+				newLabel.append(fileInfo.fileName()).append(", ");
+				folders++;
 			}
-		}
-		if (newLabel.length() > 2) {
-			newLabel = newLabel.left(newLabel.length() - 2);
-			if (folders >= maxDisplayedInLabel) {
-				newLabel.append(", ... ");
-			}
-			labelHowToProceed->setText(labelHowToProceed->text().arg(newLabel));
+			_externalLocations.append(fileInfo.absoluteFilePath());
+			onlyFiles = false;
+		} else if (fileInfo.isFile()){
+			_externalLocations.append(fileInfo.absoluteFilePath());
+			onlyFiles = onlyFiles && true;
 		}
 	}
+	if (newLabel.length() > 2) {
+		newLabel = newLabel.left(newLabel.length() - 2);
+		if (folders >= maxDisplayedInLabel) {
+			newLabel.append(", ... ");
+		}
+		labelHowToProceed->setText(labelHowToProceed->text().arg(newLabel));
+	}
+	return onlyFiles;
 }
 
 void DragDropDialog::addExternalFoldersToLibrary()

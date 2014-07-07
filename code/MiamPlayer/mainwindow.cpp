@@ -55,17 +55,21 @@ void MainWindow::appendToCurrentPlaylist(const QStringList &files)
 
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
-	dragDropDialog->setMimeData(event->mimeData());
-	switch (Settings::getInstance()->dragDropAction()) {
-	case Settings::DD_OpenPopup:
-		dragDropDialog->show();
-		break;
-	case Settings::DD_AddToLibrary:
-		customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
-		break;
-	case Settings::DD_AddToPlaylist:
+	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
+	if (onlyFiles) {
 		tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
-		break;
+	} else {
+		switch (Settings::getInstance()->dragDropAction()) {
+		case Settings::DD_OpenPopup:
+			dragDropDialog->show();
+			break;
+		case Settings::DD_AddToLibrary:
+			customizeOptionsDialog->addMusicLocations(dragDropDialog->externalLocations());
+			break;
+		case Settings::DD_AddToPlaylist:
+			tabPlaylists->addExtFolders(dragDropDialog->externalLocations());
+			break;
+		}
 	}
 }
 
@@ -455,6 +459,7 @@ void MainWindow::processArgs(const QStringList &args)
 {
 	// First arg is the location of the application
 	// Second arg is generally what to do. Let's begin with a single command: '-f' and files
+	qDebug() << Q_FUNC_INFO << args;
 	if (args.count() > 2) {
 		QString command = args.at(1);
 		if (command == "-f") {

@@ -28,7 +28,7 @@ public:
 
 	void retranslateUi(DragDropDialog *dialog);
 
-	void setMimeData(const QMimeData *mimeData);
+	bool setMimeData(const QMimeData *mimeData);
 
 	inline const QList<QDir> & externalLocations() const { return _externalLocations; }
 

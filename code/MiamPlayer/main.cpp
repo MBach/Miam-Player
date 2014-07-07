@@ -9,7 +9,8 @@
 
 #include "miamstyle.h"
 #include "plugininfo.h"
-#include "singleapplication.h"
+// #include "singleapplication.h"
+#include <qtsingleapplication/QtSingleApplication>
 
 int main(int argc, char *argv[])
 {
@@ -19,10 +20,12 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 
-	SingleApplication app(argc, argv);
+	QtSingleApplication app(SOFT, argc, argv);
 
-	// Is another instance of the program is already running
-	if (!app.shouldContinue()) {
+	if (app.isRunning()) {
+		for (int i = 0; i < QApplication::arguments().count(); i++) {
+			app.sendMessage(QApplication::arguments().at(i));
+		}
 		return 0;
 	}
 

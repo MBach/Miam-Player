@@ -135,7 +135,7 @@ Component.prototype.createOperations = function()
 				component.addElevatedOperation("RegisterFileType", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
 				component.addOperation("RegisterFileType",
                                "mp3",
-                               "@TargetDir@\\MiamPlayer.exe -f '%1'",
+                               '@TargetDir@\\MiamPlayer.exe -f "%1"',
                                "Miam-Player media file (*.mp3)",
                                "audio/mpeg",
                                "@TargetDir@\\MiamPlayer.exe," + 0,

@@ -54,8 +54,14 @@ SOURCES += \
     tagbutton.cpp \
     styling/lineedit.cpp \
     libraryfilterlineedit.cpp \
-    localserver.cpp \
-    singleapplication.cpp
+    # localserver.cpp \
+    # singleapplication.cpp \
+    qtsingleapplication/qtlocalpeer.cpp \
+    qtsingleapplication/qtlockedfile.cpp \
+    qtsingleapplication/qtlockedfile_unix.cpp \
+    qtsingleapplication/qtlockedfile_win.cpp \
+    qtsingleapplication/qtsingleapplication.cpp \
+    qtsingleapplication/qtsinglecoreapplication.cpp
 
 HEADERS += \
     dialogs/closeplaylistpopup.h \
@@ -112,8 +118,14 @@ HEADERS += \
     tagbutton.h \
     styling/lineedit.h \
     libraryfilterlineedit.h \
-    localserver.h \
-    singleapplication.h
+    # localserver.h \
+    # singleapplication.h \
+    qtsingleapplication/qtlocalpeer.h \
+    qtsingleapplication/QtLockedFile \
+    qtsingleapplication/qtlockedfile.h \
+    qtsingleapplication/QtSingleApplication \
+    qtsingleapplication/qtsingleapplication.h \
+    qtsingleapplication/qtsinglecoreapplication.h
 
 FORMS += \
     mainwindow.ui \
@@ -215,4 +227,5 @@ DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/library $$PWD/playlists $$PWD
 DEPENDPATH += $$PWD/../MiamUniqueLibrary
 
 OTHER_FILES += \
-    config/mp.rc
+    config/mp.rc \
+    qtsingleapplication/qtsingleapplication.pri
