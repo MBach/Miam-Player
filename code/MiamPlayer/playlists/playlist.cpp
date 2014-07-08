@@ -108,9 +108,11 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::FF_Playlist)).height());
 
 	connect(mediaPlaylist(), &QMediaPlaylist::loaded, this, [=] () {
+		QList<QMediaContent> medias;
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
-			_playlistModel->insertMedia(i, mediaPlaylist()->media(i));
+			medias << mediaPlaylist()->media(i);
 		}
+		_playlistModel->insertMedias(-1, medias);
 	});
 
 	// No pity: marks everything as a dirty region

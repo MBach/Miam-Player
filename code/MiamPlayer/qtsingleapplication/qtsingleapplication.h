@@ -82,11 +82,19 @@ public:
 	QWidget* activationWindow() const;
 
 public slots:
-	bool sendMessage(const QString &message, int timeout = 5000);
-	void activateWindow();
 	void aboutToSendArgs(const QString &message);
+	void activateWindow();
+	bool sendMessage(const QString &message, int timeout = 5000);
 
 signals:
+	/*!
+		\fn void QtSingleApplication::messageReceived(const QString& message)
+
+		This signal is emitted when the current instance receives a \a
+		message from another instance of this application.
+
+		\sa sendMessage(), setActivationWindow(), activateWindow()
+	*/
 	void messageReceived(const QString &message);
 };
 

@@ -30,6 +30,13 @@ SOURCES += \
     playlists/playlistitemdelegate.cpp \
     playlists/starrating.cpp \
     playlists/stareditor.cpp \
+    qtsingleapplication/qtlocalpeer.cpp \
+    qtsingleapplication/qtlockedfile.cpp \
+    qtsingleapplication/qtlockedfile_unix.cpp \
+    qtsingleapplication/qtlockedfile_win.cpp \
+    qtsingleapplication/qtsingleapplication.cpp \
+    qtsingleapplication/qtsinglecoreapplication.cpp \
+    styling/lineedit.cpp \
     styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
@@ -37,6 +44,7 @@ SOURCES += \
     tageditor/tageditortablewidget.cpp \
     circleprogressbar.cpp \
     columnutils.cpp \
+    libraryfilterlineedit.cpp \
     main.cpp \
     mainwindow.cpp \
     miamstyle.cpp \
@@ -47,21 +55,11 @@ SOURCES += \
     quickstart.cpp \
     scrollbar.cpp \
     seekbar.cpp \
+    tagbutton.cpp \
+    taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp \
-    taglineedit.cpp \
-    tagbutton.cpp \
-    styling/lineedit.cpp \
-    libraryfilterlineedit.cpp \
-    # localserver.cpp \
-    # singleapplication.cpp \
-    qtsingleapplication/qtlocalpeer.cpp \
-    qtsingleapplication/qtlockedfile.cpp \
-    qtsingleapplication/qtlockedfile_unix.cpp \
-    qtsingleapplication/qtlockedfile_win.cpp \
-    qtsingleapplication/qtsingleapplication.cpp \
-    qtsingleapplication/qtsinglecoreapplication.cpp
+    volumeslider.cpp
 
 HEADERS += \
     dialogs/closeplaylistpopup.h \
@@ -94,6 +92,13 @@ HEADERS += \
     playlists/starrating.h \
     playlists/stareditor.h \
     playlists/playlistframe.h \
+    qtsingleapplication/qtlocalpeer.h \
+    qtsingleapplication/QtLockedFile \
+    qtsingleapplication/qtlockedfile.h \
+    qtsingleapplication/QtSingleApplication \
+    qtsingleapplication/qtsingleapplication.h \
+    qtsingleapplication/qtsinglecoreapplication.h \
+    styling/lineedit.h \
     styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
@@ -101,6 +106,7 @@ HEADERS += \
     tageditor/tageditortablewidget.h \
     circleprogressbar.h \
     columnutils.h \
+    libraryfilterlineedit.h \
     mainwindow.h \
     miamstyle.h \
     nofocusitemdelegate.h \
@@ -111,21 +117,11 @@ HEADERS += \
     quickstart.h \
     scrollbar.h \
     seekbar.h \
+    tagbutton.h \
+    taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h \
-    taglineedit.h \
-    tagbutton.h \
-    styling/lineedit.h \
-    libraryfilterlineedit.h \
-    # localserver.h \
-    # singleapplication.h \
-    qtsingleapplication/qtlocalpeer.h \
-    qtsingleapplication/QtLockedFile \
-    qtsingleapplication/qtlockedfile.h \
-    qtsingleapplication/QtSingleApplication \
-    qtsingleapplication/qtsingleapplication.h \
-    qtsingleapplication/qtsinglecoreapplication.h
+    volumeslider.h
 
 FORMS += \
     mainwindow.ui \

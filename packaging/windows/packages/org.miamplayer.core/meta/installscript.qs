@@ -133,14 +133,17 @@ Component.prototype.createOperations = function()
 				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
 				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
 				component.addElevatedOperation("RegisterFileType", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
-				component.addOperation("RegisterFileType",
-                               "mp3",
-                               '@TargetDir@\\MiamPlayer.exe -f "%1"',
-                               "Miam-Player media file (*.mp3)",
-                               "audio/mpeg",
-                               "@TargetDir@\\MiamPlayer.exe," + 0,
-                               "ProgId=MiamPlayer.mp3");
-				
+				var index;
+				var extensions = ["ape", "asf", "flac", "m4a", "mpc", "mp3", "oga", "ogg"];
+				for (index = 0; index < extensions.length; ++index) {
+					var ext = extensions[index];
+					component.addOperation("RegisterFileType", ext,
+										   '@TargetDir@\\MiamPlayer.exe -f "%1"',
+										   "Miam-Player media file (*." + ext + ")",
+										   "audio/mpeg",
+										   "@TargetDir@\\MiamPlayer.exe," + 0,
+										   "ProgId=MiamPlayer." + ext);
+				}
 				// Always clear registry after install (should be improved)
 				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
 			} catch (e) {

@@ -55,8 +55,7 @@ public:
 	QtLocalPeer(QObject *parent = 0, const QString &appId = QString());
 	bool isClient();
 	bool sendMessage(const QString &message, int timeout);
-	QString applicationId() const
-		{ return id; }
+	inline QString applicationId() const { return id; }
 
 Q_SIGNALS:
 	void messageReceived(const QString &message);

@@ -5,8 +5,6 @@
 
 #include "settings.h"
 
-#include <QtDebug>
-
 DragDropDialog::DragDropDialog(QWidget *parent) :
 	QDialog(parent)
 {
@@ -69,7 +67,11 @@ void DragDropDialog::addExternalFoldersToLibrary()
 	if (checkBoxRememberChoice->isChecked()) {
 		Settings::getInstance()->setDragDropAction(Settings::DD_AddToLibrary);
 	}
-	emit aboutToAddExtFoldersToLibrary(_externalLocations);
+	QList<QDir> dirs;
+	foreach (QString dir, _externalLocations) {
+		dirs << dir;
+	}
+	emit aboutToAddExtFoldersToLibrary(dirs);
 	this->accept();
 }
 
@@ -78,6 +80,10 @@ void DragDropDialog::addExternalFoldersToPlaylist()
 	if (checkBoxRememberChoice->isChecked()) {
 		Settings::getInstance()->setDragDropAction(Settings::DD_AddToPlaylist);
 	}
-	emit aboutToAddExtFoldersToPlaylist(_externalLocations);
+	QList<QDir> dirs;
+	foreach (QString dir, _externalLocations) {
+		dirs << dir;
+	}
+	emit aboutToAddExtFoldersToPlaylist(dirs);
 	this->accept();
 }

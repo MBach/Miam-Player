@@ -180,24 +180,6 @@ bool QtSingleApplication::isRunning()
 	return peer->isClient();
 }
 
-/*!
-	Tries to send the text \a message to the currently running
-	instance. The QtSingleApplication object in the running instance
-	will emit the messageReceived() signal when it receives the
-	message.
-
-	This function returns true if the message has been sent to, and
-	processed by, the current instance. If there is no instance
-	currently running, or if the running instance fails to process the
-	message within \a timeout milliseconds, this function return false.
-
-	\sa isRunning(), messageReceived()
-*/
-bool QtSingleApplication::sendMessage(const QString &message, int timeout)
-{
-	return peer->sendMessage(message, timeout);
-}
-
 
 /*!
 	Returns the application identifier. Two processes with the same
@@ -224,14 +206,8 @@ void QtSingleApplication::setActivationWindow(MainWindow* aw, bool activateOnMes
 {
 	actWin = aw;
 	if (activateOnMessage) {
-		//connect(peer, SIGNAL(messageReceived(const QString&)), this, SLOT(activateWindow()));
-		/*connect(peer, &QtLocalPeer::messageReceived, this, [=](const QString &message){
-			aw->processArgs(QStringList(message));
-			this->activateWindow();
-		});*/
 		connect(peer, &QtLocalPeer::messageReceived, this, &QtSingleApplication::aboutToSendArgs);
 	} else {
-		//disconnect(peer, SIGNAL(messageReceived(const QString&)), this, SLOT(activateWindow()));
 		disconnect(peer, &QtLocalPeer::messageReceived, this, &QtSingleApplication::aboutToSendArgs);
 	}
 }
@@ -239,10 +215,8 @@ void QtSingleApplication::setActivationWindow(MainWindow* aw, bool activateOnMes
 void QtSingleApplication::aboutToSendArgs(const QString &message)
 {
 	this->activateWindow();
-	qDebug() << Q_FUNC_INFO << message;
-	actWin->processArgs(QApplication::arguments());
+	actWin->processArgs(message.split(";"));
 }
-
 
 /*!
 	Returns the applications activation window if one has been set by
@@ -253,6 +227,24 @@ void QtSingleApplication::aboutToSendArgs(const QString &message)
 QWidget* QtSingleApplication::activationWindow() const
 {
 	return actWin;
+}
+
+/*!
+	Tries to send the text \a message to the currently running
+	instance. The QtSingleApplication object in the running instance
+	will emit the messageReceived() signal when it receives the
+	message.
+
+	This function returns true if the message has been sent to, and
+	processed by, the current instance. If there is no instance
+	currently running, or if the running instance fails to process the
+	message within \a timeout milliseconds, this function return false.
+
+	\sa isRunning(), messageReceived()
+*/
+bool QtSingleApplication::sendMessage(const QString &message, int timeout)
+{
+	return peer->sendMessage(message, timeout);
 }
 
 /*!
@@ -277,13 +269,3 @@ void QtSingleApplication::activateWindow()
 		actWin->activateWindow();
 	}
 }
-
-/*!
-	\fn void QtSingleApplication::messageReceived(const QString& message)
-
-	This signal is emitted when the current instance receives a \a
-	message from another instance of this application.
-
-	\sa sendMessage(), setActivationWindow(), activateWindow()
-*/
-

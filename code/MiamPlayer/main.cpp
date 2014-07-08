@@ -9,7 +9,6 @@
 
 #include "miamstyle.h"
 #include "plugininfo.h"
-// #include "singleapplication.h"
 #include <qtsingleapplication/QtSingleApplication>
 
 int main(int argc, char *argv[])
@@ -23,9 +22,8 @@ int main(int argc, char *argv[])
 	QtSingleApplication app(SOFT, argc, argv);
 
 	if (app.isRunning()) {
-		for (int i = 0; i < QApplication::arguments().count(); i++) {
-			app.sendMessage(QApplication::arguments().at(i));
-		}
+		QString arg = QApplication::arguments().join(";");
+		app.sendMessage(arg);
 		return 0;
 	}
 

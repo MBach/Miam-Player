@@ -327,39 +327,31 @@ bool FileHelper::hasCover() const
 /** Convert the existing rating number into a smaller range from 1 to 5. */
 int FileHelper::rating() const
 {
-	TagLib::MPEG::File *mpegFile = NULL;
 	int r = -1;
 
 	/// TODO other types?
 	switch (fileType) {
-	case MP3:
-		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+	case MP3: {
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
-			TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
-			if (!l.isEmpty()) {
-				TagLib::ID3v2::PopularimeterFrame *pf = static_cast<TagLib::ID3v2::PopularimeterFrame*>(l.front());
-				if (pf) {
-					switch (pf->rating()) {
-					case 1:
-						r = 1;
-						break;
-					case 64:
-						r = 2;
-						break;
-					case 128:
-						r = 3;
-						break;
-					case 196:
-						r = 4;
-						break;
-					case 255:
-						r = 5;
-						break;
-					}
-				}
+			r = this->ratingForID3v2(mpegFile->ID3v2Tag());
+		}
+		break;
+	}
+	case FLAC: {
+		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
+		if (flacFile->hasID3v2Tag()) {
+			r = this->ratingForID3v2(flacFile->ID3v2Tag());
+		} else if (flacFile->hasID3v1Tag()) {
+			qDebug() << "FileHelper::rating: Not implemented (FLAC ID3v1)";
+		} else if (flacFile->hasXiphComment()) {
+			TagLib::StringList list = flacFile->xiphComment()->fieldListMap()["RATING"];
+			if (!list.isEmpty()) {
+				r = list.front().toInt();
 			}
 		}
 		break;
+	}
 	default:
 		qDebug() << "FileHelper::rating: Not implemented";
 		break;
@@ -410,45 +402,32 @@ void FileHelper::setCover(Cover *cover)
 
 void FileHelper::setRating(int rating)
 {
-	TagLib::MPEG::File *mpegFile = NULL;
 	switch (fileType) {
-	case MP3:
-		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+	case MP3: {
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
-			TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()["POPM"];
-			// If one wants to remove the existing rating
-			if (rating == 0 && !l.isEmpty()) {
-				mpegFile->ID3v2Tag()->removeFrame(l.front());
-			} else {
-				TagLib::ID3v2::PopularimeterFrame *pf = NULL;
-				if (l.isEmpty()) {
-					pf = new TagLib::ID3v2::PopularimeterFrame();
-					mpegFile->ID3v2Tag()->addFrame(pf);
-				} else {
-					pf = static_cast<TagLib::ID3v2::PopularimeterFrame*>(l.front());
-				}
-				switch (rating) {
-				case 1:
-					pf->setRating(1);
-					break;
-				case 2:
-					pf->setRating(64);
-					break;
-				case 3:
-					pf->setRating(128);
-					break;
-				case 4:
-					pf->setRating(196);
-					break;
-				case 5:
-					pf->setRating(255);
-					break;
-				}
-			}
+			this->setRatingForID3v2(rating, mpegFile->ID3v2Tag());
 		} else if (mpegFile->hasID3v1Tag()) {
 			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";
 		}
 		break;
+	}
+	case FLAC: {
+		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
+		if (flacFile->hasID3v2Tag()) {
+			this->setRatingForID3v2(rating, flacFile->ID3v2Tag());
+		} else if (flacFile->hasID3v1Tag()) {
+			qDebug() << "hasID3v1Tag";
+		} else if (flacFile->hasXiphComment()) {
+			TagLib::Ogg::XiphComment *xiph = flacFile->xiphComment();
+			if (rating == 0) {
+				xiph->removeField("RATING");
+			} else {
+				xiph->addField("RATING", QString::number(rating).toStdString());
+			}
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -620,4 +599,67 @@ QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 		qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
 	}
 	return feature;
+}
+
+int FileHelper::ratingForID3v2(TagLib::ID3v2::Tag *tag) const
+{
+	int r = -1;
+	TagLib::ID3v2::FrameList l = tag->frameListMap()["POPM"];
+	if (l.isEmpty()) {
+		return r;
+	}
+	if (TagLib::ID3v2::PopularimeterFrame *pf = static_cast<TagLib::ID3v2::PopularimeterFrame*>(l.front())) {
+		switch (pf->rating()) {
+		case 1:
+			r = 1;
+			break;
+		case 64:
+			r = 2;
+			break;
+		case 128:
+			r = 3;
+			break;
+		case 196:
+			r = 4;
+			break;
+		case 255:
+			r = 5;
+			break;
+		}
+	}
+	return r;
+}
+
+void FileHelper::setRatingForID3v2(int rating, TagLib::ID3v2::Tag *tag)
+{
+	TagLib::ID3v2::FrameList l = tag->frameListMap()["POPM"];
+	// If one wants to remove the existing rating
+	if (rating == 0 && !l.isEmpty()) {
+		tag->removeFrame(l.front());
+	} else {
+		TagLib::ID3v2::PopularimeterFrame *pf = NULL;
+		if (l.isEmpty()) {
+			pf = new TagLib::ID3v2::PopularimeterFrame();
+			tag->addFrame(pf);
+		} else {
+			pf = static_cast<TagLib::ID3v2::PopularimeterFrame*>(l.front());
+		}
+		switch (rating) {
+		case 1:
+			pf->setRating(1);
+			break;
+		case 2:
+			pf->setRating(64);
+			break;
+		case 3:
+			pf->setRating(128);
+			break;
+		case 4:
+			pf->setRating(196);
+			break;
+		case 5:
+			pf->setRating(255);
+			break;
+		}
+	}
 }

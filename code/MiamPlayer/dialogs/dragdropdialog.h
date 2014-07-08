@@ -20,7 +20,7 @@ class DragDropDialog : public QDialog, public Ui::DragDropDialog
 {
 	Q_OBJECT
 private:
-	QList<QDir> _externalLocations;
+	QStringList _externalLocations;
 	QString originalLabel;
 
 public:
@@ -30,7 +30,7 @@ public:
 
 	bool setMimeData(const QMimeData *mimeData);
 
-	inline const QList<QDir> & externalLocations() const { return _externalLocations; }
+	inline const QStringList & externalLocations() const { return _externalLocations; }
 
 private slots:
 	void addExternalFoldersToLibrary();

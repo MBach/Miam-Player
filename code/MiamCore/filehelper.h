@@ -12,6 +12,10 @@ class Cover;
 
 namespace TagLib {
 	class File;
+
+	namespace ID3v2 {
+		class Tag;
+	}
 }
 
 /**
@@ -105,6 +109,9 @@ private:
 	QString extractMp4Feature(const QString &featureToExtract) const;
 
 	QString extractMpegFeature(const QString &featureToExtract) const;
+
+	int ratingForID3v2(TagLib::ID3v2::Tag *tag) const;
+	void setRatingForID3v2(int rating, TagLib::ID3v2::Tag *tag);
 };
 
 #endif // FILEHELPER_H

@@ -6,6 +6,8 @@
 #include <QMenu>
 #include <QStandardItemModel>
 
+#include "filehelper.h"
+
 /**
  * @brief The PlaylistModel class
  */
@@ -24,8 +26,6 @@ public:
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
-	void insertMedia(int rowIndex, const QMediaContent &track);
-
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);
 
@@ -37,6 +37,8 @@ public:
 	/** Redefined. */
 	void removeRow(int row);
 
+private:
+	void insertMedia(int rowIndex, const FileHelper &fileHelper);
 };
 
 #endif // PLAYLISTMODEL_H
