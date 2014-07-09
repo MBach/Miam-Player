@@ -1251,23 +1251,23 @@ Select or drop tracks from your library or any external location.</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished">Artist</translation>
+        <translation>Artist</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Disc</source>
-        <translation type="unfinished">Disc</translation>
+        <translation>Disc</translation>
     </message>
     <message>
         <source>ArtistAlbum</source>
-        <translation type="unfinished"></translation>
+        <translation>ArtistAlbum</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished">Year</translation>
+        <translation>Year</translation>
     </message>
 </context>
 <context>

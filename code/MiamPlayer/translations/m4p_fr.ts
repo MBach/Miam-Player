@@ -1250,23 +1250,23 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished">Artiste</translation>
+        <translation>Artiste</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Disc</source>
-        <translation type="unfinished">Disque</translation>
+        <translation>Disque</translation>
     </message>
     <message>
         <source>ArtistAlbum</source>
-        <translation type="unfinished"></translation>
+        <translation>ArtisteAlbum</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished">Année</translation>
+        <translation>Année</translation>
     </message>
 </context>
 <context>
