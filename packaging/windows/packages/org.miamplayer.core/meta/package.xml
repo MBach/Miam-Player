@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>Miam-Player</DisplayName>
     <Description>Miam-Player is the main program. It is required and cannot be unselected.</Description>
-    <Version>0.6.10</Version>
-    <ReleaseDate>2014-07-06</ReleaseDate>
+    <Version>0.6.11</Version>
+    <ReleaseDate>2014-07-11</ReleaseDate>
     <Name>org.miamplayer.core</Name>
     <Licenses>
         <License name="GPL v3" file="gpl_v3.txt" />

@@ -91,6 +91,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	}
 	// Finally, reorder the inner QMediaPlaylist
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
+	qDebug() << Q_FUNC_INFO;
 
 	return rowsToHiglight;
 }
@@ -107,7 +108,7 @@ void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 }
 
 /** Redefined. */
-void PlaylistModel::removeRow(int row)
+void PlaylistModel::removeTrack(int row)
 {
 	QStandardItemModel::removeRow(row);
 	_mediaPlaylist->removeMedia(row);

@@ -156,6 +156,7 @@ TRANSLATIONS = translations/m4p_ar.ts \
     translations/m4p_en.ts \
     translations/m4p_es.ts \
     translations/m4p_fr.ts \
+    translations/m4p_in.ts \
     translations/m4p_it.ts \
     translations/m4p_ja.ts \
     translations/m4p_kr.ts \

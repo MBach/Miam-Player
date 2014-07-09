@@ -84,20 +84,21 @@
         <file alias="sequential">player/oxygen/sequential.png</file>
     </qresource>
     <qresource prefix="/languages">
-        <file alias="en">language/en.png</file>
-        <file alias="fr">language/fr.png</file>
         <file alias="ar">language/ar.png</file>
+        <file alias="cs">language/cs.png</file>
         <file alias="de">language/de.png</file>
+        <file alias="en">language/en.png</file>
         <file alias="es">language/es.png</file>
+        <file alias="fr">language/fr.png</file>
+        <file alias="in">language/in.png</file>
+        <file alias="it">language/it.png</file>
+        <file alias="ja">language/ja.png</file>
+        <file alias="kr">language/kr.png</file>
         <file alias="pt">language/pt.png</file>
         <file alias="ru">language/ru.png</file>
-        <file alias="ja">language/ja.png</file>
-        <file alias="zh">language/zh.png</file>
-        <file alias="it">language/it.png</file>
-        <file alias="kr">language/kr.png</file>
         <file alias="th">language/th.png</file>
         <file alias="vn">language/vn.png</file>
-        <file alias="cs">language/cs.png</file>
+        <file alias="zh">language/zh.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="en">translations/m4p_en.qm</file>
@@ -111,5 +112,4 @@
     <qresource prefix="/icons/unix">
         <file alias="closeTabsHover">config/unix/close_tabs_hover.png</file>
     </qresource>
-    <qresource prefix="/"/>
 </RCC>

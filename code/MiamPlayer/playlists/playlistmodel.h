@@ -34,8 +34,7 @@ public:
 
 	inline QMediaPlaylist* mediaPlaylist() const { return _mediaPlaylist; }
 
-	/** Redefined. */
-	void removeRow(int row);
+	void removeTrack(int row);
 
 private:
 	void insertMedia(int rowIndex, const FileHelper &fileHelper);

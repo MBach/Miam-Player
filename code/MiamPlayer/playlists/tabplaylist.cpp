@@ -195,12 +195,17 @@ Playlist* TabPlaylist::addPlaylist()
 	int i = insertTab(count(), stackedWidget, newPlaylistName);
 	this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 
-	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaInserted, [=]() {
+	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaInserted, this, [=]() {
 		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
 	});
-	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, [=]() {
-		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
+	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
+		bool empty = p->mediaPlaylist()->isEmpty();
+		this->displayEmptyArea(empty);
+		if (empty || p->mediaPlaylist()->currentIndex() == start) {
+		   _mediaPlayer.data()->stop();
+		}
 	});
+
 	// Forward from inner class to MainWindow the signals
 	connect(p, &Playlist::aboutToSendToTagEditor, this, &TabPlaylist::aboutToSendToTagEditor);
 	connect(p, &Playlist::selectionChanged, this, &TabPlaylist::selectionChanged);

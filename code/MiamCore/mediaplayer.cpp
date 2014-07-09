@@ -76,17 +76,10 @@ QMediaPlaylist * MediaPlayer::playlist()
 
 void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 {
+	if (_playlist) {
+		_playlist->disconnect(this);
+	}
 	_playlist = playlist;
-	connect(_playlist, &QMediaPlaylist::currentIndexChanged, this, [=]() {
-		qDebug() << "currentIndexChanged";
-		_state = QMediaPlayer::StoppedState;
-	});
-	connect(_playlist, &QMediaPlaylist::mediaRemoved, this, [=](int start, int end) {
-		qDebug() << "mediaRemoved" << start << end << _playlist->currentIndex();
-		if (_playlist->isEmpty() || _playlist->currentIndex() == start) {
-			_player->stop();
-		}
-	});
 }
 
 void MediaPlayer::setVolume(int v)
@@ -182,6 +175,7 @@ void MediaPlayer::play()
 	if (playlist()) {
 		if (_state == QMediaPlayer::PausedState) {
 			_player->resume();
+			_state = QMediaPlayer::PlayingState;
 		} else {
 			QMediaContent mc = playlist()->media(playlist()->currentIndex());
 			if (!mc.isNull()) {
@@ -191,10 +185,6 @@ void MediaPlayer::play()
 					delete _media;
 				}
 				_media = new VlcMedia(file, true, _instance);
-				/*connect(_media, &VlcMedia::durationChanged, this, [=](int i){
-					qDebug() << "durationChanged" << i;
-				});*/
-				qDebug() << "MediaPlayer::play()";
 				_player->open(_media);
 			}
 		}

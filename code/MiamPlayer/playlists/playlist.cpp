@@ -55,14 +55,10 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
 	connect(this, &QTableView::doubleClicked, this, [=](const QModelIndex &track) {
-		// Prevent the signal "currentMediaChanged" for being emitted twice
-		/// XXX is this comment still valid with VLC backend now?
-		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
-		_mediaPlayer.data()->blockSignals(false);
-		qDebug() << "about to set current index";
-		_mediaPlayer.data()->playlist()->setCurrentIndex(track.row());
+		this->mediaPlaylist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
+		this->viewport()->update();
 	});
 
 	// Link core multimedia actions
@@ -75,7 +71,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	// Ensure current item in the playlist is visible when track has just changed to another one
 	connect(_mediaPlayer.data(), &MediaPlayer::currentMediaChanged, this, [=] (const QMediaContent &media) {
 		if (!media.isNull()) {
-			int row = _mediaPlayer.data()->playlist()->currentIndex();
+			int row = mediaPlaylist()->currentIndex();
 			this->scrollTo(_playlistModel->index(row, 0));
 			this->viewport()->update();
 		}
@@ -93,7 +89,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	actionInlineTag->setDisabled(true);
 
 	connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
-	connect(actionEditTagsInEditor, &QAction::triggered, [=]() {
+	connect(actionEditTagsInEditor, &QAction::triggered, this, [=]() {
 		QList<QUrl> selectedTracks;
 		foreach (QModelIndex index, selectionModel()->selectedRows()) {
 			QMediaContent mc = _playlistModel->mediaPlaylist()->media(index.row());
@@ -355,19 +351,28 @@ void Playlist::moveTracksUp()
 void Playlist::removeSelectedTracks()
 {
 	QModelIndexList indexes = this->selectionModel()->selectedRows();
-	int firstIndex = INT_MAX;
+	int indexToHighlight = INT_MAX;
+	int currentPlayingIndex = _playlistModel->mediaPlaylist()->currentIndex();
+	int offset = 0;
 	foreach (QModelIndex idx, indexes) {
-		if (idx.row() < firstIndex) {
-			firstIndex = idx.row();
+		if (idx.row() < indexToHighlight) {
+			indexToHighlight = idx.row();
+		}
+		if (idx.row() < currentPlayingIndex) {
+			offset++;
 		}
 	}
+
 	// Remove discontiguous rows
 	for (int i = indexes.size() - 1; i >= 0; i--) {
 		int row = indexes.at(i).row();
-		_playlistModel->removeRow(row);
+		_playlistModel->removeTrack(row);
 	}
-	if (firstIndex < _playlistModel->rowCount()) {
-		this->selectRow(firstIndex);
+	_playlistModel->blockSignals(true);
+	_playlistModel->mediaPlaylist()->setCurrentIndex(currentPlayingIndex - offset);
+	_playlistModel->blockSignals(false);
+	if (indexToHighlight < _playlistModel->rowCount()) {
+		this->selectRow(indexToHighlight);
 	} else {
 		// Select the last one otherwise: it still can be possible to erase all
 		this->selectRow(_playlistModel->rowCount() - 1);
