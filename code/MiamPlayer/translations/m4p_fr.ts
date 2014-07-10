@@ -1129,7 +1129,7 @@
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>La zone de prévisualisation est vide.
-Sélectionnez une liste de lecteur pour afficher ses 30 premières pistes.</translation>
+Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</translation>
     </message>
     <message>
         <source>And more tracks...</source>
