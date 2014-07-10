@@ -293,6 +293,8 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		currentPlayList()->mediaPlaylist()->clear();
 		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount());
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
+		uint hash = qHash(currentPlayList());
+		tabBar()->setTabData(0, hash);
 		this->displayEmptyArea();
 	}
 }

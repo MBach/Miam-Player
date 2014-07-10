@@ -8,6 +8,9 @@
 #include <QTime>
 #include <QUrl>
 
+#include <algorithm>
+#include <functional>
+
 #include <QtDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) :
@@ -73,9 +76,14 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	QList<QMediaContent> mediasToMove;
 
 	// Sort in reverse lexical order for correctly taking rows
-	qSort(selectedIndexes.begin(), selectedIndexes.end(), qGreater<QModelIndex>());
+	std::sort(selectedIndexes.begin(), selectedIndexes.end(), std::less<QModelIndex>());
+	std::list<QModelIndex> indexes = selectedIndexes.toStdList();
+	indexes.reverse();
+	selectedIndexes = QList<QModelIndex>::fromStdList(indexes);
 	QList<QList<QStandardItem*> > removedRows;
-	foreach (QModelIndex selectedIndex, selectedIndexes) {
+	_mediaPlaylist->blockSignals(true);
+	int currentPlayingTrack = _mediaPlaylist->currentIndex();
+	foreach (QModelIndex selectedIndex, indexes) {
 		int rowNumber = selectedIndex.row();
 		QList<QStandardItem*> row = this->takeRow(rowNumber);
 		rowsToHiglight << row.at(0);
@@ -91,7 +99,27 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	}
 	// Finally, reorder the inner QMediaPlaylist
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << currentPlayingTrack << insertPoint;
+
+	int offset = 0;
+	if (currentPlayingTrack > insertPoint) {
+		foreach (QModelIndex selectedIndex, selectedIndexes) {
+			int rowNumber = selectedIndex.row();
+			if (rowNumber > currentPlayingTrack) {
+				offset++;
+			}
+		}
+		_mediaPlaylist->setCurrentIndex(currentPlayingTrack + offset);
+	} else {
+		foreach (QModelIndex selectedIndex, selectedIndexes) {
+			int rowNumber = selectedIndex.row();
+			if (rowNumber < currentPlayingTrack) {
+				offset++;
+			}
+		}
+		_mediaPlaylist->setCurrentIndex(currentPlayingTrack - offset);
+	}
+	_mediaPlaylist->blockSignals(false);
 
 	return rowsToHiglight;
 }

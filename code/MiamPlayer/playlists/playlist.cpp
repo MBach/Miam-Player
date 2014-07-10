@@ -344,7 +344,13 @@ void Playlist::moveTracksDown()
 /** Move selected tracks upward. */
 void Playlist::moveTracksUp()
 {
-	/// TODO
+	QModelIndexList indexes = this->selectionModel()->selectedRows();
+	int topIndex = INT_MAX;
+	foreach (QModelIndex idx, indexes) {
+		if (idx.row() < topIndex) {
+			topIndex = idx.row();
+		}
+	}
 }
 
 /** Remove selected tracks from the playlist. */
