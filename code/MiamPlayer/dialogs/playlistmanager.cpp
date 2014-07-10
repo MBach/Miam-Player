@@ -65,7 +65,10 @@ PlaylistManager::PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylis
 	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistManager::loadSelectedPlaylists);
 	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistManager::deleteSavedPlaylists);
 
-	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsRemoved, this, &PlaylistManager::dropAutoSavePlaylists);
+	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsAboutToBeRemoved, this, &PlaylistManager::dropAutoSavePlaylists);
+	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsRemoved, this, [=]() {
+		this->updatePlaylists();
+	});
 	connect(qApp, &QApplication::aboutToQuit, this, &PlaylistManager::savePlaylists);
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistManager::exportSelectedPlaylist);
@@ -94,7 +97,7 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 void PlaylistManager::init()
 {
 	playlists->blockSignals(true);
-	if (Settings::getInstance()->playbackRestorePlaylistsAtStartup()) {	
+	if (Settings::getInstance()->playbackRestorePlaylistsAtStartup()) {
 
 		// Populate saved playlists area
 		QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -115,7 +118,8 @@ void PlaylistManager::init()
 void PlaylistManager::saveAndRemovePlaylist(int index)
 {
 	qDebug() << Q_FUNC_INFO << index;
-	if (this->savePlaylist(index)) {
+	QString playlistPath = this->savePlaylist(index);
+	if (!playlistPath.isEmpty()) {
 		emit playlistSaved(index);
 	}
 }
@@ -192,26 +196,25 @@ void PlaylistManager::loadPlaylist(const QString &path)
 	}
 }
 
-bool PlaylistManager::savePlaylist(int index)
+QString PlaylistManager::savePlaylist(int index)
 {
 	qDebug() << Q_FUNC_INFO;
-	bool result = false;
+	QString playlistPath;
 	Playlist *p = playlists->playlist(index);
 	if (p && !p->mediaPlaylist()->isEmpty()) {
 		_db.open();
 		QString playlistName = playlists->tabBar()->tabText(index);
 		QVariant playlistData = playlists->tabBar()->tabData(index);
 
-		QString playlistPath;
 		// New playlists have no existing file stored as Data member
 		if (playlistData.toUInt() != 0) {
 			QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 			playlistName = this->convertNameToValidFileName(playlistName);
-			playlistPath = path + QDir::separator() + playlistName + ".m3u8";
+			playlistPath = path + "/" + playlistName + ".m3u8";
 			int count = 0;
 			// In case one has decided to create at least two playlists with the same name
 			while (QFile::exists(playlistPath)) {
-				playlistPath = path + QDir::separator() + playlistName + " (%1).m3u8";
+				playlistPath = path + "/" + playlistName + " (%1).m3u8";
 				playlistPath = playlistPath.arg(++count);
 			}
 
@@ -226,8 +229,9 @@ bool PlaylistManager::savePlaylist(int index)
 		}
 
 		// Then create or overwrite a file on the hard drive
-		QFile playlistFile(playlistPath);
+		QFile playlistFile(QDir::toNativeSeparators(playlistPath));
 		playlistFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+		qDebug() << "saving to" << playlistPath;
 		if (p->mediaPlaylist()->save(&playlistFile, "m3u8")) {
 
 			playlistFile.close();
@@ -244,11 +248,11 @@ bool PlaylistManager::savePlaylist(int index)
 			insertNewPlaylist.addBindValue(fileInfo.absoluteFilePath());
 			insertNewPlaylist.addBindValue(playlistName);
 			insertNewPlaylist.addBindValue(hash);
-			result = insertNewPlaylist.exec();
+			insertNewPlaylist.exec();
 		}
 		_db.close();
 	}
-	return result;
+	return playlistPath;
 }
 
 /** Redefined: clean preview area, populate once again lists. */
@@ -278,15 +282,28 @@ void PlaylistManager::deleteSavedPlaylists()
 			playlistToRemove.remove();
 		}
 	}
+	this->clearPreview(false);
 	this->updatePlaylists();
 }
 
-void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &, int start, int end)
+void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &parent, int start, int)
 {
-	qDebug() << "todo drop autosave" << start << end;
-	QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).first();
-	//Playlist *p;
-	//playlists->mediaPlayer().data()->playlist();
+	QModelIndex index = _unsavedPlaylistModel->index(start, 0, parent);
+	uint playlistObjectPointer = index.data(PlaylistObjectPointer).toUInt();
+	int idx = -1;
+	for (int i = 0; i < playlists->playlists().count(); i++) {
+		Playlist *p = playlists->playlist(i);
+		uint hash = qHash(p);
+		if (hash == playlistObjectPointer) {
+			idx = i;
+			break;
+		}
+	}
+	if (idx >= 0) {
+		QString playlistPath = this->savePlaylist(idx);
+		playlists->tabBar()->setTabData(idx, playlistPath);
+		playlists->setTabIcon(idx, playlists->defaultIcon(QIcon::Disabled));
+	}
 }
 
 /** Export one playlist at a time. */

@@ -56,7 +56,7 @@ private:
 	/** Load a playlist (*.m3u8) saved on the filesystem. */
 	void loadPlaylist(const QString &path);
 
-	bool savePlaylist(int index);
+	QString savePlaylist(int index);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */
@@ -66,7 +66,7 @@ private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
 	void deleteSavedPlaylists();
 
-	void dropAutoSavePlaylists(const QModelIndex &, int start, int end);
+	void dropAutoSavePlaylists(const QModelIndex &parent, int start, int);
 
 	/** Export one playlist at a time. */
 	void exportSelectedPlaylist();
