@@ -12,7 +12,7 @@ copy %MiamPlayer-libs%\*.dll packages\org.miamplayer.core\data\
 xcopy %MiamPlayer-libs%\plugins packages\org.miamplayer.core\data\plugins /y/i/e
 
 rem qt libraries
-set QTDIR="C:\Qt\Qt5.3.0\5.3\msvc2013_64"
+set QTDIR="C:\Qt\Qt5.3.1\5.3\msvc2013_64"
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\qtmedia_audioengine.dll packages\org.miamplayer.core\data\mediaservice\qtmedia_audioengine.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\wmfengine.dll packages\org.miamplayer.core\data\mediaservice\wmfengine.dll /y/s

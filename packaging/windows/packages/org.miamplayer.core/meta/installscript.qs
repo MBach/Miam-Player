@@ -129,20 +129,28 @@ Component.prototype.createOperations = function()
 		if (installer.value("os") == "win") { 
 			try {
 				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
-				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2012_redist_x64.exe", "/norestart", "/q");
-				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
-				component.addElevatedOperation("Execute", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
-				component.addElevatedOperation("RegisterFileType", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
-				var index;
-				var extensions = ["ape", "asf", "flac", "m4a", "mpc", "mp3", "oga", "ogg"];
-				for (index = 0; index < extensions.length; ++index) {
-					var ext = extensions[index];
-					component.addOperation("RegisterFileType", ext,
-										   '@TargetDir@\\MiamPlayer.exe -f "%1"',
-										   "Miam-Player media file (*." + ext + ")",
-										   "audio/mpeg",
-										   "@TargetDir@\\MiamPlayer.exe," + 0,
-										   "ProgId=MiamPlayer." + ext);
+				// only install c runtime if it is needed, no minor version check of the c runtime till we need it
+				// return value 3010 means it need a reboot, but in most cases it is not needed for run Qt application
+				// return value 5100 means there's a newer version of the runtime already installed
+				if (installer.value("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\11.0\\VC\\Runtimes\\x64\\Installed") != 1) {
+					component.addElevatedOperation("Execute", "{0,1638,3010,5100}", "@TargetDir@\\vcredist\\vc2012_redist_x64.exe", "/norestart", "/q");
+				}
+				if (installer.value("HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\12.0\\VC\\Runtimes\\x64\\Installed") != 1) {
+					component.addElevatedOperation("Execute", "{0,1638,3010,5100}", "@TargetDir@\\vcredist\\vc2013_redist_x64.exe", "/norestart", "/q");
+				}
+				var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+				if (widget.associateCommonFiletypesCheckBox.checked) {
+					var index;
+					var extensions = ["ape", "asf", "flac", "m4a", "mpc", "mp3", "oga", "ogg"];
+					for (index = 0; index < extensions.length; ++index) {
+						var ext = extensions[index];
+						component.addOperation("RegisterFileType", ext,
+											   '@TargetDir@\\MiamPlayer.exe -f "%1"',
+											   "Miam-Player media file (*." + ext + ")",
+											   "audio/mpeg",
+											   "@TargetDir@\\MiamPlayer.exe," + 0,
+											   "ProgId=MiamPlayer." + ext);
+					}
 				}
 				// Always clear registry after install (should be improved)
 				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
