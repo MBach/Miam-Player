@@ -167,10 +167,9 @@ void TagEditor::replaceCover(Cover *newCover)
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
-void TagEditor::addItemsToEditor(const QModelIndexList &sourceIndexes, const QStringList &tracks)
+void TagEditor::addItemsToEditor(const QStringList &tracks)
 {
 	this->tagEditorWidget->setFocus();
-	_sourceIndexes = sourceIndexes;
 
 	this->clear();
 	saveChangesButton->setEnabled(false);
@@ -179,7 +178,6 @@ void TagEditor::addItemsToEditor(const QModelIndexList &sourceIndexes, const QSt
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
-	//qDebug() << "TagEditor::addItemsToEditor" << tracks;
 	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, covers);
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
 	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
@@ -200,7 +198,7 @@ void TagEditor::addUrlsToEditor(const QList<QUrl> &tracks)
 			localFiles.append(url.toLocalFile());
 		}
 	}
-	this->addItemsToEditor(QModelIndexList(), localFiles);
+	this->addItemsToEditor(localFiles);
 }
 
 /** Clears all rows and comboboxes. */

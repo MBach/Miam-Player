@@ -2,7 +2,7 @@
 <Installer>
     <Name>Miam-Player</Name>
 	<!--<RunProgram>@InstallerDirPath@\MiamPlayer.exe</RunProgram>-->
-    <Version>0.6.11</Version>
+    <Version>0.6.12</Version>
     <Title>Miam-Player Installer</Title>
 	<InstallerApplicationIcon>installerApplicationIcon.png</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>

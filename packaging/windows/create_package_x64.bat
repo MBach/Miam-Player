@@ -47,22 +47,26 @@ copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
-set CoverFetcher-build="C:\dev\cover-fetcher-build-x64\release"
-set MiniMode-build="C:\dev\mini-mode-build-x64\release"
-set WindowsToolbar-build="C:\dev\windows-toolbar-build-x64\release"
+set CoverFetcherBuild="C:\dev\cover-fetcher-build-x64\release"
+set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build-x64"
+set MiniModeBuild="C:\dev\mini-mode-build-x64\release"
+set WindowsToolbarBuild="C:\dev\windows-toolbar-build-x64\release"
 
-xcopy %CoverFetcher-build%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
-xcopy %MiniMode-build%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
-xcopy %WindowsToolbar-build%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
+xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
+xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
+xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
+xcopy %MiniModeBuild%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
+xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
 
 rem vc redist 2012 and 2013 are required too
 xcopy vcredist packages\org.miamplayer.core\data\vcredist /y/i/e
 
 rem create the final package
-binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.6.11.exe
+binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.6.12.exe
 
 rem delete data folders
 rmdir packages\org.miamplayer.core\data\ /s /q
 rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
+rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
 rmdir packages\org.miamplayer.plugins.minimode\data\ /s /q
 rmdir packages\org.miamplayer.plugins.windowstoolbar\data\ /s /q

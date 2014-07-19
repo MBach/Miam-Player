@@ -3,7 +3,7 @@
     <DisplayName>Mini Mode plugin</DisplayName>
     <Description>This plugin is a tribute to the good ol' Winamp minimal player. It only occupies 8250 pixels on screen (o(</Description>
     <Version>0.5</Version>
-    <ReleaseDate>2014-06-12</ReleaseDate>
+    <ReleaseDate>2014-07-20</ReleaseDate>
     <Name>org.miamplayer.plugins.minimode</Name>
     <Default>true</Default>
 	<SortingPriority>11</SortingPriority>

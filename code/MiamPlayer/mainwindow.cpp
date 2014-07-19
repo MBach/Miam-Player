@@ -226,7 +226,7 @@ void MainWindow::setupActions()
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
 		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList indexes, const QStringList &tracks) {
 			this->showTagEditor();
-			tagEditor->addItemsToEditor(indexes, tracks);
+			tagEditor->addItemsToEditor(tracks);
 		});
 	}
 
@@ -465,12 +465,29 @@ void MainWindow::processArgs(const QStringList &args)
 	// Second arg is generally what to do. Let's begin with a single command: '-f' and files
 	if (args.count() > 2) {
 		QString command = args.at(1);
-		if (command == "-f") {
+		if (command == "-f") {			// Append to playlist
 			QStringList files;
 			for (int i = 2; i < args.count(); i++) {
 				files << args.at(i);
 			}
 			this->appendToCurrentPlaylist(files);
+		} else if (command == "-n") {	// New playlist
+			QStringList files;
+			for (int i = 2; i < args.count(); i++) {
+				files << args.at(i);
+			}
+			Playlist *p = tabPlaylists->addPlaylist();
+			if (p) {
+				this->appendToCurrentPlaylist(files);
+			}
+		} else if (command == "-t") {	// Tag Editor
+			QStringList files;
+			for (int i = 2; i < args.count(); i++) {
+				files << args.at(i);
+			}
+			tagEditor->addItemsToEditor(files);
+		} else if (command == "-l") {	// Library
+
 		}
 	}
 }

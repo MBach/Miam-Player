@@ -26,9 +26,6 @@ private:
 	QMap<int, Cover*> covers;
 	QMap<int, Cover*> unsavedCovers;
 
-	/** Cache from other views to be able to update these views after commiting data. */
-	QModelIndexList _sourceIndexes;
-
 	LibrarySqlModel *_sqlModel;
 
 public:
@@ -55,7 +52,7 @@ private:
 
 public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
-	void addItemsToEditor(const QModelIndexList &sourceIndexes, const QStringList &tracks);
+	void addItemsToEditor(const QStringList &tracks);
 
 	/** Wrapper for addItemsToEditor. */
 	void addUrlsToEditor(const QList<QUrl> &tracks);

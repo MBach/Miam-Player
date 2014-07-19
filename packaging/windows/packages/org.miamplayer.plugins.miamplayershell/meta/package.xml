@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Miam-Player Shell Extension</DisplayName>
+    <Description>This plugin extends the Windows Context Menu by adding a dynamic submenu. In this menu, four new actions are available to you. This can be modified later.</Description>
+    <Version>0.1</Version>
+    <ReleaseDate>2014-07-20</ReleaseDate>
+    <Name>org.miamplayer.plugins.miamplayershell</Name>
+	<Default>script</Default>
+    <Script>installscript.qs</Script>
+	<SortingPriority>12</SortingPriority>
+</Package>
