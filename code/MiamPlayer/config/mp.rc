@@ -1,8 +1,9 @@
-IDI_ICON1               ICON    DISCARDABLE     "../mp.ico"
+IDI_ICON1			    ICON	DISCARDABLE     "../mp.ico"
+CREATEPROCESS_MANIFEST_RESOURCE_ID  RT_MANIFEST	"../MiamPlayer.exe.manifest"
 // Executable version information.
 1 VERSIONINFO
  FILEVERSION 1,0,0,0
- PRODUCTVERSION 0,6,11,20140711
+ PRODUCTVERSION 0,6,12,20140720
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -23,7 +24,7 @@ BEGIN
 	    VALUE "LegalCopyright", "Copyleft 2014 Matthieu BACHELIER"
 	    VALUE "OriginalFilename", "MiamPlayer.exe"
 	    VALUE "ProductName", "MiamPlayer"
-	    VALUE "ProductVersion", "0.6.11.20140711"
+	    VALUE "ProductVersion", "0.6.12.20140720"
 	END
     END
     BLOCK "VarFileInfo"

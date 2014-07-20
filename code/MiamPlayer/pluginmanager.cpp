@@ -34,6 +34,8 @@ void PluginManager::setMainWindow(MainWindow *mainWindow)
 	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
 		_mainWindow->customizeOptionsDialog->listWidget->setRowHidden(5, true);
 	}
+	/// XXX: should I react to filesystem changes in ./plugins directory when one drops plugins?
+	/// It could be nice
 }
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
@@ -243,6 +245,7 @@ void PluginManager::unloadPlugin(const QString &pluginName)
 	}
 	_instances.remove(pluginName);
 	_dependencies.remove(pluginName);
+	basic->cleanUpBeforeDestroy();
 	delete basic;
 	basic = NULL;
 }
@@ -257,7 +260,8 @@ void PluginManager::loadOrUnload(QTableWidgetItem *item)
 		if (item->checkState() == Qt::Checked) {
 			QString pluginAbsPath = QDir::toNativeSeparators(_pluginPath + "/" + pluginInfo.fileName());
 			QFileInfo fileInfo(pluginAbsPath);
-			this->loadPlugin(fileInfo);
+			BasicPluginInterface *p = this->loadPlugin(fileInfo);
+			p->init();
 		} else {
 			this->unloadPlugin(pluginInfo.pluginName());
 		}

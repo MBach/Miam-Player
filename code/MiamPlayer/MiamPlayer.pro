@@ -140,7 +140,10 @@ RESOURCES += \
 
 win32 {
     RC_FILE += config/mp.rc
-    OTHER_FILES +=
+    # These lines are for embedding manifest file in the app
+    # It is used by one plugin which register / unregister DLL at runtime. Thus, Admin rights are required to do so
+    CONFIG += embed_manifest_exe
+    QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:level=\'requireAdministrator\'
 }
 unix {
     CONFIG += c++11
@@ -225,4 +228,5 @@ DEPENDPATH += $$PWD/../MiamUniqueLibrary
 
 OTHER_FILES += \
     config/mp.rc \
-    qtsingleapplication/qtsingleapplication.pri
+    qtsingleapplication/qtsingleapplication.pri \
+    MiamPlayer.exe.manifest

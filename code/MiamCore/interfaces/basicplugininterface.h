@@ -14,7 +14,11 @@ public:
 
 	virtual ~BasicPluginInterface() {}
 
+	virtual void cleanUpBeforeDestroy() {}
+
 	virtual QWidget* configPage() = 0;
+
+	virtual void init() {}
 
 	virtual bool isConfigurable() const = 0;
 
