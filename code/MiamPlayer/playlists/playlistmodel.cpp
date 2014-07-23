@@ -45,7 +45,6 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 
 	// Then, construct a new row with correct informations
 	QStandardItem *trackItem = new QStandardItem(fileHelper.trackNumber());
-	//trackItem->setData(track.canonicalUrl());
 	QStandardItem *titleItem = new QStandardItem(title);
 	QStandardItem *albumItem = new QStandardItem(fileHelper.album());
 	QStandardItem *lengthItem = new QStandardItem(fileHelper.length());
@@ -76,14 +75,11 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	QList<QMediaContent> mediasToMove;
 
 	// Sort in reverse lexical order for correctly taking rows
-	std::sort(selectedIndexes.begin(), selectedIndexes.end(), std::less<QModelIndex>());
-	std::list<QModelIndex> indexes = selectedIndexes.toStdList();
-	indexes.reverse();
-	selectedIndexes = QList<QModelIndex>::fromStdList(indexes);
-	QList<QList<QStandardItem*> > removedRows;
+	std::sort(selectedIndexes.begin(), selectedIndexes.end(), [](const QModelIndex &a, const QModelIndex &b) { return b < a; });
+	QList<QList<QStandardItem*>> removedRows;
 	_mediaPlaylist->blockSignals(true);
 	int currentPlayingTrack = _mediaPlaylist->currentIndex();
-	foreach (QModelIndex selectedIndex, indexes) {
+	foreach (QModelIndex selectedIndex, selectedIndexes) {
 		int rowNumber = selectedIndex.row();
 		QList<QStandardItem*> row = this->takeRow(rowNumber);
 		rowsToHiglight << row.at(0);
@@ -102,23 +98,22 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	qDebug() << Q_FUNC_INFO << currentPlayingTrack << insertPoint;
 
 	int offset = 0;
-	if (currentPlayingTrack > insertPoint) {
-		foreach (QModelIndex selectedIndex, selectedIndexes) {
-			int rowNumber = selectedIndex.row();
-			if (rowNumber > currentPlayingTrack) {
-				offset++;
-			}
+	foreach (QModelIndex selectedIndex, selectedIndexes) {
+		int rowNumber = selectedIndex.row();
+		if (rowNumber > currentPlayingTrack && currentPlayingTrack > insertPoint) {
+			offset++;
+		} else if (rowNumber < currentPlayingTrack && currentPlayingTrack < insertPoint) {
+			offset--;
+		} else if (currentPlayingTrack == rowNumber) {
+			offset = -rowNumber;
 		}
-		_mediaPlaylist->setCurrentIndex(currentPlayingTrack + offset);
-	} else {
-		foreach (QModelIndex selectedIndex, selectedIndexes) {
-			int rowNumber = selectedIndex.row();
-			if (rowNumber < currentPlayingTrack) {
-				offset++;
-			}
-		}
-		_mediaPlaylist->setCurrentIndex(currentPlayingTrack - offset);
 	}
+	if (offset < 0) {
+		//_mediaPlaylist->setCurrentIndex(-offset);
+	} else {
+		_mediaPlaylist->setCurrentIndex(currentPlayingTrack + offset);
+	}
+
 	_mediaPlaylist->blockSignals(false);
 
 	return rowsToHiglight;
@@ -135,7 +130,6 @@ void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 	QStandardItemModel::insertRow(row, items);
 }
 
-/** Redefined. */
 void PlaylistModel::removeTrack(int row)
 {
 	QStandardItemModel::removeRow(row);

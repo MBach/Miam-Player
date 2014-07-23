@@ -153,6 +153,7 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 
 			}
 		}*/
+		items.insert("aART", artistAlbum.toStdString().data());
 		break;
 	}
 	case MPC:

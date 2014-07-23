@@ -96,7 +96,7 @@ void TagEditorTableWidget::updateColumnData(int column, const QString &text)
 /** Add items to the table in order to edit them. */
 bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int, Cover*> &covers)
 {
-	QSet<QPair<QString, QString> > artistAlbumSet;
+	QSet<QPair<QString, QString>> artistAlbumSet;
 	foreach (QString track, tracks) {
 		FileHelper fh(track);
 
