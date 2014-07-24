@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>Miam-Player</Name>
-	<!--<RunProgram>@InstallerDirPath@\MiamPlayer.exe</RunProgram>-->
+	<RunProgram>@InstallerDirPath@\MiamPlayer.exe</RunProgram>
     <Version>0.6.12</Version>
     <Title>Miam-Player Installer</Title>
 	<InstallerApplicationIcon>installerApplicationIcon.png</InstallerApplicationIcon>
@@ -13,6 +13,7 @@
 	<AllowSpaceInPath>true</AllowSpaceInPath>
 	<UninstallerName>Uninstall MiamPlayer</UninstallerName>
 	<ProductUrl>http://sourceforge.net/projects/miammusicplayer/</ProductUrl>
+	<TargetDir>@ApplicationsDir@\MiamPlayer</TargetDir>
 	<AdminTargetDir>@ApplicationsDir@\MiamPlayer</AdminTargetDir>
 	<RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
 </Installer>

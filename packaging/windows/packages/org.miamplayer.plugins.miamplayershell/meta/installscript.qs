@@ -42,7 +42,10 @@
 // Constructor
 function Component()
 {
-	
+	var programFiles = installer.environmentVariable("PROGRAMW6432");
+	if (programFiles !== "") {
+		installer.setValue("TargetDir", programFiles + "/MiamPlayer");
+	}
 }
 
 Component.prototype.isDefault = function()

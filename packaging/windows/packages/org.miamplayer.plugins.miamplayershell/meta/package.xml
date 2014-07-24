@@ -8,4 +8,5 @@
 	<Default>script</Default>
     <Script>installscript.qs</Script>
 	<SortingPriority>12</SortingPriority>
+	<RequiresAdminRights>true</RequiresAdminRights>
 </Package>
