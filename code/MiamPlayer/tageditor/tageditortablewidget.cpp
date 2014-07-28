@@ -99,6 +99,9 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 	QSet<QPair<QString, QString>> artistAlbumSet;
 	foreach (QString track, tracks) {
 		FileHelper fh(track);
+		if (!fh.isValid()) {
+			continue;
+		}
 
 		// The first two columns are not editable
 		// It may changes in the future for the first one (the filename)

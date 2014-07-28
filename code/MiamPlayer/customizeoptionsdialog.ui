@@ -512,6 +512,55 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBoxMonitorFileSystem">
+         <property name="title">
+          <string>Keep your library up to date</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QLabel" name="labelMonitorFileSystem">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Should I look for changes in your music folders? Your library will always be synchronized automatically.</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QRadioButton" name="radioButtonEnableMonitorFS">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="icon">
+               <iconset resource="mp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonDisableMonitorFS">
+              <property name="text">
+               <string>No</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="vs_LibraryPage">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -568,8 +617,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>686</width>
-            <height>476</height>
+            <width>280</width>
+            <height>212</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1405,7 +1454,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>667</width>
+            <width>299</width>
             <height>508</height>
            </rect>
           </property>

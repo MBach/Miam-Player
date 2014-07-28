@@ -207,6 +207,17 @@ bool Settings::isCustomColors() const
 	}
 }
 
+/** Returns true if background process is active to keep library up-to-date. */
+bool Settings::isFileSystemMonitored() const
+{
+	QVariant b = value("monitorFileSystem");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
+}
+
 bool Settings::isLibraryFilteredByArticles() const
 {
 	QVariant b = value("isLibraryFilteredByArticles");
@@ -595,6 +606,12 @@ void Settings::setLibraryFilteredByArticles(const QStringList &tagList)
 void Settings::setMediaButtonVisible(const QString & buttonName, const bool &value)
 {
 	setValue(buttonName, value);
+}
+
+/** Sets if MiamPlayer should launch background process to keep library up-to-date. */
+void Settings::setMonitorFileSystem(bool b)
+{
+	setValue("monitorFileSystem", b);
 }
 
 /// PlayBack options

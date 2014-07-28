@@ -418,6 +418,14 @@
         <source>Remove selected tracks</source>
         <translation>Remove selected tracks</translation>
     </message>
+    <message>
+        <source>Keep your library up to date</source>
+        <translation>Keep your library up to date</translation>
+    </message>
+    <message>
+        <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
+        <translation>Should I look for changes in your music folders? Your library will always be synchronized automatically.</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>

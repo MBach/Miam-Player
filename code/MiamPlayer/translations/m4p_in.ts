@@ -418,6 +418,14 @@
         <source>Select a location of your music</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Keep your library up to date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>

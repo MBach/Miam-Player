@@ -89,6 +89,9 @@ public:
 
 	bool isCustomColors() const;
 
+	/** Returns true if background process is active to keep library up-to-date. */
+	bool isFileSystemMonitored() const;
+
 	bool isLibraryFilteredByArticles() const;
 
 	/** Returns true if the button in parameter is visible or not. */
@@ -193,6 +196,9 @@ public slots:
 
 	/** Sets if the button in parameter is visible or not. */
 	void setMediaButtonVisible(const QString & buttonName, const bool &value);
+
+	/** Sets if MiamPlayer should launch background process to keep library up-to-date. */
+	void setMonitorFileSystem(bool b);
 
 	/// PlayBack options
 	void setPlaybackSeekTime(int t);

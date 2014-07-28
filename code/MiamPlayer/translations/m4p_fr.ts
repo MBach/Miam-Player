@@ -418,6 +418,14 @@
         <source>Remove selected tracks</source>
         <translation>Retirer les pistes sélectionnées</translation>
     </message>
+    <message>
+        <source>Keep your library up to date</source>
+        <translation>Gardez votre bibliothèque à jour</translation>
+    </message>
+    <message>
+        <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
+        <translation>Devrais-je regarder s&apos;il y a des changements dans les dossiers où se trouvent votre musique ? Votre bibliothèque sera ainsi toujours synchronisée automatiquement.</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>

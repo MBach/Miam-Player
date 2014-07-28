@@ -41,6 +41,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		pushButtonDeleteLocation->setEnabled(true);
 	}
 
+	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, settings, &Settings::setMonitorFileSystem);
+
 	// Second panel: languages
 	FlowLayout *flowLayout = new FlowLayout(widgetLanguages, 30, 75, 75);
 	widgetLanguages->setLayout(flowLayout);
