@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -32,7 +32,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string/>
+        <string notr="true"/>
        </property>
        <property name="pixmap">
         <pixmap resource="../../../resources/additional.qrc">:/bitcoin-logo.png</pixmap>

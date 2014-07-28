@@ -43,7 +43,11 @@
 function Component()
 {
 	component.loaded.connect(this, Component.prototype.installerLoaded);
-	installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
+	if (installer.isInstaller()) {
+		installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
+	} else {
+		installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
+	}
 	var programFiles = installer.environmentVariable("PROGRAMW6432");
 	if (programFiles !== "") {
 		installer.setValue("TargetDir", programFiles + "/MiamPlayer");
@@ -62,20 +66,26 @@ var Dir = new function () {
 // called as soon as the component was loaded
 Component.prototype.installerLoaded = function()
 {
-	if (installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory)) {
-        var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
-        if (widget != null) {
-            widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
-            widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
-
-            widget.windowTitle = "Installation Folder";
-            widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
-        }
-    }
-
 	// don't show when updating / de-installing
 	if (installer.isInstaller()) {
+
+		if (installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory)) {
+			var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+			if (widget != null) {
+				widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
+				widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
+
+				widget.windowTitle = "Installation Folder";
+				widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
+			}
+		}
 		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
+
+	} else {
+	
+		if (installer.addWizardPage(component, "ReadyForInstallationWidget", QInstaller.ReadyForInstallation)) {
+			var widget = gui.pageWidgetByObjectName("DynamicReadyForInstallationWidget");
+		}
 	}
 }
 
@@ -125,7 +135,6 @@ Component.prototype.createOperations = function()
 	try {
 		// call the base create operations function
 		component.createOperations();
-		
 		if (installer.value("os") == "win") { 
 			try {
 				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
@@ -152,8 +161,7 @@ Component.prototype.createOperations = function()
 											   "ProgId=MiamPlayer." + ext);
 					}
 				}
-				// Always clear registry after install (should be improved)
-				// component.addElevatedOperation("Execute", 'REG DELETE "HKCU\\Software\\MmeMiamMiam" /F');
+				// widget = gui.pageWidgetByObjectName("FinishedPage");
 			} catch (e) {
 				// Do nothing if key doesn't exist
 			}
