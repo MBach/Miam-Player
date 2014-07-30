@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), _librarySqlModel(NULL)
+    QMainWindow(parent), _librarySqlModel(NULL), _searchDialog(NULL)
 {
     setupUi(this);
 
@@ -297,6 +297,17 @@ void MainWindow::setupActions()
 
     // Filter the library when user is typing some text to find artist, album or tracks
     connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
+	//connect(searchBar, &QLineEdit::textEdited, _searchDialog, &SearchDialog::toggle);
+	connect(searchBar, &QLineEdit::textEdited, this, [=](const QString &text) {
+		if (text.isEmpty()) {
+			_searchDialog->deleteLater();
+		} else {
+			_searchDialog = new SearchDialog(this);
+			_searchDialog->move(searchBar->mapToGlobal(searchBar->rect().topRight()));
+			_searchDialog->show();
+			searchBar->setFocus();
+		}
+	});
 
     // Playback
     connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);

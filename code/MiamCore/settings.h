@@ -14,7 +14,7 @@ class MIAMCORE_LIBRARY Settings : public QSettings
 private:
 	/** The unique instance of this class. */
 	static Settings *settings;
-
+	
 	/** Private constructor. */
 	Settings(const QString &organization = "MmeMiamMiam",
 			 const QString &application = "MiamPlayer");
@@ -26,8 +26,6 @@ private:
 	QMap<QString, QVariant> fontFamilyMap;
 
 	QList<QVariant> locations;
-
-	QMap<QString, QByteArray> stylesheets;
 
 	QMap<QString, QVariant> columnStates;
 

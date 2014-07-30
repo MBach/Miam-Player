@@ -38,17 +38,17 @@ void MusicSearchEngine::doSearch()
 
 	int fileNumber = 0;
 	// QDirIterator class is very fast to scan large directories
-	QMultiHash<QDir, QDir> dirs;
+	//QMultiHash<QDir, QDir> dirs;
 	foreach (QDir location, savedLocations) {
 		QDirIterator it(location, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
-			if (it.fileInfo().isDir()) {
-				QDir d = it.fileInfo().dir();
-				QFileInfoList fil = d.entryInfoList(QDir::AllDirs | QDir::Hidden | QDir::NoDotAndDotDot);
+			//if (it.fileInfo().isDir()) {
+				//QDir d = it.fileInfo().dir();
+				//QFileInfoList fil = d.entryInfoList(QDir::AllDirs | QDir::Hidden | QDir::NoDotAndDotDot);
 				//qDebug() << "observing" << it.filePath();
 				//dirs.insert();
-			}
+			//}
 			fileNumber++;
 		}
 	}

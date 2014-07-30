@@ -12,6 +12,7 @@
 #include "mediabutton.h"
 #include <mediaplayer.h>
 #include "playbackmodewidgetfactory.h"
+#include "searchdialog.h"
 
 #include <model/librarysqlmodel.h>
 
@@ -50,6 +51,8 @@ private:
 
 	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
 	SqlDatabase _sqlDatabase;
+	
+	SearchDialog *_searchDialog;
 
 public:
 	// Play, pause, stop, etc.

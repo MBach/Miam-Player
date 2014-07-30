@@ -59,7 +59,8 @@ SOURCES += \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp
+    volumeslider.cpp \
+    dialogs/searchdialog.cpp
 
 HEADERS += \
     dialogs/closeplaylistpopup.h \
@@ -121,7 +122,8 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h
+    volumeslider.h \
+    dialogs/searchdialog.h
 
 FORMS += \
     mainwindow.ui \
@@ -133,7 +135,8 @@ FORMS += \
     quickstart.ui \
     tagconverter.ui \
     tageditor.ui \
-    closeplaylistpopup.ui
+    closeplaylistpopup.ui \
+    searchdialog.ui
 
 RESOURCES += \
     mp.qrc
