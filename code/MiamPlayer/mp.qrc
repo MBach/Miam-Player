@@ -13,6 +13,10 @@
         <file alias="warning">config/warning.png</file>
         <file alias="mp_win32">mp.ico</file>
         <file alias="mp_osx">mp.icns</file>
+        <file alias="album">config/icons/album.png</file>
+        <file alias="artist">config/icons/artist.png</file>
+        <file alias="track">config/icons/music.png</file>
+        <file alias="search">config/icons/search.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

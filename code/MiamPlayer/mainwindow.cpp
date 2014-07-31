@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), _librarySqlModel(NULL), _searchDialog(NULL)
+    QMainWindow(parent), _librarySqlModel(NULL)
 {
     setupUi(this);
 
@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _librarySqlModel = new LibrarySqlModel(_sqlDatabase, this);
     dragDropDialog = new DragDropDialog(this);
     playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
+	_searchDialog = new SearchDialog(_sqlDatabase, this);	
 }
 
 void MainWindow::appendToCurrentPlaylist(const QStringList &files)
@@ -297,14 +298,14 @@ void MainWindow::setupActions()
 
     // Filter the library when user is typing some text to find artist, album or tracks
     connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
-	//connect(searchBar, &QLineEdit::textEdited, _searchDialog, &SearchDialog::toggle);
 	connect(searchBar, &QLineEdit::textEdited, this, [=](const QString &text) {
 		if (text.isEmpty()) {
-			_searchDialog->deleteLater();
+			_searchDialog->clear();
 		} else {
-			_searchDialog = new SearchDialog(this);
-			_searchDialog->move(searchBar->mapToGlobal(searchBar->rect().topRight()));
-			_searchDialog->show();
+			_searchDialog->search(text);
+			QPoint p = searchBar->mapToGlobal(searchBar->rect().topRight());
+			_searchDialog->move(p);
+			_searchDialog->setVisible(true);
 			searchBar->setFocus();
 		}
 	});
