@@ -50,10 +50,8 @@ PluginManager * PluginManager::getInstance()
 /** Explicitly destroys every plugin. */
 PluginManager::~PluginManager()
 {
-	QMapIterator<QString, BasicPluginInterface*> it(_instances);
-	while (it.hasNext()) {
-		delete it.next().value();
-	}
+	qDeleteAll(_instances);
+	_instances.clear();
 }
 
 /** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */

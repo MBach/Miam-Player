@@ -53,6 +53,8 @@ public:
 				 YEAR = 6};
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
+	
+	virtual ~Playlist();
 
 	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
 

@@ -22,6 +22,8 @@ private:
 public:
 	explicit SearchDialog(const SqlDatabase &db, QWidget *parent = 0);
 	
+	virtual ~SearchDialog();
+	
 	void search(const QString &text);
 	
 	virtual void setVisible(bool visible);

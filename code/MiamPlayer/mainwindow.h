@@ -60,6 +60,8 @@ public:
 	CustomizeOptionsDialog *customizeOptionsDialog;
 
 	MainWindow(QWidget *parent = 0);
+	
+	//virtual ~MainWindow();
 
 	void appendToCurrentPlaylist(const QStringList &files);
 

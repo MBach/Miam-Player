@@ -126,6 +126,11 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	}
 }
 
+Playlist::~Playlist()
+{
+	
+}
+
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	_playlistModel->insertMedias(rowIndex, medias);

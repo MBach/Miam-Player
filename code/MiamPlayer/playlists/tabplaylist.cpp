@@ -73,6 +73,11 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setAcceptDrops(true);
 }
 
+TabPlaylist::~TabPlaylist()
+{
+	
+}
+
 /** Get the current playlist. */
 Playlist* TabPlaylist::currentPlayList() const
 {

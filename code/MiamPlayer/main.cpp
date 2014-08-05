@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
 	}
 
 	app.setStyle(new MiamStyle());
-	MainWindow window;
-	app.setActivationWindow(&window);
+	MainWindow *window = new MainWindow;
+	app.setActivationWindow(window);
 
 	Settings *settings = Settings::getInstance();
 	if (settings->isCustomColors()) {
@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
 	app.setApplicationName(SOFT);
 	app.setApplicationVersion(VERSION);
 
-	window.init();
-	window.show();
-	window.loadPlugins();
+	window->init();
+	window->show();
+	window->loadPlugins();
 
 	// It this application was started from a file (for example)
 	if (argc > 1) {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
 		for (int i = 0; i < argc; i++) {
 			args << argv[i];
 		}
-		window.processArgs(args);
+		window->processArgs(args);
 	}
 	return app.exec();
 }

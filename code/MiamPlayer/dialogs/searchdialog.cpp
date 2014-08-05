@@ -16,25 +16,41 @@ SearchDialog::SearchDialog(const SqlDatabase &db, QWidget *parent) :
 	QDialog(parent, Qt::Tool | Qt::FramelessWindowHint), _db(db)
 {
 	this->setupUi(this);
-	
+
 	QFont f = Settings::getInstance()->font(Settings::FF_Library);
 	artists->setFont(f);
 	albums->setFont(f);
 	tracks->setFont(f);
 	labelSearchMore->setFont(f);
-	
+
 	/// XXX: factorize this
 	// Animates this Dialog
 	_timer = new QTimer(this);
 	_timer->setInterval(3000);
 	_timer->setSingleShot(true);
 	_animation = new QPropertyAnimation(this, "windowOpacity");
-	_animation->setDuration(200);
+	_animation->setDuration(400);
 	_animation->setTargetObject(this);
-	
+
 	this->setWindowOpacity(0.0);
-		
+
+	connect(closeButton, &QPushButton::clicked, this, &SearchDialog::clear);
 	connect(labelSearchMore, &QLabel::linkActivated, this, &SearchDialog::searchMoreResults);
+
+	foreach (QListWidget *list, findChildren<QListWidget*>()) {
+		connect(list, &QListWidget::itemClicked, this, [=]() {
+			foreach (QListWidget *otherList, findChildren<QListWidget*>()) {
+				if (list != otherList) {
+					otherList->clearSelection();
+				}
+			}
+		});
+	}
+}
+
+SearchDialog::~SearchDialog()
+{
+	
 }
 
 void SearchDialog::search(const QString &text)
@@ -42,7 +58,7 @@ void SearchDialog::search(const QString &text)
 	artists->clear();
 	albums->clear();
 	tracks->clear();
-	
+
 	if (!_db.isOpen()) {
 		_db.open();
 	}
@@ -56,7 +72,8 @@ void SearchDialog::search(const QString &text)
 			artists->addItem(qSearchForArtists.record().value(0).toString());
 		}
 	}
-	
+	artists->setMinimumHeight(artists->count() * artists->sizeHintForRow(0));
+
 	QSqlQuery qSearchForAlbums(_db);
 	qSearchForAlbums.prepare("SELECT DISTINCT album FROM tracks WHERE album like :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
@@ -66,7 +83,8 @@ void SearchDialog::search(const QString &text)
 			albums->addItem(qSearchForAlbums.record().value(0).toString());
 		}
 	}
-	
+	albums->setMinimumHeight(albums->count() * albums->sizeHintForRow(0));
+
 	QSqlQuery qSearchForTracks(_db);
 	qSearchForTracks.prepare("SELECT DISTINCT title FROM tracks WHERE title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
@@ -76,7 +94,13 @@ void SearchDialog::search(const QString &text)
 			tracks->addItem(qSearchForTracks.record().value(0).toString());
 		}
 	}
-	
+	tracks->setMinimumHeight(tracks->count() * tracks->sizeHintForRow(0));
+
+	int items = artists->count() + albums->count() + tracks->count();
+	items = items * artists->sizeHintForRow(0);
+	int minW = qMax(labelArtists->width() + artists->sizeHintForColumn(0), 400);
+	this->resize(minW, items + labelSearchMore->height());
+
 	_db.close();
 }
 
@@ -103,7 +127,8 @@ void SearchDialog::paintEvent(QPaintEvent *)
 	p.setBrush(palette.base());
 	p.drawRect(rect().adjusted(0, 0, -1, -1));
 	p.setPen(palette.midlight().color());
-	p.drawLine(39, rect().y(), 39, rect().y() + rect().height());
+	p.drawLine(1, labelSearchMore->height() - 1, rect().width() - 1, labelSearchMore->height() - 1);
+	p.drawLine(39, rect().y() + labelSearchMore->height(), 39, rect().y() + rect().height());
 }
 
 void SearchDialog::animate(qreal startValue, qreal stopValue)
@@ -121,16 +146,17 @@ void SearchDialog::clear()
 void SearchDialog::searchMoreResults(const QString &link)
 {
 	if (link == "#") {
-		qDebug() << Q_FUNC_INFO;
 		QWidget *p = this;
 		QRect mainWindowRect;
+		QPoint origin;
 		while (p->parentWidget() != NULL) {
 			p = p->parentWidget();
 			if (p->parentWidget() == NULL) {
 				mainWindowRect = p->rect();
+				origin = p->mapToGlobal(mainWindowRect.topLeft());
 			}
 		}
-		qDebug() << mainWindowRect;
-		//this->resize();
+		this->move(origin);
+		this->resize(mainWindowRect.size());
 	}
 }
