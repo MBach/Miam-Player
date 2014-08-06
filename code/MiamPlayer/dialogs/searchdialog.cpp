@@ -9,6 +9,7 @@
 #include <QSqlError>
 
 #include "settings.h"
+#include "pluginmanager.h"
 
 #include <QtDebug>
 
@@ -22,6 +23,8 @@ SearchDialog::SearchDialog(const SqlDatabase &db, QWidget *parent) :
 	albums->setFont(f);
 	tracks->setFont(f);
 	labelSearchMore->setFont(f);
+	labelAggregated->setFont(f);
+	checkBoxLibrary->setFont(f);
 
 	/// XXX: factorize this
 	// Animates this Dialog
@@ -46,12 +49,14 @@ SearchDialog::SearchDialog(const SqlDatabase &db, QWidget *parent) :
 			}
 		});
 	}
+
+	QObjectList objectsToExtend;
+	objectsToExtend << artists << albums << tracks << aggregated << this;
+	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 }
 
 SearchDialog::~SearchDialog()
-{
-	
-}
+{}
 
 void SearchDialog::search(const QString &text)
 {
@@ -68,30 +73,30 @@ void SearchDialog::search(const QString &text)
 	qSearchForArtists.bindValue(":t", "%" + text + "%");
 	if (qSearchForArtists.exec()) {
 		while (qSearchForArtists.next()) {
-			qDebug() << qSearchForArtists.record().value(0);
+			//qDebug() << qSearchForArtists.record().value(0);
 			artists->addItem(qSearchForArtists.record().value(0).toString());
 		}
 	}
 	artists->setMinimumHeight(artists->count() * artists->sizeHintForRow(0));
 
 	QSqlQuery qSearchForAlbums(_db);
-	qSearchForAlbums.prepare("SELECT DISTINCT album FROM tracks WHERE album like :t LIMIT 5");
+	qSearchForAlbums.prepare("SELECT DISTINCT album, COALESCE(artistAlbum, artist) FROM tracks WHERE album like :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
 	if (qSearchForAlbums.exec()) {
 		while (qSearchForAlbums.next()) {
-			qDebug() << qSearchForAlbums.record().value(0);
-			albums->addItem(qSearchForAlbums.record().value(0).toString());
+			//qDebug() << qSearchForAlbums.record().value(0);
+			albums->addItem(qSearchForAlbums.record().value(0).toString() + " – " + qSearchForAlbums.record().value(1).toString());
 		}
 	}
 	albums->setMinimumHeight(albums->count() * albums->sizeHintForRow(0));
 
 	QSqlQuery qSearchForTracks(_db);
-	qSearchForTracks.prepare("SELECT DISTINCT title FROM tracks WHERE title like :t LIMIT 5");
+	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist) FROM tracks WHERE title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {
 		while (qSearchForTracks.next()) {
-			qDebug() << qSearchForTracks.record().value(0);
-			tracks->addItem(qSearchForTracks.record().value(0).toString());
+			//qDebug() << qSearchForTracks.record().value(0);
+			tracks->addItem(qSearchForTracks.record().value(0).toString() + " – " + qSearchForTracks.record().value(1).toString());
 		}
 	}
 	tracks->setMinimumHeight(tracks->count() * tracks->sizeHintForRow(0));
@@ -127,8 +132,10 @@ void SearchDialog::paintEvent(QPaintEvent *)
 	p.setBrush(palette.base());
 	p.drawRect(rect().adjusted(0, 0, -1, -1));
 	p.setPen(palette.midlight().color());
-	p.drawLine(1, labelSearchMore->height() - 1, rect().width() - 1, labelSearchMore->height() - 1);
-	p.drawLine(39, rect().y() + labelSearchMore->height(), 39, rect().y() + rect().height());
+	p.drawLine(1, labelSearchMore->height() - 1, rect().width() - 2, labelSearchMore->height() - 1);
+	int y = rect().y() + rect().height() - aggregated->height();
+	p.drawLine(39, rect().y() + labelSearchMore->height(), 39, y);
+	p.drawLine(1, y, rect().width() - 2, y);
 }
 
 void SearchDialog::animate(qreal startValue, qreal stopValue)

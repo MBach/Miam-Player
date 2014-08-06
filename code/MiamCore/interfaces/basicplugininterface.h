@@ -1,7 +1,7 @@
 #ifndef BASICPLUGININTERFACE_H
 #define BASICPLUGININTERFACE_H
 
-#include <QString>
+#include <QStringList>
 #include <QTranslator>
 #include <QtPlugin>
 
@@ -13,6 +13,8 @@ public:
 	QTranslator translator;
 
 	virtual ~BasicPluginInterface() {}
+
+	virtual QStringList classesToExtend() { return QStringList(); }
 
 	virtual void cleanUpBeforeDestroy() {}
 

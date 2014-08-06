@@ -14,9 +14,7 @@ PluginManager* PluginManager::_pluginManager = NULL;
 /** Constructor with strong coupling. */
 PluginManager::PluginManager(QObject *parent) :
 	QObject(parent)
-{
-
-}
+{}
 
 void PluginManager::setMainWindow(MainWindow *mainWindow)
 {
@@ -38,7 +36,7 @@ void PluginManager::setMainWindow(MainWindow *mainWindow)
 	/// It could be nice
 }
 
-/** Singleton pattern to be able to easily use settings everywhere in the app. */
+/** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
 PluginManager * PluginManager::getInstance()
 {
 	if (_pluginManager == NULL) {
@@ -62,7 +60,7 @@ void PluginManager::registerExtensionPoint(const char *className, QObjectList so
 	}
 }
 
-/** Search into the subdir "plugins" where the application is installed.*/
+/** Search into the subdir "plugins" where the application is installed. */
 void PluginManager::init()
 {
 	QDirIterator it(_pluginPath);
@@ -117,8 +115,6 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 
 	Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }
-
-#include <QWindow>
 
 /** Load a plugin by its location on the hard drive. */
 BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
@@ -189,6 +185,16 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
 				_dependencies.insert(basic->name(), actionAddViewToMenu);
 			}
+			foreach (QString classToExtend, mediaPlayerPlugin->classesToExtend()) {
+				qDebug() << "extending:" << classToExtend;
+				// Instances of classes which can be extended at runtime
+				foreach (QObject *obj, _extensionPoints.values(classToExtend)) {
+					// SearchDialog can be extended for every plugin which implements MediaPlayerPluginInterface
+					if (QListWidget *list = qobject_cast<QListWidget*>(obj)) {
+						qDebug() << "extending" << obj->objectName() << "from class:" << classToExtend;
+					}
+				}
+			}
 		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {
 
 			// Each View Plugin can extend multiple instances
@@ -197,7 +203,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 				// Instances of classes which can be extended at runtime
 				foreach (QObject *obj, _extensionPoints.values(view)) {
 					// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
-					if (QMenu *menu = qobject_cast<QMenu *>(obj)) {
+					if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
 						if (itemViewPlugin->hasSubMenu(view)) {
 							QMenu *subMenu = itemViewPlugin->menu(view, menu);
 							menu->addMenu(subMenu);

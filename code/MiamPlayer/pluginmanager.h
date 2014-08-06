@@ -42,12 +42,10 @@ private:
 	/** Some instances in the software can be modified (menus, buttons, widgets, etc). */
 	QMultiMap<QString, QObject*> _extensionPoints;
 
-	QMap<QAbstractItemView*, QObject*> _test;
-
 	PluginManager(QObject *parent = 0);
 
 public:
-	/** Singleton Pattern to easily use Settings everywhere in the app. */
+	/** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
 	static PluginManager* getInstance();
 
 	void setMainWindow(MainWindow *mainWindow);
@@ -61,7 +59,7 @@ public:
 	inline QList<BasicPluginInterface*> plugins() const { return _instances.values(); }
 
 private:
-	/** Search into the subdir "plugins" where the application is installed.*/
+	/** Search into the subdir "plugins" where the application is installed. */
 	void init();
 
 	/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
