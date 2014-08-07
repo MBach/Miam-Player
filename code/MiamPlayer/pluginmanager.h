@@ -68,8 +68,8 @@ private:
 	/** Load a plugin by its location on the hard drive. */
 	BasicPlugin *loadPlugin(const QFileInfo &pluginFileInfo);
 
-	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
+	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
 	void loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin);
 
 	/** Unload a plugin by its name. */

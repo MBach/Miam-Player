@@ -117,30 +117,6 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 	Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }
 
-void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
-{
-	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
-	QWidget *view = mediaPlayerPlugin->providesView();
-	if (view != NULL) {
-		// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
-		if (_mainWindow->menuView->actions().count() == 3) {
-			_mainWindow->menuView->addSeparator();
-		}
-		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
-		_mainWindow->menuView->addAction(actionAddViewToMenu);
-		_mainWindow->updateFonts(Settings::getInstance()->font(Settings::FF_Menu));
-		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
-			_mainWindow->close();
-			view->show();
-		});
-
-		// Link the view to the existing ActionGroup
-		actionAddViewToMenu->setCheckable(true);
-		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
-		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
-	}
-}
-
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 {
 	// Each View Plugin can extend multiple instances
@@ -166,15 +142,50 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 	}
 }
 
+void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
+{
+	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
+	QWidget *view = mediaPlayerPlugin->providesView();
+	if (view != NULL) {
+		// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
+		if (_mainWindow->menuView->actions().count() == 3) {
+			_mainWindow->menuView->addSeparator();
+		}
+		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
+		_mainWindow->menuView->addAction(actionAddViewToMenu);
+		_mainWindow->updateFonts(Settings::getInstance()->font(Settings::FF_Menu));
+		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
+			_mainWindow->close();
+			view->show();
+		});
+
+		// Link the view to the existing ActionGroup
+		actionAddViewToMenu->setCheckable(true);
+		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
+		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
+	}
+}
+
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
 {
+	searchMediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 	foreach (QString classToExtend, searchMediaPlayerPlugin->classesToExtend()) {
-		qDebug() << "extending:" << classToExtend;
+
 		// Instances of classes which can be extended at runtime
 		foreach (QObject *obj, _extensionPoints.values(classToExtend)) {
 			// SearchDialog can be extended for every plugin which implements MediaPlayerPluginInterface
 			if (QListWidget *list = qobject_cast<QListWidget*>(obj)) {
-				qDebug() << "extending" << obj->objectName() << "from class:" << classToExtend;
+				QString name = list->objectName();
+				if (name.startsWith("artist")) {
+					searchMediaPlayerPlugin->dispatchResults(SearchMediaPlayerPlugin::Artist, list);
+				} else if (name.startsWith("album")) {
+					searchMediaPlayerPlugin->dispatchResults(SearchMediaPlayerPlugin::Album, list);
+				} else if (name.startsWith("track")) {
+					searchMediaPlayerPlugin->dispatchResults(SearchMediaPlayerPlugin::Track, list);
+				}
+			} else if (QWidget *w = qobject_cast<QWidget*>(obj)) {
+				qDebug() << "extending" << w->objectName() << "from class:" << classToExtend;
+				searchMediaPlayerPlugin->addCheckBox(w);
 			}
 		}
 	}

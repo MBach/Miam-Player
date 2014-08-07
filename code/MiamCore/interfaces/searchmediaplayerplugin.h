@@ -4,10 +4,19 @@
 #include "mediaplayerplugin.h"
 #include "mediaplayer.h"
 
+#include <QListWidget>
+
 class MIAMCORE_LIBRARY SearchMediaPlayerPlugin : public MediaPlayerPlugin
 {
 public:
+	enum Request { Artist, Album, Track };
+
 	virtual ~SearchMediaPlayerPlugin() {}
+
+	virtual void dispatchResults(Request, QListWidget *list) = 0;
+
+	virtual void addCheckBox(QWidget *w) = 0;
+
 };
 QT_BEGIN_NAMESPACE
 
