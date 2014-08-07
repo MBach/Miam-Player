@@ -56,6 +56,7 @@ PluginManager::~PluginManager()
 void PluginManager::registerExtensionPoint(const char *className, QObjectList source)
 {
 	foreach (QObject *object, source) {
+		qDebug() << "registerExtensionPoint" << className << object->objectName();
 		_extensionPoints.insert(QString(className), object);
 	}
 }
@@ -116,14 +117,77 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 	Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }
 
+void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
+{
+	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
+	QWidget *view = mediaPlayerPlugin->providesView();
+	if (view != NULL) {
+		// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
+		if (_mainWindow->menuView->actions().count() == 3) {
+			_mainWindow->menuView->addSeparator();
+		}
+		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
+		_mainWindow->menuView->addAction(actionAddViewToMenu);
+		_mainWindow->updateFonts(Settings::getInstance()->font(Settings::FF_Menu));
+		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
+			_mainWindow->close();
+			view->show();
+		});
+
+		// Link the view to the existing ActionGroup
+		actionAddViewToMenu->setCheckable(true);
+		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
+		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
+	}
+}
+
+void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
+{
+	// Each View Plugin can extend multiple instances
+	foreach (QString view, itemViewPlugin->classesToExtend()) {
+
+		// Instances of classes which can be extended at runtime
+		foreach (QObject *obj, _extensionPoints.values(view)) {
+			// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
+			if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
+				if (itemViewPlugin->hasSubMenu(view)) {
+					QMenu *subMenu = itemViewPlugin->menu(view, menu);
+					menu->addMenu(subMenu);
+					_dependencies.insert(itemViewPlugin->name(), subMenu);
+				} else {
+					QAction *action = itemViewPlugin->action(view, menu);
+					menu->addAction(action);
+					_dependencies.insert(itemViewPlugin->name(), action);
+				}
+			} else if (SelectedTracksModel *selectedTracksModel = dynamic_cast<SelectedTracksModel*>(obj)) {
+				itemViewPlugin->setSelectedTracksModel(view, selectedTracksModel);
+			}
+		}
+	}
+}
+
+void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
+{
+	foreach (QString classToExtend, searchMediaPlayerPlugin->classesToExtend()) {
+		qDebug() << "extending:" << classToExtend;
+		// Instances of classes which can be extended at runtime
+		foreach (QObject *obj, _extensionPoints.values(classToExtend)) {
+			// SearchDialog can be extended for every plugin which implements MediaPlayerPluginInterface
+			if (QListWidget *list = qobject_cast<QListWidget*>(obj)) {
+				qDebug() << "extending" << obj->objectName() << "from class:" << classToExtend;
+			}
+		}
+	}
+}
+
 /** Load a plugin by its location on the hard drive. */
-BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
+BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
 	QObject *plugin = pluginLoader.instance();
 	Settings *settings = Settings::getInstance();
 	if (plugin) {
-		BasicPluginInterface *basic = dynamic_cast<BasicPluginInterface *>(plugin);
+		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
 		if (basic) {
 			// If one has previoulsy unloaded a plugin, and now wants to reload it (yeah, I know...), we don't need to append items once again
 			///FIXME
@@ -162,63 +226,13 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 			_instances.insert(basic->name(), basic);
 		}
 
-		/// XXX Make a dispatcher for other types of plugins?
-		if (MediaPlayerPluginInterface *mediaPlayerPlugin = qobject_cast<MediaPlayerPluginInterface *>(plugin)) {
-
-			mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
-			QWidget *view = mediaPlayerPlugin->providesView();
-			if (view != NULL) {
-				// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
-				if (_mainWindow->menuView->actions().count() == 3) {
-					_mainWindow->menuView->addSeparator();
-				}
-				QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
-				_mainWindow->menuView->addAction(actionAddViewToMenu);
-				_mainWindow->updateFonts(settings->font(Settings::FF_Menu));
-				connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
-					_mainWindow->close();
-					view->show();
-				});
-
-				// Link the view to the existing ActionGroup
-				actionAddViewToMenu->setCheckable(true);
-				actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
-				_dependencies.insert(basic->name(), actionAddViewToMenu);
-			}
-			foreach (QString classToExtend, mediaPlayerPlugin->classesToExtend()) {
-				qDebug() << "extending:" << classToExtend;
-				// Instances of classes which can be extended at runtime
-				foreach (QObject *obj, _extensionPoints.values(classToExtend)) {
-					// SearchDialog can be extended for every plugin which implements MediaPlayerPluginInterface
-					if (QListWidget *list = qobject_cast<QListWidget*>(obj)) {
-						qDebug() << "extending" << obj->objectName() << "from class:" << classToExtend;
-					}
-				}
-			}
-		} else if (ItemViewPluginInterface *itemViewPlugin = qobject_cast<ItemViewPluginInterface *>(plugin)) {
-
-			// Each View Plugin can extend multiple instances
-			foreach (QString view, itemViewPlugin->classesToExtend()) {
-
-				// Instances of classes which can be extended at runtime
-				foreach (QObject *obj, _extensionPoints.values(view)) {
-					// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
-					if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
-						if (itemViewPlugin->hasSubMenu(view)) {
-							QMenu *subMenu = itemViewPlugin->menu(view, menu);
-							menu->addMenu(subMenu);
-							_dependencies.insert(basic->name(), subMenu);
-						} else {
-							QAction *action = itemViewPlugin->action(view, menu);
-							menu->addAction(action);
-							_dependencies.insert(basic->name(), action);
-						}
-					} else if (SelectedTracksModel *selectedTracksModel = dynamic_cast<SelectedTracksModel*>(obj)) {
-						itemViewPlugin->setSelectedTracksModel(view, selectedTracksModel);
-					}
-				}
-			}
-		} /// else...
+		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
+			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
+		} else if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
+			this->loadItemViewPlugin(itemViewPlugin);
+		} else if (SearchMediaPlayerPlugin *searchMediaPlayerPlugin = qobject_cast<SearchMediaPlayerPlugin*>(plugin)) {
+			this->loadSearchMediaPlayerPlugin(searchMediaPlayerPlugin);
+		}
 		return basic;
 	} else {
 		QString message = QString(tr("A plugin was found but was the player was unable to load it (file %1)").arg(pluginFileInfo.fileName()));
@@ -231,7 +245,7 @@ BasicPluginInterface * PluginManager::loadPlugin(const QFileInfo &pluginFileInfo
 /** Unload a plugin by its name. */
 void PluginManager::unloadPlugin(const QString &pluginName)
 {
-	BasicPluginInterface *basic = _instances.value(pluginName);
+	BasicPlugin *basic = _instances.value(pluginName);
 	foreach (QObject *dependency, _dependencies.values(pluginName)) {
 		if (QAction *action = qobject_cast<QAction*>(dependency)) {
 			QMenu *menu = qobject_cast<QMenu*>(action->parent());
@@ -266,7 +280,7 @@ void PluginManager::loadOrUnload(QTableWidgetItem *item)
 		if (item->checkState() == Qt::Checked) {
 			QString pluginAbsPath = QDir::toNativeSeparators(_pluginPath + "/" + pluginInfo.fileName());
 			QFileInfo fileInfo(pluginAbsPath);
-			BasicPluginInterface *p = this->loadPlugin(fileInfo);
+			BasicPlugin *p = this->loadPlugin(fileInfo);
 			p->init();
 		} else {
 			this->unloadPlugin(pluginInfo.pluginName());

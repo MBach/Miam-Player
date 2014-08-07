@@ -56,9 +56,7 @@ SOURCES += \
     model/selectedtracksmodel.cpp \
     flowlayout.cpp
 
-HEADERS += interfaces/basicplugininterface.h \
-    interfaces/itemviewplugininterface.h \
-    interfaces/mediaplayerplugininterface.h \
+HEADERS += \
     model/librarysqlmodel.h \
     model/selectedtracksmodel.h \
     cover.h \
@@ -71,4 +69,8 @@ HEADERS += interfaces/basicplugininterface.h \
     settings.h \
     sqldatabase.h \
     timelabel.h \
-    flowlayout.h
+    flowlayout.h \
+    interfaces/searchmediaplayerplugin.h \
+    interfaces/basicplugin.h \
+    interfaces/itemviewplugin.h \
+    interfaces/mediaplayerplugin.h

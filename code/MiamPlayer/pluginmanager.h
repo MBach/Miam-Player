@@ -1,8 +1,8 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include <interfaces/mediaplayerplugininterface.h>
-#include <interfaces/itemviewplugininterface.h>
+#include <interfaces/itemviewplugin.h>
+#include <interfaces/searchmediaplayerplugin.h>
 
 #include <QDir>
 
@@ -31,7 +31,7 @@ private:
 	QMap<QString, QFileInfo> _plugins;
 
 	/** Loaded plugins are stored in this map. */
-	QMap<QString, BasicPluginInterface*> _instances;
+	QMap<QString, BasicPlugin*> _instances;
 
 	/** Every plugin might instanciate objects that we need to be able to delete later (especially for unloading). */
 	QMultiMap<QString, QObject*> _dependencies;
@@ -56,7 +56,7 @@ public:
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 	void registerExtensionPoint(const char *className, QObjectList target);
 
-	inline QList<BasicPluginInterface*> plugins() const { return _instances.values(); }
+	inline QList<BasicPlugin*> plugins() const { return _instances.values(); }
 
 private:
 	/** Search into the subdir "plugins" where the application is installed. */
@@ -66,7 +66,11 @@ private:
 	void insertRow(const PluginInfo &pluginInfo);
 
 	/** Load a plugin by its location on the hard drive. */
-	BasicPluginInterface *loadPlugin(const QFileInfo &pluginFileInfo);
+	BasicPlugin *loadPlugin(const QFileInfo &pluginFileInfo);
+
+	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
+	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
+	void loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin);
 
 	/** Unload a plugin by its name. */
 	void unloadPlugin(const QString &pluginName);

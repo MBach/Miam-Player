@@ -51,7 +51,7 @@ SearchDialog::SearchDialog(const SqlDatabase &db, QWidget *parent) :
 	}
 
 	QObjectList objectsToExtend;
-	objectsToExtend << artists << albums << tracks << aggregated << this;
+	objectsToExtend << artists << albums << tracks << aggregated;
 	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 }
 
