@@ -51,7 +51,7 @@ private:
 
 	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
 	SqlDatabase _sqlDatabase;
-	
+
 	SearchDialog *_searchDialog;
 
 public:
@@ -60,8 +60,6 @@ public:
 	CustomizeOptionsDialog *customizeOptionsDialog;
 
 	MainWindow(QWidget *parent = 0);
-	
-	//virtual ~MainWindow();
 
 	void appendToCurrentPlaylist(const QStringList &files);
 
@@ -73,6 +71,8 @@ public:
 	void loadPlugins();
 
 	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
+
+	AbstractSearchDialog * searchDialog() const { return _searchDialog; }
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

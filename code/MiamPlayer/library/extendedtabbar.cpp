@@ -17,7 +17,7 @@ ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	this->setMouseTracking(true);
 
 
-	connect(settings, &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
+	connect(settings, &Settings::fontHasChanged, this, [=](Settings::FontFamily ff, const QFont &newFont) {
 		if (ff == Settings::FF_Library) {
 			this->setMinimumHeight(fontMetrics().height() * 1.25);
 			this->setMaximumHeight(fontMetrics().height() * 1.25);

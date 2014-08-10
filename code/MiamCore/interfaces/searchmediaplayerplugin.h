@@ -6,17 +6,20 @@
 
 #include <QListWidget>
 
+class AbstractSearchDialog;
+
 class MIAMCORE_LIBRARY SearchMediaPlayerPlugin : public MediaPlayerPlugin
 {
 public:
-	enum Request { Artist, Album, Track };
+	enum Request { Artist = 0,
+				   Album = 1,
+				   Track = 2};
 
 	virtual ~SearchMediaPlayerPlugin() {}
 
 	virtual void dispatchResults(Request, QListWidget *list) = 0;
 
-	virtual void addCheckBox(QWidget *w) = 0;
-
+	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;
 };
 QT_BEGIN_NAMESPACE
 

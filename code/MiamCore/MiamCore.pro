@@ -73,4 +73,5 @@ HEADERS += \
     interfaces/searchmediaplayerplugin.h \
     interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
-    interfaces/mediaplayerplugin.h
+    interfaces/mediaplayerplugin.h \
+    abstractsearchdialog.h

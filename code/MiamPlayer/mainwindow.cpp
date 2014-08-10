@@ -301,17 +301,28 @@ void MainWindow::setupActions()
 	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &MediaPlayer::setVolume);
 	volumeSlider->setValue(Settings::getInstance()->volume());
 
+	// How much space do we have after resizing for all buttons which are currently displayed?
+	auto moveSearchDialog = [this] () -> void {
+		QPoint globalMW = this->mapToGlobal(QPoint(0, 0));
+		QPoint globalSB = searchBar->mapToGlobal(searchBar->rect().topRight());
+		_searchDialog->move(globalSB - globalMW);
+		_searchDialog->setVisible(true);
+	};
+
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 	connect(searchBar, &QLineEdit::textEdited, this, [=](const QString &text) {
 		if (text.isEmpty()) {
 			_searchDialog->clear();
 		} else {
-			_searchDialog->search(text);
-			QPoint p = searchBar->mapToGlobal(searchBar->rect().topRight());
-			_searchDialog->move(p);
-			_searchDialog->setVisible(true);
+			_searchDialog->setSearchExpression(text);
+			moveSearchDialog();
 			searchBar->setFocus();
+		}
+	});
+	connect(searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
+		if (!_searchDialog->isVisible()) {
+			moveSearchDialog();
 		}
 	});
 
@@ -371,8 +382,8 @@ void MainWindow::setupActions()
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
 	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
 
-	connect(qApp, &QApplication::aboutToQuit, this, [=] { 
-		_sqlDatabase.cleanBeforeQuit(); 
+	connect(qApp, &QApplication::aboutToQuit, this, [=] {
+		_sqlDatabase.cleanBeforeQuit();
 		delete PluginManager::getInstance();
 	});
 

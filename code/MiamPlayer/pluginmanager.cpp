@@ -8,6 +8,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "model/selectedtracksmodel.h"
+#include "abstractsearchdialog.h"
 
 PluginManager* PluginManager::_pluginManager = NULL;
 
@@ -169,26 +170,10 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
 {
 	searchMediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
-	foreach (QString classToExtend, searchMediaPlayerPlugin->classesToExtend()) {
+	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
 
-		// Instances of classes which can be extended at runtime
-		foreach (QObject *obj, _extensionPoints.values(classToExtend)) {
-			// SearchDialog can be extended for every plugin which implements MediaPlayerPluginInterface
-			if (QListWidget *list = qobject_cast<QListWidget*>(obj)) {
-				QString name = list->objectName();
-				if (name.startsWith("artist")) {
-					searchMediaPlayerPlugin->dispatchResults(SearchMediaPlayerPlugin::Artist, list);
-				} else if (name.startsWith("album")) {
-					searchMediaPlayerPlugin->dispatchResults(SearchMediaPlayerPlugin::Album, list);
-				} else if (name.startsWith("track")) {
-					searchMediaPlayerPlugin->dispatchResults(SearchMediaPlayerPlugin::Track, list);
-				}
-			} else if (QWidget *w = qobject_cast<QWidget*>(obj)) {
-				qDebug() << "extending" << w->objectName() << "from class:" << classToExtend;
-				searchMediaPlayerPlugin->addCheckBox(w);
-			}
-		}
-	}
+	/// XXX: or this code style?
+	//_mainWindow->searchDialog()->addSource(searchMediaPlayerPlugin->checkBox());
 }
 
 /** Load a plugin by its location on the hard drive. */
@@ -237,12 +222,12 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 			_instances.insert(basic->name(), basic);
 		}
 
-		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
+		if (SearchMediaPlayerPlugin *searchMediaPlayerPlugin = qobject_cast<SearchMediaPlayerPlugin*>(plugin)) {
+			this->loadSearchMediaPlayerPlugin(searchMediaPlayerPlugin);
+		} else if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
 		} else if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
 			this->loadItemViewPlugin(itemViewPlugin);
-		} else if (SearchMediaPlayerPlugin *searchMediaPlayerPlugin = qobject_cast<SearchMediaPlayerPlugin*>(plugin)) {
-			this->loadSearchMediaPlayerPlugin(searchMediaPlayerPlugin);
 		}
 		return basic;
 	} else {

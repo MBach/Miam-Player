@@ -24,7 +24,12 @@ public:
 	QShortcut *shortcut;
 
 protected:
+	virtual void focusInEvent(QFocusEvent *event);
+
 	virtual void paintEvent(QPaintEvent *);
+
+signals:
+	void focusIn();
 };
 
 #endif // LIBRARYFILTERLINEEDIT_H

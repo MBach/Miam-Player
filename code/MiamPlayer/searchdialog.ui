@@ -11,15 +11,21 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>0</width>
+    <height>2</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,2,2,2,1">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -51,7 +57,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>1</width>
-         <height>20</height>
+         <height>1</height>
         </size>
        </property>
       </spacer>
@@ -102,7 +108,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>1</width>
-         <height>20</height>
+         <height>1</height>
         </size>
        </property>
       </spacer>
@@ -140,7 +146,7 @@
         <number>4</number>
        </property>
        <item>
-        <widget class="QLabel" name="labelArtists">
+        <widget class="QLabel" name="iconArtists">
          <property name="pixmap">
           <pixmap resource="mp.qrc">:/icons/artist</pixmap>
          </property>
@@ -162,7 +168,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="artists">
+      <widget class="QListWidget" name="_artists">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -199,7 +205,7 @@
         <number>4</number>
        </property>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="iconAlbums">
          <property name="pixmap">
           <pixmap resource="mp.qrc">:/icons/album</pixmap>
          </property>
@@ -221,7 +227,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="albums">
+      <widget class="QListWidget" name="_albums">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -255,7 +261,7 @@
         <number>4</number>
        </property>
        <item>
-        <widget class="QLabel" name="labelTracks">
+        <widget class="QLabel" name="iconTracks">
          <property name="pixmap">
           <pixmap resource="mp.qrc">:/icons/track</pixmap>
          </property>
@@ -277,7 +283,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QListWidget" name="tracks">
+      <widget class="QListWidget" name="_tracks">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -323,7 +329,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <layout class="QHBoxLayout" name="sources_layout">
         <item>
          <widget class="QCheckBox" name="checkBoxLibrary">
           <property name="text">
