@@ -20,6 +20,10 @@ private:
 	QTimer *_timer;
 	QRect _oldRect;
 
+	QCheckBox *_checkBoxLibrary;
+
+	QMap<QListView*, QList<QStandardItem*>> _hiddenItems;
+
 public:
 	/** Constructor. */
 	explicit SearchDialog(const SqlDatabase &db, QWidget *parent = 0);
@@ -34,13 +38,13 @@ public:
 	virtual void setVisible(bool visible);
 
 	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListWidget * artists() const { return _artists; }
+	inline virtual QListView * artists() const { return _artists; }
 
 	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListWidget * albums() const { return _albums; }
+	inline virtual QListView * albums() const { return _albums; }
 
 	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListWidget * tracks() const { return _tracks; }
+	inline virtual QListView * tracks() const { return _tracks; }
 
 protected:
 	/** Custom rendering. */
@@ -54,9 +58,11 @@ public slots:
 	void clear();
 
 	/** Process results sent back from various search engines (local, remote). */
-	virtual void processResults(SearchMediaPlayerPlugin::Request type, QList<QListWidgetItem*> results);
+	virtual void processResults(Request type, const QStandardItemList &results);
 
 private slots:
+	void appendSelectedItem(const QModelIndex &index);
+
 	/** Local search for matching expressions. */
 	void search(const QString &text);
 
