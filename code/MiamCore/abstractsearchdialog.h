@@ -7,16 +7,22 @@
 #include <QListView>
 #include <QStandardItem>
 
+#include "model/remotetrack.h"
+
 typedef QList<QStandardItem*> QStandardItemList;
 
 class MIAMCORE_LIBRARY AbstractSearchDialog : public QWidget
 {
 	Q_OBJECT
 	Q_ENUMS(Request)
+	Q_ENUMS(DataType)
 public:
 	enum Request { Artist = 0,
 				   Album = 1,
 				   Track = 2};
+
+	enum DataType { DT_Origin = Qt::UserRole + 1,
+					DT_Identifier = Qt::UserRole + 2};
 
 	explicit AbstractSearchDialog(QWidget *parent = 0, Qt::WindowFlags f = 0) : QWidget(parent, f) {}
 
@@ -33,8 +39,12 @@ public:
 public slots:
 	virtual void processResults(Request type, const QStandardItemList &results) = 0;
 
+	virtual void aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks) = 0;
+
 signals:
 	void aboutToSearch(const QString &text);
+
+	void aboutToSendToCurrentPlaylist();
 };
 
 #endif // ABSTRACTSEARCHDIALOG_H

@@ -54,7 +54,10 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	verticalHeader()->hide();
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
-	connect(this, &QTableView::doubleClicked, this, [=](const QModelIndex &track) {
+	// Set row height
+	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::FF_Playlist)).height());
+
+	connect(this, &QTableView::doubleClicked, this, [=] (const QModelIndex &track) {
 		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
 		this->mediaPlaylist()->setCurrentIndex(track.row());
 		_mediaPlayer.data()->play();
@@ -100,9 +103,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	/// TODO
 	//connect(actionInlineTag, &QAction::triggered, this, &Playlist::editTagInline);
 
-	// Set row height
-	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::FF_Playlist)).height());
-
 	connect(mediaPlaylist(), &QMediaPlaylist::loaded, this, [=] () {
 		QList<QMediaContent> medias;
 		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
@@ -128,21 +128,13 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 Playlist::~Playlist()
 {
-	
+
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	_playlistModel->insertMedias(rowIndex, medias);
-	if (Settings::getInstance()->isPlaylistResizeColumns()) {
-		this->horizontalHeader()->setStretchLastSection(false);
-		this->resizeColumnsToContents();
-		this->horizontalHeader()->setStretchLastSection(true);
-	} else {
-		this->resizeColumnToContents(TRACK_NUMBER);
-		this->resizeColumnToContents(RATINGS);
-		this->resizeColumnToContents(YEAR);
-	}
+	this->autoResize();
 }
 
 void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
@@ -159,6 +151,16 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 		rowIndex = _playlistModel->rowCount();
 	}
 	this->insertMedias(rowIndex, medias);
+}
+
+/** Insert remote medias to playlist. */
+void Playlist::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
+{
+	if (rowIndex == -1) {
+		rowIndex = _playlistModel->rowCount();
+	}
+	_playlistModel->insertMedias(rowIndex, tracks);
+	this->autoResize();
 }
 
 QSize Playlist::minimumSizeHint() const
@@ -283,6 +285,7 @@ void Playlist::mouseMoveEvent(QMouseEvent *event)
 	QTableView::mouseMoveEvent(event);
 }
 
+/** Redifined to be able to create an editor to modify star rating. */
 void Playlist::mousePressEvent(QMouseEvent *event)
 {
 	// For drag & drop
@@ -291,9 +294,14 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	}
 	QModelIndex index = indexAt(event->pos());
 	if (index.column() == RATINGS && _previouslySelectedRows.contains(index)) {
-		//qDebug() << "clic on " << index;
-		foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
-			this->openPersistentEditor(i);
+		if (index.data(PlaylistModel::RemoteMedia).toBool() == true) {
+			qDebug() << "do not open persistent editor";
+			//QTableView::mousePressEvent(event);
+			event->accept();
+		} else {
+			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+				this->openPersistentEditor(i);
+			}
 		}
 	} else {
 		QTableView::mousePressEvent(event);
@@ -338,6 +346,19 @@ void Playlist::showEvent(QShowEvent *event)
 	resizeColumnToContents(RATINGS);
 	resizeColumnToContents(YEAR);
 	QTableView::showEvent(event);
+}
+
+void Playlist::autoResize()
+{
+	if (Settings::getInstance()->isPlaylistResizeColumns()) {
+		this->horizontalHeader()->setStretchLastSection(false);
+		this->resizeColumnsToContents();
+		this->horizontalHeader()->setStretchLastSection(true);
+	} else {
+		this->resizeColumnToContents(TRACK_NUMBER);
+		this->resizeColumnToContents(RATINGS);
+		this->resizeColumnToContents(YEAR);
+	}
 }
 
 /** Move selected tracks downward. */

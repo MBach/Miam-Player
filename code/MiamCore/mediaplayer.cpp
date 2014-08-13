@@ -172,13 +172,16 @@ void MediaPlayer::pause()
 
 void MediaPlayer::play()
 {
-	if (playlist()) {
-		if (_state == QMediaPlayer::PausedState) {
-			_player->resume();
-			_state = QMediaPlayer::PlayingState;
-		} else {
-			QMediaContent mc = playlist()->media(playlist()->currentIndex());
-			if (!mc.isNull()) {
+	if (!playlist()) {
+		return;
+	}
+	if (_state == QMediaPlayer::PausedState) {
+		_player->resume();
+		_state = QMediaPlayer::PlayingState;
+	} else {
+		QMediaContent mc = playlist()->media(playlist()->currentIndex());
+		if (!mc.isNull()) {
+			if (mc.canonicalUrl().isLocalFile()) {
 				QString file = mc.canonicalUrl().toLocalFile();
 				if (_media) {
 					_media->disconnect();
@@ -186,6 +189,10 @@ void MediaPlayer::play()
 				}
 				_media = new VlcMedia(file, true, _instance);
 				_player->open(_media);
+			} else {
+				qDebug() << "get suitable player for this file";
+				qDebug() << mc.canonicalUrl();
+				emit playRemoteTrack(mc.canonicalUrl());
 			}
 		}
 	}

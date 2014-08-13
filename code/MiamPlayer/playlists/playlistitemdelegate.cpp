@@ -88,6 +88,14 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 			r.paintStars(p, opt);
 		}
 		break;
+	case Playlist::ICON:
+		//QRect iconRect = style->subElementRect(QStyle::SE_ItemViewItemDecoration, &o, o.widget);
+		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		QSize iconSize(textRect.height() * 0.8, textRect.height() * 0.8);
+		/// FIXME
+		//style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
+		style->drawItemPixmap(p, o.rect, Qt::AlignCenter, o.icon.pixmap(iconSize));
+		break;
 	}
 	p->restore();
 }

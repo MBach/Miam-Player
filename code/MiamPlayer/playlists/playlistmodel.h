@@ -7,6 +7,7 @@
 #include <QStandardItemModel>
 
 #include "filehelper.h"
+#include "model/remotetrack.h"
 
 /**
  * @brief The PlaylistModel class
@@ -14,6 +15,7 @@
 class PlaylistModel : public QStandardItemModel
 {
 	Q_OBJECT
+	Q_ENUMS(Origin)
 private:
 	/** Each instance of PlaylistModel has its own QMediaPlaylist. */
 	QMediaPlaylist *_mediaPlaylist;
@@ -21,10 +23,14 @@ private:
 public:
 	explicit PlaylistModel(QObject *parent);
 
+	enum Origin { RemoteMedia = Qt::UserRole + 1 };
+
 	/** Clear the content of playlist. */
 	void clear();
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
+
+	void insertMedias(int, const QList<RemoteTrack> &tracks);
 
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);

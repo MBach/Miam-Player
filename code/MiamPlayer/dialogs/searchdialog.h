@@ -7,10 +7,13 @@
 
 #include <QPropertyAnimation>
 
+class MainWindow;
+
 class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 {
 	Q_OBJECT
 private:
+	MainWindow *_mainWindow;
 	SqlDatabase _db;
 
 	/** Used to make this dialog transparent to have a nice fading effect. */
@@ -24,9 +27,10 @@ private:
 
 	QMap<QListView*, QList<QStandardItem*>> _hiddenItems;
 
+
 public:
 	/** Constructor. */
-	explicit SearchDialog(const SqlDatabase &db, QWidget *parent = 0);
+	explicit SearchDialog(const SqlDatabase &db, MainWindow *mainWindow);
 
 	/** Required interface from AbstractSearchDialog class. */
 	virtual void addSource(QCheckBox *checkBox);
@@ -60,6 +64,8 @@ public slots:
 	/** Process results sent back from various search engines (local, remote). */
 	virtual void processResults(Request type, const QStandardItemList &results);
 
+	virtual void aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks);
+
 private slots:
 	void appendSelectedItem(const QModelIndex &index);
 
@@ -68,6 +74,8 @@ private slots:
 
 	/** Expand this dialog to all available space. */
 	void searchMoreResults(const QString &link);
+
+	void toggleItems(bool enabled);
 };
 
 #endif // SEARCHDIALOG_H

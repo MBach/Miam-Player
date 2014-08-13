@@ -6,6 +6,7 @@
 #include <QTableView>
 
 #include "playlistmodel.h"
+#include "model/remotetrack.h"
 
 #include <mediaplayer.h>
 
@@ -44,16 +45,17 @@ private:
 	Q_ENUMS(Columns)
 
 public:
-	enum Columns{TRACK_NUMBER = 0,
-				 TITLE = 1,
-				 ALBUM = 2,
-				 ARTIST = 3,
-				 LENGTH = 4,
-				 RATINGS = 5,
-				 YEAR = 6};
+	enum Columns{TRACK_NUMBER	= 0,
+				 TITLE			= 1,
+				 ALBUM			= 2,
+				 ARTIST			= 3,
+				 LENGTH			= 4,
+				 RATINGS		= 5,
+				 YEAR			= 6,
+				 ICON			= 7};
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
-	
+
 	virtual ~Playlist();
 
 	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
@@ -63,6 +65,9 @@ public:
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
 	void insertMedias(int rowIndex, const QStringList &tracks);
+
+	/** Insert remote medias to playlist. */
+	void insertMedias(int rowIndex, const QList<RemoteTrack> &tracks);
 
 	QSize minimumSizeHint() const;
 
@@ -86,6 +91,8 @@ protected:
 	virtual void keyPressEvent(QKeyEvent *event);
 
 	virtual void mouseMoveEvent(QMouseEvent *event);
+
+	/** Redifined to be able to create an editor to modify star rating. */
 	virtual void mousePressEvent(QMouseEvent *event);
 
 	/** Redefined to display a thin line to help user for dropping tracks. */
@@ -94,6 +101,9 @@ protected:
 	virtual int sizeHintForColumn(int column) const;
 
 	virtual void showEvent(QShowEvent *event);
+
+private:
+	void autoResize();
 
 public slots:
 	/** Move selected tracks downward. */

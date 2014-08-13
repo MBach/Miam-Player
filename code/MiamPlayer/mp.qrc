@@ -17,6 +17,7 @@
         <file alias="artist">config/icons/artist.png</file>
         <file alias="track">config/icons/music.png</file>
         <file alias="search">config/icons/search.png</file>
+        <file alias="computer">config/icons/computer.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

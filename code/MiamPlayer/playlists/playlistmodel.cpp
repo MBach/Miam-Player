@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(0, 7, parent), _mediaPlaylist(new QMediaPlaylist(this))
+	QStandardItemModel(0, 8, parent), _mediaPlaylist(new QMediaPlaylist(this))
 {}
 
 /** Clear the content of playlist. */
@@ -27,15 +27,51 @@ void PlaylistModel::clear()
 
 void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
-	bool b = _mediaPlaylist->insertMedia(rowIndex, tracks);
-	qDebug() << "media was inserted" << b;
-	foreach (QMediaContent track, tracks) {
-		FileHelper f(track);
-		if (f.isValid()) {
-			this->insertMedia(rowIndex++, f);
-		} else {
-			qDebug() << "f is invalid" << track.canonicalUrl();
+	if (_mediaPlaylist->insertMedia(rowIndex, tracks)) {
+		foreach (QMediaContent track, tracks) {
+			FileHelper f(track);
+			if (f.isValid()) {
+				this->insertMedia(rowIndex++, f);
+			}
 		}
+	}
+}
+
+void PlaylistModel::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
+{
+	for (int i = 0; i < tracks.size(); i++) {
+		RemoteTrack track = tracks.at(i);
+
+		QString trackNumber = QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0'));
+		QStandardItem *trackItem = new QStandardItem(trackNumber);
+		QStandardItem *titleItem = new QStandardItem(track.title());
+		QStandardItem *albumItem = new QStandardItem(track.album());
+		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(track.length().toInt()).toString("m:ss"));
+		QStandardItem *artistItem = new QStandardItem(track.artist());
+		QStandardItem *ratingItem = new QStandardItem;
+		int rating = track.rating();
+		if (rating > 0) {
+			StarRating r(rating);
+			ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
+			ratingItem->setData(true, RemoteMedia);
+			ratingItem->setToolTip(tr("You cannot modify remote medias"));
+		}
+
+		QStandardItem *yearItem = new QStandardItem(track.year());
+		QStandardItem *iconItem = new QStandardItem;
+		iconItem->setIcon(track.icon());
+		QUrl url(track.url());
+
+		trackItem->setTextAlignment(Qt::AlignCenter);
+		lengthItem->setTextAlignment(Qt::AlignCenter);
+		ratingItem->setTextAlignment(Qt::AlignCenter);
+		yearItem->setTextAlignment(Qt::AlignCenter);
+
+		QList<QStandardItem *> items;
+		items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem << iconItem;
+
+		this->insertRow(rowIndex + i, items);
+		_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(url));
 	}
 }
 
@@ -49,22 +85,25 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	QStandardItem *albumItem = new QStandardItem(fileHelper.album());
 	QStandardItem *lengthItem = new QStandardItem(fileHelper.length());
 	QStandardItem *artistItem = new QStandardItem(fileHelper.artist());
-	QStandardItem *ratingItem = new QStandardItem();
+	QStandardItem *ratingItem = new QStandardItem;
 	int rating = fileHelper.rating();
 	if (rating > 0) {
 		StarRating r(rating);
 		ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
+		ratingItem->setData(false, RemoteMedia);
 	}
 	QStandardItem *yearItem = new QStandardItem(fileHelper.year());
+	QStandardItem *iconItem = new QStandardItem(tr("Local"));
+	iconItem->setIcon(QIcon(":/icons/computer"));
 
 	trackItem->setTextAlignment(Qt::AlignCenter);
 	lengthItem->setTextAlignment(Qt::AlignCenter);
 	ratingItem->setTextAlignment(Qt::AlignCenter);
 	yearItem->setTextAlignment(Qt::AlignCenter);
 
-	QList<QStandardItem *> widgetItems;
-	widgetItems << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem;
-	this->insertRow(rowIndex, widgetItems);
+	QList<QStandardItem *> items;
+	items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem << iconItem;
+	this->insertRow(rowIndex, items);
 }
 
 /** Moves rows from various positions to a new one (discontiguous rows are grouped). */
@@ -78,6 +117,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	std::sort(selectedIndexes.begin(), selectedIndexes.end(), [](const QModelIndex &a, const QModelIndex &b) { return b < a; });
 	QList<QList<QStandardItem*>> removedRows;
 	_mediaPlaylist->blockSignals(true);
+
 	int currentPlayingTrack = _mediaPlaylist->currentIndex();
 	foreach (QModelIndex selectedIndex, selectedIndexes) {
 		int rowNumber = selectedIndex.row();
@@ -93,9 +133,9 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	for (int i = 0; i < removedRows.count(); i++) {
 		this->insertRow(insertPoint, removedRows.at(i));
 	}
+
 	// Finally, reorder the inner QMediaPlaylist
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
-	qDebug() << Q_FUNC_INFO << currentPlayingTrack << insertPoint;
 
 	int offset = 0;
 	foreach (QModelIndex selectedIndex, selectedIndexes) {
@@ -122,7 +162,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 {
 	QFont font = Settings::getInstance()->font(Settings::FF_Playlist);
-	for (int i=0; i < items.length(); i++) {
+	for (int i = 0; i < items.length(); i++) {
 		QStandardItem *item = items.at(i);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
 		item->setFont(font);

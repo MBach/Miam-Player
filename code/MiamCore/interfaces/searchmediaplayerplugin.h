@@ -1,23 +1,18 @@
 #ifndef SEARCHMEDIAPLAYERPLUGIN_H
 #define SEARCHMEDIAPLAYERPLUGIN_H
 
+#include "abstractsearchdialog.h"
 #include "mediaplayerplugin.h"
 #include "mediaplayer.h"
 
-#include <QListWidget>
+#include <QStandardItem>
+#include <QListView>
 
-class AbstractSearchDialog;
 
 class MIAMCORE_LIBRARY SearchMediaPlayerPlugin : public MediaPlayerPlugin
 {
 public:
-	enum Request { Artist = 0,
-				   Album = 1,
-				   Track = 2};
-
 	virtual ~SearchMediaPlayerPlugin() {}
-
-	virtual void dispatchResults(Request, QListWidget *list) = 0;
 
 	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;
 };

@@ -21,10 +21,10 @@ public:
 	explicit PlaylistItemDelegate(Playlist *playlist);
 
 	/** Redefined. */
-	QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
+	virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
 
 	/** Redefined. */
-	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+	virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
 protected:
 	/** Redefined. */

@@ -9,14 +9,15 @@
 #include <QSqlRecord>
 #include <QSqlError>
 
+#include "mainwindow.h"
 #include "settings.h"
 #include "pluginmanager.h"
 
 #include <QtDebug>
 
 /** Constructor. */
-SearchDialog::SearchDialog(const SqlDatabase &db, QWidget *parent) :
-	AbstractSearchDialog(parent, Qt::Widget), _db(db)
+SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
+	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db)
 {
 	this->setupUi(this);
 	_artists->setModel(new QStandardItemModel(this));
@@ -26,7 +27,6 @@ SearchDialog::SearchDialog(const SqlDatabase &db, QWidget *parent) :
 	// Init map with empty values
 	foreach (QListView *list, this->findChildren<QListView*>()) {
 		_hiddenItems.insert(list, QList<QStandardItem*>());
-		connect(list, &QListView::doubleClicked, this, &SearchDialog::appendSelectedItem);
 	}
 
 	_checkBoxLibrary = new QCheckBox(tr("Library"), this);
@@ -80,43 +80,7 @@ void SearchDialog::addSource(QCheckBox *checkBox)
 	checkBox->setFont(Settings::getInstance()->font(Settings::FF_Library));
 	sources_layout->insertWidget(i - 1, checkBox);
 
-	connect(checkBox, &QCheckBox::toggled, this, [=](bool enabled) {
-		foreach (QListView *list, this->findChildren<QListView*>()) {
-			QStandardItemModel *m = qobject_cast<QStandardItemModel*>(list->model());
-			if (enabled) {
-				qDebug() << "Restore hidden items for every list";
-				// Restore hidden items for every list
-				QList<QStandardItem*> items = _hiddenItems.value(list);
-				for (int i = 0; i < items.size(); i++) {
-					m->insertRow(i, items.at(i));
-				}
-				m->sort(0);
-			} else {
-				qDebug() << "Hide items for every list";
-				QStandardItemModel *m = qobject_cast<QStandardItemModel*>(list->model());
-				QList<QStandardItem*> items;
-				QList<QPersistentModelIndex> indexes;
-				for (int i = 0; i < m->rowCount(); i++) {
-					QStandardItem *item = m->item(i, 0);
-					if (item->data(Qt::UserRole + 1).toString() == checkBox->text()) {
-						indexes << m->index(i, 0);
-						// Default copy-constructor is protected!
-						QStandardItem *copy = new QStandardItem(item->text());
-						copy->setData(checkBox->text(), Qt::UserRole + 1);
-						items.append(copy);
-					}
-				}
-
-				foreach (const QPersistentModelIndex &i, indexes) {
-					m->removeRow(i.row());
-				}
-
-				QList<QStandardItem*> hItems = _hiddenItems.value(list);
-				hItems.append(items);
-				_hiddenItems.insert(list, hItems);
-			}
-		}
-	});
+	connect(checkBox, &QCheckBox::toggled, this, &SearchDialog::toggleItems);
 }
 
 /** String to look for on every registered search engines. */
@@ -167,8 +131,6 @@ void SearchDialog::paintEvent(QPaintEvent *)
 /** Process results sent back from various search engines (local, remote). */
 void SearchDialog::processResults(Request type, const QStandardItemList &results)
 {
-	qDebug() << Q_FUNC_INFO << sender();
-
 	QListView *listToProcess = NULL;
 	switch (type) {
 	case Artist:
@@ -197,8 +159,13 @@ void SearchDialog::processResults(Request type, const QStandardItemList &results
 	h += labelSearchMore->height() + aggregated->height() + 3;
 	int minW = qMax(iconArtists->width() + _artists->sizeHintForColumn(0), 400);
 	this->resize(minW, h);
+}
 
-	qDebug() << "sizeHintForRow" << _albums->sizeHintForRow(0);
+void SearchDialog::aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks)
+{
+	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+	p->insertMedias(-1, QList<RemoteTrack>::fromStdList(tracks));
+	this->close();
 }
 
 /// XXX: factorize code
@@ -218,9 +185,32 @@ void SearchDialog::clear()
 
 void SearchDialog::appendSelectedItem(const QModelIndex &index)
 {
-	qDebug() << Q_FUNC_INFO << "not implemented";
+	qDebug() << Q_FUNC_INFO;
 	const QStandardItemModel *m = qobject_cast<const QStandardItemModel*>(index.model());
-	qDebug() << m->itemFromIndex(index)->text();
+
+	// At this point, we have to decide if the object that has been double clicked is local or remote
+	QStandardItem *item = m->itemFromIndex(index);
+	qDebug() << item->text();
+
+	QListView *list = qobject_cast<QListView*>(sender());
+
+	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+	if (item->data(AbstractSearchDialog::DT_Origin).toString() == _checkBoxLibrary->text()) {
+		QList<QMediaContent> tracks;
+		// Local items: easy to process! (SQL request)
+		if (list == _artists) {
+			// Select all tracks from this Artist
+		} else if (list == _albums) {
+			// Select all tracks from this Album
+		} else /*if (list == _tracks)*/ {
+			// Nothing special
+		}
+		p->insertMedias(-1, tracks);
+	} else {
+		// Remote items: apply strategy pattern to get remote information depending on the caller
+		QList<RemoteTrack> tracks;
+		p->insertMedias(-1, tracks);
+	}
 }
 
 /** Local search for matching expressions. */
@@ -243,7 +233,7 @@ void SearchDialog::search(const QString &text)
 		QList<QStandardItem*> artistList;
 		while (qSearchForArtists.next()) {
 			QStandardItem *artist = new QStandardItem(qSearchForArtists.record().value(0).toString());
-			artist->setData(_checkBoxLibrary->text(), Qt::UserRole + 1);
+			artist->setData(_checkBoxLibrary->text(), AbstractSearchDialog::DT_Origin);
 			artistList.append(artist);
 		}
 		this->processResults(Artist, artistList);
@@ -256,8 +246,7 @@ void SearchDialog::search(const QString &text)
 		QList<QStandardItem*> albumList;
 		while (qSearchForAlbums.next()) {
 			QStandardItem *album = new QStandardItem(qSearchForAlbums.record().value(0).toString() + " – " + qSearchForAlbums.record().value(1).toString());
-			/// XXX create enum
-			album->setData(_checkBoxLibrary->text(), Qt::UserRole + 1);
+			album->setData(_checkBoxLibrary->text(), AbstractSearchDialog::DT_Origin);
 			albumList.append(album);
 		}
 		this->processResults(Album, albumList);
@@ -270,7 +259,7 @@ void SearchDialog::search(const QString &text)
 		QList<QStandardItem*> trackList;
 		while (qSearchForTracks.next()) {
 			QStandardItem *track = new QStandardItem(qSearchForTracks.record().value(0).toString() + " – " + qSearchForTracks.record().value(1).toString());
-			track->setData(_checkBoxLibrary->text(), Qt::UserRole + 1);
+			track->setData(_checkBoxLibrary->text(), AbstractSearchDialog::DT_Origin);
 			trackList.append(track);
 		}
 		this->processResults(Track, trackList);
@@ -293,5 +282,65 @@ void SearchDialog::searchMoreResults(const QString &link)
 		}
 		this->move(QPoint(0, 0));
 		this->resize(mainWindowRect.size());
+	}
+}
+
+void SearchDialog::toggleItems(bool enabled)
+{
+	QCheckBox *checkBox = qobject_cast<QCheckBox*>(sender());
+	foreach (QListView *list, this->findChildren<QListView*>()) {
+		QStandardItemModel *m = qobject_cast<QStandardItemModel*>(list->model());
+		// Hiding / restoring items has to be done in 2-steps
+		// First step is for finding items that are about to be moved
+		// Second step is for iterating backward on marked items -> you cannot remove items on a single for loop
+		if (enabled) {
+			// Restore hidden items for every list
+			QList<QStandardItem*> items = _hiddenItems.value(list);
+			QList<int> indexes;
+			for (int i = 0; i < items.size(); i++) {
+				QStandardItem *item = items.at(i);
+				// Extract only matching items
+				if (item->data(AbstractSearchDialog::DT_Origin) == checkBox->text()) {
+					indexes.prepend(i);
+				}
+			}
+
+			// Moving back from hidden to visible
+			for (int i = 0; i < indexes.size(); i++) {
+				QStandardItem *item = items.takeAt(indexes.at(i));
+				m->appendRow(item);
+			}
+
+			// Replace existing values with potentially empty list
+			_hiddenItems.insert(list, items);
+			m->sort(0);
+		} else {
+			// Hide items for every list
+			QStandardItemModel *m = qobject_cast<QStandardItemModel*>(list->model());
+			QList<QStandardItem*> items;
+			QList<QPersistentModelIndex> indexes;
+			for (int i = 0; i < m->rowCount(); i++) {
+				QStandardItem *item = m->item(i, 0);
+				if (item->data(AbstractSearchDialog::DT_Origin).toString() == checkBox->text()) {
+					indexes << m->index(i, 0);
+					// Default copy-constructor is protected!
+					QStandardItem *copy = new QStandardItem(item->text());
+					copy->setData(checkBox->text(), AbstractSearchDialog::DT_Origin);
+					copy->setIcon(item->icon());
+					items.append(copy);
+				}
+			}
+
+			foreach (const QPersistentModelIndex &i, indexes) {
+				m->removeRow(i.row());
+			}
+
+			// Finally, hide selected items
+			if (!items.isEmpty()) {
+				QList<QStandardItem*> hItems = _hiddenItems.value(list);
+				hItems.append(items);
+				_hiddenItems.insert(list, hItems);
+			}
+		}
 	}
 }

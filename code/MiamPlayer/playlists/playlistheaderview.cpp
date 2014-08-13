@@ -12,7 +12,8 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Length")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Artist")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Rating")
-													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Year");
+													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Year")
+													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source");
 
 PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	QHeaderView(Qt::Horizontal, parent)
@@ -25,7 +26,7 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 
 	// Context menu on header of columns
 	columns = new QMenu(this);
-	connect(columns, &QMenu::triggered, [=](const QAction *action) {
+	connect(columns, &QMenu::triggered, this, [=](const QAction *action) {
 		int columnIndex = action->data().toInt();
 		this->setSectionHidden(columnIndex, !this->isSectionHidden(columnIndex));
 	});
@@ -33,7 +34,7 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	Settings *settings = Settings::getInstance();
 	this->setFont(settings->font(Settings::FF_Playlist));
 
-	connect(settings, &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
+	connect(settings, &Settings::fontHasChanged, this, [=](Settings::FontFamily ff, const QFont &newFont) {
 		if (ff == Settings::FF_Playlist) {
 			QFont font = newFont;
 			font.setPointSizeF(font.pointSizeF() * 0.8);
