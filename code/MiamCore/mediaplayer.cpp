@@ -85,6 +85,7 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 void MediaPlayer::setVolume(int v)
 {
 	_player->audio()->setVolume(v);
+	emit setVolumeRemote(v);
 }
 
 qint64 MediaPlayer::duration()
@@ -167,7 +168,15 @@ void MediaPlayer::skipForward()
 
 void MediaPlayer::pause()
 {
-	_player->pause();
+	if (!playlist()) {
+		return;
+	}
+	QMediaContent mc = playlist()->media(playlist()->currentIndex());
+	if (mc.canonicalUrl().isLocalFile()) {
+		_player->pause();
+	} else {
+		emit pauseRemote();
+	}
 }
 
 void MediaPlayer::play()
@@ -190,9 +199,7 @@ void MediaPlayer::play()
 				_media = new VlcMedia(file, true, _instance);
 				_player->open(_media);
 			} else {
-				qDebug() << "get suitable player for this file";
-				qDebug() << mc.canonicalUrl();
-				emit playRemoteTrack(mc.canonicalUrl());
+				emit playRemote(mc.canonicalUrl());
 			}
 		}
 	}

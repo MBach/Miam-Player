@@ -71,7 +71,9 @@ signals:
 	void positionChanged(qint64 pos);
 	void stateChanged(QMediaPlayer::State);
 
-	void playRemoteTrack(const QUrl &track);
+	void pauseRemote();
+	void playRemote(const QUrl &track);
+	void setVolumeRemote(int v);
 };
 
 #endif // MEDIAPLAYER_H
