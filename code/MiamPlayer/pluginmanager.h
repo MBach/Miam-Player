@@ -3,6 +3,7 @@
 
 #include <interfaces/itemviewplugin.h>
 #include <interfaces/searchmediaplayerplugin.h>
+#include <interfaces/remotemediaplayerplugin.h>
 
 #include <QDir>
 
@@ -70,6 +71,7 @@ private:
 
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
 	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
+	void loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin);
 	void loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin);
 
 	/** Unload a plugin by its name. */

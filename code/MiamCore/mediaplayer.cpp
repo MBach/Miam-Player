@@ -55,9 +55,10 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 		emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
 	});
 
+	// VlcMediaPlayer::positionChanged is percent-based
 	connect(_player, &VlcMediaPlayer::positionChanged, this, [=](float f) {
 		qint64 pos = _player->length() * f;
-		emit positionChanged(pos);
+		emit positionChanged(pos, _player->length());
 	});
 
 	// Cannot use new signal/slot syntax because libvlc_media_t is not fully defined at compile time (just a forward declaration)
@@ -98,17 +99,28 @@ QMediaPlayer::State MediaPlayer::state() const
 	return _state;
 }
 
+void MediaPlayer::setState(QMediaPlayer::State state)
+{
+	_state = state;
+	emit stateChanged(_state);
+}
+
 void MediaPlayer::setMute(bool b) const
 {
 	b ? _player->audio()->setTrack(-1) : _player->audio()->setTrack(0);
 }
 
-void MediaPlayer::setPosition(float pos)
+void MediaPlayer::seek(float pos)
 {
 	if (pos == 1.0) {
 		pos -= 0.001f;
 	}
-	_player->setPosition(pos);
+	QMediaContent mc = playlist()->media(playlist()->currentIndex());
+	if (mc.canonicalUrl().isLocalFile()) {
+		_player->setPosition(pos);
+	} else {
+		emit aboutToSeekRemoteWebPlayer(pos);
+	}
 }
 
 int MediaPlayer::volume() const
@@ -123,9 +135,9 @@ void MediaPlayer::seekBackward()
 		int currentPos = _player->position() * _player->length();
 		int time = currentPos - Settings::getInstance()->playbackSeekTime();
 		if (time < 0) {
-			_player->setPosition(0.0);
+			this->seek(0.0);
 		} else {
-			_player->setPosition(time / (float)_player->length());
+			this->seek(time / (float)_player->length());
 		}
 	}
 }
@@ -139,33 +151,37 @@ void MediaPlayer::seekForward()
 		if (time > _player->length()) {
 			skipForward();
 		} else {
-			_player->setPosition(time / (float)_player->length());
+			this->seek(time / (float)_player->length());
 		}
 	}
 }
 
 void MediaPlayer::skipBackward()
 {
-	if (playlist()) {
-		if (playlist()->playbackMode() == QMediaPlaylist::Sequential && playlist()->previousIndex() < 0) {
-			return;
-		}
-		playlist()->previous();
-		play();
+	if (!playlist()) {
+		return;
 	}
+
+	if (playlist()->playbackMode() == QMediaPlaylist::Sequential && playlist()->previousIndex() < 0) {
+		return;
+	}
+	playlist()->previous();
+	this->play();
 }
 
 void MediaPlayer::skipForward()
 {
-	if (playlist()) {
-		if (playlist()->playbackMode() == QMediaPlaylist::Sequential && playlist()->nextIndex() < playlist()->currentIndex()) {
-			return;
-		}
-		playlist()->next();
-		play();
+	if (!playlist()) {
+		return;
 	}
+	if (playlist()->playbackMode() == QMediaPlaylist::Sequential && playlist()->nextIndex() < playlist()->currentIndex()) {
+		return;
+	}
+	playlist()->next();
+	this->play();
 }
 
+/** Pause current playing track. */
 void MediaPlayer::pause()
 {
 	if (!playlist()) {
@@ -175,41 +191,67 @@ void MediaPlayer::pause()
 	if (mc.canonicalUrl().isLocalFile()) {
 		_player->pause();
 	} else {
-		emit pauseRemote();
+		emit aboutToPauseRemoteWebPlayer();
 	}
 }
 
+/** Play current track in the playlist. */
 void MediaPlayer::play()
 {
+	// Check if it's possible to play tracks first
 	if (!playlist()) {
 		return;
 	}
-	if (_state == QMediaPlayer::PausedState) {
-		_player->resume();
-		_state = QMediaPlayer::PlayingState;
-	} else {
-		QMediaContent mc = playlist()->media(playlist()->currentIndex());
-		if (!mc.isNull()) {
-			if (mc.canonicalUrl().isLocalFile()) {
-				QString file = mc.canonicalUrl().toLocalFile();
-				if (_media) {
-					_media->disconnect();
-					delete _media;
-				}
-				_media = new VlcMedia(file, true, _instance);
-				_player->open(_media);
-			} else {
-				emit playRemote(mc.canonicalUrl());
+	QMediaContent mc = playlist()->media(playlist()->currentIndex());
+	if (mc.isNull()) {
+		return;
+	}
+
+	// Everything is splitted in 2: local actions and remote actions
+	// Is it the good way to proceed?
+	if (mc.canonicalUrl().isLocalFile()) {
+		if (_state == QMediaPlayer::PausedState) {
+			_player->resume();
+			_state = QMediaPlayer::PlayingState;
+		} else {
+			//emit aboutToStopWebPlayer();
+			QString file = mc.canonicalUrl().toLocalFile();
+			if (_media) {
+				_media->disconnect();
+				delete _media;
 			}
+			_media = new VlcMedia(file, true, _instance);
+			_player->open(_media);
+		}
+	} else {
+		if (_state == QMediaPlayer::PausedState) {
+			emit aboutToResumeRemoteWebPlayer(mc.canonicalUrl());
+		} else {
+			// When switching from local player to remote player
+			if (_media) {
+				_media->disconnect();
+				delete _media;
+			}
+			emit aboutToPlayRemoteWebPlayer(mc.canonicalUrl());
 		}
 	}
 }
 
+/** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
-	_player->stop();
+	if (!playlist()) {
+		return;
+	}
+	QMediaContent mc = playlist()->media(playlist()->currentIndex());
+	if (mc.canonicalUrl().isLocalFile()) {
+		_player->stop();
+	} else {
+		emit aboutToStopWebPlayer();
+	}
 }
 
+/** Activate or desactive audio output. */
 void MediaPlayer::toggleMute() const
 {
 	if (_player->audio()->track() == 0) {

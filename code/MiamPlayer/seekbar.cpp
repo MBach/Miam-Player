@@ -9,7 +9,7 @@
 #include <QtDebug>
 
 SeekBar::SeekBar(QWidget *parent) :
-    QSlider(parent)
+	QSlider(parent)
 {
 	this->setMinimumHeight(30);
 	this->setSingleStep(0);
@@ -29,7 +29,7 @@ void SeekBar::mouseMoveEvent(QMouseEvent *)
 		float p = (float) xPos / (width() - 2 * bound);
 		qDebug() << "position" << p;
 		float posButton = p * 1000;
-		_mediaPlayer.data()->setPosition(p);
+		_mediaPlayer.data()->seek(p);
 		this->setValue(posButton);
 	}
 }
@@ -44,7 +44,7 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 		float posButton = p * 1000;
 		qDebug() << "mousePressEvent" << "xPos" << xPos << "width()" << width() << "posButton" << posButton;
 		_mediaPlayer.data()->setMute(true);
-		_mediaPlayer.data()->setPosition(p);
+		_mediaPlayer.data()->seek(p);
 		this->setValue(posButton);
 	}
 }

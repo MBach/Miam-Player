@@ -2,48 +2,53 @@
 #define MEDIAPLAYER_H
 
 #include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 #include "miamcore_global.h"
+#include "remotemediaplayer.h"
 
 class VlcInstance;
 class VlcMedia;
 class VlcMediaPlayer;
 struct libvlc_media_t;
 
-#include <QMediaPlaylist>
-
 class MIAMCORE_LIBRARY MediaPlayer : public QObject
 {
 	Q_OBJECT
 private:
+	QMediaPlaylist *_playlist;
+	QMediaPlayer::State _state;
+
 	VlcInstance *_instance;
 	VlcMedia *_media;
 	VlcMediaPlayer *_player;
 
-	QMediaPlaylist *_playlist;
-
-	QMediaPlayer::State _state;
+	QMap<QString, RemoteMediaPlayer*> _remotePlayers;
 
 public:
 	explicit MediaPlayer(QObject *parent = 0);
 
-	QMediaPlaylist * playlist();
+	void addRemotePlayer(const QString &id, RemoteMediaPlayer *remotePlayer) { _remotePlayers.insert(id, remotePlayer); }
 
+	QMediaPlaylist * playlist();
 	void setPlaylist(QMediaPlaylist *playlist);
 
 	void setVolume(int v);
+	int volume() const;
 
 	qint64 duration();
 
 	QMediaPlayer::State state() const;
+	void setState(QMediaPlayer::State state);
 
 	void setMute(bool b) const;
 
-	void setPosition(float pos);
-
-	int volume() const;
+	void seek(float pos);
 
 public slots:
+	/** Pause current playing track. */
+	void pause();
+
 	/** Seek backward in the current playing track for a small amount of time. */
 	void seekBackward();
 
@@ -56,10 +61,13 @@ public slots:
 	/** Change the current track. */
 	void skipForward();
 
-	void pause();
+	/** Play current track in the playlist. */
 	void play();
+
+	/** Stop current track in the playlist. */
 	void stop();
 
+	/** Activate or desactive audio output. */
 	void toggleMute() const;
 
 private slots:
@@ -68,11 +76,16 @@ private slots:
 signals:
 	void currentMediaChanged(const QMediaContent &);
 	void mediaStatusChanged(QMediaPlayer::MediaStatus);
-	void positionChanged(qint64 pos);
+	void positionChanged(qint64 pos, qint64 duration);
 	void stateChanged(QMediaPlayer::State);
 
-	void pauseRemote();
-	void playRemote(const QUrl &track);
+	/// XXX: test
+	void aboutToPauseRemoteWebPlayer();
+	void aboutToPlayRemoteWebPlayer(const QUrl &track);
+	void aboutToResumeRemoteWebPlayer(const QUrl &track);
+	void aboutToSeekRemoteWebPlayer(float position);
+	void aboutToStopWebPlayer();
+	void remotePositionChanged(qint64 pos, qint64 duration);
 	void setVolumeRemote(int v);
 };
 

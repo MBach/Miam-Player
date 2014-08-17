@@ -246,33 +246,6 @@ void MainWindow::setupActions()
 		tagEditor->addUrlsToEditor(tracks);
 	});
 
-	// Media buttons
-	connect(_mediaPlayer.data(), &MediaPlayer::stateChanged, this, [=] (QMediaPlayer::State state) {
-		//qDebug() << "MediaPlayer::stateChanged" << state;
-		playButton->disconnect();
-		actionPlay->disconnect();
-		if (state == QMediaPlayer::PlayingState) {
-			QString iconPath;
-			if (Settings::getInstance()->hasCustomIcon("pauseButton")) {
-				iconPath = Settings::getInstance()->customIcon("pauseButton");
-			} else {
-				iconPath = ":/player/" + Settings::getInstance()->theme() + "/pause";
-			}
-			playButton->setIcon(QIcon(iconPath));
-			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::pause);
-			connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::pause);
-			seekSlider->setEnabled(true);
-		} else {
-			playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
-			connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
-			connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
-			seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
-		}
-		// Remove bold font when player has stopped
-		tabPlaylists->currentPlayList()->viewport()->update();
-		seekSlider->update();
-	});
-
 	// Media buttons and their shortcuts
 	/// XXX: can this be factorized with meta object system?
 	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipBackward);
@@ -290,10 +263,10 @@ void MainWindow::setupActions()
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	// Sliders
-	connect(_mediaPlayer.data(), &MediaPlayer::positionChanged, [=] (qint64 pos) {
-		if (_mediaPlayer.data()->duration() > 0) {
-			seekSlider->setValue(1000 * pos / _mediaPlayer.data()->duration());
-			timeLabel->setTime(pos, _mediaPlayer.data()->duration());
+	connect(_mediaPlayer.data(), &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
+		if (duration > 0) {
+			seekSlider->setValue(1000 * pos / duration);
+			timeLabel->setTime(pos, duration);
 		}
 	});
 
@@ -325,6 +298,9 @@ void MainWindow::setupActions()
 			moveSearchDialog();
 		}
 	});
+
+	// Core
+	connect(_mediaPlayer.data(), &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
 
 	// Playback
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
@@ -545,6 +521,36 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}
+}
+
+void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
+{
+	qDebug() << "MW ; MediaPlayer::stateChanged" << state;
+	playButton->disconnect();
+	actionPlay->disconnect();
+	if (state == QMediaPlayer::PlayingState) {
+		QString iconPath;
+		if (Settings::getInstance()->hasCustomIcon("pauseButton")) {
+			iconPath = Settings::getInstance()->customIcon("pauseButton");
+		} else {
+			iconPath = ":/player/" + Settings::getInstance()->theme() + "/pause";
+		}
+		playButton->setIcon(QIcon(iconPath));
+		connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::pause);
+		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::pause);
+		seekSlider->setEnabled(true);
+	} else {
+		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
+		connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
+		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
+		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
+		if (state == QMediaPlayer::StoppedState) {
+			timeLabel->setTime(0, 0);
+		}
+	}
+	// Remove bold font when player has stopped
+	tabPlaylists->currentPlayList()->viewport()->update();
+	seekSlider->update();
 }
 
 void MainWindow::openFiles()

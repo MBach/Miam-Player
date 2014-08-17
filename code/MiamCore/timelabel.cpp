@@ -8,7 +8,7 @@
 #include <QtDebug>
 
 TimeLabel::TimeLabel(QWidget *parent) :
-	QLabel(parent)
+	QLabel(parent), _time(0), _total(0)
 {
 	this->installEventFilter(this);
 	this->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
@@ -56,21 +56,21 @@ void TimeLabel::display()
 {
 	switch (_mode) {
 	case 0:
-		if (_time == 0) {
+		if (_time == 0 && _total == 0) {
 			this->setText("--:--");
 		} else {
 			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss"));
 		}
 		break;
 	case 1:
-		if (_time == 0) {
+		if (_time == 0 && _total == 0) {
 			this->setText("--:--");
 		} else {
 			this->setText(QDateTime::fromTime_t((_total - _time) / 1000).toString("-mm:ss"));
 		}
 		break;
 	case 2:
-		if (_time == 0) {
+		if (_time == 0 && _total == 0) {
 			this->setText("--:-- / --:--");
 		} else {
 			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss").append(" / ").append(QDateTime::fromTime_t(round(_total / 1000)).toString("mm:ss")));

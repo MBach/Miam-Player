@@ -104,6 +104,8 @@ public slots:
 private slots:
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
 
+	void mediaPlayerStateHasChanged(QMediaPlayer::State state);
+
 	void openFiles();
 
 	void openFolder();

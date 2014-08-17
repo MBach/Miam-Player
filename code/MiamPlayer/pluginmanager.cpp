@@ -166,13 +166,16 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 	}
 }
 
+void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
+{
+	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
+	_mainWindow->mediaPlayer().data()->addRemotePlayer(remoteMediaPlayerPlugin->name(), remoteMediaPlayerPlugin->player());
+}
+
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
 {
 	searchMediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
-
-	/// XXX: or this code style?
-	//_mainWindow->searchDialog()->addSource(searchMediaPlayerPlugin->checkBox());
 }
 
 /** Load a plugin by its location on the hard drive. */
@@ -227,6 +230,8 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
 		} else if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
 			this->loadItemViewPlugin(itemViewPlugin);
+		} else if (RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
+			this->loadRemoteMediaPlayerPlugin(remoteMediaPlayerPlugin);
 		}
 		return basic;
 	} else {

@@ -55,7 +55,8 @@ SOURCES += \
     timelabel.cpp \
     model/selectedtracksmodel.cpp \
     flowlayout.cpp \
-    model/remotetrack.cpp
+    model/remotetrack.cpp \
+    remotemediaplayer.cpp
 
 HEADERS += \
     model/librarysqlmodel.h \
@@ -76,4 +77,6 @@ HEADERS += \
     interfaces/itemviewplugin.h \
     interfaces/mediaplayerplugin.h \
     abstractsearchdialog.h \
-    model/remotetrack.h
+    model/remotetrack.h \
+    remotemediaplayer.h \
+    interfaces/remotemediaplayerplugin.h
