@@ -336,7 +336,7 @@
     </message>
     <message>
         <source>Currently under development</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyní ve vývoji</translation>
     </message>
     <message>
         <source>Menu &amp;&amp; Options</source>
@@ -344,7 +344,7 @@
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Normální</translation>
     </message>
     <message>
         <source>Current item in loop</source>
@@ -356,11 +356,11 @@
     </message>
     <message>
         <source>Mute</source>
-        <translation type="unfinished"></translation>
+        <translation>Ztlumit</translation>
     </message>
     <message>
         <source>Increase volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvýšit hlasitost</translation>
     </message>
     <message>
         <source>Current item once</source>
@@ -368,15 +368,15 @@
     </message>
     <message>
         <source>Decrease volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Snížit hlasitost</translation>
     </message>
     <message>
         <source>Open folders...</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít složky...</translation>
     </message>
     <message>
         <source>Open files...</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít soubory...</translation>
     </message>
     <message>
         <source>View</source>
@@ -384,7 +384,7 @@
     </message>
     <message>
         <source>Show view Unique Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat pohled Jedinečná knihovna</translation>
     </message>
     <message>
         <source>Add selected items to Tag Editor</source>
@@ -392,15 +392,15 @@
     </message>
     <message>
         <source>Show view Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat pohled Seznamy skladeb</translation>
     </message>
     <message>
         <source>Switch to Library tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Přepnout na kartu Knihovna</translation>
     </message>
     <message>
         <source>Switch to File Explorer tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Přepnout na kartu Průzkumník souborů</translation>
     </message>
     <message>
         <source>Add selected items to current playlist</source>
@@ -408,23 +408,23 @@
     </message>
     <message>
         <source>Show view Tag Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat pohled Editor značek</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Hledat</translation>
     </message>
     <message>
         <source>Remove selected tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstranit vybrané skladby</translation>
     </message>
     <message>
         <source>Keep your library up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>Udržovat knihovnu aktuální</translation>
     </message>
     <message>
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mají se sledovat změny ve vašich složkách s hudbou? Vaše knihovna bude vždy sladěna automaticky.</translation>
     </message>
 </context>
 <context>
@@ -675,19 +675,19 @@
     </message>
     <message>
         <source>Currently under development</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyní ve vývoji</translation>
     </message>
     <message>
         <source>If there is an article at the beginning of an artist&apos;s name, should I ignore it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokud je na začátku umělcova jména člen, má se přehlížet?</translation>
     </message>
     <message>
         <source>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>Tato volba bude filtrovat gramatické členy. Například: S &quot;The Beatles&quot; se bude zacházet jako s &quot;Beatles, the&quot;</translation>
     </message>
     <message>
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;The&quot; je velice běžný člen anglických jmen, jako v &quot;The Beatles&quot;</translation>
     </message>
 </context>
 <context>
@@ -1009,15 +1009,15 @@
     </message>
     <message>
         <source>This mode is currently under development</source>
-        <translation type="unfinished"></translation>
+        <translation>Tento režim je nyní ve vývoji</translation>
     </message>
     <message>
         <source>Tag Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Editor značek</translation>
     </message>
     <message>
         <source>&amp;Open files...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Otevřít soubory...</translation>
     </message>
     <message>
         <source>Library</source>
@@ -1025,23 +1025,23 @@
     </message>
     <message>
         <source>File explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Průzkumník souborů</translation>
     </message>
     <message>
         <source>Open folder...</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít složku...</translation>
     </message>
     <message>
         <source>Audio files</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvukové soubory</translation>
     </message>
     <message>
         <source>Choose some files to open</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyberte nějaké soubory k otevření</translation>
     </message>
     <message>
         <source>Choose a folder to open</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyberte složku k otevření</translation>
     </message>
     <message>
         <source>There are more than 300 files to add to the %1 (%2 to add).</source>
@@ -1100,6 +1100,10 @@
     <message>
         <source>Year</source>
         <translation>Rok</translation>
+    </message>
+    <message>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1178,6 +1182,17 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
     </message>
 </context>
 <context>
+    <name>PlaylistModel</name>
+    <message>
+        <source>You cannot modify remote medias</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PluginManager</name>
     <message>
         <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
@@ -1228,6 +1243,25 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
     </message>
 </context>
 <context>
+    <name>SearchDialog</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Formulář</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Results are aggregated from:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation type="unfinished">Knihovna</translation>
+    </message>
+</context>
+<context>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
@@ -1264,23 +1298,23 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished">Umělec</translation>
+        <translation>Umělec</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Disc</source>
-        <translation type="unfinished">Disk</translation>
+        <translation>Disk</translation>
     </message>
     <message>
         <source>ArtistAlbum</source>
-        <translation type="unfinished"></translation>
+        <translation>Umělec alba</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished">Rok</translation>
+        <translation>Rok</translation>
     </message>
 </context>
 <context>
@@ -1399,7 +1433,7 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     </message>
     <message>
         <source>(Incompatible tracks selected)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Vybrány neslučitelné skladby)</translation>
     </message>
 </context>
 <context>

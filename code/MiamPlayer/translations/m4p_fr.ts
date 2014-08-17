@@ -1098,6 +1098,10 @@
         <source>Year</source>
         <translation>Année</translation>
     </message>
+    <message>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaylistManager</name>
@@ -1174,6 +1178,17 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
     </message>
 </context>
 <context>
+    <name>PlaylistModel</name>
+    <message>
+        <source>You cannot modify remote medias</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PluginManager</name>
     <message>
         <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
@@ -1219,6 +1234,25 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
     <message>
         <source>empty folder</source>
         <translation>dossier vide</translation>
+    </message>
+</context>
+<context>
+    <name>SearchDialog</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Results are aggregated from:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation type="unfinished">Bibliothèque</translation>
     </message>
 </context>
 <context>

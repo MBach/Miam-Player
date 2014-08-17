@@ -1110,6 +1110,10 @@
         <source>Year</source>
         <translation>سنَة</translation>
     </message>
+    <message>
+        <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaylistManager</name>
@@ -1188,6 +1192,17 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
     </message>
 </context>
 <context>
+    <name>PlaylistModel</name>
+    <message>
+        <source>You cannot modify remote medias</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PluginManager</name>
     <message>
         <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
@@ -1240,6 +1255,25 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
     </message>
     <message>
         <source>empty folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SearchDialog</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">شكل</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Results are aggregated from:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
