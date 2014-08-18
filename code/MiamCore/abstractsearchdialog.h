@@ -11,6 +11,11 @@
 
 typedef QList<QStandardItem*> QStandardItemList;
 
+/**
+ * \brief		The AbstractSearchDialog class is a pure virtual class which can be passed to plugins to be extended.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY AbstractSearchDialog : public QWidget
 {
 	Q_OBJECT

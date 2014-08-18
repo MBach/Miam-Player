@@ -6,6 +6,8 @@
 
 /**
 * \brief Display up to three modes for the length of a track.
+* \author      Matthieu Bachelier
+* \copyright   GNU General Public License v3
 */
 class MIAMCORE_LIBRARY TimeLabel : public QLabel
 {

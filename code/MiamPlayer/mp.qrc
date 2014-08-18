@@ -29,6 +29,7 @@
         <file alias="stop">player/fairytale/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
         <file alias="shuffle">player/shuffle.png</file>
+        <file alias="loading">player/loading.gif</file>
     </qresource>
     <qresource prefix="/player/gnome">
         <file alias="pause">player/gnome/pause.png</file>
@@ -40,6 +41,7 @@
         <file alias="stop">player/gnome/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
         <file alias="shuffle">player/shuffle.png</file>
+        <file alias="loading">player/loading.gif</file>
     </qresource>
     <qresource prefix="/player/nuvola">
         <file alias="pause">player/nuvola/pause.png</file>
@@ -51,6 +53,7 @@
         <file alias="stop">player/nuvola/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
         <file alias="shuffle">player/shuffle.png</file>
+        <file alias="loading">player/loading.gif</file>
     </qresource>
     <qresource prefix="/player/tango">
         <file alias="pause">player/tango/pause.png</file>
@@ -62,6 +65,7 @@
         <file alias="stop">player/tango/stop.png</file>
         <file alias="repeat">player/repeat.png</file>
         <file alias="shuffle">player/shuffle.png</file>
+        <file alias="loading">player/loading.gif</file>
     </qresource>
     <qresource prefix="/config">
         <file alias="fonts">config/fonts.png</file>
@@ -87,6 +91,7 @@
         <file alias="itemLoop">player/oxygen/item-loop.png</file>
         <file alias="itemOnce">player/oxygen/item-once.png</file>
         <file alias="sequential">player/oxygen/sequential.png</file>
+        <file alias="loading">player/oxygen/loading.gif</file>
     </qresource>
     <qresource prefix="/languages">
         <file alias="ar">language/ar.png</file>

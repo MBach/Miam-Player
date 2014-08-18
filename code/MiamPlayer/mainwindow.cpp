@@ -545,6 +545,7 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
 		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		if (state == QMediaPlayer::StoppedState) {
+			seekSlider->setValue(0);
 			timeLabel->setTime(0, 0);
 		}
 	}

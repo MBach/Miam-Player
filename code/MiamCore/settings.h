@@ -7,6 +7,13 @@
 
 #include "miamcore_global.h"
 
+/**
+ * \brief		Settings class contains all relevant pairs of (keys, values) used by Miam-Player.
+ * \details		This class implements the Singleton pattern. Instead of using standard "this->value(QString)", lots of methods
+ * are built on-top of it. It keeps the code easy to read and some important enums are shared between plugins too.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY Settings : public QSettings
 {
 	Q_OBJECT
@@ -14,7 +21,7 @@ class MIAMCORE_LIBRARY Settings : public QSettings
 private:
 	/** The unique instance of this class. */
 	static Settings *settings;
-	
+
 	/** Private constructor. */
 	Settings(const QString &organization = "MmeMiamMiam",
 			 const QString &application = "MiamPlayer");

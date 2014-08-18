@@ -169,7 +169,7 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
 	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
-	_mainWindow->mediaPlayer().data()->addRemotePlayer(remoteMediaPlayerPlugin->name(), remoteMediaPlayerPlugin->player());
+	_mainWindow->mediaPlayer().data()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)

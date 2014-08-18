@@ -12,6 +12,12 @@ class VlcMedia;
 class VlcMediaPlayer;
 struct libvlc_media_t;
 
+/**
+ * \brief The MediaPlayer class is a central class which controls local and remote sources.
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY MediaPlayer : public QObject
 {
 	Q_OBJECT
@@ -28,7 +34,7 @@ private:
 public:
 	explicit MediaPlayer(QObject *parent = 0);
 
-	void addRemotePlayer(const QString &id, RemoteMediaPlayer *remotePlayer) { _remotePlayers.insert(id, remotePlayer); }
+	void addRemotePlayer(RemoteMediaPlayer *remotePlayer);
 
 	QMediaPlaylist * playlist();
 	void setPlaylist(QMediaPlaylist *playlist);
@@ -44,6 +50,9 @@ public:
 	void setMute(bool b) const;
 
 	void seek(float pos);
+
+private:
+	void createLocalConnections();
 
 public slots:
 	/** Pause current playing track. */
@@ -70,23 +79,18 @@ public slots:
 	/** Activate or desactive audio output. */
 	void toggleMute() const;
 
+protected:
+	RemoteMediaPlayer * remoteMediaPlayer(const QUrl &track, bool autoConnect = true);
+
 private slots:
 	void convertMedia(libvlc_media_t *);
+	void disconnectPlayers(bool isLocal);
 
 signals:
 	void currentMediaChanged(const QMediaContent &);
 	void mediaStatusChanged(QMediaPlayer::MediaStatus);
 	void positionChanged(qint64 pos, qint64 duration);
 	void stateChanged(QMediaPlayer::State);
-
-	/// XXX: test
-	void aboutToPauseRemoteWebPlayer();
-	void aboutToPlayRemoteWebPlayer(const QUrl &track);
-	void aboutToResumeRemoteWebPlayer(const QUrl &track);
-	void aboutToSeekRemoteWebPlayer(float position);
-	void aboutToStopWebPlayer();
-	void remotePositionChanged(qint64 pos, qint64 duration);
-	void setVolumeRemote(int v);
 };
 
 #endif // MEDIAPLAYER_H

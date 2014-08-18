@@ -7,6 +7,8 @@
 
 /**
  * \brief The SqlDatabase class uses SQLite to store few but useful tables for tracks, playlists, etc.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class MIAMCORE_LIBRARY SqlDatabase : public QSqlDatabase
 {
