@@ -16,6 +16,8 @@ public:
 	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;
 
 	virtual RemoteMediaPlayer * player() const = 0;
+
+	virtual void sync() const = 0;
 };
 QT_BEGIN_NAMESPACE
 
