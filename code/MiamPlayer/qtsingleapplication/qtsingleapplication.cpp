@@ -202,7 +202,7 @@ QString QtSingleApplication::id() const
 
   \sa activateWindow(), messageReceived()
 */
-void QtSingleApplication::setActivationWindow(MainWindow* aw, bool activateOnMessage)
+void QtSingleApplication::setActivationWindow(QMainWindow *aw, bool activateOnMessage)
 {
 	actWin = aw;
 	if (activateOnMessage) {
@@ -215,7 +215,8 @@ void QtSingleApplication::setActivationWindow(MainWindow* aw, bool activateOnMes
 void QtSingleApplication::aboutToSendArgs(const QString &message)
 {
 	this->activateWindow();
-	actWin->processArgs(message.split(";"));
+	//actWin->processArgs(message.split(";"));
+	emit sendArgs(message.split(";"));
 }
 
 /*!

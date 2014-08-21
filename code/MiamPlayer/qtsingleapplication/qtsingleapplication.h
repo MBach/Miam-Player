@@ -42,7 +42,7 @@
 #define QTSINGLEAPPLICATION_H
 
 #include <QApplication>
-#include "mainwindow.h"
+#include <QMainWindow>
 
 class QtLocalPeer;
 
@@ -69,7 +69,7 @@ class QT_QTSINGLEAPPLICATION_EXPORT QtSingleApplication : public QApplication
 private:
 	void sysInit(const QString &appId = QString());
 	QtLocalPeer *peer;
-	MainWindow *actWin;
+	QMainWindow *actWin;
 
 public:
 	QtSingleApplication(int &argc, char **argv, bool GUIenabled = true);
@@ -78,7 +78,7 @@ public:
 	bool isRunning();
 	QString id() const;
 
-	void setActivationWindow(MainWindow *aw, bool activateOnMessage = true);
+	void setActivationWindow(QMainWindow *aw, bool activateOnMessage = true);
 	QWidget* activationWindow() const;
 
 public slots:
@@ -96,6 +96,7 @@ signals:
 		\sa sendMessage(), setActivationWindow(), activateWindow()
 	*/
 	void messageReceived(const QString &message);
+	void sendArgs(const QStringList &);
 };
 
 #endif // QTSINGLEAPPLICATION_H

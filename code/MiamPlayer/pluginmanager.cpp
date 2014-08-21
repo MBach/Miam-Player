@@ -170,7 +170,7 @@ void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteM
 {
 	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
 	_mainWindow->mediaPlayer().data()->addRemotePlayer(remoteMediaPlayerPlugin->player());
-	remoteMediaPlayerPlugin->sync();
+	//remoteMediaPlayerPlugin->sync();
 }
 
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)

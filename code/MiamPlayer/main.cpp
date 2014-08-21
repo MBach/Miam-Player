@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 
 	app.setStyle(new MiamStyle());
 	MainWindow *window = new MainWindow;
+	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 	app.setActivationWindow(window);
 
 	Settings *settings = Settings::getInstance();
