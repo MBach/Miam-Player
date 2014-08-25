@@ -17,7 +17,7 @@ public:
 
 	virtual RemoteMediaPlayer * player() const = 0;
 
-	virtual void sync() const = 0;
+	virtual void sync(const QString &token) const = 0;
 };
 QT_BEGIN_NAMESPACE
 

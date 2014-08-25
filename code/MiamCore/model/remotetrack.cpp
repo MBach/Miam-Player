@@ -27,6 +27,9 @@ void RemoteTrack::setAlbum(const QString &album) { _album = album; }
 QString RemoteTrack::artist() const { return _artist; }
 void RemoteTrack::setArtist(const QString &artist) { _artist = artist; }
 
+QString RemoteTrack::disc() const { return _disc; }
+void RemoteTrack::setDisc(const QString &disc) { _disc = disc; }
+
 QIcon RemoteTrack::icon() const { return _icon; }
 void RemoteTrack::setIcon(const QIcon &icon) { _icon = icon; }
 
