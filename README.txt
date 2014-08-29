@@ -20,9 +20,11 @@ Right now, what should be improved in this awesome-but-you-dont-know-yet player?
 
 This software was developped using Qt5 and Taglib
 
-To download it: https://sourceforge.net/projects/miammusicplayer/files/
-Project page: https://sourceforge.net/projects/miammusicplayer/
-Github page: http://mbach.github.io/Miam-Player/ (see my other repositories for the plugins)
+Official Website: http://miam-player.org/
+Wiki: http://miam-player.org/wiki/index.php?title=Main_Page
+Project page on SourceForge: https://sourceforge.net/projects/miammusicplayer/
+Download page: http://miam-player.org/downloads/
+Download page (mirror on SourceForge): https://sourceforge.net/projects/miammusicplayer/files/
 
 Resources used to develop this software:
 # Qt: http://qt.digia.com/
