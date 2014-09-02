@@ -1,9 +1,0 @@
-digraph "code/MiamPlayer/tageditor" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_70ac59aa3659d5e80014ce75245c5a8c {
-    graph [ bgcolor="#ddddee", pencolor="black", label="MiamPlayer" fontname="Helvetica", fontsize="10", URL="dir_70ac59aa3659d5e80014ce75245c5a8c.html"]
-  dir_5d04ea92810ab4c3288a002579f7b2ce [shape=box, label="tageditor", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_5d04ea92810ab4c3288a002579f7b2ce.html"];
-  }
-}

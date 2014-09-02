@@ -1,9 +1,0 @@
-digraph "code/MiamCore/model" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_8286ec72a985a42cf2222f74d6469280 {
-    graph [ bgcolor="#ddddee", pencolor="black", label="MiamCore" fontname="Helvetica", fontsize="10", URL="dir_8286ec72a985a42cf2222f74d6469280.html"]
-  dir_307cbceb1dad0ad2c44b4519d072de27 [shape=box, label="model", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_307cbceb1dad0ad2c44b4519d072de27.html"];
-  }
-}

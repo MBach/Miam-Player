@@ -1,9 +1,0 @@
-digraph "code/MiamCore/3rdparty/taglib" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_5f54856071fafa3ed28e7ecf23a68007 {
-    graph [ bgcolor="#ddddee", pencolor="black", label="3rdparty" fontname="Helvetica", fontsize="10", URL="dir_5f54856071fafa3ed28e7ecf23a68007.html"]
-  dir_c9d57739e2e9a548a47373881496d899 [shape=box, label="taglib", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_c9d57739e2e9a548a47373881496d899.html"];
-  }
-}

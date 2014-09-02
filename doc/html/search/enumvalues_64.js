@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['doesnotcontainpacket',['DoesNotContainPacket',['../class_tag_lib_1_1_ogg_1_1_page.html#a8fd971051aba938abb6263a5509c4bb4a223eb5ed1bbe4ec766245332f5cff3b9',1,'TagLib::Ogg::Page']]],
-  ['dualchannel',['DualChannel',['../class_tag_lib_1_1_m_p_e_g_1_1_header.html#ab3949f90470662a661e70d37751702f4adc1ed3881d34c258bf6e20e9e66d7270',1,'TagLib::MPEG::Header']]],
-  ['duringperformance',['DuringPerformance',['../class_tag_lib_1_1_a_s_f_1_1_picture.html#aacb0ee9f95e180575ea371bc8a4497aea4e15e19cdcf2b94b58836bb55064f452',1,'TagLib::ASF::Picture::DuringPerformance()'],['../class_tag_lib_1_1_i_d3v2_1_1_attached_picture_frame.html#a4b18580229d68adaefac1af09654f9a4a960c88b17b11d3c94e7a6af0e2c1f6f0',1,'TagLib::ID3v2::AttachedPictureFrame::DuringPerformance()'],['../class_tag_lib_1_1_f_l_a_c_1_1_picture.html#a326e413653566629f9641b09416538fea7fc11f80c24db6182dae79eb6428e07e',1,'TagLib::FLAC::Picture::DuringPerformance()']]],
-  ['duringrecording',['DuringRecording',['../class_tag_lib_1_1_a_s_f_1_1_picture.html#aacb0ee9f95e180575ea371bc8a4497aea651ef45fbd2b1f3818ed3b38bc4011f4',1,'TagLib::ASF::Picture::DuringRecording()'],['../class_tag_lib_1_1_i_d3v2_1_1_attached_picture_frame.html#a4b18580229d68adaefac1af09654f9a4ab1a031b2d216105a65d15ac2bc11c742',1,'TagLib::ID3v2::AttachedPictureFrame::DuringRecording()'],['../class_tag_lib_1_1_f_l_a_c_1_1_picture.html#a326e413653566629f9641b09416538fea76c8a258d7af4bbd1eab64bf46aabb46',1,'TagLib::FLAC::Picture::DuringRecording()']]]
-];

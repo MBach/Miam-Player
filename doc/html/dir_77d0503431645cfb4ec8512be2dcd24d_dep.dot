@@ -1,9 +1,0 @@
-digraph "code/MiamPlayer/library" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_70ac59aa3659d5e80014ce75245c5a8c {
-    graph [ bgcolor="#ddddee", pencolor="black", label="MiamPlayer" fontname="Helvetica", fontsize="10", URL="dir_70ac59aa3659d5e80014ce75245c5a8c.html"]
-  dir_77d0503431645cfb4ec8512be2dcd24d [shape=box, label="library", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_77d0503431645cfb4ec8512be2dcd24d.html"];
-  }
-}

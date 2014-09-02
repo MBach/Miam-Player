@@ -1,7 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node1 [label="TagLib::FileRef::FileType\lResolver",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$class_tag_lib_1_1_file_ref_1_1_file_type_resolver.html",tooltip="A class for pluggable file type resolution. "];
-}
