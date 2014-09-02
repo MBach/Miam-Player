@@ -58,6 +58,9 @@ public slots:
 	/** Pause current playing track. */
 	void pause();
 
+	/** Play current track in the playlist. */
+	void play();
+
 	/** Seek backward in the current playing track for a small amount of time. */
 	void seekBackward();
 
@@ -69,9 +72,6 @@ public slots:
 
 	/** Change the current track. */
 	void skipForward();
-
-	/** Play current track in the playlist. */
-	void play();
 
 	/** Stop current track in the playlist. */
 	void stop();

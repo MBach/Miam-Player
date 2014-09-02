@@ -13,6 +13,7 @@ RemoteTrack::RemoteTrack(const RemoteTrack &remoteTrack) :
 	_id = remoteTrack.id();
 	_length = remoteTrack.length();
 	_rating = remoteTrack.rating();
+	_source = remoteTrack.source();
 	_title = remoteTrack.title();
 	_trackNumber = remoteTrack.trackNumber();
 	_url = remoteTrack.url();
@@ -41,6 +42,9 @@ void RemoteTrack::setLength(const QString &length) { _length = length; }
 
 int RemoteTrack::rating() const { return _rating; }
 void RemoteTrack::setRating(int rating) { _rating = rating; }
+
+QString RemoteTrack::source() const { return _source; }
+void RemoteTrack::setSource(const QString &source) { _source = source; }
 
 QString RemoteTrack::title() const { return _title; }
 void RemoteTrack::setTitle(const QString &title) { _title = title; }

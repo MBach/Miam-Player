@@ -33,10 +33,10 @@ public:
 
 	//void invalidate(const QModelIndex &index);
 
-	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 	/** Redefined to always display the same height for albums, even for those without one. */
-	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
+	virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 	inline void setIconOpacity(qreal opacity) {
 		_iconOpacity = opacity;

@@ -10,7 +10,7 @@
 #include <QtDebug>
 
 TagLineEdit::TagLineEdit(QWidget *parent) :
-	LineEdit(parent), autoTransform(false), _timerTag(new QTimer(this))
+	LineEdit(parent), _autoTransform(false), _timerTag(new QTimer(this))
 {
 	_timerTag->setInterval(1000);
 	_timerTag->setSingleShot(true);
@@ -26,17 +26,11 @@ TagLineEdit::TagLineEdit(QWidget *parent) :
 
 void TagLineEdit::addTag(const QString &tag)
 {
-	bool found = false;
 	foreach (TagButton *button, _tags) {
 		if (button->text() == tag.trimmed().toLower()) {
-			found = true;
-			break;
+			// It useless to add a tag more than once (IMHO)
+			return;
 		}
-	}
-
-	// It useless to add a tag more than once (IMHO)
-	if (found) {
-		return;
 	}
 
 	TagButton *t = new TagButton(tag.trimmed(), this);
@@ -48,26 +42,68 @@ void TagLineEdit::addTag(const QString &tag)
 	});
 	_tags.append(t);
 	this->layout()->addWidget(t);
+	double spaceWidth = qMax((double) fontMetrics().width(' '), 1.0);
+	int fakeSpaces = ceil(t->width() / spaceWidth);
+	for (int i = 0; i < fakeSpaces; i++) {
+		this->setText(this->text() + " ");
+	}
+}
+
+void TagLineEdit::backspace()
+{
+	//int oldPos = cursorPosition();
+	cursorBackward(false);
+	//int newPos = cursorPosition();
+	foreach (TagButton *button, _tags) {
+		//QRect geo = button->geometry();
+		QPoint cursorCenter = button->mapFromParent(cursorRect().center());
+		qDebug() << button->geometry() << cursorRect() << cursorCenter;
+		if (button->geometry().contains(cursorCenter)) {
+
+		}
+	}
+	//QRect r = cursorRect();
+	if (false) {
+
+	} else {
+		cursorForward(false);
+		LineEdit::backspace();
+	}
 }
 
 bool TagLineEdit::isAutoTransform() const
 {
-	return autoTransform;
+	return _autoTransform;
 }
 
 void TagLineEdit::setAutoTransform(bool enabled)
 {
-	autoTransform = enabled;
+	_autoTransform = enabled;
 }
 
 bool TagLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
-	if (autoTransform) {
+	if (_autoTransform) {
 		if (obj == this && event->type() == QEvent::KeyRelease) {
 			_timerTag->start();
 		} else if (obj == this && event->type() == QEvent::KeyPress) {
 			if (_timerTag->isActive()) {
 				_timerTag->start();
+			}
+		}
+	} else {
+		if (obj == this && event->type() == QEvent::KeyPress) {
+			QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+			if (keyEvent->key() == Qt::Key_Backspace) {
+				qDebug() << "delete tag or char";
+				// Check if char left to cursor is a char
+
+				//foreach (TagButton *button, _tags) {
+				//	qDebug() << button->geometry() << oldPos << newPos;
+				//}
+				//qDebug() << "width of space" <<
+
+				qDebug() << "current cursor pos" << cursorPosition();
 			}
 		}
 	}
@@ -84,7 +120,7 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 	QStylePainter p(this);
 
 	// Draw frame
-	QStyleOptionFrameV2 frame;
+	QStyleOptionFrameV3 frame;
 	this->initStyleOption(&frame);
 	QPalette palette = QApplication::palette();
 	p.setPen(palette.mid().color());
@@ -94,9 +130,9 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 	// Compute cursor position
 	QRect contentsRect = this->style()->subElementRect(QStyle::SE_LineEditContents, &frame);
 	int w = 0;
-	foreach (TagButton *tag, _tags) {
-		w += tag->width() + this->layout()->spacing();
-	}
+	//foreach (TagButton *tag, _tags) {
+	//	w += tag->width() + this->layout()->spacing();
+	//}
 	QRect rText = contentsRect.adjusted(w + 2, 0, 0, 0);
 	if (w == 0 && !hasFocus()) {
 		p.setPen(palette.mid().color());

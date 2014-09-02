@@ -60,6 +60,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
 		QStandardItem *yearItem = new QStandardItem(track.year());
 		QStandardItem *iconItem = new QStandardItem;
 		iconItem->setIcon(track.icon());
+		iconItem->setToolTip(track.source());
 		QUrl url(track.url());
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
@@ -95,6 +96,7 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	QStandardItem *yearItem = new QStandardItem(fileHelper.year());
 	QStandardItem *iconItem = new QStandardItem(tr("Local"));
 	iconItem->setIcon(QIcon(":/icons/computer"));
+	iconItem->setToolTip(tr("Local file"));
 
 	trackItem->setTextAlignment(Qt::AlignCenter);
 	lengthItem->setTextAlignment(Qt::AlignCenter);

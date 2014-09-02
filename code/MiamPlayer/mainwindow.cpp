@@ -243,7 +243,7 @@ void MainWindow::setupActions()
 	connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
 	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
 		this->showTagEditor();
-		tagEditor->addUrlsToEditor(tracks);
+		tagEditor->addItemsToEditor(tracks);
 	});
 
 	// Media buttons and their shortcuts

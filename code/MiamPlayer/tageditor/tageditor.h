@@ -11,6 +11,14 @@
 
 #include <QUrl>
 
+/**
+ * \brief		The TagEditor class is the main class for editing metadata inside this soft.
+ * \details		This Widget displays selected tracks in table form. One can interact by selecting one or multiples files at the same time.
+ *				Relevant information are automatically collected and displayed in comboboxes. It is possible to tag lots of files in very
+ *				few mouse clicks. It is also possible to load / extract covers from files.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class TagEditor : public QWidget, public Ui::TagEditor, public SelectedTracksModel
 {
 	Q_OBJECT
@@ -55,7 +63,7 @@ public slots:
 	void addItemsToEditor(const QStringList &tracks);
 
 	/** Wrapper for addItemsToEditor. */
-	void addUrlsToEditor(const QList<QUrl> &tracks);
+	void addItemsToEditor(const QList<QUrl> &tracks);
 
 	/** Clears all rows and comboboxes. */
 	void clear();

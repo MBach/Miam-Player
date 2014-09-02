@@ -7,7 +7,6 @@ class ScrollBar : public QScrollBar
 {
 	Q_OBJECT
 private:
-	bool _hasVerticalFrame;
 	int _isDown;
 
 	bool _top, _left, _bottom, _right;

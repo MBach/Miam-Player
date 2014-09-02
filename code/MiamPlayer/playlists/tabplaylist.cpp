@@ -9,7 +9,7 @@
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _tabIndex(-1), _closePlaylistPopup(new ClosePlaylistPopup(this)), _mainWindow(NULL)
+	QTabWidget(parent), _closePlaylistPopup(new ClosePlaylistPopup(this)), _mainWindow(NULL)
 {
 	this->setTabBar(new TabBar(this));
 	messageBox = new TracksNotFoundMessageBox(this);
@@ -75,7 +75,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 TabPlaylist::~TabPlaylist()
 {
-	
+
 }
 
 /** Get the current playlist. */

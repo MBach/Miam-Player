@@ -3,6 +3,10 @@
 
 #include <QProgressBar>
 
+/// XXX: DELETE or not?
+/// It is not really following Windows 8 UI guidelines. What about other OS?
+/// Moreover, one cannot interact with Library when full rescan is happening
+/// It should be replace by a thin horizontal progress bar in the bottom when library is populating!
 class CircleProgressBar : public QProgressBar
 {
 	Q_OBJECT

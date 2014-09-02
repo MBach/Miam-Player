@@ -34,7 +34,7 @@ protected:
 
 signals:
 	/** Tell the view to toggle covers. */
-	void displayItemDelegate(bool);
+	void aboutToDisplayItemDelegate(bool);
 };
 
 #endif // LIBRARYSCROLLBAR_H

@@ -14,7 +14,7 @@ LibraryScrollBar::LibraryScrollBar(QWidget *parent)
 void LibraryScrollBar::mouseMoveEvent(QMouseEvent *e)
 {
 	if (_hasNotEmittedYet) {
-		emit displayItemDelegate(false);
+		emit aboutToDisplayItemDelegate(false);
 		_hasNotEmittedYet = false;
 	}
 	ScrollBar::mouseMoveEvent(e);
@@ -24,7 +24,7 @@ void LibraryScrollBar::mouseMoveEvent(QMouseEvent *e)
 void LibraryScrollBar::mousePressEvent(QMouseEvent *e)
 {
 	if (_hasNotEmittedYet) {
-		emit displayItemDelegate(false);
+		emit aboutToDisplayItemDelegate(false);
 		_hasNotEmittedYet = false;
 	}
 	ScrollBar::mousePressEvent(e);
@@ -34,7 +34,7 @@ void LibraryScrollBar::mousePressEvent(QMouseEvent *e)
 void LibraryScrollBar::mouseReleaseEvent(QMouseEvent *e)
 {
 	if (!_hasNotEmittedYet) {
-		emit displayItemDelegate(true);
+		emit aboutToDisplayItemDelegate(true);
 		_hasNotEmittedYet = true;
 	}
 	ScrollBar::mouseReleaseEvent(e);

@@ -13,8 +13,6 @@ class PlaylistItemDelegate : public MiamStyledItemDelegate
 private:
 	Playlist *_playlist;
 
-	QMap<int, StarEditor*> _editors;
-
 public:
 	enum EditMode { Editable, NoStarsYet, ReadOnly };
 

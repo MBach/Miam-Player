@@ -8,11 +8,10 @@ class TagLineEdit : public LineEdit
 {
 	Q_OBJECT
 
-	Q_PROPERTY(bool autoTransform READ isAutoTransform WRITE setAutoTransform)
+	Q_PROPERTY(bool _autoTransform READ isAutoTransform WRITE setAutoTransform)
 
 private:
-	bool autoTransform;
-
+	bool _autoTransform;
 	QList<TagButton*> _tags;
 	QTimer *_timerTag;
 
@@ -20,6 +19,8 @@ public:
 	explicit TagLineEdit(QWidget *parent = 0);
 
 	void addTag(const QString &tag);
+
+	void backspace();
 
 	bool isAutoTransform() const;
 

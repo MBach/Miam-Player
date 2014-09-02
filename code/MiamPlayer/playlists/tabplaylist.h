@@ -29,9 +29,6 @@ private:
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
-	/** Test: used to simulate a callback.*/
-	int _tabIndex;
-
 	QWeakPointer<MediaPlayer> _mediaPlayer;
 	ClosePlaylistPopup *_closePlaylistPopup;
 	MainWindow *_mainWindow;
@@ -39,7 +36,7 @@ private:
 public:
 	/** Default constructor. */
 	TabPlaylist(QWidget *parent = 0);
-	
+
 	virtual ~TabPlaylist();
 
 	/** Get the current playlist. */

@@ -190,7 +190,7 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 }
 
 /** Wrapper for addItemsToEditor. */
-void TagEditor::addUrlsToEditor(const QList<QUrl> &tracks)
+void TagEditor::addItemsToEditor(const QList<QUrl> &tracks)
 {
 	QStringList localFiles;
 	foreach (QUrl url, tracks) {
