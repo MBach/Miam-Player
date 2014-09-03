@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QStylePainter>
 
+#include <QtDebug>
+
 LineEdit::LineEdit(QWidget *parent) :
 	QLineEdit(parent), _timer(new QTimer(this)), _fps(0)
 {
@@ -37,11 +39,11 @@ void LineEdit::drawCursor(QStylePainter *painter, const QRect &rText)
 {
 	QPoint pTop, pBottom;
 	pTop = rText.topLeft();
-	pTop.rx() += fontMetrics().width(text(), cursorPosition());
+	int fm = fontMetrics().width(text(), cursorPosition());
+	pTop.rx() += fm;
 	pBottom = rText.bottomLeft();
-	pBottom.rx() += fontMetrics().width(text(), cursorPosition());
+	pBottom.rx() += fm;
 	_fade.setCurrentTime(_fps * _timer->interval());
-
 	painter->setPen(_fade.currentValue().value<QColor>());
 	painter->drawLine(pTop, pBottom);
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>502</width>
-    <height>258</height>
+    <height>292</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -24,12 +24,18 @@
           <property name="text">
            <string>#Track</string>
           </property>
+          <property name="column" stdset="0">
+           <number>6</number>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QToolButton" name="artistTB">
           <property name="text">
            <string>Artist</string>
+          </property>
+          <property name="column" stdset="0">
+           <number>3</number>
           </property>
          </widget>
         </item>
@@ -38,12 +44,18 @@
           <property name="text">
            <string>Album</string>
           </property>
+          <property name="column" stdset="0">
+           <number>5</number>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QToolButton" name="discTB">
           <property name="text">
            <string>Disc</string>
+          </property>
+          <property name="column" stdset="0">
+           <number>7</number>
           </property>
          </widget>
         </item>
@@ -52,6 +64,9 @@
           <property name="text">
            <string>ArtistAlbum</string>
           </property>
+          <property name="column" stdset="0">
+           <number>4</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -59,12 +74,18 @@
           <property name="text">
            <string>Title</string>
           </property>
+          <property name="column" stdset="0">
+           <number>2</number>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QToolButton" name="yearTB">
           <property name="text">
            <string>Year</string>
+          </property>
+          <property name="column" stdset="0">
+           <number>8</number>
           </property>
          </widget>
         </item>
@@ -84,7 +105,7 @@
        </layout>
       </item>
       <item>
-       <widget class="TagLineEdit" name="tagPattern">
+       <widget class="TagLineEdit" name="tagToFileLineEdit">
         <property name="font">
          <font>
           <pointsize>16</pointsize>
@@ -142,12 +163,18 @@
           <property name="text">
            <string>#Track</string>
           </property>
+          <property name="column" stdset="0">
+           <number>6</number>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QToolButton" name="artistTB_2">
           <property name="text">
            <string>Artist</string>
+          </property>
+          <property name="column" stdset="0">
+           <number>3</number>
           </property>
          </widget>
         </item>
@@ -156,12 +183,18 @@
           <property name="text">
            <string>Album</string>
           </property>
+          <property name="column" stdset="0">
+           <number>5</number>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QToolButton" name="discTB_2">
           <property name="text">
            <string>Disc</string>
+          </property>
+          <property name="column" stdset="0">
+           <number>7</number>
           </property>
          </widget>
         </item>
@@ -170,6 +203,9 @@
           <property name="text">
            <string>ArtistAlbum</string>
           </property>
+          <property name="column" stdset="0">
+           <number>4</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -177,12 +213,18 @@
           <property name="text">
            <string>Title</string>
           </property>
+          <property name="column" stdset="0">
+           <number>2</number>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QToolButton" name="yearTB_2">
           <property name="text">
            <string>Year</string>
+          </property>
+          <property name="column" stdset="0">
+           <number>8</number>
           </property>
          </widget>
         </item>
@@ -202,7 +244,7 @@
        </layout>
       </item>
       <item>
-       <widget class="TagLineEdit" name="tagPattern_2">
+       <widget class="TagLineEdit" name="fileToTagLineEdit">
         <property name="font">
          <font>
           <pointsize>16</pointsize>

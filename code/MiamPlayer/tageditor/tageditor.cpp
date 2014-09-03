@@ -33,8 +33,8 @@ TagEditor::TagEditor(QWidget *parent) :
 
 	this->setAcceptDrops(true);
 
-	tagConverter = new TagConverter(this);
 	tagEditorWidget->init();
+	tagConverter = new TagConverter(tagEditorWidget);
 
 	int i = 1;
 	combos.insert(++i, titleComboBox);
@@ -53,6 +53,7 @@ TagEditor::TagEditor(QWidget *parent) :
 		combo->addItem(tr("(Delete)"));
 		combo->setCurrentIndex(-1);
 	}
+
 	// Quit this widget when a request was send from this button
 	connect(closeTagEditorButton, &QPushButton::clicked, this, &TagEditor::close);
 

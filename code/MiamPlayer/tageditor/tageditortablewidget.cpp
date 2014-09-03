@@ -84,12 +84,19 @@ void TagEditorTableWidget::resetTable()
 	this->sortItems(1);
 }
 
+void TagEditorTableWidget::updateCellData(int row, int column, const QString &text)
+{
+	QTableWidgetItem *i = this->item(row, column);
+	i->setText(text);
+	i->setData(MODIFIED, true);
+}
+
 void TagEditorTableWidget::updateColumnData(int column, const QString &text)
 {
 	foreach (QModelIndex index, selectionModel()->selectedRows(column)) {
-		QTableWidgetItem *item = itemFromIndex(index);
-		item->setText(text);
-		item->setData(MODIFIED, true);
+		QTableWidgetItem *i = this->itemFromIndex(index);
+		i->setText(text);
+		i->setData(MODIFIED, true);
 	}
 }
 

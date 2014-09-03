@@ -2,7 +2,6 @@
 #include "settings.h"
 
 #include <QApplication>
-#include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QStylePainter>
 #include <QStyleOptionFrameV3>
@@ -16,16 +15,25 @@ TagLineEdit::TagLineEdit(QWidget *parent) :
 	_timerTag->setSingleShot(true);
 
 	connect(_timerTag, &QTimer::timeout, this, &TagLineEdit::createTag);
+	connect(this, &TagLineEdit::textChanged, this, [=](const QString &text) {
+		if (text.isEmpty()) {
+			foreach (TagButton *tag, _tags) {
+				tag->deleteLater();
+			}
+			_tags.clear();
+		}
+	});
 
 	this->installEventFilter(this);
-
-	QHBoxLayout *b = new QHBoxLayout(this);
-	b->setContentsMargins(0, 0, 0, 1);
-	b->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 }
 
-void TagLineEdit::addTag(const QString &tag)
+void TagLineEdit::addTag(const QString &tag, int column)
 {
+	if (tag.trimmed().isEmpty()) {
+		return;
+	}
+	qDebug() << Q_FUNC_INFO << tag;
+
 	foreach (TagButton *button, _tags) {
 		if (button->text() == tag.trimmed().toLower()) {
 			// It useless to add a tag more than once (IMHO)
@@ -34,39 +42,77 @@ void TagLineEdit::addTag(const QString &tag)
 	}
 
 	TagButton *t = new TagButton(tag.trimmed(), this);
+	if (column != -1) {
+		t->setColumn(column);
+	}
 	t->setMaximumHeight(this->height() - 2);
+
+	// Move all tag buttons, next to the one that is about to be closed, to the left
 	connect(t->closeButton(), &QToolButton::clicked, this, [=]() {
+
+		qDebug() << "about to remove spaces" << t->position() << t->spaceCount();
+		this->setText(text().remove(t->position(), t->spaceCount()));
+		foreach (TagButton *otherTag, _tags) {
+			if (otherTag != t && otherTag->position() > t->position()) {
+				int dx = fontMetrics().width(" ") * t->spaceCount();
+				otherTag->move(otherTag->x() - dx, 0);
+			}
+		}
 		_tags.removeOne(t);
 		t->deleteLater();
 		emit taglistHasChanged(this->toStringList());
 	});
 	_tags.append(t);
-	this->layout()->addWidget(t);
-	double spaceWidth = qMax((double) fontMetrics().width(' '), 1.0);
-	int fakeSpaces = ceil(t->width() / spaceWidth);
-	for (int i = 0; i < fakeSpaces; i++) {
-		this->setText(this->text() + " ");
-	}
+	qDebug() << "added tag" << tag;
+	this->setFocus();
+
+	// Unfortunately, we have to wait that a QShowEvent is emitted to have correct size of the Widget
+	connect(t, &TagButton::shown, this, &TagLineEdit::insertSpaces);
+	t->move(cursorRect().right(), 0);
+	t->show();
 }
 
+/** Redefined to be able to move tag buttons. */
 void TagLineEdit::backspace()
 {
-	//int oldPos = cursorPosition();
-	cursorBackward(false);
-	//int newPos = cursorPosition();
-	foreach (TagButton *button, _tags) {
-		//QRect geo = button->geometry();
-		QPoint cursorCenter = button->mapFromParent(cursorRect().center());
-		qDebug() << button->geometry() << cursorRect() << cursorCenter;
-		if (button->geometry().contains(cursorCenter)) {
+	bool oneTagNeedToBeRemoved = false;
+	TagButton *tag = NULL;
+	QPoint cursorCenter;
 
+	cursorBackward(false);
+	int dx = fontMetrics().width(text().at(cursorPosition()));
+	foreach (TagButton *button, _tags) {
+		cursorCenter = cursorRect().center();
+		// One tag button need to be removed
+		if (button->frameGeometry().contains(cursorCenter)) {
+			oneTagNeedToBeRemoved = true;
+			tag = button;
+		}
+
+		// Tags need to be moved to the left
+		if (button->x() > cursorCenter.x()) {
+			button->move(button->x() - dx, 0);
+			button->setPosition(cursorPosition());
 		}
 	}
-	//QRect r = cursorRect();
-	if (false) {
 
+	cursorForward(false);
+	if (oneTagNeedToBeRemoved) {
+		for (int i = 0; i < tag->spaceCount(); i++) {
+			LineEdit::backspace();
+		}
+
+		dx = fontMetrics().width(" ") * tag->spaceCount();
+		foreach (TagButton *button, _tags) {
+			if (button != tag && button->x() > cursorCenter.x()) {
+				button->move(button->x() - dx, 0);
+				button->setPosition(cursorPosition());
+			}
+		}
+		_tags.removeOne(tag);
+		delete tag;
+		emit taglistHasChanged(this->toStringList());
 	} else {
-		cursorForward(false);
 		LineEdit::backspace();
 	}
 }
@@ -91,27 +137,73 @@ bool TagLineEdit::eventFilter(QObject *obj, QEvent *event)
 				_timerTag->start();
 			}
 		}
-	} else {
-		if (obj == this && event->type() == QEvent::KeyPress) {
-			QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-			if (keyEvent->key() == Qt::Key_Backspace) {
-				qDebug() << "delete tag or char";
-				// Check if char left to cursor is a char
-
-				//foreach (TagButton *button, _tags) {
-				//	qDebug() << button->geometry() << oldPos << newPos;
-				//}
-				//qDebug() << "width of space" <<
-
-				qDebug() << "current cursor pos" << cursorPosition();
-			}
+	} //else {
+	if (obj == this && event->type() == QEvent::KeyPress) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent->key() == Qt::Key_Backspace) {
+			this->backspace();
+			// Ate Backspace key event
+			return true;
 		}
 	}
-	/// Todo !autoTransform
-	/*if (obj == this && event->type() == QEvent::FocusIn) {
+	//}
+	return LineEdit::eventFilter(obj, event);
+}
 
-	}*/
-	return QLineEdit::eventFilter(obj, event);
+void TagLineEdit::keyPressEvent(QKeyEvent *event)
+{
+	if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
+		/// TODO
+		if (QGuiApplication::keyboardModifiers().testFlag(Qt::ControlModifier)) {
+			qDebug() << "cursorWordForward / backward";
+		}
+		LineEdit::keyPressEvent(event);
+		foreach (TagButton *t, _tags) {
+			if (t->frameGeometry().contains(cursorRect().center())) {
+				if (event->key() == Qt::Key_Left) {
+					cursorBackward(false, t->spaceCount() - 1);
+				} else {
+					cursorForward(false, t->spaceCount() - 1);
+				}
+				break;
+			}
+		}
+	} else {
+		QString k = event->text();
+		int w = fontMetrics().width(k);
+		if (event->key() == Qt::Key_Delete) {
+			w = -w;
+		}
+		foreach (TagButton *t, _tags) {
+			if (t->frameGeometry().x() > cursorRect().center().x()) {
+				t->move(t->x() + w, 0);
+			}
+		}
+		LineEdit::keyPressEvent(event);
+	}
+}
+
+/** Redefined to automatically move cursor outside TagButton. */
+void TagLineEdit::mousePressEvent(QMouseEvent *event)
+{
+	LineEdit::mousePressEvent(event);
+	foreach (TagButton *t, _tags) {
+		QRect r = t->frameGeometry();
+		if (r.contains(event->pos())) {
+			if (r.x() + r.width() / 2 >= event->pos().x()) {
+				while (r.contains(cursorRect().center()) && cursorPosition() > 0) {
+					cursorBackward(false);
+					qDebug() << "cursorBackward" << r << cursorRect().center();
+				}
+			} else {
+				while (r.contains(cursorRect().center()) && cursorPosition() < text().length()) {
+					cursorForward(false);
+					qDebug() << "cursorForward" << r << cursorRect().center() << cursorPosition();
+				}
+			}
+			break;
+		}
+	}
 }
 
 /** Redefined to display user input like closable "bubbles". */
@@ -129,22 +221,25 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 
 	// Compute cursor position
 	QRect contentsRect = this->style()->subElementRect(QStyle::SE_LineEditContents, &frame);
-	int w = 0;
-	//foreach (TagButton *tag, _tags) {
-	//	w += tag->width() + this->layout()->spacing();
-	//}
-	QRect rText = contentsRect.adjusted(w + 2, 0, 0, 0);
-	if (w == 0 && !hasFocus()) {
-		p.setPen(palette.mid().color());
-		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, placeholderText());
-	} else {
+	QRect rText = contentsRect.adjusted(2, 0, 0, 0);
+	if (placeholderText().isEmpty() || !placeholderText().isEmpty() && hasFocus()) {
 		p.setPen(palette.text().color());
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
 
 		// Animate cursor is focus is owned by this widget
-		if (hasFocus()) {
+		bool overlap = false;
+		foreach (TagButton *t, _tags) {
+			if (t->frameGeometry().contains(cursorRect().center())) {
+				overlap = true;
+				break;
+			}
+		}
+		if (!overlap && hasFocus()) {
 			this->drawCursor(&p, rText.adjusted(0, 1, 0, -1));
 		}
+	} else {
+		p.setPen(palette.mid().color());
+		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, placeholderText());
 	}
 }
 
@@ -159,10 +254,42 @@ QStringList TagLineEdit::toStringList() const
 
 void TagLineEdit::createTag()
 {
+	qDebug() << Q_FUNC_INFO;
 	if (!this->text().trimmed().isEmpty()) {
 		this->addTag(this->text());
 		this->clear();
-
 		emit taglistHasChanged(this->toStringList());
+	}
+}
+
+void TagLineEdit::insertSpaces()
+{
+	TagButton *t = qobject_cast<TagButton*>(sender());
+	int cx = cursorRect().x();
+	t->setPosition(cursorPosition());
+	int numberOfSpace = 2;
+
+	/// FIXME: appending and not inserting
+	//this->setText(this->text() + "  ");
+	this->setText(this->text().insert(cursorPosition(), "  "));
+
+	cursorForward(false, 2);
+	while (t->frameGeometry().contains(cursorRect().center())) {
+		// this->setText(this->text() + " ");
+		this->setText(this->text().insert(cursorPosition(), " "));
+		cursorForward(false);
+		numberOfSpace++;
+	}
+	t->setMinimumWidth(numberOfSpace * fontMetrics().width(" ") - 5);
+	t->setSpaceCount(numberOfSpace);
+	// qDebug() << "position - numberOfSpace" << t->position() << t->spaceCount();
+	// qDebug() << "t->width()"  << t->width() << text() << "(" << text().size() << ")" << cursorPosition();
+	t->disconnect();
+
+	foreach (TagButton *tag, _tags) {
+		if (t != tag && tag->frameGeometry().x() > cx) {
+			tag->move(tag->x() + fontMetrics().width(" ") * numberOfSpace, 0);
+			//tag->move(tag->x() + t->width(), 0);
+		}
 	}
 }

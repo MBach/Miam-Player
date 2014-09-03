@@ -42,6 +42,8 @@ public:
 
 	void resetTable();
 
+	void updateCellData(int row, int column, const QString &text);
+
 	void updateColumnData(int column, const QString &text);
 
 public slots:
