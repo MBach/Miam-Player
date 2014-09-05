@@ -22,11 +22,15 @@ private:
 public:
 	explicit TagConverter(TagEditorTableWidget *parent);
 
+	void setVisible(bool b);
+
 private:
+	QString autoGuessPatternFromFile() const;
+
 	QString generatePattern(TagLineEdit *lineEdit) const;
 
-signals:
-	void aboutToApplyPattern(int column, const QString &data);
+private slots:
+	void applyPatternToFilenames();
 };
 
 #endif // TAGCONVERTER_H

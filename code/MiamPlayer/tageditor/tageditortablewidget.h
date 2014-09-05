@@ -7,7 +7,9 @@
 #include <cover.h>
 
 /**
- * \brief The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
+ * \brief		The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class TagEditorTableWidget : public QTableWidget
 {
@@ -17,26 +19,25 @@ private:
 	QMap<QString, QPersistentModelIndex> indexes;
 
 public:
-	enum Columns { COL_Filename = 0,
-				   COL_Path = 1,
-				   COL_Title = 2,
-				   COL_Artist = 3,
-				   COL_ArtistAlbum = 4,
-				   COL_Album = 5,
-				   COL_Track = 6,
-				   COL_Disc = 7,
-				   COL_Year = 8,
-				   COL_Genre = 9,
-				   COL_Comment = 10 };
+	enum Columns { COL_Filename		= 0,
+				   COL_Path			= 1,
+				   COL_Title		= 2,
+				   COL_Artist		= 3,
+				   COL_ArtistAlbum	= 4,
+				   COL_Album		= 5,
+				   COL_Track		= 6,
+				   COL_Disc			= 7,
+				   COL_Year			= 8,
+				   COL_Genre		= 9,
+				   COL_Comment		= 10 };
 
 	TagEditorTableWidget(QWidget *parent = 0);
 
 	/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
 	void init();
 
-	enum DataUserRole { MODIFIED	= Qt::UserRole+1,
-						KEY			= Qt::UserRole+2
-					  };
+	enum DataUserRole { MODIFIED	= Qt::UserRole + 1,
+						KEY			= Qt::UserRole + 2 };
 
 	inline QPersistentModelIndex index(const QString &absFilePath) const { return indexes.value(absFilePath); }
 

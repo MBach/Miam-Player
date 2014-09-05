@@ -87,8 +87,6 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	painter->restore();
 }
 
-
-
 /** Redefined to always display the same height for albums, even for those without one. */
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -293,7 +291,11 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 {
 	p->save();
 	if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
-		p->setPen(opt.palette.highlightedText().color());
+		if ((opt.palette.highlight().color().lighter(160).saturation() - opt.palette.highlightedText().color().saturation()) < 128) {
+			p->setPen(opt.palette.text().color());
+		} else {
+			p->setPen(opt.palette.highlightedText().color());
+		}
 	}
 	//qDebug() << item->data(LibraryTreeView::DF_Highlighted).toBool();
 	if (item->data(LibraryTreeView::DF_Highlighted).toBool()) {

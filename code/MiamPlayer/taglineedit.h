@@ -20,7 +20,8 @@ public:
 
 	void addTag(const QString &tag, int column = -1);
 
-	/** Redefined to be able to move tag buttons. */
+	/** Redefined to be able to move tag buttons.
+	 * Backspace method is not virtual in QLineEdit, therefore keyPressEvent must be intercepted and eaten. */
 	void backspace();
 
 	bool isAutoTransform() const;
@@ -32,6 +33,7 @@ public:
 protected:
 	virtual bool eventFilter(QObject *obj, QEvent *event);
 
+	/** Redefined to be able to move TagButton when typing. */
 	virtual void keyPressEvent(QKeyEvent *event);
 
 	/** Redefined to automatically move cursor outside TagButton. */
@@ -44,8 +46,10 @@ private:
 	QStringList toStringList() const;
 
 private slots:
+	/** Create a tag from text in the LineEdit when a timer has ended. */
 	void createTag();
 
+	/** TagButton instances are converted with whitespaces in the LineEdit in order to move them. */
 	void insertSpaces();
 
 signals:

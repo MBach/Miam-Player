@@ -20,49 +20,63 @@ TagConverter::TagConverter(TagEditorTableWidget *parent)
 		});
 	}
 
-	connect(tagToFilePreviewButton, &QPushButton::clicked, this, [=]() {
-		QString pattern = this->generatePattern(tagToFileLineEdit);
-		qDebug() << "tagToFilePreviewButton" << pattern;
-	});
-
-	connect(tagToFileApplyButton, &QPushButton::clicked, this, [=]() {
-		QString pattern = this->generatePattern(tagToFileLineEdit);
-		qDebug() << "tagToFileApplyButton" << pattern;
-	});
-
-	connect(fileToTagPreviewButton, &QPushButton::clicked, this, [=]() {
-		QString pattern = this->generatePattern(fileToTagLineEdit);
-		qDebug() << "fileToTagPreviewButton" << pattern;
-	});
-
 	connect(fileToTagApplyButton, &QPushButton::clicked, this, [=]() {
 		QString pattern = this->generatePattern(fileToTagLineEdit);
-		qDebug() << "fileToTagApplyButton" << pattern;
-
-		//pattern.indexOf(":")
-
-		int column = 0;
-		foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
-			/*for (int c = 0; c < cols; c++) {
-
-			}*/
-			QString text = pattern;
-			QString item = _tagEditor->item(index.row(), 0)->text();
-			int extension = item.lastIndexOf(".");
-			text.append(item.mid(extension));
-			_tagEditor->updateCellData(index.row(), column, text);
-		}
 	});
+
+	connect(tagToFileApplyButton, &QPushButton::clicked, this, &TagConverter::applyPatternToFilenames);
+}
+
+void TagConverter::setVisible(bool b)
+{
+	if (b && _tagEditor->selectionModel()->hasSelection()) {
+		this->autoGuessPatternFromFile();
+	}
+	QDialog::setVisible(b);
+}
+
+void TagConverter::applyPatternToFilenames()
+{
+	QString pattern = this->generatePattern(tagToFileLineEdit);
+
+	int column = 0;
+	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
+		QString text = "";
+		for (int c = 0; c < pattern.size(); c++) {
+			if (pattern.at(c) == ":") {
+				/// XXX: Working for < 10 columns in TagEditor!
+				int column = pattern.at(++c).digitValue();
+				text += _tagEditor->item(index.row(), column)->text();
+			} else {
+				text += pattern.at(c);
+			}
+		}
+		QString item = _tagEditor->item(index.row(), 0)->text();
+		int extension = item.lastIndexOf(".");
+		text.append(item.mid(extension));
+		_tagEditor->updateCellData(index.row(), column, text);
+	}
 }
 
 QString TagConverter::generatePattern(TagLineEdit *lineEdit) const
 {
+	qDebug() << "lineEdit" << lineEdit->text();
 	QString pattern = lineEdit->text();
-	pattern = pattern.replace(":", " ");
+	pattern = pattern.replace(":", "_");
+	/// XXX code review needed
 	// Proceed to substitutions in reverse order
 	for (int i = lineEdit->tags().count() - 1; i >= 0; i--) {
 		TagButton *tag = lineEdit->tags().at(i);
-		pattern.replace(tag->position(), tag->spaceCount(), ":" + QString::number(tag->column()));
+		QString substitution =  ":" + QString::number(tag->column());
+		pattern.replace(tag->position(), tag->spaceCount(), substitution);
 	}
+	qDebug() << "pattern" << pattern;
 	return pattern;
+}
+
+QString TagConverter::autoGuessPatternFromFile() const
+{
+	qDebug() << Q_FUNC_INFO;
+	static const QStringList separators = QStringList() << "-" << "." << "_";
+	return QString();
 }

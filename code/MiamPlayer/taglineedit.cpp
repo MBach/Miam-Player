@@ -72,7 +72,8 @@ void TagLineEdit::addTag(const QString &tag, int column)
 	t->show();
 }
 
-/** Redefined to be able to move tag buttons. */
+/** Redefined to be able to move tag buttons.
+ * Backspace method is not virtual in QLineEdit, therefore keyPressEvent must be intercepted and eaten. */
 void TagLineEdit::backspace()
 {
 	bool oneTagNeedToBeRemoved = false;
@@ -137,7 +138,7 @@ bool TagLineEdit::eventFilter(QObject *obj, QEvent *event)
 				_timerTag->start();
 			}
 		}
-	} //else {
+	}
 	if (obj == this && event->type() == QEvent::KeyPress) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 		if (keyEvent->key() == Qt::Key_Backspace) {
@@ -146,14 +147,14 @@ bool TagLineEdit::eventFilter(QObject *obj, QEvent *event)
 			return true;
 		}
 	}
-	//}
 	return LineEdit::eventFilter(obj, event);
 }
 
+/** Redefined to be able to move TagButton when typing. */
 void TagLineEdit::keyPressEvent(QKeyEvent *event)
 {
 	if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right) {
-		/// TODO
+		/// TODO cursorWordForward / cursorWordBackard to stop on TagButton
 		if (QGuiApplication::keyboardModifiers().testFlag(Qt::ControlModifier)) {
 			qDebug() << "cursorWordForward / backward";
 		}
@@ -179,7 +180,9 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 				t->move(t->x() + w, 0);
 			}
 		}
+		//qDebug() << "text before pressing" << event->text() << this->text();
 		LineEdit::keyPressEvent(event);
+		//qDebug() << "text after press" << this->text();
 	}
 }
 
@@ -252,6 +255,7 @@ QStringList TagLineEdit::toStringList() const
 	return tags;
 }
 
+/** Create a tag from text in the LineEdit when a timer has ended. */
 void TagLineEdit::createTag()
 {
 	qDebug() << Q_FUNC_INFO;
@@ -262,6 +266,7 @@ void TagLineEdit::createTag()
 	}
 }
 
+/** TagButton instances are converted with whitespaces in the LineEdit in order to move them. */
 void TagLineEdit::insertSpaces()
 {
 	TagButton *t = qobject_cast<TagButton*>(sender());
@@ -269,27 +274,22 @@ void TagLineEdit::insertSpaces()
 	t->setPosition(cursorPosition());
 	int numberOfSpace = 2;
 
-	/// FIXME: appending and not inserting
-	//this->setText(this->text() + "  ");
+	/// FIXME
 	this->setText(this->text().insert(cursorPosition(), "  "));
 
 	cursorForward(false, 2);
 	while (t->frameGeometry().contains(cursorRect().center())) {
-		// this->setText(this->text() + " ");
 		this->setText(this->text().insert(cursorPosition(), " "));
 		cursorForward(false);
 		numberOfSpace++;
 	}
 	t->setMinimumWidth(numberOfSpace * fontMetrics().width(" ") - 5);
 	t->setSpaceCount(numberOfSpace);
-	// qDebug() << "position - numberOfSpace" << t->position() << t->spaceCount();
-	// qDebug() << "t->width()"  << t->width() << text() << "(" << text().size() << ")" << cursorPosition();
 	t->disconnect();
 
 	foreach (TagButton *tag, _tags) {
 		if (t != tag && tag->frameGeometry().x() > cx) {
 			tag->move(tag->x() + fontMetrics().width(" ") * numberOfSpace, 0);
-			//tag->move(tag->x() + t->width(), 0);
 		}
 	}
 }

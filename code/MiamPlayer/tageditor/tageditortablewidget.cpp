@@ -89,6 +89,7 @@ void TagEditorTableWidget::updateCellData(int row, int column, const QString &te
 	QTableWidgetItem *i = this->item(row, column);
 	i->setText(text);
 	i->setData(MODIFIED, true);
+	qDebug() << "track is marked as MODIFIED" << row << i->text();
 }
 
 void TagEditorTableWidget::updateColumnData(int column, const QString &text)
@@ -110,12 +111,12 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 			continue;
 		}
 
-		// The first two columns are not editable
-		// It may changes in the future for the first one (the filename)
+		/// XXX: warning, this information is difficult to find even if public
 		QTableWidgetItem *fileName = new QTableWidgetItem(fh.fileInfo().fileName());
-		QTableWidgetItem *absPath = new QTableWidgetItem(QDir::toNativeSeparators(fh.fileInfo().path()));
-		fileName->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 		fileName->setData(Qt::UserRole, QDir::toNativeSeparators(track));
+
+		// The second column is not editable
+		QTableWidgetItem *absPath = new QTableWidgetItem(QDir::toNativeSeparators(fh.fileInfo().path()));
 		absPath->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
 		QTableWidgetItem *title = new QTableWidgetItem(fh.title());
@@ -160,12 +161,9 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 /** Redefined. */
 void TagEditorTableWidget::clear()
 {
-	qDebug() << "TagEditorTableWidget::clear() 2";
 	while (rowCount() > 0) {
 		this->removeRow(0);
 	}
-	qDebug() << "TagEditorTableWidget::clear() 3";
 	indexes.clear();
-	qDebug() << "TagEditorTableWidget::clear() 4";
 	this->setSortingEnabled(false);
 }

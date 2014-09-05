@@ -12,6 +12,7 @@
 
 #include <QtDebug>
 
+/** Default constructor. */
 LibrarySqlModel::LibrarySqlModel(const QSqlDatabase &db, QObject *parent) :
 	QSqlTableModel(parent, db), _musicSearchEngine(new MusicSearchEngine())
 {
@@ -32,35 +33,58 @@ LibrarySqlModel::LibrarySqlModel(const QSqlDatabase &db, QObject *parent) :
 	});
 }
 
-void LibrarySqlModel::updateLibrary(const QStringList &tracks)
+/**
+ * Update a list of tracks. If track name has changed, will be removed from Library then added right after.
+ * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
+void LibrarySqlModel::updateTracks(const QList<QPair<QString, QString>> &tracksToUpdate)
 {
 	if (!database().isOpen()) {
 		database().open();
 	}
+
+	// Signals are blocked to prevent saveFileRef method to emit one. Load method will tell connected views to rebuild themselves
+	this->blockSignals(true);
 	database().driver()->beginTransaction();
 
-	foreach (QString track, tracks) {
-		FileHelper fh(track);
-		QSqlQuery updateTrack(database());
-		updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, discNumber = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE absPath = ?");
-		updateTrack.addBindValue(fh.album());
-		updateTrack.addBindValue(fh.artist());
-		updateTrack.addBindValue(fh.artistAlbum());
-		updateTrack.addBindValue(fh.discNumber());
-		updateTrack.addBindValue(fh.hasCover());
-		updateTrack.addBindValue(fh.title());
-		updateTrack.addBindValue(fh.trackNumber().toInt());
-		updateTrack.addBindValue(fh.year().toInt());
-		updateTrack.addBindValue(QDir::toNativeSeparators(track));
-		updateTrack.exec();
+	for (int i = 0; i < tracksToUpdate.length(); i++) {
+		QPair<QString, QString> pair = tracksToUpdate.at(i);
+		// Old path, New Path. If New Path exists, then file has changed.
+		if (pair.second.isEmpty()) {
+			FileHelper fh(pair.first);
+			QSqlQuery updateTrack(database());
+			updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, discNumber = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE absPath = ?");
+			updateTrack.addBindValue(fh.album());
+			updateTrack.addBindValue(fh.artist());
+			updateTrack.addBindValue(fh.artistAlbum());
+			updateTrack.addBindValue(fh.discNumber());
+			updateTrack.addBindValue(fh.hasCover());
+			updateTrack.addBindValue(fh.title());
+			updateTrack.addBindValue(fh.trackNumber().toInt());
+			updateTrack.addBindValue(fh.year().toInt());
+			updateTrack.addBindValue(QDir::toNativeSeparators(pair.first));
+			updateTrack.exec();
+		} else {
+			QSqlQuery hasTrack("SELECT COUNT(*) FROM tracks WHERE absPath = ?", database());
+			hasTrack.addBindValue(QDir::toNativeSeparators(pair.first));
+			if (hasTrack.exec() && hasTrack.next() && hasTrack.record().value(0).toInt() != 0) {
+				QSqlQuery removeTrack("DELETE FROM tracks WHERE absPath = ?", database());
+				removeTrack.addBindValue(QDir::toNativeSeparators(pair.first));
+				if (removeTrack.exec()) {
+					this->saveFileRef(pair.second);
+				}
+			}
+		}
 	}
 	database().driver()->commitTransaction();
+	this->blockSignals(false);
+
 	database().close();
 
 	/// XXX: might not be the smartest way to reload changes, but it's way simpler than searching in a tree for modifications
-	this->loadFromFileDB();
+	this->load();
 }
 
+/** Read all tracks entries in the database and send them to connected views. */
 void LibrarySqlModel::loadFromFileDB()
 {
 	this->beginResetModel();
@@ -76,6 +100,7 @@ void LibrarySqlModel::loadFromFileDB()
 	this->endResetModel();
 }
 
+/** Safe delete and recreate from scratch (table Tracks only). */
 void LibrarySqlModel::rebuild()
 {
 	this->beginResetModel();
@@ -98,6 +123,7 @@ void LibrarySqlModel::rebuild()
 	_musicSearchEngine->doSearch();
 }
 
+/** Load an existing database file or recreate it, if not found. */
 void LibrarySqlModel::load()
 {
 	if (database().open() && database().tables().contains("tracks")) {
@@ -121,6 +147,9 @@ void LibrarySqlModel::saveCoverRef(const QString &coverPath)
 /** Reads a file from the filesystem and adds it into the library. */
 void LibrarySqlModel::saveFileRef(const QString &absFilePath)
 {
+	if (!database().isOpen()) {
+		database().open();
+	}
 	FileHelper fh(absFilePath);
 	if (fh.isValid()) {
 		QSqlQuery insert(database());

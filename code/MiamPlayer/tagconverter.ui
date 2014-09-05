@@ -135,13 +135,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="tagToFilePreviewButton">
-       <property name="text">
-        <string>Preview</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="tagToFileApplyButton">
        <property name="text">
         <string>Apply</string>
@@ -272,13 +265,6 @@
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="fileToTagPreviewButton">
-       <property name="text">
-        <string>Preview</string>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="fileToTagApplyButton">

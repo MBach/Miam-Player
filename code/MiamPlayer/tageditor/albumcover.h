@@ -6,7 +6,7 @@
 #include "cover.h"
 
 /**
- * @brief The AlbumCover class is used to manipulate cover albums inside music files.
+ * \brief The AlbumCover class is used to manipulate cover albums inside music files.
  */
 class AlbumCover : public QWidget
 {

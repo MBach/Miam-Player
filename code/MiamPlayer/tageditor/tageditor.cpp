@@ -70,6 +70,14 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
 	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
 
+	// Once pattern has been applied, uncheck the convert button
+	connect(tagConverter->tagToFileApplyButton, &QPushButton::clicked, this, [=]() {
+		convertPushButton->setChecked(false);
+	});
+	connect(tagConverter->fileToTagApplyButton, &QPushButton::clicked, this, [=]() {
+		convertPushButton->setChecked(false);
+	});
+
 	// The context menu in the area displaying a cover can be extended by third party
 	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << this;
 	PluginManager::getInstance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
@@ -251,24 +259,28 @@ void TagEditor::close()
 void TagEditor::commitChanges()
 {
 	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
-	QList<QModelIndex> tracksToRescan;
-	QStringList tracksToRescan2;
+	QSet<int> tracksToRescan;
 
 	// Detect changes
-	for (int i = 0; i < tagEditorWidget->rowCount(); i++) {
+	for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 		// A physical and unique file per row
-		QTableWidgetItem *itemFileName = tagEditorWidget->item(i, 0);
+		QTableWidgetItem *itemFileName = tagEditorWidget->item(row, 0);
 		QString absPath = itemFileName->data(Qt::UserRole).toString();
 		FileHelper fh(absPath);
 		bool trackWasModified = false;
-		for (int j = 2; j < tagEditorWidget->columnCount(); j++) {
+		for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
 
 			// Check for every field if we have any changes
-			QTableWidgetItem *item = tagEditorWidget->item(i, j);
+			QTableWidgetItem *item = tagEditorWidget->item(row, col);
 			if (item && item->data(TagEditorTableWidget::MODIFIED).toBool()) {
 
+				// If it has changed, we need to rename the file after setting meta-datas
+				if (col == TagEditorTableWidget::COL_Filename) {
+					trackWasModified = true;
+				}
+
 				// Replace the field by using a key stored in the header (one key per column)
-				QString key = tagEditorWidget->horizontalHeaderItem(j)->data(TagEditorTableWidget::KEY).toString();
+				QString key = tagEditorWidget->horizontalHeaderItem(col)->data(TagEditorTableWidget::KEY).toString();
 				if (fh.file()->tag()) {
 					TagLib::PropertyMap pm = fh.file()->tag()->properties();
 
@@ -290,30 +302,56 @@ void TagEditor::commitChanges()
 			}
 		}
 
-		Cover *cover = unsavedCovers.value(i);
+		/// FIXME
+		/*Cover *cover = unsavedCovers.value(row);
 		if (cover == NULL || (cover != NULL && cover->hasChanged())) {
-			/// FIXME
-			//qDebug() << "setCover(" << i << ")";
-			//fh.setCover(cover);
+			qDebug() << "setCover(" << i << ")";
+			fh.setCover(cover);
 			trackWasModified = true;
-		}
+		}*/
 
 		// Save changes if at least one field was modified
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
-		// The Tree structure could be modified
+		// The Tree structure in the Library could have been modified
 		if (trackWasModified) {
-			bool b = fh.save();
-			if (!b) {
+			if (!fh.save()) {
 				qDebug() << "tag wasn't saved :(";
 			}
-			tracksToRescan.append(tagEditorWidget->index(absPath));
-			tracksToRescan2 << absPath;
+			tracksToRescan.insert(row);
 		}
 	}
 
+	// Track name has changed?
 	if (!tracksToRescan.isEmpty()) {
-		/// TODO: possibility to rename file and path!
-		_sqlModel->updateLibrary(tracksToRescan2);
+
+		QSetIterator<int> it(tracksToRescan);
+		QList<QPair<QString, QString>> tracks;
+		while (it.hasNext()) {
+			int row = it.next();
+
+			QTableWidgetItem *filename = tagEditorWidget->item(row, TagEditorTableWidget::COL_Filename);
+			QString oldFilepath = filename->data(Qt::UserRole).toString();
+			if (filename->data(TagEditorTableWidget::MODIFIED).toBool()) {
+				QTableWidgetItem *path = tagEditorWidget->item(row, TagEditorTableWidget::COL_Path);
+				QString newAbsPath = path->text() + QDir::separator() + filename->text();
+				QFile f(oldFilepath);
+				if (f.rename(newAbsPath)) {
+					qDebug() << "track was renamed to" << newAbsPath;
+					tracks.append(qMakePair(oldFilepath, newAbsPath));
+				} else {
+					qDebug() << "something went wrong when renaming" << oldFilepath << "into" << newAbsPath;
+				}
+			} else {
+				tracks.append(qMakePair(oldFilepath, QString()));
+			}
+		}
+
+		// Check if files are already in the library, and then update them
+		if (!tracks.isEmpty()) {
+			_sqlModel->updateTracks(tracks);
+		} else {
+			qDebug() << "renamed tracks were not in library";
+		}
 	}
 
 	// Reset buttons state
