@@ -63,7 +63,12 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 
 	p->save();
 	if (o.state.testFlag(QStyle::State_Selected)) {
-		p->setPen(o.palette.highlightedText().color());
+		if ((opt.palette.highlight().color().lighter(160).saturation() - opt.palette.highlightedText().color().saturation()) < 128) {
+			p->setPen(opt.palette.text().color());
+		} else {
+			p->setPen(opt.palette.highlightedText().color());
+		}
+		//p->setPen(o.palette.highlightedText().color());
 	}
 
 	QStyle *style = QApplication::style();

@@ -6,6 +6,11 @@
 
 #include "extendedtabbar.h"
 
+/**
+ * \brief		The ExtendedTabWidget class does only one thing: bind shortcuts for tab Library and tab FileSystem.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class ExtendedTabWidget : public QTabWidget
 {
 	Q_OBJECT

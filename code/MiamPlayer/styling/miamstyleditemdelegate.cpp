@@ -39,23 +39,13 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 		}
 	}
 	Settings *settings = Settings::getInstance();
-	// Light color when mouse is over
-	/*if (o.state.testFlag(QStyle::State_MouseOver) && !o.state.testFlag(QStyle::State_Selected)) {
-		qDebug() << "ici";
-		p->setPen(opt.palette.highlight().color().darker(150));
-		if (settings->isCustomColors()) {
-			p->fillRect(o.rect, opt.palette.highlight().color().lighter(160));
-		} else {
-			p->fillRect(o.rect, opt.palette.highlight().color().lighter(170));
-		}
-	} else*/
 	if (o.state.testFlag(QStyle::State_Selected)) {
-		p->setPen(o.palette.highlight().color().darker(150));
 		if (settings->isCustomColors()) {
-			p->fillRect(o.rect, o.palette.highlight().color());
+			p->setPen(o.palette.highlight().color().darker(100));
 		} else {
-			p->fillRect(o.rect, o.palette.highlight().color().lighter());
+			p->setPen(o.palette.highlight().color());
 		}
+		p->fillRect(o.rect, o.palette.highlight().color().lighter());
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
@@ -87,7 +77,11 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 	p->restore();
 	if (!_fallback) {
 		if (o.state.testFlag(QStyle::State_Selected)) {
-			p->setPen(o.palette.highlightedText().color());
+			if ((o.palette.highlight().color().lighter(160).saturation() - o.palette.highlightedText().color().saturation()) < 128) {
+				p->setPen(o.palette.text().color());
+			} else {
+				p->setPen(o.palette.highlightedText().color());
+			}
 		} else {
 			p->setPen(o.palette.text().color());
 		}

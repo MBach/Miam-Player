@@ -6,7 +6,7 @@
 #include "model/selectedtracksmodel.h"
 
 /**
- * @brief The TreeView class is the base class for displaying trees in the player.
+ * \brief The TreeView class is the base class for displaying trees in the player.
  */
 class TreeView : public QTreeView, public SelectedTracksModel
 {

@@ -7,6 +7,7 @@
 
 #include <QtDebug>
 
+/** Default constructor. */
 ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	: QTabBar(parent)
 {
@@ -28,6 +29,7 @@ ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	});
 }
 
+/** Redefined to be style-aware at runtime. */
 void ExtendedTabBar::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);

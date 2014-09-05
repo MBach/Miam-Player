@@ -30,9 +30,6 @@ Settings::Settings(const QString &organization, const QString &application)
 		setValue("customPalette", p);
 	} else {
 		QPalette p = QApplication::palette();
-		if ((p.highlight().color().lighter(160).value() - p.highlightedText().color().value()) < 128) {
-			p.setColor(QPalette::HighlightedText, Qt::black);
-		}
 		setValue("defaultPalette", p);
 	}
 }

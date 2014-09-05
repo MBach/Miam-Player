@@ -111,11 +111,7 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 		break;
 	case NoStarsYet:
 		pen.setColor(penColor.lighter(135));
-		if (Settings::getInstance()->isCustomColors()) {
-			painter->fillRect(opt.rect, opt.palette.highlight().color());
-		} else {
-			painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());
-		}
+		painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());
 		break;
 	case ReadOnly:
 		linearGradientBrush.setColorAt(0, Qt::white);

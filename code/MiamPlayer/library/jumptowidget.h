@@ -6,6 +6,11 @@
 
 class LibraryTreeView;
 
+/**
+ * \brief		The JumpToWidget class displays letters which can be clicked to jump to a particular position in your Library.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class JumpToWidget : public QWidget
 {
 	Q_OBJECT
