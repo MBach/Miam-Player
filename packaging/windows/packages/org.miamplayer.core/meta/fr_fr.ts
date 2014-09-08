@@ -29,5 +29,13 @@
         <source>A previous installation exists in this folder. If you wish to continue, everything will be overwritten.</source>
         <translation>Une précédente installation se trouve déjà dans ce dossier. Si vous décidez de poursuivre, tout ce qui existe sera remplacé.</translation>
     </message>
+    <message>
+        <source>Installation Folder</source>
+        <translation>Dossier d'installation</translation>
+    </message>
+    <message>
+        <source>Choose your target directory.</source>
+        <translation>Choisissez le dossier d'installation.</translation>
+    </message>
 </context>
 </TS>

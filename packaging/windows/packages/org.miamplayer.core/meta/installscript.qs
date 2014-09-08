@@ -75,7 +75,7 @@ Component.prototype.installerLoaded = function()
 				widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
 				widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
 
-				widget.windowTitle = "Installation Folder";
+				widget.windowTitle = qsTr("Installation Folder");
 				widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
 			}
 		}
@@ -105,7 +105,7 @@ Component.prototype.beginInstallation = function()
 Component.prototype.chooseTarget = function () {
     var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
     if (widget != null) {
-        var newTarget = QFileDialog.getExistingDirectory("Choose your target directory.", widget.targetDirectory.text);
+        var newTarget = QFileDialog.getExistingDirectory(qsTr("Choose your target directory."), widget.targetDirectory.text);
         if (newTarget != "") {
             widget.targetDirectory.text = Dir.toNativeSparator(newTarget);
 		}
