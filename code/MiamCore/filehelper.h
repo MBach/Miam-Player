@@ -68,7 +68,7 @@ public:
 	void setArtistAlbum(const QString &artistAlbum);
 
 	/** Extract field disc number. */
-	int discNumber() const;
+	int discNumber(bool canBeZero = false) const;
 
 	/** Extract the inner picture if exists. */
 	Cover* extractCover();

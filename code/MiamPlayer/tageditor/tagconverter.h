@@ -32,7 +32,6 @@ private:
 	QString autoGuessPatternFromFile() const;
 
 	QString generatePattern(TagLineEdit *lineEdit) const;
-	QRegularExpression generatePattern2(TagLineEdit *lineEdit) const;
 
 private slots:
 	void applyPatternToColumns();

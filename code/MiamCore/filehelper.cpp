@@ -183,7 +183,7 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 	}
 }
 
-int FileHelper::discNumber() const
+int FileHelper::discNumber(bool canBeZero) const
 {
 	/// TODO
 	//APE::File *apeFile = NULL;
@@ -231,6 +231,9 @@ int FileHelper::discNumber() const
 		disc = strDiscNumber.split('/').first().toInt();
 	} else {
 		disc = strDiscNumber.toInt();
+		if (canBeZero && disc == 0) {
+			disc = -1;
+		}
 	}
 	return disc;
 }

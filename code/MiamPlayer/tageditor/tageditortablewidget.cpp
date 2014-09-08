@@ -76,7 +76,8 @@ void TagEditorTableWidget::resetTable()
 		artistAlbum->setText(fh.artistAlbum());
 		album->setText(fh.album());
 		trackNumber->setText(fh.trackNumber());
-		disc->setText(QString::number(fh.discNumber()));
+		int d = fh.discNumber(true);
+		d > 0 ? disc->setText(QString::number(d)) :	disc->setText("");
 		year->setText(fh.year());
 		genre->setText(fh.genre());
 		comment->setText(fh.comment());

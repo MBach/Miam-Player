@@ -58,53 +58,60 @@ bool TagConverter::eventFilter(QObject *obj, QEvent *event)
 
 void TagConverter::applyPatternToColumns()
 {
-	QString pattern = this->generatePattern(fileToTagLineEdit);
-	QRegularExpression re = this->generatePattern2(fileToTagLineEdit);
-	//qDebug() << "pattern" << pattern << "to apply to columns";
-	// Find columns to update
-	//int nbOfPatterns = pattern.count(':');
-	//QList<int> p;
+	QList<int> columns;
+
+	//QRegularExpression re = this->generatePattern2(fileToTagLineEdit);
+	///
+	QString text = fileToTagLineEdit->text();
+	text = text.replace(":", "_");
+
+	// Remove and convert spaces according to columns
+	for (int i = fileToTagLineEdit->tags().count() - 1; i >= 0; i--) {
+		TagButton *tag = fileToTagLineEdit->tags().at(i);
+		QString substitution = ":" + QString::number(tag->column());
+		columns.prepend(tag->column());
+		text.replace(tag->position(), tag->spaceCount(), substitution);
+	}
+
+	QString pattern = "^";
+	QString characterClass;
+	// Depending on which detected columns, choose a sub-regex
+	for (int i = 0; i < text.size(); i++) {
+		QChar c = text.at(i);
+		if (c == ":") {
+			c = text.at(++i);
+			switch (c.digitValue()) {
+			case TagEditorTableWidget::COL_Track:
+			case TagEditorTableWidget::COL_Year:
+			case TagEditorTableWidget::COL_Disc:
+				characterClass = "[\\d]+"; // Digits
+				break;
+			default:
+				characterClass = "[\\w ']+";	// Words, digits, and spaces
+				break;
+			}
+			pattern += "(" + characterClass + ")";
+		} else {
+			pattern += QRegularExpression::escape(text.at(i));
+		}
+	}
+	pattern += "$";
+	QRegularExpression re(pattern, QRegularExpression::UseUnicodePropertiesOption);
+	///
 
 	qDebug() << "regular expr" << re;
 
 	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
 		QString filename = index.data().toString();
-		/*int j = 0;
-		for (int idx = 0; idx < pattern.size(); idx++) {
-			if (pattern.at(idx) == ":") {
-
-				TagEditorTableWidget::Columns column = static_cast<TagEditorTableWidget::Columns>(pattern.at(++idx).digitValue());
-				//
-				QString extract = "";
-				switch (column) {
-				case TagEditorTableWidget::COL_Track:
-				case TagEditorTableWidget::COL_Year:
-				case TagEditorTableWidget::COL_Disc:
-					while (j < filename.size() && filename.at(j).isDigit()) {
-						extract.append(filename.at(j));
-						j++;
-					}
-					break;
-				default:
-					while (j < filename.size() && filename.at(j).isLetterOrNumber()) {
-						extract.append(filename.at(j));
-						j++;
-					}
-					break;
-				}
-				qDebug() << "for column" << column << ", extracted string" << extract;
-			} else {
-				QChar cPattern = pattern.at(idx);
-				QChar cFilename = filename.at(j);
-				if (cPattern != cFilename) {
-					qDebug() << filename << ", at" << j << ":" << cFilename << "and" << cPattern;
-					break;
-				} else {
-					j++;
-				}
-			}
-		}*/
-		qDebug() << filename <<  "match?" << re.match(filename);
+		filename = filename.left(filename.lastIndexOf("."));
+		QRegularExpressionMatch m = re.match(filename);
+		if (!m.hasMatch()) {
+			continue;
+		}
+		// The implicit capturing group with index 0 captures the result of the whole match.
+		for (int i = 0; i < re.captureCount(); i++) {
+			_tagEditor->updateCellData(index.row(), columns.at(i), m.captured(i + 1));
+		}
 	}
 	this->setVisible(false);
 	_convertButton->setChecked(false);
@@ -150,37 +157,6 @@ QString TagConverter::generatePattern(TagLineEdit *lineEdit) const
 	}
 	qDebug() << "pattern" << pattern;
 	return pattern;
-}
-
-QRegularExpression TagConverter::generatePattern2(TagLineEdit *lineEdit) const
-{
-	QString text = lineEdit->text();
-	text = text.replace(":", "_");
-	qDebug() << Q_FUNC_INFO << text << QRegularExpression::escape(text);
-
-	/// XXX code review needed
-	// Proceed to substitutions in reverse order
-	for (int i = lineEdit->tags().count() - 1; i >= 0; i--) {
-		TagButton *tag = lineEdit->tags().at(i);
-		QString characterClass;
-		switch (tag->column()) {
-		case TagEditorTableWidget::COL_Track:
-		case TagEditorTableWidget::COL_Year:
-		case TagEditorTableWidget::COL_Disc:
-			characterClass = "\\d"; // Digits
-			break;
-		default:
-			// What about non-ASCII characters? (éèêàâ...)
-			//characterClass = "[A-Za-z]";
-			characterClass = "\\S"; // Non-whitespace characters
-			break;
-		}
-
-		QString substitution =  "(" + characterClass + ")+";
-		text.replace(tag->position(), tag->spaceCount(), substitution);
-	}
-	qDebug() << "text" << text;
-	return QRegularExpression(text);
 }
 
 QString TagConverter::autoGuessPatternFromFile() const
