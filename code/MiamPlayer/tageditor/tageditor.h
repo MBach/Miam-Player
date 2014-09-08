@@ -90,8 +90,6 @@ private slots:
 	/** Cancels all changes made by the user. */
 	void rollbackChanges();
 
-	void toggleTagConverter(bool);
-
 	void updateCells(QString text);
 
 signals:

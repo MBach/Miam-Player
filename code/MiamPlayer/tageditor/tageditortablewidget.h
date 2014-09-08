@@ -15,8 +15,8 @@ class TagEditorTableWidget : public QTableWidget
 {
 	Q_OBJECT
 private:
-	/** An absolute file path is mapped with an item in the library. It's used to detect changes in tags. */
-	QMap<QString, QPersistentModelIndex> indexes;
+	/** This map is used to detect changes in tags. */
+	QMap<int, QString> _indexes;
 
 public:
 	enum Columns { COL_Filename		= 0,
@@ -39,7 +39,7 @@ public:
 	enum DataUserRole { MODIFIED	= Qt::UserRole + 1,
 						KEY			= Qt::UserRole + 2 };
 
-	inline QPersistentModelIndex index(const QString &absFilePath) const { return indexes.value(absFilePath); }
+	//inline QPersistentModelIndex index(const QString &absFilePath) const { return _indexes.value(absFilePath); }
 
 	void resetTable();
 

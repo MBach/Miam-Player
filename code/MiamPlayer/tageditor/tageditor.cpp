@@ -34,7 +34,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	this->setAcceptDrops(true);
 
 	tagEditorWidget->init();
-	tagConverter = new TagConverter(tagEditorWidget);
+	tagConverter = new TagConverter(convertPushButton, tagEditorWidget);
 
 	int i = 1;
 	combos.insert(++i, titleComboBox);
@@ -61,22 +61,10 @@ TagEditor::TagEditor(QWidget *parent) :
 	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
 
 	// General case: when one is selecting multiple items
-	//connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayCover);
 	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayTags);
-
-	// Open the TagConverter to help tagging from Tag to File, or vice-versa
-	connect(convertPushButton, &QPushButton::toggled, this, &TagEditor::toggleTagConverter);
 
 	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
 	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
-
-	// Once pattern has been applied, uncheck the convert button
-	connect(tagConverter->tagToFileApplyButton, &QPushButton::clicked, this, [=]() {
-		convertPushButton->setChecked(false);
-	});
-	connect(tagConverter->fileToTagApplyButton, &QPushButton::clicked, this, [=]() {
-		convertPushButton->setChecked(false);
-	});
 
 	// The context menu in the area displaying a cover can be extended by third party
 	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << this;
@@ -136,8 +124,9 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 		return tagEditorWidget->selectedItems().isEmpty();
 	} else if (obj == tagEditorWidget->viewport() && event->type() == QEvent::MouseButtonPress) {
 		if (tagEditorWidget->selectionModel()->hasSelection()) {
-			qDebug() << "selection";
-			this->displayCover();
+			/// FIXME
+			// qDebug() << "selection";
+			// this->displayCover();
 		}
 		return QWidget::eventFilter(obj, event);
 	} else {
@@ -330,6 +319,7 @@ void TagEditor::commitChanges()
 			int row = it.next();
 
 			QTableWidgetItem *filename = tagEditorWidget->item(row, TagEditorTableWidget::COL_Filename);
+			/// XXX: hard to find!
 			QString oldFilepath = filename->data(Qt::UserRole).toString();
 			if (filename->data(TagEditorTableWidget::MODIFIED).toBool()) {
 				QTableWidgetItem *path = tagEditorWidget->item(row, TagEditorTableWidget::COL_Path);
@@ -500,32 +490,25 @@ void TagEditor::recordSingleItemChange(QTableWidgetItem *item)
 /** Cancels all changes made by the user. */
 void TagEditor::rollbackChanges()
 {
-	tagEditorWidget->resetTable();
-	saveChangesButton->setEnabled(false);
-	cancelButton->setEnabled(false);
+	qDebug() << Q_FUNC_INFO;
 
-	qDebug() << "rollbackChanges";
-	tagEditorWidget->blockSignals(true);
-	this->replaceCover(NULL);
+	tagEditorWidget->resetTable();
+
+	// tagEditorWidget->blockSignals(true);
+	// this->replaceCover(NULL);
 
 	// Reset the unsaved cover list only
-	this->clearCovers(unsavedCovers);
+	// this->clearCovers(unsavedCovers);
 
-	tagEditorWidget->blockSignals(false);
-	qDebug() << "rollbackChanges";
+	// tagEditorWidget->blockSignals(false);
+	// qDebug() << "rollbackChanges";
 
 	// Then, reload info a second time
 	//this->displayCover();
 	//this->displayTags();
-}
 
-void TagEditor::toggleTagConverter(bool b)
-{
-	QPoint p = mapToGlobal(convertPushButton->pos());
-	p.setX(p.x() - (tagConverter->width() - convertPushButton->width()) / 2);
-	p.setY(p.y() + convertPushButton->height() + 5);
-	tagConverter->move(p);
-	tagConverter->setVisible(b);
+	saveChangesButton->setEnabled(false);
+	cancelButton->setEnabled(false);
 }
 
 /** When one is changing a field, updates all rows in the table (the Artist for example). */

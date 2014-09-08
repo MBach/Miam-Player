@@ -67,6 +67,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	if (isCoverForUniqueAlbum) {
 		if (_applyCoverToCurrentAlbumAction) {
 			delete _applyCoverToCurrentAlbumAction;
+			_applyCoverToCurrentAlbumAction = NULL;
 		}
 		_applyCoverToCurrentAlbumAction = _imageMenu->addAction(tr("Apply cover to '%1'").arg(_album));
 		_applyCoverToCurrentAlbumAction->setDisabled(isDefaultCover);
@@ -75,6 +76,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	} else {
 		if (_subMenuApplyTo) {
 			delete _subMenuApplyTo;
+			_subMenuApplyTo = NULL;
 		}
 		_subMenuApplyTo = _imageMenu->addMenu(tr("Apply cover"));
 		QAction *applyCoverToAlbumOnlyAction = _subMenuApplyTo->addAction(tr("to '%1' only").arg(_album));
@@ -85,7 +87,9 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 		connect(applyCoverToAlbumOnlyAction, &QAction::triggered, this, &AlbumCover::applyCoverToAlbumOnly);
 	}
 	foreach (QAction *action, _imageMenu->actions()) {
-		action->setFont(Settings::getInstance()->font(Settings::FF_Menu));
+		if (action) {
+			action->setFont(Settings::getInstance()->font(Settings::FF_Menu));
+		}
 	}
 	_imageMenu->exec(event->globalPos());
 }

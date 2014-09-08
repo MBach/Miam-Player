@@ -48,16 +48,18 @@ void TagEditorTableWidget::resetTable()
 {
 	this->setSortingEnabled(false);
 
-	QMapIterator<QString, QPersistentModelIndex> it(indexes);
-	int row = 0;
+	QMapIterator<int, QString> it(_indexes);
 	while (it.hasNext()) {
 		it.next();
-		QFileInfo fileInfo(it.key());
+		int row = it.key();
+		QFileInfo fileInfo(it.value());
 
 		FileHelper fh(fileInfo.absoluteFilePath());
 
 		// Reload info
-		int column = 1;
+		int column = -1;
+		QTableWidgetItem *filename = this->item(row, ++column);
+		++column; // path cannot be changed
 		QTableWidgetItem *title = this->item(row, ++column);
 		QTableWidgetItem *artist = this->item(row, ++column);
 		QTableWidgetItem *artistAlbum = this->item(row, ++column);
@@ -68,6 +70,7 @@ void TagEditorTableWidget::resetTable()
 		QTableWidgetItem *genre = this->item(row, ++column);
 		QTableWidgetItem *comment = this->item(row, ++column);
 
+		filename->setText(fileInfo.fileName());
 		title->setText(fh.title());
 		artist->setText(fh.artist());
 		artistAlbum->setText(fh.artistAlbum());
@@ -77,7 +80,6 @@ void TagEditorTableWidget::resetTable()
 		year->setText(fh.year());
 		genre->setText(fh.genre());
 		comment->setText(fh.comment());
-		row++;
 	}
 	this->setSortingEnabled(true);
 	this->sortItems(0);
@@ -146,6 +148,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		for (int column = 0; column < items.size(); column++) {
 			this->setItem(row, column, items.at(column));
 		}
+		_indexes.insert(row, fh.fileInfo().absoluteFilePath());
 
 		/// XXX is it really necessary to extract cover in this class?
 		/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
@@ -164,6 +167,6 @@ void TagEditorTableWidget::clear()
 	while (rowCount() > 0) {
 		this->removeRow(0);
 	}
-	indexes.clear();
+	_indexes.clear();
 	this->setSortingEnabled(false);
 }

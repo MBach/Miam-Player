@@ -17,19 +17,26 @@ class TagConverter : public QDialog, public Ui::TagConverter
 	Q_OBJECT
 
 private:
+	QPushButton *_convertButton;
 	TagEditorTableWidget *_tagEditor;
 
 public:
-	explicit TagConverter(TagEditorTableWidget *parent);
+	explicit TagConverter(QPushButton *convertButton, TagEditorTableWidget *parent);
 
 	void setVisible(bool b);
+
+protected:
+	virtual bool eventFilter(QObject *, QEvent *event);
 
 private:
 	QString autoGuessPatternFromFile() const;
 
 	QString generatePattern(TagLineEdit *lineEdit) const;
+	QRegularExpression generatePattern2(TagLineEdit *lineEdit) const;
 
 private slots:
+	void applyPatternToColumns();
+
 	void applyPatternToFilenames();
 };
 
