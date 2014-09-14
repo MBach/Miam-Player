@@ -3,6 +3,8 @@
 #include "settings.h"
 #include <QMediaPlaylist>
 
+#include "remotemediaplayer.h"
+
 #include "vlc-qt/Audio.h"
 #include "vlc-qt/Common.h"
 #include "vlc-qt/Instance.h"
@@ -29,6 +31,7 @@ void MediaPlayer::createLocalConnections()
 
 	connect(_player, &VlcMediaPlayer::playing, this, [=]() {
 		// Prevent multiple signals bug?
+		qDebug() << "VlcMediaPlayer::playing";
 		if (_state != QMediaPlayer::PlayingState) {
 			emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
 			_state = QMediaPlayer::PlayingState;
@@ -94,14 +97,13 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 
 void MediaPlayer::setVolume(int v)
 {
-	if (!_playlist) {
-		return;
-	}
-	QMediaContent mc = _playlist->media(_playlist->currentIndex());
-	if (mc.canonicalUrl().isLocalFile()) {
+	if (_player && _player->audio()) {
 		_player->audio()->setVolume(v);
-	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
-		remotePlayer->setVolume(v);
+	}
+	foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
+		if (remotePlayer) {
+			remotePlayer->setVolume(v);
+		}
 	}
 }
 
@@ -261,12 +263,12 @@ void MediaPlayer::play()
 
 	// Everything is splitted in 2: local actions and remote actions
 	// Is it the good way to proceed?
-	bool isLocal = mc.canonicalUrl().isLocalFile();
-	if (isLocal) {
+	if (mc.canonicalUrl().isLocalFile()) {
 		_player->blockSignals(false);
 		if (_state == QMediaPlayer::PausedState) {
 			_player->resume();
 			_state = QMediaPlayer::PlayingState;
+			emit stateChanged(_state);
 		} else {
 			QString file = mc.canonicalUrl().toLocalFile();
 			if (_media) {
@@ -323,7 +325,7 @@ RemoteMediaPlayer * MediaPlayer::remoteMediaPlayer(const QUrl &track, bool autoC
 	}
 
 	// Reconnect the good one
-	RemoteMediaPlayer *p =_remotePlayers.value(track.host());
+	RemoteMediaPlayer *p = _remotePlayers.value(track.host());
 	if (!p) {
 		return NULL;
 	}

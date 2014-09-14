@@ -185,6 +185,7 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 	tagEditorWidget->sortItems(TagEditorTableWidget::COL_Filename);
 	tagEditorWidget->sortItems(TagEditorTableWidget::COL_Path);
 	tagEditorWidget->resizeColumnsToContents();
+	tagEditorWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
 /** Wrapper for addItemsToEditor. */

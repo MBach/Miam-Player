@@ -5,7 +5,8 @@
 #include <QMediaPlaylist>
 
 #include "miamcore_global.h"
-#include "remotemediaplayer.h"
+
+class RemoteMediaPlayer;
 
 class VlcInstance;
 class VlcMedia;
