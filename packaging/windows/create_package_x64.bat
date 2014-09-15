@@ -1,15 +1,15 @@
 @echo off
 
 rem core
-set MiamPlayer-build="C:\dev\Miam-Player-build-x64"
-xcopy %MiamPlayer-build%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\ /y/e
-copy %MiamPlayer-build%\MiamPlayer\release\MiamPlayer.exe packages\org.miamplayer.core\data\
-copy %MiamPlayer-build%\MiamUniqueLibrary\release\MiamUniqueLibrary.dll packages\org.miamplayer.core\data\
+set MiamPlayerBuild="C:\dev\Miam-Player-build-x64"
+xcopy %MiamPlayerBuild%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\ /y/e
+copy %MiamPlayerBuild%\MiamPlayer\release\MiamPlayer.exe packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\MiamUniqueLibrary\release\MiamUniqueLibrary.dll packages\org.miamplayer.core\data\
 
 rem 3rd party
-set MiamPlayer-libs="C:\dev\Miam-Player\lib\release\win-x64"
-copy %MiamPlayer-libs%\*.dll packages\org.miamplayer.core\data\
-xcopy %MiamPlayer-libs%\plugins packages\org.miamplayer.core\data\plugins /y/i/e
+set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
+copy %MiamPlayerLibs%\*.dll packages\org.miamplayer.core\data\
+xcopy %MiamPlayerLibs%\plugins packages\org.miamplayer.core\data\plugins /y/i/e
 
 rem qt libraries
 set QTDIR="C:\Qt\Qt5.3.1\5.3\msvc2013_64"

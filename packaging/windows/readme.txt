@@ -4,11 +4,11 @@ The folder "data" in each subdirectory is missing. It will be created by the scr
 
 List of variables to modify:
 
-set MiamPlayer-build="C:\dev\Miam-Player-build-x64"
-set MiamPlayer-libs="C:\dev\Miam-Player\lib\release\win-x64"
+set MiamPlayerBuild="C:\dev\Miam-Player-build-x64"
+set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
 set QTDIR="C:\Qt\Qt5.3.0\5.3\msvc2013_64"
-set CoverFetcher-build="C:\dev\cover-fetcher-build-x64\release"
-set MiniMode-build="C:\dev\mini-mode-build-x64\release"
-set WindowsToolbar-build="C:\dev\windows-toolbar-build-x64\release"
+set CoverFetcherBuild="C:\dev\cover-fetcher-build-x64\release"
+set MiniModeBuild="C:\dev\mini-mode-build-x64\release"
+set WindowsToolbarBuild="C:\dev\windows-toolbar-build-x64\release"
 
 That's it! You have nothing else to do.

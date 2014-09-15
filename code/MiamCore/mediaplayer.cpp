@@ -93,6 +93,21 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 		_playlist->disconnect(this);
 	}
 	_playlist = playlist;
+	connect(_playlist, &QMediaPlaylist::currentIndexChanged, this, [=]() {
+		if (_player->state() == Vlc::State::Paused || _player->state() == Vlc::State::Playing) {
+			_player->blockSignals(true);
+			_player->stop();
+		} else {
+			foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
+				if (remotePlayer) {
+					remotePlayer->blockSignals(true);
+					remotePlayer->stop();
+				}
+			}
+		}
+		_state = QMediaPlayer::StoppedState;
+		emit stateChanged(_state);
+	});
 }
 
 void MediaPlayer::setVolume(int v)
@@ -279,6 +294,7 @@ void MediaPlayer::play()
 			_player->open(_media);
 		}
 	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
+		remotePlayer->blockSignals(false);
 		if (_state == QMediaPlayer::PausedState) {
 			remotePlayer->resume();
 			_state = QMediaPlayer::PlayingState;

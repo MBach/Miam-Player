@@ -4,7 +4,7 @@
 	<Description>This plugin extends the Windows Context Menu by adding a dynamic submenu. In this menu, four new actions are available to you. This can be modified later.</Description>
 	<Description xml:lang="fr_fr">Cette extension modifie le menu contextuel de Windows en ajoutant un sous-menu. Dedans, quatre nouvelles actions sont possibles. Cela peut être modifié plus tard.</Description>
 	<Version>0.1</Version>
-	<ReleaseDate>2014-07-28</ReleaseDate>
+	<ReleaseDate>2014-09-15</ReleaseDate>
 	<Name>org.miamplayer.plugins.miamplayershell</Name>
 	<Default>script</Default>
 	<Script>installscript.qs</Script>

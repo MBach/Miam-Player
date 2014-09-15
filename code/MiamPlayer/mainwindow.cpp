@@ -5,6 +5,7 @@
 #include "pluginmanager.h"
 #include "settings.h"
 
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -203,6 +204,9 @@ void MainWindow::setupActions()
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
 		_librarySqlModel->rebuild();
+	});
+	connect(actionShowHelp, &QAction::triggered, this, [=]() {
+		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
 	});
 
 	// Quick Start

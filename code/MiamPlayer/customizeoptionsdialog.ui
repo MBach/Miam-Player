@@ -617,25 +617,18 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>280</width>
-            <height>212</height>
+            <width>686</width>
+            <height>476</height>
            </rect>
           </property>
           <attribute name="label">
            <string>Menu &amp;&amp; Options</string>
           </attribute>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="0">
-            <widget class="QLabel" name="labelOpenFolders">
-             <property name="text">
-              <string>Open folders...</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="labelOpenFile">
-             <property name="text">
-              <string>Open files...</string>
+           <item row="7" column="0">
+            <widget class="Line" name="line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
@@ -662,14 +655,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QKeySequenceEdit" name="openFolders">
-             <property name="keySequence">
-              <string notr="true">Ctrl+Shift+O</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
+           <item row="9" column="0">
             <spacer name="vs_menuOptions">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -682,6 +668,13 @@
              </property>
             </spacer>
            </item>
+           <item row="1" column="2">
+            <widget class="QKeySequenceEdit" name="openFolders">
+             <property name="keySequence">
+              <string notr="true">Ctrl+Shift+O</string>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="labelExit">
              <property name="text">
@@ -689,7 +682,7 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="4">
+           <item row="6" column="4">
             <widget class="QPushButton" name="showOptionsReset">
              <property name="font">
               <font>
@@ -708,24 +701,17 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="labelRescanLibrary">
-             <property name="text">
-              <string>Rescan library</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="labelShowOptions">
-             <property name="text">
-              <string>Open general options</string>
-             </property>
-            </widget>
-           </item>
            <item row="4" column="2">
             <widget class="QKeySequenceEdit" name="showCustomize">
              <property name="keySequence">
               <string notr="true">F9</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="labelShowOptions">
+             <property name="text">
+              <string>Open general options</string>
              </property>
             </widget>
            </item>
@@ -736,28 +722,14 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="2">
-            <widget class="QKeySequenceEdit" name="scanLibrary">
-             <property name="keySequence">
-              <string notr="true">Ctrl+Shift+R</string>
+           <item row="3" column="0">
+            <widget class="QLabel" name="labelRescanLibrary">
+             <property name="text">
+              <string>Rescan library</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="2">
-            <widget class="QKeySequenceEdit" name="showOptions">
-             <property name="keySequence">
-              <string notr="true">F12</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="QKeySequenceEdit" name="exit">
-             <property name="keySequence">
-              <string notr="true">Ctrl+Q</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="3">
+           <item row="6" column="3">
             <widget class="QPushButton" name="showOptionsClear">
              <property name="font">
               <font>
@@ -776,41 +748,24 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="3">
-            <widget class="QPushButton" name="showCustomizeClear">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
-             </property>
-             <property name="text">
-              <string notr="true"/>
-             </property>
-             <property name="icon">
-              <iconset resource="mp.qrc">
-               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+           <item row="6" column="2">
+            <widget class="QKeySequenceEdit" name="showOptions">
+             <property name="keySequence">
+              <string notr="true">F12</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="3">
-            <widget class="QPushButton" name="scanLibraryClear">
-             <property name="font">
-              <font>
-               <pointsize>7</pointsize>
-              </font>
+           <item row="2" column="2">
+            <widget class="QKeySequenceEdit" name="exit">
+             <property name="keySequence">
+              <string notr="true">Ctrl+Q</string>
              </property>
-             <property name="text">
-              <string notr="true"/>
-             </property>
-             <property name="icon">
-              <iconset resource="mp.qrc">
-               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QKeySequenceEdit" name="scanLibrary">
+             <property name="keySequence">
+              <string notr="true">Ctrl+Shift+R</string>
              </property>
             </widget>
            </item>
@@ -871,8 +826,8 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="4">
-            <widget class="QPushButton" name="showCustomizeReset">
+           <item row="4" column="3">
+            <widget class="QPushButton" name="showCustomizeClear">
              <property name="font">
               <font>
                <pointsize>7</pointsize>
@@ -883,15 +838,15 @@
              </property>
              <property name="icon">
               <iconset resource="mp.qrc">
-               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="3" column="4">
-            <widget class="QPushButton" name="scanLibraryReset">
+           <item row="3" column="3">
+            <widget class="QPushButton" name="scanLibraryClear">
              <property name="font">
               <font>
                <pointsize>7</pointsize>
@@ -902,7 +857,7 @@
              </property>
              <property name="icon">
               <iconset resource="mp.qrc">
-               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
               <bool>true</bool>
@@ -947,8 +902,112 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="4">
+            <widget class="QPushButton" name="scanLibraryReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="4">
+            <widget class="QPushButton" name="showCustomizeReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="4">
             <widget class="QPushButton" name="openFilesReset">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelOpenFolders">
+             <property name="text">
+              <string>Open folders...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelOpenFile">
+             <property name="text">
+              <string>Open files...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="labelShowHelp">
+             <property name="text">
+              <string>Help</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QKeySequenceEdit" name="showHelp">
+             <property name="keySequence">
+              <string notr="true">F1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="3">
+            <widget class="QPushButton" name="showHelpClear">
+             <property name="font">
+              <font>
+               <pointsize>7</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="icon">
+              <iconset resource="mp.qrc">
+               <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="4">
+            <widget class="QPushButton" name="showHelpReset">
              <property name="font">
               <font>
                <pointsize>7</pointsize>

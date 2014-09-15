@@ -676,9 +676,6 @@
    </property>
   </action>
   <action name="actionShowHelp">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Show &amp;help...</string>
    </property>
