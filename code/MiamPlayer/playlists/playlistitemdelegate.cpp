@@ -1,7 +1,7 @@
 #include "playlistitemdelegate.h"
 
 #include "playlist.h"
-#include "settings.h"
+#include "settingsprivate.h"
 #include "stareditor.h"
 #include "filehelper.h"
 
@@ -54,7 +54,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	initStyleOption(&o, index);
 
 	// Highlight the current playing item
-	QFont font = Settings::getInstance()->font(Settings::FF_Playlist);
+	QFont font = SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Playlist);
 	if (_playlist->mediaPlaylist()->currentIndex() == index.row() && _playlist->mediaPlayer().data()->state() != QMediaPlayer::StoppedState) {
 		font.setBold(true);
 		font.setItalic(true);

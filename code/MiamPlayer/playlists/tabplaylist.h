@@ -100,6 +100,8 @@ private slots:
 	/** When the user is clicking on the (+) button to add a new playlist. */
 	void checkAddPlaylistButton(int i);
 
+	void closePlaylist(int index);
+
 	void execActionFromClosePopup(QAbstractButton *action);
 
 signals:

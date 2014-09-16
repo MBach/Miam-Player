@@ -1,6 +1,6 @@
 #include "libraryheader.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QLinearGradient>
@@ -36,18 +36,18 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Gradient
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
-    if (Settings::getInstance()->isCustomColors()) {
-        g.setColorAt(0, base.lighter(110));
-        g.setColorAt(1, base);
-    } else {
-        g.setColorAt(0, base);
-        g.setColorAt(1, QApplication::palette().window().color());
-    }
+	if (SettingsPrivate::getInstance()->isCustomColors()) {
+		g.setColorAt(0, base.lighter(110));
+		g.setColorAt(1, base);
+	} else {
+		g.setColorAt(0, base);
+		g.setColorAt(1, QApplication::palette().window().color());
+	}
 	p.fillRect(rect(), g);
 
 	// Text
 	QString header = _lod->headerValue();
-	QFont f = Settings::getInstance()->font(Settings::FF_Library);
+	QFont f = SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library);
 	p.setFont(f);
 	QFontMetrics fm(f);
 	this->setMinimumHeight(fm.height());

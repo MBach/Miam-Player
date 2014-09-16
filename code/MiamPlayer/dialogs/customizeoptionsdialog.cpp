@@ -3,8 +3,9 @@
 #include "flowlayout.h"
 #include "mainwindow.h"
 #include "pluginmanager.h"
-#include "settings.h"
+#include "settingsprivate.h"
 
+#include <QDesktopWidget>
 #include <QDir>
 #include <QFileDialog>
 #include <QLibraryInfo>
@@ -19,11 +20,11 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
 
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
 	// First panel: library
-	connect(radioButtonSearchAndExclude, &QRadioButton::toggled, settings, &Settings::setSearchAndExcludeLibrary);
-	connect(radioButtonActivateDelegates, &QRadioButton::toggled, settings, &Settings::setDelegates);
+	connect(radioButtonSearchAndExclude, &QRadioButton::toggled, settings, &SettingsPrivate::setSearchAndExcludeLibrary);
+	connect(radioButtonActivateDelegates, &QRadioButton::toggled, settings, &SettingsPrivate::setDelegates);
 	connect(pushButtonAddLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::openLibraryDialog);
 	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteSelectedLocation);
 
@@ -41,7 +42,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		pushButtonDeleteLocation->setEnabled(true);
 	}
 
-	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, settings, &Settings::setMonitorFileSystem);
+	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, settings, &SettingsPrivate::setMonitorFileSystem);
 
 	// Second panel: languages
 	FlowLayout *flowLayout = new FlowLayout(widgetLanguages, 30, 75, 75);
@@ -83,34 +84,34 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	// Fourth panel: playback
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
-	connect(seekTimeSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setPlaybackSeekTime);
+	connect(seekTimeSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setPlaybackSeekTime);
 
 	this->initCloseActionForPlaylists();
-	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(Settings::PL_AskUserForAction); });
-	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(Settings::PL_SaveOnClose); });
-	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(Settings::PL_DiscardOnClose); });
+	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_AskUserForAction); });
+	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose); });
+	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose); });
 
 	settings->playbackKeepPlaylists() ? radioButtonKeepPlaylists->setChecked(true) : radioButtonClearPlaylists->setChecked(true);
-	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackKeepPlaylists);
+	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &SettingsPrivate::setPlaybackKeepPlaylists);
 
 	settings->playbackRestorePlaylistsAtStartup() ? radioButtonRestorePlaylists->setChecked(true) : radioButtonDontRestorePlaylists->setChecked(true);
-	connect(radioButtonRestorePlaylists, &QRadioButton::toggled, settings, &Settings::setPlaybackRestorePlaylistsAtStartup);
+	connect(radioButtonRestorePlaylists, &QRadioButton::toggled, settings, &SettingsPrivate::setPlaybackRestorePlaylistsAtStartup);
 
 	// Fifth panel: drag and drop
 	this->initDragDropAction();
 
 	settings->copyTracksFromPlaylist() ? radioButtonDDCopyPlaylistTracks->setChecked(true) : radioButtonDDMovePlaylistTracks->setChecked(true);
 
-	connect(radioButtonDDOpenPopup, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(Settings::DD_OpenPopup); });
-	connect(radioButtonDDAddToLibrary, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(Settings::DD_AddToLibrary); });
-	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(Settings::DD_AddToPlaylist); });
-	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &Settings::setCopyTracksFromPlaylist);
+	connect(radioButtonDDOpenPopup, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(SettingsPrivate::DD_OpenPopup); });
+	connect(radioButtonDDAddToLibrary, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(SettingsPrivate::DD_AddToLibrary); });
+	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(SettingsPrivate::DD_AddToPlaylist); });
+	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
 	// Load the language of the application
-	customTranslator.load(languages.value(Settings::getInstance()->language()));
+	customTranslator.load(languages.value(SettingsPrivate::getInstance()->language()));
 
 	// Translate standard buttons (OK, Cancel, ...)
-	defaultQtTranslator.load("qt_" + Settings::getInstance()->language(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	defaultQtTranslator.load("qt_" + SettingsPrivate::getInstance()->language(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 
 	QApplication::installTranslator(&customTranslator);
 	QApplication::installTranslator(&defaultQtTranslator);
@@ -122,7 +123,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 /** Third panel in this dialog: shorcuts has to be initialized in the end. */
 void CustomizeOptionsDialog::initShortcuts()
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
 	foreach(QKeySequenceEdit *shortcut, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
@@ -176,6 +177,10 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
 {
 	QDialog::closeEvent(e);
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	settings->setValue("customizeOptionsDialogGeometry", saveGeometry());
+	settings->setValue("customizeOptionsDialogCurrentTab", listWidget->currentRow());
+
 	// Drive is scanned only when the popup is closed
 	this->updateMusicLocations();
 }
@@ -235,7 +240,7 @@ void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 void CustomizeOptionsDialog::changeLanguage(const QString &language)
 {
 	QString lang = languages.value(language);
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
 	// If the language is successfully loaded, tells every widget that they need to be redisplayed
 	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
@@ -263,6 +268,11 @@ void CustomizeOptionsDialog::open()
 	this->initCloseActionForPlaylists();
 	this->initDragDropAction();
 	retranslateUi(this);
+	if (SettingsPrivate::getInstance()->value("customizeOptionsDialogGeometry").isNull()) {
+		int w = qApp->desktop()->screenGeometry().width() / 2;
+		int h = qApp->desktop()->screenGeometry().height() / 2;
+		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
+	}
 	QDialog::open();
 	this->activateWindow();
 }
@@ -294,7 +304,7 @@ void CustomizeOptionsDialog::checkShortcutsIntegrity()
 
 	if (ok) {
 		QKeySequenceEdit *shortcut = qobject_cast<QKeySequenceEdit*>(sender());
-		Settings::getInstance()->setShortcut(shortcut->objectName(), shortcut->keySequence());
+		SettingsPrivate::getInstance()->setShortcut(shortcut->objectName(), shortcut->keySequence());
 		emit aboutToBindShortcut(shortcut->objectName(), shortcut->keySequence());
 	}
 }
@@ -308,7 +318,7 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 		row = 0;
 	}
 
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	if (!settings->musicLocations().isEmpty()) {
 		delete listWidgetMusicLocations->takeItem(row);
 
@@ -321,14 +331,14 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 
 void CustomizeOptionsDialog::initCloseActionForPlaylists()
 {
-	switch (Settings::getInstance()->playbackDefaultActionForClose()) {
-	case Settings::PL_AskUserForAction:
+	switch (SettingsPrivate::getInstance()->playbackDefaultActionForClose()) {
+	case SettingsPrivate::PL_AskUserForAction:
 		radioButtonAskAction->setChecked(true);
 		break;
-	case Settings::PL_SaveOnClose:
+	case SettingsPrivate::PL_SaveOnClose:
 		radioButtonSavePlaylist->setChecked(true);
 		break;
-	case Settings::PL_DiscardOnClose:
+	case SettingsPrivate::PL_DiscardOnClose:
 		radioButtonDiscardPlaylist->setChecked(true);
 		break;
 	}
@@ -336,14 +346,14 @@ void CustomizeOptionsDialog::initCloseActionForPlaylists()
 
 void CustomizeOptionsDialog::initDragDropAction()
 {
-	switch (Settings::getInstance()->dragDropAction()) {
-	case Settings::DD_OpenPopup:
+	switch (SettingsPrivate::getInstance()->dragDropAction()) {
+	case SettingsPrivate::DD_OpenPopup:
 		radioButtonDDOpenPopup->setChecked(true);
 		break;
-	case Settings::DD_AddToLibrary:
+	case SettingsPrivate::DD_AddToLibrary:
 		radioButtonDDAddToLibrary->setChecked(true);
 		break;
-	case Settings::DD_AddToPlaylist:
+	case SettingsPrivate::DD_AddToPlaylist:
 		radioButtonDDAddToPlaylist->setChecked(true);
 		break;
 	}
@@ -361,7 +371,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 
 void CustomizeOptionsDialog::updateMusicLocations()
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	QStringList savedLocations = settings->musicLocations();
 	QStringList newLocations;
 	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {

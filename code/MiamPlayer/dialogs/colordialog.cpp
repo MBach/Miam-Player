@@ -1,6 +1,6 @@
 #include "colordialog.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QtDebug>
 

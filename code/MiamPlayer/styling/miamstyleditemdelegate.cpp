@@ -1,6 +1,6 @@
 #include "miamstyleditemdelegate.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -38,7 +38,7 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 			p->drawLine(o.rect.topRight(), o.rect.bottomRight());
 		}
 	}
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	if (o.state.testFlag(QStyle::State_Selected)) {
 		if (settings->isCustomColors()) {
 			p->setPen(o.palette.highlight().color().darker(100));

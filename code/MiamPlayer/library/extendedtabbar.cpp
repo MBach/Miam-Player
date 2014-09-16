@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QStylePainter>
 #include <QStyleOptionTabBarBase>
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QtDebug>
 
@@ -11,15 +11,15 @@
 ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	: QTabBar(parent)
 {
-	Settings *settings = Settings::getInstance();
-	QFont f = settings->font(Settings::FF_Library);
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	QFont f = settings->font(SettingsPrivate::FF_Library);
 	f.setPointSizeF(f.pointSizeF() * 0.8);
 	this->setFont(f);
 	this->setMouseTracking(true);
 
 
-	connect(settings, &Settings::fontHasChanged, this, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::FF_Library) {
+	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+		if (ff == SettingsPrivate::FF_Library) {
 			this->setMinimumHeight(fontMetrics().height() * 1.25);
 			this->setMaximumHeight(fontMetrics().height() * 1.25);
 			QFont font = newFont;
@@ -73,7 +73,7 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		}
 		/// XXX: custom/default colors shouldn't be treated here
 		p.save();
-		if (Settings::getInstance()->isCustomColors()) {
+		if (SettingsPrivate::getInstance()->isCustomColors()) {
 			if (tab.state.testFlag(QStyle::State_MouseOver)) {
 				p.setPen(tab.palette.highlight().color());
 				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());

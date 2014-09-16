@@ -1,5 +1,5 @@
 #include "librarytreeview.h"
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QApplication>
 #include <QDirIterator>
@@ -31,7 +31,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 {
 	_libraryModel->setColumnCount(1);
 
-	int iconSize = Settings::getInstance()->coverSize();
+	int iconSize = SettingsPrivate::getInstance()->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 
@@ -60,7 +60,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
-		if (!Settings::getInstance()->isSearchAndExcludeLibrary()) {
+		if (!SettingsPrivate::getInstance()->isSearchAndExcludeLibrary()) {
 			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
 				if (b) {
 					//qDebug() << item->text();
@@ -145,9 +145,9 @@ void LibraryTreeView::updateSelectedTracks()
 void LibraryTreeView::init(LibrarySqlModel *sql)
 {
 	sqlModel = sql;
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
-	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(Settings::FF_Menu), Qt::FontRole);
+	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
 	this->setModel(proxyModel);
 
 	QObjectList objetsToExtend = QObjectList() << properties << this;
@@ -202,7 +202,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
-			action->setFont(Settings::getInstance()->font(Settings::FF_Menu));
+			action->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
 		}
 		if (item->data(DF_ItemType).toInt() != IT_Letter) {
 			properties->exec(event->globalPos());
@@ -212,7 +212,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QModelIndex &proxyIndex) const
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	if (settings->isBigCoverEnabled()) {
 		QModelIndex index2 = proxyIndex;
 		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(proxyIndex));
@@ -442,7 +442,7 @@ QStandardItem* LibraryTreeView::insertLetter(const QString &letters)
 void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
 								  const QString &album, int discNumber, const QString &title, int trackNumber, int year)
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
 	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
 	if (settings->isLibraryFilteredByArticles()) {
@@ -693,7 +693,7 @@ void LibraryTreeView::reset()
 		_libraryModel->removeRows(0, _libraryModel->rowCount());
 		_topLevelItems.clear();
 	}
-	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
+	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
 	case IT_Artist:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
 		break;

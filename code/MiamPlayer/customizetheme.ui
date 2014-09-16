@@ -150,7 +150,7 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="buttonsPage">
-      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,100,0,0,1">
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,100,0,0,0,1">
        <property name="topMargin">
         <number>0</number>
        </property>
@@ -950,6 +950,48 @@
              <bool>true</bool>
             </property>
            </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxSearchBar">
+         <property name="title">
+          <string>Search bar</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_15">
+          <item>
+           <widget class="QLabel" name="labelSearchBar">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Should I show automatically an extended search area next to the search bar?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QRadioButton" name="radioButtonShowExtendedSearch">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonHideExtendedSearch">
+              <property name="text">
+               <string>No</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

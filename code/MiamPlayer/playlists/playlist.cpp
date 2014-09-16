@@ -26,7 +26,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	this->setModel(_playlistModel);
 
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	// Init direct members
 	this->setAcceptDrops(true);
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
@@ -55,7 +55,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setHorizontalHeader(new PlaylistHeaderView(this));
 
 	// Set row height
-	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(Settings::FF_Playlist)).height());
+	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
 
 	connect(this, &QTableView::doubleClicked, this, [=] (const QModelIndex &track) {
 		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
@@ -165,7 +165,7 @@ void Playlist::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
 
 QSize Playlist::minimumSizeHint() const
 {
-	QFontMetrics fm(Settings::getInstance()->font(Settings::FF_Playlist));
+	QFontMetrics fm(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Playlist));
 	int width = 0;
 	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		if (!isColumnHidden(c)) {
@@ -248,7 +248,7 @@ void Playlist::dropEvent(QDropEvent *event)
 					selectionModel()->select(index, QItemSelectionModel::Select);
 				}
 			}
-			if (!Settings::getInstance()->copyTracksFromPlaylist()) {
+			if (!SettingsPrivate::getInstance()->copyTracksFromPlaylist()) {
 				target->removeSelectedTracks();
 			}
 		}
@@ -350,7 +350,7 @@ void Playlist::showEvent(QShowEvent *event)
 
 void Playlist::autoResize()
 {
-	if (Settings::getInstance()->isPlaylistResizeColumns()) {
+	if (SettingsPrivate::getInstance()->isPlaylistResizeColumns()) {
 		this->horizontalHeader()->setStretchLastSection(false);
 		this->resizeColumnsToContents();
 		this->horizontalHeader()->setStretchLastSection(true);

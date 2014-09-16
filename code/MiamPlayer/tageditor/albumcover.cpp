@@ -9,7 +9,7 @@
 #include <QStandardPaths>
 #include <QUrl>
 
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QtDebug>
 
@@ -88,7 +88,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	}
 	foreach (QAction *action, _imageMenu->actions()) {
 		if (action) {
-			action->setFont(Settings::getInstance()->font(Settings::FF_Menu));
+			action->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
 		}
 	}
 	_imageMenu->exec(event->globalPos());

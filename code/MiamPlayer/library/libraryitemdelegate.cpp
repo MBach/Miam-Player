@@ -1,7 +1,7 @@
 #include "libraryitemdelegate.h"
 
 #include <cover.h>
-#include <settings.h>
+#include <settingsprivate.h>
 #include "librarytreeview.h"
 #include "../playlists/starrating.h"
 
@@ -18,7 +18,7 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, Libra
 {
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
-	_showCovers = Settings::getInstance()->isCoversEnabled();
+	_showCovers = SettingsPrivate::getInstance()->isCoversEnabled();
 }
 
 /*void LibraryItemDelegate::invalidate(const QModelIndex &index)
@@ -46,7 +46,7 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, Libra
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	painter->save();
-	painter->setFont(Settings::getInstance()->font(Settings::FF_Library));
+	painter->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library));
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
@@ -90,11 +90,11 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 /** Redefined to always display the same height for albums, even for those without one. */
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	int type = item->data(LibraryTreeView::DF_ItemType).toInt();
 	if (settings->isCoversEnabled() && type == LibraryTreeView::IT_Album) {
-		QFontMetrics fmf(settings->font(Settings::FF_Library));
+		QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
@@ -107,7 +107,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	//qDebug() << "LibraryItemDelegate::drawAlbum, cover?" << item->data(Qt::UserRole + 20).toBool() << item->data(Qt::DisplayRole).toString();
 	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	int coverSize = settings->coverSize();
 	if (settings->isCoversEnabled()) {
 		QString file = item->data(LibraryTreeView::DF_CoverPath).toString();
@@ -164,7 +164,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		}
 		painter->restore();
 	}
-	QFontMetrics fmf(settings->font(Settings::FF_Library));
+	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
 	QRect rectText;
@@ -185,7 +185,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
-	QFontMetrics fmf(Settings::getInstance()->font(Settings::FF_Library));
+	QFontMetrics fmf(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QRect rectText;
 	QString s;
@@ -229,7 +229,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
-	if (Settings::getInstance()->isStarDelegates()) {
+	if (SettingsPrivate::getInstance()->isStarDelegates()) {
 		QString absFilePath = track->data(LibraryTreeView::DF_AbsFilePath).toString();
 		/// XXX: query the sqlmodel instead?
 		FileHelper fh(absFilePath);
@@ -242,7 +242,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	int trackNumber = track->data(LibraryTreeView::DF_TrackNumber).toInt();
 	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	option.text = title;
-	QFontMetrics fmf(Settings::getInstance()->font(Settings::FF_Library));
+	QFontMetrics fmf(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
 	QRect rectText;
@@ -262,7 +262,7 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 	// Display a light selection rectangle when one is moving the cursor
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
-		if (Settings::getInstance()->isCustomColors()) {
+		if (SettingsPrivate::getInstance()->isCustomColors()) {
 			painter->setPen(option.palette.highlight().color().darker(100));
 			painter->setBrush(option.palette.highlight().color().lighter());
 		} else {
@@ -274,7 +274,7 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 	} else if (option.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		painter->save();
-		if (Settings::getInstance()->isCustomColors()) {
+		if (SettingsPrivate::getInstance()->isCustomColors()) {
 			painter->setPen(option.palette.highlight().color().darker(150));
 			painter->setBrush(option.palette.highlight().color());
 		} else {

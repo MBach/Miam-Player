@@ -3,7 +3,7 @@
 
 #include <filehelper.h>
 #include <model/librarysqlmodel.h>
-#include <settings.h>
+#include <settingsprivate.h>
 
 #include "../treeview.h"
 

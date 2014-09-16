@@ -8,6 +8,7 @@
 #include <QGraphicsOpacityEffect>
 
 #include "mainwindow.h"
+#include "settings.h"
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), _targetedColor(NULL)
@@ -32,14 +33,14 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 
 	this->setupActions();
 
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	this->restoreGeometry(settings->value("customizeThemeDialogGeometry").toByteArray());
 	listWidget->setCurrentRow(settings->value("customizeThemeDialogCurrentTab").toInt());
 }
 
 void CustomizeThemeDialog::setupActions()
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), b, &MediaButton::setSize);
 	}
@@ -57,7 +58,7 @@ void CustomizeThemeDialog::setupActions()
 			}
 		}
 	});
-	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setButtonsSize);
+	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setButtonsSize);
 
 	// Hide buttons or not
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
@@ -83,13 +84,16 @@ void CustomizeThemeDialog::setupActions()
 		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
 	}
 
+	// Extended Search Area
+	connect(radioButtonShowExtendedSearch, &QRadioButton::toggled, settings, &SettingsPrivate::setExtendedSearchVisible);
+
 	// Volume bar
-	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &Settings::setVolumeBarTextAlwaysVisible);
-	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setVolumeBarHideAfter);
+	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &SettingsPrivate::setVolumeBarTextAlwaysVisible);
+	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setVolumeBarHideAfter);
 
 	// Fonts
 	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-		settings->setFont(Settings::FF_Playlist, font);
+		settings->setFont(SettingsPrivate::FF_Playlist, font);
 		mainWindow->tabPlaylists->updateRowHeight();
 		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
 			for (int i = 0; i < playlist->model()->columnCount(); i++) {
@@ -99,37 +103,37 @@ void CustomizeThemeDialog::setupActions()
 		this->fade();
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-		settings->setFont(Settings::FF_Library, font);
+		settings->setFont(SettingsPrivate::FF_Library, font);
 		this->fade();
 	});
 	connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
-		settings->setFont(Settings::FF_Menu, font);
+		settings->setFont(SettingsPrivate::FF_Menu, font);
 		mainWindow->updateFonts(font);
 		this->fade();
 	});
 
 	// And fonts size
 	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		settings->setFontPointSize(Settings::FF_Playlist, i);
+		settings->setFontPointSize(SettingsPrivate::FF_Playlist, i);
 		mainWindow->tabPlaylists->updateRowHeight();
 		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
 			for (int i = 0; i < playlist->model()->columnCount(); i++) {
-				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(Settings::FF_Playlist), Qt::FontRole);
+				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(SettingsPrivate::FF_Playlist), Qt::FontRole);
 			}
 		}
 		this->fade();
 	});
 	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		settings->setFontPointSize(Settings::FF_Library, i);
+		settings->setFontPointSize(SettingsPrivate::FF_Library, i);
 		mainWindow->library->model()->layoutChanged();
-		QFont lowerFont = settings->font(Settings::FF_Library);
+		QFont lowerFont = settings->font(SettingsPrivate::FF_Library);
 		lowerFont.setPointSize(lowerFont.pointSizeF() * 0.7);
 		mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, lowerFont, Qt::FontRole);
 		this->fade();
 	});
 	connect(spinBoxMenus, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
-		settings->setFontPointSize(Settings::FF_Menu, i);
-		mainWindow->updateFonts(settings->font(Settings::FF_Menu));
+		settings->setFontPointSize(SettingsPrivate::FF_Menu, i);
+		mainWindow->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 		this->fade();
 	});
 
@@ -215,6 +219,11 @@ void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 		int h = qApp->desktop()->screenGeometry().height() / 2;
 		parentWidget()->move(w - parentWidget()->frameGeometry().width() / 2, h - parentWidget()->frameGeometry().height() / 2);
 	}
+
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	settings->setValue("customizeThemeDialogGeometry", saveGeometry());
+	settings->setValue("customizeThemeDialogCurrentTab", listWidget->currentRow());
+
 	QDialog::closeEvent(e);
 }
 
@@ -236,7 +245,7 @@ void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)
  * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 void CustomizeThemeDialog::showColorDialog()
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
 		ColorDialog *colorDialog = new ColorDialog(this);
@@ -264,7 +273,7 @@ void CustomizeThemeDialog::showColorDialog()
 
 void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 {
-	Settings::getInstance()->setColorsAlternateBG(b);
+	SettingsPrivate::getInstance()->setColorsAlternateBG(b);
 	for (int i = 0; i < mainWindow->tabPlaylists->count() - 1; i++) {
 		Playlist *p = mainWindow->tabPlaylists->playlist(i);
 		p->setAlternatingRowColors(b);
@@ -273,7 +282,7 @@ void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	settings->setCustomColors(b);
 	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
 		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
@@ -297,7 +306,7 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 /** Load theme at startup. */
 void CustomizeThemeDialog::loadTheme()
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	customizeThemeCheckBox->setChecked(settings->isThemeCustomized());
 
 	sizeButtonsSpinBox->setValue(settings->buttonsSize());
@@ -305,7 +314,7 @@ void CustomizeThemeDialog::loadTheme()
 
 	// Select the right drop-down item according to the theme
 	int i = 0;
-	while (settings->theme() != themeComboBox->itemText(i).toLower()) {
+	while (Settings::getInstance()->theme() != themeComboBox->itemText(i).toLower()) {
 		i++;
 	}
 	themeComboBox->setCurrentIndex(i);
@@ -327,19 +336,22 @@ void CustomizeThemeDialog::loadTheme()
 		}
 	}
 
+	// Extended Search Area
+	settings->isExtendedSearchVisible() ? radioButtonShowExtendedSearch->setChecked(true) : radioButtonHideExtendedSearch->setChecked(true);
+
 	// Volume bar
 	radioButtonShowVolume->setChecked(settings->isVolumeBarTextAlwaysVisible());
 	spinBoxHideVolumeLabel->setValue(settings->volumeBarHideAfter());
 
 	// Fonts
-	fontComboBoxPlaylist->setCurrentFont(settings->font(Settings::FF_Playlist));
-	fontComboBoxLibrary->setCurrentFont(settings->font(Settings::FF_Library));
-	fontComboBoxMenus->setCurrentFont(settings->font(Settings::FF_Menu));
-	spinBoxPlaylist->setValue(settings->fontSize(Settings::FF_Playlist));
+	fontComboBoxPlaylist->setCurrentFont(settings->font(SettingsPrivate::FF_Playlist));
+	fontComboBoxLibrary->setCurrentFont(settings->font(SettingsPrivate::FF_Library));
+	fontComboBoxMenus->setCurrentFont(settings->font(SettingsPrivate::FF_Menu));
+	spinBoxPlaylist->setValue(settings->fontSize(SettingsPrivate::FF_Playlist));
 	spinBoxLibrary->blockSignals(true);
-	spinBoxLibrary->setValue(settings->fontSize(Settings::FF_Library));
+	spinBoxLibrary->setValue(settings->fontSize(SettingsPrivate::FF_Library));
 	spinBoxLibrary->blockSignals(false);
-	spinBoxMenus->setValue(settings->fontSize(Settings::FF_Menu));
+	spinBoxMenus->setValue(settings->fontSize(SettingsPrivate::FF_Menu));
 
 	// Library
 	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
@@ -362,7 +374,8 @@ void CustomizeThemeDialog::loadTheme()
 void CustomizeThemeDialog::open()
 {
 	// Change the label that talks about star delegates
-	bool starDelegateState = Settings::getInstance()->isStarDelegates();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	bool starDelegateState = settings->isStarDelegates();
 	labelLibraryDelegates->setEnabled(starDelegateState);
 	radioButtonShowNeverScoredTracks->setEnabled(starDelegateState);
 	radioButtonHideNeverScoredTracks->setEnabled(starDelegateState);
@@ -372,13 +385,18 @@ void CustomizeThemeDialog::open()
 		labelLibraryDelegatesState->setText(tr("Favorites are currently disabled"));
 	}
 
+	if (settings->value("customizeThemeDialogGeometry").isNull()) {
+		int w = qApp->desktop()->screenGeometry().width() / 2;
+		int h = qApp->desktop()->screenGeometry().height() / 2;
+		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
+	}
 	QDialog::open();
 	this->activateWindow();
 
 	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
 	/// Is it impossible to compute real size even if dialog is hidden?
 	// Add grammatical articles
-	foreach (QString article, Settings::getInstance()->libraryFilteredByArticles()) {
+	foreach (QString article, settings->libraryFilteredByArticles()) {
 		articlesLineEdit->addTag(article);
 	}
 }
@@ -386,7 +404,7 @@ void CustomizeThemeDialog::open()
 void CustomizeThemeDialog::openChooseIconDialog()
 {
 	QPushButton *button = qobject_cast<QPushButton *>(sender());
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
 	// It's always more convenient when the dialog re-open at the same location
 	QString openPath;
@@ -408,7 +426,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 		}
 	}
 	if (path.isEmpty()) {
-		button->setIcon(QIcon(":/player/" + settings->theme() + "/" + button->objectName()));
+		button->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/" + button->objectName()));
 	} else {
 		settings->setValue("customIcons/lastOpenPath", QFileInfo(path).absolutePath());
 		button->setIcon(QIcon(path));
@@ -418,7 +436,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 /** Changes the current theme and updates this dialog too. */
 void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	// Check for each button if there is a custom icon
 	foreach(QPushButton *button, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		if (button) {
@@ -430,7 +448,7 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 			}
 		}
 	}
-	settings->setThemeName(newTheme);
+	Settings::getInstance()->setThemeName(newTheme);
 	qDebug() << Q_FUNC_INFO << "wtf ?";
 	foreach(MediaButton *m, mainWindow->mediaButtons) {
 		m->setIconFromTheme(newTheme);

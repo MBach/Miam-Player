@@ -1,5 +1,6 @@
 #include "playbackmodewidget.h"
 #include "settings.h"
+#include "settingsprivate.h"
 
 /// FIXME: use Qt::Popup to avoir flicker effect when one clicks. The problem is to manage multiple popups on screen
 /// It seems difficult to handle more than one popup
@@ -12,9 +13,10 @@ PlaybackModeWidget::PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushB
 	QPushButton *button = new QPushButton(this);
 	_playbackMode = PlaybackModeWidget::nameFromMode(mode);
 
+	SettingsPrivate *settingsPrivate = SettingsPrivate::getInstance();
 	Settings *settings = Settings::getInstance();
 	button->setIcon(QIcon(":/player/" + settings->theme() + "/" + _playbackMode));
-	button->setIconSize(QSize(settings->buttonsSize(), settings->buttonsSize()));
+	button->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
 
 	QVBoxLayout *vLayout = new QVBoxLayout(this);
 	vLayout->setContentsMargins(0, 0, 0, 0);
@@ -49,9 +51,10 @@ QString PlaybackModeWidget::nameFromMode(QMediaPlaylist::PlaybackMode mode)
 /** Reload icon when theme has changed or buttons size was changed in options by one. */
 void PlaybackModeWidget::adjustIcon()
 {
+	SettingsPrivate *settingsPrivate = SettingsPrivate::getInstance();
 	Settings *settings = Settings::getInstance();
 	button()->setIcon(QIcon(":/player/" + settings->theme() + "/" + _playbackMode));
-	button()->setIconSize(QSize(settings->buttonsSize(), settings->buttonsSize()));
+	button()->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
 }
 
 /** Animates this button in circle or in line. */

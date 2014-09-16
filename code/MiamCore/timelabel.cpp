@@ -3,7 +3,7 @@
 #include <QDateTime>
 #include <QEvent>
 
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QtDebug>
 
@@ -14,7 +14,7 @@ TimeLabel::TimeLabel(QWidget *parent) :
 	this->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 	connect(this, &TimeLabel::timeChanged, this, &TimeLabel::display);
 
-	_mode = Settings::getInstance()->value("timeMode").toInt();
+	_mode = SettingsPrivate::getInstance()->value("timeMode").toInt();
 }
 
 /** Redefined to filter mouse press event. */
@@ -23,7 +23,7 @@ bool TimeLabel::eventFilter(QObject *obj, QEvent *event)
 	if (event->type() == QEvent::MouseButtonPress) {
 		// Only 3 modes (might be overkill to create an Enum just for this)
 		_mode < 2 ? _mode++ : _mode = 0;
-		Settings::getInstance()->setValue("timeMode", _mode);
+		SettingsPrivate::getInstance()->setValue("timeMode", _mode);
 
 		// Need to force update the label
 		emit timeChanged();

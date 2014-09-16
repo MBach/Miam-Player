@@ -70,14 +70,14 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 		foreach (QString location, dragDropDialog->externalLocations()) {
 			dirs << location;
 		}
-		switch (Settings::getInstance()->dragDropAction()) {
-		case Settings::DD_OpenPopup:
+		switch (SettingsPrivate::getInstance()->dragDropAction()) {
+		case SettingsPrivate::DD_OpenPopup:
 			dragDropDialog->show();
 			break;
-		case Settings::DD_AddToLibrary:
+		case SettingsPrivate::DD_AddToLibrary:
 			customizeOptionsDialog->addMusicLocations(dirs);
 			break;
-		case Settings::DD_AddToPlaylist:
+		case SettingsPrivate::DD_AddToPlaylist:
 			tabPlaylists->addExtFolders(dirs);
 			break;
 		}
@@ -94,7 +94,7 @@ void MainWindow::init()
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 
-	bool isEmpty = Settings::getInstance()->musicLocations().isEmpty();
+	bool isEmpty = SettingsPrivate::getInstance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
 	libraryHeader->setVisible(!isEmpty);
 	/// XXX For each view
@@ -223,7 +223,7 @@ void MainWindow::setupActions()
 				newLocations.append(musicLocation);
 			}
 		}
-		Settings::getInstance()->setMusicLocations(newLocations);
+		SettingsPrivate::getInstance()->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->setHidden(false);
 		libraryHeader->setHidden(false);
@@ -287,18 +287,21 @@ void MainWindow::setupActions()
 	};
 
 	// Filter the library when user is typing some text to find artist, album or tracks
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 	connect(searchBar, &QLineEdit::textEdited, this, [=](const QString &text) {
-		if (text.isEmpty()) {
-			_searchDialog->clear();
-		} else {
-			_searchDialog->setSearchExpression(text);
-			moveSearchDialog();
-			searchBar->setFocus();
+		if (settings->isExtendedSearchVisible()) {
+			if (text.isEmpty()) {
+				_searchDialog->clear();
+			} else {
+				_searchDialog->setSearchExpression(text);
+					moveSearchDialog();
+					searchBar->setFocus();
+			}
 		}
 	});
 	connect(searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
-		if (!_searchDialog->isVisible()) {
+		if (!_searchDialog->isVisible() && settings->isExtendedSearchVisible()) {
 			moveSearchDialog();
 		}
 	});
@@ -419,15 +422,11 @@ void MainWindow::changeEvent(QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
-	settings->setValue("customizeThemeDialogGeometry", customizeThemeDialog->saveGeometry());
-	settings->setValue("customizeThemeDialogCurrentTab", customizeThemeDialog->listWidget->currentRow());
-	settings->setValue("customizeOptionsDialogGeometry", customizeOptionsDialog->saveGeometry());
-	settings->setValue("customizeOptionsDialogCurrentTab", customizeOptionsDialog->listWidget->currentRow());
 	//settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
-	settings->setVolume(volumeSlider->value());
+	Settings::getInstance()->setVolume(volumeSlider->value());
 	settings->sync();
 }
 
@@ -534,8 +533,8 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 	actionPlay->disconnect();
 	if (state == QMediaPlayer::PlayingState) {
 		QString iconPath;
-		if (Settings::getInstance()->hasCustomIcon("pauseButton")) {
-			iconPath = Settings::getInstance()->customIcon("pauseButton");
+		if (SettingsPrivate::getInstance()->hasCustomIcon("pauseButton")) {
+			iconPath = SettingsPrivate::getInstance()->customIcon("pauseButton");
 		} else {
 			iconPath = ":/player/" + Settings::getInstance()->theme() + "/pause";
 		}

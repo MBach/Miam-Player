@@ -8,12 +8,12 @@
 
 #include <QtDebug>
 
-#include "settings.h"
+#include "settingsprivate.h"
 
 SqlDatabase::SqlDatabase()
 	: QSqlDatabase("QSQLITE")
 {
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	QString path("%1/%2/%3");
 	path = path.arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation),
 					settings->organizationName(),

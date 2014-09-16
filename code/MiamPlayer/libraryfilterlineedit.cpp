@@ -1,6 +1,6 @@
 #include "libraryfilterlineedit.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 #include <QAction>
 #include <QApplication>
 #include <QRect>
@@ -12,8 +12,8 @@
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	LineEdit(parent), shortcut(new QShortcut(this))
 {
-	connect(Settings::getInstance(), &Settings::fontHasChanged, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::FF_Library) {
+	connect(SettingsPrivate::getInstance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+		if (ff == SettingsPrivate::FF_Library) {
 			this->setFont(newFont);
 			this->setMinimumHeight(fontMetrics().height() * 1.6);
 		}

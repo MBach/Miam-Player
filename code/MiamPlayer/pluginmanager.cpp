@@ -6,7 +6,7 @@
 #include <QPluginLoader>
 
 #include "mainwindow.h"
-#include "settings.h"
+#include "settingsprivate.h"
 #include "model/selectedtracksmodel.h"
 #include "abstractsearchdialog.h"
 
@@ -65,7 +65,7 @@ void PluginManager::registerExtensionPoint(const char *className, QObjectList so
 void PluginManager::init()
 {
 	QDirIterator it(_pluginPath);
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	while (it.hasNext()) {
 		if (QLibrary::isLibrary(it.next())) {
 			QString pluginFileName = it.fileName();
@@ -114,7 +114,7 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(pluginInfo.version()));
 	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(false);
 
-	Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
+	SettingsPrivate::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }
 
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
@@ -153,7 +153,7 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 		}
 		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
 		_mainWindow->menuView->addAction(actionAddViewToMenu);
-		_mainWindow->updateFonts(Settings::getInstance()->font(Settings::FF_Menu));
+		_mainWindow->updateFonts(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
 		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
 			_mainWindow->close();
 			view->show();
@@ -184,7 +184,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
 	QObject *plugin = pluginLoader.instance();
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	if (plugin) {
 		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
 		if (basic) {
@@ -288,6 +288,6 @@ void PluginManager::loadOrUnload(QTableWidgetItem *item)
 		}
 		// Keep in settings if the plugin is enabled. Useful when starting the application for unwanted plugins
 		pluginInfo.setEnabled(item->checkState() == Qt::Checked);
-		Settings::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
+		SettingsPrivate::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 	}
 }

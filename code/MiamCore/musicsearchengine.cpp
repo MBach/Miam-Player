@@ -1,6 +1,6 @@
 #include "musicsearchengine.h"
 #include "filehelper.h"
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QDateTime>
 #include <QDirIterator>
@@ -30,7 +30,7 @@ void MusicSearchEngine::doSearch()
 {
 	//qDebug() << Q_FUNC_INFO;
 	QList<QDir> savedLocations;
-	foreach (QString musicPath, Settings::getInstance()->musicLocations()) {
+	foreach (QString musicPath, SettingsPrivate::getInstance()->musicLocations()) {
 		QDir location(musicPath);
 		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
 		savedLocations.append(location);

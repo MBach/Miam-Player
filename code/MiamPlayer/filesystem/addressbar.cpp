@@ -1,6 +1,6 @@
 #include "addressbar.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 #include <QApplication>
 #include <QDirIterator>
 #include <QFileIconProvider>
@@ -50,7 +50,7 @@ void AddressBar::paintEvent(QPaintEvent *)
 	// Light gradient
 	QPalette palette = QApplication::palette();
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
-	if (Settings::getInstance()->isCustomColors()) {
+	if (SettingsPrivate::getInstance()->isCustomColors()) {
 		g.setColorAt(0, palette.base().color().lighter(110));
 		g.setColorAt(1, palette.base().color());
 	} else {

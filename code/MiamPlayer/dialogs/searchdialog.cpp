@@ -61,8 +61,8 @@ SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
 	connect(this, &SearchDialog::aboutToSearch, this, &SearchDialog::search);
 
 	// Update font size
-	connect(Settings::getInstance(), &Settings::fontHasChanged, this, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::FF_Library) {
+	connect(SettingsPrivate::getInstance(), &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+		if (ff == SettingsPrivate::FF_Library) {
 			foreach (QWidget *o, this->findChildren<QWidget*>()) {
 				o->setFont(newFont);
 			}
@@ -77,7 +77,7 @@ SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
 void SearchDialog::addSource(QCheckBox *checkBox)
 {
 	int i = sources_layout->count(); // Default are: HSpacer
-	checkBox->setFont(Settings::getInstance()->font(Settings::FF_Library));
+	checkBox->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library));
 	sources_layout->insertWidget(i - 1, checkBox);
 
 	connect(checkBox, &QCheckBox::toggled, this, &SearchDialog::toggleItems);

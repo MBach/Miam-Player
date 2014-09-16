@@ -37,15 +37,17 @@ LineEdit::LineEdit(QWidget *parent) :
 
 void LineEdit::drawCursor(QStylePainter *painter, const QRect &rText)
 {
-	QPoint pTop, pBottom;
-	pTop = rText.topLeft();
-	int fm = fontMetrics().width(text(), cursorPosition());
-	pTop.rx() += fm;
-	pBottom = rText.bottomLeft();
-	pBottom.rx() += fm;
-	_fade.setCurrentTime(_fps * _timer->interval());
-	painter->setPen(_fade.currentValue().value<QColor>());
-	painter->drawLine(pTop, pBottom);
+	if (hasFocus()) {
+		QPoint pTop, pBottom;
+		pTop = rText.topLeft();
+		int fm = fontMetrics().width(text(), cursorPosition());
+		pTop.rx() += fm;
+		pBottom = rText.bottomLeft();
+		pBottom.rx() += fm;
+		_fade.setCurrentTime(_fps * _timer->interval());
+		painter->setPen(_fade.currentValue().value<QColor>());
+		painter->drawLine(pTop, pBottom);
+	}
 }
 
 void LineEdit::focusInEvent(QFocusEvent *e)

@@ -1,7 +1,7 @@
 #include "playlistmanager.h"
 
 #include <filehelper.h>
-#include <settings.h>
+#include <settingsprivate.h>
 
 #include <QDirIterator>
 #include <QFileDialog>
@@ -97,7 +97,7 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 void PlaylistManager::init()
 {
 	playlists->blockSignals(true);
-	if (Settings::getInstance()->playbackRestorePlaylistsAtStartup()) {
+	if (SettingsPrivate::getInstance()->playbackRestorePlaylistsAtStartup()) {
 
 		// Populate saved playlists area
 		QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
@@ -310,7 +310,7 @@ void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &parent, int start
 void PlaylistManager::exportSelectedPlaylist()
 {
 	QString exportedPlaylistLocation;
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	if (settings->value("locationForExportedPlaylist").isNull()) {
 		exportedPlaylistLocation = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
 	} else {
@@ -435,7 +435,7 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 /** Save all playlists when exiting the application (if enabled). */
 void PlaylistManager::savePlaylists()
 {
-	if (Settings::getInstance()->playbackKeepPlaylists()) {
+	if (SettingsPrivate::getInstance()->playbackKeepPlaylists()) {
 		_db.open();
 		for (int i = 0; i < playlists->count(); i++) {
 			this->savePlaylist(i);

@@ -1,6 +1,6 @@
 #include "mediaplayer.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 #include <QMediaPlaylist>
 
 #include "remotemediaplayer.h"
@@ -166,7 +166,7 @@ void MediaPlayer::seekBackward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		int currentPos = _player->position() * _player->length();
-		int time = currentPos - Settings::getInstance()->playbackSeekTime();
+		int time = currentPos - SettingsPrivate::getInstance()->playbackSeekTime();
 		if (time < 0) {
 			this->seek(0.0);
 		} else {
@@ -180,7 +180,7 @@ void MediaPlayer::seekForward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		int currentPos = _player->position() * _player->length();
-		int time = currentPos + Settings::getInstance()->playbackSeekTime();
+		int time = currentPos + SettingsPrivate::getInstance()->playbackSeekTime();
 		if (time > _player->length()) {
 			skipForward();
 		} else {
@@ -307,17 +307,13 @@ void MediaPlayer::play()
 /** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
-	if (!_playlist) {
-		return;
-	}
-	QMediaContent mc = _playlist->media(_playlist->currentIndex());
-	if (mc.canonicalUrl().isLocalFile()) {
+	if (_player->state() != Vlc::Stopped) {
 		_player->stop();
 	} else {
-		// Do not wait for async methods (when skipping backward / forward from remote player to local player)
-		// _state = QMediaPlayer::StoppedState;
-		if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
-			remotePlayer->stop();
+		foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
+			if (remotePlayer) {
+				remotePlayer->stop();
+			}
 		}
 	}
 }

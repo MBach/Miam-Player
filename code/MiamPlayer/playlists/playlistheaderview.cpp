@@ -1,6 +1,6 @@
 #include "playlistheaderview.h"
 
-#include "settings.h"
+#include "settingsprivate.h"
 #include <QApplication>
 #include <QStylePainter>
 
@@ -31,11 +31,11 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 		this->setSectionHidden(columnIndex, !this->isSectionHidden(columnIndex));
 	});
 
-	Settings *settings = Settings::getInstance();
-	this->setFont(settings->font(Settings::FF_Playlist));
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	this->setFont(settings->font(SettingsPrivate::FF_Playlist));
 
-	connect(settings, &Settings::fontHasChanged, this, [=](Settings::FontFamily ff, const QFont &newFont) {
-		if (ff == Settings::FF_Playlist) {
+	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+		if (ff == SettingsPrivate::FF_Playlist) {
 			QFont font = newFont;
 			font.setPointSizeF(font.pointSizeF() * 0.8);
 			this->setFont(font);
@@ -103,7 +103,7 @@ void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logical
 	QLinearGradient vLinearGradient(rect.topLeft(), rect.bottomLeft());
 	/// XXX
 	QPalette palette = QApplication::palette();
-	if (Settings::getInstance()->isCustomColors()) {
+	if (SettingsPrivate::getInstance()->isCustomColors()) {
 		vLinearGradient.setColorAt(0, palette.base().color().lighter(110));
 		vLinearGradient.setColorAt(1, palette.base().color());
 	} else {

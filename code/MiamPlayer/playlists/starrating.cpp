@@ -42,7 +42,7 @@
 #include <math.h>
 
 #include "starrating.h"
-#include "settings.h"
+#include "settingsprivate.h"
 
 int StarRating::maxStarCount = 5;
 
@@ -93,7 +93,7 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	}
 	switch (mode) {
 	case Editable:
-		if (Settings::getInstance()->isCustomColors()) {
+		if (SettingsPrivate::getInstance()->isCustomColors()) {
 			painter->fillRect(opt.rect, opt.palette.highlight().color());
 		} else {
 			painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());

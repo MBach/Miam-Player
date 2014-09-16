@@ -1,5 +1,5 @@
 #include "volumeslider.h"
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QApplication>
 #include <QMouseEvent>
@@ -27,7 +27,7 @@ VolumeSlider::VolumeSlider(QWidget *parent) :
 		this->update();
 	});
 
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
 	// Used to hide percentage on the screen (like '75%')
 	connect(this, &QSlider::sliderReleased, [=]() { _timer->start(settings->volumeBarHideAfter() * 1000); });
@@ -52,7 +52,7 @@ bool VolumeSlider::eventFilter(QObject *obj, QEvent *e)
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
 		if (keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down) {
 			_isDown = true;
-			_timer->start(Settings::getInstance()->volumeBarHideAfter() * 1000);
+			_timer->start(SettingsPrivate::getInstance()->volumeBarHideAfter() * 1000);
 		}
 	}
 	return QSlider::eventFilter(obj, e);
@@ -97,7 +97,7 @@ void VolumeSlider::paintEvent(QPaintEvent *)
 	}
 
 	// When an action is triggered, display current volume in the upper left corner
-	if (_isDown || Settings::getInstance()->isVolumeBarTextAlwaysVisible()) {
+	if (_isDown || SettingsPrivate::getInstance()->isVolumeBarTextAlwaysVisible()) {
 		p.save();
 		p.setPen(opt.palette.highlight().color());
 		p.drawText(rect().adjusted(1, 2, 0, 0), Qt::AlignTop | Qt::AlignLeft, QString::number(value()).append("%"));
