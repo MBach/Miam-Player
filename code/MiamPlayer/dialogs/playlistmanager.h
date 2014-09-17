@@ -49,7 +49,7 @@ private:
 	void clearPreview(bool aboutToInsertItems = true);
 
 	/** Remove all special characters for Windows, Unix, OSX. */
-	QString convertNameToValidFileName(QString &name);
+	static QString convertNameToValidFileName(QString &name);
 
 	QString getPlaylistName(const QString &path);
 

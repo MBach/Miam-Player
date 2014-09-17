@@ -139,6 +139,7 @@ void PlaylistManager::clearPreview(bool aboutToInsertItems)
 /** Remove all special characters for Windows, Unix, OSX. */
 QString PlaylistManager::convertNameToValidFileName(QString &name)
 {
+	/// XXX: should be improved?
 	static const QRegularExpression re("[/\\:*?\"<>|]");
 	name.replace(re, "_");
 	return name;
@@ -180,6 +181,7 @@ void PlaylistManager::loadPlaylist(const QString &path)
 			playlists->setTabIcon(playlists->currentIndex(), playlists->defaultIcon(QIcon::Disabled));
 		});
 
+		/// TODO remote tracks
 		playlist->mediaPlaylist()->load(QUrl::fromLocalFile(path), "m3u8");
 		file.close();
 
@@ -209,7 +211,7 @@ QString PlaylistManager::savePlaylist(int index)
 		// New playlists have no existing file stored as Data member
 		if (playlistData.toUInt() != 0) {
 			QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-			playlistName = this->convertNameToValidFileName(playlistName);
+			playlistName = PlaylistManager::convertNameToValidFileName(playlistName);
 			playlistPath = path + "/" + playlistName + ".m3u8";
 			int count = 0;
 			// In case one has decided to create at least two playlists with the same name
@@ -230,14 +232,24 @@ QString PlaylistManager::savePlaylist(int index)
 
 		// Then create or overwrite a file on the hard drive
 		QFile playlistFile(QDir::toNativeSeparators(playlistPath));
+		QTextStream streamOut(&playlistFile);
+		streamOut.setCodec("UTF-8");
 		playlistFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
 		qDebug() << "saving to" << playlistPath;
-		if (p->mediaPlaylist()->save(&playlistFile, "m3u8")) {
 
-			playlistFile.close();
+
+		//if (p->mediaPlaylist()->save(&playlistFile, "m3u8")) {
+
+			//playlistFile.close();
 			QFileInfo fileInfo(playlistFile);
 			QString files;
 			for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
+				if (p->mediaPlaylist()->media(j).canonicalUrl().isLocalFile()) {
+					streamOut << p->mediaPlaylist()->media(j).canonicalUrl().toLocalFile();
+				} else {
+					streamOut << p->mediaPlaylist()->media(j).canonicalUrl().toDisplayString();
+				}
+				endl(streamOut);
 				files.append(p->mediaPlaylist()->media(j).canonicalUrl().toLocalFile());
 			}
 			uint hash = qHash(files);
@@ -249,7 +261,11 @@ QString PlaylistManager::savePlaylist(int index)
 			insertNewPlaylist.addBindValue(playlistName);
 			insertNewPlaylist.addBindValue(hash);
 			insertNewPlaylist.exec();
-		}
+
+			streamOut.flush();
+			playlistFile.close();
+
+		//}
 		_db.close();
 	}
 	return playlistPath;
@@ -376,7 +392,11 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 					QMediaContent mc(url);
 					FileHelper fh(mc);
 					QTreeWidgetItem *item = new QTreeWidgetItem;
-					item->setText(0, QString("%1 (%2 - %3)").arg(fh.title(), fh.artist(), fh.album()));
+					if (url.isLocalFile()) {
+						item->setText(0, QString("%1 (%2 - %3)").arg(fh.title(), fh.artist(), fh.album()));
+					} else {
+						item->setText(0, url.toDisplayString());
+					}
 					previewPlaylist->addTopLevelItem(item);
 				}
 				if (!file.canReadLine()) {

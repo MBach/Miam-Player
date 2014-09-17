@@ -7,8 +7,6 @@
 
 /**
  * \brief		Settings class contains all relevant pairs of (keys, values) used by Miam-Player.
- * \details		This class implements the Singleton pattern. Instead of using standard "this->value(QString)", lots of methods
- * are built on-top of it. It keeps the code easy to read and some important enums are shared between plugins too.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
