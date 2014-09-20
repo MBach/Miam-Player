@@ -3,6 +3,8 @@ QT += widgets multimedia sql
 TEMPLATE = app
 
 SOURCES += \
+    debug/logbrowser.cpp \
+    debug/logbrowserdialog.cpp \
     dialogs/closeplaylistpopup.cpp \
     dialogs/colordialog.cpp \
     dialogs/customizeoptionsdialog.cpp \
@@ -10,6 +12,7 @@ SOURCES += \
     dialogs/dragdropdialog.cpp \
     dialogs/playlistmanager.cpp \
     dialogs/reflector.cpp \
+    dialogs/searchdialog.cpp \
     filesystem/addressbar.cpp \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
@@ -60,9 +63,10 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
     volumeslider.cpp \
-    dialogs/searchdialog.cpp
 
 HEADERS += \
+    debug/logbrowser.h \
+    debug/logbrowserdialog.h \
     dialogs/closeplaylistpopup.h \
     dialogs/colordialog.h \
     dialogs/customizeoptionsdialog.h \
@@ -71,6 +75,7 @@ HEADERS += \
     dialogs/playlistmanager.h \
     dialogs/reflector.h \
     dialogs/paintablewidget.h \
+    dialogs/searchdialog.h \
     filesystem/addressbar.h \
     filesystem/addressbarbutton.h \
     filesystem/addressbarmenu.h \
@@ -122,8 +127,7 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h \
-    dialogs/searchdialog.h
+    volumeslider.h
 
 FORMS += \
     mainwindow.ui \

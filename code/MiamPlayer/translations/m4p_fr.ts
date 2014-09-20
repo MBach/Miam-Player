@@ -426,6 +426,10 @@
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation>Devrais-je regarder s&apos;il y a des changements dans les dossiers où se trouvent votre musique ? Votre bibliothèque sera ainsi toujours synchronisée automatiquement.</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Aide</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -689,6 +693,14 @@
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
         <translation>&quot;The&quot; est un article très commun en anglais, comme dans &quot;The Beatles&quot;</translation>
     </message>
+    <message>
+        <source>Search bar</source>
+        <translation>Barre de recherche</translation>
+    </message>
+    <message>
+        <source>Should I show automatically an extended search area next to the search bar?</source>
+        <translation>Devrais-je afficher automatiquement  une zone de recherche étendue à côté de la barre de recherche ?</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -819,10 +831,6 @@
     <message>
         <source>LTR</source>
         <translation>LTR</translation>
-    </message>
-    <message>
-        <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation>Ce logiciel est un lecteur de musique MP3 destiné à être très simple d&apos;utilisation.&lt;br&gt;&lt;br&gt;Il n&apos;intègre pas de fonctionnalité étendues comme l&apos;accès aux paroles, ou à être interconnecté avec divers services web. Il propose un paramétrage avancé de l&apos;interface et autorise la gestion des pistes favorites.</translation>
     </message>
     <message>
         <source>Seek backward</source>
@@ -1100,7 +1108,7 @@
     </message>
     <message>
         <source>Source</source>
-        <translation type="unfinished"></translation>
+        <translation>Source</translation>
     </message>
 </context>
 <context>
@@ -1181,11 +1189,15 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas modifier des médias distants</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation type="unfinished"></translation>
+        <translation>Local</translation>
+    </message>
+    <message>
+        <source>Local file</source>
+        <translation>Fichier en local</translation>
     </message>
 </context>
 <context>
@@ -1239,20 +1251,20 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
 <context>
     <name>SearchDialog</name>
     <message>
-        <source>Form</source>
-        <translation type="unfinished">Form</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Results are aggregated from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Les résultats sont regroupés à partir de :</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished">Bibliothèque</translation>
+        <translation>Bibliothèque</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Obtenir plus de résultats...&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
+        <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Montrer moins de résultats&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -1273,10 +1285,6 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     <message>
         <source>From Tag to File</source>
         <translation>Du Tag vers le Fichier</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>Prévisualiser</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -1309,6 +1317,10 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     <message>
         <source>Year</source>
         <translation>Année</translation>
+    </message>
+    <message>
+        <source>From File to Tag</source>
+        <translation>Du Fichier vers le Tag</translation>
     </message>
 </context>
 <context>

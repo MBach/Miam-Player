@@ -426,6 +426,10 @@
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation>Mají se sledovat změny ve vašich složkách s hudbou? Vaše knihovna bude vždy sladěna automaticky.</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -689,6 +693,14 @@
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
         <translation>&quot;The&quot; je velice běžný člen anglických jmen, jako v &quot;The Beatles&quot;</translation>
     </message>
+    <message>
+        <source>Search bar</source>
+        <translation type="unfinished">Vyhledávací pole</translation>
+    </message>
+    <message>
+        <source>Should I show automatically an extended search area next to the search bar?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -819,10 +831,6 @@
     <message>
         <source>LTR</source>
         <translation>LTR</translation>
-    </message>
-    <message>
-        <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation>Tento program je přehrávačem hudby, který se používá velice jednoduše.&lt;br&gt;&lt;br&gt;Nezahrnuje rozšířenou funkcionalitu, jako je práce s texty písní, nebo připojení k internetu. Nabízí velice přizpůsobitelné uživatelské rozhraní a umožňuje vést si oblíbené skladby.</translation>
     </message>
     <message>
         <source>Seek backward</source>
@@ -1191,6 +1199,10 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
         <source>Local</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1245,20 +1257,20 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
 <context>
     <name>SearchDialog</name>
     <message>
-        <source>Form</source>
-        <translation type="unfinished">Formulář</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Results are aggregated from:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Library</source>
         <translation type="unfinished">Knihovna</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1279,10 +1291,6 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     <message>
         <source>From Tag to File</source>
         <translation>Ze značky do souboru</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>Náhled</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -1315,6 +1323,10 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     <message>
         <source>Year</source>
         <translation>Rok</translation>
+    </message>
+    <message>
+        <source>From File to Tag</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

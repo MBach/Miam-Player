@@ -426,6 +426,10 @@
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation>Soll ich auf Änderungen in Ihrem Musikordner achten? Die Bibliothek wird immer automatisch synchronisiert.</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -689,6 +693,14 @@
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
         <translation>&quot;The&quot; ist ein äußerst häufiger Englischer Artikel, wie zum Beispiel in &quot;The Beatles&quot;</translation>
     </message>
+    <message>
+        <source>Search bar</source>
+        <translation type="unfinished">Suchleiste</translation>
+    </message>
+    <message>
+        <source>Should I show automatically an extended search area next to the search bar?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -819,10 +831,6 @@
     <message>
         <source>LTR</source>
         <translation>LTR</translation>
-    </message>
-    <message>
-        <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation>Diese Software ist ein einfach zu verwendender MP3-Player.&lt;br&gt;&lt;br&gt;Er beinhaltet keine erweiterten Funktionalitäten, wie Songtexte order Internetverbindung. Er bietet eine äußerst anpassbare Benutzeroberfläche und ermöglicht die Verwendung von Favoriten.</translation>
     </message>
     <message>
         <source>Seek backward</source>
@@ -1188,6 +1196,10 @@ Bitte überprüfen Sie, ob die Datei derzeit nicht geöffnet ist.</translation>
         <source>Local</source>
         <translation>Lokal</translation>
     </message>
+    <message>
+        <source>Local file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1240,20 +1252,20 @@ Bitte überprüfen Sie, ob die Datei derzeit nicht geöffnet ist.</translation>
 <context>
     <name>SearchDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Nach mehr Ergebnissen suchen...&lt;/a&gt;</translation>
-    </message>
-    <message>
         <source>Results are aggregated from:</source>
         <translation>Ergebnisse wurden gesammelt auf:</translation>
     </message>
     <message>
         <source>Library</source>
         <translation>Bibliothek</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1274,10 +1286,6 @@ Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</tra
     <message>
         <source>From Tag to File</source>
         <translation>Vom Tag zur Datei</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>Vorschau</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -1310,6 +1318,10 @@ Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</tra
     <message>
         <source>Year</source>
         <translation>Jahr</translation>
+    </message>
+    <message>
+        <source>From File to Tag</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

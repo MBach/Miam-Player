@@ -426,6 +426,10 @@
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation>Should I look for changes in your music folders? Your library will always be synchronized automatically.</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Help</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -689,6 +693,14 @@
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
         <translation>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</translation>
     </message>
+    <message>
+        <source>Search bar</source>
+        <translation>Search bar</translation>
+    </message>
+    <message>
+        <source>Should I show automatically an extended search area next to the search bar?</source>
+        <translation>Should I show automatically an extended search area next to the search bar?</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -819,10 +831,6 @@
     <message>
         <source>LTR</source>
         <translation>LTR</translation>
-    </message>
-    <message>
-        <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</translation>
     </message>
     <message>
         <source>Seek backward</source>
@@ -1100,7 +1108,7 @@
     </message>
     <message>
         <source>Source</source>
-        <translation type="unfinished"></translation>
+        <translation>Source</translation>
     </message>
 </context>
 <context>
@@ -1182,11 +1190,15 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</tra
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation type="unfinished"></translation>
+        <translation>You cannot modify remote medias</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation type="unfinished"></translation>
+        <translation>Local</translation>
+    </message>
+    <message>
+        <source>Local file</source>
+        <translation>Local file</translation>
     </message>
 </context>
 <context>
@@ -1240,20 +1252,20 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</tra
 <context>
     <name>SearchDialog</name>
     <message>
-        <source>Form</source>
-        <translation type="unfinished">Form</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Results are aggregated from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Results are aggregated from:</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished">Library</translation>
+        <translation>Library</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
+        <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -1274,10 +1286,6 @@ Select or drop tracks from your library or any external location.</translation>
     <message>
         <source>From Tag to File</source>
         <translation>From Tag to File</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>Preview</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -1310,6 +1318,10 @@ Select or drop tracks from your library or any external location.</translation>
     <message>
         <source>Year</source>
         <translation>Year</translation>
+    </message>
+    <message>
+        <source>From File to Tag</source>
+        <translation>From File to Tag</translation>
     </message>
 </context>
 <context>

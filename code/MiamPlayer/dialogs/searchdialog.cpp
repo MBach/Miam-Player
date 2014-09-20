@@ -17,7 +17,7 @@
 
 /** Constructor. */
 SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
-	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db)
+	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db), _isMaximized(false)
 {
 	this->setupUi(this);
 	_artists->setModel(new QStandardItemModel(this));
@@ -45,7 +45,7 @@ SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
 	this->setWindowOpacity(0.0);
 
 	connect(closeButton, &QPushButton::clicked, this, &SearchDialog::clear);
-	connect(labelSearchMore, &QLabel::linkActivated, this, &SearchDialog::searchMoreResults);
+	connect(labelSearchMore, &QLabel::linkActivated, this, &SearchDialog::searchLabelWasClicked);
 
 	// Unselect the 2 other lists when one is clicking on another one
 	foreach (QListView *list, findChildren<QListView*>()) {
@@ -68,6 +68,8 @@ SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
 			}
 		}
 	});
+
+	_mainWindow->installEventFilter(this);
 
 	this->setVisible(false);
 	_oldRect = this->geometry();
@@ -95,22 +97,15 @@ void SearchDialog::setSearchExpression(const QString &text)
 	emit aboutToSearch(text);
 }
 
-/** Redefined from QWidget. */
-void SearchDialog::setVisible(bool visible)
+bool SearchDialog::eventFilter(QObject *obj, QEvent *event)
 {
-	/*if (visible) {
-		this->setWindowOpacity(0.0);
-		QWidget::setVisible(true);
-		if (!_timer->isActive()) {
-			this->animate(0.0, 1.0);
+	if (obj == _mainWindow && event->type() == QEvent::Resize) {
+		if (this->isVisible() && _isMaximized) {
+			this->move(0, 0);
+			this->resize(_mainWindow->rect().size());
 		}
-		_timer->start();
-	} else {
-		this->setWindowOpacity(0.0);
-		_timer->stop();
-		QWidget::setVisible(false);
-	}*/
-	QWidget::setVisible(visible);
+	}
+	return AbstractSearchDialog::eventFilter(obj, event);
 }
 
 /** Custom rendering. */
@@ -165,7 +160,7 @@ void SearchDialog::aboutToProcessRemoteTracks(const std::list<RemoteTrack> &trac
 {
 	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
 	p->insertMedias(-1, QList<RemoteTrack>::fromStdList(tracks));
-	this->close();
+	this->clear();
 }
 
 /// XXX: factorize code
@@ -179,8 +174,14 @@ void SearchDialog::animate(qreal startValue, qreal stopValue)
 void SearchDialog::clear()
 {
 	//this->close();
+	_isMaximized = false;
+	iconSearchMore->setPixmap(QPixmap(":/icons/search"));
+	labelSearchMore->setText(tr("<a href='#more' style='text-decoration: none; color:#3399FF;'>Search for more results...</a>"));
 	this->setVisible(false);
 	this->setGeometry(_oldRect);
+	_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 void SearchDialog::appendSelectedItem(const QModelIndex &index)
@@ -269,20 +270,35 @@ void SearchDialog::search(const QString &text)
 }
 
 /** Expand this dialog to all available space. */
-void SearchDialog::searchMoreResults(const QString &link)
+void SearchDialog::searchLabelWasClicked(const QString &link)
 {
-	if (link == "#") {
-		QWidget *p = this;
-		QRect mainWindowRect;
-		while (p->parentWidget() != NULL) {
-			p = p->parentWidget();
-			if (p->parentWidget() == NULL) {
-				mainWindowRect = p->rect();
-			}
-		}
-		this->move(QPoint(0, 0));
-		this->resize(mainWindowRect.size());
+	if (link == "#more") {
+		_isMaximized = true;
+		iconSearchMore->setPixmap(QPixmap(":/icons/back"));
+		labelSearchMore->setText(tr("<a href='#less' style='text-decoration: none; color:#3399FF;'>Show less results</a>"));
+		this->move(0, 0);
+		this->resize(_mainWindow->rect().size());
+		this->searchMoreResults();
+		_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+		_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+		_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	} else {
+		_isMaximized = false;
+		iconSearchMore->setPixmap(QPixmap(":/icons/search"));
+		labelSearchMore->setText(tr("<a href='#more' style='text-decoration: none; color:#3399FF;'>Search for more results...</a>"));
+		_mainWindow->moveSearchDialog();
+		this->resize(_oldRect.size());
+		_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+		_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+		_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	}
+}
+
+/** Start search again more but fetch more results. */
+void SearchDialog::searchMoreResults()
+{
+	/// TODO
+	qDebug() << Q_FUNC_INFO << "not implemented";
 }
 
 void SearchDialog::toggleItems(bool enabled)

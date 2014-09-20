@@ -43,16 +43,30 @@ copy %QTDIR%\bin\Qt5MultimediaWidgets.dll packages\org.miamplayer.core\data\Qt5M
 copy %QTDIR%\bin\Qt5Network.dll packages\org.miamplayer.core\data\Qt5Network.dll
 copy %QTDIR%\bin\Qt5OpenGL.dll packages\org.miamplayer.core\data\Qt5OpenGL.dll
 copy %QTDIR%\bin\Qt5Sql.dll packages\org.miamplayer.core\data\Qt5Sql.dll
+
 copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
 set CoverFetcherBuild="C:\dev\cover-fetcher-build-x64\release"
+set DeezerPluginBuild="C:\dev\deezer-plugin-build-x64\release"
 set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build-x64"
 set MiniModeBuild="C:\dev\mini-mode-build-x64\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build-x64\release"
 
+rem Deezer talks to the Internet with QtWebKit
+copy %QTDIR%\bin\Qt5WebKit.dll packages\org.miamplayer.core\data\Qt5WebKit.dll
+copy %QTDIR%\bin\Qt5WebKitWidgets.dll packages\org.miamplayer.core\data\Qt5WebKitWidgets.dll
+
+rem WebKit has a lot of dependencies!
+copy %QTDIR%\bin\Qt5Positioning.dll packages\org.miamplayer.core\data\Qt5Positioning.dll
+copy %QTDIR%\bin\Qt5PrintSupport.dll packages\org.miamplayer.core\data\Qt5PrintSupport.dll
+copy %QTDIR%\bin\Qt5Qml.dll packages\org.miamplayer.core\data\Qt5Qml.dll
+copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.core\data\Qt5Quick.dll
+copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.core\data\Qt5Sensors.dll
+
 xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
+xcopy %DeezerPluginBuild%\deezer-plugin.dll packages\org.miamplayer.plugins.deezer\data\plugins\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
 xcopy %MiniModeBuild%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
@@ -62,11 +76,12 @@ rem vc redist 2012 and 2013 are required too
 xcopy vcredist packages\org.miamplayer.core\data\vcredist /y/i/e
 
 rem create the final package
-binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.6.13.exe
+binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.6.14.exe
 
 rem delete data folders
 rmdir packages\org.miamplayer.core\data\ /s /q
 rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
+rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
 rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
 rmdir packages\org.miamplayer.plugins.minimode\data\ /s /q
 rmdir packages\org.miamplayer.plugins.windowstoolbar\data\ /s /q

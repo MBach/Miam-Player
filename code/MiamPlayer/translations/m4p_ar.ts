@@ -426,6 +426,10 @@
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -689,6 +693,14 @@
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Search bar</source>
+        <translation type="unfinished">بَحْثْ</translation>
+    </message>
+    <message>
+        <source>Should I show automatically an extended search area next to the search bar?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -819,10 +831,6 @@
     <message>
         <source>LTR</source>
         <translation>RTL</translation>
-    </message>
-    <message>
-        <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation>.هذا البرنامج يستعمِل لتسهيل قِراءة الموسيقى. فإنه يوفر واجهة الإعدادات المتقدمة ويسمح إدارة المسارات المفضلة</translation>
     </message>
     <message>
         <source>Seek backward</source>
@@ -1201,6 +1209,10 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
         <source>Local</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1261,19 +1273,19 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
 <context>
     <name>SearchDialog</name>
     <message>
-        <source>Form</source>
-        <translation type="unfinished">شكل</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Results are aggregated from:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1295,10 +1307,6 @@ Select or drop tracks from your library or any external location.</source>
     <message>
         <source>From Tag to File</source>
         <translation>من الكلمات الدلالية إلى ملف</translation>
-    </message>
-    <message>
-        <source>Preview</source>
-        <translation>معاينة</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -1330,6 +1338,10 @@ Select or drop tracks from your library or any external location.</source>
     </message>
     <message>
         <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>From File to Tag</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

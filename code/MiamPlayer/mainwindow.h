@@ -72,6 +72,8 @@ public:
 
 	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
+	void moveSearchDialog();
+
 	AbstractSearchDialog * searchDialog() const { return _searchDialog; }
 
 	/** Set up all actions and behaviour. */
@@ -96,7 +98,7 @@ protected:
 
 	virtual bool event(QEvent *event);
 
-	virtual void moveEvent(QMoveEvent *);
+	virtual void moveEvent(QMoveEvent *event);
 
 public slots:
 	void processArgs(const QStringList &args);

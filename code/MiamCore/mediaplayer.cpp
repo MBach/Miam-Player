@@ -299,6 +299,7 @@ void MediaPlayer::play()
 			remotePlayer->resume();
 			_state = QMediaPlayer::PlayingState;
 		} else {
+			qDebug() << Q_FUNC_INFO << remotePlayer->host() << mc.canonicalUrl();
 			remotePlayer->play(mc.canonicalUrl());
 		}
 	}

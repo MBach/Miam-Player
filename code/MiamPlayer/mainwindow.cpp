@@ -133,6 +133,14 @@ void MainWindow::loadPlugins()
 	}
 }
 
+void MainWindow::moveSearchDialog()
+{
+	QPoint globalMW = this->mapToGlobal(QPoint(0, 0));
+	QPoint globalSB = searchBar->mapToGlobal(searchBar->rect().topRight());
+	_searchDialog->move(globalSB - globalMW);
+	_searchDialog->setVisible(true);
+}
+
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
@@ -196,10 +204,6 @@ void MainWindow::setupActions()
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &CustomizeThemeDialog::open);
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
-	connect(actionAboutMiamPlayer, &QAction::triggered, this, [=] () {
-		QString message = tr("This software is a MP3 player very simple to use.<br><br>It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.");
-		QMessageBox::about(this, QString("Miam Player v").append(qApp->applicationVersion()), message);
-	});
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
@@ -278,14 +282,6 @@ void MainWindow::setupActions()
 	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &MediaPlayer::setVolume);
 	volumeSlider->setValue(Settings::getInstance()->volume());
 
-	// How much space do we have after resizing for all buttons which are currently displayed?
-	auto moveSearchDialog = [this] () -> void {
-		QPoint globalMW = this->mapToGlobal(QPoint(0, 0));
-		QPoint globalSB = searchBar->mapToGlobal(searchBar->rect().topRight());
-		_searchDialog->move(globalSB - globalMW);
-		_searchDialog->setVisible(true);
-	};
-
 	// Filter the library when user is typing some text to find artist, album or tracks
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
@@ -295,14 +291,14 @@ void MainWindow::setupActions()
 				_searchDialog->clear();
 			} else {
 				_searchDialog->setSearchExpression(text);
-					moveSearchDialog();
-					searchBar->setFocus();
+				this->moveSearchDialog();
+				searchBar->setFocus();
 			}
 		}
 	});
 	connect(searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
 		if (!_searchDialog->isVisible() && settings->isExtendedSearchVisible()) {
-			moveSearchDialog();
+			this->moveSearchDialog();
 		}
 	});
 
@@ -372,6 +368,13 @@ void MainWindow::setupActions()
 
 	// Shortcuts
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
+
+	// Splitter
+	connect(splitter, &QSplitter::splitterMoved, this, [=]() {
+		if (_searchDialog->isVisible()) {
+			this->moveSearchDialog();
+		}
+	});
 }
 
 /** Update fonts for menu and context menus. */

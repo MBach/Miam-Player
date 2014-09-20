@@ -26,7 +26,7 @@ private:
 	QCheckBox *_checkBoxLibrary;
 
 	QMap<QListView*, QList<QStandardItem*>> _hiddenItems;
-
+	bool _isMaximized;
 
 public:
 	/** Constructor. */
@@ -38,9 +38,6 @@ public:
 	/** String to look for on every registered search engines. */
 	void setSearchExpression(const QString &text);
 
-	/** Redefined from QWidget. */
-	virtual void setVisible(bool visible);
-
 	/** Required interface from AbstractSearchDialog class. */
 	inline virtual QListView * artists() const { return _artists; }
 
@@ -51,12 +48,17 @@ public:
 	inline virtual QListView * tracks() const { return _tracks; }
 
 protected:
+	bool eventFilter(QObject *obj, QEvent *event);
+
 	/** Custom rendering. */
 	void paintEvent(QPaintEvent *);
 
 private:
 	/// XXX: factorize code
 	void animate(qreal startValue, qreal stopValue);
+
+	/** Start search again more but fetch more results. */
+	void searchMoreResults();
 
 public slots:
 	void clear();
@@ -73,7 +75,7 @@ private slots:
 	void search(const QString &text);
 
 	/** Expand this dialog to all available space. */
-	void searchMoreResults(const QString &link);
+	void searchLabelWasClicked(const QString &link);
 
 	void toggleItems(bool enabled);
 };

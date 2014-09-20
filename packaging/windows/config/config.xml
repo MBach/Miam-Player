@@ -5,8 +5,8 @@
 	<RunProgram>@TargetDir@/MiamPlayer.exe</RunProgram>
 	<RunProgramDescription>Launch MiamPlayer!</RunProgramDescription>
 	
-    <Version>0.6.13</Version>
-    <Title>Miam-Player Installer</Title>
+    <Version>0.6.14</Version>
+    <Title>Miam-Player</Title>
 	<InstallerApplicationIcon>mp</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
 	<Logo>logo.png</Logo>

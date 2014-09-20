@@ -426,6 +426,10 @@
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -687,6 +691,14 @@
     </message>
     <message>
         <source>Pictures (*.jpg *.jpeg *.png)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Should I show automatically an extended search area next to the search bar?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -996,10 +1008,6 @@
         <source>Open folder...</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>This software is a MP3 player very simple to use.&lt;br&gt;&lt;br&gt;It does not include extended functionalities like lyrics, or to be connected to the Web. It offers a highly customizable user interface and enables favorite tracks.</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
@@ -1142,13 +1150,6 @@
 Select a playlist to display the first 30 tracks.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
     <message>
         <source>Warning</source>
         <translation type="unfinished"></translation>
@@ -1174,6 +1175,13 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
         <source>And more tracks...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message numerus="yes">
+        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
 </context>
 <context>
     <name>PlaylistModel</name>
@@ -1183,6 +1191,10 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
     </message>
     <message>
         <source>Local</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local file</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1237,19 +1249,19 @@ Please, would you be nice to check if the file isn&apos;t opened elsewhere?</sou
 <context>
     <name>SearchDialog</name>
     <message>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Results are aggregated from:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1300,11 +1312,11 @@ Select or drop tracks from your library or any external location.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Preview</source>
+        <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Apply</source>
+        <source>From File to Tag</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

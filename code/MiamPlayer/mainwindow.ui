@@ -573,8 +573,8 @@
     <addaction name="actionShowHelp"/>
     <addaction name="actionCheckNewRelease"/>
     <addaction name="separator"/>
-    <addaction name="actionAboutMiamPlayer"/>
     <addaction name="actionAboutQt"/>
+    <addaction name="actionShowDebug"/>
    </widget>
    <widget class="QMenu" name="menuPlayback">
     <property name="title">
@@ -859,6 +859,15 @@
   <action name="actionOpenFolder">
    <property name="text">
     <string>Open folder...</string>
+   </property>
+  </action>
+  <action name="actionShowDebug">
+   <property name="icon">
+    <iconset resource="mp.qrc">
+     <normaloff>:/icons/debug</normaloff>:/icons/debug</iconset>
+   </property>
+   <property name="text">
+    <string>Show debug information...</string>
    </property>
   </action>
  </widget>

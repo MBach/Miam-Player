@@ -5,11 +5,21 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MiamPlayer"
-#define VERSION "0.6.13"
+#define VERSION "0.6.14"
 
 #include "miamstyle.h"
 #include "plugininfo.h"
 #include <qtsingleapplication/QtSingleApplication>
+
+#include "debug/logbrowser.h"
+#include <QPointer>
+QPointer<LogBrowser> logBrowser;
+
+void debugOutput(QtMsgType type, const QMessageLogContext &, const QString &msg)
+{
+	if (logBrowser)
+		logBrowser->outputMessage(type, msg);
+}
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +28,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
+	qInstallMessageHandler(debugOutput);
 
 	QtSingleApplication app(SOFT, argc, argv);
 
@@ -29,6 +40,8 @@ int main(int argc, char *argv[])
 
 	app.setStyle(new MiamStyle());
 	MainWindow *window = new MainWindow;
+	logBrowser = new LogBrowser;
+	QObject::connect(window->actionShowDebug, &QAction::triggered, logBrowser, &LogBrowser::show);
 	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 	app.setActivationWindow(window);
 
@@ -52,5 +65,7 @@ int main(int argc, char *argv[])
 		}
 		window->processArgs(args);
 	}
-	return app.exec();
+	int result = app.exec();
+	delete logBrowser;
+	return result;
 }

@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string notr="true">Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,2,2,2,1">
    <property name="spacing">
@@ -93,7 +93,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>&lt;a href=&quot;#&quot; style=&quot;text-decoration: none; color:#3399FF;&quot;&gt;Search for more results...&lt;/a&gt;</string>
+        <string>&lt;a href='#more' style='text-decoration: none; color:#3399FF;'&gt;Search for more results...&lt;/a&gt;</string>
        </property>
        <property name="margin">
         <number>4</number>
@@ -323,6 +323,12 @@
    </item>
    <item>
     <widget class="QWidget" name="aggregated" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <property name="spacing">
        <number>4</number>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+	<DisplayName>Deezer plugin</DisplayName>
+	<Description>This plugin is able to connect Deezer. It can play music in streaming. Your library is synchronized too!</Description>
+	<Description xml:lang="fr_fr">Cette extension est capable de se connecter à Deezer. Elle peut lire de la musique en Streaming. Votre bibliothèque est synchronisée également !</Description>
+	<Version>0.1</Version>
+	<ReleaseDate>2014-09-19</ReleaseDate>
+	<Name>org.miamplayer.plugins.deezer</Name>
+	<Default>true</Default>
+	<SortingPriority>13</SortingPriority>
+</Package>
