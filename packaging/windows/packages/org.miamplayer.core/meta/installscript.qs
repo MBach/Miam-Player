@@ -100,6 +100,12 @@ Component.prototype.beginInstallation = function()
 {
     // call default implementation which is necessary for most hooks in beginInstallation case it makes nothing
     component.beginInstallation();
+	
+	if (installer.value("os") === "win") {
+        installer.setValue("RunProgram", "@TargetDir@/MiamPlayer.exe");
+    } else if (installer.value("os") === "x11") {
+        installer.setValue("RunProgram", "@TargetDir@/MiamPlayer");
+    }
 }
 
 Component.prototype.chooseTarget = function () {

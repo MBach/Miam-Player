@@ -9,5 +9,5 @@
 	<Name>org.miamplayer.core.shortcuts.desktop</Name>
 	<Default>script</Default>
 	<Script>installscript.qs</Script>
-	<SortingPriority>100</SortingPriority>
+	<SortingPriority>98</SortingPriority>
 </Package>

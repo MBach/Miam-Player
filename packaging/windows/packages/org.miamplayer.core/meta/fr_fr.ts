@@ -31,11 +31,11 @@
     </message>
     <message>
         <source>Installation Folder</source>
-        <translation>Dossier d'installation</translation>
+        <translation>Dossier d&apos;installation</translation>
     </message>
     <message>
         <source>Choose your target directory.</source>
-        <translation>Choisissez le dossier d'installation.</translation>
+        <translation>Choisissez le dossier d&apos;installation.</translation>
     </message>
 </context>
 </TS>

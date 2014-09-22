@@ -3,8 +3,10 @@
     <Name>Miam-Player</Name>
 	
 	<RunProgram>@TargetDir@/MiamPlayer.exe</RunProgram>
-	<RunProgramDescription>Launch MiamPlayer!</RunProgramDescription>
-	
+	<!--
+	<RunProgramDescription>Run MiamPlayer now!</RunProgramDescription>
+	<RunProgramDescription xml:lang="fr_fr">Lancer Miam-Player maintenant !</RunProgramDescription>
+	-->
     <Version>0.6.14</Version>
     <Title>Miam-Player</Title>
 	<InstallerApplicationIcon>mp</InstallerApplicationIcon>
@@ -19,4 +21,11 @@
 	<TargetDir>@ApplicationsDir@\MiamPlayer</TargetDir>
 	<AdminTargetDir>@ApplicationsDir@\MiamPlayer</AdminTargetDir>
 	<RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
+	<!--
+	<RemoteRepositories>
+        <Repository>
+            <Url>http://www.miam-player.org/repository/</Url>
+        </Repository>
+    </RemoteRepositories>
+	-->
 </Installer>

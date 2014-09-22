@@ -1,5 +1,6 @@
 #include "mediaplayer.h"
 
+#include "settings.h"
 #include "settingsprivate.h"
 #include <QMediaPlaylist>
 
@@ -93,6 +94,7 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 		_playlist->disconnect(this);
 	}
 	_playlist = playlist;
+	qDebug() << Q_FUNC_INFO;
 	connect(_playlist, &QMediaPlaylist::currentIndexChanged, this, [=]() {
 		if (_player->state() == Vlc::State::Paused || _player->state() == Vlc::State::Playing) {
 			_player->blockSignals(true);
@@ -112,7 +114,8 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 
 void MediaPlayer::setVolume(int v)
 {
-	if (_player && _player->audio()) {
+	Settings::getInstance()->setVolume(v);
+	if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
 		_player->audio()->setVolume(v);
 	}
 	foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
@@ -267,6 +270,7 @@ void MediaPlayer::disconnectPlayers(bool isLocal)
 /** Play current track in the playlist. */
 void MediaPlayer::play()
 {
+	qDebug() << Q_FUNC_INFO;
 	// Check if it's possible to play tracks first
 	if (!_playlist) {
 		return;
@@ -279,6 +283,7 @@ void MediaPlayer::play()
 	// Everything is splitted in 2: local actions and remote actions
 	// Is it the good way to proceed?
 	if (mc.canonicalUrl().isLocalFile()) {
+		qDebug() << Q_FUNC_INFO << "playing local file";
 		_player->blockSignals(false);
 		if (_state == QMediaPlayer::PausedState) {
 			_player->resume();
@@ -291,15 +296,17 @@ void MediaPlayer::play()
 				delete _media;
 			}
 			_media = new VlcMedia(file, true, _instance);
+			_player->audio()->setVolume(Settings::getInstance()->volume());
 			_player->open(_media);
 		}
 	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
+		qDebug() << Q_FUNC_INFO << remotePlayer->host() << mc.canonicalUrl();
 		remotePlayer->blockSignals(false);
+		remotePlayer->setVolume(Settings::getInstance()->volume());
 		if (_state == QMediaPlayer::PausedState) {
 			remotePlayer->resume();
 			_state = QMediaPlayer::PlayingState;
 		} else {
-			qDebug() << Q_FUNC_INFO << remotePlayer->host() << mc.canonicalUrl();
 			remotePlayer->play(mc.canonicalUrl());
 		}
 	}
@@ -308,13 +315,10 @@ void MediaPlayer::play()
 /** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
-	if (_player->state() != Vlc::Stopped) {
-		_player->stop();
-	} else {
-		foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
-			if (remotePlayer) {
-				remotePlayer->stop();
-			}
+	_player->stop();
+	foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
+		if (remotePlayer) {
+			remotePlayer->stop();
 		}
 	}
 }
