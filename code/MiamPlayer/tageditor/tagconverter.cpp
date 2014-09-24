@@ -63,12 +63,12 @@ void TagConverter::applyPatternToColumns()
 	//QRegularExpression re = this->generatePattern2(fileToTagLineEdit);
 	///
 	QString text = fileToTagLineEdit->text();
-	text = text.replace(":", "_");
+	text = text.replace(':', '_');
 
 	// Remove and convert spaces according to columns
 	for (int i = fileToTagLineEdit->tags().count() - 1; i >= 0; i--) {
 		TagButton *tag = fileToTagLineEdit->tags().at(i);
-		QString substitution = ":" + QString::number(tag->column());
+		QString substitution = ':' + QString::number(tag->column());
 		columns.prepend(tag->column());
 		text.replace(tag->position(), tag->spaceCount(), substitution);
 	}
@@ -78,7 +78,7 @@ void TagConverter::applyPatternToColumns()
 	// Depending on which detected columns, choose a sub-regex
 	for (int i = 0; i < text.size(); i++) {
 		QChar c = text.at(i);
-		if (c == ":") {
+		if (c == ':') {
 			c = text.at(++i);
 			switch (c.digitValue()) {
 			case TagEditorTableWidget::COL_Track:
@@ -125,7 +125,7 @@ void TagConverter::applyPatternToFilenames()
 	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
 		QString text = "";
 		for (int c = 0; c < pattern.size(); c++) {
-			if (pattern.at(c) == ":") {
+			if (pattern.at(c) == ':') {
 				/// XXX: Working for < 10 columns in TagEditor!
 				int column = pattern.at(++c).digitValue();
 				text += _tagEditor->item(index.row(), column)->text();
@@ -146,13 +146,13 @@ QString TagConverter::generatePattern(TagLineEdit *lineEdit) const
 {
 	qDebug() << Q_FUNC_INFO << lineEdit->text();
 	QString pattern = lineEdit->text();
-	pattern = pattern.replace(":", "_");
+	pattern = pattern.replace(':', '_');
 
 	/// XXX code review needed
 	// Proceed to substitutions in reverse order
 	for (int i = lineEdit->tags().count() - 1; i >= 0; i--) {
 		TagButton *tag = lineEdit->tags().at(i);
-		QString substitution =  ":" + QString::number(tag->column());
+		QString substitution =  ':' + QString::number(tag->column());
 		pattern.replace(tag->position(), tag->spaceCount(), substitution);
 	}
 	qDebug() << "pattern" << pattern;
