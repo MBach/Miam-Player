@@ -5,8 +5,8 @@
 #include "model/librarysqlmodel.h"
 #include "treeview.h"
 
-#include <3rdparty/taglib/tfile.h>
-#include <3rdparty/taglib/tpropertymap.h>
+#include <taglib/tfile.h>
+#include <taglib/tpropertymap.h>
 #include <QDir>
 #include <QDragEnterEvent>
 #include <QSqlQuery>

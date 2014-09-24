@@ -2,7 +2,7 @@
 
 #include <settings.h>
 #include <filehelper.h>
-#include <3rdparty/taglib/fileref.h>
+#include <taglib/fileref.h>
 
 #include "../styling/miamstyleditemdelegate.h"
 #include "../treeview.h"
