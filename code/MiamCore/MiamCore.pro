@@ -35,7 +35,7 @@ unix {
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
-    LIBS += -L$$OUT_PWD -ltag
+    LIBS += -L$$OUT_PWD -ltag -lvlc-qt -lvlc-qt-widgets
 }
 macx {
     LIBS += -L$$PWD/../../lib/ -ltag
