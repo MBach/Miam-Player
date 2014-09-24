@@ -69,6 +69,10 @@ public slots:
 	virtual void aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks);
 
 private slots:
+	void artistWasDoubleClicked(const QModelIndex &artist);
+	void albumWasDoubleClicked(const QModelIndex &album);
+	void trackWasDoubleClicked(const QModelIndex &track);
+
 	void appendSelectedItem(const QModelIndex &index);
 
 	/** Local search for matching expressions. */

@@ -87,7 +87,7 @@ void TagConverter::applyPatternToColumns()
 				characterClass = "[\\d]+"; // Digits
 				break;
 			default:
-				characterClass = "[\\w ']+";	// Words, digits, and spaces
+				characterClass = "[\\w '-]+";	// Words, digits, dash and spaces
 				break;
 			}
 			pattern += "(" + characterClass + ")";

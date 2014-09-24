@@ -73,6 +73,10 @@ SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
 
 	this->setVisible(false);
 	_oldRect = this->geometry();
+
+	connect(_artists, &QListView::doubleClicked, this, &SearchDialog::artistWasDoubleClicked);
+	connect(_albums, &QListView::doubleClicked, this, &SearchDialog::albumWasDoubleClicked);
+	connect(_tracks, &QListView::doubleClicked, this, &SearchDialog::trackWasDoubleClicked);
 }
 
 /** Required interface from AbstractSearchDialog class. */
@@ -182,6 +186,21 @@ void SearchDialog::clear()
 	_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void SearchDialog::artistWasDoubleClicked(const QModelIndex &artist)
+{
+	qDebug() << Q_FUNC_INFO << "not implemented";
+}
+
+void SearchDialog::albumWasDoubleClicked(const QModelIndex &album)
+{
+	qDebug() << Q_FUNC_INFO << "not implemented";
+}
+
+void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
+{
+	qDebug() << Q_FUNC_INFO << "not implemented";
 }
 
 void SearchDialog::appendSelectedItem(const QModelIndex &index)
