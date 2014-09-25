@@ -1,22 +1,18 @@
 QT += sql widgets
 
-TARGET = MiamUniqueLibrary
 TEMPLATE = lib
 
 DEFINES += MIAMUNIQUELIBRARY_LIBRARY
 
-FORMS += \
-    uniquelibrary.ui \
-    templateAlbum.ui
+FORMS += templateAlbum.ui \
+    uniquelibrary.ui
 
-HEADERS += \
-    uniquelibrary.h \
+HEADERS += albumform.h \
     miamuniquelibrary_global.h \
-    albumform.h
+    uniquelibrary.h
 
-SOURCES += \
-    uniquelibrary.cpp \
-    albumform.cpp
+SOURCES += albumform.cpp \
+    uniquelibrary.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore
@@ -31,7 +27,17 @@ CONFIG(release, debug|release) {
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
 }
-unix: LIBS += -L$$OUT_PWD/../MiamCore/ -lMiamCore
+win32 {
+    TARGET = MiamUniqueLibrary
+}
+unix {
+    LIBS += -L$$OUT_PWD/../MiamCore/ -lmiam-core
+    TARGET = miam-uniquelibrary
+}
+unix:!macx {
+    target.path = /usr/lib/
+    INSTALLS += target
+}
 
 INCLUDEPATH += $$PWD/../MiamCore/
 DEPENDPATH += $$PWD/../MiamCore

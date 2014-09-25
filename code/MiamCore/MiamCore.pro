@@ -8,10 +8,10 @@ DEPENDPATH += $$3rdpartyDir
 
 DEFINES += MIAM_PLUGIN
 
-TARGET = MiamCore
 TEMPLATE = lib
 
 win32 {
+    TARGET = MiamCore
     CONFIG += dll
     CONFIG(debug, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
@@ -31,53 +31,54 @@ win32 {
     }
 }
 unix {
+    TARGET = miam-core
     CONFIG += c++11
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
     LIBS += -L$$OUT_PWD -ltag -lvlc-qt -lvlc-qt-widgets
+    target.path = /usr/lib/
+    INSTALLS += target
 }
 macx {
-    LIBS += -L$$PWD/../../lib/ -ltag
+    LIBS += -L$$PWD/../../lib/ -ltag -lvlc-qt -lvlc-qt-widgets
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
 }
 
-SOURCES += \
-    model/librarysqlmodel.cpp \
+SOURCES += model/librarysqlmodel.cpp \
+    model/remotetrack.cpp \
+    model/selectedtracksmodel.cpp \
     cover.cpp \
     filehelper.cpp \
+    flowlayout.cpp \
     mediabutton.cpp \
     mediaplayer.cpp \
     musicsearchengine.cpp \
     quickstartsearchengine.cpp \
     settings.cpp \
+    settingsprivate.cpp \
     sqldatabase.cpp \
-    timelabel.cpp \
-    model/selectedtracksmodel.cpp \
-    flowlayout.cpp \
-    model/remotetrack.cpp \
-    settingsprivate.cpp
+    timelabel.cpp
 
-HEADERS += \
+HEADERS += interfaces/basicplugin.h \
+    interfaces/itemviewplugin.h \
+    interfaces/mediaplayerplugin.h \
+    interfaces/remotemediaplayerplugin.h \
+    interfaces/searchmediaplayerplugin.h \
     model/librarysqlmodel.h \
+    model/remotetrack.h \
     model/selectedtracksmodel.h \
+    abstractsearchdialog.h \
     cover.h \
     filehelper.h \
+    flowlayout.h \
     mediabutton.h \
     mediaplayer.h \
     miamcore_global.h \
     musicsearchengine.h \
     quickstartsearchengine.h \
-    settings.h \
-    sqldatabase.h \
-    timelabel.h \
-    flowlayout.h \
-    interfaces/searchmediaplayerplugin.h \
-    interfaces/basicplugin.h \
-    interfaces/itemviewplugin.h \
-    interfaces/mediaplayerplugin.h \
-    abstractsearchdialog.h \
-    model/remotetrack.h \
     remotemediaplayer.h \
-    interfaces/remotemediaplayerplugin.h \
-    settingsprivate.h
+    settings.h \
+    settingsprivate.h \
+    sqldatabase.h \
+    timelabel.h

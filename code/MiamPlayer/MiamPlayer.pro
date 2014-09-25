@@ -129,26 +129,26 @@ HEADERS += \
     treeview.h \
     volumeslider.h
 
-FORMS += \
-    mainwindow.ui \
+FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \
     customizetheme.ui \
     dragdroppopup.ui \
     libraryorderdialog.ui \
+    mainwindow.ui \
     playlistmanager.ui \
     quickstart.ui \
     tagconverter.ui \
     tageditor.ui \
-    closeplaylistpopup.ui \
     searchdialog.ui
 
-RESOURCES += \
-    mp.qrc
+RESOURCES += mp.qrc
 
 win32 {
     RC_FILE += config/mp.rc
+    TARGET = MiamPlayer
 }
 unix {
+    TARGET = miam-player
     CONFIG += c++11
     QMAKE_CXXFLAGS += -std=c++11
 }
@@ -174,13 +174,13 @@ TRANSLATIONS = translations/m4p_ar.ts \
 
 CONFIG(debug, debug|release) {
     win32 {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
-        } else {
-            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
-        }
+	!contains(QMAKE_TARGET.arch, x86_64) {
+	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
+	} else {
+	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
+	}
     }
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
@@ -190,13 +190,13 @@ CONFIG(debug, debug|release) {
 
 CONFIG(release, debug|release) {
     win32 {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
-        } else {
-            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
-        }
+	!contains(QMAKE_TARGET.arch, x86_64) {
+	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
+	} else {
+	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
+	}
     }
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
@@ -204,10 +204,12 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix:!macx {
-    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/ -lMiamUniqueLibrary
+    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
+    target.path = /usr/bin/
+    INSTALLS += target
 }
 macx {
-    LIBS += -L$$PWD/../../lib/ -ltag -L$$OUT_PWD/../MiamCore/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/ -lMiamUniqueLibrary
+    LIBS += -L$$PWD/../../lib/ -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     ICON = $$PWD/mp.icns
     QMAKE_INFO_PLIST = $$PWD/../../packaging/osx/Info.plist
     #1 create Framework directory
@@ -233,6 +235,5 @@ DEPENDPATH += $$PWD/../MiamCore
 DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/library $$PWD/playlists $$PWD/tageditor
 DEPENDPATH += $$PWD/../MiamUniqueLibrary
 
-OTHER_FILES += \
-    config/mp.rc \
+OTHER_FILES += config/mp.rc \
     qtsingleapplication/qtsingleapplication.pri
