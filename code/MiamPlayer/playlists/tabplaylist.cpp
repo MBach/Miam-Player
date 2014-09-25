@@ -179,7 +179,7 @@ Playlist* TabPlaylist::addPlaylist()
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaInserted, this, [=]() {
 		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
 	});
-	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int end) {
+	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
 		bool empty = p->mediaPlaylist()->isEmpty();
 		this->displayEmptyArea(empty);
 		if (empty || p->mediaPlaylist()->currentIndex() == start) {

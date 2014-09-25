@@ -15,10 +15,8 @@
 #include <QtDebug>
 
 MediaPlayer::MediaPlayer(QObject *parent) :
-	QObject(parent), _media(NULL), _playlist(NULL)
+	QObject(parent), _playlist(NULL), _media(NULL)
 {
-	/// FIXME ?
-	//this->setNotifyInterval(100);
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
 	this->createLocalConnections();
@@ -194,7 +192,7 @@ void MediaPlayer::seekForward()
 
 void MediaPlayer::skipBackward()
 {
-	if (!_playlist || _playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0) {
+	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0)) {
 		return;
 	}
 
@@ -219,7 +217,7 @@ void MediaPlayer::skipBackward()
 
 void MediaPlayer::skipForward()
 {
-	if (!_playlist || _playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex()) {
+	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
 		return;
 	}
 

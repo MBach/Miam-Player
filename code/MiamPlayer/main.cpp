@@ -41,7 +41,9 @@ int main(int argc, char *argv[])
 	app.setStyle(new MiamStyle());
 	MainWindow *window = new MainWindow;
 	logBrowser = new LogBrowser;
-	QObject::connect(window->actionShowDebug, &QAction::triggered, logBrowser, &LogBrowser::show);
+	QObject::connect(window->actionShowDebug, &QAction::triggered, [=]() {
+		logBrowser->show();
+	});
 	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 	app.setActivationWindow(window);
 

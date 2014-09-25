@@ -160,7 +160,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(radioButtonEnableArticles, &QRadioButton::toggled, this, [=](bool b) {
 		settings->setIsLibraryFilteredByArticles(b);
 		// Don't reorder the library if one hasn't typed an article yet
-		if (b || !b && !settings->libraryFilteredByArticles().isEmpty()) {
+		if (b || (!b && !settings->libraryFilteredByArticles().isEmpty())) {
 			mainWindow->library->changeHierarchyOrder();
 		}
 	});

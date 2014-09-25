@@ -91,7 +91,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		}
 		if (o.state.testFlag(QStyle::State_Selected)) {
 			p.setPen(o.palette.highlightedText().color());
-		} else if ((o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos) || _libraryTreeView->currentLetter() == qc)) {
+		} else if (((o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) || _libraryTreeView->currentLetter() == qc)) {
 			p.setPen(o.palette.highlightedText().color());
 		} else {
 			p.setPen(o.palette.windowText().color());

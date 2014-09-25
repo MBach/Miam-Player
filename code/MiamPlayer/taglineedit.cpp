@@ -225,7 +225,7 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 	// Compute cursor position
 	QRect contentsRect = this->style()->subElementRect(QStyle::SE_LineEditContents, &frame);
 	QRect rText = contentsRect.adjusted(2, 0, 0, 0);
-	if (placeholderText().isEmpty() || !placeholderText().isEmpty() && hasFocus()) {
+	if (placeholderText().isEmpty() || (!placeholderText().isEmpty() && hasFocus())) {
 		p.setPen(palette.text().color());
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
 

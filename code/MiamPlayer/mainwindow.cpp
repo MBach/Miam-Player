@@ -238,7 +238,7 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList indexes, const QStringList &tracks) {
+		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QStringList &tracks) {
 			this->showTagEditor();
 			tagEditor->addItemsToEditor(tracks);
 		});

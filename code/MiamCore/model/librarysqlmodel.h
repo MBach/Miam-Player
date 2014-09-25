@@ -36,7 +36,7 @@ public:
 	/**
 	 * Update a list of tracks. If track name has changed, will be removed from Library then added right after.
 	 * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
-	void updateTracks(const QList<QPair<QString, QString>> &tracksToUpdate);
+	void updateTracks(const QList<QPair<QString, QString> > &tracksToUpdate);
 
 private:
 	/** Read all tracks entries in the database and send them to connected views. */

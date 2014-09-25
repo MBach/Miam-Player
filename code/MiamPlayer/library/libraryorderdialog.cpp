@@ -88,7 +88,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 		});
 	}
 
-	QTreeView *initialTreeView;
+	/*QTreeView *initialTreeView;
 	switch (settings->value("insertPolicy").toInt()) {
 	case LibraryTreeView::IT_Album:
 		initialTreeView = _ui->albumTreeView;
@@ -103,7 +103,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	default:
 		initialTreeView = _ui->artistTreeView;
 		break;
-	}
+	}*/
 }
 
 QString LibraryOrderDialog::headerValue() const
