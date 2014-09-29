@@ -200,7 +200,10 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &album)
 
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
 {
-	qDebug() << Q_FUNC_INFO << "not implemented";
+	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+	QStringList l = QStringList() << track.data(DT_Identifier).toString();
+	p->insertMedias(-1, l);
+	this->clear();
 }
 
 void SearchDialog::appendSelectedItem(const QModelIndex &index)
@@ -253,7 +256,7 @@ void SearchDialog::search(const QString &text)
 		QList<QStandardItem*> artistList;
 		while (qSearchForArtists.next()) {
 			QStandardItem *artist = new QStandardItem(qSearchForArtists.record().value(0).toString());
-			artist->setData(_checkBoxLibrary->text(), AbstractSearchDialog::DT_Origin);
+			artist->setData(_checkBoxLibrary->text(), DT_Origin);
 			artistList.append(artist);
 		}
 		this->processResults(Artist, artistList);
@@ -266,20 +269,22 @@ void SearchDialog::search(const QString &text)
 		QList<QStandardItem*> albumList;
 		while (qSearchForAlbums.next()) {
 			QStandardItem *album = new QStandardItem(qSearchForAlbums.record().value(0).toString() + " – " + qSearchForAlbums.record().value(1).toString());
-			album->setData(_checkBoxLibrary->text(), AbstractSearchDialog::DT_Origin);
+			album->setData(_checkBoxLibrary->text(), DT_Origin);
 			albumList.append(album);
 		}
 		this->processResults(Album, albumList);
 	}
 
 	QSqlQuery qSearchForTracks(_db);
-	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist) FROM tracks WHERE title like :t LIMIT 5");
+	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist), absPath FROM tracks WHERE title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {
 		QList<QStandardItem*> trackList;
 		while (qSearchForTracks.next()) {
-			QStandardItem *track = new QStandardItem(qSearchForTracks.record().value(0).toString() + " – " + qSearchForTracks.record().value(1).toString());
-			track->setData(_checkBoxLibrary->text(), AbstractSearchDialog::DT_Origin);
+			QSqlRecord r = qSearchForTracks.record();
+			QStandardItem *track = new QStandardItem(r.value(0).toString() + " – " + r.value(1).toString());
+			track->setData(_checkBoxLibrary->text(), DT_Origin);
+			track->setData(r.value(2), DT_Identifier);
 			trackList.append(track);
 		}
 		this->processResults(Track, trackList);

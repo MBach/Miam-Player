@@ -78,37 +78,91 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 
 		// Highlight selected text
 		p.setPen(o.palette.text().color());
-		/*if (hasSelectedText()) {
+		if (hasSelectedText()) {
 
 			QRect rectTextLeft, rectTextMid, rectTextRight;
 			QString leftText, midText, rightText;
+
 			int sStart = selectionStart();
 			int sEnd = selectedText().length() - 1;
 
-			if (sStart == 0) {
-				midText = rText;
-				rectTextMid = rText;
-				rectTextMid.setWidth(fontMetrics().width(midText));
-			} else if (sEnd == text().length() - 1) {
-
-			} else {
+			// Four uses cases to highlight a text
+			if (sStart > 0 && sEnd < text().size() - 1) {
+				// a[b]cd
 				leftText = text().left(sStart);
-				rectTextLeft = rText;
+				midText = selectedText();
+				rightText = text().mid(sStart + selectedText().length());
+
+				rectTextLeft.setX(rText.x());
+				rectTextLeft.setY(rText.y());
 				rectTextLeft.setWidth(fontMetrics().width(leftText));
+				rectTextLeft.setHeight(rText.height());
+
+				rectTextMid.setX(rectTextLeft.x() + rectTextLeft.width());
+				rectTextMid.setY(rText.y());
+				rectTextMid.setWidth(fontMetrics().width(midText));
+				rectTextMid.setHeight(rText.height());
+
+				rectTextRight.setX(rectTextMid.x() + rectTextMid.width());
+				rectTextRight.setY(rText.y());
+				rectTextRight.setWidth(fontMetrics().width(rightText));
+				rectTextRight.setHeight(rText.height());
+
+				p.fillRect(rectTextLeft, o.palette.base());
+				p.fillRect(rectTextMid, o.palette.highlight());
+				p.fillRect(rectTextRight, o.palette.base());
+
+				p.drawText(rectTextLeft, Qt::AlignLeft | Qt::AlignVCenter, leftText);
+				p.save();
+				p.setPen(o.palette.highlightedText().color());
+				p.drawText(rectTextMid, Qt::AlignLeft | Qt::AlignVCenter, midText);
+				p.restore();
+				p.drawText(rectTextRight, Qt::AlignLeft | Qt::AlignVCenter, rightText);
+			} else if (sStart == 0 && sEnd < text().size() - 1) {
+				// [ab]cd
+				midText = selectedText();
+				rightText = text().mid(sStart + selectedText().length());
+
+				rectTextMid.setX(rText.x());
+				rectTextMid.setY(rText.y());
+				rectTextMid.setWidth(fontMetrics().width(midText));
+				rectTextMid.setHeight(rText.height());
+
+				rectTextRight.setX(rectTextMid.x() + rectTextMid.width());
+				rectTextRight.setY(rText.y());
+				rectTextRight.setWidth(fontMetrics().width(rightText));
+				rectTextRight.setHeight(rText.height());
+
+				p.fillRect(rectTextMid, o.palette.highlight());
+				p.fillRect(rectTextRight, o.palette.base());
+
+				p.save();
+				p.setPen(o.palette.highlightedText().color());
+				p.drawText(rectTextMid, Qt::AlignLeft | Qt::AlignVCenter, midText);
+				p.restore();
+				p.drawText(rectTextRight, Qt::AlignLeft | Qt::AlignVCenter, rightText);
+			} else if (sStart == 0 && sEnd == text().size() - 1) {
+				// [abcd]
+				midText = selectedText();
+
+				rectTextMid.setX(rText.x());
+				rectTextMid.setY(rText.y());
+				rectTextMid.setWidth(fontMetrics().width(midText));
+				rectTextMid.setHeight(rText.height());
+
+				p.fillRect(rectTextMid, o.palette.highlight());
+
+				p.save();
+				p.setPen(o.palette.highlightedText().color());
+				p.drawText(rectTextMid, Qt::AlignLeft | Qt::AlignVCenter, midText);
+				p.restore();
+			} else {
+				// ab[cd]
+				// never?
 			}
-
-			p.drawText(rectTextLeft, Qt::AlignLeft | Qt::AlignVCenter, leftText);
-
-			p.fillRect(rectTextMid, o.palette.highlight());
-			p.setPen(o.palette.highlightedText().color());
-			p.drawText(rectTextMid, Qt::AlignLeft | Qt::AlignVCenter, midText);
-
-			p.setPen(o.palette.text().color());
-			p.drawText(rectTextRight, Qt::AlignLeft | Qt::AlignVCenter, rightText);
 		} else {
 			p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
-		}*/
-		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
+		}
 		this->drawCursor(&p, rText);
 	} else {
 		p.setPen(o.palette.mid().color());
