@@ -17,7 +17,7 @@
 #include <model/librarysqlmodel.h>
 
 #include "uniquelibrary.h"
-#include "sqldatabase.h"
+#include "model/sqldatabase.h"
 
 class CustomizeThemeDialog;
 

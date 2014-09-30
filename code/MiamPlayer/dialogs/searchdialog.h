@@ -2,7 +2,7 @@
 #define SEARCHDIALOG_H
 
 #include "abstractsearchdialog.h"
-#include "sqldatabase.h"
+#include "model/sqldatabase.h"
 #include "ui_searchdialog.h"
 
 #include <QPropertyAnimation>

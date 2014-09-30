@@ -7,7 +7,7 @@
 
 #include "../playlists/tabplaylist.h"
 
-#include <QSqlDatabase>
+#include "model/sqldatabase.h"
 #include <QStackedLayout>
 #include <QStandardItem>
 
@@ -19,7 +19,7 @@ class PlaylistManager : public QDialog, public Ui::PlaylistManager
 	Q_OBJECT
 
 private:
-	QSqlDatabase _db;
+	SqlDatabase _db;
 
 	/** Reference to TabPlaylist used a lot to know what we are manipulating. */
 	TabPlaylist *playlists;
@@ -37,7 +37,7 @@ public:
 						 IsPlaylistRegistered	= Qt::UserRole + 2,
 						 PlaylistObjectPointer	= Qt::UserRole + 3};
 
-	explicit PlaylistManager(const QSqlDatabase &db, TabPlaylist *tabPlaylist);
+	explicit PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist);
 
 	bool eventFilter(QObject *obj, QEvent *event);
 
@@ -56,7 +56,7 @@ private:
 	/** Load a playlist (*.m3u8) saved on the filesystem. */
 	void loadPlaylist(const QString &path);
 
-	QString savePlaylist(int index);
+	bool savePlaylist(int index);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */

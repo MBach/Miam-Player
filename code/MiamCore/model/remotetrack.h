@@ -2,19 +2,18 @@
 #define REMOTETRACK_H
 
 #include <QIcon>
-#include <QObject>
-#include "../miamcore_global.h"
+#include "remoteobject.h"
 
 /**
  * \brief		The RemoteTrack class is a simple wrapper which contains basic informations about a file.
  * \author		Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMCORE_LIBRARY RemoteTrack : public QObject
+class MIAMCORE_LIBRARY RemoteTrack : public RemoteObject
 {
 	Q_OBJECT
 private:
-	QString _album, _artist, _disc, _id, _length, _source, _title, _trackNumber, _url, _year;
+	QString _album, _artist, _disc, _length, _source, _title, _trackNumber, _url, _year;
 	QIcon _icon;
 	int _rating;
 
@@ -36,9 +35,6 @@ public:
 
 	QIcon icon() const;
 	void setIcon(const QIcon &icon);
-
-	QString id() const;
-	void setId(const QString &id);
 
 	QString length() const;
 	void setLength(const QString &length);

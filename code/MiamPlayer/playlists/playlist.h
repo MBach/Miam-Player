@@ -48,8 +48,8 @@ public:
 	enum Columns{TRACK_NUMBER	= 0,
 				 TITLE			= 1,
 				 ALBUM			= 2,
-				 ARTIST			= 3,
-				 LENGTH			= 4,
+				 LENGTH			= 3,
+				 ARTIST			= 4,
 				 RATINGS		= 5,
 				 YEAR			= 6,
 				 ICON			= 7};

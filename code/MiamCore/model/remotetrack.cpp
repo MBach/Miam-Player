@@ -1,16 +1,15 @@
 #include "remotetrack.h"
 
 RemoteTrack::RemoteTrack(QObject *parent) :
-	QObject(parent)
+	RemoteObject(parent)
 {}
 
 RemoteTrack::RemoteTrack(const RemoteTrack &remoteTrack) :
-	QObject(remoteTrack.parent())
+	RemoteObject(remoteTrack)
 {
 	_album = remoteTrack.album();
 	_artist = remoteTrack.artist();
 	_icon = remoteTrack.icon();
-	_id = remoteTrack.id();
 	_length = remoteTrack.length();
 	_rating = remoteTrack.rating();
 	_source = remoteTrack.source();
@@ -33,9 +32,6 @@ void RemoteTrack::setDisc(const QString &disc) { _disc = disc; }
 
 QIcon RemoteTrack::icon() const { return _icon; }
 void RemoteTrack::setIcon(const QIcon &icon) { _icon = icon; }
-
-QString RemoteTrack::id() const { return _id; }
-void RemoteTrack::setId(const QString &id) { _id = id; }
 
 QString RemoteTrack::length() const { return _length; }
 void RemoteTrack::setLength(const QString &length) { _length = length; }

@@ -46,8 +46,10 @@ macx {
 }
 
 SOURCES += model/librarysqlmodel.cpp \
+    model/remoteobject.cpp \
     model/remotetrack.cpp \
     model/selectedtracksmodel.cpp \
+    model/sqldatabase.cpp \
     cover.cpp \
     filehelper.cpp \
     flowlayout.cpp \
@@ -57,8 +59,8 @@ SOURCES += model/librarysqlmodel.cpp \
     quickstartsearchengine.cpp \
     settings.cpp \
     settingsprivate.cpp \
-    sqldatabase.cpp \
-    timelabel.cpp
+    timelabel.cpp \
+    model/remoteplaylist.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -66,8 +68,10 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/searchmediaplayerplugin.h \
     model/librarysqlmodel.h \
+    model/remoteobject.h \
     model/remotetrack.h \
     model/selectedtracksmodel.h \
+    model/sqldatabase.h \
     abstractsearchdialog.h \
     cover.h \
     filehelper.h \
@@ -80,5 +84,5 @@ HEADERS += interfaces/basicplugin.h \
     remotemediaplayer.h \
     settings.h \
     settingsprivate.h \
-    sqldatabase.h \
-    timelabel.h
+    timelabel.h \
+    model/remoteplaylist.h
