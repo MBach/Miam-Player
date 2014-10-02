@@ -11,7 +11,8 @@
 TabPlaylist::TabPlaylist(QWidget *parent) :
 	QTabWidget(parent), _closePlaylistPopup(new ClosePlaylistPopup(this)), _mainWindow(NULL)
 {
-	this->setTabBar(new TabBar(this));
+	TabBar *tabBar = new TabBar(this);
+	this->setTabBar(tabBar);
 	messageBox = new TracksNotFoundMessageBox(this);
 
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
@@ -31,7 +32,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	// Removing a playlist
 	connect(_closePlaylistPopup->buttonBox, &QDialogButtonBox::clicked, this, &TabPlaylist::execActionFromClosePopup);
-
 	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
 
 	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](const SettingsPrivate::FontFamily ff, const QFont &) {
@@ -44,6 +44,29 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 				}
 			}
 		}
+	});
+
+	// Context menu to add few actions for each playlist
+	_contextMenu = new QMenu(this);
+	QAction *renamePlaylist = new QAction(tr("Rename playlist"), _contextMenu);
+	QAction *loadBackground = new QAction(tr("Load background..."), _contextMenu);
+	QAction *clearBackground = new QAction(tr("Clear background"), _contextMenu);
+	loadBackground->setEnabled(false);
+	clearBackground->setEnabled(false);
+
+	_contextMenu->addAction(renamePlaylist);
+	_contextMenu->addSeparator();
+	_contextMenu->addAction(loadBackground);
+	_contextMenu->addAction(clearBackground);
+
+	connect(renamePlaylist, &QAction::triggered, this, [=]() {
+		int index = tabBar->tabAt(mapFromGlobal(QCursor::pos()));
+		qDebug() << "index?" << index;
+		this->setCurrentIndex(index);
+		tabBar->editTab();
+	});
+	connect(loadBackground, &QAction::triggered, this, [=]() {
+		qDebug() << "Load background not implemented yet";
 	});
 
 	this->setAcceptDrops(true);
@@ -122,6 +145,15 @@ void TabPlaylist::changeEvent(QEvent *event)
 	}
 }
 
+void TabPlaylist::contextMenuEvent(QContextMenuEvent * event)
+{
+	int tab = tabBar()->tabAt(event->pos());
+	if (tab >= 0 && tab < count() - 1) {
+		_contextMenu->move(mapToGlobal(event->pos()));
+		_contextMenu->show();
+	}
+}
+
 void TabPlaylist::displayEmptyArea(bool isEmpty)
 {
 	if (isEmpty) {
@@ -147,6 +179,8 @@ Playlist* TabPlaylist::addPlaylist()
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
+	p->hideColumn(Playlist::COL_ID);
+	p->hideColumn(Playlist::COL_URL);
 	p->setAcceptDrops(true);
 	p->installEventFilter(this);
 

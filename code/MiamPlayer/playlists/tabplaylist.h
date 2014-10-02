@@ -32,6 +32,7 @@ private:
 	QWeakPointer<MediaPlayer> _mediaPlayer;
 	ClosePlaylistPopup *_closePlaylistPopup;
 	MainWindow *_mainWindow;
+	QMenu *_contextMenu;
 
 public:
 	/** Default constructor. */
@@ -68,6 +69,8 @@ public:
 protected:
 	/** Retranslate tabs' name and all playlists in this widget. */
 	virtual void changeEvent(QEvent *event);
+
+	virtual void contextMenuEvent(QContextMenuEvent * event);
 
 private:
 	void displayEmptyArea(bool isEmpty = true);

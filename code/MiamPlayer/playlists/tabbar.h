@@ -24,21 +24,20 @@ private:
 public:
 	TabBar(TabPlaylist *parent);
 
-	/** Redefined to validate new tab name if the focus is lost. */
-	bool eventFilter(QObject *, QEvent *);
+	void editTab();
 
 protected:
-	/** Redefined to accept D&D from another playlist or the library. */
-	virtual void dropEvent(QDropEvent *event);
-
 	/** Redefined to accept D&D from another playlist or the library. */
 	virtual void dragEnterEvent(QDragEnterEvent *event);
 
 	/** Redefined to accept D&D from another playlist or the library. */
 	virtual void dragMoveEvent(QDragMoveEvent *event);
 
-	/** Redefined to return a square for the last tab which is the [+] button. */
-	virtual QSize tabSizeHint(int index) const;
+	/** Redefined to accept D&D from another playlist or the library. */
+	virtual void dropEvent(QDropEvent *event);
+
+	/** Redefined to validate new tab name if the focus is lost. */
+	virtual bool eventFilter(QObject *, QEvent *);
 
 	/** Redefined to display an editable area. */
 	virtual void mouseDoubleClickEvent(QMouseEvent *);
@@ -47,6 +46,9 @@ protected:
 	virtual void mousePressEvent(QMouseEvent *);
 
 	virtual void paintEvent(QPaintEvent *);
+
+	/** Redefined to return a square for the last tab which is the [+] button. */
+	virtual QSize tabSizeHint(int index) const;
 
 private:
 	void paintRectTabs(QStylePainter &p);

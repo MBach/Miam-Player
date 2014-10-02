@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(0, 8, parent), _mediaPlaylist(new QMediaPlaylist(this))
+	QStandardItemModel(0, 10, parent), _mediaPlaylist(new QMediaPlaylist(this))
 {}
 
 /** Clear the content of playlist. */
@@ -42,8 +42,10 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
 	for (int i = 0; i < tracks.size(); i++) {
 		RemoteTrack track = tracks.at(i);
 
-		QString trackNumber = QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0'));
-		QStandardItem *trackItem = new QStandardItem(trackNumber);
+		QStandardItem *trackItem = new QStandardItem;
+		if (!track.trackNumber().isEmpty()) {
+			trackItem->setText(QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0')));
+		}
 		QStandardItem *titleItem = new QStandardItem(track.title());
 		QStandardItem *albumItem = new QStandardItem(track.album());
 		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(track.length().toInt()).toString("m:ss"));

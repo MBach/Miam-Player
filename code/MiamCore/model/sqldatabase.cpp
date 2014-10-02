@@ -31,32 +31,10 @@ SqlDatabase::SqlDatabase()
 	setDatabaseName(dbPath);
 
 	if (open()) {
-		exec("CREATE TABLE IF NOT EXISTS playlists (absPath varchar(255), id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, checksum varchar(255))");
-		exec("CREATE TABLE IF NOT EXISTS playlistTracks (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, artist varchar(255), album varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
-		exec("CREATE INDEX IF NOT EXISTS indexPlaylists ON playlists (id)");
+		exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER, title varchar(255), duration INTEGER, checksum varchar(255))");
+		exec("CREATE TABLE IF NOT EXISTS playlistTracks (url varchar(255), host varchar(255), id INTEGER, title varchar(255), duration INTEGER, artist varchar(255), album varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
 		close();
 	}
-}
-
-/** Resynchronize table Playlists in case one has deleted some files. */
-void SqlDatabase::cleanBeforeQuit()
-{
-	if (!open()) {
-		open();
-	}
-	QSqlQuery qLoadFileDB = exec("SELECT absPath FROM playlists");
-	QStringList deletedPlaylists;
-	while (qLoadFileDB.next()) {
-		qDebug() << "saved playlist reference" << qLoadFileDB.record().value(0).toString();
-		QString playlist = qLoadFileDB.record().value(0).toString();
-		if (!QFile::exists(playlist)) {
-			deletedPlaylists << QString("'" + playlist + "'");
-		}
-	}
-	if (!deletedPlaylists.isEmpty()) {
-		exec("DELETE FROM playlists WHERE absPath IN (" + deletedPlaylists.join(',') + ")");
-	}
-	close();
 }
 
 bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<RemoteTrack> &tracks)
@@ -70,19 +48,18 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 		RemoteTrack track = *it;
 		QSqlQuery insert(*this);
 		if (track.id().isEmpty()) {
-			insert.prepare("INSERT INTO playlistTracks (id, title, duration, artist, album, playlistId) VALUES (?, ?, ?, ?, ?, ?)");
-			insert.addBindValue(track.id());
-			insert.addBindValue(track.title());
-			insert.addBindValue(track.length());
-			insert.addBindValue(track.artist());
-			insert.addBindValue(track.album());
-		} else {
-			insert.prepare("INSERT INTO playlistTracks (absPath, title, artist, album, playlistId) VALUES (?, ?, ?, ?, ?)");
+			insert.prepare("INSERT INTO playlistTracks (url, id, title, artist, album, playlistId) VALUES (?, ?, ?, ?, ?, ?)");
 			insert.addBindValue(track.url());
-			insert.addBindValue(track.title());
-			insert.addBindValue(track.artist());
-			insert.addBindValue(track.album());
+			insert.addBindValue(qHash(track.url()));
+		} else {
+			insert.prepare("INSERT INTO playlistTracks (url, id, duration, title, artist, album, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			insert.addBindValue(track.url());
+			insert.addBindValue(track.id());
+			insert.addBindValue(track.length());
 		}
+		insert.addBindValue(track.title());
+		insert.addBindValue(track.artist());
+		insert.addBindValue(track.album());
 		insert.addBindValue(playlistId);
 		insert.exec();
 	}
@@ -139,4 +116,66 @@ void SqlDatabase::removePlaylists(const QList<RemotePlaylist> &playlists)
 	exec("COMMIT TRANSACTION");
 
 	close();
+}
+
+QList<RemoteTrack> SqlDatabase::selectPlaylistTracks(int playlistID)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	QList<RemoteTrack> tracks;
+	QSqlQuery results = exec("SELECT url, id, title, duration, artist, album FROM playlistTracks WHERE playlistId = " + QString::number(playlistID));
+	while (results.next()) {
+		int i = -1;
+		RemoteTrack track;
+		track.setUrl(results.record().value(++i).toString());
+		track.setId(results.record().value(++i).toString());
+		track.setTitle(results.record().value(++i).toString());
+		track.setLength(results.record().value(++i).toString());
+		track.setArtist(results.record().value(++i).toString());
+		track.setAlbum(results.record().value(++i).toString());
+		tracks.append(track);
+	}
+
+	close();
+	return tracks;
+}
+
+RemotePlaylist SqlDatabase::selectPlaylist(int playlistId)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	RemotePlaylist playlist;
+	QSqlQuery results = exec("SELECT id, title, checksum FROM playlists WHERE id = " + QString::number(playlistId));
+	if (results.next()) {
+		int i = -1;
+		playlist.setId(results.record().value(++i).toString());
+		playlist.setTitle(results.record().value(++i).toString());
+		playlist.setChecksum(results.record().value(++i).toString());
+	}
+
+	close();
+	return playlist;
+}
+
+QList<RemotePlaylist> SqlDatabase::selectPlaylists()
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	QList<RemotePlaylist> playlists;
+	QSqlQuery results = exec("SELECT title, id FROM playlists");
+	while (results.next()) {
+		RemotePlaylist playlist;
+		playlist.setTitle(results.record().value(0).toString());
+		playlist.setId(results.record().value(1).toString());
+		playlists.append(playlist);
+	}
+
+	close();
+	return playlists;
 }

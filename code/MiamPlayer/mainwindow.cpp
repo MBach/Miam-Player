@@ -362,7 +362,6 @@ void MainWindow::setupActions()
 	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		_sqlDatabase.cleanBeforeQuit();
 		delete PluginManager::getInstance();
 	});
 

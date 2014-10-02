@@ -54,7 +54,7 @@ PlaylistManager::PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist
 
 	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromUnsaved);
 	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromSaved);
-	connect(_savedPlaylistModel, &QStandardItemModel::itemChanged, [=](QStandardItem *item) {
+	/*connect(_savedPlaylistModel, &QStandardItemModel::itemChanged, [=](QStandardItem *item) {
 		_db.open();
 		QSqlQuery update(_db);
 		update.prepare("UPDATE playlists SET name = :name WHERE absPath = :path");
@@ -62,7 +62,7 @@ PlaylistManager::PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist
 		update.bindValue(":path", item->data(PlaylistPath).toString());
 		qDebug() << "update?" << update.exec();
 		_db.close();
-	});
+	});*/
 	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistManager::loadSelectedPlaylists);
 	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistManager::deleteSavedPlaylists);
 
@@ -111,6 +111,7 @@ void PlaylistManager::init()
 		QDir dataLocation(path);
 		dataLocation.setNameFilters(supportedPlaylistTypes);
 		QDirIterator it(dataLocation);
+		/// FIXME
 		while (it.hasNext()) {
 			this->loadPlaylist(it.next());
 		}
@@ -203,6 +204,36 @@ void PlaylistManager::loadPlaylist(const QString &path)
 	}
 }
 
+void PlaylistManager::loadPlaylist(int playlistId)
+{
+	Playlist *playlist = NULL;
+	RemotePlaylist remotePlaylist =  _db.selectPlaylist(playlistId);
+	if (playlists->playlist(0) && playlists->playlist(0)->mediaPlaylist()->isEmpty()) {
+		playlist = playlists->playlist(0);
+		playlists->tabBar()->setTabText(0, remotePlaylist.title());
+	} else {
+		playlist = playlists->addPlaylist();
+		playlists->tabBar()->setTabText(playlists->count() - 2, remotePlaylist.title());
+	}
+
+	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
+	/// Use (host, id) or (absPath)
+	QList<RemoteTrack> tracks = _db.selectPlaylistTracks(playlistId);
+	foreach (RemoteTrack track, tracks) {
+		QUrl url = QUrl(track.url());
+		if (url.isLocalFile()) {
+			QStringList l = QStringList() << url.toLocalFile();
+			qDebug() << "url.isLocalFile()" << l;
+			playlist->insertMedias(-1, l);
+		} else {
+			qDebug() << "url is remote file" << track.url();
+			QList<RemoteTrack> tracks2;
+			tracks2 << track;
+			playlist->insertMedias(-1, tracks2);
+		}
+	}
+}
+
 bool PlaylistManager::savePlaylist(int index)
 {
 	qDebug() << Q_FUNC_INFO;
@@ -232,9 +263,9 @@ bool PlaylistManager::savePlaylist(int index)
 				if (url.isLocalFile()) {
 					track.setUrl(url.toString());
 				}
-				QString title = p->model()->index(j, p->TITLE).data().toString();
-				QString artist = p->model()->index(j, p->ARTIST).data().toString();
-				QString album = p->model()->index(j, p->ALBUM).data().toString();
+				QString title = p->model()->index(j, p->COL_TITLE).data().toString();
+				QString artist = p->model()->index(j, p->COL_ARTIST).data().toString();
+				QString album = p->model()->index(j, p->COL_ALBUM).data().toString();
 				track.setTitle(title);
 				track.setArtist(artist);
 				track.setAlbum(album);
@@ -273,11 +304,12 @@ void PlaylistManager::deleteSavedPlaylists()
 	// Delete every selected playlist on FS
 	foreach (QModelIndex index, indexes) {
 		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
-		QString path = item->data(PlaylistPath).toString();
+		/// FIXME
+		/*QString path = item->data(PlaylistPath).toString();
 		QFile playlistToRemove(path);
 		if (playlistToRemove.exists()) {
 			playlistToRemove.remove();
-		}
+		}*/
 	}
 	this->clearPreview(false);
 	this->updatePlaylists();
@@ -315,7 +347,8 @@ void PlaylistManager::exportSelectedPlaylist()
 	}
 	QModelIndex index = savedPlaylists->selectionModel()->selectedIndexes().first();
 	QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
-	QString pPath = item->data(PlaylistPath).toString();
+	/// FIXME
+	//QString pPath = item->data(PlaylistPath).toString();
 	QString pName = item->data(Qt::DisplayRole).toString();
 
 	// Open a file dialog and ask the user to choose a location
@@ -330,14 +363,14 @@ void PlaylistManager::exportSelectedPlaylist()
 		return;
 	}
 	// After copy, keeps the directory chosen by one. It's quite convenient when you are far from QStandardPaths::MusicLocation
-	if (QFile::copy(pPath, newName)) {
+	/*if (QFile::copy(pPath, newName)) {
 		settings->setValue("locationForExportedPlaylist", QFileInfo(newName).absolutePath());
 	} else {
 		QString error = tr("Unfortunately, an error occured when Miam Player tried to export playlist '%1' to '%2'.\n"\
 						   "Please, would you be nice to check if the file isn't opened elsewhere?")
 				.arg(item->data(Qt::DisplayRole).toString(), QDir::toNativeSeparators(newName));
 		QMessageBox::warning(this, tr("Cannot export the selected playlist"), error);
-	}
+	}*/
 }
 
 /** Load every saved playlists. */
@@ -347,7 +380,7 @@ void PlaylistManager::loadSelectedPlaylists()
 	foreach (QModelIndex index, savedPlaylists->selectionModel()->selectedIndexes()) {
 		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
 		if (item) {
-			this->loadPlaylist(item->data(PlaylistPath).toString());
+			this->loadPlaylist(item->data(PlaylistID).toInt());
 		}
 	}
 	this->close();
@@ -360,39 +393,22 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 	bool empty = indexes.isEmpty();
 	this->clearPreview(!empty);
 	if (indexes.size() == 1) {
-		QString path = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistPath).toString();
-		QFile file(path);
-		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			int trackCount = 0;
-			while (trackCount < MAX_TRACKS_PREVIEW_AREA) {
-				char buf[1024];
-				file.readLine(buf, sizeof(buf));
-				QUrl url = QUrl::fromUserInput(buf);
-				if (url.isValid()) {
-					trackCount++;
-					QMediaContent mc(url);
-					FileHelper fh(mc);
-					QTreeWidgetItem *item = new QTreeWidgetItem;
-					if (url.isLocalFile()) {
-						item->setText(0, QString("%1 (%2 - %3)").arg(fh.title(), fh.artist(), fh.album()));
-					} else {
-						item->setText(0, url.toDisplayString());
-					}
-					previewPlaylist->addTopLevelItem(item);
-				}
-				if (!file.canReadLine()) {
-					break;
-				}
-			}
-			if (trackCount == MAX_TRACKS_PREVIEW_AREA) {
+		int playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toInt();
+		qDebug() << "playlistId" << playlistId;
+
+		QList<RemoteTrack> tracks = _db.selectPlaylistTracks(playlistId);
+		for (int i = 0; i < tracks.size(); i++) {
+			RemoteTrack track = tracks.at(i);
+			QTreeWidgetItem *item = new QTreeWidgetItem;
+			item->setText(0, QString("%1 (%2 - %3)").arg(track.title(), track.artist(), track.album()));
+			previewPlaylist->addTopLevelItem(item);
+
+			if (i + 1 == MAX_TRACKS_PREVIEW_AREA) {
 				QTreeWidgetItem *item = new QTreeWidgetItem;
 				item->setText(0, tr("And more tracks..."));
 				previewPlaylist->addTopLevelItem(item);
+				break;
 			}
-			file.close();
-		} else {
-			// seriously, one has deleted it meanwhile? (QLockFile?)
-			qDebug() << "unable to open" << path;
 		}
 	}
 	loadPlaylists->setDisabled(empty);
@@ -407,6 +423,7 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 	if (unsavedPlaylists->selectionModel()->selectedIndexes().size() == 1) {
 
 		QStandardItem *item = _unsavedPlaylistModel->itemFromIndex(unsavedPlaylists->selectionModel()->selectedIndexes().first());
+		/// FIXME
 		uint playlistObjectPointer = item->data(PlaylistObjectPointer).toUInt();
 		for (int i = 0; i < playlists->playlists().count(); i++) {
 			Playlist *p = playlists->playlist(i);
@@ -416,9 +433,9 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 				for (int idxTrack = 0; idxTrack < max; idxTrack++) {
 					QMediaContent mc(p->mediaPlaylist()->media(idxTrack).canonicalUrl());
 					qDebug() << mc.canonicalUrl() << mc.canonicalUrl().isLocalFile();
-					QString title = p->model()->index(idxTrack, p->TITLE).data().toString();
-					QString artist = p->model()->index(idxTrack, p->ARTIST).data().toString();
-					QString album = p->model()->index(idxTrack, p->ALBUM).data().toString();
+					QString title = p->model()->index(idxTrack, p->COL_TITLE).data().toString();
+					QString artist = p->model()->index(idxTrack, p->COL_ARTIST).data().toString();
+					QString album = p->model()->index(idxTrack, p->COL_ALBUM).data().toString();
 					QTreeWidgetItem *item = new QTreeWidgetItem;
 					item->setText(0, QString("%1 (%2 - %3)").arg(title, artist, album));
 					previewPlaylist->addTopLevelItem(item);
@@ -463,30 +480,14 @@ void PlaylistManager::updatePlaylists()
 	}
 
 	// Populate saved playlists area
-	QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-	QStringList supportedPlaylistTypes = QStringList() << "*.m3u" << "*.m3u8";
-	QDir dataLocation(path);
-	dataLocation.setNameFilters(supportedPlaylistTypes);
-	QDirIterator it(dataLocation);
-
 	_savedPlaylistModel->clear();
 	_savedPlaylistModel->blockSignals(true);
-	while (it.hasNext()) {
-		it.next();
-		QString name = this->getPlaylistName(it.fileInfo().absoluteFilePath());
-		QStandardItem *savedItem = new QStandardItem;
-		if (name == "") {
-			savedItem->setText(it.fileInfo().baseName());
-		} else {
-			savedItem->setText(name);
-		}
-		_savedPlaylistModel->appendRow(savedItem);
-		savedItem->setData(it.filePath(), PlaylistPath);
-		savedItem->setData(name == "", IsPlaylistRegistered);
-	}
 
-	// Load remote playlists (in cache)
-	//
-	//
+	QList<RemotePlaylist> playlists = _db.selectPlaylists();
+	foreach (RemotePlaylist playlist, playlists) {
+		QStandardItem *item = new QStandardItem(playlist.title());
+		item->setData(playlist.id(), PlaylistID);
+		_savedPlaylistModel->appendRow(item);
+	}
 	_savedPlaylistModel->blockSignals(false);
 }

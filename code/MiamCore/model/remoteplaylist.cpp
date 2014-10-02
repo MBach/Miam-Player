@@ -7,12 +7,16 @@ RemotePlaylist::RemotePlaylist(QObject *parent)
 RemotePlaylist::RemotePlaylist(const RemotePlaylist &remotePlaylist)
 	: RemoteObject(remotePlaylist)
 {
+	_icon = remotePlaylist.icon();
 	_length = remotePlaylist.length();
 	_title = remotePlaylist.title();
 }
 
 RemotePlaylist::~RemotePlaylist()
 {}
+
+QIcon RemotePlaylist::icon() const { return _icon; }
+void RemotePlaylist::setIcon(const QIcon &icon) { _icon = icon; }
 
 QString RemotePlaylist::length() const { return _length; }
 void RemotePlaylist::setLength(const QString &length) { _length = length; }

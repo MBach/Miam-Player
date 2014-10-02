@@ -13,7 +13,8 @@ class MIAMCORE_LIBRARY RemoteObject : public QObject
 {
 	Q_OBJECT
 private:
-	QString _checksum, _id;
+	QString _checksum, _host, _id;
+
 public:
 	explicit RemoteObject(QObject *parent = 0);
 
@@ -23,6 +24,9 @@ public:
 
 	QString checksum() const;
 	void setChecksum(const QString &checksum);
+
+	QString host() const;
+	void setHost(const QString &host);
 
 	QString id() const;
 	void setId(const QString &id);

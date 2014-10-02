@@ -33,9 +33,8 @@ private:
 	Q_ENUMS(PlaylistRoles)
 
 public:
-	enum PlaylistRoles { PlaylistPath			= Qt::UserRole + 1,
-						 IsPlaylistRegistered	= Qt::UserRole + 2,
-						 PlaylistObjectPointer	= Qt::UserRole + 3};
+	enum PlaylistRoles { PlaylistObjectPointer	= Qt::UserRole + 1,
+						 PlaylistID				= Qt::UserRole + 2};
 
 	explicit PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist);
 
@@ -55,6 +54,7 @@ private:
 
 	/** Load a playlist (*.m3u8) saved on the filesystem. */
 	void loadPlaylist(const QString &path);
+	void loadPlaylist(int playlistId);
 
 	bool savePlaylist(int index);
 

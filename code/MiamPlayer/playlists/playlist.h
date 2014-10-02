@@ -45,14 +45,16 @@ private:
 	Q_ENUMS(Columns)
 
 public:
-	enum Columns{TRACK_NUMBER	= 0,
-				 TITLE			= 1,
-				 ALBUM			= 2,
-				 LENGTH			= 3,
-				 ARTIST			= 4,
-				 RATINGS		= 5,
-				 YEAR			= 6,
-				 ICON			= 7};
+	enum Columns{COL_TRACK_NUMBER	= 0,
+				 COL_TITLE			= 1,
+				 COL_ALBUM			= 2,
+				 COL_LENGTH			= 3,
+				 COL_ARTIST			= 4,
+				 COL_RATINGS		= 5,
+				 COL_YEAR			= 6,
+				 COL_ICON			= 7,
+				 COL_ID				= 100,	// Columns that should always be hidden
+				 COL_URL			= 101};
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 

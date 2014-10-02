@@ -53,49 +53,39 @@ TabBar::TabBar(TabPlaylist *parent) :
 	w->deleteLater();
 }
 
-/** Redefined to return a square for the last tab which is the [+] button. */
-QSize TabBar::tabSizeHint(int index) const
+void TabBar::editTab()
 {
-	if (index == count() - 1) {
-		if (SettingsPrivate::getInstance()->isRectTabs()) {
-			return QSize(height(), height());
-		} else {
-			return QSize(height() * 1.333, height());
-		}
-	} else {
-		QSize s = QTabBar::tabSizeHint(index);
-		if (!SettingsPrivate::getInstance()->isRectTabs()) {
-			s.setWidth(s.width() + SettingsPrivate::getInstance()->tabsOverlappingLength() * 2);
-		}
-		// Adjust height to the minimum otherwise a small gap might appear between tab and header (depending of font size)
-		if (s.height() > height()) {
-			s.setHeight(height());
-		}
-		return s;
-	}
+	qDebug() << "todo";
 }
 
-/** Redefined to validate new tab name if the focus is lost. */
-bool TabBar::eventFilter(QObject *obj, QEvent *event)
+/** Redefined to accept D&D from another playlist or the library. */
+void TabBar::dragEnterEvent(QDragEnterEvent *event)
 {
-	// Accept the escape key
-	if (obj == lineEdit && event->type() == QEvent::KeyPress) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-		if (keyEvent->key() == Qt::Key_Escape) {
-			lineEdit->releaseMouse();
-			lineEdit->close();
-		}
-	} else if (obj == lineEdit && event->type() == QEvent::FocusOut) {
-		lineEdit->releaseMouse();
-		renameTab();
-	} else if (obj == lineEdit && event->type() == QEvent::MouseButtonPress) {
-		QMouseEvent *me = static_cast<QMouseEvent*>(event);
-		if (!lineEdit->rect().contains(me->pos())) {
-			lineEdit->releaseMouse();
-			lineEdit->close();
+	int idx = tabAt(event->pos());
+	if (idx < count() - 1) {
+		_targetRect = tabRect(idx);
+	} else {
+		_targetRect = QRect();
+	}
+	event->source() ? event->acceptProposedAction() : event->ignore();
+}
+
+/** Redefined to accept D&D from another playlist or the library. */
+void TabBar::dragMoveEvent(QDragMoveEvent *event)
+{
+	int idx = tabAt(event->pos());
+	// Exclude current tab and last one
+	if (idx < count() - 1) {
+		_targetRect = tabRect(idx);
+	}
+	Playlist *playlist = qobject_cast<Playlist*>(event->source());
+	if (playlist) {
+		// Exclude current tab and last one?
+		if (idx < count() - 1) {
+			_timer->start();
 		}
 	}
-	return false;
+	event->source() ? event->acceptProposedAction() : event->ignore();
 }
 
 /** Redefined to accept D&D from another playlist or the library. */
@@ -133,34 +123,27 @@ void TabBar::dropEvent(QDropEvent *event)
 	}
 }
 
-/** Redefined to accept D&D from another playlist or the library. */
-void TabBar::dragEnterEvent(QDragEnterEvent *event)
+/** Redefined to validate new tab name if the focus is lost. */
+bool TabBar::eventFilter(QObject *obj, QEvent *event)
 {
-	int idx = tabAt(event->pos());
-	if (idx < count() - 1) {
-		_targetRect = tabRect(idx);
-	} else {
-		_targetRect = QRect();
-	}
-	event->source() ? event->acceptProposedAction() : event->ignore();
-}
-
-/** Redefined to accept D&D from another playlist or the library. */
-void TabBar::dragMoveEvent(QDragMoveEvent *event)
-{
-	int idx = tabAt(event->pos());
-	// Exclude current tab and last one
-	if (idx < count() - 1) {
-		_targetRect = tabRect(idx);
-	}
-	Playlist *playlist = qobject_cast<Playlist*>(event->source());
-	if (playlist) {
-		// Exclude current tab and last one?
-		if (idx < count() - 1) {
-			_timer->start();
+	// Accept the escape key
+	if (obj == lineEdit && event->type() == QEvent::KeyPress) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+		if (keyEvent->key() == Qt::Key_Escape) {
+			lineEdit->releaseMouse();
+			lineEdit->close();
+		}
+	} else if (obj == lineEdit && event->type() == QEvent::FocusOut) {
+		lineEdit->releaseMouse();
+		renameTab();
+	} else if (obj == lineEdit && event->type() == QEvent::MouseButtonPress) {
+		QMouseEvent *me = static_cast<QMouseEvent*>(event);
+		if (!lineEdit->rect().contains(me->pos())) {
+			lineEdit->releaseMouse();
+			lineEdit->close();
 		}
 	}
-	event->source() ? event->acceptProposedAction() : event->ignore();
+	return false;
 }
 
 /** Redefined to display an editable area. */
@@ -239,6 +222,28 @@ void TabBar::paintEvent(QPaintEvent *)
 		} else {
 			p.drawLine(rect().left(), h, tabRect(0).left(), h);
 		}
+	}
+}
+
+/** Redefined to return a square for the last tab which is the [+] button. */
+QSize TabBar::tabSizeHint(int index) const
+{
+	if (index == count() - 1) {
+		if (SettingsPrivate::getInstance()->isRectTabs()) {
+			return QSize(height(), height());
+		} else {
+			return QSize(height() * 1.333, height());
+		}
+	} else {
+		QSize s = QTabBar::tabSizeHint(index);
+		if (!SettingsPrivate::getInstance()->isRectTabs()) {
+			s.setWidth(s.width() + SettingsPrivate::getInstance()->tabsOverlappingLength() * 2);
+		}
+		// Adjust height to the minimum otherwise a small gap might appear between tab and header (depending of font size)
+		if (s.height() > height()) {
+			s.setHeight(height());
+		}
+		return s;
 	}
 }
 

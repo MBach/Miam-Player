@@ -32,6 +32,9 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
 	this->setColumnHidden(5, true);
 	this->setColumnHidden(6, true);
+	this->setColumnHidden(7, true);
+	//this->setColumnHidden(8, true);
+	this->hideColumn(0);
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
@@ -269,7 +272,7 @@ void Playlist::keyPressEvent(QKeyEvent *event)
 			parentWidget()->parentWidget()->setFocus();
 		} else {
 			for (int row = 0; row < _playlistModel->rowCount(); row++) {
-				closePersistentEditor(_playlistModel->index(row, RATINGS));
+				closePersistentEditor(_playlistModel->index(row, COL_RATINGS));
 			}
 		}
 	}
@@ -293,13 +296,13 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 		_dragStartPosition = event->pos();
 	}
 	QModelIndex index = indexAt(event->pos());
-	if (index.column() == RATINGS && _previouslySelectedRows.contains(index)) {
+	if (index.column() == COL_RATINGS && _previouslySelectedRows.contains(index)) {
 		if (index.data(PlaylistModel::RemoteMedia).toBool() == true) {
 			qDebug() << "do not open persistent editor";
 			//QTableView::mousePressEvent(event);
 			event->accept();
 		} else {
-			foreach (QModelIndex i, selectionModel()->selectedRows(RATINGS)) {
+			foreach (QModelIndex i, selectionModel()->selectedRows(COL_RATINGS)) {
 				this->openPersistentEditor(i);
 			}
 		}
@@ -333,8 +336,8 @@ void Playlist::paintEvent(QPaintEvent *event)
 
 int Playlist::sizeHintForColumn(int column) const
 {
-	if (column == RATINGS) {
-		return rowHeight(RATINGS) * 5;
+	if (column == COL_RATINGS) {
+		return rowHeight(COL_RATINGS) * 5;
 	} else {
 		return QTableView::sizeHintForColumn(column);
 	}
@@ -342,9 +345,9 @@ int Playlist::sizeHintForColumn(int column) const
 
 void Playlist::showEvent(QShowEvent *event)
 {
-	resizeColumnToContents(TRACK_NUMBER);
-	resizeColumnToContents(RATINGS);
-	resizeColumnToContents(YEAR);
+	resizeColumnToContents(COL_TRACK_NUMBER);
+	resizeColumnToContents(COL_RATINGS);
+	resizeColumnToContents(COL_YEAR);
 	QTableView::showEvent(event);
 }
 
@@ -355,9 +358,9 @@ void Playlist::autoResize()
 		this->resizeColumnsToContents();
 		this->horizontalHeader()->setStretchLastSection(true);
 	} else {
-		this->resizeColumnToContents(TRACK_NUMBER);
-		this->resizeColumnToContents(RATINGS);
-		this->resizeColumnToContents(YEAR);
+		this->resizeColumnToContents(COL_TRACK_NUMBER);
+		this->resizeColumnToContents(COL_RATINGS);
+		this->resizeColumnToContents(COL_YEAR);
 	}
 }
 

@@ -13,7 +13,9 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Artist")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Rating")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Year")
-													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source");
+													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source")
+													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "ID")
+													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Url");
 
 PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	QHeaderView(Qt::Horizontal, parent)
@@ -56,7 +58,7 @@ void PlaylistHeaderView::changeEvent(QEvent *event)
 {
 	QHeaderView::changeEvent(event);
 	if (model() && event->type() == QEvent::LanguageChange) {
-		for (int i = 0; i < model()->columnCount(); i++) {
+		for (int i = 0; i < count(); i++) {
 			model()->setHeaderData(i, Qt::Horizontal, tr(labels.at(i).toStdString().data()), Qt::DisplayRole);
 		}
 	}
@@ -65,7 +67,7 @@ void PlaylistHeaderView::changeEvent(QEvent *event)
 void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 {
 	QHeaderView::setModel(model);
-	for (int i = 0; i < model->columnCount(); i++) {
+	for (int i = 0; i < count(); i++) {
 		QString label = labels.at(i);
 		model->setHeaderData(i, Qt::Horizontal, tr(label.toStdString().data()), Qt::DisplayRole);
 
@@ -77,7 +79,9 @@ void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 		actionColumn->setChecked(!isSectionHidden(i));
 
 		// Then populate the context menu
+		//if (i < 8) {
 		columns->addAction(actionColumn);
+		//}
 	}
 }
 
@@ -85,11 +89,17 @@ void PlaylistHeaderView::contextMenuEvent(QContextMenuEvent *event)
 {
 	// Initialize values for the Header (label and horizontal resize mode)
 	for (int i = 0; i < labels.size(); i++) {
-		columns->actions().at(i)->setText(tr(labels.at(i).toStdString().data()));
+		QAction *action = columns->actions().at(i);
+		if (action) {
+			action->setText(tr(labels.at(i).toStdString().data()));
+		}
 	}
 
 	for (int i = 0; i < this->count(); i++) {
-		columns->actions().at(i)->setChecked(!this->isSectionHidden(i));
+		QAction *action = columns->actions().at(i);
+		if (action) {
+			action->setChecked(!this->isSectionHidden(i));
+		}
 	}
 	columns->exec(mapToGlobal(event->pos()));
 }

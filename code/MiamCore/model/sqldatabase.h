@@ -19,14 +19,16 @@ public:
 
 	virtual ~SqlDatabase() {}
 
-	/** Resynchronize table Playlists in case one has deleted some files. */
-	void cleanBeforeQuit();
-
 	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<RemoteTrack> &tracks);
 
 	int insertIntoTablePlaylists(const RemotePlaylist &playlist);
 
 	void removePlaylists(const QList<RemotePlaylist> &playlists);
+
+	QList<RemoteTrack> selectPlaylistTracks(int playlistID);
+
+	RemotePlaylist selectPlaylist(int playlistId);
+	QList<RemotePlaylist> selectPlaylists();
 };
 
 #endif // SQLDATABASE_H

@@ -1,7 +1,7 @@
 #include "remotetrack.h"
 
 RemoteTrack::RemoteTrack(QObject *parent) :
-	RemoteObject(parent)
+	RemoteObject(parent), _rating(0)
 {}
 
 RemoteTrack::RemoteTrack(const RemoteTrack &remoteTrack) :
