@@ -207,7 +207,7 @@ void PlaylistManager::loadPlaylist(const QString &path)
 void PlaylistManager::loadPlaylist(int playlistId)
 {
 	Playlist *playlist = NULL;
-	RemotePlaylist remotePlaylist =  _db.selectPlaylist(playlistId);
+	PlaylistDAO remotePlaylist =  _db.selectPlaylist(playlistId);
 	if (playlists->playlist(0) && playlists->playlist(0)->mediaPlaylist()->isEmpty()) {
 		playlist = playlists->playlist(0);
 		playlists->tabBar()->setTabText(0, remotePlaylist.title());
@@ -218,21 +218,21 @@ void PlaylistManager::loadPlaylist(int playlistId)
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (absPath)
-	QList<RemoteTrack> tracks = _db.selectPlaylistTracks(playlistId);
-	foreach (RemoteTrack track, tracks) {
+	QList<TrackDAO> tracks = _db.selectPlaylistTracks(playlistId);
+	foreach (TrackDAO track, tracks) {
 		QUrl url = QUrl(track.url());
 		if (url.isLocalFile()) {
 			QStringList l = QStringList() << url.toLocalFile();
-			qDebug() << "url.isLocalFile()" << l;
 			playlist->insertMedias(-1, l);
 		} else {
-			qDebug() << "url is remote file" << track.url();
-			QList<RemoteTrack> tracks2;
+			QList<TrackDAO> tracks2;
 			tracks2 << track;
 			playlist->insertMedias(-1, tracks2);
 		}
 	}
 }
+
+#include "starrating.h"
 
 bool PlaylistManager::savePlaylist(int index)
 {
@@ -249,26 +249,36 @@ bool PlaylistManager::savePlaylist(int index)
 		uint hash = qHash(files);
 		qDebug() << "savePlaylist() << new hash generated" << hash;
 
-		RemotePlaylist playlist;
+		PlaylistDAO playlist;
 		playlist.setTitle(playlistName);
 		playlist.setChecksum(QString::number(hash));
 		int id = _db.insertIntoTablePlaylists(playlist);
 		if (id > 0) {
-			std::list<RemoteTrack> tracks;
+			std::list<TrackDAO> tracks;
 
-			/// FIXME: id -> hidden column in Playlist?
 			for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
-				RemoteTrack track;
+				TrackDAO track;
 				QUrl url = p->mediaPlaylist()->media(j).canonicalUrl();
 				if (url.isLocalFile()) {
 					track.setUrl(url.toString());
 				}
+
+				QString trackNumber = p->model()->index(j, p->COL_TRACK_NUMBER).data().toString();
 				QString title = p->model()->index(j, p->COL_TITLE).data().toString();
-				QString artist = p->model()->index(j, p->COL_ARTIST).data().toString();
 				QString album = p->model()->index(j, p->COL_ALBUM).data().toString();
+				QString length = p->model()->index(j, p->COL_LENGTH).data().toString();
+				QString artist = p->model()->index(j, p->COL_ARTIST).data().toString();
+				StarRating starRating = p->model()->index(j, p->COL_RATINGS).data().value<StarRating>();
+				QString trackId = p->model()->index(j, p->COL_ID).data().toString();
+				QString uri = p->model()->index(j, p->COL_URI).data().toString();
+				track.setTrackNumber(trackNumber);
 				track.setTitle(title);
-				track.setArtist(artist);
 				track.setAlbum(album);
+				track.setLength(length);
+				track.setArtist(artist);
+				track.setRating(starRating.starCount());
+				track.setId(trackId);
+				track.setUrl(uri);
 
 				tracks.push_back(std::move(track));
 			}
@@ -301,16 +311,14 @@ void PlaylistManager::deleteSavedPlaylists()
 		return;
 	}
 
-	// Delete every selected playlist on FS
+	QList<PlaylistDAO> playlists;
 	foreach (QModelIndex index, indexes) {
-		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
-		/// FIXME
-		/*QString path = item->data(PlaylistPath).toString();
-		QFile playlistToRemove(path);
-		if (playlistToRemove.exists()) {
-			playlistToRemove.remove();
-		}*/
+		PlaylistDAO tmpPlaylist;
+		tmpPlaylist.setId(index.data(PlaylistID).toString());
+		playlists << tmpPlaylist;
 	}
+	_db.removePlaylists(playlists);
+
 	this->clearPreview(false);
 	this->updatePlaylists();
 }
@@ -362,15 +370,6 @@ void PlaylistManager::exportSelectedPlaylist()
 	if (newName.isEmpty()) {
 		return;
 	}
-	// After copy, keeps the directory chosen by one. It's quite convenient when you are far from QStandardPaths::MusicLocation
-	/*if (QFile::copy(pPath, newName)) {
-		settings->setValue("locationForExportedPlaylist", QFileInfo(newName).absolutePath());
-	} else {
-		QString error = tr("Unfortunately, an error occured when Miam Player tried to export playlist '%1' to '%2'.\n"\
-						   "Please, would you be nice to check if the file isn't opened elsewhere?")
-				.arg(item->data(Qt::DisplayRole).toString(), QDir::toNativeSeparators(newName));
-		QMessageBox::warning(this, tr("Cannot export the selected playlist"), error);
-	}*/
 }
 
 /** Load every saved playlists. */
@@ -396,9 +395,9 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 		int playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toInt();
 		qDebug() << "playlistId" << playlistId;
 
-		QList<RemoteTrack> tracks = _db.selectPlaylistTracks(playlistId);
+		QList<TrackDAO> tracks = _db.selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {
-			RemoteTrack track = tracks.at(i);
+			TrackDAO track = tracks.at(i);
 			QTreeWidgetItem *item = new QTreeWidgetItem;
 			item->setText(0, QString("%1 (%2 - %3)").arg(track.title(), track.artist(), track.album()));
 			previewPlaylist->addTopLevelItem(item);
@@ -483,8 +482,8 @@ void PlaylistManager::updatePlaylists()
 	_savedPlaylistModel->clear();
 	_savedPlaylistModel->blockSignals(true);
 
-	QList<RemotePlaylist> playlists = _db.selectPlaylists();
-	foreach (RemotePlaylist playlist, playlists) {
+	QList<PlaylistDAO> playlists = _db.selectPlaylists();
+	foreach (PlaylistDAO playlist, playlists) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
 		_savedPlaylistModel->appendRow(item);

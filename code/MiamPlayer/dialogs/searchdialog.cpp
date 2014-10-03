@@ -160,10 +160,10 @@ void SearchDialog::processResults(Request type, const QStandardItemList &results
 	this->resize(minW, h);
 }
 
-void SearchDialog::aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks)
+void SearchDialog::aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks)
 {
 	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-	p->insertMedias(-1, QList<RemoteTrack>::fromStdList(tracks));
+	p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
 	this->clear();
 }
 
@@ -231,7 +231,7 @@ void SearchDialog::appendSelectedItem(const QModelIndex &index)
 		p->insertMedias(-1, tracks);
 	} else {
 		// Remote items: apply strategy pattern to get remote information depending on the caller
-		QList<RemoteTrack> tracks;
+		QList<TrackDAO> tracks;
 		p->insertMedias(-1, tracks);
 	}
 }

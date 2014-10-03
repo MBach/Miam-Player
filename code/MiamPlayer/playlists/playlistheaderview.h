@@ -17,6 +17,9 @@ public:
 
 	explicit PlaylistHeaderView(QWidget *parent = 0);
 
+	/** Redefined to initialize values from settings. */
+	void setFont(const QFont &newFont);
+
 	/** Redefined. */
 	void setModel(QAbstractItemModel *model);
 

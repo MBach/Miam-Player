@@ -37,10 +37,10 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 	}
 }
 
-void PlaylistModel::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
+void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	for (int i = 0; i < tracks.size(); i++) {
-		RemoteTrack track = tracks.at(i);
+		TrackDAO track = tracks.at(i);
 
 		QStandardItem *trackItem = new QStandardItem;
 		if (!track.trackNumber().isEmpty()) {
@@ -48,7 +48,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
 		}
 		QStandardItem *titleItem = new QStandardItem(track.title());
 		QStandardItem *albumItem = new QStandardItem(track.album());
-		QStandardItem *lengthItem = new QStandardItem(QDateTime::fromTime_t(track.length().toInt()).toString("m:ss"));
+		QStandardItem *lengthItem = new QStandardItem(track.length());
 		QStandardItem *artistItem = new QStandardItem(track.artist());
 		QStandardItem *ratingItem = new QStandardItem;
 		int rating = track.rating();
@@ -65,13 +65,17 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<RemoteTrack> &tracks)
 		iconItem->setToolTip(track.source());
 		QUrl url(track.url());
 
+		QStandardItem *idItem = new QStandardItem(track.id());
+		QStandardItem *urlItem = new QStandardItem(track.url());
+
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
 		ratingItem->setTextAlignment(Qt::AlignCenter);
 		yearItem->setTextAlignment(Qt::AlignCenter);
 
 		QList<QStandardItem *> items;
-		items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem << iconItem;
+		items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
+			  << yearItem << iconItem << idItem << urlItem;
 
 		this->insertRow(rowIndex + i, items);
 		_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(url));
@@ -100,13 +104,18 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	iconItem->setIcon(QIcon(":/icons/computer"));
 	iconItem->setToolTip(tr("Local file"));
 
+	QString absPath = fileHelper.fileInfo().absoluteFilePath();
+	QStandardItem *idItem = new QStandardItem(QString::number(qHash(absPath)));
+	QStandardItem *urlItem = new QStandardItem(QUrl::fromLocalFile(absPath).toString());
+
 	trackItem->setTextAlignment(Qt::AlignCenter);
 	lengthItem->setTextAlignment(Qt::AlignCenter);
 	ratingItem->setTextAlignment(Qt::AlignCenter);
 	yearItem->setTextAlignment(Qt::AlignCenter);
 
 	QList<QStandardItem *> items;
-	items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem << yearItem << iconItem;
+	items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
+		  << yearItem << iconItem << idItem << urlItem;
 	this->insertRow(rowIndex, items);
 }
 

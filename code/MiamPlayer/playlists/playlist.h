@@ -6,7 +6,7 @@
 #include <QTableView>
 
 #include "playlistmodel.h"
-#include "model/remotetrack.h"
+#include "model/trackdao.h"
 
 #include <mediaplayer.h>
 
@@ -53,8 +53,8 @@ public:
 				 COL_RATINGS		= 5,
 				 COL_YEAR			= 6,
 				 COL_ICON			= 7,
-				 COL_ID				= 100,	// Columns that should always be hidden
-				 COL_URL			= 101};
+				 COL_ID				= 8,	// Columns that should always be hidden
+				 COL_URI			= 9};
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
@@ -69,7 +69,7 @@ public:
 	void insertMedias(int rowIndex, const QStringList &tracks);
 
 	/** Insert remote medias to playlist. */
-	void insertMedias(int rowIndex, const QList<RemoteTrack> &tracks);
+	void insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
 
 	QSize minimumSizeHint() const;
 

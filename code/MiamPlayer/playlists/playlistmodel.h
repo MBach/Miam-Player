@@ -7,7 +7,7 @@
 #include <QStandardItemModel>
 
 #include "filehelper.h"
-#include "model/remotetrack.h"
+#include "model/trackdao.h"
 
 /**
  * @brief The PlaylistModel class
@@ -30,7 +30,7 @@ public:
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
-	void insertMedias(int, const QList<RemoteTrack> &tracks);
+	void insertMedias(int, const QList<TrackDAO> &tracks);
 
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);

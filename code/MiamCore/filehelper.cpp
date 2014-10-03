@@ -473,9 +473,9 @@ QString FileHelper::album() const
 QString FileHelper::length() const
 {
 	if (_file && _file->audioProperties()) {
-		return QString(QDateTime::fromTime_t(_file->audioProperties()->length()).toString("m:ss"));
+		return QString::number(_file->audioProperties()->length());
 	} else {
-		return QString("0:00");
+		return QString("0");
 	}
 }
 

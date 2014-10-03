@@ -53,9 +53,11 @@ TabBar::TabBar(TabPlaylist *parent) :
 	w->deleteLater();
 }
 
-void TabBar::editTab()
+/** Trigger a double click to rename a tab. */
+void TabBar::editTab(int indexTab)
 {
-	qDebug() << "todo";
+	QMouseEvent dbClickEvent(QEvent::MouseButtonDblClick, tabRect(indexTab).center(), Qt::LeftButton, 0, 0);
+	QApplication::sendEvent(this, &dbClickEvent);
 }
 
 /** Redefined to accept D&D from another playlist or the library. */

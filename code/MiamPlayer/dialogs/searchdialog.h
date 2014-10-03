@@ -66,7 +66,7 @@ public slots:
 	/** Process results sent back from various search engines (local, remote). */
 	virtual void processResults(Request type, const QStandardItemList &results);
 
-	virtual void aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks);
+	virtual void aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks);
 
 private slots:
 	void artistWasDoubleClicked(const QModelIndex &artist);

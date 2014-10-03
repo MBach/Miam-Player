@@ -60,22 +60,19 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	_contextMenu->addAction(clearBackground);
 
 	connect(renamePlaylist, &QAction::triggered, this, [=]() {
-		int index = tabBar->tabAt(mapFromGlobal(QCursor::pos()));
-		qDebug() << "index?" << index;
+		QPoint p = _contextMenu->property("mouseRightClickPos").toPoint();
+		int index = tabBar->tabAt(p);
 		this->setCurrentIndex(index);
-		tabBar->editTab();
+		tabBar->editTab(index);
 	});
 	connect(loadBackground, &QAction::triggered, this, [=]() {
 		qDebug() << "Load background not implemented yet";
 	});
-
 	this->setAcceptDrops(true);
 }
 
 TabPlaylist::~TabPlaylist()
-{
-
-}
+{}
 
 /** Get the current playlist. */
 Playlist* TabPlaylist::currentPlayList() const
@@ -150,6 +147,7 @@ void TabPlaylist::contextMenuEvent(QContextMenuEvent * event)
 	int tab = tabBar()->tabAt(event->pos());
 	if (tab >= 0 && tab < count() - 1) {
 		_contextMenu->move(mapToGlobal(event->pos()));
+		_contextMenu->setProperty("mouseRightClickPos", event->pos());
 		_contextMenu->show();
 	}
 }
@@ -180,7 +178,7 @@ Playlist* TabPlaylist::addPlaylist()
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
 	p->hideColumn(Playlist::COL_ID);
-	p->hideColumn(Playlist::COL_URL);
+	p->hideColumn(Playlist::COL_URI);
 	p->setAcceptDrops(true);
 	p->installEventFilter(this);
 

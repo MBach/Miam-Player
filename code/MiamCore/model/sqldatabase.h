@@ -4,8 +4,8 @@
 #include <QSqlDatabase>
 
 #include "miamcore_global.h"
-#include "remotetrack.h"
-#include "remoteplaylist.h"
+#include "trackdao.h"
+#include "playlistdao.h"
 
 /**
  * \brief		The SqlDatabase class uses SQLite to store few but useful tables for tracks, playlists, etc.
@@ -19,16 +19,16 @@ public:
 
 	virtual ~SqlDatabase() {}
 
-	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<RemoteTrack> &tracks);
+	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks);
 
-	int insertIntoTablePlaylists(const RemotePlaylist &playlist);
+	int insertIntoTablePlaylists(const PlaylistDAO &playlist);
 
-	void removePlaylists(const QList<RemotePlaylist> &playlists);
+	void removePlaylists(const QList<PlaylistDAO> &playlists);
 
-	QList<RemoteTrack> selectPlaylistTracks(int playlistID);
+	QList<TrackDAO> selectPlaylistTracks(int playlistID);
 
-	RemotePlaylist selectPlaylist(int playlistId);
-	QList<RemotePlaylist> selectPlaylists();
+	PlaylistDAO selectPlaylist(int playlistId);
+	QList<PlaylistDAO> selectPlaylists();
 };
 
 #endif // SQLDATABASE_H

@@ -107,7 +107,7 @@ void LibrarySqlModel::rebuild()
 
 	// Open Connection
 	database().open();
-
+	database().exec("PRAGMA foreign_keys = ON");
 	database().exec("PRAGMA synchronous = OFF");
 	database().exec("PRAGMA journal_mode = MEMORY");
 	database().exec("DROP TABLE tracks");

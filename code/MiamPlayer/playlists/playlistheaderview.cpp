@@ -15,7 +15,7 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Year")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "ID")
-													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Url");
+													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "URI");
 
 PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	QHeaderView(Qt::Horizontal, parent)
@@ -33,24 +33,30 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 		this->setSectionHidden(columnIndex, !this->isSectionHidden(columnIndex));
 	});
 
+	// Initialize font from settings
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	this->setFont(settings->font(SettingsPrivate::FF_Playlist));
 
 	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Playlist) {
-			QFont font = newFont;
-			font.setPointSizeF(font.pointSizeF() * 0.8);
-			this->setFont(font);
-			int h = fontMetrics().height() * 1.25;
-			if (h >= 30) {
-				this->setMinimumHeight(h);
-				this->setMaximumHeight(h);
-			} else {
-				this->setMinimumHeight(30);
-				this->setMaximumHeight(30);
-			}
+			this->setFont(newFont);
 		}
 	});
+}
+
+void PlaylistHeaderView::setFont(const QFont &newFont)
+{
+	QFont font = newFont;
+	font.setPointSizeF(font.pointSizeF() * 0.8);
+	QHeaderView::setFont(newFont);
+	int h = fontMetrics().height() * 1.25;
+	if (h >= 30) {
+		this->setMinimumHeight(h);
+		this->setMaximumHeight(h);
+	} else {
+		this->setMinimumHeight(30);
+		this->setMaximumHeight(30);
+	}
 }
 
 /** Redefined for dynamic translation. */

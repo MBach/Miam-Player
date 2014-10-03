@@ -45,6 +45,8 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	starEditor->deleteLater();
 }
 
+#include <QDateTime>
+
 /** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
@@ -75,17 +77,16 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
 	QString text;
 	switch (index.column()) {
-	case Playlist::COL_TRACK_NUMBER:
+
 	case Playlist::COL_LENGTH:
+		text = QDateTime::fromTime_t(index.data().toInt()).toString("m:ss");
+		text = QFontMetrics(font).elidedText(text, o.textElideMode, textRect.width());
+		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
+		break;
+	case Playlist::COL_TRACK_NUMBER:
 	case Playlist::COL_YEAR:
 		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
 		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
-		break;
-	case Playlist::COL_TITLE:
-	case Playlist::COL_ALBUM:
-	case Playlist::COL_ARTIST:
-		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
-		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, text);
 		break;
 	case Playlist::COL_RATINGS:
 		if (index.data().canConvert<StarRating>() || opt.state.testFlag(QStyle::State_Selected)) {
@@ -93,13 +94,21 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 			r.paintStars(p, opt);
 		}
 		break;
-	case Playlist::COL_ICON:
+	case Playlist::COL_ICON:{
 		//QRect iconRect = style->subElementRect(QStyle::SE_ItemViewItemDecoration, &o, o.widget);
 		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
 		QSize iconSize(textRect.height() * 0.8, textRect.height() * 0.8);
 		/// FIXME
 		//style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
 		style->drawItemPixmap(p, o.rect, Qt::AlignCenter, o.icon.pixmap(iconSize));
+		break;
+	}
+	case Playlist::COL_TITLE:
+	case Playlist::COL_ALBUM:
+	case Playlist::COL_ARTIST:
+	default:
+		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, text);
 		break;
 	}
 	p->restore();

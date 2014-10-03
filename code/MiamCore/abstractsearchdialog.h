@@ -7,7 +7,7 @@
 #include <QListView>
 #include <QStandardItem>
 
-#include "model/remotetrack.h"
+#include "model/trackdao.h"
 
 typedef QList<QStandardItem*> QStandardItemList;
 
@@ -18,38 +18,38 @@ typedef QList<QStandardItem*> QStandardItemList;
  */
 class MIAMCORE_LIBRARY AbstractSearchDialog : public QWidget
 {
-	Q_OBJECT
-	Q_ENUMS(Request)
-	Q_ENUMS(DataType)
+    Q_OBJECT
+    Q_ENUMS(Request)
+    Q_ENUMS(DataType)
 public:
-	enum Request { Artist = 0,
-				   Album = 1,
-				   Track = 2};
+    enum Request { Artist = 0,
+                   Album = 1,
+                   Track = 2};
 
-	enum DataType { DT_Origin = Qt::UserRole + 1,
-					DT_Identifier = Qt::UserRole + 2};
+    enum DataType { DT_Origin = Qt::UserRole + 1,
+                    DT_Identifier = Qt::UserRole + 2};
 
-	explicit AbstractSearchDialog(QWidget *parent = 0, Qt::WindowFlags f = 0) : QWidget(parent, f) {}
+    explicit AbstractSearchDialog(QWidget *parent = 0, Qt::WindowFlags f = 0) : QWidget(parent, f) {}
 
-	virtual ~AbstractSearchDialog() {}
+    virtual ~AbstractSearchDialog() {}
 
-	virtual void addSource(QCheckBox *checkBox) = 0;
+    virtual void addSource(QCheckBox *checkBox) = 0;
 
-	virtual QListView * artists() const = 0;
+    virtual QListView * artists() const = 0;
 
-	virtual QListView * albums() const = 0;
+    virtual QListView * albums() const = 0;
 
-	virtual QListView * tracks() const = 0;
+    virtual QListView * tracks() const = 0;
 
 public slots:
-	virtual void processResults(Request type, const QStandardItemList &results) = 0;
+    virtual void processResults(Request type, const QStandardItemList &results) = 0;
 
-	virtual void aboutToProcessRemoteTracks(const std::list<RemoteTrack> &tracks) = 0;
+    virtual void aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks) = 0;
 
 signals:
-	void aboutToSearch(const QString &text);
+    void aboutToSearch(const QString &text);
 
-	// void aboutToSendToCurrentPlaylist();
+    // void aboutToSendToCurrentPlaylist();
 };
 
 #endif // ABSTRACTSEARCHDIALOG_H

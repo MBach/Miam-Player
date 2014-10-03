@@ -31,35 +31,34 @@ SqlDatabase::SqlDatabase()
 	setDatabaseName(dbPath);
 
 	if (open()) {
-		exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER, title varchar(255), duration INTEGER, checksum varchar(255))");
-		exec("CREATE TABLE IF NOT EXISTS playlistTracks (url varchar(255), host varchar(255), id INTEGER, title varchar(255), duration INTEGER, artist varchar(255), album varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
+		exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, checksum varchar(255))");
+		exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
+			 "artist varchar(255), rating INTEGER, year INTEGER, url varchar(255), id INTEGER, playlistId INTEGER, " \
+			 "FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
 		close();
 	}
 }
 
-bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<RemoteTrack> &tracks)
+bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks)
 {
 	if (!isOpen()) {
 		open();
 	}
 
 	exec("BEGIN TRANSACTION");
-	for (std::list<RemoteTrack>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
-		RemoteTrack track = *it;
+	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
+		TrackDAO track = *it;
 		QSqlQuery insert(*this);
-		if (track.id().isEmpty()) {
-			insert.prepare("INSERT INTO playlistTracks (url, id, title, artist, album, playlistId) VALUES (?, ?, ?, ?, ?, ?)");
-			insert.addBindValue(track.url());
-			insert.addBindValue(qHash(track.url()));
-		} else {
-			insert.prepare("INSERT INTO playlistTracks (url, id, duration, title, artist, album, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?)");
-			insert.addBindValue(track.url());
-			insert.addBindValue(track.id());
-			insert.addBindValue(track.length());
-		}
+		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.addBindValue(track.trackNumber());
 		insert.addBindValue(track.title());
-		insert.addBindValue(track.artist());
 		insert.addBindValue(track.album());
+		insert.addBindValue(track.length());
+		insert.addBindValue(track.artist());
+		insert.addBindValue(track.rating());
+		insert.addBindValue(track.year());
+		insert.addBindValue(track.id());
+		insert.addBindValue(track.url());
 		insert.addBindValue(playlistId);
 		insert.exec();
 	}
@@ -68,7 +67,7 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 	return lastError().type() == QSqlError::NoError;
 }
 
-int SqlDatabase::insertIntoTablePlaylists(const RemotePlaylist &playlist)
+int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 {
 	qDebug() << Q_FUNC_INFO;
 	if (!isOpen()) {
@@ -100,14 +99,20 @@ int SqlDatabase::insertIntoTablePlaylists(const RemotePlaylist &playlist)
 	return id;
 }
 
-void SqlDatabase::removePlaylists(const QList<RemotePlaylist> &playlists)
+void SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 {
 	if (!isOpen()) {
 		open();
 	}
 
 	exec("BEGIN TRANSACTION");
-	foreach (RemotePlaylist playlist, playlists) {
+	foreach (PlaylistDAO playlist, playlists) {
+		/// XXX: CASCADE not working?
+		QSqlQuery children(*this);
+		children.prepare("DELETE FROM playlistTracks WHERE playlistId = :id");
+		children.bindValue(":id", playlist.id());
+		children.exec();
+
 		QSqlQuery remove(*this);
 		remove.prepare("DELETE FROM playlists WHERE id = :id");
 		remove.bindValue(":id", playlist.id());
@@ -118,23 +123,27 @@ void SqlDatabase::removePlaylists(const QList<RemotePlaylist> &playlists)
 	close();
 }
 
-QList<RemoteTrack> SqlDatabase::selectPlaylistTracks(int playlistID)
+QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 {
 	if (!isOpen()) {
 		open();
 	}
 
-	QList<RemoteTrack> tracks;
-	QSqlQuery results = exec("SELECT url, id, title, duration, artist, album FROM playlistTracks WHERE playlistId = " + QString::number(playlistID));
+	QList<TrackDAO> tracks;
+	QSqlQuery results = exec("SELECT trackNumber, title, album, length, artist, rating, year, id, url FROM playlistTracks WHERE playlistId = " + QString::number(playlistID));
 	while (results.next()) {
 		int i = -1;
-		RemoteTrack track;
-		track.setUrl(results.record().value(++i).toString());
-		track.setId(results.record().value(++i).toString());
-		track.setTitle(results.record().value(++i).toString());
-		track.setLength(results.record().value(++i).toString());
-		track.setArtist(results.record().value(++i).toString());
-		track.setAlbum(results.record().value(++i).toString());
+		TrackDAO track;
+		QSqlRecord record = results.record();
+		track.setTrackNumber(record.value(++i).toString());
+		track.setTitle(record.value(++i).toString());
+		track.setAlbum(record.value(++i).toString());
+		track.setLength(record.value(++i).toString());
+		track.setArtist(record.value(++i).toString());
+		track.setRating(record.value(++i).toInt());
+		track.setYear(record.value(++i).toString());
+		track.setId(record.value(++i).toString());
+		track.setUrl(record.value(++i).toString());
 		tracks.append(track);
 	}
 
@@ -142,13 +151,13 @@ QList<RemoteTrack> SqlDatabase::selectPlaylistTracks(int playlistID)
 	return tracks;
 }
 
-RemotePlaylist SqlDatabase::selectPlaylist(int playlistId)
+PlaylistDAO SqlDatabase::selectPlaylist(int playlistId)
 {
 	if (!isOpen()) {
 		open();
 	}
 
-	RemotePlaylist playlist;
+	PlaylistDAO playlist;
 	QSqlQuery results = exec("SELECT id, title, checksum FROM playlists WHERE id = " + QString::number(playlistId));
 	if (results.next()) {
 		int i = -1;
@@ -161,16 +170,16 @@ RemotePlaylist SqlDatabase::selectPlaylist(int playlistId)
 	return playlist;
 }
 
-QList<RemotePlaylist> SqlDatabase::selectPlaylists()
+QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 {
 	if (!isOpen()) {
 		open();
 	}
 
-	QList<RemotePlaylist> playlists;
+	QList<PlaylistDAO> playlists;
 	QSqlQuery results = exec("SELECT title, id FROM playlists");
 	while (results.next()) {
-		RemotePlaylist playlist;
+		PlaylistDAO playlist;
 		playlist.setTitle(results.record().value(0).toString());
 		playlist.setId(results.record().value(1).toString());
 		playlists.append(playlist);

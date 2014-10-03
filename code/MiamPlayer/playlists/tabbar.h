@@ -9,6 +9,13 @@
 #include "playlist.h"
 #include "tabplaylist.h"
 
+/**
+ * \brief		The TabBar class is used to be able to rename a tab, e.g. a Playlist.
+ * \details		By double clicking or using the contextual menu, one can interact with the name of every playlists in this Widget.
+ *				It also forwards drag & drop events to automatically switch from one tab to another.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class TabBar : public QTabBar
 {
 	Q_OBJECT
@@ -24,7 +31,8 @@ private:
 public:
 	TabBar(TabPlaylist *parent);
 
-	void editTab();
+	/** Trigger a double click to rename a tab. */
+	void editTab(int indexTab);
 
 protected:
 	/** Redefined to accept D&D from another playlist or the library. */
