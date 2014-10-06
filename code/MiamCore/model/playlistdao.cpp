@@ -7,7 +7,8 @@ PlaylistDAO::PlaylistDAO(QObject *parent)
 PlaylistDAO::PlaylistDAO(const PlaylistDAO &remotePlaylist)
 	: GenericDAO(remotePlaylist)
 {
-	_icon = remotePlaylist.icon();
+	_background = remotePlaylist.background();
+	_iconPath = remotePlaylist.iconPath();
 	_length = remotePlaylist.length();
 	_title = remotePlaylist.title();
 }
@@ -15,8 +16,11 @@ PlaylistDAO::PlaylistDAO(const PlaylistDAO &remotePlaylist)
 PlaylistDAO::~PlaylistDAO()
 {}
 
-QIcon PlaylistDAO::icon() const { return _icon; }
-void PlaylistDAO::setIcon(const QIcon &icon) { _icon = icon; }
+QString PlaylistDAO::background() const { return _background; }
+void PlaylistDAO::setBackground(const QString &background) { _background = background; }
+
+QString PlaylistDAO::iconPath() const { return _iconPath; }
+void PlaylistDAO::setIconPath(const QString &iconPath) { _iconPath = iconPath; }
 
 QString PlaylistDAO::length() const { return _length; }
 void PlaylistDAO::setLength(const QString &length) { _length = length; }

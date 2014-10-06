@@ -20,6 +20,7 @@
         <file alias="computer">config/icons/computer.png</file>
         <file alias="back">config/icons/back.png</file>
         <file alias="debug">config/icons/debug.png</file>
+        <file alias="playlist">config/icons/playlist.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

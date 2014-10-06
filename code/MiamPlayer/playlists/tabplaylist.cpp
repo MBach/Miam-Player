@@ -177,8 +177,9 @@ Playlist* TabPlaylist::addPlaylist()
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
-	p->hideColumn(Playlist::COL_ID);
-	p->hideColumn(Playlist::COL_URI);
+	//p->hideColumn(Playlist::COL_ID);
+	//p->hideColumn(Playlist::COL_URI);
+	p->hideColumn(Playlist::COL_TRACK_DAO);
 	p->setAcceptDrops(true);
 	p->installEventFilter(this);
 
@@ -338,7 +339,7 @@ void TabPlaylist::closePlaylist(int index)
 	Playlist *p = playlists().at(index);
 	QString hash;
 	for (int i = 0; i < p->mediaPlaylist()->mediaCount(); i++) {
-		hash += p->mediaPlaylist()->media(i).canonicalUrl().toLocalFile();
+		hash += p->mediaPlaylist()->media(i).canonicalUrl().toString();
 	}
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
 	if (p->hash() == qHash(hash) || playlists().at(index)->mediaPlaylist()->isEmpty()) {

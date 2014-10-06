@@ -2,6 +2,7 @@
 
 #include <filehelper.h>
 #include <settingsprivate.h>
+#include "starrating.h"
 
 #include <QDirIterator>
 #include <QFileDialog>
@@ -81,13 +82,10 @@ PlaylistManager::PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist
 bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Drop || event->type() == QEvent::DragEnter) {
-		//qDebug() << "todo deplacer" << event->type();
 		return QDialog::eventFilter(obj, event);
 	} else if (obj == playlists) {
-		//qDebug() << "playlists changed!" << event->type();
 		return QDialog::eventFilter(obj, event);
 	} else if (event->type() == QEvent::Drop) {
-		qDebug() << "savedPlaylists";
 		return QDialog::eventFilter(obj, event);
 	} else {
 
@@ -232,19 +230,16 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	}
 }
 
-#include "starrating.h"
-
 bool PlaylistManager::savePlaylist(int index)
 {
 	qDebug() << Q_FUNC_INFO;
 	Playlist *p = playlists->playlist(index);
 	if (p && !p->mediaPlaylist()->isEmpty()) {
 		QString playlistName = playlists->tabBar()->tabText(index);
-		// QVariant playlistData = playlists->tabBar()->tabData(index);
 
 		QString files;
 		for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
-			files.append(p->mediaPlaylist()->media(j).canonicalUrl().toLocalFile());
+			files.append(p->mediaPlaylist()->media(j).canonicalUrl().toString());
 		}
 		uint hash = qHash(files);
 		qDebug() << "savePlaylist() << new hash generated" << hash;
@@ -256,31 +251,11 @@ bool PlaylistManager::savePlaylist(int index)
 		if (id > 0) {
 			std::list<TrackDAO> tracks;
 
+			const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(p->model());
 			for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
-				TrackDAO track;
-				QUrl url = p->mediaPlaylist()->media(j).canonicalUrl();
-				if (url.isLocalFile()) {
-					track.setUrl(url.toString());
-				}
-
-				QString trackNumber = p->model()->index(j, p->COL_TRACK_NUMBER).data().toString();
-				QString title = p->model()->index(j, p->COL_TITLE).data().toString();
-				QString album = p->model()->index(j, p->COL_ALBUM).data().toString();
-				QString length = p->model()->index(j, p->COL_LENGTH).data().toString();
-				QString artist = p->model()->index(j, p->COL_ARTIST).data().toString();
-				StarRating starRating = p->model()->index(j, p->COL_RATINGS).data().value<StarRating>();
-				QString trackId = p->model()->index(j, p->COL_ID).data().toString();
-				QString uri = p->model()->index(j, p->COL_URI).data().toString();
-				track.setTrackNumber(trackNumber);
-				track.setTitle(title);
-				track.setAlbum(album);
-				track.setLength(length);
-				track.setArtist(artist);
-				track.setRating(starRating.starCount());
-				track.setId(trackId);
-				track.setUrl(uri);
-
-				tracks.push_back(std::move(track));
+				// Eeach track has been saved in a hidden column into the playlist
+				TrackDAO t = model->index(j, p->COL_TRACK_DAO).data().value<TrackDAO>();
+				tracks.push_back(std::move(t));
 			}
 
 			return _db.insertIntoTablePlaylistTracks(id, tracks);
@@ -430,8 +405,6 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 			if (hash == playlistObjectPointer) {
 				int max = qMin(p->mediaPlaylist()->mediaCount(), MAX_TRACKS_PREVIEW_AREA);
 				for (int idxTrack = 0; idxTrack < max; idxTrack++) {
-					QMediaContent mc(p->mediaPlaylist()->media(idxTrack).canonicalUrl());
-					qDebug() << mc.canonicalUrl() << mc.canonicalUrl().isLocalFile();
 					QString title = p->model()->index(idxTrack, p->COL_TITLE).data().toString();
 					QString artist = p->model()->index(idxTrack, p->COL_ARTIST).data().toString();
 					QString album = p->model()->index(idxTrack, p->COL_ALBUM).data().toString();
@@ -486,6 +459,11 @@ void PlaylistManager::updatePlaylists()
 	foreach (PlaylistDAO playlist, playlists) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
+		if (playlist.iconPath().isEmpty()) {
+			item->setIcon(QIcon(":/icons/playlist"));
+		} else {
+			item->setIcon(QIcon(playlist.iconPath()));
+		}
 		_savedPlaylistModel->appendRow(item);
 	}
 	_savedPlaylistModel->blockSignals(false);

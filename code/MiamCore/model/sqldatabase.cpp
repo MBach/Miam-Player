@@ -31,9 +31,9 @@ SqlDatabase::SqlDatabase()
 	setDatabaseName(dbPath);
 
 	if (open()) {
-		exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, checksum varchar(255))");
+		exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), background varchar(255), checksum varchar(255))");
 		exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
-			 "artist varchar(255), rating INTEGER, year INTEGER, url varchar(255), id INTEGER, playlistId INTEGER, " \
+			 "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), id INTEGER, url varchar(255), playlistId INTEGER, " \
 			 "FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
 		close();
 	}
@@ -49,7 +49,7 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
 		TrackDAO track = *it;
 		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, icon, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		insert.addBindValue(track.trackNumber());
 		insert.addBindValue(track.title());
 		insert.addBindValue(track.album());
@@ -57,6 +57,7 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 		insert.addBindValue(track.artist());
 		insert.addBindValue(track.rating());
 		insert.addBindValue(track.year());
+		insert.addBindValue(track.iconPath());
 		insert.addBindValue(track.id());
 		insert.addBindValue(track.url());
 		insert.addBindValue(playlistId);
@@ -130,7 +131,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 	}
 
 	QList<TrackDAO> tracks;
-	QSqlQuery results = exec("SELECT trackNumber, title, album, length, artist, rating, year, id, url FROM playlistTracks WHERE playlistId = " + QString::number(playlistID));
+	QSqlQuery results = exec("SELECT trackNumber, title, album, length, artist, rating, year, icon, id, url FROM playlistTracks WHERE playlistId = " + QString::number(playlistID));
 	while (results.next()) {
 		int i = -1;
 		TrackDAO track;
@@ -142,6 +143,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 		track.setArtist(record.value(++i).toString());
 		track.setRating(record.value(++i).toInt());
 		track.setYear(record.value(++i).toString());
+		track.setIconPath(record.value(++i).toString());
 		track.setId(record.value(++i).toString());
 		track.setUrl(record.value(++i).toString());
 		tracks.append(track);

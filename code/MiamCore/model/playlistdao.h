@@ -13,8 +13,7 @@ class MIAMCORE_LIBRARY PlaylistDAO : public GenericDAO
 {
 	Q_OBJECT
 private:
-	QString _length, _title;
-	QIcon _icon;
+	QString _background, _iconPath, _length, _title;
 
 public:
 	explicit PlaylistDAO(QObject *parent = 0);
@@ -23,8 +22,11 @@ public:
 
 	virtual ~PlaylistDAO();
 
-	QIcon icon() const;
-	void setIcon(const QIcon &icon);
+	QString iconPath() const;
+	void setIconPath(const QString &icon);
+
+	QString background() const;
+	void setBackground(const QString &background);
 
 	QString length() const;
 	void setLength(const QString &length);

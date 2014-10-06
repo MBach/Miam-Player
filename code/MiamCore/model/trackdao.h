@@ -13,8 +13,7 @@ class MIAMCORE_LIBRARY TrackDAO : public GenericDAO
 {
 	Q_OBJECT
 private:
-	QString _album, _artist, _disc, _length, _source, _title, _trackNumber, _url, _year;
-	QIcon _icon;
+	QString _album, _artist, _disc, _iconPath, _length, _source, _title, _trackNumber, _url, _year;
 	int _rating;
 
 public:
@@ -33,8 +32,8 @@ public:
 	QString disc() const;
 	void setDisc(const QString &disc);
 
-	QIcon icon() const;
-	void setIcon(const QIcon &icon);
+	QString iconPath() const;
+	void setIconPath(const QString &iconPath);
 
 	QString length() const;
 	void setLength(const QString &length);
@@ -57,5 +56,8 @@ public:
 	QString year() const;
 	void setYear(const QString &year);
 };
+
+/** Register this class to convert in QVariant. */
+Q_DECLARE_METATYPE(TrackDAO)
 
 #endif // TRACKDAO_H

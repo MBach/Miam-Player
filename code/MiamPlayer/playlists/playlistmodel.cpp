@@ -13,8 +13,10 @@
 
 #include <QtDebug>
 
+#include "playlistheaderview.h"
+
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(0, 10, parent), _mediaPlaylist(new QMediaPlaylist(this))
+	QStandardItemModel(0, PlaylistHeaderView::labels.count(), parent), _mediaPlaylist(new QMediaPlaylist(this))
 {}
 
 /** Clear the content of playlist. */
@@ -51,22 +53,21 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 		QStandardItem *lengthItem = new QStandardItem(track.length());
 		QStandardItem *artistItem = new QStandardItem(track.artist());
 		QStandardItem *ratingItem = new QStandardItem;
-		int rating = track.rating();
-		if (rating > 0) {
-			StarRating r(rating);
-			ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
-			ratingItem->setData(true, RemoteMedia);
-			ratingItem->setToolTip(tr("You cannot modify remote medias"));
-		}
+		StarRating r(track.rating());
+		ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
+		ratingItem->setData(true, RemoteMedia);
+		ratingItem->setToolTip(tr("You cannot modify remote medias"));
 
 		QStandardItem *yearItem = new QStandardItem(track.year());
 		QStandardItem *iconItem = new QStandardItem;
-		iconItem->setIcon(track.icon());
+		if (!track.iconPath().isEmpty()) {
+			iconItem->setIcon(QIcon(track.iconPath()));
+		}
 		iconItem->setToolTip(track.source());
 		QUrl url(track.url());
 
-		QStandardItem *idItem = new QStandardItem(track.id());
-		QStandardItem *urlItem = new QStandardItem(track.url());
+		QStandardItem *trackDAO = new QStandardItem;
+		trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
@@ -75,7 +76,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 
 		QList<QStandardItem *> items;
 		items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
-			  << yearItem << iconItem << idItem << urlItem;
+			  << yearItem << iconItem << trackDAO;
 
 		this->insertRow(rowIndex + i, items);
 		_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(url));
@@ -105,8 +106,18 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	iconItem->setToolTip(tr("Local file"));
 
 	QString absPath = fileHelper.fileInfo().absoluteFilePath();
-	QStandardItem *idItem = new QStandardItem(QString::number(qHash(absPath)));
-	QStandardItem *urlItem = new QStandardItem(QUrl::fromLocalFile(absPath).toString());
+	QStandardItem *trackDAO = new QStandardItem;
+	TrackDAO track;
+	track.setTrackNumber(fileHelper.trackNumber());
+	track.setTitle(fileHelper.title());
+	track.setAlbum(fileHelper.album());
+	track.setLength(fileHelper.length());
+	track.setArtist(fileHelper.artist());
+	track.setRating(fileHelper.rating());
+	track.setYear(fileHelper.year());
+	track.setId(QString::number(qHash(absPath)));
+	track.setUrl(QUrl::fromLocalFile(absPath).toString());
+	trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
 
 	trackItem->setTextAlignment(Qt::AlignCenter);
 	lengthItem->setTextAlignment(Qt::AlignCenter);
@@ -115,7 +126,7 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 
 	QList<QStandardItem *> items;
 	items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
-		  << yearItem << iconItem << idItem << urlItem;
+		  << yearItem << iconItem << trackDAO;
 	this->insertRow(rowIndex, items);
 }
 
