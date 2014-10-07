@@ -127,11 +127,8 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		connect(scrollBar, &QScrollBar::sliderMoved, this, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderReleased, this, [=]() { viewport()->update(); });
 	}
-}
 
-Playlist::~Playlist()
-{
-
+	//this->setStyleSheet("background-image: url(C:/Users/MasterMatt/AppData/Local/MmeMiamMiam/MiamPlayer/cache/playlist_506140425.jpg)");
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)

@@ -29,6 +29,9 @@ public:
 
 	PlaylistDAO selectPlaylist(int playlistId);
 	QList<PlaylistDAO> selectPlaylists();
+
+	bool playlistHasBackgroundImage(int playlistID);
+	void updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath);
 };
 
 #endif // SQLDATABASE_H

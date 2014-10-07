@@ -83,11 +83,12 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 	}
 
 	QSqlQuery insert(*this);
-	insert.prepare("INSERT INTO playlists(id, title, duration, checksum) VALUES (:id, :title, :length, :chk)");
-	insert.bindValue(":id", id);
-	insert.bindValue(":title", playlist.title());
-	insert.bindValue(":length", playlist.length());
-	insert.bindValue(":chk", playlist.checksum());
+	insert.prepare("INSERT INTO playlists(id, title, duration, icon, checksum) VALUES (?, ?, ?, ?, ?)");
+	insert.addBindValue(id);
+	insert.addBindValue(playlist.title());
+	insert.addBindValue(playlist.length());
+	insert.addBindValue(playlist.iconPath());
+	insert.addBindValue(playlist.checksum());
 	bool b = insert.exec();
 	int i = 0;
 	while (!b && i < 10) {
@@ -160,12 +161,14 @@ PlaylistDAO SqlDatabase::selectPlaylist(int playlistId)
 	}
 
 	PlaylistDAO playlist;
-	QSqlQuery results = exec("SELECT id, title, checksum FROM playlists WHERE id = " + QString::number(playlistId));
+	QSqlQuery results = exec("SELECT id, title, checksum, icon, background FROM playlists WHERE id = " + QString::number(playlistId));
 	if (results.next()) {
 		int i = -1;
 		playlist.setId(results.record().value(++i).toString());
 		playlist.setTitle(results.record().value(++i).toString());
 		playlist.setChecksum(results.record().value(++i).toString());
+		playlist.setIconPath(results.record().value(++i).toString());
+		playlist.setBackground(results.record().value(++i).toString());
 	}
 
 	close();
@@ -179,14 +182,47 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 	}
 
 	QList<PlaylistDAO> playlists;
-	QSqlQuery results = exec("SELECT title, id FROM playlists");
+	QSqlQuery results = exec("SELECT title, id, icon, background FROM playlists");
 	while (results.next()) {
 		PlaylistDAO playlist;
-		playlist.setTitle(results.record().value(0).toString());
-		playlist.setId(results.record().value(1).toString());
+		int i = -1;
+		playlist.setTitle(results.record().value(++i).toString());
+		playlist.setId(results.record().value(++i).toString());
+		playlist.setIconPath(results.record().value(++i).toString());
+		playlist.setBackground(results.record().value(++i).toString());
 		playlists.append(playlist);
 	}
 
 	close();
 	return playlists;
+}
+
+bool SqlDatabase::playlistHasBackgroundImage(int playlistID)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	QSqlQuery query = exec("SELECT background FROM playlists WHERE id = " + QString::number(playlistID));
+	query.next();
+	bool result = !query.record().value(0).toString().isEmpty();
+	qDebug() << query.record().value(0).toString() << result;
+
+	close();
+	return result;
+}
+
+void SqlDatabase::updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	QSqlQuery update(*this);
+	update.prepare("UPDATE playlists SET background = ? WHERE id = ?");
+	update.addBindValue(backgroundImagePath);
+	update.addBindValue(playlistID);
+	update.exec();
+
+	close();
 }

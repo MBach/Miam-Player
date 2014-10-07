@@ -47,6 +47,12 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 		}
 		p->fillRect(o.rect, o.palette.highlight().color().lighter());
 
+		/*QBrush brush = o.palette.highlight();
+		QColor color = brush.color().lighter();
+		color.setAlpha(100);
+		brush.setColor(color);
+		p->fillRect(o.rect, brush);*/
+
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
 		if (!top.isValid() || !_itemView->selectionModel()->selectedIndexes().contains(top)) {

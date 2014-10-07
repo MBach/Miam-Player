@@ -59,7 +59,7 @@ public:
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
-	virtual ~Playlist();
+	virtual ~Playlist() {}
 
 	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
 

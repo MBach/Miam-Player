@@ -6,6 +6,7 @@
 #include "filehelper.h"
 
 #include <QApplication>
+#include <QDateTime>
 #include <QPainter>
 #include <QStylePainter>
 
@@ -44,8 +45,6 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	model->setData(index, QVariant::fromValue(starEditor->starRating));
 	starEditor->deleteLater();
 }
-
-#include <QDateTime>
 
 /** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
