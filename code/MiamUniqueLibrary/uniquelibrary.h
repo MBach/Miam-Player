@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "miamuniquelibrary_global.h"
-#include <model/librarysqlmodel.h>
+#include "model/sqldatabase.h"
 
 namespace Ui {
 class UniqueLibrary;
@@ -21,14 +21,14 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget
 private:
 	Ui::UniqueLibrary *ui;
 	FlowLayout *_flowLayout;
-	LibrarySqlModel *_sqlModel;
+	SqlDatabase *_db;
 
 	QMap<QString, AlbumForm*> _albums;
 
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);
 
-	void init(LibrarySqlModel *sql);
+	void init(SqlDatabase *db);
 
 	void insertTrackFromRecord(const QSqlRecord &record);
 	void insertTrackFromFile(const FileHelper &fh);
@@ -38,7 +38,7 @@ private:
 
 private slots:
 	void reset();
-	void updateCover(const QFileInfo &coverFileInfo);
+	void updateCover(const QFileInfo &);
 };
 
 #endif // UNIQUELIBRARY_H

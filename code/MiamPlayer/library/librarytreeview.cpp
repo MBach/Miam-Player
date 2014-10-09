@@ -27,7 +27,7 @@
 #include <filehelper.h>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), sqlModel(NULL)
+	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), _db(NULL)
 {
 	_libraryModel->setColumnCount(1);
 
@@ -139,12 +139,12 @@ void LibraryTreeView::updateSelectedTracks()
 	//	_itemDelegate->invalidate(index);
 	//}
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
-	sqlModel->load();
+	_db->load();
 }
 
-void LibraryTreeView::init(LibrarySqlModel *sql)
+void LibraryTreeView::init(SqlDatabase *db)
 {
-	sqlModel = sql;
+	_db = db;
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
 	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
@@ -167,32 +167,11 @@ void LibraryTreeView::init(LibrarySqlModel *sql)
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(sqlModel, &LibrarySqlModel::coverWasUpdated, this, &LibraryTreeView::updateCover);
-	connect(sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &LibraryTreeView::reset);
-	connect(sqlModel, &LibrarySqlModel::modelReset, this, &LibraryTreeView::endPopulateTree);
-	connect(sqlModel, &LibrarySqlModel::progressChanged, circleProgressBar, &QProgressBar::setValue);
-	connect(sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &LibraryTreeView::insertTrackFromRecord);
-	connect(sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &LibraryTreeView::insertTrackFromFile);
-}
-
-void LibraryTreeView::insertTrackFromFile(const FileHelper &fh)
-{
-	this->insertTrack(fh.fileInfo().absoluteFilePath(), fh.artistAlbum(), fh.artist(), fh.album(), fh.discNumber(),
-					  fh.title(), fh.trackNumber().toInt(), fh.year().toInt());
-}
-
-void LibraryTreeView::insertTrackFromRecord(const QSqlRecord &record)
-{
-	int i = -1;
-	const QString artist = record.value(++i).toString();
-	const QString artistAlbum = record.value(++i).toString();
-	const QString album = record.value(++i).toString();
-	const QString title = record.value(++i).toString();
-	int trackNumber = record.value(++i).toInt();
-	int discNumber = record.value(++i).toInt();
-	int year = record.value(++i).toInt();
-	const QString absFilePath = record.value(++i).toString();
-	this->insertTrack(absFilePath, artistAlbum, artist, album, discNumber, title, trackNumber, year);
+	connect(_db, &SqlDatabase::coverWasUpdated, this, &LibraryTreeView::updateCover);
+	//connect(_db, &SqlDatabase::modelAboutToBeReset, this, &LibraryTreeView::reset);
+	//connect(_db, &SqlDatabase::modelReset, this, &LibraryTreeView::endPopulateTree);
+	connect(_db, &SqlDatabase::progressChanged, circleProgressBar, &QProgressBar::setValue);
+	connect(_db, &SqlDatabase::trackExtracted, this, &LibraryTreeView::insertTrack);
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -296,16 +275,16 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 
 void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
 {
-	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", sqlModel->database());
+	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", _db->database());
 	internalCover.addBindValue(album);
-	if (!sqlModel->database().isOpen()) {
-		sqlModel->database().open();
+	if (!_db->database().isOpen()) {
+		_db->database().open();
 	}
 	internalCover.exec();
 	if (internalCover.next()) {
 		itemAlbum->setData(absFilePath, DF_CoverPath);
 	} else {
-		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", sqlModel->database());
+		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", _db->database());
 		externalCover.addBindValue(album);
 		externalCover.exec();
 		if (externalCover.next()) {
@@ -439,188 +418,12 @@ QStandardItem* LibraryTreeView::insertLetter(const QString &letters)
 	return NULL;
 }
 
-void LibraryTreeView::insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist,
-								  const QString &album, int discNumber, const QString &title, int trackNumber, int year)
-{
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
-
-	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
-	if (settings->isLibraryFilteredByArticles()) {
-		QStringList articles = settings->libraryFilteredByArticles();
-		//qDebug() << articles;
-		foreach (QString article, articles) {
-			if (theArtist.startsWith(article + " ", Qt::CaseInsensitive)) {
-				QString reorderedName = theArtist.remove(QRegularExpression("^" + article + " ", QRegularExpression::CaseInsensitiveOption)).append(", ").append(article);
-				//qDebug() << theArtist << reorderedName;
-				theArtist = reorderedName;
-				break;
-			}
-		}
-	}
-
-	QStandardItem *itemArtist = NULL;
-	QStandardItem *itemAlbum = NULL;
-	QStandardItem *itemTrack = NULL;
-
-	QString art = artist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-	QString theArtistNorm = theArtist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-	QString alb = album.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-
-	static bool existingArtist = true;
-	switch (settings->value("insertPolicy").toInt()) {
-	case IT_Artist:
-		// Level 1
-		if (_artists.contains(theArtist.toLower())) {
-			itemArtist = _artists.value(theArtist.toLower());
-			existingArtist = true;
-		} else {
-			itemArtist = new QStandardItem(theArtist);
-			itemArtist->setData(IT_Artist, DF_ItemType);
-			QStandardItem *letter = NULL;
-			if (settings->isLibraryFilteredByArticles()) {
-				itemArtist->setData(theArtistNorm, DF_NormalizedString);
-				letter = this->insertLetter(theArtistNorm);
-			} else {
-				itemArtist->setData(art, DF_NormalizedString);
-				letter = this->insertLetter(art);
-			}
-			_artists.insert(theArtist.toLower(), itemArtist);
-			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
-
-			if (letter) {
-				_topLevelItems.insert(letter->index(), itemArtist->index());
-			}
-			existingArtist = false;
-		}
-		// Level 2
-		if (existingArtist && _albums.contains(QPair<QStandardItem*, QString>(itemArtist, alb))) {
-			itemAlbum = _albums.value(QPair<QStandardItem*, QString>(itemArtist, alb));
-		} else {
-			itemAlbum = new QStandardItem(album);
-			itemAlbum->setData(IT_Album, DF_ItemType);
-			itemAlbum->setData(alb, DF_NormalizedString);
-			itemAlbum->setData(year, DF_Year);
-			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
-			_albums.insert(QPair<QStandardItem *, QString>(itemArtist, alb), itemAlbum);
-			_albums2.insert(alb, itemAlbum);
-			itemArtist->appendRow(itemAlbum);
-		}
-		// Level 3 (option)
-		if (discNumber > 0 && !_discNumbers.contains(QPair<QStandardItem*, int>(itemAlbum, discNumber))) {
-			QStandardItem *itemDiscNumber = new QStandardItem(QString::number(discNumber));
-			itemDiscNumber->setData(IT_Disc, DF_ItemType);
-			itemDiscNumber->setData(discNumber, DF_DiscNumber);
-			//qDebug() << title << discNumber;
-			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, discNumber), itemDiscNumber);
-			itemAlbum->appendRow(itemDiscNumber);
-		}
-		// Level 3
-		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
-			itemTrack = new QStandardItem(title);
-		} else {
-			itemTrack = new QStandardItem(title + " (" + artist + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case IT_Album:
-		// Level 1
-		if (_albums2.contains(alb)) {
-			itemAlbum = _albums2.value(alb);
-		} else {
-			itemAlbum = new QStandardItem(album);
-			itemAlbum->setData(IT_Album, DF_ItemType);
-			itemAlbum->setData(alb, DF_NormalizedString);
-			itemAlbum->setData(year, DF_Year);
-			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
-			_albums2.insert(alb, itemAlbum);
-			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			QStandardItem *letter = this->insertLetter(alb);
-			if (letter) {
-				_topLevelItems.insert(letter->index(), itemAlbum->index());
-			}
-		}
-		// Level 2
-		itemTrack = new QStandardItem(title);
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case IT_ArtistAlbum:
-		// Level 1
-		if (_albums2.contains(theArtistNorm + alb)) {
-			itemAlbum = _albums2.value(theArtistNorm + alb);
-		} else {
-			itemAlbum = new QStandardItem(theArtist + " – " + album);
-			itemAlbum->setData(IT_Album, DF_ItemType);
-			itemAlbum->setData(theArtistNorm + alb, DF_NormalizedString);
-			itemAlbum->setData(year, DF_Year);
-			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
-			_albums2.insert(theArtistNorm + alb, itemAlbum);
-			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			QStandardItem *letter = this->insertLetter(theArtistNorm + alb);
-			if (letter) {
-				_topLevelItems.insert(letter->index(), itemAlbum->index());
-			}
-		}
-		// Level 2
-		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
-			itemTrack = new QStandardItem(title);
-		} else {
-			itemTrack = new QStandardItem(title + " (" + artist + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case IT_Year:{
-		// Level 1
-		QStandardItem *itemYear = NULL;
-		if (_years.contains(year)) {
-			itemYear = _years.value(year);
-		} else {
-			if (year > 0) {
-				itemYear = new QStandardItem(QString::number(year));
-			} else {
-				itemYear = new QStandardItem(tr("Unknown"));
-			}
-			itemYear->setData(IT_Year, DF_ItemType);
-			itemYear->setData(year, DF_NormalizedString);
-			_years.insert(year, itemYear);
-			_libraryModel->invisibleRootItem()->appendRow(itemYear);
-		}
-		// Level 2
-		if (_albums2.contains(theArtist + alb)) {
-			itemAlbum = _albums2.value(theArtist + alb);
-		} else {
-			itemAlbum = new QStandardItem(theArtist + " – " + album);
-			itemAlbum->setData(IT_Album, DF_ItemType);
-			itemAlbum->setData(art.append("|").append(alb), DF_NormalizedString);
-			itemAlbum->setData(year, DF_Year);
-			this->bindCoverToAlbum(itemAlbum, album, absFilePath);
-			_albums2.insert(theArtist + alb, itemAlbum);
-			itemYear->appendRow(itemAlbum);
-		}
-		// Level 3
-		if (artistAlbum.isEmpty() || QString::compare(artist, artistAlbum) == 0) {
-			itemTrack = new QStandardItem(title);
-		} else {
-			itemTrack = new QStandardItem(title + " (" + artist + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	}
-	}
-	/// XXX: Is it necessary to create subclasses of QStandardItem for item->type()?
-	/// YES! (07/14)
-	// itemTrack always exists
-	itemTrack->setData(IT_Track, DF_ItemType);
-	itemTrack->setData(absFilePath, DF_AbsFilePath);
-	itemTrack->setData(trackNumber, DF_TrackNumber);
-	itemTrack->setData(discNumber, DF_DiscNumber);
-}
-
 void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 {
-	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", sqlModel->database());
+	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", _db->database());
 	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
-	if (!sqlModel->database().isOpen()) {
-		sqlModel->database().open();
+	if (!_db->database().isOpen()) {
+		_db->database().open();
 	}
 	externalCover.exec();
 	if (externalCover.next()) {
@@ -646,7 +449,7 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	sqlModel->load();
+	_db->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */
@@ -714,4 +517,181 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	circleProgressBar->hide();
 	circleProgressBar->setValue(0);
+}
+
+void LibraryTreeView::insertTrack(const TrackDAO &t)
+{
+	SettingsPrivate *settings = SettingsPrivate::getInstance();
+
+	QString theArtist = t.artistAlbum().isEmpty() ? t.artist() : t.artistAlbum();
+	if (settings->isLibraryFilteredByArticles()) {
+		QStringList articles = settings->libraryFilteredByArticles();
+		//qDebug() << articles;
+		foreach (QString article, articles) {
+			if (theArtist.startsWith(article + " ", Qt::CaseInsensitive)) {
+				QString reorderedName = theArtist.remove(QRegularExpression("^" + article + " ", QRegularExpression::CaseInsensitiveOption)).append(", ").append(article);
+				//qDebug() << theArtist << reorderedName;
+				theArtist = reorderedName;
+				break;
+			}
+		}
+	}
+
+	QStandardItem *itemArtist = NULL;
+	QStandardItem *itemAlbum = NULL;
+	QStandardItem *itemTrack = NULL;
+
+	QString art = t.artist().normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
+	QString theArtistNorm = theArtist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
+	QString alb = t.album().normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
+
+	static bool existingArtist = true;
+	switch (settings->value("insertPolicy").toInt()) {
+	case IT_Artist: {
+		// Level 1
+		if (_artists.contains(theArtist.toLower())) {
+			itemArtist = _artists.value(theArtist.toLower());
+			existingArtist = true;
+		} else {
+			itemArtist = new QStandardItem(theArtist);
+			itemArtist->setData(IT_Artist, DF_ItemType);
+			QStandardItem *letter = NULL;
+			if (settings->isLibraryFilteredByArticles()) {
+				itemArtist->setData(theArtistNorm, DF_NormalizedString);
+				letter = this->insertLetter(theArtistNorm);
+			} else {
+				itemArtist->setData(art, DF_NormalizedString);
+				letter = this->insertLetter(art);
+			}
+			_artists.insert(theArtist.toLower(), itemArtist);
+			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
+
+			if (letter) {
+				_topLevelItems.insert(letter->index(), itemArtist->index());
+			}
+			existingArtist = false;
+		}
+		// Level 2
+		if (existingArtist && _albums.contains(QPair<QStandardItem*, QString>(itemArtist, alb))) {
+			itemAlbum = _albums.value(QPair<QStandardItem*, QString>(itemArtist, alb));
+		} else {
+			itemAlbum = new QStandardItem(t.album());
+			itemAlbum->setData(IT_Album, DF_ItemType);
+			itemAlbum->setData(alb, DF_NormalizedString);
+			itemAlbum->setData(t.year(), DF_Year);
+			this->bindCoverToAlbum(itemAlbum, t.album(), t.url());
+			_albums.insert(QPair<QStandardItem *, QString>(itemArtist, alb), itemAlbum);
+			_albums2.insert(alb, itemAlbum);
+			itemArtist->appendRow(itemAlbum);
+		}
+		// Level 3 (option)
+		int disc = t.disc().toInt();
+		if (disc > 0 && !_discNumbers.contains(QPair<QStandardItem*, int>(itemAlbum, disc))) {
+			QStandardItem *itemDiscNumber = new QStandardItem(t.disc());
+			itemDiscNumber->setData(IT_Disc, DF_ItemType);
+			itemDiscNumber->setData(t.disc(), DF_DiscNumber);
+			//qDebug() << title << discNumber;
+			_discNumbers.insert(QPair<QStandardItem *, int>(itemAlbum, disc), itemDiscNumber);
+			itemAlbum->appendRow(itemDiscNumber);
+		}
+		// Level 3
+		if (t.artistAlbum().isEmpty() || QString::compare(t.artist(), t.artistAlbum()) == 0) {
+			itemTrack = new QStandardItem(t.title());
+		} else {
+			itemTrack = new QStandardItem(t.title() + " (" + t.artist() + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	}
+	case IT_Album:
+		// Level 1
+		if (_albums2.contains(alb)) {
+			itemAlbum = _albums2.value(alb);
+		} else {
+			itemAlbum = new QStandardItem(t.album());
+			itemAlbum->setData(IT_Album, DF_ItemType);
+			itemAlbum->setData(alb, DF_NormalizedString);
+			itemAlbum->setData(t.year(), DF_Year);
+			this->bindCoverToAlbum(itemAlbum, t.album(), t.url());
+			_albums2.insert(alb, itemAlbum);
+			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
+			QStandardItem *letter = this->insertLetter(alb);
+			if (letter) {
+				_topLevelItems.insert(letter->index(), itemAlbum->index());
+			}
+		}
+		// Level 2
+		itemTrack = new QStandardItem(t.title());
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case IT_ArtistAlbum:
+		// Level 1
+		if (_albums2.contains(theArtistNorm + alb)) {
+			itemAlbum = _albums2.value(theArtistNorm + alb);
+		} else {
+			itemAlbum = new QStandardItem(theArtist + " – " + t.album());
+			itemAlbum->setData(IT_Album, DF_ItemType);
+			itemAlbum->setData(theArtistNorm + alb, DF_NormalizedString);
+			itemAlbum->setData(t.year(), DF_Year);
+			this->bindCoverToAlbum(itemAlbum, t.album(), t.url());
+			_albums2.insert(theArtistNorm + alb, itemAlbum);
+			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
+			QStandardItem *letter = this->insertLetter(theArtistNorm + alb);
+			if (letter) {
+				_topLevelItems.insert(letter->index(), itemAlbum->index());
+			}
+		}
+		// Level 2
+		if (t.artistAlbum().isEmpty() || QString::compare(t.artist(), t.artistAlbum()) == 0) {
+			itemTrack = new QStandardItem(t.title());
+		} else {
+			itemTrack = new QStandardItem(t.title() + " (" + t.artist() + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	case IT_Year:{
+		// Level 1
+		QStandardItem *itemYear = NULL;
+		if (_years.contains(t.year().toInt())) {
+			itemYear = _years.value(t.year().toInt());
+		} else {
+			if (t.year().toInt() > 0) {
+				itemYear = new QStandardItem(t.year());
+			} else {
+				itemYear = new QStandardItem(tr("Unknown"));
+			}
+			itemYear->setData(IT_Year, DF_ItemType);
+			itemYear->setData(t.year(), DF_NormalizedString);
+			_years.insert(t.year().toInt(), itemYear);
+			_libraryModel->invisibleRootItem()->appendRow(itemYear);
+		}
+		// Level 2
+		if (_albums2.contains(theArtist + alb)) {
+			itemAlbum = _albums2.value(theArtist + alb);
+		} else {
+			itemAlbum = new QStandardItem(theArtist + " – " + t.album());
+			itemAlbum->setData(IT_Album, DF_ItemType);
+			itemAlbum->setData(art.append("|").append(alb), DF_NormalizedString);
+			itemAlbum->setData(t.year(), DF_Year);
+			this->bindCoverToAlbum(itemAlbum, t.album(), t.url());
+			_albums2.insert(theArtist + alb, itemAlbum);
+			itemYear->appendRow(itemAlbum);
+		}
+		// Level 3
+		if (t.artistAlbum().isEmpty() || QString::compare(t.artist(), t.artistAlbum()) == 0) {
+			itemTrack = new QStandardItem(t.title());
+		} else {
+			itemTrack = new QStandardItem(t.title() + " (" + t.artist() + ")");
+		}
+		itemAlbum->appendRow(itemTrack);
+		break;
+	}
+	}
+	/// XXX: Is it necessary to create subclasses of QStandardItem for item->type()?
+	/// YES! (07/14)
+	// itemTrack always exists
+	itemTrack->setData(IT_Track, DF_ItemType);
+	itemTrack->setData(t.url(), DF_AbsFilePath);
+	itemTrack->setData(t.trackNumber(), DF_TrackNumber);
+	itemTrack->setData(t.disc(), DF_DiscNumber);
 }

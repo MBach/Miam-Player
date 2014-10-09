@@ -2,7 +2,6 @@
 #include "filehelper.h"
 #include "settings.h"
 #include "pluginmanager.h"
-#include "model/librarysqlmodel.h"
 #include "treeview.h"
 
 #include <taglib/tfile.h>
@@ -27,7 +26,7 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 	<< "Rock & Roll" << "Hard Rock");
 
 TagEditor::TagEditor(QWidget *parent) :
-	QWidget(parent), SelectedTracksModel(), _sqlModel(NULL)
+	QWidget(parent), SelectedTracksModel(), _db(NULL)
 {
 	setupUi(this);
 
@@ -74,9 +73,9 @@ TagEditor::TagEditor(QWidget *parent) :
 	tagEditorWidget->viewport()->installEventFilter(this);
 }
 
-void TagEditor::init(LibrarySqlModel *sqlModel)
+void TagEditor::init(SqlDatabase *db)
 {
-	_sqlModel = sqlModel;
+	_db = db;
 }
 
 QStringList TagEditor::selectedTracks()
@@ -91,7 +90,7 @@ QStringList TagEditor::selectedTracks()
 void TagEditor::updateSelectedTracks()
 {
 	qDebug() << "TagEditor: model has been updated, redraw selected tracks";
-	_sqlModel->load();
+	_db->load();
 }
 
 void TagEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -339,7 +338,7 @@ void TagEditor::commitChanges()
 
 		// Check if files are already in the library, and then update them
 		if (!tracks.isEmpty()) {
-			_sqlModel->updateTracks(tracks);
+			_db->updateTracks(tracks);
 		} else {
 			qDebug() << "renamed tracks were not in library";
 		}
@@ -381,9 +380,9 @@ void TagEditor::displayCover()
 	joinedTracks.append("\"\"");
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
-	_sqlModel->database().open();
+	_db->database().open();
 
-	QSqlQuery coverPathQuery = _sqlModel->database().exec("SELECT DISTINCT coverAbsPath FROM tracks WHERE absPath IN (" + joinedTracks + ")");
+	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT coverAbsPath FROM tracks WHERE absPath IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
 		coversPath << coverPathQuery.record().value(0).toString();
@@ -396,7 +395,7 @@ void TagEditor::displayCover()
 	} else if (coversPath.size() == 1) {
 		coverPathComboBox->addItems(coversPath.toList());
 	}
-	_sqlModel->database().close();
+	_db->database().close();
 
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
 	if (selectedCovers.size() == 1) {

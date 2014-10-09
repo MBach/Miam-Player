@@ -34,12 +34,12 @@ private:
 	QMap<int, Cover*> covers;
 	QMap<int, Cover*> unsavedCovers;
 
-	LibrarySqlModel *_sqlModel;
+	SqlDatabase *_db;
 
 public:
 	explicit TagEditor(QWidget *parent = 0);
 
-	virtual void init(LibrarySqlModel *sqlModel);
+	virtual void init(SqlDatabase *db);
 
 	virtual QStringList selectedTracks();
 

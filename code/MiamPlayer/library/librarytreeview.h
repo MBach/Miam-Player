@@ -2,7 +2,8 @@
 #define LIBRARYTREEVIEW_H
 
 #include <filehelper.h>
-#include <model/librarysqlmodel.h>
+#include <model/trackdao.h>
+#include <model/sqldatabase.h>
 #include <settingsprivate.h>
 
 #include "../treeview.h"
@@ -35,7 +36,7 @@ private:
 	QMenu *properties;
 
 	QStandardItemModel* _libraryModel;
-	LibrarySqlModel *sqlModel;
+	SqlDatabase *_db;
 	LibraryItemDelegate *_itemDelegate;
 	QTimer *_timer;
 
@@ -68,10 +69,7 @@ public:
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
-	virtual void init(LibrarySqlModel *sql);
-
-	void insertTrackFromFile(const FileHelper &fh);
-	void insertTrackFromRecord(const QSqlRecord &record);
+	virtual void init(SqlDatabase *db);
 
 	enum ItemType { IT_Artist		= 0,
 					IT_Album		= 1,
@@ -119,9 +117,6 @@ private:
 
 	QStandardItem* insertLetter(const QString &letters);
 
-	void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album,
-					 int discNumber, const QString &title, int trackNumber, int year);
-
 	void updateCover(const QFileInfo &coverFileInfo);
 
 	void repaintIcons();
@@ -148,6 +143,8 @@ public slots:
 private slots:
 	void endPopulateTree();
 
+	//void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album, int discNumber, const QString &title, int trackNumber, int year);
+	void insertTrack(const TrackDAO &t);
 signals:
 	/** (Dis|En)able covers.*/
 	void displayCovers(bool);

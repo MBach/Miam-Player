@@ -45,7 +45,7 @@ macx {
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
 }
 
-SOURCES += model/librarysqlmodel.cpp \
+SOURCES += \
     model/selectedtracksmodel.cpp \
     model/sqldatabase.cpp \
     model/genericdao.cpp \
@@ -67,7 +67,6 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/mediaplayerplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/searchmediaplayerplugin.h \
-    model/librarysqlmodel.h \
     model/selectedtracksmodel.h \
     model/sqldatabase.h \
     model/genericdao.h \

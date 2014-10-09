@@ -26,7 +26,7 @@ public:
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
 	void findAll(const QModelIndex &index, QStringList &tracks) const;
 
-	inline virtual void init(LibrarySqlModel *) {}
+	inline virtual void init(SqlDatabase *) {}
 
 	virtual void updateSelectedTracks();
 

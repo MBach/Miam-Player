@@ -15,7 +15,7 @@
 #include "albumform.h"
 
 UniqueLibrary::UniqueLibrary(QWidget *parent) :
-	QWidget(parent), ui(new Ui::UniqueLibrary), _sqlModel(NULL)
+	QWidget(parent), ui(new Ui::UniqueLibrary), _db(NULL)
 {
 	ui->setupUi(this);
 	_flowLayout = new FlowLayout();
@@ -23,9 +23,9 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	ui->scrollArea->widget()->setLayout(_flowLayout);
 }
 
-void UniqueLibrary::init(LibrarySqlModel *sql)
+void UniqueLibrary::init(SqlDatabase *db)
 {
-	_sqlModel = sql;
+	_db = db;
 
 	/// XXX: do this later
 	//connect(_sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &UniqueLibrary::reset);
@@ -89,9 +89,9 @@ void UniqueLibrary::reset()
 	}
 }
 
-void UniqueLibrary::updateCover(const QFileInfo &coverFileInfo)
+void UniqueLibrary::updateCover(const QFileInfo &)
 {
-	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", _sqlModel->database());
+	/*QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", _sqlModel->database());
 	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
 	if (!_sqlModel->database().isOpen()) {
 		_sqlModel->database().open();
@@ -101,5 +101,5 @@ void UniqueLibrary::updateCover(const QFileInfo &coverFileInfo)
 		QString album = externalCover.record().value(0).toString();
 		AlbumForm *albumForm = _albums.value(album);
 		albumForm->setCover(coverFileInfo.absoluteFilePath());
-	}
+	}*/
 }

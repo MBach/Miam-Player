@@ -155,6 +155,7 @@ void MainWindow::setupActions()
 			// Delete table tracks if such a previous one was found
 			if (_sqlDatabase.open()) {
 				_sqlDatabase.exec("DROP TABLE tracks");
+				qDebug() << Q_FUNC_INFO;
 				_sqlDatabase.close();
 			}
 			quickStart->searchMultimediaFiles();
