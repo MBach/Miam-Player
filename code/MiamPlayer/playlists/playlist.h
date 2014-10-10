@@ -53,8 +53,6 @@ public:
 				 COL_RATINGS		= 5,
 				 COL_YEAR			= 6,
 				 COL_ICON			= 7,
-				 //COL_ID				= 8,	// Columns that should always be hidden
-				 //COL_URI			= 9};
 				 COL_TRACK_DAO		= 8};
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);

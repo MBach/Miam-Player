@@ -168,8 +168,8 @@ void LibraryTreeView::init(SqlDatabase *db)
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
 	connect(_db, &SqlDatabase::coverWasUpdated, this, &LibraryTreeView::updateCover);
-	//connect(_db, &SqlDatabase::modelAboutToBeReset, this, &LibraryTreeView::reset);
-	//connect(_db, &SqlDatabase::modelReset, this, &LibraryTreeView::endPopulateTree);
+	connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+	connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
 	connect(_db, &SqlDatabase::progressChanged, circleProgressBar, &QProgressBar::setValue);
 	connect(_db, &SqlDatabase::trackExtracted, this, &LibraryTreeView::insertTrack);
 }
@@ -275,16 +275,16 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 
 void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
 {
-	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", _db->database());
+	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", *_db);
 	internalCover.addBindValue(album);
-	if (!_db->database().isOpen()) {
-		_db->database().open();
+	if (!_db->isOpen()) {
+		_db->open();
 	}
 	internalCover.exec();
 	if (internalCover.next()) {
 		itemAlbum->setData(absFilePath, DF_CoverPath);
 	} else {
-		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", _db->database());
+		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", *_db);
 		externalCover.addBindValue(album);
 		externalCover.exec();
 		if (externalCover.next()) {
@@ -420,10 +420,10 @@ QStandardItem* LibraryTreeView::insertLetter(const QString &letters)
 
 void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 {
-	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", _db->database());
+	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", *_db);
 	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
-	if (!_db->database().isOpen()) {
-		_db->database().open();
+	if (!_db->isOpen()) {
+		_db->open();
 	}
 	externalCover.exec();
 	if (externalCover.next()) {

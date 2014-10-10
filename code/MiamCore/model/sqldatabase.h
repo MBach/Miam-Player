@@ -1,9 +1,9 @@
 #ifndef SQLDATABASE_H
 #define SQLDATABASE_H
 
-#include "miamcore_global.h"
-#include <model/trackdao.h>
-#include <model/playlistdao.h>
+#include "../miamcore_global.h"
+#include "trackdao.h"
+#include "playlistdao.h"
 
 #include <QFileInfo>
 #include <QSqlDatabase>
@@ -48,7 +48,6 @@ public:
 	bool playlistHasBackgroundImage(int playlistID);
 	void updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath);
 
-
 	/**
 	 * Update a list of tracks. If track name has changed, will be removed from Library then added right after.
 	 * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
@@ -73,7 +72,9 @@ private slots:
 	void saveFileRef(const QString &absFilePath);
 
 signals:
+	void aboutToLoad();
 	void coverWasUpdated(const QFileInfo &);
+	void loaded();
 	void progressChanged(const int &);
 	void trackExtracted(const TrackDAO &);
 };

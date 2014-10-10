@@ -19,7 +19,7 @@ class PlaylistManager : public QDialog, public Ui::PlaylistManager
 	Q_OBJECT
 
 private:
-	SqlDatabase _db;
+	SqlDatabase *_db;
 
 	/** Reference to TabPlaylist used a lot to know what we are manipulating. */
 	TabPlaylist *playlists;
@@ -36,7 +36,7 @@ public:
 	enum PlaylistRoles { PlaylistObjectPointer	= Qt::UserRole + 1,
 						 PlaylistID				= Qt::UserRole + 2};
 
-	explicit PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist);
+	explicit PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist);
 
 	bool eventFilter(QObject *obj, QEvent *event);
 
@@ -50,10 +50,12 @@ private:
 	/** Remove all special characters for Windows, Unix, OSX. */
 	static QString convertNameToValidFileName(QString &name);
 
-	QString getPlaylistName(const QString &path);
+	// QString getPlaylistName(const QString &path);
 
 	/** Load a playlist (*.m3u8) saved on the filesystem. */
-	void loadPlaylist(const QString &path);
+	// void loadPlaylist(const QString &path);
+
+	/** Load a playlist saved on the in database. */
 	void loadPlaylist(int playlistId);
 
 	bool savePlaylist(int index);

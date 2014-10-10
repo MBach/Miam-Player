@@ -4,20 +4,18 @@
 #include <QMainWindow>
 #include <QStack>
 
-#include "ui_mainwindow.h"
+#include <model/sqldatabase.h>
+#include <mediabutton.h>
+#include <mediaplayer.h>
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/dragdropdialog.h"
 #include "dialogs/playlistmanager.h"
 #include "library/librarytreeview.h"
-#include "mediabutton.h"
-#include <mediaplayer.h>
 #include "playbackmodewidgetfactory.h"
 #include "searchdialog.h"
 
-#include <model/librarysqlmodel.h>
-
 #include "uniquelibrary.h"
-#include "model/sqldatabase.h"
+#include "ui_mainwindow.h"
 
 class CustomizeThemeDialog;
 
@@ -46,11 +44,8 @@ private:
 	/** WIP. View object: display all your tracks in a huge and page. */
 	UniqueLibrary *_uniqueLibrary;
 
-	/** Model for the Table "tracks". */
-	LibrarySqlModel *_librarySqlModel;
-
 	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
-	SqlDatabase _sqlDatabase;
+	SqlDatabase *_sqlDatabase;
 
 	SearchDialog *_searchDialog;
 

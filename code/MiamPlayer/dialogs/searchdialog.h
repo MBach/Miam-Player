@@ -14,7 +14,7 @@ class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 	Q_OBJECT
 private:
 	MainWindow *_mainWindow;
-	SqlDatabase _db;
+	SqlDatabase *_db;
 
 	/** Used to make this dialog transparent to have a nice fading effect. */
 	QPropertyAnimation *_animation;
@@ -30,7 +30,7 @@ private:
 
 public:
 	/** Constructor. */
-	explicit SearchDialog(const SqlDatabase &db, MainWindow *mainWindow);
+	explicit SearchDialog(SqlDatabase *db, MainWindow *mainWindow);
 
 	/** Required interface from AbstractSearchDialog class. */
 	virtual void addSource(QCheckBox *checkBox);

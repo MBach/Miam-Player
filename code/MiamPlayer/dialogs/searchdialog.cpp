@@ -16,7 +16,7 @@
 #include <QtDebug>
 
 /** Constructor. */
-SearchDialog::SearchDialog(const SqlDatabase &db, MainWindow *mainWindow) :
+SearchDialog::SearchDialog(SqlDatabase *db, MainWindow *mainWindow) :
 	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db), _isMaximized(false)
 {
 	this->setupUi(this);
@@ -244,12 +244,12 @@ void SearchDialog::search(const QString &text)
 		return;
 	}
 
-	if (!_db.isOpen()) {
-		_db.open();
+	if (!_db->isOpen()) {
+		_db->open();
 	}
 
 	/// XXX: Factorize this, 3 times the (almost) same code
-	QSqlQuery qSearchForArtists(_db);
+	QSqlQuery qSearchForArtists(*_db);
 	qSearchForArtists.prepare("SELECT DISTINCT artist FROM tracks WHERE artist like :t LIMIT 5");
 	qSearchForArtists.bindValue(":t", "%" + text + "%");
 	if (qSearchForArtists.exec()) {
@@ -262,7 +262,7 @@ void SearchDialog::search(const QString &text)
 		this->processResults(Artist, artistList);
 	}
 
-	QSqlQuery qSearchForAlbums(_db);
+	QSqlQuery qSearchForAlbums(*_db);
 	qSearchForAlbums.prepare("SELECT DISTINCT album, COALESCE(artistAlbum, artist) FROM tracks WHERE album like :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
 	if (qSearchForAlbums.exec()) {
@@ -275,7 +275,7 @@ void SearchDialog::search(const QString &text)
 		this->processResults(Album, albumList);
 	}
 
-	QSqlQuery qSearchForTracks(_db);
+	QSqlQuery qSearchForTracks(*_db);
 	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist), absPath FROM tracks WHERE title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {
@@ -290,7 +290,7 @@ void SearchDialog::search(const QString &text)
 		this->processResults(Track, trackList);
 	}
 
-	_db.close();
+	_db->close();
 }
 
 /** Expand this dialog to all available space. */

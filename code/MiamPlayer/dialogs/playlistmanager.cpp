@@ -14,7 +14,7 @@
 
 #include <QtDebug>
 
-PlaylistManager::PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist) :
+PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	QDialog(tabPlaylist, Qt::Tool),_db(db), playlists(tabPlaylist),
 	_unsavedPlaylistModel(new QStandardItemModel(this)), _savedPlaylistModel(new QStandardItemModel(this))
 {
@@ -48,6 +48,7 @@ PlaylistManager::PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist
 
 	unsavedPlaylists->installEventFilter(this);
 	savedPlaylists->installEventFilter(this);
+	savedPlaylists->setDragDropMode(QListView::DropOnly);
 	this->installEventFilter(this);
 
 	unsavedPlaylists->setModel(_unsavedPlaylistModel);
@@ -56,13 +57,13 @@ PlaylistManager::PlaylistManager(const SqlDatabase &db, TabPlaylist *tabPlaylist
 	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromUnsaved);
 	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromSaved);
 	/*connect(_savedPlaylistModel, &QStandardItemModel::itemChanged, [=](QStandardItem *item) {
-		_db.open();
+		_db->open();
 		QSqlQuery update(_db);
 		update.prepare("UPDATE playlists SET name = :name WHERE absPath = :path");
 		update.bindValue(":name", item->text());
 		update.bindValue(":path", item->data(PlaylistPath).toString());
 		qDebug() << "update?" << update.exec();
-		_db.close();
+		_db->close();
 	});*/
 	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistManager::loadSelectedPlaylists);
 	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistManager::deleteSavedPlaylists);
@@ -102,16 +103,8 @@ void PlaylistManager::init()
 {
 	playlists->blockSignals(true);
 	if (SettingsPrivate::getInstance()->playbackRestorePlaylistsAtStartup()) {
-
-		// Populate saved playlists area
-		QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-		QStringList supportedPlaylistTypes = QStringList() << "*.m3u" << "*.m3u8";
-		QDir dataLocation(path);
-		dataLocation.setNameFilters(supportedPlaylistTypes);
-		QDirIterator it(dataLocation);
-		/// FIXME
-		while (it.hasNext()) {
-			this->loadPlaylist(it.next());
+		foreach (PlaylistDAO playlist, _db->selectPlaylists()) {
+			this->loadPlaylist(playlist.id().toInt());
 		}
 	}
 	if (playlists->playlists().isEmpty()) {
@@ -149,10 +142,10 @@ QString PlaylistManager::convertNameToValidFileName(QString &name)
 	return name;
 }
 
-QString PlaylistManager::getPlaylistName(const QString &path)
+/*QString PlaylistManager::getPlaylistName(const QString &path)
 {
-	_db.open();
-	QSqlQuery selectName(_db);
+	_db->open();
+	QSqlQuery selectName(*_db);
 	selectName.prepare("SELECT name FROM playlists WHERE absPath = ?");
 	selectName.addBindValue(path);
 	QString name = "";
@@ -161,12 +154,12 @@ QString PlaylistManager::getPlaylistName(const QString &path)
 	} else {
 		name = QFileInfo(path).baseName();
 	}
-	_db.close();
+	_db->close();
 	return name;
-}
+}*/
 
 /** Load a playlist (*.m3u8) saved on the filesystem. */
-void PlaylistManager::loadPlaylist(const QString &path)
+/*void PlaylistManager::loadPlaylist(const QString &path)
 {
 	qDebug() << Q_FUNC_INFO << path;
 	QFile file(path);
@@ -190,22 +183,22 @@ void PlaylistManager::loadPlaylist(const QString &path)
 		file.close();
 
 		// Get the previously generated hash to be able to know if this playlist will be modified later
-		_db.open();
-		QSqlQuery hash(_db);
+		_db->open();
+		QSqlQuery hash(*_db);
 		hash.prepare("SELECT hash FROM playlists WHERE absPath = :path");
 		hash.bindValue(":path", path);
 		if (hash.exec() && hash.next()) {
 			playlist->setHash(hash.record().value(0).toUInt());
 			qDebug() << "loadPlaylist() hash" << hash.record().value(0).toUInt();
 		}
-		_db.close();
+		_db->close();
 	}
-}
+}*/
 
 void PlaylistManager::loadPlaylist(int playlistId)
 {
 	Playlist *playlist = NULL;
-	PlaylistDAO remotePlaylist =  _db.selectPlaylist(playlistId);
+	PlaylistDAO remotePlaylist = _db->selectPlaylist(playlistId);
 	if (playlists->playlist(0) && playlists->playlist(0)->mediaPlaylist()->isEmpty()) {
 		playlist = playlists->playlist(0);
 		playlists->tabBar()->setTabText(0, remotePlaylist.title());
@@ -213,10 +206,11 @@ void PlaylistManager::loadPlaylist(int playlistId)
 		playlist = playlists->addPlaylist();
 		playlists->tabBar()->setTabText(playlists->count() - 2, remotePlaylist.title());
 	}
+	playlist->setProperty("dao", QVariant::fromValue(remotePlaylist));
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (absPath)
-	QList<TrackDAO> tracks = _db.selectPlaylistTracks(playlistId);
+	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
 	foreach (TrackDAO track, tracks) {
 		QUrl url = QUrl(track.url());
 		if (url.isLocalFile()) {
@@ -247,7 +241,7 @@ bool PlaylistManager::savePlaylist(int index)
 		PlaylistDAO playlist;
 		playlist.setTitle(playlistName);
 		playlist.setChecksum(QString::number(hash));
-		int id = _db.insertIntoTablePlaylists(playlist);
+		int id = _db->insertIntoTablePlaylists(playlist);
 		if (id > 0) {
 			std::list<TrackDAO> tracks;
 
@@ -258,7 +252,7 @@ bool PlaylistManager::savePlaylist(int index)
 				tracks.push_back(std::move(t));
 			}
 
-			return _db.insertIntoTablePlaylistTracks(id, tracks);
+			return _db->insertIntoTablePlaylistTracks(id, tracks);
 		}
 	}
 	return false;
@@ -292,7 +286,7 @@ void PlaylistManager::deleteSavedPlaylists()
 		tmpPlaylist.setId(index.data(PlaylistID).toString());
 		playlists << tmpPlaylist;
 	}
-	_db.removePlaylists(playlists);
+	_db->removePlaylists(playlists);
 
 	this->clearPreview(false);
 	this->updatePlaylists();
@@ -370,7 +364,7 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 		int playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toInt();
 		qDebug() << "playlistId" << playlistId;
 
-		QList<TrackDAO> tracks = _db.selectPlaylistTracks(playlistId);
+		QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {
 			TrackDAO track = tracks.at(i);
 			QTreeWidgetItem *item = new QTreeWidgetItem;
@@ -427,11 +421,11 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 void PlaylistManager::savePlaylists()
 {
 	if (SettingsPrivate::getInstance()->playbackKeepPlaylists()) {
-		_db.open();
+		_db->open();
 		for (int i = 0; i < playlists->count(); i++) {
 			this->savePlaylist(i);
 		}
-		_db.close();
+		_db->close();
 	}
 }
 
@@ -455,7 +449,7 @@ void PlaylistManager::updatePlaylists()
 	_savedPlaylistModel->clear();
 	_savedPlaylistModel->blockSignals(true);
 
-	QList<PlaylistDAO> playlists = _db.selectPlaylists();
+	QList<PlaylistDAO> playlists = _db->selectPlaylists();
 	foreach (PlaylistDAO playlist, playlists) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);

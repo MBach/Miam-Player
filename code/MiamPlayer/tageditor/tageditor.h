@@ -1,15 +1,15 @@
 #ifndef TAGEDITOR_H
 #define TAGEDITOR_H
 
-#include <QWidget>
-
-#include "model/selectedtracksmodel.h"
-#include "cover.h"
+#include <model/selectedtracksmodel.h>
+#include <model/sqldatabase.h>
+#include <cover.h>
 #include "tagconverter.h"
 
 #include "ui_tageditor.h"
 
 #include <QUrl>
+#include <QWidget>
 
 /**
  * \brief		The TagEditor class is the main class for editing metadata inside this soft.

@@ -1,10 +1,18 @@
 #include "filehelper.h"
+#include "cover.h"
 
+#include <algorithm>
+#include <map>
+
+#include <QDateTime>
+#include <QDir>
 #include <QFileInfo>
+#include <QImage>
 
 #include <taglib/taglib.h>
 #include <taglib/fileref.h>
 #include <taglib/apefile.h>
+#include <taglib/apetag.h>
 #include <taglib/asffile.h>
 #include <taglib/flacfile.h>
 #include <taglib/mpcfile.h>
@@ -22,11 +30,11 @@
 #include <taglib/textidentificationframe.h>
 #include <taglib/tstring.h>
 
-#include "cover.h"
+#include <taglib/tmap.h>
+#include <taglib/tpropertymap.h>
+#include <taglib/mp4tag.h>
+#include <taglib/mp4item.h>
 
-#include <QDateTime>
-#include <QDir>
-#include <QImage>
 #include <QtDebug>
 
 FileHelper::FileHelper(const QMediaContent &track)
@@ -107,18 +115,11 @@ const QStringList FileHelper::suffixes(bool withPrefix)
 QString FileHelper::artistAlbum() const
 {
 	QString artAlb = "";
-	/// TODO
-	//APE::File *apeFile = NULL;
-	//ASF::File *asfFile = NULL;
-	//FLAC::File *flacFile = NULL;
-	//MPC::File *mpcFile = NULL;
-	//MP4::File *mp4File = NULL;
-	//MPEG::File *mpegFile = NULL;
-	//Ogg::File *oggFile = NULL;
-
 	switch (fileType) {
 	case APE:
-		qDebug() << "FileHelper::artistAlbum: Not yet implemented for APE file";
+	case MPC:
+	case OGG:
+		artAlb = this->extractGenericFeature("ALBUMARTIST");
 		break;
 	case ASF:
 		qDebug() << "FileHelper::artistAlbum: Not yet implemented for ASF file";
@@ -127,16 +128,10 @@ QString FileHelper::artistAlbum() const
 		artAlb = this->extractFlacFeature("TPE2");
 		break;
 	case MP4:
-		artAlb = this->extractMp4Feature("aART");
-		break;
-	case MPC:
-		qDebug() << "FileHelper::artistAlbum: Not yet implemented for MPC file";
+		artAlb = this->extractGenericFeature("aART");
 		break;
 	case MP3:
 		artAlb = this->extractMpegFeature("TPE2");
-		break;
-	case OGG:
-		qDebug() << "FileHelper::artistAlbum: Not yet implemented for OGG file";
 		break;
 	}
 	return artAlb.trimmed();
@@ -185,21 +180,14 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 
 int FileHelper::discNumber(bool canBeZero) const
 {
-	/// TODO
-	//APE::File *apeFile = NULL;
-	//ASF::File *asfFile = NULL;
-	//FLAC::File *flacFile = NULL;
-	//MPC::File *mpcFile = NULL;
-	//MP4::File *mp4File = NULL;
-	//MPEG::File *mpegFile = NULL;
-	//Ogg::File *oggFile = NULL;
-
-	QString strDiscNumber = "1";
+	QString strDiscNumber = "0";
 
 	switch (fileType) {
 	case APE:
-		//apeFile = static_cast<APE::File*>(f);
-		qDebug() << "FileHelper::discNumber: Not yet implemented for APE file";
+	case MP4:
+	case MPC:
+	case OGG:
+		strDiscNumber = this->extractGenericFeature("DISCNUMBER");
 		break;
 	case ASF:
 		//asfFile = static_cast<ASF::File*>(f);
@@ -211,22 +199,11 @@ int FileHelper::discNumber(bool canBeZero) const
 			strDiscNumber = this->extractFlacFeature("DISCNUMBER");
 		}
 		break;
-	case MP4:
-		strDiscNumber = this->extractMp4Feature("DISCNUMBER");
-		qDebug() << "MP4 DiscNumber" << strDiscNumber;
-		break;
-	case MPC:
-		//mpcFile = static_cast<MPC::File*>(f);
-		qDebug() << "FileHelper::discNumber: Not yet implemented for MPC file";
-		break;
 	case MP3:
 		strDiscNumber = this->extractMpegFeature("TPOS");
 		break;
-	case OGG:
-		//oggFile = static_cast<Ogg::File*>(f);
-		break;
 	}
-	int disc = 1;
+	int disc = -1;
 	if (strDiscNumber.contains('/')) {
 		disc = strDiscNumber.split('/').first().toInt();
 	} else {
@@ -541,50 +518,32 @@ QString FileHelper::convertKeyToID3v2Key(QString key)
 QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
-	if (flacFile->ID3v2Tag()) {
-		TagLib::ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
-		if (!l.isEmpty()) {
-			feature = QString(l.front()->toString().toCString(true));
-		}
-	} else if (flacFile->ID3v1Tag()) {
-		qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for ID3v1Tag FLAC file";
-	} else if (flacFile->xiphComment()) {
-		const TagLib::Ogg::FieldListMap map = flacFile->xiphComment()->fieldListMap();
-		if (!map[featureToExtract.toStdString().data()].isEmpty()) {
-			feature = QString(map[featureToExtract.toStdString().data()].front().toCString(true));
+	if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
+		if (flacFile->ID3v2Tag()) {
+			TagLib::ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+			if (!l.isEmpty()) {
+				feature = QString(l.front()->toString().toCString(true));
+			}
+		} else if (flacFile->ID3v1Tag()) {
+			qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for ID3v1Tag FLAC file";
+		} else if (flacFile->xiphComment()) {
+			const TagLib::Ogg::FieldListMap map = flacFile->xiphComment()->fieldListMap();
+			if (!map[featureToExtract.toStdString().data()].isEmpty()) {
+				feature = QString(map[featureToExtract.toStdString().data()].front().toCString(true));
+			}
 		}
 	}
 	return feature;
 }
 
-#include <map>
-#include <taglib/tmap.h>
-#include <taglib/tpropertymap.h>
-#include <algorithm>
-#include <taglib/mp4tag.h>
-#include <taglib/mp4item.h>
-
-
-QString FileHelper::extractMp4Feature(const QString &featureToExtract) const
+QString FileHelper::extractGenericFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	TagLib::MP4::File *mp4File = static_cast<TagLib::MP4::File*>(_file);
-	/// XXX: returns only the first element!
-	if (mp4File) {
-		TagLib::PropertyMap p = mp4File->properties();
-		if (p.contains(featureToExtract.toStdString().data())) {
-			TagLib::StringList list = p[featureToExtract.toStdString().data()];
-			if (!list.isEmpty()) {
-				feature = list.front().toCString(true);
-			}
-		}
-
-		TagLib::MP4::ItemListMap &items = mp4File->tag()->itemListMap();
-		for (TagLib::Map<TagLib::String, TagLib::MP4::Item>::Iterator i = items.begin(); i != items.end(); i++) {
-			if (i->first.toCString(true) == featureToExtract) {
-				return i->second.toStringList().front().toCString(true);
-			}
+	TagLib::PropertyMap p = _file->properties();
+	if (p.contains(featureToExtract.toStdString().data())) {
+		TagLib::StringList list = p[featureToExtract.toStdString().data()];
+		if (!list.isEmpty()) {
+			feature = list.front().toCString(true);
 		}
 	}
 	return feature;
@@ -593,14 +552,30 @@ QString FileHelper::extractMp4Feature(const QString &featureToExtract) const
 QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 {
 	QString feature;
-	TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
-	if (mpegFile->hasID3v2Tag()) {
-		TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
-		if (!l.isEmpty()) {
-			feature = QString(l.front()->toString().toCString(true));
+	if (TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file)) {
+		if (mpegFile->hasID3v2Tag()) {
+			TagLib::ID3v2::FrameList l = mpegFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+			if (!l.isEmpty()) {
+				feature = QString(l.front()->toString().toCString(true));
+			}
+		} else if (mpegFile->hasID3v1Tag()) {
+			qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
+			qDebug() << featureToExtract << _fileInfo.absoluteFilePath();
 		}
-	} else if (mpegFile->hasID3v1Tag()) {
-		qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
+	}
+	return feature;
+}
+
+QString FileHelper::extractVorbisFeature(const QString &featureToExtract) const
+{
+	QString feature;
+	if (TagLib::Vorbis::File *vorbisFile = static_cast<TagLib::Vorbis::File*>(_file)) {
+		if (vorbisFile->tag()) {
+			const TagLib::Ogg::FieldListMap map = vorbisFile->tag()->fieldListMap();
+			if (!map[featureToExtract.toStdString().data()].isEmpty()) {
+				feature = QString(map[featureToExtract.toStdString().data()].front().toCString(true));
+			}
+		}
 	}
 	return feature;
 }

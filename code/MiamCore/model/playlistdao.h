@@ -35,4 +35,7 @@ public:
 	void setTitle(const QString &title);
 };
 
+/** Register this class to convert in QVariant. */
+Q_DECLARE_METATYPE(PlaylistDAO)
+
 #endif // PLAYLISTDAO_H
