@@ -142,59 +142,6 @@ QString PlaylistManager::convertNameToValidFileName(QString &name)
 	return name;
 }
 
-/*QString PlaylistManager::getPlaylistName(const QString &path)
-{
-	_db->open();
-	QSqlQuery selectName(*_db);
-	selectName.prepare("SELECT name FROM playlists WHERE absPath = ?");
-	selectName.addBindValue(path);
-	QString name = "";
-	if (selectName.exec() && selectName.next()) {
-		name = selectName.record().value(0).toString();
-	} else {
-		name = QFileInfo(path).baseName();
-	}
-	_db->close();
-	return name;
-}*/
-
-/** Load a playlist (*.m3u8) saved on the filesystem. */
-/*void PlaylistManager::loadPlaylist(const QString &path)
-{
-	qDebug() << Q_FUNC_INFO << path;
-	QFile file(path);
-	if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-		Playlist *playlist = NULL;
-		if (playlists->playlist(0) && playlists->playlist(0)->mediaPlaylist()->isEmpty()) {
-			playlist = playlists->playlist(0);
-			playlists->tabBar()->setTabText(0, this->getPlaylistName(path));
-			playlists->tabBar()->setTabData(0, path);
-		} else {
-			playlist = playlists->addPlaylist();
-			playlists->tabBar()->setTabText(playlists->count() - 2, this->getPlaylistName(path));
-			playlists->tabBar()->setTabData(playlists->count() - 2, path);
-		}
-		connect(playlist->mediaPlaylist(), &QMediaPlaylist::loaded, [=]() {
-			playlists->setTabIcon(playlists->currentIndex(), playlists->defaultIcon(QIcon::Disabled));
-		});
-
-		/// TODO remote tracks
-		playlist->mediaPlaylist()->load(QUrl::fromLocalFile(path), "m3u8");
-		file.close();
-
-		// Get the previously generated hash to be able to know if this playlist will be modified later
-		_db->open();
-		QSqlQuery hash(*_db);
-		hash.prepare("SELECT hash FROM playlists WHERE absPath = :path");
-		hash.bindValue(":path", path);
-		if (hash.exec() && hash.next()) {
-			playlist->setHash(hash.record().value(0).toUInt());
-			qDebug() << "loadPlaylist() hash" << hash.record().value(0).toUInt();
-		}
-		_db->close();
-	}
-}*/
-
 void PlaylistManager::loadPlaylist(int playlistId)
 {
 	Playlist *playlist = NULL;

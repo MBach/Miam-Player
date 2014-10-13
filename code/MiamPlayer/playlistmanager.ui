@@ -69,7 +69,7 @@
         <item>
          <widget class="QListView" name="savedPlaylists">
           <property name="dragDropMode">
-           <enum>QAbstractItemView::DropOnly</enum>
+           <enum>QAbstractItemView::NoDragDrop</enum>
           </property>
           <property name="defaultDropAction">
            <enum>Qt::MoveAction</enum>
@@ -95,7 +95,10 @@
           <property name="viewMode">
            <enum>QListView::IconMode</enum>
           </property>
-          <property name="uniformItemSizes">
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="selectionRectVisible">
            <bool>true</bool>
           </property>
          </widget>

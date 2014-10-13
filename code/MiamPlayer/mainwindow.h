@@ -45,7 +45,7 @@ private:
 	UniqueLibrary *_uniqueLibrary;
 
 	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
-	SqlDatabase *_sqlDatabase;
+	SqlDatabase *_db;
 
 	SearchDialog *_searchDialog;
 

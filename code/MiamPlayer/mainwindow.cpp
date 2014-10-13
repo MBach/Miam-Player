@@ -15,7 +15,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), _sqlDatabase(new SqlDatabase(this))
+	QMainWindow(parent), _db(new SqlDatabase(this))
 {
 	setupUi(this);
 
@@ -43,10 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
 	/// free memory
-	playlistManager = new PlaylistManager(_sqlDatabase, tabPlaylists);
+	playlistManager = new PlaylistManager(_db, tabPlaylists);
 	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-	_searchDialog = new SearchDialog(_sqlDatabase, this);
+	_searchDialog = new SearchDialog(_db, this);
 }
 
 void MainWindow::appendToCurrentPlaylist(const QStringList &files)
@@ -81,9 +81,9 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 void MainWindow::init()
 {
 	// Link database and views
-	library->init(_sqlDatabase);
-	_uniqueLibrary->init(_sqlDatabase);
-	tagEditor->init(_sqlDatabase);
+	library->init(_db);
+	_uniqueLibrary->init(_db);
+	tagEditor->init(_db);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
@@ -100,7 +100,7 @@ void MainWindow::init()
 	if (isEmpty) {
 		quickStart->searchMultimediaFiles();
 	} else {
-		_sqlDatabase->load();
+		_db->load();
 	}
 
 	Settings *settings = Settings::getInstance();
@@ -147,18 +147,18 @@ void MainWindow::setupActions()
 		widgetSearchBar->setVisible(!libraryIsEmpty);
 		if (libraryIsEmpty) {
 			// Delete table tracks if such a previous one was found
-			if (_sqlDatabase->open()) {
-				_sqlDatabase->exec("DROP TABLE tracks");
+			if (_db->open()) {
+				_db->exec("DROP TABLE tracks");
 				qDebug() << Q_FUNC_INFO;
-				_sqlDatabase->close();
+				_db->close();
 			}
 			quickStart->searchMultimediaFiles();
 		} else {
-			_sqlDatabase->rebuild();
+			_db->rebuild();
 		}
 	});
 
-	connect(_sqlDatabase, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
+	connect(_db, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
@@ -202,7 +202,7 @@ void MainWindow::setupActions()
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
-		_sqlDatabase->rebuild();
+		_db->rebuild();
 	});
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
@@ -228,7 +228,7 @@ void MainWindow::setupActions()
 		libraryHeader->setHidden(false);
 		widgetSearchBar->setHidden(false);
 		actionScanLibrary->setEnabled(true);
-		_sqlDatabase->rebuild();
+		_db->rebuild();
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {

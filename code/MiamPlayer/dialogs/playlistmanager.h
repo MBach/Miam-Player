@@ -50,11 +50,6 @@ private:
 	/** Remove all special characters for Windows, Unix, OSX. */
 	static QString convertNameToValidFileName(QString &name);
 
-	// QString getPlaylistName(const QString &path);
-
-	/** Load a playlist (*.m3u8) saved on the filesystem. */
-	// void loadPlaylist(const QString &path);
-
 	/** Load a playlist saved on the in database. */
 	void loadPlaylist(int playlistId);
 
