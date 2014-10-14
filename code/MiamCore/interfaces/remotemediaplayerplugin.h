@@ -1,6 +1,7 @@
 #ifndef REMOTEMEDIAPLAYERPLUGIN_H
 #define REMOTEMEDIAPLAYERPLUGIN_H
 
+#include "model/sqldatabase.h"
 #include "abstractsearchdialog.h"
 #include "basicplugin.h"
 #include "remotemediaplayer.h"
@@ -14,6 +15,8 @@ public:
 	virtual ~RemoteMediaPlayerPlugin() {}
 
 	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;
+
+	virtual void setDatabase(SqlDatabase *db) = 0;
 
 	virtual RemoteMediaPlayer * player() const = 0;
 

@@ -56,15 +56,6 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 
 	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromUnsaved);
 	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromSaved);
-	/*connect(_savedPlaylistModel, &QStandardItemModel::itemChanged, [=](QStandardItem *item) {
-		_db->open();
-		QSqlQuery update(_db);
-		update.prepare("UPDATE playlists SET name = :name WHERE absPath = :path");
-		update.bindValue(":name", item->text());
-		update.bindValue(":path", item->data(PlaylistPath).toString());
-		qDebug() << "update?" << update.exec();
-		_db->close();
-	});*/
 	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistManager::loadSelectedPlaylists);
 	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistManager::deleteSavedPlaylists);
 
@@ -156,10 +147,10 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	playlist->setProperty("dao", QVariant::fromValue(remotePlaylist));
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
-	/// Use (host, id) or (absPath)
+	/// Use (host, id) or (uri)
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
 	foreach (TrackDAO track, tracks) {
-		QUrl url = QUrl(track.url());
+		QUrl url = QUrl(track.uri());
 		if (url.isLocalFile()) {
 			QStringList l = QStringList() << url.toLocalFile();
 			playlist->insertMedias(-1, l);

@@ -69,7 +69,9 @@ public:
 
 	void moveSearchDialog();
 
-	AbstractSearchDialog * searchDialog() const { return _searchDialog; }
+	inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
+
+	inline SqlDatabase * database() const { return _db; }
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

@@ -236,13 +236,15 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 {
 	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
 
-	QStringList tracks;
+	QList<TrackDAO> tracks;
 	foreach (QDir folder, folders) {
 		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			if (it.fileInfo().isFile()) {
-				tracks << it.fileInfo().absoluteFilePath();
+				TrackDAO track;
+				track.setUri(it.fileInfo().absoluteFilePath());
+				tracks.append(track);
 			}
 		}
 	}
@@ -256,10 +258,22 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 }
 
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
-void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
+void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
+}
+
+/** Overloaded function. */
+void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &files)
+{
+	QList<TrackDAO> tracks;
+	foreach (QString file, files) {
+		TrackDAO track;
+		track.setUri(file);
+		tracks.append(track);
+	}
+	this->insertItemsToPlaylist(rowIndex, tracks);
 }
 
 void TabPlaylist::moveTracksDown()

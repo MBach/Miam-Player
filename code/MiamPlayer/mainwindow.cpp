@@ -51,7 +51,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::appendToCurrentPlaylist(const QStringList &files)
 {
-	tabPlaylists->insertItemsToPlaylist(-1, files);
+	QList<TrackDAO> tracks;
+	foreach (QString file, files) {
+		TrackDAO track;
+		track.setUri(file);
+		tracks.append(track);
+	}
+
+	tabPlaylists->insertItemsToPlaylist(-1, tracks);
 }
 
 void MainWindow::dispatchDrop(QDropEvent *event)
@@ -232,8 +239,12 @@ void MainWindow::setupActions()
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
-		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QStringList &tracks) {
+		connect(tab, &TreeView::aboutToInsertToPlaylist, this, [=](int rowIndex, const QList<TrackDAO> &tracks) {
+			TrackDAO t = tracks.first();
+			qDebug() << "t.title()" << t.title();
+			tabPlaylists->insertItemsToPlaylist(rowIndex, tracks);
+		});
+		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<TrackDAO> &tracks) {
 			this->showTagEditor();
 			tagEditor->addItemsToEditor(tracks);
 		});

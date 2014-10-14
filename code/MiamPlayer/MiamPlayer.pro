@@ -63,6 +63,12 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
     volumeslider.cpp \
+    library/albumitem.cpp \
+    library/artistitem.cpp \
+    library/discitem.cpp \
+    library/letteritem.cpp \
+    library/trackitem.cpp \
+    library/yearitem.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -127,7 +133,13 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h
+    volumeslider.h \
+    library/albumitem.h \
+    library/artistitem.h \
+    library/discitem.h \
+    library/letteritem.h \
+    library/trackitem.h \
+    library/yearitem.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

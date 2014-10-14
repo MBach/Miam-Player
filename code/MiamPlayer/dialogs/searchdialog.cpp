@@ -276,7 +276,7 @@ void SearchDialog::search(const QString &text)
 	}
 
 	QSqlQuery qSearchForTracks(*_db);
-	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist), absPath FROM tracks WHERE title like :t LIMIT 5");
+	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist), uri FROM tracks WHERE title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {
 		QList<QStandardItem*> trackList;

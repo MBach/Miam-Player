@@ -17,7 +17,7 @@ TrackDAO::TrackDAO(const TrackDAO &remoteTrack) :
 	_source = remoteTrack.source();
 	_title = remoteTrack.title();
 	_trackNumber = remoteTrack.trackNumber();
-	_url = remoteTrack.url();
+	_uri = remoteTrack.uri();
 	_year = remoteTrack.year();
 }
 
@@ -53,8 +53,8 @@ void TrackDAO::setTitle(const QString &title) { _title = title; }
 QString TrackDAO::trackNumber() const { return _trackNumber; }
 void TrackDAO::setTrackNumber(const QString &trackNumber) { _trackNumber = trackNumber; }
 
-QString TrackDAO::url() const { return _url; }
-void TrackDAO::setUrl(const QString &url) { _url = url; }
+QString TrackDAO::uri() const { return _uri; }
+void TrackDAO::setUri(const QString &uri) { _uri = uri; }
 
 QString TrackDAO::year() const { return _year; }
 void TrackDAO::setYear(const QString &year) { _year = year; }

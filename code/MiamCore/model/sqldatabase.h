@@ -49,9 +49,11 @@ public:
 	void updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath);
 
 	/**
-	 * Update a list of tracks. If track name has changed, will be removed from Library then added right after.
+	 * Update a list of tracks. If track name has changed, it will be removed from Library then added right after.
 	 * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
 	void updateTracks(const QList<QPair<QString, QString> > &tracksToUpdate);
+
+	void loadRemoteTracks(const QList<TrackDAO> &tracks);
 
 private:
 	/** Read all tracks entries in the database and send them to connected views. */

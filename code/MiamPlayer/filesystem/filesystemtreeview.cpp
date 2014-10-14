@@ -37,28 +37,28 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertIndex);
 }
 
-/*FileSystemTreeView::~FileSystemTreeView()
-{
-	qDebug() << Q_FUNC_INFO;
-}*/
-
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
+void FileSystemTreeView::findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const
 {
 	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
 	if (fileInfo.isFile()) {
-		tracks.append(fileInfo.absoluteFilePath());
+		TrackDAO track;
+		track.setUri(fileInfo.absoluteFilePath());
+		tracks.append(track);
 	} else {
 		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
 			QFileInfo fileInfo(entry);
 			if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
-				tracks.append(fileInfo.absoluteFilePath());
+				TrackDAO track;
+				track.setUri(fileInfo.absoluteFilePath());
+				tracks.append(track);
 			}
 		}
 	}
-	tracks.removeDuplicates();
+	/// FIXME
+	// tracks.removeDuplicates();
 }
 
 /** Reimplemented to display up to 3 actions. */
@@ -125,6 +125,10 @@ void FileSystemTreeView::convertIndex(const QModelIndex &index)
 	if (fileInfo.isDir()) {
 		emit folderChanged(fileSystemModel->filePath(index));
 	} else {
-		emit aboutToInsertToPlaylist(-1, QStringList(fileInfo.absoluteFilePath()));
+		QList<TrackDAO> tracks;
+		TrackDAO track;
+		track.setUri(fileInfo.absoluteFilePath());
+		tracks.append(track);
+		emit aboutToInsertToPlaylist(-1, tracks);
 	}
 }

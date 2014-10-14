@@ -6,6 +6,12 @@
 #include <QPainter>
 
 #include "libraryfilterproxymodel.h"
+#include "albumitem.h"
+#include "artistitem.h"
+#include "discitem.h"
+#include "letteritem.h"
+#include "trackitem.h"
+#include "yearitem.h"
 
 #include <QPointer>
 #include <QPropertyAnimation>
@@ -31,8 +37,6 @@ private:
 public:
 	LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy);
 
-	//void invalidate(const QModelIndex &index);
-
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 	/** Redefined to always display the same height for albums, even for those without one. */
@@ -47,13 +51,13 @@ public:
 
 private:
 	/** Albums have covers usually. */
-	void drawAlbum(QPainter *painter, QStyleOptionViewItem &o, QStandardItem *item) const;
+	void drawAlbum(QPainter *painter, QStyleOptionViewItem &o, AlbumItem *item) const;
 
-	void drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const;
+	void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const;
 
-	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
+	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const;
 
-	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const;
+	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, LetterItem *item) const;
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
 

@@ -4,6 +4,7 @@
 #include <settingsprivate.h>
 #include "librarytreeview.h"
 #include "../playlists/starrating.h"
+#include "../model/albumdao.h"
 
 #include <QApplication>
 #include <QDir>
@@ -21,28 +22,6 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, Libra
 	_showCovers = SettingsPrivate::getInstance()->isCoversEnabled();
 }
 
-/*void LibraryItemDelegate::invalidate(const QModelIndex &index)
-{
-	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
-	int type = item->data(LibraryTreeView::Type).toInt();
-	switch (type) {
-	case LibraryTreeView::Album:
-		qDebug() << "invalidating" << item->text();
-		item->setData(false, Qt::UserRole + 20);
-		break;
-	case LibraryTreeView::Artist:
-		break;
-	case LibraryTreeView::Disc:
-		break;
-	case LibraryTreeView::Letter:
-		break;
-	case LibraryTreeView::Track:
-		break;
-	default:
-		break;
-	}
-}*/
-
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	painter->save();
@@ -59,26 +38,25 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
-	int type = item->data(LibraryTreeView::DF_ItemType).toInt();
-	switch (type) {
+	switch (item->type()) {
 	case LibraryTreeView::IT_Album:
 		this->paintRect(painter, o);
-		this->drawAlbum(painter, o, item);
+		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
 		break;
 	case LibraryTreeView::IT_Artist:
 		this->paintRect(painter, o);
-		this->drawArtist(painter, o, item);
+		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
 		break;
 	case LibraryTreeView::IT_Disc:
 		this->paintRect(painter, o);
-		this->drawDisc(painter, o, index);
+		this->drawDisc(painter, o, static_cast<DiscItem*>(item));
 		break;
 	case LibraryTreeView::IT_Letter:
-		this->drawLetter(painter, o, index);
+		this->drawLetter(painter, o, static_cast<LetterItem*>(item));
 		break;
 	case LibraryTreeView::IT_Track:
 		this->paintRect(painter, o);
-		this->drawTrack(painter, o, item);
+		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
@@ -92,8 +70,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 {
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	int type = item->data(LibraryTreeView::DF_ItemType).toInt();
-	if (settings->isCoversEnabled() && type == LibraryTreeView::IT_Album) {
+	if (settings->isCoversEnabled() && item->type() == LibraryTreeView::IT_Album) {
 		QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
@@ -102,9 +79,8 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 }
 
 /** Albums have covers usually. */
-void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
+void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const
 {
-	//qDebug() << "LibraryItemDelegate::drawAlbum, cover?" << item->data(Qt::UserRole + 20).toBool() << item->data(Qt::DisplayRole).toString();
 	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
@@ -164,6 +140,19 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		}
 		painter->restore();
 	}
+
+	// Add an icon on the right if album is from some remote location
+	bool isRemote = item->data(LibraryTreeView::DF_IsRemote).toBool();
+	if (isRemote) {
+		TrackDAO album = item->data(LibraryTreeView::DF_DAO).value<TrackDAO>();
+		QPoint topLeftRemote(option.rect.x() + option.rect.width() - (24 + 4), (option.rect.height() - 24)/ 2 + option.rect.y() + 2);
+		QPoint bottomRightRemote(option.rect.x() + option.rect.width() - 4, option.rect.height());
+		QRect iconRemoteRect(topLeftRemote, bottomRightRemote);
+		QPixmap iconRemote(album.iconPath());
+		painter->drawPixmap(iconRemoteRect, iconRemote);
+	}
+
+
 	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
@@ -183,7 +172,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	this->paintText(painter, option, rectText, s, item);
 }
 
-void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
+void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const
 {
 	QFontMetrics fmf(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
@@ -200,7 +189,7 @@ void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &op
 	this->paintText(painter, option, rectText, s, item);
 }
 
-void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const
+void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const
 {
 	option.state = QStyle::State_None;
 	QPointF p1 = option.rect.bottomLeft(), p2 = option.rect.bottomRight();
@@ -208,10 +197,10 @@ void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &opti
 	p2.setX(p2.x() - 2);
 	painter->setPen(Qt::gray);
 	painter->drawLine(p1, p2);
-	QStyledItemDelegate::paint(painter, option, index);
+	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
-void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, const QModelIndex &index) const
+void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, LetterItem *item) const
 {
 	// One cannot interact with an alphabetical separator
 	option.state = QStyle::State_None;
@@ -221,7 +210,7 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	p2.setX(p2.x() - 2);
 	painter->setPen(Qt::gray);
 	painter->drawLine(p1, p2);
-	QStyledItemDelegate::paint(painter, option, index);
+	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
 void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const
@@ -230,7 +219,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
 	if (SettingsPrivate::getInstance()->isStarDelegates()) {
-		QString absFilePath = track->data(LibraryTreeView::DF_AbsFilePath).toString();
+		QString absFilePath = track->data(LibraryTreeView::DF_URI).toString();
 		/// XXX: query the sqlmodel instead?
 		FileHelper fh(absFilePath);
 		//qDebug() << "rating" << fh.rating();

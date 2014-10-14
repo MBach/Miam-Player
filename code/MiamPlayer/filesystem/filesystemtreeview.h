@@ -21,10 +21,8 @@ private:
 public:
 	explicit FileSystemTreeView(QWidget *parent = 0);
 
-	//virtual ~FileSystemTreeView();
-
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	void findAll(const QModelIndex &index, QStringList &tracks) const;
+	void findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const;
 
 	inline virtual void init(SqlDatabase *) {}
 

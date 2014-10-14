@@ -83,7 +83,10 @@ public slots:
 	void addExtFolders(const QList<QDir> &folders);
 
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
-	void insertItemsToPlaylist(int rowIndex, const QStringList &tracks);
+	void insertItemsToPlaylist(int rowIndex, const QList<TrackDAO> &tracks);
+
+	/** Overloaded function. */
+	void insertItemsToPlaylist(int rowIndex, const QStringList &files);
 
 	void moveTracksDown();
 

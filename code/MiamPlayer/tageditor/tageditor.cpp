@@ -78,11 +78,13 @@ void TagEditor::init(SqlDatabase *db)
 	_db = db;
 }
 
-QStringList TagEditor::selectedTracks()
+QList<TrackDAO> TagEditor::selectedTracks()
 {
-	QStringList tracks;
+	QList<TrackDAO> tracks;
 	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename)) {
-		tracks << index.data(Qt::UserRole).toString();
+		TrackDAO track;
+		track.setUri(index.data(Qt::UserRole).toString());
+		tracks.append(track);
 	}
 	return tracks;
 }
@@ -195,6 +197,16 @@ void TagEditor::addItemsToEditor(const QList<QUrl> &tracks)
 		if (url.isLocalFile()) {
 			localFiles.append(url.toLocalFile());
 		}
+	}
+	this->addItemsToEditor(localFiles);
+}
+
+/** Wrapper for addItemsToEditor. */
+void TagEditor::addItemsToEditor(const QList<TrackDAO> &tracks)
+{
+	QStringList localFiles;
+	foreach (TrackDAO track, tracks) {
+		localFiles.append(track.uri());
 	}
 	this->addItemsToEditor(localFiles);
 }
@@ -382,7 +394,7 @@ void TagEditor::displayCover()
 	// Fill the comboBox for the absolute path to the cover (if exists)
 	_db->database().open();
 
-	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT coverAbsPath FROM tracks WHERE absPath IN (" + joinedTracks + ")");
+	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT coverAbsPath FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
 		coversPath << coverPathQuery.record().value(0).toString();

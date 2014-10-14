@@ -53,7 +53,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	// Accept separators if any top level items and its children are accepted
 	QStandardItemModel *model = qobject_cast<QStandardItemModel*>(sourceModel());
 	QStandardItem *item = model->itemFromIndex(model->index(sourceRow, 0, sourceParent));
-	if (item && item->data(LibraryTreeView::DF_ItemType).toInt() == LibraryTreeView::IT_Letter) {
+	if (item && item->type() == LibraryTreeView::IT_Letter) {
 		foreach (QModelIndex index, _topLevelItems->values(item->index())) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
 				//qDebug() << "accepting Letter" << index.data().toString();
@@ -79,8 +79,8 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 	QStandardItem *left = model->itemFromIndex(idxLeft);
 	QStandardItem *right = model->itemFromIndex(idxRight);
 
-	int lType = left->data(LibraryTreeView::DF_ItemType).toInt();
-	int rType = right->data(LibraryTreeView::DF_ItemType).toInt();
+	int lType = left->type();
+	int rType = right->type();
 	switch (lType) {
 	case LibraryTreeView::IT_Artist:
 		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);

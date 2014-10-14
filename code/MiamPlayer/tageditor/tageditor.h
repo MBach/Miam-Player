@@ -41,7 +41,7 @@ public:
 
 	virtual void init(SqlDatabase *db);
 
-	virtual QStringList selectedTracks();
+	virtual QList<TrackDAO> selectedTracks();
 
 	virtual void updateSelectedTracks();
 
@@ -64,6 +64,9 @@ public slots:
 
 	/** Wrapper for addItemsToEditor. */
 	void addItemsToEditor(const QList<QUrl> &tracks);
+
+	/** Wrapper for addItemsToEditor. */
+	void addItemsToEditor(const QList<TrackDAO> &tracks);
 
 	/** Clears all rows and comboboxes. */
 	void clear();

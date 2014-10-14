@@ -56,9 +56,15 @@ FileHelper::FileHelper(const QString &filePath)
 
 bool FileHelper::init(const QString &filePath)
 {
-	_fileInfo = QFileInfo(filePath);
+	QString fileName;
+	if (filePath.startsWith("file")) {
+		fileName = filePath.mid(7);
+	} else {
+		fileName = filePath;
+	}
+	_fileInfo = QFileInfo(fileName);
 	QString suffix = _fileInfo.suffix().toLower();
-	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(filePath)));
+	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(fileName)));
 	//qDebug() << "FileHelper::init" << filePath;
 	//QByteArray ba = QDir::toNativeSeparators(filePath).toLocal8Bit();
 	//TagLib::FileName fp(ba.data());

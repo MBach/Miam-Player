@@ -18,6 +18,12 @@ class LibraryFilterProxyModel;
 class CircleProgressBar;
 class LibraryItemDelegate;
 class JumpToWidget;
+class ArtistItem;
+class AlbumItem;
+class DiscItem;
+class LetterItem;
+class TrackItem;
+class YearItem;
 
 /**
  * \brief		The LibraryTreeView class is displaying tracks in a tree.
@@ -40,14 +46,12 @@ private:
 	LibraryItemDelegate *_itemDelegate;
 	QTimer *_timer;
 
-	QHash<QString, QStandardItem*> _artists;
-	QHash<QPair<QStandardItem*, QString>, QStandardItem*> _albums;
-	QHash<QPair<QStandardItem*, int>, QStandardItem*> _discNumbers;
-	QHash<QString, QStandardItem*> _albums2;
-	QHash<QString, QStandardItem*> _albumsAbsPath;
-	QHash<QString, QStandardItem*> _artistsAlbums;
-	QHash<int, QStandardItem*> _years;
-	QHash<QString, QStandardItem*> _letters;
+	QHash<QString, ArtistItem*> _artists;
+	QHash<QPair<ArtistItem*, QString>, AlbumItem*> _albums;
+	QHash<QPair<AlbumItem*, int>, DiscItem*> _discNumbers;
+	QHash<QString, AlbumItem*> _albums2;
+	QHash<int, YearItem*> _years;
+	QHash<QString, LetterItem*> _letters;
 
 	// Letter L returns all Artists (e.g.) starting with L
 	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
@@ -67,7 +71,7 @@ public:
 	QChar currentLetter() const;
 
 	/** Reimplemented. */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
+	virtual void findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const;
 
 	virtual void init(SqlDatabase *db);
 
@@ -80,15 +84,16 @@ public:
 					IT_Year			= 6 };
 
 	// User defined data types (item->setData(QVariant, Field);)
-	enum DataField { DF_ItemType			= Qt::UserRole + 1,
-					 DF_AbsFilePath			= Qt::UserRole + 2,
-					 DF_CoverPath			= Qt::UserRole + 3,
-					 DF_TrackNumber			= Qt::UserRole + 4,
-					 DF_DiscNumber			= Qt::UserRole + 5,
-					 DF_NormalizedString	= Qt::UserRole + 6,
-					 DF_Year				= Qt::UserRole + 7,
+	enum DataField { DF_URI					= Qt::UserRole + 1,
+					 DF_CoverPath			= Qt::UserRole + 2,
+					 DF_TrackNumber			= Qt::UserRole + 3,
+					 DF_DiscNumber			= Qt::UserRole + 4,
+					 DF_NormalizedString	= Qt::UserRole + 5,
+					 DF_Year				= Qt::UserRole + 6,
 				   /// TEST QSortFilterProxyModel
-					 DF_Highlighted			= Qt::UserRole + 8};
+					 DF_Highlighted			= Qt::UserRole + 7,
+					 DF_DAO					= Qt::UserRole + 8,
+					 DF_IsRemote			= Qt::UserRole + 9};
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -115,7 +120,7 @@ private:
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;
 
-	QStandardItem* insertLetter(const QString &letters);
+	LetterItem *insertLetter(const QString &letters);
 
 	void updateCover(const QFileInfo &coverFileInfo);
 
@@ -143,8 +148,8 @@ public slots:
 private slots:
 	void endPopulateTree();
 
-	//void insertTrack(const QString &absFilePath, const QString &artistAlbum, const QString &artist, const QString &album, int discNumber, const QString &title, int trackNumber, int year);
 	void insertTrack(const TrackDAO &t);
+
 signals:
 	/** (Dis|En)able covers.*/
 	void displayCovers(bool);

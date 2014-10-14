@@ -79,7 +79,7 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 		insert.addBindValue(track.year());
 		insert.addBindValue(track.iconPath());
 		insert.addBindValue(track.id());
-		insert.addBindValue(track.url());
+		insert.addBindValue(track.uri());
 		insert.addBindValue(playlistId);
 		insert.exec();
 	}
@@ -116,6 +116,7 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 		b = insert.exec();
 		++i;
 		qDebug() << "insert failed for playlist" << playlist.title() << "trying again" << i;
+		qDebug() << insert.lastError();
 	}
 	close();
 	return id;
@@ -166,7 +167,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 		track.setYear(record.value(++i).toString());
 		track.setIconPath(record.value(++i).toString());
 		track.setId(record.value(++i).toString());
-		track.setUrl(record.value(++i).toString());
+		track.setUri(record.value(++i).toString());
 		tracks.append(track);
 	}
 
@@ -266,7 +267,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 		if (pair.second.isEmpty()) {
 			FileHelper fh(pair.first);
 			QSqlQuery updateTrack(*this);
-			updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, discNumber = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE absPath = ?");
+			updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, discNumber = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE uri = ?");
 			updateTrack.addBindValue(fh.album());
 			updateTrack.addBindValue(fh.artist());
 			updateTrack.addBindValue(fh.artistAlbum());
@@ -278,10 +279,10 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			updateTrack.addBindValue(QDir::toNativeSeparators(pair.first));
 			updateTrack.exec();
 		} else {
-			QSqlQuery hasTrack("SELECT COUNT(*) FROM tracks WHERE absPath = ?", *this);
+			QSqlQuery hasTrack("SELECT COUNT(*) FROM tracks WHERE uri = ?", *this);
 			hasTrack.addBindValue(QDir::toNativeSeparators(pair.first));
 			if (hasTrack.exec() && hasTrack.next() && hasTrack.record().value(0).toInt() != 0) {
-				QSqlQuery removeTrack("DELETE FROM tracks WHERE absPath = ?", *this);
+				QSqlQuery removeTrack("DELETE FROM tracks WHERE uri = ?", *this);
 				removeTrack.addBindValue(QDir::toNativeSeparators(pair.first));
 				qDebug() << "deleting tracks";
 				if (removeTrack.exec()) {
@@ -290,10 +291,10 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			}
 		}
 	}
-	database().commit();
+	commit();
 	this->blockSignals(false);
 
-	database().close();
+	close();
 
 	/// XXX: might not be the smartest way to reload changes, but it's way simpler than searching in a tree for modifications
 	this->load();
@@ -319,7 +320,7 @@ void SqlDatabase::loadFromFileDB()
 		track.setTrackNumber(r.value(++i).toString());
 		track.setDisc(r.value(++i).toString());
 		track.setYear(r.value(++i).toString());
-		track.setUrl(r.value(++i).toString());
+		track.setUri(r.value(++i).toString());
 		emit trackExtracted(track);
 	}
 	close();
@@ -338,7 +339,7 @@ void SqlDatabase::rebuild()
 	exec("PRAGMA journal_mode = MEMORY");
 	exec("DROP TABLE tracks");
 	QString createTable = "CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), " \
-		"title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, absPath varchar(255) PRIMARY KEY ASC, " \
+		"title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, uri varchar(255) PRIMARY KEY ASC, " \
 		"path varchar(255), coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0)";
 	exec(createTable);
 
@@ -370,6 +371,15 @@ void SqlDatabase::saveCoverRef(const QString &coverPath)
 	emit coverWasUpdated(fileInfo);
 }
 
+void SqlDatabase::loadRemoteTracks(const QList<TrackDAO> &tracks)
+{
+	qDebug() << Q_FUNC_INFO << tracks.size();
+	foreach (TrackDAO track, tracks) {
+		qDebug() << track.title();
+		emit trackExtracted(track);
+	}
+}
+
 /** Reads a file from the filesystem and adds it into the library. */
 void SqlDatabase::saveFileRef(const QString &absFilePath)
 {
@@ -380,10 +390,12 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	if (fh.isValid()) {
 		TrackDAO track;
 		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO tracks (absPath, album, artist, artistAlbum, discNumber, internalCover, path, title, trackNumber, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		QString nativeAbsPath = QDir::toNativeSeparators(absFilePath);
-		insert.addBindValue(nativeAbsPath);
-		track.setUrl(nativeAbsPath);
+		insert.prepare("INSERT INTO tracks (uri, album, artist, artistAlbum, discNumber, internalCover, path, title, trackNumber, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		//QString nativeAbsPath = QDir::toNativeSeparators(absFilePath);
+		//insert.addBindValue(nativeAbsPath);
+		//track.setUri(nativeAbsPath);
+		insert.addBindValue("file://" + absFilePath);
+		track.setUri("file://" + absFilePath);
 
 		QString album = fh.album();
 		insert.addBindValue(album);

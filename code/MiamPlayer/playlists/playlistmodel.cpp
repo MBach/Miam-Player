@@ -43,6 +43,11 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
+		qDebug() << track.uri();
+		if (track.uri().startsWith("file")) {
+			this->insertMedia(rowIndex, FileHelper(track.uri()));
+			continue;
+		}
 
 		QStandardItem *trackItem = new QStandardItem;
 		if (!track.trackNumber().isEmpty()) {
@@ -64,7 +69,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 			iconItem->setIcon(QIcon(track.iconPath()));
 		}
 		iconItem->setToolTip(track.source());
-		QUrl url(track.url());
+		QUrl url(track.uri());
 
 		QStandardItem *trackDAO = new QStandardItem;
 		trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
@@ -116,7 +121,7 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	track.setRating(fileHelper.rating());
 	track.setYear(fileHelper.year());
 	track.setId(QString::number(qHash(absPath)));
-	track.setUrl(QUrl::fromLocalFile(absPath).toString());
+	track.setUri(QUrl::fromLocalFile(absPath).toString());
 	trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
 
 	trackItem->setTextAlignment(Qt::AlignCenter);
