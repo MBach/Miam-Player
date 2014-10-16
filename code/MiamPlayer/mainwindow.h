@@ -56,8 +56,6 @@ public:
 
 	MainWindow(QWidget *parent = 0);
 
-	void appendToCurrentPlaylist(const QStringList &files);
-
 	void dispatchDrop(QDropEvent *event);
 
 	void init();

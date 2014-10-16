@@ -51,7 +51,7 @@ public:
 
 private:
 	/** Albums have covers usually. */
-	void drawAlbum(QPainter *painter, QStyleOptionViewItem &o, AlbumItem *item) const;
+	void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const;
 
 	void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const;
 

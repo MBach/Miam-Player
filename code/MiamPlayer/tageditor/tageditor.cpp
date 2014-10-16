@@ -394,7 +394,7 @@ void TagEditor::displayCover()
 	// Fill the comboBox for the absolute path to the cover (if exists)
 	_db->database().open();
 
-	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT coverAbsPath FROM tracks WHERE uri IN (" + joinedTracks + ")");
+	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
 		coversPath << coverPathQuery.record().value(0).toString();

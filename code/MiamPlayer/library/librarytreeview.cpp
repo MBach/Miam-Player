@@ -35,18 +35,18 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 
-	proxyModel = new LibraryFilterProxyModel(this);
-	proxyModel->setSourceModel(_libraryModel);
-	proxyModel->setTopLevelItems(&_topLevelItems);
-	_itemDelegate = new LibraryItemDelegate(this, proxyModel);
+	_proxyModel = new LibraryFilterProxyModel(this);
+	_proxyModel->setSourceModel(_libraryModel);
+	_proxyModel->setTopLevelItems(&_topLevelItems);
+	_itemDelegate = new LibraryItemDelegate(this, _proxyModel);
 	this->setItemDelegate(_itemDelegate);
 
 	_timer = new QTimer(this);
 	_timer->setTimerType(Qt::PreciseTimer);
 	_timer->setInterval(10);
 
-	circleProgressBar = new CircleProgressBar(this);
-	circleProgressBar->setTransparentCenter(true);
+	_circleProgressBar = new CircleProgressBar(this);
+	_circleProgressBar->setTransparentCenter(true);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Send to the tag editor"), this);
@@ -59,12 +59,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	openTagEditor = new QShortcut(this);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
-	connect(proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
+	connect(_proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
 		if (!SettingsPrivate::getInstance()->isSearchAndExcludeLibrary()) {
 			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
-				if (b) {
-					//qDebug() << item->text();
-				}
 				item->setData(b, DF_Highlighted);
 			}
 		}
@@ -76,7 +73,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
-	proxyModel->sortOrder();
+	_proxyModel->sortOrder();
 
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
@@ -89,10 +86,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 QChar LibraryTreeView::currentLetter() const
 {
 	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-	QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(iTop));
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(iTop));
 
 	// Special item "Various" (on top) has no Normalized String
-	if (item->type() == IT_Letter && iTop.data(DF_NormalizedString).toString().isEmpty()) {
+	if (item && item->type() == IT_Letter && iTop.data(DF_NormalizedString).toString().isEmpty()) {
 		return QChar();
 	} else {
 		// An item without a valid parent is a top level item, therefore we can extract the letter.
@@ -107,7 +104,7 @@ QChar LibraryTreeView::currentLetter() const
 void LibraryTreeView::findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const
 {
 	if (_itemDelegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 		if (item && item->hasChildren()) {
 			for (int i = 0; i < item->rowCount(); i++) {
 				// Recursive call on children
@@ -158,8 +155,8 @@ void LibraryTreeView::init(SqlDatabase *db)
 	_db = db;
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
-	proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
-	this->setModel(proxyModel);
+	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
+	this->setModel(_proxyModel);
 
 	QObjectList objetsToExtend = QObjectList() << properties << this;
 	PluginManager::getInstance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
@@ -181,14 +178,18 @@ void LibraryTreeView::init(SqlDatabase *db)
 	connect(_db, &SqlDatabase::coverWasUpdated, this, &LibraryTreeView::updateCover);
 	connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
 	connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-	connect(_db, &SqlDatabase::progressChanged, circleProgressBar, &QProgressBar::setValue);
-	connect(_db, &SqlDatabase::trackExtracted, this, &LibraryTreeView::insertTrack);
+	connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
+	//connect(_db, &SqlDatabase::trackExtracted, this, &LibraryTreeView::insertTrack);
+	//connect(_db, &SqlDatabase::artistExtracted, this, &LibraryTreeView::insertArtist);
+	//connect(_db, &SqlDatabase::albumExtracted, this, &LibraryTreeView::insertAlbum);
+	//connect(_db, &SqlDatabase::trackExtracted2, this, &LibraryTreeView::insertTrack2);
+	connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
 }
 
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
-	QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(this->indexAt(event->pos())));
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
 		foreach (QAction *action, properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
@@ -205,7 +206,7 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 	if (settings->isBigCoverEnabled()) {
 		QModelIndex index2 = proxyIndex;
-		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(proxyIndex));
+		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(proxyIndex));
 		//if (item->data(Type).toInt() == Track) {
 		//	item = item->parent();
 		//	index2 = proxyIndex.parent();
@@ -295,7 +296,7 @@ void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &
 	if (internalCover.next()) {
 		itemAlbum->setData(absFilePath, DF_CoverPath);
 	} else {
-		QSqlQuery externalCover("SELECT DISTINCT coverAbsPath FROM tracks WHERE album = ?", *_db);
+		QSqlQuery externalCover("SELECT DISTINCT cover FROM tracks WHERE album = ?", *_db);
 		externalCover.addBindValue(album);
 		externalCover.exec();
 		if (externalCover.next()) {
@@ -377,7 +378,7 @@ QImage LibraryTreeView::blurred(const QImage& image, const QRect& rect, int radi
 int LibraryTreeView::count(const QModelIndex &index) const
 {
 	if (_itemDelegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(proxyModel->mapToSource(index));
+		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 		if (item) {
 			int tmp = 0;
 			for (int i = 0; i < item->rowCount(); i++) {
@@ -449,7 +450,7 @@ void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
 /** Invert the current sort order. */
 void LibraryTreeView::changeSortOrder()
 {
-	if (proxyModel->sortOrder() == Qt::AscendingOrder) {
+	if (_proxyModel->sortOrder() == Qt::AscendingOrder) {
 		sortByColumn(0, Qt::DescendingOrder);
 	} else {
 		sortByColumn(0, Qt::AscendingOrder);
@@ -466,16 +467,16 @@ void LibraryTreeView::changeHierarchyOrder()
 void LibraryTreeView::filterLibrary(const QString &filter)
 {
 	if (filter.isEmpty()) {
-		proxyModel->setFilterRegExp(QRegExp());
-		proxyModel->sort(0, proxyModel->sortOrder());
+		_proxyModel->setFilterRegExp(QRegExp());
+		_proxyModel->sort(0, _proxyModel->sortOrder());
 	} else {
 		bool needToSortAgain = false;
-		if (proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
+		if (_proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
 			needToSortAgain = true;
 		}
-		proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
+		_proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
 		if (needToSortAgain) {
-			proxyModel->sort(0, proxyModel->sortOrder());
+			_proxyModel->sort(0, _proxyModel->sortOrder());
 		}
 	}
 }
@@ -485,16 +486,16 @@ void LibraryTreeView::jumpTo(const QString &letter)
 {
 	QStandardItem *item = _letters.value(letter);
 	if (item) {
-		scrollTo(proxyModel->mapFromSource(item->index()), PositionAtTop);
+		scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
 	}
 }
 
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
-	circleProgressBar->show();
+	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
-		proxyModel->setFilterRegExp(QString());
+		_proxyModel->setFilterRegExp(QString());
 		_artists.clear();
 		_albums.clear();
 		_discNumbers.clear();
@@ -505,16 +506,16 @@ void LibraryTreeView::reset()
 		_topLevelItems.clear();
 	}
 	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
-	case IT_Artist:
+	case SqlDatabase::IP_Artists:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
 		break;
-	case IT_Album:
+	case SqlDatabase::IP_Albums:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Albums"));
 		break;
-	case IT_ArtistAlbum:
+	case SqlDatabase::IP_ArtistsAlbums:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists – Albums"));
 		break;
-	case IT_Year:
+	case SqlDatabase::IP_Years:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Years"));
 		break;
 	}
@@ -523,11 +524,11 @@ void LibraryTreeView::reset()
 void LibraryTreeView::endPopulateTree()
 {
 	sortByColumn(0, Qt::AscendingOrder);
-	circleProgressBar->hide();
-	circleProgressBar->setValue(0);
+	_circleProgressBar->hide();
+	_circleProgressBar->setValue(0);
 }
 
-void LibraryTreeView::insertTrack(const TrackDAO &t)
+/*void LibraryTreeView::insertTrack(const TrackDAO &t)
 {
 	SettingsPrivate *settings = SettingsPrivate::getInstance();
 
@@ -554,7 +555,6 @@ void LibraryTreeView::insertTrack(const TrackDAO &t)
 	QString alb = t.album().normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
 
 	bool isRemote = t.uri().startsWith("http");
-	qDebug() << t.uri() << "is remote" << isRemote;
 
 	static bool existingArtist = true;
 	switch (settings->value("insertPolicy").toInt()) {
@@ -602,7 +602,6 @@ void LibraryTreeView::insertTrack(const TrackDAO &t)
 		if (disc > 0 && !_discNumbers.contains(QPair<AlbumItem*, int>(itemAlbum, disc))) {
 			DiscItem *itemDiscNumber = new DiscItem(t.disc());
 			itemDiscNumber->setData(t.disc(), DF_DiscNumber);
-			//qDebug() << title << discNumber;
 			_discNumbers.insert(QPair<AlbumItem *, int>(itemAlbum, disc), itemDiscNumber);
 			itemAlbum->appendRow(itemDiscNumber);
 		}
@@ -701,7 +700,59 @@ void LibraryTreeView::insertTrack(const TrackDAO &t)
 	itemTrack->setData(t.trackNumber(), DF_TrackNumber);
 	itemTrack->setData(t.disc(), DF_DiscNumber);
 	if (isRemote) {
-		qDebug() << t.artist() << t.album() << t.title() << t.uri();
 		itemTrack->setData(QVariant::fromValue(t), DF_DAO);
 	}
+}*/
+
+void LibraryTreeView::insertNode(GenericDAO *node, int level, const QString &parent)
+{
+	// qDebug() << Q_FUNC_INFO;
+	QStandardItem *nodeItem = new QStandardItem(node->title());
+	if (level == 0) {
+		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
+	} else {
+		QStandardItem *parentItem = _proxyModel->find(level, parent);
+		if (parentItem) {
+			parentItem->appendRow(nodeItem);
+		} else {
+			// Should I comment this?
+			// this->insertNode(node, level - 1, parent);
+			qDebug() << "parent was NULL :(";
+		}
+	}
 }
+
+void LibraryTreeView::insertNodes(const QList<GenericDAO *> &nodes, int level, const QString &parent)
+{
+	qDebug() << Q_FUNC_INFO;
+	QList<QStandardItem *> nodesItem;
+	foreach (GenericDAO *node, nodes) {
+		QStandardItem *nodeItem = new QStandardItem(node->title());
+		nodesItem.append(nodeItem);
+
+	}
+
+	if (level == 0) {
+		_libraryModel->invisibleRootItem()->appendRows(nodesItem);
+	} else {
+		QStandardItem *parentItem = _proxyModel->find(level, parent);
+		if (parentItem) {
+			parentItem->appendRows(nodesItem);
+		}
+	}
+}
+
+/*void LibraryTreeView::insertArtist(const TrackDAO &artist)
+{
+	//qDebug() << Q_FUNC_INFO;
+}
+
+void LibraryTreeView::insertAlbum(const AlbumDAO &album)
+{
+	//qDebug() << Q_FUNC_INFO;
+}
+
+void LibraryTreeView::insertTrack2(const TrackDAO &track)
+{
+	//qDebug() << Q_FUNC_INFO;
+}*/

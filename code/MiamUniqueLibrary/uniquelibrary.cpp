@@ -46,8 +46,8 @@ void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
 	int year = record.value(++i).toInt();
 	const QString uri = record.value(++i).toString();
 	const QString path = record.value(++i).toString();
-	const QString coverAbsPath = record.value(++i).toString();
-	//qDebug() << coverAbsPath;
+	const QString cover = record.value(++i).toString();
+	//qDebug() << cover;
 	//bool internalCover = record.value(++i).toBool();
 	record.value(++i).toBool();
 	//bool externalCover = record.value(++i).toBool();

@@ -5,8 +5,11 @@
 #include <QPainter>
 
 /**
- * This class does only one thing: ignore the "focus dotted rectangle"
- * when a cell (or a row) is selected in a view.
+ * \brief		The NoFocusItemDelegate class cancel drawFocus method.
+ * \details		This class does only one thing: ignore the "focus dotted rectangle" when a cell
+ *				(or a row) is selected in a view.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class NoFocusItemDelegate : public QItemDelegate
 {

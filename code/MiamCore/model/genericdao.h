@@ -13,7 +13,7 @@ class MIAMCORE_LIBRARY GenericDAO : public QObject
 {
 	Q_OBJECT
 private:
-	QString _checksum, _host, _id;
+	QString _checksum, _host, _id, _title;
 
 public:
 	explicit GenericDAO(QObject *parent = 0);
@@ -30,6 +30,9 @@ public:
 
 	QString id() const;
 	void setId(const QString &id);
+
+	QString title() const;
+	void setTitle(const QString &title);
 };
 
 #endif // GENERICDAO_H

@@ -41,6 +41,8 @@ SqlDatabase::SqlDatabase(QObject *parent)
 		close();
 	}
 
+	qDebug() << "dbPath" << dbPath;
+
 
 	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &SqlDatabase::progressChanged);
 	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &SqlDatabase::saveCoverRef);
@@ -153,22 +155,26 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 	}
 
 	QList<TrackDAO> tracks;
-	QSqlQuery results = exec("SELECT trackNumber, title, album, length, artist, rating, year, icon, id, url FROM playlistTracks WHERE playlistId = " + QString::number(playlistID));
-	while (results.next()) {
-		int i = -1;
-		TrackDAO track;
-		QSqlRecord record = results.record();
-		track.setTrackNumber(record.value(++i).toString());
-		track.setTitle(record.value(++i).toString());
-		track.setAlbum(record.value(++i).toString());
-		track.setLength(record.value(++i).toString());
-		track.setArtist(record.value(++i).toString());
-		track.setRating(record.value(++i).toInt());
-		track.setYear(record.value(++i).toString());
-		track.setIconPath(record.value(++i).toString());
-		track.setId(record.value(++i).toString());
-		track.setUri(record.value(++i).toString());
-		tracks.append(track);
+	QSqlQuery results(*this);
+	results.prepare("SELECT trackNumber, title, album, length, artist, rating, year, icon, id, url FROM playlistTracks WHERE playlistId = ?");
+	results.addBindValue(playlistID);
+	if (results.exec()) {
+		while (results.next()) {
+			int i = -1;
+			TrackDAO track;
+			QSqlRecord record = results.record();
+			track.setTrackNumber(record.value(++i).toString());
+			track.setTitle(record.value(++i).toString());
+			track.setAlbum(record.value(++i).toString());
+			track.setLength(record.value(++i).toString());
+			track.setArtist(record.value(++i).toString());
+			track.setRating(record.value(++i).toInt());
+			track.setYear(record.value(++i).toString());
+			track.setIconPath(record.value(++i).toString());
+			track.setId(record.value(++i).toString());
+			track.setUri(record.value(++i).toString());
+			tracks.append(track);
+		}
 	}
 
 	close();
@@ -248,6 +254,24 @@ void SqlDatabase::updateTablePlaylistWithBackgroundImage(int playlistID, const Q
 	close();
 }
 
+void SqlDatabase::updateTableAlbumWithCoverImage(int albumId, const QString &coverPath)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	/// XXX: split table tracks and create "tracks", "artists" and "albums"
+	/*QSqlQuery update(*this);
+	update.prepare("UPDATE tracks SET cover = ? WHERE id = ?");
+	update.addBindValue(backgroundImagePath);
+	update.addBindValue(playlistID);
+	update.exec();*/
+
+	qDebug() << Q_FUNC_INFO << "not yet implemented";
+
+	close();
+}
+
 /**
  * Update a list of tracks. If track name has changed, will be removed from Library then added right after.
  * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
@@ -267,7 +291,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 		if (pair.second.isEmpty()) {
 			FileHelper fh(pair.first);
 			QSqlQuery updateTrack(*this);
-			updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, discNumber = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE uri = ?");
+			updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, disc = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE uri = ?");
 			updateTrack.addBindValue(fh.album());
 			updateTrack.addBindValue(fh.artist());
 			updateTrack.addBindValue(fh.artistAlbum());
@@ -308,23 +332,83 @@ void SqlDatabase::loadFromFileDB()
 		open();
 	}
 
-	QSqlQuery qLoadFileDB = exec("SELECT * FROM tracks");
-	while (qLoadFileDB.next()) {
-		QSqlRecord r = qLoadFileDB.record();
-		TrackDAO track;
-		int i = -1;
-		track.setArtist(r.value(++i).toString());
-		track.setArtistAlbum(r.value(++i).toString());
-		track.setAlbum(r.value(++i).toString());
-		track.setTitle(r.value(++i).toString());
-		track.setTrackNumber(r.value(++i).toString());
-		track.setDisc(r.value(++i).toString());
-		track.setYear(r.value(++i).toString());
-		track.setUri(r.value(++i).toString());
-		emit trackExtracted(track);
+	qDebug() << Q_FUNC_INFO;
+	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
+	case IP_Artists: {
+
+		// Level 1: Artists
+		QSqlQuery qArtists("SELECT name FROM artists", *this);
+		if (qArtists.exec()) {
+			while (qArtists.next()) {
+				QSqlRecord record = qArtists.record();
+				TrackDAO artistDAO;
+				QString artist = record.value(0).toString();
+				qDebug() << "artist" << artist;
+				artistDAO.setTitle(artist);
+				// emit artistExtracted(artistDAO);
+				//void LibraryTreeView::insertNode(GenericDAO *parent, GenericDAO *node)
+				emit nodeExtracted(&artistDAO);
+
+				// Level 2: Albums
+				QSqlQuery qAlbums(*this);
+				qAlbums.prepare("SELECT name, year, cover FROM albums WHERE artist = ?");
+				qAlbums.addBindValue(artist);
+				if (qAlbums.exec()) {
+					while (qAlbums.next()) {
+						QSqlRecord r = qAlbums.record();
+						AlbumDAO albumDAO;
+						QString album = r.value(0).toString();
+						qDebug() << "album" << album;
+						albumDAO.setTitle(album);
+						albumDAO.setYear(r.value(1).toString());
+						albumDAO.setIconPath(r.value(2).toString());
+
+						// emit albumExtracted(albumDAO);
+						emit nodeExtracted(&albumDAO, 1, artist);
+
+						// Level 3: Tracks
+						QSqlQuery qTracks(*this);
+						qTracks.prepare("SELECT uri, trackNumber, title, artist, album, artistAlbum, length, rating, disc, internalCover FROM tracks WHERE artist = ? AND album = ?");
+						qTracks.addBindValue(artist);
+						qTracks.addBindValue(album);
+						if (qTracks.exec()) {
+							while (qTracks.next()) {
+
+								QSqlRecord r = qTracks.record();
+								TrackDAO trackDAO;
+								int i = -1;
+								trackDAO.setUri(r.value(++i).toString());
+								trackDAO.setTrackNumber(r.value(++i).toString());
+								trackDAO.setTitle(r.value(++i).toString());
+								qDebug() << "track" << r.value(i).toString();
+								trackDAO.setArtist(r.value(++i).toString());
+								trackDAO.setAlbum(r.value(++i).toString());
+								trackDAO.setArtistAlbum(r.value(++i).toString());
+								trackDAO.setLength(r.value(++i).toString());
+								trackDAO.setRating(r.value(++i).toInt());
+								trackDAO.setDisc(r.value(++i).toString());
+								//emit trackExtracted2(trackDAO);
+								emit nodeExtracted(&trackDAO, 2, album);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
-	close();
+	case IP_Albums: {
+
+	}
+	case IP_ArtistsAlbums: {
+
+	}
+	case IP_Years: {
+
+	}
+	}
+
 	emit loaded();
+	close();
 }
 
 /** Safe delete and recreate from scratch (table Tracks only). */
@@ -334,14 +418,20 @@ void SqlDatabase::rebuild()
 
 	// Open Connection
 	open();
-	exec("PRAGMA foreign_keys = ON");
-	exec("PRAGMA synchronous = OFF");
-	exec("PRAGMA journal_mode = MEMORY");
-	exec("DROP TABLE tracks");
-	QString createTable = "CREATE TABLE tracks (artist varchar(255), artistAlbum varchar(255), album varchar(255), " \
-		"title varchar(255), trackNumber INTEGER, discNumber INTEGER, year INTEGER, uri varchar(255) PRIMARY KEY ASC, " \
-		"path varchar(255), coverAbsPath varchar(255), internalCover INTEGER DEFAULT 0)";
-	exec(createTable);
+	QSqlQuery createDb(*this);
+	createDb.exec("PRAGMA foreign_keys = ON");
+	createDb.exec("PRAGMA foreign_keys = ON");
+	createDb.exec("PRAGMA synchronous = OFF");
+	createDb.exec("PRAGMA journal_mode = MEMORY");
+	createDb.exec("DROP TABLE artists");
+	createDb.exec("DROP TABLE albums");
+	createDb.exec("DROP TABLE tracks");
+	createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER, name varchar(255), UNIQUE(name))");
+	createDb.exec("CREATE TABLE IF NOT EXISTS albums (id INTEGER, name varchar(255), year INTEGER, cover varchar(255), artist varchar(255), UNIQUE(name, artist))");
+	QString createTableTracks = "CREATE TABLE IF NOT EXISTS tracks (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, " \
+		"title varchar(255), artist varchar(255), album varchar(255), artistAlbum varchar(255), length INTEGER, " \
+		"rating INTEGER, disc INTEGER, internalCover INTEGER DEFAULT 0)";
+	createDb.exec(createTableTracks);
 
 	transaction();
 
@@ -364,7 +454,7 @@ void SqlDatabase::load()
 void SqlDatabase::saveCoverRef(const QString &coverPath)
 {
 	QFileInfo fileInfo(coverPath);
-	QSqlQuery updateCoverPath("UPDATE tracks SET coverAbsPath = ? WHERE path = ?", *this);
+	QSqlQuery updateCoverPath("UPDATE albums SET cover = ? WHERE path = ?", *this);
 	updateCoverPath.addBindValue(QDir::toNativeSeparators(fileInfo.absoluteFilePath()));
 	updateCoverPath.addBindValue(QDir::toNativeSeparators(fileInfo.absolutePath()));
 	updateCoverPath.exec();
@@ -376,7 +466,7 @@ void SqlDatabase::loadRemoteTracks(const QList<TrackDAO> &tracks)
 	qDebug() << Q_FUNC_INFO << tracks.size();
 	foreach (TrackDAO track, tracks) {
 		qDebug() << track.title();
-		emit trackExtracted(track);
+		emit trackExtracted2(track);
 	}
 }
 
@@ -389,47 +479,61 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	FileHelper fh(absFilePath);
 	if (fh.isValid()) {
 		TrackDAO track;
-		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO tracks (uri, album, artist, artistAlbum, discNumber, internalCover, path, title, trackNumber, year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		//QString nativeAbsPath = QDir::toNativeSeparators(absFilePath);
-		//insert.addBindValue(nativeAbsPath);
-		//track.setUri(nativeAbsPath);
-		insert.addBindValue("file://" + absFilePath);
+		QSqlQuery insertTrack(*this);
+
+		insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artist, album, artistAlbum, length, rating, disc, internalCover) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insertTrack.addBindValue("file://" + absFilePath);
 		track.setUri("file://" + absFilePath);
 
-		QString album = fh.album();
-		insert.addBindValue(album);
-		track.setAlbum(album);
-
-		QString artist = fh.artist();
-		insert.addBindValue(artist);
-		track.setArtist(artist);
-
-		QString artistAlbum = fh.artistAlbum();
-		insert.addBindValue(artistAlbum);
-		track.setArtistAlbum(artistAlbum);
-
-		int dn = fh.discNumber();
-		insert.addBindValue(dn);
-		track.setDisc(QString::number(dn));
-
-		insert.addBindValue(fh.hasCover());
-		insert.addBindValue(QDir::toNativeSeparators(fh.fileInfo().absolutePath()));
-
-		QString title = fh.title();
-		insert.addBindValue(title);
-		track.setTitle(title);
-
 		QString tn = fh.trackNumber();
-		insert.addBindValue(tn.toInt());
+		insertTrack.addBindValue(tn.toInt());
 		track.setTrackNumber(tn);
 
-		QString year = fh.year();
-		insert.addBindValue(year.toInt());
-		track.setYear(year);
+		QString title = fh.title();
+		insertTrack.addBindValue(title);
+		track.setTitle(title);
 
-		insert.exec();
-		emit trackExtracted(track);
+		QString artist = fh.artist();
+		insertTrack.addBindValue(artist);
+		track.setArtist(artist);
+
+		QString album = fh.album();
+		insertTrack.addBindValue(album);
+		track.setAlbum(album);
+
+		QString artistAlbum = fh.artistAlbum();
+		insertTrack.addBindValue(artistAlbum);
+		track.setArtistAlbum(artistAlbum);
+
+		QString length = fh.length();
+		insertTrack.addBindValue(length);
+		track.setLength(length);
+
+		int rating = fh.rating();
+		insertTrack.addBindValue(rating);
+		track.setRating(rating);
+
+		int dn = fh.discNumber();
+		insertTrack.addBindValue(dn);
+		track.setDisc(QString::number(dn));
+
+		insertTrack.addBindValue(fh.hasCover());
+
+		if (insertTrack.exec()) {
+			QSqlQuery insertAlbum(*this);
+			insertAlbum.prepare("INSERT OR IGNORE INTO albums (name, year, artist) VALUES (?, ?, ?)");
+			insertAlbum.addBindValue(fh.album());
+			insertAlbum.addBindValue(fh.year());
+			QString artist = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
+			insertAlbum.addBindValue(artist);
+			insertAlbum.exec();
+
+			QSqlQuery insertArtist(*this);
+			insertArtist.prepare("INSERT OR IGNORE INTO artists (name) VALUES (?)");
+			insertArtist.addBindValue(artist);
+			insertArtist.exec();
+		}
+		emit trackExtracted2(track);
 	} else {
 		qDebug() << "INVALID FILE FOR:" << absFilePath;
 	}

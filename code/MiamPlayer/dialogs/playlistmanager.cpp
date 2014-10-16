@@ -3,6 +3,7 @@
 #include <filehelper.h>
 #include <settingsprivate.h>
 #include "starrating.h"
+#include "styling/miamstyleditemdelegate.h"
 
 #include <QDirIterator>
 #include <QFileDialog>
@@ -53,6 +54,8 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 
 	unsavedPlaylists->setModel(_unsavedPlaylistModel);
 	savedPlaylists->setModel(_savedPlaylistModel);
+	/// XXX: MiamStyledItemDelegate should be improved!
+	// savedPlaylists->setItemDelegate(new MiamStyledItemDelegate(savedPlaylists, false));
 
 	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromUnsaved);
 	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromSaved);

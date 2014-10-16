@@ -76,7 +76,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 				if (treeView == treeView_2) {
 					treeView_2->clearSelection();
 					int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole + 1).toInt();
-					LibraryTreeView::ItemType insertPolicy = (LibraryTreeView::ItemType) i;
+					SqlDatabase::InsertPolicy insertPolicy = (SqlDatabase::InsertPolicy) i;
 					// Rebuild library only if the click was on another treeview
 					if (insertPolicy != settings->value("insertPolicy").toInt()) {
 						settings->setValue("insertPolicy", insertPolicy);
@@ -87,23 +87,6 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 			this->close();
 		});
 	}
-
-	/*QTreeView *initialTreeView;
-	switch (settings->value("insertPolicy").toInt()) {
-	case LibraryTreeView::IT_Album:
-		initialTreeView = _ui->albumTreeView;
-		break;
-	case LibraryTreeView::IT_ArtistAlbum:
-		initialTreeView = _ui->artistAlbumTreeView;
-		break;
-	case LibraryTreeView::IT_Year:
-		initialTreeView = _ui->yearTreeView;
-		break;
-	case LibraryTreeView::IT_Artist:
-	default:
-		initialTreeView = _ui->artistTreeView;
-		break;
-	}*/
 }
 
 QString LibraryOrderDialog::headerValue() const

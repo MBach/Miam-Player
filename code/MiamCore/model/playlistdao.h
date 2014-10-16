@@ -13,7 +13,7 @@ class MIAMCORE_LIBRARY PlaylistDAO : public GenericDAO
 {
 	Q_OBJECT
 private:
-	QString _background, _iconPath, _length, _title;
+	QString _background, _iconPath, _length;
 
 public:
 	explicit PlaylistDAO(QObject *parent = 0);
@@ -30,9 +30,6 @@ public:
 
 	QString length() const;
 	void setLength(const QString &length);
-
-	QString title() const;
-	void setTitle(const QString &title);
 };
 
 /** Register this class to convert in QVariant. */

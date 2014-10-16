@@ -36,8 +36,8 @@ class LibraryTreeView : public TreeView
 	Q_OBJECT
 
 private:
-	LibraryFilterProxyModel *proxyModel;
-	CircleProgressBar *circleProgressBar;
+	LibraryFilterProxyModel *_proxyModel;
+	CircleProgressBar *_circleProgressBar;
 	QPoint currentPos;
 	QMenu *properties;
 
@@ -148,7 +148,14 @@ public slots:
 private slots:
 	void endPopulateTree();
 
-	void insertTrack(const TrackDAO &t);
+	//void insertTrack(const TrackDAO &t);
+
+	void insertNode(GenericDAO *node, int level, const QString &parent);
+	void insertNodes(const QList<GenericDAO *> &nodes, int level, const QString &parent);
+	/*void insertArtist(const TrackDAO &artist);
+	void insertAlbum(const AlbumDAO &album);
+	void insertTrack2(const TrackDAO &track);*/
+
 
 signals:
 	/** (Dis|En)able covers.*/

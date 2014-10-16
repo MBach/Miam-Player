@@ -2,6 +2,7 @@
 #define SQLDATABASE_H
 
 #include "../miamcore_global.h"
+#include "albumdao.h"
 #include "trackdao.h"
 #include "playlistdao.h"
 
@@ -29,8 +30,15 @@ private:
 	/** Object than can iterate throught the FileSystem for Audio files. */
 	MusicSearchEngine *_musicSearchEngine;
 
+	Q_ENUMS(extension)
+
 public:
 	explicit SqlDatabase(QObject *parent = NULL);
+
+		enum InsertPolicy { IP_Artists			= 0,
+							IP_Albums			= 1,
+							IP_ArtistsAlbums	= 2,
+							IP_Years			= 3 };
 
 	virtual ~SqlDatabase() {}
 
@@ -47,6 +55,7 @@ public:
 
 	bool playlistHasBackgroundImage(int playlistID);
 	void updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath);
+	void updateTableAlbumWithCoverImage(int albumId, const QString &coverPath);
 
 	/**
 	 * Update a list of tracks. If track name has changed, it will be removed from Library then added right after.
@@ -78,7 +87,12 @@ signals:
 	void coverWasUpdated(const QFileInfo &);
 	void loaded();
 	void progressChanged(const int &);
-	void trackExtracted(const TrackDAO &);
+	// void trackExtracted(const TrackDAO &);
+
+	void artistExtracted(const TrackDAO &);
+	void albumExtracted(const AlbumDAO &);
+	void trackExtracted2(const TrackDAO &);
+	void nodeExtracted(GenericDAO *node, int level = 0, const QString &parent = QString());
 };
 
 #endif // SQLDATABASE_H

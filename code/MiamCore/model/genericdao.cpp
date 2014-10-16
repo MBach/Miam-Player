@@ -10,6 +10,7 @@ GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
 	_checksum = remoteObject.checksum();
 	_host = remoteObject.host();
 	_id = remoteObject.id();
+	_title = remoteObject.title();
 }
 
 GenericDAO::~GenericDAO()
@@ -23,3 +24,6 @@ void GenericDAO::setHost(const QString &host) { _host = host; }
 
 QString GenericDAO::id() const { return _id; }
 void GenericDAO::setId(const QString &id) { _id = id; }
+
+QString GenericDAO::title() const { return _title; }
+void GenericDAO::setTitle(const QString &title) { _title = title; }

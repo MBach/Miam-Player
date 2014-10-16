@@ -23,6 +23,29 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	}
 }
 
+QStandardItem* LibraryFilterProxyModel::find(int level, const QString &parent) const
+{
+	// qDebug() << Q_FUNC_INFO << level;
+	for (int i = 0; i < rowCount(); i++) {
+		// qDebug() << "find" << index(i, 0).data().toString();
+		QModelIndex ind = index(i, 0);
+		if (ind.data().toString() == parent) {
+			// qDebug() << "item found !";
+			QModelIndex ind2 = mapToSource(ind);
+			const QStandardItemModel *m = static_cast<const QStandardItemModel*>(ind2.model());
+			// qDebug() << "item found !" << m;
+			return m->itemFromIndex(ind2);
+		}
+		for (int j = 0; j < rowCount(ind); j++) {
+			// this->p_find();
+			// qDebug() << "ICI?" << index(j, 0, ind).data().toString();
+			if (level > 0)
+				return this->find(level - 1, parent);
+		}
+	}
+	return NULL;
+}
+
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	if (filterAcceptsRowItself(sourceRow, sourceParent)) {
@@ -90,7 +113,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		if (rType == LibraryTreeView::IT_Album) {
 			int lYear = left->data(LibraryTreeView::DF_Year).toInt();
 			int rYear = right->data(LibraryTreeView::DF_Year).toInt();
-			if (SettingsPrivate::getInstance()->value("insertPolicy").toInt() == LibraryTreeView::IT_Artist && lYear >= 0 && rYear >= 0) {
+			if (SettingsPrivate::getInstance()->value("insertPolicy").toInt() == SqlDatabase::IP_Artists && lYear >= 0 && rYear >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
 					if (lYear == rYear) {
 						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);

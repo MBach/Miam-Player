@@ -49,18 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	_searchDialog = new SearchDialog(_db, this);
 }
 
-void MainWindow::appendToCurrentPlaylist(const QStringList &files)
-{
-	QList<TrackDAO> tracks;
-	foreach (QString file, files) {
-		TrackDAO track;
-		track.setUri(file);
-		tracks.append(track);
-	}
-
-	tabPlaylists->insertItemsToPlaylist(-1, tracks);
-}
-
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
@@ -240,8 +228,6 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::aboutToInsertToPlaylist, this, [=](int rowIndex, const QList<TrackDAO> &tracks) {
-			TrackDAO t = tracks.first();
-			qDebug() << "t.title()" << t.title();
 			tabPlaylists->insertItemsToPlaylist(rowIndex, tracks);
 		});
 		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<TrackDAO> &tracks) {
@@ -480,31 +466,30 @@ void MainWindow::moveEvent(QMoveEvent *event)
 void MainWindow::processArgs(const QStringList &args)
 {
 	// First arg is the location of the application
-	// Second arg is generally what to do. Let's begin with a single command: '-f' and files
-	qDebug() << "MiamPlayer called with command:" << args;
 	if (args.count() > 2) {
 		QString command = args.at(1);
+		QList<TrackDAO> tracks;
+
+		auto convertArgs = [&args, &tracks] () -> void {
+			for (int i = 2; i < args.count(); i++) {
+				TrackDAO track;
+				track.setUri(args.at(i));
+				tracks.append(track);
+			}
+		};
+
 		if (command == "-f") {			// Append to playlist
-			QStringList files;
-			for (int i = 2; i < args.count(); i++) {
-				files << args.at(i);
-			}
-			this->appendToCurrentPlaylist(files);
+			convertArgs();
+			tabPlaylists->insertItemsToPlaylist(-1, tracks);
 		} else if (command == "-n") {	// New playlist
-			QStringList files;
-			for (int i = 2; i < args.count(); i++) {
-				files << args.at(i);
-			}
+			convertArgs();
 			Playlist *p = tabPlaylists->addPlaylist();
 			if (p) {
-				this->appendToCurrentPlaylist(files);
+				tabPlaylists->insertItemsToPlaylist(-1, tracks);
 			}
 		} else if (command == "-t") {	// Tag Editor
-			QStringList files;
-			for (int i = 2; i < args.count(); i++) {
-				files << args.at(i);
-			}
-			tagEditor->addItemsToEditor(files);
+			convertArgs();
+			tagEditor->addItemsToEditor(tracks);
 			showTagEditor();
 		} else if (command == "-l") {	// Library
 

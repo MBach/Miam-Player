@@ -447,7 +447,7 @@ QString FileHelper::trackNumber() const
 QString FileHelper::album() const
 {
 	if (_file && _file->tag()) {
-		return QString(_file->tag()->album().toCString(true));
+		return QString(_file->tag()->album().toCString(true)).trimmed();
 	} else {
 		return QString("Error reading album");
 	}
@@ -465,7 +465,7 @@ QString FileHelper::length() const
 QString FileHelper::artist() const
 {
 	if (_file && _file->tag()) {
-		return QString(_file->tag()->artist().toCString(true));
+		return QString(_file->tag()->artist().toCString(true)).trimmed();
 	} else {
 		return QString("Error reading artist");
 	}

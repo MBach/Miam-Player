@@ -143,13 +143,16 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 
 	// Add an icon on the right if album is from some remote location
 	bool isRemote = item->data(LibraryTreeView::DF_IsRemote).toBool();
+	int offsetWidth = 0;
 	if (isRemote) {
 		TrackDAO album = item->data(LibraryTreeView::DF_DAO).value<TrackDAO>();
-		QPoint topLeftRemote(option.rect.x() + option.rect.width() - (24 + 4), (option.rect.height() - 24)/ 2 + option.rect.y() + 2);
-		QPoint bottomRightRemote(option.rect.x() + option.rect.width() - 4, option.rect.height());
-		QRect iconRemoteRect(topLeftRemote, bottomRightRemote);
+		QRect iconRemoteRect(option.rect.x() + option.rect.width() - (24 + 4),
+							 (option.rect.height() - 24)/ 2 + option.rect.y() + 2,
+							 24,
+							 24);
 		QPixmap iconRemote(album.iconPath());
 		painter->drawPixmap(iconRemoteRect, iconRemote);
+		offsetWidth = 24;
 	}
 
 
@@ -160,8 +163,10 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	if (settings->isCoversEnabled()) {
 		// It's possible to have missing covers in your library, so we need to keep alignment.
 		if (QGuiApplication::isLeftToRight()) {
-			QPoint topLeft(option.rect.x() + coverSize + 5, option.rect.y());
-			rectText = QRect(topLeft, option.rect.bottomRight());
+			rectText = QRect(option.rect.x() + coverSize + 5,
+							 option.rect.y(),
+							 option.rect.width() - (coverSize + 7) - offsetWidth,
+							 option.rect.height() - 1);
 		} else {
 			rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - coverSize - 5, option.rect.height());
 		}

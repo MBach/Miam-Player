@@ -31,9 +31,6 @@ public:
 	QString source() const;
 	void setSource(const QString &source);
 
-	QString title() const;
-	void setTitle(const QString &title);
-
 	QString uri() const;
 	void setUri(const QString &uri);
 

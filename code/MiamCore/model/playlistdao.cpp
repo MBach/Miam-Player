@@ -10,7 +10,6 @@ PlaylistDAO::PlaylistDAO(const PlaylistDAO &remotePlaylist)
 	_background = remotePlaylist.background();
 	_iconPath = remotePlaylist.iconPath();
 	_length = remotePlaylist.length();
-	_title = remotePlaylist.title();
 }
 
 PlaylistDAO::~PlaylistDAO()
@@ -24,6 +23,3 @@ void PlaylistDAO::setIconPath(const QString &iconPath) { _iconPath = iconPath; }
 
 QString PlaylistDAO::length() const { return _length; }
 void PlaylistDAO::setLength(const QString &length) { _length = length; }
-
-QString PlaylistDAO::title() const { return _title; }
-void PlaylistDAO::setTitle(const QString &title) { _title = title; }

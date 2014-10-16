@@ -2,6 +2,7 @@
 #define LIBRARYFILTERPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
+#include <QStandardItem>
 
 /**
  * \brief		The LibraryFilterProxyModel class is used to filter Library by looking in all items
@@ -17,6 +18,8 @@ private:
 	/** Top levels items are specific items, like letters 'A', 'B', ... in the library. Each letter has a reference to all items beginning with this letter. */
 	QMultiHash<QModelIndex, QModelIndex> *_topLevelItems;
 
+	// QList<QList<QModelIndex>> _items;
+
 public:
 	explicit LibraryFilterProxyModel(QObject *parent = 0);
 
@@ -24,6 +27,8 @@ public:
 
 	/** Redefined to override Qt::FontRole. */
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+	QStandardItem* find(int level, const QString &parent) const;
 
 protected:
 	/** Redefined from QSortFilterProxyModel. */
