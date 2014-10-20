@@ -28,7 +28,7 @@ public:
 	/** Redefined to override Qt::FontRole. */
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-	QStandardItem* find(int level, const QString &parent) const;
+	QStandardItem* find(int level, const QString &nodeText) const;
 
 protected:
 	/** Redefined from QSortFilterProxyModel. */

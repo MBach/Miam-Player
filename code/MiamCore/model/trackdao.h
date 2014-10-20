@@ -17,7 +17,7 @@ private:
 	int _rating;
 
 public:
-	explicit TrackDAO(QObject *parent = 0);
+	explicit TrackDAO(QObject *parentNode = 0);
 
 	TrackDAO(const TrackDAO &remoteTrack);
 
@@ -56,6 +56,22 @@ public:
 	QString year() const;
 	void setYear(const QString &year);
 };
+
+/** Overloaded to be able to use with QVariant. */
+inline QDataStream & operator<<(QDataStream &out, const TrackDAO &track)
+{
+	out << track.uri();
+	return out;
+}
+
+/** Overloaded to be able to use with QVariant. */
+inline QDataStream & operator>>(QDataStream &in, TrackDAO &track)
+{
+	QString f;
+	in >> f;
+	track.setUri(f);
+	return in;
+}
 
 /** Register this class to convert in QVariant. */
 Q_DECLARE_METATYPE(TrackDAO)

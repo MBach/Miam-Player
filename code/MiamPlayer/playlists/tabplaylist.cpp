@@ -177,8 +177,6 @@ Playlist* TabPlaylist::addPlaylist()
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
-	//p->hideColumn(Playlist::COL_ID);
-	//p->hideColumn(Playlist::COL_URI);
 	p->hideColumn(Playlist::COL_TRACK_DAO);
 	p->setAcceptDrops(true);
 	p->installEventFilter(this);
@@ -262,18 +260,6 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<TrackDAO> &tra
 {
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
-}
-
-/** Overloaded function. */
-void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &files)
-{
-	QList<TrackDAO> tracks;
-	foreach (QString file, files) {
-		TrackDAO track;
-		track.setUri(file);
-		tracks.append(track);
-	}
-	this->insertItemsToPlaylist(rowIndex, tracks);
 }
 
 void TabPlaylist::moveTracksDown()

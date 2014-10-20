@@ -273,10 +273,12 @@ void MediaPlayer::play()
 	if (!_playlist) {
 		return;
 	}
+	qDebug() << "here 1";
 	QMediaContent mc = _playlist->media(_playlist->currentIndex());
 	if (mc.isNull()) {
 		return;
 	}
+	qDebug() << "here 2" << mc.canonicalUrl().isLocalFile();
 
 	// Everything is splitted in 2: local actions and remote actions
 	// Is it the good way to proceed?
@@ -308,6 +310,7 @@ void MediaPlayer::play()
 			remotePlayer->play(mc.canonicalUrl());
 		}
 	}
+	qDebug() << "here 3";
 }
 
 /** Stop current track in the playlist. */

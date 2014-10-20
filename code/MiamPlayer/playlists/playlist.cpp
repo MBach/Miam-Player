@@ -156,6 +156,7 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 /** Insert remote medias to playlist. */
 void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
+	qDebug() << Q_FUNC_INFO;
 	if (rowIndex == -1) {
 		rowIndex = _playlistModel->rowCount();
 	}

@@ -36,26 +36,48 @@ class LibraryTreeView : public TreeView
 	Q_OBJECT
 
 private:
+	/** This view uses a proxy to specify how items in the Tree should be ordered together. */
 	LibraryFilterProxyModel *_proxyModel;
-	CircleProgressBar *_circleProgressBar;
-	QPoint currentPos;
-	QMenu *properties;
 
+	/**
+	 * DEPRECATED: should be replaced with an horizontal progressbar in Modern UI style.
+	 * However, future class and this class are not platform independant.
+	 */
+	CircleProgressBar *_circleProgressBar;
+
+	/// XXX: I think displaying stars directly in the library should be done in a future release.
+	/// This idea is a quite good one, but it raises lots of new questions.
+	// QPoint currentPos;
+
+	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
+	 * Tag Editor, and custom plugin defined actions. */
+	QMenu *_properties;
+
+	/** The model used by this treeView is a simple QStandardItemModel. Hard work has been delegated to Proxy and ItemDelegate for the rending. */
 	QStandardItemModel* _libraryModel;
+
+	/** Link to the database to be able to integrate new tracks in the tree. */
 	SqlDatabase *_db;
+
+	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
 	LibraryItemDelegate *_itemDelegate;
+
+	/** This timer is used to animate album cover when one is scrolling.
+	 * It improves reactivity of the UI by temporarily disabling painting events.
+	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
 	QTimer *_timer;
 
-	QHash<QString, ArtistItem*> _artists;
-	QHash<QPair<ArtistItem*, QString>, AlbumItem*> _albums;
-	QHash<QPair<AlbumItem*, int>, DiscItem*> _discNumbers;
-	QHash<QString, AlbumItem*> _albums2;
-	QHash<int, YearItem*> _years;
+	/// TODO
+	QMap<GenericDAO*, QStandardItem*> _map;
+
+	/// TODO
 	QHash<QString, LetterItem*> _letters;
 
 	// Letter L returns all Artists (e.g.) starting with L
+	/// FIXME
 	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
 
+	/// TODO
 	JumpToWidget *_jumpToWidget;
 
 	Q_ENUMS(ItemType)
@@ -75,13 +97,13 @@ public:
 
 	virtual void init(SqlDatabase *db);
 
-	enum ItemType { IT_Artist		= 0,
-					IT_Album		= 1,
-					IT_ArtistAlbum	= 2,
-					IT_Disc			= 3,
-					IT_Letter		= 4,
-					IT_Track		= 5,
-					IT_Year			= 6 };
+	enum ItemType { IT_Artist		= QMetaType::User + 1,
+					IT_Album		= QMetaType::User + 2,
+					IT_ArtistAlbum	= QMetaType::User + 3,
+					IT_Disc			= QMetaType::User + 4,
+					IT_Letter		= QMetaType::User + 5,
+					IT_Track		= QMetaType::User + 6,
+					IT_Year			= QMetaType::User + 7 };
 
 	// User defined data types (item->setData(QVariant, Field);)
 	enum DataField { DF_URI					= Qt::UserRole + 1,
@@ -104,15 +126,13 @@ protected:
 	virtual void drawRow(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
-	virtual void mouseDoubleClickEvent(QMouseEvent *event);
+	///TODO in a future release
+	///virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
 	virtual void paintEvent(QPaintEvent *);
 
 private:
 	void bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath);
-
-	// Thanks StackOverflow for this algorithm (works like a charm without any changes)
-	QImage blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly = false) const;
 
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
@@ -121,8 +141,6 @@ private:
 	virtual int countAll(const QModelIndexList &indexes) const;
 
 	LetterItem *insertLetter(const QString &letters);
-
-	void updateCover(const QFileInfo &coverFileInfo);
 
 	void repaintIcons();
 
@@ -148,14 +166,8 @@ public slots:
 private slots:
 	void endPopulateTree();
 
-	//void insertTrack(const TrackDAO &t);
-
-	void insertNode(GenericDAO *node, int level, const QString &parent);
-	void insertNodes(const QList<GenericDAO *> &nodes, int level, const QString &parent);
-	/*void insertArtist(const TrackDAO &artist);
-	void insertAlbum(const AlbumDAO &album);
-	void insertTrack2(const TrackDAO &track);*/
-
+	void insertNode(GenericDAO *node);
+	void updateNode(GenericDAO *node);
 
 signals:
 	/** (Dis|En)able covers.*/

@@ -68,7 +68,8 @@ SOURCES += \
     library/discitem.cpp \
     library/letteritem.cpp \
     library/trackitem.cpp \
-    library/yearitem.cpp
+    library/yearitem.cpp \
+    styling/imageutils.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -139,7 +140,8 @@ HEADERS += \
     library/discitem.h \
     library/letteritem.h \
     library/trackitem.h \
-    library/yearitem.h
+    library/yearitem.h \
+    styling/imageutils.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

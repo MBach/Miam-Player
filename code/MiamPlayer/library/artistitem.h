@@ -7,7 +7,7 @@
 class ArtistItem : public QStandardItem
 {
 public:
-	ArtistItem(const QString &text);
+	ArtistItem(const ArtistDAO *dao);
 
 	virtual int type() const;
 };

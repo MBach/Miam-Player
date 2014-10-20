@@ -7,10 +7,10 @@ class MIAMCORE_LIBRARY AlbumDAO : public GenericDAO
 {
 	Q_OBJECT
 private:
-	QString _artist, _disc, _iconPath, _length, _source, _title, _uri, _year;
+	QString _artist, _disc, _cover, _length, _source, _uri, _year;
 
 public:
-	explicit AlbumDAO(QObject *parent = 0);
+	explicit AlbumDAO(QObject *parentNode = 0);
 
 	AlbumDAO(const AlbumDAO &remoteAlbum);
 
@@ -22,8 +22,8 @@ public:
 	QString disc() const;
 	void setDisc(const QString &disc);
 
-	QString iconPath() const;
-	void setIconPath(const QString &iconPath);
+	QString cover() const;
+	void setCover(const QString &cover);
 
 	QString length() const;
 	void setLength(const QString &length);

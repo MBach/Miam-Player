@@ -25,6 +25,9 @@ int main(int argc, char *argv[])
 {
 	Q_INIT_RESOURCE(mp);
 
+	qRegisterMetaType<GenericDAO>();
+	qRegisterMetaType<TrackDAO>();
+	qRegisterMetaTypeStreamOperators<TrackDAO>("TrackDAO");
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
@@ -38,7 +41,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	app.setStyle(new MiamStyle());
+	app.setStyle(new MiamStyle);
 	MainWindow *window = new MainWindow;
 	logBrowser = new LogBrowser;
 	QObject::connect(window->actionShowDebug, &QAction::triggered, [=]() {

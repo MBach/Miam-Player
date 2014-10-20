@@ -43,9 +43,9 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
-		qDebug() << track.uri();
 		if (track.uri().startsWith("file")) {
-			this->insertMedia(rowIndex, FileHelper(track.uri()));
+			_mediaPlaylist->insertMedia(rowIndex, QMediaContent(QUrl::fromLocalFile(track.uri().mid(7))));
+			this->insertMedia(rowIndex++, FileHelper(track.uri()));
 			continue;
 		}
 

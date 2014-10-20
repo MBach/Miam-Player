@@ -61,7 +61,8 @@ SOURCES += \
     settings.cpp \
     settingsprivate.cpp \
     timelabel.cpp \
-    model/albumdao.cpp
+    model/albumdao.cpp \
+    model/artistdao.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -86,4 +87,5 @@ HEADERS += interfaces/basicplugin.h \
     settings.h \
     settingsprivate.h \
     timelabel.h \
-    model/albumdao.h
+    model/albumdao.h \
+    model/artistdao.h

@@ -36,60 +36,67 @@ void MusicSearchEngine::doSearch()
 		savedLocations.append(location);
 	}
 
-	int fileNumber = 0;
+	int entryCount = 0;
 	// QDirIterator class is very fast to scan large directories
-	//QMultiHash<QDir, QDir> dirs;
 	foreach (QDir location, savedLocations) {
-		QDirIterator it(location, QDirIterator::Subdirectories);
+		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
-			//if (it.fileInfo().isDir()) {
-				//QDir d = it.fileInfo().dir();
-				//QFileInfoList fil = d.entryInfoList(QDir::AllDirs | QDir::Hidden | QDir::NoDotAndDotDot);
-				//qDebug() << "observing" << it.filePath();
-				//dirs.insert();
-			//}
-			fileNumber++;
+			entryCount++;
 		}
 	}
 
-	int currentFile = 0;
+	int currentEntry = 0;
 	int percent = 1;
-	bool aCoverWasFound = false;
-	QString coverPath;
+	bool atLeastOneAudioFileWasFound = false;
+	bool isNewDirectory = false;
 
-	///XXX: improve with setNameFilters (*.mp3 != entry in FileHelper::suffixes())
+	QString coverPath;
+	QString lastFileScannedNextToCover;
+
 	foreach (QDir location, savedLocations) {
-		QDirIterator it(location, QDirIterator::Subdirectories);
+		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
-			QString path = it.next();
-			QFileInfo qFileInfo(path);
-			currentFile++;
-			if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
-				coverPath = qFileInfo.absoluteFilePath();
-				aCoverWasFound = true;
-			} else if (FileHelper::suffixes().contains(qFileInfo.suffix())) {
-				emit scannedFile(qFileInfo.absoluteFilePath());
-			} else { // unknown filetype, could be a directory, or anything else
-				// if it's a directory, but excluding special folders, like "." and ".." then
-				// we have to be sure that a we have found a cover before scanning a new directory
-				if (qFileInfo.isDir() && (!qFileInfo.filePath().endsWith("..") && !qFileInfo.filePath().endsWith("."))) {
-					if (aCoverWasFound) {
-						emit scannedCover(coverPath);
-						aCoverWasFound = false;
-					}
+			QString entry = it.next();
+			// qDebug() << "entry" << entry;
+			QFileInfo qFileInfo(entry);
+			currentEntry++;
+
+			// Directory has changed: we can discard cover
+			if (qFileInfo.isDir()) {
+				// qDebug() << "directory changed";
+				if (!coverPath.isEmpty() && !lastFileScannedNextToCover.isEmpty()) {
+					// qDebug() << "cover found (sent now!)" << coverPath << lastFileScannedNextToCover;
+					emit scannedCover(coverPath, lastFileScannedNextToCover);
+					coverPath.clear();
 				}
+				isNewDirectory = true;
+				atLeastOneAudioFileWasFound = false;
+				lastFileScannedNextToCover.clear();
+				continue;
+			} else if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
+				if (atLeastOneAudioFileWasFound) {
+					coverPath = qFileInfo.absoluteFilePath();
+					emit scannedCover(coverPath, lastFileScannedNextToCover);
+					// qDebug() << "cover found" << coverPath;
+					coverPath.clear();
+				} else if (isNewDirectory) {
+					coverPath = qFileInfo.absoluteFilePath();
+					// qDebug() << "cover found (not sent)" << coverPath;
+				}
+			} else {
+				emit scannedFile(qFileInfo.absoluteFilePath());
+				atLeastOneAudioFileWasFound = true;
+				lastFileScannedNextToCover = qFileInfo.absoluteFilePath();
+				isNewDirectory = false;
 			}
-			if (currentFile * 100 / fileNumber > percent) {
-				percent = currentFile * 100 / fileNumber;
+
+			if (currentEntry * 100 / entryCount > percent) {
+				percent = currentEntry * 100 / entryCount;
 				emit progressChanged(percent);
 			}
 		}
-		// After the while loop, it's possible to have one more cover to send
-		if (aCoverWasFound) {
-			emit scannedCover(coverPath);
-			aCoverWasFound = false;
-		}
+		atLeastOneAudioFileWasFound = false;
 	}
 	emit searchHasEnded();
 }

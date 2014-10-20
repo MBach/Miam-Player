@@ -145,12 +145,12 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	bool isRemote = item->data(LibraryTreeView::DF_IsRemote).toBool();
 	int offsetWidth = 0;
 	if (isRemote) {
-		TrackDAO album = item->data(LibraryTreeView::DF_DAO).value<TrackDAO>();
+		AlbumDAO album = item->data(LibraryTreeView::DF_DAO).value<AlbumDAO>();
 		QRect iconRemoteRect(option.rect.x() + option.rect.width() - (24 + 4),
 							 (option.rect.height() - 24)/ 2 + option.rect.y() + 2,
 							 24,
 							 24);
-		QPixmap iconRemote(album.iconPath());
+		QPixmap iconRemote(album.icon());
 		painter->drawPixmap(iconRemoteRect, iconRemote);
 		offsetWidth = 24;
 	}

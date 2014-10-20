@@ -7,7 +7,7 @@
 class AlbumItem : public QStandardItem
 {
 public:
-	explicit AlbumItem(const QString &text = 0);
+	explicit AlbumItem(const AlbumDAO *dao);
 
 	virtual int type() const;
 };

@@ -1,8 +1,10 @@
 #include "artistitem.h"
 
-ArtistItem::ArtistItem(const QString &text)
-	: QStandardItem(text)
-{}
+ArtistItem::ArtistItem(const ArtistDAO *dao)
+	: QStandardItem(dao->title())
+{
+	setData(dao->titleNormalized(), LibraryTreeView::DF_NormalizedString);
+}
 
 int ArtistItem::type() const
 {

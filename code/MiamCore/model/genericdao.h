@@ -13,10 +13,12 @@ class MIAMCORE_LIBRARY GenericDAO : public QObject
 {
 	Q_OBJECT
 private:
-	QString _checksum, _host, _id, _title;
+	QString _checksum, _host, _icon, _id, _title, _titleNormalized;
+
+	GenericDAO *_parent;
 
 public:
-	explicit GenericDAO(QObject *parent = 0);
+	explicit GenericDAO(QObject *parentNode = 0);
 
 	GenericDAO(const GenericDAO &remoteObject);
 
@@ -28,11 +30,23 @@ public:
 	QString host() const;
 	void setHost(const QString &host);
 
+	QString icon() const;
+	void setIcon(const QString &icon);
+
 	QString id() const;
 	void setId(const QString &id);
 
+	void setParentNode(GenericDAO *parentNode);
+	GenericDAO* parentNode() const;
+
 	QString title() const;
 	void setTitle(const QString &title);
+
+	QString titleNormalized() const;
+	void setTitleNormalized(const QString &titleNormalized);
 };
+
+/** Register this class to convert in QVariant. */
+Q_DECLARE_METATYPE(GenericDAO)
 
 #endif // GENERICDAO_H

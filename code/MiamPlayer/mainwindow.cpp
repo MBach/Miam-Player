@@ -53,7 +53,13 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
 	if (onlyFiles) {
-		tabPlaylists->insertItemsToPlaylist(-1, dragDropDialog->externalLocations());
+		QList<TrackDAO> tracks;
+		foreach (QString file, dragDropDialog->externalLocations()) {
+			TrackDAO track;
+			track.setUri(file);
+			tracks.append(track);
+		}
+		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	} else {
 		QList<QDir> dirs;
 		foreach (QString location, dragDropDialog->externalLocations()) {
@@ -227,9 +233,7 @@ void MainWindow::setupActions()
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
-		connect(tab, &TreeView::aboutToInsertToPlaylist, this, [=](int rowIndex, const QList<TrackDAO> &tracks) {
-			tabPlaylists->insertItemsToPlaylist(rowIndex, tracks);
-		});
+		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
 		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<TrackDAO> &tracks) {
 			this->showTagEditor();
 			tagEditor->addItemsToEditor(tracks);
@@ -568,7 +572,13 @@ void MainWindow::openFiles()
 	} else {
 		QFileInfo fileInfo(files.first());
 		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
-		tabPlaylists->insertItemsToPlaylist(-1, files);
+		QList<TrackDAO> tracks;
+		foreach (QString file, files) {
+			TrackDAO track;
+			track.setUri(file);
+			tracks.append(track);
+		}
+		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	}
 }
 
@@ -589,15 +599,17 @@ void MainWindow::openFolder()
 		settings->setValue("lastOpenedLocation", dir);
 		QDirIterator it(dir, QDirIterator::Subdirectories);
 		QStringList suffixes = FileHelper::suffixes();
-		QStringList files;
+		QList<TrackDAO> tracks;
 		while (it.hasNext()) {
 			it.next();
 			if (suffixes.contains(it.fileInfo().suffix())) {
-				files << it.filePath();
+				TrackDAO track;
+				track.setUri(it.filePath());
+				tracks.append(track);
 			}
 		}
-		if (showWarning(tr("playlist"), files.count()) == QMessageBox::Ok) {
-			tabPlaylists->insertItemsToPlaylist(-1, files);
+		if (showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {
+			tabPlaylists->insertItemsToPlaylist(-1, tracks);
 		}
 	}
 }

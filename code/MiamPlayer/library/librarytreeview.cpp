@@ -16,13 +16,14 @@
 #include <QtDebug>
 
 #include "../circleprogressbar.h"
-#include "../library/libraryitemdelegate.h"
-#include "../library/libraryorderdialog.h"
+#include "../pluginmanager.h"
+#include "styling/imageutils.h"
 #include "jumptowidget.h"
+#include "libraryitemdelegate.h"
+#include "libraryorderdialog.h"
 #include "libraryfilterproxymodel.h"
 #include "libraryitemdelegate.h"
 #include "libraryscrollbar.h"
-#include "pluginmanager.h"
 
 #include <filehelper.h>
 
@@ -50,10 +51,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Send to the tag editor"), this);
-	properties = new QMenu(this);
-	properties->addAction(actionSendToCurrentPlaylist);
-	properties->addSeparator();
-	properties->addAction(actionOpenTagEditor);
+	_properties = new QMenu(this);
+	_properties->addAction(actionSendToCurrentPlaylist);
+	_properties->addSeparator();
+	_properties->addAction(actionOpenTagEditor);
 
 	sendToCurrentPlaylist = new QShortcut(this);
 	openTagEditor = new QShortcut(this);
@@ -108,20 +109,13 @@ void LibraryTreeView::findAll(const QModelIndex &index, QList<TrackDAO> &tracks)
 		if (item && item->hasChildren()) {
 			for (int i = 0; i < item->rowCount(); i++) {
 				// Recursive call on children
+				qDebug() << "Recursive call on children";
 				this->findAll(index.child(i, 0), tracks);
 			}
 			/// FIXME
 			// tracks.removeDuplicates();
-		} else if (item && item->type() == IT_Track) {
-			QUrl url = QUrl::fromLocalFile(item->data(DF_URI).toString());
-			if (url.isLocalFile()) {
-				TrackDAO track;
-				track.setUri(item->data(DF_URI).toString());
-				tracks.append(track);
-			} else {
-				TrackDAO track = item->data(DF_DAO).value<TrackDAO>();
-				tracks.append(track);
-			}
+		} else if (item && item->type() == IT_Track && item->data(DF_DAO).canConvert<TrackDAO>()) {
+			tracks.append(item->data(DF_DAO).value<TrackDAO>());
 		}
 	}
 }
@@ -158,7 +152,7 @@ void LibraryTreeView::init(SqlDatabase *db)
 	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
 	this->setModel(_proxyModel);
 
-	QObjectList objetsToExtend = QObjectList() << properties << this;
+	QObjectList objetsToExtend = QObjectList() << _properties << this;
 	PluginManager::getInstance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
@@ -175,15 +169,11 @@ void LibraryTreeView::init(SqlDatabase *db)
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(_db, &SqlDatabase::coverWasUpdated, this, &LibraryTreeView::updateCover);
 	connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
 	connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
 	connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-	//connect(_db, &SqlDatabase::trackExtracted, this, &LibraryTreeView::insertTrack);
-	//connect(_db, &SqlDatabase::artistExtracted, this, &LibraryTreeView::insertArtist);
-	//connect(_db, &SqlDatabase::albumExtracted, this, &LibraryTreeView::insertAlbum);
-	//connect(_db, &SqlDatabase::trackExtracted2, this, &LibraryTreeView::insertTrack2);
 	connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
+	connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -191,12 +181,12 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
-		foreach (QAction *action, properties->actions()) {
+		foreach (QAction *action, _properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 			action->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
 		}
 		if (item->type() != IT_Letter) {
-			properties->exec(event->globalPos());
+			_properties->exec(event->globalPos());
 		}
 	}
 }
@@ -233,7 +223,7 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 
 				painter->save();
 				// Because the expanded border can look strange to one, is blurred with some gaussian function
-				QImage img = this->blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
+				QImage img = ImageUtils::blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
 				painter->drawImage(0, r.y() + r.height(), img);
 				painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 				painter->setPen(Qt::NoPen);
@@ -262,14 +252,14 @@ void LibraryTreeView::drawRow(QPainter * painter, const QStyleOptionViewItem & o
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
-void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
+/*void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 {
 	// Save the position of the mouse, to be able to choose the correct action :
 	// - add an item to the playlist
 	// - edit stars to the current track
 	currentPos = event->pos();
 	QTreeView::mouseDoubleClickEvent(event);
-}
+}*/
 
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
@@ -303,75 +293,6 @@ void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &
 			itemAlbum->setData(externalCover.record().value(0).toString(), DF_CoverPath);
 		}
 	}
-}
-
-// Thanks StackOverflow for this algorithm (works like a charm without any changes)
-QImage LibraryTreeView::blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly) const
-{
-	int tab[] = { 14, 10, 8, 6, 5, 5, 4, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2 };
-	int alpha = (radius < 1)  ? 16 : (radius > 17) ? 1 : tab[radius-1];
-
-	QImage result = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-	int r1 = rect.top();
-	int r2 = rect.bottom();
-	int c1 = rect.left();
-	int c2 = rect.right();
-
-	int bpl = result.bytesPerLine();
-	int rgba[4];
-	unsigned char* p;
-
-	int i1 = 0;
-	int i2 = 3;
-
-	if (alphaOnly)
-		i1 = i2 = (QSysInfo::ByteOrder == QSysInfo::BigEndian ? 0 : 3);
-
-	for (int col = c1; col <= c2; col++) {
-		p = result.scanLine(r1) + col * 4;
-		for (int i = i1; i <= i2; i++)
-			rgba[i] = p[i] << 4;
-
-		p += bpl;
-		for (int j = r1; j < r2; j++, p += bpl)
-			for (int i = i1; i <= i2; i++)
-				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
-	}
-
-	for (int row = r1; row <= r2; row++) {
-		p = result.scanLine(row) + c1 * 4;
-		for (int i = i1; i <= i2; i++)
-			rgba[i] = p[i] << 4;
-
-		p += 4;
-		for (int j = c1; j < c2; j++, p += 4)
-			for (int i = i1; i <= i2; i++)
-				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
-	}
-
-	for (int col = c1; col <= c2; col++) {
-		p = result.scanLine(r2) + col * 4;
-		for (int i = i1; i <= i2; i++)
-			rgba[i] = p[i] << 4;
-
-		p -= bpl;
-		for (int j = r1; j < r2; j++, p -= bpl)
-			for (int i = i1; i <= i2; i++)
-				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
-	}
-
-	for (int row = r1; row <= r2; row++) {
-		p = result.scanLine(row) + c2 * 4;
-		for (int i = i1; i <= i2; i++)
-			rgba[i] = p[i] << 4;
-
-		p -= 4;
-		for (int j = c1; j < c2; j++, p -= 4)
-			for (int i = i1; i <= i2; i++)
-				p[i] = (rgba[i] += ((p[i] << 4) - rgba[i]) * alpha / 16) >> 4;
-	}
-
-	return result;
 }
 
 /** Recursive count for leaves only. */
@@ -429,24 +350,6 @@ LetterItem* LibraryTreeView::insertLetter(const QString &letters)
 	return NULL;
 }
 
-void LibraryTreeView::updateCover(const QFileInfo &coverFileInfo)
-{
-	QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", *_db);
-	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
-	if (!_db->isOpen()) {
-		_db->open();
-	}
-	externalCover.exec();
-	if (externalCover.next()) {
-		QString album = externalCover.record().value(0).toString();
-		QString alb = album.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-		QStandardItem *itemAlbum = _albums2.value(alb);
-		if (itemAlbum) {
-			itemAlbum->setData(coverFileInfo.absoluteFilePath(), DF_CoverPath);
-		}
-	}
-}
-
 /** Invert the current sort order. */
 void LibraryTreeView::changeSortOrder()
 {
@@ -460,7 +363,8 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	_db->load();
+	qDebug() << Q_FUNC_INFO;
+	// _db->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */
@@ -496,14 +400,14 @@ void LibraryTreeView::reset()
 	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
 		_proxyModel->setFilterRegExp(QString());
-		_artists.clear();
-		_albums.clear();
-		_discNumbers.clear();
-		_albums2.clear();
-		_years.clear();
 		_letters.clear();
 		_libraryModel->removeRows(0, _libraryModel->rowCount());
 		_topLevelItems.clear();
+		QMapIterator<GenericDAO*, QStandardItem*> it(_map);
+		while (it.hasNext()) {
+			it.next();
+			delete it.key();
+		}
 	}
 	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
 	case SqlDatabase::IP_Artists:
@@ -528,231 +432,30 @@ void LibraryTreeView::endPopulateTree()
 	_circleProgressBar->setValue(0);
 }
 
-/*void LibraryTreeView::insertTrack(const TrackDAO &t)
-{
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
-
-	QString theArtist = t.artistAlbum().isEmpty() ? t.artist() : t.artistAlbum();
-	if (settings->isLibraryFilteredByArticles()) {
-		QStringList articles = settings->libraryFilteredByArticles();
-		//qDebug() << articles;
-		foreach (QString article, articles) {
-			if (theArtist.startsWith(article + " ", Qt::CaseInsensitive)) {
-				QString reorderedName = theArtist.remove(QRegularExpression("^" + article + " ", QRegularExpression::CaseInsensitiveOption)).append(", ").append(article);
-				//qDebug() << theArtist << reorderedName;
-				theArtist = reorderedName;
-				break;
-			}
-		}
-	}
-
-	ArtistItem *itemArtist = NULL;
-	AlbumItem *itemAlbum = NULL;
-	TrackItem *itemTrack = NULL;
-
-	QString art = t.artist().normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-	QString theArtistNorm = theArtist.normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-	QString alb = t.album().normalized(QString::NormalizationForm_KD).remove(QRegularExpression("[^\\w ]")).trimmed();
-
-	bool isRemote = t.uri().startsWith("http");
-
-	static bool existingArtist = true;
-	switch (settings->value("insertPolicy").toInt()) {
-	case IT_Artist: {
-		// Level 1
-		if (_artists.contains(theArtist.toLower())) {
-			itemArtist = _artists.value(theArtist.toLower());
-			existingArtist = true;
-		} else {
-			itemArtist = new ArtistItem(theArtist);
-			LetterItem *letter = NULL;
-			if (settings->isLibraryFilteredByArticles()) {
-				itemArtist->setData(theArtistNorm, DF_NormalizedString);
-				letter = this->insertLetter(theArtistNorm);
-			} else {
-				itemArtist->setData(art, DF_NormalizedString);
-				letter = this->insertLetter(art);
-			}
-			_artists.insert(theArtist.toLower(), itemArtist);
-			_libraryModel->invisibleRootItem()->appendRow(itemArtist);
-
-			if (letter) {
-				_topLevelItems.insert(letter->index(), itemArtist->index());
-			}
-			existingArtist = false;
-		}
-		// Level 2
-		if (existingArtist && _albums.contains(QPair<ArtistItem*, QString>(itemArtist, alb))) {
-			itemAlbum = _albums.value(QPair<ArtistItem*, QString>(itemArtist, alb));
-		} else {
-			itemAlbum = new AlbumItem(t.album());
-			itemAlbum->setData(alb, DF_NormalizedString);
-			itemAlbum->setData(t.year(), DF_Year);
-			if (isRemote) {
-				itemAlbum->setData(QVariant::fromValue(t), DF_DAO);
-				itemAlbum->setData(QVariant(true), DF_IsRemote);
-			}
-			this->bindCoverToAlbum(itemAlbum, t.album(), t.uri());
-			_albums.insert(QPair<ArtistItem *, QString>(itemArtist, alb), itemAlbum);
-			_albums2.insert(alb, itemAlbum);
-			itemArtist->appendRow(itemAlbum);
-		}
-		// Level 3 (option)
-		int disc = t.disc().toInt();
-		if (disc > 0 && !_discNumbers.contains(QPair<AlbumItem*, int>(itemAlbum, disc))) {
-			DiscItem *itemDiscNumber = new DiscItem(t.disc());
-			itemDiscNumber->setData(t.disc(), DF_DiscNumber);
-			_discNumbers.insert(QPair<AlbumItem *, int>(itemAlbum, disc), itemDiscNumber);
-			itemAlbum->appendRow(itemDiscNumber);
-		}
-		// Level 3
-		if (t.artistAlbum().isEmpty() || QString::compare(t.artist(), t.artistAlbum()) == 0) {
-			itemTrack = new TrackItem(t.title());
-		} else {
-			itemTrack = new TrackItem(t.title() + " (" + t.artist() + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	}
-	case IT_Album:
-		// Level 1
-		if (_albums2.contains(alb)) {
-			itemAlbum = _albums2.value(alb);
-		} else {
-			itemAlbum = new AlbumItem(t.album());
-			itemAlbum->setData(alb, DF_NormalizedString);
-			itemAlbum->setData(t.year(), DF_Year);
-			this->bindCoverToAlbum(itemAlbum, t.album(), t.uri());
-			_albums2.insert(alb, itemAlbum);
-			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			QStandardItem *letter = this->insertLetter(alb);
-			if (letter) {
-				_topLevelItems.insert(letter->index(), itemAlbum->index());
-			}
-		}
-		// Level 2
-		itemTrack = new TrackItem(t.title());
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case IT_ArtistAlbum:
-		// Level 1
-		if (_albums2.contains(theArtistNorm + alb)) {
-			itemAlbum = _albums2.value(theArtistNorm + alb);
-		} else {
-			itemAlbum = new AlbumItem(theArtist + " – " + t.album());
-			itemAlbum->setData(theArtistNorm + alb, DF_NormalizedString);
-			itemAlbum->setData(t.year(), DF_Year);
-			this->bindCoverToAlbum(itemAlbum, t.album(), t.uri());
-			_albums2.insert(theArtistNorm + alb, itemAlbum);
-			_libraryModel->invisibleRootItem()->appendRow(itemAlbum);
-			QStandardItem *letter = this->insertLetter(theArtistNorm + alb);
-			if (letter) {
-				_topLevelItems.insert(letter->index(), itemAlbum->index());
-			}
-		}
-		// Level 2
-		if (t.artistAlbum().isEmpty() || QString::compare(t.artist(), t.artistAlbum()) == 0) {
-			itemTrack = new TrackItem(t.title());
-		} else {
-			itemTrack = new TrackItem(t.title() + " (" + t.artist() + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	case IT_Year:{
-		// Level 1
-		YearItem *itemYear = NULL;
-		if (_years.contains(t.year().toInt())) {
-			itemYear = _years.value(t.year().toInt());
-		} else {
-			if (t.year().toInt() > 0) {
-				itemYear = new YearItem(t.year());
-			} else {
-				itemYear = new YearItem(tr("Unknown"));
-			}
-			itemYear->setData(t.year(), DF_NormalizedString);
-			_years.insert(t.year().toInt(), itemYear);
-			_libraryModel->invisibleRootItem()->appendRow(itemYear);
-		}
-		// Level 2
-		if (_albums2.contains(theArtist + alb)) {
-			itemAlbum = _albums2.value(theArtist + alb);
-		} else {
-			itemAlbum = new AlbumItem(theArtist + " – " + t.album());
-			itemAlbum->setData(art.append("|").append(alb), DF_NormalizedString);
-			itemAlbum->setData(t.year(), DF_Year);
-			this->bindCoverToAlbum(itemAlbum, t.album(), t.uri());
-			_albums2.insert(theArtist + alb, itemAlbum);
-			itemYear->appendRow(itemAlbum);
-		}
-		// Level 3
-		if (t.artistAlbum().isEmpty() || QString::compare(t.artist(), t.artistAlbum()) == 0) {
-			itemTrack = new TrackItem(t.title());
-		} else {
-			itemTrack = new TrackItem(t.title() + " (" + t.artist() + ")");
-		}
-		itemAlbum->appendRow(itemTrack);
-		break;
-	}
-	}
-
-	// itemTrack always exists
-	itemTrack->setData(t.uri(), DF_URI);
-	itemTrack->setData(t.trackNumber(), DF_TrackNumber);
-	itemTrack->setData(t.disc(), DF_DiscNumber);
-	if (isRemote) {
-		itemTrack->setData(QVariant::fromValue(t), DF_DAO);
-	}
-}*/
-
-void LibraryTreeView::insertNode(GenericDAO *node, int level, const QString &parent)
+void LibraryTreeView::insertNode(GenericDAO *node)
 {
 	// qDebug() << Q_FUNC_INFO;
-	QStandardItem *nodeItem = new QStandardItem(node->title());
-	if (level == 0) {
+	QStandardItem *nodeItem = NULL;
+
+	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
+		nodeItem = new TrackItem(dao);
+	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
+		nodeItem = new AlbumItem(dao);
+	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
+		nodeItem = new ArtistItem(dao);
+	}
+
+	if (node->parentNode()) {
+		QStandardItem *parentItem = _map.value(node->parentNode());
+		parentItem->appendRow(nodeItem);
+	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
-	} else {
-		QStandardItem *parentItem = _proxyModel->find(level, parent);
-		if (parentItem) {
-			parentItem->appendRow(nodeItem);
-		} else {
-			// Should I comment this?
-			// this->insertNode(node, level - 1, parent);
-			qDebug() << "parent was NULL :(";
-		}
 	}
+	_map.insert(node, nodeItem);
 }
 
-void LibraryTreeView::insertNodes(const QList<GenericDAO *> &nodes, int level, const QString &parent)
+
+void LibraryTreeView::updateNode(GenericDAO *node)
 {
-	qDebug() << Q_FUNC_INFO;
-	QList<QStandardItem *> nodesItem;
-	foreach (GenericDAO *node, nodes) {
-		QStandardItem *nodeItem = new QStandardItem(node->title());
-		nodesItem.append(nodeItem);
-
-	}
-
-	if (level == 0) {
-		_libraryModel->invisibleRootItem()->appendRows(nodesItem);
-	} else {
-		QStandardItem *parentItem = _proxyModel->find(level, parent);
-		if (parentItem) {
-			parentItem->appendRows(nodesItem);
-		}
-	}
+	qDebug() << Q_FUNC_INFO << "not implemented";
 }
-
-/*void LibraryTreeView::insertArtist(const TrackDAO &artist)
-{
-	//qDebug() << Q_FUNC_INFO;
-}
-
-void LibraryTreeView::insertAlbum(const AlbumDAO &album)
-{
-	//qDebug() << Q_FUNC_INFO;
-}
-
-void LibraryTreeView::insertTrack2(const TrackDAO &track)
-{
-	//qDebug() << Q_FUNC_INFO;
-}*/

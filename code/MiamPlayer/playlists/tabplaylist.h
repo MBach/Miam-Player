@@ -5,14 +5,12 @@
 #include <QTabWidget>
 #include <QMouseEvent>
 
+#include <mediabutton.h>
+#include <mediaplayer.h>
+#include "../tracksnotfoundmessagebox.h"
 #include "dialogs/closeplaylistpopup.h"
 #include "playlist.h"
-#include "../tracksnotfoundmessagebox.h"
 #include "playlistframe.h"
-
-#include "mediabutton.h"
-
-#include <mediaplayer.h>
 
 class MainWindow;
 
@@ -36,7 +34,7 @@ private:
 
 public:
 	/** Default constructor. */
-	TabPlaylist(QWidget *parent = 0);
+	explicit TabPlaylist(QWidget *parent = 0);
 
 	virtual ~TabPlaylist();
 
@@ -84,9 +82,6 @@ public slots:
 
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 	void insertItemsToPlaylist(int rowIndex, const QList<TrackDAO> &tracks);
-
-	/** Overloaded function. */
-	void insertItemsToPlaylist(int rowIndex, const QStringList &files);
 
 	void moveTracksDown();
 

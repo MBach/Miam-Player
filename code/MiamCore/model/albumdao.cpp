@@ -9,7 +9,7 @@ AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
 {
 	_artist = remoteAlbum.artist();
 	_disc = remoteAlbum.disc();
-	_iconPath = remoteAlbum.iconPath();
+	_cover = remoteAlbum.cover();
 	_length = remoteAlbum.length();
 	_source = remoteAlbum.source();
 	_uri = remoteAlbum.uri();
@@ -24,8 +24,8 @@ void AlbumDAO::setArtist(const QString &artist) { _artist = artist; }
 QString AlbumDAO::disc() const { return _disc; }
 void AlbumDAO::setDisc(const QString &disc) { _disc = disc; }
 
-QString AlbumDAO::iconPath() const { return _iconPath; }
-void AlbumDAO::setIconPath(const QString &iconPath) { _iconPath = iconPath; }
+QString AlbumDAO::cover() const { return _cover; }
+void AlbumDAO::setCover(const QString &cover) { _cover = cover; }
 
 QString AlbumDAO::length() const { return _length; }
 void AlbumDAO::setLength(const QString &length) { _length = length; }

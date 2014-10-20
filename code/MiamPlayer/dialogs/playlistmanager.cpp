@@ -394,10 +394,10 @@ void PlaylistManager::updatePlaylists()
 	foreach (PlaylistDAO playlist, playlists) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
-		if (playlist.iconPath().isEmpty()) {
+		if (playlist.icon().isEmpty()) {
 			item->setIcon(QIcon(":/icons/playlist"));
 		} else {
-			item->setIcon(QIcon(playlist.iconPath()));
+			item->setIcon(QIcon(playlist.icon()));
 		}
 		_savedPlaylistModel->appendRow(item);
 	}
