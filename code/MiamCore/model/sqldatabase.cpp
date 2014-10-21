@@ -90,17 +90,19 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, const AlbumDAO &album)
 		open();
 	}
 
-	QSqlQuery insertArtist(*this);
-	insertArtist.prepare("INSERT OR IGNORE INTO albums (id, name, normalizedName, year, artistId) VALUES (?, ?, ?, ?, ?)");
+	QSqlQuery insertAlbum(*this);
+	insertAlbum.prepare("INSERT OR IGNORE INTO albums (id, name, normalizedName, year, artistId, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?)");
 	QString albumNorm = this->normalizeField(album.title());
 	uint albumId = qHash(albumNorm);
 
-	insertArtist.addBindValue(albumId);
-	insertArtist.addBindValue(album.title());
-	insertArtist.addBindValue(albumNorm);
-	insertArtist.addBindValue(album.year());
-	insertArtist.addBindValue(artistId);
-	insertArtist.exec();
+	insertAlbum.addBindValue(albumId);
+	insertAlbum.addBindValue(album.title());
+	insertAlbum.addBindValue(albumNorm);
+	insertAlbum.addBindValue(album.year());
+	insertAlbum.addBindValue(artistId);
+	insertAlbum.addBindValue(album.host());
+	insertAlbum.addBindValue(album.icon());
+	insertAlbum.exec();
 
 	close();
 	return lastError().type() == QSqlError::NoError;
@@ -171,9 +173,13 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 
 bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 {
+	if (!isOpen()) {
+		open();
+	}
+
 	QSqlQuery insertTrack(*this);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, rating, " \
-		"disc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		"disc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	QString artistAlbum = track.artistAlbum().isEmpty() ? track.artist() : track.artistAlbum();
 	QString artistNorm = this->normalizeField(artistAlbum);
@@ -190,8 +196,9 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 	insertTrack.addBindValue(track.length());
 	insertTrack.addBindValue(track.rating());
 	insertTrack.addBindValue(track.rating());
-
-	return insertTrack.exec();
+	bool b = insertTrack.exec();
+	close();
+	return b;
 }
 
 bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
@@ -200,7 +207,9 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 	bool b = true;
 	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
 		TrackDAO track = *it;
-		b = b && this->insertIntoTableTracks(track);
+		bool g = this->insertIntoTableTracks(track);
+		qDebug() << "inserted?" << track.title() << g;
+		b = b && g;
 	}
 	return b;
 }
@@ -340,20 +349,19 @@ void SqlDatabase::updateTablePlaylistWithBackgroundImage(int playlistID, const Q
 	close();
 }
 
-void SqlDatabase::updateTableAlbumWithCoverImage(int albumId, const QString &coverPath)
+void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const QString &album, const QString &artist)
 {
 	if (!isOpen()) {
 		open();
 	}
 
-	/// XXX: split table tracks and create "tracks", "artists" and "albums"
-	/*QSqlQuery update(*this);
-	update.prepare("UPDATE tracks SET cover = ? WHERE id = ?");
-	update.addBindValue(backgroundImagePath);
-	update.addBindValue(playlistID);
-	update.exec();*/
-
-	qDebug() << Q_FUNC_INFO << "not yet implemented";
+	QSqlQuery update(*this);
+	/// XXX: add artist
+	update.prepare("UPDATE albums SET cover = ? WHERE normalizedName = ? AND artistId = (SELECT id FROM artists WHERE normalizedName = ?)");
+	update.addBindValue(coverPath);
+	update.addBindValue(this->normalizeField(album));
+	update.addBindValue(this->normalizeField(artist));
+	update.exec();
 
 	close();
 }
@@ -418,10 +426,8 @@ void SqlDatabase::loadFromFileDB()
 		open();
 	}
 
-	qDebug() << Q_FUNC_INFO;
 	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
 	case IP_Artists: {
-
 		// Level 1: Artists
 		QSqlQuery qArtists("SELECT id, name, normalizedName FROM artists", *this);
 		if (qArtists.exec()) {
@@ -437,23 +443,27 @@ void SqlDatabase::loadFromFileDB()
 
 				// Level 2: Albums
 				QSqlQuery qAlbums(*this);
-				qAlbums.prepare("SELECT name, normalizedName, year, cover FROM albums WHERE artistId = ?");
+				qAlbums.prepare("SELECT name, normalizedName, year, cover, host, icon FROM albums WHERE artistId = ?");
 				qAlbums.addBindValue(artistId);
 				if (qAlbums.exec()) {
 					while (qAlbums.next()) {
 						QSqlRecord r = qAlbums.record();
 						AlbumDAO *albumDAO = new AlbumDAO;
-						QString album = r.value(0).toString();
+						int i = -1;
+						QString album = r.value(++i).toString();
 						albumDAO->setTitle(album);
-						albumDAO->setTitleNormalized(r.value(1).toString());
-						albumDAO->setYear(r.value(2).toString());
-						albumDAO->setCover(r.value(3).toString());
+						albumDAO->setTitleNormalized(r.value(++i).toString());
+						QString year = r.value(++i).toString();
+						albumDAO->setYear(year);
+						albumDAO->setCover(r.value(++i).toString());
+						albumDAO->setHost(r.value(++i).toString());
+						albumDAO->setIcon(r.value(++i).toString());
 						albumDAO->setParentNode(artistDAO);
 						emit nodeExtracted(albumDAO);
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(*this);
-						qTracks.prepare("SELECT uri, trackNumber, title, art.name, alb.name, artistAlbum, length, rating, disc, internalCover " \
+						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover " \
 										"FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 										"INNER JOIN artists art ON t.artistId = art.id " \
 										"WHERE art.name = ? AND alb.name = ?");
@@ -463,17 +473,18 @@ void SqlDatabase::loadFromFileDB()
 							while (qTracks.next()) {
 								QSqlRecord r = qTracks.record();
 								TrackDAO *trackDAO = new TrackDAO;
-								int i = -1;
-								trackDAO->setUri(r.value(++i).toString());
-								trackDAO->setTrackNumber(r.value(++i).toString());
-								trackDAO->setTitle(r.value(++i).toString());
-								trackDAO->setArtist(r.value(++i).toString());
-								trackDAO->setAlbum(r.value(++i).toString());
-								trackDAO->setArtistAlbum(r.value(++i).toString());
-								trackDAO->setLength(r.value(++i).toString());
-								trackDAO->setRating(r.value(++i).toInt());
-								trackDAO->setDisc(r.value(++i).toString());
+								int j = -1;
+								trackDAO->setUri(r.value(++j).toString());
+								trackDAO->setTrackNumber(r.value(++j).toString());
+								trackDAO->setTitle(r.value(++j).toString());
+								trackDAO->setArtist(r.value(++j).toString());
+								trackDAO->setAlbum(r.value(++j).toString());
+								trackDAO->setArtistAlbum(r.value(++j).toString());
+								trackDAO->setLength(r.value(++j).toString());
+								trackDAO->setRating(r.value(++j).toInt());
+								trackDAO->setDisc(r.value(++j).toString());
 								trackDAO->setParentNode(albumDAO);
+								trackDAO->setYear(year);
 								emit nodeExtracted(trackDAO);
 							}
 						}
@@ -483,13 +494,13 @@ void SqlDatabase::loadFromFileDB()
 		}
 	}
 	case IP_Albums: {
-
+		qDebug() << "IP_Albums";
 	}
 	case IP_ArtistsAlbums: {
-
+		qDebug() << "IP_ArtistsAlbums";
 	}
 	case IP_Years: {
-
+		qDebug() << "IP_Years";
 	}
 	}
 
@@ -514,7 +525,7 @@ void SqlDatabase::rebuild()
 	createDb.exec("DROP TABLE tracks");
 	createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), icon varchar(255), UNIQUE(normalizedName))");
 	createDb.exec("CREATE TABLE IF NOT EXISTS albums (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), " \
-		"year INTEGER, cover varchar(255), artistId INTEGER, icon varchar(255), UNIQUE(normalizedName, artistId))");
+		"year INTEGER, cover varchar(255), artistId INTEGER, host varchar(255), icon varchar(255), UNIQUE(normalizedName, artistId))");
 	QString createTableTracks = "CREATE TABLE IF NOT EXISTS tracks (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, " \
 		"title varchar(255), artistId INTEGER, albumId INTEGER, artistAlbum varchar(255), length INTEGER, " \
 		"rating INTEGER, disc INTEGER, internalCover INTEGER DEFAULT 0, host varchar(255), icon varchar(255))";

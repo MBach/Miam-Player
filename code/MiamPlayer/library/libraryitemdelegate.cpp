@@ -150,6 +150,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 							 (option.rect.height() - 24)/ 2 + option.rect.y() + 2,
 							 24,
 							 24);
+		qDebug() << album.title() << album.icon();
 		QPixmap iconRemote(album.icon());
 		painter->drawPixmap(iconRemoteRect, iconRemote);
 		offsetWidth = 24;

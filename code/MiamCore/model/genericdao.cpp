@@ -9,6 +9,7 @@ GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
 {
 	_checksum = remoteObject.checksum();
 	_host = remoteObject.host();
+	_icon = remoteObject.icon();
 	_id = remoteObject.id();
 	_parent = remoteObject.parentNode();
 	_title = remoteObject.title();

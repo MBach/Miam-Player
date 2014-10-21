@@ -92,13 +92,13 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 QString LibraryOrderDialog::headerValue() const
 {
 	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
-	case LibraryTreeView::IT_Album:
+	case SqlDatabase::IP_Albums:
 		return tr("Album");
-	case LibraryTreeView::IT_ArtistAlbum:
+	case SqlDatabase::IP_ArtistsAlbums:
 		return tr("Artist – Album");
-	case LibraryTreeView::IT_Year:
+	case SqlDatabase::IP_Years:
 		return tr("Year");
-	case LibraryTreeView::IT_Artist:
+	case SqlDatabase::IP_Artists:
 	default:
 		return tr("Artist \\ Album");
 	}
