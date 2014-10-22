@@ -65,9 +65,10 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 
 		QStandardItem *yearItem = new QStandardItem(track.year());
 		QStandardItem *iconItem = new QStandardItem;
-		if (!track.iconPath().isEmpty()) {
-			iconItem->setIcon(QIcon(track.iconPath()));
+		if (!track.icon().isEmpty()) {
+			iconItem->setIcon(QIcon(track.icon()));
 		}
+		qDebug() << Q_FUNC_INFO << "track.icon()" << track.icon();
 		iconItem->setToolTip(track.source());
 		QUrl url(track.uri());
 

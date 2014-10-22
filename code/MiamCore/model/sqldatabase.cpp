@@ -126,7 +126,7 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 		insert.addBindValue(track.artist());
 		insert.addBindValue(track.rating());
 		insert.addBindValue(track.year());
-		insert.addBindValue(track.iconPath());
+		insert.addBindValue(track.icon());
 		insert.addBindValue(track.id());
 		insert.addBindValue(track.uri());
 		insert.addBindValue(playlistId);
@@ -179,7 +179,7 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 
 	QSqlQuery insertTrack(*this);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, rating, " \
-		"disc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		"disc, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	QString artistAlbum = track.artistAlbum().isEmpty() ? track.artist() : track.artistAlbum();
 	QString artistNorm = this->normalizeField(artistAlbum);
@@ -195,7 +195,9 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 	insertTrack.addBindValue(track.artistAlbum());
 	insertTrack.addBindValue(track.length());
 	insertTrack.addBindValue(track.rating());
-	insertTrack.addBindValue(track.rating());
+	insertTrack.addBindValue(track.disc());
+	insertTrack.addBindValue(track.host());
+	insertTrack.addBindValue(track.icon());
 	bool b = insertTrack.exec();
 	close();
 	return b;
@@ -203,12 +205,10 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 
 bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 {
-	qDebug() << Q_FUNC_INFO;
 	bool b = true;
 	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
 		TrackDAO track = *it;
 		bool g = this->insertIntoTableTracks(track);
-		qDebug() << "inserted?" << track.title() << g;
 		b = b && g;
 	}
 	return b;
@@ -265,7 +265,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 			track.setArtist(record.value(++i).toString());
 			track.setRating(record.value(++i).toInt());
 			track.setYear(record.value(++i).toString());
-			track.setIconPath(record.value(++i).toString());
+			track.setIcon(record.value(++i).toString());
 			track.setId(record.value(++i).toString());
 			track.setUri(record.value(++i).toString());
 			tracks.append(track);
@@ -463,8 +463,8 @@ void SqlDatabase::loadFromFileDB()
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(*this);
-						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover " \
-										"FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
+						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
+										"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 										"INNER JOIN artists art ON t.artistId = art.id " \
 										"WHERE art.name = ? AND alb.name = ?");
 						qTracks.addBindValue(artist);
@@ -483,6 +483,10 @@ void SqlDatabase::loadFromFileDB()
 								trackDAO->setLength(r.value(++j).toString());
 								trackDAO->setRating(r.value(++j).toInt());
 								trackDAO->setDisc(r.value(++j).toString());
+								/// FIXME Internal Cover
+								++j;
+								trackDAO->setHost(r.value(++j).toString());
+								trackDAO->setIcon(r.value(++j).toString());
 								trackDAO->setParentNode(albumDAO);
 								trackDAO->setYear(year);
 								emit nodeExtracted(trackDAO);
@@ -492,15 +496,19 @@ void SqlDatabase::loadFromFileDB()
 				}
 			}
 		}
+		break;
 	}
 	case IP_Albums: {
 		qDebug() << "IP_Albums";
+		break;
 	}
 	case IP_ArtistsAlbums: {
 		qDebug() << "IP_ArtistsAlbums";
+		break;
 	}
 	case IP_Years: {
 		qDebug() << "IP_Years";
+		break;
 	}
 	}
 

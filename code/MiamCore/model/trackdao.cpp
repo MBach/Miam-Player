@@ -11,7 +11,6 @@ TrackDAO::TrackDAO(const TrackDAO &remoteTrack) :
 	_artist = remoteTrack.artist();
 	_artistAlbum = remoteTrack.artistAlbum();
 	_disc = remoteTrack.disc();
-	_iconPath = remoteTrack.iconPath();
 	_length = remoteTrack.length();
 	_rating = remoteTrack.rating();
 	_source = remoteTrack.source();
@@ -33,9 +32,6 @@ void TrackDAO::setArtistAlbum(const QString &artistAlbum) { _artistAlbum = artis
 
 QString TrackDAO::disc() const { return _disc; }
 void TrackDAO::setDisc(const QString &disc) { _disc = disc; }
-
-QString TrackDAO::iconPath() const { return _iconPath; }
-void TrackDAO::setIconPath(const QString &iconPath) { _iconPath = iconPath; }
 
 QString TrackDAO::length() const { return _length; }
 void TrackDAO::setLength(const QString &length) { _length = length; }

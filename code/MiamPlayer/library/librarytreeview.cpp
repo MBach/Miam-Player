@@ -115,6 +115,8 @@ void LibraryTreeView::findAll(const QModelIndex &index, QList<TrackDAO> &tracks)
 			/// FIXME
 			// tracks.removeDuplicates();
 		} else if (item && item->type() == IT_Track && item->data(DF_DAO).canConvert<TrackDAO>()) {
+			TrackDAO track = item->data(DF_DAO).value<TrackDAO>();
+			qDebug() << track.title() << track.host();
 			tracks.append(item->data(DF_DAO).value<TrackDAO>());
 		}
 	}
@@ -450,6 +452,7 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 		parentItem->appendRow(nodeItem);
 	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
+		this->insertLetter(nodeItem->text());
 	}
 	_map.insert(node, nodeItem);
 }
