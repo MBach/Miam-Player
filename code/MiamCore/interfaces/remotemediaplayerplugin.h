@@ -16,8 +16,6 @@ public:
 
 	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;
 
-	virtual void setDatabase(SqlDatabase *db) = 0;
-
 	virtual RemoteMediaPlayer * player() const = 0;
 
 	virtual void sync(const QString &token) const = 0;

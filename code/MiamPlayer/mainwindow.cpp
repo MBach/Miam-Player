@@ -15,7 +15,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), _db(new SqlDatabase(this))
+	QMainWindow(parent)
 {
 	setupUi(this);
 
@@ -43,10 +43,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
 	/// free memory
-	playlistManager = new PlaylistManager(_db, tabPlaylists);
+
+	playlistManager = new PlaylistManager(SqlDatabase::instance(), tabPlaylists);
 	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-	_searchDialog = new SearchDialog(_db, this);
+	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
 }
 
 void MainWindow::dispatchDrop(QDropEvent *event)
@@ -65,7 +66,7 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 		foreach (QString location, dragDropDialog->externalLocations()) {
 			dirs << location;
 		}
-		switch (SettingsPrivate::getInstance()->dragDropAction()) {
+		switch (SettingsPrivate::instance()->dragDropAction()) {
 		case SettingsPrivate::DD_OpenPopup:
 			dragDropDialog->show();
 			break;
@@ -82,14 +83,14 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 void MainWindow::init()
 {
 	// Link database and views
-	library->init(_db);
-	_uniqueLibrary->init(_db);
-	tagEditor->init(_db);
+	library->init(SqlDatabase::instance());
+	_uniqueLibrary->init(SqlDatabase::instance());
+	tagEditor->init(SqlDatabase::instance());
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 
-	bool isEmpty = SettingsPrivate::getInstance()->musicLocations().isEmpty();
+	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
 	libraryHeader->setVisible(!isEmpty);
 	/// XXX For each view
@@ -101,10 +102,10 @@ void MainWindow::init()
 	if (isEmpty) {
 		quickStart->searchMultimediaFiles();
 	} else {
-		_db->load();
+		SqlDatabase::instance()->load();
 	}
 
-	Settings *settings = Settings::getInstance();
+	Settings *settings = Settings::instance();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	//splitter->restoreState(settings->value("splitterState").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
@@ -120,7 +121,7 @@ void MainWindow::loadPlugins()
 {
 	PluginManager *pm = PluginManager::getInstance();
 	pm->setMainWindow(this);
-	int row = Settings::getInstance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
+	int row = Settings::instance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
 	if (customizeOptionsDialog->listWidget->isRowHidden(5) && row == 5) {
 		customizeOptionsDialog->listWidget->setCurrentRow(0);
 	} else {
@@ -148,18 +149,18 @@ void MainWindow::setupActions()
 		widgetSearchBar->setVisible(!libraryIsEmpty);
 		if (libraryIsEmpty) {
 			// Delete table tracks if such a previous one was found
-			if (_db->open()) {
-				_db->exec("DROP TABLE tracks");
+			if (SqlDatabase::instance()->open()) {
+				SqlDatabase::instance()->exec("DROP TABLE tracks");
 				qDebug() << Q_FUNC_INFO;
-				_db->close();
+				SqlDatabase::instance()->close();
 			}
 			quickStart->searchMultimediaFiles();
 		} else {
-			_db->rebuild();
+			SqlDatabase::instance()->rebuild();
 		}
 	});
 
-	connect(_db, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
+	connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
@@ -203,7 +204,7 @@ void MainWindow::setupActions()
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
-		_db->rebuild();
+		SqlDatabase::instance()->rebuild();
 	});
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
@@ -223,13 +224,13 @@ void MainWindow::setupActions()
 				newLocations.append(musicLocation);
 			}
 		}
-		SettingsPrivate::getInstance()->setMusicLocations(newLocations);
+		SettingsPrivate::instance()->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->setHidden(false);
 		libraryHeader->setHidden(false);
 		widgetSearchBar->setHidden(false);
 		actionScanLibrary->setEnabled(true);
-		_db->rebuild();
+		SqlDatabase::instance()->rebuild();
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
@@ -276,10 +277,10 @@ void MainWindow::setupActions()
 
 	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &MediaPlayer::setVolume);
-	volumeSlider->setValue(Settings::getInstance()->volume());
+	volumeSlider->setValue(Settings::instance()->volume());
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
 	connect(searchBar, &QLineEdit::textEdited, this, [=](const QString &text) {
 		if (settings->isExtendedSearchVisible()) {
@@ -420,11 +421,11 @@ void MainWindow::changeEvent(QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setValue("mainWindowGeometry", saveGeometry());
 	//settings->setValue("splitterState", splitter->saveState());
 	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
-	Settings::getInstance()->setVolume(volumeSlider->value());
+	Settings::instance()->setVolume(volumeSlider->value());
 	settings->sync();
 }
 
@@ -530,17 +531,17 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 	actionPlay->disconnect();
 	if (state == QMediaPlayer::PlayingState) {
 		QString iconPath;
-		if (SettingsPrivate::getInstance()->hasCustomIcon("pauseButton")) {
-			iconPath = SettingsPrivate::getInstance()->customIcon("pauseButton");
+		if (SettingsPrivate::instance()->hasCustomIcon("pauseButton")) {
+			iconPath = SettingsPrivate::instance()->customIcon("pauseButton");
 		} else {
-			iconPath = ":/player/" + Settings::getInstance()->theme() + "/pause";
+			iconPath = ":/player/" + Settings::instance()->theme() + "/pause";
 		}
 		playButton->setIcon(QIcon(iconPath));
 		connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::pause);
 		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::pause);
 		seekSlider->setEnabled(true);
 	} else {
-		playButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/play"));
+		playButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/play"));
 		connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
 		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
 		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
@@ -557,7 +558,7 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 void MainWindow::openFiles()
 {
 	QString audioFiles = tr("Audio files");
-	Settings *settings = Settings::getInstance();
+	Settings *settings = Settings::instance();
 	QString lastOpenedLocation;
 	QString defaultMusicLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
 	if (settings->value("lastOpenedLocation").toString().isEmpty()) {
@@ -584,7 +585,7 @@ void MainWindow::openFiles()
 
 void MainWindow::openFolder()
 {
-	Settings *settings = Settings::getInstance();
+	Settings *settings = Settings::instance();
 	QString lastOpenedLocation;
 	QString defaultMusicLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
 	if (settings->value("lastOpenedLocation").toString().isEmpty()) {

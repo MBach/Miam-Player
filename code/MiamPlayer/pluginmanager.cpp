@@ -65,7 +65,7 @@ void PluginManager::registerExtensionPoint(const char *className, QObjectList so
 void PluginManager::init()
 {
 	QDirIterator it(_pluginPath);
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	while (it.hasNext()) {
 		if (QLibrary::isLibrary(it.next())) {
 			QString pluginFileName = it.fileName();
@@ -114,7 +114,7 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(pluginInfo.version()));
 	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(false);
 
-	SettingsPrivate::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
+	SettingsPrivate::instance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }
 
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
@@ -153,7 +153,7 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 		}
 		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
 		_mainWindow->menuView->addAction(actionAddViewToMenu);
-		_mainWindow->updateFonts(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
+		_mainWindow->updateFonts(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
 			_mainWindow->close();
 			view->show();
@@ -169,7 +169,6 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
 	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
-	remoteMediaPlayerPlugin->setDatabase(_mainWindow->database());
 	_mainWindow->mediaPlayer().data()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
@@ -184,7 +183,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
 	QObject *plugin = pluginLoader.instance();
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (plugin) {
 		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
 		if (basic) {
@@ -288,6 +287,6 @@ void PluginManager::loadOrUnload(QTableWidgetItem *item)
 		}
 		// Keep in settings if the plugin is enabled. Useful when starting the application for unwanted plugins
 		pluginInfo.setEnabled(item->checkState() == Qt::Checked);
-		SettingsPrivate::getInstance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
+		SettingsPrivate::instance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 	}
 }

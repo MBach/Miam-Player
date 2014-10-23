@@ -35,7 +35,7 @@ SettingsPrivate::SettingsPrivate(const QString &organization, const QString &app
 }
 
 /** Singleton pattern to be able to easily use SettingsPrivate everywhere in the app. */
-SettingsPrivate* SettingsPrivate::getInstance()
+SettingsPrivate* SettingsPrivate::instance()
 {
 	if (settings == NULL) {
 		settings = new SettingsPrivate;

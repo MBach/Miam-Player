@@ -33,7 +33,7 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	});
 
 	// Initialize font from settings
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	this->setFont(settings->font(SettingsPrivate::FF_Playlist));
 
 	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
@@ -120,7 +120,7 @@ void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logical
 	QLinearGradient vLinearGradient(rect.topLeft(), rect.bottomLeft());
 	/// XXX
 	QPalette palette = QApplication::palette();
-	if (SettingsPrivate::getInstance()->isCustomColors()) {
+	if (SettingsPrivate::instance()->isCustomColors()) {
 		vLinearGradient.setColorAt(0, palette.base().color().lighter(110));
 		vLinearGradient.setColorAt(1, palette.base().color());
 	} else {

@@ -52,7 +52,7 @@ public:
 						DD_AddToPlaylist	= 2};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
-	static SettingsPrivate* getInstance();
+	static SettingsPrivate* instance();
 
 	qreal bigCoverOpacity() const;
 

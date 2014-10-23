@@ -138,7 +138,7 @@ void PlaybackModeWidgetFactory::update()
 {
 	QMediaPlaylist::PlaybackMode mode = _tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
 	QString playbackMode = PlaybackModeWidget::nameFromMode(mode);
-	_playbackModeButton->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/" + playbackMode));
+	_playbackModeButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/" + playbackMode));
 
 	foreach (PlaybackModeWidget *w, _popups) {
 		w->adjustIcon();

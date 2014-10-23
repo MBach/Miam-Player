@@ -93,7 +93,7 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	}
 	switch (mode) {
 	case Editable:
-		if (SettingsPrivate::getInstance()->isCustomColors()) {
+		if (SettingsPrivate::instance()->isCustomColors()) {
 			painter->fillRect(opt.rect, opt.palette.highlight().color());
 		} else {
 			painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());

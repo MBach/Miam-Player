@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 	app.setActivationWindow(window);
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->isCustomColors()) {
 		app.setPalette(settings->value("customPalette").value<QPalette>());
 	}

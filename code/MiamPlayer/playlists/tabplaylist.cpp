@@ -15,7 +15,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setTabBar(tabBar);
 	messageBox = new TracksNotFoundMessageBox(this);
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
@@ -316,7 +316,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 
 void TabPlaylist::updateRowHeight()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	for (int i = 0; i < count() - 1; i++) {
 		Playlist *p = playlist(i);
 		p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
@@ -345,7 +345,7 @@ void TabPlaylist::closePlaylist(int index)
 	if (p->hash() == qHash(hash) || playlists().at(index)->mediaPlaylist()->isEmpty()) {
 		this->removeTabFromCloseButton(index);
 	} else {
-		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::getInstance()->playbackDefaultActionForClose();
+		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction:
 			_closePlaylistPopup->setTabToClose(index);
@@ -366,13 +366,13 @@ void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 	switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
 	case QDialogButtonBox::Save:
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-			SettingsPrivate::getInstance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
+			SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
 		}
 		emit aboutToSavePlaylist(_closePlaylistPopup->index());
 		break;
 	case QDialogButtonBox::Discard:
 		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-			SettingsPrivate::getInstance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
+			SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
 		}
 		this->removeTabFromCloseButton(_closePlaylistPopup->index());
 		_closePlaylistPopup->hide();

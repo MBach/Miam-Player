@@ -13,6 +13,7 @@
 #include <QThread>
 #include <QWeakPointer>
 
+class Cover;
 class FileHelper;
 class MusicSearchEngine;
 
@@ -25,6 +26,10 @@ class MIAMCORE_LIBRARY SqlDatabase : public QObject, public QSqlDatabase
 {
 	Q_OBJECT
 private:
+	static SqlDatabase *_sqlDatabase;
+
+	SqlDatabase();
+
 	/** This worker is used to avoid a blocking UI when scanning the FileSystem. */
 	QThread _workerThread;
 
@@ -34,14 +39,13 @@ private:
 	Q_ENUMS(extension)
 
 public:
-	explicit SqlDatabase(QObject *parent = NULL);
+	/** Singleton pattern to be able to easily use settings everywhere in the app. */
+	static SqlDatabase* instance();
 
 	enum InsertPolicy { IP_Artists			= 0,
 						IP_Albums			= 1,
 						IP_ArtistsAlbums	= 2,
 						IP_Years			= 3 };
-
-	virtual ~SqlDatabase() {}
 
 	bool insertIntoTableArtists(const ArtistDAO &artist);
 	bool insertIntoTableAlbums(uint artistId, const AlbumDAO &album);
@@ -53,8 +57,8 @@ public:
 	void removeRecordsFromHost(const QString &host);
 	void removePlaylists(const QList<PlaylistDAO> &playlists);
 
+	Cover *selectCoverFromURI(const QString &uri);
 	QList<TrackDAO> selectPlaylistTracks(int playlistID);
-
 	PlaylistDAO selectPlaylist(int playlistId);
 	QList<PlaylistDAO> selectPlaylists();
 

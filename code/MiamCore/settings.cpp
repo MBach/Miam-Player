@@ -20,7 +20,7 @@ Settings::Settings(const QString &organization, const QString &application)
 }
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
-Settings* Settings::getInstance()
+Settings* Settings::instance()
 {
 	if (settings == NULL) {
 		settings = new Settings;

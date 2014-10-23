@@ -65,7 +65,7 @@ bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 void DragDropDialog::addExternalFoldersToLibrary()
 {
 	if (checkBoxRememberChoice->isChecked()) {
-		SettingsPrivate::getInstance()->setDragDropAction(SettingsPrivate::DD_AddToLibrary);
+		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToLibrary);
 	}
 	QList<QDir> dirs;
 	foreach (QString dir, _externalLocations) {
@@ -78,7 +78,7 @@ void DragDropDialog::addExternalFoldersToLibrary()
 void DragDropDialog::addExternalFoldersToPlaylist()
 {
 	if (checkBoxRememberChoice->isChecked()) {
-		SettingsPrivate::getInstance()->setDragDropAction(SettingsPrivate::DD_AddToPlaylist);
+		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToPlaylist);
 	}
 	QList<QDir> dirs;
 	foreach (QString dir, _externalLocations) {

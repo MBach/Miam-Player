@@ -26,7 +26,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	this->setModel(_playlistModel);
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	// Init direct members
 	this->setAcceptDrops(true);
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
@@ -75,8 +75,8 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	});
 
 	// Ensure current item in the playlist is visible when track has just changed to another one
-	connect(_mediaPlayer.data(), &MediaPlayer::currentMediaChanged, this, [=] (const QMediaContent &media) {
-		if (!media.isNull()) {
+	connect(_mediaPlayer.data(), &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
+		if (!uri.isEmpty()) {
 			int row = mediaPlaylist()->currentIndex();
 			this->scrollTo(_playlistModel->index(row, 0));
 			this->viewport()->update();
@@ -164,7 +164,7 @@ void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 
 QSize Playlist::minimumSizeHint() const
 {
-	QFontMetrics fm(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Playlist));
+	QFontMetrics fm(SettingsPrivate::instance()->font(SettingsPrivate::FF_Playlist));
 	int width = 0;
 	for (int c = 0; c < _playlistModel->columnCount(); c++) {
 		if (!isColumnHidden(c)) {
@@ -247,7 +247,7 @@ void Playlist::dropEvent(QDropEvent *event)
 					selectionModel()->select(index, QItemSelectionModel::Select);
 				}
 			}
-			if (!SettingsPrivate::getInstance()->copyTracksFromPlaylist()) {
+			if (!SettingsPrivate::instance()->copyTracksFromPlaylist()) {
 				target->removeSelectedTracks();
 			}
 		}
@@ -349,7 +349,7 @@ void Playlist::showEvent(QShowEvent *event)
 
 void Playlist::autoResize()
 {
-	if (SettingsPrivate::getInstance()->isPlaylistResizeColumns()) {
+	if (SettingsPrivate::instance()->isPlaylistResizeColumns()) {
 		this->horizontalHeader()->setStretchLastSection(false);
 		this->resizeColumnsToContents();
 		this->horizontalHeader()->setStretchLastSection(true);

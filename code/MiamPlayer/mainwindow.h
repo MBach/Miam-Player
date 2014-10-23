@@ -44,9 +44,6 @@ private:
 	/** WIP. View object: display all your tracks in a huge and page. */
 	UniqueLibrary *_uniqueLibrary;
 
-	/** Custom SQLite DataBase which defines few useful tables for playlists and tracks. */
-	SqlDatabase *_db;
-
 	SearchDialog *_searchDialog;
 
 public:
@@ -68,8 +65,6 @@ public:
 	void moveSearchDialog();
 
 	inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
-
-	inline SqlDatabase * database() const { return _db; }
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

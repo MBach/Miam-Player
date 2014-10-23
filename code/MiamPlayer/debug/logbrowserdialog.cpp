@@ -66,7 +66,7 @@ void LogBrowserDialog::outputMessage(QtMsgType type, const QString &msg)
 
 void LogBrowserDialog::show()
 {
-	this->restoreGeometry(Settings::getInstance()->value("LogBrowserDialogGeometry").toByteArray());
+	this->restoreGeometry(Settings::instance()->value("LogBrowserDialogGeometry").toByteArray());
 	QDialog::show();
 }
 
@@ -100,7 +100,7 @@ void LogBrowserDialog::save()
 
 void LogBrowserDialog::closeEvent(QCloseEvent *e)
 {
-	Settings::getInstance()->setValue("LogBrowserDialogGeometry", this->saveGeometry());
+	Settings::instance()->setValue("LogBrowserDialogGeometry", this->saveGeometry());
 	QDialog::closeEvent(e);
 }
 

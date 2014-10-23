@@ -68,7 +68,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	_ui->yearTreeView->setModel(yearModel);
 	_ui->yearTreeView->setDisabled(disabled);
 
-	Settings *settings = Settings::getInstance();
+	Settings *settings = Settings::instance();
 	foreach (QTreeView *treeView, findChildren<QTreeView*>()) {
 		treeView->expandAll();
 		connect(treeView, &QTreeView::clicked, [=]() {
@@ -91,7 +91,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 
 QString LibraryOrderDialog::headerValue() const
 {
-	switch (Settings::getInstance()->value("insertPolicy").toInt()) {
+	switch (Settings::instance()->value("insertPolicy").toInt()) {
 	case SqlDatabase::IP_Albums:
 		return tr("Album");
 	case SqlDatabase::IP_ArtistsAlbums:

@@ -20,7 +20,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// First panel: library
 	connect(radioButtonSearchAndExclude, &QRadioButton::toggled, settings, &SettingsPrivate::setSearchAndExcludeLibrary);
@@ -108,10 +108,10 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
 	// Load the language of the application
-	customTranslator.load(languages.value(SettingsPrivate::getInstance()->language()));
+	customTranslator.load(languages.value(SettingsPrivate::instance()->language()));
 
 	// Translate standard buttons (OK, Cancel, ...)
-	defaultQtTranslator.load("qt_" + SettingsPrivate::getInstance()->language(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	defaultQtTranslator.load("qt_" + SettingsPrivate::instance()->language(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 
 	QApplication::installTranslator(&customTranslator);
 	QApplication::installTranslator(&defaultQtTranslator);
@@ -123,7 +123,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 /** Third panel in this dialog: shorcuts has to be initialized in the end. */
 void CustomizeOptionsDialog::initShortcuts()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
 	foreach(QKeySequenceEdit *shortcut, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
@@ -177,7 +177,7 @@ void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
 void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
 {
 	QDialog::closeEvent(e);
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setValue("customizeOptionsDialogGeometry", saveGeometry());
 	settings->setValue("customizeOptionsDialogCurrentTab", listWidget->currentRow());
 
@@ -240,7 +240,7 @@ void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 void CustomizeOptionsDialog::changeLanguage(const QString &language)
 {
 	QString lang = languages.value(language);
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// If the language is successfully loaded, tells every widget that they need to be redisplayed
 	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
@@ -268,7 +268,7 @@ void CustomizeOptionsDialog::open()
 	this->initCloseActionForPlaylists();
 	this->initDragDropAction();
 	retranslateUi(this);
-	if (SettingsPrivate::getInstance()->value("customizeOptionsDialogGeometry").isNull()) {
+	if (SettingsPrivate::instance()->value("customizeOptionsDialogGeometry").isNull()) {
 		int w = qApp->desktop()->screenGeometry().width() / 2;
 		int h = qApp->desktop()->screenGeometry().height() / 2;
 		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
@@ -304,7 +304,7 @@ void CustomizeOptionsDialog::checkShortcutsIntegrity()
 
 	if (ok) {
 		QKeySequenceEdit *shortcut = qobject_cast<QKeySequenceEdit*>(sender());
-		SettingsPrivate::getInstance()->setShortcut(shortcut->objectName(), shortcut->keySequence());
+		SettingsPrivate::instance()->setShortcut(shortcut->objectName(), shortcut->keySequence());
 		emit aboutToBindShortcut(shortcut->objectName(), shortcut->keySequence());
 	}
 }
@@ -318,7 +318,7 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 		row = 0;
 	}
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (!settings->musicLocations().isEmpty()) {
 		delete listWidgetMusicLocations->takeItem(row);
 
@@ -331,7 +331,7 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 
 void CustomizeOptionsDialog::initCloseActionForPlaylists()
 {
-	switch (SettingsPrivate::getInstance()->playbackDefaultActionForClose()) {
+	switch (SettingsPrivate::instance()->playbackDefaultActionForClose()) {
 	case SettingsPrivate::PL_AskUserForAction:
 		radioButtonAskAction->setChecked(true);
 		break;
@@ -346,7 +346,7 @@ void CustomizeOptionsDialog::initCloseActionForPlaylists()
 
 void CustomizeOptionsDialog::initDragDropAction()
 {
-	switch (SettingsPrivate::getInstance()->dragDropAction()) {
+	switch (SettingsPrivate::instance()->dragDropAction()) {
 	case SettingsPrivate::DD_OpenPopup:
 		radioButtonDDOpenPopup->setChecked(true);
 		break;
@@ -371,7 +371,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 
 void CustomizeOptionsDialog::updateMusicLocations()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	QStringList savedLocations = settings->musicLocations();
 	QStringList newLocations;
 	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {

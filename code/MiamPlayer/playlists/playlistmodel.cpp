@@ -43,9 +43,10 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
+		qDebug() << track.title() << track.icon();
 		if (track.uri().startsWith("file")) {
 			_mediaPlaylist->insertMedia(rowIndex, QMediaContent(QUrl::fromLocalFile(track.uri().mid(7))));
-			this->insertMedia(rowIndex++, FileHelper(track.uri()));
+			this->insertMedia(rowIndex + i, FileHelper(track.uri()));
 			continue;
 		}
 
@@ -68,7 +69,6 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 		if (!track.icon().isEmpty()) {
 			iconItem->setIcon(QIcon(track.icon()));
 		}
-		qDebug() << Q_FUNC_INFO << "track.icon()" << track.icon();
 		iconItem->setToolTip(track.source());
 		QUrl url(track.uri());
 
@@ -191,7 +191,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 
 void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 {
-	QFont font = SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Playlist);
+	QFont font = SettingsPrivate::instance()->font(SettingsPrivate::FF_Playlist);
 	for (int i = 0; i < items.length(); i++) {
 		QStandardItem *item = items.at(i);
 		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);

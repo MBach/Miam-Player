@@ -85,7 +85,7 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 	} else {
 
 		if (obj == this && event->type() == QEvent::Close) {
-			SettingsPrivate::getInstance()->setValue("PlaylistManagerGeometry", this->saveGeometry());
+			SettingsPrivate::instance()->setValue("PlaylistManagerGeometry", this->saveGeometry());
 		}
 
 		// standard event processing
@@ -96,7 +96,7 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 void PlaylistManager::init()
 {
 	playlists->blockSignals(true);
-	if (SettingsPrivate::getInstance()->playbackRestorePlaylistsAtStartup()) {
+	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
 		foreach (PlaylistDAO playlist, _db->selectPlaylists()) {
 			this->loadPlaylist(playlist.id().toInt());
 		}
@@ -202,7 +202,7 @@ bool PlaylistManager::savePlaylist(int index)
 /** Redefined: clean preview area, populate once again lists. */
 void PlaylistManager::open()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->value("PlaylistManagerGeometry").isValid()) {
 		this->restoreGeometry(settings->value("PlaylistManagerGeometry").toByteArray());
 	}
@@ -257,7 +257,7 @@ void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &parent, int start
 void PlaylistManager::exportSelectedPlaylist()
 {
 	QString exportedPlaylistLocation;
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->value("locationForExportedPlaylist").isNull()) {
 		exportedPlaylistLocation = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
 	} else {
@@ -361,7 +361,7 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 /** Save all playlists when exiting the application (if enabled). */
 void PlaylistManager::savePlaylists()
 {
-	if (SettingsPrivate::getInstance()->playbackKeepPlaylists()) {
+	if (SettingsPrivate::instance()->playbackKeepPlaylists()) {
 		_db->open();
 		for (int i = 0; i < playlists->count(); i++) {
 			this->savePlaylist(i);

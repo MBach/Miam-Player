@@ -38,7 +38,7 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 			p->drawLine(o.rect.topRight(), o.rect.bottomRight());
 		}
 	}
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (o.state.testFlag(QStyle::State_Selected)) {
 		if (settings->isCustomColors()) {
 			p->setPen(o.palette.highlight().color().darker(100));

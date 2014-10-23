@@ -88,7 +88,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	}
 	foreach (QAction *action, _imageMenu->actions()) {
 		if (action) {
-			action->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
+			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}
 	}
 	_imageMenu->exec(event->globalPos());

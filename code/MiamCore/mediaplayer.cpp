@@ -112,7 +112,7 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 
 void MediaPlayer::setVolume(int v)
 {
-	Settings::getInstance()->setVolume(v);
+	Settings::instance()->setVolume(v);
 	if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
 		_player->audio()->setVolume(v);
 	}
@@ -167,7 +167,7 @@ void MediaPlayer::seekBackward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		int currentPos = _player->position() * _player->length();
-		int time = currentPos - SettingsPrivate::getInstance()->playbackSeekTime();
+		int time = currentPos - SettingsPrivate::instance()->playbackSeekTime();
 		if (time < 0) {
 			this->seek(0.0);
 		} else {
@@ -181,7 +181,7 @@ void MediaPlayer::seekForward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		int currentPos = _player->position() * _player->length();
-		int time = currentPos + SettingsPrivate::getInstance()->playbackSeekTime();
+		int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
 		if (time > _player->length()) {
 			skipForward();
 		} else {
@@ -296,13 +296,13 @@ void MediaPlayer::play()
 				delete _media;
 			}
 			_media = new VlcMedia(file, true, _instance);
-			_player->audio()->setVolume(Settings::getInstance()->volume());
+			_player->audio()->setVolume(Settings::instance()->volume());
 			_player->open(_media);
 		}
 	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
 		qDebug() << Q_FUNC_INFO << remotePlayer->host() << mc.canonicalUrl();
 		remotePlayer->blockSignals(false);
-		remotePlayer->setVolume(Settings::getInstance()->volume());
+		remotePlayer->setVolume(Settings::instance()->volume());
 		if (_state == QMediaPlayer::PausedState) {
 			remotePlayer->resume();
 			_state = QMediaPlayer::PlayingState;
@@ -358,6 +358,7 @@ RemoteMediaPlayer * MediaPlayer::remoteMediaPlayer(const QUrl &track, bool autoC
 		connect(p, &RemoteMediaPlayer::started, this, [=](int) {
 			_state = QMediaPlayer::PlayingState;
 			emit stateChanged(_state);
+			emit currentMediaChanged(track.toString());
 		});
 		connect(p, &RemoteMediaPlayer::stopped, this, [=]() {
 			_state = QMediaPlayer::StoppedState;
@@ -374,7 +375,5 @@ RemoteMediaPlayer * MediaPlayer::remoteMediaPlayer(const QUrl &track, bool autoC
 
 void MediaPlayer::convertMedia(libvlc_media_t *)
 {
-	QUrl url = QUrl::fromLocalFile(_player->currentMedia()->currentLocation());
-	QMediaContent mc(url);
-	emit currentMediaChanged(mc);
+	emit currentMediaChanged("file://" + _player->currentMedia()->currentLocation());
 }

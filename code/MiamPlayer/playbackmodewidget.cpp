@@ -13,8 +13,8 @@ PlaybackModeWidget::PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushB
 	QPushButton *button = new QPushButton(this);
 	_playbackMode = PlaybackModeWidget::nameFromMode(mode);
 
-	SettingsPrivate *settingsPrivate = SettingsPrivate::getInstance();
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	Settings *settings = Settings::instance();
 	button->setIcon(QIcon(":/player/" + settings->theme() + "/" + _playbackMode));
 	button->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
 
@@ -51,8 +51,8 @@ QString PlaybackModeWidget::nameFromMode(QMediaPlaylist::PlaybackMode mode)
 /** Reload icon when theme has changed or buttons size was changed in options by one. */
 void PlaybackModeWidget::adjustIcon()
 {
-	SettingsPrivate *settingsPrivate = SettingsPrivate::getInstance();
-	Settings *settings = Settings::getInstance();
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	Settings *settings = Settings::instance();
 	button()->setIcon(QIcon(":/player/" + settings->theme() + "/" + _playbackMode));
 	button()->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
 }

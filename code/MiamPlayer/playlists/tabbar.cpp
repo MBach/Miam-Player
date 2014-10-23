@@ -35,7 +35,7 @@ TabBar::TabBar(TabPlaylist *parent) :
 		_targetRect = tabRect(currentIndex());
 	});
 
-	connect(SettingsPrivate::getInstance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Playlist) {
 			QFont font = newFont;
 			font.setPointSizeF(font.pointSizeF() * 0.8);
@@ -111,7 +111,7 @@ void TabBar::dropEvent(QDropEvent *event)
 		target->insertMedias(target->model()->rowCount(), medias);
 
 		// Remove tracks from the current playlist if necessary
-		if (!SettingsPrivate::getInstance()->copyTracksFromPlaylist()) {
+		if (!SettingsPrivate::instance()->copyTracksFromPlaylist()) {
 			origin->removeSelectedTracks();
 		}
 	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
@@ -155,7 +155,7 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 	int c = currentIndex();
 	if (-1 < tabIndex && tabIndex < count()-1 && c == tabIndex) {
 		QRect visualRect = tabRect(tabIndex);
-		SettingsPrivate *settings = SettingsPrivate::getInstance();
+		SettingsPrivate *settings = SettingsPrivate::instance();
 		if (settings->isRectTabs()) {
 			visualRect.setLeft(visualRect.left() + 1);
 			visualRect.setRight(visualRect.right() - 1);
@@ -198,7 +198,7 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 void TabBar::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	int dist = 0;
 
 	if (settings->isRectTabs()) {
@@ -231,15 +231,15 @@ void TabBar::paintEvent(QPaintEvent *)
 QSize TabBar::tabSizeHint(int index) const
 {
 	if (index == count() - 1) {
-		if (SettingsPrivate::getInstance()->isRectTabs()) {
+		if (SettingsPrivate::instance()->isRectTabs()) {
 			return QSize(height(), height());
 		} else {
 			return QSize(height() * 1.333, height());
 		}
 	} else {
 		QSize s = QTabBar::tabSizeHint(index);
-		if (!SettingsPrivate::getInstance()->isRectTabs()) {
-			s.setWidth(s.width() + SettingsPrivate::getInstance()->tabsOverlappingLength() * 2);
+		if (!SettingsPrivate::instance()->isRectTabs()) {
+			s.setWidth(s.width() + SettingsPrivate::instance()->tabsOverlappingLength() * 2);
 		}
 		// Adjust height to the minimum otherwise a small gap might appear between tab and header (depending of font size)
 		if (s.height() > height()) {
@@ -282,7 +282,7 @@ void TabBar::paintRectTabs(QStylePainter &p)
 			p.setPen(QPen(o.palette.mid(), penScaleFactor));
 			if (i == currentIndex()) {
 				/// XXX
-				if (SettingsPrivate::getInstance()->isCustomColors()) {
+				if (SettingsPrivate::instance()->isCustomColors()) {
 					p.fillRect(o.rect, o.palette.base().color().lighter(110));
 				} else {
 					p.fillRect(o.rect, o.palette.base());
@@ -453,7 +453,7 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 					   o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
 			if (i == currentIndex()) {
 				/// XXX
-				if (SettingsPrivate::getInstance()->isCustomColors()) {
+				if (SettingsPrivate::instance()->isCustomColors()) {
 					p.fillPath(pp, o.palette.base().color().lighter(110));
 				} else {
 					p.fillPath(pp, o.palette.base());

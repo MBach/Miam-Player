@@ -10,15 +10,18 @@
 
 #include <QtDebug>
 
+#include "cover.h"
 #include "settingsprivate.h"
 #include "musicsearchengine.h"
 #include "filehelper.h"
 
-SqlDatabase::SqlDatabase(QObject *parent)
-	: QObject(parent), QSqlDatabase("QSQLITE")
+SqlDatabase* SqlDatabase::_sqlDatabase = NULL;
+
+SqlDatabase::SqlDatabase()
+	: QObject(), QSqlDatabase("QSQLITE")
 {
 	_musicSearchEngine = new MusicSearchEngine;
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	QString path("%1/%2/%3");
 	path = path.arg(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation),
 					settings->organizationName(),
@@ -62,6 +65,15 @@ SqlDatabase::SqlDatabase(QObject *parent)
 		database().close();
 		emit loaded();
 	});
+}
+
+/** Singleton pattern to be able to easily use settings everywhere in the app. */
+SqlDatabase* SqlDatabase::instance()
+{
+	if (_sqlDatabase == NULL) {
+		_sqlDatabase = new SqlDatabase;
+	}
+	return _sqlDatabase;
 }
 
 bool SqlDatabase::insertIntoTableArtists(const ArtistDAO &artist)
@@ -241,6 +253,32 @@ void SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 	this->commit();
 
 	close();
+}
+
+Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	Cover *c = NULL;
+
+	QSqlQuery selectCover(*this);
+	selectCover.prepare("SELECT t.internalCover, a.cover FROM albums a INNER JOIN tracks t ON a.id = t.albumId " \
+		"WHERE t.uri = ?");
+	selectCover.addBindValue(uri);
+	if (selectCover.exec() && selectCover.next()) {
+		// If URI has an internal cover, i.e. uri points to a local file
+		if (selectCover.record().value(0).toBool()) {
+			FileHelper fh(uri);
+			c = fh.extractCover();
+		} else {
+			c = new Cover(selectCover.record().value(1).toString());
+		}
+	}
+
+	close();
+	return c;
 }
 
 QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
@@ -426,7 +464,7 @@ void SqlDatabase::loadFromFileDB()
 		open();
 	}
 
-	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
+	switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
 	case IP_Artists: {
 		// Level 1: Artists
 		QSqlQuery qArtists("SELECT id, name, normalizedName FROM artists", *this);

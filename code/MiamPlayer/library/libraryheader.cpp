@@ -36,7 +36,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Gradient
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
-	if (SettingsPrivate::getInstance()->isCustomColors()) {
+	if (SettingsPrivate::instance()->isCustomColors()) {
 		g.setColorAt(0, base.lighter(110));
 		g.setColorAt(1, base);
 	} else {
@@ -47,7 +47,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Text
 	QString header = _lod->headerValue();
-	QFont f = SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library);
+	QFont f = SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
 	p.setFont(f);
 	QFontMetrics fm(f);
 	this->setMinimumHeight(fm.height());

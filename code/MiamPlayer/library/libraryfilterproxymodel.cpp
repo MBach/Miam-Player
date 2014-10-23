@@ -17,7 +17,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 {
 	if (role == Qt::FontRole) {
-		return SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Library);
+		return SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
 	} else {
 		return QSortFilterProxyModel::data(index, role);
 	}
@@ -85,7 +85,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 			}
 		}
 	}
-	if (SettingsPrivate::getInstance()->isSearchAndExcludeLibrary()) {
+	if (SettingsPrivate::instance()->isSearchAndExcludeLibrary()) {
 		return false;
 	} else {
 		//qDebug() << "refusing 2" << sourceParent.data().toString();
@@ -113,7 +113,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		if (rType == LibraryTreeView::IT_Album) {
 			int lYear = left->data(LibraryTreeView::DF_Year).toInt();
 			int rYear = right->data(LibraryTreeView::DF_Year).toInt();
-			if (SettingsPrivate::getInstance()->value("insertPolicy").toInt() == SqlDatabase::IP_Artists && lYear >= 0 && rYear >= 0) {
+			if (SettingsPrivate::instance()->value("insertPolicy").toInt() == SqlDatabase::IP_Artists && lYear >= 0 && rYear >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
 					if (lYear == rYear) {
 						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
@@ -167,7 +167,8 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 			int rTrackNumber = right->data(LibraryTreeView::DF_TrackNumber).toInt();
 			if (dLeft == dRight) {
 				result = (lTrackNumber < rTrackNumber && sortOrder() == Qt::AscendingOrder) ||
-						(rTrackNumber < lTrackNumber && sortOrder() == Qt::DescendingOrder);
+					(rTrackNumber < lTrackNumber && sortOrder() == Qt::DescendingOrder);
+
 			} else {
 				result = (dLeft < dRight && sortOrder() == Qt::AscendingOrder) ||
 						  (dRight < dLeft && sortOrder() == Qt::DescendingOrder);

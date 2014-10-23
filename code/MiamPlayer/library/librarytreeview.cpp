@@ -32,7 +32,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 {
 	_libraryModel->setColumnCount(1);
 
-	int iconSize = SettingsPrivate::getInstance()->coverSize();
+	int iconSize = SettingsPrivate::instance()->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 
@@ -61,7 +61,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(_proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
-		if (!SettingsPrivate::getInstance()->isSearchAndExcludeLibrary()) {
+		if (!SettingsPrivate::instance()->isSearchAndExcludeLibrary()) {
 			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
 				item->setData(b, DF_Highlighted);
 			}
@@ -149,7 +149,7 @@ void LibraryTreeView::updateSelectedTracks()
 void LibraryTreeView::init(SqlDatabase *db)
 {
 	_db = db;
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
 	this->setModel(_proxyModel);
@@ -185,7 +185,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	if (item) {
 		foreach (QAction *action, _properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
-			action->setFont(SettingsPrivate::getInstance()->font(SettingsPrivate::FF_Menu));
+			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}
 		if (item->type() != IT_Letter) {
 			_properties->exec(event->globalPos());
@@ -195,7 +195,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 
 void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QModelIndex &proxyIndex) const
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->isBigCoverEnabled()) {
 		QModelIndex index2 = proxyIndex;
 		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(proxyIndex));
@@ -411,7 +411,7 @@ void LibraryTreeView::reset()
 			delete it.key();
 		}
 	}
-	switch (SettingsPrivate::getInstance()->value("insertPolicy").toInt()) {
+	switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
 	case SqlDatabase::IP_Artists:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
 		break;

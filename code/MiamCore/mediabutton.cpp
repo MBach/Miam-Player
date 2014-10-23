@@ -8,13 +8,13 @@
 MediaButton::MediaButton(QWidget *parent) :
 	QPushButton(parent)
 {
-	this->setFlat(SettingsPrivate::getInstance()->buttonsFlat());
+	this->setFlat(SettingsPrivate::instance()->buttonsFlat());
 }
 
 /** Redefined to load custom icons saved in settings. */
 void MediaButton::setIcon(const QIcon &icon)
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->isThemeCustomized() && settings->hasCustomIcon(objectName())) {
 		QPushButton::setIcon(QIcon(settings->customIcon(objectName())));
 	} else if (icon.isNull()){

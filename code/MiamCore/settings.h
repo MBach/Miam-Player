@@ -24,7 +24,7 @@ private:
 
 public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
-	static Settings* getInstance();
+	static Settings* instance();
 
 	/** Returns the actual theme name. */
 	QString theme() const;

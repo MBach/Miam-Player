@@ -30,7 +30,7 @@ void MusicSearchEngine::doSearch()
 {
 	//qDebug() << Q_FUNC_INFO;
 	QList<QDir> savedLocations;
-	foreach (QString musicPath, SettingsPrivate::getInstance()->musicLocations()) {
+	foreach (QString musicPath, SettingsPrivate::instance()->musicLocations()) {
 		QDir location(musicPath);
 		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
 		savedLocations.append(location);

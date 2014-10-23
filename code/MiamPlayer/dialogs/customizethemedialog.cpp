@@ -33,14 +33,14 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 
 	this->setupActions();
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	this->restoreGeometry(settings->value("customizeThemeDialogGeometry").toByteArray());
 	listWidget->setCurrentRow(settings->value("customizeThemeDialogCurrentTab").toInt());
 }
 
 void CustomizeThemeDialog::setupActions()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
 		connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), b, &MediaButton::setSize);
 	}
@@ -220,7 +220,7 @@ void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 		parentWidget()->move(w - parentWidget()->frameGeometry().width() / 2, h - parentWidget()->frameGeometry().height() / 2);
 	}
 
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setValue("customizeThemeDialogGeometry", saveGeometry());
 	settings->setValue("customizeThemeDialogCurrentTab", listWidget->currentRow());
 
@@ -245,7 +245,7 @@ void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)
  * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 void CustomizeThemeDialog::showColorDialog()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
 		ColorDialog *colorDialog = new ColorDialog(this);
@@ -273,7 +273,7 @@ void CustomizeThemeDialog::showColorDialog()
 
 void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 {
-	SettingsPrivate::getInstance()->setColorsAlternateBG(b);
+	SettingsPrivate::instance()->setColorsAlternateBG(b);
 	for (int i = 0; i < mainWindow->tabPlaylists->count() - 1; i++) {
 		Playlist *p = mainWindow->tabPlaylists->playlist(i);
 		p->setAlternatingRowColors(b);
@@ -282,7 +282,7 @@ void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setCustomColors(b);
 	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
 		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
@@ -306,7 +306,7 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 /** Load theme at startup. */
 void CustomizeThemeDialog::loadTheme()
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	customizeThemeCheckBox->setChecked(settings->isThemeCustomized());
 
 	sizeButtonsSpinBox->setValue(settings->buttonsSize());
@@ -314,7 +314,7 @@ void CustomizeThemeDialog::loadTheme()
 
 	// Select the right drop-down item according to the theme
 	int i = 0;
-	while (Settings::getInstance()->theme() != themeComboBox->itemText(i).toLower()) {
+	while (Settings::instance()->theme() != themeComboBox->itemText(i).toLower()) {
 		i++;
 	}
 	themeComboBox->setCurrentIndex(i);
@@ -374,7 +374,7 @@ void CustomizeThemeDialog::loadTheme()
 void CustomizeThemeDialog::open()
 {
 	// Change the label that talks about star delegates
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	bool starDelegateState = settings->isStarDelegates();
 	labelLibraryDelegates->setEnabled(starDelegateState);
 	radioButtonShowNeverScoredTracks->setEnabled(starDelegateState);
@@ -404,7 +404,7 @@ void CustomizeThemeDialog::open()
 void CustomizeThemeDialog::openChooseIconDialog()
 {
 	QPushButton *button = qobject_cast<QPushButton *>(sender());
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// It's always more convenient when the dialog re-open at the same location
 	QString openPath;
@@ -426,7 +426,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 		}
 	}
 	if (path.isEmpty()) {
-		button->setIcon(QIcon(":/player/" + Settings::getInstance()->theme() + "/" + button->objectName()));
+		button->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/" + button->objectName()));
 	} else {
 		settings->setValue("customIcons/lastOpenPath", QFileInfo(path).absolutePath());
 		button->setIcon(QIcon(path));
@@ -436,7 +436,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 /** Changes the current theme and updates this dialog too. */
 void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	// Check for each button if there is a custom icon
 	foreach(QPushButton *button, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		if (button) {
@@ -448,7 +448,7 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 			}
 		}
 	}
-	Settings::getInstance()->setThemeName(newTheme);
+	Settings::instance()->setThemeName(newTheme);
 	qDebug() << Q_FUNC_INFO << "wtf ?";
 	foreach(MediaButton *m, mainWindow->mediaButtons) {
 		m->setIconFromTheme(newTheme);

@@ -11,7 +11,7 @@
 ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	: QTabBar(parent)
 {
-	SettingsPrivate *settings = SettingsPrivate::getInstance();
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	QFont f = settings->font(SettingsPrivate::FF_Library);
 	f.setPointSizeF(f.pointSizeF() * 0.8);
 	this->setFont(f);
@@ -73,7 +73,7 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		}
 		/// XXX: custom/default colors shouldn't be treated here
 		p.save();
-		if (SettingsPrivate::getInstance()->isCustomColors()) {
+		if (SettingsPrivate::instance()->isCustomColors()) {
 			if (tab.state.testFlag(QStyle::State_MouseOver)) {
 				p.setPen(tab.palette.highlight().color());
 				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());

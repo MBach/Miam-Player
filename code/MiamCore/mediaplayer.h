@@ -5,6 +5,7 @@
 #include <QMediaPlaylist>
 
 #include "miamcore_global.h"
+#include "model/trackdao.h"
 
 class RemoteMediaPlayer;
 
@@ -88,7 +89,7 @@ private slots:
 	void disconnectPlayers(bool isLocal);
 
 signals:
-	void currentMediaChanged(const QMediaContent &);
+	void currentMediaChanged(const QString &uri);
 	void mediaStatusChanged(QMediaPlayer::MediaStatus);
 	void positionChanged(qint64 pos, qint64 duration);
 	void stateChanged(QMediaPlayer::State);
