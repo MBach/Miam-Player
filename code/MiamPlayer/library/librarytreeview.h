@@ -67,17 +67,16 @@ private:
 	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
 	QTimer *_timer;
 
-	/// TODO
+	/** This map is a kind of cache, used to insert nodes in this tree at the right location. */
 	QMap<GenericDAO*, QStandardItem*> _map;
 
-	/// TODO
+	/** Letters are items to groups separate of top levels items (items without parent). */
 	QHash<QString, LetterItem*> _letters;
 
-	// Letter L returns all Artists (e.g.) starting with L
-	/// FIXME
+	/** Letter L returns all Artists (e.g.) starting with L. */
 	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
 
-	/// TODO
+	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
 
 	Q_ENUMS(ItemType)
@@ -164,7 +163,9 @@ public slots:
 private slots:
 	void endPopulateTree();
 
+	/** Find and insert a node in the hierarchy of items. */
 	void insertNode(GenericDAO *node);
+
 	void updateNode(GenericDAO *);
 
 signals:

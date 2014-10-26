@@ -142,10 +142,11 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 		rowIndex = _playlistModel->rowCount();
 	}
 	_playlistModel->insertMedias(rowIndex, tracks);
+	this->autoResize();
 }
 
 /** Insert remote medias to playlist. */
-/*void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
+void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	qDebug() << Q_FUNC_INFO;
 	if (rowIndex == -1) {
@@ -153,7 +154,7 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 	}
 	_playlistModel->insertMedias(rowIndex, tracks);
 	this->autoResize();
-}*/
+}
 
 QSize Playlist::minimumSizeHint() const
 {

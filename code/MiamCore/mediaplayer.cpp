@@ -2,7 +2,10 @@
 
 #include "settings.h"
 #include "settingsprivate.h"
+#include "model/sqldatabase.h"
+#include <QGuiApplication>
 #include <QMediaPlaylist>
+#include <QWindow>
 
 #include "remotemediaplayer.h"
 
@@ -20,6 +23,16 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
 	this->createLocalConnections();
+
+	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
+		QWindow *w = QGuiApplication::topLevelWindows().first();
+		TrackDAO t = SqlDatabase::instance()->selectTrack(uri);
+		if (t.artist().isEmpty()) {
+			w->setTitle(t.title() + " - Miam Player");
+		} else {
+			w->setTitle(t.title() + " (" + t.artist() + ") - Miam Player");
+		}
+	});
 }
 
 void MediaPlayer::createLocalConnections()
@@ -273,17 +286,14 @@ void MediaPlayer::play()
 	if (!_playlist) {
 		return;
 	}
-	qDebug() << "here 1";
 	QMediaContent mc = _playlist->media(_playlist->currentIndex());
 	if (mc.isNull()) {
 		return;
 	}
-	qDebug() << "here 2" << mc.canonicalUrl().isLocalFile();
 
 	// Everything is splitted in 2: local actions and remote actions
 	// Is it the good way to proceed?
 	if (mc.canonicalUrl().isLocalFile()) {
-		qDebug() << Q_FUNC_INFO << "playing local file";
 		_player->blockSignals(false);
 		if (_state == QMediaPlayer::PausedState) {
 			_player->resume();
@@ -300,7 +310,6 @@ void MediaPlayer::play()
 			_player->open(_media);
 		}
 	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
-		qDebug() << Q_FUNC_INFO << remotePlayer->host() << mc.canonicalUrl();
 		remotePlayer->blockSignals(false);
 		remotePlayer->setVolume(Settings::instance()->volume());
 		if (_state == QMediaPlayer::PausedState) {
@@ -310,7 +319,6 @@ void MediaPlayer::play()
 			remotePlayer->play(mc.canonicalUrl());
 		}
 	}
-	qDebug() << "here 3";
 }
 
 /** Stop current track in the playlist. */

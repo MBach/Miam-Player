@@ -30,7 +30,9 @@ public:
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
-	void insertMedias(int, const QStringList &tracks);
+	void insertMedias(int rowIndex, const QStringList &tracks);
+
+	void insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
 
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);
@@ -43,6 +45,8 @@ public:
 	void removeTrack(int row);
 
 private:
+	void createLine(int row, const TrackDAO &track);
+
 	void insertMedia(int rowIndex, const FileHelper &fileHelper);
 };
 

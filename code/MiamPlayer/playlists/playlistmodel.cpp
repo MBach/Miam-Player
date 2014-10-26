@@ -1,7 +1,8 @@
 #include "playlistmodel.h"
 
-#include <filehelper.h>
-#include <settingsprivate.h>
+#include "model/sqldatabase.h"
+#include "filehelper.h"
+#include "settingsprivate.h"
 #include "starrating.h"
 
 #include <QFile>
@@ -40,8 +41,6 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 	}
 }
 
-#include "model/sqldatabase.h"
-
 void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 {
 	for (int i = 0; i < tracks.size(); i++) {
@@ -52,44 +51,56 @@ void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 			continue;
 		}
 		TrackDAO track = SqlDatabase::instance()->selectTrack(trackStr);
-
-		QStandardItem *trackItem = new QStandardItem;
-		if (!track.trackNumber().isEmpty()) {
-			trackItem->setText(QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0')));
-		}
-		QStandardItem *titleItem = new QStandardItem(track.title());
-		QStandardItem *albumItem = new QStandardItem(track.album());
-		QStandardItem *lengthItem = new QStandardItem(track.length());
-		QStandardItem *artistItem = new QStandardItem(track.artist());
-		QStandardItem *ratingItem = new QStandardItem;
-		StarRating r(track.rating());
-		ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
-		ratingItem->setData(true, RemoteMedia);
-		ratingItem->setToolTip(tr("You cannot modify remote medias"));
-
-		QStandardItem *yearItem = new QStandardItem(track.year());
-		QStandardItem *iconItem = new QStandardItem;
-		if (!track.icon().isEmpty()) {
-			iconItem->setIcon(QIcon(track.icon()));
-		}
-		iconItem->setToolTip(track.source());
-		QUrl url(track.uri());
-
-		QStandardItem *trackDAO = new QStandardItem;
-		trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
-
-		trackItem->setTextAlignment(Qt::AlignCenter);
-		lengthItem->setTextAlignment(Qt::AlignCenter);
-		ratingItem->setTextAlignment(Qt::AlignCenter);
-		yearItem->setTextAlignment(Qt::AlignCenter);
-
-		QList<QStandardItem *> items;
-		items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
-			  << yearItem << iconItem << trackDAO;
-
-		this->insertRow(rowIndex + i, items);
-		_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(url));
+		this->createLine(rowIndex + i, track);
 	}
+}
+
+void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
+{
+	for (int i = 0; i < tracks.size(); i++) {
+		TrackDAO track = tracks.at(i);
+		this->createLine(rowIndex + i, track);
+	}
+}
+
+void PlaylistModel::createLine(int row, const TrackDAO &track)
+{
+	QStandardItem *trackItem = new QStandardItem;
+	if (!track.trackNumber().isEmpty()) {
+		trackItem->setText(QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0')));
+	}
+	QStandardItem *titleItem = new QStandardItem(track.title());
+	QStandardItem *albumItem = new QStandardItem(track.album());
+	QStandardItem *lengthItem = new QStandardItem(track.length());
+	QStandardItem *artistItem = new QStandardItem(track.artist());
+	QStandardItem *ratingItem = new QStandardItem;
+	StarRating r(track.rating());
+	ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
+	ratingItem->setData(true, RemoteMedia);
+	ratingItem->setToolTip(tr("You cannot modify remote medias"));
+
+	QStandardItem *yearItem = new QStandardItem(track.year());
+	QStandardItem *iconItem = new QStandardItem;
+	if (!track.icon().isEmpty()) {
+		iconItem->setIcon(QIcon(track.icon()));
+	}
+	iconItem->setToolTip(track.source());
+	QUrl url(track.uri());
+
+	QStandardItem *trackDAO = new QStandardItem;
+	trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
+
+	trackItem->setTextAlignment(Qt::AlignCenter);
+	lengthItem->setTextAlignment(Qt::AlignCenter);
+	ratingItem->setTextAlignment(Qt::AlignCenter);
+	yearItem->setTextAlignment(Qt::AlignCenter);
+
+	QList<QStandardItem *> items;
+	items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
+		  << yearItem << iconItem << trackDAO;
+
+	this->insertRow(row, items);
+	_mediaPlaylist->insertMedia(row, QMediaContent(url));
 }
 
 void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)

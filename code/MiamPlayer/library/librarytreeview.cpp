@@ -427,11 +427,10 @@ void LibraryTreeView::endPopulateTree()
 	_map.clear();
 }
 
+/** Find and insert a node in the hierarchy of items. */
 void LibraryTreeView::insertNode(GenericDAO *node)
 {
-	// qDebug() << Q_FUNC_INFO;
 	QStandardItem *nodeItem = NULL;
-
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
 		nodeItem = new TrackItem(dao);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
@@ -445,7 +444,8 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 		parentItem->appendRow(nodeItem);
 	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
-		this->insertLetter(nodeItem->text());
+		LetterItem *letter = this->insertLetter(nodeItem->text());
+		_topLevelItems.insert(letter->index(), nodeItem->index());
 	}
 	_map.insert(node, nodeItem);
 }

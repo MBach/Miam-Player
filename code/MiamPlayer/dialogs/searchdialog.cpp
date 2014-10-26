@@ -163,8 +163,7 @@ void SearchDialog::processResults(Request type, const QStandardItemList &results
 void SearchDialog::aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks)
 {
 	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-	///FIXME
-	///p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
+	p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
 	this->clear();
 }
 
@@ -189,21 +188,59 @@ void SearchDialog::clear()
 	_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-void SearchDialog::artistWasDoubleClicked(const QModelIndex &)
+void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 {
-	qDebug() << Q_FUNC_INFO << "not implemented";
+	SqlDatabase *db = SqlDatabase::instance();
+	db->open();
+
+	QSqlQuery selectTracks(*db);
+	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id " \
+		"INNER JOIN artists a ON t.artistId = a.id WHERE a.id = ? ORDER BY al.year");
+	QString artistId = artistIndex.data(DT_Identifier).toString();
+	selectTracks.addBindValue(artistId);
+	if (selectTracks.exec()) {
+		QStringList tracks;
+		while (selectTracks.next()) {
+			tracks << selectTracks.record().value(0).toString();
+		}
+
+		Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+		p->insertMedias(-1, tracks);
+		this->clear();
+	}
+
+	db->close();
 }
 
-void SearchDialog::albumWasDoubleClicked(const QModelIndex &)
+void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 {
-	qDebug() << Q_FUNC_INFO << "not implemented";
+	SqlDatabase *db = SqlDatabase::instance();
+	db->open();
+
+	QSqlQuery selectTracks(*db);
+	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id WHERE al.id = ?");
+	QString albumId = albumIndex.data(DT_Identifier).toString();
+	selectTracks.addBindValue(albumId);
+	if (selectTracks.exec()) {
+		QStringList tracks;
+		while (selectTracks.next()) {
+			tracks << selectTracks.record().value(0).toString();
+		}
+
+		Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+		p->insertMedias(-1, tracks);
+		this->clear();
+	}
+
+	this->clear();
+	db->close();
 }
 
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
 {
 	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-	QStringList l = QStringList() << track.data(DT_Identifier).toString();
-	p->insertMedias(-1, l);
+	QStringList tracks = QStringList() << track.data(DT_Identifier).toString();
+	p->insertMedias(-1, tracks);
 	this->clear();
 }
 
@@ -252,26 +289,28 @@ void SearchDialog::search(const QString &text)
 
 	/// XXX: Factorize this, 3 times the (almost) same code
 	QSqlQuery qSearchForArtists(*_db);
-	qSearchForArtists.prepare("SELECT DISTINCT a.name FROM artists a WHERE a.name like :t LIMIT 5");
+	qSearchForArtists.prepare("SELECT DISTINCT a.name, a.id FROM artists a WHERE a.name like :t LIMIT 5");
 	qSearchForArtists.bindValue(":t", "%" + text + "%");
 	if (qSearchForArtists.exec()) {
 		QList<QStandardItem*> artistList;
 		while (qSearchForArtists.next()) {
 			QStandardItem *artist = new QStandardItem(qSearchForArtists.record().value(0).toString());
 			artist->setData(_checkBoxLibrary->text(), DT_Origin);
+			artist->setData(qSearchForArtists.record().value(1).toString(), DT_Identifier);
 			artistList.append(artist);
 		}
 		this->processResults(Artist, artistList);
 	}
 
 	QSqlQuery qSearchForAlbums(*_db);
-	qSearchForAlbums.prepare("SELECT DISTINCT alb.name, art.name FROM albums alb INNER JOIN artists art ON alb.artistId = art.id WHERE alb.name like :t LIMIT 5");
+	qSearchForAlbums.prepare("SELECT DISTINCT alb.name, art.name, alb.id FROM albums alb INNER JOIN artists art ON alb.artistId = art.id WHERE alb.name like :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
 	if (qSearchForAlbums.exec()) {
 		QList<QStandardItem*> albumList;
 		while (qSearchForAlbums.next()) {
 			QStandardItem *album = new QStandardItem(qSearchForAlbums.record().value(0).toString() + " – " + qSearchForAlbums.record().value(1).toString());
 			album->setData(_checkBoxLibrary->text(), DT_Origin);
+			album->setData(qSearchForAlbums.record().value(2).toString(), DT_Identifier);
 			albumList.append(album);
 		}
 		this->processResults(Album, albumList);
