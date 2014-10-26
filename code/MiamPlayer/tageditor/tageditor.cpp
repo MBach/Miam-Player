@@ -78,13 +78,11 @@ void TagEditor::init(SqlDatabase *db)
 	_db = db;
 }
 
-QList<TrackDAO> TagEditor::selectedTracks()
+QStringList TagEditor::selectedTracks()
 {
-	QList<TrackDAO> tracks;
+	QStringList tracks;
 	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename)) {
-		TrackDAO track;
-		track.setUri(index.data(Qt::UserRole).toString());
-		tracks.append(track);
+		tracks << index.data(Qt::UserRole).toString();
 	}
 	return tracks;
 }

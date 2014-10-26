@@ -30,7 +30,7 @@ public:
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
-	void insertMedias(int, const QList<TrackDAO> &tracks);
+	void insertMedias(int, const QStringList &tracks);
 
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);

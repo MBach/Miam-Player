@@ -38,27 +38,22 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 }
 
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const
+void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
 	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
 	if (fileInfo.isFile()) {
-		TrackDAO track;
-		track.setUri(fileInfo.absoluteFilePath());
-		tracks.append(track);
+		tracks << "file://" + fileInfo.absoluteFilePath();
 	} else {
 		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
 			QFileInfo fileInfo(entry);
 			if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
-				TrackDAO track;
-				track.setUri(fileInfo.absoluteFilePath());
-				tracks.append(track);
+				tracks << "file://" + fileInfo.absoluteFilePath();
 			}
 		}
 	}
-	/// FIXME
-	// tracks.removeDuplicates();
+	tracks.removeDuplicates();
 }
 
 /** Reimplemented to display up to 3 actions. */
@@ -115,7 +110,7 @@ void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 
 void FileSystemTreeView::updateSelectedTracks()
 {
-	qDebug() << "FileSystemTreeView::updateSelectedTracks does nothing";
+	qDebug() << Q_FUNC_INFO << "not yet implemented";
 }
 
 /** Get the folder which is the target of one's double-click. */
@@ -125,10 +120,8 @@ void FileSystemTreeView::convertIndex(const QModelIndex &index)
 	if (fileInfo.isDir()) {
 		emit folderChanged(fileSystemModel->filePath(index));
 	} else {
-		QList<TrackDAO> tracks;
-		TrackDAO track;
-		track.setUri(fileInfo.absoluteFilePath());
-		tracks.append(track);
+		QStringList tracks;
+		tracks << "file://" + fileInfo.absoluteFilePath();
 		emit aboutToInsertToPlaylist(-1, tracks);
 	}
 }

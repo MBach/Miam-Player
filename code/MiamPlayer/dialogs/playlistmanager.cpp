@@ -152,17 +152,11 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
+	QStringList t;
 	foreach (TrackDAO track, tracks) {
-		QUrl url = QUrl(track.uri());
-		if (url.isLocalFile()) {
-			QStringList l = QStringList() << url.toLocalFile();
-			playlist->insertMedias(-1, l);
-		} else {
-			QList<TrackDAO> tracks2;
-			tracks2 << track;
-			playlist->insertMedias(-1, tracks2);
-		}
+		t << track.uri();
 	}
+	playlist->insertMedias(-1, t);
 }
 
 bool PlaylistManager::savePlaylist(int index)
@@ -247,9 +241,10 @@ void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &parent, int start
 		}
 	}
 	if (idx >= 0) {
-		QString playlistPath = this->savePlaylist(idx);
-		playlists->tabBar()->setTabData(idx, playlistPath);
-		playlists->setTabIcon(idx, playlists->defaultIcon(QIcon::Disabled));
+		/// FIXME
+		//QString playlistPath = this->savePlaylist(idx);
+		//playlists->tabBar()->setTabData(idx, playlistPath);
+		//playlists->setTabIcon(idx, playlists->defaultIcon(QIcon::Disabled));
 	}
 }
 
@@ -390,7 +385,7 @@ void PlaylistManager::updatePlaylists()
 	_savedPlaylistModel->clear();
 	_savedPlaylistModel->blockSignals(true);
 
-	QList<PlaylistDAO> playlists = _db->selectPlaylists();
+	/*QList<PlaylistDAO> playlists = _db->selectPlaylists();
 	foreach (PlaylistDAO playlist, playlists) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
@@ -400,6 +395,6 @@ void PlaylistManager::updatePlaylists()
 			item->setIcon(QIcon(playlist.icon()));
 		}
 		_savedPlaylistModel->appendRow(item);
-	}
+	}*/
 	_savedPlaylistModel->blockSignals(false);
 }

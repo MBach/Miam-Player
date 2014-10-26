@@ -54,11 +54,9 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
 	if (onlyFiles) {
-		QList<TrackDAO> tracks;
+		QStringList tracks;
 		foreach (QString file, dragDropDialog->externalLocations()) {
-			TrackDAO track;
-			track.setUri(file);
-			tracks.append(track);
+			tracks << "file://" + file;
 		}
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	} else {
@@ -235,7 +233,7 @@ void MainWindow::setupActions()
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<TrackDAO> &tracks) {
+		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QStringList &tracks) {
 			this->showTagEditor();
 			tagEditor->addItemsToEditor(tracks);
 		});
@@ -281,8 +279,8 @@ void MainWindow::setupActions()
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	connect(searchBar, &QLineEdit::textEdited, library, &LibraryTreeView::filterLibrary);
-	connect(searchBar, &QLineEdit::textEdited, this, [=](const QString &text) {
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::filterLibrary);
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
 		if (settings->isExtendedSearchVisible()) {
 			if (text.isEmpty()) {
 				_searchDialog->clear();
@@ -473,13 +471,11 @@ void MainWindow::processArgs(const QStringList &args)
 	// First arg is the location of the application
 	if (args.count() > 2) {
 		QString command = args.at(1);
-		QList<TrackDAO> tracks;
+		QStringList tracks;
 
 		auto convertArgs = [&args, &tracks] () -> void {
 			for (int i = 2; i < args.count(); i++) {
-				TrackDAO track;
-				track.setUri(args.at(i));
-				tracks.append(track);
+				tracks << "file://" + args.at(i);
 			}
 		};
 
@@ -573,11 +569,9 @@ void MainWindow::openFiles()
 	} else {
 		QFileInfo fileInfo(files.first());
 		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
-		QList<TrackDAO> tracks;
+		QStringList tracks;
 		foreach (QString file, files) {
-			TrackDAO track;
-			track.setUri(file);
-			tracks.append(track);
+			tracks << "file://" + file;
 		}
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	}
@@ -600,13 +594,11 @@ void MainWindow::openFolder()
 		settings->setValue("lastOpenedLocation", dir);
 		QDirIterator it(dir, QDirIterator::Subdirectories);
 		QStringList suffixes = FileHelper::suffixes();
-		QList<TrackDAO> tracks;
+		QStringList tracks;
 		while (it.hasNext()) {
 			it.next();
 			if (suffixes.contains(it.fileInfo().suffix())) {
-				TrackDAO track;
-				track.setUri(it.filePath());
-				tracks.append(track);
+				tracks << "file://" + it.filePath();
 			}
 		}
 		if (showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {

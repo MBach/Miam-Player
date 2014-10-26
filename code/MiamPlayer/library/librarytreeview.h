@@ -93,7 +93,7 @@ public:
 	QChar currentLetter() const;
 
 	/** Reimplemented. */
-	virtual void findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const;
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
 	virtual void init(SqlDatabase *db);
 
@@ -114,16 +114,14 @@ public:
 					 DF_Year				= Qt::UserRole + 6,
 				   /// TEST QSortFilterProxyModel
 					 DF_Highlighted			= Qt::UserRole + 7,
-					 DF_DAO					= Qt::UserRole + 8,
-					 DF_IsRemote			= Qt::UserRole + 9};
+					 DF_IsRemote			= Qt::UserRole + 8,
+					 DF_IconPath			= Qt::UserRole + 9};
 
 protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);
 
 	virtual void drawBranches(QPainter * painter, const QRect & rect, const QModelIndex & index) const;
-
-	virtual void drawRow(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
 	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
 	///TODO in a future release
@@ -167,7 +165,7 @@ private slots:
 	void endPopulateTree();
 
 	void insertNode(GenericDAO *node);
-	void updateNode(GenericDAO *node);
+	void updateNode(GenericDAO *);
 
 signals:
 	/** (Dis|En)able covers.*/

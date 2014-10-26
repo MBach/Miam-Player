@@ -30,6 +30,8 @@ protected:
 
 signals:
 	void focusIn();
+
+	void aboutToStartSearch(const QString &text);
 };
 
 #endif // LIBRARYFILTERLINEEDIT_H

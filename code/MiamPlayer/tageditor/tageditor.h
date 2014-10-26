@@ -41,7 +41,7 @@ public:
 
 	virtual void init(SqlDatabase *db);
 
-	virtual QList<TrackDAO> selectedTracks();
+	virtual QStringList selectedTracks();
 
 	virtual void updateSelectedTracks();
 

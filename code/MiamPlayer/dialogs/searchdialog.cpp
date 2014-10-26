@@ -163,7 +163,8 @@ void SearchDialog::processResults(Request type, const QStandardItemList &results
 void SearchDialog::aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks)
 {
 	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-	p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
+	///FIXME
+	///p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
 	this->clear();
 }
 
@@ -188,12 +189,12 @@ void SearchDialog::clear()
 	_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
-void SearchDialog::artistWasDoubleClicked(const QModelIndex &artist)
+void SearchDialog::artistWasDoubleClicked(const QModelIndex &)
 {
 	qDebug() << Q_FUNC_INFO << "not implemented";
 }
 
-void SearchDialog::albumWasDoubleClicked(const QModelIndex &album)
+void SearchDialog::albumWasDoubleClicked(const QModelIndex &)
 {
 	qDebug() << Q_FUNC_INFO << "not implemented";
 }
@@ -231,8 +232,9 @@ void SearchDialog::appendSelectedItem(const QModelIndex &index)
 		p->insertMedias(-1, tracks);
 	} else {
 		// Remote items: apply strategy pattern to get remote information depending on the caller
-		QList<TrackDAO> tracks;
-		p->insertMedias(-1, tracks);
+		///FIXME
+		//QList<TrackDAO> tracks;
+		//p->insertMedias(-1, tracks);
 	}
 }
 
@@ -250,7 +252,7 @@ void SearchDialog::search(const QString &text)
 
 	/// XXX: Factorize this, 3 times the (almost) same code
 	QSqlQuery qSearchForArtists(*_db);
-	qSearchForArtists.prepare("SELECT DISTINCT artist FROM tracks WHERE artist like :t LIMIT 5");
+	qSearchForArtists.prepare("SELECT DISTINCT a.name FROM artists a WHERE a.name like :t LIMIT 5");
 	qSearchForArtists.bindValue(":t", "%" + text + "%");
 	if (qSearchForArtists.exec()) {
 		QList<QStandardItem*> artistList;
@@ -263,7 +265,7 @@ void SearchDialog::search(const QString &text)
 	}
 
 	QSqlQuery qSearchForAlbums(*_db);
-	qSearchForAlbums.prepare("SELECT DISTINCT album, COALESCE(artistAlbum, artist) FROM tracks WHERE album like :t LIMIT 5");
+	qSearchForAlbums.prepare("SELECT DISTINCT alb.name, art.name FROM albums alb INNER JOIN artists art ON alb.artistId = art.id WHERE alb.name like :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
 	if (qSearchForAlbums.exec()) {
 		QList<QStandardItem*> albumList;
@@ -276,7 +278,7 @@ void SearchDialog::search(const QString &text)
 	}
 
 	QSqlQuery qSearchForTracks(*_db);
-	qSearchForTracks.prepare("SELECT DISTINCT title, COALESCE(artistAlbum, artist), uri FROM tracks WHERE title like :t LIMIT 5");
+	qSearchForTracks.prepare("SELECT DISTINCT t.title, COALESCE(t.artistAlbum, art.name), uri FROM tracks t INNER JOIN artists art ON t.artistId = art.id WHERE t.title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {
 		QList<QStandardItem*> trackList;

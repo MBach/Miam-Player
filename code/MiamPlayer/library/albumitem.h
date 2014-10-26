@@ -9,6 +9,10 @@ class AlbumItem : public QStandardItem
 public:
 	explicit AlbumItem(const AlbumDAO *dao);
 
+	QString coverPath() const;
+
+	QString iconPath() const;
+
 	virtual int type() const;
 };
 

@@ -92,6 +92,8 @@ QChar LibraryTreeView::currentLetter() const
 	// Special item "Various" (on top) has no Normalized String
 	if (item && item->type() == IT_Letter && iTop.data(DF_NormalizedString).toString().isEmpty()) {
 		return QChar();
+	} else if (!iTop.isValid()) {
+		return QChar();
 	} else {
 		// An item without a valid parent is a top level item, therefore we can extract the letter.
 		while (iTop.parent().isValid()) {
@@ -102,22 +104,18 @@ QChar LibraryTreeView::currentLetter() const
 }
 
 /** Reimplemented. */
-void LibraryTreeView::findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const
+void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
 	if (_itemDelegate) {
 		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 		if (item && item->hasChildren()) {
 			for (int i = 0; i < item->rowCount(); i++) {
 				// Recursive call on children
-				qDebug() << "Recursive call on children";
 				this->findAll(index.child(i, 0), tracks);
 			}
-			/// FIXME
-			// tracks.removeDuplicates();
-		} else if (item && item->type() == IT_Track && item->data(DF_DAO).canConvert<TrackDAO>()) {
-			TrackDAO track = item->data(DF_DAO).value<TrackDAO>();
-			qDebug() << track.title() << track.host();
-			tracks.append(item->data(DF_DAO).value<TrackDAO>());
+			tracks.removeDuplicates();
+		} else if (item && item->type() == IT_Track) {
+			tracks << item->data(DF_URI).toString();
 		}
 	}
 }
@@ -240,17 +238,6 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 		}
 	}
 	TreeView::drawBranches(painter, r, proxyIndex);
-}
-
-void LibraryTreeView::drawRow(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
-{
-	/// FIXME
-	/*if (index.data(Type).toInt() == Track) {
-
-	} else {
-
-	}*/
-	TreeView::drawRow(painter, option, index);
 }
 
 /** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
@@ -432,6 +419,12 @@ void LibraryTreeView::endPopulateTree()
 	sortByColumn(0, Qt::AscendingOrder);
 	_circleProgressBar->hide();
 	_circleProgressBar->setValue(0);
+	QMapIterator<GenericDAO*, QStandardItem*> it(_map);
+	while (it.hasNext()) {
+		it.next();
+		delete it.key();
+	}
+	_map.clear();
 }
 
 void LibraryTreeView::insertNode(GenericDAO *node)
@@ -458,7 +451,7 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 }
 
 
-void LibraryTreeView::updateNode(GenericDAO *node)
+void LibraryTreeView::updateNode(GenericDAO *)
 {
 	qDebug() << Q_FUNC_INFO << "not implemented";
 }

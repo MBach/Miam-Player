@@ -29,6 +29,7 @@ void PlaylistModel::clear()
 
 void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
+	qDebug() << Q_FUNC_INFO;
 	if (_mediaPlaylist->insertMedia(rowIndex, tracks)) {
 		foreach (QMediaContent track, tracks) {
 			FileHelper f(track);
@@ -39,16 +40,18 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 	}
 }
 
-void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
+#include "model/sqldatabase.h"
+
+void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 {
 	for (int i = 0; i < tracks.size(); i++) {
-		TrackDAO track = tracks.at(i);
-		qDebug() << track.title() << track.icon();
-		if (track.uri().startsWith("file")) {
-			_mediaPlaylist->insertMedia(rowIndex, QMediaContent(QUrl::fromLocalFile(track.uri().mid(7))));
-			this->insertMedia(rowIndex + i, FileHelper(track.uri()));
+		QString trackStr = tracks.at(i);
+		if (trackStr.startsWith("file")) {
+			_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(QUrl::fromLocalFile(trackStr.mid(7))));
+			this->insertMedia(rowIndex + i, FileHelper(trackStr));
 			continue;
 		}
+		TrackDAO track = SqlDatabase::instance()->selectTrack(trackStr);
 
 		QStandardItem *trackItem = new QStandardItem;
 		if (!track.trackNumber().isEmpty()) {

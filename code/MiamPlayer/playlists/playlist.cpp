@@ -137,22 +137,15 @@ void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 
 void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 {
-	QList<QMediaContent> medias;
-	foreach (QString track, tracks) {
-		QMediaContent media(QUrl::fromLocalFile(track));
-		if (!media.isNull()) {
-			medias.append(media);
-		}
-	}
 	// If the track needs to be appended at the end
 	if (rowIndex == -1) {
 		rowIndex = _playlistModel->rowCount();
 	}
-	this->insertMedias(rowIndex, medias);
+	_playlistModel->insertMedias(rowIndex, tracks);
 }
 
 /** Insert remote medias to playlist. */
-void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
+/*void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
 	qDebug() << Q_FUNC_INFO;
 	if (rowIndex == -1) {
@@ -160,7 +153,7 @@ void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 	}
 	_playlistModel->insertMedias(rowIndex, tracks);
 	this->autoResize();
-}
+}*/
 
 QSize Playlist::minimumSizeHint() const
 {

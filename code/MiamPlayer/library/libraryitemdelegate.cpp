@@ -85,15 +85,15 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	static QImageReader imageReader;
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	int coverSize = settings->coverSize();
+	bool noCoverAvailable = false;
 	if (settings->isCoversEnabled()) {
 		QString file = item->data(LibraryTreeView::DF_CoverPath).toString();
 		// Qt::UserRole + 20 == false => pixmap not loaded ; == true => pixmap loaded
 		/// XXX: extract this elsewhere
 		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
 			FileHelper fh(file);
-			QFileInfo f(file);
 			// If it's an inner cover, load it
-			if (FileHelper::suffixes().contains(f.suffix())) {
+			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
 				qDebug() << "loading internal cover from file";
 				std::unique_ptr<Cover> cover(fh.extractCover());
 				QPixmap p;
@@ -111,6 +111,9 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 				item->setIcon(QPixmap::fromImage(imageReader.read()));
 				item->setData(true, Qt::UserRole + 20);
 			}
+		} else if (file.isEmpty()) {
+			noCoverAvailable = true;
+			item->setData(true, Qt::UserRole + 20);
 		}
 	} else {
 		item->setIcon(QIcon());
@@ -136,7 +139,13 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 			painter->drawPixmap(cover, p);
 			painter->restore();
 		} else {
-			painter->drawPixmap(cover, p);
+			if (noCoverAvailable) {
+				painter->setOpacity(0.25);
+				QPixmap p2(":/icons/disc");
+				painter->drawPixmap(cover, p2);
+			} else {
+				painter->drawPixmap(cover, p);
+			}
 		}
 		painter->restore();
 	}
@@ -146,16 +155,17 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	int offsetWidth = 0;
 	if (isRemote) {
 		int iconSize = 31;
-		AlbumDAO album = item->data(LibraryTreeView::DF_DAO).value<AlbumDAO>();
 		QRect iconRemoteRect(option.rect.x() + option.rect.width() - (iconSize + 4),
 							 (option.rect.height() - iconSize)/ 2 + option.rect.y() + 2,
 							 iconSize,
 							 iconSize);
-		QPixmap iconRemote(album.icon());
+		QPixmap iconRemote(item->iconPath());
+		painter->save();
+		painter->setOpacity(0.5);
 		painter->drawPixmap(iconRemoteRect, iconRemote);
+		painter->restore();
 		offsetWidth = iconSize;
 	}
-
 
 	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;

@@ -16,9 +16,9 @@ public:
 	explicit TreeView(QWidget *parent = 0);
 
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
-	virtual void findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const = 0;
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) const = 0;
 
-	virtual QList<TrackDAO> selectedTracks();
+	virtual QStringList selectedTracks();
 
 protected:
 	/** Explore items to count leaves (tracks). */
@@ -28,7 +28,7 @@ protected:
 
 private:
 	/** Alerts the user if there's too many tracks to add. */
-	QMessageBox::StandardButton beforeSending(const QString &target, QList<TrackDAO> &tracks);
+	QMessageBox::StandardButton beforeSending(const QString &target, QStringList &tracks);
 
 public slots:
 	/** Sends folders or tracks to the end of a playlist. */
@@ -42,10 +42,10 @@ public slots:
 
 signals:
 	/** Adds tracks to the current playlist at a specific position. */
-	void aboutToInsertToPlaylist(int rowIndex, const QList<TrackDAO> &tracks);
+	void aboutToInsertToPlaylist(int rowIndex, const QStringList &tracks);
 
 	/** Adds tracks to the tag editor. */
-	void sendToTagEditor(const QModelIndexList indexes, const QList<TrackDAO> &tracks);
+	void sendToTagEditor(const QModelIndexList indexes, const QStringList &tracks);
 };
 
 #endif // TREEVIEW_H

@@ -13,9 +13,9 @@ TreeView::TreeView(QWidget *parent) :
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
-QList<TrackDAO> TreeView::selectedTracks()
+QStringList TreeView::selectedTracks()
 {
-	QList<TrackDAO> list;
+	QStringList list;
 	_cacheSelectedIndexes.clear();
 	foreach (QModelIndex index, this->selectionModel()->selectedIndexes()) {
 		_cacheSelectedIndexes << index;
@@ -25,7 +25,7 @@ QList<TrackDAO> TreeView::selectedTracks()
 }
 
 /** Alerts the user if there's too many tracks to add. */
-QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QList<TrackDAO> &tracks)
+QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QStringList &tracks)
 {
 	// Quick count tracks before anything else
 	int count = this->countAll(selectedIndexes());
@@ -44,7 +44,7 @@ QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QList
 /** Send folders or tracks to a specific position in a playlist. */
 void TreeView::insertToPlaylist(int rowIndex)
 {
-	QList<TrackDAO> tracks;
+	QStringList tracks;
 	if (this->beforeSending(tr("playlist"), tracks) == QMessageBox::Ok) {
 		emit aboutToInsertToPlaylist(rowIndex, tracks);
 	}
@@ -53,7 +53,7 @@ void TreeView::insertToPlaylist(int rowIndex)
 /** Send folders or tracks to the tag editor. */
 void TreeView::openTagEditor()
 {
-	QList<TrackDAO> tracks;
+	QStringList tracks;
 	if (this->beforeSending(tr("tag editor"), tracks) == QMessageBox::Ok) {
 		emit sendToTagEditor(selectedIndexes(), tracks);
 	}

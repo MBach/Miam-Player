@@ -226,7 +226,7 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 	return b;
 }
 
-void SqlDatabase::removeRecordsFromHost(const QString &host)
+void SqlDatabase::removeRecordsFromHost(const QString &)
 {
 	qDebug() << Q_FUNC_INFO;
 }
@@ -294,8 +294,8 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 	if (results.exec()) {
 		while (results.next()) {
 			int i = -1;
-			TrackDAO track;
 			QSqlRecord record = results.record();
+			TrackDAO track;
 			track.setTrackNumber(record.value(++i).toString());
 			track.setTitle(record.value(++i).toString());
 			track.setAlbum(record.value(++i).toString());
@@ -306,7 +306,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 			track.setIcon(record.value(++i).toString());
 			track.setId(record.value(++i).toString());
 			track.setUri(record.value(++i).toString());
-			tracks.append(track);
+			tracks.push_back(std::move(track));
 		}
 	}
 
@@ -357,6 +357,42 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 	return playlists;
 }
 
+TrackDAO SqlDatabase::selectTrack(const QString &uri)
+{
+	if (!isOpen()) {
+		open();
+	}
+
+	TrackDAO track;
+	QSqlQuery qTracks(*this);
+	qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
+		"t.host, t.icon, alb.year FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
+		"INNER JOIN artists art ON t.artistId = art.id " \
+		"WHERE uri = ?");
+	qTracks.addBindValue(uri);
+	if (qTracks.exec() && qTracks.next()) {
+
+		QSqlRecord r = qTracks.record();
+		int j = -1;
+		track.setUri(r.value(++j).toString());
+		track.setTrackNumber(r.value(++j).toString());
+		track.setTitle(r.value(++j).toString());
+		track.setArtist(r.value(++j).toString());
+		track.setAlbum(r.value(++j).toString());
+		track.setArtistAlbum(r.value(++j).toString());
+		track.setLength(r.value(++j).toString());
+		track.setRating(r.value(++j).toInt());
+		track.setDisc(r.value(++j).toString());
+		++j;
+		track.setHost(r.value(++j).toString());
+		track.setIcon(r.value(++j).toString());
+		track.setYear(r.value(++j).toString());
+	}
+
+	close();
+	return track;
+}
+
 bool SqlDatabase::playlistHasBackgroundImage(int playlistID)
 {
 	if (!isOpen()) {
@@ -394,7 +430,6 @@ void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const
 	}
 
 	QSqlQuery update(*this);
-	/// XXX: add artist
 	update.prepare("UPDATE albums SET cover = ? WHERE normalizedName = ? AND artistId = (SELECT id FROM artists WHERE normalizedName = ?)");
 	update.addBindValue(coverPath);
 	update.addBindValue(this->normalizeField(album));
@@ -625,15 +660,6 @@ void SqlDatabase::saveCoverRef(const QString &coverPath, const QString &track)
 			// albumDAO->setArtist(selectAlbum.record().value(++i));
 			emit aboutToUpdateNode(albumDAO);
 		}
-	}
-}
-
-void SqlDatabase::loadRemoteTracks(const QList<TrackDAO> &tracks)
-{
-	qDebug() << Q_FUNC_INFO << tracks.size();
-	foreach (TrackDAO track, tracks) {
-		qDebug() << track.title();
-		// emit trackExtracted2(track);
 	}
 }
 

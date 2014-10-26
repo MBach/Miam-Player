@@ -25,6 +25,12 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	connect(shortcut, &QShortcut::activated, this, [=]() {
 		this->setFocus(Qt::ShortcutFocusReason);
 	});
+
+	// Do not start search when one is typing. Add a 200ms delay after the last key pressed.
+	QTimer *timer = new QTimer(this);
+	timer->setSingleShot(true);
+	connect(this, &QLineEdit::textEdited, this, [=]() {	timer->start(200); });
+	connect(timer, &QTimer::timeout, this, [=]() { emit aboutToStartSearch(this->text()); });
 }
 
 void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)

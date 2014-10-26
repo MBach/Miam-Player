@@ -54,13 +54,14 @@ public:
 	bool insertIntoTableTracks(const TrackDAO &track);
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
-	void removeRecordsFromHost(const QString &host);
+	void removeRecordsFromHost(const QString &);
 	void removePlaylists(const QList<PlaylistDAO> &playlists);
 
 	Cover *selectCoverFromURI(const QString &uri);
 	QList<TrackDAO> selectPlaylistTracks(int playlistID);
 	PlaylistDAO selectPlaylist(int playlistId);
 	QList<PlaylistDAO> selectPlaylists();
+	TrackDAO selectTrack(const QString &uri);
 
 	bool playlistHasBackgroundImage(int playlistID);
 	void updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath);
@@ -71,7 +72,6 @@ public:
 	 * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
 	void updateTracks(const QList<QPair<QString, QString> > &tracksToUpdate);
 
-	void loadRemoteTracks(const QList<TrackDAO> &tracks);
 
 	QString normalizeField(const QString &s) const;
 

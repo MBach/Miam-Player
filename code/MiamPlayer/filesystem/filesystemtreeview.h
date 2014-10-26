@@ -22,7 +22,7 @@ public:
 	explicit FileSystemTreeView(QWidget *parent = 0);
 
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	void findAll(const QModelIndex &index, QList<TrackDAO> &tracks) const;
+	void findAll(const QModelIndex &index, QStringList &tracks) const;
 
 	inline virtual void init(SqlDatabase *) {}
 

@@ -13,7 +13,7 @@ class MIAMCORE_LIBRARY SelectedTracksModel
 public:
 	virtual ~SelectedTracksModel();
 
-	virtual QList<TrackDAO> selectedTracks() = 0;
+	virtual QStringList selectedTracks() = 0;
 
 	virtual void updateSelectedTracks() = 0;
 
