@@ -264,26 +264,6 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 	TreeView::paintEvent(event);
 }
 
-void LibraryTreeView::bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath)
-{
-	QSqlQuery internalCover("SELECT DISTINCT album FROM tracks WHERE album = ? AND internalCover = 1", *_db);
-	internalCover.addBindValue(album);
-	if (!_db->isOpen()) {
-		_db->open();
-	}
-	internalCover.exec();
-	if (internalCover.next()) {
-		itemAlbum->setData(absFilePath, DF_CoverPath);
-	} else {
-		QSqlQuery externalCover("SELECT DISTINCT cover FROM tracks WHERE album = ?", *_db);
-		externalCover.addBindValue(album);
-		externalCover.exec();
-		if (externalCover.next()) {
-			itemAlbum->setData(externalCover.record().value(0).toString(), DF_CoverPath);
-		}
-	}
-}
-
 /** Recursive count for leaves only. */
 int LibraryTreeView::count(const QModelIndex &index) const
 {
@@ -352,8 +332,7 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	qDebug() << Q_FUNC_INFO;
-	// _db->load();
+	_db->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */
@@ -450,8 +429,14 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 	_map.insert(node, nodeItem);
 }
 
-
-void LibraryTreeView::updateNode(GenericDAO *)
+void LibraryTreeView::updateNode(GenericDAO *node)
 {
-	qDebug() << Q_FUNC_INFO << "not implemented";
+	// Is it possible to update other types of nodes?
+	if (AlbumItem *album = static_cast<AlbumItem*>(_map.value(node))) {
+		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
+		album->setData(dao->year(), LibraryTreeView::DF_Year);
+		album->setData(dao->cover(), LibraryTreeView::DF_CoverPath);
+		album->setData(dao->icon(), LibraryTreeView::DF_IconPath);
+		album->setData(!dao->icon().isEmpty(), LibraryTreeView::DF_IsRemote);
+	}
 }

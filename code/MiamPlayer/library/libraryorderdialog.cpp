@@ -16,7 +16,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Artists \ Albums \ Tracks
 	QStandardItemModel *artistModel = new QStandardItemModel(this);
 	artistModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Artists \\ Albums")));
-	artistModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_Artist, Qt::UserRole + 1);
+	artistModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_Artists, Qt::UserRole + 1);
 	QStandardItem *artist = new QStandardItem("Artist");
 	artistModel->appendRow(artist);
 	for (int i = 1; i <= 1; i++) {
@@ -33,7 +33,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Albums \ Tracks
 	QStandardItemModel *albumModel = new QStandardItemModel(this);
 	albumModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Albums")));
-	albumModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_Album, Qt::UserRole + 1);
+	albumModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_Albums, Qt::UserRole + 1);
 	QStandardItem *album = new QStandardItem("Album");
 	albumModel->appendRow(album);
 	for (int i = 1; i <= 2; i++) {
@@ -45,7 +45,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Artists - Albums \ Tracks
 	QStandardItemModel *artistAlbumModel = new QStandardItemModel(this);
 	artistAlbumModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Artists – Albums")));
-	artistAlbumModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_ArtistAlbum, Qt::UserRole + 1);
+	artistAlbumModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_ArtistsAlbums, Qt::UserRole + 1);
 	QStandardItem *artistAlbum_1 = new QStandardItem("Artist – Album");
 	artistAlbumModel->appendRow(artistAlbum_1);
 	for (int i = 1; i <= 2; i++) {
@@ -57,7 +57,7 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent) :
 	// Year \ Artist - Album \ Tracks
 	QStandardItemModel *yearModel = new QStandardItemModel(this);
 	yearModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Years")));
-	yearModel->setHeaderData(0, Qt::Horizontal, LibraryTreeView::IT_Year, Qt::UserRole + 1);
+	yearModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_Years, Qt::UserRole + 1);
 	QStandardItem *year = new QStandardItem("2014");
 	yearModel->appendRow(year);
 	QStandardItem *artistAlbum_2 = new QStandardItem("Artist – Album");

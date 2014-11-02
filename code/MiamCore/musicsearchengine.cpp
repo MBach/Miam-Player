@@ -10,7 +10,7 @@
 #include <QtDebug>
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-	QObject(parent), _watcher(new QFileSystemWatcher(this))
+	QObject(parent)//, _watcher(new QFileSystemWatcher(this))
 {
 	/*_watcher->addPaths(Settings::getInstance()->musicLocations());
 	connect(_watcher, &QFileSystemWatcher::directoryChanged, [=](const QString &path) {
@@ -28,7 +28,6 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 
 void MusicSearchEngine::doSearch()
 {
-	//qDebug() << Q_FUNC_INFO;
 	QList<QDir> savedLocations;
 	foreach (QString musicPath, SettingsPrivate::instance()->musicLocations()) {
 		QDir location(musicPath);

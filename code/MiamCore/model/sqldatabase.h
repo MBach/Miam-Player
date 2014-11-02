@@ -36,6 +36,8 @@ private:
 	/** Object than can iterate throught the FileSystem for Audio files. */
 	MusicSearchEngine *_musicSearchEngine;
 
+	QHash<uint, GenericDAO*> _cache;
+
 	Q_ENUMS(extension)
 
 public:
@@ -72,7 +74,6 @@ public:
 	 * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
 	void updateTracks(const QList<QPair<QString, QString> > &tracksToUpdate);
 
-
 	QString normalizeField(const QString &s) const;
 
 private:
@@ -83,7 +84,7 @@ public slots:
 	/** Load an existing database file or recreate it, if not found. */
 	void load();
 
-	/** Safe delete and recreate from scratch (table Tracks only). */
+	/** Safe delete and recreate from scratch. */
 	void rebuild();
 
 private slots:

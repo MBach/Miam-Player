@@ -129,8 +129,6 @@ protected:
 	virtual void paintEvent(QPaintEvent *);
 
 private:
-	void bindCoverToAlbum(QStandardItem *itemAlbum, const QString &album, const QString &absFilePath);
-
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
 

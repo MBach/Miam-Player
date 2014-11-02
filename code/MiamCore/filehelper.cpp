@@ -301,9 +301,9 @@ bool FileHelper::hasCover() const
 					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty());
 				}
 			}
-		} else if (mpegFile && mpegFile->hasID3v1Tag()) {
-			qDebug() << "FileHelper::hasCover: Not implemented for ID3v1Tag";
-		}
+		} //else if (mpegFile && mpegFile->hasID3v1Tag()) {
+		//	qDebug() << "FileHelper::hasCover: Not implemented for ID3v1Tag";
+		//}
 		break;
 	default:
 		break;
@@ -340,7 +340,7 @@ int FileHelper::rating() const
 		break;
 	}
 	default:
-		qDebug() << "FileHelper::rating: Not implemented";
+		// qDebug() << "FileHelper::rating: Not implemented";
 		break;
 	}
 	return r;
@@ -564,10 +564,10 @@ QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 			if (!l.isEmpty()) {
 				feature = QString(l.front()->toString().toCString(true));
 			}
-		} else if (mpegFile->hasID3v1Tag()) {
-			qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
-			qDebug() << featureToExtract << _fileInfo.absoluteFilePath();
-		}
+		} //else if (mpegFile->hasID3v1Tag()) {
+			// qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
+			// qDebug() << featureToExtract << _fileInfo.absoluteFilePath();
+		//}
 	}
 	return feature;
 }
