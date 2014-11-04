@@ -332,7 +332,8 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	_db->load();
+	qDebug() << Q_FUNC_INFO;
+	// _db->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */
@@ -395,6 +396,7 @@ void LibraryTreeView::reset()
 
 void LibraryTreeView::endPopulateTree()
 {
+	_proxyModel->setDynamicSortFilter(true);
 	sortByColumn(0, Qt::AscendingOrder);
 	_circleProgressBar->hide();
 	_circleProgressBar->setValue(0);
@@ -429,14 +431,8 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 	_map.insert(node, nodeItem);
 }
 
-void LibraryTreeView::updateNode(GenericDAO *node)
+
+void LibraryTreeView::updateNode(GenericDAO *)
 {
-	// Is it possible to update other types of nodes?
-	if (AlbumItem *album = static_cast<AlbumItem*>(_map.value(node))) {
-		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
-		album->setData(dao->year(), LibraryTreeView::DF_Year);
-		album->setData(dao->cover(), LibraryTreeView::DF_CoverPath);
-		album->setData(dao->icon(), LibraryTreeView::DF_IconPath);
-		album->setData(!dao->icon().isEmpty(), LibraryTreeView::DF_IsRemote);
-	}
+	qDebug() << Q_FUNC_INFO << "not implemented";
 }

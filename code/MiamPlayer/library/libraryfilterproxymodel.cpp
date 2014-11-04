@@ -10,6 +10,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
 	this->setSortRole(LibraryTreeView::DF_NormalizedString);
+	this->setDynamicSortFilter(false);
 	this->sort(0, Qt::AscendingOrder);
 }
 
