@@ -3,6 +3,11 @@
 
 #include "genericdao.h"
 
+/**
+ * \brief		The ArtistDAO class is a simple wrapper.
+ * \author		Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY ArtistDAO : public GenericDAO
 {
 	Q_OBJECT

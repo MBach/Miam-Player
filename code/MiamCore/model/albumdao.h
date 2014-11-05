@@ -3,6 +3,11 @@
 
 #include "genericdao.h"
 
+/**
+ * \brief		The AlbumDAO class is a simple wrapper.
+ * \author		Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY AlbumDAO : public GenericDAO
 {
 	Q_OBJECT

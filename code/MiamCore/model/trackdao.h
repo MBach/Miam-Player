@@ -19,7 +19,7 @@ private:
 public:
 	explicit TrackDAO(QObject *parentNode = 0);
 
-	TrackDAO(const TrackDAO &remoteTrack);
+	TrackDAO(const TrackDAO &other);
 
 	virtual ~TrackDAO();
 

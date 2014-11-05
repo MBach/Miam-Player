@@ -4,11 +4,11 @@ PlaylistDAO::PlaylistDAO(QObject *parent)
 	: GenericDAO(parent)
 {}
 
-PlaylistDAO::PlaylistDAO(const PlaylistDAO &remotePlaylist)
-	: GenericDAO(remotePlaylist)
+PlaylistDAO::PlaylistDAO(const PlaylistDAO &other)
+	: GenericDAO(other)
 {
-	_background = remotePlaylist.background();
-	_length = remotePlaylist.length();
+	_background = other.background();
+	_length = other.length();
 }
 
 PlaylistDAO::~PlaylistDAO()

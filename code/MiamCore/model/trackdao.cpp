@@ -4,19 +4,19 @@ TrackDAO::TrackDAO(QObject *parent) :
 	GenericDAO(parent), _rating(0)
 {}
 
-TrackDAO::TrackDAO(const TrackDAO &remoteTrack) :
-	GenericDAO(remoteTrack)
+TrackDAO::TrackDAO(const TrackDAO &other) :
+	GenericDAO(other)
 {
-	_album = remoteTrack.album();
-	_artist = remoteTrack.artist();
-	_artistAlbum = remoteTrack.artistAlbum();
-	_disc = remoteTrack.disc();
-	_length = remoteTrack.length();
-	_rating = remoteTrack.rating();
-	_source = remoteTrack.source();
-	_trackNumber = remoteTrack.trackNumber();
-	_uri = remoteTrack.uri();
-	_year = remoteTrack.year();
+	_album = other.album();
+	_artist = other.artist();
+	_artistAlbum = other.artistAlbum();
+	_disc = other.disc();
+	_length = other.length();
+	_rating = other.rating();
+	_source = other.source();
+	_trackNumber = other.trackNumber();
+	_uri = other.uri();
+	_year = other.year();
 }
 
 TrackDAO::~TrackDAO() {}

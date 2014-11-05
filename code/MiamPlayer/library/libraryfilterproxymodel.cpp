@@ -26,20 +26,14 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 
 QStandardItem* LibraryFilterProxyModel::find(int level, const QString &nodeText) const
 {
-	qDebug() << Q_FUNC_INFO << level;
 	for (int i = 0; i < rowCount(); i++) {
-		qDebug() << "find" << index(i, 0).data().toString();
 		QModelIndex ind = index(i, 0);
 		if (ind.data().toString() == nodeText) {
-			qDebug() << "item found !";
 			QModelIndex ind2 = mapToSource(ind);
 			const QStandardItemModel *m = static_cast<const QStandardItemModel*>(ind2.model());
-			qDebug() << "item found !" << m;
 			return m->itemFromIndex(ind2);
 		}
 		for (int j = 0; j < rowCount(ind); j++) {
-			// this->p_find();
-			// qDebug() << "ICI?" << index(j, 0, ind).data().toString();
 			if (level > 0)
 				return this->find(level - 1, nodeText);
 		}

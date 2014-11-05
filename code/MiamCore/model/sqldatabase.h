@@ -6,6 +6,7 @@
 #include "albumdao.h"
 #include "trackdao.h"
 #include "playlistdao.h"
+#include "yeardao.h"
 
 #include <QFileInfo>
 #include <QSqlDatabase>

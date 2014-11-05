@@ -7,7 +7,7 @@
 class YearItem : public QStandardItem
 {
 public:
-	explicit YearItem(const QString &text);
+	explicit YearItem(const YearDAO *dao);
 
 	virtual int type() const;
 };

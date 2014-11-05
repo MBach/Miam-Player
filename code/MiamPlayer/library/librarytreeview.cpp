@@ -333,7 +333,7 @@ void LibraryTreeView::changeSortOrder()
 void LibraryTreeView::changeHierarchyOrder()
 {
 	qDebug() << Q_FUNC_INFO;
-	// _db->load();
+	_db->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */
@@ -372,6 +372,7 @@ void LibraryTreeView::reset()
 		_letters.clear();
 		_libraryModel->removeRows(0, _libraryModel->rowCount());
 		_topLevelItems.clear();
+		this->verticalScrollBar()->setValue(0);
 		QMapIterator<GenericDAO*, QStandardItem*> it(_map);
 		while (it.hasNext()) {
 			it.next();
@@ -418,6 +419,8 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 		nodeItem = new AlbumItem(dao);
 	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
 		nodeItem = new ArtistItem(dao);
+	} else if (YearDAO *dao = qobject_cast<YearDAO*>(node)) {
+		nodeItem = new YearItem(dao);
 	}
 
 	if (node->parentNode()) {
@@ -426,7 +429,9 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
 		LetterItem *letter = this->insertLetter(nodeItem->text());
-		_topLevelItems.insert(letter->index(), nodeItem->index());
+		if (letter) {
+			_topLevelItems.insert(letter->index(), nodeItem->index());
+		}
 	}
 	_map.insert(node, nodeItem);
 }

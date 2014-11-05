@@ -18,7 +18,7 @@ private:
 public:
 	explicit PlaylistDAO(QObject *parentNode = 0);
 
-	PlaylistDAO(const PlaylistDAO &remotePlaylist);
+	PlaylistDAO(const PlaylistDAO &other);
 
 	virtual ~PlaylistDAO();
 
