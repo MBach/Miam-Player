@@ -430,6 +430,10 @@
         <source>Help</source>
         <translation>Aide</translation>
     </message>
+    <message>
+        <source>Show Debug Dialog</source>
+        <translation>Montrer la fenêtre de débuggage</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -798,10 +802,6 @@
         <translation>Divers</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Inconnu</translation>
-    </message>
-    <message>
         <source>  Albums</source>
         <translation>  Albums</translation>
     </message>
@@ -816,6 +816,41 @@
     <message>
         <source>Send to the tag editor</source>
         <translation>Envoyer à l&apos;éditeur de tags</translation>
+    </message>
+</context>
+<context>
+    <name>LogBrowserDialog</name>
+    <message>
+        <source>-- WARNING: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-- CRITICAL: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-- FATAL: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Log Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/logfile.txt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text Files (*.txt);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1060,6 +1095,10 @@
         <source>playlist</source>
         <translation>la liste de lecture</translation>
     </message>
+    <message>
+        <source>Show debug information...</source>
+        <translation>Montrer les informations de débug...</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1175,14 +1214,8 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Liste de lecture (*.m3u8)</translation>
     </message>
     <message>
-        <source>Cannot export the selected playlist</source>
-        <translation>Impossible d&apos;exporter la liste de lecture sélectionnée</translation>
-    </message>
-    <message>
-        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation>Malheureusement, une erreur s&apos;est produite lorsque Miam Player a essayé d&apos;exporter vers &apos;%2&apos; la liste de lecture &apos;%1&apos;.
-Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&apos;il vous plaît ?</translation>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation>Glisser-déposer les listes de lecture vers le bas pour les sauvegarder</translation>
     </message>
 </context>
 <context>
@@ -1209,6 +1242,13 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Une extension a été trouvée mais le lecteur n&apos;a pu la charger (fichier %1)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Unknown</source>
+        <translation>Inconnu</translation>
     </message>
 </context>
 <context>
@@ -1278,6 +1318,18 @@ Pourriez-vous vérifiez que ce fichier n&apos;est pas déjà ouvert ailleurs, s&
 Select or drop tracks from your library or any external location.</source>
         <translation>Cette liste de lecture est vide.
 Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une application externe.</translation>
+    </message>
+    <message>
+        <source>Rename playlist</source>
+        <translation>Renommer une liste de lecture</translation>
+    </message>
+    <message>
+        <source>Load background...</source>
+        <translation>Charger une image en arrière-plan...</translation>
+    </message>
+    <message>
+        <source>Clear background</source>
+        <translation>Supprimer l&apos;image d&apos;arrière-plan</translation>
     </message>
 </context>
 <context>

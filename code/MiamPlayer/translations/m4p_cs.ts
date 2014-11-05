@@ -430,6 +430,10 @@
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Debug Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -798,10 +802,6 @@
         <translation>Různé</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Neznámý</translation>
-    </message>
-    <message>
         <source>  Albums</source>
         <translation>  Alba</translation>
     </message>
@@ -816,6 +816,41 @@
     <message>
         <source>Send to the tag editor</source>
         <translation>Poslat do editoru značek</translation>
+    </message>
+</context>
+<context>
+    <name>LogBrowserDialog</name>
+    <message>
+        <source>-- WARNING: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-- CRITICAL: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-- FATAL: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Log Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/logfile.txt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text Files (*.txt);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1063,6 +1098,10 @@
         <source>playlist</source>
         <translation>Seznam skladeb</translation>
     </message>
+    <message>
+        <source>Show debug information...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1179,14 +1218,8 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
         <translation>Seznam skladeb (*.m3u8)</translation>
     </message>
     <message>
-        <source>Cannot export the selected playlist</source>
-        <translation>Nelze vyvést vybraný seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation>Bohužel se při pokusu Miam o vyvedení seznamu skladeb &apos;%1&apos; do &apos;%2&apos; vyskytla chyba.
-Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě někde jinde?</translation>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1213,6 +1246,13 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Byl nalezen přídavný modul, ale přehrávač nebyl schopen jej nahrát (soubor %1)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Neznámý</translation>
     </message>
 </context>
 <context>
@@ -1284,6 +1324,18 @@ Buďte, prosím, tak laskav a prověřte, že soubor není otevřen ještě něk
 Select or drop tracks from your library or any external location.</source>
         <translation>Tento seznam skladeb je prázdný.
 Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umístění.</translation>
+    </message>
+    <message>
+        <source>Rename playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load background...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear background</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

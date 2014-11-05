@@ -14,7 +14,7 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Rating")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Year")
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source")
-													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "TrackDAO");
+													   << "TrackDAO";
 
 PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	QHeaderView(Qt::Horizontal, parent)
@@ -76,7 +76,7 @@ void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 		QString label = labels.at(i);
 
 		// Exclude hidden columns (should be improved?)
-		if (label != "TrackDAO") {
+		if (QString::compare(label, "TrackDAO") != 0) {
 			model->setHeaderData(i, Qt::Horizontal, tr(label.toStdString().data()), Qt::DisplayRole);
 
 			// Match actions with columns using index of labels

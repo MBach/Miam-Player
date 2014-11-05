@@ -430,6 +430,10 @@
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Debug Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -798,10 +802,6 @@
         <translation>Verschiedene</translation>
     </message>
     <message>
-        <source>Unknown</source>
-        <translation>Unbekannt</translation>
-    </message>
-    <message>
         <source>  Albums</source>
         <translation>  Alben</translation>
     </message>
@@ -816,6 +816,41 @@
     <message>
         <source>Send to the tag editor</source>
         <translation>Zum Tag Editor schicken</translation>
+    </message>
+</context>
+<context>
+    <name>LogBrowserDialog</name>
+    <message>
+        <source>-- WARNING: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-- CRITICAL: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-- FATAL: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Log Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1/logfile.txt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text Files (*.txt);;All Files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1060,6 +1095,10 @@
         <source>playlist</source>
         <translation>Wiedergabeliste</translation>
     </message>
+    <message>
+        <source>Show debug information...</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1176,14 +1215,8 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
         <translation>Wiedergabeliste (*.m3u8)</translation>
     </message>
     <message>
-        <source>Cannot export the selected playlist</source>
-        <translation>Die ausgewählte Wiedergabeliste konnte nicht exportiert werden</translation>
-    </message>
-    <message>
-        <source>Unfortunately, an error occured when Miam Player tried to export playlist &apos;%1&apos; to &apos;%2&apos;.
-Please, would you be nice to check if the file isn&apos;t opened elsewhere?</source>
-        <translation>Leider ist ein Fehler aufgetreten als Miam Player versucht hat, die Wiedergabeliste &apos;%1&apos; nach &apos;%2&apos; zu exportieren.
-Bitte überprüfen Sie, ob die Datei derzeit nicht geöffnet ist.</translation>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1210,6 +1243,13 @@ Bitte überprüfen Sie, ob die Datei derzeit nicht geöffnet ist.</translation>
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Ein Plugin wurde gefunden, konnte jedoch nicht geladen werden (Datei %1)</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Unbekannt</translation>
     </message>
 </context>
 <context>
@@ -1279,6 +1319,18 @@ Bitte überprüfen Sie, ob die Datei derzeit nicht geöffnet ist.</translation>
 Select or drop tracks from your library or any external location.</source>
         <translation>Diese Wiedergabeliste ist leer.
 Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</translation>
+    </message>
+    <message>
+        <source>Rename playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load background...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear background</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
