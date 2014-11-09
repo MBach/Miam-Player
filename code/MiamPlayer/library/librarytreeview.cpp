@@ -90,7 +90,7 @@ QChar LibraryTreeView::currentLetter() const
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(iTop));
 
 	// Special item "Various" (on top) has no Normalized String
-	if (item && item->type() == IT_Letter && iTop.data(DF_NormalizedString).toString().isEmpty()) {
+	if (item && item->type() == IT_Separator && iTop.data(DF_NormalizedString).toString().isEmpty()) {
 		return QChar();
 	} else if (!iTop.isValid()) {
 		return QChar();
@@ -185,7 +185,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}
-		if (item->type() != IT_Letter) {
+		if (item->type() != IT_Separator) {
 			_properties->exec(event->globalPos());
 		}
 	}
@@ -290,9 +290,30 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 	return c;
 }
 
-LetterItem* LibraryTreeView::insertLetter(const QString &letters)
+SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 {
-	if (!letters.isEmpty()) {
+	if (letters.isEmpty()) {
+		return NULL;
+	}
+
+	// Items are grouped every ten years in this particular case
+	int ip = SettingsPrivate::instance()->value("insertPolicy").toInt();
+	if (ip == SqlDatabase::IP_Years) {
+		int year = letters.toInt();
+		if (year == 0) {
+			return NULL;
+		}
+		QString yearStr = QString::number(year - year % 10);
+		if (_letters.contains(yearStr)) {
+			return _letters.value(yearStr);
+		} else {
+			SeparatorItem *separator = new SeparatorItem(yearStr);
+			separator->setData(yearStr, DF_NormalizedString);
+			_libraryModel->invisibleRootItem()->appendRow(separator);
+			_letters.insert(yearStr, separator);
+			return separator;
+		}
+	} else {
 		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		QString letter;
 		bool topLevelLetter = false;
@@ -305,18 +326,17 @@ LetterItem* LibraryTreeView::insertLetter(const QString &letters)
 		if (_letters.contains(letter)) {
 			return _letters.value(letter);
 		} else {
-			LetterItem *itemLetter = new LetterItem(letter);
+			SeparatorItem *separator = new SeparatorItem(letter);
 			if (topLevelLetter) {
-				itemLetter->setData("", DF_NormalizedString);
+				separator->setData("", DF_NormalizedString);
 			} else {
-				itemLetter->setData(letter, DF_NormalizedString);
+				separator->setData(letter, DF_NormalizedString);
 			}
-			_libraryModel->invisibleRootItem()->appendRow(itemLetter);
-			_letters.insert(letter, itemLetter);
-			return itemLetter;
+			_libraryModel->invisibleRootItem()->appendRow(separator);
+			_letters.insert(letter, separator);
+			return separator;
 		}
 	}
-	return NULL;
 }
 
 /** Invert the current sort order. */
@@ -397,8 +417,8 @@ void LibraryTreeView::reset()
 
 void LibraryTreeView::endPopulateTree()
 {
+	_proxyModel->sort(0);
 	_proxyModel->setDynamicSortFilter(true);
-	sortByColumn(0, Qt::AscendingOrder);
 	_circleProgressBar->hide();
 	_circleProgressBar->setValue(0);
 	QMapIterator<GenericDAO*, QStandardItem*> it(_map);
@@ -428,16 +448,23 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 		parentItem->appendRow(nodeItem);
 	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
-		LetterItem *letter = this->insertLetter(nodeItem->text());
-		if (letter) {
-			_topLevelItems.insert(letter->index(), nodeItem->index());
+		SeparatorItem *separator = this->insertSeparator(nodeItem->text());
+		if (separator) {
+			_topLevelItems.insert(separator->index(), nodeItem->index());
 		}
 	}
 	_map.insert(node, nodeItem);
 }
 
 
-void LibraryTreeView::updateNode(GenericDAO *)
+void LibraryTreeView::updateNode(GenericDAO *node)
 {
-	qDebug() << Q_FUNC_INFO << "not implemented";
+	// Is it possible to update other types of nodes?
+	if (AlbumItem *album = static_cast<AlbumItem*>(_map.value(node))) {
+		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
+		album->setData(dao->year(), LibraryTreeView::DF_Year);
+		album->setData(dao->cover(), LibraryTreeView::DF_CoverPath);
+		album->setData(dao->icon(), LibraryTreeView::DF_IconPath);
+		album->setData(!dao->icon().isEmpty(), LibraryTreeView::DF_IsRemote);
+	}
 }

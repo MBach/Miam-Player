@@ -169,6 +169,7 @@ void ScrollBar::paintEvent(QPaintEvent *)
 	p.restore();
 
 	// Frame border
+	/// FIXME bottomLeft right, topLeft topRight!
 	p.setPen(QApplication::palette().mid().color());
 	if (_top) p.drawLine(rect().topLeft(), rect().topRight());
 	if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());

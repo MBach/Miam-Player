@@ -9,7 +9,7 @@
 #include "albumitem.h"
 #include "artistitem.h"
 #include "discitem.h"
-#include "letteritem.h"
+#include "separatoritem.h"
 #include "trackitem.h"
 #include "yearitem.h"
 
@@ -57,7 +57,7 @@ private:
 
 	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const;
 
-	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, LetterItem *item) const;
+	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const;
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
 

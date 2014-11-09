@@ -71,7 +71,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	// Accept separators if any top level items and its children are accepted
 	QStandardItemModel *model = qobject_cast<QStandardItemModel*>(sourceModel());
 	QStandardItem *item = model->itemFromIndex(model->index(sourceRow, 0, sourceParent));
-	if (item && item->type() == LibraryTreeView::IT_Letter) {
+	if (item && item->type() == LibraryTreeView::IT_Separator) {
 		foreach (QModelIndex index, _topLevelItems->values(item->index())) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
 				//qDebug() << "accepting Letter" << index.data().toString();
@@ -135,7 +135,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		}
 		break;
 
-	case LibraryTreeView::IT_Letter:
+	case LibraryTreeView::IT_Separator:
 		// Special case if an artist's name has only one character, be sure to put it after the separator
 		// Example: M (or -M-, or Mathieu Chedid)
 		if (rType == LibraryTreeView::IT_Artist || rType == LibraryTreeView::IT_Album) {
@@ -144,12 +144,8 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 			} else {
 				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 			}
-		} else {
-			if (QString::compare(left->text().left(1), right->text().left(1)) == 0) {
-				result = (sortOrder() == Qt::AscendingOrder);
-			} else {
-				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
-			}
+		} else { // IT_Year
+			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 

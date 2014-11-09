@@ -877,7 +877,11 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 				insertAlbum.addBindValue(albumId);
 				insertAlbum.addBindValue(album);
 				insertAlbum.addBindValue(albumNorm);
-				insertAlbum.addBindValue(fh.year());
+				if (fh.year().isEmpty()) {
+					insertAlbum.addBindValue(0);
+				} else {
+					insertAlbum.addBindValue(fh.year());
+				}
 				insertAlbum.addBindValue(artistId);
 				insertAlbum.exec();
 			} else {

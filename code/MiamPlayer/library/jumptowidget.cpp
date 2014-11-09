@@ -76,6 +76,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	QFont f = p.font();
 	f.setPixelSize(height() / 26);
 	for (int i = 0; i < 26; i++) {
+		p.save();
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 19, height() / 26);
 		if (_libraryTreeView->currentLetter() == qc) {
@@ -89,14 +90,21 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
 			p.setFont(f);
 		}
-		if (o.state.testFlag(QStyle::State_Selected)) {
+		if (_libraryTreeView->currentLetter() == qc) {
 			p.setPen(o.palette.highlightedText().color());
-		} else if (((o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) || _libraryTreeView->currentLetter() == qc)) {
-			p.setPen(o.palette.highlightedText().color());
+		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
+			QColor lighterBG = o.palette.highlight().color().lighter(160);
+			QColor highlightedText = o.palette.highlightedText().color();
+			if (qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
+				p.setPen(highlightedText);
+			} else {
+				p.setPen(o.palette.windowText().color());
+			}
 		} else {
 			p.setPen(o.palette.windowText().color());
 		}
 		p.drawText(r, Qt::AlignCenter, qc);
+		p.restore();
 	}
 
 	// Draw a vertical line if there are few items in the library

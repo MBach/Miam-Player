@@ -66,10 +66,11 @@ SOURCES += \
     library/albumitem.cpp \
     library/artistitem.cpp \
     library/discitem.cpp \
-    library/letteritem.cpp \
     library/trackitem.cpp \
     library/yearitem.cpp \
-    styling/imageutils.cpp
+    styling/imageutils.cpp \
+    library/separatoritem.cpp \
+    library/changehierarchybutton.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -138,10 +139,11 @@ HEADERS += \
     library/albumitem.h \
     library/artistitem.h \
     library/discitem.h \
-    library/letteritem.h \
     library/trackitem.h \
     library/yearitem.h \
-    styling/imageutils.h
+    styling/imageutils.h \
+    library/separatoritem.h \
+    library/changehierarchybutton.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

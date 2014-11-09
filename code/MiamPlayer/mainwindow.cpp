@@ -355,6 +355,7 @@ void MainWindow::setupActions()
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
 	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
+	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		delete PluginManager::getInstance();

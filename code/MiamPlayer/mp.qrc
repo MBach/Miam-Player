@@ -21,6 +21,7 @@
         <file alias="back">config/icons/back.png</file>
         <file alias="debug">config/icons/debug.png</file>
         <file alias="playlist">config/icons/playlist.png</file>
+        <file alias="hierarchy">config/icons/hierarchy-128.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

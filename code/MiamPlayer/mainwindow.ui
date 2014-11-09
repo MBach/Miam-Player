@@ -122,14 +122,50 @@
               </widget>
              </item>
              <item>
-              <widget class="LibraryHeader" name="libraryHeader">
-               <property name="text">
-                <string>Artist \ Album</string>
+              <layout class="QHBoxLayout" name="horizontalLayout_hierarchy">
+               <property name="spacing">
+                <number>0</number>
                </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-              </widget>
+               <item>
+                <widget class="LibraryHeader" name="libraryHeader">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                   <horstretch>100</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Artist \ Album</string>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="ChangeHierarchyButton" name="changeHierarchyButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string notr="true"/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="mp.qrc">
+                   <normaloff>:/icons/hierarchy</normaloff>:/icons/hierarchy</iconset>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="LibraryTreeView" name="library">
@@ -529,7 +565,7 @@
      <x>0</x>
      <y>0</y>
      <width>681</width>
-     <height>25</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -941,6 +977,11 @@
    <class>SeekBar</class>
    <extends>QSlider</extends>
    <header>seekbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ChangeHierarchyButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">changehierarchybutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

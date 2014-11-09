@@ -103,29 +103,3 @@ QString LibraryOrderDialog::headerValue() const
 		return tr("Artist \\ Album");
 	}
 }
-
-//#include <QPropertyAnimation>
-
-void LibraryOrderDialog::show()
-{
-	QDialog::show();
-	/*qDebug() << "pick one to populate this popup!";
-	QPropertyAnimation *animation = new QPropertyAnimation(this, "pos");
-	animation->setTargetObject(albumTreeView);
-	QPoint topLeft = artistTreeView->rect().topLeft();
-	QPoint topLeftEnd = topLeft;
-	topLeftEnd.setX(topLeft.x() + artistTreeView->rect().width());
-	animation->setStartValue(QVariant(topLeft));
-	animation->setEndValue(QVariant(topLeftEnd));
-	animation->setDuration(100);
-	animation->start();
-	yearTreeView->raise();
-	artistAlbumTreeView->raise();
-	albumTreeView->raise();
-	artistTreeView->raise();*/
-}
-
-void LibraryOrderDialog::paintEvent(QPaintEvent *)
-{
-
-}

@@ -51,8 +51,8 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->paintRect(painter, o);
 		this->drawDisc(painter, o, static_cast<DiscItem*>(item));
 		break;
-	case LibraryTreeView::IT_Letter:
-		this->drawLetter(painter, o, static_cast<LetterItem*>(item));
+	case LibraryTreeView::IT_Separator:
+		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
 	case LibraryTreeView::IT_Track:
 		this->paintRect(painter, o);
@@ -216,7 +216,7 @@ void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &opti
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
-void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, LetterItem *item) const
+void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const
 {
 	// One cannot interact with an alphabetical separator
 	option.state = QStyle::State_None;

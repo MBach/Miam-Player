@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
+    <width>740</width>
     <height>660</height>
    </rect>
   </property>
@@ -277,8 +277,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>432</width>
-               <height>542</height>
+               <width>484</width>
+               <height>588</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1103,7 +1103,7 @@
           <item row="1" column="2">
            <widget class="QSpinBox" name="spinBoxLibrary">
             <property name="minimum">
-             <number>4</number>
+             <number>6</number>
             </property>
             <property name="maximum">
              <number>72</number>
@@ -1135,7 +1135,7 @@
           <item row="2" column="2">
            <widget class="QSpinBox" name="spinBoxPlaylist">
             <property name="minimum">
-             <number>4</number>
+             <number>6</number>
             </property>
             <property name="maximum">
              <number>72</number>
@@ -1171,7 +1171,7 @@
           <item row="4" column="2">
            <widget class="QSpinBox" name="spinBoxMenus">
             <property name="minimum">
-             <number>4</number>
+             <number>6</number>
             </property>
             <property name="maximum">
              <number>72</number>

@@ -9,7 +9,7 @@
 #include <QtDebug>
 
 LibraryHeader::LibraryHeader(QWidget *parent) :
-	QPushButton(parent), _lod(new LibraryOrderDialog(this)), _order(Qt::AscendingOrder)
+	QPushButton(parent), _lod(new LibraryOrderDialog(this)), _order(Qt::AscendingOrder), _uncheck(false)
 {
 	connect(this, &QPushButton::clicked, [=]() {
 		if (_order == Qt::AscendingOrder) {
@@ -21,6 +21,16 @@ LibraryHeader::LibraryHeader(QWidget *parent) :
 		emit aboutToChangeSortOrder();
 	});
 	connect(_lod, &LibraryOrderDialog::accepted, this, &LibraryHeader::aboutToChangeHierarchyOrder);
+	_lod->installEventFilter(this);
+}
+
+bool LibraryHeader::eventFilter(QObject *obj, QEvent *event)
+{
+	if (obj == _lod && event->type() == QEvent::Close) {
+		qDebug() << "uncheck button?";
+		_uncheck = true;
+	}
+	return QPushButton::eventFilter(obj, event);
 }
 
 void LibraryHeader::contextMenuEvent(QContextMenuEvent *e)
@@ -106,12 +116,18 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	}
 	p.drawPolygon(sortIndicator);
 	p.restore();
+}
 
-	// Border
-	p.setPen(QApplication::palette().mid().color());
-	if (isLeftToRight()) {
-		p.drawLine(rect().topRight(), rect().bottomRight());
+void LibraryHeader::showDialog(bool enabled)
+{
+	QPushButton *b = qobject_cast<QPushButton*>(sender());
+	if (b) {
+		_lod->move(mapToGlobal(b->frameGeometry().topLeft()));
+	}
+	if (_uncheck) {
+		_lod->setVisible(true);
+		_uncheck = false;
 	} else {
-		p.drawLine(rect().topLeft(), rect().bottomLeft());
+		_lod->setVisible(enabled);
 	}
 }

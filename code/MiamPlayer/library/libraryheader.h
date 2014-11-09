@@ -13,6 +13,8 @@ private:
 
 	Qt::SortOrder _order;
 
+	bool _uncheck;
+
 public:
 	explicit LibraryHeader(QWidget *parent = 0);
 
@@ -21,7 +23,11 @@ protected:
 
 	virtual void paintEvent(QPaintEvent *);
 
+	virtual bool eventFilter(QObject *obj, QEvent *event);
+
 public slots:
+	void showDialog(bool enabled);
+
 	inline void resetSortOrder() { _order = Qt::AscendingOrder; }
 
 signals:

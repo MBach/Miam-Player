@@ -21,7 +21,7 @@ class JumpToWidget;
 class ArtistItem;
 class AlbumItem;
 class DiscItem;
-class LetterItem;
+class SeparatorItem;
 class TrackItem;
 class YearItem;
 
@@ -71,7 +71,7 @@ private:
 	QMap<GenericDAO*, QStandardItem*> _map;
 
 	/** Letters are items to groups separate of top levels items (items without parent). */
-	QHash<QString, LetterItem*> _letters;
+	QHash<QString, SeparatorItem*> _letters;
 
 	/** Letter L returns all Artists (e.g.) starting with L. */
 	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
@@ -100,7 +100,7 @@ public:
 					IT_Album		= QMetaType::User + 2,
 					IT_ArtistAlbum	= QMetaType::User + 3,
 					IT_Disc			= QMetaType::User + 4,
-					IT_Letter		= QMetaType::User + 5,
+					IT_Separator	= QMetaType::User + 5,
 					IT_Track		= QMetaType::User + 6,
 					IT_Year			= QMetaType::User + 7 };
 
@@ -135,7 +135,7 @@ private:
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;
 
-	LetterItem *insertLetter(const QString &letters);
+	SeparatorItem *insertSeparator(const QString &letters);
 
 	void repaintIcons();
 
@@ -164,7 +164,7 @@ private slots:
 	/** Find and insert a node in the hierarchy of items. */
 	void insertNode(GenericDAO *node);
 
-	void updateNode(GenericDAO *);
+	void updateNode(GenericDAO *node);
 
 signals:
 	/** (Dis|En)able covers.*/
