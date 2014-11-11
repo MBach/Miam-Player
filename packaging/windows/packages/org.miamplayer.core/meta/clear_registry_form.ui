@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>563</width>
+    <height>92</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,9 +15,34 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <italic>true</italic>
+      </font>
+     </property>
+     <property name="text">
+      <string>Because Miam-Player is still in Beta, it is recommended to remove all files created from this software</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="clearRegistryCheckBox_2">
+     <property name="text">
+      <string>Remove database cache of audio files, etc. (recommended)</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="clearRegistryCheckBox">
      <property name="text">
-      <string>Remove all files created with Miam-Player: settings, database cache of audio files, etc.</string>
+      <string>Reset settings stored in Windows Registry (not necessary)</string>
      </property>
     </widget>
    </item>

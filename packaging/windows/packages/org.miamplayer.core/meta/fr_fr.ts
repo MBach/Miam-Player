@@ -22,13 +22,25 @@
         <source>Associate common audio file types with Miam-Player.</source>
         <translation>Associer les fichiers audio les plus communs avec Miam-Player.</translation>
     </message>
+    <message>
+        <source>&lt;font color=&apos;red&apos;&gt;A previous installation exists in this folder. If you wish to continue, everything will be overwritten.&lt;/font&gt;</source>
+        <translation>&lt;font color=&apos;red&apos;&gt;Une précédente installation se trouve déjà dans ce dossier. Si vous décidez de poursuivre, tout ce qui existe sera remplacé.&lt;/font&gt;</translation>
+    </message>
+    <message>
+        <source>Because Miam-Player is still in Beta, it is recommended to remove all files created from this software</source>
+        <translation>Miam-Player étant encore en Beta, il est recommandé de supprimer tous les fichiers créés par ce logiciel</translation>
+    </message>
+    <message>
+        <source>Remove database cache of audio files, etc. (recommended)</source>
+        <translation>Supprimer la base de donnée des caches audios, etc. (recommandé)</translation>
+    </message>
+    <message>
+        <source>Reset settings stored in Windows Registry (not necessary)</source>
+        <translation>Effacer les paramètres stockés dans l&apos;Editeur du Registre de Windows (non obligatoire)</translation>
+    </message>
 </context>
 <context>
     <name>installscript</name>
-    <message>
-        <source>A previous installation exists in this folder. If you wish to continue, everything will be overwritten.</source>
-        <translation>Une précédente installation se trouve déjà dans ce dossier. Si vous décidez de poursuivre, tout ce qui existe sera remplacé.</translation>
-    </message>
     <message>
         <source>Installation Folder</source>
         <translation>Dossier d&apos;installation</translation>

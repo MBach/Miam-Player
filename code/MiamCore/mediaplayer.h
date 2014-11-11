@@ -5,7 +5,6 @@
 #include <QMediaPlaylist>
 
 #include "miamcore_global.h"
-#include "model/trackdao.h"
 
 class RemoteMediaPlayer;
 

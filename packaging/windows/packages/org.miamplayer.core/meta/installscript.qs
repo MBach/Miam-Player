@@ -61,7 +61,7 @@ var Dir = new function () {
             return path.replace(/\//g, '\\');
         return path;
     }
-};
+}; 
 
 // called as soon as the component was loaded
 Component.prototype.installerLoaded = function()
@@ -102,7 +102,7 @@ Component.prototype.beginInstallation = function()
     component.beginInstallation();
 	
 	if (installer.value("os") === "win") {
-        installer.setValue("RunProgram", "@TargetDir@/MiamPlayer.exe");
+        installer.setValue("RunProgram", "@TargetDir@\\MiamPlayer.exe");
     } else if (installer.value("os") === "x11") {
         installer.setValue("RunProgram", "@TargetDir@/MiamPlayer");
     }
@@ -124,11 +124,11 @@ Component.prototype.targetChanged = function (text) {
         if (text != "") {
 			widget.complete = true;
 			installer.setValue("TargetDir", text);
-			if (installer.fileExists(text + "/components.xml")) {
-				var warning = "<font color='red'>" + qsTr("A previous installation exists in this folder. If you wish to continue, everything will be overwritten.") + "</font>";
-				widget.labelOverwrite.text = warning;
-			} else {
-				widget.labelOverwrite.text = "";
+			if (!installer.fileExists(text + "/components.xml")) {
+				widget.labelOverwrite.visible = false;
+				widget.labelUserShouldRemove.visible = false;
+				widget.clearCacheCheckBox.visible = false;
+				widget.clearRegistryCheckBox.visible = false;		
 			}
 			return;
         }
@@ -167,7 +167,12 @@ Component.prototype.createOperations = function()
 											   "ProgId=MiamPlayer." + ext);
 					}
 				}
-				// widget = gui.pageWidgetByObjectName("FinishedPage");
+				if (widget.clearCacheCheckBox.checked) {
+					component.addElevatedOperation("Rmdir", Dir.toNativeSparator("@HomeDir@/AppData/Local/MmeMiamMiam"));
+				}
+				if (widget.clearRegistryCheckBox.checked) {
+
+				}
 			} catch (e) {
 				// Do nothing if key doesn't exist
 			}

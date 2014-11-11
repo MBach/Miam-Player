@@ -124,6 +124,8 @@ QString FileHelper::artistAlbum() const
 	switch (fileType) {
 	case APE:
 	case MPC:
+		artAlb = this->extractGenericFeature("ALBUMARTIST");
+		break;
 	case OGG:
 		artAlb = this->extractGenericFeature("ALBUMARTIST");
 		if (artAlb.isEmpty()) {
@@ -611,7 +613,7 @@ QString FileHelper::extractVorbisFeature(const QString &featureToExtract) const
 	if (TagLib::Vorbis::File *vorbisFile = static_cast<TagLib::Vorbis::File*>(_file)) {
 		if (vorbisFile->tag()) {
 			const TagLib::Ogg::FieldListMap map = vorbisFile->tag()->fieldListMap();
-			if (!map[featureToExtract.toStdString().data()].isEmpty()) {
+			if (vorbisFile->tag()->properties().contains(featureToExtract.toStdString().data())) {
 				feature = QString(map[featureToExtract.toStdString().data()].front().toCString(true));
 			}
 		}
