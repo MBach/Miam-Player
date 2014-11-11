@@ -2,21 +2,17 @@
 #define LIBRARYORDERDIALOG_H
 
 #include <QDialog>
+#include "ui_libraryorderdialog.h"
 
-namespace Ui {
-	class LibraryOrderDialog;
-}
-
-class LibraryOrderDialog : public QDialog
+class LibraryOrderDialog : public QDialog, public Ui::LibraryOrderDialog
 {
 	Q_OBJECT
-private:
-	Ui::LibraryOrderDialog *_ui;
-
 public:
 	explicit LibraryOrderDialog(QWidget *parent = 0);
 
 	QString headerValue() const;
+
+	void setVisible(bool b);
 };
 
 #endif // LIBRARYORDERDIALOG_H

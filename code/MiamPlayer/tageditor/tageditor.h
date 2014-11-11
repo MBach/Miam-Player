@@ -26,9 +26,6 @@ class TagEditor : public QWidget, public Ui::TagEditor, public SelectedTracksMod
 private:
 	QMap<int, QComboBox*> combos;
 
-	/// An automatic helper for writing tags following regExp
-	TagConverter *tagConverter;
-
 	static QStringList genres;
 
 	QMap<int, Cover*> covers;
@@ -37,6 +34,9 @@ private:
 	SqlDatabase *_db;
 
 public:
+	/** An automatic helper for writing tags following regExp. */
+	TagConverter *tagConverter;
+
 	explicit TagEditor(QWidget *parent = 0);
 
 	virtual void init(SqlDatabase *db);

@@ -157,9 +157,17 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		if (rType == LibraryTreeView::IT_Track) {
 			int rTrackNumber = right->data(LibraryTreeView::DF_TrackNumber).toInt();
 			if (dLeft == dRight) {
-				result = (lTrackNumber < rTrackNumber && sortOrder() == Qt::AscendingOrder) ||
-					(rTrackNumber < lTrackNumber && sortOrder() == Qt::DescendingOrder);
-
+				// If there are both remote and local tracks under the same album, display first tracks from hard disk
+				// Otherwise tracks will be displayed like #1 - local, #1 - remote, #2 - local, #2 - remote, etc
+				bool lIsRemote = left->data(LibraryTreeView::DF_IsRemote).toBool();
+				bool rIsRemote = right->data(LibraryTreeView::DF_IsRemote).toBool();
+				if (lIsRemote && rIsRemote || !lIsRemote && !rIsRemote) {
+					result = (lTrackNumber < rTrackNumber && sortOrder() == Qt::AscendingOrder) ||
+						(rTrackNumber < lTrackNumber && sortOrder() == Qt::DescendingOrder);
+				} else {
+					result = (rIsRemote && sortOrder() == Qt::AscendingOrder) ||
+						(lIsRemote && sortOrder() == Qt::DescendingOrder);
+				}
 			} else {
 				result = (dLeft < dRight && sortOrder() == Qt::AscendingOrder) ||
 						  (dRight < dLeft && sortOrder() == Qt::DescendingOrder);

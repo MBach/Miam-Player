@@ -91,6 +91,7 @@ void MainWindow::init()
 	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
 	libraryHeader->setVisible(!isEmpty);
+	changeHierarchyButton->setVisible(!isEmpty);
 	/// XXX For each view
 	library->setHidden(isEmpty);
 	/// XXX
@@ -139,22 +140,26 @@ void MainWindow::moveSearchDialog()
 void MainWindow::setupActions()
 {
 	// Load music
-	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](bool libraryIsEmpty) {
+	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
+		bool libraryIsEmpty = newLocations.isEmpty();
 		quickStart->setVisible(libraryIsEmpty);
 		library->setVisible(!libraryIsEmpty);
 		libraryHeader->setVisible(!libraryIsEmpty);
+		changeHierarchyButton->setVisible(!libraryIsEmpty);
 		actionScanLibrary->setDisabled(libraryIsEmpty);
 		widgetSearchBar->setVisible(!libraryIsEmpty);
+
 		if (libraryIsEmpty) {
 			// Delete table tracks if such a previous one was found
 			if (SqlDatabase::instance()->open()) {
-				SqlDatabase::instance()->exec("DROP TABLE tracks");
+				// If one has only remote files in the database, do not drop it either!
+				// SqlDatabase::instance()->exec("DROP TABLE tracks");
 				qDebug() << Q_FUNC_INFO;
 				SqlDatabase::instance()->close();
 			}
 			quickStart->searchMultimediaFiles();
 		} else {
-			SqlDatabase::instance()->rebuild();
+			SqlDatabase::instance()->rebuild(oldLocations, newLocations);
 		}
 	});
 
@@ -224,9 +229,10 @@ void MainWindow::setupActions()
 		}
 		SettingsPrivate::instance()->setMusicLocations(newLocations);
 		quickStart->hide();
-		library->setHidden(false);
-		libraryHeader->setHidden(false);
-		widgetSearchBar->setHidden(false);
+		library->show();
+		libraryHeader->show();
+		changeHierarchyButton->show();
+		widgetSearchBar->show();
 		actionScanLibrary->setEnabled(true);
 		SqlDatabase::instance()->rebuild();
 	});
@@ -355,6 +361,7 @@ void MainWindow::setupActions()
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
 	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
+	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, this, static_cast<void (MainWindow::*)(void)>(&MainWindow::update));
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
@@ -407,7 +414,9 @@ void MainWindow::changeEvent(QEvent *event)
 		quickStart->retranslateUi(quickStart);
 		playlistManager->retranslateUi(playlistManager);
 		tagEditor->retranslateUi(tagEditor);
+		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 		dragDropDialog->retranslateUi(dragDropDialog);
+		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
 
 		// (need to be tested with Arabic language)
 		if (tr("LTR") == "RTL") {

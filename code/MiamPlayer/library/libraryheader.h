@@ -9,13 +9,13 @@ class LibraryHeader : public QPushButton
 {
 	Q_OBJECT
 private:
-	LibraryOrderDialog *_lod;
-
 	Qt::SortOrder _order;
 
 	bool _uncheck;
 
 public:
+	LibraryOrderDialog *libraryOrderDialog;
+
 	explicit LibraryHeader(QWidget *parent = 0);
 
 protected:

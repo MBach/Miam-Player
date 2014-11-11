@@ -26,19 +26,20 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 	});*/
 }
 
-void MusicSearchEngine::doSearch()
+void MusicSearchEngine::doSearch(const QStringList &delta)
 {
-	QList<QDir> savedLocations;
-	foreach (QString musicPath, SettingsPrivate::instance()->musicLocations()) {
+	QList<QDir> locations;
+	QStringList pathsToSearch = delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : delta;
+	foreach (QString musicPath, pathsToSearch) {
 		QDir location(musicPath);
 		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
-		savedLocations.append(location);
+		locations.append(location);
 	}
 
 	int entryCount = 0;
 	// QDirIterator class is very fast to scan large directories
-	foreach (QDir location, savedLocations) {
-		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+	foreach (QDir location, locations) {
+		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			entryCount++;
@@ -53,8 +54,8 @@ void MusicSearchEngine::doSearch()
 	QString coverPath;
 	QString lastFileScannedNextToCover;
 
-	foreach (QDir location, savedLocations) {
-		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+	foreach (QDir location, locations) {
+		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			QString entry = it.next();
 			// qDebug() << "entry" << entry;

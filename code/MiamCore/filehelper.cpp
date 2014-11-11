@@ -126,6 +126,9 @@ QString FileHelper::artistAlbum() const
 	case MPC:
 	case OGG:
 		artAlb = this->extractGenericFeature("ALBUMARTIST");
+		if (artAlb.isEmpty()) {
+			artAlb = this->extractVorbisFeature("ALBUM ARTIST");
+		}
 		break;
 	case ASF:
 		qDebug() << "FileHelper::artistAlbum: Not yet implemented for ASF file";
@@ -259,6 +262,7 @@ bool FileHelper::insert(QString key, const QVariant &value)
 	TagLib::String v = value.toString().toStdString();
 
 	/// XXX Create an enumeration somewhere
+
 	if (key == "ALBUM") {
 		_file->tag()->setAlbum(v);
 	} else if (key == "ARTIST") {
@@ -275,8 +279,10 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		_file->tag()->setYear(value.toInt());
 	} else if (key == "ARTISTALBUM"){
 		this->setArtistAlbum(value.toString());
+	} else if (key == "DISC"){
+		this->setDiscNumber(value.toString());
 	} else {
-		/// TODO
+		return false;
 	}
 	return true;
 }
@@ -387,6 +393,31 @@ void FileHelper::setCover(Cover *cover)
 	}
 }
 
+/** Set or remove any disc number. */
+void FileHelper::setDiscNumber(const QString &disc)
+{
+	switch (fileType) {
+	case MP3: {
+		TagLib::MPEG::File *mpegFile = mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+		if (mpegFile && mpegFile->hasID3v2Tag()) {
+			// Remove existing disc number if one has set an empty string
+			if (disc.isEmpty()) {
+				mpegFile->ID3v2Tag()->removeFrames(TagLib::ByteVector("TPOS"));
+			} else {
+				TagLib::ID3v2::TextIdentificationFrame *f = new TagLib::ID3v2::TextIdentificationFrame(TagLib::ByteVector("TPOS"));
+				f->setText(disc.toStdString());
+				mpegFile->ID3v2Tag()->addFrame(f);
+			}
+		}
+		break;
+	}
+	default:
+		qDebug() << "FileHelper::setDiscNumber: Not implemented for other file type than MP3";
+		break;
+	}
+}
+
+/** Set or remove any rating. */
 void FileHelper::setRating(int rating)
 {
 	switch (fileType) {
@@ -516,6 +547,8 @@ QString FileHelper::convertKeyToID3v2Key(QString key)
 	/// TODO other relevant keys
 	if (key.compare("ARTISTALBUM") == 0) {
 		return "TPE2";
+	} else if (key.compare("DISC") == 0) {
+		return "TPOS";
 	} else {
 		return "";
 	}

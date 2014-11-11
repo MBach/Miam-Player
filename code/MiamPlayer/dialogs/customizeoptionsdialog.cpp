@@ -395,6 +395,8 @@ void CustomizeOptionsDialog::updateMusicLocations()
 	if (!musicLocationsAreIdenticals) {
 		settings->setMusicLocations(newLocations);
 		settings->sync();
-		emit musicLocationsHaveChanged(newLocations.isEmpty());
+		qDebug() << "savedLocations" << savedLocations;
+		qDebug() << "newLocations" << newLocations;
+		emit musicLocationsHaveChanged(savedLocations, newLocations);
 	}
 }

@@ -66,7 +66,7 @@ private slots:
 
 signals:
 	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged(bool libraryIsEmpty);
+	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
 
 	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);
 };

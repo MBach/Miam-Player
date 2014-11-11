@@ -70,6 +70,8 @@ public:
 	/** Extract field disc number. */
 	int discNumber(bool canBeZero = false) const;
 
+
+
 	/** Extract the inner picture if exists. */
 	Cover* extractCover();
 
@@ -84,6 +86,10 @@ public:
 	/** Sets the inner picture. */
 	void setCover(Cover *cover);
 
+	/** Set or remove any disc number. */
+	void setDiscNumber(const QString &disc);
+
+	/** Set or remove any rating. */
 	void setRating(int rating);
 
 	/// Facade

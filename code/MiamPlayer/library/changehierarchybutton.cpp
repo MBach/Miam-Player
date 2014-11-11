@@ -12,7 +12,7 @@ ChangeHierarchyButton::ChangeHierarchyButton(QWidget *parent) :
 	QPushButton(parent)
 {}
 
-void ChangeHierarchyButton::paintEvent(QPaintEvent *event)
+void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
 	QColor base = QApplication::palette().base().color();

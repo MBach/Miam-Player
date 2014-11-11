@@ -92,7 +92,15 @@ void VolumeSlider::paintEvent(QPaintEvent *)
 			p.setPen(opt.palette.mid().color());
 			p.setBrush(opt.palette.midlight());
 		}
-		QRectF r(i * barWidth, height() * 0.15 + floor(y * h), barWidth - 2, h - floor(y * h));
+		QRectF r;
+		if (isLeftToRight()) {
+			r.setX(i * barWidth);
+		} else {
+			r.setX(width() -  i * barWidth);
+		}
+		r.setY(height() * 0.15 + floor(y * h));
+		r.setWidth(barWidth - 2);
+		r.setHeight(h - floor(y * h));
 		p.drawRect(r);
 	}
 

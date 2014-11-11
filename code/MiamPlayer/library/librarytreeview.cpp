@@ -99,7 +99,11 @@ QChar LibraryTreeView::currentLetter() const
 		while (iTop.parent().isValid()) {
 			iTop = iTop.parent();
 		}
-		return iTop.data(DF_NormalizedString).toString().toUpper().at(0);
+		if (iTop.isValid() && !iTop.data(DF_NormalizedString).toString().isEmpty()) {
+			return iTop.data(DF_NormalizedString).toString().toUpper().at(0);
+		} else {
+			return QChar();
+		}
 	}
 }
 
@@ -445,7 +449,11 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 
 	if (node->parentNode()) {
 		QStandardItem *parentItem = _map.value(node->parentNode());
-		parentItem->appendRow(nodeItem);
+		if (parentItem) {
+			parentItem->appendRow(nodeItem);
+		} else {
+			qDebug() << "parentItem should exists but it was not found?" << node->title();
+		}
 	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
 		SeparatorItem *separator = this->insertSeparator(nodeItem->text());
@@ -455,7 +463,6 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 	}
 	_map.insert(node, nodeItem);
 }
-
 
 void LibraryTreeView::updateNode(GenericDAO *node)
 {

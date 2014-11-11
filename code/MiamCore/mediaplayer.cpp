@@ -231,6 +231,7 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
+		_player->stop();
 		return;
 	}
 

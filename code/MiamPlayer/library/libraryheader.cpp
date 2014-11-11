@@ -9,7 +9,7 @@
 #include <QtDebug>
 
 LibraryHeader::LibraryHeader(QWidget *parent) :
-	QPushButton(parent), _lod(new LibraryOrderDialog(this)), _order(Qt::AscendingOrder), _uncheck(false)
+	QPushButton(parent), libraryOrderDialog(new LibraryOrderDialog(this)), _order(Qt::AscendingOrder), _uncheck(false)
 {
 	connect(this, &QPushButton::clicked, [=]() {
 		if (_order == Qt::AscendingOrder) {
@@ -20,14 +20,13 @@ LibraryHeader::LibraryHeader(QWidget *parent) :
 		this->update();
 		emit aboutToChangeSortOrder();
 	});
-	connect(_lod, &LibraryOrderDialog::accepted, this, &LibraryHeader::aboutToChangeHierarchyOrder);
-	_lod->installEventFilter(this);
+	connect(libraryOrderDialog, &LibraryOrderDialog::accepted, this, &LibraryHeader::aboutToChangeHierarchyOrder);
+	libraryOrderDialog->installEventFilter(this);
 }
 
 bool LibraryHeader::eventFilter(QObject *obj, QEvent *event)
 {
-	if (obj == _lod && event->type() == QEvent::Close) {
-		qDebug() << "uncheck button?";
+	if (obj == libraryOrderDialog && event->type() == QEvent::Close) {
 		_uncheck = true;
 	}
 	return QPushButton::eventFilter(obj, event);
@@ -35,8 +34,8 @@ bool LibraryHeader::eventFilter(QObject *obj, QEvent *event)
 
 void LibraryHeader::contextMenuEvent(QContextMenuEvent *e)
 {
-	_lod->move(mapToGlobal(e->pos()));
-	_lod->show();
+	libraryOrderDialog->move(mapToGlobal(e->pos()));
+	libraryOrderDialog->show();
 }
 
 void LibraryHeader::paintEvent(QPaintEvent *)
@@ -56,7 +55,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	p.fillRect(rect(), g);
 
 	// Text
-	QString header = _lod->headerValue();
+	QString header = libraryOrderDialog->headerValue();
 	QFont f = SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
 	p.setFont(f);
 	QFontMetrics fm(f);
@@ -122,12 +121,12 @@ void LibraryHeader::showDialog(bool enabled)
 {
 	QPushButton *b = qobject_cast<QPushButton*>(sender());
 	if (b) {
-		_lod->move(mapToGlobal(b->frameGeometry().topLeft()));
+		libraryOrderDialog->move(mapToGlobal(b->frameGeometry().topLeft()));
 	}
 	if (_uncheck) {
-		_lod->setVisible(true);
+		libraryOrderDialog->setVisible(true);
 		_uncheck = false;
 	} else {
-		_lod->setVisible(enabled);
+		libraryOrderDialog->setVisible(enabled);
 	}
 }

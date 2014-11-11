@@ -786,6 +786,14 @@
         <source>Artist \ Album</source>
         <translation>Artist \ Album</translation>
     </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artist</translation>
+    </message>
+    <message>
+        <source>track</source>
+        <translation>track</translation>
+    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>

@@ -17,7 +17,7 @@ public:
 	MusicSearchEngine(QObject *parent = 0);
 
 public slots:
-	void doSearch();
+	void doSearch(const QStringList &delta = QStringList());
 
 signals:
 	/** A JPG or a PNG was found next to a valid audio file in the same directory. */

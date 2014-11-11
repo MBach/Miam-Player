@@ -245,8 +245,11 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 		}
 	}
 	int trackNumber = track->data(LibraryTreeView::DF_TrackNumber).toInt();
-	QString title = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
-	option.text = title;
+	if (trackNumber > 0) {
+		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
+	} else {
+		option.text = track->text();
+	}
 	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;

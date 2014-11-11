@@ -752,7 +752,7 @@
     </message>
     <message>
         <source>Select how to display your library</source>
-        <translation>Sélectionnez comment afficher votre bibliothèque</translation>
+        <translation>Sélectionnez l&apos;ordre d&apos;affichage de votre bibliothèque</translation>
     </message>
     <message>
         <source>Artists \ Albums</source>
@@ -785,6 +785,14 @@
     <message>
         <source>Artist \ Album</source>
         <translation>Artiste \ Album</translation>
+    </message>
+    <message>
+        <source>Artist</source>
+        <translation>Artiste</translation>
+    </message>
+    <message>
+        <source>track</source>
+        <translation>piste</translation>
     </message>
 </context>
 <context>
@@ -1344,7 +1352,7 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     </message>
     <message>
         <source>#Track</source>
-        <translation># Piste</translation>
+        <translation>N° Piste</translation>
     </message>
     <message>
         <source>Title</source>

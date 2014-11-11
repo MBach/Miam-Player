@@ -85,8 +85,10 @@ public slots:
 	/** Load an existing database file or recreate it, if not found. */
 	void load();
 
-	/** Safe delete and recreate from scratch. */
+	/** Delete and rescan local tracks. */
 	void rebuild();
+
+	void rebuild(const QStringList &oldLocations, const QStringList &newLocations);
 
 private slots:
 	/** Reads an external picture which is close to multimedia files (same folder). */

@@ -260,6 +260,9 @@
          <property name="editable">
           <bool>true</bool>
          </property>
+         <property name="currentText">
+          <string notr="true"/>
+         </property>
          <property name="insertPolicy">
           <enum>QComboBox::InsertAlphabetically</enum>
          </property>
@@ -280,6 +283,9 @@
          <property name="editable">
           <bool>true</bool>
          </property>
+         <property name="currentText">
+          <string notr="true"/>
+         </property>
          <property name="insertPolicy">
           <enum>QComboBox::InsertAlphabetically</enum>
          </property>
@@ -299,6 +305,9 @@
         <widget class="QComboBox" name="artistComboBox">
          <property name="editable">
           <bool>true</bool>
+         </property>
+         <property name="currentText">
+          <string notr="true"/>
          </property>
          <property name="insertPolicy">
           <enum>QComboBox::InsertAlphabetically</enum>
@@ -352,6 +361,9 @@
            <property name="editable">
             <bool>true</bool>
            </property>
+           <property name="currentText">
+            <string notr="true"/>
+           </property>
            <property name="insertPolicy">
             <enum>QComboBox::InsertAlphabetically</enum>
            </property>
@@ -372,6 +384,9 @@
            <property name="editable">
             <bool>true</bool>
            </property>
+           <property name="currentText">
+            <string notr="true"/>
+           </property>
            <property name="insertPolicy">
             <enum>QComboBox::InsertAlphabetically</enum>
            </property>
@@ -384,6 +399,9 @@
          <property name="editable">
           <bool>true</bool>
          </property>
+         <property name="currentText">
+          <string notr="true"/>
+         </property>
          <property name="insertPolicy">
           <enum>QComboBox::InsertAlphabetically</enum>
          </property>
@@ -395,6 +413,9 @@
           <widget class="QComboBox" name="discComboBox">
            <property name="editable">
             <bool>true</bool>
+           </property>
+           <property name="currentText">
+            <string notr="true"/>
            </property>
            <property name="insertPolicy">
             <enum>QComboBox::InsertAlphabetically</enum>
@@ -415,6 +436,9 @@
           <widget class="QComboBox" name="genreComboBox">
            <property name="editable">
             <bool>true</bool>
+           </property>
+           <property name="currentText">
+            <string notr="true"/>
            </property>
            <property name="insertPolicy">
             <enum>QComboBox::InsertAlphabetically</enum>
@@ -444,16 +468,20 @@
  </customwidgets>
  <tabstops>
   <tabstop>closeTagEditorButton</tabstop>
+  <tabstop>tagEditorWidget</tabstop>
+  <tabstop>convertPushButton</tabstop>
   <tabstop>saveChangesButton</tabstop>
   <tabstop>cancelButton</tabstop>
-  <tabstop>tagEditorWidget</tabstop>
   <tabstop>titleComboBox</tabstop>
   <tabstop>artistComboBox</tabstop>
+  <tabstop>artistAlbumComboBox</tabstop>
+  <tabstop>albumComboBox</tabstop>
   <tabstop>trackComboBox</tabstop>
   <tabstop>discComboBox</tabstop>
   <tabstop>yearComboBox</tabstop>
   <tabstop>genreComboBox</tabstop>
   <tabstop>commentComboBox</tabstop>
+  <tabstop>coverPathComboBox</tabstop>
  </tabstops>
  <resources>
   <include location="mp.qrc"/>

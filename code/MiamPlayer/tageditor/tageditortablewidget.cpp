@@ -35,8 +35,8 @@ void TagEditorTableWidget::init()
 {
 	// Always keep the same number of columns with this taglist
 	static const QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM"
-		//<< "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT" << "COVER";
-		<< "ALBUM" << "TRACKNUMBER" << "DISC" << "DATE" << "GENRE" << "COMMENT");
+		//<< "ALBUM" << "TRACKNUMBER" << "DISC" << "YEAR" << "GENRE" << "COMMENT" << "COVER";
+		<< "ALBUM" << "TRACKNUMBER" << "DISC" << "YEAR" << "GENRE" << "COMMENT");
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = new QTableWidgetItem();
 		header->setData(KEY, keys.at(column));
@@ -75,7 +75,9 @@ void TagEditorTableWidget::resetTable()
 		artist->setText(fh.artist());
 		artistAlbum->setText(fh.artistAlbum());
 		album->setText(fh.album());
-		trackNumber->setText(fh.trackNumber());
+		if (fh.trackNumber() != "00") {
+			trackNumber->setText(fh.trackNumber());
+		}
 		int d = fh.discNumber(true);
 		d > 0 ? disc->setText(QString::number(d)) :	disc->setText("");
 		year->setText(fh.year());
@@ -92,7 +94,6 @@ void TagEditorTableWidget::updateCellData(int row, int column, const QString &te
 	QTableWidgetItem *i = this->item(row, column);
 	i->setText(text);
 	i->setData(MODIFIED, true);
-	qDebug() << "track is marked as MODIFIED" << row << i->text();
 }
 
 void TagEditorTableWidget::updateColumnData(int column, const QString &text)
@@ -116,7 +117,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 
 		/// XXX: warning, this information is difficult to find even if public
 		QTableWidgetItem *fileName = new QTableWidgetItem(fh.fileInfo().fileName());
-		fileName->setData(Qt::UserRole, QDir::toNativeSeparators(track));
+		fileName->setData(Qt::UserRole, fh.fileInfo().absoluteFilePath());
 
 		// The second column is not editable
 		QTableWidgetItem *absPath = new QTableWidgetItem(QDir::toNativeSeparators(fh.fileInfo().path()));
@@ -126,7 +127,13 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		QTableWidgetItem *artist = new QTableWidgetItem(fh.artist());
 		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum());
 		QTableWidgetItem *album = new QTableWidgetItem(fh.album());
-		QTableWidgetItem *trackNumber = new QTableWidgetItem(fh.trackNumber());
+		QTableWidgetItem *trackNumber = NULL;
+		if (fh.trackNumber() == "00") {
+			trackNumber = new QTableWidgetItem();
+		} else {
+			trackNumber = new QTableWidgetItem(fh.trackNumber());
+		}
+
 		QTableWidgetItem *disc;
 		if (fh.discNumber() == 0) {
 			disc = new QTableWidgetItem;

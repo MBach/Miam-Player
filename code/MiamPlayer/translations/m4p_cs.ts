@@ -786,6 +786,14 @@
         <source>Artist \ Album</source>
         <translation>Umělci / Alba</translation>
     </message>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished">Umělec</translation>
+    </message>
+    <message>
+        <source>track</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
