@@ -12,7 +12,7 @@ copy %MiamPlayerLibs%\*.dll packages\org.miamplayer.core\data\
 xcopy %MiamPlayerLibs%\plugins packages\org.miamplayer.core.vlc\data\plugins /y/i/e
 
 rem qt libraries
-set QTDIR="C:\Qt\Qt5.3.2\5.3\msvc2013_64"
+set QTDIR="C:\Qt\Qt5.4.0\5.4\msvc2013_64"
 echo f | xcopy %QTDIR%\plugins\accessible\qtaccessiblewidgets.dll packages\org.miamplayer.core\data\accessible\qtaccessiblewidgets.dll /y/s
 echo f | xcopy %QTDIR%\plugins\bearer\qgenericbearer.dll packages\org.miamplayer.core\data\bearer\qgenericbearer.dll /y/s
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s

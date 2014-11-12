@@ -30,12 +30,12 @@ SqlDatabase::SqlDatabase()
 	QString dbPath = QDir::toNativeSeparators(path + "/mp.db");
 	QDir userDataPath(path);
 	// Init a new database file for settings
-	QFile db(dbPath);
+	QFile dbFile(dbPath);
 	if (!userDataPath.exists(path)) {
 		userDataPath.mkpath(path);
 	}
-	db.open(QIODevice::ReadWrite);
-	db.close();
+	dbFile.open(QIODevice::ReadWrite);
+	dbFile.close();
 	setDatabaseName(dbPath);
 
 	if (open()) {
@@ -52,11 +52,15 @@ SqlDatabase::SqlDatabase()
 			 "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), id INTEGER, url varchar(255), playlistId INTEGER, " \
 			 "FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
 
-		createDb.exec("PRAGMA journal_mode = \"OFF\"");
-		createDb.exec("PRAGMA synchronous = \"0\"");
-		createDb.exec("PRAGMA temp_store = \"2\"");
-		createDb.exec("PRAGMA foreign_keys = \"1\"");
-		close();
+		bool pragma = createDb.exec("PRAGMA journal_mode = MEMORY");
+		//qDebug() << "pragma?" << pragma;
+		pragma = createDb.exec("PRAGMA synchronous = OFF");
+		//qDebug() << "synchronous?" << pragma;
+		pragma = createDb.exec("PRAGMA temp_store = 2");
+		//qDebug() << "temp_store?" << pragma;
+		pragma = createDb.exec("PRAGMA foreign_keys = 1");
+		//qDebug() << "foreign_keys?" << pragma;
+		//close();
 	}
 
 	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &SqlDatabase::progressChanged);
@@ -69,13 +73,13 @@ SqlDatabase::SqlDatabase()
 		QSqlQuery index(*this);
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
-		// index.exec("CREATE INDEX IF NOT EXISTS indexArtistAlbum ON tracks (artistAlbum)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
 		// Close Connection
-		close();
-		emit loaded();
+		//close();
+		//emit loaded();
+		this->loadFromFileDB();
 	});
 }
 
@@ -90,9 +94,9 @@ SqlDatabase* SqlDatabase::instance()
 
 bool SqlDatabase::insertIntoTableArtists(const ArtistDAO &artist)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QSqlQuery insertArtist(*this);
 	insertArtist.prepare("INSERT OR IGNORE INTO artists (id, name, normalizedName) VALUES (?, ?, ?)");
@@ -104,15 +108,15 @@ bool SqlDatabase::insertIntoTableArtists(const ArtistDAO &artist)
 	insertArtist.addBindValue(artistNorm);
 	insertArtist.exec();
 
-	close();
+	//close();
 	return lastError().type() == QSqlError::NoError;
 }
 
 bool SqlDatabase::insertIntoTableAlbums(uint artistId, const AlbumDAO &album)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QSqlQuery insertAlbum(*this);
 	insertAlbum.prepare("INSERT OR IGNORE INTO albums (id, name, normalizedName, year, artistId, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -128,16 +132,16 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, const AlbumDAO &album)
 	insertAlbum.addBindValue(album.icon());
 	insertAlbum.exec();
 
-	close();
+	//close();
 	return lastError().type() == QSqlError::NoError;
 }
 
 bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks)
 {
 	qDebug() << Q_FUNC_INFO;
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 	this->transaction();
 	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
 		TrackDAO track = *it;
@@ -157,16 +161,16 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 		insert.exec();
 	}
 	this->commit();
-	close();
+	//close();
 	return lastError().type() == QSqlError::NoError;
 }
 
 int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 {
 	qDebug() << Q_FUNC_INFO;
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	int id;
 	if (playlist.id().isEmpty()) {
@@ -191,15 +195,15 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 		qDebug() << "insert failed for playlist" << playlist.title() << "trying again" << i;
 		qDebug() << insert.lastError();
 	}
-	close();
+	//close();
 	return id;
 }
 
 bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QSqlQuery insertTrack(*this);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, rating, " \
@@ -223,7 +227,7 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 	insertTrack.addBindValue(track.host());
 	insertTrack.addBindValue(track.icon());
 	bool b = insertTrack.exec();
-	close();
+	//close();
 	return b;
 }
 
@@ -245,9 +249,9 @@ void SqlDatabase::removeRecordsFromHost(const QString &)
 
 void SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	this->transaction();
 	foreach (PlaylistDAO playlist, playlists) {
@@ -264,14 +268,14 @@ void SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 	}
 	this->commit();
 
-	close();
+	//close();
 }
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	Cover *c = NULL;
 
@@ -289,15 +293,15 @@ Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 		}
 	}
 
-	close();
+	//close();
 	return c;
 }
 
 QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QList<TrackDAO> tracks;
 	QSqlQuery results(*this);
@@ -322,15 +326,15 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 		}
 	}
 
-	close();
+	//close();
 	return tracks;
 }
 
 PlaylistDAO SqlDatabase::selectPlaylist(int playlistId)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	PlaylistDAO playlist;
 	QSqlQuery results = exec("SELECT id, title, checksum, icon, background FROM playlists WHERE id = " + QString::number(playlistId));
@@ -343,15 +347,15 @@ PlaylistDAO SqlDatabase::selectPlaylist(int playlistId)
 		playlist.setBackground(results.record().value(++i).toString());
 	}
 
-	close();
+	//close();
 	return playlist;
 }
 
 QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QList<PlaylistDAO> playlists;
 	QSqlQuery results = exec("SELECT title, id, icon, background FROM playlists");
@@ -365,15 +369,15 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 		playlists.append(playlist);
 	}
 
-	close();
+	//close();
 	return playlists;
 }
 
 TrackDAO SqlDatabase::selectTrack(const QString &uri)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	TrackDAO track;
 	QSqlQuery qTracks(*this);
@@ -401,30 +405,30 @@ TrackDAO SqlDatabase::selectTrack(const QString &uri)
 		track.setYear(r.value(++j).toString());
 	}
 
-	close();
+	//close();
 	return track;
 }
 
 bool SqlDatabase::playlistHasBackgroundImage(int playlistID)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QSqlQuery query = exec("SELECT background FROM playlists WHERE id = " + QString::number(playlistID));
 	query.next();
 	bool result = !query.record().value(0).toString().isEmpty();
 	qDebug() << query.record().value(0).toString() << result;
 
-	close();
+	//close();
 	return result;
 }
 
 void SqlDatabase::updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QSqlQuery update(*this);
 	update.prepare("UPDATE playlists SET background = ? WHERE id = ?");
@@ -432,14 +436,14 @@ void SqlDatabase::updateTablePlaylistWithBackgroundImage(int playlistID, const Q
 	update.addBindValue(playlistID);
 	update.exec();
 
-	close();
+	//close();
 }
 
 void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const QString &album, const QString &artist)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	QSqlQuery update(*this);
 	update.prepare("UPDATE albums SET cover = ? WHERE normalizedName = ? AND artistId = (SELECT id FROM artists WHERE normalizedName = ?)");
@@ -448,7 +452,7 @@ void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const
 	update.addBindValue(this->normalizeField(artist));
 	update.exec();
 
-	close();
+	//close();
 }
 
 /**
@@ -456,9 +460,9 @@ void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const
  * \param tracksToUpdate 'First' in pair is actual filename, 'Second' is the new filename, but may be empty.*/
 void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpdate)
 {
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	// Signals are blocked to prevent saveFileRef method to emit one. Load method will tell connected views to rebuild themselves
 	this->blockSignals(true);
@@ -497,7 +501,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 	commit();
 	this->blockSignals(false);
 
-	close();
+	//close();
 
 	/// XXX: might not be the smartest way to reload changes, but it's way simpler than searching in a tree for modifications
 	this->load();
@@ -507,9 +511,9 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 void SqlDatabase::loadFromFileDB()
 {
 	emit aboutToLoad();
-	if (!isOpen()) {
+	/*if (!isOpen()) {
 		open();
-	}
+	}*/
 
 	switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
 	case IP_Artists: {
@@ -765,7 +769,7 @@ void SqlDatabase::loadFromFileDB()
 	}
 
 	emit loaded();
-	close();
+	//close();
 }
 
 /** Delete and rescan local tracks. */
@@ -778,6 +782,11 @@ void SqlDatabase::rebuild()
 	createDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
 	createDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
 	createDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
+	createDb.exec("DROP INDEX indexArtist");
+	createDb.exec("DROP INDEX indexAlbum");
+	createDb.exec("DROP INDEX indexPath");
+	createDb.exec("DROP INDEX indexArtistId");
+	createDb.exec("DROP INDEX indexAlbumId");
 	transaction();
 
 	// Foreach file, insert tuple
@@ -997,7 +1006,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 			}
 		}
 
-		switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
+		/*switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
 		case IP_Artists:
 			if (artistInserted) {
 				emit nodeExtracted(artistDAO);
@@ -1019,12 +1028,22 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 			emit nodeExtracted(trackDAO);
 		break;
 		case IP_Albums:
+			if (albumInserted) {
+				emit nodeExtracted(albumDAO);
+			} else {
+				albumDAO = qobject_cast<AlbumDAO*>(_cache.value(albumId));
+			}
+			if (albumDAO != NULL) {
+				trackDAO->setParentNode(albumDAO);
+			}
+			emit nodeExtracted(trackDAO);
 		break;
 		case IP_ArtistsAlbums:
+			/// TODO
 		break;
 		case IP_Years:
 		break;
-		}
+		}*/
 	//} else {
 	//	qDebug() << "INVALID FILE FOR:" << absFilePath;
 	}

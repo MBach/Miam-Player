@@ -191,7 +191,7 @@ void SearchDialog::clear()
 void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 {
 	SqlDatabase *db = SqlDatabase::instance();
-	db->open();
+	//db->open();
 
 	QSqlQuery selectTracks(*db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id " \
@@ -209,7 +209,7 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 		this->clear();
 	}
 
-	db->close();
+	//db->close();
 }
 
 void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
@@ -233,7 +233,7 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 	}
 
 	this->clear();
-	db->close();
+	//db->close();
 }
 
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
@@ -331,7 +331,7 @@ void SearchDialog::search(const QString &text)
 		this->processResults(Track, trackList);
 	}
 
-	_db->close();
+	//_db->close();
 }
 
 /** Expand this dialog to all available space. */

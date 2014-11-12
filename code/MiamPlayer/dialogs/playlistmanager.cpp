@@ -357,11 +357,11 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 void PlaylistManager::savePlaylists()
 {
 	if (SettingsPrivate::instance()->playbackKeepPlaylists()) {
-		_db->open();
+		//_db->open();
 		for (int i = 0; i < playlists->count(); i++) {
 			this->savePlaylist(i);
 		}
-		_db->close();
+		//_db->close();
 	}
 }
 

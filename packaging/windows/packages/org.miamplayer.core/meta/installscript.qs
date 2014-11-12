@@ -128,7 +128,10 @@ Component.prototype.targetChanged = function (text) {
 				widget.labelOverwrite.visible = false;
 				widget.labelUserShouldRemove.visible = false;
 				widget.clearCacheCheckBox.visible = false;
-				widget.clearRegistryCheckBox.visible = false;		
+				widget.clearRegistryCheckBox.visible = false;
+				installer.setValue("softWasInstalledBefore", "0");
+			} else {
+				installer.setValue("softWasInstalledBefore", "1");
 			}
 			return;
         }
@@ -167,11 +170,17 @@ Component.prototype.createOperations = function()
 											   "ProgId=MiamPlayer." + ext);
 					}
 				}
-				if (widget.clearCacheCheckBox.checked) {
-					component.addElevatedOperation("Rmdir", Dir.toNativeSparator("@HomeDir@/AppData/Local/MmeMiamMiam"));
+				// Remove cache (folder including subfolders, sqlite database, etc)
+				if (widget.clearCacheCheckBox.checked && installer.value("softWasInstalledBefore") == "1") {
+					var home = installer.environmentVariable("USERPROFILE");
+					// Not working?
+					// component.addElevatedOperation("Rmdir", home + "\\AppData\\Local\\MmeMiamMiam\\");
+					component.addElevatedOperation("Delete", home + "\\AppData\\Local\\MmeMiamMiam\\MiamPlayer\\mp.db");
 				}
-				if (widget.clearRegistryCheckBox.checked) {
-
+				// Remove key and subkeys in Windows Registry
+				if (widget.clearRegistryCheckBox.checked && installer.value("softWasInstalledBefore") == "1") {
+					// Return codes are "0" == OK and "1" == KO even if a problem has occured. "1" can happens when one has manually deleted settings in Registry
+					component.addElevatedOperation("Execute", "{0,1}", "cmd", "/C", "reg", "delete", "HKEY_CURRENT_USER\\Software\\MmeMiamMiam", "/f");
 				}
 			} catch (e) {
 				// Do nothing if key doesn't exist

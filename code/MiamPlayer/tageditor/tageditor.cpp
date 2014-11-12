@@ -395,7 +395,7 @@ void TagEditor::displayCover()
 	joinedTracks.append("\"\"");
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
-	_db->database().open();
+	//_db->database().open();
 
 	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
@@ -410,7 +410,7 @@ void TagEditor::displayCover()
 	} else if (coversPath.size() == 1) {
 		coverPathComboBox->addItems(coversPath.toList());
 	}
-	_db->database().close();
+	//_db->database().close();
 
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
 	if (selectedCovers.size() == 1) {

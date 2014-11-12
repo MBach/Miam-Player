@@ -155,7 +155,7 @@ void MainWindow::setupActions()
 				// If one has only remote files in the database, do not drop it either!
 				// SqlDatabase::instance()->exec("DROP TABLE tracks");
 				qDebug() << Q_FUNC_INFO;
-				SqlDatabase::instance()->close();
+				//SqlDatabase::instance()->close();
 			}
 			quickStart->searchMultimediaFiles();
 		} else {

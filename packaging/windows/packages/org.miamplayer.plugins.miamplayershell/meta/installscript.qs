@@ -70,7 +70,7 @@ Component.prototype.createOperations = function()
 		if (installer.value("os") == "win") { 
 			try {
 				// Register DLL
-				component.addElevatedOperation("Execute", "regsvr32", "@TargetDir@\\MiamPlayerShell.dll", "/s",
+				component.addElevatedOperation("Execute", "{0,3}", "regsvr32", "@TargetDir@\\MiamPlayerShell.dll", "/s",
 												"UNDOEXECUTE", "regsvr32", "/u", "@TargetDir@\\MiamPlayerShell.dll", "/s");
 			} catch (e) {
 				
