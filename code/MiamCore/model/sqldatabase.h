@@ -79,7 +79,7 @@ public:
 
 private:
 	/** Read all tracks entries in the database and send them to connected views. */
-	void loadFromFileDB();
+	void loadFromFileDB(bool sendResetSignal = true);
 
 public slots:
 	/** Load an existing database file or recreate it, if not found. */
