@@ -45,12 +45,14 @@ macx {
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
 }
 
-SOURCES += \
+SOURCES += model/albumdao.cpp \
+    model/artistdao.cpp \
+    model/genericdao.cpp \
+    model/playlistdao.cpp \
     model/selectedtracksmodel.cpp \
     model/sqldatabase.cpp \
-    model/genericdao.cpp \
     model/trackdao.cpp \
-    model/playlistdao.cpp \
+    model/yeardao.cpp \
     cover.cpp \
     filehelper.cpp \
     flowlayout.cpp \
@@ -60,21 +62,21 @@ SOURCES += \
     quickstartsearchengine.cpp \
     settings.cpp \
     settingsprivate.cpp \
-    timelabel.cpp \
-    model/albumdao.cpp \
-    model/artistdao.cpp \
-    model/yeardao.cpp
+    timelabel.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
     interfaces/mediaplayerplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/searchmediaplayerplugin.h \
-    model/selectedtracksmodel.h \
-    model/sqldatabase.h \
+    model/albumdao.h \
+    model/artistdao.h \
     model/genericdao.h \
     model/playlistdao.h \
+    model/selectedtracksmodel.h \
+    model/sqldatabase.h \
     model/trackdao.h \
+    model/yeardao.h \
     abstractsearchdialog.h \
     cover.h \
     filehelper.h \
@@ -87,7 +89,4 @@ HEADERS += interfaces/basicplugin.h \
     remotemediaplayer.h \
     settings.h \
     settingsprivate.h \
-    timelabel.h \
-    model/albumdao.h \
-    model/artistdao.h \
-    model/yeardao.h
+    timelabel.h

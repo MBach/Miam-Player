@@ -541,7 +541,9 @@ bool FileHelper::save()
 			return mpegFile->save(TagLib::MPEG::File::AllTags, false, mpegFile->ID3v2Tag()->header()->majorVersion());
 		}
 	}
-	return _file->save();
+	if (fileType != UNKNOWN) {
+		return _file->save();
+	}
 }
 
 QString FileHelper::convertKeyToID3v2Key(QString key)
