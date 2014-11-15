@@ -13,7 +13,6 @@ xcopy %MiamPlayerLibs%\plugins packages\org.miamplayer.core.vlc\data\plugins /y/
 
 rem qt libraries
 set QTDIR="C:\Qt\Qt5.4.0\5.4\msvc2013_64"
-echo f | xcopy %QTDIR%\plugins\accessible\qtaccessiblewidgets.dll packages\org.miamplayer.core\data\accessible\qtaccessiblewidgets.dll /y/s
 echo f | xcopy %QTDIR%\plugins\bearer\qgenericbearer.dll packages\org.miamplayer.core\data\bearer\qgenericbearer.dll /y/s
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\qtmedia_audioengine.dll packages\org.miamplayer.core\data\mediaservice\qtmedia_audioengine.dll /y/s
@@ -33,9 +32,9 @@ echo f | xcopy %QTDIR%\translations\qt_ko.qm packages\org.miamplayer.core\data\t
 echo f | xcopy %QTDIR%\translations\qt_pt.qm packages\org.miamplayer.core\data\translations\qt_pt.qm /y/s
 echo f | xcopy %QTDIR%\translations\qt_ru.qm packages\org.miamplayer.core\data\translations\qt_ru.qm /y/s
 echo f | xcopy %QTDIR%\translations\qt_zh_CN.qm packages\org.miamplayer.core\data\translations\qt_zh_CN.qm /y/s
-copy %QTDIR%\bin\icudt52.dll packages\org.miamplayer.core\data\icudt52.dll
-copy %QTDIR%\bin\icuin52.dll packages\org.miamplayer.core\data\icuin52.dll
-copy %QTDIR%\bin\icuuc52.dll packages\org.miamplayer.core\data\icuuc52.dll
+copy %QTDIR%\bin\icudt53.dll packages\org.miamplayer.core\data\icudt53.dll
+copy %QTDIR%\bin\icuin53.dll packages\org.miamplayer.core\data\icuin53.dll
+copy %QTDIR%\bin\icuuc53.dll packages\org.miamplayer.core\data\icuuc53.dll
 copy %QTDIR%\bin\libEGL.dll packages\org.miamplayer.core\data\libEGL.dll
 copy %QTDIR%\bin\libGLESv2.dll packages\org.miamplayer.core\data\libGLESv2.dll
 copy %QTDIR%\bin\Qt5Core.dll packages\org.miamplayer.core\data\Qt5Core.dll
@@ -66,6 +65,7 @@ copy %QTDIR%\bin\Qt5PrintSupport.dll packages\org.miamplayer.core\data\Qt5PrintS
 copy %QTDIR%\bin\Qt5Qml.dll packages\org.miamplayer.core\data\Qt5Qml.dll
 copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.core\data\Qt5Quick.dll
 copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.core\data\Qt5Sensors.dll
+copy %QTDIR%\bin\Qt5WebChannel.dll packages\org.miamplayer.core\data\Qt5WebChannel.dll
 
 xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
 xcopy %DeezerPluginBuild%\deezer-plugin.dll packages\org.miamplayer.plugins.deezer\data\plugins\ /y/e

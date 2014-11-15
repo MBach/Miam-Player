@@ -140,9 +140,13 @@ void PlaylistManager::loadPlaylist(int playlistId)
 {
 	Playlist *playlist = NULL;
 	PlaylistDAO remotePlaylist = _db->selectPlaylist(playlistId);
-	if (playlists->playlist(0) && playlists->playlist(0)->mediaPlaylist()->isEmpty()) {
-		playlist = playlists->playlist(0);
-		playlists->tabBar()->setTabText(0, remotePlaylist.title());
+	int index = playlists->currentIndex();
+	if (playlists->playlist(index)) {
+		playlist = playlists->playlist(index);
+		// Replace the name only if playlist is empty
+		if (playlist->mediaPlaylist()->isEmpty()) {
+			playlists->tabBar()->setTabText(index, remotePlaylist.title());
+		}
 	} else {
 		playlist = playlists->addPlaylist();
 		playlists->tabBar()->setTabText(playlists->count() - 2, remotePlaylist.title());
@@ -152,14 +156,15 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
-	QStringList t;
+	/*QStringList t;
 	foreach (TrackDAO track, tracks) {
 		t << track.uri();
 	}
-	playlist->insertMedias(-1, t);
+	playlist->insertMedias(-1, t);*/
+	playlist->insertMedias(-1, tracks);
 }
 
-bool PlaylistManager::savePlaylist(int index)
+int PlaylistManager::savePlaylist(int index)
 {
 	qDebug() << Q_FUNC_INFO;
 	Playlist *p = playlists->playlist(index);
@@ -187,10 +192,12 @@ bool PlaylistManager::savePlaylist(int index)
 				tracks.push_back(std::move(t));
 			}
 
-			return _db->insertIntoTablePlaylistTracks(id, tracks);
+			if (_db->insertIntoTablePlaylistTracks(id, tracks)) {
+				return id;
+			}
 		}
 	}
-	return false;
+	return 0;
 }
 
 /** Redefined: clean preview area, populate once again lists. */
@@ -241,10 +248,11 @@ void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &parent, int start
 		}
 	}
 	if (idx >= 0) {
-		/// FIXME
-		//QString playlistPath = this->savePlaylist(idx);
-		//playlists->tabBar()->setTabData(idx, playlistPath);
-		//playlists->setTabIcon(idx, playlists->defaultIcon(QIcon::Disabled));
+		uint playlistId = this->savePlaylist(idx);
+		qDebug() << Q_FUNC_INFO << playlistId;
+		/// FIXME: really messy how ids are mixed up
+		playlists->tabBar()->setTabData(idx, playlistId);
+		playlists->setTabIcon(idx, playlists->defaultIcon(QIcon::Disabled));
 	}
 }
 
@@ -385,7 +393,7 @@ void PlaylistManager::updatePlaylists()
 	_savedPlaylistModel->clear();
 	_savedPlaylistModel->blockSignals(true);
 
-	/*QList<PlaylistDAO> playlists = _db->selectPlaylists();
+	QList<PlaylistDAO> playlists = _db->selectPlaylists();
 	foreach (PlaylistDAO playlist, playlists) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
@@ -395,6 +403,6 @@ void PlaylistManager::updatePlaylists()
 			item->setIcon(QIcon(playlist.icon()));
 		}
 		_savedPlaylistModel->appendRow(item);
-	}*/
+	}
 	_savedPlaylistModel->blockSignals(false);
 }

@@ -53,7 +53,7 @@ private:
 	/** Load a playlist saved on the in database. */
 	void loadPlaylist(int playlistId);
 
-	bool savePlaylist(int index);
+	int savePlaylist(int index);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */
