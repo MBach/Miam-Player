@@ -38,7 +38,7 @@ void PluginManager::setMainWindow(MainWindow *mainWindow)
 }
 
 /** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
-PluginManager * PluginManager::getInstance()
+PluginManager * PluginManager::instance()
 {
 	if (_pluginManager == NULL) {
 		_pluginManager = new PluginManager;

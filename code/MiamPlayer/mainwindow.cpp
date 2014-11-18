@@ -118,7 +118,7 @@ void MainWindow::init()
 /** Plugins. */
 void MainWindow::loadPlugins()
 {
-	PluginManager *pm = PluginManager::getInstance();
+	PluginManager *pm = PluginManager::instance();
 	pm->setMainWindow(this);
 	int row = Settings::instance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
 	if (customizeOptionsDialog->listWidget->isRowHidden(5) && row == 5) {
@@ -365,7 +365,7 @@ void MainWindow::setupActions()
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		delete PluginManager::getInstance();
+		delete PluginManager::instance();
 	});
 
 	// Shortcuts

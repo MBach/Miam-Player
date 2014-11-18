@@ -160,7 +160,7 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 			visualRect.setLeft(visualRect.left() + 1);
 			visualRect.setRight(visualRect.right() - 1);
 		} else {
-			visualRect.setLeft(3 + settings->tabsOverlappingLength() * 1.25 + height() / 2);
+			visualRect.setLeft(visualRect.left() + 3 + settings->tabsOverlappingLength() * 1.25 + height() / 2);
 			visualRect.setRight(visualRect.right() - settings->tabsOverlappingLength());
 		}
 		visualRect.setTop(visualRect.top() + 1);

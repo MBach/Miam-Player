@@ -47,7 +47,7 @@ private:
 
 public:
 	/** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
-	static PluginManager* getInstance();
+	static PluginManager* instance();
 
 	void setMainWindow(MainWindow *mainWindow);
 

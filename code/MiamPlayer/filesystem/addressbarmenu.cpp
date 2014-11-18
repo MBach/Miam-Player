@@ -44,11 +44,11 @@ bool AddressBarMenu::eventFilter(QObject *, QEvent *event)
 			foreach (AddressBarButton *b, _addressBar->findChildren<AddressBarButton*>()) {
 				b->setHighlighted(false);
 			}
+			_addressBar->setDown(false);
 		}
 	}
 	return false;
 }
-
 
 bool AddressBarMenu::hasSeparator() const
 {
@@ -92,6 +92,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 		/// FIXME
 		//QSize s = it->sizeHint();
 		//QRect r(0, i * s.height(), );
+		//qDebug() << "r" << r;
 		r.setWidth(r.width() - offsetSB);
 
 		if (it->data(Qt::UserRole + 1).toInt() == 1) {
@@ -131,9 +132,14 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 				p.setPen(QApplication::palette().color(QPalette::Disabled, QPalette::WindowText));
 			}
 			p.setFont(it->font());
-			if (isHighLighted) {
-				p.setPen(QApplication::palette().highlightedText().color());
+			QColor lighterBG = QApplication::palette().highlight().color().lighter();
+			QColor highlightedText = QApplication::palette().highlightedText().color();
+			if (qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
+				p.setPen(highlightedText);
+			} else {
+				p.setPen(QApplication::palette().windowText().color());
 			}
+
 			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
 			p.restore();
 		}

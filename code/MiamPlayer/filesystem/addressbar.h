@@ -12,21 +12,38 @@
 #include <QLineEdit>
 #include <QStack>
 
+/**
+ * \brief		The AddressBar class is the place where subfolders (instance of AddressBarButton) will be appended.
+ * \details		The path to a folder is splitted into folders. When there is not enough space to display the entire path,
+ *				then first folder next to root are visually removed and stacked into a menu. When one triggers the root item,
+ *				previously saved items are displayed in reverse order.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ * \see			AddressBarMenu
+ */
 class AddressBar : public QWidget
 {
 	Q_OBJECT
 private:
 	QHBoxLayout *hBoxLayout;
-	AddressBarMenu *menu;
+	AddressBarMenu *_menu;
 	QStack<QDir> _hiddenFolders;
 
 	AddressBarButton *_lastHighlightedButton;
 
+	bool _isDown;
+
 public:
 	explicit AddressBar(QWidget *parent = 0);
 
+	QString getVolumeInfo(QString &drive) const;
+
 	/** Called by the popup menu when one is moving the mouse cursor. */
 	void findAndHighlightButton(const QPoint &p);
+
+	inline bool isDown() const { return _isDown; }
+	inline void setDown(bool down) { _isDown = down; }
+	inline bool hasHiddenFolders() const { return !_hiddenFolders.isEmpty(); }
 
 protected:
 	virtual void paintEvent(QPaintEvent *);

@@ -157,7 +157,7 @@ void LibraryTreeView::init(SqlDatabase *db)
 	this->setModel(_proxyModel);
 
 	QObjectList objetsToExtend = QObjectList() << _properties << this;
-	PluginManager::getInstance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
+	PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	vScrollBar->setFrameBorder(false, false, false, true);

@@ -7,6 +7,12 @@
 /// Forward declaration
 class AddressBar;
 
+/**
+ * \brief		The AddressBarButton class represents a part of a long path.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ * \see			AddressBarMenu
+ */
 class AddressBarButton : public QPushButton
 {
 	Q_OBJECT

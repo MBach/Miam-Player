@@ -50,8 +50,8 @@ public:
 						IP_ArtistsAlbums	= 2,
 						IP_Years			= 3 };
 
-	bool insertIntoTableArtists(const ArtistDAO &artist);
-	bool insertIntoTableAlbums(uint artistId, const AlbumDAO &album);
+	bool insertIntoTableArtists(ArtistDAO *artist);
+	bool insertIntoTableAlbums(uint artistId, AlbumDAO *album);
 	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks);
 	int  insertIntoTablePlaylists(const PlaylistDAO &playlist);
 	bool insertIntoTableTracks(const TrackDAO &track);

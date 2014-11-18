@@ -7,6 +7,7 @@
 #include <QSqlRecord>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QTimer>
 
 #include <QtDebug>
 
@@ -32,8 +33,22 @@ SqlDatabase::SqlDatabase()
 	// Init a new database file for settings
 	QFile dbFile(dbPath);
 	if (!userDataPath.exists(path)) {
-		userDataPath.mkpath(path);
-	}
+		// No DB path -> first launch
+		if (!userDataPath.mkpath(path)) {
+			qWarning() << tr("Cannot create path to store cache. Miam-Player might be able to run but it will be in limited mode");
+		}
+	} else if (!dbFile.exists()) {
+		// DB folder exists but DB file doesn't. Did you delete DB file?
+		// Wait for a few seconds and restart full scan
+		/// TODO: full rescan <> rebuild which is only for local tracks
+		/// Remote tracks (like Deezer) are still not synchronized
+		QTimer *t = new QTimer(this);
+		t->setSingleShot(true);
+		t->start(5000);
+		connect(t, &QTimer::timeout, this, static_cast<void (SqlDatabase::*)(void)>(&SqlDatabase::rebuild));
+	}// else {
+	//	qDebug() << "Alright, DB folder and DB file exist";
+	//}
 	dbFile.open(QIODevice::ReadWrite);
 	dbFile.close();
 	setDatabaseName(dbPath);
@@ -87,7 +102,7 @@ SqlDatabase* SqlDatabase::instance()
 	return _sqlDatabase;
 }
 
-bool SqlDatabase::insertIntoTableArtists(const ArtistDAO &artist)
+bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
 {
 	/*if (!isOpen()) {
 		open();
@@ -95,19 +110,21 @@ bool SqlDatabase::insertIntoTableArtists(const ArtistDAO &artist)
 
 	QSqlQuery insertArtist(*this);
 	insertArtist.prepare("INSERT OR IGNORE INTO artists (id, name, normalizedName) VALUES (?, ?, ?)");
-	QString artistNorm = this->normalizeField(artist.title());
+	QString artistNorm = this->normalizeField(artist->title());
 	uint artistId = qHash(artistNorm);
 
 	insertArtist.addBindValue(artistId);
-	insertArtist.addBindValue(artist.title());
+	insertArtist.addBindValue(artist->title());
 	insertArtist.addBindValue(artistNorm);
-	insertArtist.exec();
+	if (insertArtist.exec()) {
+		emit nodeExtracted(artist);
+	}
 
 	//close();
 	return lastError().type() == QSqlError::NoError;
 }
 
-bool SqlDatabase::insertIntoTableAlbums(uint artistId, const AlbumDAO &album)
+bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 {
 	/*if (!isOpen()) {
 		open();
@@ -115,17 +132,24 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, const AlbumDAO &album)
 
 	QSqlQuery insertAlbum(*this);
 	insertAlbum.prepare("INSERT OR IGNORE INTO albums (id, name, normalizedName, year, artistId, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?)");
-	QString albumNorm = this->normalizeField(album.title());
+	QString albumNorm = this->normalizeField(album->title());
 	uint albumId = qHash(albumNorm, 1);
 
 	insertAlbum.addBindValue(albumId);
-	insertAlbum.addBindValue(album.title());
+	insertAlbum.addBindValue(album->title());
 	insertAlbum.addBindValue(albumNorm);
-	insertAlbum.addBindValue(album.year());
+	insertAlbum.addBindValue(album->year());
 	insertAlbum.addBindValue(artistId);
-	insertAlbum.addBindValue(album.host());
-	insertAlbum.addBindValue(album.icon());
-	insertAlbum.exec();
+	insertAlbum.addBindValue(album->host());
+	insertAlbum.addBindValue(album->icon());
+	if (insertAlbum.exec()) {
+		if (ArtistDAO *artist = qobject_cast<ArtistDAO*>(_cache.value(artistId))) {
+			album->setParentNode(artist);
+			emit nodeExtracted(album);
+		} else {
+			qDebug() << "artist wasn't found?" << artistId;
+		}
+	}
 
 	//close();
 	return lastError().type() == QSqlError::NoError;
@@ -570,6 +594,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 				artistDAO->setTitle(artist);
 				artistDAO->setTitleNormalized(record.value(2).toString());
 				emit nodeExtracted(artistDAO);
+				//_cache.insert(artistId, artistDAO);
 
 				// Level 2: Albums
 				QSqlQuery qAlbums(*this);
@@ -590,6 +615,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 						uint albumId = r.value(6).toUInt();
 						albumDAO->setParentNode(artistDAO);
 						emit nodeExtracted(albumDAO);
+						//_cache.insert(albumId, albumDAO);
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(*this);
@@ -625,6 +651,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 				albumDAO->setIcon(r.value(5).toString());
 				uint albumId = r.value(6).toUInt();
 				emit nodeExtracted(albumDAO);
+				//_cache.insert(albumId, albumDAO);
 
 				// Level 2: Tracks
 				QSqlQuery qTracks(*this);
@@ -659,6 +686,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 				albumDAO->setIcon(r.value(5).toString());
 				uint albumId = r.value(6).toUInt();
 				emit nodeExtracted(albumDAO);
+				//_cache.insert(albumId, albumDAO);
 
 				// Level 2: Tracks
 				QSqlQuery qTracks(*this);
@@ -708,6 +736,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 						uint albumId = r.value(7).toUInt();
 						albumDAO->setParentNode(yearDAO);
 						emit nodeExtracted(albumDAO);
+						//_cache.insert(albumId, albumDAO);
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(*this);

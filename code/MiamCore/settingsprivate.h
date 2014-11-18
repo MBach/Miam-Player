@@ -32,8 +32,6 @@ private:
 	/** Store the family of each font used in the app. */
 	QMap<QString, QVariant> fontFamilyMap;
 
-	QList<QVariant> locations;
-
 	QMap<QString, QVariant> columnStates;
 
 	Q_ENUMS(FontFamily)
