@@ -188,6 +188,7 @@ int PlaylistManager::savePlaylist(int index)
 			const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(p->model());
 			for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
 				// Eeach track has been saved in a hidden column into the playlist
+				/// FIXME
 				TrackDAO t = model->index(j, p->COL_TRACK_DAO).data().value<TrackDAO>();
 				tracks.push_back(std::move(t));
 			}

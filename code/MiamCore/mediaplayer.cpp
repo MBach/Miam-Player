@@ -91,7 +91,9 @@ void MediaPlayer::createLocalConnections()
 
 void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
 {
-	_remotePlayers.insert(remotePlayer->host(), remotePlayer);
+	if (remotePlayer) {
+		_remotePlayers.insert(remotePlayer->host(), remotePlayer);
+	}
 }
 
 QMediaPlaylist * MediaPlayer::playlist()
@@ -282,7 +284,6 @@ void MediaPlayer::disconnectPlayers(bool isLocal)
 /** Play current track in the playlist. */
 void MediaPlayer::play()
 {
-	qDebug() << Q_FUNC_INFO;
 	// Check if it's possible to play tracks first
 	if (!_playlist) {
 		return;

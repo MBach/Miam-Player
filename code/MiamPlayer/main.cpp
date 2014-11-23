@@ -5,7 +5,7 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MiamPlayer"
-#define VERSION "0.7.0"
+#define VERSION "0.7.1"
 
 #include "miamstyle.h"
 #include "plugininfo.h"
@@ -17,8 +17,9 @@ QPointer<LogBrowser> logBrowser;
 
 void debugOutput(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
-	if (logBrowser)
+	if (logBrowser) {
 		logBrowser->outputMessage(type, msg);
+	}
 }
 
 int main(int argc, char *argv[])
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
-	// qInstallMessageHandler(debugOutput);
+	qInstallMessageHandler(debugOutput);
 
 	QtSingleApplication app(SOFT, argc, argv);
 

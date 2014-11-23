@@ -544,6 +544,7 @@ bool FileHelper::save()
 	if (fileType != UNKNOWN) {
 		return _file->save();
 	}
+	return false;
 }
 
 QString FileHelper::convertKeyToID3v2Key(QString key)

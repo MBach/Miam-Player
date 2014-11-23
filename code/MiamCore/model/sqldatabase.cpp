@@ -57,7 +57,7 @@ SqlDatabase::SqlDatabase()
 		QSqlQuery createDb(*this);
 		createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), icon varchar(255), UNIQUE(normalizedName))");
 		createDb.exec("CREATE TABLE IF NOT EXISTS albums (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), " \
-			"year INTEGER, cover varchar(255), artistId INTEGER, host varchar(255), icon varchar(255), UNIQUE(normalizedName, artistId))");
+			"year INTEGER, cover varchar(255), artistId INTEGER, host varchar(255), icon varchar(255), UNIQUE(id, artistId))");
 		QString createTableTracks = "CREATE TABLE IF NOT EXISTS tracks (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, " \
 			"title varchar(255), artistId INTEGER, albumId INTEGER, artistAlbum varchar(255), length INTEGER, " \
 			"rating INTEGER, disc INTEGER, internalCover INTEGER DEFAULT 0, host varchar(255), icon varchar(255))";
@@ -499,15 +499,38 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 	this->blockSignals(true);
 	transaction();
 
+	/// TODO: First, select old artistId and albumId
+	/// Update artistId, albumId if modified
+
 	for (int i = 0; i < tracksToUpdate.length(); i++) {
 		QPair<QString, QString> pair = tracksToUpdate.at(i);
-		// Old path, New Path. If New Path exists, then file has changed.
+		// Old path, New Path. If New Path exists, then fileName has changed.
 		if (pair.second.isEmpty()) {
 			FileHelper fh(pair.first);
+
+			QSqlQuery selectArtist(*this);
+			selectArtist.prepare("SELECT artistId, albumId FROM tracks WHERE uri = ?");
+			selectArtist.addBindValue(pair.first);
+			uint oldArtistId = 0;
+			uint oldAlbumId = 0;
+			if (selectArtist.exec() && selectArtist.next()) {
+				oldArtistId = selectArtist.record().value(0).toUInt();
+				oldAlbumId = selectArtist.record().value(1).toUInt();
+			}
+
 			QSqlQuery updateTrack(*this);
-			updateTrack.prepare("UPDATE tracks SET album = ?, artist = ?, artistAlbum = ?, disc = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE uri = ?");
+			updateTrack.prepare("UPDATE tracks SET album = ?, albumId = ?, artist = ?, artistId = ?, artistAlbum = ?, disc = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE uri = ?");
+
+			QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
+			QString artistNorm = this->normalizeField(artistAlbum);
+			QString albumNorm = this->normalizeField(fh.album());
+			uint artistId = qHash(artistNorm);
+			uint albumId = qHash(albumNorm, 1);
+
 			updateTrack.addBindValue(fh.album());
+			updateTrack.addBindValue(albumId);
 			updateTrack.addBindValue(fh.artist());
+			updateTrack.addBindValue(artistId);
 			updateTrack.addBindValue(fh.artistAlbum());
 			updateTrack.addBindValue(fh.discNumber());
 			updateTrack.addBindValue(fh.hasCover());
@@ -516,6 +539,11 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			updateTrack.addBindValue(fh.year().toInt());
 			updateTrack.addBindValue(QDir::toNativeSeparators(pair.first));
 			updateTrack.exec();
+
+			// Check if old album has no more tracks
+			if (oldAlbumId != albumId) {
+				/// TODO
+			}
 		} else {
 			QSqlQuery hasTrack("SELECT COUNT(*) FROM tracks WHERE uri = ?", *this);
 			hasTrack.addBindValue(QDir::toNativeSeparators(pair.first));
@@ -541,6 +569,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 /** Read all tracks entries in the database and send them to connected views. */
 void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 {
+	qDebug() << Q_FUNC_INFO << sendResetSignal;
 	if (sendResetSignal) {
 		emit aboutToLoad();
 	}
@@ -936,9 +965,9 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	selectAlbum.addBindValue(artistId);
 	selectAlbum.exec();
 	if (!selectAlbum.next()) {
+		qDebug() << "inserting" << album << albumNorm << albumId << "artistId" << artistId;
 		QSqlQuery insertAlbum(*this);
 		insertAlbum.prepare("INSERT INTO albums (id, name, normalizedName, year, artistId) VALUES (?, ?, ?, ?, ?)");
-		QString album = fh.album();
 		insertAlbum.addBindValue(albumId);
 		insertAlbum.addBindValue(album);
 		insertAlbum.addBindValue(albumNorm);
@@ -949,9 +978,12 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		}
 		insertAlbum.addBindValue(artistId);
 		albumInserted = insertAlbum.exec();
+		if (!albumInserted) {
+			qDebug() << "not inserted" << insertAlbum.lastError();
+		}
 
 		albumDAO = new AlbumDAO;
-		albumDAO->setId(QString::number(artistId));
+		albumDAO->setId(QString::number(albumId));
 		albumDAO->setTitle(album);
 		albumDAO->setTitleNormalized(albumNorm);
 		albumDAO->setYear(fh.year());
@@ -963,6 +995,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	} else {
 		// A previous record exists for this normalized name but the new name is different
 		if (QString::compare(selectAlbum.record().value(0).toString(), album) != 0) {
+			qDebug() << "updating" << album << albumNorm << albumId;
 			QSqlQuery updateAlbum(*this);
 			updateAlbum.prepare("UPDATE albums SET name = ? WHERE id = ?");
 			updateAlbum.addBindValue(album);

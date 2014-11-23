@@ -1,13 +1,13 @@
 #ifndef REMOTEMEDIAPLAYERPLUGIN_H
 #define REMOTEMEDIAPLAYERPLUGIN_H
 
-#include "model/sqldatabase.h"
-#include "abstractsearchdialog.h"
 #include "basicplugin.h"
 #include "remotemediaplayer.h"
 
 #include <QStandardItem>
 #include <QListView>
+
+class AbstractSearchDialog;
 
 class MIAMCORE_LIBRARY RemoteMediaPlayerPlugin : public BasicPlugin
 {

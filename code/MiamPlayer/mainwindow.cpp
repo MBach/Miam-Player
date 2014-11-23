@@ -262,6 +262,7 @@ void MainWindow::setupActions()
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekBackward);
 	connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
+
 	connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
 	connect(actionStop, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::stop);
 	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::stop);
@@ -376,6 +377,11 @@ void MainWindow::setupActions()
 		if (_searchDialog->isVisible()) {
 			this->moveSearchDialog();
 		}
+	});
+
+	// Switch from one playlist to another
+	connect(tabPlaylists, &QTabWidget::currentChanged, this, [=](int i) {
+		_mediaPlayer.data()->setPlaylist(tabPlaylists->playlist(i)->mediaPlaylist());
 	});
 }
 
@@ -572,8 +578,13 @@ void MainWindow::openFiles()
 	} else {
 		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
 	}
+
+	audioFiles.append(" (" + FileHelper::suffixes(true).join(" ") + ")");
+	audioFiles.append(";;Game Music Emu (*.ay *.gbs *.gym *.hes *.kss *.nsf *.nsfe *.sap *.spc *.vgm *.vgz);;");
+	audioFiles.append(tr("Every file type (*)"));
+
 	QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose some files to open"), lastOpenedLocation,
-													 audioFiles.append(" (" + FileHelper::suffixes(true).join(" ") + ")"));
+													  audioFiles);
 	if (files.isEmpty()) {
 		settings->setValue("lastOpenedLocation", defaultMusicLocation);
 	} else {

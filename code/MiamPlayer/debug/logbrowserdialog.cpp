@@ -13,6 +13,7 @@
 #include <QKeyEvent>
 
 #include "settings.h"
+#include <iostream>
 
 LogBrowserDialog::LogBrowserDialog(QWidget *parent)
 	: QDialog(parent)
@@ -62,6 +63,11 @@ void LogBrowserDialog::outputMessage(QtMsgType type, const QString &msg)
 		browser->append(tr("-- FATAL: %1").arg(msg));
 		break;
 	}
+	/// XXX: Hack to have output in Qt Creator on Windows and at the same time in the application
+	/// Need to be tested too in Ubuntu
+	#ifdef Q_OS_WIN
+	std::cerr << msg.toStdString();
+	#endif
 }
 
 void LogBrowserDialog::show()

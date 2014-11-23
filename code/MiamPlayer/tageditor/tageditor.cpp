@@ -362,6 +362,9 @@ void TagEditor::commitChanges()
 	// Reset buttons state
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
+
+	/// TODO: If at least one of these fields were modified: Artist, ArtistAlbum, Album, Year, Track then library should be reloaded
+	//SqlDatabase::instance()->load();
 }
 
 /** Displays a cover only if all the selected items have exactly the same cover. */

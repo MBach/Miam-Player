@@ -31,7 +31,7 @@ protected:
 	virtual void contextMenuEvent(QContextMenuEvent *event);
 
 	/** Redefined. */
-	virtual void paintSection(QPainter *, const QRect &rect, int logicalIndex) const;
+	virtual void paintEvent(QPaintEvent *e);
 };
 
 #endif // PLAYLISTHEADERVIEW_H

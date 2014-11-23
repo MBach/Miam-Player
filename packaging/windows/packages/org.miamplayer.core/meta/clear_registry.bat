@@ -1,6 +1,0 @@
-REG QUERY HKEY_CURRENT_USER\Software\MmeMiamMiam
-IF ERRORLEVEL 1 GOTO endLabel
-
-REG DELETE HKEY_CURRENT_USER\Software\MmeMiamMiam /F
-
-:endLabel

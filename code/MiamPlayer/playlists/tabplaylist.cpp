@@ -256,8 +256,15 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
+	qDebug() << Q_FUNC_INFO;
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
+	if (_mediaPlayer.data()->playlist() == NULL) {
+		_mediaPlayer.data()->setPlaylist(currentPlayList()->mediaPlaylist());
+	}
+	if (currentPlayList()->mediaPlaylist()->currentIndex() == -1) {
+		currentPlayList()->mediaPlaylist()->setCurrentIndex(0);
+	}
 }
 
 void TabPlaylist::moveTracksDown()

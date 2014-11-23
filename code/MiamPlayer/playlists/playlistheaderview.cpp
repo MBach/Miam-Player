@@ -112,12 +112,11 @@ void PlaylistHeaderView::contextMenuEvent(QContextMenuEvent *event)
 }
 
 /** Redefined. */
-void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logicalIndex) const
+void PlaylistHeaderView::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this->viewport());
-	QStyleOptionHeader opt;
-	opt.initFrom(this);
-	QLinearGradient vLinearGradient(rect.topLeft(), rect.bottomLeft());
+
+	QLinearGradient vLinearGradient(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
 	/// XXX
 	QPalette palette = QApplication::palette();
 	if (SettingsPrivate::instance()->isCustomColors()) {
@@ -127,25 +126,41 @@ void PlaylistHeaderView::paintSection(QPainter *, const QRect &rect, int logical
 		vLinearGradient.setColorAt(0, palette.base().color());
 		vLinearGradient.setColorAt(1, palette.window().color());
 	}
-	p.fillRect(rect, QBrush(vLinearGradient));
-	p.setPen(opt.palette.windowText().color());
-	p.drawText(rect.adjusted(5, 0, 0, 0), Qt::AlignCenter, model()->headerData(logicalIndex, Qt::Horizontal).toString());
 
-	if (rect.contains(mapFromGlobal(QCursor::pos()))) {
+	QStyleOptionHeader opt;
+	opt.initFrom(this);
+	p.fillRect(rect(), QBrush(vLinearGradient));
+	p.setPen(opt.palette.windowText().color());
+	QRect r;
+	//r.setX(0);
+	//r.setY(0);
+	//r.setHeight(viewport()->height());
+	for (int i = 0; i < count(); i++) {
+		QRect r2(sectionPosition(i), viewport()->rect().y(), sectionSize(i), viewport()->rect().height());
+		p.drawText(r2, Qt::AlignCenter, model()->headerData(i, Qt::Horizontal).toString());
+		if (r2.contains(mapFromGlobal(QCursor::pos()))) {
+			r = r2;
+		}
+	}
+	if (!r.isNull()) {
+		qDebug() << r;
 		p.save();
 		p.setPen(palette.highlight().color());
-		p.drawLine(rect.x(), rect.y() + rect.height() / 4, rect.x(), rect.y() + 3 * rect.height() / 4);
-		p.drawLine(rect.x() + rect.width() - 1, rect.y() + rect.height() / 4, rect.x() + rect.width() - 1, rect.y() + 3 * rect.height() / 4);
+		p.drawLine(r.x(), r.y() + r.height() / 4,
+				   r.x(), r.y() + 3 * r.height() / 4);
+		p.drawLine(r.x() + r.width() - 1, r.y() + r.height() / 4,
+				   r.x() + r.width() - 1, r.y() + 3 * r.height() / 4);
 		p.restore();
 	}
 
+
 	// Frame line
 	p.setPen(QApplication::palette().mid().color());
-	p.drawLine(rect.bottomLeft(), rect.bottomRight());
+	p.drawLine(rect().bottomLeft(),  QPoint(rect().left() + rect().width(), rect().top() + rect().height()));
 
-	if (isLeftToRight() && logicalIndex == 0) {
-		p.drawLine(rect.topLeft(), rect.bottomLeft());
+	/*if (isLeftToRight() && logicalIndex == 0) {
+		p.drawLine(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
 	} else if (!isLeftToRight() && logicalIndex == count() - 1){
-		p.drawLine(rect.topLeft(), rect.bottomLeft());
-	}
+		p.drawLine(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
+	}*/
 }
