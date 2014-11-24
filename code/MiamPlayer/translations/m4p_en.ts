@@ -1107,6 +1107,10 @@
         <source>Show debug information...</source>
         <translation>Show debug information...</translation>
     </message>
+    <message>
+        <source>Every file type (*)</source>
+        <translation>Every file type (*)</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1267,10 +1271,6 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>Would you like to add them? (you can uncheck some folders)</translation>
     </message>
     <message>
-        <source>- otherwise -</source>
-        <translation>- otherwise -</translation>
-    </message>
-    <message>
         <source>Click here to manually search for music</source>
         <translation>Click here to manually search for music</translation>
     </message>
@@ -1295,6 +1295,18 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>empty folder</source>
         <translation>empty folder</translation>
+    </message>
+    <message>
+        <source>A default music folder has been found</source>
+        <translation>A default music folder has been found</translation>
+    </message>
+    <message>
+        <source>– or –</source>
+        <translation>– or –</translation>
+    </message>
+    <message>
+        <source>– otherwise –</source>
+        <translation>– otherwise –</translation>
     </message>
 </context>
 <context>

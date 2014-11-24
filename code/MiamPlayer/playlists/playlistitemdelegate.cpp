@@ -39,9 +39,8 @@ void PlaylistItemDelegate::commitAndClose()
 /** Redefined. */
 void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-	qDebug() << Q_FUNC_INFO;
 	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-	qDebug() << starEditor << starEditor->starRating.starCount();
+	qDebug() << Q_FUNC_INFO << starEditor->starRating.starCount();
 	model->setData(index, QVariant::fromValue(starEditor->starRating));
 	starEditor->deleteLater();
 }

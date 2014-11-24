@@ -140,7 +140,6 @@ void LibraryTreeView::repaintIcons()
 
 void LibraryTreeView::updateSelectedTracks()
 {
-	qDebug() << "LibraryTreeView: model has been updated, redraw selected tracks";
 	//foreach (QModelIndex index, _cacheSelectedIndexes) {
 	//	_itemDelegate->invalidate(index);
 	//}
@@ -216,7 +215,6 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 
 			w = qMin(h, qMin(w, pixmap.width()));
 			QPixmap leftBorder = pixmap.copy(0, 0, 3, pixmap.height());
-			qDebug() << "leftBorder" << leftBorder.isNull();
 			leftBorder = leftBorder.scaled(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), w);
 			// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
 			// The second one is a computer generated gradient focused on alpha channel
@@ -356,7 +354,6 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	qDebug() << Q_FUNC_INFO;
 	_db->load();
 }
 
@@ -452,7 +449,7 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 		if (parentItem) {
 			parentItem->appendRow(nodeItem);
 		} else {
-			qDebug() << "parentItem should exists but it was not found?" << node->title();
+			qDebug() << Q_FUNC_INFO << "parentItem should exists but it was not found?" << node->title();
 		}
 	} else {
 		_libraryModel->invisibleRootItem()->appendRow(nodeItem);

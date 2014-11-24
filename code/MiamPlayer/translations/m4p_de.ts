@@ -1107,6 +1107,10 @@
         <source>Show debug information...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Every file type (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1267,10 +1271,6 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
         <translation>Möchten Sie sie gerne hinzufügen? (Sie können einige Ordner abwählen)</translation>
     </message>
     <message>
-        <source>- otherwise -</source>
-        <translation>- ansonsten -</translation>
-    </message>
-    <message>
         <source>Click here to manually search for music</source>
         <translation>Hier klicken, um manuell nach Musiktiteln zu suchen</translation>
     </message>
@@ -1295,6 +1295,18 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
     <message>
         <source>empty folder</source>
         <translation>Leere Ordner</translation>
+    </message>
+    <message>
+        <source>A default music folder has been found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>– or –</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>– otherwise –</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

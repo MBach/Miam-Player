@@ -123,4 +123,7 @@
     <qresource prefix="/icons/unix">
         <file alias="closeTabsHover">config/unix/close_tabs_hover.png</file>
     </qresource>
+    <qresource prefix="/debug">
+        <file alias="warning">config/icons/warning.png</file>
+    </qresource>
 </RCC>

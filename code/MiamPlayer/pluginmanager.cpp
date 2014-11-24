@@ -213,9 +213,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 			}
 			if (basic->isConfigurable()) {
 				QString pluginLang(":/translations/" + basic->name() + "_" + settings->language());
-				//qDebug() << "pluginLang" << pluginLang;
 				if (basic->translator.load(pluginLang)) {
-					//qDebug() << "plugin translation loaded";
 					QApplication::installTranslator(&basic->translator);
 				}
 				_mainWindow->customizeOptionsDialog->tabPlugins->insertTab(idx, basic->configPage(), basic->name());

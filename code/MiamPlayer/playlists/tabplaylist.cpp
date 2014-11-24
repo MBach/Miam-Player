@@ -66,7 +66,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		tabBar->editTab(index);
 	});
 	connect(loadBackground, &QAction::triggered, this, [=]() {
-		qDebug() << "Load background not implemented yet";
+		qDebug() << Q_FUNC_INFO << "Load background not implemented yet";
 	});
 	this->setAcceptDrops(true);
 }
@@ -256,7 +256,6 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
-	qDebug() << Q_FUNC_INFO;
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	if (_mediaPlayer.data()->playlist() == NULL) {

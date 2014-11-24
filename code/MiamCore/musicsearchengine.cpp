@@ -10,21 +10,8 @@
 #include <QtDebug>
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-	QObject(parent)//, _watcher(new QFileSystemWatcher(this))
-{
-	/*_watcher->addPaths(Settings::getInstance()->musicLocations());
-	connect(_watcher, &QFileSystemWatcher::directoryChanged, [=](const QString &path) {
-		qDebug() << "directory has changed:" << path;
-		QDirIterator it(path, QDirIterator::NoIteratorFlags);
-		while (it.hasNext()) {
-			it.next();
-			qDebug() << "d:" << it.fileInfo().absoluteFilePath() << it.fileInfo().lastModified();
-		}
-	});
-	connect(_watcher, &QFileSystemWatcher::fileChanged, [=](const QString &path) {
-		qDebug() << "file has changed:" << path;
-	});*/
-}
+	QObject(parent)
+{}
 
 void MusicSearchEngine::doSearch(const QStringList &delta)
 {
@@ -58,15 +45,12 @@ void MusicSearchEngine::doSearch(const QStringList &delta)
 		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			QString entry = it.next();
-			// qDebug() << "entry" << entry;
 			QFileInfo qFileInfo(entry);
 			currentEntry++;
 
 			// Directory has changed: we can discard cover
 			if (qFileInfo.isDir()) {
-				// qDebug() << "directory changed";
 				if (!coverPath.isEmpty() && !lastFileScannedNextToCover.isEmpty()) {
-					// qDebug() << "cover found (sent now!)" << coverPath << lastFileScannedNextToCover;
 					emit scannedCover(coverPath, lastFileScannedNextToCover);
 					coverPath.clear();
 				}
@@ -78,11 +62,9 @@ void MusicSearchEngine::doSearch(const QStringList &delta)
 				if (atLeastOneAudioFileWasFound) {
 					coverPath = qFileInfo.absoluteFilePath();
 					emit scannedCover(coverPath, lastFileScannedNextToCover);
-					// qDebug() << "cover found" << coverPath;
 					coverPath.clear();
 				} else if (isNewDirectory) {
 					coverPath = qFileInfo.absoluteFilePath();
-					// qDebug() << "cover found (not sent)" << coverPath;
 				}
 			} else {
 				emit scannedFile(qFileInfo.absoluteFilePath());

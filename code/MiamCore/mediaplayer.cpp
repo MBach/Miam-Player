@@ -43,7 +43,7 @@ void MediaPlayer::createLocalConnections()
 
 	connect(_player, &VlcMediaPlayer::playing, this, [=]() {
 		// Prevent multiple signals bug?
-		qDebug() << "VlcMediaPlayer::playing";
+		qDebug() << Q_FUNC_INFO << "playing";
 		if (_state != QMediaPlayer::PlayingState) {
 			emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
 			_state = QMediaPlayer::PlayingState;
@@ -81,11 +81,6 @@ void MediaPlayer::createLocalConnections()
 	});
 
 	// Cannot use new signal/slot syntax because libvlc_media_t is not fully defined at compile time (just a forward declaration)
-	/*connect(_player, &VlcMediaPlayer::mediaChanged, this, [=](){
-		//qDebug() << f;
-		QMediaContent mc(_player->currentMedia()->currentLocation());
-		emit currentMediaChanged(mc);
-	});*/
 	connect(_player, SIGNAL(mediaChanged(libvlc_media_t*)), this, SLOT(convertMedia(libvlc_media_t*)));
 }
 
@@ -107,7 +102,6 @@ void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
 		_playlist->disconnect(this);
 	}
 	_playlist = playlist;
-	qDebug() << Q_FUNC_INFO;
 	connect(_playlist, &QMediaPlaylist::currentIndexChanged, this, [=]() {
 		if (_player->state() == Vlc::State::Paused || _player->state() == Vlc::State::Playing) {
 			_player->blockSignals(true);
@@ -214,13 +208,11 @@ void MediaPlayer::skipBackward()
 	QMediaContent previousMedia = _playlist->media(_playlist->previousIndex());
 	QMediaContent currentMedia = _playlist->media(_playlist->currentIndex());
 	if (currentMedia.canonicalUrl().isLocalFile() && !previousMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << "current is Local, previous is Remote, disconnecting local!";
-		//this->disconnectPlayers(true);
+		qDebug() << Q_FUNC_INFO << "current is Local, previous is Remote, disconnecting local!";
 		_player->blockSignals(true);
 		_player->stop();
 	} else if (!currentMedia.canonicalUrl().isLocalFile() && previousMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << "previous is Local, current is Remote, disconnecting remote!";
-		//this->disconnectPlayers(false);
+		qDebug() << Q_FUNC_INFO << "previous is Local, current is Remote, disconnecting remote!";
 		RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(currentMedia.canonicalUrl());
 		remotePlayer->blockSignals(true);
 		remotePlayer->stop();
@@ -240,12 +232,11 @@ void MediaPlayer::skipForward()
 	QMediaContent currentMedia = _playlist->media(_playlist->currentIndex());
 	QMediaContent nextMedia = _playlist->media(_playlist->nextIndex());
 	if (currentMedia.canonicalUrl().isLocalFile() && !nextMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << "current is Local, next is Remote, disconnecting local!";
-		//this->disconnectPlayers(true);
+		qDebug() << Q_FUNC_INFO << "current is Local, next is Remote, disconnecting local!";
 		_player->blockSignals(true);
 		_player->stop();
 	} else if (!currentMedia.canonicalUrl().isLocalFile() && nextMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << "next is Local, current is Remote, disconnecting remote!";
+		qDebug() << Q_FUNC_INFO << "next is Local, current is Remote, disconnecting remote!";
 		RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(currentMedia.canonicalUrl());
 		remotePlayer->blockSignals(true);
 		remotePlayer->stop();

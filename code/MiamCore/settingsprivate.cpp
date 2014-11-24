@@ -397,7 +397,6 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		palette.setColor(QPalette::Button, color);
 		colors.insert(QString::number(QPalette::Button), color);
 
-		//qDebug() << "base color" << color.value();
 		// Check if text color should be inverted when the base is too dark
 		QColor text;
 		if (color.value() < 128) {
@@ -418,7 +417,6 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		} else {
 			text = Qt::black;
 		}
-		//qDebug() << "base" << color.value() << "windowText" << palette.windowText().color().value();
 		palette.setColor(QPalette::BrightText, text);
 		palette.setColor(QPalette::ButtonText, text);
 		palette.setColor(QPalette::Text, text);

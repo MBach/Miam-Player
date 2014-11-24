@@ -3,16 +3,12 @@
 
 #include <QDir>
 #include <QFileInfo>
-//#include <QFileSystemWatcher>
 
 #include "miamcore_global.h"
 
 class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 {
 	Q_OBJECT
-//private:
-//	QFileSystemWatcher *_watcher;
-
 public:
 	MusicSearchEngine(QObject *parent = 0);
 

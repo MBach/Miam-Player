@@ -94,7 +94,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 			FileHelper fh(file);
 			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-				qDebug() << "loading internal cover from file";
+				qDebug() << Q_FUNC_INFO << "loading internal cover from file";
 				std::unique_ptr<Cover> cover(fh.extractCover());
 				QPixmap p;
 				if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
@@ -105,7 +105,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 					}
 				}
 			} else {
-				qDebug() << "loading external cover from harddrive";
+				qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 				imageReader.setFileName(QDir::fromNativeSeparators(file));
 				imageReader.setScaledSize(QSize(coverSize, coverSize));
 				item->setIcon(QPixmap::fromImage(imageReader.read()));
@@ -238,7 +238,6 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 		QString absFilePath = track->data(LibraryTreeView::DF_URI).toString();
 		/// XXX: query the sqlmodel instead?
 		FileHelper fh(absFilePath);
-		//qDebug() << "rating" << fh.rating();
 		if (fh.rating() > 0) {
 			//StarRating starRating(fh.rating());
 			//starRating.paint(painter, option, StarRating::ReadOnly);
@@ -305,7 +304,6 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 			p->setPen(opt.palette.highlightedText().color());
 		}
 	}
-	//qDebug() << item->data(LibraryTreeView::DF_Highlighted).toBool();
 	if (item->data(LibraryTreeView::DF_Highlighted).toBool()) {
 		QFont f = p->font();
 		f.setBold(true);
@@ -317,7 +315,6 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::displayIcon(bool b)
 {
-	qDebug() << Q_FUNC_INFO;
 	_showCovers = b;
 	if (_showCovers) {
 		_animateIcons = true;

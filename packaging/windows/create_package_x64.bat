@@ -78,8 +78,7 @@ rem vc redist 2012 and 2013 are required too
 xcopy vcredist packages\org.miamplayer.core\data\vcredist /y/i/e
 
 rem create the final package
-rem binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.6.14.exe
-binarycreator -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.7.0.exe
+binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.7.1.exe
 
 rem delete data folders
 rmdir packages\org.miamplayer.core\data\ /s /q

@@ -1107,6 +1107,10 @@
         <source>Show debug information...</source>
         <translation>Montrer les informations de débug...</translation>
     </message>
+    <message>
+        <source>Every file type (*)</source>
+        <translation>Tous les fichiers (*)</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1266,10 +1270,6 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Souhaitez-vous les ajouter ? (vous pouvez en décocher)</translation>
     </message>
     <message>
-        <source>- otherwise -</source>
-        <translation>- ou sinon -</translation>
-    </message>
-    <message>
         <source>Click here to manually search for music</source>
         <translation>Cliquez ici pour rechercher des dossiers musicaux</translation>
     </message>
@@ -1294,6 +1294,18 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>empty folder</source>
         <translation>dossier vide</translation>
+    </message>
+    <message>
+        <source>A default music folder has been found</source>
+        <translation>Un répertoire musical par défaut a été trouvé</translation>
+    </message>
+    <message>
+        <source>– or –</source>
+        <translation>– ou –</translation>
+    </message>
+    <message>
+        <source>– otherwise –</source>
+        <translation>– ou sinon –</translation>
     </message>
 </context>
 <context>

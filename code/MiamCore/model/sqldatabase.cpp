@@ -46,9 +46,7 @@ SqlDatabase::SqlDatabase()
 		t->setSingleShot(true);
 		t->start(5000);
 		connect(t, &QTimer::timeout, this, static_cast<void (SqlDatabase::*)(void)>(&SqlDatabase::rebuild));
-	}// else {
-	//	qDebug() << "Alright, DB folder and DB file exist";
-	//}
+	}
 	dbFile.open(QIODevice::ReadWrite);
 	dbFile.close();
 	setDatabaseName(dbPath);
@@ -147,7 +145,7 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 			album->setParentNode(artist);
 			emit nodeExtracted(album);
 		} else {
-			qDebug() << "artist wasn't found?" << artistId;
+			qDebug() << Q_FUNC_INFO << "artist wasn't found?" << artistId;
 		}
 	}
 
@@ -211,8 +209,8 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist)
 		insert.bindValue(":id", QString::number(qrand()));
 		b = insert.exec();
 		++i;
-		qDebug() << "insert failed for playlist" << playlist.title() << "trying again" << i;
-		qDebug() << insert.lastError();
+		qDebug() << Q_FUNC_INFO << "insert failed for playlist" << playlist.title() << "trying again" << i;
+		qDebug() << Q_FUNC_INFO << insert.lastError();
 	}
 	//close();
 	return id;
@@ -449,7 +447,7 @@ bool SqlDatabase::playlistHasBackgroundImage(int playlistID)
 	QSqlQuery query = exec("SELECT background FROM playlists WHERE id = " + QString::number(playlistID));
 	query.next();
 	bool result = !query.record().value(0).toString().isEmpty();
-	qDebug() << query.record().value(0).toString() << result;
+	qDebug() << Q_FUNC_INFO << query.record().value(0).toString() << result;
 
 	//close();
 	return result;
@@ -550,7 +548,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			if (hasTrack.exec() && hasTrack.next() && hasTrack.record().value(0).toInt() != 0) {
 				QSqlQuery removeTrack("DELETE FROM tracks WHERE uri = ?", *this);
 				removeTrack.addBindValue(QDir::toNativeSeparators(pair.first));
-				qDebug() << "deleting tracks";
+				qDebug() << Q_FUNC_INFO << "deleting tracks";
 				if (removeTrack.exec()) {
 					this->saveFileRef(pair.second);
 				}
@@ -945,7 +943,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	AlbumDAO *albumDAO = NULL;
 
 	if (!insertTrack.exec()) {
-		qDebug() << insertTrack.lastError();
+		qDebug() << Q_FUNC_INFO << insertTrack.lastError();
 		return;
 	}
 	TrackDAO *trackDAO = new TrackDAO;
@@ -965,7 +963,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	selectAlbum.addBindValue(artistId);
 	selectAlbum.exec();
 	if (!selectAlbum.next()) {
-		qDebug() << "inserting" << album << albumNorm << albumId << "artistId" << artistId;
+		qDebug() << Q_FUNC_INFO << "inserting" << album << albumNorm << albumId << "artistId" << artistId;
 		QSqlQuery insertAlbum(*this);
 		insertAlbum.prepare("INSERT INTO albums (id, name, normalizedName, year, artistId) VALUES (?, ?, ?, ?, ?)");
 		insertAlbum.addBindValue(albumId);
@@ -979,7 +977,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		insertAlbum.addBindValue(artistId);
 		albumInserted = insertAlbum.exec();
 		if (!albumInserted) {
-			qDebug() << "not inserted" << insertAlbum.lastError();
+			qDebug() << Q_FUNC_INFO << "not inserted" << insertAlbum.lastError();
 		}
 
 		albumDAO = new AlbumDAO;
@@ -995,7 +993,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	} else {
 		// A previous record exists for this normalized name but the new name is different
 		if (QString::compare(selectAlbum.record().value(0).toString(), album) != 0) {
-			qDebug() << "updating" << album << albumNorm << albumId;
+			qDebug() << Q_FUNC_INFO << "updating" << album << albumNorm << albumId;
 			QSqlQuery updateAlbum(*this);
 			updateAlbum.prepare("UPDATE albums SET name = ? WHERE id = ?");
 			updateAlbum.addBindValue(album);

@@ -25,8 +25,14 @@ public:
 
 	enum Origin { RemoteMedia = Qt::UserRole + 1 };
 
+	/** Redefined to add lazy-loading. */
+	//bool canFetchMore(const QModelIndex &index) const;
+
 	/** Clear the content of playlist. */
 	void clear();
+
+	/** Redefined to add lazy-loading. */
+	//void fetchMore(const QModelIndex &parent);
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 

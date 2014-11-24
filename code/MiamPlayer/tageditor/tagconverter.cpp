@@ -99,7 +99,7 @@ void TagConverter::applyPatternToColumns()
 	QRegularExpression re(pattern, QRegularExpression::UseUnicodePropertiesOption);
 	///
 
-	qDebug() << "regular expr" << re;
+	//qDebug() << "regular expr" << re;
 
 	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
 		QString filename = index.data().toString();
@@ -144,7 +144,6 @@ void TagConverter::applyPatternToFilenames()
 
 QString TagConverter::generatePattern(TagLineEdit *lineEdit) const
 {
-	qDebug() << Q_FUNC_INFO << lineEdit->text();
 	QString pattern = lineEdit->text();
 	pattern = pattern.replace(':', '_');
 
@@ -155,13 +154,12 @@ QString TagConverter::generatePattern(TagLineEdit *lineEdit) const
 		QString substitution =  ':' + QString::number(tag->column());
 		pattern.replace(tag->position(), tag->spaceCount(), substitution);
 	}
-	qDebug() << "pattern" << pattern;
+	qDebug() << Q_FUNC_INFO << lineEdit->text() << "pattern" << pattern;
 	return pattern;
 }
 
 QString TagConverter::autoGuessPatternFromFile() const
 {
-	//qDebug() << Q_FUNC_INFO;
 	static const QStringList separators = QStringList() << "-" << "." << "_";
 	return QString();
 }

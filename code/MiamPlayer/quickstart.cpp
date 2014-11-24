@@ -4,6 +4,8 @@
 #include "filehelper.h"
 #include "nofocusitemdelegate.h"
 
+#include <QDir>
+#include <QFileIconProvider>
 #include <QStandardPaths>
 #include <QThread>
 
@@ -16,6 +18,13 @@ QuickStart::QuickStart(QWidget *parent) :
 {
 	setupUi(this);
 
+	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+	if (musicLocations.isEmpty()) {
+		defaultFolderGroupBox->setVisible(false);
+		orLabel->setVisible(false);
+	} else {
+		defaultFolderTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
+	}
 	quickStartTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
 
 	connect(quickStartTableWidget, &QTableWidget::itemClicked, this, &QuickStart::checkRow);
@@ -116,6 +125,7 @@ void QuickStart::insertFirstRow()
 		otherwiseLabel->hide();
 	} else {
 		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
+		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
 
 		QTableWidgetItem *masterCheckBox = new QTableWidgetItem;
 		masterCheckBox->setFlags(masterCheckBox->flags() | Qt::ItemIsTristate | Qt::ItemIsUserCheckable);
@@ -138,6 +148,23 @@ void QuickStart::insertFirstRow()
 		quickStartTableWidget->setItem(0, 1, new QTableWidgetItem(tr("%n folders", "", quickStartTableWidget->rowCount() - 1)));
 		quickStartTableWidget->setItem(0, 2, totalFiles);
 
+
+		QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+		if (!musicLocations.isEmpty()) {
+			QTableWidgetItem *checkBox = new QTableWidgetItem;
+			checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
+			checkBox->setCheckState(Qt::Checked);
+
+			QTableWidgetItem *totalFiles2 = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
+			totalFiles2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+			defaultFolderTableWidget->insertRow(0);
+			defaultFolderTableWidget->setItem(0, 0, checkBox);
+			QString musicLocation = musicLocations.first();
+			defaultFolderTableWidget->setItem(0, 1, new QTableWidgetItem(QFileIconProvider().icon(musicLocation), QDir::toNativeSeparators(musicLocation)));
+			defaultFolderTableWidget->setItem(0, 2, totalFiles2);
+		}
+
 		quickStartApplyButton->setEnabled(true);
 
 		_totalMusicFiles = 0;
@@ -155,7 +182,7 @@ void QuickStart::insertRow(const QFileInfo &fileInfo, const int & musicFileNumbe
 	checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
 	checkBox->setCheckState(Qt::Checked);
 
-	QTableWidgetItem *musicSubFolderName = new QTableWidgetItem(fileInfo.baseName());
+	QTableWidgetItem *musicSubFolderName = new QTableWidgetItem(QFileIconProvider().icon(fileInfo), fileInfo.baseName());
 	musicSubFolderName->setData(Qt::UserRole, fileInfo.absoluteFilePath());
 
 	QTableWidgetItem *musicSubFolderCount;

@@ -27,7 +27,7 @@ void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 	QRect addLineRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarAddLine, sc);
 	QRect sliderRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSlider, sc);
 
-	qDebug() << subLineRect << sliderRect << addLineRect;
+	//qDebug() << subLineRect << sliderRect << addLineRect;
 
 
 	if (sc->orientation() == Qt::Vertical) {

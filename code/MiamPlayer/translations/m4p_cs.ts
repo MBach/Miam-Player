@@ -1110,6 +1110,10 @@
         <source>Show debug information...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Every file type (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1270,10 +1274,6 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
         <translation>Chtěl byste je přidat? (U některých složky můžete zrušit jejich zaškrtnutí)</translation>
     </message>
     <message>
-        <source>- otherwise -</source>
-        <translation>- jinak -</translation>
-    </message>
-    <message>
         <source>Click here to manually search for music</source>
         <translation>Klepněte zde pro ruční hledání hudby</translation>
     </message>
@@ -1300,6 +1300,18 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <message>
         <source>empty folder</source>
         <translation>prázdná složka</translation>
+    </message>
+    <message>
+        <source>A default music folder has been found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>– or –</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>– otherwise –</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

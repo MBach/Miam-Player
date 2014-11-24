@@ -50,7 +50,6 @@ TagEditor::TagEditor(QWidget *parent) :
 		combo->addItem(tr("(Keep)"));
 		combo->addItem(tr("(Delete)"));
 		combo->setCurrentIndex(-1);
-		qDebug() << "column" << combos.key(combo);
 		combo->setProperty("column", combos.key(combo));
 	}
 
@@ -90,7 +89,7 @@ QStringList TagEditor::selectedTracks()
 
 void TagEditor::updateSelectedTracks()
 {
-	qDebug() << "TagEditor: model has been updated, redraw selected tracks";
+	qDebug() << Q_FUNC_INFO << "Model has been updated, redraw selected tracks";
 	_db->load();
 }
 
@@ -139,7 +138,7 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 	QMutableMapIterator<int, Cover*> iterator(coversToRemove);
 	while (iterator.hasNext()) {
 		iterator.next();
-		qDebug() << "clearCovers" << iterator.key() << (iterator.value() == NULL);
+		qDebug() << Q_FUNC_INFO << "clearCovers" << iterator.key() << (iterator.value() == NULL);
 		if (iterator.value() != NULL) {
 			delete iterator.value();
 			iterator.value() = NULL;

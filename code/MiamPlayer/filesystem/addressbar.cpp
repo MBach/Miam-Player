@@ -127,14 +127,13 @@ void AddressBar::resizeEvent(QResizeEvent *event)
 			QLayoutItem *item = hBoxLayout->itemAt(1);
 			AddressBarButton *button = qobject_cast<AddressBarButton*>(item->widget());
 
-			//qDebug() << "items in layout ? " << hBoxLayout->count();
 			// Root button, current button, and spacer item
 			if (hBoxLayout->count() == 3) {
 				// Keep at least one button, and resize it to the minimum size
 				if (button->width() > 70) {
-					qDebug() << "we should reduce size" << button->minimumSizeHint();
+					qDebug() << Q_FUNC_INFO << "we should reduce size" << button->minimumSizeHint();
 					int actualTextWidth = fontMetrics().width(button->text());
-					qDebug() << "text width" << actualTextWidth << button->text() << button->path();
+					qDebug() << Q_FUNC_INFO << "text width" << actualTextWidth << button->text() << button->path();
 					button->setText(fontMetrics().elidedText(button->text(), Qt::ElideRight, actualTextWidth - 5));
 				}
 			} else {

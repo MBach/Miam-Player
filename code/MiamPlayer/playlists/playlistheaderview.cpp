@@ -143,7 +143,6 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 		}
 	}
 	if (!r.isNull()) {
-		qDebug() << r;
 		p.save();
 		p.setPen(palette.highlight().color());
 		p.drawLine(r.x(), r.y() + r.height() / 4,
@@ -152,7 +151,6 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 				   r.x() + r.width() - 1, r.y() + 3 * r.height() / 4);
 		p.restore();
 	}
-
 
 	// Frame line
 	p.setPen(QApplication::palette().mid().color());

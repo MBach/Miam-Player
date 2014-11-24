@@ -27,7 +27,6 @@ void SeekBar::mouseMoveEvent(QMouseEvent *)
 	static const int bound = 12;
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
 		float p = (float) xPos / (width() - 2 * bound);
-		qDebug() << "position" << p;
 		float posButton = p * 1000;
 		_mediaPlayer.data()->seek(p);
 		this->setValue(posButton);
@@ -39,10 +38,8 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 	int xPos = mapFromGlobal(QCursor::pos()).x();
 	static const int bound = 12;
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
-		qDebug() << "mousePressEvent inside clickable area";
 		float p = (float) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
-		qDebug() << "mousePressEvent" << "xPos" << xPos << "width()" << width() << "posButton" << posButton;
 		_mediaPlayer.data()->setMute(true);
 		_mediaPlayer.data()->seek(p);
 		this->setValue(posButton);
@@ -56,7 +53,6 @@ void SeekBar::mouseReleaseEvent(QMouseEvent *)
 
 void SeekBar::paintEvent(QPaintEvent *)
 {
-	//qDebug() << "paintEvent" << value();
 	int h = height() / 3.0;
 	QStylePainter p(this);
 	QStyleOptionSlider o;

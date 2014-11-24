@@ -28,6 +28,21 @@ void PlaylistModel::clear()
 	}
 }
 
+/** Redefined to add lazy-loading. */
+/*bool PlaylistModel::canFetchMore(const QModelIndex &index) const
+{
+	bool b = QStandardItemModel::canFetchMore(index);
+	qDebug() << Q_FUNC_INFO << b;
+	return true;
+}*/
+
+/** Redefined to add lazy-loading. */
+/*void PlaylistModel::fetchMore(const QModelIndex &parent)
+{
+	qDebug() << Q_FUNC_INFO;
+	QStandardItemModel::fetchMore(parent);
+}*/
+
 void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
 	qDebug() << Q_FUNC_INFO;

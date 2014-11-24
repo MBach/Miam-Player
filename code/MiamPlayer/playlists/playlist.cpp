@@ -148,7 +148,6 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 /** Insert remote medias to playlist. */
 void Playlist::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
-	qDebug() << Q_FUNC_INFO;
 	if (rowIndex == -1) {
 		rowIndex = _playlistModel->rowCount();
 	}
@@ -247,7 +246,6 @@ void Playlist::dropEvent(QDropEvent *event)
 		}
 	} else if (source == NULL) {
 		event->ignore();
-		qDebug() << "source is null, ignore event?" << this->parent() << this->objectName();
 		return;
 	}
 }
@@ -288,8 +286,6 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 	QModelIndex index = indexAt(event->pos());
 	if (index.column() == COL_RATINGS && _previouslySelectedRows.contains(index)) {
 		if (index.data(PlaylistModel::RemoteMedia).toBool() == true) {
-			qDebug() << "do not open persistent editor";
-			//QTableView::mousePressEvent(event);
 			event->accept();
 		} else {
 			foreach (QModelIndex i, selectionModel()->selectedRows(COL_RATINGS)) {

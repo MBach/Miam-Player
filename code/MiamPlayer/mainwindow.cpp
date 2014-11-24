@@ -150,13 +150,6 @@ void MainWindow::setupActions()
 		widgetSearchBar->setVisible(!libraryIsEmpty);
 
 		if (libraryIsEmpty) {
-			// Delete table tracks if such a previous one was found
-			if (SqlDatabase::instance()->open()) {
-				// If one has only remote files in the database, do not drop it either!
-				// SqlDatabase::instance()->exec("DROP TABLE tracks");
-				qDebug() << Q_FUNC_INFO;
-				//SqlDatabase::instance()->close();
-			}
 			quickStart->searchMultimediaFiles();
 		} else {
 			SqlDatabase::instance()->rebuild(oldLocations, newLocations);
@@ -216,6 +209,25 @@ void MainWindow::setupActions()
 	// Quick Start
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 
+	// Lambda function to reduce duplicate code
+	auto applyButtonClicked = [this] (const QStringList &newLocations) {
+		SettingsPrivate::instance()->setMusicLocations(newLocations);
+		quickStart->hide();
+		library->show();
+		libraryHeader->show();
+		changeHierarchyButton->show();
+		widgetSearchBar->show();
+		actionScanLibrary->setEnabled(true);
+		SqlDatabase::instance()->rebuild();
+	};
+
+	// Set only one location in the Library: the default music folder
+	connect(quickStart->defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
+		QString musicLocation = quickStart->defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
+		QStringList newLocations = QStringList() << musicLocation;
+		applyButtonClicked(newLocations);
+	});
+
 	// Select only folders that are checked by one
 	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QStringList newLocations;
@@ -227,14 +239,7 @@ void MainWindow::setupActions()
 				newLocations.append(musicLocation);
 			}
 		}
-		SettingsPrivate::instance()->setMusicLocations(newLocations);
-		quickStart->hide();
-		library->show();
-		libraryHeader->show();
-		changeHierarchyButton->show();
-		widgetSearchBar->show();
-		actionScanLibrary->setEnabled(true);
-		SqlDatabase::instance()->rebuild();
+		applyButtonClicked(newLocations);
 	});
 
 	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
@@ -538,7 +543,7 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 {
-	qDebug() << "MW ; MediaPlayer::stateChanged" << state;
+	qDebug() << Q_FUNC_INFO << state;
 	playButton->disconnect();
 	actionPlay->disconnect();
 	if (state == QMediaPlayer::PlayingState) {

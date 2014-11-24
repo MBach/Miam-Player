@@ -1119,6 +1119,10 @@
         <source>Show debug information...</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Every file type (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1281,10 +1285,6 @@ Select a playlist to display the first 30 tracks.</source>
         <translation> تريدون إظافتهم؟</translation>
     </message>
     <message>
-        <source>- otherwise -</source>
-        <translation>- وإلا-</translation>
-    </message>
-    <message>
         <source>Click here to manually search for music</source>
         <translation>انقر هنا للبحث عن ملفات الموسيقى</translation>
     </message>
@@ -1316,6 +1316,18 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>empty folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A default music folder has been found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>– or –</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>– otherwise –</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -48,9 +48,7 @@ FileHelper::FileHelper(const QMediaContent &track)
 FileHelper::FileHelper(const QString &filePath)
 {
 	if (!init(filePath)) {
-		//qDebug() << "second chance for" << filePath;
 		init(filePath.toStdString().c_str());
-		//init(filePath.toUtf8());
 	}
 }
 
@@ -65,33 +63,30 @@ bool FileHelper::init(const QString &filePath)
 	_fileInfo = QFileInfo(fileName);
 	QString suffix = _fileInfo.suffix().toLower();
 	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(fileName)));
-	//qDebug() << "FileHelper::init" << filePath;
-	//QByteArray ba = QDir::toNativeSeparators(filePath).toLocal8Bit();
-	//TagLib::FileName fp(ba.data());
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
-		fileType = APE;
+		_fileType = APE;
 	} else if (suffix == "asf") {
 		_file = new TagLib::ASF::File(fp);
-		fileType = ASF;
+		_fileType = ASF;
 	} else if (suffix == "flac") {
 		_file = new TagLib::FLAC::File(fp);
-		fileType = FLAC;
+		_fileType = FLAC;
 	} else if (suffix == "m4a") {
 		_file = new TagLib::MP4::File(fp);
-		fileType = MP4;
+		_fileType = MP4;
 	} else if (suffix == "mpc") {
 		_file = new TagLib::MPC::File(fp);
-		fileType = MPC;
+		_fileType = MPC;
 	} else if (suffix == "mp3") {
 		_file = new TagLib::MPEG::File(fp);
-		fileType = MP3;
+		_fileType = MP3;
 	} else if (suffix == "ogg" || suffix == "oga") {
 		_file = new TagLib::Vorbis::File(fp);
-		fileType = OGG;
+		_fileType = OGG;
 	} else {
 		_file = NULL;
-		fileType = UNKNOWN;
+		_fileType = UNKNOWN;
 	}
 	return (_file && _file->isValid());
 }
@@ -121,7 +116,7 @@ const QStringList FileHelper::suffixes(bool withPrefix)
 QString FileHelper::artistAlbum() const
 {
 	QString artAlb = "";
-	switch (fileType) {
+	switch (_fileType) {
 	case APE:
 	case MPC:
 		artAlb = this->extractGenericFeature("ALBUMARTIST");
@@ -133,7 +128,7 @@ QString FileHelper::artistAlbum() const
 		}
 		break;
 	case ASF:
-		qDebug() << "FileHelper::artistAlbum: Not yet implemented for ASF file";
+		qDebug() << Q_FUNC_INFO << "Not yet implemented for ASF file";
 		break;
 	case FLAC:
 		artAlb = this->extractFlacFeature("TPE2");
@@ -150,7 +145,7 @@ QString FileHelper::artistAlbum() const
 
 void FileHelper::setArtistAlbum(const QString &artistAlbum)
 {
-	switch (fileType) {
+	switch (_fileType) {
 	case MP4:{
 		TagLib::MP4::File *mp4File = static_cast<TagLib::MP4::File*>(_file);
 		TagLib::MP4::ItemListMap &items = mp4File->tag()->itemListMap();
@@ -164,7 +159,7 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 	}
 	case MPC:
 		//mpcFile = static_cast<MPC::File*>(f);
-		qDebug() << "MPC file";
+		qDebug() << Q_FUNC_INFO << "MPC file";
 		break;
 	case MP3:{
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
@@ -179,12 +174,12 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 			tif->setText(artistAlbum.toStdString().data());
 			tag->addFrame(tif);
 		} else if (mpegFile->hasID3v1Tag()) {
-			qDebug() << "ID3v1Tag";
+			qDebug() << Q_FUNC_INFO << "ID3v1Tag";
 		}
 		break;
 	}
 	default:
-		qDebug() << "FileHelper::setArtistAlbum not implemented for this type of file";
+		qDebug() << Q_FUNC_INFO << "Not implemented for this type of file";
 		break;
 	}
 }
@@ -193,7 +188,7 @@ int FileHelper::discNumber(bool canBeZero) const
 {
 	QString strDiscNumber = "0";
 
-	switch (fileType) {
+	switch (_fileType) {
 	case APE:
 	case MP4:
 	case MPC:
@@ -201,8 +196,7 @@ int FileHelper::discNumber(bool canBeZero) const
 		strDiscNumber = this->extractGenericFeature("DISCNUMBER");
 		break;
 	case ASF:
-		//asfFile = static_cast<ASF::File*>(f);
-		qDebug() << "FileHelper::discNumber: Not yet implemented for ASF file";
+		qDebug() << Q_FUNC_INFO << "Not yet implemented for ASF file";
 		break;
 	case FLAC:
 		strDiscNumber = this->extractFlacFeature("TPOS");
@@ -230,7 +224,7 @@ Cover* FileHelper::extractCover()
 {
 	TagLib::MPEG::File *mpegFile = NULL;
 	Cover *cover = NULL;
-	switch (fileType) {
+	switch (_fileType) {
 	case MP3:
 		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
@@ -249,7 +243,7 @@ Cover* FileHelper::extractCover()
 				}
 			}
 		} else if (mpegFile && mpegFile->hasID3v1Tag()) {
-			qDebug() << "FileHelper::extractCover: Not implemented for ID3v1Tag";
+			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
 		}
 		break;
 	default:
@@ -294,7 +288,7 @@ bool FileHelper::hasCover() const
 {
 	TagLib::MPEG::File *mpegFile = NULL;
 	bool atLeastOnePicture = false;
-	switch (fileType) {
+	switch (_fileType) {
 	case MP3:
 		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
@@ -309,9 +303,7 @@ bool FileHelper::hasCover() const
 					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty());
 				}
 			}
-		} //else if (mpegFile && mpegFile->hasID3v1Tag()) {
-		//	qDebug() << "FileHelper::hasCover: Not implemented for ID3v1Tag";
-		//}
+		}
 		break;
 	default:
 		break;
@@ -325,7 +317,7 @@ int FileHelper::rating() const
 	int r = -1;
 
 	/// TODO other types?
-	switch (fileType) {
+	switch (_fileType) {
 	case MP3: {
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
@@ -338,7 +330,7 @@ int FileHelper::rating() const
 		if (flacFile->hasID3v2Tag()) {
 			r = this->ratingForID3v2(flacFile->ID3v2Tag());
 		} else if (flacFile->hasID3v1Tag()) {
-			qDebug() << "FileHelper::rating: Not implemented (FLAC ID3v1)";
+			qDebug() << Q_FUNC_INFO << "Not implemented (FLAC ID3v1)";
 		} else if (flacFile->hasXiphComment()) {
 			TagLib::StringList list = flacFile->xiphComment()->fieldListMap()["RATING"];
 			if (!list.isEmpty()) {
@@ -348,7 +340,6 @@ int FileHelper::rating() const
 		break;
 	}
 	default:
-		// qDebug() << "FileHelper::rating: Not implemented";
 		break;
 	}
 	return r;
@@ -357,9 +348,8 @@ int FileHelper::rating() const
 /** Sets the inner picture. */
 void FileHelper::setCover(Cover *cover)
 {
-	//qDebug() << "FileHelper::setCover, cover==NULL?" << (cover == NULL);
 	TagLib::MPEG::File *mpegFile = NULL;
-	switch (fileType) {
+	switch (_fileType) {
 	case MP3:
 		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
@@ -369,28 +359,23 @@ void FileHelper::setCover(Cover *cover)
 				for (TagLib::ID3v2::FrameList::Iterator it = mp3Frames.begin(); it != mp3Frames.end() ; it++) {
 					// Removing a frame will invalidate any pointers on the list
 					mpegFile->ID3v2Tag()->removeFrame(*it);
-					qDebug() << "removing a frame";
 					break;
 				}
 			}
 			if (cover != NULL) {
 				TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
-				qDebug() << "cover->hasChanged()" << cover->hasChanged();
 				TagLib::ID3v2::AttachedPictureFrame *pictureFrame = new TagLib::ID3v2::AttachedPictureFrame();
-				//qDebug() << "cover.mimeType()" << QString(cover->mimeType());
-				//qDebug() << "cover.mimeType2()" << QString::fromUtf8(cover->mimeType2().c_str());
 				pictureFrame->setMimeType(cover->mimeType());
 				pictureFrame->setPicture(bv);
 				pictureFrame->setType(TagLib::ID3v2::AttachedPictureFrame::FrontCover);
 				mpegFile->ID3v2Tag()->addFrame(pictureFrame);
-				qDebug() << "adding a frame";
 			}
 		} else if (mpegFile->hasID3v1Tag()) {
-			qDebug() << "FileHelper::setCover: Not implemented for ID3v1Tag";
+			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
 		}
 		break;
 	default:
-		qDebug() << "FileHelper::setCover: Not implemented for" << fileType;
+		qDebug() << Q_FUNC_INFO << "Not implemented for" << _fileType;
 		break;
 	}
 }
@@ -398,7 +383,7 @@ void FileHelper::setCover(Cover *cover)
 /** Set or remove any disc number. */
 void FileHelper::setDiscNumber(const QString &disc)
 {
-	switch (fileType) {
+	switch (_fileType) {
 	case MP3: {
 		TagLib::MPEG::File *mpegFile = mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
@@ -414,7 +399,7 @@ void FileHelper::setDiscNumber(const QString &disc)
 		break;
 	}
 	default:
-		qDebug() << "FileHelper::setDiscNumber: Not implemented for other file type than MP3";
+		qDebug() << Q_FUNC_INFO << "Not implemented for other file type than MP3";
 		break;
 	}
 }
@@ -422,13 +407,13 @@ void FileHelper::setDiscNumber(const QString &disc)
 /** Set or remove any rating. */
 void FileHelper::setRating(int rating)
 {
-	switch (fileType) {
+	switch (_fileType) {
 	case MP3: {
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
 			this->setRatingForID3v2(rating, mpegFile->ID3v2Tag());
 		} else if (mpegFile->hasID3v1Tag()) {
-			qDebug() << "FileHelper::rating: Not implemented for ID3v1Tag";
+			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
 		}
 		break;
 	}
@@ -437,7 +422,7 @@ void FileHelper::setRating(int rating)
 		if (flacFile->hasID3v2Tag()) {
 			this->setRatingForID3v2(rating, flacFile->ID3v2Tag());
 		} else if (flacFile->hasID3v1Tag()) {
-			qDebug() << "hasID3v1Tag";
+			qDebug() << Q_FUNC_INFO << "hasID3v1Tag";
 		} else if (flacFile->hasXiphComment()) {
 			TagLib::Ogg::XiphComment *xiph = flacFile->xiphComment();
 			if (rating == 0) {
@@ -533,7 +518,7 @@ QString FileHelper::comment() const
 
 bool FileHelper::save()
 {
-	if (fileType == MP3) {
+	if (_fileType == MP3) {
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		// TagLib updates tags with the latest version (ID3v2.4)
 		// We just want to save the file with the exact same version!
@@ -541,7 +526,7 @@ bool FileHelper::save()
 			return mpegFile->save(TagLib::MPEG::File::AllTags, false, mpegFile->ID3v2Tag()->header()->majorVersion());
 		}
 	}
-	if (fileType != UNKNOWN) {
+	if (_fileType != UNKNOWN) {
 		return _file->save();
 	}
 	return false;
@@ -569,7 +554,7 @@ QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 				feature = QString(l.front()->toString().toCString(true));
 			}
 		} else if (flacFile->ID3v1Tag()) {
-			qDebug() << "FileHelper::extractFlacFeature: Not yet implemented for ID3v1Tag FLAC file";
+			qDebug() << Q_FUNC_INFO << "Not yet implemented for ID3v1Tag FLAC file";
 		} else if (flacFile->xiphComment()) {
 			const TagLib::Ogg::FieldListMap map = flacFile->xiphComment()->fieldListMap();
 			if (!map[featureToExtract.toStdString().data()].isEmpty()) {
@@ -602,10 +587,7 @@ QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 			if (!l.isEmpty()) {
 				feature = QString(l.front()->toString().toCString(true));
 			}
-		} //else if (mpegFile->hasID3v1Tag()) {
-			// qDebug() << "FileHelper::extractMpegFeature: Not yet implemented for ID3v1Tag MP3 file";
-			// qDebug() << featureToExtract << _fileInfo.absoluteFilePath();
-		//}
+		}
 	}
 	return feature;
 }

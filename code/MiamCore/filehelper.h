@@ -29,7 +29,7 @@ class MIAMCORE_LIBRARY FileHelper
 private:
 	TagLib::File *_file;
 
-	int fileType;
+	int _fileType;
 
 	QFileInfo _fileInfo;
 
@@ -69,8 +69,6 @@ public:
 
 	/** Extract field disc number. */
 	int discNumber(bool canBeZero = false) const;
-
-
 
 	/** Extract the inner picture if exists. */
 	Cover* extractCover();

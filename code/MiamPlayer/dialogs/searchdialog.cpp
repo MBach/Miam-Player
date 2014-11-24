@@ -246,12 +246,11 @@ void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
 
 void SearchDialog::appendSelectedItem(const QModelIndex &index)
 {
-	qDebug() << Q_FUNC_INFO;
 	const QStandardItemModel *m = qobject_cast<const QStandardItemModel*>(index.model());
 
 	// At this point, we have to decide if the object that has been double clicked is local or remote
 	QStandardItem *item = m->itemFromIndex(index);
-	qDebug() << item->text();
+	qDebug() << Q_FUNC_INFO << item->text();
 
 	QListView *list = qobject_cast<QListView*>(sender());
 
@@ -278,7 +277,6 @@ void SearchDialog::appendSelectedItem(const QModelIndex &index)
 /** Local search for matching expressions. */
 void SearchDialog::search(const QString &text)
 {
-	qDebug() << Q_FUNC_INFO;
 	if (!_checkBoxLibrary->isChecked()) {
 		return;
 	}

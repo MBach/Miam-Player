@@ -166,7 +166,6 @@ void PlaylistManager::loadPlaylist(int playlistId)
 
 int PlaylistManager::savePlaylist(int index)
 {
-	qDebug() << Q_FUNC_INFO;
 	Playlist *p = playlists->playlist(index);
 	if (p && !p->mediaPlaylist()->isEmpty()) {
 		QString playlistName = playlists->tabBar()->tabText(index);
@@ -176,7 +175,7 @@ int PlaylistManager::savePlaylist(int index)
 			files.append(p->mediaPlaylist()->media(j).canonicalUrl().toString());
 		}
 		uint hash = qHash(files);
-		qDebug() << "savePlaylist() << new hash generated" << hash;
+		qDebug() << Q_FUNC_INFO << "savePlaylist() << new hash generated" << hash;
 
 		PlaylistDAO playlist;
 		playlist.setTitle(playlistName);
@@ -278,7 +277,7 @@ void PlaylistManager::exportSelectedPlaylist()
 	if (QFile::exists(newName)) {
 		QFile removePreviousOne(newName);
 		if (!removePreviousOne.remove()) {
-			qDebug() << "Cannot remove" << newName;
+			qDebug() << Q_FUNC_INFO << "Cannot remove" << newName;
 		}
 	}
 	if (newName.isEmpty()) {
@@ -307,7 +306,7 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 	this->clearPreview(!empty);
 	if (indexes.size() == 1) {
 		int playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toInt();
-		qDebug() << "playlistId" << playlistId;
+		qDebug() << Q_FUNC_INFO << "playlistId" << playlistId;
 
 		QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {

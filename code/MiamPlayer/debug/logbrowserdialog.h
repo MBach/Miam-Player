@@ -5,14 +5,24 @@
 
 class QTextBrowser;
 class QPushButton;
+class QTableWidget;
 
 class LogBrowserDialog : public QDialog
 {
 	Q_OBJECT
 
+private:
+	QTableWidget *_browser;
+	QPushButton *_clearButton;
+	QPushButton *_saveButton;
+
 public:
 	LogBrowserDialog(QWidget *parent = 0);
 	~LogBrowserDialog() {}
+
+protected:
+	virtual void closeEvent(QCloseEvent *e);
+	virtual void keyPressEvent(QKeyEvent *e);
 
 public slots:
 	void outputMessage(QtMsgType type, const QString &msg);
@@ -21,13 +31,6 @@ public slots:
 protected slots:
 	void save();
 
-protected:
-	virtual void closeEvent(QCloseEvent *e);
-	virtual void keyPressEvent(QKeyEvent *e);
-
-	QTextBrowser *browser;
-	QPushButton *clearButton;
-	QPushButton *saveButton;
 };
 
 #endif // DIALOG_H

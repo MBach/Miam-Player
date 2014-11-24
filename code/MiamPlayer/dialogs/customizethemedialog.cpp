@@ -230,7 +230,6 @@ void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 /** Automatically centers the parent window when closing this dialog. */
 void CustomizeThemeDialog::mouseMoveEvent(QMouseEvent *event)
 {
-	qDebug() << event->pos();
 	QDialog::mouseMoveEvent(event);
 }
 
@@ -449,7 +448,6 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 		}
 	}
 	Settings::instance()->setThemeName(newTheme);
-	qDebug() << Q_FUNC_INFO << "wtf ?";
 	foreach(MediaButton *m, mainWindow->mediaButtons) {
 		m->setIconFromTheme(newTheme);
 	}
