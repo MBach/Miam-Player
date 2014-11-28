@@ -385,7 +385,7 @@ void FileHelper::setDiscNumber(const QString &disc)
 {
 	switch (_fileType) {
 	case MP3: {
-		TagLib::MPEG::File *mpegFile = mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
 			// Remove existing disc number if one has set an empty string
 			if (disc.isEmpty()) {
