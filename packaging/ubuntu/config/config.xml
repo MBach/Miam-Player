@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+	<Name>Miam-Player</Name>
+	<RunProgram>@TargetDir@/miam-player</RunProgram>
+	<Version>0.7.0</Version>
+	<Title>Miam-Player</Title>
+	<InstallerApplicationIcon>mp</InstallerApplicationIcon>
+	<InstallerWindowIcon>installerIcon.png</InstallerWindowIcon>
+	<Logo>logo.png</Logo>
+	<Publisher>Matthieu Bachelier</Publisher>
+	<StartMenuDir>Miam-Player</StartMenuDir>
+	<AllowNonAsciiCharacters>true</AllowNonAsciiCharacters>
+	<AllowSpaceInPath>true</AllowSpaceInPath>
+	<UninstallerName>uninstall-miam-player</UninstallerName>
+	<ProductUrl>http://www.miam-player.org</ProductUrl>
+	<TargetDir>@ApplicationsDir@\MiamPlayer</TargetDir>
+	<AdminTargetDir>@ApplicationsDir@\MiamPlayer</AdminTargetDir>
+	<RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
+	<WizardStyle>Modern</WizardStyle>
+</Installer>

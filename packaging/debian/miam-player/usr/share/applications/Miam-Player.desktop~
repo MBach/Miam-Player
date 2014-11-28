@@ -1,0 +1,41 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Miam-Player
+GenericName=Miam-Player!
+GenericName[fr]=Miam-Player !
+Version=1.0
+Exec=miam-player %U
+TryExec=miam-player
+Path=/usr/bin/
+Icon=application-x-miamplayer
+Terminal=false
+Categories=AudioVideo;Player;Qt;
+MimeType=application/ogg;application/x-ogg;application/x-ogm-audio;audio/aac;audio/mp4;audio/mpeg;audio/mpegurl;audio/ogg;audio/vorbis;audio/x-flac;audio/x-mp3;audio/x-mpeg;audio/x-mpegurl;audio/x-musepack;audio/x-oggflac;audio/x-vorbis;audio/x-vorbis+ogg;audio/x-wav;video/x-ms-asf;x-content/audio-player;
+
+Name[fr_FR]=Miam-Player
+
+[Play Shortcut Group]
+Name=Play
+Exec=miam-player --play
+TargetEnvironment=Unity
+
+[Pause Shortcut Group]
+Name=Pause
+Exec=miam-player --pause
+TargetEnvironment=Unity
+
+[Stop Shortcut Group]
+Name=Stop
+Exec=miam-player --stop
+TargetEnvironment=Unity
+
+[Previous Shortcut Group]
+Name=Previous
+Exec=miam-player --previous
+TargetEnvironment=Unity
+
+[Next Shortcut Group]
+Name=Next
+Exec=miam-player --next
+TargetEnvironment=Unity

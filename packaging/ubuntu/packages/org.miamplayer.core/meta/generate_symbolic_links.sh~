@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ln -s libmiam-core.so.1.0.0 libmiam-core.so.1.0.0
+ln -s libmiam-core.so.1.0.0 libmiam-core.so.1.0
+ln -s libmiam-core.so.1.0.0 libmiam-core.so.1
+
+ln -s libmiam-uniquelibrary.so.1.0.0 libmiam-uniquelibrary.so.1.0.0
+ln -s libmiam-uniquelibrary.so.1.0.0 libmiam-uniquelibrary.so.1.0
+ln -s libmiam-uniquelibrary.so.1.0.0 libmiam-uniquelibrary.so.1
+
+ldconfig
