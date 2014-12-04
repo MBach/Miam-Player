@@ -29,7 +29,7 @@ private:
 	QTimer *_timer;
 
 public:
-	TabBar(TabPlaylist *parent);
+	explicit TabBar(TabPlaylist *parent);
 
 	/** Trigger a double click to rename a tab. */
 	void editTab(int indexTab);

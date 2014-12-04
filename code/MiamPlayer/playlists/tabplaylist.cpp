@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "settings.h"
 #include "tabbar.h"
+#include "cornerwidget.h"
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
@@ -13,12 +14,15 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
+	this->setMovable(true);
 	messageBox = new TracksNotFoundMessageBox(this);
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// Add a new playlist
-	connect(this, &QTabWidget::currentChanged, this, &TabPlaylist::checkAddPlaylistButton);
+	connect(this, &QTabWidget::currentChanged, this, [=]() {
+		emit updatePlaybackModeButton();
+	});
 
 	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
 		if (playlists().size() == 1 && playlist(0)->mediaPlaylist()->isEmpty()) {
@@ -69,6 +73,11 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		qDebug() << Q_FUNC_INFO << "Load background not implemented yet";
 	});
 	this->setAcceptDrops(true);
+
+	CornerWidget *corner = new CornerWidget(this);
+	this->setCornerWidget(corner, Qt::TopRightCorner);
+	connect(corner, &QPushButton::clicked, this, &TabPlaylist::addPlaylist);
+	corner->installEventFilter(this);
 }
 
 TabPlaylist::~TabPlaylist()
@@ -102,7 +111,13 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			_mainWindow->dispatchDrop(d);
 			return true;
 		} else {
-			currentPlayList()->forceDrop(de);
+			if (obj == cornerWidget()) {
+				auto p = this->addPlaylist();
+				p->forceDrop(de);
+			} else {
+				currentPlayList()->forceDrop(de);
+			}
+			this->displayEmptyArea(currentPlayList()->mediaPlaylist()->isEmpty());
 			return true;
 		}
 	}
@@ -145,7 +160,7 @@ void TabPlaylist::changeEvent(QEvent *event)
 void TabPlaylist::contextMenuEvent(QContextMenuEvent * event)
 {
 	int tab = tabBar()->tabAt(event->pos());
-	if (tab >= 0 && tab < count() - 1) {
+	if (tab >= 0 && tab < count()) {
 		_contextMenu->move(mapToGlobal(event->pos()));
 		_contextMenu->setProperty("mouseRightClickPos", event->pos());
 		_contextMenu->show();
@@ -170,7 +185,8 @@ void TabPlaylist::displayEmptyArea(bool isEmpty)
 /** Add a new playlist tab. */
 Playlist* TabPlaylist::addPlaylist()
 {
-	QString newPlaylistName = tr("Playlist %1").arg(count());
+	qDebug() << sender();
+	QString newPlaylistName = tr("Playlist %1").arg(count() + 1);
 
 	// Then append a new empty playlist to the others
 	QWidget *stackedWidget = new QWidget(this);
@@ -204,7 +220,7 @@ Playlist* TabPlaylist::addPlaylist()
 	stackedLayout->addWidget(p);
 
 	// Always create an icon in Disabled mode. It will be enabled when one will provide some tracks
-	int i = insertTab(count(), stackedWidget, newPlaylistName);
+	int i = addTab(stackedWidget, newPlaylistName);
 	this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaInserted, this, [=]() {
@@ -298,13 +314,11 @@ void TabPlaylist::removeSelectedTracks()
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
 	// Don't delete the first tab, if it's the last one remaining
-	if (index > 0 || (index == 0 && count() > 2)) {
-		// If the playlist we want to delete has no more right tab, then pick the left tab
-		if (index + 1 > count() - 2) {
-			setCurrentIndex(index - 1);
-		}
+	if (index > 0 || (index == 0 && count() > 1)) {
 		Playlist *p = playlist(index);
-		p->mediaPlaylist()->removeMedia(0, p->mediaPlaylist()->mediaCount() - 1);
+		if (!p->mediaPlaylist()->isEmpty()) {
+			p->mediaPlaylist()->removeMedia(0, p->mediaPlaylist()->mediaCount() - 1);
+		}
 		this->removeTab(index);
 		delete p;
 	} else {
@@ -321,26 +335,19 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 void TabPlaylist::updateRowHeight()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	for (int i = 0; i < count() - 1; i++) {
-		Playlist *p = playlist(i);
-		p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
-	}
-}
-
-/** When the user is clicking on the (+) button to add a new playlist. */
-void TabPlaylist::checkAddPlaylistButton(int i)
-{
-	// The (+) button is the last tab
-	if (i == count() - 1) {
-		this->addPlaylist();
-	} else {
-		emit updatePlaybackModeButton();
+	for (int i = 0; i < count(); i++) {
+		if (Playlist *p = playlist(i)) {
+			p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
+		}
 	}
 }
 
 void TabPlaylist::closePlaylist(int index)
 {
 	Playlist *p = playlists().at(index);
+	if (!(p && p->mediaPlaylist())) {
+		return;
+	}
 	QString hash;
 	for (int i = 0; i < p->mediaPlaylist()->mediaCount(); i++) {
 		hash += p->mediaPlaylist()->media(i).canonicalUrl().toString();

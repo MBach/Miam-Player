@@ -9,6 +9,8 @@ class MiamStyle : public QProxyStyle
 public:
 	explicit MiamStyle(QStyle *parent = 0);
 
+	QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
+
 	virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
 
 	virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const;

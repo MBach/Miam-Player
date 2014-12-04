@@ -10,13 +10,10 @@
 TabBar::TabBar(TabPlaylist *parent) :
 	QTabBar(parent), lineEdit(new QLineEdit(this)), tabPlaylist(parent)
 {
-	this->addTab(QString());
 	this->setTabsClosable(true);
 	this->setAcceptDrops(true);
 	this->setDocumentMode(true);
-	QWidget *w = this->tabButton(count() - 1, RightSide);
-	this->setTabButton(count()-1, RightSide, NULL);
-	this->setUsesScrollButtons(false);
+	this->setUsesScrollButtons(true);
 
 	lineEdit->setVisible(false);
 	lineEdit->setAlignment(Qt::AlignCenter);
@@ -50,7 +47,6 @@ TabBar::TabBar(TabPlaylist *parent) :
 			}
 		}
 	});
-	w->deleteLater();
 }
 
 /** Trigger a double click to rename a tab. */
@@ -95,13 +91,8 @@ void TabBar::dropEvent(QDropEvent *event)
 {
 	int tab = this->tabAt(event->pos());
 	if (Playlist *origin = qobject_cast<Playlist*>(event->source())) {
-		Playlist *target;
-		// Tracks were dropped on the [+] button
-		if (tab == this->count() - 1) {
-			target = tabPlaylist->addPlaylist();
-		} else {
-			target = tabPlaylist->playlist(tab);
-		}
+		Playlist *target = tabPlaylist->playlist(tab);
+
 		// Copy tracks in the target
 		QList<QMediaContent> medias;
 		foreach (QPersistentModelIndex index, origin->selectionModel()->selectedRows()) {
@@ -115,12 +106,7 @@ void TabBar::dropEvent(QDropEvent *event)
 			origin->removeSelectedTracks();
 		}
 	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
-		// Tracks were dropped on the [+] button
-		if (tab == this->count() - 1) {
-			tabPlaylist->addPlaylist();
-		} else {
-			tabPlaylist->setCurrentIndex(tab);
-		}
+		tabPlaylist->setCurrentIndex(tab);
 		origin->appendToPlaylist();
 	}
 }
@@ -153,7 +139,7 @@ void TabBar::mouseDoubleClickEvent(QMouseEvent *event)
 {
 	int tabIndex = tabAt(event->pos());
 	int c = currentIndex();
-	if (-1 < tabIndex && tabIndex < count()-1 && c == tabIndex) {
+	if (-1 < tabIndex && tabIndex < count() && c == tabIndex) {
 		QRect visualRect = tabRect(tabIndex);
 		SettingsPrivate *settings = SettingsPrivate::instance();
 		if (settings->isRectTabs()) {
@@ -230,23 +216,15 @@ void TabBar::paintEvent(QPaintEvent *)
 /** Redefined to return a square for the last tab which is the [+] button. */
 QSize TabBar::tabSizeHint(int index) const
 {
-	if (index == count() - 1) {
-		if (SettingsPrivate::instance()->isRectTabs()) {
-			return QSize(height(), height());
-		} else {
-			return QSize(height() * 1.333, height());
-		}
-	} else {
-		QSize s = QTabBar::tabSizeHint(index);
-		if (!SettingsPrivate::instance()->isRectTabs()) {
-			s.setWidth(s.width() + SettingsPrivate::instance()->tabsOverlappingLength() * 2);
-		}
-		// Adjust height to the minimum otherwise a small gap might appear between tab and header (depending of font size)
-		if (s.height() > height()) {
-			s.setHeight(height());
-		}
-		return s;
+	QSize s = QTabBar::tabSizeHint(index);
+	if (!SettingsPrivate::instance()->isRectTabs()) {
+		s.setWidth(s.width() + SettingsPrivate::instance()->tabsOverlappingLength() * 2);
 	}
+	// Adjust height to the minimum otherwise a small gap might appear between tab and header (depending of font size)
+	if (s.height() > height()) {
+		s.setHeight(height());
+	}
+	return s;
 }
 
 void TabBar::paintRectTabs(QStylePainter &p)
@@ -293,7 +271,7 @@ void TabBar::paintRectTabs(QStylePainter &p)
 		}
 
 		// Draw last tab frame (which is the [+] button)
-		if (i == count() - 1) {
+		/*if (i == count() - 1) {
 			QPen plusPen;
 			if (o.state.testFlag(QStyle::State_MouseOver)) {
 				plusPen = QPen(o.palette.highlight(), penScaleFactor);
@@ -318,17 +296,17 @@ void TabBar::paintRectTabs(QStylePainter &p)
 			linearGradient.setColorAt(1, QColor(253, 230, 116));
 			p.setBrush(linearGradient);
 			p.drawPolygon(plus, 13);
+		} else {*/
+		if (o.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlight().color());
 		} else {
-			if (o.state.testFlag(QStyle::State_MouseOver)) {
-				p.setPen(o.palette.highlight().color());
-			} else {
-				p.setPen(o.palette.mid().color());
-			}
-			// Frame tab, it is not a rectangle but only 3 lines
-			p.drawLine(o.rect.topLeft(), o.rect.bottomLeft());
-			p.drawLine(o.rect.topRight(), o.rect.bottomRight());
-			p.drawLine(o.rect.topLeft(), o.rect.topRight());
+			p.setPen(o.palette.mid().color());
 		}
+		// Frame tab, it is not a rectangle but only 3 lines
+		p.drawLine(o.rect.topLeft(), o.rect.bottomLeft());
+		p.drawLine(o.rect.topRight(), o.rect.bottomRight());
+		p.drawLine(o.rect.topLeft(), o.rect.topRight());
+		//}
 		p.restore();
 
 		// Icon
@@ -371,9 +349,9 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 
 		// Background color
 		p.save();
-		if (i != currentIndex() && i != count() - 1) {
+		if (i != currentIndex()) {
 			o.rect.adjust(0, 2, 0, 0);
-		} else if (i == count() - 1) {
+		} else if (i == count()) {
 			o.rect.adjust(2, 2, -4, -4);
 		}
 
@@ -381,7 +359,7 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		/// TODO
 
 		// Draw last tab frame (which is the \+\ button)
-		if (i == count() - 1) {
+		/*if (i == count() - 1) {
 			QPen plusPen;
 			if (o.state.testFlag(QStyle::State_MouseOver)) {
 				plusPen = QPen(o.palette.highlight(), penScaleFactor);
@@ -435,34 +413,34 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 			linearGradient.setColorAt(1, QColor(253, 230, 116));
 			p.setBrush(linearGradient);
 			//p.drawPolygon(plus, 13);
+		} else {*/
+		if (o.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlight().color());
 		} else {
-			if (o.state.testFlag(QStyle::State_MouseOver)) {
-				p.setPen(o.palette.highlight().color());
-			} else {
-				p.setPen(o.palette.mid().color());
-			}
-			// Rounded frame tab
-			QPainterPath pp;
-			pp.moveTo(o.rect.x() + dist * 0, o.rect.y() + o.rect.height());
-			pp.cubicTo(o.rect.x() + dist * 1, o.rect.y() + o.rect.height(),
-					   o.rect.x() + dist * 1, o.rect.y(),
-					   o.rect.x() + dist * 2, o.rect.y());
-			pp.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
-			pp.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y(),
-					   o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height(),
-					   o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
-			if (i == currentIndex()) {
-				/// XXX
-				if (SettingsPrivate::instance()->isCustomColors()) {
-					p.fillPath(pp, o.palette.base().color().lighter(110));
-				} else {
-					p.fillPath(pp, o.palette.base());
-				}
-			}
-			p.setRenderHint(QPainter::Antialiasing, true);
-			p.drawPath(pp);
-			p.setRenderHint(QPainter::Antialiasing, false);
+			p.setPen(o.palette.mid().color());
 		}
+		// Rounded frame tab
+		QPainterPath pp;
+		pp.moveTo(o.rect.x() + dist * 0, o.rect.y() + o.rect.height());
+		pp.cubicTo(o.rect.x() + dist * 1, o.rect.y() + o.rect.height(),
+				   o.rect.x() + dist * 1, o.rect.y(),
+				   o.rect.x() + dist * 2, o.rect.y());
+		pp.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
+		pp.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y(),
+				   o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height(),
+				   o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
+		if (i == currentIndex()) {
+			/// XXX
+			if (SettingsPrivate::instance()->isCustomColors()) {
+				p.fillPath(pp, o.palette.base().color().lighter(110));
+			} else {
+				p.fillPath(pp, o.palette.base());
+			}
+		}
+		p.setRenderHint(QPainter::Antialiasing, true);
+		p.drawPath(pp);
+		p.setRenderHint(QPainter::Antialiasing, false);
+		//}
 		p.restore();
 
 		// Icon

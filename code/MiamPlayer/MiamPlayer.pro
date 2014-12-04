@@ -70,7 +70,8 @@ SOURCES += \
     library/yearitem.cpp \
     styling/imageutils.cpp \
     library/separatoritem.cpp \
-    library/changehierarchybutton.cpp
+    library/changehierarchybutton.cpp \
+    playlists/cornerwidget.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -143,7 +144,8 @@ HEADERS += \
     library/yearitem.h \
     styling/imageutils.h \
     library/separatoritem.h \
-    library/changehierarchybutton.h
+    library/changehierarchybutton.h \
+    playlists/cornerwidget.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

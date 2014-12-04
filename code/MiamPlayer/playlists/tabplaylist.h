@@ -53,7 +53,7 @@ public:
 
 	inline QList<Playlist *> playlists() {
 		QList<Playlist*> _playlists;
-		for (int i = 0; i < count() - 1; i++) {
+		for (int i = 0; i < count(); i++) {
 			_playlists.append(this->playlist(i));
 		}
 		return _playlists;
@@ -98,9 +98,6 @@ public slots:
 	void updateRowHeight();
 
 private slots:
-	/** When the user is clicking on the (+) button to add a new playlist. */
-	void checkAddPlaylistButton(int i);
-
 	void closePlaylist(int index);
 
 	void execActionFromClosePopup(QAbstractButton *action);

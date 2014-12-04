@@ -137,6 +137,52 @@ void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 	p->restore();
 }
 
+#include "tabplaylist.h"
+
+QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
+{
+	QRect r = QProxyStyle::subElementRect(element, option, widget);
+
+
+	/*QStyle::SE_TabWidgetLeftCorner	21	Area for the left corner widget in a tab widget.
+	QStyle::SE_TabWidgetRightCorner	22	Area for the right corner widget in a tab widget.
+	QStyle::SE_TabWidgetTabBar	18	Area for the tab bar widget in a tab widget.
+	QStyle::SE_TabWidgetTabContents	20	Area for the contents of the tab widget.
+	QStyle::SE_TabWidgetTabPane	19	Area for the pane of a tab widget.
+	QStyle::SE_TabWidgetLayoutItem	?	Area that counts for the parent layout.
+	*/
+	if (widget && widget->objectName() == "tabPlaylists") {
+		const TabPlaylist *t = dynamic_cast<const TabPlaylist*>(widget);
+		QRect minRect = QRect(0, 0, 0, 0);
+		for (int i = 0; i < t->tabBar()->count(); i++) {
+			minRect.setWidth(minRect.width() + t->tabBar()->tabRect(i).width());
+		}
+		minRect.setHeight(t->tabBar()->tabRect(0).height());
+		switch (element) {
+		case SE_TabWidgetRightCorner:
+			//qDebug() << r << "SE_TabWidgetRightCorner" << t->width();
+			r.setX(minRect.x() + minRect.width() + 1);
+			r.setWidth(t->cornerWidget()->width());
+			break;
+		case SE_TabWidgetTabBar:
+			//qDebug() << r << minRect << "SE_TabWidgetTabBar";
+			r = minRect;
+			break;
+//		case SE_TabWidgetTabContents:
+//			qDebug() << r << "SE_TabWidgetTabContents" << widget;
+//			break;
+//		case SE_TabWidgetTabPane:
+//			qDebug() << r << "SE_TabWidgetTabPane" << widget;
+//			break;
+//		case SE_TabWidgetLayoutItem:
+//			qDebug() << r << "SE_TabWidgetLayoutItem" << widget;
+//			break;
+		}
+	}
+
+	return r;
+}
+
 void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *p, const QWidget *widget) const
 {
 	switch (control) {

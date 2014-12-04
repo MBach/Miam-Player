@@ -244,9 +244,15 @@ void Playlist::dropEvent(QDropEvent *event)
 				target->removeSelectedTracks();
 			}
 		}
+	} else if (source == cornerWidget()) {
+		qDebug() << "TODO drop on corner!";
+		event->ignore();
+		return;
 	} else if (source == NULL) {
 		event->ignore();
 		return;
+	} else {
+		qDebug() << "???" << source;
 	}
 }
 
