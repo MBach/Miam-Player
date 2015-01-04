@@ -7,10 +7,14 @@ class QTextBrowser;
 class QPushButton;
 class QTableWidget;
 
+/**
+ * \brief		The LogBrowserDialog class is a popup which converts debug strings.
+ * \author      Qt-project.org
+ * \copyright   GNU General Public License v3
+ */
 class LogBrowserDialog : public QDialog
 {
 	Q_OBJECT
-
 private:
 	QTableWidget *_browser;
 	QPushButton *_clearButton;

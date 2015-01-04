@@ -13,7 +13,7 @@ CornerWidget::CornerWidget(QWidget *parent) :
 	this->setAcceptDrops(true);
 }
 
-void CornerWidget::paintEvent(QPaintEvent *e)
+void CornerWidget::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
 	QPen plusPen;

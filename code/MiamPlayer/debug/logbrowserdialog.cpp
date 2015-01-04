@@ -24,6 +24,7 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
 	setLayout(layout);
 
 	_browser = new QTableWidget(0, 2, this);
+	_browser->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	_browser->horizontalHeader()->setStretchLastSection(true);
 	_browser->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
 	_browser->setHorizontalHeaderLabels(QStringList() << tr("Type") << tr("Message"));
@@ -57,6 +58,7 @@ void LogBrowserDialog::outputMessage(QtMsgType type, const QString &msg)
 	_browser->insertRow(row);
 	switch (type) {
 	case QtDebugMsg:
+		_browser->setItem(row, 0, new QTableWidgetItem(QIcon(":/debug/hexa"), ""));
 		_browser->setItem(row, 1, new QTableWidgetItem(msg));
 		break;
 

@@ -5,6 +5,15 @@
 
 class LogBrowserDialog;
 
+/**
+ * \brief		The LogBrowser class shows logs on screen.
+ * \details		The wrapper is instantiated in the main function of an application and creates the browser window.
+ *				It also acts as an intermediary and converts the const char * based messages from the debug system into QString
+ *				based messages. With this trick the debug messages can be sent to the actual browser by the means of signal/slot
+ *				connections. This adds basic thread support to the browser.
+ * \author      Qt-project.org
+ * \copyright   GNU General Public License v3
+ */
 class LogBrowser : public QObject
 {
 	Q_OBJECT

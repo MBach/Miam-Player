@@ -7,16 +7,23 @@
 #include <QFileSystemModel>
 #include <QMenu>
 
+/**
+ * \brief		The FileSystemTreeView class is displaying a standard file-system in a tree.
+ * \details     This view allows one to browse folders and files from a standard file-system. Non playable files are disabled,
+ *				excepted for covers. One can send files, folders, and both to playlist or tag editor.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class FileSystemTreeView : public TreeView
 {
 	Q_OBJECT
 private:
-	QString toLibrary;
-	QString toPlaylist;
-	QString toTagEditor;
-	QMenu *properties;
+	QString _toLibrary;
+	QString _toPlaylist;
+	QString _toTagEditor;
+	QMenu *_properties;
 	QModelIndex theIndex;
-	QFileSystemModel *fileSystemModel;
+	QFileSystemModel *_fileSystemModel;
 
 public:
 	explicit FileSystemTreeView(QWidget *parent = 0);

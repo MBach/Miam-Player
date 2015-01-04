@@ -222,11 +222,10 @@ int FileHelper::discNumber(bool canBeZero) const
 
 Cover* FileHelper::extractCover()
 {
-	TagLib::MPEG::File *mpegFile = NULL;
 	Cover *cover = NULL;
 	switch (_fileType) {
-	case MP3:
-		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+	case MP3: {
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
 			// Look for picture frames only
 			TagLib::ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
@@ -246,6 +245,21 @@ Cover* FileHelper::extractCover()
 			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
 		}
 		break;
+	}
+	case FLAC: {
+		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
+		auto list = flacFile->pictureList();
+		for (auto it = list.begin(); it != list.end() ; it++) {
+			TagLib::FLAC::Picture *p = *it;
+			if (p->type() == TagLib::FLAC::Picture::FrontCover) {
+				// Performs a deep copy of the cover
+				QByteArray b = QByteArray(p->data().data(), p->data().size());
+				cover = new Cover(b, QString(p->mimeType().toCString(true)));
+				break;
+			}
+		}
+
+	}
 	default:
 		break;
 	}
@@ -286,11 +300,10 @@ bool FileHelper::insert(QString key, const QVariant &value)
 /** Check if file has an inner picture. */
 bool FileHelper::hasCover() const
 {
-	TagLib::MPEG::File *mpegFile = NULL;
 	bool atLeastOnePicture = false;
 	switch (_fileType) {
-	case MP3:
-		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+	case MP3: {
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
 			// Look for picture frames only
 			TagLib::ID3v2::FrameList listOfMp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
@@ -305,6 +318,11 @@ bool FileHelper::hasCover() const
 			}
 		}
 		break;
+	}
+	case FLAC: {
+		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
+		atLeastOnePicture = !flacFile->pictureList().isEmpty();
+	}
 	default:
 		break;
 	}
@@ -348,10 +366,9 @@ int FileHelper::rating() const
 /** Sets the inner picture. */
 void FileHelper::setCover(Cover *cover)
 {
-	TagLib::MPEG::File *mpegFile = NULL;
 	switch (_fileType) {
-	case MP3:
-		mpegFile = static_cast<TagLib::MPEG::File*>(_file);
+	case MP3: {
+		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile->hasID3v2Tag()) {
 			// Look for picture frames only
 			TagLib::ID3v2::FrameList mp3Frames = mpegFile->ID3v2Tag()->frameListMap()["APIC"];
@@ -374,6 +391,17 @@ void FileHelper::setCover(Cover *cover)
 			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
 		}
 		break;
+	}
+	case FLAC: {
+		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
+		flacFile->removePictures();
+		TagLib::FLAC::Picture *picture = new TagLib::FLAC::Picture;
+		picture->setType(TagLib::FLAC::Picture::FrontCover);
+		TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
+		picture->setData(bv);
+		flacFile->addPicture(picture);
+		break;
+	}
 	default:
 		qDebug() << Q_FUNC_INFO << "Not implemented for" << _fileType;
 		break;

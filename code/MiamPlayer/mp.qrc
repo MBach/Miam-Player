@@ -125,5 +125,6 @@
     </qresource>
     <qresource prefix="/debug">
         <file alias="warning">config/icons/warning.png</file>
+        <file alias="hexa">config/icons/hexa.png</file>
     </qresource>
 </RCC>

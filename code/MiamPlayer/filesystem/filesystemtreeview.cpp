@@ -14,12 +14,12 @@
 FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	TreeView(parent)
 {
-	fileSystemModel = new QFileSystemModel(this);
-	fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
+	_fileSystemModel = new QFileSystemModel(this);
+	_fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
-	fileSystemModel->setNameFilters(FileHelper::suffixes(true));
+	_fileSystemModel->setNameFilters(FileHelper::suffixes(true));
 
-	this->setModel(fileSystemModel);
+	this->setModel(_fileSystemModel);
 
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
 	this->setColumnHidden(1, true);
@@ -29,10 +29,10 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	this->header()->hide();
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
 
-	properties = new QMenu(this);
-	toPlaylist = tr("Add \"%1\" to playlist");
-	toLibrary = tr("Add \"%1\" to library");
-	toTagEditor = tr("Send \"%1\" to the tag editor");
+	_properties = new QMenu(this);
+	_toPlaylist = tr("Add \"%1\" to playlist");
+	_toLibrary = tr("Add \"%1\" to library");
+	_toTagEditor = tr("Send \"%1\" to the tag editor");
 
 	connect(this, &FileSystemTreeView::doubleClicked, this, &FileSystemTreeView::convertIndex);
 }
@@ -40,7 +40,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
 void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
-	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
+	QFileInfo fileInfo = _fileSystemModel->fileInfo(index);
 	if (fileInfo.isFile()) {
 		tracks << "file://" + fileInfo.absoluteFilePath();
 	} else {
@@ -60,29 +60,29 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) 
 void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QModelIndex index = this->indexAt(event->pos());
-	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
-	properties->clear();
+	QFileInfo fileInfo = _fileSystemModel->fileInfo(index);
+	_properties->clear();
 
 	// Always add the possibility for one to send a folder or a track to the current playlist
-	QAction *actionSendToCurrentPlaylist = new QAction(toPlaylist.arg(fileInfo.baseName()), properties);
+	QAction *actionSendToCurrentPlaylist = new QAction(_toPlaylist.arg(fileInfo.baseName()), _properties);
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
-	properties->addAction(actionSendToCurrentPlaylist);
+	_properties->addAction(actionSendToCurrentPlaylist);
 
 	// Same thing for the tag editor
-	QAction *actionSendToTagEditor = new QAction(toTagEditor.arg(fileInfo.baseName()), properties);
+	QAction *actionSendToTagEditor = new QAction(_toTagEditor.arg(fileInfo.baseName()), _properties);
 	connect(actionSendToTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
-	properties->addAction(actionSendToTagEditor);
+	_properties->addAction(actionSendToTagEditor);
 
 	// But restricts for the library. It is not wished to add single file as placeholder
 	if (fileInfo.isDir()) {
-		QAction *actionAddToLibrary = new QAction(toLibrary.arg(fileInfo.baseName()), properties);
+		QAction *actionAddToLibrary = new QAction(_toLibrary.arg(fileInfo.baseName()), _properties);
 		connect(actionAddToLibrary, &QAction::triggered, this, [=]() {
-			QList<QDir> dirs = QList<QDir>() << fileSystemModel->fileInfo(currentIndex()).absoluteFilePath();
+			QList<QDir> dirs = QList<QDir>() << _fileSystemModel->fileInfo(currentIndex()).absoluteFilePath();
 			emit aboutToAddMusicLocations(dirs);
 		});
-		properties->addAction(actionAddToLibrary);
+		_properties->addAction(actionAddToLibrary);
 	}
-	properties->exec(event->globalPos());
+	_properties->exec(event->globalPos());
 }
 
 /** Reimplemented with a QDirIterator to quick count tracks. */
@@ -90,7 +90,7 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 {
 	int files = 0;
 	foreach (QModelIndex index, indexes) {
-		QDirIterator dirIterator(fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
+		QDirIterator dirIterator(_fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			if (QFileInfo(dirIterator.next()).isFile()) {
 				files++;
@@ -102,7 +102,7 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 /** Reload tree when the path has changed in the address bar. */
 void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 {
-	theIndex = fileSystemModel->setRootPath(path.absolutePath());
+	theIndex = _fileSystemModel->setRootPath(path.absolutePath());
 	this->setRootIndex(theIndex);
 	this->collapseAll();
 	this->update(theIndex);
@@ -116,9 +116,9 @@ void FileSystemTreeView::updateSelectedTracks()
 /** Get the folder which is the target of one's double-click. */
 void FileSystemTreeView::convertIndex(const QModelIndex &index)
 {
-	QFileInfo fileInfo = fileSystemModel->fileInfo(index);
+	QFileInfo fileInfo = _fileSystemModel->fileInfo(index);
 	if (fileInfo.isDir()) {
-		emit folderChanged(fileSystemModel->filePath(index));
+		emit folderChanged(_fileSystemModel->filePath(index));
 	} else {
 		QStringList tracks;
 		tracks << "file://" + fileInfo.absoluteFilePath();
