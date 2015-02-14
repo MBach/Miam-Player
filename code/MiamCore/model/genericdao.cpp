@@ -1,7 +1,7 @@
 #include "genericdao.h"
 
-GenericDAO::GenericDAO(QObject *parent) :
-	QObject(parent), _parent(NULL)
+GenericDAO::GenericDAO(QObject *parent, NodeType nt) :
+	QObject(parent), _parent(NULL), _type(nt)
 {}
 
 GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
@@ -14,6 +14,7 @@ GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
 	_parent = remoteObject.parentNode();
 	_title = remoteObject.title();
 	_titleNormalized = remoteObject.titleNormalized();
+	_type = remoteObject.type();
 }
 
 GenericDAO::~GenericDAO()
@@ -39,3 +40,5 @@ void GenericDAO::setTitle(const QString &title) { _title = title; }
 
 QString GenericDAO::titleNormalized() const{ return _titleNormalized; }
 void GenericDAO::setTitleNormalized(const QString &titleNormalized) { _titleNormalized = titleNormalized; }
+
+GenericDAO::NodeType GenericDAO::type() const { return _type; }

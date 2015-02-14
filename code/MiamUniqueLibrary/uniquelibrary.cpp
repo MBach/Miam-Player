@@ -3,7 +3,6 @@
 #include "ui_uniquelibrary.h"
 
 #include "filehelper.h"
-#include "flowlayout.h"
 
 #include <QDir>
 #include <QPushButton>
@@ -18,88 +17,83 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	QWidget(parent), ui(new Ui::UniqueLibrary), _db(NULL)
 {
 	ui->setupUi(this);
-	_flowLayout = new FlowLayout();
-	ui->scrollArea->setWidgetResizable(true);
-	ui->scrollArea->widget()->setLayout(_flowLayout);
+	_model = new QStandardItemModel(this);
+	_model->setColumnCount(4);
+
+	_model->setHeaderData(0, Qt::Horizontal, tr("Cover"), Qt::DisplayRole);
+
+	ui->library->setModel(_model);
+}
+
+void UniqueLibrary::setVisible(bool visible)
+{
+	qDebug() << Q_FUNC_INFO << visible;
+	QWidget::setVisible(visible);
+	if (visible) {
+		_db->load();
+	}
 }
 
 void UniqueLibrary::init(SqlDatabase *db)
 {
 	_db = db;
 
-	/// XXX: do this later
-	//connect(_sqlModel, &LibrarySqlModel::modelAboutToBeReset, this, &UniqueLibrary::reset);
-	//connect(_sqlModel, &LibrarySqlModel::trackExtractedFromFS, this, &UniqueLibrary::insertTrackFromFile);
-	//connect(_sqlModel, &LibrarySqlModel::trackExtractedFromDB, this, &UniqueLibrary::insertTrackFromRecord);
-	//connect(_sqlModel, &LibrarySqlModel::coverWasUpdated, this, &UniqueLibrary::updateCover);
+	// Build a tree directly by scanning the hard drive or from a previously saved file
+	connect(_db, &SqlDatabase::aboutToLoad, this, &UniqueLibrary::reset);
+	//connect(_db, &SqlDatabase::loaded, this, &UniqueLibrary::endPopulateTree);
+	//connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
+	connect(_db, &SqlDatabase::nodeExtracted, this, &UniqueLibrary::insertNode);
+	connect(_db, &SqlDatabase::aboutToUpdateNode, this, &UniqueLibrary::updateNode);
 }
 
-void UniqueLibrary::insertTrackFromRecord(const QSqlRecord &record)
+void UniqueLibrary::insertNode(GenericDAO *node)
 {
-	int i = -1;
-	const QString artist = record.value(++i).toString();
-	const QString artistAlbum = record.value(++i).toString();
-	const QString album = record.value(++i).toString();
-	const QString title = record.value(++i).toString();
-	int trackNumber = record.value(++i).toInt();
-	int discNumber = record.value(++i).toInt();
-	int year = record.value(++i).toInt();
-	const QString uri = record.value(++i).toString();
-	const QString path = record.value(++i).toString();
-	const QString cover = record.value(++i).toString();
-	//qDebug() << cover;
-	//bool internalCover = record.value(++i).toBool();
-	record.value(++i).toBool();
-	//bool externalCover = record.value(++i).toBool();
-	record.value(++i).toBool();
-	QString trackTitle = QString::number(trackNumber).append(". ").append(title);
-	this->insertTrack(uri, artistAlbum, artist, album, discNumber, trackTitle, year);
-}
-
-void UniqueLibrary::insertTrackFromFile(const FileHelper &fh)
-{
-	this->insertTrack(fh.fileInfo().absoluteFilePath(), fh.artistAlbum(), fh.artist(), fh.album(), fh.discNumber(),
-					  fh.title(), fh.year().toInt());
-}
-
-void UniqueLibrary::insertTrack(const QString &, const QString &artistAlbum, const QString &artist, const QString &album,
-				 int discNumber, const QString &title, int year)
-{
-	QString theArtist = artistAlbum.isEmpty() ? artist : artistAlbum;
-	AlbumForm *wAlbum = NULL;
-	if (_albums.contains(album)) {
-		wAlbum = _albums.value(album);
-	} else {
-		wAlbum = new AlbumForm();
-		wAlbum->setArtist(theArtist);
-		wAlbum->setAlbum(album, year);
-		wAlbum->setDiscNumber(discNumber);
-		_albums.insert(album, wAlbum);
-		ui->scrollArea->widget()->layout()->addWidget(wAlbum);
+	if (!isVisible()) {
+		return;
 	}
-	wAlbum->appendTrack(title);
+
+	switch (node->type()){
+	case GenericDAO::Artist: {
+		QStandardItem *artist = new QStandardItem;
+		artist->setText("[ " + node->title() + " ]");
+		_model->appendRow(artist);
+		break;
+	}
+	case GenericDAO::Album: {
+		AlbumDAO *album = static_cast<AlbumDAO*>(node);
+
+		QStandardItem *cover = new QStandardItem;
+		QStandardItem *albumYear = new QStandardItem;
+		if (album->year().isEmpty()) {
+			albumYear->setText(album->title());
+		} else {
+			albumYear->setText(album->title() + " [" + album->year() + " ]");
+		}
+		_model->appendRow({cover, albumYear});
+		break;
+	}
+	case GenericDAO::Track: {
+		TrackDAO *trackDao = static_cast<TrackDAO*>(node);
+		QStandardItem *track = new QStandardItem(trackDao->trackNumber());
+		QStandardItem *title = new QStandardItem(trackDao->title());
+		QStandardItem *length = new QStandardItem(trackDao->length());
+
+		_model->appendRow({NULL, track, title, length});
+		break;
+	}
+	}
+
+}
+
+void UniqueLibrary::updateNode(GenericDAO *)
+{
+	if (!isVisible()) {
+		return;
+	}
 }
 
 void UniqueLibrary::reset()
 {
-	_albums.clear();
-	while (QLayoutItem* item = _flowLayout->takeAt(0)) {
-		delete item->widget();
-		delete item;
-	}
-}
-
-void UniqueLibrary::updateCover(const QFileInfo &)
-{
-	/*QSqlQuery externalCover("SELECT DISTINCT album FROM tracks WHERE path = ?", _sqlModel->database());
-	externalCover.addBindValue(QDir::toNativeSeparators(coverFileInfo.absolutePath()));
-	if (!_sqlModel->database().isOpen()) {
-		_sqlModel->database().open();
-	}
-	externalCover.exec();
-	if (externalCover.next()) {
-		QString album = externalCover.record().value(0).toString();
-		AlbumForm *albumForm = _albums.value(album);
-		albumForm->setCover(coverFileInfo.absoluteFilePath());
-	}*/
+	_model->clear();
+	_model->setHeaderData(0, Qt::Horizontal, tr("Cover"), Qt::DisplayRole);
 }

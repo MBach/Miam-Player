@@ -172,11 +172,27 @@ void LibraryTreeView::init(SqlDatabase *db)
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+	/*connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
 	connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
 	connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
 	connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
-	connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
+	connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);*/
+}
+
+void LibraryTreeView::setVisible(bool visible)
+{
+	TreeView::setVisible(visible);
+	if (visible) {
+		connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+		connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
+		connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
+		connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
+		connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
+	} else {
+		disconnect(_db, 0, this, 0);
+		disconnect(_db, 0, _circleProgressBar, 0);
+		this->reset();
+	}
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -387,6 +403,7 @@ void LibraryTreeView::jumpTo(const QString &letter)
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
+	qDebug() << Q_FUNC_INFO;
 	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
 		_proxyModel->setFilterRegExp(QString());

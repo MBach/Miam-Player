@@ -25,12 +25,12 @@ void CornerWidget::paintEvent(QPaintEvent *)
 	static const qreal penScaleFactor = 0.2;
 
 	if (this->rect().contains(mapFromGlobal(QCursor::pos()))) {
-		qDebug() << "in";
+		// qDebug() << "in";
 		plusPen = QPen(palette.highlight(), penScaleFactor);
 		p.setPen(palette.highlight().color());
 		p.setBrush(palette.highlight().color().lighter());
 	} else {
-		qDebug() << "out";
+		// qDebug() << "out";
 		plusPen = QPen(palette.mid(), penScaleFactor);
 		p.setPen(palette.mid().color());
 		p.setBrush(palette.base());

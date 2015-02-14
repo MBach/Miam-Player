@@ -21,6 +21,8 @@ CONFIG(debug, debug|release) {
     RCC_DIR = debug/.rcc
 }
 
+win32: DEFINES += Q_COMPILER_INITIALIZER_LISTS
+
 CONFIG(release, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -lMiamCore
     OBJECTS_DIR = release/.obj

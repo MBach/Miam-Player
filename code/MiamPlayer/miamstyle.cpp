@@ -163,10 +163,11 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 			//qDebug() << r << "SE_TabWidgetRightCorner" << t->width();
 			r.setX(minRect.x() + minRect.width() + 1);
 			r.setWidth(t->cornerWidget()->width());
+			r.setHeight(r.width());
 			break;
 		case SE_TabWidgetTabBar:
 			//qDebug() << r << minRect << "SE_TabWidgetTabBar";
-			r = minRect;
+			r = minRect.adjusted(0, 0, 6, 0);
 			break;
 //		case SE_TabWidgetTabContents:
 //			qDebug() << r << "SE_TabWidgetTabContents" << widget;
@@ -181,6 +182,38 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 	}
 
 	return r;
+}
+
+void MiamStyle::​drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+{
+	qDebug() << Q_FUNC_INFO << "here";
+	/*QStyle::CE_MenuBarItem	20	A menu item in a QMenuBar.
+	QStyle::CE_MenuBarEmptyArea	21	The empty area of a QMenuBar.
+	QStyle::CE_MenuItem	14	A menu item in a QMenu.
+	QStyle::CE_MenuScroller	15	Scrolling areas in a QMenu when the style supports scrolling.
+	QStyle::CE_MenuTearoff	18	A menu item representing the tear off section of a QMenu.
+	QStyle::CE_MenuEmptyArea	19	The area in a menu without menu items.
+	QStyle::CE_MenuHMargin	17	The horizontal extra space on the left/right of a menu.
+	QStyle::CE_MenuVMargin	16	The vertical extra space on the top/bottom of a menu.*/
+	switch (element) {
+	case CE_MenuItem: {
+		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
+		//somi->font.setBold(true);
+		painter->drawText(somi->rect, "test");
+		qDebug() << Q_FUNC_INFO << "ici";
+		break;
+	}
+	case CE_MenuBarItem:{
+		qDebug() << Q_FUNC_INFO << "ici";
+		break;
+	}
+	case CE_MenuBarEmptyArea:{
+		qDebug() << Q_FUNC_INFO << "ici";
+		break;
+	}
+	default:
+		QProxyStyle::drawControl(element, option, painter, widget);
+	}
 }
 
 void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *p, const QWidget *widget) const
@@ -267,7 +300,26 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 		}
 		break;
 	}
-	default:
+	/*case PE_FrameMenu: {
+		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(opt);
+		//qDebug() << Q_FUNC_INFO << "PE_FrameMenu" << somi->rect << somi->font;
+		break;
+	}
+	case PE_PanelMenuBar: {
+		//qDebug() << Q_FUNC_INFO << "PE_PanelMenuBar";
+		break;
+	}
+	case PE_PanelMenu: {
+		//qDebug() << Q_FUNC_INFO << "PE_PanelMenu" << opt;
+		QStyleOptionMenuItem mi;
+		mi.init(widget);
+		//qDebug() << Q_FUNC_INFO << "PE_FrameMenu" << mi.rect << mi.font;
+		painter->drawRect(mi.rect);
+		break;
+	}*/
+	default: {
 		QProxyStyle::drawPrimitive(element, opt, painter, widget);
+		break;
+	}
 	}
 }

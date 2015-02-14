@@ -116,6 +116,8 @@ public:
 					 DF_IsRemote			= Qt::UserRole + 8,
 					 DF_IconPath			= Qt::UserRole + 9};
 
+	void setVisible(bool visible);
+
 protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event);

@@ -1,7 +1,7 @@
 #include "trackdao.h"
 
 TrackDAO::TrackDAO(QObject *parent) :
-	GenericDAO(parent), _rating(0)
+	GenericDAO(parent, GenericDAO::Track), _rating(0)
 {}
 
 TrackDAO::TrackDAO(const TrackDAO &other) :

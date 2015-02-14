@@ -1,7 +1,7 @@
 #include "yeardao.h"
 
 YearDAO::YearDAO(QObject *parent) :
-	GenericDAO(parent)
+	GenericDAO(parent, GenericDAO::Year)
 {
 }
 
