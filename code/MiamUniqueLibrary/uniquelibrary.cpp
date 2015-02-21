@@ -11,8 +11,6 @@
 
 #include <QtDebug>
 
-#include "albumform.h"
-
 UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	QWidget(parent), ui(new Ui::UniqueLibrary), _db(NULL)
 {
@@ -20,9 +18,17 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	_model = new QStandardItemModel(this);
 	_model->setColumnCount(4);
 
-	_model->setHeaderData(0, Qt::Horizontal, tr("Cover"), Qt::DisplayRole);
-
 	ui->library->setModel(_model);
+	ui->library->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui->library->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	//ui->library->setShowGrid(false);
+
+	_model->setHorizontalHeaderLabels({"", tr("Track"), tr("Title"), tr("Duration")});
+	ui->library->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	ui->library->horizontalHeader()->setHighlightSections(false);
+	ui->library->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+	ui->library->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
+	ui->library->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
 }
 
 void UniqueLibrary::setVisible(bool visible)
@@ -36,6 +42,7 @@ void UniqueLibrary::setVisible(bool visible)
 
 void UniqueLibrary::init(SqlDatabase *db)
 {
+	qDebug() << Q_FUNC_INFO;
 	_db = db;
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
@@ -52,27 +59,39 @@ void UniqueLibrary::insertNode(GenericDAO *node)
 		return;
 	}
 
+	static bool isNewAlbum = false;
+	static bool isNewArtist = false;
+	static bool isNewTrack = false;
+
+	static int trackCount = 0;
+
+	int i = _model->rowCount();
 	switch (node->type()){
 	case GenericDAO::Artist: {
+		isNewTrack = false;
 		QStandardItem *artist = new QStandardItem;
 		artist->setText("[ " + node->title() + " ]");
 		_model->appendRow(artist);
+		ui->library->setSpan(i, 0, 1, 4);
 		break;
 	}
 	case GenericDAO::Album: {
+		isNewAlbum = true;
+		isNewTrack = false;
 		AlbumDAO *album = static_cast<AlbumDAO*>(node);
-
 		QStandardItem *cover = new QStandardItem;
 		QStandardItem *albumYear = new QStandardItem;
 		if (album->year().isEmpty()) {
 			albumYear->setText(album->title());
 		} else {
-			albumYear->setText(album->title() + " [" + album->year() + " ]");
+			albumYear->setText(album->title() + " [" + album->year() + "]");
 		}
 		_model->appendRow({cover, albumYear});
+		ui->library->setSpan(i, 1, 1, 3);
 		break;
 	}
 	case GenericDAO::Track: {
+		isNewTrack = true;
 		TrackDAO *trackDao = static_cast<TrackDAO*>(node);
 		QStandardItem *track = new QStandardItem(trackDao->trackNumber());
 		QStandardItem *title = new QStandardItem(trackDao->title());
@@ -82,7 +101,7 @@ void UniqueLibrary::insertNode(GenericDAO *node)
 		break;
 	}
 	}
-
+	//_set.insert(node);
 }
 
 void UniqueLibrary::updateNode(GenericDAO *)
@@ -94,6 +113,8 @@ void UniqueLibrary::updateNode(GenericDAO *)
 
 void UniqueLibrary::reset()
 {
-	_model->clear();
-	_model->setHeaderData(0, Qt::Horizontal, tr("Cover"), Qt::DisplayRole);
+	_model->removeRows(0, _model->rowCount());
+	//qDeleteAll(_set);
+	ui->library->setViewportMargins(0, 100, 0, 0);
+
 }

@@ -1,26 +1,27 @@
 #ifndef JUMPTOWIDGET_H
 #define JUMPTOWIDGET_H
 
+#include <QAbstractItemView>
 #include <QMouseEvent>
 #include <QWidget>
 
-class LibraryTreeView;
+#include "miamcore_global.h"
 
 /**
  * \brief		The JumpToWidget class displays letters which can be clicked to jump to a particular position in your Library.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class JumpToWidget : public QWidget
+class MIAMCORE_LIBRARY JumpToWidget : public QWidget
 {
 	Q_OBJECT
 private:
-	LibraryTreeView *_libraryTreeView;
+	QAbstractItemView *_view;
 
 	QPoint _pos;
 
 public:
-	explicit JumpToWidget(LibraryTreeView *treeView);
+	explicit JumpToWidget(QAbstractItemView *treeView);
 
 	bool eventFilter(QObject *obj, QEvent *event);
 

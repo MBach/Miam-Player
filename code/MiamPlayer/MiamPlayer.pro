@@ -17,14 +17,20 @@ SOURCES += \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
+    library/albumitem.cpp \
+    library/artistitem.cpp \
+    library/discitem.cpp \
+    library/trackitem.cpp \
+    library/yearitem.cpp \
     library/extendedtabbar.cpp \
-    library/jumptowidget.cpp \
-    library/libraryfilterproxymodel.cpp \
     library/libraryheader.cpp \
     library/libraryitemdelegate.cpp \
     library/libraryorderdialog.cpp \
     library/libraryscrollbar.cpp \
     library/librarytreeview.cpp \
+    library/separatoritem.cpp \
+    library/changehierarchybutton.cpp \
+    playlists/cornerwidget.cpp \
     playlists/playlist.cpp \
     playlists/playlistheaderview.cpp \
     playlists/playlistmodel.cpp \
@@ -39,6 +45,7 @@ SOURCES += \
     qtsingleapplication/qtlockedfile_win.cpp \
     qtsingleapplication/qtsingleapplication.cpp \
     qtsingleapplication/qtsinglecoreapplication.cpp \
+    styling/imageutils.cpp \
     styling/lineedit.cpp \
     styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
@@ -62,16 +69,7 @@ SOURCES += \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp \
-    library/albumitem.cpp \
-    library/artistitem.cpp \
-    library/discitem.cpp \
-    library/trackitem.cpp \
-    library/yearitem.cpp \
-    styling/imageutils.cpp \
-    library/separatoritem.cpp \
-    library/changehierarchybutton.cpp \
-    playlists/cornerwidget.cpp
+    volumeslider.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -91,13 +89,19 @@ HEADERS += \
     filesystem/filesystemtreeview.h \
     library/extendedtabbar.h \
     library/extendedtabwidget.h \
-    library/libraryfilterproxymodel.h \
     library/libraryitemdelegate.h \
     library/libraryorderdialog.h \
     library/libraryscrollbar.h \
     library/librarytreeview.h \
     library/libraryheader.h \
-    library/jumptowidget.h \
+    library/albumitem.h \
+    library/artistitem.h \
+    library/discitem.h \
+    library/trackitem.h \
+    library/yearitem.h \
+    library/separatoritem.h \
+    library/changehierarchybutton.h \
+    playlists/cornerwidget.h \
     playlists/playlist.h \
     playlists/playlistheaderview.h \
     playlists/playlistmodel.h \
@@ -113,6 +117,7 @@ HEADERS += \
     qtsingleapplication/QtSingleApplication \
     qtsingleapplication/qtsingleapplication.h \
     qtsingleapplication/qtsinglecoreapplication.h \
+    styling/imageutils.h \
     styling/lineedit.h \
     styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
@@ -136,16 +141,7 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h \
-    library/albumitem.h \
-    library/artistitem.h \
-    library/discitem.h \
-    library/trackitem.h \
-    library/yearitem.h \
-    styling/imageutils.h \
-    library/separatoritem.h \
-    library/changehierarchybutton.h \
-    playlists/cornerwidget.h
+    volumeslider.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

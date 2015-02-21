@@ -6,10 +6,10 @@ YearItem::YearItem(const YearDAO *dao) :
 	if (QString::compare(dao->title(), "0") == 0) {
 		setText(QObject::tr("Unknown"));
 	}
-	setData(dao->titleNormalized(), LibraryTreeView::DF_NormalizedString);
+	setData(dao->titleNormalized(), LibraryFilterProxyModel::DF_NormalizedString);
 }
 
 int YearItem::type() const
 {
-	return LibraryTreeView::IT_Year;
+	return LibraryFilterProxyModel::IT_Year;
 }

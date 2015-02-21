@@ -5,7 +5,7 @@
 
 #include <QPainter>
 
-#include "libraryfilterproxymodel.h"
+#include "library/libraryfilterproxymodel.h"
 #include "albumitem.h"
 #include "artistitem.h"
 #include "discitem.h"

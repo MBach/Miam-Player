@@ -4,15 +4,17 @@ TEMPLATE = lib
 
 DEFINES += MIAMUNIQUELIBRARY_LIBRARY
 
-FORMS += templateAlbum.ui \
+FORMS += \
     uniquelibrary.ui
 
-HEADERS += albumform.h \
+HEADERS += \
     miamuniquelibrary_global.h \
-    uniquelibrary.h
+    uniquelibrary.h \
+    tableview.h
 
-SOURCES += albumform.cpp \
-    uniquelibrary.cpp
+SOURCES += \
+    uniquelibrary.cpp \
+    tableview.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore

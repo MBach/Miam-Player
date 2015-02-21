@@ -6,5 +6,5 @@ SeparatorItem::SeparatorItem(const QString &text) :
 
 int SeparatorItem::type() const
 {
-	return LibraryTreeView::IT_Separator;
+	return LibraryFilterProxyModel::IT_Separator;
 }

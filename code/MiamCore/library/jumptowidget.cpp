@@ -10,10 +10,8 @@
 
 #include <QtDebug>
 
-#include "librarytreeview.h"
-
-JumpToWidget::JumpToWidget(LibraryTreeView *treeView) :
-	QWidget(treeView), _libraryTreeView(treeView), _pos(-1, -1)
+JumpToWidget::JumpToWidget(QAbstractItemView *treeView) :
+	QWidget(treeView), _view(treeView), _pos(-1, -1)
 {
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
@@ -22,7 +20,7 @@ JumpToWidget::JumpToWidget(LibraryTreeView *treeView) :
 bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Wheel) {
-		return QApplication::sendEvent(_libraryTreeView->viewport(), event);
+		return QApplication::sendEvent(_view->viewport(), event);
 	} else if (event->type() == QEvent::MouseButtonRelease) {
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 		if (mouseEvent) {
@@ -31,7 +29,8 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 			// in ASCII, the A letter is 65
 			QString s(v + 65);
 			emit displayItemDelegate(false);
-			_libraryTreeView->jumpTo(s);
+			/// FIXME
+			/// _libraryTreeView->jumpTo(s);
 			emit displayItemDelegate(true);
 		}
 		return false;
@@ -42,7 +41,7 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 
 QSize JumpToWidget::sizeHint() const
 {
-	return QSize(20, _libraryTreeView->height());
+	return QSize(20, _view->height());
 }
 
 void JumpToWidget::leaveEvent(QEvent *e)
@@ -61,11 +60,11 @@ void JumpToWidget::mouseMoveEvent(QMouseEvent *e)
 
 void JumpToWidget::paintEvent(QPaintEvent *)
 {
-	this->setMinimumSize(20, _libraryTreeView->height() - _libraryTreeView->header()->height());
-	this->setMaximumSize(20, _libraryTreeView->height() - _libraryTreeView->header()->height());
+	this->setMinimumSize(20, _view->height());
+	this->setMaximumSize(20, _view->height());
 	QStylePainter p(this);
 	QStyleOptionViewItem o;
-	o.initFrom(_libraryTreeView);
+	o.initFrom(_view);
 	o.palette = QApplication::palette();
 	//p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
 	p.fillRect(rect(), o.palette.window());
@@ -79,7 +78,9 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		p.save();
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 19, height() / 26);
-		if (_libraryTreeView->currentLetter() == qc) {
+		/// FIXME
+		if (qc != qc) {
+		//if (_view->currentLetter() == qc) {
 			// Display a bright selection rectangle corresponding to the top letter in the library
 			p.fillRect(r, o.palette.highlight());
 		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
@@ -90,7 +91,9 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
 			p.setFont(f);
 		}
-		if (_libraryTreeView->currentLetter() == qc) {
+		/// FIXME
+		//if (_view->currentLetter() == qc) {
+		if (qc != qc) {
 			p.setPen(o.palette.highlightedText().color());
 		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
 			QColor lighterBG = o.palette.highlight().color().lighter(160);
@@ -108,7 +111,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	}
 
 	// Draw a vertical line if there are few items in the library
-	if (!_libraryTreeView->verticalScrollBar()->isVisible()) {
+	if (!_view->verticalScrollBar()->isVisible()) {
 		p.setPen(o.palette.mid().color());
 		if (isLeftToRight()) {
 			p.drawLine(rect().topRight(), rect().bottomRight());

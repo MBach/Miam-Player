@@ -45,7 +45,9 @@ macx {
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
 }
 
-SOURCES += model/albumdao.cpp \
+SOURCES +=     library/jumptowidget.cpp \
+    library/libraryfilterproxymodel.cpp \
+    model/albumdao.cpp \
     model/artistdao.cpp \
     model/genericdao.cpp \
     model/playlistdao.cpp \
@@ -69,6 +71,8 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/mediaplayerplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/searchmediaplayerplugin.h \
+    library/jumptowidget.h \
+    library/libraryfilterproxymodel.h \
     model/albumdao.h \
     model/artistdao.h \
     model/genericdao.h \

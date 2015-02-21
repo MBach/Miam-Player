@@ -2,7 +2,7 @@
 #define SEPARATORITEM_H
 
 #include <QStandardItem>
-#include "librarytreeview.h"
+#include "library/libraryfilterproxymodel.h"
 
 class SeparatorItem : public QStandardItem
 {

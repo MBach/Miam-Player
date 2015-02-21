@@ -2,7 +2,8 @@
 #define ARTISTITEM_H
 
 #include <QStandardItem>
-#include "librarytreeview.h"
+#include "library/libraryfilterproxymodel.h"
+#include "model/artistdao.h"
 
 class ArtistItem : public QStandardItem
 {

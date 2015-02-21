@@ -1,6 +1,7 @@
 #ifndef UNIQUELIBRARY_H
 #define UNIQUELIBRARY_H
 
+#include <QSet>
 #include <QStandardItemModel>
 #include <QWidget>
 
@@ -19,6 +20,7 @@ private:
 	Ui::UniqueLibrary *ui;
 	SqlDatabase *_db;
 	QStandardItemModel *_model;
+	QSet<GenericDAO*> _set;
 
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);

@@ -2,7 +2,8 @@
 #define ALBUMITEM_H
 
 #include <QStandardItem>
-#include "librarytreeview.h"
+#include "library/libraryfilterproxymodel.h"
+#include "model/albumdao.h"
 
 class AlbumItem : public QStandardItem
 {

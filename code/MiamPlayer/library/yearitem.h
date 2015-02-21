@@ -2,7 +2,8 @@
 #define YEARITEM_H
 
 #include <QStandardItem>
-#include "librarytreeview.h"
+#include "library/libraryfilterproxymodel.h"
+#include "model/yeardao.h"
 
 class YearItem : public QStandardItem
 {
