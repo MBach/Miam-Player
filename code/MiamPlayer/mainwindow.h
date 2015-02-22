@@ -53,6 +53,8 @@ public:
 
 	MainWindow(QWidget *parent = 0);
 
+	void activateLastView();
+
 	void dispatchDrop(QDropEvent *event);
 
 	void init();

@@ -121,6 +121,9 @@ public:
 	/** Returns the language of the application. */
 	QString language();
 
+	/** Returns the last view activated by the user. Used when reopening the player. */
+	QString lastActiveView() const;
+
 	QStringList libraryFilteredByArticles() const;
 
 	/** Returns all music locations. */
@@ -192,6 +195,9 @@ public slots:
 	void setFontPointSize(const FontFamily &fontFamily, int i);
 
 	void setIsLibraryFilteredByArticles(bool b);
+
+	/** Sets the last view activated by the user. Used when reopening the player. */
+	void setLastActiveView(const QString &viewName);
 
 	void setLibraryFilteredByArticles(const QStringList &tagList);
 

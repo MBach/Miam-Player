@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 	window->init();
 	window->show();
 	window->loadPlugins();
+	window->activateLastView();
 
 	// It this application was started from a file (for example)
 	if (argc > 1) {

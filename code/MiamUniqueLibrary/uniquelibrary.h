@@ -2,7 +2,6 @@
 #define UNIQUELIBRARY_H
 
 #include <QSet>
-#include <QStandardItemModel>
 #include <QWidget>
 
 #include "miamuniquelibrary_global.h"
@@ -19,7 +18,6 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget
 private:
 	Ui::UniqueLibrary *ui;
 	SqlDatabase *_db;
-	QStandardItemModel *_model;
 	QSet<GenericDAO*> _set;
 
 public:
@@ -27,11 +25,6 @@ public:
 
 	void init(SqlDatabase *db);
 	void setVisible(bool visible);
-	void insertNode(GenericDAO *node);
-	void updateNode(GenericDAO *node);
-
-private slots:
-	void reset();
 };
 
 #endif // UNIQUELIBRARY_H

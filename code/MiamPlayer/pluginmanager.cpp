@@ -152,11 +152,13 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 			_mainWindow->menuView->addSeparator();
 		}
 		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
+		actionAddViewToMenu->setObjectName(mediaPlayerPlugin->name());
 		_mainWindow->menuView->addAction(actionAddViewToMenu);
 		_mainWindow->updateFonts(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
 			_mainWindow->close();
 			view->show();
+			SettingsPrivate::instance()->setLastActiveView(actionAddViewToMenu->objectName());
 		});
 
 		// Link the view to the existing ActionGroup

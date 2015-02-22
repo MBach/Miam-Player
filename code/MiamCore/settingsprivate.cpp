@@ -308,6 +308,16 @@ QString SettingsPrivate::language()
 	}
 }
 
+QString SettingsPrivate::lastActiveView() const
+{
+	QString l = value("lastActiveView").toString();
+	if (l.isEmpty()) {
+		return "library";
+	} else {
+		return l;
+	}
+}
+
 QStringList SettingsPrivate::libraryFilteredByArticles() const
 {
 	QVariant vArticles = value("libraryFilteredByArticles");
@@ -584,6 +594,11 @@ void SettingsPrivate::setFontPointSize(const FontFamily &fontFamily, int i)
 void SettingsPrivate::setIsLibraryFilteredByArticles(bool b)
 {
 	setValue("isLibraryFilteredByArticles", b);
+}
+
+void SettingsPrivate::setLastActiveView(const QString &viewName)
+{
+	setValue("lastActiveView", viewName);
 }
 
 void SettingsPrivate::setLibraryFilteredByArticles(const QStringList &tagList)

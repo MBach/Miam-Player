@@ -17,6 +17,7 @@ SOURCES += \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
+    library/libraryfilterproxymodel.cpp \
     library/albumitem.cpp \
     library/artistitem.cpp \
     library/discitem.cpp \
@@ -54,7 +55,6 @@ SOURCES += \
     tageditor/tageditortablewidget.cpp \
     circleprogressbar.cpp \
     columnutils.cpp \
-    libraryfilterlineedit.cpp \
     main.cpp \
     mainwindow.cpp \
     miamstyle.cpp \
@@ -69,7 +69,8 @@ SOURCES += \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp
+    volumeslider.cpp \
+    libraryfilterlineedit.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -88,6 +89,7 @@ HEADERS += \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
     library/extendedtabbar.h \
+    library/libraryfilterproxymodel.h \
     library/extendedtabwidget.h \
     library/libraryitemdelegate.h \
     library/libraryorderdialog.h \
@@ -126,7 +128,6 @@ HEADERS += \
     tageditor/tageditortablewidget.h \
     circleprogressbar.h \
     columnutils.h \
-    libraryfilterlineedit.h \
     mainwindow.h \
     miamstyle.h \
     nofocusitemdelegate.h \
@@ -141,7 +142,8 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h
+    volumeslider.h \
+    libraryfilterlineedit.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

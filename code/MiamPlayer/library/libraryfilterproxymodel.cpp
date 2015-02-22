@@ -1,7 +1,6 @@
 #include "libraryfilterproxymodel.h"
 
 #include "settingsprivate.h"
-// #include "librarytreeview.h"
 #include "../model/sqldatabase.h"
 
 #include <QtDebug>
@@ -10,7 +9,7 @@ LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	QSortFilterProxyModel(parent), _topLevelItems(NULL)
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
-	// this->setSortRole(LibraryTreeView::DF_NormalizedString);
+	this->setSortRole(DF_NormalizedString);
 	this->setDynamicSortFilter(false);
 	this->sort(0, Qt::AscendingOrder);
 }

@@ -50,6 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
 	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
 }
 
+void MainWindow::activateLastView()
+{
+	// Find the last active view and connect database to it
+	QString viewName = SettingsPrivate::instance()->lastActiveView();
+	QAction *lastActiveView = findChild<QAction*>(viewName);
+	if (lastActiveView) {
+		lastActiveView->trigger();
+	}
+	SqlDatabase::instance()->load();
+}
+
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
@@ -81,9 +92,10 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 void MainWindow::init()
 {
 	// Link database and views
-	library->init(SqlDatabase::instance());
-	_uniqueLibrary->init(SqlDatabase::instance());
-	tagEditor->init(SqlDatabase::instance());
+	SqlDatabase *db = SqlDatabase::instance();
+	library->init(db);
+	_uniqueLibrary->init(db);
+	tagEditor->init(db);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
@@ -93,15 +105,16 @@ void MainWindow::init()
 	libraryHeader->setVisible(!isEmpty);
 	changeHierarchyButton->setVisible(!isEmpty);
 	/// XXX For each view
-	library->setHidden(isEmpty);
+	library->setVisible(!isEmpty);
 	/// XXX
+
 	actionScanLibrary->setDisabled(isEmpty);
-	widgetSearchBar->setHidden(isEmpty);
+	widgetSearchBar->setVisible(!isEmpty);
 	this->showTabPlaylists();
 	if (isEmpty) {
 		quickStart->searchMultimediaFiles();
 	} else {
-		SqlDatabase::instance()->load();
+		// db->load();
 	}
 
 	Settings *settings = Settings::instance();
@@ -167,14 +180,17 @@ void MainWindow::setupActions()
 	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(0);
+		SettingsPrivate::instance()->setLastActiveView(actionViewPlaylists->objectName());
 	});
 	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(1);
+		SettingsPrivate::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
 	});
 	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(1);
 		actionViewTagEditor->setChecked(true);
+		SettingsPrivate::instance()->setLastActiveView(actionViewTagEditor->objectName());
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
@@ -472,6 +488,8 @@ bool MainWindow::event(QEvent *e)
 	bool b = QMainWindow::event(e);
 	// Init the address bar. It's really important to have the exact width on screen
 	if (e->type() == QEvent::Show) {
+		// qDebug() << Q_FUNC_INFO;
+		// SettingsPrivate::instance()->setLastActiveView(this->objectName());
 		if (!filesystem->isVisible()) {
 			addressBar->setMinimumWidth(leftTabs->width());
 		}

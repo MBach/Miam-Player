@@ -6,8 +6,6 @@
 #include <QShortcut>
 #include <QTimer>
 
-#include "miamcore_global.h"
-
 /**
  * \brief		The LibraryFilterLineEdit class
  * \details

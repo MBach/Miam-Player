@@ -4,8 +4,6 @@
 #include <QSortFilterProxyModel>
 #include <QStandardItem>
 
-#include "miamcore_global.h"
-
 /**
  * \brief		The LibraryFilterProxyModel class is used to filter Library by looking in all items
  * \details		When filtering, the method filterAcceptsRow will not stop if a search term was not found in a node. The algorithm
@@ -13,7 +11,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMCORE_LIBRARY LibraryFilterProxyModel : public QSortFilterProxyModel
+class LibraryFilterProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT
 private:

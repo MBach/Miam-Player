@@ -7,12 +7,12 @@ DEFINES += MIAMUNIQUELIBRARY_LIBRARY
 FORMS += \
     uniquelibrary.ui
 
-HEADERS += \
+HEADERS += model/tablefilterproxymodel.h \
     miamuniquelibrary_global.h \
     uniquelibrary.h \
     tableview.h
 
-SOURCES += \
+SOURCES += model/tablefilterproxymodel.cpp \
     uniquelibrary.cpp \
     tableview.cpp
 

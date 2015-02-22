@@ -170,13 +170,6 @@ void LibraryTreeView::init(SqlDatabase *db)
 		b ? _timer->start() : _timer->stop();
 	});
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
-
-	// Build a tree directly by scanning the hard drive or from a previously saved file
-	/*connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
-	connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-	connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-	connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
-	connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);*/
 }
 
 void LibraryTreeView::setVisible(bool visible)

@@ -46,7 +46,6 @@ macx {
 }
 
 SOURCES +=     library/jumptowidget.cpp \
-    library/libraryfilterproxymodel.cpp \
     model/albumdao.cpp \
     model/artistdao.cpp \
     model/genericdao.cpp \
@@ -72,7 +71,6 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/searchmediaplayerplugin.h \
     library/jumptowidget.h \
-    library/libraryfilterproxymodel.h \
     model/albumdao.h \
     model/artistdao.h \
     model/genericdao.h \
