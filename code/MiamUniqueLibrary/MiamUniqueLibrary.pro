@@ -37,6 +37,8 @@ win32 {
 unix {
     LIBS += -L$$OUT_PWD/../MiamCore/ -lmiam-core
     TARGET = miam-uniquelibrary
+    CONFIG += c++11
+    QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
     target.path = /usr/lib/
