@@ -1,4 +1,4 @@
-#include "Separatoritem.h"
+#include "separatoritem.h"
 
 SeparatorItem::SeparatorItem(const QString &text) :
 	QStandardItem(text)

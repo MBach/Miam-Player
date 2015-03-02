@@ -29,7 +29,7 @@ AddressBar::AddressBar(QWidget *parent) :
 #ifdef Q_OS_WIN
 #include <qt_windows.h>
 // Retrieve volume names
-QString AddressBar::getVolumeInfo(QString &drive) const
+QString AddressBar::getVolumeInfo(const QString &drive) const
 {
 	WCHAR szVolumeName[256] ;
 	WCHAR szFileSystemName[256];
@@ -44,7 +44,7 @@ QString AddressBar::getVolumeInfo(QString &drive) const
 	return vName.trimmed() + " (" + drive.left(drive.size() - 1) + ")";
 }
 #else
-QString AddressBar::getVolumeInfo(QString &drive) const
+QString AddressBar::getVolumeInfo(const QString &drive) const
 {
 	return drive;
 }

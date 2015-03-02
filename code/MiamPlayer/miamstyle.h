@@ -11,7 +11,7 @@ public:
 
 	QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
 
-	virtual void ​drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0) const;
+	//virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0) const;
 
 	virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const;
 

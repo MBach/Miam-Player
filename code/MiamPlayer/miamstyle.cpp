@@ -6,6 +6,8 @@
 #include <QStyleOptionSlider>
 #include <QPainter>
 
+#include "settings.h"
+
 #include <QtDebug>
 
 MiamStyle::MiamStyle(QStyle *parent) :
@@ -184,17 +186,17 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 	return r;
 }
 
-void MiamStyle::​drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+/*void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
 	qDebug() << Q_FUNC_INFO << "here";
-	/*QStyle::CE_MenuBarItem	20	A menu item in a QMenuBar.
-	QStyle::CE_MenuBarEmptyArea	21	The empty area of a QMenuBar.
-	QStyle::CE_MenuItem	14	A menu item in a QMenu.
-	QStyle::CE_MenuScroller	15	Scrolling areas in a QMenu when the style supports scrolling.
-	QStyle::CE_MenuTearoff	18	A menu item representing the tear off section of a QMenu.
-	QStyle::CE_MenuEmptyArea	19	The area in a menu without menu items.
-	QStyle::CE_MenuHMargin	17	The horizontal extra space on the left/right of a menu.
-	QStyle::CE_MenuVMargin	16	The vertical extra space on the top/bottom of a menu.*/
+	// QStyle::CE_MenuBarItem	20	A menu item in a QMenuBar.
+	// QStyle::CE_MenuBarEmptyArea	21	The empty area of a QMenuBar.
+	// QStyle::CE_MenuItem	14	A menu item in a QMenu.
+	// QStyle::CE_MenuScroller	15	Scrolling areas in a QMenu when the style supports scrolling.
+	// QStyle::CE_MenuTearoff	18	A menu item representing the tear off section of a QMenu.
+	// QStyle::CE_MenuEmptyArea	19	The area in a menu without menu items.
+	// QStyle::CE_MenuHMargin	17	The horizontal extra space on the left/right of a menu.
+	// QStyle::CE_MenuVMargin	16	The vertical extra space on the top/bottom of a menu.
 	switch (element) {
 	case CE_MenuItem: {
 		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
@@ -214,7 +216,7 @@ void MiamStyle::​drawControl(ControlElement element, const QStyleOption *optio
 	default:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
-}
+}*/
 
 void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *p, const QWidget *widget) const
 {
@@ -233,8 +235,6 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 		QProxyStyle::drawComplexControl(control, option, p, widget);
 	}
 }
-
-#include "settings.h"
 
 void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *painter, const QWidget *widget) const
 {
