@@ -9,7 +9,7 @@
 #include <QtDebug>
 
 LibraryHeader::LibraryHeader(QWidget *parent) :
-	QPushButton(parent), libraryOrderDialog(new LibraryOrderDialog(this)), _order(Qt::AscendingOrder), _uncheck(false)
+	QPushButton(parent), _order(Qt::AscendingOrder), _uncheck(false), libraryOrderDialog(new LibraryOrderDialog(this))
 {
 	connect(this, &QPushButton::clicked, [=]() {
 		if (_order == Qt::AscendingOrder) {

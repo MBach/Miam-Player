@@ -5,16 +5,29 @@ GenericDAO::GenericDAO(QObject *parent, NodeType nt) :
 {}
 
 GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
-	QObject(remoteObject.parentNode())
+	QObject(remoteObject.parentNode()),
+	_checksum(remoteObject.checksum()),
+	_host(remoteObject.host()),
+	_icon(remoteObject.icon()),
+	_id(remoteObject.id()),
+	_title(remoteObject.title()),
+	_titleNormalized(remoteObject.titleNormalized()),
+	_parent(remoteObject.parentNode()),
+	_type(remoteObject.type())
+{}
+
+GenericDAO& GenericDAO::operator=(const GenericDAO& remoteObject)
 {
+	//QObject::operator=(other);
 	_checksum = remoteObject.checksum();
 	_host = remoteObject.host();
 	_icon = remoteObject.icon();
 	_id = remoteObject.id();
-	_parent = remoteObject.parentNode();
 	_title = remoteObject.title();
 	_titleNormalized = remoteObject.titleNormalized();
+	_parent = remoteObject.parentNode();
 	_type = remoteObject.type();
+	return *this;
 }
 
 GenericDAO::~GenericDAO()

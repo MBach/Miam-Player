@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(mp);
 
 	qRegisterMetaType<GenericDAO>();
-	qRegisterMetaType<TrackDAO>();
+    qRegisterMetaType<TrackDAO>();
 	qRegisterMetaTypeStreamOperators<TrackDAO>("TrackDAO");
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();

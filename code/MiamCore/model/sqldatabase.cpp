@@ -351,7 +351,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 			track.setIcon(record.value(++i).toString());
 			track.setId(record.value(++i).toString());
 			track.setUri(record.value(++i).toString());
-			tracks.push_back(std::move(track));
+			tracks.append(std::move(track));
 		}
 	}
 
@@ -382,10 +382,6 @@ PlaylistDAO SqlDatabase::selectPlaylist(int playlistId)
 
 QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 {
-	/*if (!isOpen()) {
-		open();
-	}*/
-
 	QList<PlaylistDAO> playlists;
 	QSqlQuery results = exec("SELECT title, id, icon, background FROM playlists");
 	while (results.next()) {
@@ -395,10 +391,9 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 		playlist.setId(results.record().value(++i).toString());
 		playlist.setIcon(results.record().value(++i).toString());
 		playlist.setBackground(results.record().value(++i).toString());
-		playlists.append(playlist);
+		playlists.append(std::move(playlist));
 	}
 
-	//close();
 	return playlists;
 }
 

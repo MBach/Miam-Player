@@ -21,6 +21,8 @@ public:
 
 	TrackDAO(const TrackDAO &other);
 
+	TrackDAO& operator=(const TrackDAO& other);
+
 	virtual ~TrackDAO();
 
 	QString album() const;

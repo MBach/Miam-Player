@@ -4,7 +4,7 @@ AlbumDAO::AlbumDAO(QObject *parent) :
 	GenericDAO(parent, GenericDAO::Album)
 {}
 
-AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
+/*AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
 	GenericDAO(remoteAlbum)
 {
 	_artist = remoteAlbum.artist();
@@ -14,7 +14,7 @@ AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
 	_source = remoteAlbum.source();
 	_uri = remoteAlbum.uri();
 	_year = remoteAlbum.year();
-}
+}*/
 
 AlbumDAO::~AlbumDAO() {}
 

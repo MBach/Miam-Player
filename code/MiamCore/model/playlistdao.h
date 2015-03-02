@@ -20,6 +20,8 @@ public:
 
 	PlaylistDAO(const PlaylistDAO &other);
 
+	PlaylistDAO& operator=(const PlaylistDAO& other);
+
 	virtual ~PlaylistDAO();
 
 	QString background() const;

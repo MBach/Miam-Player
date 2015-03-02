@@ -5,10 +5,17 @@ PlaylistDAO::PlaylistDAO(QObject *parent)
 {}
 
 PlaylistDAO::PlaylistDAO(const PlaylistDAO &other)
-	: GenericDAO(other)
+	: GenericDAO(other),
+	  _background(other.background()),
+	  _length(other.length())
+{}
+
+PlaylistDAO& PlaylistDAO::operator=(const PlaylistDAO& other)
 {
+	GenericDAO::operator=(other);
 	_background = other.background();
 	_length = other.length();
+	return *this;
 }
 
 PlaylistDAO::~PlaylistDAO()

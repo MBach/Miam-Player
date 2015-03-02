@@ -97,7 +97,8 @@ void PlaylistManager::init()
 {
 	playlists->blockSignals(true);
 	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
-		foreach (PlaylistDAO playlist, _db->selectPlaylists()) {
+		QList<PlaylistDAO> playlists = _db->selectPlaylists();
+		foreach (PlaylistDAO playlist, playlists) {
 			this->loadPlaylist(playlist.id().toInt());
 		}
 	}
@@ -156,11 +157,6 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
-	/*QStringList t;
-	foreach (TrackDAO track, tracks) {
-		t << track.uri();
-	}
-	playlist->insertMedias(-1, t);*/
 	playlist->insertMedias(-1, tracks);
 }
 

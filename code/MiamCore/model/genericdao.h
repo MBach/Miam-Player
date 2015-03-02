@@ -33,6 +33,8 @@ public:
 
 	GenericDAO(const GenericDAO &remoteObject);
 
+	GenericDAO& operator=(const GenericDAO& other);
+
 	virtual ~GenericDAO();
 
 	QString checksum() const;

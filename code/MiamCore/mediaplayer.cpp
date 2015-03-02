@@ -16,8 +16,6 @@
 #include "vlc-qt/MediaPlayer.h"
 
 #include <QtDebug>
-#include <QAudioDeviceInfo>
-#include <QAudioOutput>
 
 MediaPlayer::MediaPlayer(QObject *parent) :
 	QObject(parent), _playlist(NULL), _media(NULL)
@@ -25,9 +23,6 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
 	this->createLocalConnections();
-
-	QAudioDeviceInfo output = QAudioDeviceInfo::defaultOutputDevice();
-	output;
 
 	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
 		QWindow *w = QGuiApplication::topLevelWindows().first();
