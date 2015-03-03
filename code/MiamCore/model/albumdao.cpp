@@ -4,17 +4,29 @@ AlbumDAO::AlbumDAO(QObject *parent) :
 	GenericDAO(parent, GenericDAO::Album)
 {}
 
-/*AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
-	GenericDAO(remoteAlbum)
+AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
+	GenericDAO(remoteAlbum),
+	_artist(remoteAlbum.artist()),
+	_disc(remoteAlbum.disc()),
+	_cover(remoteAlbum.cover()),
+	_length(remoteAlbum.length()),
+	_source(remoteAlbum.source()),
+	_uri(remoteAlbum.uri()),
+	_year(remoteAlbum.year())
+{}
+
+AlbumDAO& AlbumDAO::operator=(const AlbumDAO& other)
 {
-	_artist = remoteAlbum.artist();
-	_disc = remoteAlbum.disc();
-	_cover = remoteAlbum.cover();
-	_length = remoteAlbum.length();
-	_source = remoteAlbum.source();
-	_uri = remoteAlbum.uri();
-	_year = remoteAlbum.year();
-}*/
+	GenericDAO::operator=(other);
+	_artist = other.artist();
+	_disc = other.disc();
+	_cover = other.cover();
+	_length = other.length();
+	_source = other.source();
+	_uri = other.uri();
+	_year = other.year();
+	return *this;
+}
 
 AlbumDAO::~AlbumDAO() {}
 

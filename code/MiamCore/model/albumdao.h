@@ -17,7 +17,9 @@ private:
 public:
 	explicit AlbumDAO(QObject *parentNode = 0);
 
-	//AlbumDAO(const AlbumDAO &remoteAlbum);
+	AlbumDAO(const AlbumDAO &remoteAlbum);
+
+	AlbumDAO& operator=(const AlbumDAO& other);
 
 	virtual ~AlbumDAO();
 
