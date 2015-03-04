@@ -24,6 +24,16 @@ QuickStart::QuickStart(QWidget *parent) :
 		orLabel->setVisible(false);
 	} else {
 		defaultFolderTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
+		connect(defaultFolderTableWidget, &QTableWidget::itemClicked, this, [=](QTableWidgetItem *i) {
+			if (i->column() != 0) {
+				if (defaultFolderTableWidget->item(0, 0)->checkState() == Qt::Checked) {
+					defaultFolderTableWidget->item(0, 0)->setCheckState(Qt::Unchecked);
+				} else {
+					defaultFolderTableWidget->item(0, 0)->setCheckState(Qt::Checked);
+				}
+			}
+			defaultFolderApplyButton->setEnabled(defaultFolderTableWidget->item(0, 0)->checkState() == Qt::Checked);
+		});
 	}
 	quickStartTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
 
@@ -76,6 +86,7 @@ void QuickStart::paintEvent(QPaintEvent *)
 	}
 }
 
+/** Check or uncheck rows when one is clicking not only on the checkbox. */
 void QuickStart::checkRow(QTableWidgetItem *i)
 {
 	int row = i->row();

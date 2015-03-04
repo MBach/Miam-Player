@@ -31,6 +31,7 @@ protected:
 	virtual void paintEvent(QPaintEvent *);
 
 private slots:
+	/** Check or uncheck rows when one is clicking not only on the checkbox. */
 	void checkRow(QTableWidgetItem *i);
 
 public slots:
