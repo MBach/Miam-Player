@@ -116,6 +116,9 @@ const QStringList FileHelper::suffixes(bool withPrefix)
 QString FileHelper::artistAlbum() const
 {
 	QString artAlb = "";
+	if (!(_file && _file->tag())) {
+		return artAlb;
+	}
 	switch (_fileType) {
 	case APE:
 	case MPC:
@@ -186,6 +189,9 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 
 int FileHelper::discNumber(bool canBeZero) const
 {
+	if (!(_file && _file->tag())) {
+		return -1;
+	}
 	QString strDiscNumber = "0";
 
 	switch (_fileType) {
@@ -247,18 +253,18 @@ Cover* FileHelper::extractCover()
 		break;
 	}
 	case FLAC: {
-		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
-		auto list = flacFile->pictureList();
-		for (auto it = list.begin(); it != list.end() ; it++) {
-			TagLib::FLAC::Picture *p = *it;
-			if (p->type() == TagLib::FLAC::Picture::FrontCover) {
-				// Performs a deep copy of the cover
-				QByteArray b = QByteArray(p->data().data(), p->data().size());
-				cover = new Cover(b, QString(p->mimeType().toCString(true)));
-				break;
+		if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
+			auto list = flacFile->pictureList();
+			for (auto it = list.begin(); it != list.end() ; it++) {
+				TagLib::FLAC::Picture *p = *it;
+				if (p->type() == TagLib::FLAC::Picture::FrontCover) {
+					// Performs a deep copy of the cover
+					QByteArray b = QByteArray(p->data().data(), p->data().size());
+					cover = new Cover(b, QString(p->mimeType().toCString(true)));
+					break;
+				}
 			}
 		}
-
 	}
 	default:
 		break;
@@ -320,8 +326,9 @@ bool FileHelper::hasCover() const
 		break;
 	}
 	case FLAC: {
-		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
-		atLeastOnePicture = !flacFile->pictureList().isEmpty();
+		if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
+			atLeastOnePicture = !flacFile->pictureList().isEmpty();
+		}
 	}
 	default:
 		break;
@@ -338,21 +345,22 @@ int FileHelper::rating() const
 	switch (_fileType) {
 	case MP3: {
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
-		if (mpegFile->hasID3v2Tag()) {
+		if (mpegFile && mpegFile->hasID3v2Tag()) {
 			r = this->ratingForID3v2(mpegFile->ID3v2Tag());
 		}
 		break;
 	}
 	case FLAC: {
-		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
-		if (flacFile->hasID3v2Tag()) {
-			r = this->ratingForID3v2(flacFile->ID3v2Tag());
-		} else if (flacFile->hasID3v1Tag()) {
-			qDebug() << Q_FUNC_INFO << "Not implemented (FLAC ID3v1)";
-		} else if (flacFile->hasXiphComment()) {
-			TagLib::StringList list = flacFile->xiphComment()->fieldListMap()["RATING"];
-			if (!list.isEmpty()) {
-				r = list.front().toInt();
+		if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
+			if (flacFile->hasID3v2Tag()) {
+				r = this->ratingForID3v2(flacFile->ID3v2Tag());
+			} else if (flacFile->hasID3v1Tag()) {
+				qDebug() << Q_FUNC_INFO << "Not implemented (FLAC ID3v1)";
+			} else if (flacFile->hasXiphComment()) {
+				TagLib::StringList list = flacFile->xiphComment()->fieldListMap()["RATING"];
+				if (!list.isEmpty()) {
+					r = list.front().toInt();
+				}
 			}
 		}
 		break;
