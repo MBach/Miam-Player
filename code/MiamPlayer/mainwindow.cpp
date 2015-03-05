@@ -240,7 +240,10 @@ void MainWindow::setupActions()
 	// Set only one location in the Library: the default music folder
 	connect(quickStart->defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QString musicLocation = quickStart->defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
-		QStringList newLocations = QStringList() << musicLocation;
+		musicLocation = QDir::toNativeSeparators(musicLocation);
+		customizeOptionsDialog->addMusicLocation(musicLocation);
+		QStringList newLocations;
+		newLocations.append(musicLocation);
 		applyButtonClicked(newLocations);
 	});
 

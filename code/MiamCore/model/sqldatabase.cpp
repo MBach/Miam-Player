@@ -131,7 +131,7 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 	QSqlQuery insertAlbum(*this);
 	insertAlbum.prepare("INSERT OR IGNORE INTO albums (id, name, normalizedName, year, artistId, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?)");
 	QString albumNorm = this->normalizeField(album->title());
-	uint albumId = qHash(albumNorm, 1);
+	uint albumId = artistId + qHash(albumNorm, 1);
 
 	insertAlbum.addBindValue(albumId);
 	insertAlbum.addBindValue(album->title());
@@ -230,7 +230,7 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 	QString artistNorm = this->normalizeField(artistAlbum);
 	QString albumNorm = this->normalizeField(track.album());
 	uint artistId = qHash(artistNorm);
-	uint albumId = qHash(albumNorm, 1);
+	uint albumId = artistId + qHash(albumNorm, 1);
 
 	insertTrack.addBindValue(track.uri());
 	insertTrack.addBindValue(track.trackNumber());
@@ -518,7 +518,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			QString artistNorm = this->normalizeField(artistAlbum);
 			QString albumNorm = this->normalizeField(fh.album());
 			uint artistId = qHash(artistNorm);
-			uint albumId = qHash(albumNorm, 1);
+			uint albumId = artistId + qHash(albumNorm, 1);
 
 			updateTrack.addBindValue(fh.album());
 			updateTrack.addBindValue(albumId);
@@ -858,7 +858,7 @@ void SqlDatabase::saveCoverRef(const QString &coverPath, const QString &track)
 	QString albumNorm = this->normalizeField(fh.album());
 
 	uint artistId = qHash(artistNorm);
-	uint albumId = qHash(albumNorm, 1);
+	uint albumId = artistId + qHash(albumNorm, 1);
 
 	QSqlQuery updateCoverPath("UPDATE albums SET cover = ? WHERE id = ? AND artistId = ?", *this);
 	updateCoverPath.addBindValue(coverPath);
@@ -919,7 +919,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	QString albumNorm = this->normalizeField(album);
 	QString length = fh.length();
 	uint artistId = qHash(artistNorm);
-	uint albumId = qHash(albumNorm, 1);
+	uint albumId = artistId + qHash(albumNorm, 1);
 	int dn = fh.discNumber();
 
 	insertTrack.addBindValue("file://" + absFilePath);

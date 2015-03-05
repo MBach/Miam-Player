@@ -297,19 +297,25 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text, const QStandardItem *item) const
 {
 	p->save();
-	if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
-		if ((opt.palette.highlight().color().lighter(160).saturation() - opt.palette.highlightedText().color().saturation()) < 128) {
-			p->setPen(opt.palette.text().color());
-		} else {
-			p->setPen(opt.palette.highlightedText().color());
+	if (text.isEmpty()) {
+		p->setPen(opt.palette.mid().color());
+		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
+	} else {
+		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
+			if ((opt.palette.highlight().color().lighter(160).saturation() - opt.palette.highlightedText().color().saturation()) < 128) {
+				p->setPen(opt.palette.text().color());
+			} else {
+				p->setPen(opt.palette.highlightedText().color());
+			}
 		}
+		if (item->data(LibraryFilterProxyModel::DF_Highlighted).toBool()) {
+			QFont f = p->font();
+			f.setBold(true);
+			p->setFont(f);
+		}
+		p->drawText(rectText, Qt::AlignVCenter, text);
 	}
-	if (item->data(LibraryFilterProxyModel::DF_Highlighted).toBool()) {
-		QFont f = p->font();
-		f.setBold(true);
-		p->setFont(f);
-	}
-	p->drawText(rectText, Qt::AlignVCenter, text);
 	p->restore();
 }
 

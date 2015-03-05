@@ -331,9 +331,7 @@ QStringList SettingsPrivate::libraryFilteredByArticles() const
 QStringList SettingsPrivate::musicLocations() const
 {
 	QStringList list;
-	foreach (QVariant v, value("musicLocations").toList()) {
-		list.append(v.toString());
-	}
+	list.append(value("musicLocations").toStringList());
 	return list;
 }
 
