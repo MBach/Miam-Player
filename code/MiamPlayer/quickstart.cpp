@@ -44,6 +44,7 @@ QuickStart::QuickStart(QWidget *parent) :
 bool QuickStart::eventFilter(QObject *, QEvent *e)
 {
 	if (e->type() == QEvent::Show || e->type() == QEvent::Resize) {
+		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
 		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
 		return true;
 	} else {
