@@ -391,6 +391,11 @@ void MainWindow::setupActions()
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		delete PluginManager::instance();
+		//SettingsPrivate *settings = SettingsPrivate::instance();
+		settings->setValue("mainWindowGeometry", saveGeometry());
+		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
+		Settings::instance()->setVolume(volumeSlider->value());
+		settings->sync();
 	});
 
 	// Shortcuts
@@ -455,16 +460,6 @@ void MainWindow::changeEvent(QEvent *event)
 	} else {
 		QMainWindow::changeEvent(event);
 	}
-}
-
-void MainWindow::closeEvent(QCloseEvent *)
-{
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	settings->setValue("mainWindowGeometry", saveGeometry());
-	//settings->setValue("splitterState", splitter->saveState());
-	settings->setValue("leftTabsIndex", leftTabs->currentIndex());
-	Settings::instance()->setVolume(volumeSlider->value());
-	settings->sync();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)

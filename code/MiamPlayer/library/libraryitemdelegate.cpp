@@ -39,22 +39,22 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
 	switch (item->type()) {
-	case LibraryFilterProxyModel::IT_Album:
+	case Miam::IT_Album:
 		this->paintRect(painter, o);
 		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
 		break;
-	case LibraryFilterProxyModel::IT_Artist:
+	case Miam::IT_Artist:
 		this->paintRect(painter, o);
 		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
 		break;
-	case LibraryFilterProxyModel::IT_Disc:
+	case Miam::IT_Disc:
 		this->paintRect(painter, o);
 		this->drawDisc(painter, o, static_cast<DiscItem*>(item));
 		break;
-	case LibraryFilterProxyModel::IT_Separator:
+	case Miam::IT_Separator:
 		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
-	case LibraryFilterProxyModel::IT_Track:
+	case Miam::IT_Track:
 		this->paintRect(painter, o);
 		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
@@ -70,7 +70,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	if (settings->isCoversEnabled() && item->type() == LibraryFilterProxyModel::IT_Album) {
+	if (settings->isCoversEnabled() && item->type() == Miam::IT_Album) {
 		QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
@@ -87,7 +87,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	int coverSize = settings->coverSize();
 	bool noCoverAvailable = false;
 	if (settings->isCoversEnabled()) {
-		QString file = item->data(LibraryFilterProxyModel::DF_CoverPath).toString();
+		QString file = item->data(Miam::DF_CoverPath).toString();
 		// Qt::UserRole + 20 == false => pixmap not loaded ; == true => pixmap loaded
 		/// XXX: extract this elsewhere
 		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
@@ -151,7 +151,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	}
 
 	// Add an icon on the right if album is from some remote location
-	bool isRemote = item->data(LibraryFilterProxyModel::DF_IsRemote).toBool();
+	bool isRemote = item->data(Miam::DF_IsRemote).toBool();
 	int offsetWidth = 0;
 	if (isRemote) {
 		int iconSize = 31;
@@ -235,7 +235,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
 	if (SettingsPrivate::instance()->isStarDelegates()) {
-		QString absFilePath = track->data(LibraryFilterProxyModel::DF_URI).toString();
+		QString absFilePath = track->data(Miam::DF_URI).toString();
 		/// XXX: query the sqlmodel instead?
 		FileHelper fh(absFilePath);
 		if (fh.rating() > 0) {
@@ -243,7 +243,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 			//starRating.paint(painter, option, StarRating::ReadOnly);
 		}
 	}
-	int trackNumber = track->data(LibraryFilterProxyModel::DF_TrackNumber).toInt();
+	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
 	if (trackNumber > 0) {
 		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	} else {
@@ -309,7 +309,7 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 				p->setPen(opt.palette.highlightedText().color());
 			}
 		}
-		if (item->data(LibraryFilterProxyModel::DF_Highlighted).toBool()) {
+		if (item->data(Miam::DF_Highlighted).toBool()) {
 			QFont f = p->font();
 			f.setBold(true);
 			p->setFont(f);

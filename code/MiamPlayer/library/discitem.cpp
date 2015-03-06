@@ -6,5 +6,5 @@ DiscItem::DiscItem(const QString &text) :
 
 int DiscItem::type() const
 {
-	return LibraryFilterProxyModel::IT_Disc;
+	return Miam::IT_Disc;
 }

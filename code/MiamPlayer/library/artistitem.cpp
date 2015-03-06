@@ -3,10 +3,10 @@
 ArtistItem::ArtistItem(const ArtistDAO *dao)
 	: QStandardItem(dao->title())
 {
-	setData(dao->titleNormalized(), LibraryFilterProxyModel::DF_NormalizedString);
+	setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 }
 
 int ArtistItem::type() const
 {
-	return LibraryFilterProxyModel::IT_Artist;
+	return Miam::IT_Artist;
 }

@@ -16,6 +16,7 @@ TableView::TableView(QWidget *parent)
 	_model->setHorizontalHeaderLabels({"", tr("Track"), tr("Title"), tr("Duration")});
 	_proxyModel = new TableFilterProxyModel(this);
 	_proxyModel->setSourceModel(_model);
+	this->setModel(_proxyModel);
 }
 
 void TableView::setViewportMargins(int left, int top, int right, int bottom)
@@ -63,11 +64,9 @@ void TableView::insertNode(GenericDAO *node)
 		return;
 	}
 
-
 	static bool isNewAlbum = false;
 	static bool isNewArtist = false;
 	static bool isNewTrack = false;
-
 	static int trackCount = 0;
 
 	int i = _model->rowCount();
@@ -77,6 +76,7 @@ void TableView::insertNode(GenericDAO *node)
 		QStandardItem *artist = new QStandardItem;
 		artist->setText("[ " + node->title() + " ]");
 		_model->invisibleRootItem()->appendRow(artist);
+		//_model->invisibleRootItem()->insertRow(i, artist);
 		setSpan(i, 0, 1, 4);
 		break;
 	}
@@ -106,7 +106,6 @@ void TableView::insertNode(GenericDAO *node)
 		break;
 	}
 	}
-	//_set.insert(node);
 }
 
 void TableView::updateNode(GenericDAO *)
@@ -119,6 +118,5 @@ void TableView::updateNode(GenericDAO *)
 void TableView::reset()
 {
 	_model->removeRows(0, _model->rowCount());
-	//qDeleteAll(_set);
 	setViewportMargins(0, 100, 0, 0);
 }

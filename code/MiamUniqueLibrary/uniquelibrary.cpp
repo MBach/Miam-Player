@@ -47,7 +47,9 @@ void UniqueLibrary::init(SqlDatabase *db)
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
 	connect(_db, &SqlDatabase::aboutToLoad, ui->library, &TableView::reset);
-	//connect(_db, &SqlDatabase::loaded, this, &UniqueLibrary::endPopulateTree);
+	connect(_db, &SqlDatabase::loaded, this, [=]() {
+		ui->library->sortByColumn(0);
+	});
 	//connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
 	connect(_db, &SqlDatabase::nodeExtracted, ui->library, &TableView::insertNode);
 	connect(_db, &SqlDatabase::aboutToUpdateNode, ui->library, &TableView::updateNode);

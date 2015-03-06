@@ -80,8 +80,6 @@ protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event);
 
-	virtual void closeEvent(QCloseEvent *event);
-
 	virtual void dragEnterEvent(QDragEnterEvent *event);
 
 	virtual void dragMoveEvent(QDragMoveEvent *event);

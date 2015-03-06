@@ -63,7 +63,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(_proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
 		if (!SettingsPrivate::instance()->isSearchAndExcludeLibrary()) {
 			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
-				item->setData(b, LibraryFilterProxyModel::DF_Highlighted);
+				item->setData(b, Miam::DF_Highlighted);
 			}
 		}
 	});
@@ -90,7 +90,7 @@ QChar LibraryTreeView::currentLetter() const
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(iTop));
 
 	// Special item "Various" (on top) has no Normalized String
-	if (item && item->type() == LibraryFilterProxyModel::IT_Separator && iTop.data(LibraryFilterProxyModel::DF_NormalizedString).toString().isEmpty()) {
+	if (item && item->type() == Miam::IT_Separator && iTop.data(Miam::DF_NormalizedString).toString().isEmpty()) {
 		return QChar();
 	} else if (!iTop.isValid()) {
 		return QChar();
@@ -99,8 +99,8 @@ QChar LibraryTreeView::currentLetter() const
 		while (iTop.parent().isValid()) {
 			iTop = iTop.parent();
 		}
-		if (iTop.isValid() && !iTop.data(LibraryFilterProxyModel::DF_NormalizedString).toString().isEmpty()) {
-			return iTop.data(LibraryFilterProxyModel::DF_NormalizedString).toString().toUpper().at(0);
+		if (iTop.isValid() && !iTop.data(Miam::DF_NormalizedString).toString().isEmpty()) {
+			return iTop.data(Miam::DF_NormalizedString).toString().toUpper().at(0);
 		} else {
 			return QChar();
 		}
@@ -118,8 +118,8 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 				this->findAll(index.child(i, 0), tracks);
 			}
 			tracks.removeDuplicates();
-		} else if (item && item->type() == LibraryFilterProxyModel::IT_Track) {
-			tracks << item->data(LibraryFilterProxyModel::DF_URI).toString();
+		} else if (item && item->type() == Miam::IT_Track) {
+			tracks << item->data(Miam::DF_URI).toString();
 		}
 	}
 }
@@ -197,7 +197,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}
-		if (item->type() != LibraryFilterProxyModel::IT_Separator) {
+		if (item->type() != Miam::IT_Separator) {
 			_properties->exec(event->globalPos());
 		}
 	}
@@ -214,8 +214,8 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 		//	index2 = proxyIndex.parent();
 		//}
 		//QRect r2 = visualRect(index2);
-		if (item && item->type() == LibraryFilterProxyModel::IT_Album && isExpanded(index2)) {
-			QString cover = item->data(LibraryFilterProxyModel::DF_CoverPath).toString();
+		if (item && item->type() == Miam::IT_Album && isExpanded(index2)) {
+			QString cover = item->data(Miam::DF_CoverPath).toString();
 			// Get the area to display cover
 			int w, h;
 			w = rect().width() - (r.width() + 2 * verticalScrollBar()->width());
@@ -319,7 +319,7 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 			return _letters.value(yearStr);
 		} else {
 			SeparatorItem *separator = new SeparatorItem(yearStr);
-			separator->setData(yearStr, LibraryFilterProxyModel::DF_NormalizedString);
+			separator->setData(yearStr, Miam::DF_NormalizedString);
 			_libraryModel->invisibleRootItem()->appendRow(separator);
 			_letters.insert(yearStr, separator);
 			return separator;
@@ -339,9 +339,9 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 		} else {
 			SeparatorItem *separator = new SeparatorItem(letter);
 			if (topLevelLetter) {
-				separator->setData("", LibraryFilterProxyModel::DF_NormalizedString);
+				separator->setData("", Miam::DF_NormalizedString);
 			} else {
-				separator->setData(letter, LibraryFilterProxyModel::DF_NormalizedString);
+				separator->setData(letter, Miam::DF_NormalizedString);
 			}
 			_libraryModel->invisibleRootItem()->appendRow(separator);
 			_letters.insert(letter, separator);
@@ -476,9 +476,9 @@ void LibraryTreeView::updateNode(GenericDAO *node)
 	// Is it possible to update other types of nodes?
 	if (AlbumItem *album = static_cast<AlbumItem*>(_map.value(node))) {
 		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
-		album->setData(dao->year(), LibraryFilterProxyModel::DF_Year);
-		album->setData(dao->cover(), LibraryFilterProxyModel::DF_CoverPath);
-		album->setData(dao->icon(), LibraryFilterProxyModel::DF_IconPath);
-		album->setData(!dao->icon().isEmpty(), LibraryFilterProxyModel::DF_IsRemote);
+		album->setData(dao->year(), Miam::DF_Year);
+		album->setData(dao->cover(), Miam::DF_CoverPath);
+		album->setData(dao->icon(), Miam::DF_IconPath);
+		album->setData(!dao->icon().isEmpty(), Miam::DF_IsRemote);
 	}
 }
