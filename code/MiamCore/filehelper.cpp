@@ -491,8 +491,8 @@ QString FileHelper::title() const
 
 QString FileHelper::trackNumber() const
 {
-	if (_file && _file->tag()) {
-		return QString("%1").arg(_file->tag()->track(), 2, 10, QChar('0')).toUpper();
+	if (_file && _file->tag() && _file->tag()->track() < INT_MAX) {
+		return QString("%1").arg(QString::number(_file->tag()->track()), 2, QChar('0')).toUpper();
 	} else {
 		return QString("00");
 	}
@@ -527,7 +527,7 @@ QString FileHelper::artist() const
 
 QString FileHelper::year() const
 {
-	if (_file && _file->tag() && _file->tag()->year() > 0) {
+	if (_file && _file->tag() && _file->tag()->year() > 0 && _file->tag()->year() < INT_MAX) {
 		return QString::number(_file->tag()->year());
 	} else {
 		return "";
