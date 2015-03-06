@@ -5,17 +5,19 @@
 #include <QHeaderView>
 #include <QMenu>
 
+#include "playlist.h"
+
 class PlaylistHeaderView : public QHeaderView
 {
 	Q_OBJECT
 
 private:
-	QMenu *columns;
+	QMenu *_columns;
 
 public:
 	static QStringList labels;
 
-	explicit PlaylistHeaderView(QWidget *parent = 0);
+	explicit PlaylistHeaderView(Playlist *parent);
 
 	/** Redefined to initialize values from settings. */
 	void setFont(const QFont &newFont);

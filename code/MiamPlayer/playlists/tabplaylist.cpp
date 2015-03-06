@@ -24,16 +24,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		emit updatePlaybackModeButton();
 	});
 
-	connect(qApp, &QCoreApplication::aboutToQuit, [=]() {
-		if (playlists().size() == 1 && playlist(0)->mediaPlaylist()->isEmpty()) {
-			settings->remove("columnStateForPlaylist");
-		} else {
-			for (int i = 0; i < playlists().size(); i++) {
-				settings->saveColumnStateForPlaylist(i, playlist(i)->horizontalHeader()->saveState());
-			}
-		}
-	});
-
 	// Removing a playlist
 	connect(_closePlaylistPopup->buttonBox, &QDialogButtonBox::clicked, this, &TabPlaylist::execActionFromClosePopup);
 	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
@@ -185,17 +175,23 @@ void TabPlaylist::displayEmptyArea(bool isEmpty)
 /** Add a new playlist tab. */
 Playlist* TabPlaylist::addPlaylist()
 {
-	qDebug() << sender();
 	QString newPlaylistName = tr("Playlist %1").arg(count() + 1);
+	QByteArray ba;
+	if (playlists().isEmpty()) {
+		ba = SettingsPrivate::instance()->lastActivePlaylistGeometry();
+	} else {
+		ba = currentPlayList()->horizontalHeader()->saveState();
+	}
 
 	// Then append a new empty playlist to the others
 	QWidget *stackedWidget = new QWidget(this);
 	stackedWidget->setAcceptDrops(true);
 	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
-	p->hideColumn(Playlist::COL_TRACK_DAO);
-	p->setAcceptDrops(true);
 	p->installEventFilter(this);
+	if (!ba.isEmpty()) {
+		p->horizontalHeader()->restoreState(ba);
+	}
 
 	QStackedLayout *stackedLayout = new QStackedLayout(stackedWidget);
 	stackedLayout->setStackingMode(QStackedLayout::StackAll);

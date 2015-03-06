@@ -394,6 +394,7 @@ void MainWindow::setupActions()
 		//SettingsPrivate *settings = SettingsPrivate::instance();
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
+		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
 		Settings::instance()->setVolume(volumeSlider->value());
 		settings->sync();
 	});

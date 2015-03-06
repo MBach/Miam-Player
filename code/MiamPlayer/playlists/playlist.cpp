@@ -30,11 +30,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	// Init direct members
 	this->setAcceptDrops(true);
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
-	this->setColumnHidden(5, true);
-	this->setColumnHidden(6, true);
-	this->setColumnHidden(7, true);
-	//this->setColumnHidden(8, true);
-	this->hideColumn(0);
+	this->setColumnHidden(COL_TRACK_DAO, true);
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);

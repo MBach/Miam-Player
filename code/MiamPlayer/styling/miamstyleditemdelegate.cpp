@@ -31,13 +31,7 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 	o.palette = QApplication::palette();
 	p->save();
 	p->setPen(o.palette.mid().color());
-	if (_fallback) {
-		if (QApplication::isLeftToRight() && index.column() == 0) {
-			p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
-		} else if (!QApplication::isLeftToRight() && index.column() == 0) {
-			p->drawLine(o.rect.topRight(), o.rect.bottomRight());
-		}
-	}
+
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (o.state.testFlag(QStyle::State_Selected)) {
 		if (settings->isCustomColors()) {
@@ -46,12 +40,6 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 			p->setPen(o.palette.highlight().color());
 		}
 		p->fillRect(o.rect, o.palette.highlight().color().lighter());
-
-		/*QBrush brush = o.palette.highlight();
-		QColor color = brush.color().lighter();
-		color.setAlpha(100);
-		brush.setColor(color);
-		p->fillRect(o.rect, brush);*/
 
 		// Don't display the upper line is the track above is selected
 		QModelIndex top = index.sibling(index.row() - 1, index.column());
@@ -64,9 +52,8 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 			p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
 			p->drawLine(o.rect.topRight(), o.rect.bottomRight());
 		} else {
-			if (o.rect.left() == 0) {
-				//p->drawLine(o.rect.x() + 1, o.rect.y(), o.rect.x() + 1, o.rect.bottom());
-				p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
+			if (o.rect.left() == 1) {
+				p->drawLine(o.rect.x(), o.rect.y(), o.rect.x(), o.rect.bottom());
 			} else if (o.rect.right() == _itemView->viewport()->rect().right()) {
 				p->drawLine(o.rect.topRight(), o.rect.bottomRight());
 			}

@@ -45,13 +45,24 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	starEditor->deleteLater();
 }
 
+#include <QHeaderView>
+
 /** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
-	MiamStyledItemDelegate::paint(p, opt, index);
-
+	//qDebug() << index.data().toString() << index.column() << ;
 	QStyleOptionViewItem o(opt);
 	initStyleOption(&o, index);
+
+	QStyle *style = QApplication::style();
+	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
+
+	if (_playlist->horizontalHeader()->visualIndex(index.column()) == 0) {
+		textRect = textRect.adjusted(1, 0, 0, 0);
+		o.rect = textRect;
+	}
+
+	MiamStyledItemDelegate::paint(p, o, index);
 
 	// Highlight the current playing item
 	QFont font = SettingsPrivate::instance()->font(SettingsPrivate::FF_Playlist);
@@ -68,11 +79,8 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		} else {
 			p->setPen(opt.palette.highlightedText().color());
 		}
-		//p->setPen(o.palette.highlightedText().color());
 	}
 
-	QStyle *style = QApplication::style();
-	QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &o, o.widget);
 	QString text;
 	switch (index.column()) {
 

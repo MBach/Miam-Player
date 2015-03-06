@@ -308,6 +308,12 @@ QString SettingsPrivate::language()
 	}
 }
 
+/** Returns the last active playlist header state. */
+QByteArray SettingsPrivate::lastActivePlaylistGeometry() const
+{
+	return value("lastActivePlaylistGeometry").toByteArray();
+}
+
 QString SettingsPrivate::lastActiveView() const
 {
 	QString l = value("lastActiveView").toString();
@@ -379,18 +385,6 @@ bool SettingsPrivate::playbackRestorePlaylistsAtStartup() const
 	} else {
 		return false;
 	}
-}
-
-QByteArray SettingsPrivate::restoreColumnStateForPlaylist(int playlistIndex) const
-{
-	return this->value("columnStateForPlaylist").toMap().value(QString::number(playlistIndex)).toByteArray();
-}
-
-void SettingsPrivate::saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state)
-{
-	columnStates = this->value("columnStateForPlaylist").toMap();
-	columnStates.insert(QString::number(playlistIndex), state);
-	this->setValue("columnStateForPlaylist", columnStates);
 }
 
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
@@ -594,6 +588,13 @@ void SettingsPrivate::setIsLibraryFilteredByArticles(bool b)
 	setValue("isLibraryFilteredByArticles", b);
 }
 
+/** Save the last active playlist header state. */
+void SettingsPrivate::setLastActivePlaylistGeometry(const QByteArray &ba)
+{
+	setValue("lastActivePlaylistGeometry", ba);
+}
+
+/** Sets the last view activated by the user. Used when reopening the player. */
 void SettingsPrivate::setLastActiveView(const QString &viewName)
 {
 	setValue("lastActiveView", viewName);

@@ -209,11 +209,6 @@ void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QMod
 	if (settings->isBigCoverEnabled()) {
 		QModelIndex index2 = proxyIndex;
 		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(proxyIndex));
-		//if (item->data(Type).toInt() == Track) {
-		//	item = item->parent();
-		//	index2 = proxyIndex.parent();
-		//}
-		//QRect r2 = visualRect(index2);
 		if (item && item->type() == Miam::IT_Album && isExpanded(index2)) {
 			QString cover = item->data(Miam::DF_CoverPath).toString();
 			// Get the area to display cover

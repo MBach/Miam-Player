@@ -32,8 +32,6 @@ private:
 	/** Store the family of each font used in the app. */
 	QMap<QString, QVariant> fontFamilyMap;
 
-	QMap<QString, QVariant> columnStates;
-
 	Q_ENUMS(FontFamily)
 	Q_ENUMS(PlaylistDefaultAction)
 	Q_ENUMS(DragDropAction)
@@ -121,6 +119,9 @@ public:
 	/** Returns the language of the application. */
 	QString language();
 
+	/** Returns the last active playlist header state. */
+	QByteArray lastActivePlaylistGeometry() const;
+
 	/** Returns the last view activated by the user. Used when reopening the player. */
 	QString lastActiveView() const;
 
@@ -139,10 +140,6 @@ public:
 	bool playbackKeepPlaylists() const;
 
 	bool playbackRestorePlaylistsAtStartup() const;
-
-	QByteArray restoreColumnStateForPlaylist(int playlistIndex) const;
-
-	void saveColumnStateForPlaylist(int playlistIndex, const QByteArray &state);
 
 	void setCustomColorRole(QPalette::ColorRole cr, const QColor &color);
 
@@ -195,6 +192,9 @@ public slots:
 	void setFontPointSize(const FontFamily &fontFamily, int i);
 
 	void setIsLibraryFilteredByArticles(bool b);
+
+	/** Save the last active playlist header state. */
+	void setLastActivePlaylistGeometry(const QByteArray &);
 
 	/** Sets the last view activated by the user. Used when reopening the player. */
 	void setLastActiveView(const QString &viewName);

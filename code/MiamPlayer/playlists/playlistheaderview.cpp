@@ -16,7 +16,7 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source")
 													   << "TrackDAO";
 
-PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
+PlaylistHeaderView::PlaylistHeaderView(Playlist *parent) :
 	QHeaderView(Qt::Horizontal, parent)
 {
 	this->setHighlightSections(false);
@@ -24,12 +24,14 @@ PlaylistHeaderView::PlaylistHeaderView(QWidget *parent) :
 	this->setSectionResizeMode(QHeaderView::Interactive);
 	this->setStretchLastSection(true);
 	this->setFrameShape(QFrame::NoFrame);
+	this->setMinimumSectionSize(this->height());
 
 	// Context menu on header of columns
-	columns = new QMenu(this);
-	connect(columns, &QMenu::triggered, this, [=](const QAction *action) {
+	_columns = new QMenu(this);
+	connect(_columns, &QMenu::triggered, this, [=](const QAction *action) {
 		int columnIndex = action->data().toInt();
 		this->setSectionHidden(columnIndex, !this->isSectionHidden(columnIndex));
+		parent->resizeColumnToContents(columnIndex);
 	});
 
 	// Initialize font from settings
@@ -72,6 +74,7 @@ void PlaylistHeaderView::changeEvent(QEvent *event)
 void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 {
 	QHeaderView::setModel(model);
+	qDebug() << Q_FUNC_INFO << count();
 	for (int i = 0; i < count(); i++) {
 		QString label = labels.at(i);
 
@@ -87,7 +90,7 @@ void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 			actionColumn->setChecked(!isSectionHidden(i));
 
 			// Then populate the context menu
-			columns->addAction(actionColumn);
+			_columns->addAction(actionColumn);
 		}
 	}
 }
@@ -95,20 +98,20 @@ void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 void PlaylistHeaderView::contextMenuEvent(QContextMenuEvent *event)
 {
 	// Initialize values for the Header (label and horizontal resize mode)
-	for (int i = 0; i < columns->actions().count(); i++) {
-		QAction *action = columns->actions().at(i);
+	for (int i = 0; i < _columns->actions().count(); i++) {
+		QAction *action = _columns->actions().at(i);
 		if (action) {
 			action->setText(tr(labels.at(i).toStdString().data()));
 		}
 	}
 
-	for (int i = 0; i < columns->actions().count(); i++) {
-		QAction *action = columns->actions().at(i);
+	for (int i = 0; i < _columns->actions().count(); i++) {
+		QAction *action = _columns->actions().at(i);
 		if (action) {
 			action->setChecked(!this->isSectionHidden(i));
 		}
 	}
-	columns->exec(mapToGlobal(event->pos()));
+	_columns->exec(mapToGlobal(event->pos()));
 }
 
 /** Redefined. */
