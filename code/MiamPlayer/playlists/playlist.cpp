@@ -30,7 +30,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	// Init direct members
 	this->setAcceptDrops(true);
 	this->setAlternatingRowColors(settings->colorsAlternateBG());
-	this->setColumnHidden(COL_TRACK_DAO, true);
 	this->setDragDropMode(QAbstractItemView::DragDrop);
 	this->setDragEnabled(true);
 	this->setDropIndicatorShown(true);
@@ -123,6 +122,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		connect(scrollBar, &QScrollBar::sliderMoved, this, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderReleased, this, [=]() { viewport()->update(); });
 	}
+	this->hideColumn(COL_TRACK_DAO);
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
