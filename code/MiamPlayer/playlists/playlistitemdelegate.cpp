@@ -114,6 +114,11 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	case Playlist::COL_ARTIST:
 	default:
 		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		if (QApplication::isLeftToRight()) {
+			textRect.adjust(2, 0, 0, 0);
+		} else {
+			textRect.adjust(0, 0, -2, 0);
+		}
 		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, text);
 		break;
 	}

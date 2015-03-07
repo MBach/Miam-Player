@@ -25,6 +25,7 @@ PlaylistHeaderView::PlaylistHeaderView(Playlist *parent) :
 	this->setStretchLastSection(true);
 	this->setFrameShape(QFrame::NoFrame);
 	this->setMinimumSectionSize(this->height());
+	this->setMouseTracking(true);
 
 	// Context menu on header of columns
 	_columns = new QMenu(this);
@@ -131,13 +132,16 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 	}
 
 	QStyleOptionHeader opt;
-	opt.initFrom(this);
+	opt.initFrom(this->viewport());
 	p.fillRect(rect(), QBrush(vLinearGradient));
 	p.setPen(opt.palette.windowText().color());
 	QRect r;
-	//r.setX(0);
-	//r.setY(0);
-	//r.setHeight(viewport()->height());
+	p.save();
+	if (QGuiApplication::isLeftToRight()) {
+		p.translate(-offset(), 0);
+	} else {
+		p.translate(offset(), 0);
+	}
 	for (int i = 0; i < count(); i++) {
 		QRect r2(sectionPosition(i), viewport()->rect().y(), sectionSize(i), viewport()->rect().height());
 		p.drawText(r2, Qt::AlignCenter, model()->headerData(i, Qt::Horizontal).toString());
@@ -145,6 +149,7 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 			r = r2;
 		}
 	}
+	p.restore();
 	if (!r.isNull()) {
 		p.save();
 		p.setPen(palette.highlight().color());
@@ -155,13 +160,14 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 		p.restore();
 	}
 
-	// Frame line
+	// Bottom frame
 	p.setPen(QApplication::palette().mid().color());
 	p.drawLine(rect().bottomLeft(),  QPoint(rect().left() + rect().width(), rect().top() + rect().height()));
 
-	/*if (isLeftToRight() && logicalIndex == 0) {
+	// Vertical frame
+	if (QGuiApplication::isLeftToRight()) {
 		p.drawLine(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
-	} else if (!isLeftToRight() && logicalIndex == count() - 1){
-		p.drawLine(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
-	}*/
+	} else {
+		p.drawLine(rect().topRight(), QPoint(rect().right(), rect().top() + rect().height()));
+	}
 }
