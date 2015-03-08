@@ -745,6 +745,13 @@
     </message>
 </context>
 <context>
+    <name>LibraryItemDelegate</name>
+    <message>
+        <source>(empty)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LibraryOrderDialog</name>
     <message>
         <source>Dialog</source>
@@ -829,18 +836,6 @@
 <context>
     <name>LogBrowserDialog</name>
     <message>
-        <source>-- WARNING: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>-- CRITICAL: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>-- FATAL: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Save Log Output</source>
         <translation type="unfinished"></translation>
     </message>
@@ -858,6 +853,26 @@
     </message>
     <message>
         <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1311,6 +1326,10 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>– otherwise –</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: it&apos;s not possible to add your default location because 0 tracks where found</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
