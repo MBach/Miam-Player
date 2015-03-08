@@ -75,7 +75,6 @@ void PlaylistHeaderView::changeEvent(QEvent *event)
 void PlaylistHeaderView::setModel(QAbstractItemModel *model)
 {
 	QHeaderView::setModel(model);
-	qDebug() << Q_FUNC_INFO << count();
 	for (int i = 0; i < count(); i++) {
 		QString label = labels.at(i);
 

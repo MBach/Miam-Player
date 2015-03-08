@@ -32,20 +32,28 @@ private:
 	/** Store the family of each font used in the app. */
 	QMap<QString, QVariant> fontFamilyMap;
 
-	Q_ENUMS(FontFamily)
-	Q_ENUMS(PlaylistDefaultAction)
 	Q_ENUMS(DragDropAction)
+	Q_ENUMS(FontFamily)
+	Q_ENUMS(InsertPolicy)
+	Q_ENUMS(PlaylistDefaultAction)
 
 public:
-	enum FontFamily{FF_Playlist, FF_Library, FF_Menu};
+	enum DragDropAction { DD_OpenPopup		= 0,
+						  DD_AddToLibrary	= 1,
+						  DD_AddToPlaylist	= 2};
 
-	enum PlaylistDefaultAction{PL_AskUserForAction	= 0,
-							   PL_SaveOnClose		= 1,
-							   PL_DiscardOnClose	= 2};
+	enum FontFamily { FF_Playlist	= 0,
+					  FF_Library	= 1,
+					  FF_Menu		= 2};
 
-	enum DragDropAction{DD_OpenPopup		= 0,
-						DD_AddToLibrary		= 1,
-						DD_AddToPlaylist	= 2};
+	enum InsertPolicy { IP_Artists			= 0,
+						IP_Albums			= 1,
+						IP_ArtistsAlbums	= 2,
+						IP_Years			= 3};
+
+	enum PlaylistDefaultAction { PL_AskUserForAction	= 0,
+								 PL_SaveOnClose			= 1,
+								 PL_DiscardOnClose		= 2};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();
@@ -82,6 +90,8 @@ public:
 	/** Custom icons in CustomizeTheme */
 	bool hasCustomIcon(const QString &buttonName) const;
 
+	InsertPolicy insertPolicy() const;
+
 	/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
 	bool isBigCoverEnabled() const;
 
@@ -95,6 +105,7 @@ public:
 	/** Returns true if background process is active to keep library up-to-date. */
 	bool isFileSystemMonitored() const;
 
+	/** Returns the hierarchical order of the library tree view. */
 	bool isLibraryFilteredByArticles() const;
 
 	/** Returns true if the button in parameter is visible or not. */
@@ -158,6 +169,10 @@ public:
 	QMap<QString, QVariant> shortcuts() const;
 
 	int volumeBarHideAfter() const;
+
+public:
+	/** Define the hierarchical order of the library tree view. */
+	void setInsertPolicy(InsertPolicy ip);
 
 public slots:
 	void setBigCoverOpacity(int v);

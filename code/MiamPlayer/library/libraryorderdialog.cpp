@@ -1,7 +1,7 @@
 #include "libraryorderdialog.h"
 
 #include <qstandarditemmodel.h>
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include "ui_libraryorderdialog.h"
 #include "librarytreeview.h"
@@ -22,7 +22,7 @@ void LibraryOrderDialog::setVisible(bool b)
 		// Artists \ Albums \ Tracks
 		QStandardItemModel *artistModel = new QStandardItemModel(this);
 		artistModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Artists \\ Albums")));
-		artistModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_Artists, Qt::UserRole + 1);
+		artistModel->setHeaderData(0, Qt::Horizontal, SettingsPrivate::IP_Artists, Qt::UserRole);
 		QStandardItem *artist = new QStandardItem(tr("Artist"));
 		artistModel->appendRow(artist);
 		for (int i = 1; i <= 1; i++) {
@@ -41,7 +41,7 @@ void LibraryOrderDialog::setVisible(bool b)
 		// Albums \ Tracks
 		QStandardItemModel *albumModel = new QStandardItemModel(this);
 		albumModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Albums")));
-		albumModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_Albums, Qt::UserRole + 1);
+		albumModel->setHeaderData(0, Qt::Horizontal, SettingsPrivate::IP_Albums, Qt::UserRole);
 		QStandardItem *album = new QStandardItem(tr("Album"));
 		albumModel->appendRow(album);
 		for (int i = 1; i <= 2; i++) {
@@ -55,7 +55,7 @@ void LibraryOrderDialog::setVisible(bool b)
 		// Artists - Albums \ Tracks
 		QStandardItemModel *artistAlbumModel = new QStandardItemModel(this);
 		artistAlbumModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Artists – Albums")));
-		artistAlbumModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_ArtistsAlbums, Qt::UserRole + 1);
+		artistAlbumModel->setHeaderData(0, Qt::Horizontal, SettingsPrivate::IP_ArtistsAlbums, Qt::UserRole);
 		QStandardItem *artistAlbum_1 = new QStandardItem(tr("Artist – Album"));
 		artistAlbumModel->appendRow(artistAlbum_1);
 		for (int i = 1; i <= 2; i++) {
@@ -69,7 +69,7 @@ void LibraryOrderDialog::setVisible(bool b)
 		// Year \ Artist - Album \ Tracks
 		QStandardItemModel *yearModel = new QStandardItemModel(this);
 		yearModel->setHorizontalHeaderItem(0, new QStandardItem(tr("Years")));
-		yearModel->setHeaderData(0, Qt::Horizontal, SqlDatabase::IP_Years, Qt::UserRole + 1);
+		yearModel->setHeaderData(0, Qt::Horizontal, SettingsPrivate::IP_Years, Qt::UserRole);
 		QStandardItem *year = new QStandardItem("2014");
 		yearModel->appendRow(year);
 		QStandardItem *artistAlbum_2 = new QStandardItem(tr("Artist – Album"));
@@ -82,18 +82,18 @@ void LibraryOrderDialog::setVisible(bool b)
 		delete m;
 		yearTreeView->setDisabled(disabled);
 
-		Settings *settings = Settings::instance();
+		SettingsPrivate *settings = SettingsPrivate::instance();
 		foreach (QTreeView *treeView, findChildren<QTreeView*>()) {
 			treeView->expandAll();
 			connect(treeView, &QTreeView::clicked, [=]() {
 				foreach (QTreeView *treeView_2, findChildren<QTreeView*>()) {
 					if (treeView == treeView_2) {
 						treeView_2->clearSelection();
-						int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole + 1).toInt();
-						SqlDatabase::InsertPolicy insertPolicy = (SqlDatabase::InsertPolicy) i;
+						int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole).toInt();
+						SettingsPrivate::InsertPolicy insertPolicy = (SettingsPrivate::InsertPolicy) i;
 						// Rebuild library only if the click was on another treeview
-						if (insertPolicy != settings->value("insertPolicy").toInt()) {
-							settings->setValue("insertPolicy", insertPolicy);
+						if (insertPolicy != settings->insertPolicy()) {
+							settings->setInsertPolicy(insertPolicy);
 							emit accept();
 						}
 					}
@@ -107,14 +107,14 @@ void LibraryOrderDialog::setVisible(bool b)
 
 QString LibraryOrderDialog::headerValue() const
 {
-	switch (Settings::instance()->value("insertPolicy").toInt()) {
-	case SqlDatabase::IP_Albums:
+	switch (SettingsPrivate::instance()->insertPolicy()) {
+	case SettingsPrivate::IP_Albums:
 		return tr("Album");
-	case SqlDatabase::IP_ArtistsAlbums:
+	case SettingsPrivate::IP_ArtistsAlbums:
 		return tr("Artist – Album");
-	case SqlDatabase::IP_Years:
+	case SettingsPrivate::IP_Years:
 		return tr("Year");
-	case SqlDatabase::IP_Artists:
+	case SettingsPrivate::IP_Artists:
 	default:
 		return tr("Artist \\ Album");
 	}

@@ -45,11 +45,6 @@ public:
 	/** Singleton pattern to be able to easily use settings everywhere in the app. */
 	static SqlDatabase* instance();
 
-	enum InsertPolicy { IP_Artists			= 0,
-						IP_Albums			= 1,
-						IP_ArtistsAlbums	= 2,
-						IP_Years			= 3 };
-
 	bool insertIntoTableArtists(ArtistDAO *artist);
 	bool insertIntoTableAlbums(uint artistId, AlbumDAO *album);
 	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks);

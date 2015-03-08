@@ -20,7 +20,13 @@ LibraryHeader::LibraryHeader(QWidget *parent) :
 		this->update();
 		emit aboutToChangeSortOrder();
 	});
-	connect(libraryOrderDialog, &LibraryOrderDialog::accepted, this, &LibraryHeader::aboutToChangeHierarchyOrder);
+	connect(libraryOrderDialog, &LibraryOrderDialog::accepted, this, [=]() {
+		// Reset sort order before switch from one hierarchical order to another one
+		if (_order == Qt::DescendingOrder) {
+			emit aboutToChangeSortOrder();
+		}
+		emit aboutToChangeHierarchyOrder();
+	});
 	libraryOrderDialog->installEventFilter(this);
 }
 

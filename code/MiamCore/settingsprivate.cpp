@@ -174,6 +174,16 @@ bool SettingsPrivate::hasCustomIcon(const QString &buttonName) const
 	return value("customIcons/" + buttonName).isValid() && value("customIcons/" + buttonName).toBool();
 }
 
+SettingsPrivate::InsertPolicy SettingsPrivate::insertPolicy() const
+{
+	if (value("insertPolicy").isNull()) {
+		return SettingsPrivate::IP_Artists;
+	} else {
+		int i = value("insertPolicy").toInt();
+		return (SettingsPrivate::InsertPolicy)i;
+	}
+}
+
 /** Returns true if big and faded covers are displayed in the library when an album is expanded. */
 bool SettingsPrivate::isBigCoverEnabled() const
 {
@@ -225,6 +235,7 @@ bool SettingsPrivate::isFileSystemMonitored() const
 	}
 }
 
+/** Returns the hierarchical order of the library tree view. */
 bool SettingsPrivate::isLibraryFilteredByArticles() const
 {
 	QVariant b = value("isLibraryFilteredByArticles");
@@ -497,6 +508,12 @@ int SettingsPrivate::volumeBarHideAfter() const
 	} else {
 		return value("volumeBarHideAfter").toInt();
 	}
+}
+
+/** Define the hierarchical order of the library tree view. */
+void SettingsPrivate::setInsertPolicy(SettingsPrivate::InsertPolicy ip)
+{
+	setValue("insertPolicy", ip);
 }
 
 /// SLOTS

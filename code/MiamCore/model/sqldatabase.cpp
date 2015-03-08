@@ -516,8 +516,8 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 		}
 	};
 
-	switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
-	case IP_Artists: {
+	switch (SettingsPrivate::instance()->insertPolicy()) {
+	case SettingsPrivate::IP_Artists: {
 
 		// Level 1: Artists
 		QSqlQuery qArtists("SELECT id, name, normalizedName FROM artists", *this);
@@ -571,7 +571,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 		}
 		break;
 	}
-	case IP_Albums: {
+	case SettingsPrivate::IP_Albums: {
 		// Level 1: Albums
 		QSqlQuery qAlbums("SELECT name, normalizedName, year, cover, host, icon, id FROM albums", *this);
 		if (qAlbums.exec()) {
@@ -604,7 +604,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 		}
 		break;
 	}
-	case IP_ArtistsAlbums: {
+	case SettingsPrivate::IP_ArtistsAlbums: {
 		// Level 1: Artist - Album
 		QSqlQuery qAlbums("SELECT art.name || ' – ' || alb.name, art.normalizedName || alb.normalizedName, alb.year, alb.cover, alb.host, alb.icon, alb.id " \
 						  "FROM albums alb " \
@@ -639,7 +639,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 		}
 		break;
 	}
-	case IP_Years: {
+	case SettingsPrivate::IP_Years: {
 		// Level 1: Years
 		QSqlQuery qYears("SELECT DISTINCT year FROM albums ORDER BY year", *this);
 		if (qYears.exec()) {

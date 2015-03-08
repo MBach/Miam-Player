@@ -74,8 +74,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
-	_proxyModel->sortOrder();
-
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
 
@@ -174,6 +172,7 @@ void LibraryTreeView::init(SqlDatabase *db)
 
 void LibraryTreeView::setVisible(bool visible)
 {
+	qDebug() << Q_FUNC_INFO << visible;
 	TreeView::setVisible(visible);
 	if (visible) {
 		connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
@@ -303,8 +302,8 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 	}
 
 	// Items are grouped every ten years in this particular case
-	int ip = SettingsPrivate::instance()->value("insertPolicy").toInt();
-	if (ip == SqlDatabase::IP_Years) {
+	switch (SettingsPrivate::instance()->insertPolicy()) {
+	case SettingsPrivate::IP_Years: {
 		int year = letters.toInt();
 		if (year == 0) {
 			return NULL;
@@ -319,7 +318,9 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 			_letters.insert(yearStr, separator);
 			return separator;
 		}
-	} else {
+		break;
+	}
+	default:
 		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		QString letter;
 		bool topLevelLetter = false;
@@ -334,9 +335,9 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 		} else {
 			SeparatorItem *separator = new SeparatorItem(letter);
 			if (topLevelLetter) {
-				separator->setData("", Miam::DF_NormalizedString);
+				separator->setData("0", Miam::DF_NormalizedString);
 			} else {
-				separator->setData(letter, Miam::DF_NormalizedString);
+				separator->setData(letter.toLower(), Miam::DF_NormalizedString);
 			}
 			_libraryModel->invisibleRootItem()->appendRow(separator);
 			_letters.insert(letter, separator);
@@ -391,7 +392,7 @@ void LibraryTreeView::jumpTo(const QString &letter)
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << sender();
 	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
 		_proxyModel->setFilterRegExp(QString());
@@ -405,17 +406,17 @@ void LibraryTreeView::reset()
 			delete it.key();
 		}
 	}
-	switch (SettingsPrivate::instance()->value("insertPolicy").toInt()) {
-	case SqlDatabase::IP_Artists:
+	switch (SettingsPrivate::instance()->insertPolicy()) {
+	case SettingsPrivate::IP_Artists:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
 		break;
-	case SqlDatabase::IP_Albums:
+	case SettingsPrivate::IP_Albums:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Albums"));
 		break;
-	case SqlDatabase::IP_ArtistsAlbums:
+	case SettingsPrivate::IP_ArtistsAlbums:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists – Albums"));
 		break;
-	case SqlDatabase::IP_Years:
+	case SettingsPrivate::IP_Years:
 		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Years"));
 		break;
 	}

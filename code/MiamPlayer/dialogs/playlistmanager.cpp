@@ -1,4 +1,4 @@
-#include "playlistmanager.h"
+﻿#include "playlistmanager.h"
 
 #include <filehelper.h>
 #include <settingsprivate.h>

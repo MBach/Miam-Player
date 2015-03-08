@@ -108,7 +108,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		if (rType == Miam::IT_Album) {
 			int lYear = left->data(Miam::DF_Year).toInt();
 			int rYear = right->data(Miam::DF_Year).toInt();
-			if (SettingsPrivate::instance()->value("insertPolicy").toInt() == SqlDatabase::IP_Artists && lYear >= 0 && rYear >= 0) {
+			if (SettingsPrivate::instance()->insertPolicy() == SettingsPrivate::IP_Artists && lYear >= 0 && rYear >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
 					if (lYear == rYear) {
 						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
@@ -136,16 +136,25 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		break;
 
 	case Miam::IT_Separator:
-		// Special case if an artist's name has only one character, be sure to put it after the separator
-		// Example: M (or -M-, or Mathieu Chedid)
-		if (rType == Miam::IT_Artist || rType == Miam::IT_Album) {
-			if (QString::compare(left->text().left(1), right->data(Miam::DF_NormalizedString).toString().left(1)) == 0) {
+		// Separators have a different sorting order when Hierarchical Order starts with Years
+		if (SettingsPrivate::instance()->insertPolicy() == SettingsPrivate::IP_Years) {
+			if (sortOrder() == Qt::AscendingOrder) {
+				result = left->data(Miam::DF_NormalizedString).toInt() <= right->data(Miam::DF_NormalizedString).toInt();
+			} else {
+				result = left->data(Miam::DF_NormalizedString).toInt() + 10 <= right->data(Miam::DF_NormalizedString).toInt();
+			}
+		} else {
+			// Special case if an artist's name has only one character, be sure to put it after the separator
+			// Example: M (or -M-, or Mathieu Chedid)
+			if (QString::compare(left->data(Miam::DF_NormalizedString).toString(),
+								 right->data(Miam::DF_NormalizedString).toString().left(1)) == 0) {
 				result = (sortOrder() == Qt::AscendingOrder);
+			} else if (left->data(Miam::DF_NormalizedString).toString() == "0" && sortOrder() == Qt::DescendingOrder) {
+				// Again a very special case to keep the separator for "Various" on top of siblings
+				result = "9" < right->data(Miam::DF_NormalizedString).toString().left(1);
 			} else {
 				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 			}
-		} else { // IT_Year
-			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
