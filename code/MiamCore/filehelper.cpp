@@ -72,7 +72,7 @@ bool FileHelper::init(const QString &filePath)
 	} else if (suffix == "flac") {
 		_file = new TagLib::FLAC::File(fp);
 		_fileType = FLAC;
-	} else if (suffix == "m4a") {
+	} else if (suffix == "m4a" || suffix == "mp4") {
 		_file = new TagLib::MP4::File(fp);
 		_fileType = MP4;
 	} else if (suffix == "mpc") {
@@ -100,7 +100,7 @@ FileHelper::~FileHelper()
 
 const QStringList FileHelper::suffixes(bool withPrefix)
 {
-	QStringList suffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mpc" << "mp3" << "oga" << "ogg";
+	QStringList suffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg";
 	if (withPrefix) {
 		QStringList filters;
 		foreach (QString filter, suffixes) {
