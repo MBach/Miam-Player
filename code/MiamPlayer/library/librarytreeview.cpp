@@ -297,10 +297,6 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 
 SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 {
-	if (letters.isEmpty()) {
-		return NULL;
-	}
-
 	// Items are grouped every ten years in this particular case
 	switch (SettingsPrivate::instance()->insertPolicy()) {
 	case SettingsPrivate::IP_Years: {
