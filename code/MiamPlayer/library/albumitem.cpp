@@ -1,13 +1,10 @@
 #include "albumitem.h"
 
-#include <QtDebug>
-
 #include <QRegularExpression>
 
 AlbumItem::AlbumItem(const AlbumDAO *dao) :
 	QStandardItem(dao->title())
 {
-	//setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 	if (dao->titleNormalized().isEmpty() || !dao->titleNormalized().contains(QRegularExpression("[\\w]"))) {
 		setData("0", Miam::DF_NormalizedString);
 	} else {

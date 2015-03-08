@@ -12,13 +12,13 @@
  */
 class SeekBar : public QSlider
 {
-    Q_OBJECT
+	Q_OBJECT
 private:
 	/** Reference to the unique instance of MediaPlayer class in the application. */
 	QWeakPointer<MediaPlayer> _mediaPlayer;
 
 public:
-    explicit SeekBar(QWidget *parent = 0);
+	explicit SeekBar(QWidget *parent = 0);
 
 	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
@@ -28,6 +28,9 @@ protected:
 	virtual void mousePressEvent(QMouseEvent *);
 
 	virtual void mouseReleaseEvent(QMouseEvent *);
+
+	/** Redefined to seek in current playing file. */
+	virtual void wheelEvent(QWheelEvent *e);
 
 	virtual void paintEvent(QPaintEvent *);
 

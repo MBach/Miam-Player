@@ -85,9 +85,11 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	switch (index.column()) {
 
 	case Playlist::COL_LENGTH:
-		text = QDateTime::fromTime_t(index.data().toInt()).toString("m:ss");
-		text = QFontMetrics(font).elidedText(text, o.textElideMode, textRect.width());
-		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
+		if (index.data().toInt() >= 0) {
+			text = QDateTime::fromTime_t(index.data().toInt()).toString("m:ss");
+			text = QFontMetrics(font).elidedText(text, o.textElideMode, textRect.width());
+			style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
+		}
 		break;
 	case Playlist::COL_TRACK_NUMBER:
 	case Playlist::COL_YEAR:

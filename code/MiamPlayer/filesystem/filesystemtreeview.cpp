@@ -17,7 +17,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	_fileSystemModel = new QFileSystemModel(this);
 	_fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 
-	_fileSystemModel->setNameFilters(FileHelper::suffixes(true));
+	_fileSystemModel->setNameFilters(FileHelper::suffixes(FileHelper::All, true));
 
 	this->setModel(_fileSystemModel);
 
@@ -48,7 +48,7 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) 
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
 			QFileInfo fileInfo(entry);
-			if (fileInfo.isFile() && FileHelper::suffixes().contains(fileInfo.suffix())) {
+			if (fileInfo.isFile() && FileHelper::suffixes(FileHelper::All).contains(fileInfo.suffix())) {
 				tracks << "file://" + fileInfo.absoluteFilePath();
 			}
 		}

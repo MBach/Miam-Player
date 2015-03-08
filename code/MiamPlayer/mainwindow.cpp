@@ -601,8 +601,8 @@ void MainWindow::openFiles()
 		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
 	}
 
-	audioFiles.append(" (" + FileHelper::suffixes(true).join(" ") + ")");
-	audioFiles.append(";;Game Music Emu (*.ay *.gbs *.gym *.hes *.kss *.nsf *.nsfe *.sap *.spc *.vgm *.vgz);;");
+	audioFiles.append(" (" + FileHelper::suffixes(FileHelper::Standard, true).join(" ") + ")");
+	audioFiles.append(";;Game Music Emu (" + FileHelper::suffixes(FileHelper::GameMusicEmu, true).join(" ") + ");;");
 	audioFiles.append(tr("Every file type (*)"));
 
 	QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose some files to open"), lastOpenedLocation,
@@ -636,7 +636,8 @@ void MainWindow::openFolder()
 	} else {
 		settings->setValue("lastOpenedLocation", dir);
 		QDirIterator it(dir, QDirIterator::Subdirectories);
-		QStringList suffixes = FileHelper::suffixes();
+		QStringList suffixes = FileHelper::suffixes(FileHelper::All, false);
+		qDebug() << "supported suffixes" << suffixes;
 		QStringList tracks;
 		while (it.hasNext()) {
 			it.next();

@@ -29,6 +29,7 @@ private:
 	VlcInstance *_instance;
 	VlcMedia *_media;
 	VlcMediaPlayer *_player;
+	RemoteMediaPlayer *_remotePlayer;
 
 	QMap<QString, RemoteMediaPlayer*> _remotePlayers;
 
@@ -45,10 +46,14 @@ public:
 
 	qint64 duration();
 
+	float position() const;
+
 	QMediaPlayer::State state() const;
 	void setState(QMediaPlayer::State state);
 
 	void setMute(bool b) const;
+
+	void setTime(int t) const;
 
 	void seek(float pos);
 

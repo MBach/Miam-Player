@@ -18,7 +18,7 @@
 #include <QtDebug>
 
 MediaPlayer::MediaPlayer(QObject *parent) :
-	QObject(parent), _playlist(NULL), _media(NULL)
+	QObject(parent), _playlist(NULL), _media(NULL), _remotePlayer(NULL)
 {
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
@@ -139,7 +139,24 @@ void MediaPlayer::setVolume(int v)
 
 qint64 MediaPlayer::duration()
 {
-	return _player->length();
+	/// XXX: what if remote playing?
+	if (_remotePlayer != NULL) {
+		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
+		return 1;
+	} else {
+		return _player->length();
+	}
+}
+
+float MediaPlayer::position() const
+{
+	if (_remotePlayer != NULL) {
+		//return _remotePlayer->position();
+		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
+		return 0.0;
+	} else {
+		return _player->position();
+	}
 }
 
 QMediaPlayer::State MediaPlayer::state() const
@@ -156,6 +173,19 @@ void MediaPlayer::setState(QMediaPlayer::State state)
 void MediaPlayer::setMute(bool b) const
 {
 	b ? _player->audio()->setTrack(-1) : _player->audio()->setTrack(0);
+}
+
+void MediaPlayer::setTime(int t) const
+{
+	QMediaContent mc = _playlist->media(_playlist->currentIndex());
+	if (mc.canonicalUrl().isLocalFile()) {
+		_player->setTime(t);
+	} else if (_remotePlayer != NULL) {
+		/// TODO
+		_remotePlayer->setTime(t);
+	} else {
+
+	}
 }
 
 void MediaPlayer::seek(float pos)

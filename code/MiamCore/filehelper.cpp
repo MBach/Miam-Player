@@ -98,18 +98,30 @@ FileHelper::~FileHelper()
 	}
 }
 
-const QStringList FileHelper::suffixes(bool withPrefix)
+const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
 {
-	QStringList suffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg";
-	if (withPrefix) {
-		QStringList filters;
-		foreach (QString filter, suffixes) {
-			filters.append("*." + filter);
+	static QStringList standardSuffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg";
+	static QStringList gameMusicEmuSuffixes = QStringList() << "ay" << "gbs" << "gym" << "hes" << "kss" << "nsf" << "nsfe" << "sap" << "spc" << "vgm" << "vgz";
+	QStringList filters;
+	if (et & Standard) {
+		if (withPrefix) {
+			foreach (QString filter, standardSuffixes) {
+				filters.append("*." + filter);
+			}
+		} else {
+			filters.append(standardSuffixes);
 		}
-		return filters;
-	} else {
-		return suffixes;
 	}
+	if (et & GameMusicEmu) {
+		if (withPrefix) {
+			foreach (QString filter, gameMusicEmuSuffixes) {
+				filters.append("*." + filter);
+			}
+		} else {
+			filters.append(gameMusicEmuSuffixes);
+		}
+	}
+	return filters;
 }
 
 /** Field ArtistAlbum if exists (in a compilation for example). */

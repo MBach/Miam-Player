@@ -21,6 +21,10 @@ public:
 
 	virtual QString host() const = 0;
 
+	virtual float position() const = 0;
+
+	virtual void setTime(int t) = 0;
+
 public slots:
 	virtual void pause() = 0;
 	virtual void play(const QUrl &track) = 0;

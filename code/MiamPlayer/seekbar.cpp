@@ -1,10 +1,11 @@
 #include "seekbar.h"
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QApplication>
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
 #include <QStylePainter>
+#include <QWheelEvent>
 
 #include <QtDebug>
 
@@ -48,6 +49,28 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 
 void SeekBar::mouseReleaseEvent(QMouseEvent *)
 {
+	_mediaPlayer.data()->setMute(false);
+}
+
+/** Redefined to seek in current playing file. */
+void SeekBar::wheelEvent(QWheelEvent *e)
+{
+	_mediaPlayer.data()->setMute(true);
+	qint64 d = _mediaPlayer.data()->duration();
+	if (d == 0) {
+		return;
+	}
+	float p = _mediaPlayer.data()->position();
+	qint64 currentPosition = d * p;
+	qint64 s = SettingsPrivate::instance()->playbackSeekTime();
+	// Wheel up is positive value, wheel down is negative value
+	if (e->angleDelta().y() > 0) {
+		currentPosition += s;
+	} else {
+		currentPosition -= s;
+	}
+	p = (float)currentPosition / d;
+	_mediaPlayer.data()->seek(p);
 	_mediaPlayer.data()->setMute(false);
 }
 

@@ -125,46 +125,61 @@ void PlaylistModel::createLine(int row, const TrackDAO &track)
 
 void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 {
-	QString title(fileHelper.title());
+	QList<QStandardItem *> items;
 
-	// Then, construct a new row with correct informations
-	QStandardItem *trackItem = new QStandardItem(fileHelper.trackNumber());
-	QStandardItem *titleItem = new QStandardItem(title);
-	QStandardItem *albumItem = new QStandardItem(fileHelper.album());
-	QStandardItem *lengthItem = new QStandardItem(fileHelper.length());
-	QStandardItem *artistItem = new QStandardItem(fileHelper.artist());
-	QStandardItem *ratingItem = new QStandardItem;
-	int rating = fileHelper.rating();
-	if (rating > 0) {
-		StarRating r(rating);
-		ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
-		ratingItem->setData(false, RemoteMedia);
-	}
-	QStandardItem *yearItem = new QStandardItem(fileHelper.year());
+	QStandardItem *trackItem, *titleItem, *albumItem, *lengthItem, *artistItem, *ratingItem, *yearItem;
+	QStandardItem *trackDAO = new QStandardItem;
 	QStandardItem *iconItem = new QStandardItem(tr("Local"));
 	iconItem->setIcon(QIcon(":/icons/computer"));
 	iconItem->setToolTip(tr("Local file"));
+	if (FileHelper::suffixes(FileHelper::Standard).contains(fileHelper.fileInfo().suffix())) {
+		QString title(fileHelper.title());
 
-	QString absPath = fileHelper.fileInfo().absoluteFilePath();
-	QStandardItem *trackDAO = new QStandardItem;
-	TrackDAO track;
-	track.setTrackNumber(fileHelper.trackNumber());
-	track.setTitle(fileHelper.title());
-	track.setAlbum(fileHelper.album());
-	track.setLength(fileHelper.length());
-	track.setArtist(fileHelper.artist());
-	track.setRating(fileHelper.rating());
-	track.setYear(fileHelper.year());
-	track.setId(QString::number(qHash(absPath)));
-	track.setUri(QUrl::fromLocalFile(absPath).toString());
-	trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
+		// Then, construct a new row with correct informations
+		trackItem = new QStandardItem(fileHelper.trackNumber());
+		titleItem = new QStandardItem(title);
+		albumItem = new QStandardItem(fileHelper.album());
+		lengthItem = new QStandardItem(fileHelper.length());
+		artistItem = new QStandardItem(fileHelper.artist());
+		ratingItem = new QStandardItem;
+		int rating = fileHelper.rating();
+		if (rating > 0) {
+			StarRating r(rating);
+			ratingItem->setData(QVariant::fromValue(r), Qt::DisplayRole);
+			ratingItem->setData(false, RemoteMedia);
+		}
+		yearItem = new QStandardItem(fileHelper.year());
 
-	trackItem->setTextAlignment(Qt::AlignCenter);
-	lengthItem->setTextAlignment(Qt::AlignCenter);
-	ratingItem->setTextAlignment(Qt::AlignCenter);
-	yearItem->setTextAlignment(Qt::AlignCenter);
 
-	QList<QStandardItem *> items;
+		QString absPath = fileHelper.fileInfo().absoluteFilePath();
+		TrackDAO track;
+		track.setTrackNumber(fileHelper.trackNumber());
+		track.setTitle(fileHelper.title());
+		track.setAlbum(fileHelper.album());
+		track.setLength(fileHelper.length());
+		track.setArtist(fileHelper.artist());
+		track.setRating(fileHelper.rating());
+		track.setYear(fileHelper.year());
+		track.setId(QString::number(qHash(absPath)));
+		track.setUri(QUrl::fromLocalFile(absPath).toString());
+		trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
+
+		trackItem->setTextAlignment(Qt::AlignCenter);
+		lengthItem->setTextAlignment(Qt::AlignCenter);
+		ratingItem->setTextAlignment(Qt::AlignCenter);
+		yearItem->setTextAlignment(Qt::AlignCenter);
+
+
+	} else {
+		trackItem = new QStandardItem;
+		titleItem = new QStandardItem(fileHelper.fileInfo().baseName());
+		albumItem = new QStandardItem;
+		///XXX: how to use VLC to detect right length?
+		lengthItem = new QStandardItem(QString::number(-1));
+		artistItem = new QStandardItem;
+		ratingItem = new QStandardItem;
+		yearItem = new QStandardItem;
+	}
 	items << trackItem << titleItem << albumItem << lengthItem << artistItem << ratingItem \
 		  << yearItem << iconItem << trackDAO;
 	this->insertRow(rowIndex, items);
