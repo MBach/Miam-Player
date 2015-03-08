@@ -59,6 +59,8 @@ void QuickStart::searchMultimediaFiles()
 		quickStartTableWidget->removeRow(0);
 	}
 	if (QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first().isEmpty()) {
+		defaultFolderGroupBox->hide();
+		orLabel->hide();
 		quickStartGroupBox->hide();
 		otherwiseLabel->hide();
 	} else {
@@ -135,54 +137,66 @@ void QuickStart::insertFirstRow()
 	if (_totalMusicFiles == 0) {
 		quickStartGroupBox->hide();
 		otherwiseLabel->hide();
-	} else {
-		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
-		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
-
-		QTableWidgetItem *masterCheckBox = new QTableWidgetItem;
-		masterCheckBox->setFlags(masterCheckBox->flags() | Qt::ItemIsTristate | Qt::ItemIsUserCheckable);
-
-		bool atLeastOneFolderIsEmpty = false;
-		for (int r = 0; r < quickStartTableWidget->rowCount(); r++) {
-			atLeastOneFolderIsEmpty = atLeastOneFolderIsEmpty || quickStartTableWidget->item(r, 0)->checkState() == Qt::Unchecked;
-		}
-		if (atLeastOneFolderIsEmpty) {
-			masterCheckBox->setCheckState(Qt::PartiallyChecked);
-		} else {
-			masterCheckBox->setCheckState(Qt::Checked);
-		}
-
-		QTableWidgetItem *totalFiles = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
-		totalFiles->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
-		quickStartTableWidget->insertRow(0);
-		quickStartTableWidget->setItem(0, 0, masterCheckBox);
-		quickStartTableWidget->setItem(0, 1, new QTableWidgetItem(tr("%n folders", "", quickStartTableWidget->rowCount() - 1)));
-		quickStartTableWidget->setItem(0, 2, totalFiles);
-
-
-		QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-		if (!musicLocations.isEmpty()) {
-			QTableWidgetItem *checkBox = new QTableWidgetItem;
-			checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
-			checkBox->setCheckState(Qt::Checked);
-
-			QTableWidgetItem *totalFiles2 = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
-			totalFiles2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
-			defaultFolderTableWidget->insertRow(0);
-			defaultFolderTableWidget->setItem(0, 0, checkBox);
-			QString musicLocation = musicLocations.first();
-			defaultFolderTableWidget->setItem(0, 1, new QTableWidgetItem(QFileIconProvider().icon(musicLocation), QDir::toNativeSeparators(musicLocation)));
-			defaultFolderTableWidget->setItem(0, 2, totalFiles2);
-		}
-
-		quickStartApplyButton->setEnabled(true);
-
-		_totalMusicFiles = 0;
 	}
+	ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
+	ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
+
+	QTableWidgetItem *masterCheckBox = new QTableWidgetItem;
+	masterCheckBox->setFlags(masterCheckBox->flags() | Qt::ItemIsTristate | Qt::ItemIsUserCheckable);
+
+	bool atLeastOneFolderIsEmpty = false;
+	for (int r = 0; r < quickStartTableWidget->rowCount(); r++) {
+		atLeastOneFolderIsEmpty = atLeastOneFolderIsEmpty || quickStartTableWidget->item(r, 0)->checkState() == Qt::Unchecked;
+	}
+	if (atLeastOneFolderIsEmpty) {
+		masterCheckBox->setCheckState(Qt::PartiallyChecked);
+	} else {
+		masterCheckBox->setCheckState(Qt::Checked);
+	}
+
+	QTableWidgetItem *totalFiles = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
+	totalFiles->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+	quickStartTableWidget->insertRow(0);
+	quickStartTableWidget->setItem(0, 0, masterCheckBox);
+	quickStartTableWidget->setItem(0, 1, new QTableWidgetItem(tr("%n folders", "", quickStartTableWidget->rowCount() - 1)));
+	quickStartTableWidget->setItem(0, 2, totalFiles);
+
+
+	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+	if (!musicLocations.isEmpty()) {
+		QTableWidgetItem *checkBox = new QTableWidgetItem;
+		checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
+
+		if (_totalMusicFiles == 0) {
+			checkBox->setCheckState(Qt::Unchecked);
+			defaultFolderTableWidget->setEnabled(false);
+			QLabel *cannotApplyNoFiles = new QLabel(tr("Note: it's not possible to add your default location because 0 tracks where found"),
+													defaultFolderGroupBox);
+			cannotApplyNoFiles->setWordWrap(true);
+			QVBoxLayout *vbox = qobject_cast<QVBoxLayout*>(defaultFolderGroupBox->layout());
+			vbox->insertWidget(1, cannotApplyNoFiles);
+			defaultFolderApplyButton->setEnabled(false);
+		} else {
+			checkBox->setCheckState(Qt::Checked);
+		}
+
+		QTableWidgetItem *totalFiles2 = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
+		totalFiles2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+
+		defaultFolderTableWidget->insertRow(0);
+		defaultFolderTableWidget->setItem(0, 0, checkBox);
+		QString musicLocation = musicLocations.first();
+		defaultFolderTableWidget->setItem(0, 1, new QTableWidgetItem(QFileIconProvider().icon(musicLocation), QDir::toNativeSeparators(musicLocation)));
+		defaultFolderTableWidget->setItem(0, 2, totalFiles2);
+	}
+
+	quickStartApplyButton->setEnabled(true);
+
+	_totalMusicFiles = 0;
+
 	_qsse->deleteLater();
-	//_worker->deleteLater();
 	sender()->deleteLater();
 }
 
