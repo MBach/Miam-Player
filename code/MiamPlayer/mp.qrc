@@ -116,6 +116,7 @@
         <file alias="ar">translations/m4p_ar.qm</file>
         <file alias="cs">translations/m4p_cs.qm</file>
         <file alias="de">translations/m4p_de.qm</file>
+        <file alias="de">translations/m4p_ru.qm</file>
     </qresource>
     <qresource prefix="/icons/win">
         <file alias="closeTabsHover">config/windows/close_tabs_hover.png</file>
