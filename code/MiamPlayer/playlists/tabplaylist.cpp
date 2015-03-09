@@ -28,7 +28,9 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(_closePlaylistPopup->buttonBox, &QDialogButtonBox::clicked, this, &TabPlaylist::execActionFromClosePopup);
 	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
 
-	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](const SettingsPrivate::FontFamily ff, const QFont &) {
+	/// FIXME: when changing font for saved and untouched playlists, overwritting to normal instead of disabled
+	/// Reducing size is ok, inreasing size is ko
+	/*connect(settings, &SettingsPrivate::fontHasChanged, this, [=](const SettingsPrivate::FontFamily ff, const QFont &) {
 		if (ff == SettingsPrivate::FF_Playlist) {
 			for (int i = 0; i < count() - 1; i++) {
 				if (playlist(i)->mediaPlaylist()->isEmpty()) {
@@ -38,7 +40,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 				}
 			}
 		}
-	});
+	});*/
 
 	// Context menu to add few actions for each playlist
 	_contextMenu = new QMenu(this);
@@ -269,7 +271,7 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
 	currentPlayList()->insertMedias(rowIndex, tracks);
-	this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
+	//this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	if (_mediaPlayer.data()->playlist() == NULL) {
 		_mediaPlayer.data()->setPlaylist(currentPlayList()->mediaPlaylist());
 	}

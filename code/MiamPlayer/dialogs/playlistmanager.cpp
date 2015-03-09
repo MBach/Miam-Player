@@ -27,14 +27,14 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	icon->setAlignment(Qt::AlignCenter);
 	icon->setPixmap(QPixmap(":/icons/emptyPlaylist"));
 
-	QLabel *label = new QLabel(tr("This preview area is empty.\nSelect a playlist to display the first 30 tracks."));
-	label->setAlignment(Qt::AlignCenter);
-	label->setWordWrap(true);
+	_labelEmptyPreview = new QLabel(tr("This preview area is empty.\nSelect a playlist to display the first 30 tracks."));
+	_labelEmptyPreview->setAlignment(Qt::AlignCenter);
+	_labelEmptyPreview->setWordWrap(true);
 
 	QVBoxLayout *vboxLayout = new QVBoxLayout();
 	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 	vboxLayout->addWidget(icon);
-	vboxLayout->addWidget(label);
+	vboxLayout->addWidget(_labelEmptyPreview);
 	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 
 	QWidget *widget = new QWidget();
@@ -99,6 +99,7 @@ void PlaylistManager::init()
 	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
 		QList<PlaylistDAO> playlists = _db->selectPlaylists();
 		foreach (PlaylistDAO playlist, playlists) {
+
 			this->loadPlaylist(playlist.id().toInt());
 		}
 	}
@@ -106,6 +107,12 @@ void PlaylistManager::init()
 		playlists->addPlaylist();
 	}
 	playlists->blockSignals(false);
+}
+
+void PlaylistManager::retranslateUi(PlaylistManager *dialog)
+{
+	_labelEmptyPreview->setText(QApplication::translate("PlaylistManager", "This preview area is empty.\nSelect a playlist to display the first 30 tracks.", 0));
+	Ui::PlaylistManager::retranslateUi(dialog);
 }
 
 void PlaylistManager::saveAndRemovePlaylist(int index)
@@ -140,24 +147,30 @@ QString PlaylistManager::convertNameToValidFileName(QString &name)
 void PlaylistManager::loadPlaylist(int playlistId)
 {
 	Playlist *playlist = NULL;
-	PlaylistDAO remotePlaylist = _db->selectPlaylist(playlistId);
+	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
+
 	int index = playlists->currentIndex();
-	if (playlists->playlist(index)) {
+	if (index >= 0) {
 		playlist = playlists->playlist(index);
 		// Replace the name only if playlist is empty
 		if (playlist->mediaPlaylist()->isEmpty()) {
-			playlists->tabBar()->setTabText(index, remotePlaylist.title());
+			playlists->tabBar()->setTabText(index, playlistDao.title());
+		} else {
+			playlist = playlists->addPlaylist();
+			playlists->tabBar()->setTabText(playlists->count() - 1, playlistDao.title());
 		}
 	} else {
 		playlist = playlists->addPlaylist();
-		playlists->tabBar()->setTabText(playlists->count() - 2, remotePlaylist.title());
+		playlists->tabBar()->setTabText(playlists->count() - 1, playlistDao.title());
 	}
-	playlist->setProperty("dao", QVariant::fromValue(remotePlaylist));
+	playlist->setProperty("dao", QVariant::fromValue(playlistDao));
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
 	playlist->insertMedias(-1, tracks);
+
+	playlists->setTabIcon(index, playlists->defaultIcon(QIcon::Disabled));
 }
 
 int PlaylistManager::savePlaylist(int index)

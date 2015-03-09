@@ -432,7 +432,7 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			}
 
 			QSqlQuery updateTrack(*this);
-			updateTrack.prepare("UPDATE tracks SET album = ?, albumId = ?, artist = ?, artistId = ?, artistAlbum = ?, disc = ?, internalCover = ?, title = ?, trackNumber = ?, year = ? WHERE uri = ?");
+			updateTrack.prepare("UPDATE tracks SET album = ?, albumId = ?, artist = ?, artistId = ?, artistAlbum = ?, disc = ?, internalCover = ?, title = ?, trackNumber = ? WHERE uri = ?");
 
 			QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
 			QString artistNorm = this->normalizeField(artistAlbum);
@@ -449,9 +449,14 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			updateTrack.addBindValue(fh.hasCover());
 			updateTrack.addBindValue(fh.title());
 			updateTrack.addBindValue(fh.trackNumber().toInt());
-			updateTrack.addBindValue(fh.year().toInt());
 			updateTrack.addBindValue(QDir::toNativeSeparators(pair.first));
 			updateTrack.exec();
+
+			QSqlQuery updateAlbum(*this);
+			updateAlbum.prepare("UPDATE albums SET year = ? WHERE id = ?");
+			updateAlbum.addBindValue(fh.year().toInt());
+			updateAlbum.addBindValue(albumId);
+			updateAlbum.exec();
 
 			// Check if old album has no more tracks
 			if (oldAlbumId != albumId) {

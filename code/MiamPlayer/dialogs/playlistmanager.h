@@ -21,6 +21,8 @@ class PlaylistManager : public QDialog, public Ui::PlaylistManager
 private:
 	SqlDatabase *_db;
 
+	QLabel *_labelEmptyPreview;
+
 	/** Reference to TabPlaylist used a lot to know what we are manipulating. */
 	TabPlaylist *playlists;
 
@@ -38,9 +40,11 @@ public:
 
 	explicit PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist);
 
-	bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event);
 
 	void init();
+
+	void retranslateUi(PlaylistManager *dialog);
 
 	void saveAndRemovePlaylist(int index);
 
