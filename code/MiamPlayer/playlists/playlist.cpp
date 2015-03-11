@@ -71,6 +71,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	// Ensure current item in the playlist is visible when track has just changed to another one
 	connect(_mediaPlayer.data(), &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
+		qDebug() << "sender: MediaPlayer::currentMediaChanged";
 		if (!uri.isEmpty()) {
 			int row = mediaPlaylist()->currentIndex();
 			this->scrollTo(_playlistModel->index(row, 0));
@@ -302,23 +303,73 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 /** Redefined to display a thin line to help user for dropping tracks. */
 void Playlist::paintEvent(QPaintEvent *event)
 {
-	QTableView::paintEvent(event);
 	QPainter p(viewport());
-	p.setPen(QApplication::palette().mid().color());
-	if (isLeftToRight()) {
-		p.drawLine(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
-	} else {
-		p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
-	}
-	if (_dropDownIndex) {
-		// Where to draw the indicator line
-		int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
-		int height = this->rowHeight(0);
-		/// TODO computes color from user defined settings
+	if (_playlistModel && _playlistModel->rowCount() == 0) {
+		QRect vp = viewport()->rect();
+		if (horizontalScrollBar()->isVisible()) {
+			vp.setHeight(vp.height() - horizontalScrollBar()->rect().height());
+		}
 
-		p.setPen(Qt::black);
-		p.drawLine(viewport()->rect().left(), rowDest * height,
-				   viewport()->rect().right(), rowDest * height);
+		QRect sourcePix(0, 0, 96, 96);
+		sourcePix.translate(vp.width() / 2 - sourcePix.width() / 2,
+							vp.height() / 2 - sourcePix.height() / 2);
+		if (horizontalHeader()->isVisible()) {
+			vp.setHeight(vp.height() - horizontalHeader()->rect().height());
+		}
+		QTextOption to;
+		to.setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+		to.setWrapMode(QTextOption::WordWrap);
+		QRect source(0, 96, vp.width(), 48);
+		// Fade empty icon playlist if there is not enough space to display it
+		if (vp.height() < source.height()) {
+			qreal sy = (qreal) vp.height() / (qreal) source.height();
+			p.save();
+			p.setOpacity(sy);
+			sourcePix.translate(vp.width() / 2 - source.width() / 2,
+							 vp.height() / 2 - source.height() / 2);
+			p.drawPixmap(sourcePix, QPixmap(":/icons/emptyPlaylist"));
+			p.restore();
+		} else {
+			p.drawPixmap(sourcePix, QPixmap(":/icons/emptyPlaylist"));
+		}
+		source.translate(vp.width() / 2 - source.width() / 2,
+						 vp.height() / 2 - source.height() / 2);
+
+		//QRect adjustedRect = QFontMetrics(QApplication::font()).boundingRect(source, Qt::AlignHCenter | Qt::AlignTop | Qt::TextExpandTabs | Qt::TextWordWrap,
+		//															tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
+		p.drawText(source, tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."), to);
+		p.setPen(QApplication::palette().mid().color());
+		if (isLeftToRight()) {
+			p.drawLine(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
+		} else {
+			p.drawLine(viewport()->rect().right() - 1, viewport()->rect().top(),
+					   viewport()->rect().right() - 1, viewport()->rect().bottom() - 1);
+		}
+	} else {
+		QTableView::paintEvent(event);
+		p.save();
+		p.setPen(QApplication::palette().mid().color());
+		if (isLeftToRight()) {
+			p.drawLine(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
+		} else {
+			p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
+		}
+		if (_dropDownIndex) {
+			// Where to draw the indicator line
+			int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
+			int height = this->rowHeight(0);
+			/// TODO computes color from user defined settings
+
+			p.setPen(Qt::black);
+			p.drawLine(viewport()->rect().left(), rowDest * height,
+					   viewport()->rect().right(), rowDest * height);
+		}
+		p.restore();
+	}
+	if (!horizontalScrollBar()->isVisible()) {
+		p.setPen(QApplication::palette().mid().color());
+		p.drawLine(0, viewport()->rect().bottom(),
+				   viewport()->rect().right(), viewport()->rect().bottom());
 	}
 }
 

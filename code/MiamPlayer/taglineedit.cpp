@@ -16,7 +16,8 @@ TagLineEdit::TagLineEdit(QWidget *parent) :
 
 	connect(_timerTag, &QTimer::timeout, this, &TagLineEdit::createTag);
 	connect(this, &TagLineEdit::textChanged, this, [=](const QString &text) {
-		if (text.isEmpty()) {
+		qDebug() << Q_FUNC_INFO << text;
+		if (text.isEmpty() && !_autoTransform) {
 			foreach (TagButton *tag, _tags) {
 				tag->deleteLater();
 			}
@@ -225,7 +226,7 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 	// Compute cursor position
 	QRect contentsRect = this->style()->subElementRect(QStyle::SE_LineEditContents, &frame);
 	QRect rText = contentsRect.adjusted(2, 0, 0, 0);
-	if (placeholderText().isEmpty() || (!placeholderText().isEmpty() && hasFocus())) {
+	if (!_tags.isEmpty() || (placeholderText().isEmpty() || (!placeholderText().isEmpty() && hasFocus()))) {
 		p.setPen(palette.text().color());
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
 
@@ -258,7 +259,7 @@ QStringList TagLineEdit::toStringList() const
 /** Create a tag from text in the LineEdit when a timer has ended. */
 void TagLineEdit::createTag()
 {
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << this->text() << this->text().trimmed();
 	if (!this->text().trimmed().isEmpty()) {
 		this->addTag(this->text());
 		this->clear();
@@ -275,6 +276,7 @@ void TagLineEdit::insertSpaces()
 	int numberOfSpace = 2;
 
 	/// FIXME
+	qDebug() << Q_FUNC_INFO << this->text();
 	this->setText(this->text().insert(cursorPosition(), "  "));
 
 	cursorForward(false, 2);

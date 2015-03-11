@@ -43,8 +43,9 @@ void MediaPlayer::createLocalConnections()
 
 	connect(_player, &VlcMediaPlayer::playing, this, [=]() {
 		// Prevent multiple signals bug?
-		qDebug() << Q_FUNC_INFO << "playing";
+		// qDebug() << "VlcMediaPlayer::playing ?";
 		if (_state != QMediaPlayer::PlayingState) {
+			qDebug() << "VlcMediaPlayer::playing !";
 			emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
 			_state = QMediaPlayer::PlayingState;
 			emit stateChanged(QMediaPlayer::PlayingState);

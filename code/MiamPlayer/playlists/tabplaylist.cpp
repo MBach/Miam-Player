@@ -1,7 +1,7 @@
 #include "tabplaylist.h"
 
 #include <QDirIterator>
-#include <QStackedLayout>
+//#include <QStackedLayout>
 
 #include "mainwindow.h"
 #include "settings.h"
@@ -17,7 +17,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	this->setMovable(true);
 	messageBox = new TracksNotFoundMessageBox(this);
 
-	SettingsPrivate *settings = SettingsPrivate::instance();
+	//SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
@@ -78,7 +78,7 @@ TabPlaylist::~TabPlaylist()
 /** Get the current playlist. */
 Playlist* TabPlaylist::currentPlayList() const
 {
-	return this->widget(currentIndex())->findChild<Playlist*>();
+	return qobject_cast<Playlist*>(this->currentWidget());
 }
 
 QIcon TabPlaylist::defaultIcon(QIcon::Mode mode)
@@ -109,7 +109,6 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			} else {
 				currentPlayList()->forceDrop(de);
 			}
-			this->displayEmptyArea(currentPlayList()->mediaPlaylist()->isEmpty());
 			return true;
 		}
 	}
@@ -119,7 +118,7 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 /** Get the playlist at index. */
 Playlist* TabPlaylist::playlist(int index)
 {
-	return this->widget(index)->findChild<Playlist*>();
+	return qobject_cast<Playlist*>(this->widget(index));
 }
 
 /** Setter. */
@@ -159,21 +158,6 @@ void TabPlaylist::contextMenuEvent(QContextMenuEvent * event)
 	}
 }
 
-void TabPlaylist::displayEmptyArea(bool isEmpty)
-{
-	if (isEmpty) {
-		QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
-		stackedLayout->setCurrentIndex(0);
-		stackedLayout->setStackingMode(QStackedLayout::StackAll);
-		setTabIcon(currentIndex(), this->defaultIcon(QIcon::Disabled));
-	} else {
-		QStackedLayout *stackedLayout = qobject_cast<QStackedLayout*>(widget(currentIndex())->layout());
-		stackedLayout->setCurrentIndex(1);
-		stackedLayout->setStackingMode(QStackedLayout::StackOne);
-		setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
-	}
-}
-
 /** Add a new playlist tab. */
 Playlist* TabPlaylist::addPlaylist()
 {
@@ -186,51 +170,24 @@ Playlist* TabPlaylist::addPlaylist()
 	}
 
 	// Then append a new empty playlist to the others
-	QWidget *stackedWidget = new QWidget(this);
-	stackedWidget->setAcceptDrops(true);
-	stackedWidget->installEventFilter(this);
 	Playlist *p = new Playlist(_mediaPlayer, this);
 	p->installEventFilter(this);
 	if (!ba.isEmpty()) {
 		p->horizontalHeader()->restoreState(ba);
 	}
 
-	QStackedLayout *stackedLayout = new QStackedLayout(stackedWidget);
-	stackedLayout->setStackingMode(QStackedLayout::StackAll);
-
-	QLabel *icon = new QLabel;
-	icon->setAlignment(Qt::AlignCenter);
-	icon->setPixmap(QPixmap(":/icons/emptyPlaylist"));
-
-	QLabel *label = new QLabel(tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
-	label->setAlignment(Qt::AlignCenter);
-	label->setWordWrap(true);
-
-	PlaylistFrame *w = new PlaylistFrame(this);
-	QVBoxLayout *vboxLayout = new QVBoxLayout(w);
-	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
-	vboxLayout->addWidget(icon);
-	vboxLayout->addWidget(label);
-	vboxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
-	w->setMinimumHeight(vboxLayout->sizeHint().height() + p->horizontalHeader()->height());
-
-	stackedLayout->addWidget(w);
-	stackedLayout->addWidget(p);
-
 	// Always create an icon in Disabled mode. It will be enabled when one will provide some tracks
-	int i = addTab(stackedWidget, newPlaylistName);
+	int i = addTab(p, newPlaylistName);
 	this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 
-	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaInserted, this, [=]() {
-		this->displayEmptyArea(p->mediaPlaylist()->isEmpty());
-	});
-	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
+	/*connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
 		bool empty = p->mediaPlaylist()->isEmpty();
-		this->displayEmptyArea(empty);
+		qDebug() << "QMediaPlaylist::mediaRemoved" << empty;
 		if (empty || p->mediaPlaylist()->currentIndex() == start) {
-		   _mediaPlayer.data()->stop();
+			qDebug() << Q_FUNC_INFO << empty << p->mediaPlaylist()->currentIndex();
+		   //_mediaPlayer.data()->stop();
 		}
-	});
+	});*/
 
 	// Forward from inner class to MainWindow the signals
 	connect(p, &Playlist::aboutToSendToTagEditor, this, &TabPlaylist::aboutToSendToTagEditor);
@@ -304,13 +261,17 @@ void TabPlaylist::removeSelectedTracks()
 {
 	if (currentPlayList()) {
 		currentPlayList()->removeSelectedTracks();
-		displayEmptyArea(currentPlayList()->mediaPlaylist()->isEmpty());
 	}
 }
 
 /** Remove a playlist when clicking on a close button in the corner. */
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
+	if (_mediaPlayer.data()->playlist() == currentPlayList()->mediaPlaylist()) {
+		qDebug() << Q_FUNC_INFO << index;
+		_mediaPlayer.data()->stop();
+	}
+
 	// Don't delete the first tab, if it's the last one remaining
 	if (index > 0 || (index == 0 && count() > 1)) {
 		Playlist *p = playlist(index);
@@ -326,7 +287,6 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
 		uint hash = qHash(currentPlayList());
 		tabBar()->setTabData(0, hash);
-		this->displayEmptyArea();
 	}
 }
 

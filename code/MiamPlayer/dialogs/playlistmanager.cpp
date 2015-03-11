@@ -153,7 +153,7 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	if (index >= 0) {
 		playlist = playlists->playlist(index);
 		// Replace the name only if playlist is empty
-		if (playlist->mediaPlaylist()->isEmpty()) {
+		if (playlist && playlist->mediaPlaylist()->isEmpty()) {
 			playlists->tabBar()->setTabText(index, playlistDao.title());
 		} else {
 			playlist = playlists->addPlaylist();

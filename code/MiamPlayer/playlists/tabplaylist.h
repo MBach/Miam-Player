@@ -70,9 +70,6 @@ protected:
 
 	virtual void contextMenuEvent(QContextMenuEvent * event);
 
-private:
-	void displayEmptyArea(bool isEmpty = true);
-
 public slots:
 	/** Add a new playlist tab. */
 	Playlist* addPlaylist();

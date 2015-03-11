@@ -326,7 +326,6 @@ void TagEditor::commitChanges()
 
 		qDebug() << tracksToRescan.size() << "tracksToRescan.size()";
 
-
 		QSetIterator<int> it(tracksToRescan);
 		QList<QPair<QString, QString>> tracks;
 		while (it.hasNext()) {
@@ -352,6 +351,7 @@ void TagEditor::commitChanges()
 
 		// Check if files are already in the library, and then update them
 		if (!tracks.isEmpty()) {
+			qDebug() << "about to update tracks (db)";
 			_db->updateTracks(tracks);
 		} else {
 			qDebug() << "renamed tracks were not in library";
@@ -361,9 +361,6 @@ void TagEditor::commitChanges()
 	// Reset buttons state
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
-
-	/// TODO: If at least one of these fields were modified: Artist, ArtistAlbum, Album, Year, Track then library should be reloaded
-	//SqlDatabase::instance()->load();
 }
 
 /** Displays a cover only if all the selected items have exactly the same cover. */
