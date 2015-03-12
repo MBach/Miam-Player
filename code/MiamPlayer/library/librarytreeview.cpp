@@ -79,6 +79,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	_jumpToWidget = new JumpToWidget(this);
 	_jumpToWidget->setBackgroundRole(QPalette::Button);
+	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::jumpTo);
+	//connect(this, &LibraryTreeView::currentLetterChanged, _jumpToWidget, &JumpToWidget::setCurrentLetter);
 }
 
 /** For every item in the library, gets the top level letter attached to it. */
@@ -88,7 +90,7 @@ QChar LibraryTreeView::currentLetter() const
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(iTop));
 
 	// Special item "Various" (on top) has no Normalized String
-	if (item && item->type() == Miam::IT_Separator && iTop.data(Miam::DF_NormalizedString).toString().isEmpty()) {
+	if (item && item->type() == Miam::IT_Separator && iTop.data(Miam::DF_NormalizedString).toString() == "0") {
 		return QChar();
 	} else if (!iTop.isValid()) {
 		return QChar();
@@ -267,6 +269,8 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, header()->height());
 	}
 	TreeView::paintEvent(event);
+	///XXX: analyze performance?
+	_jumpToWidget->setCurrentLetter(currentLetter());
 }
 
 /** Recursive count for leaves only. */

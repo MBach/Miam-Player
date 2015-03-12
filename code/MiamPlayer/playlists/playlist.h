@@ -103,6 +103,8 @@ protected:
 
 	virtual void showEvent(QShowEvent *event);
 
+	virtual void wheelEvent(QWheelEvent *event);
+
 private:
 	void autoResize();
 

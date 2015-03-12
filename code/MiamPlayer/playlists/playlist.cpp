@@ -390,6 +390,12 @@ void Playlist::showEvent(QShowEvent *event)
 	QTableView::showEvent(event);
 }
 
+void Playlist::wheelEvent(QWheelEvent *event)
+{
+	QTableView::wheelEvent(event);
+	this->viewport()->update();
+}
+
 void Playlist::autoResize()
 {
 	if (SettingsPrivate::instance()->isPlaylistResizeColumns()) {

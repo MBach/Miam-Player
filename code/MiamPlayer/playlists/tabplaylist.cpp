@@ -1,7 +1,6 @@
 #include "tabplaylist.h"
 
 #include <QDirIterator>
-//#include <QStackedLayout>
 
 #include "mainwindow.h"
 #include "settings.h"
@@ -180,14 +179,11 @@ Playlist* TabPlaylist::addPlaylist()
 	int i = addTab(p, newPlaylistName);
 	this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 
-	/*connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
-		bool empty = p->mediaPlaylist()->isEmpty();
-		qDebug() << "QMediaPlaylist::mediaRemoved" << empty;
-		if (empty || p->mediaPlaylist()->currentIndex() == start) {
-			qDebug() << Q_FUNC_INFO << empty << p->mediaPlaylist()->currentIndex();
-		   //_mediaPlayer.data()->stop();
+	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
+		if (_mediaPlayer.data()->playlist() == p->mediaPlaylist() && p->mediaPlaylist()->currentIndex() == start) {
+			_mediaPlayer.data()->stop();
 		}
-	});*/
+	});
 
 	// Forward from inner class to MainWindow the signals
 	connect(p, &Playlist::aboutToSendToTagEditor, this, &TabPlaylist::aboutToSendToTagEditor);
@@ -230,6 +226,7 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	currentPlayList()->insertMedias(rowIndex, tracks);
 	//this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	if (_mediaPlayer.data()->playlist() == NULL) {
+		qDebug() << "there is no playlist in the player, switching";
 		_mediaPlayer.data()->setPlaylist(currentPlayList()->mediaPlaylist());
 	}
 	if (currentPlayList()->mediaPlaylist()->currentIndex() == -1) {
@@ -267,14 +264,12 @@ void TabPlaylist::removeSelectedTracks()
 /** Remove a playlist when clicking on a close button in the corner. */
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
-	if (_mediaPlayer.data()->playlist() == currentPlayList()->mediaPlaylist()) {
-		qDebug() << Q_FUNC_INFO << index;
-		_mediaPlayer.data()->stop();
-	}
-
 	// Don't delete the first tab, if it's the last one remaining
 	if (index > 0 || (index == 0 && count() > 1)) {
 		Playlist *p = playlist(index);
+		if (_mediaPlayer.data()->playlist() == p->mediaPlaylist()) {
+			_mediaPlayer.data()->stop();
+		}
 		if (!p->mediaPlaylist()->isEmpty()) {
 			p->mediaPlaylist()->removeMedia(0, p->mediaPlaylist()->mediaCount() - 1);
 		}
@@ -282,10 +277,14 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		delete p;
 	} else {
 		// Clear the content of first tab
-		currentPlayList()->mediaPlaylist()->clear();
-		currentPlayList()->model()->removeRows(0, currentPlayList()->model()->rowCount());
+		Playlist *p = playlist(index);
+		if (_mediaPlayer.data()->playlist() == p->mediaPlaylist()) {
+			_mediaPlayer.data()->stop();
+		}
+		p->mediaPlaylist()->clear();
+		p->model()->removeRows(0, p->model()->rowCount());
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
-		uint hash = qHash(currentPlayList());
+		uint hash = qHash(p);
 		tabBar()->setTabData(0, hash);
 	}
 }

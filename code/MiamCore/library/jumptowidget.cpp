@@ -31,12 +31,18 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 			emit displayItemDelegate(false);
 			/// FIXME
 			/// _libraryTreeView->jumpTo(s);
+			emit aboutToScrollTo(s);
 			emit displayItemDelegate(true);
 		}
 		return false;
 	} else {
 		return QWidget::eventFilter(obj, event);
 	}
+}
+
+void JumpToWidget::setCurrentLetter(const QChar &currentLetter)
+{
+	_currentLetter = currentLetter;
 }
 
 QSize JumpToWidget::sizeHint() const
@@ -66,10 +72,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	QStyleOptionViewItem o;
 	o.initFrom(_view);
 	o.palette = QApplication::palette();
-	//p.drawPrimitive(QStyle::PE_FrameButtonTool, o);
 	p.fillRect(rect(), o.palette.window());
-
-	//QColor hiColor = Settings::getInstance()->customColors(QPalette::Highlight);
 
 	// Reduce the font if this widget is too small
 	QFont f = p.font();
@@ -78,9 +81,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		p.save();
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 19, height() / 26);
-		/// FIXME
-		if (qc != qc) {
-		//if (_view->currentLetter() == qc) {
+		if (_currentLetter == qc) {
 			// Display a bright selection rectangle corresponding to the top letter in the library
 			p.fillRect(r, o.palette.highlight());
 		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
@@ -88,14 +89,10 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 			p.fillRect(r, o.palette.highlight().color().lighter(160));
 		}
 
-		if (r.height() < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
+		if (r.height() + 4 < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
 			p.setFont(f);
 		}
-		/// FIXME
-		//if (_view->currentLetter() == qc) {
-		if (qc != qc) {
-			p.setPen(o.palette.highlightedText().color());
-		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
+		if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
 			QColor lighterBG = o.palette.highlight().color().lighter(160);
 			QColor highlightedText = o.palette.highlightedText().color();
 			if (qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {

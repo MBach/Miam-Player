@@ -20,10 +20,14 @@ private:
 
 	QPoint _pos;
 
+	QChar _currentLetter;
+
 public:
 	explicit JumpToWidget(QAbstractItemView *treeView);
 
-	bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event);
+
+	void setCurrentLetter(const QChar &currentLetter);
 
 	virtual QSize sizeHint() const;
 
@@ -35,6 +39,7 @@ protected:
 	void paintEvent(QPaintEvent *event);
 
 signals:
+	void aboutToScrollTo(const QString &letter);
 	void displayItemDelegate(bool);
 };
 

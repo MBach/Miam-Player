@@ -408,11 +408,6 @@ void MainWindow::setupActions()
 			this->moveSearchDialog();
 		}
 	});
-
-	// Switch from one playlist to another
-	connect(tabPlaylists, &QTabWidget::currentChanged, this, [=](int i) {
-		_mediaPlayer.data()->setPlaylist(tabPlaylists->playlist(i)->mediaPlaylist());
-	});
 }
 
 /** Update fonts for menu and context menus. */

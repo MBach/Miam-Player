@@ -16,13 +16,13 @@ ScrollBar::ScrollBar(Qt::Orientation orientation, QWidget *parent) :
 void ScrollBar::setFrameBorder(bool top, bool left, bool bottom, bool right)
 {
 	_top = top;
-	if (isLeftToRight()) {
+	//if (isLeftToRight()) {
 		_left = left;
 		_right = right;
-	} else {
-		_left = right;
-		_right = left;
-	}
+	//} else {
+	//	_left = right;
+	//	_right = left;
+	//}
 	_bottom = bottom;
 }
 
@@ -163,7 +163,11 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		right.append(t.map(rightArrow[2]));
 		p.translate(subLineRect.height() / 3.0, subLineRect.width() / 4.0);
 		p.drawPolygon(left);
-		p.translate(addLineRect.x(), 0);
+		if (isLeftToRight()) {
+			p.translate(addLineRect.x(), 0);
+		} else {
+			p.translate(subLineRect.x(), 0);
+		}
 		p.drawPolygon(right);
 	}
 	p.restore();
@@ -173,6 +177,18 @@ void ScrollBar::paintEvent(QPaintEvent *)
 	p.setPen(QApplication::palette().mid().color());
 	if (_top) p.drawLine(rect().topLeft(), rect().topRight());
 	if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());
-	if (_left) p.drawLine(rect().topLeft(), rect().bottomLeft());
-	if (_right) p.drawLine(rect().topRight(), rect().bottomRight());
+	if (_left) {
+		if (isLeftToRight()) {
+			p.drawLine(rect().topLeft(), rect().bottomLeft());
+		} else {
+			p.drawLine(rect().topRight(), rect().bottomRight());
+		}
+	}
+	if (_right) {
+		if (isLeftToRight()) {
+			p.drawLine(rect().topRight(), rect().bottomRight());
+		} else {
+			p.drawLine(rect().topLeft(), rect().bottomLeft());
+		}
+	}
 }
