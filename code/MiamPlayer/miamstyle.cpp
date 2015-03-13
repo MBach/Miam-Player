@@ -6,7 +6,7 @@
 #include <QStyleOptionSlider>
 #include <QPainter>
 
-#include "settings.h"
+#include "settingsprivate.h"
 
 #include <QtDebug>
 
@@ -160,26 +160,29 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 			minRect.setWidth(minRect.width() + t->tabBar()->tabRect(i).width());
 		}
 		minRect.setHeight(t->tabBar()->tabRect(0).height());
+
 		switch (element) {
 		case SE_TabWidgetRightCorner:
-			//qDebug() << r << "SE_TabWidgetRightCorner" << t->width();
+			//qDebug() << r << "SE_TabWidgetRightCorner" << t->width() << t->tabBar()->height();
 			r.setX(minRect.x() + minRect.width() + 1);
-			r.setWidth(t->cornerWidget()->width());
-			r.setHeight(r.width());
+			r.setY(0);
 			break;
 		case SE_TabWidgetTabBar:
 			//qDebug() << r << minRect << "SE_TabWidgetTabBar";
-			r = minRect.adjusted(0, 0, 6, 0);
+			/// tab overlap
+			//minRect.adjust(0, 0, 0, 0);
+			//SettingsPrivate::instance()->tabsOverlappingLength()
+			r = minRect.adjusted(0, 0, SettingsPrivate::instance()->tabsOverlappingLength(), 0);
 			break;
-//		case SE_TabWidgetTabContents:
-//			qDebug() << r << "SE_TabWidgetTabContents" << widget;
-//			break;
-//		case SE_TabWidgetTabPane:
-//			qDebug() << r << "SE_TabWidgetTabPane" << widget;
-//			break;
-//		case SE_TabWidgetLayoutItem:
-//			qDebug() << r << "SE_TabWidgetLayoutItem" << widget;
-//			break;
+		case SE_TabWidgetTabContents:
+			//qDebug() << r << "SE_TabWidgetTabContents" << widget;
+			break;
+		case SE_TabWidgetTabPane:
+			//qDebug() << r << "SE_TabWidgetTabPane" << widget;
+			break;
+		case SE_TabWidgetLayoutItem:
+			//qDebug() << r << "SE_TabWidgetLayoutItem" << widget;
+			break;
 		}
 	}
 

@@ -43,7 +43,7 @@ void MediaPlayer::createLocalConnections()
 
 	connect(_player, &VlcMediaPlayer::playing, this, [=]() {
 		// Prevent multiple signals bug?
-		qDebug() << "VlcMediaPlayer::playing ?";
+		//qDebug() << "VlcMediaPlayer::playing ?";
 		//if (_state != QMediaPlayer::PlayingState) {
 		//	qDebug() << "VlcMediaPlayer::playing !";
 			//emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
@@ -53,22 +53,22 @@ void MediaPlayer::createLocalConnections()
 	});
 
 	connect(_player, &VlcMediaPlayer::stopped, this, [=]() {
-		qDebug() << "VlcMediaPlayer::stopped";
+		//qDebug() << "VlcMediaPlayer::stopped";
 		emit mediaStatusChanged(QMediaPlayer::NoMedia);
 		_state = QMediaPlayer::StoppedState;
 		emit stateChanged(QMediaPlayer::StoppedState);
 	});
 
 	connect(_player, &VlcMediaPlayer::paused, this, [=]() {
-		qDebug() << "VlcMediaPlayer::paused";
+		//qDebug() << "VlcMediaPlayer::paused";
 		_state = QMediaPlayer::PausedState;
 		emit stateChanged(QMediaPlayer::PausedState);
 	});
 
 	connect(_player, &VlcMediaPlayer::buffering, this, [=](float buffer) {
-		qDebug() << "VlcMediaPlayer::buffering" << buffer;
+		//qDebug() << "VlcMediaPlayer::buffering" << buffer;
 		if (buffer == 100) {
-			qDebug() << "VlcMediaPlayer::Buffered" << buffer;
+			//qDebug() << "VlcMediaPlayer::Buffered" << buffer;
 			_state = QMediaPlayer::PlayingState;
 			emit mediaStatusChanged(QMediaPlayer::BufferedMedia);
 			emit stateChanged(QMediaPlayer::PlayingState);
@@ -78,7 +78,7 @@ void MediaPlayer::createLocalConnections()
 	});
 
 	connect(_player, &VlcMediaPlayer::end, this, [=]() {
-		qDebug() << "VlcMediaPlayer::end";
+		//qDebug() << "VlcMediaPlayer::end";
 		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
 	});
 

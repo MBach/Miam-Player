@@ -183,10 +183,9 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 
 void TabBar::paintEvent(QPaintEvent *)
 {
-	QStylePainter p(this);
 	SettingsPrivate *settings = SettingsPrivate::instance();
+	QStylePainter p(this);
 	int dist = 0;
-
 	if (settings->isRectTabs()) {
 		paintRectTabs(p);
 	} else {
@@ -197,7 +196,7 @@ void TabBar::paintEvent(QPaintEvent *)
 	// Global bottom frame border
 	int h = tabRect(0).height() - 1;
 	p.setPen(QApplication::palette().mid().color());
-	if (count() > 2) {
+	if (count() > 1) {
 		if (currentIndex() == 0) {
 			p.drawLine(tabRect(0).right() + 1 + dist, h, rect().right(), h);
 		} else {
@@ -224,20 +223,12 @@ QSize TabBar::tabSizeHint(int index) const
 	if (s.height() > height()) {
 		s.setHeight(height());
 	}
+	qDebug() << sizeHint();
 	return s;
 }
 
 void TabBar::paintRectTabs(QStylePainter &p)
 {
-	// A "[+]" button on the right
-	static const QPointF plus[13] = {
-		QPointF(1, 2), QPointF(2, 2), QPointF(2, 1),
-		QPointF(3, 1), QPointF(3, 2), QPointF(4, 2),
-		QPointF(4, 3), QPointF(3, 3), QPointF(3, 4),
-		QPointF(2, 4), QPointF(2, 3), QPointF(1, 3),
-		QPointF(1, 2),
-	};
-
 	static const qreal penScaleFactor = 0.2;
 
 	for (int i = 0; i < count(); i++) {
@@ -246,9 +237,9 @@ void TabBar::paintRectTabs(QStylePainter &p)
 
 		// Background color
 		p.save();
-		if (i != currentIndex() && i != count() - 1) {
+		if (i != currentIndex()) {
 			o.rect.adjust(0, 2, 0, 0);
-		} else if (i == count() - 1) {
+		} else if (i == count()) {
 			o.rect.adjust(2, 2, -4, -4);
 		}
 
@@ -270,33 +261,6 @@ void TabBar::paintRectTabs(QStylePainter &p)
 			}
 		}
 
-		// Draw last tab frame (which is the [+] button)
-		/*if (i == count() - 1) {
-			QPen plusPen;
-			if (o.state.testFlag(QStyle::State_MouseOver)) {
-				plusPen = QPen(o.palette.highlight(), penScaleFactor);
-				p.setPen(o.palette.highlight().color());
-				p.setBrush(o.palette.highlight().color().lighter());
-			} else {
-				plusPen = QPen(o.palette.mid(), penScaleFactor);
-				p.setPen(o.palette.mid().color());
-				p.setBrush(o.palette.window());
-			}
-			p.drawRect(o.rect);
-
-			p.translate(o.rect.topLeft());
-			plusPen.setJoinStyle(Qt::MiterJoin);
-			p.setPen(plusPen);
-
-			// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
-			// Should I disable this gradient when height is small?
-			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
-			QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
-			linearGradient.setColorAt(0, Qt::white);
-			linearGradient.setColorAt(1, QColor(253, 230, 116));
-			p.setBrush(linearGradient);
-			p.drawPolygon(plus, 13);
-		} else {*/
 		if (o.state.testFlag(QStyle::State_MouseOver)) {
 			p.setPen(o.palette.highlight().color());
 		} else {
@@ -333,9 +297,6 @@ void TabBar::paintRectTabs(QStylePainter &p)
 
 void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 {
-	// A "\_\" button on the right
-	static const qreal penScaleFactor = 0.15;
-
 	// Draw all tabs before the selected tab
 	QList<int> tabs;
 	for (int i = 0; i < count(); i++)
@@ -348,77 +309,15 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		initStyleOption(&o, i);
 
 		// Background color
-		p.save();
 		if (i != currentIndex()) {
 			o.rect.adjust(0, 2, 0, 0);
 		} else if (i == count()) {
 			o.rect.adjust(2, 2, -4, -4);
 		}
 
-		// Highlight the tab under the cursor
-		/// TODO
+		/// Adjust parameters to tighten tabs
+		//o.rect.adjust(-dist / 2, 0, dist / 2, 0);
 
-		// Draw last tab frame (which is the \+\ button)
-		/*if (i == count() - 1) {
-			QPen plusPen;
-			if (o.state.testFlag(QStyle::State_MouseOver)) {
-				plusPen = QPen(o.palette.highlight(), penScaleFactor);
-				p.setPen(o.palette.highlight().color());
-				p.setBrush(o.palette.highlight().color().lighter());
-			} else {
-				plusPen = QPen(o.palette.mid(), penScaleFactor);
-				p.setPen(o.palette.mid().color());
-				p.setBrush(o.palette.base());
-			}
-			QPainterPath pp;
-			if (isLeftToRight()) {
-				plusPen.setWidthF(0.75);
-				// horizontal offset, diagonal offset
-				const float oH = 3.0;
-				const float oDiag = dist / 10;
-				pp.moveTo(o.rect.x() + oDiag,
-						  o.rect.y() + oH);
-				pp.cubicTo(o.rect.x() + 4.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.15 + oDiag),
-						   o.rect.x() + 10.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.1 + oDiag),
-						   o.rect.x() + 7.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.3 + oDiag));
-				pp.lineTo(o.rect.x() + o.rect.width(),
-						  o.rect.y() + o.rect.height() - oH - oDiag);
-				pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15,
-						   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.1,
-						   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.3);
-				pp.lineTo(o.rect.x() + oDiag,
-						  o.rect.y() + oH);
-			} else {
-				pp.moveTo(o.rect.topRight());
-				pp.cubicTo(o.rect.topRight(),
-						   o.rect.bottomRight(),
-						   o.rect.bottomLeft());
-				pp.cubicTo(o.rect.bottomLeft(),
-						   o.rect.topLeft(),
-						   o.rect.topRight());
-			}
-			plusPen.setJoinStyle(Qt::MiterJoin);
-			p.setPen(plusPen);
-			p.setRenderHint(QPainter::Antialiasing, true);
-			p.drawPath(pp);
-			p.setRenderHint(QPainter::Antialiasing, false);
-
-			p.translate(o.rect.topLeft());
-
-			// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
-			// Should I disable this gradient when height is small?
-			p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
-			QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
-			linearGradient.setColorAt(0, Qt::white);
-			linearGradient.setColorAt(1, QColor(253, 230, 116));
-			p.setBrush(linearGradient);
-			//p.drawPolygon(plus, 13);
-		} else {*/
-		if (o.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.highlight().color());
-		} else {
-			p.setPen(o.palette.mid().color());
-		}
 		// Rounded frame tab
 		QPainterPath pp;
 		pp.moveTo(o.rect.x() + dist * 0, o.rect.y() + o.rect.height());
@@ -429,6 +328,13 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		pp.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y(),
 				   o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height(),
 				   o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
+
+		p.save();
+		if (o.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlight().color());
+		} else {
+			p.setPen(o.palette.mid().color());
+		}
 		if (i == currentIndex()) {
 			/// XXX
 			if (SettingsPrivate::instance()->isCustomColors()) {
@@ -436,11 +342,14 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 			} else {
 				p.fillPath(pp, o.palette.base());
 			}
+		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
+			p.fillPath(pp, o.palette.highlight().color().lighter(170));
+		} else {
+			p.fillPath(pp, o.palette.window());
 		}
 		p.setRenderHint(QPainter::Antialiasing, true);
 		p.drawPath(pp);
 		p.setRenderHint(QPainter::Antialiasing, false);
-		//}
 		p.restore();
 
 		// Icon

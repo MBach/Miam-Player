@@ -7,7 +7,7 @@
 
 #include <QtDebug>
 
-CornerWidget::CornerWidget(QWidget *parent) :
+CornerWidget::CornerWidget(TabPlaylist *parent) :
 	QPushButton("", parent)
 {
 	this->setAcceptDrops(true);
@@ -16,21 +16,24 @@ CornerWidget::CornerWidget(QWidget *parent) :
 void CornerWidget::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
+
 	QPen plusPen;
 	QPalette palette = QApplication::palette();
+
 	QStyleOptionTab o;
-	/// FIXME
-	o.rect.setCoords(0, 0, 30, 20);
+	o.rect = this->rect();
+	o.rect.setWidth(o.rect.height() * 1.5);
+
+	double h = this->height() / (double)8;
+	o.rect.adjust(h, h, -h, -h);
 	int dist = 0 + SettingsPrivate::instance()->tabsOverlappingLength();
 	static const qreal penScaleFactor = 0.2;
 
 	if (this->rect().contains(mapFromGlobal(QCursor::pos()))) {
-		// qDebug() << "in";
 		plusPen = QPen(palette.highlight(), penScaleFactor);
 		p.setPen(palette.highlight().color());
 		p.setBrush(palette.highlight().color().lighter());
 	} else {
-		// qDebug() << "out";
 		plusPen = QPen(palette.mid(), penScaleFactor);
 		p.setPen(palette.mid().color());
 		p.setBrush(palette.base());
