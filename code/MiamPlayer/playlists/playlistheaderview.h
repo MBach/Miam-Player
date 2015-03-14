@@ -27,13 +27,13 @@ public:
 
 protected:
 	/** Redefined for dynamic translation. */
-	virtual void changeEvent(QEvent *event);
+	virtual void changeEvent(QEvent *event) override;
 
 	/** Redefined. */
-	virtual void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
 	/** Redefined. */
-	virtual void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 };
 
 #endif // PLAYLISTHEADERVIEW_H

@@ -277,8 +277,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>484</width>
-               <height>588</height>
+               <width>451</width>
+               <height>542</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1281,6 +1281,16 @@
               <property name="text">
                <string>Yes</string>
               </property>
+              <property name="icon">
+               <iconset resource="mp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
               <property name="checked">
                <bool>false</bool>
               </property>
@@ -1550,7 +1560,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
-           <widget class="QLabel" name="labelIgnorePronouns">
+           <widget class="QLabel" name="labelIgnoreArticles">
             <property name="font">
              <font>
               <italic>true</italic>
@@ -1574,15 +1584,12 @@
               <property name="text">
                <string>Yes</string>
               </property>
-              <property name="iconSize">
-               <size>
-                <width>16</width>
-                <height>16</height>
-               </size>
-              </property>
               <property name="checked">
                <bool>false</bool>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup</string>
+              </attribute>
              </widget>
             </item>
             <item>
@@ -1593,12 +1600,15 @@
               <property name="checked">
                <bool>true</bool>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup</string>
+              </attribute>
              </widget>
             </item>
            </layout>
           </item>
           <item>
-           <widget class="TagLineEdit" name="articlesLineEdit">
+           <widget class="CustomizeThemeTagLineEdit" name="articlesLineEdit">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -1615,9 +1625,97 @@
              <number>128</number>
             </property>
             <property name="placeholderText">
-             <string>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</string>
+             <string>&quot;The&quot; is very common English article, like in « The Beatles »</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>9</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelReorderArtistsArticle">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Do you want to display the article after the name?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelReorderArtistsArticleExample">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Example:  « The Beatles » will become « Beatles, the »</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QRadioButton" name="radioButtonEnableReorderArtistsArticle">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonDisableReorderArtistsArticle">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>No</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -1752,21 +1850,8 @@
           </item>
           <item>
            <widget class="QRadioButton" name="radioButtonTabsRounded">
-            <property name="toolTip">
-             <string>Currently under development</string>
-            </property>
             <property name="text">
              <string>Rounded tabs</string>
-            </property>
-            <property name="icon">
-             <iconset resource="mp.qrc">
-              <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>16</width>
-              <height>16</height>
-             </size>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -1836,9 +1921,9 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>TagLineEdit</class>
+   <class>CustomizeThemeTagLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>taglineedit.h</header>
+   <header>dialogs/customizethemetaglineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>
@@ -2149,5 +2234,73 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>radioButtonEnableArticles</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelReorderArtistsArticle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>353</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>472</x>
+     <y>285</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonEnableArticles</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelReorderArtistsArticleExample</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>353</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>472</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonEnableArticles</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>radioButtonEnableReorderArtistsArticle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>353</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>353</x>
+     <y>328</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>radioButtonEnableArticles</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>radioButtonDisableReorderArtistsArticle</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>353</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>591</x>
+     <y>328</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
+ </buttongroups>
 </ui>

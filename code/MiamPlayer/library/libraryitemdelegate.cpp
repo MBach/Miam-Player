@@ -190,14 +190,21 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const
 {
-	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+	auto settings = SettingsPrivate::instance();
+	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QRect rectText;
 	QString s;
 	if (QGuiApplication::isLeftToRight()) {
 		QPoint topLeft(option.rect.x() + 5, option.rect.y());
 		rectText = QRect(topLeft, option.rect.bottomRight());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		QString custom = item->data(Miam::DF_Custom).toString();
+		if (!custom.isEmpty() && settings->isReorderArtistsArticle()) {
+			/// XXX: paint articles like ", the" in gray? Could be nice
+			s = fmf.elidedText(custom, Qt::ElideRight, rectText.width());
+		} else {
+			s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		}
 	} else {
 		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
 		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());

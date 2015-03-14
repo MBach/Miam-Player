@@ -14,7 +14,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(parent), _targetedColor(NULL)
 {
 	setupUi(this);
-	articlesLineEdit->setAutoTransform(true);
+
 	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
 
@@ -88,7 +88,10 @@ void CustomizeThemeDialog::setupActions()
 	connect(radioButtonShowExtendedSearch, &QRadioButton::toggled, settings, &SettingsPrivate::setExtendedSearchVisible);
 
 	// Volume bar
-	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &SettingsPrivate::setVolumeBarTextAlwaysVisible);
+	connect(radioButtonShowVolume, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setVolumeBarTextAlwaysVisible(b);
+		mainWindow->volumeSlider->update();
+	});
 	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setVolumeBarHideAfter);
 
 	// Fonts
@@ -105,11 +108,12 @@ void CustomizeThemeDialog::setupActions()
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(SettingsPrivate::FF_Library, font);
 		this->fade();
+		mainWindow->library->viewport()->update();
 	});
 	connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(SettingsPrivate::FF_Menu, font);
-		mainWindow->updateFonts(font);
 		this->fade();
+		mainWindow->updateFonts(font);
 	});
 
 	// And fonts size
@@ -156,19 +160,6 @@ void CustomizeThemeDialog::setupActions()
 		}
 	});
 
-	// Filter library
-	connect(radioButtonEnableArticles, &QRadioButton::toggled, this, [=](bool b) {
-		settings->setIsLibraryFilteredByArticles(b);
-		// Don't reorder the library if one hasn't typed an article yet
-		if (b || (!b && !settings->libraryFilteredByArticles().isEmpty())) {
-			mainWindow->library->changeHierarchyOrder();
-		}
-	});
-	connect(articlesLineEdit, &TagLineEdit::taglistHasChanged, this, [=](const QStringList &articles) {
-		settings->setLibraryFilteredByArticles(articles);
-		mainWindow->library->changeHierarchyOrder();
-	});
-
 	// Change cover size
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
 		settings->setCoverSize(cs);
@@ -181,23 +172,44 @@ void CustomizeThemeDialog::setupActions()
 		settings->setBigCovers(b);
 		labelBigCoverOpacity->setEnabled(b);
 		spinBoxBigCoverOpacity->setEnabled(b);
+		this->fade();
+		mainWindow->library->viewport()->repaint();
 	});
 	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int v) {
 		settings->setBigCoverOpacity(v);
 		this->fade();
-		mainWindow->repaint();
+		mainWindow->library->viewport()->repaint();
+	});
+
+	// Filter library
+	connect(radioButtonEnableArticles, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setIsLibraryFilteredByArticles(b);
+		// Don't reorder the library if one hasn't typed an article yet
+		if (!settings->libraryFilteredByArticles().isEmpty()) {
+			mainWindow->library->changeHierarchyOrder();
+		}
+	});
+	connect(articlesLineEdit, &CustomizeThemeTagLineEdit::taglistHasChanged, this, [=](const QStringList &articles) {
+		settings->setLibraryFilteredByArticles(articles);
+		mainWindow->library->changeHierarchyOrder();
+	});
+	connect(radioButtonEnableReorderArtistsArticle, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setReorderArtistsArticle(b);
+		this->fade();
+		mainWindow->library->viewport()->repaint();
 	});
 
 	// Tabs
 	connect(radioButtonTabsRect, &QRadioButton::toggled, [=](bool b) {
 		settings->setTabsRect(b);
 		this->fade();
-		mainWindow->repaint();
+		mainWindow->tabPlaylists->tabBar()->update();
+		mainWindow->tabPlaylists->cornerWidget(Qt::TopRightCorner)->update();
 	});
 	connect(overlapTabsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int v) {
 		settings->setTabsOverlappingLength(v);
 		this->fade();
-		mainWindow->repaint();
+		mainWindow->tabPlaylists->tabBar()->update();
 	});
 }
 
@@ -361,12 +373,17 @@ void CustomizeThemeDialog::loadTheme()
 	settings->isCustomColors() ? enableCustomColorsRadioButton->setChecked(true) : disableCustomColorsRadioButton->setChecked(true);
 	this->toggleCustomColors(settings->isCustomColors());
 
+	// Covers
+	radioButtonEnableBigCover->setChecked(settings->isBigCoverEnabled());
+	spinBoxBigCoverOpacity->setValue(settings->bigCoverOpacity());
+
 	// Tabs
 	radioButtonTabsRect->setChecked(settings->isRectTabs());
 	overlapTabsSpinBox->setValue(settings->tabsOverlappingLength());
 
 	// Articles
 	radioButtonEnableArticles->setChecked(settings->isLibraryFilteredByArticles());
+	radioButtonEnableReorderArtistsArticle->setChecked(settings->isReorderArtistsArticle());
 }
 
 /** Redefined to initialize favorites from settings. */

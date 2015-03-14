@@ -21,7 +21,7 @@ TagButton::TagButton(const QString &tag, TagLineEdit *parent) :
 	_closeButton->setIcon(QIcon(":/icons/closeTabs"));
 
 	QHBoxLayout *hBoxLayout = new QHBoxLayout(this);
-	hBoxLayout->setContentsMargins(3, 3, 0, 0);
+	hBoxLayout->setContentsMargins(3, 3, 1, 1);
 	hBoxLayout->setSpacing(3);
 	this->setLayout(hBoxLayout);
 	_label->setIndent(2);

@@ -279,6 +279,17 @@ bool SettingsPrivate::isRectTabs() const
 	}
 }
 
+/** Returns true if the article should be displayed after artist's name. */
+bool SettingsPrivate::isReorderArtistsArticle() const
+{
+	QVariant b = value("reorderArtistsArticle");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return false;
+	}
+}
+
 bool SettingsPrivate::isSearchAndExcludeLibrary() const
 {
 	QVariant b = value("searchAndExcludeLibrary");
@@ -648,6 +659,11 @@ void SettingsPrivate::setPlaybackCloseAction(PlaylistDefaultAction action)
 void SettingsPrivate::setPlaybackKeepPlaylists(bool b)
 {
 	setValue("playbackKeepPlaylists", b);
+}
+
+void SettingsPrivate::setReorderArtistsArticle(bool b)
+{
+	setValue("reorderArtistsArticle", b);
 }
 
 void SettingsPrivate::setSearchAndExcludeLibrary(bool b)

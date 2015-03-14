@@ -11,10 +11,16 @@
 class MIAMCORE_LIBRARY ArtistDAO : public GenericDAO
 {
 	Q_OBJECT
+private:
+	QString _customData;
+
 public:
 	explicit ArtistDAO(QObject *parent = 0);
 
 	ArtistDAO(const ArtistDAO &remoteArtist);
+
+	void setCustomData(const QString &data);
+	QString customData() const;
 
 	virtual ~ArtistDAO();
 };

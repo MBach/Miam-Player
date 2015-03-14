@@ -10,10 +10,11 @@
 TabBar::TabBar(TabPlaylist *parent) :
 	QTabBar(parent), lineEdit(new QLineEdit(this)), tabPlaylist(parent)
 {
-	this->setTabsClosable(true);
 	this->setAcceptDrops(true);
 	this->setDocumentMode(true);
+	this->setTabsClosable(true);
 	this->setUsesScrollButtons(true);
+	this->installEventFilter(this);
 
 	lineEdit->setVisible(false);
 	lineEdit->setAlignment(Qt::AlignCenter);
@@ -130,6 +131,8 @@ bool TabBar::eventFilter(QObject *obj, QEvent *event)
 			lineEdit->releaseMouse();
 			lineEdit->close();
 		}
+	} else if (obj == this && event->type() == QEvent::HoverLeave) {
+		this->update();
 	}
 	return false;
 }
@@ -223,7 +226,6 @@ QSize TabBar::tabSizeHint(int index) const
 	if (s.height() > height()) {
 		s.setHeight(height());
 	}
-	qDebug() << sizeHint();
 	return s;
 }
 
@@ -289,7 +291,6 @@ void TabBar::paintRectTabs(QStylePainter &p)
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
-		//o.rect.adjust(r.x() + r.width() + 10, 0, 0, 0);
 		QRect rText(r.x() + r.width() + 10, r.y(), o.rect.width() - r.width() - 10, r.height());
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, o.text);
 	}
@@ -297,6 +298,8 @@ void TabBar::paintRectTabs(QStylePainter &p)
 
 void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 {
+	/// TODO: minor highlight bug when mouse goes on another tab without click
+
 	// Draw all tabs before the selected tab
 	QList<int> tabs;
 	for (int i = 0; i < count(); i++)
@@ -312,22 +315,32 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		if (i != currentIndex()) {
 			o.rect.adjust(0, 2, 0, 0);
 		} else if (i == count()) {
-			o.rect.adjust(2, 2, -4, -4);
+			o.rect.adjust(2, 2, -4, 0);
 		}
 
 		/// Adjust parameters to tighten tabs
 		//o.rect.adjust(-dist / 2, 0, dist / 2, 0);
 
 		// Rounded frame tab
-		QPainterPath pp;
-		pp.moveTo(o.rect.x() + dist * 0, o.rect.y() + o.rect.height());
-		pp.cubicTo(o.rect.x() + dist * 1, o.rect.y() + o.rect.height(),
-				   o.rect.x() + dist * 1, o.rect.y(),
-				   o.rect.x() + dist * 2, o.rect.y());
-		pp.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
-		pp.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y(),
-				   o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height(),
-				   o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
+		QPainterPath ppLeft, ppRight;
+		ppLeft.moveTo(o.rect.x() + dist * 0, o.rect.y() + o.rect.height());
+		ppLeft.cubicTo(o.rect.x() + dist * 1, o.rect.y() + o.rect.height(),
+					o.rect.x() + dist * 1, o.rect.y() + 1,
+					o.rect.x() + dist * 2, o.rect.y() + 1);
+		QPainterPath ppLeftCurve(ppLeft);
+		// Add another point to be able to fill the path afterwards
+		ppLeft.lineTo(o.rect.x() + dist * 2, o.rect.y() + o.rect.height());
+
+		QLine topHozLine(o.rect.x() + dist * 2, o.rect.y(),
+						 o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
+
+		ppRight.moveTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y() + 1);
+		ppRight.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + 1,
+					o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height(),
+					o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height());
+		QPainterPath ppRightCurve(ppRight);
+		// Like first curve
+		ppRight.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y() + o.rect.height());
 
 		p.save();
 		if (o.state.testFlag(QStyle::State_MouseOver)) {
@@ -335,22 +348,37 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
+		QRect midRect(topHozLine.p1(), QPoint(topHozLine.p2().x(), topHozLine.p2().y() + o.rect.height()));
 		if (i == currentIndex()) {
 			/// XXX
 			if (SettingsPrivate::instance()->isCustomColors()) {
-				p.fillPath(pp, o.palette.base().color().lighter(110));
+				p.fillPath(ppLeft, o.palette.base().color().lighter(110));
+				p.fillRect(midRect, o.palette.base().color().lighter(110));
+				p.fillPath(ppRight, o.palette.base().color().lighter(110));
 			} else {
-				p.fillPath(pp, o.palette.base());
+				p.fillPath(ppLeft, o.palette.base());
+				p.fillRect(midRect, o.palette.base());
+				p.fillPath(ppRight, o.palette.base());
 			}
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
-			p.fillPath(pp, o.palette.highlight().color().lighter(170));
+			p.fillPath(ppLeft, o.palette.highlight().color().lighter(170));
+			p.fillRect(midRect, o.palette.highlight().color().lighter(170));
+			p.fillPath(ppRight, o.palette.highlight().color().lighter(170));
 		} else {
-			p.fillPath(pp, o.palette.window());
+			p.fillPath(ppLeft, o.palette.window());
+			p.fillRect(midRect, o.palette.window());
+			p.fillPath(ppRight, o.palette.window());
 		}
 		p.setRenderHint(QPainter::Antialiasing, true);
-		p.drawPath(pp);
+		p.drawPath(ppLeftCurve);
+		p.drawPath(ppRightCurve);
 		p.setRenderHint(QPainter::Antialiasing, false);
+		p.drawLine(topHozLine);
+
 		p.restore();
+
+		/// DEBUG
+		//p.drawRect(o.rect);
 
 		// Icon
 		QRect r = tabRect(i);

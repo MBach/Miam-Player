@@ -521,8 +521,13 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 		}
 	};
 
-	switch (SettingsPrivate::instance()->insertPolicy()) {
+	auto s = SettingsPrivate::instance();
+	switch (s->insertPolicy()) {
 	case SettingsPrivate::IP_Artists: {
+		QStringList filters;
+		if (s->isLibraryFilteredByArticles() && !s->libraryFilteredByArticles().isEmpty()) {
+			filters = s->libraryFilteredByArticles();
+		}
 
 		// Level 1: Artists
 		QSqlQuery qArtists("SELECT id, name, normalizedName FROM artists", *this);
@@ -534,7 +539,18 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 				QString artist = record.value(1).toString();
 				artistDAO->setId(record.value(0).toString());
 				artistDAO->setTitle(artist);
-				artistDAO->setTitleNormalized(record.value(2).toString());
+				if (filters.isEmpty()) {
+					artistDAO->setTitleNormalized(record.value(2).toString());
+				} else {
+					for (QString filter : filters) {
+						if (artist.startsWith(filter + " ", Qt::CaseInsensitive)) {
+							artist = artist.mid(filter.length() + 1);
+							artistDAO->setCustomData(artist + ", " + filter);
+							break;
+						}
+					}
+					artistDAO->setTitleNormalized(this->normalizeField(artist));
+				}
 				emit nodeExtracted(artistDAO);
 				//_cache.insert(artistId, artistDAO);
 
@@ -805,7 +821,6 @@ void SqlDatabase::saveCoverRef(const QString &coverPath, const QString &track)
 				albumDAO->setTitleNormalized(selectAlbum.record().value(++i).toString());
 				albumDAO->setYear(selectAlbum.record().value(++i).toString());
 				albumDAO->setCover(selectAlbum.record().value(++i).toString());
-				// albumDAO->setArtist(selectAlbum.record().value(++i));
 				emit aboutToUpdateNode(albumDAO);
 			}
 		}

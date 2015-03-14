@@ -10,6 +10,9 @@ ArtistItem::ArtistItem(const ArtistDAO *dao)
 	} else {
 		setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 	}
+	if (!dao->customData().isEmpty()) {
+		setData(dao->customData(), Miam::DF_Custom);
+	}
 }
 
 int ArtistItem::type() const

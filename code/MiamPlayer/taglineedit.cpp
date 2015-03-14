@@ -9,21 +9,9 @@
 #include <QtDebug>
 
 TagLineEdit::TagLineEdit(QWidget *parent) :
-	LineEdit(parent), _autoTransform(false), _timerTag(new QTimer(this))
+	LineEdit(parent)
 {
-	_timerTag->setInterval(1000);
-	_timerTag->setSingleShot(true);
-
-	connect(_timerTag, &QTimer::timeout, this, &TagLineEdit::createTag);
-	connect(this, &TagLineEdit::textChanged, this, [=](const QString &text) {
-		qDebug() << Q_FUNC_INFO << text;
-		if (text.isEmpty() && !_autoTransform) {
-			foreach (TagButton *tag, _tags) {
-				tag->deleteLater();
-			}
-			_tags.clear();
-		}
-	});
+	connect(this, &TagLineEdit::textChanged, this, &TagLineEdit::clearTextAndTags);
 
 	this->installEventFilter(this);
 }
@@ -50,26 +38,16 @@ void TagLineEdit::addTag(const QString &tag, int column)
 
 	// Move all tag buttons, next to the one that is about to be closed, to the left
 	connect(t->closeButton(), &QToolButton::clicked, this, [=]() {
-
-		qDebug() << "about to remove spaces" << t->position() << t->spaceCount();
-		this->setText(text().remove(t->position(), t->spaceCount()));
-		foreach (TagButton *otherTag, _tags) {
-			if (otherTag != t && otherTag->position() > t->position()) {
-				int dx = fontMetrics().width(" ") * t->spaceCount();
-				otherTag->move(otherTag->x() - dx, 0);
-			}
-		}
-		_tags.removeOne(t);
-		t->deleteLater();
-		emit taglistHasChanged(this->toStringList());
+		this->closeTagButton(t);
 	});
+
 	_tags.append(t);
 	qDebug() << "added tag" << tag;
 	this->setFocus();
 
 	// Unfortunately, we have to wait that a QShowEvent is emitted to have correct size of the Widget
 	connect(t, &TagButton::shown, this, &TagLineEdit::insertSpaces);
-	t->move(cursorRect().right(), 0);
+	t->move(cursorRect().right() + 1, 0);
 	t->show();
 }
 
@@ -113,33 +91,15 @@ void TagLineEdit::backspace()
 		}
 		_tags.removeOne(tag);
 		delete tag;
-		emit taglistHasChanged(this->toStringList());
+		/// FIXME
+		//emit taglistHasChanged(this->toStringList());
 	} else {
 		LineEdit::backspace();
 	}
 }
 
-bool TagLineEdit::isAutoTransform() const
-{
-	return _autoTransform;
-}
-
-void TagLineEdit::setAutoTransform(bool enabled)
-{
-	_autoTransform = enabled;
-}
-
 bool TagLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
-	if (_autoTransform) {
-		if (obj == this && event->type() == QEvent::KeyRelease) {
-			_timerTag->start();
-		} else if (obj == this && event->type() == QEvent::KeyPress) {
-			if (_timerTag->isActive()) {
-				_timerTag->start();
-			}
-		}
-	}
 	if (obj == this && event->type() == QEvent::KeyPress) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 		if (keyEvent->key() == Qt::Key_Backspace) {
@@ -256,14 +216,29 @@ QStringList TagLineEdit::toStringList() const
 	return tags;
 }
 
-/** Create a tag from text in the LineEdit when a timer has ended. */
-void TagLineEdit::createTag()
+void TagLineEdit::closeTagButton(TagButton *t)
 {
-	qDebug() << Q_FUNC_INFO << this->text() << this->text().trimmed();
-	if (!this->text().trimmed().isEmpty()) {
-		this->addTag(this->text());
-		this->clear();
-		emit taglistHasChanged(this->toStringList());
+	qDebug() << "about to remove spaces" << t->position() << t->spaceCount();
+	this->setText(text().remove(t->position(), t->spaceCount()));
+	foreach (TagButton *otherTag, _tags) {
+		if (otherTag != t && otherTag->position() > t->position()) {
+			int dx = fontMetrics().width(" ") * t->spaceCount();
+			otherTag->move(otherTag->x() - dx, 0);
+		}
+	}
+	_tags.removeOne(t);
+	t->deleteLater();
+}
+
+void TagLineEdit::clearTextAndTags(const QString &txt)
+{
+	qDebug() << Q_FUNC_INFO << txt;
+	if (txt.isEmpty()) {
+		foreach (TagButton *tag, _tags) {
+			qDebug() << "deleting tag" << tag->text();
+			tag->deleteLater();
+		}
+		_tags.clear();
 	}
 }
 
@@ -278,6 +253,7 @@ void TagLineEdit::insertSpaces()
 	/// FIXME
 	qDebug() << Q_FUNC_INFO << this->text();
 	this->setText(this->text().insert(cursorPosition(), "  "));
+	qDebug() << Q_FUNC_INFO << this->text();
 
 	cursorForward(false, 2);
 	while (t->frameGeometry().contains(cursorRect().center())) {
@@ -290,7 +266,9 @@ void TagLineEdit::insertSpaces()
 	t->disconnect();
 
 	foreach (TagButton *tag, _tags) {
+		qDebug() << "trying to move tag";
 		if (t != tag && tag->frameGeometry().x() > cx) {
+			qDebug() << "moving tag" << tag->text();
 			tag->move(tag->x() + fontMetrics().width(" ") * numberOfSpace, 0);
 		}
 	}

@@ -19,17 +19,17 @@ private:
 	QMap<int, QString> _indexes;
 
 public:
-	enum Columns { COL_Filename		= 0,
-				   COL_Path			= 1,
-				   COL_Title		= 2,
-				   COL_Artist		= 3,
-				   COL_ArtistAlbum	= 4,
-				   COL_Album		= 5,
-				   COL_Track		= 6,
-				   COL_Disc			= 7,
-				   COL_Year			= 8,
-				   COL_Genre		= 9,
-				   COL_Comment		= 10 };
+	enum Columns : int { COL_Filename		= 0,
+						 COL_Path			= 1,
+						 COL_Title			= 2,
+						 COL_Artist			= 3,
+						 COL_ArtistAlbum	= 4,
+						 COL_Album			= 5,
+						 COL_Track			= 6,
+						 COL_Disc			= 7,
+						 COL_Year			= 8,
+						 COL_Genre			= 9,
+						 COL_Comment		= 10 };
 
 	TagEditorTableWidget(QWidget *parent = 0);
 
@@ -38,8 +38,6 @@ public:
 
 	enum DataUserRole { MODIFIED	= Qt::UserRole + 1,
 						KEY			= Qt::UserRole + 2 };
-
-	//inline QPersistentModelIndex index(const QString &absFilePath) const { return _indexes.value(absFilePath); }
 
 	void resetTable();
 

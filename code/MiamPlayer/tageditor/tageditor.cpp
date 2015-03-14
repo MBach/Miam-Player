@@ -35,22 +35,22 @@ TagEditor::TagEditor(QWidget *parent) :
 	tagEditorWidget->init();
 	tagConverter = new TagConverter(convertPushButton, tagEditorWidget);
 
-	combos.insert(TagEditorTableWidget::COL_Title, titleComboBox);
-	combos.insert(TagEditorTableWidget::COL_Artist, artistComboBox);
-	combos.insert(TagEditorTableWidget::COL_ArtistAlbum, artistAlbumComboBox);
-	combos.insert(TagEditorTableWidget::COL_Album, albumComboBox);
-	combos.insert(TagEditorTableWidget::COL_Track, trackComboBox);
-	combos.insert(TagEditorTableWidget::COL_Disc, discComboBox);
-	combos.insert(TagEditorTableWidget::COL_Year, yearComboBox);
-	combos.insert(TagEditorTableWidget::COL_Genre, genreComboBox);
-	combos.insert(TagEditorTableWidget::COL_Comment, commentComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Title, titleComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Artist, artistComboBox);
+	_combos.insert(TagEditorTableWidget::COL_ArtistAlbum, artistAlbumComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Album, albumComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Track, trackComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Disc, discComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Year, yearComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Genre, genreComboBox);
+	_combos.insert(TagEditorTableWidget::COL_Comment, commentComboBox);
 	coverPathComboBox->setEditable(false);
 
-	foreach (QComboBox *combo, combos.values()) {
+	foreach (QComboBox *combo, _combos.values()) {
 		combo->addItem(tr("(Keep)"));
 		combo->addItem(tr("(Delete)"));
 		combo->setCurrentIndex(-1);
-		combo->setProperty("column", combos.key(combo));
+		combo->setProperty("column", _combos.key(combo));
 	}
 
 	// Quit this widget when a request was send from this button
@@ -218,7 +218,7 @@ void TagEditor::clear()
 	albumCover->resetCover();
 
 	// Delete text contents, not the combobox itself
-	foreach (QComboBox *combo, combos.values()) {
+	foreach (QComboBox *combo, _combos.values()) {
 		combo->clear();
 	}
 	tagEditorWidget->clear();
@@ -430,12 +430,42 @@ void TagEditor::displayCover()
 /** Displays tags in separate QComboBoxes. */
 void TagEditor::displayTags()
 {
+	if (tagEditorWidget->selectedItems().isEmpty()) {
+		for (QComboBox *combo : _combos.values()) {
+			combo->clear();
+		}
+		return;
+	}
+
 	// Information in the table is split into columns, using column index
 	QMap<int, QStringList> datas;
+	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
+		switch (col) {
+		case TagEditorTableWidget::COL_Album:
+		case TagEditorTableWidget::COL_Artist:
+		case TagEditorTableWidget::COL_ArtistAlbum:
+			for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
+				QStringList stringList = datas.value(col);
+				stringList << tagEditorWidget->item(row, col)->text();
+				datas.insert(col, stringList);
+			}
+			break;
+		default:
+			break;
+		}
+	}
 	foreach (QTableWidgetItem *item, tagEditorWidget->selectedItems()) {
-		QStringList stringList = datas.value(item->column());
-		stringList << item->text();
-		datas.insert(item->column(), stringList);
+		switch (item->column()) {
+		case TagEditorTableWidget::COL_Album:
+		case TagEditorTableWidget::COL_Artist:
+		case TagEditorTableWidget::COL_ArtistAlbum:
+			break;
+		default:
+			QStringList stringList = datas.value(item->column());
+			stringList << item->text();
+			datas.insert(item->column(), stringList);
+			break;
+		}
 	}
 
 	// To avoid redondancy, overwrite data for the same key
@@ -446,7 +476,7 @@ void TagEditor::displayTags()
 		stringList.removeDuplicates();
 
 		// Beware: there are no comboBox for every column in the edit area below the table
-		QComboBox *combo = combos.value(it.key());
+		QComboBox *combo = _combos.value(it.key());
 		if (!combo) {
 			continue;
 		}
@@ -481,15 +511,16 @@ void TagEditor::displayTags()
 		// 2 or more: select (Keep)
 		if (stringList.isEmpty()) {
 			combo->setCurrentIndex(-1);
-		} else if (stringList.count() == 1) {
-			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
-				int result = combo->findText(stringList.first());
-				combo->setCurrentIndex(result);
-			} else {
-				combo->setCurrentIndex(2);
-			}
+		} else if (stringList.count() == 1) { // Multiple tracks selected but same value
+			//if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
+			//	int result = combo->findText(stringList.first());
+			//	combo->setCurrentIndex(result);
+			//} else {
+			combo->setCurrentIndex(2);
+			//}
 		} else {
-			combo->setCurrentIndex(0);
+			// Multiple tracks selected but for same attribute
+			combo->setCurrentIndex(-1);
 		}
 
 		connect(combo, &QComboBox::editTextChanged, this, &TagEditor::updateCells);

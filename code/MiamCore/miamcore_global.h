@@ -42,7 +42,8 @@ public:
 		DF_Year				= Qt::UserRole + 6,
 		DF_Highlighted		= Qt::UserRole + 7,
 		DF_IsRemote			= Qt::UserRole + 8,
-		DF_IconPath			= Qt::UserRole + 9
+		DF_IconPath			= Qt::UserRole + 9,
+		DF_Custom			= Qt::UserRole + 10
 	};
 };
 

@@ -15,70 +15,87 @@ CornerWidget::CornerWidget(TabPlaylist *parent) :
 
 void CornerWidget::paintEvent(QPaintEvent *)
 {
-	QStylePainter p(this);
-
-	QPen plusPen;
 	QPalette palette = QApplication::palette();
-
+	QStylePainter p(this);
 	QStyleOptionTab o;
-	o.rect = this->rect();
-	o.rect.setWidth(o.rect.height() * 1.5);
-
-	double h = this->height() / (double)8;
-	o.rect.adjust(h, h, -h, -h);
-	int dist = 0 + SettingsPrivate::instance()->tabsOverlappingLength();
+	o.initFrom(this);
+	o.rect = rect();
+	QPen plusPen;
 	static const qreal penScaleFactor = 0.2;
 
-	if (this->rect().contains(mapFromGlobal(QCursor::pos()))) {
-		plusPen = QPen(palette.highlight(), penScaleFactor);
-		p.setPen(palette.highlight().color());
-		p.setBrush(palette.highlight().color().lighter());
-	} else {
-		plusPen = QPen(palette.mid(), penScaleFactor);
-		p.setPen(palette.mid().color());
-		p.setBrush(palette.base());
-	}
-	QPainterPath pp;
-	if (isLeftToRight()) {
-		plusPen.setWidthF(0.75);
-		// horizontal offset, diagonal offset
-		const float oH = 3.0;
-		const float oDiag = dist / 10;
-		pp.moveTo(o.rect.x() + oDiag,
-				  o.rect.y() + oH);
-		pp.cubicTo(o.rect.x() + 4.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.15 + oDiag),
-				   o.rect.x() + 10.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.1 + oDiag),
-				   o.rect.x() + 7.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.3 + oDiag));
-		pp.lineTo(o.rect.x() + o.rect.width(),
-				  o.rect.y() + o.rect.height() - oH - oDiag);
-		pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15,
-				   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.1,
-				   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.3);
-		pp.lineTo(o.rect.x() + oDiag,
-				  o.rect.y() + oH);
-	} else {
-		pp.moveTo(o.rect.topRight());
-		pp.cubicTo(o.rect.topRight(),
-				   o.rect.bottomRight(),
-				   o.rect.bottomLeft());
-		pp.cubicTo(o.rect.bottomLeft(),
-				   o.rect.topLeft(),
-				   o.rect.topRight());
-	}
-	plusPen.setJoinStyle(Qt::MiterJoin);
-	p.setPen(plusPen);
-	p.setRenderHint(QPainter::Antialiasing, true);
-	p.drawPath(pp);
-	p.setRenderHint(QPainter::Antialiasing, false);
+	if (SettingsPrivate::instance()->isRectTabs()) {
+		o.rect.setWidth(o.rect.height());
+		float offset = o.rect.height() / 5.0;
+		o.rect.adjust(offset, offset, -offset - 1, -offset - 2);
+		qDebug() << o.state;
+		if (o.rect.contains(mapFromGlobal(QCursor::pos())) || o.state.testFlag(QStyle::State_MouseOver)) {
+			plusPen = QPen(palette.highlight(), penScaleFactor);
+			p.setPen(palette.highlight().color());
+			p.setBrush(palette.highlight().color().lighter());
+		} else {
+			plusPen = QPen(palette.mid(), penScaleFactor);
+			p.setPen(palette.mid().color());
+			p.setBrush(palette.base());
+		}
 
-	p.translate(o.rect.topLeft());
+		p.drawRect(o.rect);
+	} else {
+		o.rect.setWidth(o.rect.height() * 1.5);
 
-	// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
-	// Should I disable this gradient when height is small?
-	p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
-	QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
-	linearGradient.setColorAt(0, Qt::white);
-	linearGradient.setColorAt(1, QColor(253, 230, 116));
-	p.setBrush(linearGradient);
-	//p.drawPolygon(plus, 13);
+		double h = this->height() / (double)8;
+		o.rect.adjust(h, h, -h, -h);
+		int dist = 0 + SettingsPrivate::instance()->tabsOverlappingLength();
+
+		if (o.rect.contains(mapFromGlobal(QCursor::pos()))) {
+			plusPen = QPen(palette.highlight(), penScaleFactor);
+			p.setPen(palette.highlight().color());
+			p.setBrush(palette.highlight().color().lighter());
+		} else {
+			plusPen = QPen(palette.mid(), penScaleFactor);
+			p.setPen(palette.mid().color());
+			p.setBrush(palette.base());
+		}
+		QPainterPath pp;
+		if (isLeftToRight()) {
+			plusPen.setWidthF(0.75);
+			// horizontal offset, diagonal offset
+			const float oH = 3.0;
+			const float oDiag = dist / 10;
+			pp.moveTo(o.rect.x() + oDiag,
+					  o.rect.y() + oH);
+			pp.cubicTo(o.rect.x() + 4.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.15 + oDiag),
+					   o.rect.x() + 10.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.1 + oDiag),
+					   o.rect.x() + 7.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.3 + oDiag));
+			pp.lineTo(o.rect.x() + o.rect.width(),
+					  o.rect.y() + o.rect.height() - oH - oDiag);
+			pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15,
+					   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.1,
+					   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.3);
+			pp.lineTo(o.rect.x() + oDiag,
+					  o.rect.y() + oH);
+		} else {
+			pp.moveTo(o.rect.topRight());
+			pp.cubicTo(o.rect.topRight(),
+					   o.rect.bottomRight(),
+					   o.rect.bottomLeft());
+			pp.cubicTo(o.rect.bottomLeft(),
+					   o.rect.topLeft(),
+					   o.rect.topRight());
+		}
+		plusPen.setJoinStyle(Qt::MiterJoin);
+		p.setPen(plusPen);
+		p.setRenderHint(QPainter::Antialiasing, true);
+		p.drawPath(pp);
+		p.setRenderHint(QPainter::Antialiasing, false);
+
+		p.translate(o.rect.topLeft());
+
+		// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
+		// Should I disable this gradient when height is small?
+		p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
+		QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
+		linearGradient.setColorAt(0, Qt::white);
+		linearGradient.setColorAt(1, QColor(253, 230, 116));
+		p.setBrush(linearGradient);
+	}
 }

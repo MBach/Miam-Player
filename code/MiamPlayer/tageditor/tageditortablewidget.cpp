@@ -16,6 +16,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	QTableWidget(parent)
 {
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
+	this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 	/// XXX delegate should be improved because this piece of code has to be duplicated
 	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {

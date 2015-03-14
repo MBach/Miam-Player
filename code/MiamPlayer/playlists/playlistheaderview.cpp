@@ -20,12 +20,13 @@ PlaylistHeaderView::PlaylistHeaderView(Playlist *parent) :
 	QHeaderView(Qt::Horizontal, parent)
 {
 	this->setHighlightSections(false);
-	this->setSectionsMovable(true);
-	this->setSectionResizeMode(QHeaderView::Interactive);
-	this->setStretchLastSection(true);
 	this->setFrameShape(QFrame::NoFrame);
 	this->setMinimumSectionSize(this->height());
 	this->setMouseTracking(true);
+	this->setSectionResizeMode(QHeaderView::Interactive);
+	this->setSectionsMovable(true);
+	this->setStretchLastSection(true);
+	this->installEventFilter(this);
 
 	// Context menu on header of columns
 	_columns = new QMenu(this);

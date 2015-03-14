@@ -91,9 +91,6 @@ void SeekBar::paintEvent(QPaintEvent *)
 
 	p.fillRect(rect(), o.palette.window());
 
-	static const int startAngle = 90 * 16;
-	static const int spanAngle = 180 * 16;
-
 	QRectF rLeft = QRectF(o.rect.x(),
 						o.rect.y() + h,
 						h,
@@ -107,20 +104,52 @@ void SeekBar::paintEvent(QPaintEvent *)
 	// Fill the seek bar with highlighted color
 	QRectF rPlayed(QPoint(rMid.left(), rMid.top()), QPoint(posButton, rMid.bottom()));
 
-	p.setPen(o.palette.mid().color());
+	QPen pen(o.palette.mid().color());
+	p.setPen(pen);
 	p.save();
 	p.setRenderHint(QPainter::Antialiasing, true);
-	p.drawArc(rLeft, startAngle, spanAngle - 16);
-	p.drawArc(rRight, (180 * 16) + startAngle, spanAngle);
+	QPainterPath ppLeft, ppRight;
+	ppLeft.moveTo(rMid.topLeft());
+	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1
+	// |   |        First cubic call is with points p1, p2 and p3
+	// 3   +        Second is with points p3, p4 and p5
+	// |   |        With that, a half circle can be filled with linear gradient
+	// 4---5---->
+	ppLeft.cubicTo(rMid.x(), rMid.y(),
+				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y(),
+				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f);
+	ppLeft.cubicTo(rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f,
+				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height(),
+				   rLeft.x() + rLeft.width(), rLeft.y() + rLeft.height());
+
+	ppRight.moveTo(rRight.topLeft());
+	ppRight.cubicTo(rRight.x(), rRight.y(),
+					rRight.x() + rRight.width() / 2.0f, rRight.y(),
+					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f);
+	ppRight.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
+					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
+					rRight.x(), rRight.y() + rRight.height());
+	p.save();
+	// Increase the width of the pen because of Antialising
+	pen.setWidthF(1.3);
+	p.setPen(pen);
+	p.drawPath(ppLeft);
+	p.drawPath(ppRight);
+	p.restore();
+
 	p.setRenderHint(QPainter::Antialiasing, false);
-	p.drawLine(QPoint(rLeft.center().x(), rLeft.y() - 1), QPoint(rRight.center().x() - 1, rRight.y() - 1));
-	p.drawLine(QPoint(rLeft.center().x(), rLeft.bottom()), QPoint(rRight.center().x() - 1, rRight.bottom()));
+	p.drawLine(QPoint(rMid.x(), rMid.y() - 1), QPoint(rMid.x() + rMid.width(), rMid.y() - 1));
+	p.drawLine(QPoint(rMid.x(), rMid.y() + rMid.height()), QPoint(rMid.x() + rMid.width(), rMid.y() + rMid.height()));
 	p.restore();
 
 	// Exclude ErrorState from painting
 	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState || _mediaPlayer.data()->state() == QMediaPlayer::PausedState) {
-		QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
-		p.fillRect(rPlayed, linearGradient);
+		//QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
+
+		//p.fillPath(ppLeft, linearGradient);
+		//p.fillRect(rPlayed, linearGradient);
+		p.fillPath(ppLeft, Qt::red);
+		p.fillRect(rPlayed, Qt::red);
 		p.save();
 		p.setRenderHint(QPainter::Antialiasing, true);
 		QPointF center(posButton, height() * 0.5);

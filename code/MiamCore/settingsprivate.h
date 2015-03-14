@@ -116,6 +116,9 @@ public:
 	/** Returns true if tabs should be displayed like rectangles. */
 	bool isRectTabs() const;
 
+	/** Returns true if the article should be displayed after artist's name. */
+	bool isReorderArtistsArticle() const;
+
 	bool isSearchAndExcludeLibrary() const;
 
 	/** Returns true if stars are visible and active. */
@@ -227,6 +230,8 @@ public slots:
 	void setPlaybackCloseAction(PlaylistDefaultAction action);
 	void setPlaybackKeepPlaylists(bool b);
 	void setPlaybackRestorePlaylistsAtStartup(bool b);
+
+	void setReorderArtistsArticle(bool b);
 
 	void setSearchAndExcludeLibrary(bool b);
 

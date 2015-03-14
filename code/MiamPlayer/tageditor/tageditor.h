@@ -24,7 +24,7 @@ class TagEditor : public QWidget, public Ui::TagEditor, public SelectedTracksMod
 	Q_OBJECT
 
 private:
-	QMap<int, QComboBox*> combos;
+	QMap<int, QComboBox*> _combos;
 
 	static QStringList genres;
 
