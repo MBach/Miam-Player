@@ -40,7 +40,7 @@ protected:
 	virtual void paintEvent(QPaintEvent *) override;
 
 private:
-	QLinearGradient interpolatedLinearGradient(qreal val, QStyleOptionSlider &o);
+	QLinearGradient interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o);
 };
 
 

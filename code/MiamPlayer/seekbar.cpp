@@ -149,9 +149,6 @@ void SeekBar::paintEvent(QPaintEvent *)
 						 h);
 	QRectF rMid = QRectF(rLeft.topRight(), rRight.bottomLeft());
 
-	// Fill the seek bar with highlighted color
-	QRectF rPlayed(QPoint(rMid.left(), rMid.top()), QPoint(posButton, rMid.bottom()));
-
 	QPen pen(o.palette.mid().color());
 	p.setPen(pen);
 	p.save();
@@ -198,8 +195,7 @@ void SeekBar::paintEvent(QPaintEvent *)
 	// Exclude ErrorState from painting
 	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState || _mediaPlayer.data()->state() == QMediaPlayer::PausedState) {
 
-		qreal r = (rPlayed.right() - rLeft.x() + 1);
-		QLinearGradient linearGradient = this->interpolatedLinearGradient(r, o);
+		QLinearGradient linearGradient = this->interpolatedLinearGradient(pp.boundingRect(), o);
 
 		p.setRenderHint(QPainter::Antialiasing, true);
 		p.fillPath(pp, linearGradient);
@@ -222,7 +218,7 @@ void SeekBar::paintEvent(QPaintEvent *)
 	}
 }
 
-QLinearGradient SeekBar::interpolatedLinearGradient(qreal val, QStyleOptionSlider &o)
+QLinearGradient SeekBar::interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o)
 {
 	static QPropertyAnimation interpolator;
 	interpolator.setEasingCurve(QEasingCurve::Linear);
@@ -238,11 +234,10 @@ QLinearGradient SeekBar::interpolatedLinearGradient(qreal val, QStyleOptionSlide
 	interpolator.setCurrentTime(value()) ;
 	QColor c = interpolator.currentValue().value<QColor>();
 
-	QLinearGradient linearGradient(0, 0, 1, 0);
-	linearGradient.setCoordinateMode(QGradient::StretchToDeviceMode);
+	QLinearGradient linearGradient(boudingRect.x(), 0, boudingRect.x() + boudingRect.width(), 0);
 	linearGradient.setColorAt(0.0, startColor);
-	linearGradient.setColorAt(val / 1000, c);
-	linearGradient.setColorAt(val / 1000 + 0.001, o.palette.light().color());
+	linearGradient.setColorAt((qreal) value() / 1000, c);
+	linearGradient.setColorAt((qreal) value() / 1000 + 0.001, o.palette.light().color());
 	linearGradient.setColorAt(1.0, o.palette.light().color());
 	return linearGradient;
 }
