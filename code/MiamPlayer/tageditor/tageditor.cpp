@@ -394,7 +394,6 @@ void TagEditor::displayCover()
 	joinedTracks.append("\"\"");
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
-	//_db->database().open();
 
 	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
@@ -409,7 +408,6 @@ void TagEditor::displayCover()
 	} else if (coversPath.size() == 1) {
 		coverPathComboBox->addItems(coversPath.toList());
 	}
-	//_db->database().close();
 
 	// Beware: if a cover is shared between multiple albums, only the first album name will appear in the context menu.
 	if (selectedCovers.size() == 1) {
@@ -431,49 +429,35 @@ void TagEditor::displayCover()
 void TagEditor::displayTags()
 {
 	if (tagEditorWidget->selectedItems().isEmpty()) {
-		for (QComboBox *combo : _combos.values()) {
+		for (auto combo : _combos.values()) {
 			combo->clear();
 		}
 		return;
 	}
 
 	// Information in the table is split into columns, using column index
-	QMap<int, QStringList> datas;
+	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
+	QMap<int, QSet<QString>> datas;
 	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
-		switch (col) {
-		case TagEditorTableWidget::COL_Album:
-		case TagEditorTableWidget::COL_Artist:
-		case TagEditorTableWidget::COL_ArtistAlbum:
-			for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
-				QStringList stringList = datas.value(col);
-				stringList << tagEditorWidget->item(row, col)->text();
-				datas.insert(col, stringList);
-			}
-			break;
-		default:
-			break;
-		}
-	}
-	foreach (QTableWidgetItem *item, tagEditorWidget->selectedItems()) {
-		switch (item->column()) {
-		case TagEditorTableWidget::COL_Album:
-		case TagEditorTableWidget::COL_Artist:
-		case TagEditorTableWidget::COL_ArtistAlbum:
-			break;
-		default:
-			QStringList stringList = datas.value(item->column());
-			stringList << item->text();
-			datas.insert(item->column(), stringList);
-			break;
+		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
+			QSet<QString> stringList = datas.value(col);
+			stringList.insert(tagEditorWidget->item(row, col)->text());
+			datas.insert(col, stringList);
 		}
 	}
 
+	QMap<int, QSet<QString>> selectedDatas;
+	for (auto item : tagEditorWidget->selectedItems()) {
+		QSet<QString> stringList = selectedDatas.value(item->column());
+		stringList.insert(item->text());
+		selectedDatas.insert(item->column(), stringList);
+	}
+
 	// To avoid redondancy, overwrite data for the same key
-	QMapIterator<int, QStringList> it(datas);
+	QMapIterator<int, QSet<QString>> it(selectedDatas);
 	while (it.hasNext()) {
 		it.next();
-		QStringList stringList = datas.value(it.key());
-		stringList.removeDuplicates();
+		QSet<QString> stringList = selectedDatas.value(it.key());
 
 		// Beware: there are no comboBox for every column in the edit area below the table
 		QComboBox *combo = _combos.value(it.key());
@@ -493,12 +477,7 @@ void TagEditor::displayTags()
 				}
 			}
 		} else {
-			combo->addItems(stringList);
-		}
-
-		// Special case for Tracknumber and Year: it's better to have a numerical order
-		if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
-			combo->model()->sort(0);
+			combo->addItems(stringList.toList());
 		}
 
 		// Map the combobox object with the number of the column in the table to dynamically reflect changes
@@ -512,16 +491,28 @@ void TagEditor::displayTags()
 		if (stringList.isEmpty()) {
 			combo->setCurrentIndex(-1);
 		} else if (stringList.count() == 1) { // Multiple tracks selected but same value
-			//if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
-			//	int result = combo->findText(stringList.first());
-			//	combo->setCurrentIndex(result);
-			//} else {
-			combo->setCurrentIndex(2);
-			//}
+			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
+				int result = combo->findText(stringList.toList().first());
+				combo->setCurrentIndex(result);
+			} else {
+				combo->setCurrentIndex(2);
+			}
 		} else {
 			// Multiple tracks selected but for same attribute
-			combo->setCurrentIndex(-1);
+			combo->setCurrentIndex(0);
 		}
+
+		// Suggest data from the complete table
+		if (combo != titleComboBox && combo != genreComboBox) {
+			QSet<QString> allDatas = datas.value(it.key());
+			combo->setDuplicatesEnabled(false);
+			for (QString c : allDatas) {
+				if (combo->findText(c) == -1) {
+					combo->addItem(c);
+				}
+			}
+		}
+		combo->model()->sort(0);
 
 		connect(combo, &QComboBox::editTextChanged, this, &TagEditor::updateCells);
 	}
