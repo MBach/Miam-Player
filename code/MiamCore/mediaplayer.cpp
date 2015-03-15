@@ -68,10 +68,11 @@ void MediaPlayer::createLocalConnections()
 	connect(_player, &VlcMediaPlayer::buffering, this, [=](float buffer) {
 		//qDebug() << "VlcMediaPlayer::buffering" << buffer;
 		if (buffer == 100) {
-			//qDebug() << "VlcMediaPlayer::Buffered" << buffer;
-			_state = QMediaPlayer::PlayingState;
+			if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
+				_state = QMediaPlayer::PlayingState;
+			}
 			emit mediaStatusChanged(QMediaPlayer::BufferedMedia);
-			emit stateChanged(QMediaPlayer::PlayingState);
+			emit stateChanged(_state);
 		} else {
 			emit mediaStatusChanged(QMediaPlayer::BufferingMedia);
 		}
@@ -83,7 +84,7 @@ void MediaPlayer::createLocalConnections()
 	});
 
 	connect(_player, &VlcMediaPlayer::error, this, [=]() {
-		qDebug() << "VlcMediaPlayer::error";
+		//qDebug() << "VlcMediaPlayer::error";
 		emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
 	});
 
@@ -96,6 +97,13 @@ void MediaPlayer::createLocalConnections()
 
 	// Cannot use new signal/slot syntax because libvlc_media_t is not fully defined at compile time (just a forward declaration)
 	connect(_player, SIGNAL(mediaChanged(libvlc_media_t*)), this, SLOT(convertMedia(libvlc_media_t*)));
+
+	// Link core multimedia actions
+	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
+		if (status == QMediaPlayer::EndOfMedia) {
+			skipForward();
+		}
+	});
 }
 
 void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
@@ -221,6 +229,8 @@ int MediaPlayer::volume() const
 void MediaPlayer::seekBackward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
+		int currentVolume = volume();
+		setVolume(0);
 		int currentPos = _player->position() * _player->length();
 		int time = currentPos - SettingsPrivate::instance()->playbackSeekTime();
 		if (time < 0) {
@@ -228,6 +238,7 @@ void MediaPlayer::seekBackward()
 		} else {
 			this->seek(time / (float)_player->length());
 		}
+		setVolume(currentVolume);
 	}
 }
 
@@ -235,6 +246,8 @@ void MediaPlayer::seekBackward()
 void MediaPlayer::seekForward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
+		int currentVolume = volume();
+		setVolume(0);
 		int currentPos = _player->position() * _player->length();
 		int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
 		if (time > _player->length()) {
@@ -242,6 +255,7 @@ void MediaPlayer::seekForward()
 		} else {
 			this->seek(time / (float)_player->length());
 		}
+		setVolume(currentVolume);
 	}
 }
 
@@ -414,6 +428,7 @@ RemoteMediaPlayer * MediaPlayer::remoteMediaPlayer(const QUrl &track, bool autoC
 		connect(p, &RemoteMediaPlayer::trackHasEnded, this, [=]() {
 			_state = QMediaPlayer::StoppedState;
 			emit stateChanged(_state);
+			qDebug() << "emit mediaStatusChanged(QMediaPlayer::EndOfMedia)";
 			emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
 		});
 	}

@@ -65,10 +65,12 @@ private slots:
 	void updateMusicLocations();
 
 signals:
+	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);
+
+	void defaultLocationFileExplorerHasChanged(const QDir &location);
+
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
-
-	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);
 };
 
 #endif // CUSTOMIZEOPTIONSDIALOG_H

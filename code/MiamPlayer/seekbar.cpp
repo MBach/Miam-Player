@@ -22,6 +22,52 @@ void SeekBar::setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer)
 	_mediaPlayer = mediaPlayer;
 }
 
+void SeekBar::keyPressEvent(QKeyEvent *e)
+{
+	_mediaPlayer.data()->blockSignals(true);
+	if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) {
+		_mediaPlayer.data()->blockSignals(true);
+		_mediaPlayer.data()->setMute(true);
+
+		qint64 d = _mediaPlayer.data()->duration();
+		if (d == 0) {
+			return;
+		}
+		float p = _mediaPlayer.data()->position();
+		qint64 currentPosition = d * p;
+		qint64 s = SettingsPrivate::instance()->playbackSeekTime();
+
+		if (e->key() == Qt::Key_Left) {
+			currentPosition -= s;
+		} else {
+			currentPosition += s;
+		}
+		if (currentPosition > d || currentPosition < 0) {
+			e->accept();
+			return;
+		}
+
+		// qDebug() << "old position" << p << "new position" << (float)currentPosition / d;
+		p = (float)currentPosition / d;
+		if (p >= 0 && p <= 1.0f) {
+			_mediaPlayer.data()->seek(p);
+		}
+		this->setValue(p * 1000);
+	} else {
+		QSlider::keyPressEvent(e);
+	}
+}
+
+void SeekBar::keyReleaseEvent(QKeyEvent *e)
+{
+	if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) {
+		_mediaPlayer.data()->setMute(false);
+		_mediaPlayer.data()->blockSignals(false);
+	} else {
+		QSlider::keyPressEvent(e);
+	}
+}
+
 void SeekBar::mouseMoveEvent(QMouseEvent *)
 {
 	int xPos = mapFromGlobal(QCursor::pos()).x();
@@ -41,6 +87,7 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
 		float p = (float) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
+		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setMute(true);
 		_mediaPlayer.data()->seek(p);
 		this->setValue(posButton);
@@ -50,6 +97,7 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 void SeekBar::mouseReleaseEvent(QMouseEvent *)
 {
 	_mediaPlayer.data()->setMute(false);
+	_mediaPlayer.data()->blockSignals(false);
 }
 
 /** Redefined to seek in current playing file. */
@@ -109,12 +157,12 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.save();
 	p.setRenderHint(QPainter::Antialiasing, true);
 	QPainterPath ppLeft, ppRight;
+	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1   <----10--9
+	// |   |        First cubic call is with points p1, p2 and p3                       |   |
+	// 3   +        Second is with points p3, p4 and p5                                 +   8
+	// |   |        With that, a half circle can be filled with linear gradient         |   |
+	// 4---5---->                                                                  <----6---7
 	ppLeft.moveTo(rMid.topLeft());
-	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1
-	// |   |        First cubic call is with points p1, p2 and p3
-	// 3   +        Second is with points p3, p4 and p5
-	// |   |        With that, a half circle can be filled with linear gradient
-	// 4---5---->
 	ppLeft.cubicTo(rMid.x(), rMid.y(),
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y(),
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f);
@@ -122,13 +170,18 @@ void SeekBar::paintEvent(QPaintEvent *)
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height(),
 				   rLeft.x() + rLeft.width(), rLeft.y() + rLeft.height());
 
-	ppRight.moveTo(rRight.topLeft());
-	ppRight.cubicTo(rRight.x(), rRight.y(),
-					rRight.x() + rRight.width() / 2.0f, rRight.y(),
+	QPainterPath pp(ppLeft);
+
+	ppRight.moveTo(rRight.bottomLeft());
+	ppRight.cubicTo(rRight.x(), rRight.y() + rRight.height(),
+					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
 					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f);
 	ppRight.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
-					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
-					rRight.x(), rRight.y() + rRight.height());
+					rRight.x() + rRight.width() / 2.0f, rRight.y(),
+					rRight.x(), rRight.y());
+
+	pp.connectPath(ppRight);
+
 	p.save();
 	// Increase the width of the pen because of Antialising
 	pen.setWidthF(1.3);
@@ -144,12 +197,14 @@ void SeekBar::paintEvent(QPaintEvent *)
 
 	// Exclude ErrorState from painting
 	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState || _mediaPlayer.data()->state() == QMediaPlayer::PausedState) {
-		//QLinearGradient linearGradient = this->interpolatedLinearGradient(rPlayed.topLeft(), rPlayed.topRight(), o);
 
-		//p.fillPath(ppLeft, linearGradient);
-		//p.fillRect(rPlayed, linearGradient);
-		p.fillPath(ppLeft, Qt::red);
-		p.fillRect(rPlayed, Qt::red);
+		qreal r = (rPlayed.right() - rLeft.x() + 1);
+		QLinearGradient linearGradient = this->interpolatedLinearGradient(r, o);
+
+		p.setRenderHint(QPainter::Antialiasing, true);
+		p.fillPath(pp, linearGradient);
+		p.setRenderHint(QPainter::Antialiasing, false);
+
 		p.save();
 		p.setRenderHint(QPainter::Antialiasing, true);
 		QPointF center(posButton, height() * 0.5);
@@ -167,14 +222,11 @@ void SeekBar::paintEvent(QPaintEvent *)
 	}
 }
 
-QLinearGradient SeekBar::interpolatedLinearGradient(const QPointF &start, const QPointF &end, QStyleOptionSlider &o)
+QLinearGradient SeekBar::interpolatedLinearGradient(qreal val, QStyleOptionSlider &o)
 {
-	QPropertyAnimation interpolator;
+	static QPropertyAnimation interpolator;
 	interpolator.setEasingCurve(QEasingCurve::Linear);
 
-	const qreal granularity = 1000.0;
-	/// FIXME: drawChord(rectLeft) if converted(value() -> posX) in rectLeft
-	//QColor startColor = o.palette.highlight().color().lighter();
 	QColor startColor = o.palette.base().color();
 	interpolator.setStartValue(startColor);
 	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState) {
@@ -182,13 +234,15 @@ QLinearGradient SeekBar::interpolatedLinearGradient(const QPointF &start, const 
 	} else {
 		interpolator.setEndValue(o.palette.mid().color());
 	}
-	interpolator.setDuration(granularity) ;
+	interpolator.setDuration(1000.0) ;
 	interpolator.setCurrentTime(value()) ;
 	QColor c = interpolator.currentValue().value<QColor>();
 
-	QLinearGradient linearGradient(start, end);
+	QLinearGradient linearGradient(0, 0, 1, 0);
+	linearGradient.setCoordinateMode(QGradient::StretchToDeviceMode);
 	linearGradient.setColorAt(0.0, startColor);
-	linearGradient.setColorAt(1.0, c);
-
+	linearGradient.setColorAt(val / 1000, c);
+	linearGradient.setColorAt(val / 1000 + 0.001, o.palette.light().color());
+	linearGradient.setColorAt(1.0, o.palette.light().color());
 	return linearGradient;
 }

@@ -23,19 +23,25 @@ public:
 	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
 protected:
-	virtual void mouseMoveEvent(QMouseEvent *);
+	/** Redefined to seek in current playing file. */
+	virtual void keyPressEvent(QKeyEvent *e) override;
 
-	virtual void mousePressEvent(QMouseEvent *);
+	virtual void keyReleaseEvent(QKeyEvent *e) override;
 
-	virtual void mouseReleaseEvent(QMouseEvent *);
+	virtual void mouseMoveEvent(QMouseEvent *) override;
+
+	virtual void mousePressEvent(QMouseEvent *) override;
+
+	virtual void mouseReleaseEvent(QMouseEvent *) override;
 
 	/** Redefined to seek in current playing file. */
-	virtual void wheelEvent(QWheelEvent *e);
+	virtual void wheelEvent(QWheelEvent *e) override;
 
-	virtual void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 
 private:
-	QLinearGradient interpolatedLinearGradient(const QPointF &start, const QPointF &end, QStyleOptionSlider &o);
+	QLinearGradient interpolatedLinearGradient(qreal val, QStyleOptionSlider &o);
 };
+
 
 #endif // SEEKBAR_H

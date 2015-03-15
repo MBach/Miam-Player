@@ -119,7 +119,6 @@ void MainWindow::init()
 
 	Settings *settings = Settings::instance();
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
-	//splitter->restoreState(settings->value("splitterState").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	playlistManager->init();
@@ -168,6 +167,7 @@ void MainWindow::setupActions()
 			SqlDatabase::instance()->rebuild(oldLocations, newLocations);
 		}
 	});
+	connect(customizeOptionsDialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
 
 	connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
@@ -487,7 +487,7 @@ bool MainWindow::event(QEvent *e)
 		if (!filesystem->isVisible()) {
 			addressBar->setMinimumWidth(leftTabs->width());
 		}
-		addressBar->init(QDir(QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first()));
+		addressBar->init(QDir(SettingsPrivate::instance()->defaultLocationFileExplorer()));
 		customizeThemeDialog->loadTheme();
 	}
 	return b;

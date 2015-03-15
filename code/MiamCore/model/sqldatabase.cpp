@@ -844,7 +844,6 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	if (!isOpen()) {
 		open();
 	}
-	qDebug() << "about to save" << absFilePath;
 	FileHelper fh(absFilePath);
 	if (!fh.isValid()) {
 		return;
@@ -902,7 +901,6 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	selectAlbum.addBindValue(artistId);
 	selectAlbum.exec();
 	if (!selectAlbum.next()) {
-		// qDebug() << Q_FUNC_INFO << "inserting" << album << albumNorm << albumId << "artistId" << artistId;
 		QSqlQuery insertAlbum(*this);
 		insertAlbum.prepare("INSERT INTO albums (id, name, normalizedName, year, artistId) VALUES (?, ?, ?, ?, ?)");
 		insertAlbum.addBindValue(albumId);
@@ -966,6 +964,4 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 			updateArtist.exec();
 		}
 	}
-
-	qDebug() << "saved" << fh.fileInfo().absoluteFilePath();
 }

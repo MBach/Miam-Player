@@ -30,7 +30,7 @@
      </property>
      <property name="maximumSize">
       <size>
-       <width>200</width>
+       <width>180</width>
        <height>16777215</height>
       </size>
      </property>
@@ -66,9 +66,6 @@
      </property>
      <property name="viewMode">
       <enum>QListView::IconMode</enum>
-     </property>
-     <property name="uniformItemSizes">
-      <bool>true</bool>
      </property>
      <property name="currentRow">
       <number>0</number>
@@ -277,7 +274,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>451</width>
+               <width>471</width>
                <height>542</height>
               </rect>
              </property>

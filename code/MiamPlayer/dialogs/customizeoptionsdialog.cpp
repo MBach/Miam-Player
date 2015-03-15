@@ -8,6 +8,7 @@
 #include <QDesktopWidget>
 #include <QDir>
 #include <QFileDialog>
+#include <QFileIconProvider>
 #include <QLibraryInfo>
 #include <QStandardPaths>
 
@@ -28,6 +29,12 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(pushButtonAddLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::openLibraryDialog);
 	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteSelectedLocation);
 
+	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+	if (!musicLocations.isEmpty()) {
+		QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocations.first()));
+		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocations.first()));
+	}
+
 	settings->isSearchAndExcludeLibrary() ? radioButtonSearchAndExclude->setChecked(true) : radioButtonSearchAndKeep->setChecked(true);
 	settings->isStarDelegates() ? radioButtonActivateDelegates->setChecked(true) : radioButtonDesactivateDelegates->setChecked(true);
 
@@ -36,11 +43,25 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
 	} else {
 		foreach (QString path, locations) {
-			listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(path), listWidgetMusicLocations));
+			QIcon icon = QFileIconProvider().icon(QFileInfo(path));
+			listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
+			comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
 		}
 		listWidgetMusicLocations->setCurrentRow(0);
 		pushButtonDeleteLocation->setEnabled(true);
 	}
+
+	// Restore default location for the file explorer
+	for (int i = 0; i < comboBoxDefaultFileExplorer->count(); i++) {
+		if (comboBoxDefaultFileExplorer->itemText(i) == QDir::toNativeSeparators(settings->defaultLocationFileExplorer())) {
+			comboBoxDefaultFileExplorer->setCurrentIndex(i);
+			break;
+		}
+	}
+	connect(comboBoxDefaultFileExplorer, &QComboBox::currentTextChanged, [=](const QString &location) {
+		settings->setDefaultLocationFileExplorer(location);
+		emit defaultLocationFileExplorerHasChanged(QDir(location));
+	});
 
 	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, settings, &SettingsPrivate::setMonitorFileSystem);
 
@@ -223,8 +244,12 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 	if (existingItem >= 0) {
 		delete listWidgetMusicLocations->takeItem(existingItem);
 	}
-	listWidgetMusicLocations->addItem(new QListWidgetItem(QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
+	QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocation));
+	listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
 	pushButtonDeleteLocation->setEnabled(true);
+
+	// Add this music location in the defaults for the file explorer
+	comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocation));
 }
 
 /** Adds a external music locations in the library (Drag & Drop). */
@@ -319,12 +344,25 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 	}
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
+	QString text;
 	if (!settings->musicLocations().isEmpty()) {
+		text = listWidgetMusicLocations->item(row)->text();
 		delete listWidgetMusicLocations->takeItem(row);
 
 		if (listWidgetMusicLocations->count() == 0) {
 			pushButtonDeleteLocation->setEnabled(false);
 			listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
+		}
+	}
+
+	// Udpate default list for the File Explorer
+	if (!text.isEmpty()) {
+		QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+		if (!musicLocations.isEmpty() && QDir::toNativeSeparators(musicLocations.first()) != text) {
+			int comboRow = comboBoxDefaultFileExplorer->findText(text);
+			if (comboRow != -1) {
+				comboBoxDefaultFileExplorer->removeItem(comboRow);
+			}
 		}
 	}
 }

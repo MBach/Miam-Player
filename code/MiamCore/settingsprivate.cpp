@@ -6,6 +6,7 @@
 #include <QGuiApplication>
 #include <QHeaderView>
 #include <QScrollBar>
+#include <QStandardPaths>
 #include <QTabWidget>
 
 #include <QtDebug>
@@ -115,6 +116,19 @@ QColor SettingsPrivate::customColors(QPalette::ColorRole cr) const
 const QString SettingsPrivate::customIcon(const QString &buttonName) const
 {
 	return value("customIcons/" + buttonName).toString();
+}
+
+QString SettingsPrivate::defaultLocationFileExplorer() const
+{
+	if (value("defaultLocationFileExplorer").isNull()) {
+		QStringList l = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+		if (!l.isEmpty()) {
+			return l.first();
+		}
+	} else {
+		return value("defaultLocationFileExplorer").toString();
+	}
+	return "/";
 }
 
 SettingsPrivate::DragDropAction SettingsPrivate::dragDropAction() const
@@ -519,6 +533,11 @@ int SettingsPrivate::volumeBarHideAfter() const
 	} else {
 		return value("volumeBarHideAfter").toInt();
 	}
+}
+
+void SettingsPrivate::setDefaultLocationFileExplorer(const QString &location)
+{
+	setValue("defaultLocationFileExplorer", location);
 }
 
 /** Define the hierarchical order of the library tree view. */

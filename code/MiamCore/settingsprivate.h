@@ -79,6 +79,8 @@ public:
 	/** Custom icons in Customize(Theme) */
 	const QString customIcon(const QString &buttonName) const;
 
+	QString defaultLocationFileExplorer() const;
+
 	DragDropAction dragDropAction() const;
 
 	/** Returns the font of the application. */
@@ -174,6 +176,8 @@ public:
 	int volumeBarHideAfter() const;
 
 public:
+	void setDefaultLocationFileExplorer(const QString &location);
+
 	/** Define the hierarchical order of the library tree view. */
 	void setInsertPolicy(InsertPolicy ip);
 

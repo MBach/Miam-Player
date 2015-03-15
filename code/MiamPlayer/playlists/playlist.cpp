@@ -62,17 +62,9 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		this->viewport()->update();
 	});
 
-	// Link core multimedia actions
-	connect(_mediaPlayer.data(), &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
-		if (status == QMediaPlayer::EndOfMedia) {
-			_mediaPlayer.data()->skipForward();
-		}
-	});
-
 	// Ensure current item in the playlist is visible when track has just changed to another one
 	connect(_mediaPlayer.data(), &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
-		qDebug() << "sender: MediaPlayer::currentMediaChanged";
-		if (!uri.isEmpty()) {
+		if (_mediaPlayer.data()->playlist() == this->mediaPlaylist() && !uri.isEmpty()) {
 			int row = mediaPlaylist()->currentIndex();
 			this->scrollTo(_playlistModel->index(row, 0));
 			this->viewport()->update();

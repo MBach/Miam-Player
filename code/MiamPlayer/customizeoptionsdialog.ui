@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>882</width>
-    <height>628</height>
+    <width>800</width>
+    <height>592</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>640</width>
-    <height>480</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Customize general options</string>
@@ -22,15 +16,15 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QListWidget" name="listWidget">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+     <property name="minimumSize">
+      <size>
+       <width>148</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>150</width>
+       <width>180</width>
        <height>16777215</height>
       </size>
      </property>
@@ -56,10 +50,10 @@
       <enum>QListView::Static</enum>
      </property>
      <property name="flow">
-      <enum>QListView::TopToBottom</enum>
+      <enum>QListView::LeftToRight</enum>
      </property>
      <property name="isWrapping" stdset="0">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="resizeMode">
       <enum>QListView::Adjust</enum>
@@ -146,7 +140,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="page">
+     <widget class="QWidget" name="pageLibrary">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QGroupBox" name="groupBoxMusicLocations">
@@ -183,6 +177,9 @@
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Minimum</enum>
+              </property>
               <property name="sizeHint" stdset="0">
                <size>
                 <width>5</width>
@@ -213,6 +210,9 @@
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Minimum</enum>
+              </property>
               <property name="sizeHint" stdset="0">
                <size>
                 <width>5</width>
@@ -222,6 +222,35 @@
              </spacer>
             </item>
            </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxFileExplorer">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>File Explorer</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelFileExplorer">
+            <property name="text">
+             <string>Default folder</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboBoxDefaultFileExplorer">
+            <property name="insertPolicy">
+             <enum>QComboBox::InsertAlphabetically</enum>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -513,6 +542,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBoxMonitorFileSystem">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string>Keep your library up to date</string>
          </property>
@@ -565,6 +600,9 @@
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
@@ -575,8 +613,8 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_2">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <widget class="QWidget" name="pageLanguages">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <widget class="QGroupBox" name="groupBoxLanguage">
          <property name="title">
@@ -584,17 +622,16 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="PaintableWidget" name="widgetLanguages" native="true">
+           <widget class="PaintableWidget" name="widgetLanguages" native="true"/>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelStatusLanguage">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelStatusLanguage">
             <property name="text">
              <string comment="status">Translation status: OK!</string>
             </property>
@@ -603,9 +640,22 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_4">
+     <widget class="QWidget" name="pageShortcuts">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QToolBox" name="shortcutsToolBox">
@@ -617,8 +667,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>686</width>
-            <height>476</height>
+            <width>280</width>
+            <height>285</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1084,8 +1134,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>686</width>
-            <height>476</height>
+            <width>208</width>
+            <height>540</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1565,7 +1615,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>667</width>
+            <width>299</width>
             <height>508</height>
            </rect>
           </property>
@@ -2857,8 +2907,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>686</width>
-            <height>476</height>
+            <width>307</width>
+            <height>212</height>
            </rect>
           </property>
           <attribute name="label">
@@ -3221,7 +3271,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_3">
+     <widget class="QWidget" name="pagePlayback_2">
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <item>
         <widget class="QGroupBox" name="groupBoxPlaybackOptions">
@@ -3499,7 +3549,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_5">
+     <widget class="QWidget" name="pageDragAndDrop">
       <layout class="QVBoxLayout" name="verticalLayout_10">
        <item>
         <widget class="QGroupBox" name="groupBoxDDFromExternalPlaces">
@@ -3616,7 +3666,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_6">
+     <widget class="QWidget" name="pagePlugins">
       <layout class="QVBoxLayout" name="verticalLayout_11">
        <item>
         <widget class="QTabWidget" name="tabPlugins">
