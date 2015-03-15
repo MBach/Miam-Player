@@ -45,7 +45,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		foreach (QString path, locations) {
 			QIcon icon = QFileIconProvider().icon(QFileInfo(path));
 			listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
-			comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
+			if (musicLocations.isEmpty() || musicLocations.first() != path) {
+				comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
+			}
 		}
 		listWidgetMusicLocations->setCurrentRow(0);
 		pushButtonDeleteLocation->setEnabled(true);
@@ -249,7 +251,10 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 	pushButtonDeleteLocation->setEnabled(true);
 
 	// Add this music location in the defaults for the file explorer
-	comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocation));
+	QStringList l = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+	if (l.isEmpty() || l.first() != musicLocation) {
+		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocation));
+	}
 }
 
 /** Adds a external music locations in the library (Drag & Drop). */
