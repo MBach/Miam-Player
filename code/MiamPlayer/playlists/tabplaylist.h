@@ -103,7 +103,7 @@ signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
 
-	void aboutToSavePlaylist(int);
+	void aboutToSavePlaylist(int, bool = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 

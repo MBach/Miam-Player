@@ -47,8 +47,7 @@ public:
 
 	bool insertIntoTableArtists(ArtistDAO *artist);
 	bool insertIntoTableAlbums(uint artistId, AlbumDAO *album);
-	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks);
-	int  insertIntoTablePlaylists(const PlaylistDAO &playlist);
+	int  insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting);
 	bool insertIntoTableTracks(const TrackDAO &track);
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
@@ -73,6 +72,8 @@ public:
 	QString normalizeField(const QString &s) const;
 
 private:
+	bool insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting = false);
+
 	/** Read all tracks entries in the database and send them to connected views. */
 	void loadFromFileDB(bool sendResetSignal = true);
 

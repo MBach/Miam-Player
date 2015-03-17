@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>440</width>
-    <height>128</height>
+    <height>124</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="labelActionRequired">
+    <widget class="QLabel" name="labelNewPlaylist">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -29,6 +29,24 @@
      </property>
      <property name="text">
       <string>You're about to close a playlist. What would you like to do?</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelExistingPlaylist">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>You're about to close a playlist that you have modified. What would you like to do?</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

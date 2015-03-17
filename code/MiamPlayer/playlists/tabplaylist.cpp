@@ -189,6 +189,22 @@ Playlist* TabPlaylist::addPlaylist()
 	connect(p, &Playlist::aboutToSendToTagEditor, this, &TabPlaylist::aboutToSendToTagEditor);
 	connect(p, &Playlist::selectionChanged, this, &TabPlaylist::selectionChanged);
 
+	// Check if tab icon should indicate that playlist has changed or not
+	connect(p, &Playlist::contentHasChanged, this, [=]() {
+		int playlistTabIndex = -1;
+		for (int i = 0; i < playlists().count(); i++) {
+			if (p == playlist(i)) {
+				playlistTabIndex = i;
+				break;
+			}
+		}
+		if (playlistTabIndex != -1) {
+			if (p->hash() != p->generateNewHash()) {
+				this->setTabIcon(playlistTabIndex, this->defaultIcon(QIcon::Normal));
+			}
+		}
+	});
+
 	// Select the new empty playlist
 	setCurrentIndex(i);
 	uint hash = qHash(p);
@@ -223,10 +239,13 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
+	//uint oldHash = currentPlayList()->hash();
 	currentPlayList()->insertMedias(rowIndex, tracks);
-	//this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
+	//qDebug() << Q_FUNC_INFO << oldHash << currentPlayList()->generateNewHash();
+	if (currentPlayList()->hash() != currentPlayList()->generateNewHash()) {
+		this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
+	}
 	if (_mediaPlayer.data()->playlist() == NULL) {
-		qDebug() << "there is no playlist in the player, switching";
 		_mediaPlayer.data()->setPlaylist(currentPlayList()->mediaPlaylist());
 	}
 	if (currentPlayList()->mediaPlaylist()->currentIndex() == -1) {
@@ -283,9 +302,11 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		}
 		p->mediaPlaylist()->clear();
 		p->model()->removeRows(0, p->model()->rowCount());
+		p->setHash(0);
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
 		uint hash = qHash(p);
 		tabBar()->setTabData(0, hash);
+		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	}
 }
 
@@ -305,22 +326,28 @@ void TabPlaylist::closePlaylist(int index)
 	if (!(p && p->mediaPlaylist())) {
 		return;
 	}
-	QString hash;
-	for (int i = 0; i < p->mediaPlaylist()->mediaCount(); i++) {
-		hash += p->mediaPlaylist()->media(i).canonicalUrl().toString();
-	}
+
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
-	if (p->hash() == qHash(hash) || playlists().at(index)->mediaPlaylist()->isEmpty()) {
+	uint newHash = p->generateNewHash();
+	if (p->hash() == newHash || playlists().at(index)->mediaPlaylist()->isEmpty()) {
 		this->removeTabFromCloseButton(index);
+		p->setHash(0);
+		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	} else {
 		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
+		if (p->hash() != 0 && p->hash() != newHash) {
+			qDebug() << Q_FUNC_INFO << "override default action and ask once again to user" << "old hash" << p->hash() << "new hash" << newHash;
+			// Override default action and ask once again to user.
+			action = SettingsPrivate::PL_AskUserForAction;
+			_closePlaylistPopup->setOverwriteMode(true);
+		}
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction:
 			_closePlaylistPopup->setTabToClose(index);
-			_closePlaylistPopup->show();
+			_closePlaylistPopup->setVisible(true);
 			break;
 		case SettingsPrivate::PL_SaveOnClose:
-			emit aboutToSavePlaylist(index);
+			emit aboutToSavePlaylist(index, false);
 			break;
 		case SettingsPrivate::PL_DiscardOnClose:
 			this->removeTabFromCloseButton(index);
@@ -331,21 +358,27 @@ void TabPlaylist::closePlaylist(int index)
 
 void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 {
-	switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
-	case QDialogButtonBox::Save:
-		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-			SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
+	if (action == _closePlaylistPopup->replace) {
+		qDebug() << Q_FUNC_INFO << action;
+		emit aboutToSavePlaylist(_closePlaylistPopup->index(), true);
+	} else {
+		switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
+		case QDialogButtonBox::Save:
+			if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
+				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
+			}
+			emit aboutToSavePlaylist(_closePlaylistPopup->index(), false);
+			break;
+		case QDialogButtonBox::Discard:
+			if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
+				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
+			}
+			this->removeTabFromCloseButton(_closePlaylistPopup->index());
+			_closePlaylistPopup->setVisible(false);
+			break;
+		default:
+
+			break;
 		}
-		emit aboutToSavePlaylist(_closePlaylistPopup->index());
-		break;
-	case QDialogButtonBox::Discard:
-		if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-			SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
-		}
-		this->removeTabFromCloseButton(_closePlaylistPopup->index());
-		_closePlaylistPopup->hide();
-		break;
-	default:
-		break;
 	}
 }

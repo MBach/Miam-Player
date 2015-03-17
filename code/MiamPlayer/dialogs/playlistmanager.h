@@ -24,7 +24,7 @@ private:
 	QLabel *_labelEmptyPreview;
 
 	/** Reference to TabPlaylist used a lot to know what we are manipulating. */
-	TabPlaylist *playlists;
+	TabPlaylist *_tabPlaylists;
 
 	/** Display an icon when the Preview Area is empty. */
 	QStackedLayout *_stackLayout;
@@ -40,13 +40,12 @@ public:
 
 	explicit PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist);
 
-	virtual bool eventFilter(QObject *obj, QEvent *event);
+	/** Add drag & drop processing. */
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	void init();
 
 	void retranslateUi(PlaylistManager *dialog);
-
-	void saveAndRemovePlaylist(int index);
 
 private:
 	void clearPreview(bool aboutToInsertItems = true);
@@ -57,11 +56,13 @@ private:
 	/** Load a playlist saved on the in database. */
 	void loadPlaylist(int playlistId);
 
-	int savePlaylist(int index);
+	int savePlaylist(int index, bool isOverwriting = false, bool isExitingApplication = false);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */
 	void open();
+
+	void saveAndRemovePlaylist(int index, bool isOverwriting = false);
 
 private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
@@ -86,7 +87,7 @@ private slots:
 	void updatePlaylists();
 
 signals:
-	void playlistSaved(int);
+	void aboutToRemovePlaylist(int);
 };
 
 #endif // PLAYLISTMANAGER_H

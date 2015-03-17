@@ -57,9 +57,11 @@ public:
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
-	virtual ~Playlist() {}
+	//virtual ~Playlist() {}
 
-	inline QMediaPlaylist *mediaPlaylist() { return _playlistModel->mediaPlaylist(); }
+	inline QMediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
+
+	uint generateNewHash() const;
 
 	inline uint hash() const { return _hash; }
 
@@ -80,30 +82,30 @@ public:
 
 protected:
 	/** Redefined to display a small context menu in the view. */
-	virtual void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
-	virtual void dragEnterEvent(QDragEnterEvent *event);
-	virtual void dragMoveEvent(QDragMoveEvent *event);
+	virtual void dragEnterEvent(QDragEnterEvent *event) override;
+	virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
 	/** Redefined to be able to move tracks between playlists or internally. */
-	virtual void dropEvent(QDropEvent *event);
+	virtual void dropEvent(QDropEvent *event) override;
 
 	/** Redefined to handle escape key when editing ratings. */
-	virtual void keyPressEvent(QKeyEvent *event);
+	virtual void keyPressEvent(QKeyEvent *event) override;
 
-	virtual void mouseMoveEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
 
-	/** Redifined to be able to create an editor to modify star rating. */
-	virtual void mousePressEvent(QMouseEvent *event);
+	/** Redefined to be able to create an editor to modify star rating. */
+	virtual void mousePressEvent(QMouseEvent *event) override;
 
 	/** Redefined to display a thin line to help user for dropping tracks. */
-	virtual void paintEvent(QPaintEvent *e);
+	virtual void paintEvent(QPaintEvent *e) override;
 
-	virtual int sizeHintForColumn(int column) const;
+	virtual int sizeHintForColumn(int column) const override;
 
-	virtual void showEvent(QShowEvent *event);
+	virtual void showEvent(QShowEvent *event) override;
 
-	virtual void wheelEvent(QWheelEvent *event);
+	virtual void wheelEvent(QWheelEvent *event) override;
 
 private:
 	void autoResize();
@@ -120,6 +122,8 @@ public slots:
 
 signals:
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
+
+	void contentHasChanged();
 
 	void selectionChanged(bool isEmpty);
 };

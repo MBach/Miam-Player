@@ -66,6 +66,14 @@
         <source>Remember my choice in the future</source>
         <translation>Remember my choice in the future</translation>
     </message>
+    <message>
+        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
+        <translation>You&apos;re about to close a playlist that you have modified. What would you like to do?</translation>
+    </message>
+    <message>
+        <source>Replace</source>
+        <translation>Replace</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeOptionsDialog</name>
@@ -434,6 +442,14 @@
         <source>Show Debug Dialog</source>
         <translation>Show Debug Dialog</translation>
     </message>
+    <message>
+        <source>File Explorer</source>
+        <translation>File Explorer</translation>
+    </message>
+    <message>
+        <source>Default folder</source>
+        <translation>Default folder</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -695,7 +711,7 @@
     </message>
     <message>
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</translation>
+        <translation type="vanished">&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</translation>
     </message>
     <message>
         <source>Search bar</source>
@@ -704,6 +720,18 @@
     <message>
         <source>Should I show automatically an extended search area next to the search bar?</source>
         <translation>Should I show automatically an extended search area next to the search bar?</translation>
+    </message>
+    <message>
+        <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
+        <translation>&quot;The&quot; is very common English article, like in « The Beatles »</translation>
+    </message>
+    <message>
+        <source>Do you want to display the article after the name?</source>
+        <translation>Do you want to display the article after the name?</translation>
+    </message>
+    <message>
+        <source>Example:  « The Beatles » will become « Beatles, the »</source>
+        <translation>Example:  « The Beatles » will become « Beatles, the »</translation>
     </message>
 </context>
 <context>
@@ -1145,6 +1173,12 @@
         <source>inline</source>
         <translation>inline</translation>
     </message>
+    <message>
+        <source>This playlist is empty.
+Select or drop tracks from your library or any external location.</source>
+        <translation>This playlist is empty.
+Select or drop tracks from your library or any external location.</translation>
+    </message>
 </context>
 <context>
     <name>PlaylistHeaderView</name>
@@ -1244,6 +1278,10 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>Drag &amp; drop playlists below to save them</source>
         <translation>Drag &amp; drop playlists below to save them</translation>
+    </message>
+    <message>
+        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
+        <translation>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</translation>
     </message>
 </context>
 <context>
@@ -1356,7 +1394,7 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation>This playlist is empty.
+        <translation type="vanished">This playlist is empty.
 Select or drop tracks from your library or any external location.</translation>
     </message>
     <message>

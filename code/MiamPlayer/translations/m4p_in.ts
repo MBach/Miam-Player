@@ -66,6 +66,14 @@
         <source>Remember my choice in the future</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeOptionsDialog</name>
@@ -434,6 +442,14 @@
         <source>Show Debug Dialog</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>File Explorer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default folder</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -638,10 +654,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Manage favorites</source>
         <translation type="unfinished"></translation>
     </message>
@@ -703,6 +715,18 @@
     </message>
     <message>
         <source>Should I show automatically an extended search area next to the search bar?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to display the article after the name?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Example:  « The Beatles » will become « Beatles, the »</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1145,6 +1169,11 @@
         <source>inline</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>This playlist is empty.
+Select or drop tracks from your library or any external location.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PlaylistHeaderView</name>
@@ -1241,6 +1270,10 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Drag &amp; drop playlists below to save them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1349,11 +1382,6 @@ Select a playlist to display the first 30 tracks.</source>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

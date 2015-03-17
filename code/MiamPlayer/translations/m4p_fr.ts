@@ -66,6 +66,14 @@
         <source>Remember my choice in the future</source>
         <translation>Se souvenir de mon choix à l&apos;avenir</translation>
     </message>
+    <message>
+        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
+        <translation>Vous êtes sur le point de fermer une liste de lecture que vous venez de modifier. Que souhaitez-vous faire ?</translation>
+    </message>
+    <message>
+        <source>Replace</source>
+        <translation>Remplacer</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeOptionsDialog</name>
@@ -434,6 +442,14 @@
         <source>Show Debug Dialog</source>
         <translation>Montrer la fenêtre de débuggage</translation>
     </message>
+    <message>
+        <source>File Explorer</source>
+        <translation>Explorateur de fichiers</translation>
+    </message>
+    <message>
+        <source>Default folder</source>
+        <translation>Dossier par défaut</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -695,7 +711,7 @@
     </message>
     <message>
         <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation>&quot;The&quot; est un article très commun en anglais, comme dans &quot;The Beatles&quot;</translation>
+        <translation type="vanished">&quot;The&quot; est un article très commun en anglais, comme dans &quot;The Beatles&quot;</translation>
     </message>
     <message>
         <source>Search bar</source>
@@ -704,6 +720,18 @@
     <message>
         <source>Should I show automatically an extended search area next to the search bar?</source>
         <translation>Devrais-je afficher automatiquement  une zone de recherche étendue à côté de la barre de recherche ?</translation>
+    </message>
+    <message>
+        <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
+        <translation>&quot;The&quot; est un article très commun en anglais, comme dans « The Beatles »</translation>
+    </message>
+    <message>
+        <source>Do you want to display the article after the name?</source>
+        <translation>Souhaitez-vous afficher l&apos;article après le nom?</translation>
+    </message>
+    <message>
+        <source>Example:  « The Beatles » will become « Beatles, the »</source>
+        <translation>Exemple : « The Beatles » deviendra « Beatles, the »</translation>
     </message>
 </context>
 <context>
@@ -1145,6 +1173,12 @@
         <source>inline</source>
         <translation>ici</translation>
     </message>
+    <message>
+        <source>This playlist is empty.
+Select or drop tracks from your library or any external location.</source>
+        <translation>Cette liste de lecture est vide.
+Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une application externe.</translation>
+    </message>
 </context>
 <context>
     <name>PlaylistHeaderView</name>
@@ -1243,6 +1277,10 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>Drag &amp; drop playlists below to save them</source>
         <translation>Glisser-déposer les listes de lecture vers le bas pour les sauvegarder</translation>
+    </message>
+    <message>
+        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
+        <translation>Il y a exactement la même liste de lecture dans le Gestionnaire (identifié comme &apos;%1&apos;), par conséquent il n&apos;est pas possible de l&apos;ajouter en double.</translation>
     </message>
 </context>
 <context>
@@ -1355,7 +1393,7 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation>Cette liste de lecture est vide.
+        <translation type="vanished">Cette liste de lecture est vide.
 Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une application externe.</translation>
     </message>
     <message>

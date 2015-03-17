@@ -118,6 +118,19 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	this->hideColumn(COL_TRACK_DAO);
 }
 
+uint Playlist::generateNewHash() const
+{
+	if (mediaPlaylist()->mediaCount() == 0) {
+		return 0;
+	} else {
+		QString hash("");
+		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
+			hash += mediaPlaylist()->media(i).canonicalUrl().toString();
+		}
+		return qHash(hash);
+	}
+}
+
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	_playlistModel->insertMedias(rowIndex, medias);
@@ -449,4 +462,5 @@ void Playlist::removeSelectedTracks()
 		// Select the last one otherwise: it still can be possible to erase all
 		this->selectRow(_playlistModel->rowCount() - 1);
 	}
+	emit contentHasChanged();
 }
