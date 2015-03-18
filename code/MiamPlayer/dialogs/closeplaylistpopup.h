@@ -21,7 +21,7 @@ private:
 	int _index;
 
 public:
-	QPushButton *replace;
+	QPushButton *deleteButton, *replaceButton;
 
 	explicit ClosePlaylistPopup(QWidget *parent = 0);
 
@@ -29,6 +29,7 @@ public:
 
 	inline void setTabToClose(int index) { _index = index; }
 
+	void setDeleteMode(bool del);
 	void setOverwriteMode(bool overwrite);
 
 	void setVisible(bool visible);

@@ -144,6 +144,12 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std
 	int id;
 	if (isOverwriting) {
 		id = playlist.id().toInt();
+		QSqlQuery update(*this);
+		update.prepare("UPDATE playlists SET title = ?, checksum = ? WHERE id = ?");
+		update.addBindValue(playlist.title());
+		update.addBindValue(playlist.checksum());
+		update.addBindValue(id);
+		update.exec();
 		this->insertIntoTablePlaylistTracks(id, tracks, isOverwriting);
 	} else {
 		if (playlist.id().isEmpty()) {
@@ -219,7 +225,7 @@ void SqlDatabase::removeRecordsFromHost(const QString &)
 	qDebug() << Q_FUNC_INFO;
 }
 
-void SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
+bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 {
 	this->transaction();
 	foreach (PlaylistDAO playlist, playlists) {
@@ -234,7 +240,7 @@ void SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 		remove.bindValue(":id", playlist.id());
 		remove.exec();
 	}
-	this->commit();
+	return this->commit();
 }
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)

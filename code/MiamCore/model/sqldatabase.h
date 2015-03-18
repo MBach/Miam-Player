@@ -52,7 +52,7 @@ public:
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
 	void removeRecordsFromHost(const QString &);
-	void removePlaylists(const QList<PlaylistDAO> &playlists);
+	bool removePlaylists(const QList<PlaylistDAO> &playlists);
 
 	Cover *selectCoverFromURI(const QString &uri);
 	QList<TrackDAO> selectPlaylistTracks(int playlistID);

@@ -209,6 +209,7 @@ Playlist* TabPlaylist::addPlaylist()
 	setCurrentIndex(i);
 	uint hash = qHash(p);
 	this->tabBar()->setTabData(i, hash);
+	emit playlistCreated();
 	return p;
 }
 
@@ -329,7 +330,7 @@ void TabPlaylist::closePlaylist(int index)
 
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
 	uint newHash = p->generateNewHash();
-	if (p->hash() == newHash || playlists().at(index)->mediaPlaylist()->isEmpty()) {
+	if (p->hash() == newHash || p->mediaPlaylist()->isEmpty() && p->hash() == 0) {
 		this->removeTabFromCloseButton(index);
 		p->setHash(0);
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
@@ -339,7 +340,11 @@ void TabPlaylist::closePlaylist(int index)
 			qDebug() << Q_FUNC_INFO << "override default action and ask once again to user" << "old hash" << p->hash() << "new hash" << newHash;
 			// Override default action and ask once again to user.
 			action = SettingsPrivate::PL_AskUserForAction;
-			_closePlaylistPopup->setOverwriteMode(true);
+			if (p->mediaPlaylist()->isEmpty()) {
+				_closePlaylistPopup->setDeleteMode(true);
+			} else {
+				_closePlaylistPopup->setOverwriteMode(true);
+			}
 		}
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction:
@@ -358,10 +363,14 @@ void TabPlaylist::closePlaylist(int index)
 
 void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 {
-	if (action == _closePlaylistPopup->replace) {
-		qDebug() << Q_FUNC_INFO << action;
+	// Handle custom buttons (not QDialogButtonBox::StandardButton but QAbstractButton*)
+	if (action == _closePlaylistPopup->replaceButton) {
 		emit aboutToSavePlaylist(_closePlaylistPopup->index(), true);
+	} else if (action == _closePlaylistPopup->deleteButton){
+		int index = _closePlaylistPopup->index();
+		emit aboutToDeletePlaylist(index, playlist(index));
 	} else {
+		// Standard enumeration
 		switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
 		case QDialogButtonBox::Save:
 			if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
@@ -377,7 +386,6 @@ void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
 			_closePlaylistPopup->setVisible(false);
 			break;
 		default:
-
 			break;
 		}
 	}

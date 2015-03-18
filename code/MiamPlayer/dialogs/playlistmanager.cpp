@@ -75,8 +75,12 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	connect(qApp, &QGuiApplication::lastWindowClosed, this, &PlaylistManager::savePlaylists);
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistManager::exportSelectedPlaylist);
+	connect(_tabPlaylists, &TabPlaylist::playlistCreated, this, [=]() {
+		qDebug() << "PlaylistManager::lambda a new playlist was created in tab playlist";
+	});
 	// Save playlist on close (if enabled)
 	connect(_tabPlaylists, &TabPlaylist::aboutToSavePlaylist, this, &PlaylistManager::saveAndRemovePlaylist);
+	connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistManager::deletePlaylist);
 	connect(this, &PlaylistManager::aboutToRemovePlaylist, _tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
 }
 
@@ -90,9 +94,12 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 	} else if (event->type() == QEvent::Drop) {
 		return QDialog::eventFilter(obj, event);
 	} else if (obj == savedPlaylists && event->type() == QEvent::KeyPress) {
+		// Bind common keys to useful actions
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
 		if (keyEvent->key() == Qt::Key_Delete) {
 			this->deleteSavedPlaylists();
+		} else if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return) {
+			this->loadSelectedPlaylists();
 		}
 		return true;
 	} else {
@@ -173,12 +180,13 @@ void PlaylistManager::loadPlaylist(int playlistId)
 		_tabPlaylists->tabBar()->setTabText(_tabPlaylists->count() - 1, playlistDao.title());
 	}
 	playlist->setHash(playlistDao.checksum().toUInt());
-	qDebug() << "loaded playlist" << playlistDao.title() << playlist->hash();
+	qDebug() << Q_FUNC_INFO << playlistDao.title() << playlist->hash();
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
 	playlist->insertMedias(-1, tracks);
+	playlist->setId(playlistId);
 
 	_tabPlaylists->setTabIcon(index, _tabPlaylists->defaultIcon(QIcon::Disabled));
 }
@@ -195,7 +203,7 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExitingA
 		// Check first if one has the same playlist in database
 		PlaylistDAO playlist;
 		for (PlaylistDAO dao : _db->selectPlaylists()) {
-			if (dao.checksum().toUInt() == generateNewHash && !isOverwriting && !isExitingApplication) {
+			if (dao.checksum().toUInt() == generateNewHash && !isExitingApplication) {
 				// Playlist exists in database and user is not exiting application -> showing a popup
 				QMessageBox mb;
 				mb.setIcon(QMessageBox::Information);
@@ -249,6 +257,19 @@ void PlaylistManager::open()
 	this->updatePlaylists();
 	QDialog::open();
 	this->activateWindow();
+}
+
+void PlaylistManager::deletePlaylist(int index, Playlist *p)
+{
+	QList<PlaylistDAO> playlists;
+	PlaylistDAO dao;
+	dao.setId(QString::number(p->id()));
+	playlists << dao;
+
+	// Try to remove the playlist then call the view to reset or close the current tab
+	if (_db->removePlaylists(playlists)) {
+		emit aboutToRemovePlaylist(index);
+	}
 }
 
 /** Delete from the file system every selected playlists. Cannot be canceled. */
@@ -380,7 +401,7 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 		uint hash = item->data(PlaylistObjectPointer).toUInt();
 		for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
 			Playlist *p = _tabPlaylists->playlist(i);
-			if (p->generateNewHash() == hash) {
+			if (p->hash() == hash) {
 				int max = qMin(p->mediaPlaylist()->mediaCount(), MAX_TRACKS_PREVIEW_AREA);
 				for (int idxTrack = 0; idxTrack < max; idxTrack++) {
 					QString title = p->model()->index(idxTrack, p->COL_TITLE).data().toString();
@@ -419,7 +440,8 @@ void PlaylistManager::updatePlaylists()
 	for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
 		Playlist *p = _tabPlaylists->playlist(i);
 		uint hash = p->hash();
-		if (hash != 0 && !p->mediaPlaylist()->isEmpty()) {
+		qDebug() << _tabPlaylists->tabBar()->tabText(i) << hash << p->generateNewHash();
+		if (!p->mediaPlaylist()->isEmpty() && hash != p->generateNewHash()) {
 			QStandardItem *item = new QStandardItem(_tabPlaylists->tabBar()->tabText(i));
 			item->setData(hash, PlaylistObjectPointer);
 			_unsavedPlaylistModel->appendRow(item);

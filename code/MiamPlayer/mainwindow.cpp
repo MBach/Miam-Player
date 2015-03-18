@@ -540,7 +540,10 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 		// Some default shortcuts might interfer with other widgets, so we need to restrict where it applies
 		if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
 			action->setShortcutContext(Qt::WidgetShortcut);
+		} else if (action == actionRemoveSelectedTracks) {
+			action->setShortcutContext(Qt::ApplicationShortcut);
 		}
+
 	// Specific actions not defined in main menu
 	} else if (objectName == "showTabLibrary" || objectName == "showTabFilesystem") {
 		leftTabs->setShortcut(objectName, keySequence);

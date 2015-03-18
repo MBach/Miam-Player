@@ -42,6 +42,8 @@ private:
 
 	uint _hash;
 
+	uint _id;
+
 	Q_ENUMS(Columns)
 
 public:
@@ -57,13 +59,12 @@ public:
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
-	//virtual ~Playlist() {}
-
 	inline QMediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
 
 	uint generateNewHash() const;
 
 	inline uint hash() const { return _hash; }
+	inline uint id() const { return _id; }
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
@@ -77,6 +78,7 @@ public:
 	inline void forceDrop(QDropEvent *e) { this->dropEvent(e); }
 
 	inline void setHash(uint hash) { _hash = hash; }
+	inline void setId(uint id) { _id = id; }
 
 	inline QWeakPointer<MediaPlayer> mediaPlayer() { return _mediaPlayer; }
 

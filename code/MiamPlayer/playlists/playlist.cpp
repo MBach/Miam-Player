@@ -20,7 +20,7 @@
 #include <QtDebug>
 
 Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
-	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL), _hash(0)
+	QTableView(parent), _mediaPlayer(mediaPlayer), _dropDownIndex(NULL), _hash(0), _id(0)
 {
 	_playlistModel = new PlaylistModel(this);
 

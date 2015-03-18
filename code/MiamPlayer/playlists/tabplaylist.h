@@ -103,9 +103,13 @@ signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
 
+	void aboutToDeletePlaylist(int, Playlist *);
+
 	void aboutToSavePlaylist(int, bool = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
+
+	void playlistCreated();
 
 	void selectionChanged(bool isEmpty);
 
