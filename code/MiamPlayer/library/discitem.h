@@ -9,7 +9,7 @@ class DiscItem : public QStandardItem
 public:
 	explicit DiscItem(const QString &text);
 
-	virtual int type() const;
+	virtual int type() const override;
 };
 
 #endif // DISCITEM_H

@@ -6,7 +6,7 @@ YearItem::YearItem(const YearDAO *dao) :
 	if (QString::compare(dao->title(), "0") == 0) {
 		setText(QObject::tr("Unknown"));
 	}
-	setData(dao->title(), Miam::DF_NormalizedString);
+	setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 }
 
 int YearItem::type() const

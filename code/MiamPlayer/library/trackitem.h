@@ -10,7 +10,7 @@ class TrackItem : public QStandardItem
 public:
 	explicit TrackItem(const TrackDAO *dao);
 
-	virtual int type() const;
+	virtual int type() const override;
 };
 
 #endif // TRACKITEM_H

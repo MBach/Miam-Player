@@ -189,6 +189,13 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 		}
 		break;
 	}
+	case Miam::IT_Year: {
+		int lYear = left->data(Miam::DF_NormalizedString).toInt();
+		int rYear = right->data(Miam::DF_NormalizedString).toInt();
+		result = (lYear < rYear && sortOrder() == Qt::AscendingOrder) ||
+				  (rYear > lYear && sortOrder() == Qt::DescendingOrder);
+		break;
+	}
 	default:
 		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		break;

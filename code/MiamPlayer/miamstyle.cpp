@@ -144,9 +144,8 @@ void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
 	QRect r = QProxyStyle::subElementRect(element, option, widget);
-
-
-	/*QStyle::SE_TabWidgetLeftCorner	21	Area for the left corner widget in a tab widget.
+	/*
+	QStyle::SE_TabWidgetLeftCorner	21	Area for the left corner widget in a tab widget.
 	QStyle::SE_TabWidgetRightCorner	22	Area for the right corner widget in a tab widget.
 	QStyle::SE_TabWidgetTabBar	18	Area for the tab bar widget in a tab widget.
 	QStyle::SE_TabWidgetTabContents	20	Area for the contents of the tab widget.
@@ -160,32 +159,18 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 			minRect.setWidth(minRect.width() + t->tabBar()->tabRect(i).width());
 		}
 		minRect.setHeight(t->tabBar()->tabRect(0).height());
-
 		switch (element) {
 		case SE_TabWidgetRightCorner:
-			//qDebug() << r << "SE_TabWidgetRightCorner" << t->width() << t->tabBar()->height();
 			r.setX(minRect.x() + minRect.width() + 1);
 			r.setY(0);
 			break;
 		case SE_TabWidgetTabBar:
-			//qDebug() << r << minRect << "SE_TabWidgetTabBar";
-			/// tab overlap
-			//minRect.adjust(0, 0, 0, 0);
-			//SettingsPrivate::instance()->tabsOverlappingLength()
 			r = minRect.adjusted(0, 0, SettingsPrivate::instance()->tabsOverlappingLength(), 0);
 			break;
-		case SE_TabWidgetTabContents:
-			//qDebug() << r << "SE_TabWidgetTabContents" << widget;
-			break;
-		case SE_TabWidgetTabPane:
-			//qDebug() << r << "SE_TabWidgetTabPane" << widget;
-			break;
-		case SE_TabWidgetLayoutItem:
-			//qDebug() << r << "SE_TabWidgetLayoutItem" << widget;
+		default:
 			break;
 		}
 	}
-
 	return r;
 }
 

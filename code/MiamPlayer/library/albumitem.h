@@ -14,7 +14,7 @@ public:
 
 	QString iconPath() const;
 
-	virtual int type() const;
+	virtual int type() const override;
 };
 
 #endif // ALBUMITEM_H

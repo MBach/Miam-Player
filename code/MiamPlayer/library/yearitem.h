@@ -10,7 +10,7 @@ class YearItem : public QStandardItem
 public:
 	explicit YearItem(const YearDAO *dao);
 
-	virtual int type() const;
+	virtual int type() const override;
 };
 
 #endif // YEARITEM_H

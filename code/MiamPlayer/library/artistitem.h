@@ -10,7 +10,7 @@ class ArtistItem : public QStandardItem
 public:
 	ArtistItem(const ArtistDAO *dao);
 
-	virtual int type() const;
+	virtual int type() const override;
 };
 
 #endif // ARTISTITEM_H
