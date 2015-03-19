@@ -70,7 +70,7 @@ private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
 	void deleteSavedPlaylists();
 
-	void dropAutoSavePlaylists(const QModelIndex &parent, int start, int);
+	void dropAutoSavePlaylists(const QModelIndex &, int start, int);
 
 	/** Export one playlist at a time. */
 	void exportSelectedPlaylist();
@@ -82,11 +82,8 @@ private slots:
 
 	void populatePreviewFromUnsaved(QItemSelection, QItemSelection);
 
-	/** Save all playlists when exiting the application (if enabled). */
-	void savePlaylists();
-
 	/** Update saved and unsaved playlists when one is adding a new one. Also used at startup. */
-	void updatePlaylists();
+	void updatePlaylists(bool unsaved = true, bool saved = true);
 
 signals:
 	void aboutToRemovePlaylist(int);
