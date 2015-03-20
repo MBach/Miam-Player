@@ -181,6 +181,36 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std
 	return id;
 }
 
+bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting)
+{
+	this->transaction();
+	if (isOverwriting) {
+		QSqlQuery deleteTracks(*this);
+		deleteTracks.prepare("DELETE FROM playlistTracks WHERE playlistId = ?");
+		deleteTracks.addBindValue(playlistId);
+		deleteTracks.exec();
+	}
+	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
+		TrackDAO track = *it;
+		QSqlQuery insert(*this);
+		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, icon, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.addBindValue(track.trackNumber());
+		insert.addBindValue(track.title());
+		insert.addBindValue(track.album());
+		insert.addBindValue(track.length());
+		insert.addBindValue(track.artist());
+		insert.addBindValue(track.rating());
+		insert.addBindValue(track.year());
+		insert.addBindValue(track.icon());
+		insert.addBindValue(track.id());
+		insert.addBindValue(track.uri());
+		insert.addBindValue(playlistId);
+		insert.exec();
+	}
+	this->commit();
+	return lastError().type() == QSqlError::NoError;
+}
+
 bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 {
 	QSqlQuery insertTrack(*this);
@@ -471,36 +501,6 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 
 	/// XXX: might not be the smartest way to reload changes, but it's way simpler than searching in a tree for modifications
 	this->load();
-}
-
-bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting)
-{
-	this->transaction();
-	if (isOverwriting) {
-		QSqlQuery deleteTracks(*this);
-		deleteTracks.prepare("DELETE FROM playlistTracks WHERE playlistId = ?");
-		deleteTracks.addBindValue(playlistId);
-		deleteTracks.exec();
-	}
-	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
-		TrackDAO track = *it;
-		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, icon, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		insert.addBindValue(track.trackNumber());
-		insert.addBindValue(track.title());
-		insert.addBindValue(track.album());
-		insert.addBindValue(track.length());
-		insert.addBindValue(track.artist());
-		insert.addBindValue(track.rating());
-		insert.addBindValue(track.year());
-		insert.addBindValue(track.icon());
-		insert.addBindValue(track.id());
-		insert.addBindValue(track.uri());
-		insert.addBindValue(playlistId);
-		insert.exec();
-	}
-	this->commit();
-	return lastError().type() == QSqlError::NoError;
 }
 
 /** Read all tracks entries in the database and send them to connected views. */

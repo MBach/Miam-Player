@@ -62,7 +62,11 @@ bool FileHelper::init(const QString &filePath)
 	}
 	_fileInfo = QFileInfo(fileName);
 	QString suffix = _fileInfo.suffix().toLower();
-	TagLib::FileName fp(QFile::encodeName(QDir::toNativeSeparators(fileName)));
+#ifdef _WIN32
+	TagLib::FileName fp(QDir::toNativeSeparators(fileName).toStdWString().data());
+#else
+	TagLib::FileName fp(QDir::toNativeSeparators(fileName).toStdString().data());
+#endif
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
 		_fileType = APE;
@@ -302,9 +306,9 @@ bool FileHelper::insert(QString key, const QVariant &value)
 	} else if (key == "TITLE") {
 		_file->tag()->setTitle(v);
 	} else if (key == "TRACKNUMBER") {
-		_file->tag()->setTrack(value.toInt());
+		_file->tag()->setTrack(value.toUInt());
 	} else if (key == "YEAR") {
-		_file->tag()->setYear(value.toInt());
+		_file->tag()->setYear(value.toUInt());
 	} else if (key == "ARTISTALBUM"){
 		this->setArtistAlbum(value.toString());
 	} else if (key == "DISC"){
