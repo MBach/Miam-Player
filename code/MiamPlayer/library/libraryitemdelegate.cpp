@@ -94,7 +94,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 			FileHelper fh(file);
 			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-				qDebug() << Q_FUNC_INFO << "loading internal cover from file";
+				// qDebug() << Q_FUNC_INFO << "loading internal cover from file";
 				std::unique_ptr<Cover> cover(fh.extractCover());
 				QPixmap p;
 				if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
@@ -105,7 +105,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 					}
 				}
 			} else {
-				qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+				// qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 				imageReader.setFileName(QDir::fromNativeSeparators(file));
 				imageReader.setScaledSize(QSize(coverSize, coverSize));
 				item->setIcon(QPixmap::fromImage(imageReader.read()));

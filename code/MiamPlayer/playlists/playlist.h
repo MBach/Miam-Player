@@ -31,14 +31,13 @@ private:
 	/** Reference to the unique instance of MediaPlayer class in the application. */
 	QWeakPointer<MediaPlayer> _mediaPlayer;
 
-	/** TEST: for drag & drop events: when moving tracks, displays a thin line under the cursor. */
-	QModelIndex *_dropDownIndex;
-
-	/** TEST. */
 	QPoint _dragStartPosition;
 
 	/** TEST: for star ratings. */
 	QModelIndexList _previouslySelectedRows;
+
+	/** Drag & drop events: when moving tracks, displays a thin line under the cursor. */
+	QModelIndex *_dropDownIndex;
 
 	uint _hash;
 

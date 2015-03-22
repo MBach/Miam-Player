@@ -151,6 +151,8 @@ void MainWindow::moveSearchDialog()
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
+	SqlDatabase *db = SqlDatabase::instance();
+
 	// Load music
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
 		bool libraryIsEmpty = newLocations.isEmpty();
@@ -162,14 +164,15 @@ void MainWindow::setupActions()
 		widgetSearchBar->setVisible(!libraryIsEmpty);
 
 		if (libraryIsEmpty) {
+			db->rebuild(oldLocations, QStringList());
 			quickStart->searchMultimediaFiles();
 		} else {
-			SqlDatabase::instance()->rebuild(oldLocations, newLocations);
+			db->rebuild(oldLocations, newLocations);
 		}
 	});
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
 
-	connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
+	connect(db, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
@@ -216,7 +219,7 @@ void MainWindow::setupActions()
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
-		SqlDatabase::instance()->rebuild();
+		db->rebuild();
 	});
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
@@ -226,7 +229,7 @@ void MainWindow::setupActions()
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 
 	// Lambda function to reduce duplicate code
-	auto applyButtonClicked = [this] (const QStringList &newLocations) {
+	auto applyButtonClicked = [this, &db] (const QStringList &newLocations) {
 		SettingsPrivate::instance()->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->show();
@@ -234,7 +237,7 @@ void MainWindow::setupActions()
 		changeHierarchyButton->show();
 		widgetSearchBar->show();
 		actionScanLibrary->setEnabled(true);
-		SqlDatabase::instance()->rebuild();
+		db->rebuild();
 	};
 
 	// Set only one location in the Library: the default music folder

@@ -83,7 +83,7 @@ SqlDatabase::SqlDatabase()
 		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
-		this->loadFromFileDB(false);
+		this->loadFromFileDB(true);
 	});
 }
 
@@ -127,6 +127,7 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 	insertAlbum.addBindValue(artistId);
 	insertAlbum.addBindValue(album->host());
 	insertAlbum.addBindValue(album->icon());
+	qDebug() << "inserting album" << album->title() << album->year() << album->host();
 	if (insertAlbum.exec()) {
 		if (ArtistDAO *artist = qobject_cast<ArtistDAO*>(_cache.value(artistId))) {
 			album->setParentNode(artist);
@@ -250,9 +251,17 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 	return b;
 }
 
-void SqlDatabase::removeRecordsFromHost(const QString &)
+void SqlDatabase::removeRecordsFromHost(const QString &host)
 {
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << host;
+	this->transaction();
+	QSqlQuery remove(*this);
+	remove.prepare("DELETE FROM tracks WHERE host LIKE :h");
+	remove.bindValue(":h", host);
+	remove.exec();
+
+	this->commit();
+	this->loadFromFileDB();
 }
 
 bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
@@ -777,7 +786,7 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 	// Remove old locations from database cache
 	transaction();
 	foreach (QString oldLocation, oldLocations) {
-		if (!newLocations.contains(oldLocation)) {
+		if (newLocations.isEmpty() || !newLocations.contains(oldLocation)) {
 			QSqlQuery syncDb(*this);
 			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
 			syncDb.bindValue(":path", "file://" + QDir::fromNativeSeparators(oldLocation) + "%");
@@ -788,8 +797,6 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 	}
 	commit();
 
-	loadFromFileDB();
-
 	// Restart the worker thread on new locations
 	QStringList locationsToAdd;
 	foreach (QString newLocation, newLocations) {
@@ -798,7 +805,9 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 		}
 	}
 
-	if (!locationsToAdd.isEmpty()) {
+	if (locationsToAdd.isEmpty()) {
+		this->load();
+	} else {
 		_musicSearchEngine->moveToThread(&_workerThread);
 		_musicSearchEngine->doSearch(locationsToAdd);
 	}

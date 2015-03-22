@@ -174,18 +174,15 @@ void LibraryTreeView::init(SqlDatabase *db)
 
 void LibraryTreeView::setVisible(bool visible)
 {
-	qDebug() << Q_FUNC_INFO << visible;
 	TreeView::setVisible(visible);
+	disconnect(_db, 0, this, 0);
+	disconnect(_db, 0, _circleProgressBar, 0);
 	if (visible) {
 		connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
 		connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
 		connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
 		connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
 		connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
-	} else {
-		disconnect(_db, 0, this, 0);
-		disconnect(_db, 0, _circleProgressBar, 0);
-		this->reset();
 	}
 }
 
@@ -392,7 +389,9 @@ void LibraryTreeView::jumpTo(const QString &letter)
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
-	qDebug() << Q_FUNC_INFO << sender();
+	if (sender() == NULL) {
+		return;
+	}
 	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
 		_proxyModel->setFilterRegExp(QString());
@@ -400,11 +399,8 @@ void LibraryTreeView::reset()
 		_libraryModel->removeRows(0, _libraryModel->rowCount());
 		_topLevelItems.clear();
 		this->verticalScrollBar()->setValue(0);
-		QMapIterator<GenericDAO*, QStandardItem*> it(_map);
-		while (it.hasNext()) {
-			it.next();
-			delete it.key();
-		}
+		qDeleteAll(_map.begin(), _map.end());
+		_map.clear();
 	}
 	switch (SettingsPrivate::instance()->insertPolicy()) {
 	case SettingsPrivate::IP_Artists:

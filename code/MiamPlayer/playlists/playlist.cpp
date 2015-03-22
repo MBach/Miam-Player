@@ -115,6 +115,8 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 		connect(scrollBar, &QScrollBar::sliderMoved, this, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderReleased, this, [=]() { viewport()->update(); });
 	}
+	connect(hScrollBar, &QScrollBar::sliderMoved, this, [=]() {	horizontalHeader()->viewport()->update(); });
+
 	this->hideColumn(COL_TRACK_DAO);
 }
 
@@ -199,7 +201,8 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 	// Kind of hack to keep track of position?
 	*_dropDownIndex = indexAt(event->pos());
 	//qDebug() << "DDI" << _dropDownIndex->row();
-	//repaint();
+	this->viewport()->repaint();
+
 	delete _dropDownIndex;
 	_dropDownIndex = NULL;
 }
@@ -363,9 +366,7 @@ void Playlist::paintEvent(QPaintEvent *event)
 			// Where to draw the indicator line
 			int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
 			int height = this->rowHeight(0);
-			/// TODO computes color from user defined settings
-
-			p.setPen(Qt::black);
+			p.setPen(QApplication::palette().highlight().color());
 			p.drawLine(viewport()->rect().left(), rowDest * height,
 					   viewport()->rect().right(), rowDest * height);
 		}

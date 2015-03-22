@@ -7,6 +7,7 @@
 
 #include <QApplication>
 #include <QDateTime>
+#include <QHeaderView>
 #include <QPainter>
 #include <QStylePainter>
 
@@ -45,12 +46,9 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	starEditor->deleteLater();
 }
 
-#include <QHeaderView>
-
 /** Redefined. */
 void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const
 {
-	//qDebug() << index.data().toString() << index.column() << ;
 	QStyleOptionViewItem o(opt);
 	initStyleOption(&o, index);
 
