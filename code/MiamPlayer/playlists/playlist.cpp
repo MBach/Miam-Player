@@ -13,6 +13,8 @@
 #include "playlistitemdelegate.h"
 #include "scrollbar.h"
 
+#include <QMimeData>
+#include <QDrag>
 #include <QItemSelection>
 #include <QPaintEngine>
 #include <QStylePainter>
@@ -194,15 +196,61 @@ void Playlist::dragEnterEvent(QDragEnterEvent *event)
 	}
 }
 
+void Playlist::startDrag(Qt::DropActions)
+{
+	QByteArray itemData;
+	//QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+	QMimeData *mimeData = new QMimeData;
+	mimeData->setData("playlist/x-tableview-item", itemData);
+	QDrag *drag = new QDrag(this);
+	drag->setMimeData(mimeData);
+
+	QPixmap track(":/config/music_64");
+	QColor c = QApplication::palette().highlight().color();
+	QPainter p;
+	p.begin(&track);
+	p.setPen(c);
+	p.drawRect(0, 0, 63, 63);
+	c.setAlpha(128);
+	p.fillRect(0, 0, 63, 63, c);
+	QPen pen(Qt::white);
+	pen.setWidth(1);
+	p.setBrush(QApplication::palette().highlight().color());
+	p.setPen(pen);
+	int selectedRows = selectionModel()->selectedRows().count();
+	QString s = QString::number(selectedRows);
+	int l = fontMetrics().width(s);
+	p.setRenderHint(QPainter::Antialiasing);
+	if (l > 21) {
+		p.drawRoundRect((64 - l) / 2, 21, l, 21);
+		if (selectedRows > 99) {
+			p.drawText(0, 21, 63, 21, Qt::AlignCenter, "99+");
+		} else {
+			p.drawText(0, 21, 63, 21, Qt::AlignCenter, s);
+		}
+	} else {
+		p.drawRoundRect(21, 21, 21, 21);
+		p.drawText(21, 21, 21, 21, Qt::AlignCenter, s);
+	}
+	p.setRenderHint(QPainter::Antialiasing, false);
+	p.end();
+	drag->setPixmap(track);
+
+	// Switch from standard cursor with small plus icon or with arrow icon
+	if (SettingsPrivate::instance()->copyTracksFromPlaylist()) {
+		drag->exec(Qt::MoveAction | Qt::CopyAction, Qt::CopyAction);
+	} else {
+		drag->exec(Qt::MoveAction | Qt::CopyAction, Qt::MoveAction);
+	}
+}
+
 void Playlist::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
 	_dropDownIndex = new QModelIndex();
 	// Kind of hack to keep track of position?
 	*_dropDownIndex = indexAt(event->pos());
-	//qDebug() << "DDI" << _dropDownIndex->row();
 	this->viewport()->repaint();
-
 	delete _dropDownIndex;
 	_dropDownIndex = NULL;
 }
@@ -210,7 +258,6 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 /** Redefined to be able to move tracks between playlists or internally. */
 void Playlist::dropEvent(QDropEvent *event)
 {
-	qDebug() << Q_FUNC_INFO;
 	QObject *source = event->source();
 	int row = this->indexAt(event->pos()).row();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
@@ -258,6 +305,9 @@ void Playlist::dropEvent(QDropEvent *event)
 		return;
 	} else {
 		qDebug() << "???" << source;
+	}
+	if (QDrag *drag = findChild<QDrag*>()) {
+		drag->deleteLater();
 	}
 }
 
@@ -362,6 +412,7 @@ void Playlist::paintEvent(QPaintEvent *event)
 		} else {
 			p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
 		}
+		/// FIXME: when viewport has scrolled down a little, missing offset
 		if (_dropDownIndex) {
 			// Where to draw the indicator line
 			int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();

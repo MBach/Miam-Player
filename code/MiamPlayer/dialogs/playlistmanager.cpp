@@ -89,9 +89,7 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	});
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistManager::exportSelectedPlaylist);
-	connect(_tabPlaylists, &TabPlaylist::playlistCreated, this, [=]() {
-		qDebug() << "PlaylistManager::lambda a new playlist was created in tab playlist";
-	});
+
 	// Save playlist on close (if enabled)
 	connect(_tabPlaylists, &TabPlaylist::aboutToSavePlaylist, this, &PlaylistManager::saveAndRemovePlaylist);
 	connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistManager::deletePlaylist);

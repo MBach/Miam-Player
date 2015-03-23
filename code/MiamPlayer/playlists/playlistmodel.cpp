@@ -209,6 +209,9 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 
 	// Dest equals -1 when rows are dropped at the bottom of the playlist
 	int insertPoint = (dest.isValid() || dest.row() >= 0) ? dest.row() : rowCount();
+	if (insertPoint > rowCount()) {
+		insertPoint = rowCount();
+	}
 	for (int i = 0; i < removedRows.count(); i++) {
 		this->insertRow(insertPoint, removedRows.at(i));
 	}

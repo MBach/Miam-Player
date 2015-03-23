@@ -67,7 +67,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 
 	CornerWidget *corner = new CornerWidget(this);
 	this->setCornerWidget(corner, Qt::TopRightCorner);
-	connect(corner, &QPushButton::clicked, this, &TabPlaylist::addPlaylist);
+	connect(corner, &CornerWidget::innerButtonClicked, this, &TabPlaylist::addPlaylist);
 	corner->installEventFilter(this);
 }
 

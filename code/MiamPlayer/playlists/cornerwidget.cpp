@@ -11,6 +11,19 @@ CornerWidget::CornerWidget(TabPlaylist *parent) :
 	QPushButton("", parent)
 {
 	this->setAcceptDrops(true);
+	//this->setMouseTracking(true);
+	connect(this, &QPushButton::clicked, this, [=]() {
+		QRect r = rect();
+		if (SettingsPrivate::instance()->isRectTabs()) {
+			r.setWidth(r.height());
+		} else {
+			r.setWidth(r.height() * 1.5);
+		}
+		QPoint mfg = mapFromGlobal(QCursor::pos());
+		if (r.contains(mfg)) {
+			emit innerButtonClicked();
+		}
+	});
 }
 
 void CornerWidget::paintEvent(QPaintEvent *)
@@ -22,13 +35,14 @@ void CornerWidget::paintEvent(QPaintEvent *)
 	o.rect = rect();
 	QPen plusPen;
 	static const qreal penScaleFactor = 0.2;
+	QPoint mfg = mapFromGlobal(QCursor::pos());
 
 	if (SettingsPrivate::instance()->isRectTabs()) {
 		o.rect.setWidth(o.rect.height());
 		float offset = o.rect.height() / 5.0;
+		bool isInside = o.rect.contains(mfg);
 		o.rect.adjust(offset, offset, -offset - 1, -offset - 2);
-		qDebug() << o.state;
-		if (o.rect.contains(mapFromGlobal(QCursor::pos())) || o.state.testFlag(QStyle::State_MouseOver)) {
+		if (isInside) {
 			plusPen = QPen(palette.highlight(), penScaleFactor);
 			p.setPen(palette.highlight().color());
 			p.setBrush(palette.highlight().color().lighter());
@@ -43,10 +57,10 @@ void CornerWidget::paintEvent(QPaintEvent *)
 		o.rect.setWidth(o.rect.height() * 1.5);
 
 		double h = this->height() / (double)8;
+		bool isInside = o.rect.contains(mfg);
 		o.rect.adjust(h, h, -h, -h);
 		int dist = 0 + SettingsPrivate::instance()->tabsOverlappingLength();
-
-		if (o.rect.contains(mapFromGlobal(QCursor::pos()))) {
+		if (isInside) {
 			plusPen = QPen(palette.highlight(), penScaleFactor);
 			p.setPen(palette.highlight().color());
 			p.setBrush(palette.highlight().color().lighter());

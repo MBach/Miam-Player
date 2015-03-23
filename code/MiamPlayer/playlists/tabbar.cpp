@@ -74,15 +74,12 @@ void TabBar::dragMoveEvent(QDragMoveEvent *event)
 {
 	int idx = tabAt(event->pos());
 	// Exclude current tab and last one
-	if (idx < count() - 1) {
+	if (idx < count()) {
 		_targetRect = tabRect(idx);
 	}
 	Playlist *playlist = qobject_cast<Playlist*>(event->source());
-	if (playlist) {
-		// Exclude current tab and last one?
-		if (idx < count() - 1) {
-			_timer->start();
-		}
+	if (playlist && idx < count()) {
+		_timer->start();
 	}
 	event->source() ? event->acceptProposedAction() : event->ignore();
 }

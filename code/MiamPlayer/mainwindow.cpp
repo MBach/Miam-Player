@@ -468,7 +468,13 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
-	event->acceptProposedAction();
+	if (event->mimeData()->hasFormat("playlist/x-tableview-item")) {
+		// Display a forbid cursor when one has started a drag from a playlist
+		// Accepted drops are other playlists or the tabbar
+		event->ignore();
+	} else {
+		event->acceptProposedAction();
+	}
 }
 
 void MainWindow::dropEvent(QDropEvent *event)

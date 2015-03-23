@@ -13,6 +13,9 @@ public:
 
 protected:
 	void paintEvent(QPaintEvent *);
+
+signals:
+	void innerButtonClicked();
 };
 
 #endif // CORNERWIDGET_H

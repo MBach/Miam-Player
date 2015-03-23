@@ -62,8 +62,9 @@ TagEditor::TagEditor(QWidget *parent) :
 	// General case: when one is selecting multiple items
 	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayTags);
 
-	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
-	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
+	/// FIXME
+	//connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
+	//connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
 
 	// The context menu in the area displaying a cover can be extended by third party
 	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << this;
@@ -149,7 +150,7 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 
 void TagEditor::replaceCover(Cover *newCover)
 {
-	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows()) {
+	/*foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows()) {
 		Cover *previousCover = covers.value(index.row());
 		// It is sure that covers are different
 		if (!(previousCover == NULL || newCover == NULL || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
@@ -160,7 +161,7 @@ void TagEditor::replaceCover(Cover *newCover)
 		unsavedCovers.insert(index.row(), newCover);
 	}
 	saveChangesButton->setEnabled(true);
-	cancelButton->setEnabled(true);
+	cancelButton->setEnabled(true);*/
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
@@ -285,7 +286,7 @@ void TagEditor::commitChanges()
 					TagLib::PropertyMap pm = fh.file()->tag()->properties();
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
-					if (pm.contains(key.toStdString())) {
+					if (pm.contains(TagLib::String(key.toStdString(), TagLib::String::UTF8))) {
 						bool b = pm.replace(key.toStdString(), TagLib::String(item->text().toStdString(), TagLib::String::UTF8));
 						if (b) {
 							fh.file()->tag()->setProperties(pm);
@@ -441,7 +442,8 @@ void TagEditor::displayTags()
 	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 			QSet<QString> stringList = datas.value(col);
-			stringList.insert(tagEditorWidget->item(row, col)->text());
+			auto item = tagEditorWidget->item(row, col);
+			stringList.insert(item->text());
 			datas.insert(col, stringList);
 		}
 	}
@@ -469,37 +471,30 @@ void TagEditor::displayTags()
 		combo->clear();
 
 		// Special case for Genre, it's better to have them all in the combobox
+		auto list = stringList.toList();
+		std::sort(list.begin(), list.end());
 		if (combo == genreComboBox) {
 			combo->addItems(genres);
-			foreach (QString genre, stringList) {
+			foreach (QString genre, list) {
 				if (!genres.contains(genre)) {
 					combo->addItem(genre);
 				}
 			}
 		} else {
-			combo->addItems(stringList.toList());
+			combo->addItems(list);
 		}
 
-		// Map the combobox object with the number of the column in the table to dynamically reflect changes
-		// Arbitrarily adds the column number to the first item (Keep)
-		combo->insertItem(0, tr("(Keep)"));
-		combo->insertItem(1, tr("(Delete)"));
-
-		// No item: nothing is selected
-		// 1 item: select this item
-		// 2 or more: select (Keep)
-		if (stringList.isEmpty()) {
-			combo->setCurrentIndex(-1);
-		} else if (stringList.count() == 1) { // Multiple tracks selected but same value
+		int nextCurrentIndex = -1;
+		if (list.count() == 1) { // Multiple tracks selected but same value
 			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
-				int result = combo->findText(stringList.toList().first());
-				combo->setCurrentIndex(result);
+				int result = combo->findText(list.first());
+				nextCurrentIndex = result + 2;
 			} else {
-				combo->setCurrentIndex(2);
+				nextCurrentIndex = 2;
 			}
 		} else {
 			// Multiple tracks selected but for same attribute
-			combo->setCurrentIndex(0);
+			nextCurrentIndex = 0;
 		}
 
 		// Suggest data from the complete table
@@ -513,6 +508,12 @@ void TagEditor::displayTags()
 			}
 		}
 		combo->model()->sort(0);
+
+		// Map the combobox object with the number of the column in the table to dynamically reflect changes
+		// Arbitrarily adds the column number to the first item (Keep)
+		combo->insertItem(0, tr("(Keep)"));
+		combo->insertItem(1, tr("(Delete)"));
+		combo->setCurrentIndex(nextCurrentIndex);
 
 		connect(combo, &QComboBox::editTextChanged, this, &TagEditor::updateCells);
 	}
@@ -543,7 +544,7 @@ void TagEditor::rollbackChanges()
 
 	// Then, reload info a second time
 	//this->displayCover();
-	//this->displayTags();
+	this->displayTags();
 
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
@@ -552,6 +553,7 @@ void TagEditor::rollbackChanges()
 /** When one is changing a field, updates all rows in the table (the Artist for example). */
 void TagEditor::updateCells(QString text)
 {
+	qDebug() << Q_FUNC_INFO << sender() << text;
 	QComboBox *combo = findChild<QComboBox*>(sender()->objectName());
 	int column = combo->property("column").toInt();
 
@@ -585,8 +587,8 @@ void TagEditor::updateCells(QString text)
 		tagEditorWidget->updateColumnData(column, text);
 		break;
 	}
-	saveChangesButton->setEnabled(true);
-	cancelButton->setEnabled(true);
+	//saveChangesButton->setEnabled(true);
+	//cancelButton->setEnabled(true);
 
 	combo->blockSignals(false);
 }

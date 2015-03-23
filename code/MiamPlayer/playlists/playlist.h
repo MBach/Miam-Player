@@ -87,6 +87,7 @@ protected:
 
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 	virtual void dragMoveEvent(QDragMoveEvent *event) override;
+	virtual void startDrag(Qt::DropActions) override;
 
 	/** Redefined to be able to move tracks between playlists or internally. */
 	virtual void dropEvent(QDropEvent *event) override;
