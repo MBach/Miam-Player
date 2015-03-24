@@ -57,17 +57,19 @@ SqlDatabase::SqlDatabase()
 		this->exec("PRAGMA temp_store = 2");
 		this->exec("PRAGMA foreign_keys = 1");
 		QSqlQuery createDb(*this);
-		createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), icon varchar(255), UNIQUE(normalizedName))");
+		createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), "\
+					  " icon varchar(255), host varchar(255), UNIQUE(normalizedName))");
 		createDb.exec("CREATE TABLE IF NOT EXISTS albums (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), " \
 			"year INTEGER, cover varchar(255), artistId INTEGER, host varchar(255), icon varchar(255), UNIQUE(id, artistId))");
 		QString createTableTracks = "CREATE TABLE IF NOT EXISTS tracks (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, " \
 			"title varchar(255), artistId INTEGER, albumId INTEGER, artistAlbum varchar(255), length INTEGER, " \
 			"rating INTEGER, disc INTEGER, internalCover INTEGER DEFAULT 0, host varchar(255), icon varchar(255))";
 		createDb.exec(createTableTracks);
-		createDb.exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), background varchar(255), checksum varchar(255))");
+		createDb.exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), " \
+					  "host varchar(255), background varchar(255), checksum varchar(255))");
 		createDb.exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
-			 "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), id INTEGER, url varchar(255), playlistId INTEGER, " \
-			 "FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
+					  "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), host varchar(255), id INTEGER, " \
+					  "url varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
 	}
 
 	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &SqlDatabase::progressChanged);
@@ -77,13 +79,18 @@ SqlDatabase::SqlDatabase()
 	// When the scan is complete, save the model in the filesystem
 	connect(_musicSearchEngine, &MusicSearchEngine::searchHasEnded, [=] () {
 		commit();
+
 		QSqlQuery index(*this);
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
+
 		this->loadFromFileDB(true);
+
+		// Resync remote players and remote databases
+		emit aboutToResyncRemoteSources();
 	});
 }
 
@@ -99,13 +106,14 @@ SqlDatabase* SqlDatabase::instance()
 bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
 {
 	QSqlQuery insertArtist(*this);
-	insertArtist.prepare("INSERT OR IGNORE INTO artists (id, name, normalizedName) VALUES (?, ?, ?)");
+	insertArtist.prepare("INSERT OR IGNORE INTO artists (id, name, normalizedName, host) VALUES (?, ?, ?, ?)");
 	QString artistNorm = this->normalizeField(artist->title());
 	uint artistId = qHash(artistNorm);
 
 	insertArtist.addBindValue(artistId);
 	insertArtist.addBindValue(artist->title());
 	insertArtist.addBindValue(artistNorm);
+	insertArtist.addBindValue(artist->host());
 	if (insertArtist.exec()) {
 		emit nodeExtracted(artist);
 	}
@@ -160,11 +168,12 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std
 		}
 
 		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO playlists(id, title, duration, icon, checksum) VALUES (?, ?, ?, ?, ?)");
+		insert.prepare("INSERT INTO playlists(id, title, duration, icon, host, checksum) VALUES (?, ?, ?, ?, ?, ?)");
 		insert.addBindValue(id);
 		insert.addBindValue(playlist.title());
 		insert.addBindValue(playlist.length());
 		insert.addBindValue(playlist.icon());
+		insert.addBindValue(playlist.host());
 		insert.addBindValue(playlist.checksum());
 		qDebug() << Q_FUNC_INFO << "inserting new playlist" << playlist.checksum();
 
@@ -194,7 +203,8 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
 		TrackDAO track = *it;
 		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, icon, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, " \
+					   "icon, host, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		insert.addBindValue(track.trackNumber());
 		insert.addBindValue(track.title());
 		insert.addBindValue(track.album());
@@ -203,6 +213,7 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<
 		insert.addBindValue(track.rating());
 		insert.addBindValue(track.year());
 		insert.addBindValue(track.icon());
+		insert.addBindValue(track.host());
 		insert.addBindValue(track.id());
 		insert.addBindValue(track.uri());
 		insert.addBindValue(playlistId);
@@ -255,10 +266,20 @@ void SqlDatabase::removeRecordsFromHost(const QString &host)
 {
 	qDebug() << Q_FUNC_INFO << host;
 	this->transaction();
-	QSqlQuery remove(*this);
-	remove.prepare("DELETE FROM tracks WHERE host LIKE :h");
-	remove.bindValue(":h", host);
-	remove.exec();
+	QSqlQuery removeTracks(*this);
+	removeTracks.prepare("DELETE FROM tracks WHERE host LIKE :h");
+	removeTracks.bindValue(":h", host);
+	removeTracks.exec();
+
+	QSqlQuery removeAlbums(*this);
+	removeAlbums.prepare("DELETE FROM albums WHERE host LIKE :h");
+	removeAlbums.bindValue(":h", host);
+	removeAlbums.exec();
+
+	QSqlQuery removeArtists(*this);
+	removeArtists.prepare("DELETE FROM artists WHERE host LIKE :h");
+	removeArtists.bindValue(":h", host);
+	removeArtists.exec();
 
 	this->commit();
 	this->loadFromFileDB();
@@ -280,6 +301,23 @@ bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 		remove.exec();
 	}
 	return this->commit();
+}
+
+void SqlDatabase::removePlaylistsFromHost(const QString &host)
+{
+	this->transaction();
+
+	QSqlQuery children(*this);
+	children.prepare("DELETE FROM playlistTracks WHERE playlistId IN (SELECT id FROM playlists WHERE host LIKE :h)");
+	children.bindValue(":h", host);
+	children.exec();
+
+	QSqlQuery remove(*this);
+	remove.prepare("DELETE FROM playlists WHERE host LIKE :h");
+	remove.bindValue(":h", host);
+	remove.exec();
+
+	this->commit();
 }
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
@@ -379,13 +417,13 @@ TrackDAO SqlDatabase::selectTrack(const QString &uri)
 {
 	TrackDAO track;
 	QSqlQuery qTracks(*this);
-	qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
-		"t.host, t.icon, alb.year FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-		"INNER JOIN artists art ON t.artistId = art.id " \
-		"WHERE uri = ?");
+	qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, " \
+					"rating, disc, internalCover, t.host, t.icon, alb.year " \
+					"FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
+					"INNER JOIN artists art ON t.artistId = art.id " \
+					"WHERE uri = ?");
 	qTracks.addBindValue(uri);
 	if (qTracks.exec() && qTracks.next()) {
-
 		QSqlRecord r = qTracks.record();
 		int j = -1;
 		track.setUri(r.value(++j).toString());
@@ -958,15 +996,18 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		_cache.insert(albumId, albumDAO);
 
 	} else {
-		// A previous record exists for this normalized name but the new name is different
-		if (QString::compare(selectAlbum.record().value(0).toString(), album) != 0) {
-			qDebug() << Q_FUNC_INFO << "updating" << album << albumNorm << albumId;
-			QSqlQuery updateAlbum(*this);
+		QSqlQuery updateAlbum(*this);
+		if (QString::compare(selectAlbum.record().value(0).toString(), album) == 0) {
+			// Remote album with an icon in the treeview, then we add the exact same album from harddrive
+			// for example, first: listenned in streaming, second: enjoyed, then downloaded (legit DL of course)
+			updateAlbum.prepare("UPDATE albums SET host = NULL, icon = NULL WHERE id = ?");
+		} else {
+			// A previous record exists for this normalized name but the new name is different
 			updateAlbum.prepare("UPDATE albums SET name = ? WHERE id = ?");
 			updateAlbum.addBindValue(album);
-			updateAlbum.addBindValue(albumId);
-			updateAlbum.exec();
 		}
+		updateAlbum.addBindValue(albumId);
+		updateAlbum.exec();
 	}
 	QSqlQuery selectArtist(*this);
 	selectArtist.prepare("SELECT name, normalizedName FROM artists WHERE id = ?");
@@ -986,12 +1027,14 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		artistDAO->setTitleNormalized(artistNorm);
 		_cache.insert(artistId, artistDAO);
 	} else {
-		if (QString::compare(selectArtist.record().value(0).toString(), artistAlbum) != 0) {
-			QSqlQuery updateArtist(*this);
-			updateArtist.prepare("UPDATE artists SET name = ? WHERE id = ?");
+		QSqlQuery updateArtist(*this);
+		if (QString::compare(selectArtist.record().value(0).toString(), artistAlbum) == 0) {
+			updateArtist.prepare("UPDATE artists SET host = NULL WHERE id = ?");
+		} else {
+			updateArtist.prepare("UPDATE artists SET name = ?, host = NULL WHERE id = ?");
 			updateArtist.addBindValue(artistAlbum);
-			updateArtist.addBindValue(artistId);
-			updateArtist.exec();
 		}
+		updateArtist.addBindValue(artistId);
+		updateArtist.exec();
 	}
 }

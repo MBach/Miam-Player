@@ -54,6 +54,7 @@ public:
 
 	void removeRecordsFromHost(const QString &host);
 	bool removePlaylists(const QList<PlaylistDAO> &playlists);
+	void removePlaylistsFromHost(const QString &host);
 
 	Cover *selectCoverFromURI(const QString &uri);
 	QList<TrackDAO> selectPlaylistTracks(int playlistID);
@@ -94,6 +95,7 @@ private slots:
 
 signals:
 	void aboutToLoad();
+	void aboutToResyncRemoteSources();
 	void coverWasUpdated(const QFileInfo &);
 	void loaded();
 	void progressChanged(const int &);
