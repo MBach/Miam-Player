@@ -4,6 +4,7 @@
 #include "settingsprivate.h"
 #include "model/sqldatabase.h"
 #include <QGuiApplication>
+#include <QMediaContent>
 #include <QMediaPlaylist>
 #include <QWindow>
 
@@ -37,19 +38,19 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 
 void MediaPlayer::createLocalConnections()
 {
+	// Disconnect remote players
+	QMapIterator<QString, RemoteMediaPlayer*> it(_remotePlayers);
+	while (it.hasNext()) {
+		it.next();
+		RemoteMediaPlayer *p = it.value();
+		if (p) {
+			p->disconnect();
+		}
+	}
+	_remotePlayer = NULL;
+
 	connect(_player, &VlcMediaPlayer::opening, this, [=]() {
 		emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
-	});
-
-	connect(_player, &VlcMediaPlayer::playing, this, [=]() {
-		// Prevent multiple signals bug?
-		//qDebug() << "VlcMediaPlayer::playing ?";
-		//if (_state != QMediaPlayer::PlayingState) {
-		//	qDebug() << "VlcMediaPlayer::playing !";
-			//emit mediaStatusChanged(QMediaPlayer::LoadedMedia);
-			//_state = QMediaPlayer::PlayingState;
-			//emit stateChanged(QMediaPlayer::PlayingState);
-		//}
 	});
 
 	connect(_player, &VlcMediaPlayer::stopped, this, [=]() {
@@ -69,6 +70,7 @@ void MediaPlayer::createLocalConnections()
 		//qDebug() << "VlcMediaPlayer::buffering" << buffer;
 		if (buffer == 100) {
 			if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
+				_player->audio()->setVolume(Settings::instance()->volume());
 				_state = QMediaPlayer::PlayingState;
 			}
 			emit mediaStatusChanged(QMediaPlayer::BufferedMedia);
@@ -106,6 +108,52 @@ void MediaPlayer::createLocalConnections()
 	});
 }
 
+void MediaPlayer::createRemoteConnections(const QUrl &track)
+{
+	// Disconnect all existing remote players
+	QMapIterator<QString, RemoteMediaPlayer*> it(_remotePlayers);
+	while (it.hasNext()) {
+		it.next().value()->disconnect();
+	}
+
+	// Reconnect the good one
+	RemoteMediaPlayer *p = _remotePlayers.value(track.host());
+	if (!p) {
+		_remotePlayer = NULL;
+		return;
+	}
+	_remotePlayer = p;
+	_remotePlayer->setVolume(Settings::instance()->volume());
+
+	// Disconnect local player first
+	_player->disconnect();
+
+	connect(_remotePlayer, &RemoteMediaPlayer::paused, this, [=]() {
+		_state = QMediaPlayer::PausedState;
+		emit stateChanged(_state);
+	});
+	connect(_remotePlayer, &RemoteMediaPlayer::positionChanged, [=](qint64 pos, qint64 duration) {
+		// Cannot set position with connect(...) in plugin. Maybe thread problem? (Tried all Qt::Connection in plugin)
+		_remotePlayer->setPosition(pos);
+		emit positionChanged(pos, duration);
+	});
+	connect(_remotePlayer, &RemoteMediaPlayer::started, this, [=](int duration) {
+		_remotePlayer->setTime(duration);
+		_state = QMediaPlayer::PlayingState;
+		emit stateChanged(_state);
+		emit currentMediaChanged(track.toString());
+	});
+	connect(_remotePlayer, &RemoteMediaPlayer::stopped, this, [=]() {
+		_state = QMediaPlayer::StoppedState;
+		emit stateChanged(_state);
+	});
+	connect(_remotePlayer, &RemoteMediaPlayer::trackHasEnded, this, [=]() {
+		_state = QMediaPlayer::StoppedState;
+		emit stateChanged(_state);
+		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
+	});
+}
+
 void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
 {
 	if (remotePlayer) {
@@ -113,74 +161,51 @@ void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
 	}
 }
 
-QMediaPlaylist * MediaPlayer::playlist()
+void MediaPlayer::changeTrack(QMediaPlaylist *playlist, int trackIndex)
 {
-	return _playlist;
-}
-
-void MediaPlayer::setPlaylist(QMediaPlaylist *playlist)
-{
-	if (_playlist) {
-		_playlist->disconnect(this);
+	if (_remotePlayer) {
+		_remotePlayer->disconnect();
+		_remotePlayer->stop();
+	} else {
+		_player->disconnect();
+		_player->stop();
 	}
+	_state = QMediaPlayer::StoppedState;
 	_playlist = playlist;
-	/// FIXME?
-	/*connect(_playlist, &QMediaPlaylist::currentIndexChanged, this, [=]() {
-		qDebug() << Q_FUNC_INFO;
-		if (_player->state() == Vlc::State::Paused || _player->state() == Vlc::State::Playing) {
-			_player->blockSignals(true);
-			_player->stop();
-		} else {
-			foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
-				if (remotePlayer) {
-					remotePlayer->blockSignals(true);
-					remotePlayer->stop();
-				}
-			}
-		}
-		// _state = QMediaPlayer::StoppedState;
-		//emit stateChanged(_state);
-	});*/
+	_playlist->setCurrentIndex(trackIndex);
+	this->play();
 }
 
 void MediaPlayer::setVolume(int v)
 {
 	Settings::instance()->setVolume(v);
-	if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
-		_player->audio()->setVolume(v);
-	}
-	foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
-		if (remotePlayer) {
-			remotePlayer->setVolume(v);
+	if (_remotePlayer) {
+		_remotePlayer->setVolume(v);
+	} else {
+		if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
+			_player->audio()->setVolume(v);
 		}
 	}
 }
 
+/** Current duration of the media, in ms. */
 qint64 MediaPlayer::duration()
 {
-	/// XXX: what if remote playing?
-	if (_remotePlayer != NULL) {
-		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
-		return 1;
+	if (_remotePlayer) {
+		return _remotePlayer->length();
 	} else {
 		return _player->length();
 	}
 }
 
+/** Current position in the media, percent-based. */
 float MediaPlayer::position() const
 {
 	if (_remotePlayer != NULL) {
-		//return _remotePlayer->position();
-		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
-		return 0.0;
+		return _remotePlayer->position();
 	} else {
 		return _player->position();
 	}
-}
-
-QMediaPlayer::State MediaPlayer::state() const
-{
-	return _state;
 }
 
 void MediaPlayer::setState(QMediaPlayer::State state)
@@ -189,21 +214,27 @@ void MediaPlayer::setState(QMediaPlayer::State state)
 	emit stateChanged(_state);
 }
 
+/** Set mute on or off. */
 void MediaPlayer::setMute(bool b) const
 {
-	b ? _player->audio()->setTrack(-1) : _player->audio()->setTrack(0);
+	if (_remotePlayer) {
+		_remotePlayer->setMute(b);
+	} else {
+		// To avoid some glitches with VLC, it's better to switch from a fake track than actually muting sound
+		if (b) {
+			_player->audio()->setTrack(-1);
+		} else {
+			_player->audio()->setTrack(0);
+		}
+	}
 }
 
 void MediaPlayer::setTime(int t) const
 {
-	QMediaContent mc = _playlist->media(_playlist->currentIndex());
-	if (mc.canonicalUrl().isLocalFile()) {
-		_player->setTime(t);
-	} else if (_remotePlayer != NULL) {
-		/// TODO
+	if (_remotePlayer) {
 		_remotePlayer->setTime(t);
 	} else {
-
+		_player->setTime(t);
 	}
 }
 
@@ -212,17 +243,21 @@ void MediaPlayer::seek(float pos)
 	if (pos == 1.0) {
 		pos -= 0.001f;
 	}
-	QMediaContent mc = _playlist->media(_playlist->currentIndex());
-	if (mc.canonicalUrl().isLocalFile()) {
+
+	if (_remotePlayer) {
+		_remotePlayer->seek(pos);
+	} else {
 		_player->setPosition(pos);
-	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
-		remotePlayer->seek(pos);
 	}
 }
 
 int MediaPlayer::volume() const
 {
-	return _player->audio()->volume();
+	if (_remotePlayer) {
+		return _remotePlayer->volume();
+	} else {
+		return _player->audio()->volume();
+	}
 }
 
 /** Seek backward in the current playing track for a small amount of time. */
@@ -231,12 +266,21 @@ void MediaPlayer::seekBackward()
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		int currentVolume = volume();
 		setVolume(0);
-		int currentPos = _player->position() * _player->length();
+		int currentPos = 0;
+		if (_remotePlayer) {
+			currentPos = _remotePlayer->position() * _remotePlayer->length();
+		} else {
+			currentPos = _player->position() * _player->length();
+		}
 		int time = currentPos - SettingsPrivate::instance()->playbackSeekTime();
 		if (time < 0) {
 			this->seek(0.0);
 		} else {
-			this->seek(time / (float)_player->length());
+			if (_remotePlayer) {
+				this->seek(time / (float)_remotePlayer->length());
+			} else {
+				this->seek(time / (float)_player->length());
+			}
 		}
 		setVolume(currentVolume);
 	}
@@ -248,12 +292,22 @@ void MediaPlayer::seekForward()
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		int currentVolume = volume();
 		setVolume(0);
-		int currentPos = _player->position() * _player->length();
-		int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
-		if (time > _player->length()) {
-			skipForward();
+		if (_remotePlayer) {
+			int currentPos = _remotePlayer->position() * _remotePlayer->length();
+			int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
+			if (time > _remotePlayer->length()) {
+				skipForward();
+			} else {
+				this->seek(time / (float)_remotePlayer->length());
+			}
 		} else {
-			this->seek(time / (float)_player->length());
+			int currentPos = _player->position() * _player->length();
+			int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
+			if (time > _player->length()) {
+				skipForward();
+			} else {
+				this->seek(time / (float)_player->length());
+			}
 		}
 		setVolume(currentVolume);
 	}
@@ -264,18 +318,10 @@ void MediaPlayer::skipBackward()
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0)) {
 		return;
 	}
-
-	QMediaContent previousMedia = _playlist->media(_playlist->previousIndex());
-	QMediaContent currentMedia = _playlist->media(_playlist->currentIndex());
-	if (currentMedia.canonicalUrl().isLocalFile() && !previousMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << Q_FUNC_INFO << "current is Local, previous is Remote, disconnecting local!";
-		_player->blockSignals(true);
+	if (_remotePlayer) {
+		_remotePlayer->stop();
+	} else {
 		_player->stop();
-	} else if (!currentMedia.canonicalUrl().isLocalFile() && previousMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << Q_FUNC_INFO << "previous is Local, current is Remote, disconnecting remote!";
-		RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(currentMedia.canonicalUrl());
-		remotePlayer->blockSignals(true);
-		remotePlayer->stop();
 	}
 
 	_playlist->previous();
@@ -285,21 +331,12 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
-		_player->stop();
 		return;
 	}
-
-	QMediaContent currentMedia = _playlist->media(_playlist->currentIndex());
-	QMediaContent nextMedia = _playlist->media(_playlist->nextIndex());
-	if (currentMedia.canonicalUrl().isLocalFile() && !nextMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << Q_FUNC_INFO << "current is Local, next is Remote, disconnecting local!";
-		_player->blockSignals(true);
+	if (_remotePlayer) {
+		_remotePlayer->stop();
+	} else {
 		_player->stop();
-	} else if (!currentMedia.canonicalUrl().isLocalFile() && nextMedia.canonicalUrl().isLocalFile()) {
-		qDebug() << Q_FUNC_INFO << "next is Local, current is Remote, disconnecting remote!";
-		RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(currentMedia.canonicalUrl());
-		remotePlayer->blockSignals(true);
-		remotePlayer->stop();
 	}
 
 	_playlist->next();
@@ -312,23 +349,10 @@ void MediaPlayer::pause()
 	if (!_playlist) {
 		return;
 	}
-	QMediaContent mc = _playlist->media(_playlist->currentIndex());
-	if (mc.canonicalUrl().isLocalFile()) {
-		_player->pause();
-	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
-		remotePlayer->pause();
-	}
-}
-
-void MediaPlayer::disconnectPlayers(bool isLocal)
-{
-	if (isLocal) {
-		_player->disconnect();
+	if (_remotePlayer) {
+		_remotePlayer->pause();
 	} else {
-		QMapIterator<QString, RemoteMediaPlayer*> it(_remotePlayers);
-		while (it.hasNext()) {
-			it.next().value()->disconnect();
-		}
+		_player->pause();
 	}
 }
 
@@ -345,31 +369,32 @@ void MediaPlayer::play()
 	}
 
 	// Everything is splitted in 2: local actions and remote actions
-	// Is it the good way to proceed?
 	if (mc.canonicalUrl().isLocalFile()) {
-		_player->blockSignals(false);
+		this->createLocalConnections();
+
+		// Resume playback is file was previously opened
 		if (_state == QMediaPlayer::PausedState) {
+			qDebug() << Q_FUNC_INFO << "QMediaPlayer::PausedState";
 			_player->resume();
 			_state = QMediaPlayer::PlayingState;
 			emit stateChanged(_state);
 		} else {
+			qDebug() << Q_FUNC_INFO << _state;
 			QString file = mc.canonicalUrl().toLocalFile();
 			if (_media) {
-				_media->disconnect();
 				delete _media;
 			}
 			_media = new VlcMedia(file, true, _instance);
 			_player->audio()->setVolume(Settings::instance()->volume());
 			_player->open(_media);
 		}
-	} else if (RemoteMediaPlayer *remotePlayer = this->remoteMediaPlayer(mc.canonicalUrl())) {
-		remotePlayer->blockSignals(false);
-		remotePlayer->setVolume(Settings::instance()->volume());
+	} else {
+		// Remote player is about to start
+		this->createRemoteConnections(mc.canonicalUrl());
 		if (_state == QMediaPlayer::PausedState) {
-			remotePlayer->resume();
-			_state = QMediaPlayer::PlayingState;
+			_remotePlayer->resume();
 		} else {
-			remotePlayer->play(mc.canonicalUrl());
+			_remotePlayer->play(mc.canonicalUrl());
 		}
 	}
 }
@@ -377,62 +402,25 @@ void MediaPlayer::play()
 /** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
-	_player->stop();
-	foreach (RemoteMediaPlayer *remotePlayer, _remotePlayers) {
-		if (remotePlayer) {
-			remotePlayer->stop();
-		}
+	if (_remotePlayer) {
+		_remotePlayer->stop();
+	} else {
+		_player->stop();
 	}
 }
 
 /** Activate or desactive audio output. */
 void MediaPlayer::toggleMute() const
 {
-	if (_player->audio()->track() == 0) {
-		_player->audio()->setTrack(-1);
+	if (_remotePlayer) {
+		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
 	} else {
-		_player->audio()->setTrack(0);
+		if (_player->audio()->track() == 0) {
+			_player->audio()->setTrack(-1);
+		} else {
+			_player->audio()->setTrack(0);
+		}
 	}
-}
-
-RemoteMediaPlayer * MediaPlayer::remoteMediaPlayer(const QUrl &track, bool autoConnect)
-{
-	// Disconnect all existing remote players (just in case)
-	QMapIterator<QString, RemoteMediaPlayer*> it(_remotePlayers);
-	while (it.hasNext()) {
-		it.next().value()->disconnect();
-	}
-
-	// Reconnect the good one
-	RemoteMediaPlayer *p = _remotePlayers.value(track.host());
-	if (!p) {
-		return NULL;
-	}
-
-	// Auto connect after disconnected. Useful when switching from local to remote and vice-versa
-	if (autoConnect) {
-		connect(p, &RemoteMediaPlayer::paused, this, [=]() {
-			_state = QMediaPlayer::PausedState;
-			emit stateChanged(_state);
-		});
-		connect(p, &RemoteMediaPlayer::positionChanged, this, &MediaPlayer::positionChanged);
-		connect(p, &RemoteMediaPlayer::started, this, [=](int) {
-			_state = QMediaPlayer::PlayingState;
-			emit stateChanged(_state);
-			emit currentMediaChanged(track.toString());
-		});
-		connect(p, &RemoteMediaPlayer::stopped, this, [=]() {
-			_state = QMediaPlayer::StoppedState;
-			emit stateChanged(_state);
-		});
-		connect(p, &RemoteMediaPlayer::trackHasEnded, this, [=]() {
-			_state = QMediaPlayer::StoppedState;
-			emit stateChanged(_state);
-			qDebug() << "emit mediaStatusChanged(QMediaPlayer::EndOfMedia)";
-			emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
-		});
-	}
-	return p;
 }
 
 void MediaPlayer::convertMedia(libvlc_media_t *)

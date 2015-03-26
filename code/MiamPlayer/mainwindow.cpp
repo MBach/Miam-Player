@@ -283,7 +283,6 @@ void MainWindow::setupActions()
 	});
 
 	// Media buttons and their shortcuts
-	/// XXX: can this be factorized with meta object system?
 	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekBackward);

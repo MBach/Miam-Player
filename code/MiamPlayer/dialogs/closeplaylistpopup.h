@@ -33,9 +33,6 @@ public:
 	void setOverwriteMode(bool overwrite);
 
 	void setVisible(bool visible);
-
-//signals:
-//	void saveAndOverwritePlaylist();
 };
 
 #endif // CLOSEPLAYLISTPOPUP_H

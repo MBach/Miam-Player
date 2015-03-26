@@ -447,17 +447,20 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 	}
 
 	if (node->parentNode()) {
+
 		QStandardItem *parentItem = _map.value(node->parentNode());
 		if (parentItem) {
 			parentItem->appendRow(nodeItem);
 		} else {
-			qDebug() << Q_FUNC_INFO << "parentItem should exists but it was not found?" << node->title();
+			qDebug() << Q_FUNC_INFO << "parentItem should exists but it was not found?" << node->title() << node->parentNode()->title();
 		}
 	} else {
-		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
-		SeparatorItem *separator = this->insertSeparator(nodeItem->text());
-		if (separator) {
-			_topLevelItems.insert(separator->index(), nodeItem->index());
+		if (!_map.contains(node)) {
+			_libraryModel->invisibleRootItem()->appendRow(nodeItem);
+			SeparatorItem *separator = this->insertSeparator(nodeItem->text());
+			if (separator) {
+				_topLevelItems.insert(separator->index(), nodeItem->index());
+			}
 		}
 	}
 	_map.insert(node, nodeItem);

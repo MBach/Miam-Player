@@ -140,8 +140,34 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 		if (ArtistDAO *artist = qobject_cast<ArtistDAO*>(_cache.value(artistId))) {
 			album->setParentNode(artist);
 			emit nodeExtracted(album);
-		} else {
+
+		}/*else {
 			qDebug() << Q_FUNC_INFO << "artist wasn't found?" << artistId;
+
+			QSqlQuery selectArtist(*this);
+			selectArtist.prepare("SELECT id, name, normalizedName, icon, host FROM artists WHERE id = ?");
+			selectArtist.addBindValue(artistId);
+			selectArtist.exec();
+
+
+			if (selectArtist.exec() && selectArtist.next()) {
+				QSqlRecord r = selectArtist.record();
+				ArtistDAO *artist = new ArtistDAO;
+				int i = -1;
+				artist->setId(r.value(++i).toString());
+				artist->setTitle(r.value(++i).toString());
+				artist->setTitleNormalized(r.value(++i).toString());
+				artist->setIcon(r.value(++i).toString());
+				artist->setHost(r.value(++i).toString());
+
+				_cache.insert(artistId, artist);
+				album->setParentNode(artist);
+				emit nodeExtracted(album);
+			}
+		}*/
+		else if (album->parentNode() != NULL) {
+			qDebug() << Q_FUNC_INFO << "album->parentNode()" << album->parentNode()->title();
+			emit nodeExtracted(album);
 		}
 	}
 
@@ -797,15 +823,18 @@ void SqlDatabase::rebuild()
 	this->exec("PRAGMA temp_store = 2");
 	this->exec("PRAGMA foreign_keys = 1");
 
-	QSqlQuery createDb(*this);
-	createDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
-	createDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
-	createDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
-	createDb.exec("DROP INDEX indexArtist");
-	createDb.exec("DROP INDEX indexAlbum");
-	createDb.exec("DROP INDEX indexPath");
-	createDb.exec("DROP INDEX indexArtistId");
-	createDb.exec("DROP INDEX indexAlbumId");
+	QSqlQuery cleanDb(*this);
+	//cleanDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
+	//cleanDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
+	//cleanDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
+	cleanDb.exec("DELETE FROM tracks");
+	cleanDb.exec("DELETE FROM albums");
+	cleanDb.exec("DELETE FROM artists");
+	cleanDb.exec("DROP INDEX indexArtist");
+	cleanDb.exec("DROP INDEX indexAlbum");
+	cleanDb.exec("DROP INDEX indexPath");
+	cleanDb.exec("DROP INDEX indexArtistId");
+	cleanDb.exec("DROP INDEX indexAlbumId");
 	transaction();
 
 	// Foreach file, insert tuple

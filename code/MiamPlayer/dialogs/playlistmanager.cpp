@@ -178,10 +178,14 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	Playlist *playlist = NULL;
 	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
 
+	qDebug() << Q_FUNC_INFO << playlistId;
+
 	// Do not load the playlist if it's already displayed
 	for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
 		Playlist *p = _tabPlaylists->playlist(i);
-		if (playlistDao.checksum().toUInt() == p->hash()) {
+		bool ok = false;
+		uint checksum = playlistDao.checksum().toUInt(&ok);
+		if (ok && checksum == p->hash()) {
 			/// TODO: ask one if if want to reload the playlist or not
 			_tabPlaylists->setCurrentIndex(i);
 			return;

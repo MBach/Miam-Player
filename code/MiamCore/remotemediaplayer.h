@@ -19,13 +19,28 @@ public:
 
 	virtual ~RemoteMediaPlayer() {}
 
+	/** The host acts as a key to play medias, like http://www.my-favourite-streaming-website.com/. */
 	virtual QString host() const = 0;
 
+	/** Current media length in ms. */
+	virtual int length() const = 0;
+
+	/** The position in the current media being played. Percent-based. */
 	virtual float position() const = 0;
 
-	virtual void setTime(int t) = 0;
+	virtual void setMute(bool b) = 0;
+
+	/** Sets the current position in ms in the current media being played (useful for seeking). */
+	virtual void setPosition(qint64 pos) = 0;
+
+	/** Sets the total time in ms in the current media being played (useful for seeking). */
+	virtual void setTime(qint64 t) = 0;
+
+	/** The current volume of this remote player. */
+	virtual int volume() const = 0;
 
 public slots:
+	/// Must be implemented in derived class
 	virtual void pause() = 0;
 	virtual void play(const QUrl &track) = 0;
 	virtual void resume() = 0;
@@ -34,6 +49,7 @@ public slots:
 	virtual void stop() = 0;
 
 signals:
+	/** Current player has been put in pause mode by one. */
 	void paused();
 
 	/** Current track position has changed. 'Pos' and 'duration' are expressed in milliseconds. */
@@ -42,9 +58,10 @@ signals:
 	/** The player has started to play a new track. 'Duration' is expressed in milliseconds.*/
 	void started(qint64 duration);
 
+	/** Current player has been put in stop mode by one. */
 	void stopped();
 
-	/** Current track has finished. */
+	/** Current track has finished to be played. */
 	void trackHasEnded();
 };
 

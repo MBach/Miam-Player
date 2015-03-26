@@ -58,9 +58,10 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
 
 	connect(this, &QTableView::doubleClicked, this, [=] (const QModelIndex &track) {
-		_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
+		_mediaPlayer.data()->changeTrack(_playlistModel->mediaPlaylist(), track.row());
+		/*_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
 		this->mediaPlaylist()->setCurrentIndex(track.row());
-		_mediaPlayer.data()->play();
+		_mediaPlayer.data()->play();*/
 		this->viewport()->update();
 	});
 
