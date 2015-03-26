@@ -24,6 +24,14 @@ QuickStart::QuickStart(QWidget *parent) :
 		orLabel->setVisible(false);
 	} else {
 		defaultFolderTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
+
+		defaultFolderTableWidget->insertRow(0);
+		QTableWidgetItem *checkBox = new QTableWidgetItem;
+		checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
+		defaultFolderTableWidget->setItem(0, 0, checkBox);
+		QString musicLocation = musicLocations.first();
+		defaultFolderTableWidget->setItem(0, 1, new QTableWidgetItem(QFileIconProvider().icon(musicLocation), QDir::toNativeSeparators(musicLocation)));
+
 		connect(defaultFolderTableWidget, &QTableWidget::itemClicked, this, [=](QTableWidgetItem *i) {
 			if (i->column() != 0) {
 				if (defaultFolderTableWidget->item(0, 0)->checkState() == Qt::Checked) {
@@ -184,11 +192,7 @@ void QuickStart::insertFirstRow()
 		QTableWidgetItem *totalFiles2 = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
 		totalFiles2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-
-		defaultFolderTableWidget->insertRow(0);
 		defaultFolderTableWidget->setItem(0, 0, checkBox);
-		QString musicLocation = musicLocations.first();
-		defaultFolderTableWidget->setItem(0, 1, new QTableWidgetItem(QFileIconProvider().icon(musicLocation), QDir::toNativeSeparators(musicLocation)));
 		defaultFolderTableWidget->setItem(0, 2, totalFiles2);
 	}
 

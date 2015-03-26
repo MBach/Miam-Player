@@ -229,7 +229,7 @@ void MainWindow::setupActions()
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 
 	// Lambda function to reduce duplicate code
-	auto applyButtonClicked = [this, &db] (const QStringList &newLocations) {
+	auto applyButtonClicked = [this, db] (const QStringList &newLocations) {
 		SettingsPrivate::instance()->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->show();
