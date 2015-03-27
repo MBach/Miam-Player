@@ -5,7 +5,7 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MiamPlayer"
-#define VERSION "0.7.1"
+#define VERSION "0.7.2"
 
 #include "miamstyle.h"
 #include "plugininfo.h"
@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(mp);
 
 	qRegisterMetaType<GenericDAO>();
-    qRegisterMetaType<TrackDAO>();
+	qRegisterMetaType<TrackDAO>();
 	qRegisterMetaTypeStreamOperators<TrackDAO>("TrackDAO");
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();

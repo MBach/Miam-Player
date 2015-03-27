@@ -15,9 +15,11 @@
 #include <taglib/apetag.h>
 #include <taglib/asffile.h>
 #include <taglib/flacfile.h>
+#include <taglib/modfile.h>
 #include <taglib/mpcfile.h>
 #include <taglib/mp4file.h>
 #include <taglib/mpegfile.h>
+#include <taglib/opusfile.h>
 #include <taglib/vorbisfile.h>
 
 #include <taglib/id3v2tag.h>
@@ -88,6 +90,9 @@ bool FileHelper::init(const QString &filePath)
 	} else if (suffix == "ogg" || suffix == "oga") {
 		_file = new TagLib::Vorbis::File(fp);
 		_fileType = OGG;
+	} else if (suffix == "opus") {
+		_file = new TagLib::Ogg::Opus::File(fp);
+		_fileType = OGG;
 	} else {
 		_file = NULL;
 		_fileType = UNKNOWN;
@@ -104,7 +109,7 @@ FileHelper::~FileHelper()
 
 const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
 {
-	static QStringList standardSuffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg";
+	static QStringList standardSuffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg" << "opus";
 	static QStringList gameMusicEmuSuffixes = QStringList() << "ay" << "gbs" << "gym" << "hes" << "kss" << "nsf" << "nsfe" << "sap" << "spc" << "vgm" << "vgz";
 	QStringList filters;
 	if (et & Standard) {
@@ -165,6 +170,10 @@ QString FileHelper::artistAlbum() const
 void FileHelper::setArtistAlbum(const QString &artistAlbum)
 {
 	switch (_fileType) {
+	case FLAC: {
+		this->setFlacAttribute("ALBUMARTIST", artistAlbum);
+		break;
+	}
 	case MP4:{
 		TagLib::MP4::File *mp4File = static_cast<TagLib::MP4::File*>(_file);
 		TagLib::MP4::ItemListMap &items = mp4File->tag()->itemListMap();
@@ -178,7 +187,7 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 	}
 	case MPC:
 		//mpcFile = static_cast<MPC::File*>(f);
-		qDebug() << Q_FUNC_INFO << "MPC file";
+		qDebug() << Q_FUNC_INFO << "Not implemented for MPC";
 		break;
 	case MP3:{
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
@@ -193,7 +202,16 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 			tif->setText(artistAlbum.toStdString().data());
 			tag->addFrame(tif);
 		} else if (mpegFile->hasID3v1Tag()) {
-			qDebug() << Q_FUNC_INFO << "ID3v1Tag";
+			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
+		}
+		break;
+	}
+	case OGG: {
+		TagLib::Ogg::XiphComment *xiphComment = static_cast<TagLib::Ogg::XiphComment*>(_file->tag());
+		if (xiphComment) {
+			xiphComment->addField("ALBUMARTIST", artistAlbum.toStdString().data());
+		} else {
+			qDebug() << Q_FUNC_INFO << "Not implemented for this OGG file";
 		}
 		break;
 	}
@@ -436,6 +454,19 @@ void FileHelper::setCover(Cover *cover)
 void FileHelper::setDiscNumber(const QString &disc)
 {
 	switch (_fileType) {
+	case FLAC: {
+		this->setFlacAttribute("DISCNUMBER", disc);
+		break;
+	}
+	case OGG: {
+		TagLib::Ogg::XiphComment *xiphComment = static_cast<TagLib::Ogg::XiphComment*>(_file->tag());
+		if (xiphComment) {
+			xiphComment->addField("DISCNUMBER", disc.toStdString().data());
+		} else {
+			qDebug() << Q_FUNC_INFO << "Not implemented for this OGG file";
+		}
+		break;
+	}
 	case MP3: {
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
 		if (mpegFile && mpegFile->hasID3v2Tag()) {
@@ -451,7 +482,7 @@ void FileHelper::setDiscNumber(const QString &disc)
 		break;
 	}
 	default:
-		qDebug() << Q_FUNC_INFO << "Not implemented for other file type than MP3";
+		qDebug() << Q_FUNC_INFO << "Not implemented for this file type";
 		break;
 	}
 }
@@ -685,6 +716,31 @@ int FileHelper::ratingForID3v2(TagLib::ID3v2::Tag *tag) const
 		}
 	}
 	return r;
+}
+
+void FileHelper::setFlacAttribute(const std::string &attribute, const QString &value)
+{
+	if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
+		if (flacFile->hasID3v2Tag()) {
+			TagLib::ID3v2::Tag *tag = flacFile->ID3v2Tag();
+			TagLib::ID3v2::FrameList l = tag->frameListMap()[attribute.data()];
+			if (!l.isEmpty()) {
+				tag->removeFrame(l.front());
+			}
+			TagLib::ID3v2::TextIdentificationFrame *tif = new TagLib::ID3v2::TextIdentificationFrame(TagLib::ByteVector("ARTISTALBUM"));
+			tif->setText(value.toStdString().data());
+			tag->addFrame(tif);
+		} else if (flacFile->hasID3v1Tag()) {
+			qDebug() << Q_FUNC_INFO << "Not implemented (FLAC ID3v1)";
+		} else if (flacFile->hasXiphComment()) {
+			TagLib::Ogg::XiphComment *xiph = flacFile->xiphComment();
+			if (value.isEmpty()) {
+				xiph->removeField(attribute.data());
+			} else {
+				xiph->addField(attribute.data(), value.toStdString().data());
+			}
+		}
+	}
 }
 
 void FileHelper::setRatingForID3v2(int rating, TagLib::ID3v2::Tag *tag)

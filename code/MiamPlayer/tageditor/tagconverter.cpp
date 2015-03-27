@@ -121,6 +121,9 @@ void TagConverter::applyPatternToFilenames()
 {
 	QString pattern = this->generatePattern(tagToFileLineEdit);
 
+	static QRegularExpression forbiddenChar1("[\\\\/:*?\"<>|]");
+	static QRegularExpression forbiddenChar2("[\\\\/:*?<>|]");
+
 	int column = 0;
 	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
 		QString text = "";
@@ -132,6 +135,11 @@ void TagConverter::applyPatternToFilenames()
 			} else {
 				text += pattern.at(c);
 			}
+		}
+
+		// Pattern contains invalid characters for current row
+		if (text.contains(forbiddenChar1)) {
+			text = text.replace(forbiddenChar2, "_").replace("\"", "'");
 		}
 		QString item = _tagEditor->item(index.row(), 0)->text();
 		int extension = item.lastIndexOf(".");

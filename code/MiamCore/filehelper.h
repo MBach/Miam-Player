@@ -121,6 +121,7 @@ private:
 	QString extractVorbisFeature(const QString &featureToExtract) const;
 
 	int ratingForID3v2(TagLib::ID3v2::Tag *tag) const;
+	void setFlacAttribute(const std::string &attribute, const QString &value);
 	void setRatingForID3v2(int rating, TagLib::ID3v2::Tag *tag);
 };
 
