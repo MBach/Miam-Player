@@ -44,13 +44,6 @@ public:
 	inline void setPlaylist(QMediaPlaylist *playlist) { _playlist = playlist; }
 
 	void setVolume(int v);
-	int volume() const;
-
-	/** Current duration of the media, in ms. */
-	qint64 duration();
-
-	/** Current position in the media, percent-based. */
-	float position() const;
 
 	inline QMediaPlayer::State state() const { return _state; }
 	void setState(QMediaPlayer::State state);
@@ -58,7 +51,8 @@ public:
 	/** Set mute on or off. */
 	void setMute(bool b) const;
 
-	void setTime(int t) const;
+	void setTime(qint64 t) const;
+	qint64 time() const;
 
 	void seek(float pos);
 
@@ -66,6 +60,12 @@ private:
 	void createLocalConnections();
 
 	void createRemoteConnections(const QUrl &track);
+
+	/** Current duration of the media, in ms. */
+	qint64 duration();
+
+	/** Current position in the media, percent-based. */
+	float position() const;
 
 public slots:
 	/** Pause current playing track. */

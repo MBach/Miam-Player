@@ -566,7 +566,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 {
-	qDebug() << Q_FUNC_INFO << state;
 	playButton->disconnect();
 	actionPlay->disconnect();
 	if (state == QMediaPlayer::PlayingState) {

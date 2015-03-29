@@ -34,6 +34,14 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 			w->setTitle(t.title() + " (" + t.artist() + ") - Miam Player");
 		}
 	});
+
+	// Link core multimedia actions
+	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
+		//qDebug() << "MediaPlayer::mediaStatusChanged" << status;
+		if (status == QMediaPlayer::EndOfMedia) {
+			skipForward();
+		}
+	});
 }
 
 void MediaPlayer::createLocalConnections()
@@ -48,6 +56,8 @@ void MediaPlayer::createLocalConnections()
 		}
 	}
 	_remotePlayer = NULL;
+	_player->disconnect();
+	_player->setTime(0);
 
 	connect(_player, &VlcMediaPlayer::opening, this, [=]() {
 		emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
@@ -56,25 +66,23 @@ void MediaPlayer::createLocalConnections()
 	connect(_player, &VlcMediaPlayer::stopped, this, [=]() {
 		//qDebug() << "VlcMediaPlayer::stopped";
 		emit mediaStatusChanged(QMediaPlayer::NoMedia);
-		_state = QMediaPlayer::StoppedState;
-		emit stateChanged(QMediaPlayer::StoppedState);
+		this->setState(QMediaPlayer::StoppedState);
 	});
 
 	connect(_player, &VlcMediaPlayer::paused, this, [=]() {
 		//qDebug() << "VlcMediaPlayer::paused";
-		_state = QMediaPlayer::PausedState;
-		emit stateChanged(QMediaPlayer::PausedState);
+		this->setState(QMediaPlayer::PausedState);
 	});
 
 	connect(_player, &VlcMediaPlayer::buffering, this, [=](float buffer) {
 		//qDebug() << "VlcMediaPlayer::buffering" << buffer;
 		if (buffer == 100) {
+			_player->audio()->setVolume(Settings::instance()->volume());
 			if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
-				_player->audio()->setVolume(Settings::instance()->volume());
-				_state = QMediaPlayer::PlayingState;
+				this->setState(QMediaPlayer::PlayingState);
 			}
-			emit mediaStatusChanged(QMediaPlayer::BufferedMedia);
-			emit stateChanged(_state);
+			// useless signal?
+			//emit mediaStatusChanged(QMediaPlayer::BufferedMedia);
 		} else {
 			emit mediaStatusChanged(QMediaPlayer::BufferingMedia);
 		}
@@ -99,13 +107,6 @@ void MediaPlayer::createLocalConnections()
 
 	// Cannot use new signal/slot syntax because libvlc_media_t is not fully defined at compile time (just a forward declaration)
 	connect(_player, SIGNAL(mediaChanged(libvlc_media_t*)), this, SLOT(convertMedia(libvlc_media_t*)));
-
-	// Link core multimedia actions
-	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
-		if (status == QMediaPlayer::EndOfMedia) {
-			skipForward();
-		}
-	});
 }
 
 void MediaPlayer::createRemoteConnections(const QUrl &track)
@@ -123,14 +124,14 @@ void MediaPlayer::createRemoteConnections(const QUrl &track)
 		return;
 	}
 	_remotePlayer = p;
+	_remotePlayer->disconnect();
 	_remotePlayer->setVolume(Settings::instance()->volume());
 
 	// Disconnect local player first
 	_player->disconnect();
 
 	connect(_remotePlayer, &RemoteMediaPlayer::paused, this, [=]() {
-		_state = QMediaPlayer::PausedState;
-		emit stateChanged(_state);
+		this->setState(QMediaPlayer::PausedState);
 	});
 	connect(_remotePlayer, &RemoteMediaPlayer::positionChanged, [=](qint64 pos, qint64 duration) {
 		// Cannot set position with connect(...) in plugin. Maybe thread problem? (Tried all Qt::Connection in plugin)
@@ -139,17 +140,14 @@ void MediaPlayer::createRemoteConnections(const QUrl &track)
 	});
 	connect(_remotePlayer, &RemoteMediaPlayer::started, this, [=](int duration) {
 		_remotePlayer->setTime(duration);
-		_state = QMediaPlayer::PlayingState;
-		emit stateChanged(_state);
+		this->setState(QMediaPlayer::PlayingState);
 		emit currentMediaChanged(track.toString());
 	});
 	connect(_remotePlayer, &RemoteMediaPlayer::stopped, this, [=]() {
-		_state = QMediaPlayer::StoppedState;
-		emit stateChanged(_state);
+		this->setState(QMediaPlayer::StoppedState);
 	});
 	connect(_remotePlayer, &RemoteMediaPlayer::trackHasEnded, this, [=]() {
-		_state = QMediaPlayer::StoppedState;
-		emit stateChanged(_state);
+		this->setState(QMediaPlayer::StoppedState);
 		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
 	});
 }
@@ -184,6 +182,8 @@ void MediaPlayer::setVolume(int v)
 	} else {
 		if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
 			_player->audio()->setVolume(v);
+		} else {
+			qDebug() << Q_FUNC_INFO << "couldn't set volume to" << v;
 		}
 	}
 }
@@ -201,7 +201,7 @@ qint64 MediaPlayer::duration()
 /** Current position in the media, percent-based. */
 float MediaPlayer::position() const
 {
-	if (_remotePlayer != NULL) {
+	if (_remotePlayer) {
 		return _remotePlayer->position();
 	} else {
 		return _player->position();
@@ -222,19 +222,28 @@ void MediaPlayer::setMute(bool b) const
 	} else {
 		// To avoid some glitches with VLC, it's better to switch from a fake track than actually muting sound
 		if (b) {
-			_player->audio()->setTrack(-1);
+			_player->audio()->setVolume(0);
 		} else {
-			_player->audio()->setTrack(0);
+			_player->audio()->setVolume(Settings::instance()->volume());
 		}
 	}
 }
 
-void MediaPlayer::setTime(int t) const
+void MediaPlayer::setTime(qint64 t) const
 {
 	if (_remotePlayer) {
 		_remotePlayer->setTime(t);
 	} else {
 		_player->setTime(t);
+	}
+}
+
+qint64 MediaPlayer::time() const
+{
+	if (_remotePlayer) {
+		return _remotePlayer->time();
+	} else {
+		return _player->time();
 	}
 }
 
@@ -251,26 +260,15 @@ void MediaPlayer::seek(float pos)
 	}
 }
 
-int MediaPlayer::volume() const
-{
-	if (_remotePlayer) {
-		return _remotePlayer->volume();
-	} else {
-		return _player->audio()->volume();
-	}
-}
-
 /** Seek backward in the current playing track for a small amount of time. */
 void MediaPlayer::seekBackward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
-		int currentVolume = volume();
-		setVolume(0);
 		int currentPos = 0;
 		if (_remotePlayer) {
 			currentPos = _remotePlayer->position() * _remotePlayer->length();
 		} else {
-			currentPos = _player->position() * _player->length();
+			currentPos = _player->time();
 		}
 		int time = currentPos - SettingsPrivate::instance()->playbackSeekTime();
 		if (time < 0) {
@@ -279,10 +277,9 @@ void MediaPlayer::seekBackward()
 			if (_remotePlayer) {
 				this->seek(time / (float)_remotePlayer->length());
 			} else {
-				this->seek(time / (float)_player->length());
+				_player->setTime(time);
 			}
 		}
-		setVolume(currentVolume);
 	}
 }
 
@@ -290,8 +287,6 @@ void MediaPlayer::seekBackward()
 void MediaPlayer::seekForward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
-		int currentVolume = volume();
-		setVolume(0);
 		if (_remotePlayer) {
 			int currentPos = _remotePlayer->position() * _remotePlayer->length();
 			int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
@@ -301,15 +296,13 @@ void MediaPlayer::seekForward()
 				this->seek(time / (float)_remotePlayer->length());
 			}
 		} else {
-			int currentPos = _player->position() * _player->length();
-			int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
+			int time = _player->time() + SettingsPrivate::instance()->playbackSeekTime();
 			if (time > _player->length()) {
 				skipForward();
 			} else {
-				this->seek(time / (float)_player->length());
+				_player->setTime(time);
 			}
 		}
-		setVolume(currentVolume);
 	}
 }
 
@@ -318,27 +311,21 @@ void MediaPlayer::skipBackward()
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0)) {
 		return;
 	}
-	if (_remotePlayer) {
-		_remotePlayer->stop();
-	} else {
-		_player->stop();
-	}
-
+	this->stop();
 	_playlist->previous();
 	this->play();
 }
 
 void MediaPlayer::skipForward()
 {
+	qDebug() << Q_FUNC_INFO;
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
+		if (_state != QMediaPlayer::StoppedState) {
+			this->stop();
+		}
 		return;
 	}
-	if (_remotePlayer) {
-		_remotePlayer->stop();
-	} else {
-		_player->stop();
-	}
-
+	this->stop();
 	_playlist->next();
 	this->play();
 }

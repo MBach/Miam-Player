@@ -28,31 +28,11 @@ void SeekBar::keyPressEvent(QKeyEvent *e)
 	if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) {
 		_mediaPlayer.data()->blockSignals(true);
 		_mediaPlayer.data()->setMute(true);
-
-		qint64 d = _mediaPlayer.data()->duration();
-		if (d == 0) {
-			return;
-		}
-		float p = _mediaPlayer.data()->position();
-		qint64 currentPosition = d * p;
-		qint64 s = SettingsPrivate::instance()->playbackSeekTime();
-
 		if (e->key() == Qt::Key_Left) {
-			currentPosition -= s;
+			_mediaPlayer.data()->seekBackward();
 		} else {
-			currentPosition += s;
+			_mediaPlayer.data()->seekForward();
 		}
-		if (currentPosition > d || currentPosition < 0) {
-			e->accept();
-			return;
-		}
-
-		// qDebug() << "old position" << p << "new position" << (float)currentPosition / d;
-		p = (float)currentPosition / d;
-		if (p >= 0 && p <= 1.0f) {
-			_mediaPlayer.data()->seek(p);
-		}
-		this->setValue(p * 1000);
 	} else {
 		QSlider::keyPressEvent(e);
 	}
@@ -103,23 +83,12 @@ void SeekBar::mouseReleaseEvent(QMouseEvent *)
 /** Redefined to seek in current playing file. */
 void SeekBar::wheelEvent(QWheelEvent *e)
 {
-	_mediaPlayer.data()->setMute(true);
-	qint64 d = _mediaPlayer.data()->duration();
-	if (d == 0) {
-		return;
-	}
-	float p = _mediaPlayer.data()->position();
-	qint64 currentPosition = d * p;
-	qint64 s = SettingsPrivate::instance()->playbackSeekTime();
 	// Wheel up is positive value, wheel down is negative value
 	if (e->angleDelta().y() > 0) {
-		currentPosition += s;
+		_mediaPlayer.data()->seekForward();
 	} else {
-		currentPosition -= s;
+		_mediaPlayer.data()->seekBackward();
 	}
-	p = (float)currentPosition / d;
-	_mediaPlayer.data()->seek(p);
-	_mediaPlayer.data()->setMute(false);
 }
 
 void SeekBar::paintEvent(QPaintEvent *)

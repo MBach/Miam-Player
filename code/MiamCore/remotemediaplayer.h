@@ -35,6 +35,7 @@ public:
 
 	/** Sets the total time in ms in the current media being played (useful for seeking). */
 	virtual void setTime(qint64 t) = 0;
+	virtual qint64 time() const = 0;
 
 	/** The current volume of this remote player. */
 	virtual int volume() const = 0;
