@@ -152,28 +152,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	}
 	p.restore();
 
-	if (_atLeastOneSubDir) {
-		QStyleOptionButton o;
-		o.initFrom(this);
-		if (isLeftToRight()) {
-			o.rect = _arrowRect.adjusted(5, 7, -2, -4);
-		} else {
-			o.rect = _arrowRect.adjusted(2, 7, -5, -4);
-		}
-		/// XXX: create subclass for root button with special arrow when folders are hidden?
-		//p.setBrush(o.palette.highlight());
-		p.save();
-		p.setPen(Qt::NoPen);
-		p.setBrush(o.palette.mid());
-		if (_highlighted) {
-			p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
-		} else if (isLeftToRight()) {
-			p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
-		} else {
-			p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
-		}
-		p.restore();
-	}
+
 
 	// Draw folder's name
 	QColor lighterBG = palette.highlight().color().lighter();
@@ -185,6 +164,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	}
 
 	// Special case for root and drives
+	bool root = false;
 	if (dir.isRoot()) {
 		bool absRoot = true;
 		foreach (QFileInfo fileInfo, QDir::drives()) {
@@ -200,6 +180,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			}
 		}
 		if (absRoot) {
+			root = true;
 			QPixmap computer = QFileIconProvider().icon(QFileIconProvider::Computer).pixmap(20, 20);
 			if (isLeftToRight()) {
 				p.drawPixmap(2, 3, 20, 20, computer);
@@ -215,5 +196,43 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			}
 			p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, dir.dirName());
 		}
+	}
+
+	if (_atLeastOneSubDir) {
+		QStyleOptionButton o;
+		o.initFrom(this);
+		p.save();
+		p.setPen(Qt::NoPen);
+		p.setBrush(o.palette.mid());
+		if (root && _addressBar->hasHiddenFolders()) {
+			/// Right To Left
+			QPoint p1(o.rect.x() + 32, o.rect.y() + 11),
+					p2(o.rect.x() + 29, o.rect.y() + 14),
+					p2b(o.rect.x() + 29, o.rect.y() + 13),
+					p3(o.rect.x() + 32, o.rect.y() + 16);
+			p.save();
+			p.setPen(Qt::black);
+			p.setRenderHint(QPainter::Antialiasing);
+			p.drawLine(p1, p2);
+			p.drawLine(p2b, p3);
+			p.translate(4, 0);
+			p.drawLine(p1, p2);
+			p.drawLine(p2b, p3);
+			p.restore();
+		} else {
+			if (isLeftToRight()) {
+				o.rect = _arrowRect.adjusted(5, 7, -2, -4);
+			} else {
+				o.rect = _arrowRect.adjusted(2, 7, -5, -4);
+			}
+			if (_highlighted) {
+				p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
+			} else if (isLeftToRight()) {
+				p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
+			} else {
+				p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
+			}
+		}
+		p.restore();
 	}
 }

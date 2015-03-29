@@ -6,6 +6,7 @@
 #include <QFileIconProvider>
 #include <QPainter>
 #include <QResizeEvent>
+#include <QStandardPaths>
 
 #include <QtDebug>
 
@@ -271,7 +272,6 @@ void AddressBar::showDrivesAndPreviousFolders()
 		}
 		QListWidgetItem *item = new QListWidgetItem(QFileIconProvider().icon(QFileInfo(d.absolutePath())), text, _menu);
 		item->setSizeHint(QSize(_menu->viewport()->width(), 24));
-		//qDebug() << "root menu" << d.absolutePath();
 		item->setData(Qt::UserRole, d.absolutePath());
 	}
 	if (!_hiddenFolders.isEmpty()) {
@@ -281,6 +281,38 @@ void AddressBar::showDrivesAndPreviousFolders()
 	AddressBarButton *firstButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(0)->widget());
 	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(1)->widget());
 
+	// Insert Desktop, Documents, Downloads, Pictures, Music, Videos
+	QString desktop = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
+	QString documents = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first();
+	QString downloads = QStandardPaths::standardLocations(QStandardPaths::DownloadLocation).first();
+	QString pictures = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation).first();
+	QString music = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
+	QString videos = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
+
+	QFileInfoList fil;
+	fil << desktop << documents << downloads << pictures << music << videos;
+
+	auto insertItemInMenu = [this, nextButton] (const QFileInfo &fileInfo, const QString &location) -> void {
+		QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(fileInfo), location, _menu);
+		item->setSizeHint(QSize(_menu->viewport()->width(), 24));
+		item->setData(Qt::UserRole, fileInfo.absoluteFilePath());
+		if (!fileInfo.isReadable()) {
+			item->setFlags(Qt::NoItemFlags);
+		}
+		// Check if the new submenu has one of its items already displayed, then make it bold
+		if (nextButton != NULL && fileInfo.absoluteFilePath() == nextButton->path().absolutePath()) {
+			QFont font = item->font();
+			font.setBold(true);
+			item->setFont(font);
+		}
+	};
+
+	// Insert standard locations
+	foreach (QFileInfo fileInfo, fil) {
+		insertItemInMenu(fileInfo, fileInfo.baseName());
+	}
+
+	// Insert drives
 	foreach (QFileInfo drive, QDir::drives()) {
 		QString driveName = QDir::toNativeSeparators(drive.absoluteFilePath());
 		if (driveName.length() > 1) {
@@ -289,18 +321,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 				driveName = d;
 			}
 		}
-		QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(drive), driveName, _menu);
-		item->setSizeHint(QSize(_menu->viewport()->width(), 24));
-		item->setData(Qt::UserRole, drive.absoluteFilePath());
-		if (!drive.isReadable()) {
-			item->setFlags(Qt::NoItemFlags);
-		}
-		// Check if the new submenu has one of its items already displayed, then make it bold
-		if (nextButton != NULL && drive.dir() == nextButton->path()) {
-			QFont font = item->font();
-			font.setBold(true);
-			item->setFont(font);
-		}
+		insertItemInMenu(drive, driveName);
 	}
 
 	// Then display the menu and the possibly empty list of folders before the first visible folder

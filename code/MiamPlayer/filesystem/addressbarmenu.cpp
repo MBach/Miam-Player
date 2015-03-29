@@ -14,11 +14,12 @@ AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
 {
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
-	this->setUniformItemSizes(true);
+	this->setUniformItemSizes(false);
 	this->setWindowFlags(Qt::Popup);
 
 	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
 		if (!item->flags().testFlag(Qt::NoItemFlags)) {
+			qDebug() << "itemClicked" << item->data(Qt::UserRole).toString();
 			_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
 			this->clear();
 			this->close();
@@ -58,8 +59,8 @@ bool AddressBarMenu::hasSeparator() const
 void AddressBarMenu::insertSeparator()
 {
 	QListWidgetItem *s = new QListWidgetItem(this);
-	s->setSizeHint(QSize(width(), 1));
-	s->setData(Qt::UserRole + 1, 1);
+	s->setSizeHint(QSize(width(), 9));
+	s->setData(Qt::UserRole + 1, true);
 	_hasSeparator = true;
 }
 
@@ -95,10 +96,10 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 		//qDebug() << "r" << r;
 		r.setWidth(r.width() - offsetSB);
 
-		if (it->data(Qt::UserRole + 1).toInt() == 1) {
+		if (it->data(Qt::UserRole + 1).toBool()) {
 			p.save();
 			p.setPen(QApplication::palette().midlight().color());
-			p.drawLine(r.x(), r.y(), r.width(), r.y());
+			p.drawLine(r.x(), r.y() + (it->sizeHint().height()) / 2, r.width(), r.y() + (it->sizeHint().height()) / 2);
 			p.restore();
 			continue;
 		}
@@ -107,7 +108,6 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 		if (r.isValid()) {
 			QRect iconRect(r.x() + 6, r.y() + 2, 19, 19);
 			bool itemIsEnabled = true;
-			//bool isHighLighted = false;
 			if (it->flags().testFlag(Qt::NoItemFlags)) {
 				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19), QIcon::Disabled));
 				itemIsEnabled = false;
@@ -119,7 +119,6 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 					p.drawRect(r);
 					p.setPen(QColor(192, 192, 192, 128));
 					p.drawLine(33, r.top() + 1, 33, r.bottom());
-					//isHighLighted = true;
 				}
 				p.restore();
 				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19)));
@@ -136,8 +135,6 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 			QColor highlightedText = QApplication::palette().highlightedText().color();
 			if (qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
 				p.setPen(highlightedText);
-			} else {
-				p.setPen(QApplication::palette().windowText().color());
 			}
 
 			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
@@ -173,9 +170,11 @@ void AddressBarMenu::show()
 	static const int margin = 4;
 	if (count() < maxBeforeScrolling) {
 		int h = count() * sizeHintForRow(0) + margin;
-		/*if (_hasSeparator) {
-			h -= 19; // sizeHintForRow(0) == 22, height(separator) == 3
-		}*/
+		if (_hasSeparator) {
+			h = (count() - 1) * sizeHintForRow(0) + 9 + margin;
+		} else {
+			h = count() * sizeHintForRow(0) + margin;
+		}
 		this->setMinimumHeight(h);
 		this->setMaximumHeight(h);
 	} else {
