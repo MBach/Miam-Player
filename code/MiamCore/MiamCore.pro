@@ -61,7 +61,8 @@ SOURCES +=     library/jumptowidget.cpp \
     quickstartsearchengine.cpp \
     settings.cpp \
     settingsprivate.cpp \
-    timelabel.cpp
+    timelabel.cpp \
+    stopbutton.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -89,4 +90,5 @@ HEADERS += interfaces/basicplugin.h \
     remotemediaplayer.h \
     settings.h \
     settingsprivate.h \
-    timelabel.h
+    timelabel.h \
+    stopbutton.h

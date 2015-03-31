@@ -385,7 +385,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="MediaButton" name="stopButton">
+                <widget class="StopButton" name="stopButton">
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -976,6 +976,11 @@
    <class>ChangeHierarchyButton</class>
    <extends>QPushButton</extends>
    <header location="global">changehierarchybutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StopButton</class>
+   <extends>QPushButton</extends>
+   <header>stopbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

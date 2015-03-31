@@ -20,6 +20,7 @@
 
 MediaPlayer::MediaPlayer(QObject *parent) :
 	QObject(parent), _playlist(NULL), _state(QMediaPlayer::StoppedState), _media(NULL), _remotePlayer(NULL)
+  , _stopAfterCurrent(false)
 {
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
@@ -39,7 +40,12 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
 		//qDebug() << "MediaPlayer::mediaStatusChanged" << status;
 		if (status == QMediaPlayer::EndOfMedia) {
-			skipForward();
+			if (_stopAfterCurrent) {
+				stop();
+				_stopAfterCurrent = false;
+			} else {
+				skipForward();
+			}
 		}
 	});
 }

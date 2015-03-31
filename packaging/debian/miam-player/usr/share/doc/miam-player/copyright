@@ -1,10 +1,10 @@
-Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
+﻿Format-Specification: http://svn.debian.org/wsvn/dep/web/deps/dep5.mdwn?op=file&rev=135
 Name: Miam-Player
 Maintainer: Matthieu Bachelier <bachelier.matthieu@gmail.com>
-Source: http://sourceforge.net/projects/miammusicplayer/
+Source: http://www.miam-player.org/
 
 Files: *
-Copyright: 2014, Matthieu Bachelier <bachelier.matthieu@gmail.com>
+Copyright: 2015, Matthieu Bachelier <bachelier.matthieu@gmail.com>
 License: GPL-3
 
 Files: 3rdparty/taglib/*

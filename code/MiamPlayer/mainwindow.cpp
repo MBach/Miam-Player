@@ -298,6 +298,9 @@ void MainWindow::setupActions()
 	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
+	// Extra action for stop button
+	stopButton->setMediaPlayer(_mediaPlayer);
+
 	// Sliders
 	connect(_mediaPlayer.data(), &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
 		if (duration > 0) {

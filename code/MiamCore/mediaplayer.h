@@ -32,6 +32,7 @@ private:
 	RemoteMediaPlayer *_remotePlayer;
 
 	QMap<QString, RemoteMediaPlayer*> _remotePlayers;
+	bool _stopAfterCurrent;
 
 public:
 	explicit MediaPlayer(QObject *parent = 0);
@@ -53,6 +54,8 @@ public:
 
 	void setTime(qint64 t) const;
 	qint64 time() const;
+
+	inline void setStopAfterCurrent(bool b) { _stopAfterCurrent = b; }
 
 	void seek(float pos);
 
