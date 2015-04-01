@@ -378,7 +378,6 @@ void MediaPlayer::play()
 				delete _media;
 			}
 			_media = new VlcMedia(file, true, _instance);
-			_player->audio()->setVolume(Settings::instance()->volume());
 			_player->open(_media);
 		}
 	} else {

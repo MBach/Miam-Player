@@ -41,6 +41,8 @@ public:
 
 	void changeTrack(QMediaPlaylist *playlist, int trackIndex);
 
+	inline bool isStopAfterCurrent() const { return _stopAfterCurrent; }
+
 	inline QMediaPlaylist * playlist() { return _playlist; }
 	inline void setPlaylist(QMediaPlaylist *playlist) { _playlist = playlist; }
 
@@ -54,8 +56,6 @@ public:
 
 	void setTime(qint64 t) const;
 	qint64 time() const;
-
-	inline void setStopAfterCurrent(bool b) { _stopAfterCurrent = b; }
 
 	void seek(float pos);
 
@@ -91,6 +91,8 @@ public slots:
 
 	/** Stop current track in the playlist. */
 	void stop();
+
+	inline void stopAfterCurrent(bool b) { _stopAfterCurrent = b; }
 
 	/** Activate or desactive audio output. */
 	void toggleMute() const;

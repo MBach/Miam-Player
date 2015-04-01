@@ -617,6 +617,7 @@
     <addaction name="actionSeekBackward"/>
     <addaction name="actionPlay"/>
     <addaction name="actionStop"/>
+    <addaction name="actionStopAfterCurrent"/>
     <addaction name="actionSeekForward"/>
     <addaction name="actionSkipForward"/>
     <addaction name="separator"/>
@@ -719,6 +720,9 @@
    </property>
   </action>
   <action name="actionSeekBackward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Seek backward</string>
    </property>
@@ -728,12 +732,10 @@
     <string>&amp;Play / pause</string>
    </property>
   </action>
-  <action name="actionStop">
-   <property name="text">
-    <string>&amp;Stop</string>
-   </property>
-  </action>
   <action name="actionSeekForward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Seek forward</string>
    </property>
@@ -898,6 +900,25 @@
    </property>
    <property name="text">
     <string>Show debug information...</string>
+   </property>
+  </action>
+  <action name="actionStopAfterCurrent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Stop after current</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
    </property>
   </action>
  </widget>

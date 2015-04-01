@@ -283,6 +283,19 @@ void MainWindow::setupActions()
 	});
 
 	// Media buttons and their shortcuts
+	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
+		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
+		actionSeekBackward->setEnabled(isPlaying);
+		actionStop->setEnabled(isPlaying);
+		actionStopAfterCurrent->setEnabled(isPlaying);
+		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
+		actionSeekForward->setEnabled(isPlaying);
+
+		bool notEmpty = _mediaPlayer->playlist() && !_mediaPlayer->playlist()->isEmpty();
+		actionSkipBackward->setEnabled(notEmpty);
+		actionPlay->setEnabled(notEmpty);
+		actionSkipForward->setEnabled(notEmpty);
+	});
 	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekBackward);
@@ -291,6 +304,7 @@ void MainWindow::setupActions()
 
 	connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
 	connect(actionStop, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::stop);
+	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::stopAfterCurrent);
 	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::stop);
 	connect(actionSeekForward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekForward);
 	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekForward);
