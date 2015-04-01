@@ -71,7 +71,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Replace</source>
+        <source>Delete this playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace this playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -710,10 +714,6 @@
         <translation>Diese Einstellung wird grammatikalische Artikel filtern. Beispielsweise wird &quot;The Beatles&quot; als &quot;Beatles, the&quot; betrachtet</translation>
     </message>
     <message>
-        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="vanished">&quot;The&quot; ist ein äußerst häufiger Englischer Artikel, wie zum Beispiel in &quot;The Beatles&quot;</translation>
-    </message>
-    <message>
         <source>Search bar</source>
         <translation type="unfinished">Suchleiste</translation>
     </message>
@@ -781,10 +781,6 @@
 </context>
 <context>
     <name>LibraryOrderDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
     <message>
         <source>Select how to display your library</source>
         <translation>Wählen Sie, wie die Bibliothek dargestellt werden soll</translation>
@@ -1154,6 +1150,10 @@
         <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stop after current</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1392,12 +1392,6 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
         <translation>Wiedergabeliste %1</translation>
     </message>
     <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">Diese Wiedergabeliste ist leer.
-Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</translation>
-    </message>
-    <message>
         <source>Rename playlist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1455,10 +1449,6 @@ Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</tra
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
     <message>
         <source>Close Editor</source>
         <translation>Editor schließen</translation>

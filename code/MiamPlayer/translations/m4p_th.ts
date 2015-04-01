@@ -71,7 +71,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Replace</source>
+        <source>Delete this playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace this playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -778,10 +782,6 @@
 <context>
     <name>LibraryOrderDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Select how to display your library</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1147,6 +1147,10 @@
         <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stop after current</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1436,10 +1440,6 @@ Select a playlist to display the first 30 tracks.</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Close Editor</source>
         <translation type="unfinished"></translation>

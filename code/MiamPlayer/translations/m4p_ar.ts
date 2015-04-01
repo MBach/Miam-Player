@@ -71,7 +71,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Replace</source>
+        <source>Delete this playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace this playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -778,10 +782,6 @@
 <context>
     <name>LibraryOrderDialog</name>
     <message>
-        <source>Dialog</source>
-        <translation>حوار</translation>
-    </message>
-    <message>
         <source>Select how to display your library</source>
         <translation>حدِّد كيف تظهِر المكتبة</translation>
     </message>
@@ -1162,6 +1162,10 @@
         <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stop after current</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1410,12 +1414,6 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>قائمة القراءة %1</translation>
     </message>
     <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">هذه القائمة فارغة
- أختر و ضع المسارات من المكتبة أو من برنامج خارجي٠</translation>
-    </message>
-    <message>
         <source>Rename playlist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1473,10 +1471,6 @@ Select or drop tracks from your library or any external location.</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Form</source>
-        <translation>شكل</translation>
-    </message>
     <message>
         <source>Close Editor</source>
         <translation>أغلق المحرر</translation>

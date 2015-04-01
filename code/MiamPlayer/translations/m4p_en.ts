@@ -71,8 +71,12 @@
         <translation>You&apos;re about to close a playlist that you have modified. What would you like to do?</translation>
     </message>
     <message>
-        <source>Replace</source>
-        <translation>Replace</translation>
+        <source>Delete this playlist</source>
+        <translation>Delete this playlist</translation>
+    </message>
+    <message>
+        <source>Replace this playlist</source>
+        <translation>Replace this playlist</translation>
     </message>
 </context>
 <context>
@@ -710,10 +714,6 @@
         <translation>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</translation>
     </message>
     <message>
-        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="vanished">&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</translation>
-    </message>
-    <message>
         <source>Search bar</source>
         <translation>Search bar</translation>
     </message>
@@ -781,10 +781,6 @@
 </context>
 <context>
     <name>LibraryOrderDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
     <message>
         <source>Select how to display your library</source>
         <translation>Select how to display your library</translation>
@@ -1154,6 +1150,10 @@
         <source>Every file type (*)</source>
         <translation>Every file type (*)</translation>
     </message>
+    <message>
+        <source>Stop after current</source>
+        <translation>Stop after current</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1392,12 +1392,6 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>Playlist %1</translation>
     </message>
     <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">This playlist is empty.
-Select or drop tracks from your library or any external location.</translation>
-    </message>
-    <message>
         <source>Rename playlist</source>
         <translation>Rename playlist</translation>
     </message>
@@ -1455,10 +1449,6 @@ Select or drop tracks from your library or any external location.</translation>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
     <message>
         <source>Close Editor</source>
         <translation>Close Editor</translation>

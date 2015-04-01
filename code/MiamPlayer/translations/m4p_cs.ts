@@ -71,7 +71,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Replace</source>
+        <source>Delete this playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace this playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -710,10 +714,6 @@
         <translation>Tato volba bude filtrovat gramatické členy. Například: S &quot;The Beatles&quot; se bude zacházet jako s &quot;Beatles, the&quot;</translation>
     </message>
     <message>
-        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="vanished">&quot;The&quot; je velice běžný člen anglických jmen, jako v &quot;The Beatles&quot;</translation>
-    </message>
-    <message>
         <source>Search bar</source>
         <translation type="unfinished">Vyhledávací pole</translation>
     </message>
@@ -781,10 +781,6 @@
 </context>
 <context>
     <name>LibraryOrderDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
     <message>
         <source>Select how to display your library</source>
         <translation>Vyberte, jak má být zobrazována knihovna</translation>
@@ -1157,6 +1153,10 @@
         <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stop after current</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1397,12 +1397,6 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
         <translation>Seznam skladeb %1</translation>
     </message>
     <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">Tento seznam skladeb je prázdný.
-Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umístění.</translation>
-    </message>
-    <message>
         <source>Rename playlist</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1460,10 +1454,6 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulář</translation>
-    </message>
     <message>
         <source>Close Editor</source>
         <translation>Zavřít editor</translation>

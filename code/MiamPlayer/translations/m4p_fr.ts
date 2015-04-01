@@ -71,8 +71,12 @@
         <translation>Vous êtes sur le point de fermer une liste de lecture que vous venez de modifier. Que souhaitez-vous faire ?</translation>
     </message>
     <message>
-        <source>Replace</source>
-        <translation>Remplacer</translation>
+        <source>Delete this playlist</source>
+        <translation>Supprimer cette liste de lecture</translation>
+    </message>
+    <message>
+        <source>Replace this playlist</source>
+        <translation>Remplacer cette liste de lecture</translation>
     </message>
 </context>
 <context>
@@ -710,10 +714,6 @@
         <translation>Cette option va filtrer les articles grammaticaux. Par exemple, &quot;The Beatles&quot; sera traité comme &quot;Beatles, the&quot;</translation>
     </message>
     <message>
-        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="vanished">&quot;The&quot; est un article très commun en anglais, comme dans &quot;The Beatles&quot;</translation>
-    </message>
-    <message>
         <source>Search bar</source>
         <translation>Barre de recherche</translation>
     </message>
@@ -781,10 +781,6 @@
 </context>
 <context>
     <name>LibraryOrderDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation>Boîte de dialogue</translation>
-    </message>
     <message>
         <source>Select how to display your library</source>
         <translation>Sélectionnez l&apos;ordre d&apos;affichage de votre bibliothèque</translation>
@@ -1154,6 +1150,10 @@
         <source>Every file type (*)</source>
         <translation>Tous les fichiers (*)</translation>
     </message>
+    <message>
+        <source>Stop after current</source>
+        <translation>Arrêter après cette piste</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1391,12 +1391,6 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Liste de lecture %1</translation>
     </message>
     <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">Cette liste de lecture est vide.
-Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une application externe.</translation>
-    </message>
-    <message>
         <source>Rename playlist</source>
         <translation>Renommer une liste de lecture</translation>
     </message>
@@ -1454,10 +1448,6 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Form</source>
-        <translation>Form</translation>
-    </message>
     <message>
         <source>Close Editor</source>
         <translation>Fermer l&apos;Éditeur</translation>
