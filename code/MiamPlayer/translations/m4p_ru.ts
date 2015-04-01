@@ -74,7 +74,7 @@
     <message>
         <location filename="../closeplaylistpopup.ui" line="46"/>
         <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы собираетесь закрыть изменённый список воспроизведения. Что вы хотите сделать?</translation>
     </message>
     <message>
         <location filename="../closeplaylistpopup.ui" line="82"/>
@@ -87,16 +87,14 @@
         <translation>Запомнить мой выбор</translation>
     </message>
     <message>
-        <location filename="../dialogs/closeplaylistpopup.cpp" line="9"/>
-        <source>Replace</source>
-        <translation type="unfinished"></translation>
+        <location filename="../dialogs/closeplaylistpopup.cpp" line="11"/>
+        <source>Delete this playlist</source>
+        <translation>Удалить этот список воспроизведения</translation>
     </message>
-</context>
-<context>
-    <name>CopyBitcoinAddressForm</name>
     <message>
-        <source>If you like this software, please donate a few hundreds satoshi (1 satoshi = 0.00000001 BTC) or more to :</source>
-        <translation type="vanished">Если вам нравится эта программа, пожалуйста, пожертвовать несколько сотен сатоши (1 сатоши = 0.00000001 BTC) или больше на:</translation>
+        <location filename="../dialogs/closeplaylistpopup.cpp" line="12"/>
+        <source>Replace this playlist</source>
+        <translation>Заменить этот список воспроизведения</translation>
     </message>
 </context>
 <context>
@@ -155,12 +153,12 @@
     <message>
         <location filename="../customizeoptionsdialog.ui" line="238"/>
         <source>File Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Проводник</translation>
     </message>
     <message>
         <location filename="../customizeoptionsdialog.ui" line="244"/>
         <source>Default folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Начальная папка</translation>
     </message>
     <message>
         <location filename="../customizeoptionsdialog.ui" line="267"/>
@@ -867,21 +865,17 @@
     <message>
         <location filename="../customizetheme.ui" line="1625"/>
         <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
-        <translation type="unfinished"></translation>
+        <translation>«The» — очень распространённый английский артикль, как в «The Beatles»</translation>
     </message>
     <message>
         <location filename="../customizetheme.ui" line="1656"/>
         <source>Do you want to display the article after the name?</source>
-        <translation type="unfinished"></translation>
+        <translation>Отображать артикль после названия?</translation>
     </message>
     <message>
         <location filename="../customizetheme.ui" line="1674"/>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&quot;The&quot; is very common English article, like in &quot;The Beatles&quot;</source>
-        <translation type="vanished">&quot;The&quot; — это очень распространенный английский артикль, как в &quot;The Beatles&quot;</translation>
+        <translation>Пример: «The Beatles» станет «Beatles, the»</translation>
     </message>
     <message>
         <location filename="../customizetheme.ui" line="1726"/>
@@ -1089,27 +1083,27 @@
         <translation>Отправить в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../library/librarytreeview.cpp" line="330"/>
+        <location filename="../library/librarytreeview.cpp" line="327"/>
         <source>Various</source>
         <translation>Разные</translation>
     </message>
     <message>
-        <location filename="../library/librarytreeview.cpp" line="411"/>
+        <location filename="../library/librarytreeview.cpp" line="407"/>
         <source>  Artists \ Albums</source>
         <translation>  Исполнители \ Альбомы</translation>
     </message>
     <message>
-        <location filename="../library/librarytreeview.cpp" line="414"/>
+        <location filename="../library/librarytreeview.cpp" line="410"/>
         <source>  Albums</source>
         <translation>  Альбомы</translation>
     </message>
     <message>
-        <location filename="../library/librarytreeview.cpp" line="417"/>
+        <location filename="../library/librarytreeview.cpp" line="413"/>
         <source>  Artists – Albums</source>
         <translation>  Исполнители – Альбомы</translation>
     </message>
     <message>
-        <location filename="../library/librarytreeview.cpp" line="420"/>
+        <location filename="../library/librarytreeview.cpp" line="416"/>
         <source>  Years</source>
         <translation>  Годы</translation>
     </message>
@@ -1410,7 +1404,7 @@
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="378"/>
+        <location filename="../mainwindow.cpp" line="383"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1420,7 +1414,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="379"/>
+        <location filename="../mainwindow.cpp" line="384"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1430,7 +1424,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="380"/>
+        <location filename="../mainwindow.cpp" line="385"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1440,42 +1434,42 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="../mainwindow.cpp" line="433"/>
         <source>There are more than 300 files to add to the %1 (%2 to add).</source>
         <translation>Вы добавляете более 300 файлов в %1 (добавляется %2).</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="430"/>
+        <location filename="../mainwindow.cpp" line="435"/>
         <source>Are you sure you want to continue? This might take some time.</source>
         <translation>Вы действительно хотите продолжить? Это может занять некотороое время.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="453"/>
+        <location filename="../mainwindow.cpp" line="458"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="589"/>
+        <location filename="../mainwindow.cpp" line="602"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="601"/>
+        <location filename="../mainwindow.cpp" line="614"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="603"/>
+        <location filename="../mainwindow.cpp" line="616"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="628"/>
+        <location filename="../mainwindow.cpp" line="641"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="643"/>
+        <location filename="../mainwindow.cpp" line="656"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
@@ -1483,30 +1477,30 @@
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../playlists/playlist.cpp" line="77"/>
+        <location filename="../playlists/playlist.cpp" line="80"/>
         <source>Remove from playlist</source>
         <translation>Удалить из списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../playlists/playlist.cpp" line="78"/>
+        <location filename="../playlists/playlist.cpp" line="81"/>
         <source>Edit tags</source>
         <translation>Изменить теги</translation>
     </message>
     <message>
-        <location filename="../playlists/playlist.cpp" line="80"/>
+        <location filename="../playlists/playlist.cpp" line="83"/>
         <source>in tag editor</source>
         <translation>в редакторе тегов</translation>
     </message>
     <message>
-        <location filename="../playlists/playlist.cpp" line="81"/>
+        <location filename="../playlists/playlist.cpp" line="84"/>
         <source>inline</source>
         <translation>встроенный</translation>
     </message>
     <message>
-        <location filename="../playlists/playlist.cpp" line="345"/>
+        <location filename="../playlists/playlist.cpp" line="399"/>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation type="unfinished">Этот список воспроизведения пуст.
+        <translation>Этот список воспроизведения пуст.
 Выберите или перетащите треки из вашей библиотеки или любого внешнего местоположения.</translation>
     </message>
 </context>
@@ -1599,19 +1593,19 @@ Select or drop tracks from your library or any external location.</source>
     </message>
     <message>
         <location filename="../dialogs/playlistmanager.cpp" line="30"/>
-        <location filename="../dialogs/playlistmanager.cpp" line="118"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="144"/>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>Эта область предварительного просмотра пуста.
 Выберите список воспроизведения, чтобы отобразить первые 30 треков.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistmanager.cpp" line="193"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="237"/>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Точно такой же список воспроизведения уже есть в диспетчере списков воспроизведения (называется &apos;%1&apos;), поэтому невозможно добавить его повторно.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../dialogs/playlistmanager.cpp" line="253"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="311"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>Вы собираетесь удалить %n список воспроизведения. Вы действительно хотите продолжить?</numerusform>
@@ -1620,23 +1614,23 @@ Select a playlist to display the first 30 tracks.</source>
         </translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistmanager.cpp" line="254"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="312"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistmanager.cpp" line="308"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="368"/>
         <source>Export playlist</source>
         <translation>Экспортировать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistmanager.cpp" line="308"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="368"/>
         <source>Playlist (*.m3u8)</source>
         <translation>Список воспроизведения (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistmanager.cpp" line="352"/>
-        <location filename="../dialogs/playlistmanager.cpp" line="386"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="412"/>
+        <location filename="../dialogs/playlistmanager.cpp" line="449"/>
         <source>And more tracks...</source>
         <translation>И больше треков...</translation>
     </message>
@@ -1713,9 +1707,9 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Нажмите здесь, чтобы искать музыку вручную</translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="157"/>
-        <location filename="../quickstart.cpp" line="184"/>
-        <location filename="../quickstart.cpp" line="219"/>
+        <location filename="../quickstart.cpp" line="165"/>
+        <location filename="../quickstart.cpp" line="192"/>
+        <location filename="../quickstart.cpp" line="223"/>
         <source>%n elements</source>
         <translation>
             <numerusform>%n элемент</numerusform>
@@ -1724,7 +1718,7 @@ Select a playlist to display the first 30 tracks.</source>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="162"/>
+        <location filename="../quickstart.cpp" line="170"/>
         <source>%n folders</source>
         <translation>
             <numerusform>%n папка</numerusform>
@@ -1733,21 +1727,14 @@ Select a playlist to display the first 30 tracks.</source>
         </translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="174"/>
+        <location filename="../quickstart.cpp" line="182"/>
         <source>Note: it&apos;s not possible to add your default location because 0 tracks where found</source>
         <translation>Внимание: невозможно добавить вашу системную папку для музыки, потому что в ней не было найдено треков</translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="216"/>
+        <location filename="../quickstart.cpp" line="220"/>
         <source>empty folder</source>
         <translation>пустая папка</translation>
-    </message>
-</context>
-<context>
-    <name>ReadyForInstallationWidget</name>
-    <message>
-        <source>Remove all files created with Miam-Player: settings, database cache of audio files, etc.</source>
-        <translation type="vanished">Удалить все файлы, созданные Miam-Player&apos;ом: настройки, кэш базы данных аудио файлов и др.</translation>
     </message>
 </context>
 <context>
@@ -1776,13 +1763,6 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
 </context>
 <context>
-    <name>SqlDatabase</name>
-    <message>
-        <source>Cannot create path to store cache. Miam-Player might be able to run but it will be in limited mode</source>
-        <translation type="vanished">Не удается создать путь для сохранения кэша. Miam-Player может запуститься,но только в ограниченном режиме</translation>
-    </message>
-</context>
-<context>
     <name>TabPlaylist</name>
     <message>
         <location filename="../playlists/tabplaylist.cpp" line="46"/>
@@ -1801,30 +1781,9 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <location filename="../playlists/tabplaylist.cpp" line="163"/>
-        <location filename="../playlists/tabplaylist.cpp" line="306"/>
+        <location filename="../playlists/tabplaylist.cpp" line="307"/>
         <source>Playlist %1</source>
         <translation>Список воспроизведения %1</translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">Этот список воспроизведения пуст.
-Выберите или перетащите треки из вашей библиотеки или любого внешнего местоположения.</translation>
-    </message>
-</context>
-<context>
-    <name>TableView</name>
-    <message>
-        <source>Track</source>
-        <translation type="vanished">Трек</translation>
-    </message>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">Название</translation>
-    </message>
-    <message>
-        <source>Duration</source>
-        <translation type="vanished">Длительность</translation>
     </message>
 </context>
 <context>
@@ -2022,51 +1981,20 @@ Select or drop tracks from your library or any external location.</source>
     </message>
     <message>
         <location filename="../tageditor/tageditor.cpp" line="50"/>
-        <location filename="../tageditor/tageditor.cpp" line="485"/>
+        <location filename="../tageditor/tageditor.cpp" line="514"/>
         <source>(Keep)</source>
         <translation>(Сохранить)</translation>
     </message>
     <message>
         <location filename="../tageditor/tageditor.cpp" line="51"/>
-        <location filename="../tageditor/tageditor.cpp" line="486"/>
+        <location filename="../tageditor/tageditor.cpp" line="515"/>
         <source>(Delete)</source>
         <translation>(Удалить)</translation>
     </message>
     <message>
-        <location filename="../tageditor/tageditor.cpp" line="406"/>
+        <location filename="../tageditor/tageditor.cpp" line="407"/>
         <source>(Incompatible tracks selected)</source>
         <translation>(Выбраны несовместимые треки)</translation>
-    </message>
-</context>
-<context>
-    <name>TargetWidget</name>
-    <message>
-        <source>Please specify the folder where Miam-Player will be installed.</source>
-        <translation type="vanished">Пожалуйста, укажите папку, в которую будет установлен Miam-Player.</translation>
-    </message>
-    <message>
-        <source>Associate common audio file types (.ape, .asf, .flac, .m4a, .mpc, .mp3, .oga, .ogg) with Miam-Player.</source>
-        <translation type="vanished">Связать распространенные типы аудиофайлов (.ape, .asf, .flac, .m4a, .mpc, .mp3, .oga, .ogg) с Miam-Player.</translation>
-    </message>
-    <message>
-        <source>Associate common audio file types with Miam-Player.</source>
-        <translation type="vanished">Связать распространенные типы аудиофайлов с Miam-Player.</translation>
-    </message>
-    <message>
-        <source>&lt;font color=&apos;red&apos;&gt;A previous installation exists in this folder. If you wish to continue, everything will be overwritten.&lt;/font&gt;</source>
-        <translation type="vanished">&lt;font color=&apos;red&apos;&gt;Есть предыдущая установка в этой папке. Если вы хотите продолжить, всё будет перезаписано.&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>Because Miam-Player is still in Beta, it is recommended to remove all files created from this software</source>
-        <translation type="vanished">Из-за того, что Miam-Player всё-ещё в бета-версии, рекомендуется удалить все файлы, созданные этой программой</translation>
-    </message>
-    <message>
-        <source>Remove database cache of audio files, etc. (recommended)</source>
-        <translation type="vanished">Удалить кеш базы данных аудиофайлов и тд. (рекомендуется)</translation>
-    </message>
-    <message>
-        <source>Reset settings stored in Windows Registry (not necessary)</source>
-        <translation type="vanished">Сбросить настройки, хранящиеся в реестре Windows (необязательно)</translation>
     </message>
 </context>
 <context>
@@ -2103,28 +2031,6 @@ Select or drop tracks from your library or any external location.</source>
         <location filename="../treeview.cpp" line="57"/>
         <source>tag editor</source>
         <translation>редактор тегов</translation>
-    </message>
-</context>
-<context>
-    <name>UniqueLibrary</name>
-    <message>
-        <source>Search...</source>
-        <translation type="vanished">Искать...</translation>
-    </message>
-</context>
-<context>
-    <name>installscript</name>
-    <message>
-        <source>Installation Folder</source>
-        <translation type="vanished">Папка установки</translation>
-    </message>
-    <message>
-        <source>Choose your target directory.</source>
-        <translation type="vanished">Выберите целевую папку.</translation>
-    </message>
-    <message>
-        <source>A previous installation exists in this folder. If you wish to continue, everything will be overwritten.</source>
-        <translation type="vanished">Есть предыдущая установка в этой папке. Если вы хотите продолжить, всё будет перезаписано.</translation>
     </message>
 </context>
 </TS>
