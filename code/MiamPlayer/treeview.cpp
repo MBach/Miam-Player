@@ -24,6 +24,18 @@ QStringList TreeView::selectedTracks()
 	return list;
 }
 
+#include <QDrag>
+
+void TreeView::startDrag(Qt::DropActions)
+{
+	QByteArray itemData;
+	QMimeData *mimeData = new QMimeData;
+	mimeData->setData("treeview/x-treeview-item", itemData);
+	QDrag *drag = new QDrag(this);
+	drag->setMimeData(mimeData);
+	drag->exec(Qt::MoveAction | Qt::CopyAction, Qt::CopyAction);
+}
+
 /** Alerts the user if there's too many tracks to add. */
 QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QStringList &tracks)
 {

@@ -59,9 +59,6 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 
 	connect(this, &QTableView::doubleClicked, this, [=] (const QModelIndex &track) {
 		_mediaPlayer.data()->changeTrack(_playlistModel->mediaPlaylist(), track.row());
-		/*_mediaPlayer.data()->setPlaylist(_playlistModel->mediaPlaylist());
-		this->mediaPlaylist()->setCurrentIndex(track.row());
-		_mediaPlayer.data()->play();*/
 		this->viewport()->update();
 	});
 
@@ -197,6 +194,12 @@ void Playlist::dragEnterEvent(QDragEnterEvent *event)
 	}
 }
 
+void Playlist::dragLeaveEvent(QDragLeaveEvent *event)
+{
+	this->setProperty("dragFromTreeview", false);
+	QTableView::dragLeaveEvent(event);
+}
+
 void Playlist::startDrag(Qt::DropActions)
 {
 	QByteArray itemData;
@@ -251,6 +254,7 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 	_dropDownIndex = new QModelIndex();
 	// Kind of hack to keep track of position?
 	*_dropDownIndex = indexAt(event->pos());
+	this->setProperty("dragFromTreeview", event->mimeData()->hasFormat("treeview/x-treeview-item"));
 	this->viewport()->repaint();
 	delete _dropDownIndex;
 	_dropDownIndex = NULL;
@@ -263,6 +267,7 @@ void Playlist::dropEvent(QDropEvent *event)
 	int row = this->indexAt(event->pos()).row();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
 		view->insertToPlaylist(row);
+		this->setProperty("dragFromTreeview", false);
 	} else if (Playlist *target = qobject_cast<Playlist*>(source)) {
 		// Internal drag and drop (moving tracks)
 		if (target && target == this) {
@@ -363,6 +368,7 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 void Playlist::paintEvent(QPaintEvent *event)
 {
 	QPainter p(viewport());
+
 	if (_playlistModel && _playlistModel->rowCount() == 0) {
 		QRect vp = viewport()->rect();
 		if (horizontalScrollBar()->isVisible()) {
@@ -389,21 +395,49 @@ void Playlist::paintEvent(QPaintEvent *event)
 			p.drawPixmap(sourcePix, QPixmap(":/icons/emptyPlaylist"));
 			p.restore();
 		} else {
-			p.drawPixmap(sourcePix, QPixmap(":/icons/emptyPlaylist"));
+
+			// Highlight the drop area
+			if (this->property("dragFromTreeview").toBool()) {
+				p.save();
+				QBrush highlight = QApplication::palette().highlight();
+				QPen pen(highlight.color());
+				pen.setWidth(2);
+				p.setPen(pen);
+
+				// Draw a small rectangle in the viewport
+				p.drawRect(this->viewport()->rect().adjusted(1, 1, -1, -2));
+				p.setBrush(highlight);
+				p.setPen(Qt::NoPen);
+				p.drawRect(sourcePix);
+
+				// Then change the color of the icon with the current highlighted color
+				p.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+				p.drawPixmap(sourcePix, QPixmap(":/icons/emptyPlaylist"));
+				p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+				p.fillRect(rect(), QApplication::palette().base());
+				p.restore();
+			} else {
+				p.drawPixmap(sourcePix, QPixmap(":/icons/emptyPlaylist"));
+			}
+
 		}
 		source.translate(vp.width() / 2 - source.width() / 2,
 						 vp.height() / 2 - source.height() / 2);
 
-		//QRect adjustedRect = QFontMetrics(QApplication::font()).boundingRect(source, Qt::AlignHCenter | Qt::AlignTop | Qt::TextExpandTabs | Qt::TextWordWrap,
-		//															tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."));
 		p.drawText(source, tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."), to);
-		p.setPen(QApplication::palette().mid().color());
+
+		if (this->property("dragFromTreeview").toBool()) {
+			p.setPen(QApplication::palette().highlight().color());
+		} else {
+			p.setPen(QApplication::palette().mid().color());
+		}
 		if (isLeftToRight()) {
 			p.drawLine(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
 		} else {
 			p.drawLine(viewport()->rect().right() - 1, viewport()->rect().top(),
 					   viewport()->rect().right() - 1, viewport()->rect().bottom() - 1);
 		}
+
 	} else {
 		QTableView::paintEvent(event);
 		p.save();

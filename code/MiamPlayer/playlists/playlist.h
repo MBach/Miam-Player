@@ -86,6 +86,7 @@ protected:
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
+	virtual void dragLeaveEvent(QDragLeaveEvent *event) override;
 	virtual void dragMoveEvent(QDragMoveEvent *event) override;
 	virtual void startDrag(Qt::DropActions) override;
 

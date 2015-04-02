@@ -26,6 +26,8 @@ protected:
 
 	QModelIndexList _cacheSelectedIndexes;
 
+	virtual void startDrag(Qt::DropActions supportedActions) override;
+
 private:
 	/** Alerts the user if there's too many tracks to add. */
 	QMessageBox::StandardButton beforeSending(const QString &target, QStringList &tracks);

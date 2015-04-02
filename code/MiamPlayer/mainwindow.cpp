@@ -484,7 +484,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 {
-	if (event->mimeData()->hasFormat("playlist/x-tableview-item")) {
+	if (event->mimeData()->hasFormat("playlist/x-tableview-item") || event->mimeData()->hasFormat("treeview/x-treeview-item")) {
 		// Display a forbid cursor when one has started a drag from a playlist
 		// Accepted drops are other playlists or the tabbar
 		event->ignore();
