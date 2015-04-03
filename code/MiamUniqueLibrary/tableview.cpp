@@ -105,6 +105,8 @@ void TableView::insertNode(GenericDAO *node)
 		_model->invisibleRootItem()->appendRow({NULL, track, title, length});
 		break;
 	}
+    default:
+        break;
 	}
 }
 

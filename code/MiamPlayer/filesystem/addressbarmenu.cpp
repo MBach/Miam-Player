@@ -77,7 +77,8 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 	QStylePainter p(this->viewport());
 	// Vertical frame between icons and text
 	p.save();
-	p.setPen(QApplication::palette().midlight().color());
+	QPalette palette = QApplication::palette();
+	p.setPen(palette.midlight().color());
 	p.drawLine(33, 0, 33, rect().height());
 	p.restore();
 
@@ -98,12 +99,14 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 
 		if (it->data(Qt::UserRole + 1).toBool()) {
 			p.save();
-			p.setPen(QApplication::palette().midlight().color());
+			p.setPen(palette.midlight().color());
 			p.drawLine(r.x(), r.y() + (it->sizeHint().height()) / 2, r.width(), r.y() + (it->sizeHint().height()) / 2);
 			p.restore();
 			continue;
 		}
+
 		r.adjust(1, 1, -4, -1);
+		bool isHighlighted = r.contains(mapFromGlobal(QCursor::pos()));
 		// Draw: Highlight, Icon, Text
 		if (r.isValid()) {
 			QRect iconRect(r.x() + 6, r.y() + 2, 19, 19);
@@ -113,9 +116,9 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 				itemIsEnabled = false;
 			} else {
 				p.save();
-				if (r.contains(mapFromGlobal(QCursor::pos()))) {
-					p.setPen(QApplication::palette().highlight().color());
-					p.setBrush(QApplication::palette().highlight().color().lighter());
+				if (isHighlighted) {
+					p.setPen(palette.highlight().color());
+					p.setBrush(palette.highlight().color().lighter());
 					p.drawRect(r);
 					p.setPen(QColor(192, 192, 192, 128));
 					p.drawLine(33, r.top() + 1, 33, r.bottom());
@@ -127,14 +130,18 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 			QRect textRect = r.adjusted(37, 0, 0, 0);
 			QString text = fontMetrics().elidedText(it->text(), Qt::ElideRight, textRect.width());
 			p.save();
-			if (!itemIsEnabled) {
-				p.setPen(QApplication::palette().color(QPalette::Disabled, QPalette::WindowText));
-			}
+
 			p.setFont(it->font());
-			QColor lighterBG = QApplication::palette().highlight().color().lighter();
-			QColor highlightedText = QApplication::palette().highlightedText().color();
-			if (qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
+			QColor lighterBG = palette.highlight().color().lighter();
+			QColor highlightedText = palette.highlightedText().color();
+			if (itemIsEnabled && isHighlighted && qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
 				p.setPen(highlightedText);
+			} else {
+				if (itemIsEnabled) {
+					p.setPen(palette.text().color());
+				} else {
+					p.setPen(palette.color(QPalette::Disabled, QPalette::WindowText));
+				}
 			}
 
 			p.drawText(textRect, text, Qt::AlignLeft | Qt::AlignVCenter);
