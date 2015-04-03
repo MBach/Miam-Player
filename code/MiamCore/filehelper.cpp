@@ -67,7 +67,8 @@ bool FileHelper::init(const QString &filePath)
 #ifdef _WIN32
 	TagLib::FileName fp(QDir::toNativeSeparators(fileName).toStdWString().data());
 #else
-	TagLib::FileName fp(QDir::toNativeSeparators(fileName).toStdString().data());
+    TagLib::String s(QDir::toNativeSeparators(fileName).toUtf8().constData(), TagLib::String::UTF8);
+    TagLib::FileName fp(s.toCString(true));
 #endif
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
