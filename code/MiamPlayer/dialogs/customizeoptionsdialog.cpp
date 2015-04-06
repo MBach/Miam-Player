@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "pluginmanager.h"
 #include "settingsprivate.h"
+#include "musicsearchengine.h"
 
 #include <QDesktopWidget>
 #include <QDir>
@@ -53,6 +54,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		pushButtonDeleteLocation->setEnabled(true);
 	}
 
+
 	// Restore default location for the file explorer
 	for (int i = 0; i < comboBoxDefaultFileExplorer->count(); i++) {
 		if (comboBoxDefaultFileExplorer->itemText(i) == QDir::toNativeSeparators(settings->defaultLocationFileExplorer())) {
@@ -65,7 +67,11 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		emit defaultLocationFileExplorerHasChanged(QDir(location));
 	});
 
-	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, settings, &SettingsPrivate::setMonitorFileSystem);
+	settings->isFileSystemMonitored() ? radioButtonEnableMonitorFS->setChecked(true) : radioButtonDisableMonitorFS->setChecked(true);
+	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setMonitorFileSystem(b);
+		SqlDatabase::instance()->musicSearchEngine()->setWatchForChanges(b);
+	});
 
 	// Second panel: languages
 	FlowLayout *flowLayout = new FlowLayout(widgetLanguages, 30, 75, 75);

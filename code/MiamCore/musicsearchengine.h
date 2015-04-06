@@ -3,17 +3,26 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QTimer>
 
 #include "miamcore_global.h"
 
 class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 {
 	Q_OBJECT
+private:
+	QTimer *_timer;
+
 public:
 	MusicSearchEngine(QObject *parent = 0);
 
+	void setWatchForChanges(bool b);
+
 public slots:
 	void doSearch(const QStringList &delta = QStringList());
+
+private slots:
+	void watchForChanges();
 
 signals:
 	/** A JPG or a PNG was found next to a valid audio file in the same directory. */

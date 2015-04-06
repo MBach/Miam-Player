@@ -45,6 +45,8 @@ public:
 	/** Singleton pattern to be able to easily use settings everywhere in the app. */
 	static SqlDatabase* instance();
 
+	MusicSearchEngine * musicSearchEngine() const;
+
 	bool insertIntoTableArtists(ArtistDAO *artist);
 	bool insertIntoTableAlbums(uint artistId, AlbumDAO *album);
 	int  insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting);
@@ -52,9 +54,9 @@ public:
 	bool insertIntoTableTracks(const TrackDAO &track);
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
-	void removeRecordsFromHost(const QString &host);
 	bool removePlaylists(const QList<PlaylistDAO> &playlists);
 	void removePlaylistsFromHost(const QString &host);
+	void removeRecordsFromHost(const QString &host);
 
 	Cover *selectCoverFromURI(const QString &uri);
 	QList<TrackDAO> selectPlaylistTracks(int playlistID);

@@ -581,6 +581,9 @@
               <property name="checked">
                <bool>true</bool>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup</string>
+              </attribute>
              </widget>
             </item>
             <item>
@@ -588,6 +591,9 @@
               <property name="text">
                <string>No</string>
               </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup</string>
+              </attribute>
              </widget>
             </item>
            </layout>
@@ -3834,4 +3840,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

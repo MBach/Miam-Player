@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include "dialogs/customizethemedialog.h"
+#include "musicsearchengine.h"
 #include "playlists/playlist.h"
 #include "pluginmanager.h"
 #include "settings.h"

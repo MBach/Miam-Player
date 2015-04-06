@@ -70,6 +70,9 @@ SqlDatabase::SqlDatabase()
 		createDb.exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
 					  "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), host varchar(255), id INTEGER, " \
 					  "url varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
+		/// TEST Monitor Filesystem
+		 createDb.exec("CREATE TABLE IF NOT EXISTS filesystem (path VARCHAR(255) PRIMARY KEY ASC, " \
+			"lastModified INTEGER);");
 	}
 
 	connect(_musicSearchEngine, &MusicSearchEngine::progressChanged, this, &SqlDatabase::progressChanged);
@@ -92,6 +95,12 @@ SqlDatabase::SqlDatabase()
 		// Resync remote players and remote databases
 		emit aboutToResyncRemoteSources();
 	});
+
+	// Monitor filesystem
+	if (settings->isFileSystemMonitored()) {
+		//qDebug() << "start watching FS for changes";
+		musicSearchEngine()->setWatchForChanges(true);
+	}
 }
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
@@ -101,6 +110,11 @@ SqlDatabase* SqlDatabase::instance()
 		_sqlDatabase = new SqlDatabase;
 	}
 	return _sqlDatabase;
+}
+
+MusicSearchEngine * SqlDatabase::musicSearchEngine() const
+{
+	return _musicSearchEngine;
 }
 
 bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
@@ -288,29 +302,6 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 	return b;
 }
 
-void SqlDatabase::removeRecordsFromHost(const QString &host)
-{
-	qDebug() << Q_FUNC_INFO << host;
-	this->transaction();
-	QSqlQuery removeTracks(*this);
-	removeTracks.prepare("DELETE FROM tracks WHERE host LIKE :h");
-	removeTracks.bindValue(":h", host);
-	removeTracks.exec();
-
-	QSqlQuery removeAlbums(*this);
-	removeAlbums.prepare("DELETE FROM albums WHERE host LIKE :h");
-	removeAlbums.bindValue(":h", host);
-	removeAlbums.exec();
-
-	QSqlQuery removeArtists(*this);
-	removeArtists.prepare("DELETE FROM artists WHERE host LIKE :h");
-	removeArtists.bindValue(":h", host);
-	removeArtists.exec();
-
-	this->commit();
-	this->loadFromFileDB();
-}
-
 bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 {
 	this->transaction();
@@ -344,6 +335,29 @@ void SqlDatabase::removePlaylistsFromHost(const QString &host)
 	remove.exec();
 
 	this->commit();
+}
+
+void SqlDatabase::removeRecordsFromHost(const QString &host)
+{
+	qDebug() << Q_FUNC_INFO << host;
+	this->transaction();
+	QSqlQuery removeTracks(*this);
+	removeTracks.prepare("DELETE FROM tracks WHERE host LIKE :h");
+	removeTracks.bindValue(":h", host);
+	removeTracks.exec();
+
+	QSqlQuery removeAlbums(*this);
+	removeAlbums.prepare("DELETE FROM albums WHERE host LIKE :h");
+	removeAlbums.bindValue(":h", host);
+	removeAlbums.exec();
+
+	QSqlQuery removeArtists(*this);
+	removeArtists.prepare("DELETE FROM artists WHERE host LIKE :h");
+	removeArtists.bindValue(":h", host);
+	removeArtists.exec();
+
+	this->commit();
+	this->loadFromFileDB();
 }
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
