@@ -330,7 +330,7 @@ void TabPlaylist::closePlaylist(int index)
 
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
 	uint newHash = p->generateNewHash();
-	if (p->hash() == newHash || p->mediaPlaylist()->isEmpty() && p->hash() == 0) {
+	if (p->hash() == newHash || (p->mediaPlaylist()->isEmpty() && p->hash() == 0)) {
 		this->removeTabFromCloseButton(index);
 		p->setHash(0);
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));

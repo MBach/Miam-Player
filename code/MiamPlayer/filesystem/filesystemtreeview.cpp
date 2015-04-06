@@ -53,6 +53,7 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) 
 			}
 		}
 	}
+	tracks.sort(Qt::CaseInsensitive);
 	tracks.removeDuplicates();
 }
 
