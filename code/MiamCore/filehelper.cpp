@@ -67,8 +67,8 @@ bool FileHelper::init(const QString &filePath)
 #ifdef _WIN32
 	TagLib::FileName fp(QDir::toNativeSeparators(fileName).toStdWString().data());
 #else
-    TagLib::String s(QDir::toNativeSeparators(fileName).toUtf8().constData(), TagLib::String::UTF8);
-    TagLib::FileName fp(s.toCString(true));
+	TagLib::String s(QDir::toNativeSeparators(fileName).toUtf8().constData(), TagLib::String::UTF8);
+	TagLib::FileName fp(s.toCString(true));
 #endif
 	if (suffix == "ape") {
 		_file = new TagLib::APE::File(fp);
@@ -199,7 +199,7 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 			if (!l.isEmpty()) {
 				tag->removeFrame(l.front());
 			}
-			TagLib::ID3v2::TextIdentificationFrame *tif = new TagLib::ID3v2::TextIdentificationFrame(TagLib::ByteVector("ARTISTALBUM"));
+			TagLib::ID3v2::TextIdentificationFrame *tif = new TagLib::ID3v2::TextIdentificationFrame(TagLib::ByteVector(convertedKey.toStdString().data()));
 			tif->setText(artistAlbum.toStdString().data());
 			tag->addFrame(tif);
 		} else if (mpegFile->hasID3v1Tag()) {
@@ -328,9 +328,9 @@ bool FileHelper::insert(QString key, const QVariant &value)
 		_file->tag()->setTrack(value.toUInt());
 	} else if (key == "YEAR") {
 		_file->tag()->setYear(value.toUInt());
-	} else if (key == "ARTISTALBUM"){
+	} else if (key == "ARTISTALBUM") {
 		this->setArtistAlbum(value.toString());
-	} else if (key == "DISC"){
+	} else if (key == "DISC") {
 		this->setDiscNumber(value.toString());
 	} else {
 		return false;
