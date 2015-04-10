@@ -185,10 +185,10 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
 	QPluginLoader pluginLoader(pluginFileInfo.absoluteFilePath(), this);
 	QObject *plugin = pluginLoader.instance();
-	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (plugin) {
 		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
 		if (basic) {
+			SettingsPrivate *settings = SettingsPrivate::instance();
 			// If one has previoulsy unloaded a plugin, and now wants to reload it (yeah, I know...), we don't need to append items once again
 			///FIXME
 			int idx = _mainWindow->customizeOptionsDialog->tabPlugins->count();

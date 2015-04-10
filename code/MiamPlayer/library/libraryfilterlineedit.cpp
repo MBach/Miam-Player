@@ -15,7 +15,7 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {
 			this->setFont(newFont);
-			this->setMinimumHeight(fontMetrics().height() * 1.6);
+			//this->setMinimumHeight(fontMetrics().height() * 1.6);
 		}
 	});
 
@@ -49,7 +49,9 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	QStyleOptionFrame o;
 	initStyleOption(&o);
 	o.palette = QApplication::palette();
-	o.rect.adjust(10, 10, -10, -15);
+	//o.rect.adjust(10, 10, -10, -15);
+	//qDebug() << o.rect.height() << p.fontMetrics().height();
+	//o.rect.setHeight(p.fontMetrics().height());
 
 	p.fillRect(rect(), o.palette.base().color().lighter(110));
 
@@ -176,14 +178,14 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	}
 
 	// Border of this widget
-	p.setPen(o.palette.mid().color());
+	/*p.setPen(o.palette.mid().color());
 	if (QApplication::isLeftToRight()) {
 		p.drawLine(QPoint(rect().center().x(), 0), rect().topRight());
 		p.drawLine(rect().topRight(), rect().bottomRight());
 	} else {
 		p.drawLine(QPoint(rect().center().x() - 1, 0), rect().topLeft());
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
-	}
+	}*/
 }
 
 

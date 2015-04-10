@@ -90,7 +90,6 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 				p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
 			}
 		}
-
 		p.drawLine(tab.rect.x(), tab.rect.y(),
 				   tab.rect.x() + tab.rect.width(), tab.rect.y());
 		p.drawLine(tab.rect.x(), tab.rect.y(),

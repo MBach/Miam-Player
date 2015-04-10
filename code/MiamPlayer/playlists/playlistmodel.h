@@ -8,6 +8,7 @@
 
 #include "filehelper.h"
 #include "model/trackdao.h"
+#include "mediaplaylist.h"
 
 /**
  * @brief The PlaylistModel class
@@ -17,8 +18,8 @@ class PlaylistModel : public QStandardItemModel
 	Q_OBJECT
 	Q_ENUMS(Origin)
 private:
-	/** Each instance of PlaylistModel has its own QMediaPlaylist. */
-	QMediaPlaylist *_mediaPlaylist;
+	/** Each instance of PlaylistModel has its own MediaPlaylist. */
+	MediaPlaylist *_mediaPlaylist;
 
 public:
 	explicit PlaylistModel(QObject *parent);
@@ -46,7 +47,7 @@ public:
 	/** Redefined. */
 	void insertRow(int row, const QList<QStandardItem *> & items);
 
-	inline QMediaPlaylist* mediaPlaylist() const { return _mediaPlaylist; }
+	inline MediaPlaylist* mediaPlaylist() const { return _mediaPlaylist; }
 
 	void removeTrack(int row);
 

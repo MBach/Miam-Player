@@ -1,6 +1,7 @@
 #include "miamstyle.h"
 
 #include <QApplication>
+#include <QFileSelector>
 #include <QScrollBar>
 #include <QStyleOptionGroupBox>
 #include <QStyleOptionSlider>
@@ -174,37 +175,51 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 	return r;
 }
 
-/*void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-	qDebug() << Q_FUNC_INFO << "here";
-	// QStyle::CE_MenuBarItem	20	A menu item in a QMenuBar.
-	// QStyle::CE_MenuBarEmptyArea	21	The empty area of a QMenuBar.
-	// QStyle::CE_MenuItem	14	A menu item in a QMenu.
-	// QStyle::CE_MenuScroller	15	Scrolling areas in a QMenu when the style supports scrolling.
-	// QStyle::CE_MenuTearoff	18	A menu item representing the tear off section of a QMenu.
-	// QStyle::CE_MenuEmptyArea	19	The area in a menu without menu items.
-	// QStyle::CE_MenuHMargin	17	The horizontal extra space on the left/right of a menu.
-	// QStyle::CE_MenuVMargin	16	The vertical extra space on the top/bottom of a menu.
 	switch (element) {
-	case CE_MenuItem: {
+	/*case CE_MenuItem: {
 		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
 		//somi->font.setBold(true);
-		painter->drawText(somi->rect, "test");
-		qDebug() << Q_FUNC_INFO << "ici";
+		//painter->drawText(somi->rect, "test");
+		qDebug() << "CE_MenuItem" << somi->text;
+		//QProxyStyle::drawControl(element, option, painter, widget);
+		uint alignment = Qt::AlignLeft | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
+		if (!proxy()->styleHint(SH_UnderlineShortcut, somi, widget)) {
+			alignment |= Qt::TextHideMnemonic;
+		}
+		painter->drawText(somi->rect, alignment, somi->text);
 		break;
-	}
+	}*/
 	case CE_MenuBarItem:{
-		qDebug() << Q_FUNC_INFO << "ici";
+		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
+		const bool act = somi->state & (State_Sunken | State_Selected);
+		if (act) {
+			painter->save();
+			painter->setPen(QApplication::palette().highlight().color());
+			painter->setBrush(QApplication::palette().highlight().color().light());
+			painter->drawRect(option->rect.adjusted(0, 0, -1, -1));
+			painter->restore();
+		} else {
+			painter->fillRect(option->rect, QApplication::palette().window());
+		}
+
+		uint alignment = Qt::AlignCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
+		if (!proxy()->styleHint(SH_UnderlineShortcut, somi, widget)) {
+			alignment |= Qt::TextHideMnemonic;
+		}
+		painter->drawText(option->rect, alignment, somi->text);
 		break;
 	}
 	case CE_MenuBarEmptyArea:{
-		qDebug() << Q_FUNC_INFO << "ici";
+		//qDebug() << Q_FUNC_INFO << "CE_MenuBarEmptyArea";
+		painter->fillRect(option->rect, QApplication::palette().window());
 		break;
 	}
 	default:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
-}*/
+}
 
 void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *p, const QWidget *widget) const
 {
@@ -227,9 +242,14 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *painter, const QWidget *widget) const
 {
 	switch (element) {
+	// On Linux, don't fill the rectangular area where lives the PE_IndicatorBranch. Keep this area transparent
+	// On Windows, this is the default behaviour
+	case PE_PanelItemViewRow:
+		break;
 	case PE_IndicatorTabClose: {
 		if (opt->state.testFlag(State_MouseOver)) {
-			painter->drawPixmap(0, 0, 16, 16, QPixmap(":/icons/win/closeTabsHover"));
+			QFileSelector fs;
+			painter->drawPixmap(0, 0, 16, 16, QPixmap(fs.select(":/icons/config/close_tabs_hover.png")));
 		} else {
 			painter->drawPixmap(0, 0, 16, 16, QPixmap(":/icons/closeTabs"));
 		}

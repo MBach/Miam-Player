@@ -17,7 +17,7 @@
 #include "playlistheaderview.h"
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-	QStandardItemModel(0, PlaylistHeaderView::labels.count(), parent), _mediaPlaylist(new QMediaPlaylist(this))
+	QStandardItemModel(0, PlaylistHeaderView::labels.count(), parent), _mediaPlaylist(new MediaPlaylist(this))
 {}
 
 /** Clear the content of playlist. */

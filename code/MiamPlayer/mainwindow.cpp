@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	setupUi(this);
+	widgetSearchBar->setFrameBorder(false, true, true, false);
+	widgetSearchBar->setHalfTop(true);
 
 	this->setAcceptDrops(true);
 	//this->setAttribute(Qt::WA_DeleteOnClose, true);

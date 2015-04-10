@@ -62,7 +62,8 @@ SOURCES +=     library/jumptowidget.cpp \
     settings.cpp \
     settingsprivate.cpp \
     timelabel.cpp \
-    stopbutton.cpp
+    stopbutton.cpp \
+    mediaplaylist.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -91,4 +92,5 @@ HEADERS += interfaces/basicplugin.h \
     settings.h \
     settingsprivate.h \
     timelabel.h \
-    stopbutton.h
+    stopbutton.h \
+    mediaplaylist.h

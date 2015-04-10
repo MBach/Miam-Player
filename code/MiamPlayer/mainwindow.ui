@@ -97,7 +97,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QWidget" name="widgetSearchBar" native="true">
+              <widget class="PaintableWidget" name="widgetSearchBar" native="true">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -109,16 +109,16 @@
                  <number>0</number>
                 </property>
                 <property name="leftMargin">
-                 <number>0</number>
+                 <number>10</number>
                 </property>
                 <property name="topMargin">
-                 <number>0</number>
+                 <number>10</number>
                 </property>
                 <property name="rightMargin">
-                 <number>0</number>
+                 <number>10</number>
                 </property>
                 <property name="bottomMargin">
-                 <number>0</number>
+                 <number>15</number>
                 </property>
                 <item>
                  <widget class="LibraryFilterLineEdit" name="searchBar">
@@ -1002,6 +1002,12 @@
    <class>StopButton</class>
    <extends>QPushButton</extends>
    <header>stopbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PaintableWidget</class>
+   <extends>QWidget</extends>
+   <header>paintablewidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

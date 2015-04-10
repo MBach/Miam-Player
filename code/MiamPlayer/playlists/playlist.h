@@ -58,7 +58,7 @@ public:
 
 	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
 
-	inline QMediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
+	inline MediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
 
 	uint generateNewHash() const;
 

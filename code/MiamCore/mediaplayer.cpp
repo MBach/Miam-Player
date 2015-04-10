@@ -63,7 +63,6 @@ void MediaPlayer::createLocalConnections()
 	}
 	_remotePlayer = NULL;
 	_player->disconnect();
-	_player->setTime(0);
 
 	connect(_player, &VlcMediaPlayer::opening, this, [=]() {
 		emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
@@ -165,7 +164,7 @@ void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
 	}
 }
 
-void MediaPlayer::changeTrack(QMediaPlaylist *playlist, int trackIndex)
+void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 {
 	if (_remotePlayer) {
 		_remotePlayer->disconnect();
@@ -347,6 +346,7 @@ void MediaPlayer::pause()
 	} else {
 		_player->pause();
 	}
+	this->setState(QMediaPlayer::PausedState);
 }
 
 /** Play current track in the playlist. */
@@ -369,8 +369,7 @@ void MediaPlayer::play()
 		if (_state == QMediaPlayer::PausedState) {
 			qDebug() << Q_FUNC_INFO << "QMediaPlayer::PausedState";
 			_player->resume();
-			_state = QMediaPlayer::PlayingState;
-			emit stateChanged(_state);
+			this->setState(QMediaPlayer::PlayingState);
 		} else {
 			qDebug() << Q_FUNC_INFO << _state;
 			QString file = mc.canonicalUrl().toLocalFile();

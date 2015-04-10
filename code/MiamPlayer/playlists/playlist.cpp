@@ -57,7 +57,7 @@ Playlist::Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent) :
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
 
-	connect(this, &QTableView::doubleClicked, this, [=] (const QModelIndex &track) {
+	connect(this, &Playlist::doubleClicked, this, [=] (const QModelIndex &track) {
 		_mediaPlayer.data()->changeTrack(_playlistModel->mediaPlaylist(), track.row());
 		this->viewport()->update();
 	});

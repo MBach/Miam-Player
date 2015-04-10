@@ -9,6 +9,7 @@ SOURCES += \
     dialogs/colordialog.cpp \
     dialogs/customizeoptionsdialog.cpp \
     dialogs/customizethemedialog.cpp \
+    dialogs/customizethemetaglineedit.cpp \
     dialogs/dragdropdialog.cpp \
     dialogs/playlistmanager.cpp \
     dialogs/reflector.cpp \
@@ -17,20 +18,21 @@ SOURCES += \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
-    library/libraryfilterproxymodel.cpp \
     library/albumitem.cpp \
     library/artistitem.cpp \
+    library/changehierarchybutton.cpp \
     library/discitem.cpp \
-    library/trackitem.cpp \
-    library/yearitem.cpp \
     library/extendedtabbar.cpp \
+    library/libraryfilterlineedit.cpp \
+    library/libraryfilterproxymodel.cpp \
     library/libraryheader.cpp \
     library/libraryitemdelegate.cpp \
     library/libraryorderdialog.cpp \
     library/libraryscrollbar.cpp \
     library/librarytreeview.cpp \
     library/separatoritem.cpp \
-    library/changehierarchybutton.cpp \
+    library/trackitem.cpp \
+    library/yearitem.cpp \
     playlists/cornerwidget.cpp \
     playlists/playlist.cpp \
     playlists/playlistheaderview.cpp \
@@ -69,9 +71,7 @@ SOURCES += \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp \
-    libraryfilterlineedit.cpp \
-    dialogs/customizethemetaglineedit.cpp
+    volumeslider.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -80,6 +80,7 @@ HEADERS += \
     dialogs/colordialog.h \
     dialogs/customizeoptionsdialog.h \
     dialogs/customizethemedialog.h \
+    dialogs/customizethemetaglineedit.h \
     dialogs/dragdropdialog.h \
     dialogs/playlistmanager.h \
     dialogs/reflector.h \
@@ -89,21 +90,22 @@ HEADERS += \
     filesystem/addressbarbutton.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
+    library/albumitem.h \
+    library/artistitem.h \
+    library/changehierarchybutton.h \
+    library/discitem.h \
     library/extendedtabbar.h \
-    library/libraryfilterproxymodel.h \
     library/extendedtabwidget.h \
+    library/libraryfilterproxymodel.h \
+    library/libraryheader.h \
     library/libraryitemdelegate.h \
+    library/libraryfilterlineedit.h \
     library/libraryorderdialog.h \
     library/libraryscrollbar.h \
     library/librarytreeview.h \
-    library/libraryheader.h \
-    library/albumitem.h \
-    library/artistitem.h \
-    library/discitem.h \
+    library/separatoritem.h \
     library/trackitem.h \
     library/yearitem.h \
-    library/separatoritem.h \
-    library/changehierarchybutton.h \
     playlists/cornerwidget.h \
     playlists/playlist.h \
     playlists/playlistheaderview.h \
@@ -143,9 +145,7 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h \
-    libraryfilterlineedit.h \
-    dialogs/customizethemetaglineedit.h
+    volumeslider.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

@@ -2,7 +2,7 @@
 #define MEDIAPLAYER_H
 
 #include <QMediaPlayer>
-#include <QMediaPlaylist>
+#include "mediaplaylist.h"
 
 #include "miamcore_global.h"
 
@@ -23,7 +23,7 @@ class MIAMCORE_LIBRARY MediaPlayer : public QObject
 {
 	Q_OBJECT
 private:
-	QMediaPlaylist *_playlist;
+	MediaPlaylist *_playlist;
 	QMediaPlayer::State _state;
 
 	VlcInstance *_instance;
@@ -39,12 +39,12 @@ public:
 
 	void addRemotePlayer(RemoteMediaPlayer *remotePlayer);
 
-	void changeTrack(QMediaPlaylist *playlist, int trackIndex);
+	void changeTrack(MediaPlaylist *playlist, int trackIndex);
 
 	inline bool isStopAfterCurrent() const { return _stopAfterCurrent; }
 
-	inline QMediaPlaylist * playlist() { return _playlist; }
-	inline void setPlaylist(QMediaPlaylist *playlist) { _playlist = playlist; }
+	inline MediaPlaylist * playlist() { return _playlist; }
+	inline void setPlaylist(MediaPlaylist *playlist) { _playlist = playlist; }
 
 	void setVolume(int v);
 
