@@ -144,7 +144,6 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 
 void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 {
-	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 	QWidget *view = mediaPlayerPlugin->providesView();
 	if (view != NULL) {
 		// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
@@ -171,12 +170,11 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
 	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
-	_mainWindow->mediaPlayer().data()->addRemotePlayer(remoteMediaPlayerPlugin->player());
+	MediaPlayer::instance()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
 {
-	searchMediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
 }
 

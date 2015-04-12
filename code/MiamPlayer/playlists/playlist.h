@@ -28,9 +28,6 @@ private:
 	/** Model to store basic fields on a track. Mostly used to create or move rows. */
 	PlaylistModel *_playlistModel;
 
-	/** Reference to the unique instance of MediaPlayer class in the application. */
-	QWeakPointer<MediaPlayer> _mediaPlayer;
-
 	QPoint _dragStartPosition;
 
 	/** TEST: for star ratings. */
@@ -56,7 +53,7 @@ public:
 				 COL_ICON			= 7,
 				 COL_TRACK_DAO		= 8};
 
-	explicit Playlist(QWeakPointer<MediaPlayer> mediaPlayer, QWidget *parent = NULL);
+	explicit Playlist(QWidget *parent = NULL);
 
 	inline MediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
 
@@ -78,8 +75,6 @@ public:
 
 	inline void setHash(uint hash) { _hash = hash; }
 	inline void setId(uint id) { _id = id; }
-
-	inline QWeakPointer<MediaPlayer> mediaPlayer() { return _mediaPlayer; }
 
 protected:
 	/** Redefined to display a small context menu in the view. */

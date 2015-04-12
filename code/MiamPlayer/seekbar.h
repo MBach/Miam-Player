@@ -13,14 +13,8 @@
 class SeekBar : public QSlider
 {
 	Q_OBJECT
-private:
-	/** Reference to the unique instance of MediaPlayer class in the application. */
-	QWeakPointer<MediaPlayer> _mediaPlayer;
-
 public:
 	explicit SeekBar(QWidget *parent = 0);
-
-	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
 protected:
 	/** Redefined to seek in current playing file. */

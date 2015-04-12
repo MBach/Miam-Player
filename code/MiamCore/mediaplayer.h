@@ -34,30 +34,39 @@ private:
 	QMap<QString, RemoteMediaPlayer*> _remotePlayers;
 	bool _stopAfterCurrent;
 
-public:
+	/** The unique instance of this class. */
+	static MediaPlayer *_mediaPlayer;
+
 	explicit MediaPlayer(QObject *parent = 0);
+public:
+	static MediaPlayer *instance();
 
 	void addRemotePlayer(RemoteMediaPlayer *remotePlayer);
+
+	void changeTrack(const QMediaContent &mediaContent);
 
 	void changeTrack(MediaPlaylist *playlist, int trackIndex);
 
 	inline bool isStopAfterCurrent() const { return _stopAfterCurrent; }
 
 	inline MediaPlaylist * playlist() { return _playlist; }
-	inline void setPlaylist(MediaPlaylist *playlist) { _playlist = playlist; }
 
-	void setVolume(int v);
-
-	inline QMediaPlayer::State state() const { return _state; }
-	void setState(QMediaPlayer::State state);
+	void seek(float pos);
 
 	/** Set mute on or off. */
 	void setMute(bool b) const;
 
-	void setTime(qint64 t) const;
-	qint64 time() const;
+	inline void setPlaylist(MediaPlaylist *playlist) { _playlist = playlist; }
 
-	void seek(float pos);
+	void setState(QMediaPlayer::State state);
+
+	void setTime(qint64 t) const;
+
+	void setVolume(int v);
+
+	inline QMediaPlayer::State state() const { return _state; }
+
+	qint64 time() const;
 
 private:
 	void createLocalConnections();
@@ -66,6 +75,9 @@ private:
 
 	/** Current duration of the media, in ms. */
 	qint64 duration();
+
+	/** Play track directly in the player, without playlist. */
+	void playMediaContent(const QMediaContent &mc);
 
 	/** Current position in the media, percent-based. */
 	float position() const;

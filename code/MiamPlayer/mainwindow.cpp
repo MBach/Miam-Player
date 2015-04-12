@@ -29,12 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
 				 << seekForwardButton << skipForwardButton << playbackModeButton;
-
-	// Init the audio module
-	_mediaPlayer = QSharedPointer<MediaPlayer>(new MediaPlayer(this));
 	tabPlaylists->setMainWindow(this);
-	tabPlaylists->setMediaPlayer(_mediaPlayer);
-	seekSlider->setMediaPlayer(_mediaPlayer);
 
 	/// XXX
 	_uniqueLibrary = new UniqueLibrary(this);
@@ -94,11 +89,9 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 void MainWindow::init()
 {
-	// Link database and views
-	SqlDatabase *db = SqlDatabase::instance();
-	library->init(db);
-	_uniqueLibrary->init(db);
-	tagEditor->init(db);
+	library->init();
+	_uniqueLibrary->init();
+	tagEditor->init();
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
@@ -286,40 +279,38 @@ void MainWindow::setupActions()
 	});
 
 	// Media buttons and their shortcuts
+	auto mp = MediaPlayer::instance();
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
-		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
+		bool isPlaying = (mp->state() == QMediaPlayer::PlayingState || mp->state() == QMediaPlayer::PausedState);
 		actionSeekBackward->setEnabled(isPlaying);
 		actionStop->setEnabled(isPlaying);
 		actionStopAfterCurrent->setEnabled(isPlaying);
-		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
+		actionStopAfterCurrent->setChecked(mp->isStopAfterCurrent());
 		actionSeekForward->setEnabled(isPlaying);
 
-		bool notEmpty = _mediaPlayer->playlist() && !_mediaPlayer->playlist()->isEmpty();
+		bool notEmpty = mp->playlist() && !mp->playlist()->isEmpty();
 		actionSkipBackward->setEnabled(notEmpty);
 		actionPlay->setEnabled(notEmpty);
 		actionSkipForward->setEnabled(notEmpty);
 	});
-	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipBackward);
-	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipBackward);
-	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekBackward);
-	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekBackward);
-	connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
+	connect(actionSkipBackward, &QAction::triggered, mp, &MediaPlayer::skipBackward);
+	connect(skipBackwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::skipBackward);
+	connect(actionSeekBackward, &QAction::triggered, mp, &MediaPlayer::seekBackward);
+	connect(seekBackwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::seekBackward);
+	connect(actionPlay, &QAction::triggered, mp, &MediaPlayer::play);
 
-	connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
-	connect(actionStop, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::stop);
-	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::stopAfterCurrent);
-	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::stop);
-	connect(actionSeekForward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::seekForward);
-	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::seekForward);
-	connect(actionSkipForward, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::skipForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::skipForward);
+	connect(playButton, &QAbstractButton::clicked, mp, &MediaPlayer::play);
+	connect(actionStop, &QAction::triggered, mp, &MediaPlayer::stop);
+	connect(actionStopAfterCurrent, &QAction::triggered, mp, &MediaPlayer::stopAfterCurrent);
+	connect(stopButton, &QAbstractButton::clicked, mp, &MediaPlayer::stop);
+	connect(actionSeekForward, &QAction::triggered, mp, &MediaPlayer::seekForward);
+	connect(seekForwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::seekForward);
+	connect(actionSkipForward, &QAction::triggered, mp, &MediaPlayer::skipForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
-	// Extra action for stop button
-	stopButton->setMediaPlayer(_mediaPlayer);
-
 	// Sliders
-	connect(_mediaPlayer.data(), &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
+	connect(mp, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
 		if (duration > 0) {
 			seekSlider->setValue(1000 * pos / duration);
 			timeLabel->setTime(pos, duration);
@@ -327,7 +318,7 @@ void MainWindow::setupActions()
 	});
 
 	// Volume bar
-	connect(volumeSlider, &QSlider::valueChanged, _mediaPlayer.data(), &MediaPlayer::setVolume);
+	connect(volumeSlider, &QSlider::valueChanged, mp, &MediaPlayer::setVolume);
 	volumeSlider->setValue(Settings::instance()->volume());
 
 	// Filter the library when user is typing some text to find artist, album or tracks
@@ -351,7 +342,7 @@ void MainWindow::setupActions()
 	});
 
 	// Core
-	connect(_mediaPlayer.data(), &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
+	connect(mp, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
 
 	// Playback
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
@@ -359,7 +350,7 @@ void MainWindow::setupActions()
 	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionOpenPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
-	connect(actionMute, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::toggleMute);
+	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
 	});
@@ -588,6 +579,7 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 {
 	playButton->disconnect();
 	actionPlay->disconnect();
+	auto mp = MediaPlayer::instance();
 	if (state == QMediaPlayer::PlayingState) {
 		QString iconPath;
 		if (SettingsPrivate::instance()->hasCustomIcon("pauseButton")) {
@@ -596,13 +588,13 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 			iconPath = ":/player/" + Settings::instance()->theme() + "/pause";
 		}
 		playButton->setIcon(QIcon(iconPath));
-		connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::pause);
-		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::pause);
+		connect(playButton, &QAbstractButton::clicked, mp, &MediaPlayer::pause);
+		connect(actionPlay, &QAction::triggered, mp, &MediaPlayer::pause);
 		seekSlider->setEnabled(true);
 	} else {
 		playButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/play"));
-		connect(playButton, &QAbstractButton::clicked, _mediaPlayer.data(), &MediaPlayer::play);
-		connect(actionPlay, &QAction::triggered, _mediaPlayer.data(), &MediaPlayer::play);
+		connect(playButton, &QAbstractButton::clicked, mp, &MediaPlayer::play);
+		connect(actionPlay, &QAction::triggered, mp, &MediaPlayer::play);
 		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		if (state == QMediaPlayer::StoppedState) {
 			seekSlider->setValue(0);

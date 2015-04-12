@@ -6,6 +6,7 @@
 #include "library/jumptowidget.h"
 #include "model/tablefilterproxymodel.h"
 #include "model/genericdao.h"
+#include "mediaplayer.h"
 
 class TableView : public QTableView
 {
@@ -17,6 +18,8 @@ private:
 
 	/** This view uses a proxy to specify how items in the Table should be ordered together. */
 	TableFilterProxyModel *_proxyModel;
+
+	//MediaPlaylist *_mediaPlaylist;
 
 public:
 	explicit TableView(QWidget *parent = 0);

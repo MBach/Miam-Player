@@ -90,17 +90,12 @@ SqlDatabase::SqlDatabase()
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
 
+		qDebug() << Q_FUNC_INFO;
 		this->loadFromFileDB(true);
 
 		// Resync remote players and remote databases
 		emit aboutToResyncRemoteSources();
 	});
-
-	// Monitor filesystem
-	if (settings->isFileSystemMonitored()) {
-		//qDebug() << "start watching FS for changes";
-		musicSearchEngine()->setWatchForChanges(true);
-	}
 }
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
@@ -357,6 +352,7 @@ void SqlDatabase::removeRecordsFromHost(const QString &host)
 	removeArtists.exec();
 
 	this->commit();
+	qDebug() << Q_FUNC_INFO;
 	this->loadFromFileDB();
 }
 

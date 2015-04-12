@@ -28,7 +28,7 @@
 #include <filehelper.h>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), _db(NULL)
+	TreeView(parent), _libraryModel(new QStandardItemModel(parent))
 {
 	_libraryModel->setColumnCount(1);
 
@@ -144,12 +144,12 @@ void LibraryTreeView::updateSelectedTracks()
 	//	_itemDelegate->invalidate(index);
 	//}
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
-	_db->load();
+	qDebug() << Q_FUNC_INFO;
+	SqlDatabase::instance()->load();
 }
 
-void LibraryTreeView::init(SqlDatabase *db)
+void LibraryTreeView::init()
 {
-	_db = db;
 	SettingsPrivate *settings = SettingsPrivate::instance();
 
 	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
@@ -175,14 +175,15 @@ void LibraryTreeView::init(SqlDatabase *db)
 void LibraryTreeView::setVisible(bool visible)
 {
 	TreeView::setVisible(visible);
-	disconnect(_db, 0, this, 0);
-	disconnect(_db, 0, _circleProgressBar, 0);
+	auto db = SqlDatabase::instance();
+	disconnect(db, 0, this, 0);
+	disconnect(db, 0, _circleProgressBar, 0);
 	if (visible) {
-		connect(_db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
-		connect(_db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-		connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-		connect(_db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
-		connect(_db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
+		connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+		connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
+		connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
+		connect(db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
+		connect(db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
 	}
 }
 
@@ -356,7 +357,8 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	_db->load();
+	qDebug() << Q_FUNC_INFO;
+	SqlDatabase::instance()->load();
 }
 
 /** Reduces the size of the library when the user is typing text. */

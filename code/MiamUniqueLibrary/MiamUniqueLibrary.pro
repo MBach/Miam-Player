@@ -1,4 +1,4 @@
-QT += sql widgets
+QT += sql multimedia widgets
 
 TEMPLATE = lib
 

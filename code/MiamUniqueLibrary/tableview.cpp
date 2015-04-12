@@ -11,12 +11,23 @@
 
 TableView::TableView(QWidget *parent)
 	: QTableView(parent), _jumpToWidget(new JumpToWidget(this)), _model(new QStandardItemModel(this))
+	/*, _mediaPlaylist(new MediaPlaylist(this))*/
 {
 	_model->setColumnCount(4);
 	_model->setHorizontalHeaderLabels({"", tr("Track"), tr("Title"), tr("Duration")});
 	_proxyModel = new TableFilterProxyModel(this);
 	_proxyModel->setSourceModel(_model);
 	this->setModel(_proxyModel);
+
+	connect(this, &QTableView::doubleClicked, this, [=](const QModelIndex &index) {
+		int r = index.row();
+		QString uri = index.model()->index(r, 1).data(Miam::DF_URI).toString();
+		qDebug() << Q_FUNC_INFO << uri;
+		if (!uri.isEmpty()) {
+			MediaPlayer::instance()->changeTrack(QMediaContent(QUrl::fromLocalFile(uri.mid(7))));
+			viewport()->update();
+		}
+	});
 }
 
 void TableView::setViewportMargins(int left, int top, int right, int bottom)
@@ -60,7 +71,7 @@ void TableView::filterLibrary(const QString &filter)
 
 void TableView::insertNode(GenericDAO *node)
 {
-	if (!isVisible()) {
+	/*if (!isVisible()) {
 		return;
 	}
 
@@ -99,15 +110,17 @@ void TableView::insertNode(GenericDAO *node)
 		isNewTrack = true;
 		TrackDAO *trackDao = static_cast<TrackDAO*>(node);
 		QStandardItem *track = new QStandardItem(trackDao->trackNumber());
+		track->setData(trackDao->uri(), Miam::DF_URI);
 		QStandardItem *title = new QStandardItem(trackDao->title());
 		QStandardItem *length = new QStandardItem(trackDao->length());
 
 		_model->invisibleRootItem()->appendRow({NULL, track, title, length});
+		//_mediaPlaylist->addMedia(QMediaContent(trackDao->uri()));
 		break;
 	}
-    default:
-        break;
-	}
+	default:
+		break;
+	}*/
 }
 
 void TableView::updateNode(GenericDAO *)

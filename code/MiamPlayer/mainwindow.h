@@ -38,9 +38,6 @@ private:
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 
-	/** The MediaPlayer manipulates audio tracks. */
-	QSharedPointer<MediaPlayer> _mediaPlayer;
-
 	/** WIP. View object: display all your tracks in a huge and page. */
 	UniqueLibrary *_uniqueLibrary;
 
@@ -61,8 +58,6 @@ public:
 
 	/** Plugins. */
 	void loadPlugins();
-
-	QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
 
 	void moveSearchDialog();
 

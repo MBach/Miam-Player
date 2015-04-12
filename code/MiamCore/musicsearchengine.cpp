@@ -8,20 +8,35 @@
 #include <QFileInfo>
 #include <QThread>
 
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlRecord>
+
 #include <QtDebug>
+
+bool MusicSearchEngine::isScanning = false;
 
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 	QObject(parent), _timer(new QTimer(this))
 {
+	//_timer->setInterval(5 * 60 * 1000);
 	_timer->setInterval(5000);
 	/// debug
-	_timer->setSingleShot(true);
+	///_timer->setSingleShot(true);
 	connect(_timer, &QTimer::timeout, this, &MusicSearchEngine::watchForChanges);
+
+	// Monitor filesystem
+	if (SettingsPrivate::instance()->isFileSystemMonitored()) {
+		qDebug() << Q_FUNC_INFO;
+		setWatchForChanges(true);
+	} else {
+		qDebug() << Q_FUNC_INFO;
+	}
 }
 
 void MusicSearchEngine::setWatchForChanges(bool b)
 {
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << b << MusicSearchEngine::isScanning;
 	if (b) {
 		_timer->start();
 	} else {
@@ -31,6 +46,8 @@ void MusicSearchEngine::setWatchForChanges(bool b)
 
 void MusicSearchEngine::doSearch(const QStringList &delta)
 {
+	qDebug() << Q_FUNC_INFO << delta;
+	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
 	QStringList pathsToSearch = delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : delta;
 	foreach (QString musicPath, pathsToSearch) {
@@ -97,23 +114,15 @@ void MusicSearchEngine::doSearch(const QStringList &delta)
 		atLeastOneAudioFileWasFound = false;
 	}
 	emit searchHasEnded();
+	MusicSearchEngine::isScanning = false;
 }
-
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSqlRecord>
 
 void MusicSearchEngine::watchForChanges()
 {
-	qDebug() << Q_FUNC_INFO;
-
-
+	// Gather all folders registered on music locations
 	QFileInfoList dirs;
-
 	foreach (QString musicPath, SettingsPrivate::instance()->musicLocations()) {
 		QFileInfo location(musicPath);
-
-		// For each directory, check if timestamp has changed
 		QDirIterator it(location.absoluteFilePath(), QDir::Dirs | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			QString entry = it.next();
@@ -123,14 +132,11 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	SqlDatabase *db = SqlDatabase::instance();
-
 	QStringList newFoldersToAddInLibrary;
+	// Add folders that were not found first
 	for (QFileInfo f : dirs) {
 		QSqlQuery query = db->exec("SELECT * FROM filesystem WHERE path = \"" + f.absoluteFilePath() + "\"");
-		if (query.next()) {
-			//qDebug() << "folder exists" << query.record().value(0) << query.record().value(1);
-		} else {
-			//qDebug() << "folder doesn't exist" << f.absoluteFilePath();
+		if (!query.next()) {
 			newFoldersToAddInLibrary << f.absoluteFilePath();
 			QSqlQuery prepared(*db);
 			prepared.prepare("INSERT INTO filesystem (path, lastModified) VALUES (?, ?)");
@@ -153,7 +159,6 @@ void MusicSearchEngine::watchForChanges()
 		QFileInfo fileInfo(cache.record().value(0).toString());
 		// Remove folder in database because it couldn't be find in the filesystem
 		if (!fileInfo.exists()) {
-			// qDebug() << fileInfo.absoluteFilePath() << "was removed from your filesystem";
 			db->exec("DELETE FROM filesystem WHERE path = \"" + fileInfo.absoluteFilePath() + "\"");
 			oldLocations << fileInfo.absoluteFilePath();
 		}

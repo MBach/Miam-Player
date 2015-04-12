@@ -31,15 +31,13 @@ private:
 	QMap<int, Cover*> covers;
 	QMap<int, Cover*> unsavedCovers;
 
-	SqlDatabase *_db;
-
 public:
 	/** An automatic helper for writing tags following regExp. */
 	TagConverter *tagConverter;
 
 	explicit TagEditor(QWidget *parent = 0);
 
-	virtual void init(SqlDatabase *db);
+	virtual void init() {}
 
 	virtual QStringList selectedTracks();
 

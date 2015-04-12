@@ -17,13 +17,12 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget
 
 private:
 	Ui::UniqueLibrary *ui;
-	SqlDatabase *_db;
 	QSet<GenericDAO*> _set;
 
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);
 
-	void init(SqlDatabase *db);
+	void init();
 	void setVisible(bool visible);
 };
 

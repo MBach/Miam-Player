@@ -16,6 +16,8 @@ private:
 public:
 	MusicSearchEngine(QObject *parent = 0);
 
+	static bool isScanning;
+
 	void setWatchForChanges(bool b);
 
 public slots:

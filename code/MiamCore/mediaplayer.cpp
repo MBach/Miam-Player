@@ -18,6 +18,8 @@
 
 #include <QtDebug>
 
+MediaPlayer* MediaPlayer::_mediaPlayer = NULL;
+
 MediaPlayer::MediaPlayer(QObject *parent) :
 	QObject(parent), _playlist(NULL), _state(QMediaPlayer::StoppedState), _media(NULL), _remotePlayer(NULL)
   , _stopAfterCurrent(false)
@@ -38,7 +40,6 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 
 	// Link core multimedia actions
 	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
-		//qDebug() << "MediaPlayer::mediaStatusChanged" << status;
 		if (status == QMediaPlayer::EndOfMedia) {
 			if (_stopAfterCurrent) {
 				stop();
@@ -48,6 +49,14 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 			}
 		}
 	});
+}
+
+MediaPlayer* MediaPlayer::instance()
+{
+	if (_mediaPlayer == NULL) {
+		_mediaPlayer = new MediaPlayer;
+	}
+	return _mediaPlayer;
 }
 
 void MediaPlayer::createLocalConnections()
@@ -164,6 +173,20 @@ void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
 	}
 }
 
+void MediaPlayer::changeTrack(const QMediaContent &mediaContent)
+{
+	qDebug() << Q_FUNC_INFO << mediaContent.canonicalUrl();
+	if (_remotePlayer) {
+		_remotePlayer->disconnect();
+		_remotePlayer->stop();
+	} else {
+		_player->disconnect();
+		_player->stop();
+	}
+	_state = QMediaPlayer::StoppedState;
+	this->playMediaContent(mediaContent);
+}
+
 void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 {
 	if (_remotePlayer) {
@@ -200,6 +223,37 @@ qint64 MediaPlayer::duration()
 		return _remotePlayer->length();
 	} else {
 		return _player->length();
+	}
+}
+
+void MediaPlayer::playMediaContent(const QMediaContent &mc)
+{
+	// Everything is splitted in 2: local actions and remote actions
+	if (mc.canonicalUrl().isLocalFile()) {
+		this->createLocalConnections();
+
+		// Resume playback is file was previously opened
+		if (_state == QMediaPlayer::PausedState) {
+			qDebug() << Q_FUNC_INFO << "QMediaPlayer::PausedState";
+			_player->resume();
+			this->setState(QMediaPlayer::PlayingState);
+		} else {
+			qDebug() << Q_FUNC_INFO << _state << mc.canonicalUrl().toLocalFile();
+			QString file = mc.canonicalUrl().toLocalFile();
+			if (_media) {
+				delete _media;
+			}
+			_media = new VlcMedia(file, true, _instance);
+			_player->open(_media);
+		}
+	} else {
+		// Remote player is about to start
+		this->createRemoteConnections(mc.canonicalUrl());
+		if (_state == QMediaPlayer::PausedState) {
+			_remotePlayer->resume();
+		} else {
+			_remotePlayer->play(mc.canonicalUrl());
+		}
 	}
 }
 
@@ -251,6 +305,8 @@ qint64 MediaPlayer::time() const
 		return _player->time();
 	}
 }
+
+
 
 void MediaPlayer::seek(float pos)
 {
@@ -361,33 +417,7 @@ void MediaPlayer::play()
 		return;
 	}
 
-	// Everything is splitted in 2: local actions and remote actions
-	if (mc.canonicalUrl().isLocalFile()) {
-		this->createLocalConnections();
-
-		// Resume playback is file was previously opened
-		if (_state == QMediaPlayer::PausedState) {
-			qDebug() << Q_FUNC_INFO << "QMediaPlayer::PausedState";
-			_player->resume();
-			this->setState(QMediaPlayer::PlayingState);
-		} else {
-			qDebug() << Q_FUNC_INFO << _state;
-			QString file = mc.canonicalUrl().toLocalFile();
-			if (_media) {
-				delete _media;
-			}
-			_media = new VlcMedia(file, true, _instance);
-			_player->open(_media);
-		}
-	} else {
-		// Remote player is about to start
-		this->createRemoteConnections(mc.canonicalUrl());
-		if (_state == QMediaPlayer::PausedState) {
-			_remotePlayer->resume();
-		} else {
-			_remotePlayer->play(mc.canonicalUrl());
-		}
-	}
+	this->playMediaContent(mc);
 }
 
 /** Stop current track in the playlist. */

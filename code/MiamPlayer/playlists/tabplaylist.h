@@ -27,7 +27,6 @@ private:
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
-	QWeakPointer<MediaPlayer> _mediaPlayer;
 	ClosePlaylistPopup *_closePlaylistPopup;
 	MainWindow *_mainWindow;
 	QMenu *_contextMenu;
@@ -46,8 +45,6 @@ public:
 	/** Redefined to forward events to children. */
 	virtual bool eventFilter(QObject *obj, QEvent *event);
 
-	inline QWeakPointer<MediaPlayer> mediaPlayer() const { return _mediaPlayer; }
-
 	/** Get the playlist at index. */
 	Playlist *playlist(int index);
 
@@ -58,9 +55,6 @@ public:
 		}
 		return _playlists;
 	}
-
-	/** Setter. */
-	void setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer);
 
 	void setMainWindow(MainWindow *mainWindow);
 

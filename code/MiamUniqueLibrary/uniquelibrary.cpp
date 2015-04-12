@@ -13,7 +13,7 @@
 #include <QtDebug>
 
 UniqueLibrary::UniqueLibrary(QWidget *parent) :
-	QWidget(parent), ui(new Ui::UniqueLibrary), _db(NULL)
+	QWidget(parent), ui(new Ui::UniqueLibrary)
 {
 	ui->setupUi(this);
 	ui->library->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -22,8 +22,6 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(ui->searchBar, &QLineEdit::textEdited, ui->library, &TableView::filterLibrary);
-
-
 }
 
 void UniqueLibrary::setVisible(bool visible)
@@ -32,7 +30,7 @@ void UniqueLibrary::setVisible(bool visible)
 	QWidget::setVisible(visible);
 	if (visible) {
 		qDebug() << "hh" << ui->library->horizontalHeader();
-		_db->load();
+		SqlDatabase::instance()->load();
 		ui->library->horizontalHeader()->setHighlightSections(false);
 		/*ui->library->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 		ui->library->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
@@ -40,17 +38,17 @@ void UniqueLibrary::setVisible(bool visible)
 	}
 }
 
-void UniqueLibrary::init(SqlDatabase *db)
+void UniqueLibrary::init()
 {
 	qDebug() << Q_FUNC_INFO;
-	_db = db;
+	auto db = SqlDatabase::instance();
 
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(_db, &SqlDatabase::aboutToLoad, ui->library, &TableView::reset);
-	connect(_db, &SqlDatabase::loaded, this, [=]() {
+	connect(db, &SqlDatabase::aboutToLoad, ui->library, &TableView::reset);
+	connect(db, &SqlDatabase::loaded, this, [=]() {
 		ui->library->sortByColumn(0);
 	});
 	//connect(_db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-	connect(_db, &SqlDatabase::nodeExtracted, ui->library, &TableView::insertNode);
-	connect(_db, &SqlDatabase::aboutToUpdateNode, ui->library, &TableView::updateNode);
+	connect(db, &SqlDatabase::nodeExtracted, ui->library, &TableView::insertNode);
+	connect(db, &SqlDatabase::aboutToUpdateNode, ui->library, &TableView::updateNode);
 }

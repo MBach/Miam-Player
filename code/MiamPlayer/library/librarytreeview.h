@@ -56,9 +56,6 @@ private:
 	/** The model used by this treeView is a simple QStandardItemModel. Hard work has been delegated to Proxy and ItemDelegate for the rending. */
 	QStandardItemModel* _libraryModel;
 
-	/** Link to the database to be able to integrate new tracks in the tree. */
-	SqlDatabase *_db;
-
 	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
 	LibraryItemDelegate *_itemDelegate;
 
@@ -91,7 +88,7 @@ public:
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
-	virtual void init(SqlDatabase *db);
+	virtual void init();
 
 	void setVisible(bool visible);
 

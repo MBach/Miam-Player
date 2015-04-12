@@ -41,7 +41,7 @@ protected:
 		p.setBrush(QApplication::palette().base());
 		p.drawRect(this->rect());
 		p.setPen(QApplication::palette().mid().color());
-		if (_left && isLeftToRight() || _right && !isLeftToRight()) p.drawLine(rect().topLeft(), rect().bottomLeft());
+		if ((_left && isLeftToRight()) || (_right && !isLeftToRight())) p.drawLine(rect().topLeft(), rect().bottomLeft());
 		if (_top) {
 			if (_halfTop) {
 				if (isLeftToRight()) {
@@ -53,7 +53,7 @@ protected:
 				p.drawLine(rect().topLeft(), rect().topRight());
 			}
 		}
-		if (_right && isLeftToRight() || _left && !isLeftToRight()) p.drawLine(rect().topRight(), rect().bottomRight());
+		if ((_right && isLeftToRight()) || (_left && !isLeftToRight())) p.drawLine(rect().topRight(), rect().bottomRight());
 		if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());
 	}
 };

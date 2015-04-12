@@ -17,7 +17,7 @@ public:
 
 	virtual void updateSelectedTracks() = 0;
 
-	virtual void init(SqlDatabase *db) = 0;
+	virtual void init() = 0;
 };
 
 #endif // SELECTEDTRACKSMODEL_H

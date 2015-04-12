@@ -17,21 +17,17 @@ SeekBar::SeekBar(QWidget *parent) :
 	this->setPageStep(0);
 }
 
-void SeekBar::setMediaPlayer(QWeakPointer<MediaPlayer> mediaPlayer)
-{
-	_mediaPlayer = mediaPlayer;
-}
-
 void SeekBar::keyPressEvent(QKeyEvent *e)
 {
-	_mediaPlayer.data()->blockSignals(true);
+	auto mediaPlayer = MediaPlayer::instance();
+	mediaPlayer->blockSignals(true);
 	if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) {
-		_mediaPlayer.data()->blockSignals(true);
-		_mediaPlayer.data()->setMute(true);
+		mediaPlayer->blockSignals(true);
+		mediaPlayer->setMute(true);
 		if (e->key() == Qt::Key_Left) {
-			_mediaPlayer.data()->seekBackward();
+			mediaPlayer->seekBackward();
 		} else {
-			_mediaPlayer.data()->seekForward();
+			mediaPlayer->seekForward();
 		}
 	} else {
 		QSlider::keyPressEvent(e);
@@ -41,8 +37,8 @@ void SeekBar::keyPressEvent(QKeyEvent *e)
 void SeekBar::keyReleaseEvent(QKeyEvent *e)
 {
 	if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right) {
-		_mediaPlayer.data()->setMute(false);
-		_mediaPlayer.data()->blockSignals(false);
+		MediaPlayer::instance()->setMute(false);
+		MediaPlayer::instance()->blockSignals(false);
 	} else {
 		QSlider::keyPressEvent(e);
 	}
@@ -55,7 +51,7 @@ void SeekBar::mouseMoveEvent(QMouseEvent *)
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
 		float p = (float) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
-		_mediaPlayer.data()->seek(p);
+		MediaPlayer::instance()->seek(p);
 		this->setValue(posButton);
 	}
 }
@@ -67,17 +63,17 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
 		float p = (float) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
-		_mediaPlayer.data()->blockSignals(true);
-		_mediaPlayer.data()->setMute(true);
-		_mediaPlayer.data()->seek(p);
+		MediaPlayer::instance()->blockSignals(true);
+		MediaPlayer::instance()->setMute(true);
+		MediaPlayer::instance()->seek(p);
 		this->setValue(posButton);
 	}
 }
 
 void SeekBar::mouseReleaseEvent(QMouseEvent *)
 {
-	_mediaPlayer.data()->setMute(false);
-	_mediaPlayer.data()->blockSignals(false);
+	MediaPlayer::instance()->setMute(false);
+	MediaPlayer::instance()->blockSignals(false);
 }
 
 /** Redefined to seek in current playing file. */
@@ -85,9 +81,9 @@ void SeekBar::wheelEvent(QWheelEvent *e)
 {
 	// Wheel up is positive value, wheel down is negative value
 	if (e->angleDelta().y() > 0) {
-		_mediaPlayer.data()->seekForward();
+		MediaPlayer::instance()->seekForward();
 	} else {
-		_mediaPlayer.data()->seekBackward();
+		MediaPlayer::instance()->seekBackward();
 	}
 }
 
@@ -162,7 +158,7 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.restore();
 
 	// Exclude ErrorState from painting
-	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState || _mediaPlayer.data()->state() == QMediaPlayer::PausedState) {
+	if (MediaPlayer::instance()->state() == QMediaPlayer::PlayingState || MediaPlayer::instance()->state() == QMediaPlayer::PausedState) {
 
 		QLinearGradient linearGradient = this->interpolatedLinearGradient(pp.boundingRect(), o);
 
@@ -174,7 +170,7 @@ void SeekBar::paintEvent(QPaintEvent *)
 		p.setRenderHint(QPainter::Antialiasing, true);
 		QPointF center(posButton, height() * 0.5);
 		QConicalGradient cGrad(center, 360 - 4 * (value() % 360));
-		if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState) {
+		if (MediaPlayer::instance()->state() == QMediaPlayer::PlayingState) {
 			cGrad.setColorAt(0.0, o.palette.highlight().color());
 			cGrad.setColorAt(1.0, o.palette.highlight().color().lighter());
 		} else {
@@ -194,7 +190,7 @@ QLinearGradient SeekBar::interpolatedLinearGradient(const QRectF &boudingRect, Q
 
 	QColor startColor = o.palette.base().color();
 	interpolator.setStartValue(startColor);
-	if (_mediaPlayer.data()->state() == QMediaPlayer::PlayingState) {
+	if (MediaPlayer::instance()->state() == QMediaPlayer::PlayingState) {
 		interpolator.setEndValue(o.palette.highlight().color());
 	} else {
 		interpolator.setEndValue(o.palette.mid().color());

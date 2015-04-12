@@ -44,10 +44,10 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButto
 
 void PlaybackModeWidgetFactory::setPlaybackMode(QMediaPlaylist::PlaybackMode mode)
 {
-	if (_tabPlaylists->mediaPlayer().data()->playlist() == NULL) {
-		_tabPlaylists->mediaPlayer().data()->setPlaylist(_tabPlaylists->currentPlayList()->mediaPlaylist());
+	if (MediaPlayer::instance()->playlist() == NULL) {
+		MediaPlayer::instance()->setPlaylist(_tabPlaylists->currentPlayList()->mediaPlaylist());
 	}
-	_tabPlaylists->mediaPlayer().data()->playlist()->setPlaybackMode(mode);
+	MediaPlayer::instance()->playlist()->setPlaybackMode(mode);
 	this->update();
 }
 

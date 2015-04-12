@@ -26,7 +26,7 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 	<< "Rock & Roll" << "Hard Rock");
 
 TagEditor::TagEditor(QWidget *parent) :
-	QWidget(parent), SelectedTracksModel(), _db(NULL)
+	QWidget(parent), SelectedTracksModel()
 {
 	setupUi(this);
 
@@ -74,11 +74,6 @@ TagEditor::TagEditor(QWidget *parent) :
 	tagEditorWidget->viewport()->installEventFilter(this);
 }
 
-void TagEditor::init(SqlDatabase *db)
-{
-	_db = db;
-}
-
 QStringList TagEditor::selectedTracks()
 {
 	QStringList tracks;
@@ -91,7 +86,7 @@ QStringList TagEditor::selectedTracks()
 void TagEditor::updateSelectedTracks()
 {
 	qDebug() << Q_FUNC_INFO << "Model has been updated, redraw selected tracks";
-	_db->load();
+	SqlDatabase::instance()->load();
 }
 
 void TagEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -353,7 +348,7 @@ void TagEditor::commitChanges()
 		// Check if files are already in the library, and then update them
 		if (!tracks.isEmpty()) {
 			qDebug() << "about to update tracks (db)";
-			_db->updateTracks(tracks);
+			SqlDatabase::instance()->updateTracks(tracks);
 		} else {
 			qDebug() << "renamed tracks were not in library";
 		}
@@ -396,7 +391,7 @@ void TagEditor::displayCover()
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
 
-	QSqlQuery coverPathQuery = _db->database().exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
+	QSqlQuery coverPathQuery = SqlDatabase::instance()->database().exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
 		coversPath << coverPathQuery.record().value(0).toString();
