@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QEvent>
+#include <cmath>
 
 #include "settingsprivate.h"
 
@@ -73,7 +74,8 @@ void TimeLabel::display()
 		if (_time == 0 && _total == 0) {
 			this->setText("--:-- / --:--");
 		} else {
-			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss").append(" / ").append(QDateTime::fromTime_t(round(_total / 1000)).toString("mm:ss")));
+			uint t = round(_total / 1000);
+			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss").append(" / ").append(QDateTime::fromTime_t(t).toString("mm:ss")));
 		}
 		break;
 	}

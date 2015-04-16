@@ -44,6 +44,11 @@ unix:!macx {
     target.path = /usr/lib/
     INSTALLS += target
 }
+macx {
+    QMAKE_SONAME_PREFIX = @rpath/../Frameworks
+    QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.10
+}
 
 INCLUDEPATH += $$PWD/../MiamCore/
 DEPENDPATH += $$PWD/../MiamCore

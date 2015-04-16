@@ -107,7 +107,7 @@ Playlist::Playlist(QWidget *parent) :
 	connect(this->selectionModel(), &QItemSelectionModel::selectionChanged, this, [=](const QItemSelection & selected, const QItemSelection &) {
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 		_previouslySelectedRows = selected.indexes();
-		emit selectionChanged(selected.isEmpty());
+		emit selectionHasChanged(selected.isEmpty());
 	});
 
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();

@@ -39,8 +39,10 @@ unix:!macx {
     INSTALLS += target
 }
 macx {
-    LIBS += -L$$PWD/../../lib/ -ltag -lvlc-qt -lvlc-qt-widgets
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.8
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt -lvlc-qt-widgets
+    QMAKE_RPATHDIR = @rpath/../Frameworks
+    QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.10
 }
 
 SOURCES +=     library/jumptowidget.cpp \

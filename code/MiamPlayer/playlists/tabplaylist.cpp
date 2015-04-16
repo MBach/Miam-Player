@@ -182,7 +182,7 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Forward from inner class to MainWindow the signals
 	connect(p, &Playlist::aboutToSendToTagEditor, this, &TabPlaylist::aboutToSendToTagEditor);
-	connect(p, &Playlist::selectionChanged, this, &TabPlaylist::selectionChanged);
+	connect(p, &Playlist::selectionHasChanged, this, &TabPlaylist::selectionChanged);
 
 	// Check if tab icon should indicate that playlist has changed or not
 	connect(p, &Playlist::contentHasChanged, this, [=]() {

@@ -24,6 +24,9 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 	QObject(parent), _playlist(NULL), _state(QMediaPlayer::StoppedState), _media(NULL), _remotePlayer(NULL)
   , _stopAfterCurrent(false)
 {
+#ifdef Q_OS_OSX
+	VlcCommon::setPluginPath("../plugIns");
+#endif
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);
 	this->createLocalConnections();

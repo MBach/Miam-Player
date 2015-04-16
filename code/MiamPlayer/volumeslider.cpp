@@ -6,6 +6,8 @@
 #include <QStyleOptionSlider>
 #include <QStylePainter>
 
+#include <cmath>
+
 #include <QtDebug>
 
 VolumeSlider::VolumeSlider(QWidget *parent) :

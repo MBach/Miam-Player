@@ -27,6 +27,7 @@
 #include "SharedExportCore.h"
 
 class VlcInstance;
+struct VlcStats;
 
 struct libvlc_event_t;
 struct libvlc_event_manager_t;
@@ -94,6 +95,13 @@ public:
         \return QString media location
     */
     QString currentLocation() const;
+
+    /*!
+        \brief Get media stats
+
+        \return VlcStats media stats object
+    */
+    VlcStats *getStats();
 
     /*!
         \brief Duplicate (provided for convenience)
@@ -250,12 +258,6 @@ public:
         \param options media options (QStringList)
     */
     void setOptions(const QStringList &options);
-
-    /*!
-        \brief Get media track type
-        \return track type (Vlc::TrackType)
-    */
-    Vlc::TrackType trackType();
 
 
 signals:

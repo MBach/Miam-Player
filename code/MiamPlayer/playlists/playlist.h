@@ -123,7 +123,7 @@ signals:
 
 	void contentHasChanged();
 
-	void selectionChanged(bool isEmpty);
+	void selectionHasChanged(bool isEmpty);
 };
 
 #endif // PLAYLIST_H
