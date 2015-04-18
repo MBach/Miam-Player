@@ -233,7 +233,6 @@ macx {
     LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt -lvlc-qt-widgets -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     QMAKE_RPATHDIR = @executable_path/../Frameworks
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
-    QMAKE_INFO_PLIST = $$PWD/../../packaging/osx/Info.plist
     #1 create Framework directory
     #2 copy third party library: TagLib, VLC-Qt
     #3 copy own libs

@@ -36,7 +36,6 @@ install_name_tool -id "@executable_path/../Frameworks/libvlccore.8.dylib" ${fram
 cp ${vlcDir}/Contents/MacOS/plugins/* MiamPlayer.app/Contents/PlugIns/
 for plugin in MiamPlayer.app/Contents/PlugIns/*.dylib
 do
-    #install_name_tool -change "@loader_path/../lib/libvlccore.8.dylib" "@executable_path/../Frameworks/libvlccore.8.dylib" ${plugin};
     install_name_tool -change "@loader_path/../lib/libvlccore.8.dylib" "@loader_path/../Frameworks/libvlccore.8.dylib" ${plugin};
 done
 

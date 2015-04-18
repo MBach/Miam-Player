@@ -320,6 +320,12 @@
                </property>
                <item>
                 <widget class="MediaButton" name="skipBackwardButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -340,6 +346,12 @@
                </item>
                <item>
                 <widget class="MediaButton" name="seekBackwardButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -360,6 +372,12 @@
                </item>
                <item>
                 <widget class="MediaButton" name="playButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -380,6 +398,12 @@
                </item>
                <item>
                 <widget class="StopButton" name="stopButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -400,6 +424,12 @@
                </item>
                <item>
                 <widget class="MediaButton" name="seekForwardButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -420,6 +450,12 @@
                </item>
                <item>
                 <widget class="MediaButton" name="skipForwardButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>
@@ -440,6 +476,12 @@
                </item>
                <item>
                 <widget class="MediaButton" name="playbackModeButton">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string notr="true"/>
                  </property>

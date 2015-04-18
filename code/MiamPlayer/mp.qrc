@@ -11,7 +11,6 @@
         <file alias="playlistIcon">config/playlist_icon.png</file>
         <file alias="warning">config/warning.png</file>
         <file alias="mp_win32">mp.ico</file>
-        <file alias="mp_osx">mp.icns</file>
         <file alias="album">config/icons/album.png</file>
         <file alias="artist">config/icons/artist.png</file>
         <file alias="track">config/icons/music.png</file>
@@ -24,6 +23,7 @@
         <file>config/close_tabs_hover.png</file>
         <file>config/+linux/close_tabs_hover.png</file>
         <file alias="closeTabs">config/close_tabs.png</file>
+        <file>config/+osx/close_tabs_hover.png</file>
     </qresource>
     <qresource prefix="/player/fairytale">
         <file alias="pause">player/fairytale/pause.png</file>

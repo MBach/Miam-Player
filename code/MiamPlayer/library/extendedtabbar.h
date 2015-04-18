@@ -18,10 +18,10 @@ public:
 
 protected:
 	/** Get half the size of the bounding rectangle. */
-	inline QSize tabSizeHint(int) const
+	/*inline QSize tabSizeHint(int) const
 	{
-		return QSize(rect().width() / 2, rect().height());
-	}
+		return QSize(parentWidget()->rect().width() / 2, parentWidget()->rect().height());
+	}*/
 
 	/** Redefined to be style-aware at runtime. */
 	virtual void paintEvent(QPaintEvent *);

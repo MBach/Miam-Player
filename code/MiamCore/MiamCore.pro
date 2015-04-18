@@ -53,6 +53,7 @@ unix:!macx {
 }
 macx {
     LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt -lvlc-qt-widgets
+    QMAKE_PRE_LINK = rm -f $$OUT_PWD/../MiamPlayer/MiamPlayer.app/Contents/MacOS/MiamPlayer
     QMAKE_RPATHDIR = @rpath/../Frameworks
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.10

@@ -146,8 +146,10 @@ QFont SettingsPrivate::font(const FontFamily fontFamily)
 	case FF_Library:
 		vFont = fontFamilyMap.value(QString(fontFamily));
 		if (vFont.isNull()) {
-			#ifdef Q_OS_WIN
+			#if defined(Q_OS_WIN)
 			font = QFont("Segoe UI Light");
+			#elif defined(Q_OS_OSX)
+			font = QFont("Helvetica Neue");
 			#else
 			font = QGuiApplication::font();
 			#endif
@@ -159,8 +161,10 @@ QFont SettingsPrivate::font(const FontFamily fontFamily)
 	case FF_Playlist:
 		vFont = fontFamilyMap.value(QString(fontFamily));
 		if (vFont.isNull()) {
-			#ifdef Q_OS_WIN
+			#if defined(Q_OS_WIN)
 			font = QFont("Segoe UI");
+			#elif defined(Q_OS_OSX)
+			font = QFont("Helvetica Neue");
 			#else
 			font = QGuiApplication::font();
 			#endif
@@ -178,7 +182,11 @@ int SettingsPrivate::fontSize(const FontFamily fontFamily)
 	fontPointSizeMap = this->value("fontPointSizeMap").toMap();
 	int pointSize = fontPointSizeMap.value(QString(fontFamily)).toInt();
 	if (pointSize == 0) {
+		#if defined(Q_OS_OSX)
+		pointSize = 16;
+		#else
 		pointSize = 12;
+		#endif
 	}
 	return pointSize;
 }
