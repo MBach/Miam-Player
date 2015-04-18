@@ -28,6 +28,19 @@ win32 {
 	}
     }
 }
+
+# intermediate objects are put in subdirs
+CONFIG(debug, debug|release) {
+    OBJECTS_DIR = debug/.obj
+    MOC_DIR = debug/.moc
+    RCC_DIR = debug/.rcc
+}
+CONFIG(release, debug|release) {
+    OBJECTS_DIR = release/.obj
+    MOC_DIR = release/.moc
+    RCC_DIR = release/.rcc
+}
+
 unix {
     TARGET = miam-core
     CONFIG += c++11

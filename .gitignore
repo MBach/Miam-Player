@@ -12,5 +12,8 @@ packaging/windows/packages/org.miamplayer.plugins.coverfetcher/data/*
 packaging/windows/packages/org.miamplayer.plugins.minimode/data/*
 packaging/windows/packages/org.miamplayer.plugins.windowstoolbar/data/*
 
+packaging/osx/MiamPlayer.app
+packaging/osx/MiamPlayer.dmg
+
 lib/release/win-x64/plugins/plugins.dat
 lib/release/win-x86/plugins/plugins.dat

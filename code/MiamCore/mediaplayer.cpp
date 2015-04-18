@@ -18,6 +18,8 @@
 
 #include <QtDebug>
 
+#include <QDir>
+
 MediaPlayer* MediaPlayer::_mediaPlayer = NULL;
 
 MediaPlayer::MediaPlayer(QObject *parent) :
@@ -25,7 +27,9 @@ MediaPlayer::MediaPlayer(QObject *parent) :
   , _stopAfterCurrent(false)
 {
 #ifdef Q_OS_OSX
-	VlcCommon::setPluginPath("../plugIns");
+	QDir d(QCoreApplication::applicationDirPath());
+	d.cd("../PlugIns/");
+	VlcCommon::setPluginPath(d.absolutePath());
 #endif
 	_instance = new VlcInstance(VlcCommon::args(), this);
 	_player = new VlcMediaPlayer(_instance);

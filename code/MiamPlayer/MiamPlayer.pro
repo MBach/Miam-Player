@@ -231,23 +231,16 @@ unix:!macx {
 }
 macx {
     LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt -lvlc-qt-widgets -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
-    ICON = $$PWD/mp.icns
     QMAKE_RPATHDIR = @executable_path/../Frameworks
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_INFO_PLIST = $$PWD/../../packaging/osx/Info.plist
     #1 create Framework directory
     #2 copy third party library: TagLib, VLC-Qt
-    #3 create PlugIns directory
-    #4 copy VLC plugins libs (which are resolved at runtime, not compile time)
-    #5 copy own libs
-    #6 execute macdeploy to create a nice bundle
+    #3 copy own libs
     QMAKE_POST_LINK += $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/PlugIns/) && \
-     $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/plugins/*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/PlugIns/) && \
+     $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/libvlc-qt*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamCore/libmiam-core.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamUniqueLibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKESPEC}/../../bin/macdeployqt $$OUT_PWD/MiamPlayer.app -always-overwrite
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamUniqueLibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
 }
 
 3rdpartyDir  = $$PWD/../MiamCore/3rdparty
