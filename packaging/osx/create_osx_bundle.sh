@@ -48,7 +48,10 @@ cp Info.plist MiamPlayer.app/Contents/
 cp MiamPlayer.icns MiamPlayer.app/Contents/Resources/
 
 # Create bundle
-${qtDir}/5.4/clang_64/bin/macdeployqt MiamPlayer.app -dmg -always-overwrite
+${qtDir}/5.4/clang_64/bin/macdeployqt MiamPlayer.app -always-overwrite
 
 # Wtf? If set before macdeployqt it's not written, unlike first 2 calls of install_name_tool
 install_name_tool -change "@loader_path/../lib/libvlccore.8.dylib" "@executable_path/../Frameworks/libvlccore.8.dylib" ${frameworks}/libvlc.5.dylib
+
+# Create the final redistributable package
+hdiutil create -volname MiamPlayer -srcfolder MiamPlayer.app -ov -format UDZO MiamPlayer-${version}.dmg
