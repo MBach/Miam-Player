@@ -8,6 +8,7 @@
 #include <QPainter>
 
 #include "settingsprivate.h"
+#include "tabplaylist.h"
 
 #include <QtDebug>
 
@@ -140,19 +141,9 @@ void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 	p->restore();
 }
 
-#include "tabplaylist.h"
-
 QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
 	QRect r = QProxyStyle::subElementRect(element, option, widget);
-	/*
-	QStyle::SE_TabWidgetLeftCorner	21	Area for the left corner widget in a tab widget.
-	QStyle::SE_TabWidgetRightCorner	22	Area for the right corner widget in a tab widget.
-	QStyle::SE_TabWidgetTabBar	18	Area for the tab bar widget in a tab widget.
-	QStyle::SE_TabWidgetTabContents	20	Area for the contents of the tab widget.
-	QStyle::SE_TabWidgetTabPane	19	Area for the pane of a tab widget.
-	QStyle::SE_TabWidgetLayoutItem	?	Area that counts for the parent layout.
-	*/
 	if (widget && widget->objectName() == "tabPlaylists") {
 		const TabPlaylist *t = dynamic_cast<const TabPlaylist*>(widget);
 		QRect minRect = QRect(0, 0, 0, 0);
@@ -178,19 +169,6 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
 	switch (element) {
-	/*case CE_MenuItem: {
-		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
-		//somi->font.setBold(true);
-		//painter->drawText(somi->rect, "test");
-		qDebug() << "CE_MenuItem" << somi->text;
-		//QProxyStyle::drawControl(element, option, painter, widget);
-		uint alignment = Qt::AlignLeft | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
-		if (!proxy()->styleHint(SH_UnderlineShortcut, somi, widget)) {
-			alignment |= Qt::TextHideMnemonic;
-		}
-		painter->drawText(somi->rect, alignment, somi->text);
-		break;
-	}*/
 	case CE_MenuBarItem:{
 		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
 		const bool act = somi->state & (State_Sunken | State_Selected);
@@ -308,23 +286,9 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 		}
 		break;
 	}
-	/*case PE_FrameMenu: {
-		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(opt);
-		//qDebug() << Q_FUNC_INFO << "PE_FrameMenu" << somi->rect << somi->font;
-		break;
-	}
-	case PE_PanelMenuBar: {
-		//qDebug() << Q_FUNC_INFO << "PE_PanelMenuBar";
-		break;
-	}
-	case PE_PanelMenu: {
-		//qDebug() << Q_FUNC_INFO << "PE_PanelMenu" << opt;
-		QStyleOptionMenuItem mi;
-		mi.init(widget);
-		//qDebug() << Q_FUNC_INFO << "PE_FrameMenu" << mi.rect << mi.font;
-		painter->drawRect(mi.rect);
-		break;
-	}*/
+    // Don't paint this frame (weird behaviour on OS X)
+    case PE_FrameTabBarBase:
+        break;
 	default: {
 		QProxyStyle::drawPrimitive(element, opt, painter, widget);
 		break;

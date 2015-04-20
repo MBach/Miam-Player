@@ -20,6 +20,10 @@ SearchDialog::SearchDialog(SqlDatabase *db, MainWindow *mainWindow) :
 	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db), _isMaximized(false)
 {
 	this->setupUi(this);
+    _artists->setAttribute(Qt::WA_MacShowFocusRect, false);
+    _albums->setAttribute(Qt::WA_MacShowFocusRect, false);
+    _tracks->setAttribute(Qt::WA_MacShowFocusRect, false);
+
 	_artists->setModel(new QStandardItemModel(this));
 	_albums->setModel(new QStandardItemModel(this));
 	_tracks->setModel(new QStandardItemModel(this));
