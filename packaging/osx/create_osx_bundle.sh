@@ -54,8 +54,8 @@ ${qtDir}/5.4/clang_64/bin/macdeployqt MiamPlayer.app -always-overwrite
 install_name_tool -change "@loader_path/../lib/libvlccore.8.dylib" "@executable_path/../Frameworks/libvlccore.8.dylib" ${frameworks}/libvlc.5.dylib
 
 # Create the final redistributable package
+rm -rf MiamPlayer-${version}.dmg
 appdmg spec.json MiamPlayer-${version}.dmg > /dev/null 2>&1 || {
     echo >&2 "appdmg is required to build the final package. Please install homebrew and appdmg. Aborting.";
     exit 1;
-    #hdiutil create -volname MiamPlayer -srcfolder MiamPlayer.app -ov -format UDZO MiamPlayer-${version}.dmg
 }

@@ -1,7 +1,7 @@
 {
   "title": "MiamPlayer",
   "background": "background.png",
-  "icon": ".VolumeIcon.icns",
+  "icon": "VolumeIcon.icns",
   "icon-size": 128,
   "contents": [
     { "x": 128, "y": 192, "type": "file", "path": "MiamPlayer.app" },
