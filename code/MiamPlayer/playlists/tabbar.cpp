@@ -33,7 +33,9 @@ TabBar::TabBar(TabPlaylist *parent) :
 		_targetRect = tabRect(currentIndex());
 	});
 
-	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	auto applyFont = [this, settings] (SettingsPrivate::FontFamily ff, const QFont &newFont)
+	{
 		if (ff == SettingsPrivate::FF_Playlist) {
 			QFont font = newFont;
 			font.setPointSizeF(font.pointSizeF() * 0.8);
@@ -47,7 +49,10 @@ TabBar::TabBar(TabPlaylist *parent) :
 				this->setMaximumHeight(30);
 			}
 		}
-	});
+	};
+	// Init font from settings
+	applyFont(SettingsPrivate::FF_Playlist, settings->font(SettingsPrivate::FF_Playlist));
+	connect(settings, &SettingsPrivate::fontHasChanged, this, applyFont);
 }
 
 /** Trigger a double click to rename a tab. */

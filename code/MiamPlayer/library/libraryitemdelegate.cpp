@@ -5,6 +5,7 @@
 #include "librarytreeview.h"
 #include "../playlists/starrating.h"
 #include "../model/albumdao.h"
+#include "styling/imageutils.h"
 
 #include <QApplication>
 #include <QDir>
@@ -55,7 +56,11 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
 	case Miam::IT_Track:
-		this->paintRect(painter, o);
+		if (SettingsPrivate::instance()->isBigCoverEnabled()) {
+			this->paintCoverOnTrack(painter, o, static_cast<TrackItem*>(item));
+		} else {
+			this->paintRect(painter, o);
+		}
 		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
 	default:
@@ -269,6 +274,96 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
 	this->paintText(painter, option, rectText, s, track);
+}
+
+void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const TrackItem *track) const
+{
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	// Copy QStyleOptionViewItem to be able to expand it to the left, and take the maximum available space
+	QStyleOptionViewItem option(opt);
+	option.rect.setX(0);
+
+	/// Pointer or not?
+	//QImage image = track->parent()->data(Miam::DF_Custom + 1).value<QImage>();
+	const QImage *image = _libraryTreeView->expandedCover(track->parent());
+	if (!image) {
+		return;
+	}
+
+	int totalHeight = track->model()->rowCount(track->parent()->index()) * option.rect.height();
+	QImage scaled;
+	QRect subRect;
+	if (totalHeight > option.rect.width()) {
+		scaled = image->scaledToWidth(option.rect.width());
+		subRect = option.rect.translated(option.rect.width() - scaled.width(), -option.rect.y() + option.rect.height() * track->row());
+	} else {
+		subRect = option.rect.translated(-option.rect.x(), -option.rect.y() + option.rect.height() * track->row());
+		scaled = image->scaledToHeight(totalHeight);
+	}
+
+	QImage subImage = scaled.copy(subRect);
+	//qDebug() << scaled.height() << subRect.y() << track->row();
+	// Fill with white when there are too much tracks to paint (height of all tracks is greater than the scaled image)
+	if (scaled.height() < subRect.y() + subRect.height()) {
+		subImage.fill(option.palette.base().color());
+	}
+
+	//subImage.fill(option.palette.base().color());
+	painter->save();
+	painter->setOpacity(1 - settings->bigCoverOpacity());
+	painter->drawImage(option.rect, subImage);
+	painter->restore();
+
+
+	/*leftBorder = leftBorder.scaled(30, 1);
+	// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
+	// The second one is a computer generated gradient focused on alpha channel
+	if (!leftBorder.isNull()) {
+		QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
+		linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
+		linearAlphaBrush.setColorAt(1, Qt::transparent);
+
+		painter->save();
+		// Because the expanded border can look strange to one, is blurred with some gaussian function
+		QImage img = ImageUtils::blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
+		painter->drawImage(0, opr.y() + r.height(), img);
+		painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+		painter->setPen(Qt::NoPen);
+		painter->setBrush(linearAlphaBrush);
+		painter->drawRect(0, r.y() + r.height(), leftBorder.width(), leftBorder.height());
+		painter->drawPixmap(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), r.y() + r.height(), w, w, pixmap);
+
+		painter->setOpacity(settings->bigCoverOpacity());
+		painter->fillRect(0, r.y() + r.height(), rect().width() - 2 * verticalScrollBar()->width(), leftBorder.height(), QApplication::palette().base());
+		painter->restore();
+	}*/
+
+
+	// Display a light selection rectangle when one is moving the cursor
+	painter->save();
+	QColor color = option.palette.highlight().color();
+	color.setAlphaF(0.5);
+	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
+		if (SettingsPrivate::instance()->isCustomColors()) {
+			painter->setPen(option.palette.highlight().color().darker(100));
+			painter->setBrush(color.lighter());
+		} else {
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(color.lighter(170));
+		}
+		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
+	} else if (option.state.testFlag(QStyle::State_Selected)) {
+		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
+		if (SettingsPrivate::instance()->isCustomColors()) {
+			painter->setPen(option.palette.highlight().color().darker(150));
+			painter->setBrush(color);
+		} else {
+			painter->setPen(option.palette.highlight().color());
+			painter->setBrush(color.lighter(160));
+		}
+		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
+	}
+	painter->restore();
 }
 
 void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewItem &option) const

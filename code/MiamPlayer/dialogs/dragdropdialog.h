@@ -26,7 +26,7 @@ private:
 public:
 	explicit DragDropDialog(QWidget *parent = 0);
 
-	void retranslateUi(DragDropDialog *dialog);
+	//void retranslateUi(DragDropDialog *dialog);
 
 	bool setMimeData(const QMimeData *mimeData);
 

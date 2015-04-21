@@ -11,7 +11,7 @@ CornerWidget::CornerWidget(TabPlaylist *parent) :
 	QPushButton("", parent)
 {
 	this->setAcceptDrops(true);
-	//this->setMouseTracking(true);
+	this->setMouseTracking(true);
 	connect(this, &QPushButton::clicked, this, [=]() {
 		QRect r = rect();
 		if (SettingsPrivate::instance()->isRectTabs()) {
@@ -24,6 +24,12 @@ CornerWidget::CornerWidget(TabPlaylist *parent) :
 			emit innerButtonClicked();
 		}
 	});
+}
+
+void CornerWidget::mouseMoveEvent(QMouseEvent *e)
+{
+	QWidget::mouseMoveEvent(e);
+	this->update();
 }
 
 void CornerWidget::paintEvent(QPaintEvent *)
@@ -112,4 +118,7 @@ void CornerWidget::paintEvent(QPaintEvent *)
 		linearGradient.setColorAt(1, QColor(253, 230, 116));
 		p.setBrush(linearGradient);
 	}
+	//qDebug() << Q_FUNC_INFO << this->rect();
+	//p.setPen(Qt::red);
+	//p.drawLine(this->rect().bottomLeft(), this->rect().bottomRight());
 }

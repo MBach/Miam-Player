@@ -8,7 +8,6 @@
 #include <mediabutton.h>
 #include <mediaplayer.h>
 #include "dialogs/customizeoptionsdialog.h"
-#include "dialogs/dragdropdialog.h"
 #include "dialogs/playlistmanager.h"
 #include "library/librarytreeview.h"
 #include "playbackmodewidgetfactory.h"
@@ -17,8 +16,6 @@
 #include "uniquelibrary.h"
 #include "ui_mainwindow.h"
 
-class CustomizeThemeDialog;
-
 /**
  * \brief The MainWindow class is the entry point of this audio player.
  */
@@ -26,14 +23,8 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 	Q_OBJECT
 private:
-	/** Dialog for with lots of different sections to customize the look of MiamPlayer. */
-	CustomizeThemeDialog *customizeThemeDialog;
-
 	/** Dialog to organize your playlists: saving, exporting, loading. */
 	PlaylistManager *playlistManager;
-
-	/** Popup shown to one when tracks are dropped from another application to MiamPlayer. */
-	DragDropDialog *dragDropDialog;
 
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
@@ -73,17 +64,20 @@ public:
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
-	virtual void changeEvent(QEvent *event);
+	virtual void changeEvent(QEvent *event) override;
 
-	virtual void dragEnterEvent(QDragEnterEvent *event);
+	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
-	virtual void dragMoveEvent(QDragMoveEvent *event);
+	virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
-	virtual void dropEvent(QDropEvent *event);
+	virtual void dropEvent(QDropEvent *event) override;
 
-	virtual bool event(QEvent *event);
+	virtual bool event(QEvent *event) override;
 
-	virtual void moveEvent(QMoveEvent *event);
+	virtual void moveEvent(QMoveEvent *event) override;
+
+private:
+	void loadTheme();
 
 public slots:
 	void processArgs(const QStringList &args);

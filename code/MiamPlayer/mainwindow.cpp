@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include "dialogs/customizethemedialog.h"
+#include "dialogs/dragdropdialog.h"
 #include "musicsearchengine.h"
 #include "playlists/playlist.h"
 #include "pluginmanager.h"
@@ -23,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	widgetSearchBar->setHalfTop(true);
 
 	this->setAcceptDrops(true);
-	//this->setAttribute(Qt::WA_DeleteOnClose, true);
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
 
 	// Special behaviour for media buttons
@@ -36,14 +36,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
 
+	this->loadTheme();
 	// Instantiate dialogs
-	customizeThemeDialog = new CustomizeThemeDialog(this);
 	customizeOptionsDialog = new CustomizeOptionsDialog(this);
 
-	/// free memory
-
 	playlistManager = new PlaylistManager(SqlDatabase::instance(), tabPlaylists);
-	dragDropDialog = new DragDropDialog(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
 }
@@ -61,12 +58,20 @@ void MainWindow::activateLastView()
 
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
+	/** Popup shown to one when tracks are dropped from another application to MiamPlayer. */
+	DragDropDialog *dragDropDialog = new DragDropDialog;
+
+	// Drag & Drop actions
+	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
+	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
+
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
 	if (onlyFiles) {
 		QStringList tracks;
 		foreach (QString file, dragDropDialog->externalLocations()) {
 			tracks << "file://" + file;
 		}
+		tracks.sort(Qt::CaseInsensitive);
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	} else {
 		QList<QDir> dirs;
@@ -96,7 +101,8 @@ void MainWindow::init()
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 
-	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
+	auto settingsPrivate = SettingsPrivate::instance();
+	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
 	libraryHeader->setVisible(!isEmpty);
 	changeHierarchyButton->setVisible(!isEmpty);
@@ -210,7 +216,11 @@ void MainWindow::setupActions()
 	connect(actionExit, &QAction::triggered, &QApplication::quit);
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
-	connect(actionShowCustomize, &QAction::triggered, customizeThemeDialog, &CustomizeThemeDialog::open);
+	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
+		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
+		customizeThemeDialog->loadTheme();
+		customizeThemeDialog->open();
+	});
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
@@ -361,10 +371,6 @@ void MainWindow::setupActions()
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
-	// Drag & Drop actions
-	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
-	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
-
 	// Playback modes
 	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
@@ -404,7 +410,6 @@ void MainWindow::setupActions()
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		delete PluginManager::instance();
-		//SettingsPrivate *settings = SettingsPrivate::instance();
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
@@ -454,12 +459,10 @@ void MainWindow::changeEvent(QEvent *event)
 	if (event->type() == QEvent::LanguageChange) {
 		this->retranslateUi(this);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
-		customizeThemeDialog->retranslateUi(customizeThemeDialog);
 		quickStart->retranslateUi(quickStart);
 		playlistManager->retranslateUi(playlistManager);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
-		dragDropDialog->retranslateUi(dragDropDialog);
 		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
 
 		// (need to be tested with Arabic language)
@@ -507,7 +510,7 @@ bool MainWindow::event(QEvent *e)
 			addressBar->setMinimumWidth(leftTabs->width());
 		}
 		addressBar->init(QDir(SettingsPrivate::instance()->defaultLocationFileExplorer()));
-		customizeThemeDialog->loadTheme();
+		//customizeThemeDialog->loadTheme();
 	}
 	return b;
 }
@@ -516,6 +519,25 @@ void MainWindow::moveEvent(QMoveEvent *event)
 {
 	playbackModeWidgetFactory->move();
 	QMainWindow::moveEvent(event);
+}
+
+void MainWindow::loadTheme()
+{
+	// Buttons
+	auto settings = Settings::instance();
+	auto settingsPrivate = SettingsPrivate::instance();
+	foreach(MediaButton *b, mediaButtons) {
+		if (settingsPrivate->isThemeCustomized()) {
+			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
+		} else {
+			b->setIconFromTheme(settings->theme());
+		}
+		b->setVisible(settingsPrivate->isMediaButtonVisible(b->objectName()));
+	}
+
+	// Fonts
+	this->updateFonts(settingsPrivate->font(SettingsPrivate::FF_Menu));
+	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
 }
 
 void MainWindow::processArgs(const QStringList &args)

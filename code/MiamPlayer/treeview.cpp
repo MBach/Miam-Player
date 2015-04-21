@@ -3,7 +3,9 @@
 #include "mainwindow.h"
 #include "settings.h"
 
+#include <QDrag>
 #include <QMessageBox>
+#include <QMimeData>
 
 #include <QtDebug>
 
@@ -23,8 +25,6 @@ QStringList TreeView::selectedTracks()
 	}
 	return list;
 }
-
-#include <QDrag>
 
 void TreeView::startDrag(Qt::DropActions)
 {

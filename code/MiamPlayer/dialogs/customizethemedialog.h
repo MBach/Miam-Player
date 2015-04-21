@@ -49,13 +49,13 @@ private:
 
 protected:
 	/** Automatically centers the parent window when closing this dialog. */
-	virtual void closeEvent(QCloseEvent *e);
+	virtual void closeEvent(QCloseEvent *e) override;
 
-	virtual void mouseMoveEvent(QMouseEvent *event);
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
 
 public slots:
 	/** Redefined to initialize favorites from settings. */
-	void open();
+	virtual void open() override;
 
 private slots:
 	void openChooseIconDialog();

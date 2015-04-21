@@ -61,6 +61,7 @@ private:
 
 	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
 
+	void paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &option, const TrackItem *track) const;
 	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;
 
 	/** Check if color needs to be inverted then paint text. */

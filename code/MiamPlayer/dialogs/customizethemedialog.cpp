@@ -17,6 +17,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 
 	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
+	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	mainWindow = qobject_cast<MainWindow *>(parent);
 	buttonsListBox->setVisible(false);
@@ -55,6 +56,10 @@ void CustomizeThemeDialog::setupActions()
 				if (!button->isChecked()) {
 					button->toggle();
 				}
+			}
+			// Restore default image
+			foreach(MediaButton *b, mainWindow->mediaButtons) {
+				b->setIcon(QIcon());
 			}
 		}
 	});
@@ -168,6 +173,7 @@ void CustomizeThemeDialog::setupActions()
 			this->fade();
 		}
 	});
+	// Change big cover opacity
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
 		settings->setBigCovers(b);
 		labelBigCoverOpacity->setEnabled(b);
@@ -332,7 +338,6 @@ void CustomizeThemeDialog::loadTheme()
 
 	// Buttons
 	foreach(MediaButton *b, mainWindow->mediaButtons) {
-		b->setVisible(settings->isMediaButtonVisible(b->objectName()));
 
 		// Check or uncheck checkboxes in this customize interface
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
@@ -375,7 +380,7 @@ void CustomizeThemeDialog::loadTheme()
 
 	// Covers
 	radioButtonEnableBigCover->setChecked(settings->isBigCoverEnabled());
-	spinBoxBigCoverOpacity->setValue(settings->bigCoverOpacity());
+	spinBoxBigCoverOpacity->setValue(settings->bigCoverOpacity() * 100);
 
 	// Tabs
 	radioButtonTabsRect->setChecked(settings->isRectTabs());
@@ -441,11 +446,15 @@ void CustomizeThemeDialog::openChooseIconDialog()
 			b->setIcon(QIcon(path));
 		}
 	}
+
+	MediaButton *b = mainWindow->findChild<MediaButton*>(button->objectName() + "Button");
 	if (path.isEmpty()) {
 		button->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/" + button->objectName()));
+		b->setIcon(QIcon());
 	} else {
 		settings->setValue("customIcons/lastOpenPath", QFileInfo(path).absolutePath());
 		button->setIcon(QIcon(path));
+		b->setIcon(QIcon(path));
 	}
 }
 

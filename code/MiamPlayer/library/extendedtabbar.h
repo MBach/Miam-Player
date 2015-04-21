@@ -23,6 +23,8 @@ protected:
 		return QSize(parentWidget()->rect().width() / 2, parentWidget()->rect().height());
 	}*/
 
+	QSize tabSizeHint(int) const;
+
 	/** Redefined to be style-aware at runtime. */
 	virtual void paintEvent(QPaintEvent *);
 };

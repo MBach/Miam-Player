@@ -29,9 +29,28 @@ ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	});
 }
 
-/** Redefined to be style-aware at runtime. */
-void ExtendedTabBar::paintEvent(QPaintEvent *)
+QSize ExtendedTabBar::tabSizeHint(int i) const
 {
+	//qDebug() << Q_FUNC_INFO << (double)((double) rect().width() / 2 - 1);
+	//if (i == 0) {
+		if (width() % 2 == 0) {
+			return QSize(rect().width() / 2, rect().height());
+		} else {
+			return QSize(rect().width() / 2 - 1, rect().height());
+		}
+	/*} else {
+		return QSize(rect().width() / 2, rect().height());
+	}*/
+
+	//return QTabBar::tabSizeHint(i);
+}
+
+/** Redefined to be style-aware at runtime. */
+void ExtendedTabBar::paintEvent(QPaintEvent *e)
+{
+	//QRect r = tabRect(currentIndex());
+	//QTabBar::paintEvent(e);
+	//return;
 	QStylePainter p(this);
 
 	QStyleOptionTabBarBase o;
@@ -41,9 +60,10 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 	for (int i = 0; i < count(); ++i)
 		o.tabBarRect |= tabRect(i);
 
-	o.selectedTabRect = tabRect(selected);
-	if (drawBase())
-		p.drawPrimitive(QStyle::PE_FrameTabBarBase, o);
+
+	//if (drawBase())
+	//	p.drawPrimitive(QStyle::PE_FrameTabBarBase, o);
+
 
 	for (int i = 0; i < count(); ++i) {
 		QStyleOptionTab tab;
@@ -53,12 +73,18 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 			tab.palette.setCurrentColorGroup(QPalette::Disabled);
 		}
 
-		o.tabBarRect |= tab.rect;
-		if (i == selected)
+		//o.tabBarRect |= tab.rect;
+		tab.rect.setCoords(i * rect().width() / 2, 0,
+						   (i + 1) * rect().width() / 2 - 1, rect().height());
+		if (i == selected) {
+
+			o.selectedTabRect = tab.rect;
+			//qDebug() << Q_FUNC_INFO << i << tab.rect << o.selectedTabRect;
 			continue;
+		}
 
 		// Reduces the size of the tab
-		if (i > 0) {
+		/*if (i > 0) {
 			if (isLeftToRight()) {
 				tab.rect.adjust(1, 3, -3, 0);
 			} else {
@@ -70,10 +96,10 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 			} else {
 				tab.rect.adjust(0, 3, 0, 0);
 			}
-		}
+		}*/
 		/// XXX: custom/default colors shouldn't be treated here
 		p.save();
-		if (SettingsPrivate::instance()->isCustomColors()) {
+		/*if (SettingsPrivate::instance()->isCustomColors()) {
 			if (tab.state.testFlag(QStyle::State_MouseOver)) {
 				p.setPen(tab.palette.highlight().color());
 				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());
@@ -81,15 +107,15 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 				p.setPen(tab.palette.mid().color());
 				p.fillRect(tab.rect, tab.palette.base());
 			}
+		} else {*/
+		if (tab.state.testFlag(QStyle::State_MouseOver)) {
+			p.setPen(o.palette.highlight().color());
+			p.fillRect(tab.rect, tab.palette.highlight().color().lighter(170));
 		} else {
-			if (tab.state.testFlag(QStyle::State_MouseOver)) {
-				p.setPen(o.palette.highlight().color());
-				p.fillRect(tab.rect, tab.palette.highlight().color().lighter(170));
-			} else {
-				p.setPen(o.palette.midlight().color());
-				p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
-			}
+			p.setPen(o.palette.midlight().color());
+			p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
 		}
+		//}
 		p.drawLine(tab.rect.x(), tab.rect.y(),
 				   tab.rect.x() + tab.rect.width(), tab.rect.y());
 		p.drawLine(tab.rect.x(), tab.rect.y(),

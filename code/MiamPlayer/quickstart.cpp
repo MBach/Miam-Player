@@ -184,10 +184,10 @@ void QuickStart::insertFirstRow()
 			cannotApplyNoFiles->setWordWrap(true);
 			QVBoxLayout *vbox = qobject_cast<QVBoxLayout*>(defaultFolderGroupBox->layout());
 			vbox->insertWidget(1, cannotApplyNoFiles);
-			defaultFolderApplyButton->setEnabled(false);
 		} else {
 			checkBox->setCheckState(Qt::Checked);
 		}
+		defaultFolderApplyButton->setEnabled(_totalMusicFiles != 0);
 
 		QTableWidgetItem *totalFiles2 = new QTableWidgetItem(tr("%n elements", "", _totalMusicFiles));
 		totalFiles2->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);

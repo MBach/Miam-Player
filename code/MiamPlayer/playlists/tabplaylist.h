@@ -43,7 +43,10 @@ public:
 	QIcon defaultIcon(QIcon::Mode mode);
 
 	/** Redefined to forward events to children. */
-	virtual bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
+	/** Load a playlist saved in database. */
+	void loadPlaylist(int playlistId);
 
 	/** Get the playlist at index. */
 	Playlist *playlist(int index);

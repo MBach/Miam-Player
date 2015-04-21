@@ -114,6 +114,51 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 	return QTabWidget::eventFilter(obj, event);
 }
 
+/** Load a playlist saved in database. */
+void TabPlaylist::loadPlaylist(int playlistId)
+{
+	Playlist *playlist = NULL;
+	auto _db = SqlDatabase::instance();
+	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
+
+	qDebug() << Q_FUNC_INFO << playlistId;
+
+	// Do not load the playlist if it's already displayed
+	for (int i = 0; i < playlists().count(); i++) {
+		Playlist *p = this->playlist(i);
+		bool ok = false;
+		uint checksum = playlistDao.checksum().toUInt(&ok);
+		if (ok && checksum == p->hash()) {
+			/// TODO: ask one if if want to reload the playlist or not
+			setCurrentIndex(i);
+			return;
+		}
+	}
+
+	int index = currentIndex();
+	if (index >= 0) {
+		playlist = this->playlist(index);
+		if (!playlist->mediaPlaylist()->isEmpty()) {
+			playlist = addPlaylist();
+			tabBar()->setTabText(count() - 1, playlistDao.title());
+		} else {
+			tabBar()->setTabText(index, playlistDao.title());
+		}
+	} else {
+		playlist = addPlaylist();
+		tabBar()->setTabText(count() - 1, playlistDao.title());
+	}
+	playlist->setHash(playlistDao.checksum().toUInt());
+
+	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
+	/// Use (host, id) or (uri)
+	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
+	playlist->insertMedias(-1, tracks);
+	playlist->setId(playlistId);
+
+	setTabIcon(index, defaultIcon(QIcon::Disabled));
+}
+
 /** Get the playlist at index. */
 Playlist* TabPlaylist::playlist(int index)
 {

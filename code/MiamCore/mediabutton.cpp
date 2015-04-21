@@ -1,5 +1,6 @@
 #include "mediabutton.h"
 
+#include <settings.h>
 #include <settingsprivate.h>
 #include <QFile>
 
@@ -18,8 +19,8 @@ void MediaButton::setIcon(const QIcon &icon)
 	if (settings->isThemeCustomized() && settings->hasCustomIcon(objectName())) {
 		QPushButton::setIcon(QIcon(settings->customIcon(objectName())));
 	} else if (icon.isNull()){
-		/// FIXME
-		//setIconFromTheme(settings->theme());
+		settings->setCustomIcon(objectName(), QString());
+		setIconFromTheme(Settings::instance()->theme());
 	} else {
 		QPushButton::setIcon(icon);
 	}

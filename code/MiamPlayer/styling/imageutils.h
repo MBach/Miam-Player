@@ -5,9 +5,10 @@
 
 class ImageUtils
 {
-public:
+private:
 	ImageUtils();
 
+public:
 	// Thanks StackOverflow for this algorithm (works like a charm without any changes)
 	static QImage blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly = false);
 };

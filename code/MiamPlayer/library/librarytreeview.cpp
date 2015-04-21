@@ -17,7 +17,6 @@
 
 #include "../circleprogressbar.h"
 #include "../pluginmanager.h"
-#include "styling/imageutils.h"
 #include "library/jumptowidget.h"
 #include "library/libraryfilterproxymodel.h"
 #include "libraryitemdelegate.h"
@@ -32,7 +31,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 {
 	_libraryModel->setColumnCount(1);
 
-	int iconSize = SettingsPrivate::instance()->coverSize();
+	auto settings = SettingsPrivate::instance();
+	int iconSize = settings->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
 
@@ -61,7 +61,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
 	connect(_proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
-		if (!SettingsPrivate::instance()->isSearchAndExcludeLibrary()) {
+		if (!settings->isSearchAndExcludeLibrary()) {
 			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
 				item->setData(b, Miam::DF_Highlighted);
 			}
@@ -80,7 +80,29 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_jumpToWidget = new JumpToWidget(this);
 	_jumpToWidget->setBackgroundRole(QPalette::Button);
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::jumpTo);
-	//connect(this, &LibraryTreeView::currentLetterChanged, _jumpToWidget, &JumpToWidget::setCurrentLetter);
+
+	/*connect(this, &QTreeView::expanded, this, [=](const QModelIndex &index) {
+		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
+		if (item->type() == Miam::IT_Album && settings->isBigCoverEnabled()) {
+			this->setExpandedCover(item);
+			// load album cover here
+			//int h = item->rowCount() * rowHeight(item->child(0, 0)->index());
+			//qDebug() << Q_FUNC_INFO << h << rect().width();
+			//item->setData(QImage(item->data(Miam::DF_CoverPath).toString()).scaledToHeight(h), Miam::DF_Custom + 1);
+			item->setData(QImage(item->data(Miam::DF_CoverPath).toString()), Miam::DF_Custom + 1);
+		}
+	});*/
+	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);
+
+	/*connect(this, &QTreeView::collapsed, this, [=](const QModelIndex &index) {
+		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
+		if (item->type() == Miam::IT_Album) {
+			// destroy album cover here
+			//item->setData(QImage(), Miam::DF_Custom + 1);
+			this->removeExpandedCover(item);
+		}
+	});*/
+	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
 }
 
 /** For every item in the library, gets the top level letter attached to it. */
@@ -107,6 +129,12 @@ QChar LibraryTreeView::currentLetter() const
 	}
 }
 
+const QImage * LibraryTreeView::expandedCover(QStandardItem *album) const
+{
+	// proxy, etc
+	return _expandedCovers.value(album);
+}
+
 /** Reimplemented. */
 void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
@@ -124,6 +152,17 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 	}
 }
 
+void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
+{
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
+	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
+		/// TODO: inner cover
+		QImage *image = _expandedCovers.value(item);
+		delete image;
+		_expandedCovers.remove(item);
+	}
+}
+
 void LibraryTreeView::repaintIcons()
 {
 	static qreal r = 0;
@@ -135,6 +174,16 @@ void LibraryTreeView::repaintIcons()
 			r = 0;
 		}
 		this->viewport()->repaint();
+	}
+}
+
+void LibraryTreeView::setExpandedCover(const QModelIndex &index)
+{
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
+	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
+		/// TODO: inner cover
+		QImage *image = new QImage(item->data(Miam::DF_CoverPath).toString());
+		_expandedCovers.insert(item, image);
 	}
 }
 
@@ -201,59 +250,6 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 		}
 	}
 }
-
-void LibraryTreeView::drawBranches(QPainter *painter, const QRect &r, const QModelIndex &proxyIndex) const
-{
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	if (settings->isBigCoverEnabled()) {
-		QModelIndex index2 = proxyIndex;
-		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(proxyIndex));
-		if (item && item->type() == Miam::IT_Album && isExpanded(index2)) {
-			QString cover = item->data(Miam::DF_CoverPath).toString();
-			// Get the area to display cover
-			int w, h;
-			w = rect().width() - (r.width() + 2 * verticalScrollBar()->width());
-			h = item->rowCount() * this->indexRowSizeHint(index2.child(0, 0));
-			QPixmap pixmap(cover);
-
-			w = qMin(h, qMin(w, pixmap.width()));
-			QPixmap leftBorder = pixmap.copy(0, 0, 3, pixmap.height());
-			leftBorder = leftBorder.scaled(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), w);
-			// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
-			// The second one is a computer generated gradient focused on alpha channel
-			if (!leftBorder.isNull()) {
-				QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
-				linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
-				linearAlphaBrush.setColorAt(1, Qt::transparent);
-
-				painter->save();
-				// Because the expanded border can look strange to one, is blurred with some gaussian function
-				QImage img = ImageUtils::blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
-				painter->drawImage(0, r.y() + r.height(), img);
-				painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
-				painter->setPen(Qt::NoPen);
-				painter->setBrush(linearAlphaBrush);
-				painter->drawRect(0, r.y() + r.height(), leftBorder.width(), leftBorder.height());
-				painter->drawPixmap(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), r.y() + r.height(), w, w, pixmap);
-
-				painter->setOpacity(settings->bigCoverOpacity());
-				painter->fillRect(0, r.y() + r.height(), rect().width() - 2 * verticalScrollBar()->width(), leftBorder.height(), QApplication::palette().base());
-				painter->restore();
-			}
-		}
-	}
-	TreeView::drawBranches(painter, r, proxyIndex);
-}
-
-/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
-/*void LibraryTreeView::mouseDoubleClickEvent(QMouseEvent *event)
-{
-	// Save the position of the mouse, to be able to choose the correct action :
-	// - add an item to the playlist
-	// - edit stars to the current track
-	currentPos = event->pos();
-	QTreeView::mouseDoubleClickEvent(event);
-}*/
 
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {

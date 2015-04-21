@@ -12,6 +12,8 @@ public:
 	explicit CornerWidget(TabPlaylist *parent);
 
 protected:
+	void mouseMoveEvent(QMouseEvent *e);
+
 	void paintEvent(QPaintEvent *);
 
 signals:

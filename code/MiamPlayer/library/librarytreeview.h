@@ -45,10 +45,6 @@ private:
 	 */
 	CircleProgressBar *_circleProgressBar;
 
-	/// XXX: I think displaying stars directly in the library should be done in a future release.
-	/// This idea is a quite good one, but it raises lots of new questions.
-	// QPoint currentPos;
-
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */
 	QMenu *_properties;
@@ -76,6 +72,9 @@ private:
 	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
 
+	/** Cache of expanded albums and their covers. */
+	QMap<QStandardItem*, QImage*> _expandedCovers;
+
 public:
 	QShortcut *sendToCurrentPlaylist;
 	QShortcut *openTagEditor;
@@ -84,6 +83,8 @@ public:
 
 	/** For every item in the library, gets the top level letter attached to it. */
 	QChar currentLetter() const;
+
+	const QImage * expandedCover(QStandardItem *album) const;
 
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
@@ -94,15 +95,9 @@ public:
 
 protected:
 	/** Redefined to display a small context menu in the view. */
-	virtual void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
-	virtual void drawBranches(QPainter * painter, const QRect & rect, const QModelIndex & index) const;
-
-	/** Redefined from the super class to add 2 behaviours depending on where the user clicks. */
-	///TODO in a future release
-	///virtual void mouseDoubleClickEvent(QMouseEvent *event);
-
-	virtual void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 
 private:
 	/** Recursive count for leaves only. */
@@ -139,6 +134,10 @@ private slots:
 
 	/** Find and insert a node in the hierarchy of items. */
 	void insertNode(GenericDAO *node);
+
+	void removeExpandedCover(const QModelIndex &index);
+
+	void setExpandedCover(const QModelIndex &index);
 
 	void updateNode(GenericDAO *node);
 
