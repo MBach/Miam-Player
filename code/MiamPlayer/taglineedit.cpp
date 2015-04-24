@@ -21,7 +21,7 @@ void TagLineEdit::addTag(const QString &tag, int column)
 	if (tag.trimmed().isEmpty()) {
 		return;
 	}
-	qDebug() << Q_FUNC_INFO << tag;
+	//qDebug() << Q_FUNC_INFO << tag;
 
 	foreach (TagButton *button, _tags) {
 		if (button->text() == tag.trimmed().toLower()) {
@@ -42,7 +42,7 @@ void TagLineEdit::addTag(const QString &tag, int column)
 	});
 
 	_tags.append(t);
-	qDebug() << "added tag" << tag;
+	//qDebug() << "added tag" << tag;
 	this->setFocus();
 
 	// Unfortunately, we have to wait that a QShowEvent is emitted to have correct size of the Widget

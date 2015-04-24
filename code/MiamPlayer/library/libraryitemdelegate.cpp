@@ -203,7 +203,7 @@ void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &op
 	if (QGuiApplication::isLeftToRight()) {
 		QPoint topLeft(option.rect.x() + 5, option.rect.y());
 		rectText = QRect(topLeft, option.rect.bottomRight());
-		QString custom = item->data(Miam::DF_Custom).toString();
+		QString custom = item->data(Miam::DF_CustomDisplayText).toString();
 		if (!custom.isEmpty() && settings->isReorderArtistsArticle()) {
 			/// XXX: paint articles like ", the" in gray? Could be nice
 			s = fmf.elidedText(custom, Qt::ElideRight, rectText.width());

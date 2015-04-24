@@ -387,12 +387,15 @@ void CustomizeThemeDialog::loadTheme()
 	overlapTabsSpinBox->setValue(settings->tabsOverlappingLength());
 
 	// Articles
-	//radioButtonEnableArticles->blockSignals(true);
-	bool isLibraryFilteredByArticles = settings->isLibraryFilteredByArticles();
-	radioButtonEnableArticles->setChecked(isLibraryFilteredByArticles);
-	articlesLineEdit->setEnabled(isLibraryFilteredByArticles);
-	//radioButtonEnableArticles->blockSignals(false);
+	radioButtonEnableArticles->blockSignals(true);
+	bool isFiltered = settings->isLibraryFilteredByArticles();
+	radioButtonEnableArticles->setChecked(isFiltered);
+	std::list<QWidget*> enabled = { articlesLineEdit, labelReorderArtistsArticle, labelReorderArtistsArticleExample, radioButtonEnableReorderArtistsArticle, radioButtonDisableReorderArtistsArticle };
+	for (QWidget *w : enabled) {
+		w->setEnabled(isFiltered);
+	}
 	radioButtonEnableReorderArtistsArticle->setChecked(settings->isReorderArtistsArticle());
+	radioButtonEnableArticles->blockSignals(false);
 }
 
 /** Redefined to initialize favorites from settings. */
@@ -421,11 +424,9 @@ void CustomizeThemeDialog::open()
 	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
 	/// Is it impossible to compute real size even if dialog is hidden?
 	// Add grammatical articles
-	//articlesLineEdit->blockSignals(true);
 	foreach (QString article, settings->libraryFilteredByArticles()) {
 		articlesLineEdit->addTag(article);
 	}
-	//articlesLineEdit->blockSignals(false);
 }
 
 void CustomizeThemeDialog::openChooseIconDialog()

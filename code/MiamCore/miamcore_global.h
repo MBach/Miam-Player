@@ -34,16 +34,16 @@ public:
 	// User defined data types (item->setData(QVariant, Field);)
 	enum DataField : int
 	{
-		DF_URI				= Qt::UserRole + 1,
-		DF_CoverPath		= Qt::UserRole + 2,
-		DF_TrackNumber		= Qt::UserRole + 3,
-		DF_DiscNumber		= Qt::UserRole + 4,
-		DF_NormalizedString	= Qt::UserRole + 5,
-		DF_Year				= Qt::UserRole + 6,
-		DF_Highlighted		= Qt::UserRole + 7,
-		DF_IsRemote			= Qt::UserRole + 8,
-		DF_IconPath			= Qt::UserRole + 9,
-		DF_Custom			= Qt::UserRole + 10
+		DF_URI					= Qt::UserRole + 1,
+		DF_CoverPath			= Qt::UserRole + 2,
+		DF_TrackNumber			= Qt::UserRole + 3,
+		DF_DiscNumber			= Qt::UserRole + 4,
+		DF_NormalizedString		= Qt::UserRole + 5,
+		DF_Year					= Qt::UserRole + 6,
+		DF_Highlighted			= Qt::UserRole + 7,
+		DF_IsRemote				= Qt::UserRole + 8,
+		DF_IconPath				= Qt::UserRole + 9,
+		DF_CustomDisplayText	= Qt::UserRole + 10
 	};
 };
 

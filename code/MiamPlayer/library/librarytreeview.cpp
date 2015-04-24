@@ -1,20 +1,11 @@
 #include "librarytreeview.h"
 #include "settingsprivate.h"
 
-#include <QApplication>
-#include <QDirIterator>
-#include <QHeaderView>
-#include <QLabel>
-#include <QMouseEvent>
-#include <QRegularExpression>
-#include <QScrollBar>
-#include <QSqlRecord>
-#include <QSqlQuery>
-#include <QStandardPaths>
-#include <QThread>
+#include <functional>
 
 #include <QtDebug>
 
+#include <filehelper.h>
 #include "../circleprogressbar.h"
 #include "../pluginmanager.h"
 #include "library/jumptowidget.h"
@@ -23,8 +14,6 @@
 #include "libraryorderdialog.h"
 #include "libraryitemdelegate.h"
 #include "libraryscrollbar.h"
-
-#include <filehelper.h>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent))
@@ -221,20 +210,35 @@ void LibraryTreeView::init()
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 }
 
-#include <functional>
-
 /** Rebuild the list of separators when one has changed grammatical articles in options. */
 void LibraryTreeView::rebuildSeparators()
 {
-	qDebug() << Q_FUNC_INFO;
+	auto db = SqlDatabase::instance();
+	auto s = SettingsPrivate::instance();
+	QStringList filters;
+	if (s->isLibraryFilteredByArticles() && !s->libraryFilteredByArticles().isEmpty()) {
+		filters = s->libraryFilteredByArticles();
+	}
+
+	// Reset custom displayed text, like "Artist, the"
 	QHashIterator<SeparatorItem*, QModelIndex> i(_topLevelItems);
 	while (i.hasNext()) {
 		i.next();
-		if (!i.value().data(Miam::DF_Custom).toString().isEmpty()) {
-			auto item = _libraryModel->itemFromIndex(i.value());
-			if (item) {
-				qDebug() << item->text();
-				item->setData(QString(), Miam::DF_Custom);
+		if (auto item = _libraryModel->itemFromIndex(i.value())) {
+			if (!i.value().data(Miam::DF_CustomDisplayText).toString().isEmpty()) {
+				item->setData(QString(), Miam::DF_CustomDisplayText);
+				// Recompute standard normalized name: "The Artist" -> "theartist"
+				item->setData(db->normalizeField(item->text()), Miam::DF_NormalizedString);
+			} else if (!filters.isEmpty()) {
+				for (QString filter : filters) {
+					QString text = item->text();
+					if (text.startsWith(filter + " ", Qt::CaseInsensitive)) {
+						text = text.mid(filter.length() + 1);
+						item->setData(text + ", " + filter, Miam::DF_CustomDisplayText);
+						item->setData(db->normalizeField(text), Miam::DF_NormalizedString);
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -360,12 +364,13 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QStandardItem *node)
 		}
 		break;
 	}
+	// Other types of hierarchy, separators are built from letters
 	default:
 		QString c;
-		if (node->data(Miam::DF_Custom).toString().isEmpty()) {
+		if (node->data(Miam::DF_CustomDisplayText).toString().isEmpty()) {
 			c = node->text().left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		} else {
-			QString reorderedText = node->data(Miam::DF_Custom).toString();
+			QString reorderedText = node->data(Miam::DF_CustomDisplayText).toString();
 			c = reorderedText.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
 		}
 		QString letter;
