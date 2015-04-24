@@ -2,7 +2,6 @@
 #define TRACKITEM_H
 
 #include <QStandardItem>
-#include "library/libraryfilterproxymodel.h"
 #include "model/trackdao.h"
 
 class TrackItem : public QStandardItem

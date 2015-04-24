@@ -137,9 +137,6 @@
      <property name="locale">
       <locale language="English" country="UnitedStates"/>
      </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="pageLibrary">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>

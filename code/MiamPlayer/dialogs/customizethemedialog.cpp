@@ -192,12 +192,12 @@ void CustomizeThemeDialog::setupActions()
 		settings->setIsLibraryFilteredByArticles(b);
 		// Don't reorder the library if one hasn't typed an article yet
 		if (!settings->libraryFilteredByArticles().isEmpty()) {
-			mainWindow->library->changeHierarchyOrder();
+			mainWindow->library->rebuildSeparators();
 		}
 	});
 	connect(articlesLineEdit, &CustomizeThemeTagLineEdit::taglistHasChanged, this, [=](const QStringList &articles) {
 		settings->setLibraryFilteredByArticles(articles);
-		mainWindow->library->changeHierarchyOrder();
+		mainWindow->library->rebuildSeparators();
 	});
 	connect(radioButtonEnableReorderArtistsArticle, &QRadioButton::toggled, this, [=](bool b) {
 		settings->setReorderArtistsArticle(b);
@@ -387,7 +387,11 @@ void CustomizeThemeDialog::loadTheme()
 	overlapTabsSpinBox->setValue(settings->tabsOverlappingLength());
 
 	// Articles
-	radioButtonEnableArticles->setChecked(settings->isLibraryFilteredByArticles());
+	//radioButtonEnableArticles->blockSignals(true);
+	bool isLibraryFilteredByArticles = settings->isLibraryFilteredByArticles();
+	radioButtonEnableArticles->setChecked(isLibraryFilteredByArticles);
+	articlesLineEdit->setEnabled(isLibraryFilteredByArticles);
+	//radioButtonEnableArticles->blockSignals(false);
 	radioButtonEnableReorderArtistsArticle->setChecked(settings->isReorderArtistsArticle());
 }
 
@@ -417,9 +421,11 @@ void CustomizeThemeDialog::open()
 	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
 	/// Is it impossible to compute real size even if dialog is hidden?
 	// Add grammatical articles
+	//articlesLineEdit->blockSignals(true);
 	foreach (QString article, settings->libraryFilteredByArticles()) {
 		articlesLineEdit->addTag(article);
 	}
+	//articlesLineEdit->blockSignals(false);
 }
 
 void CustomizeThemeDialog::openChooseIconDialog()

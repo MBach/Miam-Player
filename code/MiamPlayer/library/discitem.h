@@ -2,7 +2,6 @@
 #define DISCITEM_H
 
 #include <QStandardItem>
-#include "library/libraryfilterproxymodel.h"
 
 class DiscItem : public QStandardItem
 {

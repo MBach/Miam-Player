@@ -25,6 +25,7 @@ LibraryHeader::LibraryHeader(QWidget *parent) :
 		if (_order == Qt::DescendingOrder) {
 			emit aboutToChangeSortOrder();
 		}
+		qDebug() << Q_FUNC_INFO;
 		emit aboutToChangeHierarchyOrder();
 	});
 	libraryOrderDialog->installEventFilter(this);

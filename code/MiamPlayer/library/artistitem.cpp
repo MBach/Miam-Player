@@ -1,4 +1,5 @@
 #include "artistitem.h"
+#include "miamcore_global.h"
 
 #include <QRegularExpression>
 

@@ -232,10 +232,10 @@ void TagLineEdit::closeTagButton(TagButton *t)
 
 void TagLineEdit::clearTextAndTags(const QString &txt)
 {
-	qDebug() << Q_FUNC_INFO << txt;
+	//qDebug() << Q_FUNC_INFO << txt;
 	if (txt.isEmpty()) {
 		foreach (TagButton *tag, _tags) {
-			qDebug() << "deleting tag" << tag->text();
+			//qDebug() << "deleting tag" << tag->text();
 			tag->deleteLater();
 		}
 		_tags.clear();
@@ -251,9 +251,9 @@ void TagLineEdit::insertSpaces()
 	int numberOfSpace = 2;
 
 	/// FIXME
-	qDebug() << Q_FUNC_INFO << this->text();
+	//qDebug() << Q_FUNC_INFO << this->text();
 	this->setText(this->text().insert(cursorPosition(), "  "));
-	qDebug() << Q_FUNC_INFO << this->text();
+	//qDebug() << Q_FUNC_INFO << this->text();
 
 	cursorForward(false, 2);
 	while (t->frameGeometry().contains(cursorRect().center())) {
@@ -266,9 +266,9 @@ void TagLineEdit::insertSpaces()
 	t->disconnect();
 
 	foreach (TagButton *tag, _tags) {
-		qDebug() << "trying to move tag";
+		//qDebug() << "trying to move tag";
 		if (t != tag && tag->frameGeometry().x() > cx) {
-			qDebug() << "moving tag" << tag->text();
+			//qDebug() << "moving tag" << tag->text();
 			tag->move(tag->x() + fontMetrics().width(" ") * numberOfSpace, 0);
 		}
 	}

@@ -16,6 +16,7 @@ CustomizeThemeTagLineEdit::CustomizeThemeTagLineEdit(QWidget *parent)
 		this->clear();
 		this->blockSignals(false);
 		this->addTag(t);
+		qDebug() << Q_FUNC_INFO;
 		emit taglistHasChanged(this->toStringList());
 	});
 }
@@ -34,6 +35,7 @@ bool CustomizeThemeTagLineEdit::eventFilter(QObject *obj, QEvent *event)
 
 void CustomizeThemeTagLineEdit::closeTagButton(TagButton *t)
 {
+	qDebug() << Q_FUNC_INFO;
 	TagLineEdit::closeTagButton(t);
 	emit taglistHasChanged(this->toStringList());
 }

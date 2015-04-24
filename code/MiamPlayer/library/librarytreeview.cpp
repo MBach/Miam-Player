@@ -221,6 +221,52 @@ void LibraryTreeView::init()
 	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
 }
 
+#include <functional>
+
+/** Rebuild the list of separators when one has changed grammatical articles in options. */
+void LibraryTreeView::rebuildSeparators()
+{
+	qDebug() << Q_FUNC_INFO;
+	QHashIterator<SeparatorItem*, QModelIndex> i(_topLevelItems);
+	while (i.hasNext()) {
+		i.next();
+		if (!i.value().data(Miam::DF_Custom).toString().isEmpty()) {
+			auto item = _libraryModel->itemFromIndex(i.value());
+			if (item) {
+				qDebug() << item->text();
+				item->setData(QString(), Miam::DF_Custom);
+			}
+		}
+	}
+
+	// Delete separators first
+	QSet<int> setRows;
+	QHashIterator<QString, SeparatorItem*> it(_letters);
+	while (it.hasNext()) {
+		it.next();
+		setRows << it.value()->index().row();
+	}
+
+	// Always remove items (rows) in reverse order
+	QList<int> rows = setRows.toList();
+	std::sort(rows.begin(), rows.end(), std::greater<int>());
+	for (int row : rows) {
+		auto item = _libraryModel->takeItem(row);
+		_libraryModel->removeRow(row);
+		delete item;
+	}
+	_letters.clear();
+	_topLevelItems.clear();
+
+	// Insert once again new separators
+	for (int row = 0; row < _libraryModel->rowCount(); row++) {
+		auto item = _libraryModel->item(row);
+		if (auto separator = this->insertSeparator(item)) {
+			_topLevelItems.insert(separator, item->index());
+		}
+	}
+}
+
 void LibraryTreeView::setVisible(bool visible)
 {
 	TreeView::setVisible(visible);
@@ -293,12 +339,12 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 	return c;
 }
 
-SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
+SeparatorItem *LibraryTreeView::insertSeparator(const QStandardItem *node)
 {
 	// Items are grouped every ten years in this particular case
 	switch (SettingsPrivate::instance()->insertPolicy()) {
 	case SettingsPrivate::IP_Years: {
-		int year = letters.toInt();
+		int year = node->text().toInt();
 		if (year == 0) {
 			return NULL;
 		}
@@ -315,7 +361,13 @@ SeparatorItem *LibraryTreeView::insertSeparator(const QString &letters)
 		break;
 	}
 	default:
-		QString c = letters.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
+		QString c;
+		if (node->data(Miam::DF_Custom).toString().isEmpty()) {
+			c = node->text().left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
+		} else {
+			QString reorderedText = node->data(Miam::DF_Custom).toString();
+			c = reorderedText.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
+		}
 		QString letter;
 		bool topLevelLetter = false;
 		if (c.contains(QRegExp("\\w"))) {
@@ -353,7 +405,7 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << sender();
 	SqlDatabase::instance()->load();
 }
 
@@ -445,20 +497,13 @@ void LibraryTreeView::insertNode(GenericDAO *node)
 	}
 
 	if (node->parentNode()) {
-
-		QStandardItem *parentItem = _map.value(node->parentNode());
-		if (parentItem) {
+		if (QStandardItem *parentItem = _map.value(node->parentNode())) {
 			parentItem->appendRow(nodeItem);
-		} else {
-			qDebug() << Q_FUNC_INFO << "parentItem should exists but it was not found?" << node->title() << node->parentNode()->title();
 		}
-	} else {
-		if (!_map.contains(node)) {
-			_libraryModel->invisibleRootItem()->appendRow(nodeItem);
-			SeparatorItem *separator = this->insertSeparator(nodeItem->text());
-			if (separator) {
-				_topLevelItems.insert(separator->index(), nodeItem->index());
-			}
+	} else if (!_map.contains(node)) {
+		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
+		if (SeparatorItem *separator = this->insertSeparator(nodeItem)) {
+			_topLevelItems.insert(separator, nodeItem->index());
 		}
 	}
 	_map.insert(node, nodeItem);

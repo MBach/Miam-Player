@@ -2,7 +2,6 @@
 #define ALBUMITEM_H
 
 #include <QStandardItem>
-#include "library/libraryfilterproxymodel.h"
 #include "model/albumdao.h"
 
 class AlbumItem : public QStandardItem

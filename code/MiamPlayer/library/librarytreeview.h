@@ -67,7 +67,7 @@ private:
 	QHash<QString, SeparatorItem*> _letters;
 
 	/** Letter L returns all Artists (e.g.) starting with L. */
-	QMultiHash<QModelIndex, QModelIndex> _topLevelItems;
+	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
 
 	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
@@ -91,6 +91,9 @@ public:
 
 	virtual void init();
 
+	/** Rebuild the list of separators when one has changed grammatical articles in options. */
+	void rebuildSeparators();
+
 	void setVisible(bool visible);
 
 protected:
@@ -106,7 +109,7 @@ private:
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;
 
-	SeparatorItem *insertSeparator(const QString &letters);
+	SeparatorItem *insertSeparator(const QStandardItem *node);
 
 	void repaintIcons();
 

@@ -1,4 +1,5 @@
 #include "trackitem.h"
+#include "miamcore_global.h"
 
 TrackItem::TrackItem(const TrackDAO *dao) :
 	QStandardItem(dao->title())

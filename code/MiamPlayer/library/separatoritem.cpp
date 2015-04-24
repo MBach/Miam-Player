@@ -1,4 +1,5 @@
 #include "separatoritem.h"
+#include "miamcore_global.h"
 
 SeparatorItem::SeparatorItem(const QString &text) :
 	QStandardItem(text)

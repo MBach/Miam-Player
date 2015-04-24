@@ -72,7 +72,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	QStandardItemModel *model = qobject_cast<QStandardItemModel*>(sourceModel());
 	QStandardItem *item = model->itemFromIndex(model->index(sourceRow, 0, sourceParent));
 	if (item && item->type() == Miam::IT_Separator) {
-		foreach (QModelIndex index, _topLevelItems->values(item->index())) {
+		foreach (QModelIndex index, _topLevelItems->values(static_cast<SeparatorItem*>(item))) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
 				//qDebug() << "accepting Letter" << index.data().toString();
 				emit aboutToHighlight(index, true);

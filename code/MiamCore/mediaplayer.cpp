@@ -95,7 +95,7 @@ void MediaPlayer::createLocalConnections()
 		this->setState(QMediaPlayer::PausedState);
 	});
 
-	connect(_player, &VlcMediaPlayer::buffering, this, [=](float buffer) {
+	connect(_player, static_cast<void (VlcMediaPlayer::*)(float)>(&VlcMediaPlayer::buffering), this, [=](float buffer) {
 		//qDebug() << "VlcMediaPlayer::buffering" << buffer;
 		if (buffer == 100) {
 			_player->audio()->setVolume(Settings::instance()->volume());
