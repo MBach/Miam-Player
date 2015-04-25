@@ -19,6 +19,8 @@ private:
 	/** Keep a track of cover state between mouse events. */
 	bool _hasNotEmittedYet;
 
+	QTimer *_timer;
+
 public:
 	explicit LibraryScrollBar(QWidget *parent);
 

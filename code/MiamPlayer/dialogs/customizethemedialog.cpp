@@ -166,13 +166,18 @@ void CustomizeThemeDialog::setupActions()
 	});
 
 	// Change cover size
+	QTimer *reloadCoverSizeTimer = new QTimer(this);
+	reloadCoverSizeTimer->setSingleShot(true);
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
 		settings->setCoverSize(cs);
 		if (mainWindow->library->model()) {
 			mainWindow->library->model()->layoutChanged();
 			this->fade();
 		}
+		reloadCoverSizeTimer->start(1000);
 	});
+	connect(reloadCoverSizeTimer, &QTimer::timeout, mainWindow->library, &LibraryTreeView::reloadCovers);
+
 	// Change big cover opacity
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
 		settings->setBigCovers(b);
@@ -371,7 +376,9 @@ void CustomizeThemeDialog::loadTheme()
 
 	// Library
 	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
+	spinBoxCoverSize->blockSignals(true);
 	spinBoxCoverSize->setValue(settings->coverSize());
+	spinBoxCoverSize->blockSignals(false);
 
 	// Colors
 	settings->colorsAlternateBG() ? enableAlternateBGRadioButton->setChecked(true) : disableAlternateBGRadioButton->setChecked(true);

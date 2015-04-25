@@ -28,26 +28,28 @@ private:
 	QPointer<QStandardItemModel> _libraryModel;
 
 	bool _showCovers;
-	bool _animateIcons;
 
-	qreal _iconOpacity;
+	static qreal _iconOpacity;
 
 	LibraryTreeView *_libraryTreeView;
+
+	/** Cache for covers displayed in the tree view.
+	 * This field is mutable because it's modified in paint() which is const by design.*/
+	mutable QHash<AlbumItem*, bool> _loadedCovers;
+
+	/** This timer is used to animate album cover when one is scrolling.
+	 * It improves reactivity of the UI by temporarily disabling painting events.
+	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
+	QTimer *_timer;
 
 public:
 	LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy);
 
-	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	/** Redefined. */
+	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 	/** Redefined to always display the same height for albums, even for those without one. */
-	virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-	inline void setIconOpacity(qreal opacity) {
-		_iconOpacity = opacity;
-		if (_iconOpacity == 1.0) {
-			_animateIcons = false;
-		}
-	}
+	virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
 	/** Albums have covers usually. */
@@ -69,6 +71,8 @@ private:
 
 public slots:
 	void displayIcon(bool b);
+
+	inline void updateCoverSize() { _loadedCovers.clear(); }
 };
 
 #endif // LIBRARYITEMDELEGATE_H

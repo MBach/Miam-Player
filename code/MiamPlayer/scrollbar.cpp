@@ -65,11 +65,11 @@ void ScrollBar::paintEvent(QPaintEvent *)
 	if (orientation() == Qt::Vertical) {
 		subLineRect.adjust(0, 0, -1, 0);
 		addLineRect.adjust(0, 0, -1, 0);
-		sliderRect.adjust(0, 0, -1, 0);
+		sliderRect.adjust(0, 0, -1, -1);
 	} else {
 		subLineRect.adjust(0, 0, 0, -1);
 		addLineRect.adjust(0, 0, 0, -1);
-		sliderRect.adjust(0, 0, 0, -1);
+		sliderRect.adjust(0, 0, -1, -1);
 	}
 
 	p.setPen(Qt::NoPen);

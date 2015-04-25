@@ -31,10 +31,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_itemDelegate = new LibraryItemDelegate(this, _proxyModel);
 	this->setItemDelegate(_itemDelegate);
 
-	_timer = new QTimer(this);
-	_timer->setTimerType(Qt::PreciseTimer);
-	_timer->setInterval(10);
-
 	_circleProgressBar = new CircleProgressBar(this);
 	_circleProgressBar->setTransparentCenter(true);
 
@@ -70,27 +66,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	_jumpToWidget->setBackgroundRole(QPalette::Button);
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::jumpTo);
 
-	/*connect(this, &QTreeView::expanded, this, [=](const QModelIndex &index) {
-		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
-		if (item->type() == Miam::IT_Album && settings->isBigCoverEnabled()) {
-			this->setExpandedCover(item);
-			// load album cover here
-			//int h = item->rowCount() * rowHeight(item->child(0, 0)->index());
-			//qDebug() << Q_FUNC_INFO << h << rect().width();
-			//item->setData(QImage(item->data(Miam::DF_CoverPath).toString()).scaledToHeight(h), Miam::DF_Custom + 1);
-			item->setData(QImage(item->data(Miam::DF_CoverPath).toString()), Miam::DF_Custom + 1);
-		}
-	});*/
+	// Load album cover
 	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);
-
-	/*connect(this, &QTreeView::collapsed, this, [=](const QModelIndex &index) {
-		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
-		if (item->type() == Miam::IT_Album) {
-			// destroy album cover here
-			//item->setData(QImage(), Miam::DF_Custom + 1);
-			this->removeExpandedCover(item);
-		}
-	});*/
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
 }
 
@@ -152,20 +129,6 @@ void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
 	}
 }
 
-void LibraryTreeView::repaintIcons()
-{
-	static qreal r = 0;
-	if (_timer->isActive()) {
-		r += 0.01;
-		_itemDelegate->setIconOpacity(r);
-		if (r >= 1) {
-			_timer->stop();
-			r = 0;
-		}
-		this->viewport()->repaint();
-	}
-}
-
 void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
@@ -178,9 +141,6 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 
 void LibraryTreeView::updateSelectedTracks()
 {
-	//foreach (QModelIndex index, _cacheSelectedIndexes) {
-	//	_itemDelegate->invalidate(index);
-	//}
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
 	qDebug() << Q_FUNC_INFO;
 	SqlDatabase::instance()->load();
@@ -199,15 +159,9 @@ void LibraryTreeView::init()
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	vScrollBar->setFrameBorder(false, false, false, true);
 	this->setVerticalScrollBar(vScrollBar);
-	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, [=](bool b) {
-		_itemDelegate->displayIcon(b);
-		b ? _timer->start() : _timer->stop();
-	});
-	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, [=](bool b) {
-		_itemDelegate->displayIcon(b);
-		b ? _timer->start() : _timer->stop();
-	});
-	connect(_timer, &QTimer::timeout, this, &LibraryTreeView::repaintIcons);
+
+	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
+	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
 }
 
 /** Rebuild the list of separators when one has changed grammatical articles in options. */
@@ -410,7 +364,6 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	qDebug() << Q_FUNC_INFO << sender();
 	SqlDatabase::instance()->load();
 }
 
@@ -439,6 +392,13 @@ void LibraryTreeView::jumpTo(const QString &letter)
 	if (item) {
 		scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
 	}
+}
+
+/** Reload covers when one has changed cover size in options. */
+void LibraryTreeView::reloadCovers()
+{
+	_itemDelegate->updateCoverSize();
+	this->viewport()->update();
 }
 
 /** Reimplemented. */

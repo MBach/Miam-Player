@@ -55,11 +55,6 @@ private:
 	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
 	LibraryItemDelegate *_itemDelegate;
 
-	/** This timer is used to animate album cover when one is scrolling.
-	 * It improves reactivity of the UI by temporarily disabling painting events.
-	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
-	QTimer *_timer;
-
 	/** This map is a kind of cache, used to insert nodes in this tree at the right location. */
 	QMap<GenericDAO*, QStandardItem*> _map;
 
@@ -111,8 +106,6 @@ private:
 
 	SeparatorItem *insertSeparator(const QStandardItem *node);
 
-	void repaintIcons();
-
 	/** Reimplemented. */
 	virtual void updateSelectedTracks();
 
@@ -129,8 +122,11 @@ public slots:
 	/** Find index from current letter then scrolls to it. */
 	void jumpTo(const QString &letter);
 
+	/** Reload covers when one has changed cover size in options. */
+	void reloadCovers();
+
 	/** Reimplemented. */
-	virtual void reset();
+	virtual void reset() override;
 
 private slots:
 	void endPopulateTree();

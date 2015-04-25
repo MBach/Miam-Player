@@ -15,12 +15,27 @@
 
 #include <QtDebug>
 
+qreal LibraryItemDelegate::_iconOpacity = 1.0;
+
 LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy), _animateIcons(false), _iconOpacity(1.0), _libraryTreeView(libraryTreeView)
+	QStyledItemDelegate(proxy), _libraryTreeView(libraryTreeView), _timer(new QTimer(this))
 {
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_showCovers = SettingsPrivate::instance()->isCoversEnabled();
+	_timer->setTimerType(Qt::PreciseTimer);
+	_timer->setInterval(10);
+	connect(_timer, &QTimer::timeout, this, [=]() {
+		_iconOpacity += 0.01;
+		_libraryTreeView->viewport()->update();
+		if (_iconOpacity >= 1) {
+			_timer->stop();
+			_iconOpacity = 1.0;
+		} else {
+			// Restart the timer until r has reached the maximum (1.0)
+			_timer->start();
+		}
+	});
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -90,13 +105,12 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	static QImageReader imageReader;
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	int coverSize = settings->coverSize();
-	bool noCoverAvailable = false;
-	if (settings->isCoversEnabled()) {
-		QString file = item->data(Miam::DF_CoverPath).toString();
-		// Qt::UserRole + 20 == false => pixmap not loaded ; == true => pixmap loaded
-		/// XXX: extract this elsewhere
-		if (item->data(Qt::UserRole + 20).toBool() == false && !file.isEmpty()) {
-			FileHelper fh(file);
+
+	QString coverPath;
+	if (settings->isCoversEnabled() && _showCovers) {
+		coverPath = item->data(Miam::DF_CoverPath).toString();
+		if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
+			FileHelper fh(coverPath);
 			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
 				// qDebug() << Q_FUNC_INFO << "loading internal cover from file";
@@ -106,27 +120,21 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 					p = p.scaled(coverSize, coverSize);
 					if (!p.isNull()) {
 						item->setIcon(p);
-						item->setData(true, Qt::UserRole + 20);
+						_loadedCovers.insert(item, true);
 					}
 				}
 			} else {
 				// qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
-				imageReader.setFileName(QDir::fromNativeSeparators(file));
+				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
 				imageReader.setScaledSize(QSize(coverSize, coverSize));
 				item->setIcon(QPixmap::fromImage(imageReader.read()));
-				item->setData(true, Qt::UserRole + 20);
+				_loadedCovers.insert(item, true);
 			}
-		} else if (file.isEmpty()) {
-			noCoverAvailable = true;
-			item->setData(true, Qt::UserRole + 20);
 		}
-	} else {
-		item->setIcon(QIcon());
-		item->setData(false, Qt::UserRole + 20);
 	}
-	bool b = item->data(Qt::UserRole + 20).toBool();
-	if (settings->isCoversEnabled() && b) {
-		QPixmap p = option.icon.pixmap(QSize(coverSize, coverSize));
+
+	if (settings->isCoversEnabled()) {
+		painter->save();
 		QRect cover;
 		if (QGuiApplication::isLeftToRight()) {
 			cover = QRect(option.rect.x() + 1, option.rect.y() + 1, coverSize, coverSize);
@@ -134,23 +142,21 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 			cover = QRect(option.rect.width() + 19 - coverSize - 1, option.rect.y() + 1, coverSize, coverSize);
 		}
 		// If font size is greater than the cover, align it
-		painter->save();
 		if (coverSize < option.rect.height() - 2) {
 			painter->translate(0, (option.rect.height() - 1 - coverSize) / 2);
 		}
-		if (_animateIcons) {
-			painter->save();
-			painter->setOpacity(_iconOpacity);
-			painter->drawPixmap(cover, p);
-			painter->restore();
-		} else {
-			if (noCoverAvailable) {
-				painter->setOpacity(0.25);
-				QPixmap p2(":/icons/disc");
-				painter->drawPixmap(cover, p2);
+
+		if (coverPath.isEmpty()) {
+			if (_iconOpacity <= 0.25) {
+				painter->setOpacity(_iconOpacity);
 			} else {
-				painter->drawPixmap(cover, p);
+				painter->setOpacity(0.25);
 			}
+			painter->drawPixmap(cover, QPixmap(":/icons/disc"));
+		} else {
+			painter->setOpacity(_iconOpacity);
+			QPixmap p = option.icon.pixmap(QSize(coverSize, coverSize));
+			painter->drawPixmap(cover, p);
 		}
 		painter->restore();
 	}
@@ -172,9 +178,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		offsetWidth = iconSize;
 	}
 
-	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
-	QString s;
 	QRect rectText;
 	if (settings->isCoversEnabled()) {
 		// It's possible to have missing covers in your library, so we need to keep alignment.
@@ -189,7 +193,8 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	} else {
 		rectText = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - 5, option.rect.height());
 	}
-	s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
+	QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 	this->paintText(painter, option, rectText, s, item);
 }
 
@@ -283,8 +288,6 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 	QStyleOptionViewItem option(opt);
 	option.rect.setX(0);
 
-	/// Pointer or not?
-	//QImage image = track->parent()->data(Miam::DF_Custom + 1).value<QImage>();
 	const QImage *image = _libraryTreeView->expandedCover(track->parent());
 	if (!image) {
 		return;
@@ -425,8 +428,8 @@ void LibraryItemDelegate::displayIcon(bool b)
 {
 	_showCovers = b;
 	if (_showCovers) {
-		_animateIcons = true;
+		_timer->start();
 	} else {
-		this->setIconOpacity(0);
+		_iconOpacity = 0;
 	}
 }
