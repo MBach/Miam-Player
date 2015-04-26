@@ -98,7 +98,7 @@ void TabBar::dropEvent(QDropEvent *event)
 
 		// Copy tracks in the target
 		QList<QMediaContent> medias;
-		foreach (QPersistentModelIndex index, origin->selectionModel()->selectedRows()) {
+		for (QModelIndex index : origin->selectionModel()->selectedRows()) {
 			medias.append(origin->mediaPlaylist()->media(index.row()));
 		}
 		// Append tracks at the end

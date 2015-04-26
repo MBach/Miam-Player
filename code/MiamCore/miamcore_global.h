@@ -43,7 +43,8 @@ public:
 		DF_Highlighted			= Qt::UserRole + 7,
 		DF_IsRemote				= Qt::UserRole + 8,
 		DF_IconPath				= Qt::UserRole + 9,
-		DF_CustomDisplayText	= Qt::UserRole + 10
+		DF_Rating				= Qt::UserRole + 10,
+		DF_CustomDisplayText	= Qt::UserRole + 11
 	};
 };
 

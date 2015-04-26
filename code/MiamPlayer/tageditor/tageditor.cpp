@@ -46,7 +46,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	_combos.insert(TagEditorTableWidget::COL_Comment, commentComboBox);
 	coverPathComboBox->setEditable(false);
 
-	foreach (QComboBox *combo, _combos.values()) {
+	for (QComboBox *combo : _combos.values()) {
 		combo->addItem(tr("(Keep)"));
 		combo->addItem(tr("(Delete)"));
 		combo->setCurrentIndex(-1);
@@ -77,7 +77,7 @@ TagEditor::TagEditor(QWidget *parent) :
 QStringList TagEditor::selectedTracks()
 {
 	QStringList tracks;
-	foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename)) {
+	for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename)) {
 		tracks << index.data(Qt::UserRole).toString();
 	}
 	return tracks;
@@ -145,7 +145,7 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 
 void TagEditor::replaceCover(Cover *newCover)
 {
-	/*foreach (QModelIndex index, tagEditorWidget->selectionModel()->selectedRows()) {
+	/*for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows()) {
 		Cover *previousCover = covers.value(index.row());
 		// It is sure that covers are different
 		if (!(previousCover == NULL || newCover == NULL || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
@@ -187,7 +187,7 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 void TagEditor::addItemsToEditor(const QList<QUrl> &tracks)
 {
 	QStringList localFiles;
-	foreach (QUrl url, tracks) {
+	for (QUrl url : tracks) {
 		if (url.isLocalFile()) {
 			localFiles.append(url.toLocalFile());
 		}
@@ -199,7 +199,7 @@ void TagEditor::addItemsToEditor(const QList<QUrl> &tracks)
 void TagEditor::addItemsToEditor(const QList<TrackDAO> &tracks)
 {
 	QStringList localFiles;
-	foreach (TrackDAO track, tracks) {
+	for (TrackDAO track : tracks) {
 		localFiles.append(track.uri());
 	}
 	this->addItemsToEditor(localFiles);
@@ -214,7 +214,7 @@ void TagEditor::clear()
 	albumCover->resetCover();
 
 	// Delete text contents, not the combobox itself
-	foreach (QComboBox *combo, _combos.values()) {
+	for (QComboBox *combo : _combos.values()) {
 		combo->clear();
 	}
 	tagEditorWidget->clear();
@@ -369,7 +369,7 @@ void TagEditor::displayCover()
 	QString joinedTracks;
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
 	tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename);
-	foreach (QModelIndex item, tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
+	for (QModelIndex item : tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
 		Cover *cover = NULL;
 		// Check if there's a cover in a temporary state (to allow rollback action)
 		if (unsavedCovers.value(item.row()) != NULL) {
@@ -470,7 +470,7 @@ void TagEditor::displayTags()
 		std::sort(list.begin(), list.end());
 		if (combo == genreComboBox) {
 			combo->addItems(genres);
-			foreach (QString genre, list) {
+			for (QString genre : list) {
 				if (!genres.contains(genre)) {
 					combo->addItem(genre);
 				}

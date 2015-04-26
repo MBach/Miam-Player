@@ -56,7 +56,7 @@ PluginManager::~PluginManager()
 /** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 void PluginManager::registerExtensionPoint(const char *className, QObjectList source)
 {
-	foreach (QObject *object, source) {
+	for (QObject *object : source) {
 		_extensionPoints.insert(QString(className), object);
 	}
 }
@@ -120,10 +120,10 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 {
 	// Each View Plugin can extend multiple instances
-	foreach (QString view, itemViewPlugin->classesToExtend()) {
+	for (QString view : itemViewPlugin->classesToExtend()) {
 
 		// Instances of classes which can be extended at runtime
-		foreach (QObject *obj, _extensionPoints.values(view)) {
+		for (QObject *obj : _extensionPoints.values(view)) {
 			// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
 			if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
 				if (itemViewPlugin->hasSubMenu(view)) {
@@ -245,7 +245,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 void PluginManager::unloadPlugin(const QString &pluginName)
 {
 	BasicPlugin *basic = _instances.value(pluginName);
-	foreach (QObject *dependency, _dependencies.values(pluginName)) {
+	for (QObject *dependency : _dependencies.values(pluginName)) {
 		if (QAction *action = qobject_cast<QAction*>(dependency)) {
 			QMenu *menu = qobject_cast<QMenu*>(action->parent());
 			menu->removeAction(action);

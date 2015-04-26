@@ -35,7 +35,7 @@ AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent) :
 		// Special root folders like "/" or "D:\" on Windows are empty
 		if (d.isRoot()) {
 			bool absRoot = true;
-			foreach (QFileInfo fileInfo, QDir::drives()) {
+			for (QFileInfo fileInfo : QDir::drives()) {
 				if (fileInfo.absolutePath() == _path.absolutePath()) {
 					absRoot = false;
 					break;
@@ -167,7 +167,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	bool root = false;
 	if (dir.isRoot()) {
 		bool absRoot = true;
-		foreach (QFileInfo fileInfo, QDir::drives()) {
+		for (QFileInfo fileInfo : QDir::drives()) {
 			if (fileInfo.absolutePath() == _path.absolutePath()) {
 				// Add a small offset to simulate a pressed button
 				if (_highlighted) {

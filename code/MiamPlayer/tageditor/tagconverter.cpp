@@ -12,12 +12,12 @@ TagConverter::TagConverter(QPushButton *convertButton, TagEditorTableWidget *par
 
 	this->installEventFilter(this);
 
-	foreach (QToolButton *toolButton, tagToFileGroupBox->findChildren<QToolButton*>()) {
+	for (QToolButton *toolButton : tagToFileGroupBox->findChildren<QToolButton*>()) {
 		connect(toolButton, &QToolButton::clicked, this, [=]() {
 			tagToFileLineEdit->addTag(toolButton->text(), toolButton->property("column").toInt());
 		});
 	}
-	foreach (QToolButton *toolButton, fileToTagGroupBox->findChildren<QToolButton*>()) {
+	for (QToolButton *toolButton : fileToTagGroupBox->findChildren<QToolButton*>()) {
 		connect(toolButton, &QToolButton::clicked, this, [=]() {
 			fileToTagLineEdit->addTag(toolButton->text(), toolButton->property("column").toInt());
 		});
@@ -101,7 +101,7 @@ void TagConverter::applyPatternToColumns()
 
 	//qDebug() << "regular expr" << re;
 
-	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
+	for (QModelIndex index : _tagEditor->selectionModel()->selectedRows()) {
 		QString filename = index.data().toString();
 		filename = filename.left(filename.lastIndexOf("."));
 		QRegularExpressionMatch m = re.match(filename);
@@ -125,7 +125,7 @@ void TagConverter::applyPatternToFilenames()
 	static QRegularExpression forbiddenChar2("[\\\\/:*?<>|]");
 
 	int column = 0;
-	foreach (QModelIndex index, _tagEditor->selectionModel()->selectedRows()) {
+	for (QModelIndex index : _tagEditor->selectionModel()->selectedRows()) {
 		QString text = "";
 		for (int c = 0; c < pattern.size(); c++) {
 			if (pattern.at(c) == ':') {

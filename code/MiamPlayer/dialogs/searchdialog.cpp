@@ -20,16 +20,16 @@ SearchDialog::SearchDialog(SqlDatabase *db, MainWindow *mainWindow) :
 	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db), _isMaximized(false)
 {
 	this->setupUi(this);
-    _artists->setAttribute(Qt::WA_MacShowFocusRect, false);
-    _albums->setAttribute(Qt::WA_MacShowFocusRect, false);
-    _tracks->setAttribute(Qt::WA_MacShowFocusRect, false);
+	_artists->setAttribute(Qt::WA_MacShowFocusRect, false);
+	_albums->setAttribute(Qt::WA_MacShowFocusRect, false);
+	_tracks->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	_artists->setModel(new QStandardItemModel(this));
 	_albums->setModel(new QStandardItemModel(this));
 	_tracks->setModel(new QStandardItemModel(this));
 
 	// Init map with empty values
-	foreach (QListView *list, this->findChildren<QListView*>()) {
+	for (QListView *list : this->findChildren<QListView*>()) {
 		_hiddenItems.insert(list, QList<QStandardItem*>());
 	}
 
@@ -52,9 +52,9 @@ SearchDialog::SearchDialog(SqlDatabase *db, MainWindow *mainWindow) :
 	connect(labelSearchMore, &QLabel::linkActivated, this, &SearchDialog::searchLabelWasClicked);
 
 	// Unselect the 2 other lists when one is clicking on another one
-	foreach (QListView *list, findChildren<QListView*>()) {
+	for (QListView *list : findChildren<QListView*>()) {
 		connect(list->selectionModel(), &QItemSelectionModel::currentRowChanged, this, [=]() {
-			foreach (QListView *otherList, findChildren<QListView*>()) {
+			for (QListView *otherList : findChildren<QListView*>()) {
 				if (list != otherList) {
 					otherList->selectionModel()->clear();
 				}
@@ -67,7 +67,7 @@ SearchDialog::SearchDialog(SqlDatabase *db, MainWindow *mainWindow) :
 	// Update font size
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {
-			foreach (QWidget *o, this->findChildren<QWidget*>()) {
+			for (QWidget *o : this->findChildren<QWidget*>()) {
 				o->setFont(newFont);
 			}
 		}
@@ -96,7 +96,7 @@ void SearchDialog::addSource(QCheckBox *checkBox)
 /** String to look for on every registered search engines. */
 void SearchDialog::setSearchExpression(const QString &text)
 {
-	foreach (QListView *view, this->findChildren<QListView*>()) {
+	for (QListView *view : this->findChildren<QListView*>()) {
 		auto model = view->model();
 		while (model->rowCount() != 0) {
 			model->removeRow(0);
@@ -371,7 +371,7 @@ void SearchDialog::searchMoreResults()
 void SearchDialog::toggleItems(bool enabled)
 {
 	QCheckBox *checkBox = qobject_cast<QCheckBox*>(sender());
-	foreach (QListView *list, this->findChildren<QListView*>()) {
+	for (QListView *list : this->findChildren<QListView*>()) {
 		QStandardItemModel *m = qobject_cast<QStandardItemModel*>(list->model());
 		// Hiding / restoring items has to be done in 2-steps
 		// First step is for finding items that are about to be moved
@@ -414,7 +414,7 @@ void SearchDialog::toggleItems(bool enabled)
 				}
 			}
 
-			foreach (const QPersistentModelIndex &i, indexes) {
+			for (const QPersistentModelIndex &i : indexes) {
 				m->removeRow(i.row());
 			}
 

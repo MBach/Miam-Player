@@ -86,7 +86,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 		connect(applyCoverToAllAction, &QAction::triggered, this, &AlbumCover::applyCoverToAll);
 		connect(applyCoverToAlbumOnlyAction, &QAction::triggered, this, &AlbumCover::applyCoverToAlbumOnly);
 	}
-	foreach (QAction *action, _imageMenu->actions()) {
+	for (QAction *action : _imageMenu->actions()) {
 		if (action) {
 			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}

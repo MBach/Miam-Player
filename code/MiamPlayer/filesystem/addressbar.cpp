@@ -54,7 +54,7 @@ QString AddressBar::getVolumeInfo(const QString &drive) const
 /** Called by the popup menu when one is moving the mouse cursor. */
 void AddressBar::findAndHighlightButton(const QPoint &p)
 {
-	foreach (AddressBarButton *b, findChildren<AddressBarButton*>()) {
+	for (AddressBarButton *b : findChildren<AddressBarButton*>()) {
 		if (b->rect().contains(b->mapFromGlobal(p))) {
 			if (!b->isHighlighted()) {
 				b->setHighlighted(true);
@@ -105,7 +105,7 @@ void AddressBar::resizeEvent(QResizeEvent *event)
 	// How much space do we have after resizing for all buttons which are currently displayed?
 	auto avalaibleWidth = [this, &event] () -> int {
 		int w = event->size().width();
-		foreach (AddressBarButton *b, this->findChildren<AddressBarButton*>()) {
+		for (AddressBarButton *b : this->findChildren<AddressBarButton*>()) {
 			w -= b->width();
 		}
 		return w;
@@ -308,12 +308,12 @@ void AddressBar::showDrivesAndPreviousFolders()
 	};
 
 	// Insert standard locations
-	foreach (QFileInfo fileInfo, fil) {
+	for (QFileInfo fileInfo : fil) {
 		insertItemInMenu(fileInfo, fileInfo.baseName());
 	}
 
 	// Insert drives
-	foreach (QFileInfo drive, QDir::drives()) {
+	for (QFileInfo drive : QDir::drives()) {
 		QString driveName = QDir::toNativeSeparators(drive.absoluteFilePath());
 		if (driveName.length() > 1) {
 			QString d = this->getVolumeInfo(driveName);

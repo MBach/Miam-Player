@@ -90,7 +90,7 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 {
 	int files = 0;
-	foreach (QModelIndex index, indexes) {
+	for (QModelIndex index : indexes) {
 		QDirIterator dirIterator(_fileSystemModel->fileInfo(index).absoluteFilePath(), QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			if (QFileInfo(dirIterator.next()).isFile()) {

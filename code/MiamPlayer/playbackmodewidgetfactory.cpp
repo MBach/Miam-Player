@@ -19,7 +19,7 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButto
 	_popups << pCurrentItemOnce << pCurrentItemLoop << pSequential << pLoop << pRandom;
 
 	QMap<PlaybackModeWidget*, QPushButton*> map;
-	foreach (PlaybackModeWidget *popup, _popups) {
+	for (PlaybackModeWidget *popup : _popups) {
 		map.insert(popup, popup->button());
 	}
 
@@ -28,7 +28,7 @@ PlaybackModeWidgetFactory::PlaybackModeWidgetFactory(QWidget *parent, MediaButto
 		i.next();
 
 		// When a button is clicked, it's necessary to close all other widgets
-		foreach (PlaybackModeWidget *popup, _popups) {
+		for (PlaybackModeWidget *popup : _popups) {
 			connect(i.value(), &QPushButton::clicked, [=]() {
 				_playbackModeButton->setIcon(i.value()->icon());
 				popup->close();
@@ -140,7 +140,7 @@ void PlaybackModeWidgetFactory::update()
 	QString playbackMode = PlaybackModeWidget::nameFromMode(mode);
 	_playbackModeButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/" + playbackMode));
 
-	foreach (PlaybackModeWidget *w, _popups) {
+	for (PlaybackModeWidget *w : _popups) {
 		w->adjustIcon();
 		w->adjustSize();
 	}

@@ -18,7 +18,7 @@ void QuickStartSearchEngine::doSearch()
 	QDir musicDir(userMusicPath);
 
 	// For every subfolder in the user's music path, a quick test on multimedia files is done
-	foreach (QFileInfo fileInfo, musicDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
+	for (QFileInfo fileInfo : musicDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name)) {
 
 		QDirIterator it(fileInfo.absoluteFilePath(), FileHelper::suffixes(FileHelper::Standard, true), QDir::Files, QDirIterator::Subdirectories);
 		int musicFiles = 0;

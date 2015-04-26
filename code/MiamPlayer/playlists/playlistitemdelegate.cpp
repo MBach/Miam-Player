@@ -25,16 +25,25 @@ QWidget* PlaylistItemDelegate::createEditor(QWidget *p, const QStyleOptionViewIt
 	return editor;
 }
 
+#include "model/sqldatabase.h"
+
 void PlaylistItemDelegate::commitAndClose()
 {
+	auto db = SqlDatabase::instance();
+	QList<QPair<QString, QString>> tracksToUpdate;
 	// Multiple editors might have been opened by one, therefore it's required to commit and close all of them
-	foreach (StarEditor *se, parent()->findChildren<StarEditor*>()) {
+	for (StarEditor *se : parent()->findChildren<StarEditor*>()) {
 		QMediaContent mediaContent = _playlist->mediaPlaylist()->media(se->index().row());
-		FileHelper fh(QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile())));
+		QString fileName = QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile()));
+		FileHelper fh(fileName);
+		int r = fh.rating();
 		fh.setRating(se->starRating.starCount());
+		qDebug() << "before" << r << "after" << fh.rating();
 		commitData(se);
 		closeEditor(se);
+		tracksToUpdate << qMakePair(fileName, QString());
 	}
+	db->updateTracks(tracksToUpdate);
 }
 
 /** Redefined. */

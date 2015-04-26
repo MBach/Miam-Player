@@ -23,7 +23,7 @@ void TagLineEdit::addTag(const QString &tag, int column)
 	}
 	//qDebug() << Q_FUNC_INFO << tag;
 
-	foreach (TagButton *button, _tags) {
+	for (TagButton *button : _tags) {
 		if (button->text() == tag.trimmed().toLower()) {
 			// It useless to add a tag more than once (IMHO)
 			return;
@@ -61,7 +61,7 @@ void TagLineEdit::backspace()
 
 	cursorBackward(false);
 	int dx = fontMetrics().width(text().at(cursorPosition()));
-	foreach (TagButton *button, _tags) {
+	for (TagButton *button : _tags) {
 		cursorCenter = cursorRect().center();
 		// One tag button need to be removed
 		if (button->frameGeometry().contains(cursorCenter)) {
@@ -83,7 +83,7 @@ void TagLineEdit::backspace()
 		}
 
 		dx = fontMetrics().width(" ") * tag->spaceCount();
-		foreach (TagButton *button, _tags) {
+		for (TagButton *button : _tags) {
 			if (button != tag && button->x() > cursorCenter.x()) {
 				button->move(button->x() - dx, 0);
 				button->setPosition(cursorPosition());
@@ -120,7 +120,7 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 			qDebug() << "cursorWordForward / backward";
 		}
 		LineEdit::keyPressEvent(event);
-		foreach (TagButton *t, _tags) {
+		for (TagButton *t : _tags) {
 			if (t->frameGeometry().contains(cursorRect().center())) {
 				if (event->key() == Qt::Key_Left) {
 					cursorBackward(false, t->spaceCount() - 1);
@@ -136,7 +136,7 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 		if (event->key() == Qt::Key_Delete) {
 			w = -w;
 		}
-		foreach (TagButton *t, _tags) {
+		for (TagButton *t : _tags) {
 			if (t->frameGeometry().x() > cursorRect().center().x()) {
 				t->move(t->x() + w, 0);
 			}
@@ -151,7 +151,7 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 void TagLineEdit::mousePressEvent(QMouseEvent *event)
 {
 	LineEdit::mousePressEvent(event);
-	foreach (TagButton *t, _tags) {
+	for (TagButton *t : _tags) {
 		QRect r = t->frameGeometry();
 		if (r.contains(event->pos())) {
 			if (r.x() + r.width() / 2 >= event->pos().x()) {
@@ -192,7 +192,7 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 
 		// Animate cursor is focus is owned by this widget
 		bool overlap = false;
-		foreach (TagButton *t, _tags) {
+		for (TagButton *t : _tags) {
 			if (t->frameGeometry().contains(cursorRect().center())) {
 				overlap = true;
 				break;
@@ -210,7 +210,7 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 QStringList TagLineEdit::toStringList() const
 {
 	QStringList tags;
-	foreach (TagButton *b, _tags) {
+	for (TagButton *b : _tags) {
 		tags << b->text();
 	}
 	return tags;
@@ -220,7 +220,7 @@ void TagLineEdit::closeTagButton(TagButton *t)
 {
 	qDebug() << "about to remove spaces" << t->position() << t->spaceCount();
 	this->setText(text().remove(t->position(), t->spaceCount()));
-	foreach (TagButton *otherTag, _tags) {
+	for (TagButton *otherTag : _tags) {
 		if (otherTag != t && otherTag->position() > t->position()) {
 			int dx = fontMetrics().width(" ") * t->spaceCount();
 			otherTag->move(otherTag->x() - dx, 0);
@@ -234,7 +234,7 @@ void TagLineEdit::clearTextAndTags(const QString &txt)
 {
 	//qDebug() << Q_FUNC_INFO << txt;
 	if (txt.isEmpty()) {
-		foreach (TagButton *tag, _tags) {
+		for (TagButton *tag : _tags) {
 			//qDebug() << "deleting tag" << tag->text();
 			tag->deleteLater();
 		}
@@ -265,7 +265,7 @@ void TagLineEdit::insertSpaces()
 	t->setSpaceCount(numberOfSpace);
 	t->disconnect();
 
-	foreach (TagButton *tag, _tags) {
+	for (TagButton *tag : _tags) {
 		//qDebug() << "trying to move tag";
 		if (t != tag && tag->frameGeometry().x() > cx) {
 			//qDebug() << "moving tag" << tag->text();

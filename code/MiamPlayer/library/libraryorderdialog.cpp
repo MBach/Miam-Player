@@ -83,10 +83,10 @@ void LibraryOrderDialog::setVisible(bool b)
 		yearTreeView->setDisabled(disabled);
 
 		SettingsPrivate *settings = SettingsPrivate::instance();
-		foreach (QTreeView *treeView, findChildren<QTreeView*>()) {
+		for (QTreeView *treeView : findChildren<QTreeView*>()) {
 			treeView->expandAll();
 			connect(treeView, &QTreeView::clicked, [=]() {
-				foreach (QTreeView *treeView_2, findChildren<QTreeView*>()) {
+				for (QTreeView *treeView_2 : findChildren<QTreeView*>()) {
 					if (treeView == treeView_2) {
 						treeView_2->clearSelection();
 						int i = treeView_2->model()->headerData(0, Qt::Horizontal, Qt::UserRole).toInt();

@@ -115,7 +115,7 @@ const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
 	QStringList filters;
 	if (et & Standard) {
 		if (withPrefix) {
-			foreach (QString filter, standardSuffixes) {
+			for (QString filter : standardSuffixes) {
 				filters.append("*." + filter);
 			}
 		} else {
@@ -124,7 +124,7 @@ const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
 	}
 	if (et & GameMusicEmu) {
 		if (withPrefix) {
-			foreach (QString filter, gameMusicEmuSuffixes) {
+			for (QString filter : gameMusicEmuSuffixes) {
 				filters.append("*." + filter);
 			}
 		} else {
@@ -300,8 +300,10 @@ Cover* FileHelper::extractCover()
 				}
 			}
 		}
+		break;
 	}
 	default:
+		qDebug() << Q_FUNC_INFO << "Not implemented for this file type";
 		break;
 	}
 	return cover;

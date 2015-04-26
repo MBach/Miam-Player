@@ -68,14 +68,14 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
 	if (onlyFiles) {
 		QStringList tracks;
-		foreach (QString file, dragDropDialog->externalLocations()) {
+		for (QString file : dragDropDialog->externalLocations()) {
 			tracks << "file://" + file;
 		}
 		tracks.sort(Qt::CaseInsensitive);
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	} else {
 		QList<QDir> dirs;
-		foreach (QString location, dragDropDialog->externalLocations()) {
+		for (QString location : dragDropDialog->externalLocations()) {
 			dirs << location;
 		}
 		switch (SettingsPrivate::instance()->dragDropAction()) {
@@ -199,7 +199,7 @@ void MainWindow::setupActions()
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
-	foreach(QAction *actionPlayBack, findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
+	for (QAction *actionPlayBack : findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
 		actionPlaybackGroup->addAction(actionPlayBack);
 		connect(actionPlayBack, &QAction::triggered, this, [=]() {
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
@@ -270,7 +270,7 @@ void MainWindow::setupActions()
 		applyButtonClicked(newLocations);
 	});
 
-	foreach (TreeView *tab, this->findChildren<TreeView*>()) {
+	for (TreeView *tab : this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
 		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QStringList &tracks) {
 			this->showTagEditor();
@@ -432,7 +432,7 @@ void MainWindow::setupActions()
 void MainWindow::updateFonts(const QFont &font)
 {
 	menuBar()->setFont(font);
-	foreach (QAction *action, findChildren<QAction*>()) {
+	for (QAction *action : findChildren<QAction*>()) {
 		action->setFont(font);
 	}
 }
@@ -526,7 +526,7 @@ void MainWindow::loadTheme()
 	// Buttons
 	auto settings = Settings::instance();
 	auto settingsPrivate = SettingsPrivate::instance();
-	foreach(MediaButton *b, mediaButtons) {
+	for (MediaButton *b : mediaButtons) {
 		if (settingsPrivate->isThemeCustomized()) {
 			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
 		} else {
@@ -652,7 +652,7 @@ void MainWindow::openFiles()
 		QFileInfo fileInfo(files.first());
 		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
 		QStringList tracks;
-		foreach (QString file, files) {
+		for (QString file : files) {
 			tracks << "file://" + file;
 		}
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);

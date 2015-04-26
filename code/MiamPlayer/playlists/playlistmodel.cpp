@@ -47,7 +47,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 {
 	qDebug() << Q_FUNC_INFO;
 	if (_mediaPlaylist->insertMedia(rowIndex, tracks)) {
-		foreach (QMediaContent track, tracks) {
+		for (QMediaContent track : tracks) {
 			FileHelper f(track);
 			if (f.isValid()) {
 				this->insertMedia(rowIndex++, f);
@@ -198,7 +198,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	_mediaPlaylist->blockSignals(true);
 
 	int currentPlayingTrack = _mediaPlaylist->currentIndex();
-	foreach (QModelIndex selectedIndex, selectedIndexes) {
+	for (QModelIndex selectedIndex : selectedIndexes) {
 		int rowNumber = selectedIndex.row();
 		QList<QStandardItem*> row = this->takeRow(rowNumber);
 		rowsToHiglight << row.at(0);
@@ -220,7 +220,7 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
 
 	int offset = 0;
-	foreach (QModelIndex selectedIndex, selectedIndexes) {
+	for (QModelIndex selectedIndex : selectedIndexes) {
 		int rowNumber = selectedIndex.row();
 		if (rowNumber > currentPlayingTrack && currentPlayingTrack > insertPoint) {
 			offset++;

@@ -19,7 +19,7 @@ QStringList TreeView::selectedTracks()
 {
 	QStringList list;
 	_cacheSelectedIndexes.clear();
-	foreach (QModelIndex index, this->selectionModel()->selectedIndexes()) {
+	for (QModelIndex index : this->selectionModel()->selectedIndexes()) {
 		_cacheSelectedIndexes << index;
 		this->findAll(index, list);
 	}
@@ -46,7 +46,7 @@ QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QStri
 
 	if (ret == QMessageBox::Ok) {
 		// Gather all items (pure virtual call, this function must be reimplemented in subclasses: custom tree, file system, etc.)
-		foreach (QModelIndex index, selectedIndexes()) {
+		for (QModelIndex index : selectedIndexes()) {
 			this->findAll(index, tracks);
 		}
 	}

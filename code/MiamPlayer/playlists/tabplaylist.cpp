@@ -176,7 +176,7 @@ void TabPlaylist::changeEvent(QEvent *event)
 	if (event->type() == QEvent::LanguageChange) {
 		// No translation for the (+) tab button
 		for (int i = 0; i < playlists().count(); i ++) {
-			foreach (QLabel *label, widget(i)->findChildren<QLabel*>()) {
+			for (QLabel *label : widget(i)->findChildren<QLabel*>()) {
 				if (label && !label->text().isEmpty()) {
 					label->setText(QApplication::translate("TabPlaylist", label->text().toStdString().data()));
 				}
@@ -259,7 +259,7 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 	bool isEmpty = this->currentPlayList()->mediaPlaylist()->isEmpty();
 
 	QStringList tracks;
-	foreach (QDir folder, folders) {
+	for (QDir folder : folders) {
 		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(FileHelper::Standard, true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();

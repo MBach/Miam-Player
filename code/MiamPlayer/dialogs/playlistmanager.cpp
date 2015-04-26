@@ -314,7 +314,7 @@ void PlaylistManager::deleteSavedPlaylists()
 	}
 
 	QList<PlaylistDAO> playlists;
-	foreach (QModelIndex index, indexes) {
+	for (QModelIndex index : indexes) {
 		PlaylistDAO tmpPlaylist;
 		tmpPlaylist.setId(index.data(PlaylistID).toString());
 		playlists << tmpPlaylist;
@@ -381,7 +381,7 @@ void PlaylistManager::exportSelectedPlaylist()
 void PlaylistManager::loadSelectedPlaylists()
 {
 	qDebug() << Q_FUNC_INFO;
-	foreach (QModelIndex index, savedPlaylists->selectionModel()->selectedIndexes()) {
+	for (QModelIndex index : savedPlaylists->selectionModel()->selectedIndexes()) {
 		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
 		if (item) {
 			this->loadPlaylist(item->data(PlaylistID).toInt());
@@ -481,8 +481,7 @@ void PlaylistManager::updatePlaylists(bool unsaved, bool saved)
 		_savedPlaylistModel->clear();
 		_savedPlaylistModel->blockSignals(true);
 
-		QList<PlaylistDAO> playlists = _db->selectPlaylists();
-		foreach (PlaylistDAO playlist, playlists) {
+		for (PlaylistDAO playlist : _db->selectPlaylists()) {
 			QStandardItem *item = new QStandardItem(playlist.title());
 			item->setData(playlist.id(), PlaylistID);
 			if (playlist.icon().isEmpty()) {

@@ -68,7 +68,7 @@ void DragDropDialog::addExternalFoldersToLibrary()
 		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToLibrary);
 	}
 	QList<QDir> dirs;
-	foreach (QString dir, _externalLocations) {
+	for (QString dir : _externalLocations) {
 		dirs << dir;
 	}
 	emit aboutToAddExtFoldersToLibrary(dirs);
@@ -81,7 +81,7 @@ void DragDropDialog::addExternalFoldersToPlaylist()
 		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToPlaylist);
 	}
 	QList<QDir> dirs;
-	foreach (QString dir, _externalLocations) {
+	for (QString dir : _externalLocations) {
 		dirs << dir;
 	}
 	emit aboutToAddExtFoldersToPlaylist(dirs);

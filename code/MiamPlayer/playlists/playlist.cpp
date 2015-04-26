@@ -86,7 +86,7 @@ Playlist::Playlist(QWidget *parent) :
 	connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 	connect(actionEditTagsInEditor, &QAction::triggered, this, [=]() {
 		QList<QUrl> selectedTracks;
-		foreach (QModelIndex index, selectionModel()->selectedRows()) {
+		for (QModelIndex index : selectionModel()->selectedRows()) {
 			QMediaContent mc = _playlistModel->mediaPlaylist()->media(index.row());
 			selectedTracks.append(mc.canonicalUrl());
 		}
@@ -111,7 +111,7 @@ Playlist::Playlist(QWidget *parent) :
 	});
 
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
-	foreach (QScrollBar *scrollBar, scrollBars) {
+	for (QScrollBar *scrollBar : scrollBars) {
 		connect(scrollBar, &QScrollBar::sliderPressed, this, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderMoved, this, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderReleased, this, [=]() { viewport()->update(); });
@@ -178,7 +178,7 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 	QModelIndex index = this->indexAt(event->pos());
 	QStandardItem *item = _playlistModel->itemFromIndex(index);
 	if (item != NULL) {
-		foreach (QAction *action, _trackProperties->actions()) {
+		for (QAction *action : _trackProperties->actions()) {
 			action->setText(tr(action->text().toStdString().data()));
 		}
 		_trackProperties->exec(event->globalPos());
@@ -274,7 +274,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		if (target && target == this) {
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			// Highlight rows that were just moved
-			foreach (QStandardItem *item, rowsToHighlight) {
+			for (QStandardItem *item : rowsToHighlight) {
 				for (int c = 0; c < _playlistModel->columnCount(); c++) {
 					QModelIndex index = _playlistModel->index(item->row(), c);
 					selectionModel()->select(index, QItemSelectionModel::Select);
@@ -286,7 +286,7 @@ void Playlist::dropEvent(QDropEvent *event)
 				row = _playlistModel->rowCount();
 			}
 			QList<QMediaContent> medias;
-			foreach (QModelIndex index, target->selectionModel()->selectedRows()) {
+			for (QModelIndex index : target->selectionModel()->selectedRows()) {
 				medias.append(target->mediaPlaylist()->media(index.row()));
 			}
 			this->insertMedias(row, medias);
@@ -356,7 +356,7 @@ void Playlist::mousePressEvent(QMouseEvent *event)
 		if (index.data(PlaylistModel::RemoteMedia).toBool() == true) {
 			event->accept();
 		} else {
-			foreach (QModelIndex i, selectionModel()->selectedRows(COL_RATINGS)) {
+			for (QModelIndex i : selectionModel()->selectedRows(COL_RATINGS)) {
 				this->openPersistentEditor(i);
 			}
 		}
@@ -513,7 +513,7 @@ void Playlist::moveTracksUp()
 {
 	QModelIndexList indexes = this->selectionModel()->selectedRows();
 	int topIndex = INT_MAX;
-	foreach (QModelIndex idx, indexes) {
+	for (QModelIndex idx : indexes) {
 		if (idx.row() < topIndex) {
 			topIndex = idx.row();
 		}
@@ -527,7 +527,7 @@ void Playlist::removeSelectedTracks()
 	int indexToHighlight = INT_MAX;
 	int currentPlayingIndex = _playlistModel->mediaPlaylist()->currentIndex();
 	int offset = 0;
-	foreach (QModelIndex idx, indexes) {
+	for (QModelIndex idx : indexes) {
 		if (idx.row() < indexToHighlight) {
 			indexToHighlight = idx.row();
 		}

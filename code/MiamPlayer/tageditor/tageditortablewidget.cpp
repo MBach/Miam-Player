@@ -23,7 +23,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 		this->setDirtyRegion(QRegion(this->viewport()->rect()));
 	});
 	QList<QScrollBar*> scrollBars = QList<QScrollBar*>() << horizontalScrollBar() << verticalScrollBar();
-	foreach (QScrollBar *scrollBar, scrollBars) {
+	for (QScrollBar *scrollBar : scrollBars) {
 		connect(scrollBar, &QScrollBar::sliderPressed, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderMoved, [=]() { viewport()->update(); });
 		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
@@ -99,7 +99,7 @@ void TagEditorTableWidget::updateCellData(int row, int column, const QString &te
 
 void TagEditorTableWidget::updateColumnData(int column, const QString &text)
 {
-	foreach (QModelIndex index, selectionModel()->selectedRows(column)) {
+	for (QModelIndex index : selectionModel()->selectedRows(column)) {
 		QTableWidgetItem *i = this->itemFromIndex(index);
 		i->setText(text);
 		i->setData(MODIFIED, true);
@@ -110,7 +110,7 @@ void TagEditorTableWidget::updateColumnData(int column, const QString &text)
 bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int, Cover*> &covers)
 {
 	QSet<QPair<QString, QString>> artistAlbumSet;
-	foreach (QString track, tracks) {
+	for (QString track : tracks) {
 		FileHelper fh(track);
 		if (!fh.isValid()) {
 			continue;

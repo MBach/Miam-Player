@@ -42,7 +42,7 @@ bool AddressBarMenu::eventFilter(QObject *, QEvent *event)
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 		if (!rect().contains(mouseEvent->pos())) {
 			this->close();
-			foreach (AddressBarButton *b, _addressBar->findChildren<AddressBarButton*>()) {
+			for (AddressBarButton *b : _addressBar->findChildren<AddressBarButton*>()) {
 				b->setHighlighted(false);
 			}
 			_addressBar->setDown(false);
