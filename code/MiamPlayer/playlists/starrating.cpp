@@ -111,7 +111,6 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 		break;
 	case NoStarsYet:
 		pen.setColor(penColor.lighter(135));
-		painter->fillRect(opt.rect, opt.palette.highlight().color().lighter());
 		break;
 	case ReadOnly:
 		linearGradientBrush.setColorAt(0, Qt::white);
@@ -132,6 +131,9 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	if (opt.rect.height() < opt.rect.width() / 5) {
 		painter->scale(opt.rect.height(), opt.rect.height());
 	} else {
+		// Align stars vertically if there's not enough space to display them at full scale
+		yOffset = (opt.rect.height() - (opt.rect.width() / maxStarCount)) / 2;
+		painter->translate(0, yOffset);
 		painter->scale(opt.rect.width() / maxStarCount, opt.rect.width() / maxStarCount);
 	}
 

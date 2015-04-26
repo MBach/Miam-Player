@@ -26,7 +26,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	// First panel: library
 	connect(radioButtonSearchAndExclude, &QRadioButton::toggled, settings, &SettingsPrivate::setSearchAndExcludeLibrary);
-	connect(radioButtonActivateDelegates, &QRadioButton::toggled, settings, &SettingsPrivate::setDelegates);
 	connect(pushButtonAddLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::openLibraryDialog);
 	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteSelectedLocation);
 
@@ -37,13 +36,12 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	}
 
 	settings->isSearchAndExcludeLibrary() ? radioButtonSearchAndExclude->setChecked(true) : radioButtonSearchAndKeep->setChecked(true);
-	settings->isStarDelegates() ? radioButtonActivateDelegates->setChecked(true) : radioButtonDesactivateDelegates->setChecked(true);
 
 	QStringList locations = settings->musicLocations();
 	if (locations.isEmpty()) {
 		listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
 	} else {
-		foreach (QString path, locations) {
+		for (QString path : locations) {
 			QIcon icon = QFileIconProvider().icon(QFileInfo(path));
 			listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
 			if (musicLocations.isEmpty() || musicLocations.first() != path) {
@@ -78,8 +76,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	widgetLanguages->setLayout(flowLayout);
 
 	QDir dir(":/languages");
-	QStringList fileNames = dir.entryList();
-	foreach (QString i, fileNames) {
+	for (QString i : dir.entryList()) {
 
 		// If the language is available, then store it
 		QFileInfo lang(":/translations/" + i);
@@ -97,7 +94,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		flowLayout->addWidget(languageButton);
 		connect(languageButton, &QToolButton::clicked, this, [=]() {
 			this->changeLanguage(languageButton->text());
-			foreach (QToolButton *b, this->findChildren<QToolButton*>()) {
+			for (QToolButton *b : this->findChildren<QToolButton*>()) {
 				b->setDown(false);
 			}
 			languageButton->setDown(true);
@@ -155,7 +152,7 @@ void CustomizeOptionsDialog::initShortcuts()
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
-	foreach(QKeySequenceEdit *shortcut, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+	for (QKeySequenceEdit *shortcut : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
 		QKeySequence sequence = shortcut->keySequence();
 		defaultShortcuts->insert(shortcut, sequence);
 
@@ -177,7 +174,7 @@ void CustomizeOptionsDialog::initShortcuts()
 	}
 
 	// Clear current shortcut or restore default one
-	foreach(QKeySequenceEdit *shortcut, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+	for (QKeySequenceEdit *shortcut : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
 		QPushButton *clear = shortcutsToolBox->findChild<QPushButton*>(shortcut->objectName().append("Clear"));
 		QPushButton *reset = shortcutsToolBox->findChild<QPushButton*>(shortcut->objectName().append("Reset"));
 		connect(clear, &QPushButton::clicked, this, [=]() {
@@ -227,7 +224,7 @@ bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
 		emit edit->editingFinished();
 
 		// Don't forget to clear ambiguous status for other QKeySequenceEdit widget
-		foreach (QKeySequenceEdit *other, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+		for (QKeySequenceEdit *other : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
 			if (other->property("ambiguous").toBool()) {
 				other->setProperty("ambiguous", false);
 				other->setStyleSheet("");
@@ -266,7 +263,7 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 /** Adds a external music locations in the library (Drag & Drop). */
 void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 {
-	foreach (QDir folder, dirs) {
+	for (QDir folder : dirs) {
 		this->addMusicLocation(folder.absolutePath());
 	}
 	this->updateMusicLocations();
@@ -293,7 +290,7 @@ void CustomizeOptionsDialog::changeLanguage(const QString &language)
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()
 {
-	foreach(MediaButton *b, parent()->findChildren<MediaButton*>()) {
+	for (MediaButton *b : parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
 		if (button) {
 			button->setIcon(b->icon());
@@ -319,7 +316,7 @@ void CustomizeOptionsDialog::checkShortcutsIntegrity()
 
 	// Find ambiguous shortcuts
 	QMultiMap<int, QKeySequenceEdit*> map;
-	foreach (QKeySequenceEdit *edit, shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+	for (QKeySequenceEdit *edit : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
 		// Each sequence can has up to 4 keys
 		for (int i = 0; i < edit->keySequence().count(); i++) {
 			map.insert(edit->keySequence()[i], edit);

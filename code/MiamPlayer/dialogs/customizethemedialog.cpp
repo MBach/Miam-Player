@@ -42,7 +42,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 void CustomizeThemeDialog::setupActions()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	foreach(MediaButton *b, mainWindow->mediaButtons) {
+	for (MediaButton *b : mainWindow->mediaButtons) {
 		connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), b, &MediaButton::setSize);
 	}
 
@@ -52,13 +52,13 @@ void CustomizeThemeDialog::setupActions()
 		settings->setThemeCustomized(b);
 		if (!b) {
 			// Restore all buttons when unchecked
-			foreach (QCheckBox *button, customizeButtonsScrollArea->findChildren<QCheckBox*>()) {
+			for (QCheckBox *button : customizeButtonsScrollArea->findChildren<QCheckBox*>()) {
 				if (!button->isChecked()) {
 					button->toggle();
 				}
 			}
 			// Restore default image
-			foreach(MediaButton *b, mainWindow->mediaButtons) {
+			for (MediaButton *b : mainWindow->mediaButtons) {
 				b->setIcon(QIcon());
 			}
 		}
@@ -66,7 +66,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setButtonsSize);
 
 	// Hide buttons or not
-	foreach(MediaButton *b, mainWindow->mediaButtons) {
+	for (MediaButton *b : mainWindow->mediaButtons) {
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
 		if (checkBox) {
 			connect(checkBox, &QCheckBox::toggled, [=] (bool visible) {
@@ -79,13 +79,13 @@ void CustomizeThemeDialog::setupActions()
 	// Make buttons flat
 	connect(flatButtonsCheckBox, &QCheckBox::toggled, this, [=] (bool isFlat) {
 		settings->setButtonsFlat(isFlat);
-		foreach(MediaButton *b, mainWindow->mediaButtons) {
+		for(MediaButton *b : mainWindow->mediaButtons) {
 			b->setFlat(isFlat);
 		}
 	});
 
 	// Connect a file dialog to every button if one wants to customize everything
-	foreach (QPushButton *pushButton, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
+	for (QPushButton *pushButton : customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
 	}
 
@@ -103,7 +103,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(SettingsPrivate::FF_Playlist, font);
 		mainWindow->tabPlaylists->updateRowHeight();
-		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
+		for (Playlist *playlist : mainWindow->tabPlaylists->playlists()) {
 			for (int i = 0; i < playlist->model()->columnCount(); i++) {
 				playlist->model()->setHeaderData(i, Qt::Horizontal, font, Qt::FontRole);
 			}
@@ -125,7 +125,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
 		settings->setFontPointSize(SettingsPrivate::FF_Playlist, i);
 		mainWindow->tabPlaylists->updateRowHeight();
-		foreach (Playlist *playlist, mainWindow->tabPlaylists->playlists()) {
+		for (Playlist *playlist : mainWindow->tabPlaylists->playlists()) {
 			for (int i = 0; i < playlist->model()->columnCount(); i++) {
 				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(SettingsPrivate::FF_Playlist), Qt::FontRole);
 			}
@@ -152,7 +152,7 @@ void CustomizeThemeDialog::setupActions()
 	// Colors
 	connect(enableCustomColorsRadioButton, &QCheckBox::toggled, this, &CustomizeThemeDialog::toggleCustomColors);
 	connect(enableAlternateBGRadioButton, &QRadioButton::toggled, this, &CustomizeThemeDialog::toggleAlternativeBackgroundColor);
-	foreach (QToolButton *b, groupBoxCustomColors->findChildren<QToolButton*>()) {
+	for (QToolButton *b : groupBoxCustomColors->findChildren<QToolButton*>()) {
 		connect(b, &QToolButton::clicked, this, &CustomizeThemeDialog::showColorDialog);
 	}
 
@@ -222,6 +222,20 @@ void CustomizeThemeDialog::setupActions()
 		this->fade();
 		mainWindow->tabPlaylists->tabBar()->update();
 	});
+
+	// Star delegates
+	connect(radioButtonEnableStarDelegate, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setDelegates(b);
+		labelLibraryDelegates->setEnabled(b);
+		radioButtonShowNeverScoredTracks->setEnabled(b);
+		radioButtonHideNeverScoredTracks->setEnabled(b);
+		std::list<QWidget*> stars = { starOutline1, starOutline2, starOutline3, starOutline4, starOutline5 };
+		for (QWidget *star : stars) {
+			star->setEnabled(b && settings->isShowNeverScored());
+		}
+	});
+
+	connect(radioButtonShowNeverScoredTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setShowNeverScored);
 }
 
 void CustomizeThemeDialog::fade()
@@ -342,7 +356,7 @@ void CustomizeThemeDialog::loadTheme()
 	themeComboBox->setCurrentIndex(i);
 
 	// Buttons
-	foreach(MediaButton *b, mainWindow->mediaButtons) {
+	for (MediaButton *b : mainWindow->mediaButtons) {
 
 		// Check or uncheck checkboxes in this customize interface
 		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
@@ -403,6 +417,22 @@ void CustomizeThemeDialog::loadTheme()
 	}
 	radioButtonEnableReorderArtistsArticle->setChecked(settings->isReorderArtistsArticle());
 	radioButtonEnableArticles->blockSignals(false);
+
+	// Star delegate
+	if (settings->isStarDelegates()) {
+		radioButtonEnableStarDelegate->setChecked(true);
+	} else {
+		radioButtonDisableStarDelegate->setChecked(true);
+	}
+	if (settings->isShowNeverScored()) {
+		radioButtonShowNeverScoredTracks->setChecked(true);
+	} else {
+		radioButtonHideNeverScoredTracks->setChecked(true);
+	}
+	std::list<QWidget*> stars = { starOutline1, starOutline2, starOutline3, starOutline4, starOutline5 };
+	for (QWidget *star : stars) {
+		star->setEnabled(settings->isStarDelegates() && settings->isShowNeverScored());
+	}
 }
 
 /** Redefined to initialize favorites from settings. */
@@ -414,11 +444,6 @@ void CustomizeThemeDialog::open()
 	labelLibraryDelegates->setEnabled(starDelegateState);
 	radioButtonShowNeverScoredTracks->setEnabled(starDelegateState);
 	radioButtonHideNeverScoredTracks->setEnabled(starDelegateState);
-	if (starDelegateState) {
-		labelLibraryDelegatesState->setText(tr("Favorites are currently enabled"));
-	} else {
-		labelLibraryDelegatesState->setText(tr("Favorites are currently disabled"));
-	}
 
 	if (settings->value("customizeThemeDialogGeometry").isNull()) {
 		int w = qApp->desktop()->screenGeometry().width() / 2;
@@ -431,7 +456,7 @@ void CustomizeThemeDialog::open()
 	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
 	/// Is it impossible to compute real size even if dialog is hidden?
 	// Add grammatical articles
-	foreach (QString article, settings->libraryFilteredByArticles()) {
+	for (QString article : settings->libraryFilteredByArticles()) {
 		articlesLineEdit->addTag(article);
 	}
 }
@@ -455,7 +480,7 @@ void CustomizeThemeDialog::openChooseIconDialog()
 	// Reset custom icon if path is empty (delete key in settings too)
 	settings->setCustomIcon(button->objectName() + "Button", path);
 
-	foreach (MediaButton *b, mainWindow->findChildren<MediaButton*>(button->objectName() + "Button")) {
+	for (MediaButton *b : mainWindow->findChildren<MediaButton*>(button->objectName() + "Button")) {
 		if (b) {
 			b->setIcon(QIcon(path));
 		}
@@ -477,7 +502,7 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	// Check for each button if there is a custom icon
-	foreach(QPushButton *button, customizeButtonsScrollArea->findChildren<QPushButton*>()) {
+	for (QPushButton *button : customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		if (button) {
 			// Keep the custom icon provided by one
 			if (settings->hasCustomIcon(button->objectName())) {
@@ -488,7 +513,7 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 		}
 	}
 	Settings::instance()->setThemeName(newTheme);
-	foreach(MediaButton *m, mainWindow->mediaButtons) {
+	for (MediaButton *m : mainWindow->mediaButtons) {
 		m->setIconFromTheme(newTheme);
 	}
 }

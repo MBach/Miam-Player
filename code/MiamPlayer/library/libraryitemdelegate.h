@@ -61,7 +61,7 @@ private:
 
 	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const;
 
-	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const;
+	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const;
 
 	void paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &option, const TrackItem *track) const;
 	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;

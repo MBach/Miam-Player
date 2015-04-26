@@ -3,8 +3,7 @@
 
 #include <functional>
 
-#include <QtDebug>
-
+#include <cover.h>
 #include <filehelper.h>
 #include "../circleprogressbar.h"
 #include "../pluginmanager.h"
@@ -14,6 +13,8 @@
 #include "libraryorderdialog.h"
 #include "libraryitemdelegate.h"
 #include "libraryscrollbar.h"
+
+#include <QtDebug>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new QStandardItemModel(parent))
@@ -134,7 +135,19 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
 		/// TODO: inner cover
-		QImage *image = new QImage(item->data(Miam::DF_CoverPath).toString());
+		QString coverPath = item->data(Miam::DF_CoverPath).toString();
+		QImage *image;
+		if (coverPath.startsWith("file://")) {
+			FileHelper fh(coverPath);
+			Cover *cover = fh.extractCover();
+			if (cover) {
+				image = new QImage();
+				image->loadFromData(cover->byteArray(), cover->format());
+				delete cover;
+			}
+		} else {
+			image = new QImage(coverPath);
+		}
 		_expandedCovers.insert(item, image);
 	}
 }
@@ -245,7 +258,7 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
-		foreach (QAction *action, _properties->actions()) {
+		for (QAction *action : _properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}
@@ -291,7 +304,7 @@ int LibraryTreeView::count(const QModelIndex &index) const
 int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 {
 	int c = 0;
-	foreach (QModelIndex index, indexes) {
+	for (QModelIndex index : indexes) {
 		c += this->count(index);
 	}
 	return c;
@@ -371,6 +384,7 @@ void LibraryTreeView::changeHierarchyOrder()
 void LibraryTreeView::filterLibrary(const QString &filter)
 {
 	if (filter.isEmpty()) {
+		_proxyModel->setFilterRole(Qt::DisplayRole);
 		_proxyModel->setFilterRegExp(QRegExp());
 		_proxyModel->sort(0, _proxyModel->sortOrder());
 	} else {
@@ -378,7 +392,14 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 		if (_proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
 			needToSortAgain = true;
 		}
-		_proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
+		if (filter.contains(QRegExp("^(\\*){1,5}$"))) {
+			// Convert stars into [1-5], ..., [5-5] regular expression
+			_proxyModel->setFilterRole(Miam::DF_Rating);
+			_proxyModel->setFilterRegExp(QRegExp("[" + QString::number(filter.size()) + "-5]", Qt::CaseInsensitive, QRegExp::RegExp));
+		} else {
+			_proxyModel->setFilterRole(Qt::DisplayRole);
+			_proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
+		}
 		if (needToSortAgain) {
 			_proxyModel->sort(0, _proxyModel->sortOrder());
 		}

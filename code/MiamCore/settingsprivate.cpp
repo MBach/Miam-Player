@@ -322,10 +322,26 @@ bool SettingsPrivate::isSearchAndExcludeLibrary() const
 	}
 }
 
+/** Returns true if star outline must be displayed in the library. */
+bool SettingsPrivate::isShowNeverScored() const
+{
+	QVariant b = value("showNeverScored");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return false;
+	}
+}
+
 /** Returns true if stars are visible and active. */
 bool SettingsPrivate::isStarDelegates() const
 {
-	return value("delegates").toBool();
+	QVariant b = value("delegates");
+	if (b.isValid()) {
+		return b.toBool();
+	} else {
+		return true;
+	}
 }
 
 /** Returns true if a user has modified one of defaults theme. */
@@ -696,6 +712,11 @@ void SettingsPrivate::setReorderArtistsArticle(bool b)
 void SettingsPrivate::setSearchAndExcludeLibrary(bool b)
 {
 	setValue("searchAndExcludeLibrary", b);
+}
+
+void SettingsPrivate::setShowNeverScored(bool b)
+{
+	setValue("showNeverScored", b);
 }
 
 void SettingsPrivate::setPlaybackRestorePlaylistsAtStartup(bool b)

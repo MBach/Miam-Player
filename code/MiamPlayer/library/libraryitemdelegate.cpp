@@ -71,7 +71,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
 	case Miam::IT_Track:
-		if (SettingsPrivate::instance()->isBigCoverEnabled()) {
+		if (SettingsPrivate::instance()->isBigCoverEnabled() && _proxy->filterRegExp().isEmpty()) {
 			this->paintCoverOnTrack(painter, o, static_cast<TrackItem*>(item));
 		} else {
 			this->paintRect(painter, o);
@@ -246,18 +246,23 @@ void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &op
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
-void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, const QStandardItem *track) const
+void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const
 {
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
 	/// for example: zero padding
-	if (SettingsPrivate::instance()->isStarDelegates()) {
-		QString absFilePath = track->data(Miam::DF_URI).toString();
-		/// XXX: query the sqlmodel instead?
-		FileHelper fh(absFilePath);
-		if (fh.rating() > 0) {
-			//StarRating starRating(fh.rating());
-			//starRating.paint(painter, option, StarRating::ReadOnly);
+	auto settings = SettingsPrivate::instance();
+	if (settings->isStarDelegates()) {
+		int r = track->data(Miam::DF_Rating).toInt();
+		QStyleOptionViewItem copy(option);
+		copy.rect = QRect(0, option.rect.y(), option.rect.x(), option.rect.height());
+		/// XXX: create an option to display stars right to the text, and fade them if text is too large
+		//copy.rect = QRect(option.rect.x() + option.rect.width() - option.rect.height() * 5, option.rect.y(), option.rect.height() * 5, option.rect.height());
+		StarRating starRating(r);
+		if (r > 0) {
+			starRating.paintStars(painter, copy, StarRating::ReadOnly);
+		} else if (settings->isShowNeverScored()) {
+			starRating.paintStars(painter, copy, StarRating::NoStarsYet);
 		}
 	}
 	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
@@ -300,59 +305,62 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 		scaled = image->scaledToWidth(option.rect.width());
 		subRect = option.rect.translated(option.rect.width() - scaled.width(), -option.rect.y() + option.rect.height() * track->row());
 	} else {
-		subRect = option.rect.translated(-option.rect.x(), -option.rect.y() + option.rect.height() * track->row());
 		scaled = image->scaledToHeight(totalHeight);
+		int dx = option.rect.width() - scaled.width();
+		subRect = option.rect.translated(-dx, -option.rect.y() + option.rect.height() * track->row());
 	}
 
-	QImage subImage = scaled.copy(subRect);
-	//qDebug() << scaled.height() << subRect.y() << track->row();
 	// Fill with white when there are too much tracks to paint (height of all tracks is greater than the scaled image)
+	QImage subImage = scaled.copy(subRect);
 	if (scaled.height() < subRect.y() + subRect.height()) {
 		subImage.fill(option.palette.base().color());
 	}
 
-	//subImage.fill(option.palette.base().color());
 	painter->save();
 	painter->setOpacity(1 - settings->bigCoverOpacity());
 	painter->drawImage(option.rect, subImage);
-	painter->restore();
 
+	// Over paint black pixel in white
+	QRect t(option.rect.x(), option.rect.y(), option.rect.width() - scaled.width(), option.rect.height());
+	QImage white(t.size(), QImage::Format_ARGB32);
+	white.fill(option.palette.base().color());
+	painter->setOpacity(1.0);
+	painter->drawImage(t, white);
 
-	/*leftBorder = leftBorder.scaled(30, 1);
 	// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
 	// The second one is a computer generated gradient focused on alpha channel
+	QImage leftBorder = scaled.copy(0, subRect.y(), 3, option.rect.height());
 	if (!leftBorder.isNull()) {
+
+		// Because the expanded border can look strange to one, is blurred with some gaussian function
+		leftBorder = leftBorder.scaled(t.width(), option.rect.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		leftBorder = ImageUtils::blurred(leftBorder, leftBorder.rect(), 10, false);
+		painter->setOpacity(1 - settings->bigCoverOpacity());
+		painter->drawImage(t, leftBorder);
+
 		QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
 		linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
 		linearAlphaBrush.setColorAt(1, Qt::transparent);
 
-		painter->save();
-		// Because the expanded border can look strange to one, is blurred with some gaussian function
-		QImage img = ImageUtils::blurred(leftBorder.toImage(), leftBorder.rect(), 10, false);
-		painter->drawImage(0, opr.y() + r.height(), img);
+		painter->setOpacity(1.0);
 		painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 		painter->setPen(Qt::NoPen);
 		painter->setBrush(linearAlphaBrush);
-		painter->drawRect(0, r.y() + r.height(), leftBorder.width(), leftBorder.height());
-		painter->drawPixmap(1 + rect().width() - (w + 2 * verticalScrollBar()->width()), r.y() + r.height(), w, w, pixmap);
-
-		painter->setOpacity(settings->bigCoverOpacity());
-		painter->fillRect(0, r.y() + r.height(), rect().width() - 2 * verticalScrollBar()->width(), leftBorder.height(), QApplication::palette().base());
-		painter->restore();
-	}*/
-
+		painter->drawRect(t);
+	}
+	painter->restore();
 
 	// Display a light selection rectangle when one is moving the cursor
 	painter->save();
 	QColor color = option.palette.highlight().color();
-	color.setAlphaF(0.5);
+	color.setAlphaF(0.66);
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		if (SettingsPrivate::instance()->isCustomColors()) {
 			painter->setPen(option.palette.highlight().color().darker(100));
 			painter->setBrush(color.lighter());
 		} else {
 			painter->setPen(option.palette.highlight().color());
-			painter->setBrush(color.lighter(170));
+			painter->setBrush(color.lighter(160));
 		}
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	} else if (option.state.testFlag(QStyle::State_Selected)) {
@@ -362,7 +370,7 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 			painter->setBrush(color);
 		} else {
 			painter->setPen(option.palette.highlight().color());
-			painter->setBrush(color.lighter(160));
+			painter->setBrush(color.lighter(150));
 		}
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	}
@@ -379,7 +387,7 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 			painter->setBrush(option.palette.highlight().color().lighter());
 		} else {
 			painter->setPen(option.palette.highlight().color());
-			painter->setBrush(option.palette.highlight().color().lighter(170));
+			painter->setBrush(option.palette.highlight().color().lighter(160));
 		}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
@@ -391,7 +399,7 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 			painter->setBrush(option.palette.highlight().color());
 		} else {
 			painter->setPen(option.palette.highlight().color());
-			painter->setBrush(option.palette.highlight().color().lighter(160));
+			painter->setBrush(option.palette.highlight().color().lighter(150));
 		}
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();

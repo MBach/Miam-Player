@@ -123,6 +123,9 @@ public:
 
 	bool isSearchAndExcludeLibrary() const;
 
+	/** Returns true if star outline must be displayed in the library. */
+	bool isShowNeverScored() const;
+
 	/** Returns true if stars are visible and active. */
 	bool isStarDelegates() const;
 
@@ -238,6 +241,7 @@ public slots:
 	void setReorderArtistsArticle(bool b);
 
 	void setSearchAndExcludeLibrary(bool b);
+	void setShowNeverScored(bool b);
 
 	void setTabsOverlappingLength(int l);
 

@@ -8,6 +8,9 @@ TrackItem::TrackItem(const TrackDAO *dao) :
 	setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 	setData(dao->trackNumber(), Miam::DF_TrackNumber);
 	setData(dao->disc().toInt(), Miam::DF_DiscNumber);
+	if (dao->rating() != -1) {
+		setData(dao->rating(), Miam::DF_Rating);
+	}
 	setData(!dao->uri().startsWith("file://"), Miam::DF_IsRemote);
 }
 

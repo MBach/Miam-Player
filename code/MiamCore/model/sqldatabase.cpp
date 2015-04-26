@@ -300,7 +300,7 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 {
 	this->transaction();
-	foreach (PlaylistDAO playlist, playlists) {
+	for (PlaylistDAO playlist : playlists) {
 		/// XXX: CASCADE not working?
 		QSqlQuery children(*this);
 		children.prepare("DELETE FROM playlistTracks WHERE playlistId = :id");
@@ -536,7 +536,8 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			}
 
 			QSqlQuery updateTrack(*this);
-			updateTrack.prepare("UPDATE tracks SET album = ?, albumId = ?, artist = ?, artistId = ?, artistAlbum = ?, disc = ?, internalCover = ?, title = ?, trackNumber = ? WHERE uri = ?");
+			updateTrack.prepare("UPDATE tracks SET trackNumber = ?, title = ?, artistId = ?, albumId = ?, artistAlbum = ?, rating = ?, "\
+								"disc = ?, internalCover = ? WHERE uri = ?");
 
 			QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
 			QString artistNorm = this->normalizeField(artistAlbum);
@@ -544,16 +545,15 @@ void SqlDatabase::updateTracks(const QList<QPair<QString, QString>> &tracksToUpd
 			uint artistId = qHash(artistNorm);
 			uint albumId = artistId + qHash(albumNorm, 1);
 
-			updateTrack.addBindValue(fh.album());
-			updateTrack.addBindValue(albumId);
-			updateTrack.addBindValue(fh.artist());
+			updateTrack.addBindValue(fh.trackNumber());
+			updateTrack.addBindValue(fh.title());
 			updateTrack.addBindValue(artistId);
+			updateTrack.addBindValue(albumId);
 			updateTrack.addBindValue(fh.artistAlbum());
+			updateTrack.addBindValue(fh.rating());
 			updateTrack.addBindValue(fh.discNumber());
 			updateTrack.addBindValue(fh.hasCover());
-			updateTrack.addBindValue(fh.title());
-			updateTrack.addBindValue(fh.trackNumber().toInt());
-			updateTrack.addBindValue(QDir::toNativeSeparators(pair.first));
+			updateTrack.addBindValue("file://" + QDir::fromNativeSeparators(pair.first));
 			updateTrack.exec();
 
 			QSqlQuery updateAlbum(*this);
@@ -862,7 +862,7 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 
 	// Remove old locations from database cache
 	transaction();
-	foreach (QString oldLocation, oldLocations) {
+	for (QString oldLocation : oldLocations) {
 		if (newLocations.isEmpty() || !newLocations.contains(oldLocation)) {
 			QSqlQuery syncDb(*this);
 			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
@@ -876,7 +876,7 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 
 	// Restart the worker thread on new locations
 	QStringList locationsToAdd;
-	foreach (QString newLocation, newLocations) {
+	for (QString newLocation : newLocations) {
 		if (!oldLocations.contains(newLocation)) {
 			locationsToAdd.append(newLocation);
 		}
@@ -959,7 +959,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 
 	QSqlQuery insertTrack(*this);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, " \
-		"disc, internalCover) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		"disc, internalCover, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 	QString tn = fh.trackNumber();
 	QString title = fh.title();
@@ -982,6 +982,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	insertTrack.addBindValue(length);
 	insertTrack.addBindValue(dn);
 	insertTrack.addBindValue(fh.hasCover());
+	insertTrack.addBindValue(fh.rating());
 
 	bool artistInserted = false;
 	bool albumInserted = false;
