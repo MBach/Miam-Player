@@ -293,87 +293,85 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const TrackItem *track) const
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	// Copy QStyleOptionViewItem to be able to expand it to the left, and take the maximum available space
-	QStyleOptionViewItem option(opt);
-	option.rect.setX(0);
-
 	const QImage *image = _libraryTreeView->expandedCover(track->parent());
-	if (!image) {
-		return;
-	}
+	if (image && !image->isNull()) {
+		// Copy QStyleOptionViewItem to be able to expand it to the left, and take the maximum available space
+		QStyleOptionViewItem option(opt);
+		option.rect.setX(0);
 
-	int totalHeight = track->model()->rowCount(track->parent()->index()) * option.rect.height();
-	QImage scaled;
-	QRect subRect;
-	if (totalHeight > option.rect.width()) {
-		scaled = image->scaledToWidth(option.rect.width());
-		subRect = option.rect.translated(option.rect.width() - scaled.width(), -option.rect.y() + option.rect.height() * track->row());
-	} else {
-		scaled = image->scaledToHeight(totalHeight);
-		int dx = option.rect.width() - scaled.width();
-		subRect = option.rect.translated(-dx, -option.rect.y() + option.rect.height() * track->row());
-	}
+		int totalHeight = track->model()->rowCount(track->parent()->index()) * option.rect.height();
+		QImage scaled;
+		QRect subRect;
+		if (totalHeight > option.rect.width()) {
+			scaled = image->scaledToWidth(option.rect.width());
+			subRect = option.rect.translated(option.rect.width() - scaled.width(), -option.rect.y() + option.rect.height() * track->row());
+		} else {
+			scaled = image->scaledToHeight(totalHeight);
+			int dx = option.rect.width() - scaled.width();
+			subRect = option.rect.translated(-dx, -option.rect.y() + option.rect.height() * track->row());
+		}
 
-	// Fill with white when there are too much tracks to paint (height of all tracks is greater than the scaled image)
-	QImage subImage = scaled.copy(subRect);
-	if (scaled.height() < subRect.y() + subRect.height()) {
-		subImage.fill(option.palette.base().color());
-	}
+		// Fill with white when there are too much tracks to paint (height of all tracks is greater than the scaled image)
+		QImage subImage = scaled.copy(subRect);
+		if (scaled.height() < subRect.y() + subRect.height()) {
+			subImage.fill(option.palette.base().color());
+		}
 
-	painter->save();
-	painter->setOpacity(1 - settings->bigCoverOpacity());
-	painter->drawImage(option.rect, subImage);
-
-	// Over paint black pixel in white
-	QRect t(option.rect.x(), option.rect.y(), option.rect.width() - scaled.width(), option.rect.height());
-	QImage white(t.size(), QImage::Format_ARGB32);
-	white.fill(option.palette.base().color());
-	painter->setOpacity(1.0);
-	painter->drawImage(t, white);
-
-	// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
-	// The second one is a computer generated gradient focused on alpha channel
-	QImage leftBorder = scaled.copy(0, subRect.y(), 3, option.rect.height());
-	if (!leftBorder.isNull()) {
-
-		// Because the expanded border can look strange to one, is blurred with some gaussian function
-		leftBorder = leftBorder.scaled(t.width(), option.rect.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-		leftBorder = ImageUtils::blurred(leftBorder, leftBorder.rect(), 10, false);
+		painter->save();
 		painter->setOpacity(1 - settings->bigCoverOpacity());
-		painter->drawImage(t, leftBorder);
+		painter->drawImage(option.rect, subImage);
 
-		QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
-		linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
-		linearAlphaBrush.setColorAt(1, Qt::transparent);
-
+		// Over paint black pixel in white
+		QRect t(option.rect.x(), option.rect.y(), option.rect.width() - scaled.width(), option.rect.height());
+		QImage white(t.size(), QImage::Format_ARGB32);
+		white.fill(option.palette.base().color());
 		painter->setOpacity(1.0);
-		painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
-		painter->setPen(Qt::NoPen);
-		painter->setBrush(linearAlphaBrush);
-		painter->drawRect(t);
+		painter->drawImage(t, white);
+
+		// Create a mix with 2 images: first one is a 3 pixels subimage of the album cover which is expanded to the left border
+		// The second one is a computer generated gradient focused on alpha channel
+		QImage leftBorder = scaled.copy(0, subRect.y(), 3, option.rect.height());
+		if (!leftBorder.isNull()) {
+
+			// Because the expanded border can look strange to one, is blurred with some gaussian function
+			leftBorder = leftBorder.scaled(t.width(), option.rect.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+			leftBorder = ImageUtils::blurred(leftBorder, leftBorder.rect(), 10, false);
+			painter->setOpacity(1 - settings->bigCoverOpacity());
+			painter->drawImage(t, leftBorder);
+
+			QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
+			linearAlphaBrush.setColorAt(0, QApplication::palette().base().color());
+			linearAlphaBrush.setColorAt(1, Qt::transparent);
+
+			painter->setOpacity(1.0);
+			painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+			painter->setPen(Qt::NoPen);
+			painter->setBrush(linearAlphaBrush);
+			painter->drawRect(t);
+		}
+		painter->restore();
 	}
-	painter->restore();
 
 	// Display a light selection rectangle when one is moving the cursor
 	painter->save();
-	QColor color = option.palette.highlight().color();
+	QColor color = opt.palette.highlight().color();
 	color.setAlphaF(0.66);
-	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
+	if (opt.state.testFlag(QStyle::State_MouseOver) && !opt.state.testFlag(QStyle::State_Selected)) {
 		if (settings->isCustomColors()) {
-			painter->setPen(option.palette.highlight().color().darker(100));
+			painter->setPen(opt.palette.highlight().color().darker(100));
 			painter->setBrush(color.lighter());
 		} else {
-			painter->setPen(option.palette.highlight().color());
+			painter->setPen(opt.palette.highlight().color());
 			painter->setBrush(color.lighter(160));
 		}
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
-	} else if (option.state.testFlag(QStyle::State_Selected)) {
+	} else if (opt.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		if (settings->isCustomColors()) {
-			painter->setPen(option.palette.highlight().color().darker(150));
+			painter->setPen(opt.palette.highlight().color().darker(150));
 			painter->setBrush(color);
 		} else {
-			painter->setPen(option.palette.highlight().color());
+			painter->setPen(opt.palette.highlight().color());
 			painter->setBrush(color.lighter(150));
 		}
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));

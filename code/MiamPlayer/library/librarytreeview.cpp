@@ -139,6 +139,9 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
 		/// TODO: inner cover
 		QString coverPath = item->data(Miam::DF_CoverPath).toString();
+		if (coverPath.isEmpty()) {
+			return;
+		}
 		QImage *image;
 		if (coverPath.startsWith("file://")) {
 			FileHelper fh(coverPath);
