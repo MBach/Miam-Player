@@ -22,10 +22,14 @@ private:
 
 	QChar _currentLetter;
 
+	QSet<QChar> _lettersToHighlight;
+
 public:
-	explicit JumpToWidget(QAbstractItemView *treeView);
+	explicit JumpToWidget(QAbstractItemView *view);
 
 	virtual bool eventFilter(QObject *obj, QEvent *event);
+
+	inline void highlightLetters(const QSet<QChar> &letters) { _lettersToHighlight = letters; }
 
 	void setCurrentLetter(const QChar &currentLetter);
 

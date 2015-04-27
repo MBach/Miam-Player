@@ -14,10 +14,11 @@
 #include <QStandardItemModel>
 #include <QTimer>
 
-class LibraryFilterProxyModel;
 class CircleProgressBar;
-class LibraryItemDelegate;
 class JumpToWidget;
+class LibraryFilterLineEdit;
+class LibraryFilterProxyModel;
+class LibraryItemDelegate;
 class ArtistItem;
 class AlbumItem;
 class DiscItem;
@@ -70,6 +71,8 @@ private:
 	/** Cache of expanded albums and their covers. */
 	QMap<QStandardItem*, QImage*> _expandedCovers;
 
+	LibraryFilterLineEdit *_searchBar;
+
 public:
 	QShortcut *sendToCurrentPlaylist;
 	QShortcut *openTagEditor;
@@ -84,10 +87,14 @@ public:
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
-	virtual void init();
+	void findMusic(const QString &text);
+
+	virtual void init() override;
 
 	/** Rebuild the list of separators when one has changed grammatical articles in options. */
 	void rebuildSeparators();
+
+	void setSearchBar(LibraryFilterLineEdit *lfle);
 
 	void setVisible(bool visible);
 
@@ -104,6 +111,12 @@ private:
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;
 
+	/** Reduce the size of the library when the user is typing text. */
+	void filterLibrary(const QString &filter);
+
+	/** Highlight items in the Tree when one has activated this option in settings. */
+	void highlightMatchingText(const QString &text);
+
 	SeparatorItem *insertSeparator(const QStandardItem *node);
 
 	/** Reimplemented. */
@@ -115,9 +128,6 @@ public slots:
 
 	/** Redraw the treeview with a new display mode. */
 	void changeHierarchyOrder();
-
-	/** Reduce the size of the library when the user is typing text. */
-	void filterLibrary(const QString &filter);
 
 	/** Find index from current letter then scrolls to it. */
 	void jumpTo(const QString &letter);
@@ -143,8 +153,6 @@ private slots:
 signals:
 	/** (Dis|En)able covers.*/
 	void displayCovers(bool);
-
-	void searchMusic();
 };
 
 #endif // LIBRARYTREEVIEW_H

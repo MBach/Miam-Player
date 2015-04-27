@@ -312,16 +312,6 @@ bool SettingsPrivate::isReorderArtistsArticle() const
 	}
 }
 
-bool SettingsPrivate::isSearchAndExcludeLibrary() const
-{
-	QVariant b = value("searchAndExcludeLibrary");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
-}
-
 /** Returns true if star outline must be displayed in the library. */
 bool SettingsPrivate::isShowNeverScored() const
 {
@@ -391,6 +381,16 @@ QStringList SettingsPrivate::libraryFilteredByArticles() const
 		return vArticles.toStringList();
 	} else {
 		return QStringList();
+	}
+}
+
+SettingsPrivate::LibrarySearchMode SettingsPrivate::librarySearchMode() const
+{
+	if (value("librarySearchMode").isNull()) {
+		return SettingsPrivate::LSM_Filter;
+	} else {
+		int i = value("librarySearchMode").toInt();
+		return (SettingsPrivate::LibrarySearchMode)i;
 	}
 }
 
@@ -711,7 +711,14 @@ void SettingsPrivate::setReorderArtistsArticle(bool b)
 
 void SettingsPrivate::setSearchAndExcludeLibrary(bool b)
 {
-	setValue("searchAndExcludeLibrary", b);
+	LibrarySearchMode lsm;
+	if (b) {
+		lsm = LSM_Filter;
+	} else {
+		lsm = LSM_HighlightOnly;
+	}
+	setValue("librarySearchMode", lsm);
+	emit librarySearchModeChanged(lsm);
 }
 
 void SettingsPrivate::setShowNeverScored(bool b)

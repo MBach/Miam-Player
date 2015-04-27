@@ -5,19 +5,20 @@
 
 #include <cover.h>
 #include <filehelper.h>
+#include <library/jumptowidget.h>
 #include "../circleprogressbar.h"
 #include "../pluginmanager.h"
-#include "library/jumptowidget.h"
-#include "library/libraryfilterproxymodel.h"
+#include "libraryfilterproxymodel.h"
 #include "libraryitemdelegate.h"
 #include "libraryorderdialog.h"
 #include "libraryitemdelegate.h"
 #include "libraryscrollbar.h"
+#include "libraryfilterlineedit.h"
 
 #include <QtDebug>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(new QStandardItemModel(parent))
+	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), _searchBar(NULL)
 {
 	_libraryModel->setColumnCount(1);
 
@@ -46,13 +47,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	openTagEditor = new QShortcut(this);
 
 	connect(this, &QTreeView::doubleClicked, [=] (const QModelIndex &) { appendToPlaylist(); });
-	connect(_proxyModel, &LibraryFilterProxyModel::aboutToHighlight, this, [=](const QModelIndex &index, bool b) {
-		if (!settings->isSearchAndExcludeLibrary()) {
-			if (QStandardItem *item = _libraryModel->itemFromIndex(index)) {
-				item->setData(b, Miam::DF_Highlighted);
-			}
-		}
-	});
 
 	// Context menu and shortcuts
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
@@ -116,6 +110,15 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 		} else if (item && item->type() == Miam::IT_Track) {
 			tracks << item->data(Miam::DF_URI).toString();
 		}
+	}
+}
+
+void LibraryTreeView::findMusic(const QString &text)
+{
+	if (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_Filter) {
+		this->filterLibrary(text);
+	} else {
+		this->highlightMatchingText(text);
 	}
 }
 
@@ -238,6 +241,20 @@ void LibraryTreeView::rebuildSeparators()
 	}
 }
 
+void LibraryTreeView::setSearchBar(LibraryFilterLineEdit *lfle) {
+	_searchBar = lfle;
+	// Reset filter or remove highlight when one is switching from one mode to another
+	connect(SettingsPrivate::instance(), &SettingsPrivate::librarySearchModeChanged, this, [=](SettingsPrivate::LibrarySearchMode lsm) {
+		QString text;
+		_searchBar->setText(text);
+		if (lsm == SettingsPrivate::LSM_Filter) {
+			this->highlightMatchingText(text);
+		} else {
+			this->filterLibrary(text);
+		}
+	});
+}
+
 void LibraryTreeView::setVisible(bool visible)
 {
 	TreeView::setVisible(visible);
@@ -275,7 +292,7 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 		wVerticalScrollBar = verticalScrollBar()->width();
 	}
 	if (QGuiApplication::isLeftToRight()) {
-		_jumpToWidget->move(frameGeometry().right() - 19 - wVerticalScrollBar, header()->height());
+		_jumpToWidget->move(frameGeometry().right() - 22 - wVerticalScrollBar, header()->height());
 	} else {
 		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, header()->height());
 	}
@@ -308,6 +325,90 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 		c += this->count(index);
 	}
 	return c;
+}
+
+/** Reduces the size of the library when the user is typing text. */
+void LibraryTreeView::filterLibrary(const QString &filter)
+{
+	if (filter.isEmpty()) {
+		_proxyModel->setFilterRole(Qt::DisplayRole);
+		_proxyModel->setFilterRegExp(QRegExp());
+		_proxyModel->sort(0, _proxyModel->sortOrder());
+	} else {
+		bool needToSortAgain = false;
+		if (_proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
+			needToSortAgain = true;
+		}
+		if (filter.contains(QRegExp("^(\\*){1,5}$"))) {
+			// Convert stars into [1-5], ..., [5-5] regular expression
+			_proxyModel->setFilterRole(Miam::DF_Rating);
+			_proxyModel->setFilterRegExp(QRegExp("[" + QString::number(filter.size()) + "-5]", Qt::CaseInsensitive, QRegExp::RegExp));
+		} else {
+			_proxyModel->setFilterRole(Qt::DisplayRole);
+			_proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
+		}
+		if (needToSortAgain) {
+			_proxyModel->sort(0, _proxyModel->sortOrder());
+		}
+	}
+}
+
+/** Highlight items in the Tree when one has activated this option in settings. */
+void LibraryTreeView::highlightMatchingText(const QString &text)
+{
+	// Clear highlight on every call
+	std::function<void(QStandardItem *item)> recursiveClearHighlight;
+	recursiveClearHighlight = [&recursiveClearHighlight] (QStandardItem *item) -> void {
+		if (item->hasChildren()) {
+			item->setData(false, Miam::DF_Highlighted);
+			for (int i = 0; i < item->rowCount(); i++) {
+				recursiveClearHighlight(item->child(i, 0));
+			}
+		} else {
+			item->setData(false, Miam::DF_Highlighted);
+		}
+	};
+
+	for (int i = 0; i < _libraryModel->rowCount(); i++) {
+		recursiveClearHighlight(_libraryModel->item(i, 0));
+	}
+
+	// Adapt filter if one is typing '*'
+	QString filter;
+	Qt::MatchFlags flags;
+	if (text.contains(QRegExp("^(\\*){1,5}$"))) {
+		_proxyModel->setFilterRole(Miam::DF_Rating);
+		filter = "[" + QString::number(text.size()) + "-5]";
+		flags = Qt::MatchRecursive | Qt::MatchRegExp;
+	} else {
+		_proxyModel->setFilterRole(Qt::DisplayRole);
+		filter = text;
+		flags = Qt::MatchRecursive | Qt::MatchContains;
+	}
+
+	// Mark items with a bold font
+	QSet<QChar> lettersToHighlight;
+	if (!text.isEmpty()) {
+		QModelIndexList indexes = _libraryModel->match(_libraryModel->index(0, 0, QModelIndex()), _proxyModel->filterRole(), filter, -1, flags);
+		QList<QStandardItem*> items;
+		for (int i = 0; i < indexes.size(); ++i) {
+			items.append(_libraryModel->itemFromIndex(indexes.at(i)));
+		}
+		for (QStandardItem *item : items) {
+			item->setData(true, Miam::DF_Highlighted);
+			QStandardItem *parent = item->parent();
+			// For every item marked, mark also the top level item
+			while (parent != NULL) {
+				parent->setData(true, Miam::DF_Highlighted);
+				if (parent->parent() == NULL) {
+					lettersToHighlight << parent->data(Miam::DF_NormalizedString).toString().toUpper().at(0);
+				}
+				parent = parent->parent();
+			}
+		}
+		qDebug() << lettersToHighlight;
+	}
+	_jumpToWidget->highlightLetters(lettersToHighlight);
 }
 
 SeparatorItem *LibraryTreeView::insertSeparator(const QStandardItem *node)
@@ -377,33 +478,11 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	SqlDatabase::instance()->load();
-}
-
-/** Reduces the size of the library when the user is typing text. */
-void LibraryTreeView::filterLibrary(const QString &filter)
-{
-	if (filter.isEmpty()) {
-		_proxyModel->setFilterRole(Qt::DisplayRole);
-		_proxyModel->setFilterRegExp(QRegExp());
-		_proxyModel->sort(0, _proxyModel->sortOrder());
-	} else {
-		bool needToSortAgain = false;
-		if (_proxyModel->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
-			needToSortAgain = true;
-		}
-		if (filter.contains(QRegExp("^(\\*){1,5}$"))) {
-			// Convert stars into [1-5], ..., [5-5] regular expression
-			_proxyModel->setFilterRole(Miam::DF_Rating);
-			_proxyModel->setFilterRegExp(QRegExp("[" + QString::number(filter.size()) + "-5]", Qt::CaseInsensitive, QRegExp::RegExp));
-		} else {
-			_proxyModel->setFilterRole(Qt::DisplayRole);
-			_proxyModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
-		}
-		if (needToSortAgain) {
-			_proxyModel->sort(0, _proxyModel->sortOrder());
-		}
+	if (_searchBar) {
+		_searchBar->setText(QString());
 	}
+	SqlDatabase::instance()->load();
+	this->highlightMatchingText(QString());
 }
 
 /** Find index from current letter then scrolls to it. */

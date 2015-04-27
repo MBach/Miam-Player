@@ -36,6 +36,7 @@ private:
 	Q_ENUMS(FontFamily)
 	Q_ENUMS(InsertPolicy)
 	Q_ENUMS(PlaylistDefaultAction)
+	Q_ENUMS(LibrarySearchMode)
 
 public:
 	enum DragDropAction { DD_OpenPopup		= 0,
@@ -54,6 +55,9 @@ public:
 	enum PlaylistDefaultAction { PL_AskUserForAction	= 0,
 								 PL_SaveOnClose			= 1,
 								 PL_DiscardOnClose		= 2};
+
+	enum LibrarySearchMode { LSM_Filter	= 0,
+							 LSM_HighlightOnly = 1};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();
@@ -121,8 +125,6 @@ public:
 	/** Returns true if the article should be displayed after artist's name. */
 	bool isReorderArtistsArticle() const;
 
-	bool isSearchAndExcludeLibrary() const;
-
 	/** Returns true if star outline must be displayed in the library. */
 	bool isShowNeverScored() const;
 
@@ -145,6 +147,8 @@ public:
 	QString lastActiveView() const;
 
 	QStringList libraryFilteredByArticles() const;
+
+	LibrarySearchMode librarySearchMode() const;
 
 	/** Returns all music locations. */
 	QStringList musicLocations() const;
@@ -253,7 +257,9 @@ public slots:
 	void setVolumeBarTextAlwaysVisible(bool b);
 
 signals:
-	void fontHasChanged(const FontFamily &fontFamily, const QFont &font);
+	void fontHasChanged(FontFamily, const QFont &font);
+
+	void librarySearchModeChanged(LibrarySearchMode);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

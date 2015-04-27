@@ -26,10 +26,10 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 		this->setFocus(Qt::ShortcutFocusReason);
 	});
 
-	// Do not start search when one is typing. Add a 200ms delay after the last key pressed.
+	// Do not start search when one is typing. Add a 300ms delay after the last key pressed.
 	QTimer *timer = new QTimer(this);
 	timer->setSingleShot(true);
-	connect(this, &QLineEdit::textEdited, this, [=]() {	timer->start(200); });
+	connect(this, &QLineEdit::textEdited, this, [=]() {	timer->start(300); });
 	connect(timer, &QTimer::timeout, this, [=]() { emit aboutToStartSearch(this->text()); });
 }
 

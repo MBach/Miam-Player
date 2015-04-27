@@ -1,4 +1,5 @@
 #include "jumptowidget.h"
+#include "settingsprivate.h"
 
 #include <QApplication>
 #include <QHeaderView>
@@ -10,8 +11,8 @@
 
 #include <QtDebug>
 
-JumpToWidget::JumpToWidget(QAbstractItemView *treeView) :
-	QWidget(treeView), _view(treeView), _pos(-1, -1)
+JumpToWidget::JumpToWidget(QAbstractItemView *view) :
+	QWidget(view), _view(view), _pos(-1, -1)
 {
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
@@ -66,8 +67,8 @@ void JumpToWidget::mouseMoveEvent(QMouseEvent *e)
 
 void JumpToWidget::paintEvent(QPaintEvent *)
 {
-	this->setMinimumSize(20, _view->height());
-	this->setMaximumSize(20, _view->height());
+	this->setMinimumSize(23, _view->height());
+	this->setMaximumSize(23, _view->height());
 	QStylePainter p(this);
 	QStyleOptionViewItem o;
 	o.initFrom(_view);
@@ -76,21 +77,19 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 
 	// Reduce the font if this widget is too small
 	QFont f = p.font();
-	f.setPixelSize(height() / 26);
+	int fontPointSize = SettingsPrivate::instance()->fontSize(SettingsPrivate::FF_Library);
+	f.setPointSize(qMin(fontPointSize, height() / 60));
+	p.setFont(f);
 	for (int i = 0; i < 26; i++) {
 		p.save();
 		QChar qc(i + 65);
-		QRect r(0, height() * i / 26, 19, height() / 26);
+		QRect r(0, height() * i / 26, 22, height() / 26);
 		if (_currentLetter == qc) {
 			// Display a bright selection rectangle corresponding to the top letter in the library
 			p.fillRect(r, o.palette.highlight());
 		} else if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
 			// Display a light rectangle under the mouse pointer
 			p.fillRect(r, o.palette.highlight().color().lighter(160));
-		}
-
-		if (r.height() + 4 < p.fontMetrics().height() && r.width() >= p.fontMetrics().width(qc)) {
-			p.setFont(f);
 		}
 		if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
 			QColor lighterBG = o.palette.highlight().color().lighter(160);
@@ -103,7 +102,15 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		} else {
 			p.setPen(o.palette.windowText().color());
 		}
-		p.drawText(r, Qt::AlignCenter, qc);
+		if (_lettersToHighlight.contains(qc)) {
+			p.save();
+			f.setBold(true);
+			p.setFont(f);
+			p.drawText(r, Qt::AlignCenter, qc);
+			p.restore();
+		} else {
+			p.drawText(r, Qt::AlignCenter, qc);
+		}
 		p.restore();
 	}
 

@@ -332,9 +332,10 @@ void MainWindow::setupActions()
 	volumeSlider->setValue(Settings::instance()->volume());
 
 	// Filter the library when user is typing some text to find artist, album or tracks
+	library->setSearchBar(searchBar);
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::filterLibrary);
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
+		library->findMusic(text);
 		if (settings->isExtendedSearchVisible()) {
 			if (text.isEmpty()) {
 				_searchDialog->clear();

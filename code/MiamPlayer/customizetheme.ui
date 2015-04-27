@@ -1721,7 +1721,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Would you like to display stars in the library, right to the track name?</string>
+             <string>Would you like to display stars in the library, left to the track name?</string>
             </property>
            </widget>
           </item>
@@ -2716,8 +2716,8 @@
  </connections>
  <buttongroups>
   <buttongroup name="buttonGroupEnableStarOutline"/>
-  <buttongroup name="buttonGroupEnableStarDelegate"/>
-  <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupArtistsArticle"/>
+  <buttongroup name="buttonGroupReorderArtists"/>
+  <buttongroup name="buttonGroupEnableStarDelegate"/>
  </buttongroups>
 </ui>

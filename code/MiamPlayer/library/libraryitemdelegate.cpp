@@ -41,7 +41,8 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, Libra
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	painter->save();
-	painter->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+	auto settings = SettingsPrivate::instance();
+	painter->setFont(settings->font(SettingsPrivate::FF_Library));
 	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
@@ -70,14 +71,17 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	case Miam::IT_Separator:
 		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
-	case Miam::IT_Track:
-		if (SettingsPrivate::instance()->isBigCoverEnabled() && _proxy->filterRegExp().isEmpty()) {
+	case Miam::IT_Track: {
+		SettingsPrivate::LibrarySearchMode lsm = settings->librarySearchMode();
+		if (settings->isBigCoverEnabled() && ((_proxy->filterRegExp().isEmpty() && lsm == SettingsPrivate::LSM_Filter) ||
+				lsm == SettingsPrivate::LSM_HighlightOnly)) {
 			this->paintCoverOnTrack(painter, o, static_cast<TrackItem*>(item));
 		} else {
 			this->paintRect(painter, o);
 		}
 		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
+	}
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
 		break;
@@ -355,7 +359,7 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 	QColor color = option.palette.highlight().color();
 	color.setAlphaF(0.66);
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
-		if (SettingsPrivate::instance()->isCustomColors()) {
+		if (settings->isCustomColors()) {
 			painter->setPen(option.palette.highlight().color().darker(100));
 			painter->setBrush(color.lighter());
 		} else {
@@ -365,7 +369,7 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	} else if (option.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
-		if (SettingsPrivate::instance()->isCustomColors()) {
+		if (settings->isCustomColors()) {
 			painter->setPen(option.palette.highlight().color().darker(150));
 			painter->setBrush(color);
 		} else {

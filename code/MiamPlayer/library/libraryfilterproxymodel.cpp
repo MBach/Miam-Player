@@ -24,23 +24,6 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	}
 }
 
-QStandardItem* LibraryFilterProxyModel::find(int level, const QString &nodeText) const
-{
-	for (int i = 0; i < rowCount(); i++) {
-		QModelIndex ind = index(i, 0);
-		if (ind.data().toString() == nodeText) {
-			QModelIndex ind2 = mapToSource(ind);
-			const QStandardItemModel *m = static_cast<const QStandardItemModel*>(ind2.model());
-			return m->itemFromIndex(ind2);
-		}
-		for (int j = 0; j < rowCount(ind); j++) {
-			if (level > 0)
-				return this->find(level - 1, nodeText);
-		}
-	}
-	return NULL;
-}
-
 bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	if (filterAcceptsRowItself(sourceRow, sourceParent)) {
@@ -51,8 +34,6 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	QModelIndex parent = sourceParent;
 	while (parent.isValid()) {
 		if (filterAcceptsRowItself(parent.row(), parent.parent())) {
-			emit aboutToHighlight(sourceParent, true);
-			//qDebug() << "accepting 1" << parent.data().toString();
 			return true;
 		}
 		parent = parent.parent();
@@ -60,12 +41,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 
 	// Accept if any of the children is accepted on it's own merits
 	if (hasAcceptedChildren(sourceRow, sourceParent)) {
-		//qDebug() << "accepting 2" << sourceParent.data().toString();
-		emit aboutToHighlight(sourceParent, true);
 		return true;
-	} else {
-		//qDebug() << "refusing 1" << sourceParent.data().toString();
-		emit aboutToHighlight(sourceParent, false);
 	}
 
 	// Accept separators if any top level items and its children are accepted
@@ -74,19 +50,11 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	if (item && item->type() == Miam::IT_Separator) {
 		for (QModelIndex index : _topLevelItems->values(static_cast<SeparatorItem*>(item))) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
-				//qDebug() << "accepting Letter" << index.data().toString();
-				emit aboutToHighlight(index, true);
 				return true;
 			}
 		}
 	}
-	if (SettingsPrivate::instance()->isSearchAndExcludeLibrary()) {
-		return false;
-	} else {
-		//qDebug() << "refusing 2" << sourceParent.data().toString();
-		emit aboutToHighlight(sourceParent, false);
-		return true;
-	}
+	return (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_HighlightOnly);
 }
 
 /** Redefined for custom sorting. */
@@ -205,12 +173,6 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 
 bool LibraryFilterProxyModel::filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const
 {
-	/*if (QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent)) {
-		emit aboutToHighlight(sourceParent, true);
-		return true;
-	} else {
-		return false;
-	}*/
 	return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
 
@@ -218,33 +180,23 @@ bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelInd
 {
 	QModelIndex item = sourceModel()->index(sourceRow, 0, sourceParent);
 	if (!item.isValid()) {
-		//qDebug() << "refusing A" << item.data().toString();
-		emit aboutToHighlight(item, false);
 		return false;
 	}
 
 	// Check if there are children
 	int childCount = item.model()->rowCount(item);
 	if (childCount == 0) {
-		//qDebug() << "refusing B" << item.data().toString();
-		emit aboutToHighlight(item, false);
 		return false;
 	}
 
 	for (int i = 0; i < childCount; ++i) {
 		if (filterAcceptsRowItself(i, item)) {
-			//qDebug() << "accepting A" << item.child(i, 0).data().toString();
-			emit aboutToHighlight(item.child(i, 0), true);
 			return true;
 		}
 		// Recursive call
 		if (hasAcceptedChildren(i, item)) {
-			//qDebug() << "accepting B" << item.data().toString();
-			emit aboutToHighlight(item, true);
 			return true;
 		}
 	}
-	//qDebug() << "refusing C" << item.data().toString();
-	emit aboutToHighlight(item, false);
 	return false;
 }

@@ -35,7 +35,11 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocations.first()));
 	}
 
-	settings->isSearchAndExcludeLibrary() ? radioButtonSearchAndExclude->setChecked(true) : radioButtonSearchAndKeep->setChecked(true);
+	if (settings->librarySearchMode() == SettingsPrivate::LSM_Filter) {
+		radioButtonSearchAndExclude->setChecked(true);
+	} else {
+		radioButtonSearchAndKeep->setChecked(true);
+	}
 
 	QStringList locations = settings->musicLocations();
 	if (locations.isEmpty()) {
