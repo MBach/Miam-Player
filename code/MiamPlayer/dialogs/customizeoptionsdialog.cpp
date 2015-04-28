@@ -19,6 +19,9 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDialog(parent)
 {
 	setupUi(this);
+	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+	listWidgetMusicLocations->setAttribute(Qt::WA_MacShowFocusRect, false);
+
 	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
 

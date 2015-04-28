@@ -11,12 +11,12 @@
 #include "settings.h"
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
-	QDialog(parent), _targetedColor(NULL)
+	QDialog(NULL), _targetedColor(NULL), _animation(new QPropertyAnimation(this, "windowOpacity")), _timer(new QTimer(this))
 {
 	setupUi(this);
+	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	this->setWindowFlags(Qt::Tool);
-	this->setModal(true);
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	mainWindow = qobject_cast<MainWindow *>(parent);
@@ -25,10 +25,8 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	spinBoxLibrary->setMouseTracking(true);
 
 	// Animates this Dialog
-	_timer = new QTimer(this);
 	_timer->setInterval(3000);
 	_timer->setSingleShot(true);
-	_animation = new QPropertyAnimation(this, "windowOpacity");
 	_animation->setDuration(200);
 	_animation->setTargetObject(this);
 
@@ -251,12 +249,6 @@ void CustomizeThemeDialog::fade()
 /** Automatically centers the parent window when closing this dialog. */
 void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 {
-	if (!parentWidget()->isMaximized()) {
-		int w = qApp->desktop()->screenGeometry().width() / 2;
-		int h = qApp->desktop()->screenGeometry().height() / 2;
-		parentWidget()->move(w - parentWidget()->frameGeometry().width() / 2, h - parentWidget()->frameGeometry().height() / 2);
-	}
-
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setValue("customizeThemeDialogGeometry", saveGeometry());
 	settings->setValue("customizeThemeDialogCurrentTab", listWidget->currentRow());
@@ -264,10 +256,17 @@ void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 	QDialog::closeEvent(e);
 }
 
-/** Automatically centers the parent window when closing this dialog. */
-void CustomizeThemeDialog::mouseMoveEvent(QMouseEvent *event)
+void CustomizeThemeDialog::showEvent(QShowEvent *event)
 {
-	QDialog::mouseMoveEvent(event);
+	QDialog::showEvent(event);
+
+	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
+	/// Is it impossible to compute real size even if dialog is hidden?
+	// Add grammatical articles
+	for (QString article : SettingsPrivate::instance()->libraryFilteredByArticles()) {
+		articlesLineEdit->addTag(article);
+	}
+	this->activateWindow();
 }
 
 void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)
@@ -436,7 +435,7 @@ void CustomizeThemeDialog::loadTheme()
 }
 
 /** Redefined to initialize favorites from settings. */
-void CustomizeThemeDialog::open()
+int CustomizeThemeDialog::exec()
 {
 	// Change the label that talks about star delegates
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -450,15 +449,7 @@ void CustomizeThemeDialog::open()
 		int h = qApp->desktop()->screenGeometry().height() / 2;
 		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
 	}
-	QDialog::open();
-	this->activateWindow();
-
-	/// XXX: why should I show the dialog before adding tags to have the exact and right size?
-	/// Is it impossible to compute real size even if dialog is hidden?
-	// Add grammatical articles
-	for (QString article : settings->libraryFilteredByArticles()) {
-		articlesLineEdit->addTag(article);
-	}
+	return QDialog::exec();
 }
 
 void CustomizeThemeDialog::openChooseIconDialog()

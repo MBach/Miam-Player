@@ -17,13 +17,7 @@ public:
 	explicit ExtendedTabBar(QWidget *parent = 0);
 
 protected:
-	/** Get half the size of the bounding rectangle. */
-	/*inline QSize tabSizeHint(int) const
-	{
-		return QSize(parentWidget()->rect().width() / 2, parentWidget()->rect().height());
-	}*/
-
-	QSize tabSizeHint(int) const;
+	virtual QSize tabSizeHint(int) const override;
 
 	/** Redefined to be style-aware at runtime. */
 	virtual void paintEvent(QPaintEvent *);

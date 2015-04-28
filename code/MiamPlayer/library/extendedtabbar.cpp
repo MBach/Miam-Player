@@ -29,28 +29,24 @@ ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 	});
 }
 
-QSize ExtendedTabBar::tabSizeHint(int i) const
+QSize ExtendedTabBar::tabSizeHint(int) const
 {
-	//qDebug() << Q_FUNC_INFO << (double)((double) rect().width() / 2 - 1);
-	//if (i == 0) {
-		if (width() % 2 == 0) {
-			return QSize(rect().width() / 2, rect().height());
-		} else {
-			return QSize(rect().width() / 2 - 1, rect().height());
-		}
-	/*} else {
-		return QSize(rect().width() / 2, rect().height());
-	}*/
-
-	//return QTabBar::tabSizeHint(i);
+	return QSize(this->rect().width() / 2, this->rect().height());
 }
 
 /** Redefined to be style-aware at runtime. */
 void ExtendedTabBar::paintEvent(QPaintEvent *e)
 {
-	//QRect r = tabRect(currentIndex());
-	//QTabBar::paintEvent(e);
-	//return;
+	/*QStyleOptionTab library, fileExporer;
+	initStyleOption(&library, 0);
+	initStyleOption(&fileExporer, 1);
+	library.palette = QApplication::palette();
+	fileExporer.palette = QApplication::palette();
+
+	QStylePainter p(this);
+	p.fillRect(library.rect, library.palette.base().color());
+
+	qDebug() << Q_FUNC_INFO << this->rect();*/
 	QStylePainter p(this);
 
 	QStyleOptionTabBarBase o;
@@ -59,11 +55,6 @@ void ExtendedTabBar::paintEvent(QPaintEvent *e)
 
 	for (int i = 0; i < count(); ++i)
 		o.tabBarRect |= tabRect(i);
-
-
-	//if (drawBase())
-	//	p.drawPrimitive(QStyle::PE_FrameTabBarBase, o);
-
 
 	for (int i = 0; i < count(); ++i) {
 		QStyleOptionTab tab;

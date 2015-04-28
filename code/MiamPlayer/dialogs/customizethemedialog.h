@@ -36,7 +36,7 @@ private:
 	QTimer *_timer;
 
 public:
-	CustomizeThemeDialog(QWidget *parent);
+	CustomizeThemeDialog(QWidget *parent = NULL);
 
 	/** Load theme at startup. */
 	void loadTheme();
@@ -51,11 +51,11 @@ protected:
 	/** Automatically centers the parent window when closing this dialog. */
 	virtual void closeEvent(QCloseEvent *e) override;
 
-	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void showEvent(QShowEvent * event) override;
 
 public slots:
 	/** Redefined to initialize favorites from settings. */
-	virtual void open() override;
+	virtual int exec() override;
 
 private slots:
 	void openChooseIconDialog();

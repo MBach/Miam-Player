@@ -20,6 +20,10 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	_unsavedPlaylistModel(new QStandardItemModel(this)), _savedPlaylistModel(new QStandardItemModel(this))
 {
 	setupUi(this);
+	unsavedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);
+	savedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);
+	previewPlaylist->setAttribute(Qt::WA_MacShowFocusRect, false);
+
 	delete groupBoxPreview->layout();
 	_stackLayout = new QStackedLayout(groupBoxPreview);
 	groupBoxPreview->setContentsMargins(11, 24, 11, 11);
@@ -63,20 +67,7 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistManager::deleteSavedPlaylists);
 
 	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsAboutToBeRemoved, this, &PlaylistManager::dropAutoSavePlaylists);
-	connect(savedPlaylists->model(), &QStandardItemModel::rowsAboutToBeInserted, this, [=](const QModelIndex &, int first, int end) {
-		qDebug() << "rowsAboutToBeInserted" << first << end;
-		for (int i = first; i <= end; i++) {
-			qDebug() << "2" << i;
-		}
-	});
-	connect(savedPlaylists->model(), &QStandardItemModel::rowsInserted, this, [=](const QModelIndex &, int first, int end) {
-		qDebug() << "rowsInserted" << first << end;
-		for (int i = first; i <= end; i++) {
-			qDebug() << "2" << i;
-		}
-	});
-	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsRemoved, this, [=](const QModelIndex &, int first, int end) {
-		qDebug() << "rowsRemoved" << first << end;
+	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsRemoved, this, [=](const QModelIndex &, int, int) {
 		this->updatePlaylists(false, true);
 	});
 

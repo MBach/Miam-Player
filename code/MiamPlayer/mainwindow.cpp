@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	this->loadTheme();
 	// Instantiate dialogs
-	customizeOptionsDialog = new CustomizeOptionsDialog(this);
+	customizeOptionsDialog = new CustomizeOptionsDialog;
 
 	playlistManager = new PlaylistManager(SqlDatabase::instance(), tabPlaylists);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
@@ -219,7 +219,7 @@ void MainWindow::setupActions()
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
 		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
 		customizeThemeDialog->loadTheme();
-		customizeThemeDialog->open();
+		customizeThemeDialog->exec();
 	});
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
