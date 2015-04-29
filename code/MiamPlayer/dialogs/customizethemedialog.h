@@ -41,6 +41,8 @@ public:
 	/** Load theme at startup. */
 	void loadTheme();
 
+	inline Reflector* targetedColor() const { return _targetedColor; }
+
 private:
 	void fade();
 	void setupActions();

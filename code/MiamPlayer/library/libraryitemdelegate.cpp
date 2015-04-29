@@ -1,5 +1,6 @@
 #include "libraryitemdelegate.h"
 
+#include <library/jumptowidget.h>
 #include <cover.h>
 #include <settingsprivate.h>
 #include "librarytreeview.h"
@@ -48,9 +49,9 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	initStyleOption(&o, index);
 	o.palette = QApplication::palette();
 	if (QGuiApplication::isLeftToRight()) {
-		o.rect.adjust(0, 0, -20, 0);
+		o.rect.adjust(0, 0, -_libraryTreeView->jumpToWidget()->width(), 0);
 	} else {
-		o.rect.adjust(19, 0, 0, 0);
+		o.rect.adjust(_libraryTreeView->jumpToWidget()->width(), 0, 0, 0);
 	}
 
 	// Removes the dotted rectangle to the focused item
@@ -357,23 +358,13 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 	QColor color = opt.palette.highlight().color();
 	color.setAlphaF(0.66);
 	if (opt.state.testFlag(QStyle::State_MouseOver) && !opt.state.testFlag(QStyle::State_Selected)) {
-		if (settings->isCustomColors()) {
-			painter->setPen(opt.palette.highlight().color().darker(100));
-			painter->setBrush(color.lighter());
-		} else {
-			painter->setPen(opt.palette.highlight().color());
-			painter->setBrush(color.lighter(160));
-		}
+		painter->setPen(opt.palette.highlight().color());
+		painter->setBrush(color.lighter(160));
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	} else if (opt.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
-		if (settings->isCustomColors()) {
-			painter->setPen(opt.palette.highlight().color().darker(150));
-			painter->setBrush(color);
-		} else {
-			painter->setPen(opt.palette.highlight().color());
-			painter->setBrush(color.lighter(150));
-		}
+		painter->setPen(opt.palette.highlight().color());
+		painter->setBrush(color.lighter(150));
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	}
 	painter->restore();
@@ -384,25 +375,15 @@ void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewIte
 	// Display a light selection rectangle when one is moving the cursor
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
-		if (SettingsPrivate::instance()->isCustomColors()) {
-			painter->setPen(option.palette.highlight().color().darker(100));
-			painter->setBrush(option.palette.highlight().color().lighter());
-		} else {
-			painter->setPen(option.palette.highlight().color());
-			painter->setBrush(option.palette.highlight().color().lighter(160));
-		}
+		painter->setPen(option.palette.highlight().color());
+		painter->setBrush(option.palette.highlight().color().lighter(160));
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	} else if (option.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
 		painter->save();
-		if (SettingsPrivate::instance()->isCustomColors()) {
-			painter->setPen(option.palette.highlight().color().darker(150));
-			painter->setBrush(option.palette.highlight().color());
-		} else {
-			painter->setPen(option.palette.highlight().color());
-			painter->setBrush(option.palette.highlight().color().lighter(150));
-		}
+		painter->setPen(option.palette.highlight().color());
+		painter->setBrush(option.palette.highlight().color().lighter(150));
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	}

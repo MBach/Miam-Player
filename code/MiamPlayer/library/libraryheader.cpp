@@ -51,13 +51,8 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Gradient
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
-	if (SettingsPrivate::instance()->isCustomColors()) {
-		g.setColorAt(0, base.lighter(110));
-		g.setColorAt(1, base);
-	} else {
-		g.setColorAt(0, base);
-		g.setColorAt(1, QApplication::palette().window().color());
-	}
+	g.setColorAt(0, base);
+	g.setColorAt(1, QApplication::palette().window().color());
 	p.fillRect(rect(), g);
 
 	// Text

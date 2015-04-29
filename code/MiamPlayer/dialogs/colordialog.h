@@ -5,6 +5,8 @@
 
 #include "reflector.h"
 
+class CustomizeThemeDialog;
+
 class ColorDialog : public QColorDialog
 {
 	Q_OBJECT
@@ -12,14 +14,13 @@ private:
 	/** Pointer to the item containing all the instances of repaintables elements. */
 	Reflector *reflector;
 
+	CustomizeThemeDialog *_customizeThemeDialog;
+
 public:
-	ColorDialog(QWidget *parent);
+	ColorDialog(CustomizeThemeDialog *parent);
 
 protected:
 	void closeEvent(QCloseEvent *);
-
-signals:
-	void aboutToBeClosed();
 };
 
 #endif // COLORDIALOG_H

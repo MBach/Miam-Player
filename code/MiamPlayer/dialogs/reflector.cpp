@@ -18,5 +18,10 @@ void Reflector::paintEvent(QPaintEvent *)
 	QStylePainter p(this);
 	p.setPen(QApplication::palette().mid().color());
 	p.setBrush(backgroundColor);
-	p.drawRect(this->rect());
+	p.drawRect(this->rect().adjusted(0, 0, -1, -1));
+}
+
+void Reflector::setColor(const QColor &color)
+{
+	this->backgroundColor = color;
 }

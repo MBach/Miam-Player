@@ -29,9 +29,6 @@ SettingsPrivate::SettingsPrivate(const QString &organization, const QString &app
 		}
 		QApplication::setPalette(p);
 		setValue("customPalette", p);
-	} else {
-		QPalette p = QApplication::palette();
-		setValue("defaultPalette", p);
 	}
 }
 
@@ -463,19 +460,6 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		QColor text;
 		if (color.value() < 128) {
 			text = Qt::white;
-
-			/*palette.setColor(QPalette::Light, color);
-			palette.setColor(QPalette::Midlight, color);
-			palette.setColor(QPalette::Dark, color);
-			palette.setColor(QPalette::Mid, color);
-			palette.setColor(QPalette::Shadow, color);
-
-			colors.insert(QString::number(QPalette::Light), color);
-			colors.insert(QString::number(QPalette::Midlight), color);
-			colors.insert(QString::number(QPalette::Dark), color);
-			colors.insert(QString::number(QPalette::Mid), color);
-			colors.insert(QString::number(QPalette::Shadow), color);*/
-
 		} else {
 			text = Qt::black;
 		}
@@ -491,11 +475,7 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 
 		// Automatically create a window color from the base one
 		QColor windowColor = color;
-		if (windowColor.value() > 128) {
-			windowColor = windowColor.darker(115);
-		} else {
-			windowColor = windowColor.lighter(115);
-		}
+		windowColor.setAlphaF(0.5);
 		palette.setColor(QPalette::Window, windowColor);
 		colors.insert(QString::number(QPalette::Window), windowColor);
 	} else if (cr == QPalette::Highlight) {
@@ -616,11 +596,6 @@ void SettingsPrivate::setCoverSize(int s)
 void SettingsPrivate::setCustomColors(bool b)
 {
 	setValue("customColors", b);
-	if (b) {
-		QApplication::setPalette(value("customPalette").value<QPalette>());
-	} else {
-		QApplication::setPalette(value("defaultPalette").value<QPalette>());
-	}
 }
 
 /** Sets if stars are visible and active. */

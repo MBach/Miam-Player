@@ -31,7 +31,12 @@ ExtendedTabBar::ExtendedTabBar(QWidget *parent)
 
 QSize ExtendedTabBar::tabSizeHint(int) const
 {
+	/// FIXME or bug?
+#if defined(Q_OS_OSX)
+	return QSize(this->rect().width() / 2.05, this->rect().height());
+#else
 	return QSize(this->rect().width() / 2, this->rect().height());
+#endif
 }
 
 /** Redefined to be style-aware at runtime. */

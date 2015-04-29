@@ -280,29 +280,16 @@ void CustomizeThemeDialog::animate(qreal startValue, qreal stopValue)
  * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 void CustomizeThemeDialog::showColorDialog()
 {
-	SettingsPrivate *settings = SettingsPrivate::instance();
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
+		qDebug() << _targetedColor->objectName() << _targetedColor->color();
+		_targetedColor->setColor(SettingsPrivate::instance()->customColors(_targetedColor->colorRole()));
+		qDebug() << _targetedColor->objectName() << _targetedColor->color();
 		ColorDialog *colorDialog = new ColorDialog(this);
-		colorDialog->show();
 		colorDialog->setCurrentColor(_targetedColor->color());
-
-		connect(colorDialog, &ColorDialog::currentColorChanged, [=] (const QColor &selectedColor) {
-			settings->setCustomColorRole(_targetedColor->colorRole(), selectedColor);
-		});
-		connect(colorDialog, &ColorDialog::aboutToBeClosed, [=] () {
-			_targetedColor->setColor(colorDialog->currentColor());
-		});
-
-		// Moves the color dialog right to the mainWindow
-		if (parentWidget()->width() + 20 + colorDialog->width() < qApp->desktop()->availableGeometry().width()) {
-			int desktopWidth = qApp->desktop()->availableGeometry().width();
-			int w = (desktopWidth - (parentWidget()->width() + 20 + colorDialog->width())) / 2;
-			parentWidget()->move(QPoint(w, parentWidget()->pos().y()));
-			int h = parentWidget()->y() + parentWidget()->height() / 2 - colorDialog->height() / 2;
-			colorDialog->move(parentWidget()->x() + 40 + parentWidget()->width(), h);
-		}
+		//qDebug() << colorDialog->currentColor() << _targetedColor->color();
 		this->hide();
+		colorDialog->exec();
 	}
 }
 
@@ -331,10 +318,13 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 		bgPrimaryColorWidget->setColor(settings->customColors(QPalette::Base));
 		selectedItemColorWidget->setColor(settings->customColors(QPalette::Highlight));
 	} else {
-		int gray = qGray(settings->customColors(QPalette::Base).rgb());
+		QColor base = style()->standardPalette().base().color();
+		QColor highlight = style()->standardPalette().highlight().color();
+		int gray = qGray(base.rgb());
 		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
-		gray = qGray(settings->customColors(QPalette::Highlight).rgb());
+		gray = qGray(highlight.rgb());
 		selectedItemColorWidget->setColor(QColor(gray, gray, gray));
+		QApplication::setPalette(style()->standardPalette());
 	}
 }
 

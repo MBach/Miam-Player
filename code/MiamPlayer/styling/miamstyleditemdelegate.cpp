@@ -32,13 +32,9 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 	p->save();
 	p->setPen(o.palette.mid().color());
 
-	SettingsPrivate *settings = SettingsPrivate::instance();
+	//SettingsPrivate *settings = SettingsPrivate::instance();
 	if (o.state.testFlag(QStyle::State_Selected)) {
-		if (settings->isCustomColors()) {
-			p->setPen(o.palette.highlight().color().darker(100));
-		} else {
-			p->setPen(o.palette.highlight().color());
-		}
+		p->setPen(o.palette.highlight().color());
 		p->fillRect(o.rect, o.palette.highlight().color().lighter());
 
 		// Don't display the upper line is the track above is selected

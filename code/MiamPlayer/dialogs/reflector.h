@@ -22,7 +22,7 @@ public:
 	QPalette::ColorRole colorRole() const;
 
 	/** Setter to the color used in the preview pane in the Customize Theme Dialog. */
-	inline void setColor(const QColor &color) { this->backgroundColor = color; }
+	void setColor(const QColor &color);
 
 protected:
 	/** Redefined to be able to reflect the color of the elements in the Customize Theme Dialog. */

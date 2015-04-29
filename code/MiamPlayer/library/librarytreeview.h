@@ -91,6 +91,8 @@ public:
 
 	virtual void init() override;
 
+	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
+
 	/** Rebuild the list of separators when one has changed grammatical articles in options. */
 	void rebuildSeparators();
 
