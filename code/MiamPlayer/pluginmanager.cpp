@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QPluginLoader>
 
+#include <settings.h>
 #include "mainwindow.h"
 #include "settingsprivate.h"
 #include "model/selectedtracksmodel.h"
@@ -157,7 +158,6 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
 			_mainWindow->close();
 			view->show();
-			SettingsPrivate::instance()->setLastActiveView(actionAddViewToMenu->objectName());
 		});
 
 		// Link the view to the existing ActionGroup
@@ -165,6 +165,7 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
 		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
 	}
+	mediaPlayerPlugin->setMediaPlayer(MediaPlayer::instance());
 }
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)

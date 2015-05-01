@@ -28,6 +28,16 @@ Settings* Settings::instance()
 	return settings;
 }
 
+QString Settings::lastActiveView() const
+{
+	QString l = value("lastActiveView").toString();
+	if (l.isEmpty()) {
+		return "actionViewPlaylists";
+	} else {
+		return l;
+	}
+}
+
 /** Returns the actual theme name. */
 QString Settings::theme() const
 {
@@ -47,6 +57,14 @@ int Settings::volume() const
    } else {
 	   return value("volume").toInt();
    }
+}
+
+/// Slots
+
+/** Sets the last view activated by the user. Used when reopening the player. */
+void Settings::setLastActiveView(const QString &viewName)
+{
+	setValue("lastActiveView", viewName);
 }
 
 void Settings::setThemeName(const QString &theme)

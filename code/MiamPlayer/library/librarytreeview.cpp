@@ -409,7 +409,6 @@ void LibraryTreeView::highlightMatchingText(const QString &text)
 				parent = parent->parent();
 			}
 		}
-		qDebug() << lettersToHighlight;
 	}
 	_jumpToWidget->highlightLetters(lettersToHighlight);
 }

@@ -43,7 +43,10 @@ void CornerWidget::paintEvent(QPaintEvent *)
 	static const qreal penScaleFactor = 0.2;
 	QPoint mfg = mapFromGlobal(QCursor::pos());
 
+	p.setPen(o.palette.mid().color());
 	if (SettingsPrivate::instance()->isRectTabs()) {
+		p.drawLine(rect().x(), rect().y() + rect().height() - 1, rect().x() + rect().width(), rect().y() + rect().height() - 1);
+
 		o.rect.setWidth(o.rect.height());
 		float offset = o.rect.height() / 5.0;
 		bool isInside = o.rect.contains(mfg);
@@ -61,11 +64,11 @@ void CornerWidget::paintEvent(QPaintEvent *)
 		p.drawRect(o.rect);
 	} else {
 		o.rect.setWidth(o.rect.height() * 1.5);
-
 		double h = this->height() / (double)8;
 		bool isInside = o.rect.contains(mfg);
 		o.rect.adjust(h, h, -h, -h);
 		int dist = 0 + SettingsPrivate::instance()->tabsOverlappingLength();
+		p.drawLine(o.rect.x() + dist - h, rect().y() + rect().height() - 1, rect().x() + rect().width(), rect().y() + rect().height() - 1);
 		if (isInside) {
 			plusPen = QPen(palette.highlight(), penScaleFactor);
 			p.setPen(palette.highlight().color());
@@ -118,7 +121,4 @@ void CornerWidget::paintEvent(QPaintEvent *)
 		linearGradient.setColorAt(1, QColor(253, 230, 116));
 		p.setBrush(linearGradient);
 	}
-	//qDebug() << Q_FUNC_INFO << this->rect();
-	//p.setPen(Qt::red);
-	//p.drawLine(this->rect().bottomLeft(), this->rect().bottomRight());
 }

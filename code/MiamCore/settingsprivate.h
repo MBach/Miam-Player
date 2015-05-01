@@ -143,9 +143,6 @@ public:
 	/** Returns the last active playlist header state. */
 	QByteArray lastActivePlaylistGeometry() const;
 
-	/** Returns the last view activated by the user. Used when reopening the player. */
-	QString lastActiveView() const;
-
 	QStringList libraryFilteredByArticles() const;
 
 	LibrarySearchMode librarySearchMode() const;
@@ -224,9 +221,6 @@ public slots:
 
 	/** Save the last active playlist header state. */
 	void setLastActivePlaylistGeometry(const QByteArray &);
-
-	/** Sets the last view activated by the user. Used when reopening the player. */
-	void setLastActiveView(const QString &viewName);
 
 	void setLibraryFilteredByArticles(const QStringList &tagList);
 

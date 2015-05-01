@@ -20,8 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent)
 {
 	setupUi(this);
-	widgetSearchBar->setFrameBorder(false, true, true, false);
-	widgetSearchBar->setHalfTop(true);
+	widgetSearchBar->setFrameBorder(false, false, true, false);
 
 	this->setAcceptDrops(true);
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
@@ -48,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::activateLastView()
 {
 	// Find the last active view and connect database to it
-	QString viewName = SettingsPrivate::instance()->lastActiveView();
+	QString viewName = Settings::instance()->lastActiveView();
 	QAction *lastActiveView = findChild<QAction*>(viewName);
 	if (lastActiveView) {
 		lastActiveView->trigger();
@@ -127,6 +126,8 @@ void MainWindow::init()
 
 	// Load shortcuts
 	customizeOptionsDialog->initShortcuts();
+
+	playbackModeWidgetFactory->update();
 }
 
 /** Plugins. */
@@ -185,17 +186,17 @@ void MainWindow::setupActions()
 	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(0);
-		SettingsPrivate::instance()->setLastActiveView(actionViewPlaylists->objectName());
+		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 	});
 	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(1);
-		SettingsPrivate::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
+		Settings::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
 	});
 	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(1);
 		actionViewTagEditor->setChecked(true);
-		SettingsPrivate::instance()->setLastActiveView(actionViewTagEditor->objectName());
+		Settings::instance()->setLastActiveView(actionViewTagEditor->objectName());
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
@@ -290,6 +291,7 @@ void MainWindow::setupActions()
 
 	// Media buttons and their shortcuts
 	auto mp = MediaPlayer::instance();
+	mp->setParent(this);
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
 		bool isPlaying = (mp->state() == QMediaPlayer::PlayingState || mp->state() == QMediaPlayer::PausedState);
 		actionSeekBackward->setEnabled(isPlaying);
@@ -505,13 +507,10 @@ bool MainWindow::event(QEvent *e)
 	bool b = QMainWindow::event(e);
 	// Init the address bar. It's really important to have the exact width on screen
 	if (e->type() == QEvent::Show) {
-		// qDebug() << Q_FUNC_INFO;
-		// SettingsPrivate::instance()->setLastActiveView(this->objectName());
 		if (!filesystem->isVisible()) {
 			addressBar->setMinimumWidth(leftTabs->width());
 		}
 		addressBar->init(QDir(SettingsPrivate::instance()->defaultLocationFileExplorer()));
-		//customizeThemeDialog->loadTheme();
 	}
 	return b;
 }
@@ -695,6 +694,7 @@ void MainWindow::showTabPlaylists()
 {
 	if (!actionViewPlaylists->isChecked()) {
 		actionViewPlaylists->setChecked(true);
+		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 	}
 	stackedWidgetRight->setCurrentIndex(0);
 }
@@ -703,6 +703,7 @@ void MainWindow::showTagEditor()
 {
 	if (!actionViewTagEditor->isChecked()) {
 		actionViewTagEditor->setChecked(true);
+		Settings::instance()->setLastActiveView(actionViewTagEditor->objectName());
 	}
 	stackedWidgetRight->setCurrentIndex(1);
 }

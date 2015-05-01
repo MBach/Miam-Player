@@ -249,7 +249,6 @@ Playlist* TabPlaylist::addPlaylist()
 	setCurrentIndex(i);
 	uint hash = qHash(p);
 	this->tabBar()->setTabData(i, hash);
-	emit playlistCreated();
 	return p;
 }
 

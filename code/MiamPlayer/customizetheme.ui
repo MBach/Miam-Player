@@ -1492,7 +1492,7 @@
                </size>
               </property>
               <property name="checked">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1502,15 +1502,12 @@
                <string>No</string>
               </property>
               <property name="checked">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
              <widget class="QLabel" name="labelBigCoverOpacity">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="text">
                <string>Opacity</string>
               </property>
@@ -1518,9 +1515,6 @@
             </item>
             <item row="1" column="2">
              <widget class="QSpinBox" name="spinBoxBigCoverOpacity">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <property name="minimum">
                <number>0</number>
               </property>
@@ -2715,9 +2709,9 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroupEnableStarOutline"/>
-  <buttongroup name="buttonGroupArtistsArticle"/>
-  <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
+  <buttongroup name="buttonGroupArtistsArticle"/>
+  <buttongroup name="buttonGroupEnableStarOutline"/>
+  <buttongroup name="buttonGroupReorderArtists"/>
  </buttongroups>
 </ui>

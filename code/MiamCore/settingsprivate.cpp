@@ -207,7 +207,7 @@ SettingsPrivate::InsertPolicy SettingsPrivate::insertPolicy() const
 bool SettingsPrivate::isBigCoverEnabled() const
 {
 	if (value("bigCovers").isNull()) {
-		return false;
+		return true;
 	} else {
 		return value("bigCovers").toBool();
 	}
@@ -359,16 +359,6 @@ QString SettingsPrivate::language()
 QByteArray SettingsPrivate::lastActivePlaylistGeometry() const
 {
 	return value("lastActivePlaylistGeometry").toByteArray();
-}
-
-QString SettingsPrivate::lastActiveView() const
-{
-	QString l = value("lastActiveView").toString();
-	if (l.isEmpty()) {
-		return "library";
-	} else {
-		return l;
-	}
 }
 
 QStringList SettingsPrivate::libraryFilteredByArticles() const
@@ -638,12 +628,6 @@ void SettingsPrivate::setIsLibraryFilteredByArticles(bool b)
 void SettingsPrivate::setLastActivePlaylistGeometry(const QByteArray &ba)
 {
 	setValue("lastActivePlaylistGeometry", ba);
-}
-
-/** Sets the last view activated by the user. Used when reopening the player. */
-void SettingsPrivate::setLastActiveView(const QString &viewName)
-{
-	setValue("lastActiveView", viewName);
 }
 
 void SettingsPrivate::setLibraryFilteredByArticles(const QStringList &tagList)

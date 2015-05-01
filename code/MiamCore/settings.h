@@ -26,6 +26,9 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* instance();
 
+	/** Returns the last view activated by the user. Used when reopening the player. */
+	QString lastActiveView() const;
+
 	/** Returns the actual theme name. */
 	QString theme() const;
 
@@ -33,6 +36,9 @@ public:
 	int volume() const;
 
 public slots:
+	/** Sets the last view activated by the user. Used when reopening the player. */
+	void setLastActiveView(const QString &viewName);
+
 	/** Sets a new theme. */
 	void setThemeName(const QString &theme);
 

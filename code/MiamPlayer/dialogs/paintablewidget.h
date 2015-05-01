@@ -16,11 +16,10 @@ class PaintableWidget : public QWidget
 	Q_OBJECT
 private:
 	bool _left, _top, _right, _bottom;
-	bool _halfTop;
 
 public:
 	explicit PaintableWidget(QWidget *parent) : QWidget(parent),
-		_left(false), _top(false), _right(false), _bottom(false), _halfTop(false)
+		_left(false), _top(false), _right(false), _bottom(false)
 	{}
 
 	void setFrameBorder(bool left, bool top, bool right, bool bottom)
@@ -30,8 +29,6 @@ public:
 		_right = right;
 		_bottom = bottom;
 	}
-
-	void setHalfTop(bool half) { _halfTop = half; }
 
 protected:
 	virtual void paintEvent(QPaintEvent *)
@@ -43,14 +40,10 @@ protected:
 		p.setPen(QApplication::palette().mid().color());
 		if ((_left && isLeftToRight()) || (_right && !isLeftToRight())) p.drawLine(rect().topLeft(), rect().bottomLeft());
 		if (_top) {
-			if (_halfTop) {
-				if (isLeftToRight()) {
-					p.drawLine(QPoint(rect().center().x() + 1, rect().y()), rect().topRight());
-				} else {
-					p.drawLine(rect().topLeft(), QPoint(rect().center().x(), rect().y()));
-				}
+			if (isLeftToRight()) {
+				p.drawLine(QPoint(rect().center().x() + 1, rect().y()), rect().topRight());
 			} else {
-				p.drawLine(rect().topLeft(), rect().topRight());
+				p.drawLine(rect().topLeft(), QPoint(rect().center().x(), rect().y()));
 			}
 		}
 		if ((_right && isLeftToRight()) || (_left && !isLeftToRight())) p.drawLine(rect().topRight(), rect().bottomRight());

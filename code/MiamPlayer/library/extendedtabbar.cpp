@@ -40,123 +40,96 @@ QSize ExtendedTabBar::tabSizeHint(int) const
 }
 
 /** Redefined to be style-aware at runtime. */
-void ExtendedTabBar::paintEvent(QPaintEvent *e)
+void ExtendedTabBar::paintEvent(QPaintEvent *)
 {
-	/*QStyleOptionTab library, fileExporer;
-	initStyleOption(&library, 0);
-	initStyleOption(&fileExporer, 1);
-	library.palette = QApplication::palette();
-	fileExporer.palette = QApplication::palette();
+	QStyleOptionTab lib, fe;
+	initStyleOption(&lib, 0);
+	initStyleOption(&fe, 1);
+	QPalette pal = QApplication::palette();
 
 	QStylePainter p(this);
-	p.fillRect(library.rect, library.palette.base().color());
+	// Library is selected
+	if (currentIndex() == 0) {
+		p.fillRect(lib.rect, lib.palette.base().color());
+		p.setPen(pal.text().color());
+		p.drawText(lib.rect, Qt::AlignCenter, fontMetrics().elidedText(lib.text, Qt::ElideRight, lib.rect.width()));
 
-	qDebug() << Q_FUNC_INFO << this->rect();*/
-	QStylePainter p(this);
-
-	QStyleOptionTabBarBase o;
-	o.palette = QApplication::palette();
-	int selected = currentIndex();
-
-	for (int i = 0; i < count(); ++i)
-		o.tabBarRect |= tabRect(i);
-
-	for (int i = 0; i < count(); ++i) {
-		QStyleOptionTab tab;
-		initStyleOption(&tab, i);
-		tab.palette = QApplication::palette();
-		if (!(tab.state & QStyle::State_Enabled)) {
-			tab.palette.setCurrentColorGroup(QPalette::Disabled);
-		}
-
-		//o.tabBarRect |= tab.rect;
-		tab.rect.setCoords(i * rect().width() / 2, 0,
-						   (i + 1) * rect().width() / 2 - 1, rect().height());
-		if (i == selected) {
-
-			o.selectedTabRect = tab.rect;
-			//qDebug() << Q_FUNC_INFO << i << tab.rect << o.selectedTabRect;
-			continue;
-		}
-
-		// Reduces the size of the tab
-		/*if (i > 0) {
-			if (isLeftToRight()) {
-				tab.rect.adjust(1, 3, -3, 0);
-			} else {
-				tab.rect.adjust(1, 3, 0, 0);
-			}
-		} else {
-			if (isLeftToRight()) {
-				tab.rect.adjust(3, 3, 0, 0);
-			} else {
-				tab.rect.adjust(0, 3, 0, 0);
-			}
-		}*/
-		/// XXX: custom/default colors shouldn't be treated here
-		p.save();
-		/*if (SettingsPrivate::instance()->isCustomColors()) {
-			if (tab.state.testFlag(QStyle::State_MouseOver)) {
-				p.setPen(tab.palette.highlight().color());
-				p.fillRect(tab.rect, tab.palette.highlight().color().lighter());
-			} else {
-				p.setPen(tab.palette.mid().color());
-				p.fillRect(tab.rect, tab.palette.base());
-			}
-		} else {*/
-		if (tab.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.highlight().color());
-			p.fillRect(tab.rect, tab.palette.highlight().color().lighter(170));
-		} else {
-			p.setPen(o.palette.midlight().color());
-			p.fillRect(tab.rect, tab.palette.window().color().lighter(105));
-		}
-		//}
-		p.drawLine(tab.rect.x(), tab.rect.y(),
-				   tab.rect.x() + tab.rect.width(), tab.rect.y());
-		p.drawLine(tab.rect.x(), tab.rect.y(),
-				   tab.rect.x(), tab.rect.y() + tab.rect.height());
-		p.drawLine(tab.rect.x() + tab.rect.width(), tab.rect.y(),
-				   tab.rect.x() + tab.rect.width(), tab.rect.y() + tab.rect.height());
-		p.restore();
-
-		/*if (tab.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.highlightedText().color());
-		} else {
-			p.setPen(o.palette.windowText().color());
-		}*/
-		// If the rectangle is smaller than the text, shrink it
-		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
-	}
-
-	// Draw the selected tab last to get it "on top"
-	if (selected >= 0) {
-		QStyleOptionTab tab;
-		initStyleOption(&tab, selected);
-		tab.palette = QApplication::palette();
-		p.fillRect(tab.rect, tab.palette.base().color().lighter(110));
-		/*if (tab.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.highlightedText().color());
-		} else {
-			p.setPen(o.palette.windowText().color());
-		}*/
-		p.drawText(tab.rect, Qt::AlignCenter, fontMetrics().elidedText(tab.text, Qt::ElideRight, tab.rect.width()));
-		p.setPen(tab.palette.mid().color());
-		p.drawLine(tab.rect.x(), tab.rect.y(),
-				   tab.rect.x() + tab.rect.width(), tab.rect.y());
+		// Draw Top and Right lines only
+		p.setPen(pal.mid().color());
+		p.drawLine(lib.rect.x(), lib.rect.y(), lib.rect.x() + lib.rect.width(), lib.rect.y());
 		if (isLeftToRight()) {
-			p.drawLine(tab.rect.x() + tab.rect.width(), tab.rect.y(),
-					   tab.rect.x() + tab.rect.width(), tab.rect.y() + tab.rect.height());
-			if (selected > 0) {
-				p.drawLine(tab.rect.x(), tab.rect.y(),
-						   tab.rect.x(), tab.rect.y() + tab.rect.height());
+			p.drawLine(lib.rect.x() + lib.rect.width(), lib.rect.y(), lib.rect.x() + lib.rect.width(), lib.rect.y() + lib.rect.height());
+		} else {
+			p.drawLine(lib.rect.x(), lib.rect.y(), lib.rect.x(), lib.rect.y() + lib.rect.height());
+		}
+
+		// Reduce the size of unselected tab
+		fe.rect.adjust(3, 2, -3, 0);
+
+		if (fe.state.testFlag(QStyle::State_MouseOver)) {
+			p.fillRect(fe.rect, pal.highlight().color().light());
+			p.setPen(pal.text().color());
+			p.drawText(fe.rect, Qt::AlignCenter, fontMetrics().elidedText(fe.text, Qt::ElideRight, fe.rect.width()));
+			p.setPen(fe.palette.highlight().color());
+		} else {
+			p.fillRect(fe.rect, pal.light().color());
+			p.setPen(pal.mid().color());
+			p.drawText(fe.rect, Qt::AlignCenter, fontMetrics().elidedText(fe.text, Qt::ElideRight, fe.rect.width()));
+			p.setPen(pal.midlight().color());
+		}
+
+		// Draw Left, Top and Right lines
+		p.drawLine(fe.rect.x(), fe.rect.y() + fe.rect.height(), fe.rect.x(), fe.rect.y());
+		p.drawLine(fe.rect.x(), fe.rect.y(), fe.rect.x() + fe.rect.width(), fe.rect.y());
+		p.drawLine(fe.rect.x() + fe.rect.width(), fe.rect.y(), fe.rect.x() + fe.rect.width(), fe.rect.y() + fe.rect.height());
+
+		// Draw bottom line
+		p.setPen(pal.mid().color());
+		if (isLeftToRight()) {
+			p.drawLine(rect().x() + rect().width() / 2, rect().y() + rect().height() - 1, rect().x() + rect().width(), rect().y() + rect().height() - 1);
+		} else {
+			p.drawLine(rect().x(), rect().y() + rect().height() - 1, rect().x() + rect().width() / 2, rect().y() + rect().height() - 1);
+		}
+	} else {
+		p.fillRect(fe.rect, lib.palette.base().color());
+		p.setPen(pal.text().color());
+		p.drawText(fe.rect, Qt::AlignCenter, fontMetrics().elidedText(fe.text, Qt::ElideRight, fe.rect.width()));
+
+		if (isLeftToRight()) {
+			if (rect().width() % 2 == 0) {
+				lib.rect.adjust(0, 0, -1, 0);
+				fe.rect.adjust(-1, 0, -1, 0);
 			}
 		} else {
-			tab.rect.adjust(1, 0, 0, 0);
-			p.drawLine(tab.rect.topLeft(), tab.rect.bottomLeft());
-			if (selected > 0) {
-				p.drawLine(tab.rect.topRight(), tab.rect.bottomRight());
+			if (rect().width() % 2 == 1) {
+				lib.rect.adjust(0, 0, -1, 0);
+				fe.rect.adjust(1, 0, -1, 0);
 			}
 		}
+
+		// Draw Left, Top and Right lines
+		p.setPen(pal.mid().color());
+		p.drawLine(fe.rect.x(), fe.rect.y() + fe.rect.height(), fe.rect.x(), fe.rect.y());
+		p.drawLine(fe.rect.x(), fe.rect.y(), fe.rect.x() + fe.rect.width(), fe.rect.y());
+		p.drawLine(fe.rect.x() + fe.rect.width(), fe.rect.y(), fe.rect.x() + fe.rect.width(), fe.rect.y() + fe.rect.height());
+
+		// Reduce the size of unselected tab
+		lib.rect.adjust(2, 2, -3, 0);
+		if (lib.state.testFlag(QStyle::State_MouseOver)) {
+			p.fillRect(lib.rect, pal.highlight().color().light());
+			p.setPen(pal.text().color());
+			p.drawText(lib.rect, Qt::AlignCenter, fontMetrics().elidedText(lib.text, Qt::ElideRight, lib.rect.width()));
+			p.setPen(lib.palette.highlight().color());
+		} else {
+			p.fillRect(lib.rect, pal.light().color());
+			p.setPen(pal.mid().color());
+			p.drawText(lib.rect, Qt::AlignCenter, fontMetrics().elidedText(lib.text, Qt::ElideRight, lib.rect.width()));
+			p.setPen(pal.midlight().color());
+		}
+
+		// Draw Left, Top and Right lines
+		p.drawLine(lib.rect.x(), lib.rect.y() + lib.rect.height(), lib.rect.x(), lib.rect.y());
+		p.drawLine(lib.rect.x(), lib.rect.y(), lib.rect.x() + lib.rect.width(), lib.rect.y());
+		p.drawLine(lib.rect.x() + lib.rect.width(), lib.rect.y(), lib.rect.x() + lib.rect.width(), lib.rect.y() + lib.rect.height());
 	}
 }

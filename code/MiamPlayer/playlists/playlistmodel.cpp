@@ -70,7 +70,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 		/// TrackDAO track = TrackLoader::instance()->loadFromUri(uri)
 		/// However, to avoid too much requests to remove server, it might be useful to update the line only before playback started
 		TrackDAO track = SqlDatabase::instance()->selectTrack(trackStr);
-		qDebug() << "remote track to be fully reloaded" << trackStr;
+		//qDebug() << "remote track to be fully reloaded" << trackStr;
 		this->createLine(rowIndex + i, track);
 	}
 }

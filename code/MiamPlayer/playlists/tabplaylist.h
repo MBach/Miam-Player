@@ -106,8 +106,6 @@ signals:
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 
-	void playlistCreated();
-
 	void selectionChanged(bool isEmpty);
 
 	void updatePlaybackModeButton();
