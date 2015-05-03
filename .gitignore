@@ -6,6 +6,9 @@
 *.wixobj
 *.wixpdb
 *ui_*.h
+
+doc/html/*
+
 packaging/windows/MiamPlayer-*.exe
 packaging/windows/packages/org.miamplayer.core/data/*
 packaging/windows/packages/org.miamplayer.plugins.coverfetcher/data/*

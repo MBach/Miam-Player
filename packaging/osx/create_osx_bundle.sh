@@ -12,7 +12,7 @@ build=~/dev/Miam-Player-build
 vlcDir=/Applications/VLC.app
 
 # Current release
-version=0.7.1
+version=0.7.2
 
 ### Libraries
 # Modify uncomplete App first
