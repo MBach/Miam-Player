@@ -110,14 +110,6 @@
         <translation>Nur übereinstimmenden Text hervorheben</translation>
     </message>
     <message>
-        <source>Artists and albums list</source>
-        <translation>Liste der Interpreten und Alben</translation>
-    </message>
-    <message>
-        <source>Would you like to activate favorites?</source>
-        <translation>Möchten Sie Favoriten aktivieren?</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
@@ -542,14 +534,6 @@
         <translation>Favoriten verwalten</translation>
     </message>
     <message>
-        <source>This option can be changed in General options section</source>
-        <translation>Diese Einstellung kann in den allgemeinen Einstellungen verändert werden</translation>
-    </message>
-    <message>
-        <source>Favorites are currently enabled</source>
-        <translation>Favoriten sind derzeit aktiviert</translation>
-    </message>
-    <message>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation>Diese Einstellung führt dazu, dass immer 5 Sterne in der Bewertung dargestellt werden. Dies trifft auch auf Musiktitel zu, die bisher nicht bewertet wurden</translation>
     </message>
@@ -564,14 +548,6 @@
     <message>
         <source>No</source>
         <translation>Nein</translation>
-    </message>
-    <message>
-        <source>Favorites are currently disabled</source>
-        <translation>Favoriten sind derzeit deaktiviert</translation>
-    </message>
-    <message>
-        <source>Always display stars right to the track name, even if there&apos;s no rating yet.</source>
-        <translation>Sterne immer auf der rechten Seite des Titels darstellen.</translation>
     </message>
     <message>
         <source>Customize selected theme</source>
@@ -731,6 +707,14 @@
     </message>
     <message>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to display stars in the library, left to the track name?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

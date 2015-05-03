@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Where is the player built with QtCreator?
-build=$HOME/Miam-Player-build-release
-deezerbuild=$HOME/build-deezer-plugin-Desktop-Release
+build=$HOME/Miam-Player-build
+#deezerbuild=$HOME/build-deezer-plugin-Desktop-Release
 
 # Current release
-version=0.7.1
+version=0.7.2
 
 # Temporary folder
 mkdir $HOME/miam-player_$version
@@ -17,7 +17,7 @@ cp -f $build/MiamUniqueLibrary/libmiam-uniquelibrary.so* ./miam-player/usr/lib/
 cp -f $build/MiamPlayer/miam-player ./miam-player/usr/bin/
 
 # Copy plugins
-cp -f $deezerbuild/libdeezer-plugin.so* ./miam-player/usr/lib
+#cp -f $deezerbuild/libdeezer-plugin.so* ./miam-player/usr/lib
 
 # Prepare final copy
 cp -Rf ./miam-player/* $dest/

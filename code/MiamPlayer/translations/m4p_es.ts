@@ -110,14 +110,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Artists and albums list</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Would you like to activate favorites?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -542,14 +534,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This option can be changed in General options section</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Favorites are currently enabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation type="unfinished"></translation>
     </message>
@@ -563,14 +547,6 @@
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Favorites are currently disabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Always display stars right to the track name, even if there&apos;s no rating yet.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -731,6 +707,14 @@
     </message>
     <message>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to display stars in the library, left to the track name?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -98,14 +98,6 @@
         <translation>أظهِر الكِتابة المُقابِلة</translation>
     </message>
     <message>
-        <source>Artists and albums list</source>
-        <translation>مَجْمُوعَةُ الفنانِين و الأشْرِطة</translation>
-    </message>
-    <message>
-        <source>Would you like to activate favorites?</source>
-        <translation>تُريدون ترخِيصْ إسْتِعمال المُفضلاتْ؟</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>نعَم</translation>
     </message>
@@ -542,10 +534,6 @@
         <translation>إدارة المسارات المفضلة</translation>
     </message>
     <message>
-        <source>Favorites are currently enabled</source>
-        <translation>بإمكانكم إدارة المسارات المفضلة الآن</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>نعم</translation>
     </message>
@@ -554,24 +542,12 @@
         <translation>لا</translation>
     </message>
     <message>
-        <source>Favorites are currently disabled</source>
-        <translation>إدارة المسارات المفضلة غير ممكن الآن</translation>
-    </message>
-    <message>
-        <source>This option can be changed in General options section</source>
-        <translation>هذا الخيار يمكن تغيره في قسم الخيارات العامة</translation>
-    </message>
-    <message>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation> هذا الخيار يظهر دائما خمس نجوم حتى لو لم يتم تقييم المسار بعد </translation>
     </message>
     <message>
         <source>This option will never show 5 gray stars if the track has not been rated </source>
         <translation>هذا الخيار لن يظهر أبدا خمس نجوم إدا لم يتم تقييم المسار </translation>
-    </message>
-    <message>
-        <source>Always display stars right to the track name, even if there&apos;s no rating yet.</source>
-        <translation>.دائما أظهر نجوم على يمين العناوين حتى وإن لم يتم بعد تقييم </translation>
     </message>
     <message>
         <source>Customize selected theme</source>
@@ -731,6 +707,14 @@
     </message>
     <message>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Would you like to display stars in the library, left to the track name?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

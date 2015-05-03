@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
-	//qInstallMessageHandler(debugOutput);
+	qInstallMessageHandler(debugOutput);
 
 	QtSingleApplication app(SOFT, argc, argv);
 

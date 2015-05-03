@@ -102,14 +102,6 @@
         <translation>Mettre en évidence le texte correspondant</translation>
     </message>
     <message>
-        <source>Artists and albums list</source>
-        <translation>Liste des artistes et des albums</translation>
-    </message>
-    <message>
-        <source>Would you like to activate favorites?</source>
-        <translation>Voulez-vous activer la gestion des pistes favorites ?</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
@@ -542,10 +534,6 @@
         <translation>Gestion des pistes favorites</translation>
     </message>
     <message>
-        <source>Favorites are currently enabled</source>
-        <translation>La gestion des pistes favorites est actuellement activée</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>Oui</translation>
     </message>
@@ -554,24 +542,12 @@
         <translation>Non</translation>
     </message>
     <message>
-        <source>Favorites are currently disabled</source>
-        <translation>La gestion des pistes favorites est actuellement désactivée</translation>
-    </message>
-    <message>
-        <source>This option can be changed in General options section</source>
-        <translation>Cette option se change dans le comportement général de l&apos;application</translation>
-    </message>
-    <message>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation>Cette option affichera toujours 5 étoiles grises, même si la piste n&apos;a pas été encore notée</translation>
     </message>
     <message>
         <source>This option will never show 5 gray stars if the track has not been rated </source>
         <translation>Cette option n&apos;affichera jamais 5 étoiles grises si la piste n&apos;a pas été notée</translation>
-    </message>
-    <message>
-        <source>Always display stars right to the track name, even if there&apos;s no rating yet.</source>
-        <translation>Toujours afficher des étoiles à droite des titres, même s&apos;il n&apos;existe pas encore de note.</translation>
     </message>
     <message>
         <source>Customize selected theme</source>
@@ -732,6 +708,14 @@
     <message>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
         <translation>Exemple : « The Beatles » deviendra « Beatles, the »</translation>
+    </message>
+    <message>
+        <source>Would you like to display stars in the library, left to the track name?</source>
+        <translation>Souhaitez-vous afficher des étoiles dans la bibliothèque, à gauche du nom de la piste ?</translation>
+    </message>
+    <message>
+        <source>Display star outline if there&apos;s no rating yet for a track</source>
+        <translation>Afficher le contour des étoiles s&apos;il n&apos;y a pas encore de note pour une piste</translation>
     </message>
 </context>
 <context>

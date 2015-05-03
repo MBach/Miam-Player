@@ -102,14 +102,6 @@
         <translation>Highlight only matching text</translation>
     </message>
     <message>
-        <source>Artists and albums list</source>
-        <translation>Artists and albums list</translation>
-    </message>
-    <message>
-        <source>Would you like to activate favorites?</source>
-        <translation>Would you like to activate favorites?</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
@@ -542,10 +534,6 @@
         <translation>Manage favorites</translation>
     </message>
     <message>
-        <source>Favorites are currently enabled</source>
-        <translation>Favorites are currently enabled</translation>
-    </message>
-    <message>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
@@ -554,24 +542,12 @@
         <translation>No</translation>
     </message>
     <message>
-        <source>Favorites are currently disabled</source>
-        <translation>Favorites are currently disabled</translation>
-    </message>
-    <message>
-        <source>This option can be changed in General options section</source>
-        <translation>This option can be changed in General options section</translation>
-    </message>
-    <message>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation>This option will always displays 5 stars, even if the track has not been rated yet</translation>
     </message>
     <message>
         <source>This option will never show 5 gray stars if the track has not been rated </source>
         <translation>This option will never show 5 gray stars if the track has not been rated </translation>
-    </message>
-    <message>
-        <source>Always display stars right to the track name, even if there&apos;s no rating yet.</source>
-        <translation>Always display stars right to the track name, even if there&apos;s no rating yet.</translation>
     </message>
     <message>
         <source>Customize selected theme</source>
@@ -732,6 +708,14 @@
     <message>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
         <translation>Example:  « The Beatles » will become « Beatles, the »</translation>
+    </message>
+    <message>
+        <source>Would you like to display stars in the library, left to the track name?</source>
+        <translation>Would you like to display stars in the library, left to the track name?</translation>
+    </message>
+    <message>
+        <source>Display star outline if there&apos;s no rating yet for a track</source>
+        <translation>Display star outline if there&apos;s no rating yet for a track</translation>
     </message>
 </context>
 <context>
