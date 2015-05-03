@@ -303,13 +303,14 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 		int totalHeight = track->model()->rowCount(track->parent()->index()) * option.rect.height();
 		QImage scaled;
 		QRect subRect;
+		int row = _proxy->mapFromSource(track->index()).row();
 		if (totalHeight > option.rect.width()) {
 			scaled = image->scaledToWidth(option.rect.width());
-			subRect = option.rect.translated(option.rect.width() - scaled.width(), -option.rect.y() + option.rect.height() * track->row());
+			subRect = option.rect.translated(option.rect.width() - scaled.width(), -option.rect.y() + option.rect.height() * row);
 		} else {
 			scaled = image->scaledToHeight(totalHeight);
 			int dx = option.rect.width() - scaled.width();
-			subRect = option.rect.translated(-dx, -option.rect.y() + option.rect.height() * track->row());
+			subRect = option.rect.translated(-dx, -option.rect.y() + option.rect.height() * row);
 		}
 
 		// Fill with white when there are too much tracks to paint (height of all tracks is greater than the scaled image)
