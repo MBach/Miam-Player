@@ -26,6 +26,8 @@ public:
 	void setModel(QAbstractItemModel *model);
 
 protected:
+	virtual QSize sectionSizeFromContents(int logicalIndex) const;
+
 	/** Redefined for dynamic translation. */
 	virtual void changeEvent(QEvent *event) override;
 

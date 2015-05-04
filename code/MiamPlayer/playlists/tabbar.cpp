@@ -234,7 +234,6 @@ QSize TabBar::tabSizeHint(int index) const
 void TabBar::paintRectTabs(QStylePainter &p)
 {
 	static const qreal penScaleFactor = 0.2;
-
 	for (int i = 0; i < count(); i++) {
 		QStyleOptionTab o;
 		initStyleOption(&o, i);
@@ -301,7 +300,6 @@ void TabBar::paintRectTabs(QStylePainter &p)
 void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 {
 	/// TODO: minor highlight bug when mouse goes on another tab without click
-
 	// Draw all tabs before the selected tab
 	QList<int> tabs;
 	for (int i = 0; i < count(); i++)
@@ -352,16 +350,9 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 		}
 		QRect midRect(topHozLine.p1(), QPoint(topHozLine.p2().x(), topHozLine.p2().y() + o.rect.height()));
 		if (i == currentIndex()) {
-			/// XXX
-			if (SettingsPrivate::instance()->isCustomColors()) {
-				p.fillPath(ppLeft, o.palette.base().color().lighter(110));
-				p.fillRect(midRect, o.palette.base().color().lighter(110));
-				p.fillPath(ppRight, o.palette.base().color().lighter(110));
-			} else {
-				p.fillPath(ppLeft, o.palette.base());
-				p.fillRect(midRect, o.palette.base());
-				p.fillPath(ppRight, o.palette.base());
-			}
+			p.fillPath(ppLeft, o.palette.base());
+			p.fillRect(midRect, o.palette.base());
+			p.fillPath(ppRight, o.palette.base());
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
 			p.fillPath(ppLeft, o.palette.highlight().color().lighter(170));
 			p.fillRect(midRect, o.palette.highlight().color().lighter(170));

@@ -1,6 +1,6 @@
 #include "playlistheaderview.h"
 
-#include "settingsprivate.h"
+#include <settingsprivate.h>
 #include <QApplication>
 #include <QStylePainter>
 
@@ -23,7 +23,7 @@ PlaylistHeaderView::PlaylistHeaderView(Playlist *parent) :
 	this->setFrameShape(QFrame::NoFrame);
 	this->setMinimumSectionSize(this->height());
 	this->setMouseTracking(true);
-	this->setSectionResizeMode(QHeaderView::Interactive);
+	this->setSectionResizeMode(Interactive);
 	this->setSectionsMovable(true);
 	this->setStretchLastSection(true);
 	this->installEventFilter(this);
@@ -60,6 +60,19 @@ void PlaylistHeaderView::setFont(const QFont &newFont)
 		this->setMinimumHeight(30);
 		this->setMaximumHeight(30);
 	}
+}
+
+QSize PlaylistHeaderView::sectionSizeFromContents(int logicalIndex) const
+{
+	if (logicalIndex == 5) {
+		QSize s = QHeaderView::sectionSizeFromContents(logicalIndex);
+		auto playlist = qobject_cast<Playlist*>(parentWidget());
+		if (playlist->rowHeight(0) != 0) {
+			s.setWidth(5 * playlist->rowHeight(0));
+		}
+		return s;
+	}
+	return QHeaderView::sectionSizeFromContents(logicalIndex);
 }
 
 /** Redefined for dynamic translation. */
@@ -120,20 +133,15 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this->viewport());
 
-	QLinearGradient vLinearGradient(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
-	/// XXX
+	QLinearGradient vLinearGradient(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
 	QPalette palette = QApplication::palette();
-	if (SettingsPrivate::instance()->isCustomColors()) {
-		vLinearGradient.setColorAt(0, palette.base().color().lighter(110));
-		vLinearGradient.setColorAt(1, palette.base().color());
-	} else {
-		vLinearGradient.setColorAt(0, palette.base().color());
-		vLinearGradient.setColorAt(1, palette.window().color());
-	}
+	vLinearGradient.setColorAt(0, palette.base().color());
+	vLinearGradient.setColorAt(1, palette.window().color());
 
 	QStyleOptionHeader opt;
 	opt.initFrom(this->viewport());
-	p.fillRect(rect(), QBrush(vLinearGradient));
+	p.fillRect(this->viewport()->rect(), QBrush(vLinearGradient));
+
 	p.setPen(opt.palette.windowText().color());
 	QRect r;
 	p.save();

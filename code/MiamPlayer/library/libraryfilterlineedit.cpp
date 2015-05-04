@@ -53,6 +53,8 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	//qDebug() << o.rect.height() << p.fontMetrics().height();
 	//o.rect.setHeight(p.fontMetrics().height());
 
+	/// FIXME
+	/// Use a path then fill it instead of using drawArc
 	p.fillRect(rect(), o.palette.base().color().lighter(110));
 
 	static const int startAngle = 90 * 16;
@@ -176,16 +178,6 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		p.setPen(o.palette.mid().color());
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, placeholderText());
 	}
-
-	// Border of this widget
-	/*p.setPen(o.palette.mid().color());
-	if (QApplication::isLeftToRight()) {
-		p.drawLine(QPoint(rect().center().x(), 0), rect().topRight());
-		p.drawLine(rect().topRight(), rect().bottomRight());
-	} else {
-		p.drawLine(QPoint(rect().center().x() - 1, 0), rect().topLeft());
-		p.drawLine(rect().topLeft(), rect().bottomLeft());
-	}*/
 }
 
 

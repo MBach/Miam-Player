@@ -7,6 +7,11 @@
 
 class Playlist;
 
+/**
+ * \brief		The PlaylistItemDelegate class is a delegate used to display rows in a table.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class PlaylistItemDelegate : public MiamStyledItemDelegate
 {
 	Q_OBJECT

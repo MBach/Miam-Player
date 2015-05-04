@@ -36,6 +36,8 @@ void CornerWidget::paintEvent(QPaintEvent *)
 {
 	QPalette palette = QApplication::palette();
 	QStylePainter p(this);
+	//p.fillRect(rect(), palette.window());
+
 	QStyleOptionTab o;
 	o.initFrom(this);
 	o.rect = rect();
@@ -110,15 +112,5 @@ void CornerWidget::paintEvent(QPaintEvent *)
 		p.setRenderHint(QPainter::Antialiasing, true);
 		p.drawPath(pp);
 		p.setRenderHint(QPainter::Antialiasing, false);
-
-		p.translate(o.rect.topLeft());
-
-		// When the tabbar is very big, the inner color of [+] is a gradient like star ratings
-		// Should I disable this gradient when height is small?
-		p.scale(o.rect.height() * penScaleFactor, o.rect.height() * penScaleFactor);
-		QLinearGradient linearGradient(0, 0, 0, o.rect.height() * 0.1);
-		linearGradient.setColorAt(0, Qt::white);
-		linearGradient.setColorAt(1, QColor(253, 230, 116));
-		p.setBrush(linearGradient);
 	}
 }

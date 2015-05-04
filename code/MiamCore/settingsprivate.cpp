@@ -465,7 +465,12 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 
 		// Automatically create a window color from the base one
 		QColor windowColor = color;
-		windowColor.setAlphaF(0.5);
+		//windowColor.setAlphaF(0.5);
+		if (text == Qt::white) {
+			windowColor = color.lighter(130);
+		} else {
+			windowColor = color.darker(110);
+		}
 		palette.setColor(QPalette::Window, windowColor);
 		colors.insert(QString::number(QPalette::Window), windowColor);
 	} else if (cr == QPalette::Highlight) {

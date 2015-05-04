@@ -286,9 +286,13 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 		}
 		break;
 	}
-    // Don't paint this frame (weird behaviour on OS X)
-    case PE_FrameTabBarBase:
-        break;
+	case PE_FrameTabBarBase:
+		if (widget) {
+			painter->fillRect(widget->rect(), QApplication::palette().window());
+		} else {
+			painter->fillRect(opt->rect, QApplication::palette().window());
+		}
+		break;
 	default: {
 		QProxyStyle::drawPrimitive(element, opt, painter, widget);
 		break;

@@ -52,7 +52,10 @@ Playlist::Playlist(QWidget *parent) :
 
 	// Init child members
 	verticalHeader()->hide();
-	this->setHorizontalHeader(new PlaylistHeaderView(this));
+	auto headerView = new PlaylistHeaderView(this);
+	this->setHorizontalHeader(headerView);
+	/// XXX not working?
+	//headerView->setSectionResizeMode(Playlist::COL_RATINGS, QHeaderView::Fixed);
 
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());

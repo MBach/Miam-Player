@@ -1,9 +1,10 @@
 #include "playlistitemdelegate.h"
 
+#include <model/sqldatabase.h>
+#include <filehelper.h>
+#include <settingsprivate.h>
 #include "playlist.h"
-#include "settingsprivate.h"
 #include "stareditor.h"
-#include "filehelper.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -25,8 +26,6 @@ QWidget* PlaylistItemDelegate::createEditor(QWidget *p, const QStyleOptionViewIt
 	return editor;
 }
 
-#include "model/sqldatabase.h"
-
 void PlaylistItemDelegate::commitAndClose()
 {
 	auto db = SqlDatabase::instance();
@@ -36,9 +35,7 @@ void PlaylistItemDelegate::commitAndClose()
 		QMediaContent mediaContent = _playlist->mediaPlaylist()->media(se->index().row());
 		QString fileName = QString(QFile::encodeName(mediaContent.canonicalUrl().toLocalFile()));
 		FileHelper fh(fileName);
-		int r = fh.rating();
 		fh.setRating(se->starRating.starCount());
-		qDebug() << "before" << r << "after" << fh.rating();
 		commitData(se);
 		closeEditor(se);
 		tracksToUpdate << qMakePair(fileName, QString());

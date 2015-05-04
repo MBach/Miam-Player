@@ -16,6 +16,13 @@ JumpToWidget::JumpToWidget(QAbstractItemView *view) :
 {
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
+	auto settings = SettingsPrivate::instance();
+	this->setFont(settings->font(SettingsPrivate::FF_Library));
+	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &font){
+		if (ff == SettingsPrivate::FF_Library) {
+			this->setFont(font);
+		}
+	});
 }
 
 bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
@@ -76,10 +83,11 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	p.fillRect(rect(), o.palette.window());
 
 	// Reduce the font if this widget is too small
+	//auto settings = SettingsPrivate::instance();
 	QFont f = p.font();
-	int fontPointSize = SettingsPrivate::instance()->fontSize(SettingsPrivate::FF_Library);
-	f.setPointSize(qMin(fontPointSize, height() / 60));
-	p.setFont(f);
+	//int fontPointSize = settings->fontSize(SettingsPrivate::FF_Library);
+	//f.setPointSize(qMin(fontPointSize, height() / 60));
+	//p.setFont(f);
 	for (int i = 0; i < 26; i++) {
 		p.save();
 		QChar qc(i + 65);
