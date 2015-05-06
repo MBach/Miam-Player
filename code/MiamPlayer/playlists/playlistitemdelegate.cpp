@@ -9,6 +9,7 @@
 #include <QApplication>
 #include <QDateTime>
 #include <QHeaderView>
+#include <QKeyEvent>
 #include <QPainter>
 #include <QStylePainter>
 
@@ -21,9 +22,34 @@ PlaylistItemDelegate::PlaylistItemDelegate(Playlist *playlist) :
 /** Redefined. */
 QWidget* PlaylistItemDelegate::createEditor(QWidget *p, const QStyleOptionViewItem &, const QModelIndex &index) const
 {
+	qDebug() << Q_FUNC_INFO;
 	StarEditor *editor = new StarEditor(index, p);
-	connect(editor, &StarEditor::editingFinished, this, &PlaylistItemDelegate::commitAndClose);
+	connect(editor, &StarEditor::editFinished, this, &PlaylistItemDelegate::commitAndClose);
 	return editor;
+}
+
+bool PlaylistItemDelegate::eventFilter(QObject *object, QEvent *event)
+{
+	// Cancel input and close editor
+	if (event->type() == QEvent::KeyPress) {
+		QKeyEvent *ke = static_cast<QKeyEvent*>(event);
+		if (ke->key() == Qt::Key_Escape) {
+			auto starEditor = qobject_cast<StarEditor*>(object);
+			StarRating sr = _playlist->model()->data(starEditor->index()).value<StarRating>();
+			starEditor->starRating.setStarCount(sr.starCount());
+			closeEditor(starEditor);
+			return true;
+		}
+	} else if (event->type() == QEvent::FocusOut) {
+		// Save value only if different from the moment where the editor was opened
+		auto starEditor = qobject_cast<StarEditor*>(object);
+		StarRating sr = _playlist->model()->data(starEditor->index()).value<StarRating>();
+		if (starEditor->starRating.starCount() != sr.starCount()) {
+			commitAndClose();
+			return true;
+		}
+	}
+	return MiamStyledItemDelegate::eventFilter(object, event);
 }
 
 void PlaylistItemDelegate::commitAndClose()
@@ -47,7 +73,6 @@ void PlaylistItemDelegate::commitAndClose()
 void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
 	StarEditor *starEditor = qobject_cast<StarEditor *>(editor);
-	qDebug() << Q_FUNC_INFO << starEditor->starRating.starCount();
 	model->setData(index, QVariant::fromValue(starEditor->starRating));
 	starEditor->deleteLater();
 }

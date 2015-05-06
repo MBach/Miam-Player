@@ -36,11 +36,14 @@ public:
 	virtual QSize sizeHint() const;
 
 protected:
-	void leaveEvent(QEvent *e);
+	virtual void leaveEvent(QEvent *event) override;
 
-	void mouseMoveEvent(QMouseEvent *e);
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
 
-	void paintEvent(QPaintEvent *event);
+	virtual void paintEvent(QPaintEvent *event) override;
+
+	/** Reduce the font if this widget is too small. */
+	virtual void resizeEvent(QResizeEvent *event) override;
 
 signals:
 	void aboutToScrollTo(const QString &letter);

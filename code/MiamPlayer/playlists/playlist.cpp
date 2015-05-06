@@ -324,6 +324,7 @@ void Playlist::dropEvent(QDropEvent *event)
 /** Redefined to handle escape key when editing ratings. */
 void Playlist::keyPressEvent(QKeyEvent *event)
 {
+	qDebug() << Q_FUNC_INFO;
 	if (event->key() == Qt::Key_Escape) {
 		// Two level escape: if there are editors or not
 		if (findChildren<StarEditor*>().isEmpty()) {

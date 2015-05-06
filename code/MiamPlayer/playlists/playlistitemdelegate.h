@@ -23,15 +23,17 @@ public:
 
 	explicit PlaylistItemDelegate(Playlist *playlist);
 
-	/** Redefined. */
-	virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;
+	virtual bool eventFilter(QObject *object, QEvent *event) override;
 
 	/** Redefined. */
-	virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+	virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const override;
+
+	/** Redefined. */
+	virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
 
 protected:
 	/** Redefined. */
-	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private slots:
 	void commitAndClose();

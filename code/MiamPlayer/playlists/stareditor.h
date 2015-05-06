@@ -46,6 +46,11 @@
 
 #include "starrating.h"
 
+/**
+ * \brief		The StarEditor class is reusing the example provided with Qt Framework
+ * \author      Digia Plc
+ * \copyright   GNU General Public License v3
+ */
 class StarEditor : public QWidget
 {
 	Q_OBJECT
@@ -55,17 +60,15 @@ public:
 	QModelIndex _index;
 	StarRating starRating;
 
-	virtual bool eventFilter(QObject *obj, QEvent *e);
-
 	inline QModelIndex index() const { return _index; }
 
 protected:
-	void mouseMoveEvent(QMouseEvent *event);
-	void mousePressEvent(QMouseEvent *);
-	void paintEvent(QPaintEvent *);
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mousePressEvent(QMouseEvent *) override;
+	virtual void paintEvent(QPaintEvent *) override;
 
 signals:
-	void editingFinished();
+	void editFinished();
 };
 
 #endif

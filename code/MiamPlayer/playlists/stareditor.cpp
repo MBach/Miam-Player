@@ -45,21 +45,15 @@
 
 #include <cmath>
 
-#include <QtDebug>
-
 StarEditor::StarEditor(const QModelIndex &index, QWidget *parent)
 	: QWidget(parent)
 {
 	starRating = index.data().value<StarRating>();
 	_index = index;
-	this->installEventFilter(this);
 	this->setMouseTracking(true);
-	qDebug() << "Editor for" << index;
-}
-
-bool StarEditor::eventFilter(QObject *obj, QEvent *e)
-{
-	return QWidget::eventFilter(obj, e);
+	this->setFocusPolicy(Qt::ClickFocus);
+	this->setFocus();
+	parent->installEventFilter(this);
 }
 
 void StarEditor::mouseMoveEvent(QMouseEvent *event)
@@ -69,9 +63,19 @@ void StarEditor::mouseMoveEvent(QMouseEvent *event)
 	update();
 }
 
-void StarEditor::mousePressEvent(QMouseEvent *)
+void StarEditor::mousePressEvent(QMouseEvent *event)
 {
-	emit editingFinished();
+	if (rect().contains(event->pos())) {
+		StarRating savedRating = _index.data().value<StarRating>();
+		// Send signal only if one has really changed the value of the track
+		if (starRating.starCount() == savedRating.starCount()) {
+			close();
+			return;
+		} else {
+			emit editFinished();
+		}
+	}
+	QWidget::mousePressEvent(event);
 }
 
 void StarEditor::paintEvent(QPaintEvent *)

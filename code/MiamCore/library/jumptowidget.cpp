@@ -58,18 +58,28 @@ QSize JumpToWidget::sizeHint() const
 	return QSize(20, _view->height());
 }
 
-void JumpToWidget::leaveEvent(QEvent *e)
+void JumpToWidget::leaveEvent(QEvent *event)
 {
 	_pos = QPoint(-1, -1);
-	QWidget::leaveEvent(e);
+	QWidget::leaveEvent(event);
 	this->update();
 }
 
-void JumpToWidget::mouseMoveEvent(QMouseEvent *e)
+void JumpToWidget::mouseMoveEvent(QMouseEvent *event)
 {
-	_pos = e->pos();
-	QWidget::mouseMoveEvent(e);
+	_pos = event->pos();
+	QWidget::mouseMoveEvent(event);
 	this->update();
+}
+
+/** Reduce the font if this widget is too small. */
+void JumpToWidget::resizeEvent(QResizeEvent *event)
+{
+	QFont f = this->font();
+	int fontPointSize = SettingsPrivate::instance()->fontSize(SettingsPrivate::FF_Library);
+	f.setPointSize(qMin(fontPointSize, height() / 60));
+	this->setFont(f);
+	QWidget::resizeEvent(event);
 }
 
 void JumpToWidget::paintEvent(QPaintEvent *)
@@ -82,12 +92,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	o.palette = QApplication::palette();
 	p.fillRect(rect(), o.palette.window());
 
-	// Reduce the font if this widget is too small
-	//auto settings = SettingsPrivate::instance();
 	QFont f = p.font();
-	//int fontPointSize = settings->fontSize(SettingsPrivate::FF_Library);
-	//f.setPointSize(qMin(fontPointSize, height() / 60));
-	//p.setFont(f);
 	for (int i = 0; i < 26; i++) {
 		p.save();
 		QChar qc(i + 65);

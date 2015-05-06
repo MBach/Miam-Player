@@ -46,6 +46,11 @@
 #include <QStyleOptionViewItem>
 #include <QVector>
 
+/**
+ * \brief		The StarRating class is reusing the example provided with Qt Framework
+ * \author      Digia Plc
+ * \copyright   GNU General Public License v3
+ */
 class StarRating
 {
 private:
