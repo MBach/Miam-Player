@@ -1,7 +1,7 @@
 #include "albumdao.h"
 
 AlbumDAO::AlbumDAO(QObject *parent) :
-	GenericDAO(parent, GenericDAO::Album)
+	GenericDAO(Miam::IT_Album, parent)
 {}
 
 AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
@@ -50,3 +50,28 @@ void AlbumDAO::setUri(const QString &uri) { _uri = uri; }
 
 QString AlbumDAO::year() const { return _year; }
 void AlbumDAO::setYear(const QString &year) { _year = year; }
+
+bool operator==(const AlbumDAO &d1, const AlbumDAO &d2)
+{
+	return  d1.checksum() == d2.checksum() &&
+			d1.host() == d2.host() &&
+			d1.icon() == d2.icon() &&
+			d1.id() == d2.id() &&
+			d1.title() == d2.title() &&
+			d1.titleNormalized() == d2.titleNormalized() &&
+			d1.parent() == d2.parent() &&
+			d1.type() == d2.type() &&
+			d1.artist() == d2.artist() &&
+			d1.disc() == d2.disc() &&
+			d1.cover() == d2.cover() &&
+			d1.length() == d2.length() &&
+			d1.source() == d2.source() &&
+			d1.uri() == d2.uri() &&
+			d1.year() == d2.year();
+}
+
+/*uint qHash(AlbumDAO *key)
+{
+	GenericDAO *parent = key;
+	return qHash(parent) ^ qHash(key->title());
+}*/

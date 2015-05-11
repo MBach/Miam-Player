@@ -1,7 +1,7 @@
 #include "genericdao.h"
 
-GenericDAO::GenericDAO(QObject *parent, NodeType nt) :
-	QObject(parent), _parent(NULL), _type(nt)
+GenericDAO::GenericDAO(Miam::ItemType itemType, QObject *parent) :
+	QObject(parent), _parent(NULL), _type(itemType)
 {}
 
 GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
@@ -18,7 +18,6 @@ GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
 
 GenericDAO& GenericDAO::operator=(const GenericDAO& remoteObject)
 {
-	//QObject::operator=(other);
 	_checksum = remoteObject.checksum();
 	_host = remoteObject.host();
 	_icon = remoteObject.icon();
@@ -54,4 +53,11 @@ void GenericDAO::setTitle(const QString &title) { _title = title; }
 QString GenericDAO::titleNormalized() const{ return _titleNormalized; }
 void GenericDAO::setTitleNormalized(const QString &titleNormalized) { _titleNormalized = titleNormalized; }
 
-GenericDAO::NodeType GenericDAO::type() const { return _type; }
+Miam::ItemType GenericDAO::type() const { return _type; }
+
+#include <QHash>
+
+uint GenericDAO::hash() const
+{
+	return qHash(_titleNormalized) ^ qHash(_type);
+}

@@ -55,7 +55,8 @@ bool PlaylistItemDelegate::eventFilter(QObject *object, QEvent *event)
 void PlaylistItemDelegate::commitAndClose()
 {
 	auto db = SqlDatabase::instance();
-	QList<QPair<QString, QString>> tracksToUpdate;
+	QStringList tracksToUpdate;
+	QStringList tracksToUpdate2;
 	// Multiple editors might have been opened by one, therefore it's required to commit and close all of them
 	for (StarEditor *se : parent()->findChildren<StarEditor*>()) {
 		QMediaContent mediaContent = _playlist->mediaPlaylist()->media(se->index().row());
@@ -64,9 +65,10 @@ void PlaylistItemDelegate::commitAndClose()
 		fh.setRating(se->starRating.starCount());
 		commitData(se);
 		closeEditor(se);
-		tracksToUpdate << qMakePair(fileName, QString());
+		tracksToUpdate << fileName;
+		tracksToUpdate2 << QString();
 	}
-	db->updateTracks(tracksToUpdate);
+	db->updateTracks(tracksToUpdate, tracksToUpdate2);
 }
 
 /** Redefined. */

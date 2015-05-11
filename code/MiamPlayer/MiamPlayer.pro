@@ -71,7 +71,8 @@ SOURCES += \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp
+    volumeslider.cpp \
+    library/libraryitemmodel.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -145,7 +146,8 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h
+    volumeslider.h \
+    library/libraryitemmodel.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

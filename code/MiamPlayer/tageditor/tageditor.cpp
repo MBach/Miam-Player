@@ -321,9 +321,8 @@ void TagEditor::commitChanges()
 	if (!tracksToRescan.isEmpty()) {
 
 		qDebug() << tracksToRescan.size() << "tracksToRescan.size()";
-
 		QSetIterator<int> it(tracksToRescan);
-		QList<QPair<QString, QString>> tracks;
+		QStringList oldPaths, newPaths;
 		while (it.hasNext()) {
 			int row = it.next();
 
@@ -335,22 +334,18 @@ void TagEditor::commitChanges()
 				QString newAbsPath = path->text() + QDir::separator() + filename->text();
 				QFile f(oldFilepath);
 				if (f.rename(newAbsPath)) {
-					qDebug() << "track was renamed to" << newAbsPath;
-					tracks.append(qMakePair(oldFilepath, newAbsPath));
-				} else {
-					qDebug() << "something went wrong when renaming" << oldFilepath << "into" << newAbsPath;
+					oldPaths << oldFilepath;
+					newPaths << newAbsPath;
 				}
 			} else {
-				tracks.append(qMakePair(oldFilepath, QString()));
+				oldPaths << oldFilepath;
+				newPaths << QString();
 			}
 		}
 
 		// Check if files are already in the library, and then update them
-		if (!tracks.isEmpty()) {
-			qDebug() << "about to update tracks (db)";
-			SqlDatabase::instance()->updateTracks(tracks);
-		} else {
-			qDebug() << "renamed tracks were not in library";
+		if (!oldPaths.isEmpty()) {
+			SqlDatabase::instance()->updateTracks(oldPaths, newPaths);
 		}
 	}
 

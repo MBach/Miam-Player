@@ -195,12 +195,12 @@ void CustomizeThemeDialog::setupActions()
 		settings->setIsLibraryFilteredByArticles(b);
 		// Don't reorder the library if one hasn't typed an article yet
 		if (!settings->libraryFilteredByArticles().isEmpty()) {
-			mainWindow->library->rebuildSeparators();
+			mainWindow->library->model()->rebuildSeparators();
 		}
 	});
 	connect(articlesLineEdit, &CustomizeThemeTagLineEdit::taglistHasChanged, this, [=](const QStringList &articles) {
 		settings->setLibraryFilteredByArticles(articles);
-		mainWindow->library->rebuildSeparators();
+		mainWindow->library->model()->rebuildSeparators();
 	});
 	connect(radioButtonEnableReorderArtistsArticle, &QRadioButton::toggled, this, [=](bool b) {
 		settings->setReorderArtistsArticle(b);

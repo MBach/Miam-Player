@@ -1,7 +1,7 @@
 #include "yeardao.h"
 
 YearDAO::YearDAO(QObject *parent) :
-	GenericDAO(parent, GenericDAO::Year)
+	GenericDAO(Miam::IT_Year, parent)
 {
 }
 

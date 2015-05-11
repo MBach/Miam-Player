@@ -54,6 +54,8 @@ public:
 
 	QString year() const;
 	void setYear(const QString &year);
+
+	virtual uint hash() const;
 };
 
 /** Overloaded to be able to use with QVariant. */

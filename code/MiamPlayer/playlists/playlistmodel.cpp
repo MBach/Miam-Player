@@ -69,7 +69,7 @@ void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 		/// A new class like TrackLoader should be created. It could be a unique place to dispatch URIs to relevant plugins which can load remote tracks
 		/// TrackDAO track = TrackLoader::instance()->loadFromUri(uri)
 		/// However, to avoid too much requests to remove server, it might be useful to update the line only before playback started
-		TrackDAO track = SqlDatabase::instance()->selectTrack(trackStr);
+		TrackDAO track = SqlDatabase::instance()->selectTrackByURI(trackStr);
 		//qDebug() << "remote track to be fully reloaded" << trackStr;
 		this->createLine(rowIndex + i, track);
 	}

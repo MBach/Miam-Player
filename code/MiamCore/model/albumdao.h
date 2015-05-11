@@ -45,6 +45,10 @@ public:
 	void setYear(const QString &year);
 };
 
+bool operator==(const AlbumDAO &d1, const AlbumDAO &d2);
+
+//uint qHash(AlbumDAO * key);
+
 /** Register this class to convert in QVariant. */
 Q_DECLARE_METATYPE(AlbumDAO)
 

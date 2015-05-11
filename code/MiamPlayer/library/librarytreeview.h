@@ -7,6 +7,7 @@
 #include <settingsprivate.h>
 
 #include "../treeview.h"
+#include "libraryitemmodel.h"
 
 #include <QMenu>
 #include <QShortcut>
@@ -51,19 +52,10 @@ private:
 	QMenu *_properties;
 
 	/** The model used by this treeView is a simple QStandardItemModel. Hard work has been delegated to Proxy and ItemDelegate for the rending. */
-	QStandardItemModel* _libraryModel;
+	LibraryItemModel *_libraryModel;
 
 	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
 	LibraryItemDelegate *_itemDelegate;
-
-	/** This map is a kind of cache, used to insert nodes in this tree at the right location. */
-	QMap<GenericDAO*, QStandardItem*> _map;
-
-	/** Letters are items to groups separate of top levels items (items without parent). */
-	QHash<QString, SeparatorItem*> _letters;
-
-	/** Letter L returns all Artists (e.g.) starting with L. */
-	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
 
 	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
@@ -93,8 +85,7 @@ public:
 
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
-	/** Rebuild the list of separators when one has changed grammatical articles in options. */
-	void rebuildSeparators();
+	inline LibraryItemModel* model() const { return _libraryModel; }
 
 	void setSearchBar(LibraryFilterLineEdit *lfle);
 
@@ -119,8 +110,6 @@ private:
 	/** Highlight items in the Tree when one has activated this option in settings. */
 	void highlightMatchingText(const QString &text);
 
-	SeparatorItem *insertSeparator(const QStandardItem *node);
-
 	/** Reimplemented. */
 	virtual void updateSelectedTracks();
 
@@ -143,14 +132,9 @@ public slots:
 private slots:
 	void endPopulateTree();
 
-	/** Find and insert a node in the hierarchy of items. */
-	void insertNode(GenericDAO *node);
-
 	void removeExpandedCover(const QModelIndex &index);
 
 	void setExpandedCover(const QModelIndex &index);
-
-	void updateNode(GenericDAO *node);
 
 signals:
 	/** (Dis|En)able covers.*/

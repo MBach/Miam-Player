@@ -1,11 +1,9 @@
 #include "librarytreeview.h"
-#include "settingsprivate.h"
 
-#include <functional>
-
+#include <library/jumptowidget.h>
 #include <cover.h>
 #include <filehelper.h>
-#include <library/jumptowidget.h>
+#include <settingsprivate.h>
 #include "../circleprogressbar.h"
 #include "../pluginmanager.h"
 #include "libraryfilterproxymodel.h"
@@ -15,13 +13,13 @@
 #include "libraryscrollbar.h"
 #include "libraryfilterlineedit.h"
 
+#include <functional>
+
 #include <QtDebug>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(new QStandardItemModel(parent)), _searchBar(NULL)
+	TreeView(parent), _libraryModel(new LibraryItemModel(parent)), _searchBar(NULL)
 {
-	_libraryModel->setColumnCount(1);
-
 	auto settings = SettingsPrivate::instance();
 	int iconSize = settings->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
@@ -29,7 +27,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	_proxyModel = new LibraryFilterProxyModel(this);
 	_proxyModel->setSourceModel(_libraryModel);
-	_proxyModel->setTopLevelItems(&_topLevelItems);
+	_proxyModel->setTopLevelItems(&_libraryModel->topLevelItems());
 	_itemDelegate = new LibraryItemDelegate(this, _proxyModel);
 	this->setItemDelegate(_itemDelegate);
 
@@ -126,7 +124,6 @@ void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
-		/// TODO: inner cover
 		QImage *image = _expandedCovers.value(item);
 		delete image;
 		_expandedCovers.remove(item);
@@ -137,7 +134,6 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
-		/// TODO: inner cover
 		QString coverPath = item->data(Miam::DF_CoverPath).toString();
 		if (coverPath.isEmpty()) {
 			return;
@@ -183,67 +179,6 @@ void LibraryTreeView::init()
 	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
 }
 
-/** Rebuild the list of separators when one has changed grammatical articles in options. */
-void LibraryTreeView::rebuildSeparators()
-{
-	auto db = SqlDatabase::instance();
-	auto s = SettingsPrivate::instance();
-	QStringList filters;
-	if (s->isLibraryFilteredByArticles() && !s->libraryFilteredByArticles().isEmpty()) {
-		filters = s->libraryFilteredByArticles();
-	}
-
-	// Reset custom displayed text, like "Artist, the"
-	QHashIterator<SeparatorItem*, QModelIndex> i(_topLevelItems);
-	while (i.hasNext()) {
-		i.next();
-		if (auto item = _libraryModel->itemFromIndex(i.value())) {
-			if (!i.value().data(Miam::DF_CustomDisplayText).toString().isEmpty()) {
-				item->setData(QString(), Miam::DF_CustomDisplayText);
-				// Recompute standard normalized name: "The Artist" -> "theartist"
-				item->setData(db->normalizeField(item->text()), Miam::DF_NormalizedString);
-			} else if (!filters.isEmpty()) {
-				for (QString filter : filters) {
-					QString text = item->text();
-					if (text.startsWith(filter + " ", Qt::CaseInsensitive)) {
-						text = text.mid(filter.length() + 1);
-						item->setData(text + ", " + filter, Miam::DF_CustomDisplayText);
-						item->setData(db->normalizeField(text), Miam::DF_NormalizedString);
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	// Delete separators first
-	QSet<int> setRows;
-	QHashIterator<QString, SeparatorItem*> it(_letters);
-	while (it.hasNext()) {
-		it.next();
-		setRows << it.value()->index().row();
-	}
-
-	// Always remove items (rows) in reverse order
-	QList<int> rows = setRows.toList();
-	std::sort(rows.begin(), rows.end(), std::greater<int>());
-	for (int row : rows) {
-		auto item = _libraryModel->takeItem(row);
-		_libraryModel->removeRow(row);
-		delete item;
-	}
-	_letters.clear();
-	_topLevelItems.clear();
-
-	// Insert once again new separators
-	for (int row = 0; row < _libraryModel->rowCount(); row++) {
-		auto item = _libraryModel->item(row);
-		if (auto separator = this->insertSeparator(item)) {
-			_topLevelItems.insert(separator, item->index());
-		}
-	}
-}
-
 void LibraryTreeView::setSearchBar(LibraryFilterLineEdit *lfle) {
 	_searchBar = lfle;
 	// Reset filter or remove highlight when one is switching from one mode to another
@@ -268,8 +203,10 @@ void LibraryTreeView::setVisible(bool visible)
 		connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
 		connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
 		connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-		connect(db, &SqlDatabase::nodeExtracted, this, &LibraryTreeView::insertNode);
-		connect(db, &SqlDatabase::aboutToUpdateNode, this, &LibraryTreeView::updateNode);
+		connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
+		connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
+		connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
+		//connect(db, &SqlDatabase::aboutToUpdateView, _libraryModel, &LibraryItemModel::updateNodes);
 	}
 }
 
@@ -413,60 +350,6 @@ void LibraryTreeView::highlightMatchingText(const QString &text)
 	_jumpToWidget->highlightLetters(lettersToHighlight);
 }
 
-SeparatorItem *LibraryTreeView::insertSeparator(const QStandardItem *node)
-{
-	// Items are grouped every ten years in this particular case
-	switch (SettingsPrivate::instance()->insertPolicy()) {
-	case SettingsPrivate::IP_Years: {
-		int year = node->text().toInt();
-		if (year == 0) {
-			return NULL;
-		}
-		QString yearStr = QString::number(year - year % 10);
-		if (_letters.contains(yearStr)) {
-			return _letters.value(yearStr);
-		} else {
-			SeparatorItem *separator = new SeparatorItem(yearStr);
-			separator->setData(yearStr, Miam::DF_NormalizedString);
-			_libraryModel->invisibleRootItem()->appendRow(separator);
-			_letters.insert(yearStr, separator);
-			return separator;
-		}
-		break;
-	}
-	// Other types of hierarchy, separators are built from letters
-	default:
-		QString c;
-		if (node->data(Miam::DF_CustomDisplayText).toString().isEmpty()) {
-			c = node->text().left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
-		} else {
-			QString reorderedText = node->data(Miam::DF_CustomDisplayText).toString();
-			c = reorderedText.left(1).normalized(QString::NormalizationForm_KD).toUpper().remove(QRegExp("[^A-Z\\s]"));
-		}
-		QString letter;
-		bool topLevelLetter = false;
-		if (c.contains(QRegExp("\\w"))) {
-			letter = c;
-		} else {
-			letter = tr("Various");
-			topLevelLetter = true;
-		}
-		if (_letters.contains(letter)) {
-			return _letters.value(letter);
-		} else {
-			SeparatorItem *separator = new SeparatorItem(letter);
-			if (topLevelLetter) {
-				separator->setData("0", Miam::DF_NormalizedString);
-			} else {
-				separator->setData(letter.toLower(), Miam::DF_NormalizedString);
-			}
-			_libraryModel->invisibleRootItem()->appendRow(separator);
-			_letters.insert(letter, separator);
-			return separator;
-		}
-	}
-}
-
 /** Invert the current sort order. */
 void LibraryTreeView::changeSortOrder()
 {
@@ -490,9 +373,9 @@ void LibraryTreeView::changeHierarchyOrder()
 /** Find index from current letter then scrolls to it. */
 void LibraryTreeView::jumpTo(const QString &letter)
 {
-	QStandardItem *item = _letters.value(letter);
+	QStandardItem *item = _libraryModel->letterItem(letter);
 	if (item) {
-		scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
+		this->scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
 	}
 }
 
@@ -512,27 +395,9 @@ void LibraryTreeView::reset()
 	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
 		_proxyModel->setFilterRegExp(QString());
-		_letters.clear();
-		_libraryModel->removeRows(0, _libraryModel->rowCount());
-		_topLevelItems.clear();
 		this->verticalScrollBar()->setValue(0);
-		qDeleteAll(_map.begin(), _map.end());
-		_map.clear();
 	}
-	switch (SettingsPrivate::instance()->insertPolicy()) {
-	case SettingsPrivate::IP_Artists:
-		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
-		break;
-	case SettingsPrivate::IP_Albums:
-		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Albums"));
-		break;
-	case SettingsPrivate::IP_ArtistsAlbums:
-		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Artists – Albums"));
-		break;
-	case SettingsPrivate::IP_Years:
-		_libraryModel->horizontalHeaderItem(0)->setText(tr("  Years"));
-		break;
-	}
+	_libraryModel->reset();
 }
 
 void LibraryTreeView::endPopulateTree()
@@ -541,49 +406,5 @@ void LibraryTreeView::endPopulateTree()
 	_proxyModel->setDynamicSortFilter(true);
 	_circleProgressBar->hide();
 	_circleProgressBar->setValue(0);
-	QMapIterator<GenericDAO*, QStandardItem*> it(_map);
-	while (it.hasNext()) {
-		it.next();
-		delete it.key();
-	}
-	_map.clear();
-}
-
-/** Find and insert a node in the hierarchy of items. */
-void LibraryTreeView::insertNode(GenericDAO *node)
-{
-	QStandardItem *nodeItem = NULL;
-	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
-		nodeItem = new TrackItem(dao);
-	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
-		nodeItem = new AlbumItem(dao);
-	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
-		nodeItem = new ArtistItem(dao);
-	} else if (YearDAO *dao = qobject_cast<YearDAO*>(node)) {
-		nodeItem = new YearItem(dao);
-	}
-
-	if (node->parentNode()) {
-		if (QStandardItem *parentItem = _map.value(node->parentNode())) {
-			parentItem->appendRow(nodeItem);
-		}
-	} else if (!_map.contains(node)) {
-		_libraryModel->invisibleRootItem()->appendRow(nodeItem);
-		if (SeparatorItem *separator = this->insertSeparator(nodeItem)) {
-			_topLevelItems.insert(separator, nodeItem->index());
-		}
-	}
-	_map.insert(node, nodeItem);
-}
-
-void LibraryTreeView::updateNode(GenericDAO *node)
-{
-	// Is it possible to update other types of nodes?
-	if (AlbumItem *album = static_cast<AlbumItem*>(_map.value(node))) {
-		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
-		album->setData(dao->year(), Miam::DF_Year);
-		album->setData(dao->cover(), Miam::DF_CoverPath);
-		album->setData(dao->icon(), Miam::DF_IconPath);
-		album->setData(!dao->icon().isEmpty(), Miam::DF_IsRemote);
-	}
+	//_libraryModel->clearCache();
 }

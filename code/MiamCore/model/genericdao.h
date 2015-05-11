@@ -12,24 +12,15 @@
 class MIAMCORE_LIBRARY GenericDAO : public QObject
 {
 	Q_OBJECT
-public:
-	enum NodeType { Artist		= 0,
-					Album		= 1,
-					Track		= 2,
-					Year		= 3,
-					Undefined	= -1
-				  };
 private:
 	QString _checksum, _host, _icon, _id, _title, _titleNormalized;
 
 	GenericDAO *_parent;
 
-	Q_ENUMS(NodeType)
-
-	NodeType _type;
+	Miam::ItemType _type;
 
 public:
-	explicit GenericDAO(QObject *parentNode = 0, NodeType nt = Undefined);
+	explicit GenericDAO(Miam::ItemType itemType = Miam::IT_UnknownType, QObject *parentNode = 0);
 
 	GenericDAO(const GenericDAO &remoteObject);
 
@@ -58,10 +49,33 @@ public:
 	QString titleNormalized() const;
 	void setTitleNormalized(const QString &titleNormalized);
 
-	NodeType type() const;
+	Miam::ItemType type() const;
+
+	virtual uint hash() const;
 };
+
+//#include <QHash>
+//#include <QtDebug>
 
 /** Register this class to convert in QVariant. */
 Q_DECLARE_METATYPE(GenericDAO)
+
+/*inline bool operator ==(const GenericDAO &a1, const GenericDAO &a2)
+{
+    qDebug() << Q_FUNC_INFO;
+    return a1.title() == a2.title() && a1.type() == a2.type();
+}
+
+inline uint qHash(const GenericDAO &key, uint seed)
+{
+    qDebug() << Q_FUNC_INFO;
+    return qHash(key.title(), seed) ^ qHash(key.type(), seed);
+}
+
+inline uint qHash(const GenericDAO *key, uint seed)
+{
+    qDebug() << Q_FUNC_INFO;
+    return qHash(key->title(), seed) ^ qHash(key->type(), seed);
+}*/
 
 #endif // GENERICDAO_H

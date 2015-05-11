@@ -1,7 +1,7 @@
 #include "trackdao.h"
 
 TrackDAO::TrackDAO(QObject *parent) :
-	GenericDAO(parent, GenericDAO::Track), _rating(0)
+	GenericDAO(Miam::IT_Track, parent), _rating(0)
 {}
 
 TrackDAO::TrackDAO(const TrackDAO &other) :
@@ -65,3 +65,12 @@ void TrackDAO::setUri(const QString &uri) { _uri = uri; }
 
 QString TrackDAO::year() const { return _year; }
 void TrackDAO::setYear(const QString &year) { _year = year; }
+
+uint TrackDAO::hash() const
+{
+	if (parentNode()) {
+		return qHash(title()) ^ qHash(_rating) ^ parentNode()->hash();
+	} else {
+		return qHash(title()) ^ qHash(_rating);
+	}
+}

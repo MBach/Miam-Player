@@ -1,7 +1,7 @@
 #include "playlistdao.h"
 
 PlaylistDAO::PlaylistDAO(QObject *parent)
-	: GenericDAO(parent)
+	: GenericDAO(Miam::IT_Playlist, parent)
 {}
 
 PlaylistDAO::PlaylistDAO(const PlaylistDAO &other)

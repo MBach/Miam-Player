@@ -1,7 +1,7 @@
 #include "artistdao.h"
 
 ArtistDAO::ArtistDAO(QObject *parent) :
-	GenericDAO(parent, GenericDAO::Artist)
+	GenericDAO(Miam::IT_Artist, parent)
 {}
 
 ArtistDAO::ArtistDAO(const ArtistDAO &remoteArtist) :
@@ -21,3 +21,14 @@ QString ArtistDAO::customData() const
 }
 
 ArtistDAO::~ArtistDAO() {}
+
+#include <QHash>
+
+uint ArtistDAO::hash() const
+{
+	if (parentNode()) {
+		return GenericDAO::hash() ^ parentNode()->hash();
+	} else {
+		return GenericDAO::hash();
+	}
+}
