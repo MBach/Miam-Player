@@ -54,28 +54,7 @@ public:
 	virtual uint hash() const;
 };
 
-//#include <QHash>
-//#include <QtDebug>
-
 /** Register this class to convert in QVariant. */
 Q_DECLARE_METATYPE(GenericDAO)
-
-/*inline bool operator ==(const GenericDAO &a1, const GenericDAO &a2)
-{
-    qDebug() << Q_FUNC_INFO;
-    return a1.title() == a2.title() && a1.type() == a2.type();
-}
-
-inline uint qHash(const GenericDAO &key, uint seed)
-{
-    qDebug() << Q_FUNC_INFO;
-    return qHash(key.title(), seed) ^ qHash(key.type(), seed);
-}
-
-inline uint qHash(const GenericDAO *key, uint seed)
-{
-    qDebug() << Q_FUNC_INFO;
-    return qHash(key->title(), seed) ^ qHash(key->type(), seed);
-}*/
 
 #endif // GENERICDAO_H

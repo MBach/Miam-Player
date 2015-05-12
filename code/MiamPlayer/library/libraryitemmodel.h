@@ -45,6 +45,9 @@ public:
 private:
 	SeparatorItem *insertSeparator(const QStandardItem *node);
 
+	/** Recursively remove node and its parent if the latter has no more children. */
+	void removeNode(const QModelIndex &node);
+
 public slots:
 	void cleanDanglingNodes();
 

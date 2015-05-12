@@ -88,10 +88,15 @@ QChar LibraryTreeView::currentLetter() const
 	}
 }
 
-const QImage * LibraryTreeView::expandedCover(QStandardItem *album) const
+const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 {
 	// proxy, etc
-	return _expandedCovers.value(album);
+	//if (_expandedCovers.contains(album)) {
+	//	qDebug() << _expandedCovers.value(album);
+		return _expandedCovers.value(album, NULL);
+	//} else {
+	//	return NULL;
+	//}
 }
 
 /** Reimplemented. */
@@ -124,9 +129,10 @@ void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
-		QImage *image = _expandedCovers.value(item);
+		AlbumItem *album = static_cast<AlbumItem*>(item);
+		QImage *image = _expandedCovers.value(album);
 		delete image;
-		_expandedCovers.remove(item);
+		_expandedCovers.remove(album);
 	}
 }
 
@@ -134,7 +140,8 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
-		QString coverPath = item->data(Miam::DF_CoverPath).toString();
+		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
+		QString coverPath = albumItem->coverPath();
 		if (coverPath.isEmpty()) {
 			return;
 		}
@@ -150,7 +157,7 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 		} else {
 			image = new QImage(coverPath);
 		}
-		_expandedCovers.insert(item, image);
+		_expandedCovers.insert(albumItem, image);
 	}
 }
 

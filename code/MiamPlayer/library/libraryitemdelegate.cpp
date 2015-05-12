@@ -294,7 +294,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const TrackItem *track) const
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	const QImage *image = _libraryTreeView->expandedCover(track->parent());
+	const QImage *image = _libraryTreeView->expandedCover(static_cast<AlbumItem*>(track->parent()));
 	if (image && !image->isNull()) {
 		// Copy QStyleOptionViewItem to be able to expand it to the left, and take the maximum available space
 		QStyleOptionViewItem option(opt);

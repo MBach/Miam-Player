@@ -81,8 +81,10 @@ void LibraryItemModel::rebuildSeparators()
 	// Insert once again new separators
 	for (int row = 0; row < rowCount(); row++) {
 		auto item = this->item(row);
-		if (auto separator = this->insertSeparator(item)) {
-			_topLevelItems.insert(separator, item->index());
+		if (item->type() != Miam::IT_Separator) {
+			if (auto separator = this->insertSeparator(item)) {
+				_topLevelItems.insert(separator, item->index());
+			}
 		}
 	}
 }
@@ -167,37 +169,50 @@ SeparatorItem *LibraryItemModel::insertSeparator(const QStandardItem *node)
 
 void LibraryItemModel::cleanDanglingNodes()
 {
-	qDebug() << Q_FUNC_INFO << "remove nodes that were updated";
+	/// XXX: there's an empty row sometimes caused by extra SeparatorItem
+	this->rebuildSeparators();
+}
+
+/** Recursively remove node and its parent if the latter has no more children. */
+void LibraryItemModel::removeNode(const QModelIndex &node)
+{
+	QModelIndex parent = node.parent();
+	this->removeRow(node.row(), parent);
+	if (!hasChildren(parent)) {
+		this->removeNode(parent);
+	}
 }
 
 /** Find and insert a node in the hierarchy of items. */
 void LibraryItemModel::insertNode(GenericDAO *node)
 {
-	// qDebug() << Q_FUNC_INFO << node->hash() << node->title();
 	if (_hash.contains(node->hash())) {
-		qDebug() << "node exists, returning!" << node->title();
+		//qDebug() << "node exists, returning!" << node->title();
 		return;
 	}
 
 	QStandardItem *nodeItem = NULL;
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
+		//qDebug() << Q_FUNC_INFO << dao->uri();
 		nodeItem = new TrackItem(dao);
+		if (_tracks.contains(dao->uri())) {
+			QStandardItem *rowToDelete = _tracks.value(dao->uri());
+			// Clean unused nodes
+			this->removeNode(rowToDelete->index());
+		}
 		_tracks.insert(dao->uri(), nodeItem);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
+		//qDebug() << Q_FUNC_INFO << "AlbumDAO cover" << dao << dao->cover();
 		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
 		if (album) {
-			qDebug() << Q_FUNC_INFO << "album exists";
 			nodeItem = album;
+			//qDebug() << Q_FUNC_INFO << "AlbumItem exists" << album->coverPath();
 		} else {
-			if (dao->parentNode()) {
-				qDebug() << Q_FUNC_INFO << "parentNode" << dao->parentNode()->title();
-			}
 			nodeItem = new AlbumItem(dao);
 		}
 	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
 		ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(dao->hash()));
 		if (artist) {
-			qDebug() << Q_FUNC_INFO << "artist exists";
 			nodeItem = artist;
 		} else {
 			nodeItem = new ArtistItem(dao);
@@ -221,11 +236,11 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 
 void LibraryItemModel::updateNode(GenericDAO *node)
 {
-	qDebug() << Q_FUNC_INFO << node->title();
+	//qDebug() << Q_FUNC_INFO << node->title();
 	uint h = node->hash();
+	/// Why do I have to update asynchronously this node? Can I just not fill all the information in the Database class?
 	if (AlbumItem *album = static_cast<AlbumItem*>(_hash.value(h))) {
 		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
-		qDebug() << Q_FUNC_INFO << dao << album;
 		album->setData(dao->year(), Miam::DF_Year);
 		album->setData(dao->cover(), Miam::DF_CoverPath);
 		album->setData(dao->icon(), Miam::DF_IconPath);

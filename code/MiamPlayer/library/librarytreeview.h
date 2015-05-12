@@ -61,7 +61,7 @@ private:
 	JumpToWidget *_jumpToWidget;
 
 	/** Cache of expanded albums and their covers. */
-	QMap<QStandardItem*, QImage*> _expandedCovers;
+	QMap<AlbumItem*, QImage*> _expandedCovers;
 
 	LibraryFilterLineEdit *_searchBar;
 
@@ -74,7 +74,7 @@ public:
 	/** For every item in the library, gets the top level letter attached to it. */
 	QChar currentLetter() const;
 
-	const QImage * expandedCover(QStandardItem *album) const;
+	const QImage *expandedCover(AlbumItem *album) const;
 
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;

@@ -498,7 +498,6 @@ void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const
 void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &newPaths)
 {
 	// Signals are blocked to prevent saveFileRef method to emit one. Load method will tell connected views to rebuild themselves
-	//this->blockSignals(true);
 	transaction();
 	Q_ASSERT(oldPaths.size() == newPaths.size());
 
@@ -509,8 +508,9 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 	// If New Path exists, then fileName has changed.
 	for (int i = 0; i < oldPaths.length(); i++) {
+		QString oldPath = "file://" + oldPaths.at(i);
 		if (newPaths.at(i).isEmpty()) {
-			QString oldPath = oldPaths.at(i);
+			//qDebug() << oldPath;
 			FileHelper *fh = new FileHelper(oldPath);
 
 			QSqlQuery selectArtist(*this);
@@ -549,17 +549,20 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 			// Same thing for Album
 			if (oldAlbumId == albumId) {
-				QSqlQuery queryAlbum("SELECT * FROM albums WHERE id = ?", *this);
+				QSqlQuery queryAlbum("SELECT cover FROM albums WHERE id = ?", *this);
 				queryAlbum.addBindValue(oldAlbumId);
 				if (queryAlbum.exec() && queryAlbum.next()) {
 					AlbumDAO *albumDAO = new AlbumDAO;
 					albumDAO->setId(QString::number(oldAlbumId));
 					albumDAO->setTitle(fh->album());
 					albumDAO->setYear(fh->year());
+					if (fh->hasCover()) {
+						albumDAO->setCover(oldPath);
+					} else {
+						albumDAO->setCover(queryAlbum.record().value(0).toString());
+					}
 					albums << albumDAO;
 					qDebug() << Q_FUNC_INFO << "saving temp albumDAO";
-				} else {
-					qDebug() << Q_FUNC_INFO << "albumDAO not selected?";
 				}
 			} else {
 				QSqlQuery queryAlbum("SELECT * FROM albums WHERE id = ?", *this);
@@ -571,6 +574,11 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 					albumDAO->setYear(fh->year());
 					if (this->insertIntoTableAlbums(artistId, albumDAO)) {
 						albums << albumDAO;
+						if (fh->hasCover()) {
+							albumDAO->setCover(oldPath);
+						} else {
+							// how to tie cover on the filesystem?
+						}
 						emit nodeExtracted(albumDAO);
 					} else {
 						delete albumDAO;
@@ -588,7 +596,8 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			updateTrack.addBindValue(rating);
 			updateTrack.addBindValue(discNumber);
 			updateTrack.addBindValue(fh->hasCover());
-			updateTrack.addBindValue("file://" + QDir::fromNativeSeparators(oldPath));
+			//qDebug() << Q_FUNC_INFO << oldPath << QDir::fromNativeSeparators(oldPath);
+			updateTrack.addBindValue(oldPath);
 
 			AlbumDAO *albumDAO = NULL;
 			for (AlbumDAO *savedAlbum : albums) {
@@ -600,25 +609,23 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			if (updateTrack.exec()) {
 				if (albumDAO != NULL) {
 					TrackDAO *trackDAO = new TrackDAO;
-					trackDAO->setUri("file://" + QDir::fromNativeSeparators(oldPath));
+					trackDAO->setUri(oldPath);
 					trackDAO->setTrackNumber(fh->trackNumber());
 					trackDAO->setTitle(fh->title());
 					trackDAO->setRating(rating);
 					trackDAO->setDisc(QString::number(discNumber));
 					trackDAO->setParentNode(albumDAO);
 					emit nodeExtracted(trackDAO);
-				} else {
-					qDebug() << Q_FUNC_INFO << "node track was updated but parent album is null!";
 				}
 			}
 			olds.append(fh);
 		} else {
 			QString newPath = newPaths.at(i);
 			QSqlQuery hasTrack("SELECT COUNT(*) FROM tracks WHERE uri = ?", *this);
-			hasTrack.addBindValue(QDir::toNativeSeparators(oldPaths.at(i)));
+			hasTrack.addBindValue(oldPath);
 			if (hasTrack.exec() && hasTrack.next() && hasTrack.record().value(0).toInt() != 0) {
 				QSqlQuery removeTrack("DELETE FROM tracks WHERE uri = ?", *this);
-				removeTrack.addBindValue(QDir::toNativeSeparators(oldPaths.at(i)));
+				removeTrack.addBindValue(oldPath);
 				qDebug() << Q_FUNC_INFO << "deleting tracks";
 				if (removeTrack.exec()) {
 					this->saveFileRef(newPath);
@@ -694,6 +701,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 			emit nodeExtracted(trackDAO);
 		}
 		if (internalCover) {
+			// Cover path is now pointing to the first track of this album, because it need to be extracted at runtime
 			emit aboutToUpdateNode(albumDAO);
 		}
 	};
