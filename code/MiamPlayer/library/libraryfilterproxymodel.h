@@ -19,12 +19,12 @@ class LibraryFilterProxyModel : public QSortFilterProxyModel
 	Q_OBJECT
 private:
 	/** Top levels items are specific items, like letters 'A', 'B', ... in the library. Each letter has a reference to all items beginning with this letter. */
-	QMultiHash<SeparatorItem*, QModelIndex> *_topLevelItems;
+	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
 
 public:
 	explicit LibraryFilterProxyModel(QObject *parent = 0);
 
-	inline void setTopLevelItems(QMultiHash<SeparatorItem*, QModelIndex> *topLevelItems) { _topLevelItems = topLevelItems; }
+	inline void setTopLevelItems(const QMultiHash<SeparatorItem*, QModelIndex> &topLevelItems) { _topLevelItems = topLevelItems; }
 
 	/** Redefined to override Qt::FontRole. */
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

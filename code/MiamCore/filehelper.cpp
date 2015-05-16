@@ -53,6 +53,11 @@ FileHelper::FileHelper(const QString &filePath)
 {
 	if (!init(filePath)) {
 		init(filePath.toStdString().c_str());
+		//qDebug() << Q_FUNC_INFO << "couldn't init file, second chance!";
+		//bool b = init(filePath.toStdString().c_str());
+		//if (!b) {
+		//	qDebug() << Q_FUNC_INFO << "couldn't init second chance :(";
+		//}
 	}
 }
 
@@ -100,13 +105,21 @@ bool FileHelper::init(const QString &filePath)
 		_file = NULL;
 		_fileType = UNKNOWN;
 	}
-	return (_file && _file->isValid());
+	if (isValid()) {
+		return true;
+	} else if (_file != NULL) {
+		delete _file;
+		_file = NULL;
+		_fileType = UNKNOWN;
+	}
+	return false;
 }
 
 FileHelper::~FileHelper()
 {
 	if (_file != NULL) {
 		delete _file;
+		_file = NULL;
 	}
 }
 
@@ -613,8 +626,7 @@ bool FileHelper::save()
 		if (mpegFile->hasID3v2Tag()) {
 			return mpegFile->save(TagLib::MPEG::File::AllTags, false, mpegFile->ID3v2Tag()->header()->majorVersion());
 		}
-	}
-	if (_fileType != UNKNOWN) {
+	} else if (_fileType != UNKNOWN) {
 		return _file->save();
 	}
 	return false;

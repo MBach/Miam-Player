@@ -27,7 +27,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 
 	_proxyModel = new LibraryFilterProxyModel(this);
 	_proxyModel->setSourceModel(_libraryModel);
-	_proxyModel->setTopLevelItems(&_libraryModel->topLevelItems());
+	_proxyModel->setTopLevelItems(_libraryModel->topLevelItems());
 	_itemDelegate = new LibraryItemDelegate(this, _proxyModel);
 	this->setItemDelegate(_itemDelegate);
 
@@ -140,12 +140,14 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
+		qDebug() << Q_FUNC_INFO << "about to extract cover for index" << item->text();
 		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
 		QString coverPath = albumItem->coverPath();
 		if (coverPath.isEmpty()) {
+			qDebug() << Q_FUNC_INFO << "no cover for this node, return";
 			return;
 		}
-		QImage *image;
+		QImage *image = NULL;
 		if (coverPath.startsWith("file://")) {
 			FileHelper fh(coverPath);
 			Cover *cover = fh.extractCover();
@@ -153,11 +155,15 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 				image = new QImage();
 				image->loadFromData(cover->byteArray(), cover->format());
 				delete cover;
+			} else {
+				qDebug() << Q_FUNC_INFO << "couldn't extract cover";
 			}
 		} else {
 			image = new QImage(coverPath);
 		}
 		_expandedCovers.insert(albumItem, image);
+	} else {
+		qDebug() << Q_FUNC_INFO << "index isn't from Album type";
 	}
 }
 

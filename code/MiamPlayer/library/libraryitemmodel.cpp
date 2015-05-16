@@ -187,13 +187,11 @@ void LibraryItemModel::removeNode(const QModelIndex &node)
 void LibraryItemModel::insertNode(GenericDAO *node)
 {
 	if (_hash.contains(node->hash())) {
-		//qDebug() << "node exists, returning!" << node->title();
 		return;
 	}
 
 	QStandardItem *nodeItem = NULL;
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
-		//qDebug() << Q_FUNC_INFO << dao->uri();
 		nodeItem = new TrackItem(dao);
 		if (_tracks.contains(dao->uri())) {
 			QStandardItem *rowToDelete = _tracks.value(dao->uri());
@@ -202,11 +200,9 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 		}
 		_tracks.insert(dao->uri(), nodeItem);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
-		//qDebug() << Q_FUNC_INFO << "AlbumDAO cover" << dao << dao->cover();
 		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
 		if (album) {
 			nodeItem = album;
-			//qDebug() << Q_FUNC_INFO << "AlbumItem exists" << album->coverPath();
 		} else {
 			nodeItem = new AlbumItem(dao);
 		}
@@ -225,18 +221,21 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 		if (QStandardItem *parentItem = _hash.value(node->parentNode()->hash())) {
 			parentItem->appendRow(nodeItem);
 		}
-	} else {
+	} else if (nodeItem){
 		invisibleRootItem()->appendRow(nodeItem);
-		if (SeparatorItem *separator = this->insertSeparator(nodeItem)) {
-			_topLevelItems.insert(separator, nodeItem->index());
+		if (nodeItem->type() != Miam::IT_Separator) {
+			if ( SeparatorItem *separator = this->insertSeparator(nodeItem)) {
+				_topLevelItems.insert(separator, nodeItem->index());
+			}
 		}
 	}
-	_hash.insert(node->hash(), nodeItem);
+	if (nodeItem) {
+		_hash.insert(node->hash(), nodeItem);
+	}
 }
 
 void LibraryItemModel::updateNode(GenericDAO *node)
 {
-	//qDebug() << Q_FUNC_INFO << node->title();
 	uint h = node->hash();
 	/// Why do I have to update asynchronously this node? Can I just not fill all the information in the Database class?
 	if (AlbumItem *album = static_cast<AlbumItem*>(_hash.value(h))) {
@@ -245,11 +244,9 @@ void LibraryItemModel::updateNode(GenericDAO *node)
 		album->setData(dao->cover(), Miam::DF_CoverPath);
 		album->setData(dao->icon(), Miam::DF_IconPath);
 		album->setData(!dao->icon().isEmpty(), Miam::DF_IsRemote);
-	} else if (TrackItem *track = static_cast<TrackItem*>(_hash.value(h))) {
+	} /*else if (TrackItem *track = static_cast<TrackItem*>(_hash.value(h))) {
 		TrackDAO *dao = qobject_cast<TrackDAO*>(node);
-		qDebug() << Q_FUNC_INFO << dao << track;
 	} else if (ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(h))) {
 		ArtistDAO *dao = qobject_cast<ArtistDAO*>(node);
-		qDebug() << Q_FUNC_INFO << dao << artist;
-	}
+	}*/
 }

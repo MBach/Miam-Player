@@ -6,7 +6,7 @@
 #include <QtDebug>
 
 LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
-	QSortFilterProxyModel(parent), _topLevelItems(NULL)
+	QSortFilterProxyModel(parent)
 {
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
 	this->setSortRole(Miam::DF_NormalizedString);
@@ -48,7 +48,7 @@ bool LibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex 
 	QStandardItemModel *model = qobject_cast<QStandardItemModel*>(sourceModel());
 	QStandardItem *item = model->itemFromIndex(model->index(sourceRow, 0, sourceParent));
 	if (item && item->type() == Miam::IT_Separator) {
-		for (QModelIndex index : _topLevelItems->values(static_cast<SeparatorItem*>(item))) {
+		for (QModelIndex index : _topLevelItems.values(static_cast<SeparatorItem*>(item))) {
 			if (filterAcceptsRow(index.row(), sourceParent)) {
 				return true;
 			}

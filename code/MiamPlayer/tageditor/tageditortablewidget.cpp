@@ -162,10 +162,10 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		/// XXX is it really necessary to extract cover in this class?
 		/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
 		/// One in this class, one in TagEditor class ? But here is quite easy!
-		Cover *cover = fh.extractCover();
+		/*Cover *cover = fh.extractCover();
 		if (cover != NULL && !cover->byteArray().isEmpty()) {
 			covers.insert(row, cover);
-		}
+		}*/
 	}
 	return (artistAlbumSet.size() == 1);
 }

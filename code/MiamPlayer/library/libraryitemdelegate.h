@@ -35,7 +35,7 @@ private:
 
 	/** Cache for covers displayed in the tree view.
 	 * This field is mutable because it's modified in paint() which is const by design.*/
-	mutable QHash<AlbumItem*, bool> _loadedCovers;
+	//mutable QHash<AlbumItem*, bool> _loadedCovers;
 
 	/** This timer is used to animate album cover when one is scrolling.
 	 * It improves reactivity of the UI by temporarily disabling painting events.
@@ -72,7 +72,9 @@ private:
 public slots:
 	void displayIcon(bool b);
 
-	inline void updateCoverSize() { _loadedCovers.clear(); }
+	/// FIXME
+	//inline void updateCoverSize() { _loadedCovers.clear(); }
+	inline void updateCoverSize() {  }
 };
 
 #endif // LIBRARYITEMDELEGATE_H

@@ -312,6 +312,8 @@ void TagEditor::commitChanges()
 		if (trackWasModified) {
 			if (!fh.save()) {
 				qDebug() << "tag wasn't saved :(";
+			} else {
+				qDebug() << "tag was saved";
 			}
 			tracksToRescan.insert(row);
 		}

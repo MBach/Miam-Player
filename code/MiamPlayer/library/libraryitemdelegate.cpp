@@ -114,26 +114,36 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	QString coverPath;
 	if (settings->isCoversEnabled() && _showCovers) {
 		coverPath = item->data(Miam::DF_CoverPath).toString();
-		if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
+		//qDebug() << Q_FUNC_INFO << item->icon().isNull() << coverPath;
+		if (!coverPath.isEmpty() && item->icon().isNull()) {
+		//if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
 			FileHelper fh(coverPath);
 			// If it's an inner cover, load it
 			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-				// qDebug() << Q_FUNC_INFO << "loading internal cover from file";
+				//qDebug() << Q_FUNC_INFO << "loading internal cover from file";
 				std::unique_ptr<Cover> cover(fh.extractCover());
-				QPixmap p;
-				if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
-					p = p.scaled(coverSize, coverSize);
-					if (!p.isNull()) {
-						item->setIcon(p);
-						_loadedCovers.insert(item, true);
+				//if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
+				if (cover) {
+					//qDebug() << Q_FUNC_INFO << "cover was extracted";
+					QPixmap p;
+					if (p.loadFromData(cover->byteArray(), cover->format())) {
+						p = p.scaled(coverSize, coverSize);
+						if (!p.isNull()) {
+							item->setIcon(p);
+							//_loadedCovers.insert(item, true);
+						}
+					} else {
+						//qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
 					}
+				} else {
+					//qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
 				}
 			} else {
-				// qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+				//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
 				imageReader.setScaledSize(QSize(coverSize, coverSize));
 				item->setIcon(QPixmap::fromImage(imageReader.read()));
-				_loadedCovers.insert(item, true);
+				//_loadedCovers.insert(item, true);
 			}
 		}
 	}
