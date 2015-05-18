@@ -686,6 +686,8 @@
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="menuRole">
+   </property>
   </action>
   <action name="actionOpenFiles">
    <property name="text">
