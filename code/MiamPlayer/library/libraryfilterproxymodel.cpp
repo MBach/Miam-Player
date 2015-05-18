@@ -138,7 +138,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 				// Otherwise tracks will be displayed like #1 - local, #1 - remote, #2 - local, #2 - remote, etc
 				bool lIsRemote = left->data(Miam::DF_IsRemote).toBool();
 				bool rIsRemote = right->data(Miam::DF_IsRemote).toBool();
-				if (lIsRemote && rIsRemote || !lIsRemote && !rIsRemote) {
+				if ((lIsRemote && rIsRemote) || (!lIsRemote && !rIsRemote)) {
 					result = (lTrackNumber < rTrackNumber && sortOrder() == Qt::AscendingOrder) ||
 						(rTrackNumber < lTrackNumber && sortOrder() == Qt::DescendingOrder);
 				} else {

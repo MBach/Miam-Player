@@ -756,6 +756,8 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 						albumDAO->setIcon(r.value(5).toString());
 						uint albumId = r.value(6).toUInt();
 						albumDAO->setParentNode(artistDAO);
+						albumDAO->setArtist(artistDAO->title());
+						albumDAO->setId(QString::number(albumId));
 						emit nodeExtracted(albumDAO);
 						//_cache.insert(albumId, albumDAO);
 
