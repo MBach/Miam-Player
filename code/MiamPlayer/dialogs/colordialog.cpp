@@ -10,7 +10,9 @@ ColorDialog::ColorDialog(CustomizeThemeDialog *parent) :
 {
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	this->setOptions(QColorDialog::NoButtons);
+#ifndef Q_OS_MAC
 	this->setWindowIcon(QIcon(":config/palette"));
+#endif
 	Qt::WindowFlags flags = this->windowFlags();
 	flags |= Qt::ForeignWindow;
 	this->setWindowFlags(flags);

@@ -23,7 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
 	this->setAcceptDrops(true);
+#ifndef Q_OS_MAC
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
+#endif
 
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
