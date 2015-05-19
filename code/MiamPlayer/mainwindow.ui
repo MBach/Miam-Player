@@ -704,10 +704,16 @@
    <property name="text">
     <string>&amp;Customize appearance...</string>
    </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
     <string>About &amp;Qt...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
    </property>
   </action>
   <action name="actionOpenPlaylistManager">
@@ -736,6 +742,9 @@
   <action name="actionShowOptions">
    <property name="text">
     <string>Customize general &amp;options...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
    </property>
   </action>
   <action name="actionAboutMiamPlayer">

@@ -71,13 +71,13 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 		this->updatePlaylists(false, true);
 	});
 
-	connect(qApp, &QGuiApplication::lastWindowClosed, this, [=]() {
+	/*connect(qApp, &QGuiApplication::lastWindowClosed, this, [=]() {
 		if (SettingsPrivate::instance()->playbackKeepPlaylists()) {
 			for (int i = 0; i < _tabPlaylists->count(); i++) {
 				this->savePlaylist(i, false, true);
 			}
 		}
-	});
+	});*/
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistManager::exportSelectedPlaylist);
 
@@ -128,6 +128,62 @@ void PlaylistManager::init()
 		_tabPlaylists->addPlaylist();
 	}
 	_tabPlaylists->blockSignals(false);
+}
+
+int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExitingApplication)
+{
+	Playlist *p = _tabPlaylists->playlist(index);
+	int id = 0;
+	if (p && !p->mediaPlaylist()->isEmpty()) {
+		QString playlistName = _tabPlaylists->tabBar()->tabText(index);
+
+		uint generateNewHash = p->generateNewHash();
+
+		// Check first if one has the same playlist in database
+		PlaylistDAO playlist;
+		for (PlaylistDAO dao : _db->selectPlaylists()) {
+			if (dao.checksum().toUInt() == generateNewHash && !isExitingApplication) {
+				// Playlist exists in database and user is not exiting application -> showing a popup
+				QMessageBox mb;
+				mb.setIcon(QMessageBox::Information);
+				mb.setText(tr("There is exactly the same playlist in the Playlist Manager (known as '%1'), "\
+							  "therefore it's not possible to add it twice.").arg(dao.title()));
+				mb.addButton(QMessageBox::Cancel);
+				mb.addButton(QMessageBox::Discard);
+				mb.setDefaultButton(QMessageBox::Cancel);
+
+				int ret = mb.exec();
+				switch (ret) {
+				case QMessageBox::Cancel:
+					return 0;
+				case QMessageBox::Discard:
+					return 1;
+				}
+				break;
+			} else if (dao.checksum().toUInt() == generateNewHash && !isOverwriting && isExitingApplication) {
+				// Playlist exists in database and user is exiting application -> discarding
+				return 1;
+			} else if (isOverwriting) {
+				playlist = dao;
+			}
+		}
+
+		playlist.setTitle(playlistName);
+		playlist.setChecksum(QString::number(generateNewHash));
+
+		std::list<TrackDAO> tracks;
+		const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(p->model());
+		for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
+			// Eeach track has been saved in a hidden column into the playlist
+			/// FIXME
+			TrackDAO t = model->index(j, p->COL_TRACK_DAO).data().value<TrackDAO>();
+			tracks.push_back(std::move(t));
+		}
+
+		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
+		p->setHash(generateNewHash);
+	}
+	return id;
 }
 
 void PlaylistManager::retranslateUi(PlaylistManager *dialog)
@@ -207,62 +263,6 @@ void PlaylistManager::loadPlaylist(int playlistId)
 	playlist->setId(playlistId);
 
 	_tabPlaylists->setTabIcon(index, _tabPlaylists->defaultIcon(QIcon::Disabled));
-}
-
-int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExitingApplication)
-{
-	Playlist *p = _tabPlaylists->playlist(index);
-	int id = 0;
-	if (p && !p->mediaPlaylist()->isEmpty()) {
-		QString playlistName = _tabPlaylists->tabBar()->tabText(index);
-
-		uint generateNewHash = p->generateNewHash();
-
-		// Check first if one has the same playlist in database
-		PlaylistDAO playlist;
-		for (PlaylistDAO dao : _db->selectPlaylists()) {
-			if (dao.checksum().toUInt() == generateNewHash && !isExitingApplication) {
-				// Playlist exists in database and user is not exiting application -> showing a popup
-				QMessageBox mb;
-				mb.setIcon(QMessageBox::Information);
-				mb.setText(tr("There is exactly the same playlist in the Playlist Manager (known as '%1'), "\
-							  "therefore it's not possible to add it twice.").arg(dao.title()));
-				mb.addButton(QMessageBox::Cancel);
-				mb.addButton(QMessageBox::Discard);
-				mb.setDefaultButton(QMessageBox::Cancel);
-
-				int ret = mb.exec();
-				switch (ret) {
-				case QMessageBox::Cancel:
-					return 0;
-				case QMessageBox::Discard:
-					return 1;
-				}
-				break;
-			} else if (dao.checksum().toUInt() == generateNewHash && !isOverwriting && isExitingApplication) {
-				// Playlist exists in database and user is exiting application -> discarding
-				return 1;
-			} else if (isOverwriting) {
-				playlist = dao;
-			}
-		}
-
-		playlist.setTitle(playlistName);
-		playlist.setChecksum(QString::number(generateNewHash));
-
-		std::list<TrackDAO> tracks;
-		const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(p->model());
-		for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
-			// Eeach track has been saved in a hidden column into the playlist
-			/// FIXME
-			TrackDAO t = model->index(j, p->COL_TRACK_DAO).data().value<TrackDAO>();
-			tracks.push_back(std::move(t));
-		}
-
-		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
-		p->setHash(generateNewHash);
-	}
-	return id;
 }
 
 /** Redefined: clean preview area, populate once again lists. */

@@ -45,6 +45,8 @@ public:
 
 	void init();
 
+	int savePlaylist(int index, bool isOverwriting = false, bool isExitingApplication = false);
+
 	void retranslateUi(PlaylistManager *dialog);
 
 private:
@@ -55,8 +57,6 @@ private:
 
 	/** Load a playlist saved on the in database. */
 	void loadPlaylist(int playlistId);
-
-	int savePlaylist(int index, bool isOverwriting = false, bool isExitingApplication = false);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */

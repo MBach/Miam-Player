@@ -414,6 +414,11 @@ void MainWindow::setupActions()
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
+		if (settings->playbackKeepPlaylists()) {
+			for (int i = 0; i < tabPlaylists->count(); i++) {
+				playlistManager->savePlaylist(i, false, true);
+			}
+		}
 		delete PluginManager::instance();
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
