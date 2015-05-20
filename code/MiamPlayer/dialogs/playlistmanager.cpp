@@ -71,14 +71,6 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 		this->updatePlaylists(false, true);
 	});
 
-	/*connect(qApp, &QGuiApplication::lastWindowClosed, this, [=]() {
-		if (SettingsPrivate::instance()->playbackKeepPlaylists()) {
-			for (int i = 0; i < _tabPlaylists->count(); i++) {
-				this->savePlaylist(i, false, true);
-			}
-		}
-	});*/
-
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistManager::exportSelectedPlaylist);
 
 	// Save playlist on close (if enabled)

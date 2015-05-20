@@ -17,6 +17,9 @@
 #include "filehelper.h"
 #include "yeardao.h"
 
+#include <chrono>
+#include <random>
+
 SqlDatabase* SqlDatabase::_sqlDatabase = NULL;
 
 SqlDatabase::SqlDatabase()
@@ -153,21 +156,26 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 
 int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting)
 {
-	int id;
+	static std::uniform_int_distribution<uint> tt;
+	this->transaction();
+	uint id;
 	if (isOverwriting) {
-		id = playlist.id().toInt();
+		id = playlist.id().toUInt();
 		QSqlQuery update(*this);
 		update.prepare("UPDATE playlists SET title = ?, checksum = ? WHERE id = ?");
 		update.addBindValue(playlist.title());
 		update.addBindValue(playlist.checksum());
 		update.addBindValue(id);
-		update.exec();
-		this->insertIntoTablePlaylistTracks(id, tracks, isOverwriting);
+		if (update.exec()) {
+			this->insertIntoTablePlaylistTracks(id, tracks, isOverwriting);
+		}
 	} else {
 		if (playlist.id().isEmpty()) {
-			id = qrand();
+			auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+			std::mt19937_64 generator(seed);
+			id = tt(generator);
 		} else {
-			id = playlist.id().toInt();
+			id = playlist.id().toUInt();
 		}
 
 		QSqlQuery insert(*this);
@@ -178,19 +186,11 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std
 		insert.addBindValue(playlist.icon());
 		insert.addBindValue(playlist.host());
 		insert.addBindValue(playlist.checksum());
-		qDebug() << Q_FUNC_INFO << "inserting new playlist" << playlist.checksum();
-
-		bool b = insert.exec();
-		int i = 0;
-		while (!b && i < 10) {
-			insert.bindValue(":id", QString::number(qrand()));
-			b = insert.exec();
-			++i;
-			qDebug() << Q_FUNC_INFO << "insert failed for playlist" << playlist.title() << "trying again" << i;
-			qDebug() << Q_FUNC_INFO << insert.lastError();
+		if (insert.exec()) {
+			this->insertIntoTablePlaylistTracks(id, tracks);
 		}
-		this->insertIntoTablePlaylistTracks(id, tracks);
 	}
+	this->commit();
 	return id;
 }
 
