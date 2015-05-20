@@ -46,7 +46,7 @@ public:
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	/** Load a playlist saved in database. */
-	void loadPlaylist(int playlistId);
+	void loadPlaylist(uint playlistId);
 
 	/** Get the playlist at index. */
 	Playlist *playlist(int index);

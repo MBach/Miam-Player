@@ -115,7 +115,7 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 }
 
 /** Load a playlist saved in database. */
-void TabPlaylist::loadPlaylist(int playlistId)
+void TabPlaylist::loadPlaylist(uint playlistId)
 {
 	Playlist *playlist = NULL;
 	auto _db = SqlDatabase::instance();

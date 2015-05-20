@@ -60,7 +60,7 @@ public:
 
 	Cover *selectCoverFromURI(const QString &uri);
 	QList<TrackDAO> selectPlaylistTracks(int playlistID);
-	PlaylistDAO selectPlaylist(int playlistId);
+	PlaylistDAO selectPlaylist(uint playlistId);
 	QList<PlaylistDAO> selectPlaylists();
 
 	ArtistDAO* selectArtist(uint artistId);

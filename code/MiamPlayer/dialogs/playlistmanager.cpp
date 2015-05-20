@@ -113,7 +113,7 @@ void PlaylistManager::init()
 	_tabPlaylists->blockSignals(true);
 	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
 		for (PlaylistDAO playlist : _db->selectPlaylists()) {
-			this->loadPlaylist(playlist.id().toInt());
+			this->loadPlaylist(playlist.id().toUInt());
 		}
 	}
 	if (_tabPlaylists->playlists().isEmpty()) {
@@ -212,7 +212,7 @@ QString PlaylistManager::convertNameToValidFileName(QString &name)
 	return name;
 }
 
-void PlaylistManager::loadPlaylist(int playlistId)
+void PlaylistManager::loadPlaylist(uint playlistId)
 {
 	Playlist *playlist = NULL;
 	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
@@ -367,7 +367,7 @@ void PlaylistManager::loadSelectedPlaylists()
 	for (QModelIndex index : savedPlaylists->selectionModel()->selectedIndexes()) {
 		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
 		if (item) {
-			this->loadPlaylist(item->data(PlaylistID).toInt());
+			this->loadPlaylist(item->data(PlaylistID).toUInt());
 		}
 	}
 	this->close();
@@ -380,7 +380,7 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 	bool empty = indexes.isEmpty();
 	this->clearPreview(!empty);
 	if (indexes.size() == 1) {
-		int playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toInt();
+		uint playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toUInt();
 		qDebug() << Q_FUNC_INFO << "playlistId" << playlistId;
 
 		QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);

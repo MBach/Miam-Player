@@ -56,7 +56,7 @@ private:
 	static QString convertNameToValidFileName(QString &name);
 
 	/** Load a playlist saved on the in database. */
-	void loadPlaylist(int playlistId);
+	void loadPlaylist(uint playlistId);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */

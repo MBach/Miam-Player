@@ -384,7 +384,7 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
 	return tracks;
 }
 
-PlaylistDAO SqlDatabase::selectPlaylist(int playlistId)
+PlaylistDAO SqlDatabase::selectPlaylist(uint playlistId)
 {
 	PlaylistDAO playlist;
 	QSqlQuery results = exec("SELECT id, title, checksum, icon, background FROM playlists WHERE id = " + QString::number(playlistId));
