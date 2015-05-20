@@ -296,7 +296,7 @@ void CustomizeThemeDialog::showColorDialog()
 void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 {
 	SettingsPrivate::instance()->setColorsAlternateBG(b);
-	for (int i = 0; i < mainWindow->tabPlaylists->count() - 1; i++) {
+	for (int i = 0; i < mainWindow->tabPlaylists->count(); i++) {
 		Playlist *p = mainWindow->tabPlaylists->playlist(i);
 		p->setAlternatingRowColors(b);
 	}

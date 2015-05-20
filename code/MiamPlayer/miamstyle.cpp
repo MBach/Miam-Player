@@ -222,8 +222,12 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 	switch (element) {
 	// On Linux, don't fill the rectangular area where lives the PE_IndicatorBranch. Keep this area transparent
 	// On Windows, this is the default behaviour
-	case PE_PanelItemViewRow:
+	case PE_PanelItemViewRow: {
+		if (widget && widget->inherits("Playlist")) {
+			QProxyStyle::drawPrimitive(element, opt, painter, widget);
+		}
 		break;
+	}
 	case PE_IndicatorTabClose: {
 		if (opt->state.testFlag(State_MouseOver)) {
 			QFileSelector fs;
