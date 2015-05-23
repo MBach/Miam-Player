@@ -37,6 +37,8 @@ public:
 
 	explicit TagEditor(QWidget *parent = 0);
 
+	void addDirectory(const QDir &dir);
+
 	virtual void init() {}
 
 	virtual QStringList selectedTracks();

@@ -215,7 +215,7 @@ void MainWindow::setupActions()
 	// Link user interface
 	// Actions from the menu
 	connect(actionOpenFiles, &QAction::triggered, this, &MainWindow::openFiles);
-	connect(actionOpenFolder, &QAction::triggered, this, &MainWindow::openFolder);
+	connect(actionOpenFolder, &QAction::triggered, this, &MainWindow::openFolderPopup);
 	connect(actionExit, &QAction::triggered, &QApplication::quit);
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
@@ -252,8 +252,8 @@ void MainWindow::setupActions()
 	// Set only one location in the Library: the default music folder
 	connect(quickStart->defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QString musicLocation = quickStart->defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
+		customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
 		musicLocation = QDir::toNativeSeparators(musicLocation);
-		customizeOptionsDialog->addMusicLocation(musicLocation);
 		QStringList newLocations;
 		newLocations.append(musicLocation);
 		applyButtonClicked(newLocations);
@@ -265,8 +265,8 @@ void MainWindow::setupActions()
 		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
 				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
+				customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
 				musicLocation = QDir::toNativeSeparators(musicLocation);
-				customizeOptionsDialog->addMusicLocation(musicLocation);
 				newLocations.append(musicLocation);
 			}
 		}
@@ -463,6 +463,23 @@ QMessageBox::StandardButton MainWindow::showWarning(const QString &target, int c
 	return ret;
 }
 
+void MainWindow::openFolder(const QString &dir)
+{
+	Settings::instance()->setValue("lastOpenedLocation", dir);
+	QDirIterator it(dir, QDirIterator::Subdirectories);
+	QStringList suffixes = FileHelper::suffixes(FileHelper::All, false);
+	QStringList tracks;
+	while (it.hasNext()) {
+		it.next();
+		if (suffixes.contains(it.fileInfo().suffix())) {
+			tracks << "file://" + it.filePath();
+		}
+	}
+	if (showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {
+		tabPlaylists->insertItemsToPlaylist(-1, tracks);
+	}
+}
+
 /** Redefined to be able to retransltate User Interface at runtime. */
 void MainWindow::changeEvent(QEvent *event)
 {
@@ -549,32 +566,88 @@ void MainWindow::loadTheme()
 
 void MainWindow::processArgs(const QStringList &args)
 {
-	// First arg is the location of the application
-	if (args.count() > 2) {
-		QString command = args.at(1);
-		QStringList tracks;
+	QCommandLineParser parser;
+	parser.setApplicationDescription(QCoreApplication::tr("Command line helper for Miam-Player"));
+	parser.addHelpOption();
 
-		auto convertArgs = [&args, &tracks] () -> void {
-			for (int i = 2; i < args.count(); i++) {
-				tracks << "file://" + args.at(i);
+	QCommandLineOption directoryOption(QStringList() << "d" << "directory", tr("Directory to open."), tr("dir"));
+	QCommandLineOption createNewPlaylist(QStringList() << "n" << "new-playlist", tr("Medias are added into a new playlist."));
+	QCommandLineOption sendToTagEditor(QStringList() << "t" << "tag-editor", tr("Medias are sent to tag editor."));
+	QCommandLineOption addToLibrary(QStringList() << "l" << "library", tr("Directory is sent to library."));
+	QCommandLineOption playPause(QStringList() << "p" << "play", tr("Play or pause track in active playlist."));
+	QCommandLineOption stop(QStringList() << "s" << "stop", tr("Stop playback."));
+	QCommandLineOption skipForward(QStringList() << "f" << "forward", tr("Play next track."));
+	QCommandLineOption skipBackward(QStringList() << "b" << "backward", tr("Play previous track."));
+	QCommandLineOption volume(QStringList() << "v" << "volume", tr("Set volume of the player."), tr("volume"));
+
+	parser.addOption(directoryOption);
+	parser.addPositionalArgument("files", "Files to open", "[files]");
+	parser.addOption(createNewPlaylist);
+	parser.addOption(sendToTagEditor);
+	parser.addOption(addToLibrary);
+	parser.addOption(playPause);
+	parser.addOption(stop);
+	parser.addOption(skipForward);
+	parser.addOption(skipBackward);
+	parser.addOption(volume);
+	parser.process(args);
+
+	QStringList positionalArgs = parser.positionalArguments();
+	bool isDirectoryOption = parser.isSet(directoryOption);
+	bool isCreateNewPlaylist = parser.isSet(createNewPlaylist);
+	bool isSendToTagEditor = parser.isSet(sendToTagEditor);
+	bool isAddToLibrary = parser.isSet(addToLibrary);
+	auto mp = MediaPlayer::instance();
+
+	// -d <dir> and -f <files...> options are exclusive
+	// It could be possible to use them at the same time but it can be confusing. Directory takes precedence
+	if (isDirectoryOption) {
+		QFileInfo fileInfo(parser.value(directoryOption));
+		if (!fileInfo.isDir()) {
+			parser.showHelp();
+		}
+		if (isSendToTagEditor) {
+			tagEditor->addDirectory(fileInfo.absoluteDir());
+			actionViewTagEditor->trigger();
+		} else if (isAddToLibrary) {
+			customizeOptionsDialog->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
+		} else {
+			if (isCreateNewPlaylist) {
+				tabPlaylists->addPlaylist();
 			}
-		};
-
-		if (command == "-f") {			// Append to playlist
-			convertArgs();
+			this->openFolder(fileInfo.absoluteFilePath());
+		}
+	} else if (!positionalArgs.isEmpty()) {
+		if (isSendToTagEditor) {
+			tagEditor->addItemsToEditor(positionalArgs);
+			actionViewTagEditor->trigger();
+		} else {
+			if (isCreateNewPlaylist) {
+				tabPlaylists->addPlaylist();
+			}
+			QStringList tracks;
+			for (QString p : positionalArgs) {
+				tracks << "file://" + p;
+			}
 			tabPlaylists->insertItemsToPlaylist(-1, tracks);
-		} else if (command == "-n") {	// New playlist
-			convertArgs();
-			Playlist *p = tabPlaylists->addPlaylist();
-			if (p) {
-				tabPlaylists->insertItemsToPlaylist(-1, tracks);
-			}
-		} else if (command == "-t") {	// Tag Editor
-			convertArgs();
-			tagEditor->addItemsToEditor(tracks);
-			showTagEditor();
-		} else if (command == "-l") {	// Library
-
+		}
+	} else if (parser.isSet(playPause)) {
+		if (mp->state() == QMediaPlayer::PlayingState) {
+			mp->pause();
+		} else {
+			mp->play();
+		}
+	} else if (parser.isSet(skipForward)) {
+		mp->skipForward();
+	} else if (parser.isSet(skipBackward)) {
+		mp->skipBackward();
+	} else if (parser.isSet(stop)) {
+		mp->stop();
+	} else if (parser.isSet(volume)) {
+		bool ok = false;
+		int vol = parser.value(volume).toInt(&ok);
+		if (ok) {
+			volumeSlider->setValue(vol);
 		}
 	}
 }
@@ -666,7 +739,7 @@ void MainWindow::openFiles()
 	}
 }
 
-void MainWindow::openFolder()
+void MainWindow::openFolderPopup()
 {
 	Settings *settings = Settings::instance();
 	QString lastOpenedLocation;
@@ -680,20 +753,7 @@ void MainWindow::openFolder()
 	if (dir.isEmpty()) {
 		settings->setValue("lastOpenedLocation", defaultMusicLocation);
 	} else {
-		settings->setValue("lastOpenedLocation", dir);
-		QDirIterator it(dir, QDirIterator::Subdirectories);
-		QStringList suffixes = FileHelper::suffixes(FileHelper::All, false);
-		qDebug() << "supported suffixes" << suffixes;
-		QStringList tracks;
-		while (it.hasNext()) {
-			it.next();
-			if (suffixes.contains(it.fileInfo().suffix())) {
-				tracks << "file://" + it.filePath();
-			}
-		}
-		if (showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {
-			tabPlaylists->insertItemsToPlaylist(-1, tracks);
-		}
+		this->openFolder(dir);
 	}
 }
 

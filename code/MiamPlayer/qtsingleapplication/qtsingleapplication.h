@@ -42,6 +42,7 @@
 #define QTSINGLEAPPLICATION_H
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QMainWindow>
 
 class QtLocalPeer;
@@ -84,7 +85,7 @@ public:
 public slots:
 	void aboutToSendArgs(const QString &message);
 	void activateWindow();
-	bool sendMessage(const QString &message, int timeout = 5000);
+	bool forwardArgsToServer(int timeout = 5000);
 
 signals:
 	/*!

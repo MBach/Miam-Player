@@ -242,12 +242,14 @@ bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
 }
 
 /** Adds a new music location in the library. */
-void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
+void CustomizeOptionsDialog::addMusicLocation(const QDir &musicLocation)
 {
+	QString path = musicLocation.absolutePath();
 	int existingItem = -1;
 	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
 		QListWidgetItem *item = listWidgetMusicLocations->item(i);
-		if (QString::compare(item->text(), QDir::toNativeSeparators(musicLocation)) == 0 ||
+		QDir itemDir(item->text());
+		if ((QString::compare(itemDir.absolutePath(), path) == 0) ||
 			QString::compare(item->text(), tr("Add some music locations here")) == 0) {
 			existingItem = i;
 			break;
@@ -256,14 +258,14 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 	if (existingItem >= 0) {
 		delete listWidgetMusicLocations->takeItem(existingItem);
 	}
-	QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocation));
-	listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(musicLocation), listWidgetMusicLocations));
+	QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocation.absolutePath()));
+	listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
 	pushButtonDeleteLocation->setEnabled(true);
 
 	// Add this music location in the defaults for the file explorer
 	QStringList l = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-	if (l.isEmpty() || l.first() != musicLocation) {
-		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocation));
+	if (l.isEmpty() || l.first() != path) {
+		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
 	}
 }
 
@@ -271,7 +273,7 @@ void CustomizeOptionsDialog::addMusicLocation(const QString &musicLocation)
 void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 {
 	for (QDir folder : dirs) {
-		this->addMusicLocation(folder.absolutePath());
+		this->addMusicLocation(folder);
 	}
 	this->updateMusicLocations();
 }
@@ -418,7 +420,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 	QString libraryPath = QFileDialog::getExistingDirectory(this, tr("Select a location of your music"),
 		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
-		this->addMusicLocation(libraryPath);
+		this->addMusicLocation(QDir(libraryPath));
 	}
 }
 

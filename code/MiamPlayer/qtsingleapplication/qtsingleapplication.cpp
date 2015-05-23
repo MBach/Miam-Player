@@ -230,22 +230,9 @@ QWidget* QtSingleApplication::activationWindow() const
 	return actWin;
 }
 
-/*!
-	Tries to send the text \a message to the currently running
-	instance. The QtSingleApplication object in the running instance
-	will emit the messageReceived() signal when it receives the
-	message.
-
-	This function returns true if the message has been sent to, and
-	processed by, the current instance. If there is no instance
-	currently running, or if the running instance fails to process the
-	message within \a timeout milliseconds, this function return false.
-
-	\sa isRunning(), messageReceived()
-*/
-bool QtSingleApplication::sendMessage(const QString &message, int timeout)
+bool QtSingleApplication::forwardArgsToServer(int timeout)
 {
-	return peer->sendMessage(message, timeout);
+	return peer->sendMessage(arguments(), timeout);
 }
 
 /*!

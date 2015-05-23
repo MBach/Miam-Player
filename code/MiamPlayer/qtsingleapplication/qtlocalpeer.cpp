@@ -131,11 +131,17 @@ bool QtLocalPeer::isClient()
 	return false;
 }
 
+bool QtLocalPeer::sendMessage(const QStringList &args, int timeout)
+{
+	return this->sendMessage(args.join(";"), timeout);
+}
+
 
 bool QtLocalPeer::sendMessage(const QString &message, int timeout)
 {
-	if (!isClient())
+	if (!isClient()) {
 		return false;
+	}
 
 	QLocalSocket socket;
 	bool connOk = false;

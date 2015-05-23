@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QCommandLineParser>
 #include <QMainWindow>
 #include <QStack>
 
@@ -62,6 +63,8 @@ public:
 
 	static QMessageBox::StandardButton showWarning(const QString &target, int count);
 
+	void openFolder(const QString &dir);
+
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event) override;
@@ -89,7 +92,7 @@ private slots:
 
 	void openFiles();
 
-	void openFolder();
+	void openFolderPopup();
 
 	void showTabPlaylists();
 

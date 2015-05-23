@@ -2,6 +2,8 @@ QT += widgets multimedia sql
 
 TEMPLATE = app
 
+include(qtsingleapplication/qtsingleapplication.pri)
+
 SOURCES += \
     debug/logbrowser.cpp \
     debug/logbrowserdialog.cpp \
@@ -42,12 +44,6 @@ SOURCES += \
     playlists/playlistitemdelegate.cpp \
     playlists/starrating.cpp \
     playlists/stareditor.cpp \
-    qtsingleapplication/qtlocalpeer.cpp \
-    qtsingleapplication/qtlockedfile.cpp \
-    qtsingleapplication/qtlockedfile_unix.cpp \
-    qtsingleapplication/qtlockedfile_win.cpp \
-    qtsingleapplication/qtsingleapplication.cpp \
-    qtsingleapplication/qtsinglecoreapplication.cpp \
     styling/imageutils.cpp \
     styling/lineedit.cpp \
     styling/miamstyleditemdelegate.cpp \
@@ -117,12 +113,6 @@ HEADERS += \
     playlists/starrating.h \
     playlists/stareditor.h \
     playlists/playlistframe.h \
-    qtsingleapplication/qtlocalpeer.h \
-    qtsingleapplication/QtLockedFile \
-    qtsingleapplication/qtlockedfile.h \
-    qtsingleapplication/QtSingleApplication \
-    qtsingleapplication/qtsingleapplication.h \
-    qtsingleapplication/qtsinglecoreapplication.h \
     styling/imageutils.h \
     styling/lineedit.h \
     styling/miamstyleditemdelegate.h \

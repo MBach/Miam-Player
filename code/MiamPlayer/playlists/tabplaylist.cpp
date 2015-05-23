@@ -267,6 +267,7 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 			}
 		}
 	}
+	tracks.sort(Qt::CaseInsensitive);
 	this->insertItemsToPlaylist(-1, tracks);
 
 	// Automatically plays the first track

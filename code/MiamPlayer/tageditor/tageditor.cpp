@@ -7,6 +7,7 @@
 #include <taglib/tfile.h>
 #include <taglib/tpropertymap.h>
 #include <QDir>
+#include <QDirIterator>
 #include <QDragEnterEvent>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -72,6 +73,20 @@ TagEditor::TagEditor(QWidget *parent) :
 
 	albumCover->installEventFilter(this);
 	tagEditorWidget->viewport()->installEventFilter(this);
+}
+
+void TagEditor::addDirectory(const QDir &dir)
+{
+	QDirIterator it(dir, QDirIterator::Subdirectories);
+	QStringList tracks;
+	while (it.hasNext()) {
+		QString entry = it.next();
+		QFileInfo fileInfo(entry);
+		if (fileInfo.isFile() && FileHelper::suffixes(FileHelper::All).contains(fileInfo.suffix())) {
+			tracks << "file://" + fileInfo.absoluteFilePath();
+		}
+	}
+	this->addItemsToEditor(tracks);
 }
 
 QStringList TagEditor::selectedTracks()

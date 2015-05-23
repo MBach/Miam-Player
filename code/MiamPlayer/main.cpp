@@ -35,43 +35,38 @@ int main(int argc, char *argv[])
 	qInstallMessageHandler(debugOutput);
 
 	QtSingleApplication app(SOFT, argc, argv);
+	app.setOrganizationName(COMPANY);
+	app.setApplicationName(SOFT);
+	app.setApplicationVersion(VERSION);
 
 	if (app.isRunning()) {
-		QString arg = QApplication::arguments().join(";");
-		app.sendMessage(arg);
+		app.forwardArgsToServer();
 		return 0;
 	}
 
 	app.setStyle(new MiamStyle);
 	MainWindow *window = new MainWindow;
-	logBrowser = new LogBrowser;
-	QObject::connect(window->actionShowDebug, &QAction::triggered, [=]() {
-		logBrowser->show();
-	});
-	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 	app.setActivationWindow(window);
+
+	logBrowser = new LogBrowser;
+	QObject::connect(window->actionShowDebug, &QAction::triggered, [=]() { logBrowser->show(); });
+	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->isCustomColors()) {
 		app.setPalette(settings->value("customPalette").value<QPalette>());
 	}
-	app.setOrganizationName(COMPANY);
-	app.setApplicationName(SOFT);
-	app.setApplicationVersion(VERSION);
 
 	window->init();
 	window->show();
 	window->loadPlugins();
 	window->activateLastView();
-
-	// It this application was started from a file (for example)
-	if (argc > 1) {
-		QStringList args;
-		for (int i = 0; i < argc; i++) {
-			args << argv[i];
-		}
-		window->processArgs(args);
+	QStringList args;
+	for (int i = 0; i < argc; i++) {
+		args << argv[i];
 	}
+	window->processArgs(args);
+
 	int result = app.exec();
 	delete logBrowser;
 	return result;
