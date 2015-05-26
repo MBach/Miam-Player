@@ -8,7 +8,6 @@
 #include <mediabutton.h>
 #include <mediaplayer.h>
 #include "../tracksnotfoundmessagebox.h"
-#include "dialogs/closeplaylistpopup.h"
 #include "playlist.h"
 #include "playlistframe.h"
 
@@ -27,7 +26,6 @@ private:
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
-	ClosePlaylistPopup *_closePlaylistPopup;
 	MainWindow *_mainWindow;
 	QMenu *_contextMenu;
 
@@ -91,10 +89,7 @@ public slots:
 
 	void updateRowHeight();
 
-private slots:
 	void closePlaylist(int index);
-
-	void execActionFromClosePopup(QAbstractButton *action);
 
 signals:
 	/** Forward the signal. */
@@ -102,7 +97,7 @@ signals:
 
 	void aboutToDeletePlaylist(int, Playlist *);
 
-	void aboutToSavePlaylist(int, bool = false);
+	void aboutToSavePlaylist(int, bool overwrite = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 

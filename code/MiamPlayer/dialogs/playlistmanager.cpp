@@ -1,5 +1,6 @@
 ﻿#include "playlistmanager.h"
 
+#include <model/playlistdao.h>
 #include <filehelper.h>
 #include <settingsprivate.h>
 #include "starrating.h"
@@ -122,10 +123,10 @@ void PlaylistManager::init()
 	_tabPlaylists->blockSignals(false);
 }
 
-int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExitingApplication)
+int PlaylistManager::savePlaylist(int index, bool isOverwriting)
 {
 	Playlist *p = _tabPlaylists->playlist(index);
-	int id = 0;
+	int id = -1;
 	if (p && !p->mediaPlaylist()->isEmpty()) {
 		QString playlistName = _tabPlaylists->tabBar()->tabText(index);
 
@@ -134,7 +135,7 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExitingA
 		// Check first if one has the same playlist in database
 		PlaylistDAO playlist;
 		for (PlaylistDAO dao : _db->selectPlaylists()) {
-			if (dao.checksum().toUInt() == generateNewHash && !isExitingApplication) {
+			if (dao.checksum().toUInt() == generateNewHash) {
 				// Playlist exists in database and user is not exiting application -> showing a popup
 				QMessageBox mb;
 				mb.setIcon(QMessageBox::Information);
@@ -152,11 +153,9 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExitingA
 					return 1;
 				}
 				break;
-			} else if (dao.checksum().toUInt() == generateNewHash && !isOverwriting && isExitingApplication) {
-				// Playlist exists in database and user is exiting application -> discarding
-				return 1;
-			} else if (isOverwriting) {
+			} else if (isOverwriting && p->hash() == dao.checksum().toUInt()) {
 				playlist = dao;
+				break;
 			}
 		}
 

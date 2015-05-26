@@ -40,7 +40,7 @@
 #include <QtDebug>
 
 FileHelper::FileHelper(const QMediaContent &track)
-	: _file(NULL)
+	: _file(NULL), _fileType(UNKNOWN)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 	if (!b) {
@@ -51,13 +51,14 @@ FileHelper::FileHelper(const QMediaContent &track)
 FileHelper::FileHelper(const QString &filePath)
 	: _file(NULL)
 {
+	qDebug() << Q_FUNC_INFO << filePath;
 	if (!init(filePath)) {
-		init(filePath.toStdString().c_str());
-		//qDebug() << Q_FUNC_INFO << "couldn't init file, second chance!";
-		//bool b = init(filePath.toStdString().c_str());
-		//if (!b) {
-		//	qDebug() << Q_FUNC_INFO << "couldn't init second chance :(";
-		//}
+		//init(filePath.toStdString().c_str());
+		qDebug() << Q_FUNC_INFO << "couldn't init file, second chance!";
+		bool b = init(filePath.toStdString().c_str());
+		if (!b) {
+			qDebug() << Q_FUNC_INFO << "couldn't init second chance :(";
+		}
 	}
 }
 
@@ -318,7 +319,7 @@ Cover* FileHelper::extractCover()
 		break;
 	}
 	default:
-		qDebug() << Q_FUNC_INFO << "Not implemented for this file type";
+		qDebug() << Q_FUNC_INFO << "Not implemented for this file type" << _fileType << _file << _fileInfo.absoluteFilePath();
 		break;
 	}
 	return cover;

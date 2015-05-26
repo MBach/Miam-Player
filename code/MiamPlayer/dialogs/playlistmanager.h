@@ -45,7 +45,7 @@ public:
 
 	void init();
 
-	int savePlaylist(int index, bool isOverwriting = false, bool isExitingApplication = false);
+	int savePlaylist(int index, bool isOverwriting = false);
 
 	void retranslateUi(PlaylistManager *dialog);
 

@@ -69,6 +69,8 @@ protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event) override;
 
+	virtual void closeEvent(QCloseEvent *event) override;
+
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
 	virtual void dragMoveEvent(QDragMoveEvent *event) override;

@@ -2,21 +2,22 @@
 
 #include <QDirIterator>
 
+#include <settings.h>
+#include <settingsprivate.h>
+
+#include "dialogs/closeplaylistpopup.h"
 #include "mainwindow.h"
-#include "settings.h"
 #include "tabbar.h"
 #include "cornerwidget.h"
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _closePlaylistPopup(new ClosePlaylistPopup(this)), _mainWindow(NULL)
+	QTabWidget(parent), _mainWindow(NULL)
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
 	this->setMovable(true);
 	messageBox = new TracksNotFoundMessageBox(this);
-
-	//SettingsPrivate *settings = SettingsPrivate::instance();
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
@@ -24,7 +25,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	});
 
 	// Removing a playlist
-	connect(_closePlaylistPopup->buttonBox, &QDialogButtonBox::clicked, this, &TabPlaylist::execActionFromClosePopup);
 	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
 
 	/// FIXME: when changing font for saved and untouched playlists, overwritting to normal instead of disabled
@@ -182,7 +182,6 @@ void TabPlaylist::changeEvent(QEvent *event)
 				}
 			}
 		}
-		_closePlaylistPopup->retranslateUi(_closePlaylistPopup);
 	}
 }
 
@@ -379,52 +378,30 @@ void TabPlaylist::closePlaylist(int index)
 			qDebug() << Q_FUNC_INFO << "override default action and ask once again to user" << "old hash" << p->hash() << "new hash" << newHash;
 			// Override default action and ask once again to user.
 			action = SettingsPrivate::PL_AskUserForAction;
-			if (p->mediaPlaylist()->isEmpty()) {
-				_closePlaylistPopup->setDeleteMode(true);
-			} else {
-				_closePlaylistPopup->setOverwriteMode(true);
-			}
 		}
 		switch (action) {
-		case SettingsPrivate::PL_AskUserForAction:
-			_closePlaylistPopup->setTabToClose(index);
-			_closePlaylistPopup->setVisible(true);
+		case SettingsPrivate::PL_AskUserForAction: {
+			ClosePlaylistPopup *closePopup = new ClosePlaylistPopup(this);
+			connect(closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, this, &TabPlaylist::aboutToSavePlaylist);
+			connect(closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, [=](int idx) {
+				emit aboutToDeletePlaylist(idx, playlist(idx));
+			});
+			connect(closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
+			closePopup->setTabToClose(index);
+			if (p->mediaPlaylist()->isEmpty()) {
+				closePopup->setDeleteMode(true);
+			} else {
+				closePopup->setOverwriteMode(true);
+			}
+			closePopup->exec();
+			qDebug() << Q_FUNC_INFO;
 			break;
+		}
 		case SettingsPrivate::PL_SaveOnClose:
 			emit aboutToSavePlaylist(index, false);
 			break;
 		case SettingsPrivate::PL_DiscardOnClose:
 			this->removeTabFromCloseButton(index);
-			break;
-		}
-	}
-}
-
-void TabPlaylist::execActionFromClosePopup(QAbstractButton *action)
-{
-	// Handle custom buttons (not QDialogButtonBox::StandardButton but QAbstractButton*)
-	if (action == _closePlaylistPopup->replaceButton) {
-		emit aboutToSavePlaylist(_closePlaylistPopup->index(), true);
-	} else if (action == _closePlaylistPopup->deleteButton){
-		int index = _closePlaylistPopup->index();
-		emit aboutToDeletePlaylist(index, playlist(index));
-	} else {
-		// Standard enumeration
-		switch(_closePlaylistPopup->buttonBox->standardButton(action)) {
-		case QDialogButtonBox::Save:
-			if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
-			}
-			emit aboutToSavePlaylist(_closePlaylistPopup->index(), false);
-			break;
-		case QDialogButtonBox::Discard:
-			if (_closePlaylistPopup->checkBoxRememberChoice->isChecked()) {
-				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
-			}
-			this->removeTabFromCloseButton(_closePlaylistPopup->index());
-			_closePlaylistPopup->setVisible(false);
-			break;
-		default:
 			break;
 		}
 	}

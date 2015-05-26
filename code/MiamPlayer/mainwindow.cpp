@@ -1,11 +1,12 @@
 #include "mainwindow.h"
 
+#include <settings.h>
+#include <settingsprivate.h>
+#include <musicsearchengine.h>
 #include "dialogs/customizethemedialog.h"
 #include "dialogs/dragdropdialog.h"
-#include "musicsearchengine.h"
 #include "playlists/playlist.h"
 #include "pluginmanager.h"
-#include "settings.h"
 
 #include <QDesktopServices>
 #include <QFileDialog>
@@ -216,7 +217,10 @@ void MainWindow::setupActions()
 	// Actions from the menu
 	connect(actionOpenFiles, &QAction::triggered, this, &MainWindow::openFiles);
 	connect(actionOpenFolder, &QAction::triggered, this, &MainWindow::openFolderPopup);
-	connect(actionExit, &QAction::triggered, &QApplication::quit);
+	connect(actionExit, &QAction::triggered, this, [=]() {
+		QCloseEvent event;
+		this->closeEvent(&event);
+	});
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
@@ -238,8 +242,9 @@ void MainWindow::setupActions()
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 
 	// Lambda function to reduce duplicate code
-	auto applyButtonClicked = [this, db] (const QStringList &newLocations) {
-		SettingsPrivate::instance()->setMusicLocations(newLocations);
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	auto applyButtonClicked = [this, db, settings] (const QStringList &newLocations) {
+		settings->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->show();
 		libraryHeader->show();
@@ -337,7 +342,6 @@ void MainWindow::setupActions()
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	library->setSearchBar(searchBar);
-	SettingsPrivate *settings = SettingsPrivate::instance();
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
 		library->findMusic(text);
 		if (settings->isExtendedSearchVisible()) {
@@ -414,11 +418,6 @@ void MainWindow::setupActions()
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		if (settings->playbackKeepPlaylists()) {
-			for (int i = 0; i < tabPlaylists->count(); i++) {
-				playlistManager->savePlaylist(i, false, true);
-			}
-		}
 		delete PluginManager::instance();
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
@@ -498,6 +497,24 @@ void MainWindow::changeEvent(QEvent *event)
 		}
 	} else {
 		QMainWindow::changeEvent(event);
+	}
+}
+
+void MainWindow::closeEvent(QCloseEvent *)
+{
+	qDebug() << Q_FUNC_INFO;
+	int ret = -1;
+	auto settings = SettingsPrivate::instance();
+	if (settings->playbackKeepPlaylists()) {
+		//SettingsPrivate::PlaylistDefaultAction pda = settings->playbackDefaultActionForClose();
+		//bool isOverwritting = (pda == SettingsPrivate::PL_SaveOnClose);
+		for (int i = 0; i < tabPlaylists->count(); i++) {
+			//ret = playlistManager->savePlaylist(i, isOverwritting);
+			tabPlaylists->closePlaylist(i);
+		}
+	}
+	if (ret == -1) {
+		QCoreApplication::quit();
 	}
 }
 

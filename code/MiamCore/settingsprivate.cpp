@@ -409,11 +409,13 @@ qint64 SettingsPrivate::playbackSeekTime() const
 	}
 }
 
+/** Default action to execute when one is closing a playlist. */
 SettingsPrivate::PlaylistDefaultAction SettingsPrivate::playbackDefaultActionForClose() const
 {
 	return static_cast<SettingsPrivate::PlaylistDefaultAction>(value("playbackDefaultActionForClose").toInt());
 }
 
+/** Automatically save all playlists before exit. */
 bool SettingsPrivate::playbackKeepPlaylists() const
 {
 	QVariant b = value("playbackKeepPlaylists");
@@ -424,6 +426,7 @@ bool SettingsPrivate::playbackKeepPlaylists() const
 	}
 }
 
+/** Automatically restore all saved playlists at startup. */
 bool SettingsPrivate::playbackRestorePlaylistsAtStartup() const
 {
 	QVariant b = value("playbackRestorePlaylistsAtStartup");

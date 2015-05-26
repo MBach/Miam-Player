@@ -56,8 +56,8 @@ public:
 								 PL_SaveOnClose			= 1,
 								 PL_DiscardOnClose		= 2};
 
-	enum LibrarySearchMode { LSM_Filter	= 0,
-							 LSM_HighlightOnly = 1};
+	enum LibrarySearchMode { LSM_Filter			= 0,
+							 LSM_HighlightOnly	= 1};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();
@@ -155,10 +155,13 @@ public:
 	/// PlayBack options
 	qint64 playbackSeekTime() const;
 
+	/** Default action to execute when one is closing a playlist. */
 	PlaylistDefaultAction playbackDefaultActionForClose() const;
 
+	/** Automatically save all playlists before exit. */
 	bool playbackKeepPlaylists() const;
 
+	/** Automatically restore all saved playlists at startup. */
 	bool playbackRestorePlaylistsAtStartup() const;
 
 	void setCustomColorRole(QPalette::ColorRole cr, const QColor &color);
