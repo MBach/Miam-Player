@@ -5,8 +5,6 @@
 
 #include "ui_closeplaylistpopup.h"
 
-class TabPlaylist;
-
 /**
  * \brief		The ClosePlaylistPopup class is a small modal dialog
  * \details		This dialog is displayed on screen when one is about to close a playlist. 3 actions are possible for the user:
@@ -22,24 +20,16 @@ class ClosePlaylistPopup : public QDialog, public Ui::ClosePlaylistPopup
 private:
 	int _index;
 
+	QPushButton *_deleteButton, *_replaceButton;
+
 public:
-	QPushButton *deleteButton, *replaceButton;
-
-	explicit ClosePlaylistPopup(TabPlaylist *parent);
-
-	inline int index() { return _index; }
-
-	inline void setTabToClose(int index) { _index = index; }
-
-	void setDeleteMode(bool del);
-	void setOverwriteMode(bool overwrite);
-
-	void setVisible(bool visible);
+	explicit ClosePlaylistPopup(int index, bool currentPlaylistIsEmpty, bool playlistModified, QWidget *parent = NULL);
 
 private slots:
 	void execActionFromClosePopup(QAbstractButton *action);
 
 signals:
+	void aboutToCancel();
 	void aboutToRemoveTab(int playlistTabIndex);
 	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite);
 	void aboutToDeletePlaylist(int playlistTabIndex);

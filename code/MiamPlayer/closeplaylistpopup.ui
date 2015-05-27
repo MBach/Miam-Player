@@ -19,12 +19,9 @@
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
-  <property name="modal">
-   <bool>true</bool>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout">
    <item>
-    <widget class="QLabel" name="labelNewPlaylist">
+    <widget class="QLabel" name="labelPlaylist">
      <property name="font">
       <font>
        <pointsize>10</pointsize>
@@ -32,21 +29,6 @@
      </property>
      <property name="text">
       <string>You're about to close a playlist. What would you like to do?</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="labelExistingPlaylist">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>You're about to close a playlist that you have modified. What would you like to do?</string>
      </property>
      <property name="wordWrap">
       <bool>true</bool>

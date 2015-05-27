@@ -159,6 +159,10 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting)
 			}
 		}
 
+		// Playlist wasn't found so we cannot overwrite it
+		if (playlist.checksum().isEmpty()) {
+			isOverwriting = false;
+		}
 		playlist.setTitle(playlistName);
 		playlist.setChecksum(QString::number(generateNewHash));
 
@@ -216,8 +220,6 @@ void PlaylistManager::loadPlaylist(uint playlistId)
 	Playlist *playlist = NULL;
 	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
 
-	qDebug() << Q_FUNC_INFO << playlistId;
-
 	// Do not load the playlist if it's already displayed
 	for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
 		Playlist *p = _tabPlaylists->playlist(i);
@@ -233,7 +235,6 @@ void PlaylistManager::loadPlaylist(uint playlistId)
 	int index = _tabPlaylists->currentIndex();
 	if (index >= 0) {
 		playlist = _tabPlaylists->playlist(index);
-		qDebug() << playlist->hash() << playlist->generateNewHash() << playlist->mediaPlaylist()->isEmpty();
 		if (!playlist->mediaPlaylist()->isEmpty()) {
 			playlist = _tabPlaylists->addPlaylist();
 			_tabPlaylists->tabBar()->setTabText(_tabPlaylists->count() - 1, playlistDao.title());
@@ -245,7 +246,6 @@ void PlaylistManager::loadPlaylist(uint playlistId)
 		_tabPlaylists->tabBar()->setTabText(_tabPlaylists->count() - 1, playlistDao.title());
 	}
 	playlist->setHash(playlistDao.checksum().toUInt());
-	qDebug() << Q_FUNC_INFO << playlistDao.title() << playlist->hash();
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
@@ -269,16 +269,18 @@ void PlaylistManager::open()
 	this->activateWindow();
 }
 
-void PlaylistManager::deletePlaylist(int index, Playlist *p)
+void PlaylistManager::deletePlaylist(int index)
 {
-	QList<PlaylistDAO> playlists;
-	PlaylistDAO dao;
-	dao.setId(QString::number(p->id()));
-	playlists << dao;
+	if (Playlist *p = _tabPlaylists->playlist(index)) {
+		QList<PlaylistDAO> playlists;
+		PlaylistDAO dao;
+		dao.setId(QString::number(p->id()));
+		playlists << dao;
 
-	// Try to remove the playlist then call the view to reset or close the current tab
-	if (_db->removePlaylists(playlists)) {
-		emit aboutToRemovePlaylist(index);
+		// Try to remove the playlist then call the view to reset or close the current tab
+		if (_db->removePlaylists(playlists)) {
+			emit aboutToRemovePlaylist(index);
+		}
 	}
 }
 

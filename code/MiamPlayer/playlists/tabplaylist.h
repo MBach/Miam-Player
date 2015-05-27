@@ -89,15 +89,15 @@ public slots:
 
 	void updateRowHeight();
 
-	void closePlaylist(int index);
+	int closePlaylist(int index, bool aboutToQuit = false);
 
 signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
 
-	void aboutToDeletePlaylist(int, Playlist *);
+	void aboutToDeletePlaylist(int playlistTabIndex);
 
-	void aboutToSavePlaylist(int, bool overwrite = false);
+	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 

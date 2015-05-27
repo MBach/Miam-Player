@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	playlistManager = new PlaylistManager(SqlDatabase::instance(), tabPlaylists);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
+
+	this->installEventFilter(this);
 }
 
 void MainWindow::activateLastView()
@@ -500,21 +502,26 @@ void MainWindow::changeEvent(QEvent *event)
 	}
 }
 
-void MainWindow::closeEvent(QCloseEvent *)
+void MainWindow::closeEvent(QCloseEvent *e)
 {
-	qDebug() << Q_FUNC_INFO;
-	int ret = -1;
+	int ret = 0;
 	auto settings = SettingsPrivate::instance();
 	if (settings->playbackKeepPlaylists()) {
-		//SettingsPrivate::PlaylistDefaultAction pda = settings->playbackDefaultActionForClose();
-		//bool isOverwritting = (pda == SettingsPrivate::PL_SaveOnClose);
-		for (int i = 0; i < tabPlaylists->count(); i++) {
-			//ret = playlistManager->savePlaylist(i, isOverwritting);
-			tabPlaylists->closePlaylist(i);
+		while (tabPlaylists->count() > 1 || !tabPlaylists->playlist(0)->mediaPlaylist()->isEmpty()) {
+			int lastOne = tabPlaylists->count() - 1;
+			tabPlaylists->setCurrentIndex(lastOne);
+			ret = tabPlaylists->closePlaylist(lastOne, true);
+			// Interrup while loop if one has cancelled popup
+			if (ret == 1) {
+				qDebug() << Q_FUNC_INFO << "interrupt exit (Cancel button should have been clicked)";
+				break;
+			}
 		}
 	}
-	if (ret == -1) {
+	if (ret == 0) {
 		QCoreApplication::quit();
+	} else {
+		e->ignore();
 	}
 }
 

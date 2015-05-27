@@ -25,7 +25,10 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	});
 
 	// Removing a playlist
-	connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
+	//connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
+	connect(this, &QTabWidget::tabCloseRequested, this, [=](int tabIndex) {
+		this->closePlaylist(tabIndex);
+	});
 
 	/// FIXME: when changing font for saved and untouched playlists, overwritting to normal instead of disabled
 	/// Reducing size is ok, inreasing size is ko
@@ -359,11 +362,11 @@ void TabPlaylist::updateRowHeight()
 	}
 }
 
-void TabPlaylist::closePlaylist(int index)
+int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 {
 	Playlist *p = playlists().at(index);
 	if (!(p && p->mediaPlaylist())) {
-		return;
+		return 0;
 	}
 
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
@@ -374,35 +377,32 @@ void TabPlaylist::closePlaylist(int index)
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	} else {
 		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
-		if (p->hash() != 0 && p->hash() != newHash) {
-			qDebug() << Q_FUNC_INFO << "override default action and ask once again to user" << "old hash" << p->hash() << "new hash" << newHash;
-			// Override default action and ask once again to user.
+		bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
+		// Override default action and ask once again to user because it's not allowed to save empty playlist automatically
+		if (playlistModified && action == SettingsPrivate::PL_SaveOnClose) {
 			action = SettingsPrivate::PL_AskUserForAction;
 		}
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction: {
-			ClosePlaylistPopup *closePopup = new ClosePlaylistPopup(this);
-			connect(closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, this, &TabPlaylist::aboutToSavePlaylist);
-			connect(closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, [=](int idx) {
-				emit aboutToDeletePlaylist(idx, playlist(idx));
+			int returnCode = 0;
+			ClosePlaylistPopup closePopup(index, p->mediaPlaylist()->isEmpty(), playlistModified);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, this, &TabPlaylist::aboutToSavePlaylist);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::aboutToDeletePlaylist);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [&returnCode]() {
+				// Interrupt exit!
+				returnCode = 1;
 			});
-			connect(closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
-			closePopup->setTabToClose(index);
-			if (p->mediaPlaylist()->isEmpty()) {
-				closePopup->setDeleteMode(true);
-			} else {
-				closePopup->setOverwriteMode(true);
-			}
-			closePopup->exec();
-			qDebug() << Q_FUNC_INFO;
-			break;
+			closePopup.exec();
+			return returnCode;
 		}
 		case SettingsPrivate::PL_SaveOnClose:
-			emit aboutToSavePlaylist(index, false);
+			emit aboutToSavePlaylist(index, aboutToQuit);
 			break;
 		case SettingsPrivate::PL_DiscardOnClose:
 			this->removeTabFromCloseButton(index);
 			break;
 		}
 	}
+	return 0;
 }

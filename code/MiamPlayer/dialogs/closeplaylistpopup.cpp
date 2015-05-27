@@ -5,94 +5,68 @@
 #include <QPushButton>
 
 #include <settingsprivate.h>
-#include "tabplaylist.h"
 
 #include <QtDebug>
 
-ClosePlaylistPopup::ClosePlaylistPopup(TabPlaylist *p) :
-	QDialog(NULL), _index(0),
-	deleteButton(new QPushButton(tr("Delete this playlist"), this)),
-	replaceButton(new QPushButton(tr("Replace this playlist"), this))
+ClosePlaylistPopup::ClosePlaylistPopup(int index, bool currentPlaylistIsEmpty, bool playlistModified, QWidget *parent) :
+	QDialog(parent), _index(index),
+	_deleteButton(NULL),
+	_replaceButton(NULL)
 {
 	setupUi(this);
-	deleteButton->hide();
-	replaceButton->hide();
-	labelExistingPlaylist->hide();
 
 	connect(buttonBox, &QDialogButtonBox::clicked, this, &ClosePlaylistPopup::execActionFromClosePopup);
 	connect(checkBoxRememberChoice, &QCheckBox::toggled, buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::setDisabled);
-}
 
-void ClosePlaylistPopup::setDeleteMode(bool del)
-{
-	labelExistingPlaylist->setVisible(del);
-	labelNewPlaylist->setVisible(!del);
-	checkBoxRememberChoice->setVisible(!del);
-	if (del) {
-		buttonBox->removeButton(replaceButton);
+	checkBoxRememberChoice->setVisible(false);
+
+	// Delete mode
+	if (currentPlaylistIsEmpty) {
 		buttonBox->setStandardButtons(QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
-		buttonBox->addButton(deleteButton, QDialogButtonBox::AcceptRole);
-	} else {
-		buttonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
-		buttonBox->removeButton(deleteButton);
-		buttonBox->removeButton(replaceButton);
-	}
-}
-
-void ClosePlaylistPopup::setOverwriteMode(bool overwrite)
-{
-	labelExistingPlaylist->setVisible(overwrite);
-	labelNewPlaylist->setVisible(!overwrite);
-	checkBoxRememberChoice->setVisible(!overwrite);
-	if (overwrite) {
-		buttonBox->removeButton(deleteButton);
+		_deleteButton = new QPushButton(tr("Delete this playlist"), this);
+		buttonBox->addButton(_deleteButton, QDialogButtonBox::AcceptRole);
+	} else if (playlistModified) {
+		// Overwrite mode
+		labelPlaylist->setText(tr("You're about to close a playlist that you have modified. What would you like to do?"));
 		buttonBox->setStandardButtons(QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
-		buttonBox->addButton(replaceButton, QDialogButtonBox::AcceptRole);
+		_replaceButton = new QPushButton(tr("Replace this playlist"), this);
+		buttonBox->addButton(_replaceButton, QDialogButtonBox::AcceptRole);
 	} else {
+		// Standard
+		labelPlaylist->setText(tr("You're about to close a playlist. What would you like to do?"));
 		buttonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
-		buttonBox->removeButton(replaceButton);
-		buttonBox->removeButton(deleteButton);
 	}
-}
-
-void ClosePlaylistPopup::setVisible(bool visible)
-{
-	if (checkBoxRememberChoice->isChecked()) {
-		checkBoxRememberChoice->toggle();
-	}
-	if (!visible) {
-		setOverwriteMode(visible);
-	} else {
-		int w = qApp->desktop()->screenGeometry().width() / 2;
-		int h = qApp->desktop()->screenGeometry().height() / 2;
-		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
-	}
-	QDialog::setVisible(visible);
 }
 
 void ClosePlaylistPopup::execActionFromClosePopup(QAbstractButton *action)
 {
-   if (action == replaceButton) {
-	   emit aboutToSavePlaylist(index(), true);
-   } else if (action == deleteButton){
-	   emit aboutToDeletePlaylist(index());
-   } else {
-	   // Standard enumeration
-	   switch(buttonBox->standardButton(action)) {
-	   case QDialogButtonBox::Save:
-		   if (checkBoxRememberChoice->isChecked()) {
-			   SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
-		   }
-		   emit aboutToSavePlaylist(index(), false);
-		   break;
-	   case QDialogButtonBox::Discard:
-		   if (checkBoxRememberChoice->isChecked()) {
-			   SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
-		   }
-		   emit aboutToRemoveTab(index());
-		   break;
-	   default:
-		   break;
-	   }
-   }
-  }
+	if (action == _replaceButton) {
+		emit aboutToSavePlaylist(_index, true);
+	} else if (action == _deleteButton){
+		emit aboutToDeletePlaylist(_index);
+	} else {
+		// Standard enumeration
+		switch(buttonBox->standardButton(action)) {
+		case QDialogButtonBox::Save:
+			if (checkBoxRememberChoice->isChecked()) {
+				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
+			}
+			emit aboutToSavePlaylist(_index, false);
+			break;
+		case QDialogButtonBox::Discard:
+			if (checkBoxRememberChoice->isChecked()) {
+				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
+			}
+			emit aboutToRemoveTab(_index);
+			this->close();
+			break;
+		case QDialogButtonBox::Cancel:
+			emit aboutToCancel();
+			this->close();
+			qDebug() << Q_FUNC_INFO << "Cancel was clicked!";
+			break;
+		default:
+			break;
+		}
+	}
+}

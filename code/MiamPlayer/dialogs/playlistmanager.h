@@ -62,7 +62,7 @@ public slots:
 	/** Redefined: clean preview area, populate once again lists. */
 	void open();
 
-	void deletePlaylist(int index, Playlist *p);
+	void deletePlaylist(int index);
 
 	void saveAndRemovePlaylist(int index, bool isOverwriting = false);
 
