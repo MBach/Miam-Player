@@ -764,6 +764,29 @@
     </message>
 </context>
 <context>
+    <name>LibraryItemModel</name>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation type="unfinished">  Umělci/Alba</translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation type="unfinished">  Alba</translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation type="unfinished">  Umělci - Alba</translation>
+    </message>
+    <message>
+        <source>  Years</source>
+        <translation type="unfinished">  Roky</translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation type="unfinished">Různé</translation>
+    </message>
+</context>
+<context>
     <name>LibraryOrderDialog</name>
     <message>
         <source>Select how to display your library</source>
@@ -818,23 +841,23 @@
     </message>
     <message>
         <source>  Artists \ Albums</source>
-        <translation>  Umělci/Alba</translation>
+        <translation type="vanished">  Umělci/Alba</translation>
     </message>
     <message>
         <source>Various</source>
-        <translation>Různé</translation>
+        <translation type="vanished">Různé</translation>
     </message>
     <message>
         <source>  Albums</source>
-        <translation>  Alba</translation>
+        <translation type="vanished">  Alba</translation>
     </message>
     <message>
         <source>  Artists – Albums</source>
-        <translation>  Umělci - Alba</translation>
+        <translation type="vanished">  Umělci - Alba</translation>
     </message>
     <message>
         <source>  Years</source>
-        <translation>  Roky</translation>
+        <translation type="vanished">  Roky</translation>
     </message>
     <message>
         <source>Send to the tag editor</source>
@@ -1141,6 +1164,50 @@
         <source>Stop after current</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Directory to open.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dir</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medias are added into a new playlist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medias are sent to tag editor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directory is sent to library.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play or pause track in active playlist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop playback.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play next track.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play previous track.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set volume of the player.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>volume</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1295,6 +1362,13 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Byl nalezen přídavný modul, ale přehrávač nebyl schopen jej nahrát (soubor %1)</translation>
+    </message>
+</context>
+<context>
+    <name>QCoreApplication</name>
+    <message>
+        <source>Command line helper for Miam-Player</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

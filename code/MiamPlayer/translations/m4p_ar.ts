@@ -764,6 +764,29 @@
     </message>
 </context>
 <context>
+    <name>LibraryItemModel</name>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation type="unfinished">  الفنانين \ الالبومات</translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation type="unfinished">  الألبومات</translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation type="unfinished">  الفنانين – الألبومات</translation>
+    </message>
+    <message>
+        <source>  Years</source>
+        <translation type="unfinished">  السنوات</translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation type="unfinished">منوعات</translation>
+    </message>
+</context>
+<context>
     <name>LibraryOrderDialog</name>
     <message>
         <source>Select how to display your library</source>
@@ -818,23 +841,23 @@
     </message>
     <message>
         <source>  Artists \ Albums</source>
-        <translation>  الفنانين \ الالبومات</translation>
+        <translation type="vanished">  الفنانين \ الالبومات</translation>
     </message>
     <message>
         <source>Various</source>
-        <translation>منوعات</translation>
+        <translation type="vanished">منوعات</translation>
     </message>
     <message>
         <source>  Albums</source>
-        <translation>  الألبومات</translation>
+        <translation type="vanished">  الألبومات</translation>
     </message>
     <message>
         <source>  Artists – Albums</source>
-        <translation>  الفنانين – الألبومات</translation>
+        <translation type="vanished">  الفنانين – الألبومات</translation>
     </message>
     <message>
         <source>  Years</source>
-        <translation>  السنوات</translation>
+        <translation type="vanished">  السنوات</translation>
     </message>
     <message>
         <source>Send to the tag editor</source>
@@ -1150,6 +1173,50 @@
         <source>Stop after current</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Directory to open.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>dir</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medias are added into a new playlist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medias are sent to tag editor.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Directory is sent to library.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play or pause track in active playlist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop playback.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play next track.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play previous track.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set volume of the player.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>volume</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1306,6 +1373,13 @@ Select a playlist to display the first 30 tracks.</source>
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>(fichier %1) تم العثور على التمديد لكن القارئ لم يتمكن من تحميل الملف</translation>
+    </message>
+</context>
+<context>
+    <name>QCoreApplication</name>
+    <message>
+        <source>Command line helper for Miam-Player</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

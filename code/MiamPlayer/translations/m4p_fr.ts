@@ -764,6 +764,29 @@
     </message>
 </context>
 <context>
+    <name>LibraryItemModel</name>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation>  Artistes \ Albums</translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation>  Albums</translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation>  Artistes – Albums</translation>
+    </message>
+    <message>
+        <source>  Years</source>
+        <translation>  Année</translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation>Divers</translation>
+    </message>
+</context>
+<context>
     <name>LibraryOrderDialog</name>
     <message>
         <source>Select how to display your library</source>
@@ -818,23 +841,23 @@
     </message>
     <message>
         <source>  Artists \ Albums</source>
-        <translation>  Artistes \ Albums</translation>
+        <translation type="vanished">  Artistes \ Albums</translation>
     </message>
     <message>
         <source>Various</source>
-        <translation>Divers</translation>
+        <translation type="vanished">Divers</translation>
     </message>
     <message>
         <source>  Albums</source>
-        <translation>  Albums</translation>
+        <translation type="vanished">  Albums</translation>
     </message>
     <message>
         <source>  Artists – Albums</source>
-        <translation>  Artistes – Albums</translation>
+        <translation type="vanished">  Artistes – Albums</translation>
     </message>
     <message>
         <source>  Years</source>
-        <translation>  Année</translation>
+        <translation type="vanished">  Année</translation>
     </message>
     <message>
         <source>Send to the tag editor</source>
@@ -1138,6 +1161,50 @@
         <source>Stop after current</source>
         <translation>Arrêter après cette piste</translation>
     </message>
+    <message>
+        <source>Directory to open.</source>
+        <translation>Dossier à ouvrir.</translation>
+    </message>
+    <message>
+        <source>dir</source>
+        <translation>rép</translation>
+    </message>
+    <message>
+        <source>Medias are added into a new playlist.</source>
+        <translation>Les médias sont envoyés vers une nouvelle liste de lecture.</translation>
+    </message>
+    <message>
+        <source>Medias are sent to tag editor.</source>
+        <translation>Les médias sont envoyés vers l&apos;éditeur de tags.</translation>
+    </message>
+    <message>
+        <source>Directory is sent to library.</source>
+        <translation>Le dossier est ajouté à la bibliothèque.</translation>
+    </message>
+    <message>
+        <source>Play or pause track in active playlist.</source>
+        <translation>Lecture ou pause de la piste courante.</translation>
+    </message>
+    <message>
+        <source>Stop playback.</source>
+        <translation>Arrêter la lecture.</translation>
+    </message>
+    <message>
+        <source>Play next track.</source>
+        <translation>Lire la piste suivante.</translation>
+    </message>
+    <message>
+        <source>Play previous track.</source>
+        <translation>Lire la piste précédente.</translation>
+    </message>
+    <message>
+        <source>Set volume of the player.</source>
+        <translation>Régler le volume du lecteur.</translation>
+    </message>
+    <message>
+        <source>volume</source>
+        <translation>volume</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1291,6 +1358,13 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Une extension a été trouvée mais le lecteur n&apos;a pu la charger (fichier %1)</translation>
+    </message>
+</context>
+<context>
+    <name>QCoreApplication</name>
+    <message>
+        <source>Command line helper for Miam-Player</source>
+        <translation>Aide pour utiliser Miam-Player en ligne de commande</translation>
     </message>
 </context>
 <context>

@@ -764,6 +764,29 @@
     </message>
 </context>
 <context>
+    <name>LibraryItemModel</name>
+    <message>
+        <source>  Artists \ Albums</source>
+        <translation>  Artists \ Albums</translation>
+    </message>
+    <message>
+        <source>  Albums</source>
+        <translation>  Albums</translation>
+    </message>
+    <message>
+        <source>  Artists – Albums</source>
+        <translation>  Artists – Albums</translation>
+    </message>
+    <message>
+        <source>  Years</source>
+        <translation>  Years</translation>
+    </message>
+    <message>
+        <source>Various</source>
+        <translation>Various</translation>
+    </message>
+</context>
+<context>
     <name>LibraryOrderDialog</name>
     <message>
         <source>Select how to display your library</source>
@@ -818,23 +841,23 @@
     </message>
     <message>
         <source>  Artists \ Albums</source>
-        <translation>  Artists \ Albums</translation>
+        <translation type="vanished">  Artists \ Albums</translation>
     </message>
     <message>
         <source>Various</source>
-        <translation>Various</translation>
+        <translation type="vanished">Various</translation>
     </message>
     <message>
         <source>  Albums</source>
-        <translation>  Albums</translation>
+        <translation type="vanished">  Albums</translation>
     </message>
     <message>
         <source>  Artists – Albums</source>
-        <translation>  Artists – Albums</translation>
+        <translation type="vanished">  Artists – Albums</translation>
     </message>
     <message>
         <source>  Years</source>
-        <translation>  Years</translation>
+        <translation type="vanished">  Years</translation>
     </message>
     <message>
         <source>Send to the tag editor</source>
@@ -1138,6 +1161,50 @@
         <source>Stop after current</source>
         <translation>Stop after current</translation>
     </message>
+    <message>
+        <source>Directory to open.</source>
+        <translation>Directory to open.</translation>
+    </message>
+    <message>
+        <source>dir</source>
+        <translation>dir</translation>
+    </message>
+    <message>
+        <source>Medias are added into a new playlist.</source>
+        <translation>Medias are added into a new playlist.</translation>
+    </message>
+    <message>
+        <source>Medias are sent to tag editor.</source>
+        <translation>Medias are sent to tag editor.</translation>
+    </message>
+    <message>
+        <source>Directory is sent to library.</source>
+        <translation>Directory is sent to library.</translation>
+    </message>
+    <message>
+        <source>Play or pause track in active playlist.</source>
+        <translation>Play or pause track in active playlist.</translation>
+    </message>
+    <message>
+        <source>Stop playback.</source>
+        <translation>Stop playback.</translation>
+    </message>
+    <message>
+        <source>Play next track.</source>
+        <translation>Play next track.</translation>
+    </message>
+    <message>
+        <source>Play previous track.</source>
+        <translation>Play previous track.</translation>
+    </message>
+    <message>
+        <source>Set volume of the player.</source>
+        <translation>Set volume of the player.</translation>
+    </message>
+    <message>
+        <source>volume</source>
+        <translation>volume</translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1292,6 +1359,13 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>A plugin was found but was the player was unable to load it (file %1)</translation>
+    </message>
+</context>
+<context>
+    <name>QCoreApplication</name>
+    <message>
+        <source>Command line helper for Miam-Player</source>
+        <translation>Command line helper for Miam-Player</translation>
     </message>
 </context>
 <context>
