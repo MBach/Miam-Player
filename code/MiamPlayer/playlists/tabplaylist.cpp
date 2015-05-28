@@ -377,14 +377,14 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	} else {
 		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
-		bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
 		// Override default action and ask once again to user because it's not allowed to save empty playlist automatically
-		if (playlistModified && action == SettingsPrivate::PL_SaveOnClose) {
+		if (p->mediaPlaylist()->isEmpty() && action == SettingsPrivate::PL_SaveOnClose) {
 			action = SettingsPrivate::PL_AskUserForAction;
 		}
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction: {
 			int returnCode = 0;
+			bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
 			ClosePlaylistPopup closePopup(index, p->mediaPlaylist()->isEmpty(), playlistModified);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, this, &TabPlaylist::aboutToSavePlaylist);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::aboutToDeletePlaylist);
