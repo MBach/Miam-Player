@@ -97,7 +97,7 @@ signals:
 
 	void aboutToDeletePlaylist(int playlistTabIndex);
 
-	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite = false);
+	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite = false, bool exit = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 

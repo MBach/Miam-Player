@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Instantiate dialogs
 	customizeOptionsDialog = new CustomizeOptionsDialog;
 
-	playlistManager = new PlaylistManager(SqlDatabase::instance(), tabPlaylists);
+	playlistDialog = new PlaylistDialog(SqlDatabase::instance(), tabPlaylists);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
 
@@ -127,7 +127,7 @@ void MainWindow::init()
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
-	playlistManager->init();
+	playlistDialog->init();
 
 	// Load shortcuts
 	customizeOptionsDialog->initShortcuts();
@@ -370,7 +370,7 @@ void MainWindow::setupActions()
 	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
 	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
-	connect(actionOpenPlaylistManager, &QAction::triggered, playlistManager, &PlaylistManager::open);
+	connect(actionOpenPlaylistManager, &QAction::triggered, playlistDialog, &PlaylistDialog::open);
 	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
@@ -488,7 +488,7 @@ void MainWindow::changeEvent(QEvent *event)
 		this->retranslateUi(this);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
 		quickStart->retranslateUi(quickStart);
-		playlistManager->retranslateUi(playlistManager);
+		playlistDialog->retranslateUi(playlistDialog);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
@@ -507,15 +507,21 @@ void MainWindow::closeEvent(QCloseEvent *e)
 	int ret = 0;
 	auto settings = SettingsPrivate::instance();
 	if (settings->playbackKeepPlaylists()) {
-		while (tabPlaylists->count() > 1 || !tabPlaylists->playlist(0)->mediaPlaylist()->isEmpty()) {
-			int lastOne = tabPlaylists->count() - 1;
+
+		int lastOne = tabPlaylists->count() - 1;
+		Playlist *p = tabPlaylists->playlist(lastOne);
+		while (p && p->hash() != p->generateNewHash()) {
+			qDebug() << Q_FUNC_INFO << "about to remove playlist" << lastOne;
 			tabPlaylists->setCurrentIndex(lastOne);
-			ret = tabPlaylists->closePlaylist(lastOne, true);
+
 			// Interrup while loop if one has cancelled popup
+			ret = tabPlaylists->closePlaylist(lastOne, true);
 			if (ret == 1) {
-				qDebug() << Q_FUNC_INFO << "interrupt exit (Cancel button should have been clicked)";
 				break;
 			}
+
+			lastOne = tabPlaylists->count() - 1;
+			p = tabPlaylists->playlist(lastOne);
 		}
 	}
 	if (ret == 0) {

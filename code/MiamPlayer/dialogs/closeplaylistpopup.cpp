@@ -18,13 +18,12 @@ ClosePlaylistPopup::ClosePlaylistPopup(int index, bool currentPlaylistIsEmpty, b
 	connect(buttonBox, &QDialogButtonBox::clicked, this, &ClosePlaylistPopup::execActionFromClosePopup);
 	connect(checkBoxRememberChoice, &QCheckBox::toggled, buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::setDisabled);
 
-	checkBoxRememberChoice->setVisible(false);
-
 	// Delete mode
 	if (currentPlaylistIsEmpty) {
 		buttonBox->setStandardButtons(QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
 		_deleteButton = new QPushButton(tr("Delete this playlist"), this);
 		buttonBox->addButton(_deleteButton, QDialogButtonBox::AcceptRole);
+		checkBoxRememberChoice->hide();
 	} else if (playlistModified) {
 		// Overwrite mode
 		labelPlaylist->setText(tr("You're about to close a playlist that you have modified. What would you like to do?"));

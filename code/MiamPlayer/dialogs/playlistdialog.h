@@ -1,9 +1,9 @@
-#ifndef PLAYLISTMANAGER_H
-#define PLAYLISTMANAGER_H
+#ifndef PLAYLISTDIALOG_H
+#define PLAYLISTDIALOG_H
 
 #include <QDialog>
 
-#include "ui_playlistmanager.h"
+#include "ui_playlistdialog.h"
 
 #include "../playlists/tabplaylist.h"
 
@@ -12,9 +12,9 @@
 #include <QStandardItem>
 
 /**
- * \brief The PlaylistManager class can save, load and export playlists in m3u format.
+ * \brief The PlaylistDialog class can save, load and export playlists in m3u format.
  */
-class PlaylistManager : public QDialog, public Ui::PlaylistManager
+class PlaylistDialog : public QDialog, public Ui::PlaylistDialog
 {
 	Q_OBJECT
 
@@ -38,16 +38,16 @@ public:
 	enum PlaylistRoles { PlaylistObjectPointer	= Qt::UserRole + 1,
 						 PlaylistID				= Qt::UserRole + 2};
 
-	explicit PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist);
+	explicit PlaylistDialog(SqlDatabase *db, TabPlaylist *tabPlaylist);
 
 	/** Add drag & drop processing. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	void init();
 
-	int savePlaylist(int index, bool isOverwriting = false);
+	int savePlaylist(int index, bool isOverwriting = false, bool isExiting = false);
 
-	void retranslateUi(PlaylistManager *dialog);
+	void retranslateUi(PlaylistDialog *dialog);
 
 private:
 	void clearPreview(bool aboutToInsertItems = true);
@@ -64,7 +64,7 @@ public slots:
 
 	void deletePlaylist(int index);
 
-	void saveAndRemovePlaylist(int index, bool isOverwriting = false);
+	void saveAndRemovePlaylist(int index, bool isOverwriting = false, bool isExiting = false);
 
 private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
@@ -89,4 +89,4 @@ signals:
 	void aboutToRemovePlaylist(int);
 };
 
-#endif // PLAYLISTMANAGER_H
+#endif // PLAYLISTDIALOG_H

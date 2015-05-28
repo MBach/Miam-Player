@@ -13,7 +13,7 @@ SOURCES += \
     dialogs/customizethemedialog.cpp \
     dialogs/customizethemetaglineedit.cpp \
     dialogs/dragdropdialog.cpp \
-    dialogs/playlistmanager.cpp \
+    dialogs/playlistdialog.cpp \
     dialogs/reflector.cpp \
     dialogs/searchdialog.cpp \
     filesystem/addressbar.cpp \
@@ -79,7 +79,7 @@ HEADERS += \
     dialogs/customizethemedialog.h \
     dialogs/customizethemetaglineedit.h \
     dialogs/dragdropdialog.h \
-    dialogs/playlistmanager.h \
+    dialogs/playlistdialog.h \
     dialogs/reflector.h \
     dialogs/paintablewidget.h \
     dialogs/searchdialog.h \
@@ -145,7 +145,7 @@ FORMS += closeplaylistpopup.ui \
     dragdroppopup.ui \
     libraryorderdialog.ui \
     mainwindow.ui \
-    playlistmanager.ui \
+    playlistdialog.ui \
     quickstart.ui \
     tagconverter.ui \
     tageditor.ui \

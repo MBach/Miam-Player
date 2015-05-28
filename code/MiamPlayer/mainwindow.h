@@ -9,7 +9,7 @@
 #include <mediabutton.h>
 #include <mediaplayer.h>
 #include "dialogs/customizeoptionsdialog.h"
-#include "dialogs/playlistmanager.h"
+#include "dialogs/playlistdialog.h"
 #include "library/librarytreeview.h"
 #include "playbackmodewidgetfactory.h"
 #include "searchdialog.h"
@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 	Q_OBJECT
 private:
 	/** Dialog to organize your playlists: saving, exporting, loading. */
-	PlaylistManager *playlistManager;
+	PlaylistDialog *playlistDialog;
 
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;

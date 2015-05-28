@@ -1,4 +1,4 @@
-﻿#include "playlistmanager.h"
+﻿#include "playlistdialog.h"
 
 #include <model/playlistdao.h>
 #include <filehelper.h>
@@ -16,7 +16,7 @@
 
 #include <QtDebug>
 
-PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
+PlaylistDialog::PlaylistDialog(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	QDialog(tabPlaylist, Qt::Tool),_db(db), _tabPlaylists(tabPlaylist),
 	_unsavedPlaylistModel(new QStandardItemModel(this)), _savedPlaylistModel(new QStandardItemModel(this))
 {
@@ -62,26 +62,26 @@ PlaylistManager::PlaylistManager(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 	/// XXX: MiamStyledItemDelegate should be improved!
 	// savedPlaylists->setItemDelegate(new MiamStyledItemDelegate(savedPlaylists, false));
 
-	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromUnsaved);
-	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistManager::populatePreviewFromSaved);
-	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistManager::loadSelectedPlaylists);
-	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistManager::deleteSavedPlaylists);
+	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistDialog::populatePreviewFromUnsaved);
+	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistDialog::populatePreviewFromSaved);
+	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistDialog::loadSelectedPlaylists);
+	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistDialog::deleteSavedPlaylists);
 
-	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsAboutToBeRemoved, this, &PlaylistManager::dropAutoSavePlaylists);
+	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsAboutToBeRemoved, this, &PlaylistDialog::dropAutoSavePlaylists);
 	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsRemoved, this, [=](const QModelIndex &, int, int) {
 		this->updatePlaylists(false, true);
 	});
 
-	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistManager::exportSelectedPlaylist);
+	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistDialog::exportSelectedPlaylist);
 
 	// Save playlist on close (if enabled)
-	connect(_tabPlaylists, &TabPlaylist::aboutToSavePlaylist, this, &PlaylistManager::saveAndRemovePlaylist);
-	connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistManager::deletePlaylist);
-	connect(this, &PlaylistManager::aboutToRemovePlaylist, _tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
+	connect(_tabPlaylists, &TabPlaylist::aboutToSavePlaylist, this, &PlaylistDialog::saveAndRemovePlaylist);
+	connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistDialog::deletePlaylist);
+	connect(this, &PlaylistDialog::aboutToRemovePlaylist, _tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
 }
 
 /** Add drag & drop processing. */
-bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
+bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Drop || event->type() == QEvent::DragEnter) {
 		return QDialog::eventFilter(obj, event);
@@ -109,7 +109,7 @@ bool PlaylistManager::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
-void PlaylistManager::init()
+void PlaylistDialog::init()
 {
 	_tabPlaylists->blockSignals(true);
 	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
@@ -123,8 +123,9 @@ void PlaylistManager::init()
 	_tabPlaylists->blockSignals(false);
 }
 
-int PlaylistManager::savePlaylist(int index, bool isOverwriting)
+int PlaylistDialog::savePlaylist(int index, bool isOverwriting, bool isExiting)
 {
+	qDebug() << Q_FUNC_INFO << index << isOverwriting << isExiting;
 	Playlist *p = _tabPlaylists->playlist(index);
 	int id = -1;
 	if (p && !p->mediaPlaylist()->isEmpty()) {
@@ -136,6 +137,11 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting)
 		PlaylistDAO playlist;
 		for (PlaylistDAO dao : _db->selectPlaylists()) {
 			if (dao.checksum().toUInt() == generateNewHash) {
+				// When exiting, don't show this Dialog and just quit!
+				if (isExiting) {
+					qDebug() << Q_FUNC_INFO << "exiting!";
+					return 1;
+				}
 				// Playlist exists in database and user is not exiting application -> showing a popup
 				QMessageBox mb;
 				mb.setIcon(QMessageBox::Information);
@@ -148,7 +154,11 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting)
 				int ret = mb.exec();
 				switch (ret) {
 				case QMessageBox::Cancel:
-					return 0;
+					if (isExiting) {
+						return 1;
+					} else {
+						return 0;
+					}
 				case QMessageBox::Discard:
 					return 1;
 				}
@@ -181,20 +191,20 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting)
 	return id;
 }
 
-void PlaylistManager::retranslateUi(PlaylistManager *dialog)
+void PlaylistDialog::retranslateUi(PlaylistDialog *dialog)
 {
 	_labelEmptyPreview->setText(QApplication::translate("PlaylistManager", "This preview area is empty.\nSelect a playlist to display the first 30 tracks.", 0));
-	Ui::PlaylistManager::retranslateUi(dialog);
+	Ui::PlaylistDialog::retranslateUi(dialog);
 }
 
-void PlaylistManager::saveAndRemovePlaylist(int index, bool isOverwriting)
+void PlaylistDialog::saveAndRemovePlaylist(int index, bool isOverwriting, bool isExiting)
 {
-	if (this->savePlaylist(index, isOverwriting)) {
+	if (this->savePlaylist(index, isOverwriting, isExiting)) {
 		emit aboutToRemovePlaylist(index);
 	}
 }
 
-void PlaylistManager::clearPreview(bool aboutToInsertItems)
+void PlaylistDialog::clearPreview(bool aboutToInsertItems)
 {
 	previewPlaylist->clear();
 	if (aboutToInsertItems) {
@@ -207,7 +217,7 @@ void PlaylistManager::clearPreview(bool aboutToInsertItems)
 }
 
 /** Remove all special characters for Windows, Unix, OSX. */
-QString PlaylistManager::convertNameToValidFileName(QString &name)
+QString PlaylistDialog::convertNameToValidFileName(QString &name)
 {
 	/// XXX: should be improved?
 	static const QRegularExpression re("[/\\:*?\"<>|]");
@@ -215,7 +225,7 @@ QString PlaylistManager::convertNameToValidFileName(QString &name)
 	return name;
 }
 
-void PlaylistManager::loadPlaylist(uint playlistId)
+void PlaylistDialog::loadPlaylist(uint playlistId)
 {
 	Playlist *playlist = NULL;
 	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
@@ -257,7 +267,7 @@ void PlaylistManager::loadPlaylist(uint playlistId)
 }
 
 /** Redefined: clean preview area, populate once again lists. */
-void PlaylistManager::open()
+void PlaylistDialog::open()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->value("PlaylistManagerGeometry").isValid()) {
@@ -269,7 +279,7 @@ void PlaylistManager::open()
 	this->activateWindow();
 }
 
-void PlaylistManager::deletePlaylist(int index)
+void PlaylistDialog::deletePlaylist(int index)
 {
 	if (Playlist *p = _tabPlaylists->playlist(index)) {
 		QList<PlaylistDAO> playlists;
@@ -285,7 +295,7 @@ void PlaylistManager::deletePlaylist(int index)
 }
 
 /** Delete from the file system every selected playlists. Cannot be canceled. */
-void PlaylistManager::deleteSavedPlaylists()
+void PlaylistDialog::deleteSavedPlaylists()
 {
 	QModelIndexList indexes = savedPlaylists->selectionModel()->selectedIndexes();
 	if (indexes.isEmpty()) {
@@ -309,7 +319,7 @@ void PlaylistManager::deleteSavedPlaylists()
 	this->updatePlaylists();
 }
 
-void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &, int start, int end)
+void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int end)
 {
 	for (int i = start; i <= end; i++) {
 		auto item = _unsavedPlaylistModel->item(start);
@@ -329,7 +339,7 @@ void PlaylistManager::dropAutoSavePlaylists(const QModelIndex &, int start, int 
 }
 
 /** Export one playlist at a time. */
-void PlaylistManager::exportSelectedPlaylist()
+void PlaylistDialog::exportSelectedPlaylist()
 {
 	QString exportedPlaylistLocation;
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -362,7 +372,7 @@ void PlaylistManager::exportSelectedPlaylist()
 }
 
 /** Load every saved playlists. */
-void PlaylistManager::loadSelectedPlaylists()
+void PlaylistDialog::loadSelectedPlaylists()
 {
 	qDebug() << Q_FUNC_INFO;
 	for (QModelIndex index : savedPlaylists->selectionModel()->selectedIndexes()) {
@@ -374,7 +384,7 @@ void PlaylistManager::loadSelectedPlaylists()
 	this->close();
 }
 
-void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
+void PlaylistDialog::populatePreviewFromSaved(QItemSelection, QItemSelection)
 {
 	static const int MAX_TRACKS_PREVIEW_AREA = 30;
 	QModelIndexList indexes = savedPlaylists->selectionModel()->selectedIndexes();
@@ -404,7 +414,7 @@ void PlaylistManager::populatePreviewFromSaved(QItemSelection, QItemSelection)
 	exportPlaylists->setEnabled(indexes.size() == 1);
 }
 
-void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
+void PlaylistDialog::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 {
 	static const int MAX_TRACKS_PREVIEW_AREA = 30;
 	bool b = unsavedPlaylists->selectionModel()->selectedIndexes().size() == 1;
@@ -440,7 +450,7 @@ void PlaylistManager::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 }
 
 /** Update saved and unsaved playlists when one is adding a new one. */
-void PlaylistManager::updatePlaylists(bool unsaved, bool saved)
+void PlaylistDialog::updatePlaylists(bool unsaved, bool saved)
 {
 	qDebug() << Q_FUNC_INFO;
 

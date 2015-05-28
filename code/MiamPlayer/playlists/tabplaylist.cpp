@@ -371,6 +371,7 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
 	uint newHash = p->generateNewHash();
+	qDebug() << Q_FUNC_INFO << p->hash() << newHash;
 	if (p->hash() == newHash || (p->mediaPlaylist()->isEmpty() && p->hash() == 0)) {
 		this->removeTabFromCloseButton(index);
 		p->setHash(0);
@@ -386,7 +387,9 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 			int returnCode = 0;
 			bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
 			ClosePlaylistPopup closePopup(index, p->mediaPlaylist()->isEmpty(), playlistModified);
-			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, this, &TabPlaylist::aboutToSavePlaylist);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](int playlistIndex, bool overwrite) {
+				emit aboutToSavePlaylist(playlistIndex, overwrite, aboutToQuit);
+			});
 			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::aboutToDeletePlaylist);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [&returnCode]() {
@@ -397,7 +400,7 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 			return returnCode;
 		}
 		case SettingsPrivate::PL_SaveOnClose:
-			emit aboutToSavePlaylist(index, aboutToQuit);
+			emit aboutToSavePlaylist(index, false, aboutToQuit);
 			break;
 		case SettingsPrivate::PL_DiscardOnClose:
 			this->removeTabFromCloseButton(index);
