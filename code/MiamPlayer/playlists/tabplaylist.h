@@ -5,10 +5,12 @@
 #include <QTabWidget>
 #include <QMouseEvent>
 
+#include <model/playlistdao.h>
 #include <mediabutton.h>
 #include <mediaplayer.h>
 #include "../tracksnotfoundmessagebox.h"
 #include "playlist.h"
+#include "playlistmanager.h"
 #include "playlistframe.h"
 
 class MainWindow;
@@ -23,6 +25,8 @@ class TabPlaylist : public QTabWidget
 	Q_OBJECT
 
 private:
+	PlaylistManager *_playlistManager;
+
 	/** A custom message box for handling errors. */
 	TracksNotFoundMessageBox *messageBox;
 
@@ -42,6 +46,8 @@ public:
 
 	/** Redefined to forward events to children. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
+	void init();
 
 	/** Load a playlist saved in database. */
 	void loadPlaylist(uint playlistId);
@@ -82,7 +88,7 @@ public slots:
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();
 
-	void removeSelectedTracks();
+	void removeTabs(const QList<PlaylistDAO> &playlists);
 
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
@@ -91,11 +97,13 @@ public slots:
 
 	int closePlaylist(int index, bool aboutToQuit = false);
 
+	void sendTabs();
+
 signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
 
-	void aboutToDeletePlaylist(int playlistTabIndex);
+	//void aboutToDeletePlaylist(int playlistTabIndex);
 
 	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite = false, bool exit = false);
 
@@ -104,6 +112,8 @@ signals:
 	void selectionChanged(bool isEmpty);
 
 	void updatePlaybackModeButton();
+
+	void tabs(const QList<Playlist*> &unsavedPlaylists);
 };
 
 #endif // TABPLAYLIST_H

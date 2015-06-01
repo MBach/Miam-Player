@@ -12,7 +12,7 @@
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _mainWindow(NULL)
+	QTabWidget(parent), _playlistManager(new PlaylistManager(this)), _mainWindow(NULL)
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
@@ -24,10 +24,20 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		emit updatePlaybackModeButton();
 	});
 
+	connect(this, &TabPlaylist::aboutToSavePlaylist, _playlistManager, &PlaylistManager::saveAndRemovePlaylist);
+	connect(_playlistManager, &PlaylistManager::aboutToRemovePlaylist, this, &TabPlaylist::removeTabFromCloseButton);
+
+
 	// Removing a playlist
-	//connect(this, &QTabWidget::tabCloseRequested, this, &TabPlaylist::closePlaylist);
 	connect(this, &QTabWidget::tabCloseRequested, this, [=](int tabIndex) {
-		this->closePlaylist(tabIndex);
+		this->closePlaylist(tabIndex, false);
+	});
+
+	connect(tabBar, &TabBar::tabRenamed, this, [=](int index, const QString &text) {
+		Playlist *p = playlist(index);
+		p->setTitle(text);
+		p->setModified(true);
+		this->setTabIcon(index, this->defaultIcon(QIcon::Normal));
 	});
 
 	/// FIXME: when changing font for saved and untouched playlists, overwritting to normal instead of disabled
@@ -116,6 +126,19 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 	}
 	return QTabWidget::eventFilter(obj, event);
 }
+void TabPlaylist::init()
+{
+	blockSignals(true);
+	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
+		for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
+			this->loadPlaylist(playlist.id().toUInt());
+		}
+	}
+	if (playlists().isEmpty()) {
+		addPlaylist();
+	}
+	blockSignals(false);
+}
 
 /** Load a playlist saved in database. */
 void TabPlaylist::loadPlaylist(uint playlistId)
@@ -133,7 +156,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 		uint checksum = playlistDao.checksum().toUInt(&ok);
 		if (ok && checksum == p->hash()) {
 			/// TODO: ask one if if want to reload the playlist or not
-			setCurrentIndex(i);
+			this->setCurrentIndex(i);
 			return;
 		}
 	}
@@ -143,13 +166,13 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 		playlist = this->playlist(index);
 		if (!playlist->mediaPlaylist()->isEmpty()) {
 			playlist = addPlaylist();
-			tabBar()->setTabText(count() - 1, playlistDao.title());
+			this->tabBar()->setTabText(count() - 1, playlistDao.title());
 		} else {
-			tabBar()->setTabText(index, playlistDao.title());
+			this->tabBar()->setTabText(index, playlistDao.title());
 		}
 	} else {
 		playlist = addPlaylist();
-		tabBar()->setTabText(count() - 1, playlistDao.title());
+		this->tabBar()->setTabText(count() - 1, playlistDao.title());
 	}
 	playlist->setHash(playlistDao.checksum().toUInt());
 
@@ -159,7 +182,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 	playlist->insertMedias(-1, tracks);
 	playlist->setId(playlistId);
 
-	setTabIcon(index, defaultIcon(QIcon::Disabled));
+	this->setTabIcon(index, defaultIcon(QIcon::Disabled));
 }
 
 /** Get the playlist at index. */
@@ -177,7 +200,6 @@ void TabPlaylist::setMainWindow(MainWindow *mainWindow)
 void TabPlaylist::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
-		// No translation for the (+) tab button
 		for (int i = 0; i < playlists().count(); i ++) {
 			for (QLabel *label : widget(i)->findChildren<QLabel*>()) {
 				if (label && !label->text().isEmpty()) {
@@ -314,10 +336,15 @@ void TabPlaylist::removeCurrentPlaylist()
 	emit tabCloseRequested(currentIndex());
 }
 
-void TabPlaylist::removeSelectedTracks()
+void TabPlaylist::removeTabs(const QList<PlaylistDAO> &daos)
 {
-	if (currentPlayList()) {
-		currentPlayList()->removeSelectedTracks();
+	for (PlaylistDAO dao : daos) {
+		for (int tabIndex = count() - 1; tabIndex >= 0; tabIndex--) {
+			if (playlist(tabIndex)->id() == dao.id().toUInt()) {
+				this->removeTabFromCloseButton(tabIndex);
+				break;
+			}
+		}
 	}
 }
 
@@ -390,7 +417,7 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](int playlistIndex, bool overwrite) {
 				emit aboutToSavePlaylist(playlistIndex, overwrite, aboutToQuit);
 			});
-			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::aboutToDeletePlaylist);
+			//connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::aboutToDeletePlaylist);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [&returnCode]() {
 				// Interrupt exit!
@@ -408,4 +435,16 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 		}
 	}
 	return 0;
+}
+
+void TabPlaylist::sendTabs()
+{
+	/*QList<Playlist*> unsavedPlaylists;
+	for (int i = 0; i < count(); i++) {
+		Playlist *p = playlist(i);
+		if (p->hash() == 0) {
+			unsavedPlaylists << p;
+		}
+	}*/
+	emit tabs(playlists());
 }

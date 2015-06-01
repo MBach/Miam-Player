@@ -24,9 +24,6 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 	Q_OBJECT
 private:
-	/** Dialog to organize your playlists: saving, exporting, loading. */
-	PlaylistDialog *playlistDialog;
-
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
 

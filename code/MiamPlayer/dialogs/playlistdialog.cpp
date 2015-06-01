@@ -1,6 +1,7 @@
 ﻿#include "playlistdialog.h"
 
 #include <model/playlistdao.h>
+#include <model/trackdao.h>
 #include <filehelper.h>
 #include <settingsprivate.h>
 #include "starrating.h"
@@ -16,11 +17,12 @@
 
 #include <QtDebug>
 
-PlaylistDialog::PlaylistDialog(SqlDatabase *db, TabPlaylist *tabPlaylist) :
-	QDialog(tabPlaylist, Qt::Tool),_db(db), _tabPlaylists(tabPlaylist),
+PlaylistDialog::PlaylistDialog(QWidget *parent) :
+	QDialog(parent, Qt::Tool),
 	_unsavedPlaylistModel(new QStandardItemModel(this)), _savedPlaylistModel(new QStandardItemModel(this))
 {
 	setupUi(this);
+	this->setAttribute(Qt::WA_DeleteOnClose);
 	unsavedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);
 	savedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);
 	previewPlaylist->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -74,10 +76,7 @@ PlaylistDialog::PlaylistDialog(SqlDatabase *db, TabPlaylist *tabPlaylist) :
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistDialog::exportSelectedPlaylist);
 
-	// Save playlist on close (if enabled)
-	connect(_tabPlaylists, &TabPlaylist::aboutToSavePlaylist, this, &PlaylistDialog::saveAndRemovePlaylist);
-	connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistDialog::deletePlaylist);
-	connect(this, &PlaylistDialog::aboutToRemovePlaylist, _tabPlaylists, &TabPlaylist::removeTabFromCloseButton);
+	//connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistDialog::deletePlaylist);
 }
 
 /** Add drag & drop processing. */
@@ -85,8 +84,8 @@ bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Drop || event->type() == QEvent::DragEnter) {
 		return QDialog::eventFilter(obj, event);
-	} else if (obj == _tabPlaylists) {
-		return QDialog::eventFilter(obj, event);
+	//} else if (obj == _tabPlaylists) {
+	//	return QDialog::eventFilter(obj, event);
 	} else if (event->type() == QEvent::Drop) {
 		return QDialog::eventFilter(obj, event);
 	} else if (obj == savedPlaylists && event->type() == QEvent::KeyPress) {
@@ -106,101 +105,6 @@ bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
 
 		// standard event processing
 		return QDialog::eventFilter(obj, event);
-	}
-}
-
-void PlaylistDialog::init()
-{
-	_tabPlaylists->blockSignals(true);
-	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
-		for (PlaylistDAO playlist : _db->selectPlaylists()) {
-			this->loadPlaylist(playlist.id().toUInt());
-		}
-	}
-	if (_tabPlaylists->playlists().isEmpty()) {
-		_tabPlaylists->addPlaylist();
-	}
-	_tabPlaylists->blockSignals(false);
-}
-
-int PlaylistDialog::savePlaylist(int index, bool isOverwriting, bool isExiting)
-{
-	qDebug() << Q_FUNC_INFO << index << isOverwriting << isExiting;
-	Playlist *p = _tabPlaylists->playlist(index);
-	int id = -1;
-	if (p && !p->mediaPlaylist()->isEmpty()) {
-		QString playlistName = _tabPlaylists->tabBar()->tabText(index);
-
-		uint generateNewHash = p->generateNewHash();
-
-		// Check first if one has the same playlist in database
-		PlaylistDAO playlist;
-		for (PlaylistDAO dao : _db->selectPlaylists()) {
-			if (dao.checksum().toUInt() == generateNewHash) {
-				// When exiting, don't show this Dialog and just quit!
-				if (isExiting) {
-					qDebug() << Q_FUNC_INFO << "exiting!";
-					return 1;
-				}
-				// Playlist exists in database and user is not exiting application -> showing a popup
-				QMessageBox mb;
-				mb.setIcon(QMessageBox::Information);
-				mb.setText(tr("There is exactly the same playlist in the Playlist Manager (known as '%1'), "\
-							  "therefore it's not possible to add it twice.").arg(dao.title()));
-				mb.addButton(QMessageBox::Cancel);
-				mb.addButton(QMessageBox::Discard);
-				mb.setDefaultButton(QMessageBox::Cancel);
-
-				int ret = mb.exec();
-				switch (ret) {
-				case QMessageBox::Cancel:
-					if (isExiting) {
-						return 1;
-					} else {
-						return 0;
-					}
-				case QMessageBox::Discard:
-					return 1;
-				}
-				break;
-			} else if (isOverwriting && p->hash() == dao.checksum().toUInt()) {
-				playlist = dao;
-				break;
-			}
-		}
-
-		// Playlist wasn't found so we cannot overwrite it
-		if (playlist.checksum().isEmpty()) {
-			isOverwriting = false;
-		}
-		playlist.setTitle(playlistName);
-		playlist.setChecksum(QString::number(generateNewHash));
-
-		std::list<TrackDAO> tracks;
-		const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(p->model());
-		for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
-			// Eeach track has been saved in a hidden column into the playlist
-			/// FIXME
-			TrackDAO t = model->index(j, p->COL_TRACK_DAO).data().value<TrackDAO>();
-			tracks.push_back(std::move(t));
-		}
-
-		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
-		p->setHash(generateNewHash);
-	}
-	return id;
-}
-
-void PlaylistDialog::retranslateUi(PlaylistDialog *dialog)
-{
-	_labelEmptyPreview->setText(QApplication::translate("PlaylistManager", "This preview area is empty.\nSelect a playlist to display the first 30 tracks.", 0));
-	Ui::PlaylistDialog::retranslateUi(dialog);
-}
-
-void PlaylistDialog::saveAndRemovePlaylist(int index, bool isOverwriting, bool isExiting)
-{
-	if (this->savePlaylist(index, isOverwriting, isExiting)) {
-		emit aboutToRemovePlaylist(index);
 	}
 }
 
@@ -225,47 +129,6 @@ QString PlaylistDialog::convertNameToValidFileName(QString &name)
 	return name;
 }
 
-void PlaylistDialog::loadPlaylist(uint playlistId)
-{
-	Playlist *playlist = NULL;
-	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
-
-	// Do not load the playlist if it's already displayed
-	for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
-		Playlist *p = _tabPlaylists->playlist(i);
-		bool ok = false;
-		uint checksum = playlistDao.checksum().toUInt(&ok);
-		if (ok && checksum == p->hash()) {
-			/// TODO: ask one if if want to reload the playlist or not
-			_tabPlaylists->setCurrentIndex(i);
-			return;
-		}
-	}
-
-	int index = _tabPlaylists->currentIndex();
-	if (index >= 0) {
-		playlist = _tabPlaylists->playlist(index);
-		if (!playlist->mediaPlaylist()->isEmpty()) {
-			playlist = _tabPlaylists->addPlaylist();
-			_tabPlaylists->tabBar()->setTabText(_tabPlaylists->count() - 1, playlistDao.title());
-		} else {
-			_tabPlaylists->tabBar()->setTabText(index, playlistDao.title());
-		}
-	} else {
-		playlist = _tabPlaylists->addPlaylist();
-		_tabPlaylists->tabBar()->setTabText(_tabPlaylists->count() - 1, playlistDao.title());
-	}
-	playlist->setHash(playlistDao.checksum().toUInt());
-
-	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
-	/// Use (host, id) or (uri)
-	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
-	playlist->insertMedias(-1, tracks);
-	playlist->setId(playlistId);
-
-	_tabPlaylists->setTabIcon(index, _tabPlaylists->defaultIcon(QIcon::Disabled));
-}
-
 /** Redefined: clean preview area, populate once again lists. */
 void PlaylistDialog::open()
 {
@@ -277,21 +140,6 @@ void PlaylistDialog::open()
 	this->updatePlaylists();
 	QDialog::open();
 	this->activateWindow();
-}
-
-void PlaylistDialog::deletePlaylist(int index)
-{
-	if (Playlist *p = _tabPlaylists->playlist(index)) {
-		QList<PlaylistDAO> playlists;
-		PlaylistDAO dao;
-		dao.setId(QString::number(p->id()));
-		playlists << dao;
-
-		// Try to remove the playlist then call the view to reset or close the current tab
-		if (_db->removePlaylists(playlists)) {
-			emit aboutToRemovePlaylist(index);
-		}
-	}
 }
 
 /** Delete from the file system every selected playlists. Cannot be canceled. */
@@ -313,7 +161,10 @@ void PlaylistDialog::deleteSavedPlaylists()
 		tmpPlaylist.setId(index.data(PlaylistID).toString());
 		playlists << tmpPlaylist;
 	}
-	_db->removePlaylists(playlists);
+	//
+	if (SqlDatabase::instance()->removePlaylists(playlists)) {
+		emit aboutToRemoveTabs(playlists);
+	}
 
 	this->clearPreview(false);
 	this->updatePlaylists();
@@ -327,13 +178,13 @@ void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int e
 			uint playlistObjectPointer = item->data(PlaylistObjectPointer).toUInt();
 			/// XXX: it's not really easy to read...
 			// Find the playlist in the TabWidget
-			for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
+			/*for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
 				if (playlistObjectPointer == _tabPlaylists->tabBar()->tabData(i).toUInt()) {
 					if (this->savePlaylist(i) > 0) {
 						_tabPlaylists->setTabIcon(i, _tabPlaylists->defaultIcon(QIcon::Disabled));
 					}
 				}
-			}
+			}*/
 		}
 	}
 }
@@ -378,7 +229,7 @@ void PlaylistDialog::loadSelectedPlaylists()
 	for (QModelIndex index : savedPlaylists->selectionModel()->selectedIndexes()) {
 		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
 		if (item) {
-			this->loadPlaylist(item->data(PlaylistID).toUInt());
+			emit aboutToLoadPlaylist(item->data(PlaylistID).toUInt());
 		}
 	}
 	this->close();
@@ -394,7 +245,7 @@ void PlaylistDialog::populatePreviewFromSaved(QItemSelection, QItemSelection)
 		uint playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toUInt();
 		qDebug() << Q_FUNC_INFO << "playlistId" << playlistId;
 
-		QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
+		QList<TrackDAO> tracks = SqlDatabase::instance()->selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {
 			TrackDAO track = tracks.at(i);
 			QTreeWidgetItem *item = new QTreeWidgetItem;
@@ -424,7 +275,7 @@ void PlaylistDialog::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 		QStandardItem *item = _unsavedPlaylistModel->itemFromIndex(unsavedPlaylists->selectionModel()->selectedIndexes().first());
 		/// FIXME
 		uint hash = item->data(PlaylistObjectPointer).toUInt();
-		for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
+		/*for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
 			uint playlistPointer = _tabPlaylists->tabBar()->tabData(i).toUInt();
 
 			if (playlistPointer == hash) {
@@ -445,7 +296,7 @@ void PlaylistDialog::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
 				}
 				break;
 			}
-		}
+		}*/
 	}
 }
 
@@ -457,17 +308,7 @@ void PlaylistDialog::updatePlaylists(bool unsaved, bool saved)
 	if (unsaved) {
 		// Populate unsaved playlists area
 		_unsavedPlaylistModel->clear();
-		for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
-			Playlist *p = _tabPlaylists->playlist(i);
-			uint hash = p->hash();
-			qDebug() << _tabPlaylists->tabBar()->tabText(i) << hash << p->generateNewHash();
-			if (!p->mediaPlaylist()->isEmpty() && hash != p->generateNewHash()) {
-				QStandardItem *item = new QStandardItem(_tabPlaylists->tabBar()->tabText(i));
-				uint playlistObjectPointer = _tabPlaylists->tabBar()->tabData(i).toUInt();
-				item->setData(playlistObjectPointer, PlaylistObjectPointer);
-				_unsavedPlaylistModel->appendRow(item);
-			}
-		}
+		emit requestTabs();
 	}
 
 	if (saved) {
@@ -475,7 +316,7 @@ void PlaylistDialog::updatePlaylists(bool unsaved, bool saved)
 		_savedPlaylistModel->clear();
 		_savedPlaylistModel->blockSignals(true);
 
-		for (PlaylistDAO playlist : _db->selectPlaylists()) {
+		for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
 			QStandardItem *item = new QStandardItem(playlist.title());
 			item->setData(playlist.id(), PlaylistID);
 			if (playlist.icon().isEmpty()) {
@@ -486,5 +327,18 @@ void PlaylistDialog::updatePlaylists(bool unsaved, bool saved)
 			_savedPlaylistModel->appendRow(item);
 		}
 		_savedPlaylistModel->blockSignals(false);
+	}
+}
+
+void PlaylistDialog::updatePlaylists2(const QList<Playlist*> playlists)
+{
+	for (int i = 0; i < playlists.count(); i++) {
+		Playlist *p = playlists.at(i);
+		QStandardItem *item = new QStandardItem(p->title());
+		if (p->hash() == 0) {
+			_unsavedPlaylistModel->appendRow(item);
+		} else {
+			_savedPlaylistModel->appendRow(item);
+		}
 	}
 }

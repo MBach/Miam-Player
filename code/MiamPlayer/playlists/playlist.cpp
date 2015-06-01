@@ -22,7 +22,7 @@
 #include <QtDebug>
 
 Playlist::Playlist(QWidget *parent) :
-	QTableView(parent), _dropDownIndex(NULL), _hash(0), _id(0)
+	QTableView(parent), _dropDownIndex(NULL), _hash(0), _id(0), _isModified(false)
 {
 	_playlistModel = new PlaylistModel(this);
 

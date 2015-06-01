@@ -399,6 +399,7 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 void TabBar::renameTab()
 {
 	this->setTabText(currentIndex(), lineEdit->text());
+	emit tabRenamed(currentIndex(), tabText(currentIndex()));
 	lineEdit->close();
 	for (int t = 0; t < count(); t++) {
 		QWidget *button = tabButton(t, QTabBar::RightSide);

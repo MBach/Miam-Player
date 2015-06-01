@@ -42,7 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Instantiate dialogs
 	customizeOptionsDialog = new CustomizeOptionsDialog;
 
-	playlistDialog = new PlaylistDialog(SqlDatabase::instance(), tabPlaylists);
+	//playlistDialog = new PlaylistDialog(SqlDatabase::instance(), tabPlaylists);
+	//_playlistManager = new PlaylistManager(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
 
@@ -127,7 +128,7 @@ void MainWindow::init()
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
-	playlistDialog->init();
+	tabPlaylists->init();
 
 	// Load shortcuts
 	customizeOptionsDialog->initShortcuts();
@@ -367,10 +368,22 @@ void MainWindow::setupActions()
 
 	// Playback
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
-	connect(actionRemoveSelectedTracks, &QAction::triggered, tabPlaylists, &TabPlaylist::removeSelectedTracks);
+	connect(actionRemoveSelectedTracks, &QAction::triggered, this, [=]() {
+		if (tabPlaylists->currentPlayList()) {
+			tabPlaylists->currentPlayList()->removeSelectedTracks();
+		}
+	});
 	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
-	connect(actionOpenPlaylistManager, &QAction::triggered, playlistDialog, &PlaylistDialog::open);
+	connect(actionOpenPlaylistManager, &QAction::triggered, this, [=]() {
+		PlaylistDialog *playlistDialog = new PlaylistDialog(this);
+		//playlistDialog->setPlaylists(tabPlaylists->playlists());
+		connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
+		connect(playlistDialog, &PlaylistDialog::aboutToRemoveTabs, tabPlaylists, &TabPlaylist::removeTabs);
+		connect(playlistDialog, &PlaylistDialog::requestTabs, tabPlaylists, &TabPlaylist::sendTabs);
+		connect(tabPlaylists, &TabPlaylist::tabs, playlistDialog, &PlaylistDialog::updatePlaylists2);
+		playlistDialog->open();
+	});
 	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
@@ -488,7 +501,7 @@ void MainWindow::changeEvent(QEvent *event)
 		this->retranslateUi(this);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
 		quickStart->retranslateUi(quickStart);
-		playlistDialog->retranslateUi(playlistDialog);
+		//playlistDialog->retranslateUi(playlistDialog);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);

@@ -66,6 +66,9 @@ private:
 private slots:
 	/** Rename a tab. */
 	void renameTab();
+
+signals:
+	void tabRenamed(int index, const QString &text);
 };
 
 #endif // TABBAR_H

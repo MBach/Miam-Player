@@ -38,6 +38,7 @@ SOURCES += \
     playlists/cornerwidget.cpp \
     playlists/playlist.cpp \
     playlists/playlistheaderview.cpp \
+    playlists/playlistmanager.cpp \
     playlists/playlistmodel.cpp \
     playlists/tabbar.cpp \
     playlists/tabplaylist.cpp \
@@ -106,6 +107,7 @@ HEADERS += \
     playlists/cornerwidget.h \
     playlists/playlist.h \
     playlists/playlistheaderview.h \
+    playlists/playlistmanager.h \
     playlists/playlistmodel.h \
     playlists/tabbar.h \
     playlists/tabplaylist.h \
