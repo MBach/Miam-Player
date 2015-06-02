@@ -42,8 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Instantiate dialogs
 	customizeOptionsDialog = new CustomizeOptionsDialog;
 
-	//playlistDialog = new PlaylistDialog(SqlDatabase::instance(), tabPlaylists);
-	//_playlistManager = new PlaylistManager(this);
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
 
@@ -377,11 +375,10 @@ void MainWindow::setupActions()
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionOpenPlaylistManager, &QAction::triggered, this, [=]() {
 		PlaylistDialog *playlistDialog = new PlaylistDialog(this);
-		//playlistDialog->setPlaylists(tabPlaylists->playlists());
+		playlistDialog->setPlaylists(tabPlaylists->playlists());
 		connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
 		connect(playlistDialog, &PlaylistDialog::aboutToRemoveTabs, tabPlaylists, &TabPlaylist::removeTabs);
-		connect(playlistDialog, &PlaylistDialog::requestTabs, tabPlaylists, &TabPlaylist::sendTabs);
-		connect(tabPlaylists, &TabPlaylist::tabs, playlistDialog, &PlaylistDialog::updatePlaylists2);
+		connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
 		playlistDialog->open();
 	});
 	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);
@@ -523,7 +520,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 		int lastOne = tabPlaylists->count() - 1;
 		Playlist *p = tabPlaylists->playlist(lastOne);
-		while (p && p->hash() != p->generateNewHash()) {
+		//while (p && p->hash() != p->generateNewHash()) {
+		while (p && p->isModified()) {
 			qDebug() << Q_FUNC_INFO << "about to remove playlist" << lastOne;
 			tabPlaylists->setCurrentIndex(lastOne);
 

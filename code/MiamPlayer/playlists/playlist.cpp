@@ -137,6 +137,12 @@ uint Playlist::generateNewHash() const
 	}
 }
 
+bool Playlist::isModified() const
+{
+	//return _isModified;
+	return _hash != generateNewHash();
+}
+
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	_playlistModel->insertMedias(rowIndex, medias);

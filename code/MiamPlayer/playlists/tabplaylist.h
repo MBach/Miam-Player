@@ -85,6 +85,8 @@ public slots:
 
 	void moveTracksUp();
 
+	void renamePlaylist(Playlist *p);
+
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();
 
@@ -97,13 +99,11 @@ public slots:
 
 	int closePlaylist(int index, bool aboutToQuit = false);
 
-	void sendTabs();
+	//void sendTabs();
 
 signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
-
-	//void aboutToDeletePlaylist(int playlistTabIndex);
 
 	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite = false, bool exit = false);
 
@@ -113,7 +113,7 @@ signals:
 
 	void updatePlaybackModeButton();
 
-	void tabs(const QList<Playlist*> &unsavedPlaylists);
+	//void tabs(const QList<Playlist*> &unsavedPlaylists);
 };
 
 #endif // TABPLAYLIST_H

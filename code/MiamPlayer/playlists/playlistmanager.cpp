@@ -59,7 +59,8 @@ int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExiting)
 					return 1;
 				}
 				break;
-			} else if (isOverwriting && p->hash() == dao.checksum().toUInt()) {
+			//} else if (isOverwriting && p->hash() == dao.checksum().toUInt()) {
+			} else if (isOverwriting && p->isModified()) {
 				playlist = dao;
 				break;
 			}

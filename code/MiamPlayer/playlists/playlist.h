@@ -63,9 +63,9 @@ public:
 
 	uint generateNewHash() const;
 
-	inline uint hash() const { return _hash; }
+
 	inline uint id() const { return _id; }
-	inline bool isModified() const { return _isModified; }
+	bool isModified() const;
 	inline QString title() const { return _title; }
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
@@ -85,6 +85,8 @@ public:
 	inline void setTitle(const QString &title) { _title = title; }
 
 protected:
+	inline uint hash() const { return _hash; }
+
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 

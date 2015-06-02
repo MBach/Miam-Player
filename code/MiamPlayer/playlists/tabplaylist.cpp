@@ -154,7 +154,8 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 		Playlist *p = this->playlist(i);
 		bool ok = false;
 		uint checksum = playlistDao.checksum().toUInt(&ok);
-		if (ok && checksum == p->hash()) {
+		//if (ok && checksum == p->hash()) {
+		if (ok) {
 			/// TODO: ask one if if want to reload the playlist or not
 			this->setCurrentIndex(i);
 			return;
@@ -233,6 +234,7 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Then append a new empty playlist to the others
 	Playlist *p = new Playlist(this);
+	p->setTitle(newPlaylistName);
 	p->installEventFilter(this);
 	if (!ba.isEmpty()) {
 		p->horizontalHeader()->restoreState(ba);
@@ -263,7 +265,8 @@ Playlist* TabPlaylist::addPlaylist()
 			}
 		}
 		if (playlistTabIndex != -1) {
-			if (p->hash() != p->generateNewHash()) {
+			//if (p->hash() != p->generateNewHash()) {
+			if (p->isModified()) {
 				this->setTabIcon(playlistTabIndex, this->defaultIcon(QIcon::Normal));
 			}
 		}
@@ -305,7 +308,8 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 {
 	currentPlayList()->insertMedias(rowIndex, tracks);
-	if (currentPlayList()->hash() != currentPlayList()->generateNewHash()) {
+	//if (currentPlayList()->hash() != currentPlayList()->generateNewHash()) {
+	if (currentPlayList()->isModified()) {
 		this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	}
 	if (MediaPlayer::instance()->playlist() == NULL) {
@@ -327,6 +331,18 @@ void TabPlaylist::moveTracksUp()
 {
 	if (currentPlayList()) {
 		currentPlayList()->moveTracksUp();
+	}
+}
+
+void TabPlaylist::renamePlaylist(Playlist *p)
+{
+	for (int i = 0; i < playlists().count(); i++) {
+		Playlist *tmp = playlist(i);
+		if (tmp == p) {
+			this->setTabText(i, p->title());
+			this->setTabIcon(i, this->defaultIcon(QIcon::Normal));
+			break;
+		}
 	}
 }
 
@@ -397,11 +413,11 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 	}
 
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
-	uint newHash = p->generateNewHash();
-	qDebug() << Q_FUNC_INFO << p->hash() << newHash;
-	if (p->hash() == newHash || (p->mediaPlaylist()->isEmpty() && p->hash() == 0)) {
+	//uint newHash = p->generateNewHash();
+	//if (p->hash() == newHash || (p->mediaPlaylist()->isEmpty() && p->hash() == 0)) {
+	if (!p->isModified()) {
 		this->removeTabFromCloseButton(index);
-		p->setHash(0);
+		//p->setHash(0);
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	} else {
 		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
@@ -412,8 +428,8 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction: {
 			int returnCode = 0;
-			bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
-			ClosePlaylistPopup closePopup(index, p->mediaPlaylist()->isEmpty(), playlistModified);
+			//bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
+			ClosePlaylistPopup closePopup(index, p->mediaPlaylist()->isEmpty(), true);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](int playlistIndex, bool overwrite) {
 				emit aboutToSavePlaylist(playlistIndex, overwrite, aboutToQuit);
 			});
@@ -435,16 +451,4 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 		}
 	}
 	return 0;
-}
-
-void TabPlaylist::sendTabs()
-{
-	/*QList<Playlist*> unsavedPlaylists;
-	for (int i = 0; i < count(); i++) {
-		Playlist *p = playlist(i);
-		if (p->hash() == 0) {
-			unsavedPlaylists << p;
-		}
-	}*/
-	emit tabs(playlists());
 }

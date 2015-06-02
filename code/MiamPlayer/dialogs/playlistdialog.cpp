@@ -71,12 +71,20 @@ PlaylistDialog::PlaylistDialog(QWidget *parent) :
 
 	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsAboutToBeRemoved, this, &PlaylistDialog::dropAutoSavePlaylists);
 	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsRemoved, this, [=](const QModelIndex &, int, int) {
-		this->updatePlaylists(false, true);
+		this->updatePlaylists();
+	});
+
+	connect(_unsavedPlaylistModel, &QStandardItemModel::itemChanged, this, [=](QStandardItem *item) {
+		if (item) {
+			if (Playlist *p = _unsaved.value(item)) {
+				p->setTitle(item->text());
+				p->setModified(true);
+				emit aboutToRenamePlaylist(p);
+			}
+		}
 	});
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistDialog::exportSelectedPlaylist);
-
-	//connect(_tabPlaylists, &TabPlaylist::aboutToDeletePlaylist, this, &PlaylistDialog::deletePlaylist);
 }
 
 /** Add drag & drop processing. */
@@ -84,8 +92,6 @@ bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Drop || event->type() == QEvent::DragEnter) {
 		return QDialog::eventFilter(obj, event);
-	//} else if (obj == _tabPlaylists) {
-	//	return QDialog::eventFilter(obj, event);
 	} else if (event->type() == QEvent::Drop) {
 		return QDialog::eventFilter(obj, event);
 	} else if (obj == savedPlaylists && event->type() == QEvent::KeyPress) {
@@ -137,7 +143,17 @@ void PlaylistDialog::open()
 		this->restoreGeometry(settings->value("PlaylistManagerGeometry").toByteArray());
 	}
 	this->clearPreview(false);
+
+	for (int i = 0; i < _playlists.count(); i++) {
+		Playlist *p = _playlists.at(i);
+		if (p && p->isModified()) {
+			QStandardItem *item = new QStandardItem(p->title());
+			_unsavedPlaylistModel->appendRow(item);
+			_unsaved.insert(item, p);
+		}
+	}
 	this->updatePlaylists();
+
 	QDialog::open();
 	this->activateWindow();
 }
@@ -167,7 +183,6 @@ void PlaylistDialog::deleteSavedPlaylists()
 	}
 
 	this->clearPreview(false);
-	this->updatePlaylists();
 }
 
 void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int end)
@@ -175,7 +190,7 @@ void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int e
 	for (int i = start; i <= end; i++) {
 		auto item = _unsavedPlaylistModel->item(start);
 		if (item) {
-			uint playlistObjectPointer = item->data(PlaylistObjectPointer).toUInt();
+			//uint playlistObjectPointer = item->data(PlaylistObjectPointer).toUInt();
 			/// XXX: it's not really easy to read...
 			// Find the playlist in the TabWidget
 			/*for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
@@ -225,7 +240,6 @@ void PlaylistDialog::exportSelectedPlaylist()
 /** Load every saved playlists. */
 void PlaylistDialog::loadSelectedPlaylists()
 {
-	qDebug() << Q_FUNC_INFO;
 	for (QModelIndex index : savedPlaylists->selectionModel()->selectedIndexes()) {
 		QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
 		if (item) {
@@ -235,7 +249,7 @@ void PlaylistDialog::loadSelectedPlaylists()
 	this->close();
 }
 
-void PlaylistDialog::populatePreviewFromSaved(QItemSelection, QItemSelection)
+void PlaylistDialog::populatePreviewFromSaved(const QItemSelection &, const QItemSelection &)
 {
 	static const int MAX_TRACKS_PREVIEW_AREA = 30;
 	QModelIndexList indexes = savedPlaylists->selectionModel()->selectedIndexes();
@@ -265,80 +279,47 @@ void PlaylistDialog::populatePreviewFromSaved(QItemSelection, QItemSelection)
 	exportPlaylists->setEnabled(indexes.size() == 1);
 }
 
-void PlaylistDialog::populatePreviewFromUnsaved(QItemSelection, QItemSelection)
+void PlaylistDialog::populatePreviewFromUnsaved(const QItemSelection &, const QItemSelection &)
 {
 	static const int MAX_TRACKS_PREVIEW_AREA = 30;
 	bool b = unsavedPlaylists->selectionModel()->selectedIndexes().size() == 1;
 	this->clearPreview(b);
 	if (b) {
-
 		QStandardItem *item = _unsavedPlaylistModel->itemFromIndex(unsavedPlaylists->selectionModel()->selectedIndexes().first());
-		/// FIXME
-		uint hash = item->data(PlaylistObjectPointer).toUInt();
-		/*for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
-			uint playlistPointer = _tabPlaylists->tabBar()->tabData(i).toUInt();
-
-			if (playlistPointer == hash) {
-				Playlist *p = _tabPlaylists->playlist(i);
-				int max = qMin(p->mediaPlaylist()->mediaCount(), MAX_TRACKS_PREVIEW_AREA);
-				for (int idxTrack = 0; idxTrack < max; idxTrack++) {
-					QString title = p->model()->index(idxTrack, p->COL_TITLE).data().toString();
-					QString artist = p->model()->index(idxTrack, p->COL_ARTIST).data().toString();
-					QString album = p->model()->index(idxTrack, p->COL_ALBUM).data().toString();
-					QTreeWidgetItem *item = new QTreeWidgetItem;
-					item->setText(0, QString("%1 (%2 - %3)").arg(title, artist, album));
-					previewPlaylist->addTopLevelItem(item);
-				}
-				if (p->mediaPlaylist()->mediaCount() > MAX_TRACKS_PREVIEW_AREA) {
-					QTreeWidgetItem *item = new QTreeWidgetItem;
-					item->setText(0, tr("And more tracks..."));
-					previewPlaylist->addTopLevelItem(item);
-				}
-				break;
-			}
-		}*/
-	}
-}
-
-/** Update saved and unsaved playlists when one is adding a new one. */
-void PlaylistDialog::updatePlaylists(bool unsaved, bool saved)
-{
-	qDebug() << Q_FUNC_INFO;
-
-	if (unsaved) {
-		// Populate unsaved playlists area
-		_unsavedPlaylistModel->clear();
-		emit requestTabs();
-	}
-
-	if (saved) {
-		// Populate saved playlists area
-		_savedPlaylistModel->clear();
-		_savedPlaylistModel->blockSignals(true);
-
-		for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
-			QStandardItem *item = new QStandardItem(playlist.title());
-			item->setData(playlist.id(), PlaylistID);
-			if (playlist.icon().isEmpty()) {
-				item->setIcon(QIcon(":/icons/playlist"));
-			} else {
-				item->setIcon(QIcon(playlist.icon()));
-			}
-			_savedPlaylistModel->appendRow(item);
+		Playlist *p = _unsaved.value(item);
+		int max = qMin(p->mediaPlaylist()->mediaCount(), MAX_TRACKS_PREVIEW_AREA);
+		for (int idxTrack = 0; idxTrack < max; idxTrack++) {
+			QString title = p->model()->index(idxTrack, Playlist::COL_TITLE).data().toString();
+			QString artist = p->model()->index(idxTrack, Playlist::COL_ARTIST).data().toString();
+			QString album = p->model()->index(idxTrack, Playlist::COL_ALBUM).data().toString();
+			QTreeWidgetItem *item = new QTreeWidgetItem;
+			item->setText(0, QString("%1 (%2 - %3)").arg(title, artist, album));
+			previewPlaylist->addTopLevelItem(item);
 		}
-		_savedPlaylistModel->blockSignals(false);
+		if (p->mediaPlaylist()->mediaCount() > MAX_TRACKS_PREVIEW_AREA) {
+			QTreeWidgetItem *item = new QTreeWidgetItem;
+			item->setText(0, tr("And more tracks..."));
+			previewPlaylist->addTopLevelItem(item);
+		}
 	}
 }
 
-void PlaylistDialog::updatePlaylists2(const QList<Playlist*> playlists)
+/** Update saved playlists when one is adding a new one. */
+void PlaylistDialog::updatePlaylists()
 {
-	for (int i = 0; i < playlists.count(); i++) {
-		Playlist *p = playlists.at(i);
-		QStandardItem *item = new QStandardItem(p->title());
-		if (p->hash() == 0) {
-			_unsavedPlaylistModel->appendRow(item);
+	// Populate saved playlists area
+	_savedPlaylistModel->clear();
+	_savedPlaylistModel->blockSignals(true);
+
+	for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
+		QStandardItem *item = new QStandardItem(playlist.title());
+		item->setData(playlist.id(), PlaylistID);
+		if (playlist.icon().isEmpty()) {
+			item->setIcon(QIcon(":/icons/playlist"));
 		} else {
-			_savedPlaylistModel->appendRow(item);
+			item->setIcon(QIcon(playlist.icon()));
 		}
+		_savedPlaylistModel->appendRow(item);
 	}
+	_savedPlaylistModel->blockSignals(false);
 }

@@ -27,6 +27,9 @@ private:
 	/** Volatile models in the Dialog to separate which playlists were save or not. */
 	QStandardItemModel *_unsavedPlaylistModel, *_savedPlaylistModel;
 
+	QList<Playlist*> _playlists;
+	QMap<QStandardItem*, Playlist*> _unsaved;
+
 	Q_ENUMS(PlaylistRoles)
 
 public:
@@ -34,6 +37,8 @@ public:
 						 PlaylistID				= Qt::UserRole + 2};
 
 	explicit PlaylistDialog(QWidget *parent = NULL);
+
+	inline void setPlaylists(const QList<Playlist*> &playlists) { _playlists = playlists; }
 
 	/** Add drag & drop processing. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
@@ -48,7 +53,7 @@ public slots:
 	/** Redefined: clean preview area, populate once again lists. */
 	void open();
 
-	void updatePlaylists2(const QList<Playlist*> playlists);
+	//void updatePlaylists2(const QList<Playlist*> playlists);
 
 private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
@@ -62,20 +67,20 @@ private slots:
 	/** Load every saved playlists. */
 	void loadSelectedPlaylists();
 
-	void populatePreviewFromSaved(QItemSelection, QItemSelection);
+	void populatePreviewFromSaved(const QItemSelection &, const QItemSelection &);
 
-	void populatePreviewFromUnsaved(QItemSelection, QItemSelection);
+	void populatePreviewFromUnsaved(const QItemSelection &, const QItemSelection &);
 
-	/** Update saved and unsaved playlists when one is adding a new one. Also used at startup. */
-	void updatePlaylists(bool unsaved = true, bool saved = true);
+	/** Update saved playlists when one is adding a new one. Also used at startup. */
+	void updatePlaylists();
 
 
 signals:
 	void aboutToLoadPlaylist(uint playlistId);
 
-	void aboutToRemoveTabs(const QList<PlaylistDAO> &playlists);
+	void aboutToRenamePlaylist(Playlist *playlist);
 
-	void requestTabs();
+	void aboutToRemoveTabs(const QList<PlaylistDAO> &playlists);
 };
 
 #endif // PLAYLISTDIALOG_H
