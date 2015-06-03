@@ -379,6 +379,7 @@ void MainWindow::setupActions()
 		connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
 		connect(playlistDialog, &PlaylistDialog::aboutToRemoveTabs, tabPlaylists, &TabPlaylist::removeTabs);
 		connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
+		connect(playlistDialog, &PlaylistDialog::aboutToRenameDAO, tabPlaylists, &TabPlaylist::renamePlaylistDAO);
 		playlistDialog->open();
 	});
 	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);

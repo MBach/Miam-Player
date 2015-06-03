@@ -346,6 +346,18 @@ void TabPlaylist::renamePlaylist(Playlist *p)
 	}
 }
 
+void TabPlaylist::renamePlaylistDAO(const PlaylistDAO &dao)
+{
+	for (int i = 0; i < playlists().count(); i++) {
+		Playlist *tmp = playlist(i);
+		if (tmp->id() == dao.id().toUInt()) {
+			this->setTabText(i, dao.title());
+			SqlDatabase::instance()->updateTablePlaylist(dao);
+			break;
+		}
+	}
+}
+
 void TabPlaylist::removeCurrentPlaylist()
 {
 	// Simulate a click on the close button

@@ -29,6 +29,7 @@ private:
 
 	QList<Playlist*> _playlists;
 	QMap<QStandardItem*, Playlist*> _unsaved;
+	QMap<QStandardItem*, PlaylistDAO> _saved;
 
 	Q_ENUMS(PlaylistRoles)
 
@@ -71,6 +72,8 @@ private slots:
 
 	void populatePreviewFromUnsaved(const QItemSelection &, const QItemSelection &);
 
+	void renameItem(QStandardItem *item);
+
 	/** Update saved playlists when one is adding a new one. Also used at startup. */
 	void updatePlaylists();
 
@@ -79,6 +82,7 @@ signals:
 	void aboutToLoadPlaylist(uint playlistId);
 
 	void aboutToRenamePlaylist(Playlist *playlist);
+	void aboutToRenameDAO(const PlaylistDAO &dao);
 
 	void aboutToRemoveTabs(const QList<PlaylistDAO> &playlists);
 };

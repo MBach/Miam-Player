@@ -160,13 +160,8 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std
 	this->transaction();
 	uint id;
 	if (isOverwriting) {
-		id = playlist.id().toUInt();
-		QSqlQuery update(*this);
-		update.prepare("UPDATE playlists SET title = ?, checksum = ? WHERE id = ?");
-		update.addBindValue(playlist.title());
-		update.addBindValue(playlist.checksum());
-		update.addBindValue(id);
-		if (update.exec()) {
+		if (this->updateTablePlaylist(playlist)) {
+			id = playlist.id().toUInt();
 			this->insertIntoTablePlaylistTracks(id, tracks, isOverwriting);
 		}
 	} else {
@@ -466,7 +461,7 @@ TrackDAO SqlDatabase::selectTrackByURI(const QString &uri)
 	return track;
 }
 
-bool SqlDatabase::playlistHasBackgroundImage(int playlistID)
+bool SqlDatabase::playlistHasBackgroundImage(uint playlistID)
 {
 	QSqlQuery query = exec("SELECT background FROM playlists WHERE id = " + QString::number(playlistID));
 	query.next();
@@ -475,7 +470,17 @@ bool SqlDatabase::playlistHasBackgroundImage(int playlistID)
 	return result;
 }
 
-void SqlDatabase::updateTablePlaylistWithBackgroundImage(int playlistID, const QString &backgroundImagePath)
+bool SqlDatabase::updateTablePlaylist(const PlaylistDAO &playlist)
+{
+	QSqlQuery update(*this);
+	update.prepare("UPDATE playlists SET title = ?, checksum = ? WHERE id = ?");
+	update.addBindValue(playlist.title());
+	update.addBindValue(playlist.checksum());
+	update.addBindValue(playlist.id());
+	return update.exec();
+}
+
+void SqlDatabase::updateTablePlaylistWithBackgroundImage(uint playlistID, const QString &backgroundImagePath)
 {
 	QSqlQuery update(*this);
 	update.prepare("UPDATE playlists SET background = ? WHERE id = ?");

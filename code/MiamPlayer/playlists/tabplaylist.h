@@ -86,6 +86,7 @@ public slots:
 	void moveTracksUp();
 
 	void renamePlaylist(Playlist *p);
+	void renamePlaylistDAO(const PlaylistDAO &dao);
 
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();

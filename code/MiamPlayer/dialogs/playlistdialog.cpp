@@ -74,15 +74,8 @@ PlaylistDialog::PlaylistDialog(QWidget *parent) :
 		this->updatePlaylists();
 	});
 
-	connect(_unsavedPlaylistModel, &QStandardItemModel::itemChanged, this, [=](QStandardItem *item) {
-		if (item) {
-			if (Playlist *p = _unsaved.value(item)) {
-				p->setTitle(item->text());
-				p->setModified(true);
-				emit aboutToRenamePlaylist(p);
-			}
-		}
-	});
+	connect(_unsavedPlaylistModel, &QStandardItemModel::itemChanged, this, &PlaylistDialog::renameItem);
+	connect(_savedPlaylistModel, &QStandardItemModel::itemChanged, this, &PlaylistDialog::renameItem);
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistDialog::exportSelectedPlaylist);
 }
@@ -304,6 +297,21 @@ void PlaylistDialog::populatePreviewFromUnsaved(const QItemSelection &, const QI
 	}
 }
 
+void PlaylistDialog::renameItem(QStandardItem *item)
+{
+	if (item) {
+		if (Playlist *p = _unsaved.value(item)) {
+			p->setTitle(item->text());
+			p->setModified(true);
+			emit aboutToRenamePlaylist(p);
+		} else {
+			PlaylistDAO dao = _saved.value(item);
+			dao.setTitle(item->text());
+			emit aboutToRenameDAO(dao);
+		}
+	}
+}
+
 /** Update saved playlists when one is adding a new one. */
 void PlaylistDialog::updatePlaylists()
 {
@@ -320,6 +328,7 @@ void PlaylistDialog::updatePlaylists()
 			item->setIcon(QIcon(playlist.icon()));
 		}
 		_savedPlaylistModel->appendRow(item);
+		_saved.insert(item, playlist);
 	}
 	_savedPlaylistModel->blockSignals(false);
 }
