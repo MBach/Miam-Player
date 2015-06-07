@@ -4,6 +4,7 @@
 #include <QObject>
 
 class TabPlaylist;
+class Playlist;
 
 class PlaylistManager : public QObject
 {
@@ -14,13 +15,10 @@ private:
 public:
 	explicit PlaylistManager(TabPlaylist *parent);
 
-	/** Load a playlist saved on the in database. */
-	//void loadPlaylist(uint playlistId);
-
-	int savePlaylist(int index, bool isOverwriting, bool isExiting);
+	int savePlaylist(Playlist *p, bool isOverwriting, bool isExiting);
 
 public slots:
-	void saveAndRemovePlaylist(int index, bool isOverwriting = false, bool isExiting = false);
+	void saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting = false, bool isExiting = false);
 
 signals:
 	void aboutToRemovePlaylist(int);

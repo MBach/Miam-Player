@@ -100,21 +100,19 @@ public slots:
 
 	int closePlaylist(int index, bool aboutToQuit = false);
 
-	//void sendTabs();
+	void savePlaylist(Playlist *playlist);
 
 signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
 
-	void aboutToSavePlaylist(int playlistTabIndex, bool overwrite = false, bool exit = false);
+	void aboutToSavePlaylist(Playlist *p, int index, bool overwrite = false, bool exit = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 
 	void selectionChanged(bool isEmpty);
 
 	void updatePlaybackModeButton();
-
-	//void tabs(const QList<Playlist*> &unsavedPlaylists);
 };
 
 #endif // TABPLAYLIST_H

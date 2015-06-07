@@ -5,11 +5,12 @@
 #include <QPushButton>
 
 #include <settingsprivate.h>
+#include "playlist.h"
 
 #include <QtDebug>
 
-ClosePlaylistPopup::ClosePlaylistPopup(int index, bool currentPlaylistIsEmpty, bool playlistModified, QWidget *parent) :
-	QDialog(parent), _index(index),
+ClosePlaylistPopup::ClosePlaylistPopup(Playlist *playlist, int index, QWidget *parent) :
+	QDialog(parent), _playlist(playlist), _index(index),
 	_deleteButton(NULL),
 	_replaceButton(NULL)
 {
@@ -19,12 +20,12 @@ ClosePlaylistPopup::ClosePlaylistPopup(int index, bool currentPlaylistIsEmpty, b
 	connect(checkBoxRememberChoice, &QCheckBox::toggled, buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::setDisabled);
 
 	// Delete mode
-	if (currentPlaylistIsEmpty) {
+	if (playlist->mediaPlaylist()->isEmpty()) {
 		buttonBox->setStandardButtons(QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
 		_deleteButton = new QPushButton(tr("Delete this playlist"), this);
 		buttonBox->addButton(_deleteButton, QDialogButtonBox::AcceptRole);
 		checkBoxRememberChoice->hide();
-	} else if (playlistModified) {
+	} else if (playlist->isModified()) {
 		// Overwrite mode
 		labelPlaylist->setText(tr("You're about to close a playlist that you have modified. What would you like to do?"));
 		buttonBox->setStandardButtons(QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
@@ -40,9 +41,9 @@ ClosePlaylistPopup::ClosePlaylistPopup(int index, bool currentPlaylistIsEmpty, b
 void ClosePlaylistPopup::execActionFromClosePopup(QAbstractButton *action)
 {
 	if (action == _replaceButton) {
-		emit aboutToSavePlaylist(_index, true);
+		emit aboutToSavePlaylist(true);
 	} else if (action == _deleteButton){
-		emit aboutToDeletePlaylist(_index);
+		emit aboutToDeletePlaylist(_playlist);
 	} else {
 		// Standard enumeration
 		switch(buttonBox->standardButton(action)) {
@@ -50,7 +51,7 @@ void ClosePlaylistPopup::execActionFromClosePopup(QAbstractButton *action)
 			if (checkBoxRememberChoice->isChecked()) {
 				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
 			}
-			emit aboutToSavePlaylist(_index, false);
+			emit aboutToSavePlaylist(false);
 			break;
 		case QDialogButtonBox::Discard:
 			if (checkBoxRememberChoice->isChecked()) {

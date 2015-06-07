@@ -80,10 +80,9 @@ private slots:
 
 signals:
 	void aboutToLoadPlaylist(uint playlistId);
-
+	void aboutToSavePlaylist(Playlist *playlist);
 	void aboutToRenamePlaylist(Playlist *playlist);
 	void aboutToRenameDAO(const PlaylistDAO &dao);
-
 	void aboutToRemoveTabs(const QList<PlaylistDAO> &playlists);
 };
 

@@ -35,11 +35,11 @@ public:
 	/** Redefined to add lazy-loading. */
 	//void fetchMore(const QModelIndex &parent);
 
-	void insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
+	bool insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
 
-	void insertMedias(int rowIndex, const QStringList &tracks);
+	bool insertMedias(int rowIndex, const QStringList &tracks);
 
-	void insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
+	bool insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
 
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);

@@ -176,6 +176,7 @@ void PlaylistDialog::deleteSavedPlaylists()
 	}
 
 	this->clearPreview(false);
+	this->updatePlaylists();
 }
 
 void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int end)
@@ -183,18 +184,12 @@ void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int e
 	for (int i = start; i <= end; i++) {
 		auto item = _unsavedPlaylistModel->item(start);
 		if (item) {
-			//uint playlistObjectPointer = item->data(PlaylistObjectPointer).toUInt();
-			/// XXX: it's not really easy to read...
-			// Find the playlist in the TabWidget
-			/*for (int i = 0; i < _tabPlaylists->playlists().count(); i++) {
-				if (playlistObjectPointer == _tabPlaylists->tabBar()->tabData(i).toUInt()) {
-					if (this->savePlaylist(i) > 0) {
-						_tabPlaylists->setTabIcon(i, _tabPlaylists->defaultIcon(QIcon::Disabled));
-					}
-				}
-			}*/
+			auto playlist = _unsaved.value(item);
+			emit aboutToSavePlaylist(playlist);
+			_unsaved.remove(item);
 		}
 	}
+	this->updatePlaylists();
 }
 
 /** Export one playlist at a time. */

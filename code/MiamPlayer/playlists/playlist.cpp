@@ -139,14 +139,15 @@ uint Playlist::generateNewHash() const
 
 bool Playlist::isModified() const
 {
-	//return _isModified;
-	return _hash != generateNewHash();
+	return _hash != 0 && _hash != generateNewHash();
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
-	_playlistModel->insertMedias(rowIndex, medias);
-	this->autoResize();
+	if (_playlistModel->insertMedias(rowIndex, medias)) {
+		this->autoResize();
+		_isModified = true;
+	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
@@ -155,8 +156,10 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 	if (rowIndex == -1) {
 		rowIndex = _playlistModel->rowCount();
 	}
-	_playlistModel->insertMedias(rowIndex, tracks);
-	this->autoResize();
+	if (_playlistModel->insertMedias(rowIndex, tracks)) {
+		this->autoResize();
+		_isModified = true;
+	}
 }
 
 /** Insert remote medias to playlist. */

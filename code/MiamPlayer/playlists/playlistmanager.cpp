@@ -11,19 +11,28 @@ PlaylistManager::PlaylistManager(TabPlaylist *parent)
 {
 }
 
-void PlaylistManager::saveAndRemovePlaylist(int index, bool isOverwriting, bool isExiting)
+void PlaylistManager::saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting, bool isExiting)
 {
-	if (this->savePlaylist(index, isOverwriting, isExiting)) {
+	if (this->savePlaylist(p, isOverwriting, isExiting)) {
 		emit aboutToRemovePlaylist(index);
 	}
 }
 
-int PlaylistManager::savePlaylist(int index, bool isOverwriting, bool isExiting)
+int PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiting)
 {
-	qDebug() << Q_FUNC_INFO << index << isOverwriting << isExiting;
-	Playlist *p = _tabPlaylists->playlist(index);
 	int id = -1;
 	auto _db = SqlDatabase::instance();
+
+	int index = -1;
+	for (int i = 0; i < _tabPlaylists->count(); i++) {
+		Playlist *pl = _tabPlaylists->playlist(i);
+		if (pl == p) {
+			index = i;
+			break;
+		}
+	}
+	qDebug() << Q_FUNC_INFO << index << isOverwriting << isExiting;
+
 	if (p && !p->mediaPlaylist()->isEmpty()) {
 		QString playlistName = _tabPlaylists->tabBar()->tabText(index);
 

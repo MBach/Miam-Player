@@ -43,9 +43,10 @@ void PlaylistModel::clear()
 	QStandardItemModel::fetchMore(parent);
 }*/
 
-void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
+bool PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
 	qDebug() << Q_FUNC_INFO;
+	int c = this->rowCount();
 	if (_mediaPlaylist->insertMedia(rowIndex, tracks)) {
 		for (QMediaContent track : tracks) {
 			FileHelper f(track);
@@ -54,10 +55,12 @@ void PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 			}
 		}
 	}
+	return c < this->rowCount();
 }
 
-void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
+bool PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 {
+	int c = this->rowCount();
 	for (int i = 0; i < tracks.size(); i++) {
 		QString trackStr = tracks.at(i);
 		if (trackStr.startsWith("file")) {
@@ -73,14 +76,17 @@ void PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 		//qDebug() << "remote track to be fully reloaded" << trackStr;
 		this->createLine(rowIndex + i, track);
 	}
+	return c < this->rowCount();
 }
 
-void PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
+bool PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
+	int c = this->rowCount();
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
 		this->createLine(rowIndex + i, track);
 	}
+	return c < this->rowCount();
 }
 
 void PlaylistModel::createLine(int row, const TrackDAO &track)

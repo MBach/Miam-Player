@@ -440,12 +440,14 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 		switch (action) {
 		case SettingsPrivate::PL_AskUserForAction: {
 			int returnCode = 0;
-			//bool playlistModified = (p->hash() != 0 && p->hash() != newHash);
-			ClosePlaylistPopup closePopup(index, p->mediaPlaylist()->isEmpty(), true);
-			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](int playlistIndex, bool overwrite) {
-				emit aboutToSavePlaylist(playlistIndex, overwrite, aboutToQuit);
+			ClosePlaylistPopup closePopup(p, index);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](bool overwrite) {
+				emit aboutToSavePlaylist(p, index, overwrite, aboutToQuit);
 			});
-			//connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::aboutToDeletePlaylist);
+			//connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, _playlistManager, &TabPlaylist::aboutToDeletePlaylist);
+			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, [=]() {
+
+			});
 			connect(&closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [&returnCode]() {
 				// Interrupt exit!
@@ -455,7 +457,7 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 			return returnCode;
 		}
 		case SettingsPrivate::PL_SaveOnClose:
-			emit aboutToSavePlaylist(index, false, aboutToQuit);
+			emit aboutToSavePlaylist(p, false, aboutToQuit);
 			break;
 		case SettingsPrivate::PL_DiscardOnClose:
 			this->removeTabFromCloseButton(index);
@@ -463,4 +465,9 @@ int TabPlaylist::closePlaylist(int index, bool aboutToQuit)
 		}
 	}
 	return 0;
+}
+
+void TabPlaylist::savePlaylist(Playlist *playlist)
+{
+	uint id = _playlistManager->savePlaylist(playlist, true, false);
 }
