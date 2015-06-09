@@ -6,7 +6,7 @@ List of variables to modify:
 
 set MiamPlayerBuild="C:\dev\Miam-Player-build-x64"
 set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
-set QTDIR="C:\Qt\Qt5.4.1\5.4\msvc2013_64"
+set QTDIR="C:\Qt\Qt5.4.2\5.4\msvc2013_64"
 set CoverFetcherBuild="C:\dev\cover-fetcher-build-x64\release"
 set DeezerPluginBuild="C:\dev\deezer-plugin-build-x64\release"
 set MiniModeBuild="C:\dev\mini-mode-build-x64\release"
