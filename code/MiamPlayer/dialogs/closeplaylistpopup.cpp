@@ -25,7 +25,7 @@ ClosePlaylistPopup::ClosePlaylistPopup(Playlist *playlist, int index, QWidget *p
 		_deleteButton = new QPushButton(tr("Delete this playlist"), this);
 		buttonBox->addButton(_deleteButton, QDialogButtonBox::AcceptRole);
 		checkBoxRememberChoice->hide();
-	} else if (playlist->isModified()) {
+	} else if (playlist->hash() != 0 && playlist->isModified()) {
 		// Overwrite mode
 		labelPlaylist->setText(tr("You're about to close a playlist that you have modified. What would you like to do?"));
 		buttonBox->setStandardButtons(QDialogButtonBox::Discard | QDialogButtonBox::Cancel);
@@ -63,7 +63,6 @@ void ClosePlaylistPopup::execActionFromClosePopup(QAbstractButton *action)
 		case QDialogButtonBox::Cancel:
 			emit aboutToCancel();
 			this->close();
-			qDebug() << Q_FUNC_INFO << "Cancel was clicked!";
 			break;
 		default:
 			break;

@@ -54,8 +54,6 @@ public slots:
 	/** Redefined: clean preview area, populate once again lists. */
 	void open();
 
-	//void updatePlaylists2(const QList<Playlist*> playlists);
-
 private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */
 	void deleteSavedPlaylists();
@@ -76,7 +74,6 @@ private slots:
 
 	/** Update saved playlists when one is adding a new one. Also used at startup. */
 	void updatePlaylists();
-
 
 signals:
 	void aboutToLoadPlaylist(uint playlistId);

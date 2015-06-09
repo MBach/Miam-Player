@@ -63,6 +63,8 @@ public:
 		return _playlists;
 	}
 
+	inline PlaylistManager *playlistManager() const { return _playlistManager; }
+
 	void setMainWindow(MainWindow *mainWindow);
 
 protected:
@@ -85,6 +87,8 @@ public slots:
 
 	void moveTracksUp();
 
+	void savePlaylist(Playlist *p);
+
 	void renamePlaylist(Playlist *p);
 	void renamePlaylistDAO(const PlaylistDAO &dao);
 
@@ -98,15 +102,13 @@ public slots:
 
 	void updateRowHeight();
 
-	int closePlaylist(int index, bool aboutToQuit = false);
-
-	void savePlaylist(Playlist *playlist);
+	int closePlaylist(int index);
 
 signals:
 	/** Forward the signal. */
 	void aboutToChangeMenuLabels(int);
 
-	void aboutToSavePlaylist(Playlist *p, int index, bool overwrite = false, bool exit = false);
+	void aboutToSavePlaylist(Playlist *p, int index, bool overwrite = false);
 
 	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 

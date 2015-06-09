@@ -66,7 +66,7 @@ protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event) override;
 
-	virtual void closeEvent(QCloseEvent *event) override;
+	virtual void closeEvent(QCloseEvent *) override;
 
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
@@ -92,6 +92,8 @@ private slots:
 	void openFiles();
 
 	void openFolderPopup();
+
+	void openPlaylistManager();
 
 	void showTabPlaylists();
 

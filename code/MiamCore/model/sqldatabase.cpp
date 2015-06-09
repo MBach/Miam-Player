@@ -154,7 +154,7 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 	return lastError().type() == QSqlError::NoError;
 }
 
-int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting)
+uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting)
 {
 	static std::uniform_int_distribution<uint> tt;
 	this->transaction();
@@ -189,7 +189,7 @@ int SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std
 	return id;
 }
 
-bool SqlDatabase::insertIntoTablePlaylistTracks(int playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting)
+bool SqlDatabase::insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting)
 {
 	this->transaction();
 	if (isOverwriting) {
@@ -352,7 +352,7 @@ Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 	return c;
 }
 
-QList<TrackDAO> SqlDatabase::selectPlaylistTracks(int playlistID)
+QList<TrackDAO> SqlDatabase::selectPlaylistTracks(uint playlistID)
 {
 	QList<TrackDAO> tracks;
 	QSqlQuery results(*this);

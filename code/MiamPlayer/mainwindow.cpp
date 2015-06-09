@@ -373,16 +373,7 @@ void MainWindow::setupActions()
 	});
 	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
-	connect(actionOpenPlaylistManager, &QAction::triggered, this, [=]() {
-		PlaylistDialog *playlistDialog = new PlaylistDialog(this);
-		playlistDialog->setPlaylists(tabPlaylists->playlists());
-		connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
-		connect(playlistDialog, &PlaylistDialog::aboutToRemoveTabs, tabPlaylists, &TabPlaylist::removeTabs);
-		connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
-		connect(playlistDialog, &PlaylistDialog::aboutToRenameDAO, tabPlaylists, &TabPlaylist::renamePlaylistDAO);
-		connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);
-		playlistDialog->open();
-	});
+	connect(actionOpenPlaylistManager, &QAction::triggered, this, &MainWindow::openPlaylistManager);
 	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
@@ -514,34 +505,16 @@ void MainWindow::changeEvent(QEvent *event)
 	}
 }
 
-void MainWindow::closeEvent(QCloseEvent *e)
+void MainWindow::closeEvent(QCloseEvent *)
 {
-	int ret = 0;
 	auto settings = SettingsPrivate::instance();
 	if (settings->playbackKeepPlaylists()) {
-
-		int lastOne = tabPlaylists->count() - 1;
-		Playlist *p = tabPlaylists->playlist(lastOne);
-		//while (p && p->hash() != p->generateNewHash()) {
-		while (p && p->isModified()) {
-			qDebug() << Q_FUNC_INFO << "about to remove playlist" << lastOne;
-			tabPlaylists->setCurrentIndex(lastOne);
-
-			// Interrup while loop if one has cancelled popup
-			ret = tabPlaylists->closePlaylist(lastOne, true);
-			if (ret == 1) {
-				break;
-			}
-
-			lastOne = tabPlaylists->count() - 1;
-			p = tabPlaylists->playlist(lastOne);
+		for (int i = 0; i < tabPlaylists->count(); i++) {
+			Playlist *p = tabPlaylists->playlist(i);
+			tabPlaylists->playlistManager()->savePlaylist(p, true, true);
 		}
 	}
-	if (ret == 0) {
-		QCoreApplication::quit();
-	} else {
-		e->ignore();
-	}
+	QCoreApplication::quit();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -798,6 +771,18 @@ void MainWindow::openFolderPopup()
 	} else {
 		this->openFolder(dir);
 	}
+}
+
+void MainWindow::openPlaylistManager()
+{
+	PlaylistDialog *playlistDialog = new PlaylistDialog(this);
+	playlistDialog->setPlaylists(tabPlaylists->playlists());
+	connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
+	connect(playlistDialog, &PlaylistDialog::aboutToRemoveTabs, tabPlaylists, &TabPlaylist::removeTabs);
+	connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
+	connect(playlistDialog, &PlaylistDialog::aboutToRenameDAO, tabPlaylists, &TabPlaylist::renamePlaylistDAO);
+	connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);
+	playlistDialog->open();
 }
 
 void MainWindow::showTabPlaylists()

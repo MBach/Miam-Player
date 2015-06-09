@@ -42,8 +42,6 @@ private:
 
 	QString _title;
 
-	bool _isModified;
-
 	Q_ENUMS(Columns)
 
 public:
@@ -79,13 +77,12 @@ public:
 
 	inline void forceDrop(QDropEvent *e) { this->dropEvent(e); }
 
+	inline uint hash() const { return _hash; }
 	inline void setHash(uint hash) { _hash = hash; }
 	inline void setId(uint id) { _id = id; }
-	inline void setModified(bool b) { _isModified = b; }
 	inline void setTitle(const QString &title) { _title = title; }
 
 protected:
-	inline uint hash() const { return _hash; }
 
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;

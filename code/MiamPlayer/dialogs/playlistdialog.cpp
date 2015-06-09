@@ -182,9 +182,8 @@ void PlaylistDialog::deleteSavedPlaylists()
 void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int end)
 {
 	for (int i = start; i <= end; i++) {
-		auto item = _unsavedPlaylistModel->item(start);
-		if (item) {
-			auto playlist = _unsaved.value(item);
+		if (auto item = _unsavedPlaylistModel->item(start)) {
+			Playlist *playlist = _unsaved.value(item);
 			emit aboutToSavePlaylist(playlist);
 			_unsaved.remove(item);
 		}
@@ -297,7 +296,6 @@ void PlaylistDialog::renameItem(QStandardItem *item)
 	if (item) {
 		if (Playlist *p = _unsaved.value(item)) {
 			p->setTitle(item->text());
-			p->setModified(true);
 			emit aboutToRenamePlaylist(p);
 		} else {
 			PlaylistDAO dao = _saved.value(item);

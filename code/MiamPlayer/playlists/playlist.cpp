@@ -22,7 +22,7 @@
 #include <QtDebug>
 
 Playlist::Playlist(QWidget *parent) :
-	QTableView(parent), _dropDownIndex(NULL), _hash(0), _id(0), _isModified(false)
+	QTableView(parent), _dropDownIndex(NULL), _hash(0), _id(0)
 {
 	_playlistModel = new PlaylistModel(this);
 
@@ -139,14 +139,33 @@ uint Playlist::generateNewHash() const
 
 bool Playlist::isModified() const
 {
-	return _hash != 0 && _hash != generateNewHash();
+	if (_hash == 0) {
+		if (_playlistModel->mediaPlaylist()->isEmpty()) {
+			// Closing playlist but without any tracks
+			qDebug() << Q_FUNC_INFO << "Closing playlist but without any tracks";
+			return false;
+		} else {
+			// Closing playlist, new playlist never saved before, with tracks
+			qDebug() << Q_FUNC_INFO << "Closing playlist, new playlist never saved before, with tracks";
+			return true;
+		}
+	} else {
+		if (_playlistModel->mediaPlaylist()->isEmpty()) {
+			// All tracks were removed
+			qDebug() << Q_FUNC_INFO << "All tracks were removed";
+			return true;
+		} else {
+			// Check old and new hash
+			qDebug() << Q_FUNC_INFO << "Check old and new hash" << _hash << this->generateNewHash();
+			return _hash != this->generateNewHash();
+		}
+	}
 }
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	if (_playlistModel->insertMedias(rowIndex, medias)) {
 		this->autoResize();
-		_isModified = true;
 	}
 }
 
@@ -158,7 +177,6 @@ void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
 	}
 	if (_playlistModel->insertMedias(rowIndex, tracks)) {
 		this->autoResize();
-		_isModified = true;
 	}
 }
 

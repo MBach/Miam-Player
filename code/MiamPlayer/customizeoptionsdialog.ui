@@ -3115,7 +3115,7 @@
          <property name="title">
           <string>Playlists</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_13">
+         <layout class="QVBoxLayout" name="verticalLayout_14">
           <item>
            <widget class="QLabel" name="labelClosePlaylist">
             <property name="font">
@@ -3135,8 +3135,51 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widgetClosePlaylist" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QRadioButton" name="radioButtonAskAction">
+              <property name="text">
+               <string>Let me decide</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonSavePlaylist">
+              <property name="text">
+               <string>Save</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonDiscardPlaylist">
+              <property name="text">
+               <string>Discard</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QWidget" name="widgetKeepPlaylists_2" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -3146,38 +3189,123 @@
              <property name="rightMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="QRadioButton" name="radioButtonAskAction">
-               <property name="text">
-                <string>Let me decide</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButtonSavePlaylist">
-               <property name="text">
-                <string>Save</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButtonDiscardPlaylist">
-               <property name="text">
-                <string>Discard</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
             </layout>
            </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelResizeColumns">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>What is the behaviour for columns?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QRadioButton" name="radioButtonResizeColumnsContent">
+              <property name="text">
+               <string>Resize columns to contents</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_5</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonKeepAllColumnsVisible">
+              <property name="toolTip">
+               <string>Currently under development</string>
+              </property>
+              <property name="text">
+               <string>Keep all columns visible</string>
+              </property>
+              <property name="icon">
+               <iconset resource="mp.qrc">
+                <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_5</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxStartupExit">
+         <property name="title">
+          <string>Startup &amp;&amp; Exit</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="labelRestorePlaylists">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Would you like to restore existing playlists at startup?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="radioButtonRestorePlaylists">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonDontRestorePlaylists">
+              <property name="text">
+               <string>No</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QLabel" name="labelKeepPlaylists">
@@ -3188,6 +3316,46 @@
             </property>
             <property name="text">
              <string>Would you like to keep your playlists in memory before exiting?</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QRadioButton" name="radioButtonKeepPlaylists">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_3</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonClearPlaylists">
+              <property name="text">
+               <string>No</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_3</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelNoteUnsavedPlaylists">
+            <property name="text">
+             <string>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -3206,136 +3374,9 @@
              <property name="rightMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="QRadioButton" name="radioButtonKeepPlaylists">
-               <property name="text">
-                <string>Yes</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButtonClearPlaylists">
-               <property name="text">
-                <string>No</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelRestorePlaylists">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Would you like to restore existing playlists at startup?</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="widgetRestorePlaylists" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_10">
-             <property name="leftMargin">
+             <property name="bottomMargin">
               <number>0</number>
              </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QRadioButton" name="radioButtonRestorePlaylists">
-               <property name="text">
-                <string>Yes</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButtonDontRestorePlaylists">
-               <property name="text">
-                <string>No</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>What is the behaviour for columns?</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="widgetResizeToContents" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_13">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QRadioButton" name="radioButtonResizeColumnsContent">
-               <property name="text">
-                <string>Resize columns to contents</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QRadioButton" name="radioButtonKeepAllColumnsVisible">
-               <property name="toolTip">
-                <string>Currently under development</string>
-               </property>
-               <property name="text">
-                <string>Keep all columns visible</string>
-               </property>
-               <property name="icon">
-                <iconset resource="mp.qrc">
-                 <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>16</width>
-                 <height>16</height>
-                </size>
-               </property>
-              </widget>
-             </item>
             </layout>
            </widget>
           </item>
@@ -3563,6 +3604,10 @@
   </connection>
  </connections>
  <buttongroups>
+  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

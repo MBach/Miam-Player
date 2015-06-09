@@ -8,19 +8,11 @@
 
 PlaylistManager::PlaylistManager(TabPlaylist *parent)
 	: QObject(parent), _tabPlaylists(parent)
-{
-}
+{}
 
-void PlaylistManager::saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting, bool isExiting)
+uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiting)
 {
-	if (this->savePlaylist(p, isOverwriting, isExiting)) {
-		emit aboutToRemovePlaylist(index);
-	}
-}
-
-int PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiting)
-{
-	int id = -1;
+	uint id = 0;
 	auto _db = SqlDatabase::instance();
 
 	int index = -1;
@@ -31,27 +23,36 @@ int PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExitin
 			break;
 		}
 	}
-	qDebug() << Q_FUNC_INFO << index << isOverwriting << isExiting;
 
 	if (p && !p->mediaPlaylist()->isEmpty()) {
-		QString playlistName = _tabPlaylists->tabBar()->tabText(index);
 
 		uint generateNewHash = p->generateNewHash();
+		PlaylistDAO playlist;
 
 		// Check first if one has the same playlist in database
-		PlaylistDAO playlist;
 		for (PlaylistDAO dao : _db->selectPlaylists()) {
 			if (dao.checksum().toUInt() == generateNewHash) {
-				// When exiting, don't show this Dialog and just quit!
-				if (isOverwriting && isExiting) {
-					qDebug() << Q_FUNC_INFO << "exiting!";
-					return 1;
-				}
+				playlist = dao;
+				break;
+			}
+		}
+
+		// No playlists with this checksum were found -> it's possible to write/overwrite this one
+		if (playlist.id().isEmpty()) {
+			// Playlist object
+			if (p->id() > 0) {
+				playlist.setId(QString::number(p->id()));
+			}
+		} else {
+			if (isExiting) {
+				// When exiting, don't show a Dialog and just quit!
+				return 1;
+			} else {
 				// Playlist exists in database and user is not exiting application -> showing a popup
 				QMessageBox mb;
 				mb.setIcon(QMessageBox::Information);
 				mb.setText(tr("There is exactly the same playlist in the Playlist Manager (known as '%1'), "\
-							  "therefore it's not possible to add it twice.").arg(dao.title()));
+							  "therefore it's not possible to add it twice.").arg(playlist.title()));
 				mb.addButton(QMessageBox::Cancel);
 				mb.addButton(QMessageBox::Discard);
 				mb.setDefaultButton(QMessageBox::Cancel);
@@ -59,27 +60,14 @@ int PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExitin
 				int ret = mb.exec();
 				switch (ret) {
 				case QMessageBox::Cancel:
-					if (isExiting) {
-						return 1;
-					} else {
-						return 0;
-					}
+					return 0;
 				case QMessageBox::Discard:
 					return 1;
 				}
-				break;
-			//} else if (isOverwriting && p->hash() == dao.checksum().toUInt()) {
-			} else if (isOverwriting && p->isModified()) {
-				playlist = dao;
-				break;
 			}
 		}
 
-		// Playlist wasn't found so we cannot overwrite it
-		if (playlist.checksum().isEmpty()) {
-			isOverwriting = false;
-		}
-		playlist.setTitle(playlistName);
+		playlist.setTitle(p->title());
 		playlist.setChecksum(QString::number(generateNewHash));
 
 		std::list<TrackDAO> tracks;
@@ -95,4 +83,11 @@ int PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExitin
 		p->setHash(generateNewHash);
 	}
 	return id;
+}
+
+void PlaylistManager::saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting)
+{
+	if (this->savePlaylist(p, isOverwriting, false) != 0) {
+		emit aboutToRemovePlaylist(index);
+	}
 }

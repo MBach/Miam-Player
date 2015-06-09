@@ -15,10 +15,10 @@ private:
 public:
 	explicit PlaylistManager(TabPlaylist *parent);
 
-	int savePlaylist(Playlist *p, bool isOverwriting, bool isExiting);
-
 public slots:
-	void saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting = false, bool isExiting = false);
+	uint savePlaylist(Playlist *p, bool isOverwriting, bool isExiting);
+
+	void saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting = false);
 
 signals:
 	void aboutToRemovePlaylist(int);
