@@ -10,6 +10,11 @@ PlaylistManager::PlaylistManager(TabPlaylist *parent)
 	: QObject(parent), _tabPlaylists(parent)
 {}
 
+bool PlaylistManager::deletePlaylist(uint playlistId)
+{
+	return SqlDatabase::instance()->removePlaylist(playlistId);
+}
+
 uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiting)
 {
 	uint id = 0;
@@ -22,6 +27,10 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 			index = i;
 			break;
 		}
+	}
+
+	if (isExiting) {
+		qDebug() << Q_FUNC_INFO << "about to save automatically" << p->title();
 	}
 
 	if (p && !p->mediaPlaylist()->isEmpty()) {
@@ -67,6 +76,8 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 			}
 		}
 
+		qDebug() << Q_FUNC_INFO << "about to save 2" << p->title();
+
 		playlist.setTitle(p->title());
 		playlist.setChecksum(QString::number(generateNewHash));
 
@@ -80,6 +91,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		}
 
 		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
+		p->setId(id);
 		p->setHash(generateNewHash);
 	}
 	return id;

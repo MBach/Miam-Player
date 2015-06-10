@@ -139,7 +139,7 @@ void PlaylistDialog::open()
 
 	for (int i = 0; i < _playlists.count(); i++) {
 		Playlist *p = _playlists.at(i);
-		if (p && p->isModified()) {
+		if (p && p->id() == 0 && !p->mediaPlaylist()->isEmpty()) {
 			QStandardItem *item = new QStandardItem(p->title());
 			_unsavedPlaylistModel->appendRow(item);
 			_unsaved.insert(item, p);
@@ -164,15 +164,9 @@ void PlaylistDialog::deleteSavedPlaylists()
 		return;
 	}
 
-	QList<PlaylistDAO> playlists;
 	for (QModelIndex index : indexes) {
-		PlaylistDAO tmpPlaylist;
-		tmpPlaylist.setId(index.data(PlaylistID).toString());
-		playlists << tmpPlaylist;
-	}
-	//
-	if (SqlDatabase::instance()->removePlaylists(playlists)) {
-		emit aboutToRemoveTabs(playlists);
+		qDebug() << Q_FUNC_INFO << index.data(PlaylistID).toUInt() << index.data(PlaylistID).toString();
+		emit aboutToDeletePlaylist(index.data(PlaylistID).toUInt());
 	}
 
 	this->clearPreview(false);

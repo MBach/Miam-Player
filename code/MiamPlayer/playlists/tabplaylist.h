@@ -95,7 +95,7 @@ public slots:
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();
 
-	void removeTabs(const QList<PlaylistDAO> &playlists);
+	void deletePlaylist(uint playlistId);
 
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);

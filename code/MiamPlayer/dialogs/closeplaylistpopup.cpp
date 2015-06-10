@@ -43,7 +43,7 @@ void ClosePlaylistPopup::execActionFromClosePopup(QAbstractButton *action)
 	if (action == _replaceButton) {
 		emit aboutToSavePlaylist(true);
 	} else if (action == _deleteButton){
-		emit aboutToDeletePlaylist(_playlist);
+		emit aboutToDeletePlaylist(_playlist->id());
 	} else {
 		// Standard enumeration
 		switch(buttonBox->standardButton(action)) {

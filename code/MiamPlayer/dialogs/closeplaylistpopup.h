@@ -35,7 +35,7 @@ signals:
 	void aboutToCancel();
 	void aboutToRemoveTab(int index);
 	void aboutToSavePlaylist(bool overwrite);
-	void aboutToDeletePlaylist(Playlist *);
+	void aboutToDeletePlaylist(uint playlistId);
 };
 
 #endif // CLOSEPLAYLISTPOPUP_H

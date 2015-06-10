@@ -16,6 +16,8 @@ public:
 	explicit PlaylistManager(TabPlaylist *parent);
 
 public slots:
+	bool deletePlaylist(uint playlistId);
+
 	uint savePlaylist(Playlist *p, bool isOverwriting, bool isExiting);
 
 	void saveAndRemovePlaylist(Playlist *p, int index, bool isOverwriting = false);

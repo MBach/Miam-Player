@@ -508,9 +508,11 @@ void MainWindow::changeEvent(QEvent *event)
 void MainWindow::closeEvent(QCloseEvent *)
 {
 	auto settings = SettingsPrivate::instance();
+
 	if (settings->playbackKeepPlaylists()) {
 		for (int i = 0; i < tabPlaylists->count(); i++) {
 			Playlist *p = tabPlaylists->playlist(i);
+			qDebug() << Q_FUNC_INFO << "about to save automatically" << p->title();
 			tabPlaylists->playlistManager()->savePlaylist(p, true, true);
 		}
 	}
@@ -778,7 +780,7 @@ void MainWindow::openPlaylistManager()
 	PlaylistDialog *playlistDialog = new PlaylistDialog(this);
 	playlistDialog->setPlaylists(tabPlaylists->playlists());
 	connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
-	connect(playlistDialog, &PlaylistDialog::aboutToRemoveTabs, tabPlaylists, &TabPlaylist::removeTabs);
+	connect(playlistDialog, &PlaylistDialog::aboutToDeletePlaylist, tabPlaylists, &TabPlaylist::deletePlaylist);
 	connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
 	connect(playlistDialog, &PlaylistDialog::aboutToRenameDAO, tabPlaylists, &TabPlaylist::renamePlaylistDAO);
 	connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);

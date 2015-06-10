@@ -334,9 +334,10 @@ void TabPlaylist::savePlaylist(Playlist *p)
 {
 	uint playlistId = _playlistManager->savePlaylist(p, false, false);
 	for (int i = 0; i < this->count(); i++) {
-		Playlist *p = this->playlist(i);
-		if (p->id() == playlistId) {
-			this->setTabIcon(i, this->defaultIcon(QIcon::Normal));
+		Playlist *p2 = this->playlist(i);
+		if (p2->id() == playlistId) {
+			this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
+			break;
 		}
 	}
 }
@@ -371,14 +372,19 @@ void TabPlaylist::removeCurrentPlaylist()
 	emit tabCloseRequested(currentIndex());
 }
 
-void TabPlaylist::removeTabs(const QList<PlaylistDAO> &daos)
+void TabPlaylist::deletePlaylist(uint playlistId)
 {
-	for (PlaylistDAO dao : daos) {
-		for (int tabIndex = count() - 1; tabIndex >= 0; tabIndex--) {
-			if (playlist(tabIndex)->id() == dao.id().toUInt()) {
-				this->removeTabFromCloseButton(tabIndex);
-				break;
-			}
+	int index = -1;
+	for (int i = 0; i < playlists().count(); i++) {
+		Playlist *tmp = playlist(i);
+		if (tmp->id() == playlistId) {
+			index = i;
+			break;
+		}
+	}
+	if (_playlistManager->deletePlaylist(playlistId)) {
+		if (index != -1) {
+			this->removeTabFromCloseButton(index);
 		}
 	}
 }
@@ -447,9 +453,7 @@ int TabPlaylist::closePlaylist(int index)
 			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](bool overwrite) {
 				emit aboutToSavePlaylist(p, index, overwrite);
 			});
-			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, [=]() {
-
-			});
+			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::deletePlaylist);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [&returnCode]() {
 				// Interrupt exit!

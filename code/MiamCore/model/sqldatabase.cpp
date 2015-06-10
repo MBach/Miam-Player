@@ -260,7 +260,23 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 	return b;
 }
 
-bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
+bool SqlDatabase::removePlaylist(uint playlistId)
+{
+	this->transaction();
+	/// XXX: CASCADE not working?
+	QSqlQuery children(*this);
+	children.prepare("DELETE FROM playlistTracks WHERE playlistId = :id");
+	children.bindValue(":id", playlistId);
+	children.exec();
+
+	QSqlQuery remove(*this);
+	remove.prepare("DELETE FROM playlists WHERE id = :id");
+	remove.bindValue(":id", playlistId);
+	remove.exec();
+	return this->commit();
+}
+
+/*bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 {
 	this->transaction();
 	for (PlaylistDAO playlist : playlists) {
@@ -276,7 +292,7 @@ bool SqlDatabase::removePlaylists(const QList<PlaylistDAO> &playlists)
 		remove.exec();
 	}
 	return this->commit();
-}
+}*/
 
 void SqlDatabase::removePlaylistsFromHost(const QString &host)
 {

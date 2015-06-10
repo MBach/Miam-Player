@@ -80,7 +80,7 @@ signals:
 	void aboutToSavePlaylist(Playlist *playlist);
 	void aboutToRenamePlaylist(Playlist *playlist);
 	void aboutToRenameDAO(const PlaylistDAO &dao);
-	void aboutToRemoveTabs(const QList<PlaylistDAO> &playlists);
+	void aboutToDeletePlaylist(uint playlistId);
 };
 
 #endif // PLAYLISTDIALOG_H

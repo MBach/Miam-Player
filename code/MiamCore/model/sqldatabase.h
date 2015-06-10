@@ -54,7 +54,8 @@ public:
 	bool insertIntoTableTracks(const TrackDAO &track);
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
-	bool removePlaylists(const QList<PlaylistDAO> &playlists);
+	bool removePlaylist(uint playlistId);
+	//bool removePlaylists(const QList<PlaylistDAO> &playlists);
 	void removePlaylistsFromHost(const QString &host);
 	void removeRecordsFromHost(const QString &host);
 
