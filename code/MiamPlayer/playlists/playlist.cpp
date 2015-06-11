@@ -142,21 +142,17 @@ bool Playlist::isModified() const
 	if (_hash == 0) {
 		if (_playlistModel->mediaPlaylist()->isEmpty()) {
 			// Closing playlist but without any tracks
-			qDebug() << Q_FUNC_INFO << "Closing playlist but without any tracks";
 			return false;
 		} else {
 			// Closing playlist, new playlist never saved before, with tracks
-			qDebug() << Q_FUNC_INFO << "Closing playlist, new playlist never saved before, with tracks";
 			return true;
 		}
 	} else {
 		if (_playlistModel->mediaPlaylist()->isEmpty()) {
 			// All tracks were removed
-			qDebug() << Q_FUNC_INFO << "All tracks were removed";
 			return true;
 		} else {
 			// Check old and new hash
-			qDebug() << Q_FUNC_INFO << "Check old and new hash" << _hash << this->generateNewHash();
 			return _hash != this->generateNewHash();
 		}
 	}

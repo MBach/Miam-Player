@@ -34,8 +34,8 @@ private:
 	Q_ENUMS(PlaylistRoles)
 
 public:
-	enum PlaylistRoles { PlaylistObjectPointer	= Qt::UserRole + 1,
-						 PlaylistID				= Qt::UserRole + 2};
+	enum PlaylistRoles { PlaylistID			= Qt::UserRole + 1,
+						 PlaylistModified	= Qt::UserRole + 2};
 
 	explicit PlaylistDialog(QWidget *parent = NULL);
 
@@ -77,7 +77,7 @@ private slots:
 
 signals:
 	void aboutToLoadPlaylist(uint playlistId);
-	void aboutToSavePlaylist(Playlist *playlist);
+	void aboutToSavePlaylist(Playlist *playlist, bool overwrite);
 	void aboutToRenamePlaylist(Playlist *playlist);
 	void aboutToRenameDAO(const PlaylistDAO &dao);
 	void aboutToDeletePlaylist(uint playlistId);

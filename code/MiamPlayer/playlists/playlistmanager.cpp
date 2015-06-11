@@ -91,6 +91,9 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		}
 
 		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
+
+		qDebug() << Q_FUNC_INFO << "about to save 3" << id << isOverwriting << tracks.size();
+
 		p->setId(id);
 		p->setHash(generateNewHash);
 	}

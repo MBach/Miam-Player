@@ -330,9 +330,9 @@ void TabPlaylist::moveTracksUp()
 	}
 }
 
-void TabPlaylist::savePlaylist(Playlist *p)
+void TabPlaylist::savePlaylist(Playlist *p, bool overwrite)
 {
-	uint playlistId = _playlistManager->savePlaylist(p, false, false);
+	uint playlistId = _playlistManager->savePlaylist(p, overwrite, false);
 	for (int i = 0; i < this->count(); i++) {
 		Playlist *p2 = this->playlist(i);
 		if (p2->id() == playlistId) {

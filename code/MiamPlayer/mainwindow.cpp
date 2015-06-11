@@ -513,7 +513,8 @@ void MainWindow::closeEvent(QCloseEvent *)
 		for (int i = 0; i < tabPlaylists->count(); i++) {
 			Playlist *p = tabPlaylists->playlist(i);
 			qDebug() << Q_FUNC_INFO << "about to save automatically" << p->title();
-			tabPlaylists->playlistManager()->savePlaylist(p, true, true);
+			bool isOverwritting = p->id() != 0;
+			tabPlaylists->playlistManager()->savePlaylist(p, isOverwritting, true);
 		}
 	}
 	QCoreApplication::quit();

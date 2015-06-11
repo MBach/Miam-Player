@@ -67,6 +67,19 @@ PlaylistDialog::PlaylistDialog(QWidget *parent) :
 	connect(unsavedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistDialog::populatePreviewFromUnsaved);
 	connect(savedPlaylists->selectionModel(), &QItemSelectionModel::selectionChanged, this, &PlaylistDialog::populatePreviewFromSaved);
 	connect(loadPlaylists, &QPushButton::clicked, this, &PlaylistDialog::loadSelectedPlaylists);
+	connect(savePlaylists, &QPushButton::clicked, this, [=]() {
+		for (QModelIndex idx : savedPlaylists->selectionModel()->selectedIndexes()) {
+			uint playlistId = idx.data(PlaylistID).toUInt();
+			for (int i = 0; i < _playlists.count(); i++) {
+				Playlist *p = _playlists.at(i);
+				if (playlistId == p->id()) {
+					emit aboutToSavePlaylist(p, true);
+					break;
+				}
+			}
+		}
+		this->updatePlaylists();
+	});
 	connect(deletePlaylists, &QPushButton::clicked, this, &PlaylistDialog::deleteSavedPlaylists);
 
 	connect(unsavedPlaylists->model(), &QStandardItemModel::rowsAboutToBeRemoved, this, &PlaylistDialog::dropAutoSavePlaylists);
@@ -79,6 +92,8 @@ PlaylistDialog::PlaylistDialog(QWidget *parent) :
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistDialog::exportSelectedPlaylist);
 }
+
+#include <QLineEdit>
 
 /** Add drag & drop processing. */
 bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
@@ -93,7 +108,17 @@ bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
 		if (keyEvent->key() == Qt::Key_Delete) {
 			this->deleteSavedPlaylists();
 		} else if (keyEvent->key() == Qt::Key_Enter || keyEvent->key() == Qt::Key_Return) {
-			this->loadSelectedPlaylists();
+
+			// If one is editing an item, don't load the playlist but rename it instead
+			QList<QLineEdit*> ol = this->findChildren<QLineEdit*>();
+			if (ol.isEmpty()) {
+				this->loadSelectedPlaylists();
+			} else {
+				// Only one item can be edited at the same time
+				if (auto item = _savedPlaylistModel->itemFromIndex(savedPlaylists->currentIndex())) {
+					this->renameItem(item);
+				}
+			}
 		}
 		return true;
 	} else {
@@ -178,7 +203,7 @@ void PlaylistDialog::dropAutoSavePlaylists(const QModelIndex &, int start, int e
 	for (int i = start; i <= end; i++) {
 		if (auto item = _unsavedPlaylistModel->item(start)) {
 			Playlist *playlist = _unsaved.value(item);
-			emit aboutToSavePlaylist(playlist);
+			emit aboutToSavePlaylist(playlist, false);
 			_unsaved.remove(item);
 		}
 	}
@@ -238,8 +263,6 @@ void PlaylistDialog::populatePreviewFromSaved(const QItemSelection &, const QIte
 	this->clearPreview(!empty);
 	if (indexes.size() == 1) {
 		uint playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toUInt();
-		qDebug() << Q_FUNC_INFO << "playlistId" << playlistId;
-
 		QList<TrackDAO> tracks = SqlDatabase::instance()->selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {
 			TrackDAO track = tracks.at(i);
@@ -258,6 +281,26 @@ void PlaylistDialog::populatePreviewFromSaved(const QItemSelection &, const QIte
 	loadPlaylists->setDisabled(empty);
 	deletePlaylists->setDisabled(empty);
 	exportPlaylists->setEnabled(indexes.size() == 1);
+
+	// Some work for the Save button
+	if (empty) {
+		savePlaylists->setEnabled(false);
+	} else {
+		bool allPlaylistsAreModified = true;
+		QMap<uint, Playlist*> map;
+		for (int i = 0; i < _playlists.count(); i++) {
+			Playlist *p = _playlists.at(i);
+			map.insert(p->id(), p);
+		}
+		for (QModelIndex idx : indexes) {
+			uint playlistId = idx.data(PlaylistID).toUInt();
+			if (map.contains(playlistId)) {
+				Playlist *p = map.value(playlistId);
+				allPlaylistsAreModified = allPlaylistsAreModified && p->isModified();
+			}
+		}
+		savePlaylists->setEnabled(allPlaylistsAreModified);
+	}
 }
 
 void PlaylistDialog::populatePreviewFromUnsaved(const QItemSelection &, const QItemSelection &)
@@ -306,11 +349,26 @@ void PlaylistDialog::updatePlaylists()
 	_savedPlaylistModel->clear();
 	_savedPlaylistModel->blockSignals(true);
 
+	QMap<uint, Playlist*> map;
+	for (int i = 0; i < _playlists.count(); i++) {
+		Playlist *p = _playlists.at(i);
+		if (p->id() != 0) {
+			map.insert(p->id(), p);
+		}
+	}
+
 	for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
 		if (playlist.icon().isEmpty()) {
-			item->setIcon(QIcon(":/icons/playlist"));
+			Playlist *p = map.value(playlist.id().toUInt());
+			if (p && p->isModified()) {
+				item->setIcon(QIcon(":/icons/playlist_modified"));
+				item->setData(true, PlaylistModified);
+				item->setToolTip(tr("This playlist has changed"));
+			} else {
+				item->setIcon(QIcon(":/icons/playlist"));
+			}
 		} else {
 			item->setIcon(QIcon(playlist.icon()));
 		}
@@ -318,4 +376,10 @@ void PlaylistDialog::updatePlaylists()
 		_saved.insert(item, playlist);
 	}
 	_savedPlaylistModel->blockSignals(false);
+
+	// Reset buttons status
+	loadPlaylists->setEnabled(false);
+	savePlaylists->setEnabled(false);
+	deletePlaylists->setEnabled(false);
+	exportPlaylists->setEnabled(false);
 }
