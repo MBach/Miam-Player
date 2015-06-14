@@ -33,7 +33,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(tabBar, &TabBar::tabRenamed, this, [=](int index, const QString &text) {
 		Playlist *p = playlist(index);
 		p->setTitle(text);
-		//p->setModified(true);
 		this->setTabIcon(index, this->defaultIcon(QIcon::Normal));
 	});
 
@@ -128,7 +127,6 @@ void TabPlaylist::init()
 	blockSignals(true);
 	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
 		for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
-			qDebug() << Q_FUNC_INFO << playlist.id().toUInt() << playlist.title();
 			this->loadPlaylist(playlist.id().toUInt());
 		}
 	}
@@ -145,19 +143,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 	auto _db = SqlDatabase::instance();
 	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
 
-	// Do not load the playlist if it's already displayed
-	for (int i = 0; i < playlists().count(); i++) {
-		Playlist *p = this->playlist(i);
-		bool ok = false;
-		uint checksum = playlistDao.checksum().toUInt(&ok);
-		//if (ok && checksum == p->hash()) {
-		if (ok) {
-			/// TODO: ask one if if want to reload the playlist or not
-			this->setCurrentIndex(i);
-			qDebug() << Q_FUNC_INFO << "return";
-			//return;
-		}
-	}
+	/// TODO: Do not load the playlist if it's already displayed
 
 	int index = currentIndex();
 	if (index >= 0) {
@@ -176,11 +162,10 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
-	qDebug() << Q_FUNC_INFO << playlistId;
 	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
-	qDebug() << Q_FUNC_INFO << tracks.isEmpty();
 	playlist->insertMedias(-1, tracks);
 	playlist->setId(playlistId);
+	playlist->setTitle(playlistDao.title());
 
 	this->setTabIcon(index, defaultIcon(QIcon::Disabled));
 }

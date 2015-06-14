@@ -16,8 +16,8 @@
 #include <QtDebug>
 
 /** Constructor. */
-SearchDialog::SearchDialog(SqlDatabase *db, MainWindow *mainWindow) :
-	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _db(db), _isMaximized(false)
+SearchDialog::SearchDialog(MainWindow *mainWindow) :
+	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _isMaximized(false)
 {
 	this->setupUi(this);
 	_artists->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -179,6 +179,15 @@ void SearchDialog::animate(qreal startValue, qreal stopValue)
 	_animation->start();
 }
 
+void SearchDialog::moveSearchDialog()
+{
+	QPoint globalMW = _mainWindow->mapToGlobal(QPoint(0, 0));
+	//QPoint globalSB = this->mapToGlobal(_mainWindow->searchBar->rect().topRight());
+	//QPoint globalSB = this->mapToParent(_mainWindow->widgetSearchBar->rect().bottomRight());
+	QPoint globalSB = this->mapToGlobal(_mainWindow->tabPlaylists->frameGeometry().topLeft());
+	move(globalSB);
+}
+
 void SearchDialog::clear()
 {
 	//this->close();
@@ -285,6 +294,7 @@ void SearchDialog::search(const QString &text)
 		return;
 	}
 
+	auto _db = SqlDatabase::instance();
 	if (!_db->isOpen()) {
 		_db->open();
 	}
@@ -353,7 +363,8 @@ void SearchDialog::searchLabelWasClicked(const QString &link)
 		_isMaximized = false;
 		iconSearchMore->setPixmap(QPixmap(":/icons/search"));
 		labelSearchMore->setText(tr("<a href='#more' style='text-decoration: none; color:#3399FF;'>Search for more results...</a>"));
-		_mainWindow->moveSearchDialog();
+		/// FIXME
+		//_mainWindow->moveSearchDialog();
 		this->resize(_oldRect.size());
 		_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 		_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

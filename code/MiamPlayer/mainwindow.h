@@ -48,8 +48,6 @@ public:
 	/** Plugins. */
 	void loadPlugins();
 
-	void moveSearchDialog();
-
 	inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
 
 	/** Set up all actions and behaviour. */

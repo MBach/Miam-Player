@@ -55,7 +55,9 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		} else {
 			if (isExiting) {
 				// When exiting, don't show a Dialog and just quit!
-				return 1;
+				if (!isOverwriting) {
+					return 1;
+				}
 			} else {
 				// Playlist exists in database and user is not exiting application -> showing a popup
 				QMessageBox mb;
@@ -76,7 +78,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 			}
 		}
 
-		qDebug() << Q_FUNC_INFO << "about to save 2" << p->title();
+		qDebug() << Q_FUNC_INFO << "about to save 2" << p->title() << playlist.title();
 
 		playlist.setTitle(p->title());
 		playlist.setChecksum(QString::number(generateNewHash));

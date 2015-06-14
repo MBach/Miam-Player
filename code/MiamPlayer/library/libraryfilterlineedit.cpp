@@ -36,7 +36,7 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)
 {
 	LineEdit::focusInEvent(event);
-	// Alert registered objets that one has clicked inside this widget.
+	// Notify registered objets that one has clicked inside this widget.
 	// Useful to redisplay search results dialog
 	if (!text().isEmpty()) {
 		emit focusIn();

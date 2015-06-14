@@ -2,7 +2,6 @@
 #define SEARCHDIALOG_H
 
 #include "abstractsearchdialog.h"
-#include "model/sqldatabase.h"
 #include "ui_searchdialog.h"
 
 #include <QPropertyAnimation>
@@ -14,7 +13,6 @@ class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 	Q_OBJECT
 private:
 	MainWindow *_mainWindow;
-	SqlDatabase *_db;
 
 	/** Used to make this dialog transparent to have a nice fading effect. */
 	QPropertyAnimation *_animation;
@@ -30,7 +28,7 @@ private:
 
 public:
 	/** Constructor. */
-	explicit SearchDialog(SqlDatabase *db, MainWindow *mainWindow);
+	explicit SearchDialog(MainWindow *mainWindow);
 
 	/** Required interface from AbstractSearchDialog class. */
 	virtual void addSource(QCheckBox *checkBox);
@@ -62,6 +60,8 @@ private:
 
 public slots:
 	void clear();
+
+	void moveSearchDialog();
 
 	/** Process results sent back from various search engines (local, remote). */
 	virtual void processResults(Request type, const QStandardItemList &results);

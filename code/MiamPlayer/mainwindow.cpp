@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog;
 
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-	_searchDialog = new SearchDialog(SqlDatabase::instance(), this);
+	_searchDialog = new SearchDialog(this);
 
 	this->installEventFilter(this);
 }
@@ -145,14 +145,6 @@ void MainWindow::loadPlugins()
 	} else {
 		customizeOptionsDialog->listWidget->setCurrentRow(row);
 	}
-}
-
-void MainWindow::moveSearchDialog()
-{
-	QPoint globalMW = this->mapToGlobal(QPoint(0, 0));
-	QPoint globalSB = searchBar->mapToGlobal(searchBar->rect().topRight());
-	_searchDialog->move(globalSB - globalMW);
-	_searchDialog->setVisible(true);
 }
 
 /** Set up all actions and behaviour. */
@@ -350,16 +342,18 @@ void MainWindow::setupActions()
 				_searchDialog->clear();
 			} else {
 				_searchDialog->setSearchExpression(text);
-				this->moveSearchDialog();
-				searchBar->setFocus();
+				_searchDialog->moveSearchDialog();
+				_searchDialog->show();
+				_searchDialog->raise();
 			}
 		}
 	});
-	connect(searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
+	/*connect(searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
 		if (!_searchDialog->isVisible() && settings->isExtendedSearchVisible()) {
-			this->moveSearchDialog();
+			_searchDialog->moveSearchDialog();
+			_searchDialog->setVisible(true);
 		}
-	});
+	});*/
 
 	// Core
 	connect(mp, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
@@ -435,11 +429,7 @@ void MainWindow::setupActions()
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 
 	// Splitter
-	connect(splitter, &QSplitter::splitterMoved, this, [=]() {
-		if (_searchDialog->isVisible()) {
-			this->moveSearchDialog();
-		}
-	});
+	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
 }
 
 /** Update fonts for menu and context menus. */
