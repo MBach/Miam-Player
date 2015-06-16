@@ -12,7 +12,6 @@
 #include "dialogs/playlistdialog.h"
 #include "library/librarytreeview.h"
 #include "playbackmodewidgetfactory.h"
-#include "searchdialog.h"
 
 #include "uniquelibrary.h"
 #include "ui_mainwindow.h"
@@ -30,8 +29,6 @@ private:
 	/** WIP. View object: display all your tracks in a huge and page. */
 	UniqueLibrary *_uniqueLibrary;
 
-	SearchDialog *_searchDialog;
-
 public:
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
@@ -48,7 +45,7 @@ public:
 	/** Plugins. */
 	void loadPlugins();
 
-	inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
+	//inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
 
 	/** Set up all actions and behaviour. */
 	void setupActions();

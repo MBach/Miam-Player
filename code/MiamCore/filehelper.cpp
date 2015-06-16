@@ -51,13 +51,13 @@ FileHelper::FileHelper(const QMediaContent &track)
 FileHelper::FileHelper(const QString &filePath)
 	: _file(NULL)
 {
-	qDebug() << Q_FUNC_INFO << filePath;
+	//qDebug() << Q_FUNC_INFO << filePath;
 	if (!init(filePath)) {
 		//init(filePath.toStdString().c_str());
-		qDebug() << Q_FUNC_INFO << "couldn't init file, second chance!";
+		//qDebug() << Q_FUNC_INFO << "couldn't init file, second chance!";
 		bool b = init(filePath.toStdString().c_str());
 		if (!b) {
-			qDebug() << Q_FUNC_INFO << "couldn't init second chance :(";
+			//qDebug() << Q_FUNC_INFO << "couldn't init second chance :(";
 		}
 	}
 }

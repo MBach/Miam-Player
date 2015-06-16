@@ -120,7 +120,7 @@
        </property>
        <property name="icon">
         <iconset resource="mp.qrc">
-         <normaloff>:/icons/win/closeTabsHover</normaloff>:/icons/win/closeTabsHover</iconset>
+         <normaloff>:/icons/config/close_tabs_hover.png</normaloff>:/icons/config/close_tabs_hover.png</iconset>
        </property>
        <property name="flat">
         <bool>true</bool>

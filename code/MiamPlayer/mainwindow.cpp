@@ -43,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	customizeOptionsDialog = new CustomizeOptionsDialog;
 
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-	_searchDialog = new SearchDialog(this);
 
 	this->installEventFilter(this);
 }
@@ -97,6 +96,7 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 void MainWindow::init()
 {
+	searchBar->init(this);
 	library->init();
 	_uniqueLibrary->init();
 	tagEditor->init();
@@ -335,25 +335,6 @@ void MainWindow::setupActions()
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	library->setSearchBar(searchBar);
-	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-		library->findMusic(text);
-		if (settings->isExtendedSearchVisible()) {
-			if (text.isEmpty()) {
-				_searchDialog->clear();
-			} else {
-				_searchDialog->setSearchExpression(text);
-				_searchDialog->moveSearchDialog();
-				_searchDialog->show();
-				_searchDialog->raise();
-			}
-		}
-	});
-	/*connect(searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
-		if (!_searchDialog->isVisible() && settings->isExtendedSearchVisible()) {
-			_searchDialog->moveSearchDialog();
-			_searchDialog->setVisible(true);
-		}
-	});*/
 
 	// Core
 	connect(mp, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
@@ -427,9 +408,6 @@ void MainWindow::setupActions()
 
 	// Shortcuts
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-
-	// Splitter
-	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
 }
 
 /** Update fonts for menu and context menus. */

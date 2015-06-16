@@ -74,6 +74,8 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 	});
 
 	_mainWindow->installEventFilter(this);
+	//_mainWindow->searchBar->installEventFilter(this);
+	//this->installEventFilter(this);
 
 	this->setVisible(false);
 	_oldRect = this->geometry();
@@ -81,6 +83,36 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 	connect(_artists, &QListView::doubleClicked, this, &SearchDialog::artistWasDoubleClicked);
 	connect(_albums, &QListView::doubleClicked, this, &SearchDialog::albumWasDoubleClicked);
 	connect(_tracks, &QListView::doubleClicked, this, &SearchDialog::trackWasDoubleClicked);
+
+	// Splitter
+	connect(_mainWindow->splitter, &QSplitter::splitterMoved, this, &SearchDialog::moveSearchDialog);
+
+	auto settings = SettingsPrivate::instance();
+	connect(_mainWindow->searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
+		_mainWindow->library->findMusic(text);
+		if (settings->isExtendedSearchVisible()) {
+			if (text.isEmpty()) {
+				this->clear();
+			} else {
+				this->setSearchExpression(text);
+				this->moveSearchDialog();
+				this->show();
+				this->raise();
+			}
+		}
+	});
+	/*connect(_mainWindow->searchBar, &LibraryFilterLineEdit::focusIn, this, [=] () {
+		if (!this->isVisible() && settings->isExtendedSearchVisible()) {
+			this->moveSearchDialog();
+			this->setVisible(true);
+		}
+	});
+
+	connect(_mainWindow->searchBar, &LibraryFilterLineEdit::focusOut, this, [=] () {
+		if (!this->hasFocus() && settings->isExtendedSearchVisible()) {
+			this->setVisible(false);
+		}
+	});*/
 }
 
 /** Required interface from AbstractSearchDialog class. */
@@ -112,7 +144,16 @@ bool SearchDialog::eventFilter(QObject *obj, QEvent *event)
 			this->move(0, 0);
 			this->resize(_mainWindow->rect().size());
 		}
-	}
+	} /*else if (obj == _mainWindow->searchBar && event->type() == QEvent::FocusAboutToChange) {
+		qDebug() << Q_FUNC_INFO << "here" << event;
+		QFocusEvent *fe = static_cast<QFocusEvent*>(event);
+	} else if (obj == this && event->type() == QEvent::MouseButtonPress) {
+		QMouseEvent *me = static_cast<QMouseEvent*>(event);
+		qDebug() << Q_FUNC_INFO << "!!!" << me;
+		this->setFocus();
+	} else if (obj == _mainWindow && event->type() == QEvent::MouseButtonPress) {
+		qDebug() << Q_FUNC_INFO << "_mainWindow, autoclose?" << event;
+	}*/
 	return AbstractSearchDialog::eventFilter(obj, event);
 }
 

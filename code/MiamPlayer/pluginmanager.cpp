@@ -170,13 +170,13 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
-	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
+	//remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
 	MediaPlayer::instance()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
 {
-	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
+	//searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog());
 }
 
 /** Load a plugin by its location on the hard drive. */

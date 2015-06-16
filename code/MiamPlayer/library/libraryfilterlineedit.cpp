@@ -7,10 +7,13 @@
 #include <QStyleOption>
 #include <QStylePainter>
 
+#include "searchdialog.h"
+#include "mainwindow.h"
+
 #include <QtDebug>
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-	LineEdit(parent), shortcut(new QShortcut(this))
+	LineEdit(parent), shortcut(new QShortcut(this)), _searchDialog(NULL)
 {
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {
@@ -31,9 +34,45 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	timer->setSingleShot(true);
 	connect(this, &QLineEdit::textEdited, this, [=]() {	timer->start(300); });
 	connect(timer, &QTimer::timeout, this, [=]() { emit aboutToStartSearch(this->text()); });
+
+	this->installEventFilter(this);
+	this->setMouseTracking(true);
 }
 
-void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)
+void LibraryFilterLineEdit::init(MainWindow *mainWindow)
+{
+	_searchDialog = new SearchDialog(mainWindow);
+	_searchDialog->installEventFilter(this);
+}
+
+bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
+{
+	if (obj == this && event->type() == QEvent::FocusAboutToChange) {
+		//QFocusEvent *fe = static_cast<QFocusEvent*>(event);
+		//qDebug() << Q_FUNC_INFO << fe;
+		if (_searchDialog && _searchDialog->hasFocus()) {
+			//qDebug() << "search dialog has focus";
+		} else {
+			if (_searchDialog->rect().contains(_searchDialog->mapFromGlobal(QCursor::pos()))) {
+				//qDebug() << "children widgets say they have not the focus but the whole dialog has it!";
+			} else {
+				//qDebug() << "search dialog has really lost the focus";
+				_searchDialog->hide();
+			}
+		}
+		return true;
+	} /*else if (event->type() == QEvent::MouseButtonPress) {
+		qDebug() << Q_FUNC_INFO << event;
+
+	} else if (event->type() == QEvent::MouseButtonPress) {
+		qDebug() << Q_FUNC_INFO << "???" << event;
+	} else if (event->type() == QEvent::FocusIn) {
+		qDebug() << Q_FUNC_INFO << "who gets the focus?" << event;
+	}*/
+	return LineEdit::eventFilter(obj, event);
+}
+
+/*void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)
 {
 	LineEdit::focusInEvent(event);
 	// Notify registered objets that one has clicked inside this widget.
@@ -41,7 +80,13 @@ void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)
 	if (!text().isEmpty()) {
 		emit focusIn();
 	}
-}
+}*/
+
+/*void LibraryFilterLineEdit::focusOutEvent(QFocusEvent *event)
+{
+	LineEdit::focusOutEvent(event);
+	emit focusOut();
+}*/
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {

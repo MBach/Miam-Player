@@ -6,6 +6,9 @@
 #include <QShortcut>
 #include <QTimer>
 
+class MainWindow;
+class SearchDialog;
+
 /**
  * \brief		The LibraryFilterLineEdit class
  * \details
@@ -16,18 +19,29 @@ class LibraryFilterLineEdit : public LineEdit
 {
 	Q_OBJECT
 
+private:
+	SearchDialog *_searchDialog;
+
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
 
 	QShortcut *shortcut;
 
-protected:
-	virtual void focusInEvent(QFocusEvent *event);
+	void init(MainWindow *mainWindow);
 
-	virtual void paintEvent(QPaintEvent *);
+protected:
+	bool eventFilter(QObject *obj, QEvent *event) override;
+
+	//virtual void focusInEvent(QFocusEvent *event) override;
+
+	//virtual void focusOutEvent(QFocusEvent *event) override;
+
+	virtual void paintEvent(QPaintEvent *) override;
 
 signals:
-	void focusIn();
+	//void focusIn();
+
+	//void focusOut();
 
 	void aboutToStartSearch(const QString &text);
 };
