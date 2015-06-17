@@ -69,7 +69,8 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
     volumeslider.cpp \
-    library/libraryitemmodel.cpp
+    library/libraryitemmodel.cpp \
+    dialogs/starswidget.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -139,7 +140,8 @@ HEADERS += \
     tracksnotfoundmessagebox.h \
     treeview.h \
     volumeslider.h \
-    library/libraryitemmodel.h
+    library/libraryitemmodel.h \
+    dialogs/starswidget.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

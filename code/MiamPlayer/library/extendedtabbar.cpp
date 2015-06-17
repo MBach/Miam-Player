@@ -72,10 +72,9 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 			p.drawText(fe.rect, Qt::AlignCenter, fontMetrics().elidedText(fe.text, Qt::ElideRight, fe.rect.width()));
 			p.setPen(fe.palette.highlight().color());
 		} else {
-			p.fillRect(fe.rect, pal.light().color());
+			p.fillRect(fe.rect, pal.window().color());
 			p.setPen(pal.mid().color());
 			p.drawText(fe.rect, Qt::AlignCenter, fontMetrics().elidedText(fe.text, Qt::ElideRight, fe.rect.width()));
-			p.setPen(pal.midlight().color());
 		}
 
 		// Draw Left, Top and Right lines
@@ -121,10 +120,9 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 			p.drawText(lib.rect, Qt::AlignCenter, fontMetrics().elidedText(lib.text, Qt::ElideRight, lib.rect.width()));
 			p.setPen(lib.palette.highlight().color());
 		} else {
-			p.fillRect(lib.rect, pal.light().color());
+			p.fillRect(lib.rect, pal.window().color());
 			p.setPen(pal.mid().color());
 			p.drawText(lib.rect, Qt::AlignCenter, fontMetrics().elidedText(lib.text, Qt::ElideRight, lib.rect.width()));
-			p.setPen(pal.midlight().color());
 		}
 
 		// Draw Left, Top and Right lines

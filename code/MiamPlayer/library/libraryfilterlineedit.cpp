@@ -48,45 +48,16 @@ void LibraryFilterLineEdit::init(MainWindow *mainWindow)
 bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == this && event->type() == QEvent::FocusAboutToChange) {
-		//QFocusEvent *fe = static_cast<QFocusEvent*>(event);
-		//qDebug() << Q_FUNC_INFO << fe;
-		if (_searchDialog && _searchDialog->hasFocus()) {
-			//qDebug() << "search dialog has focus";
-		} else {
+		if (_searchDialog && !_searchDialog->hasFocus()) {
 			if (_searchDialog->rect().contains(_searchDialog->mapFromGlobal(QCursor::pos()))) {
-				//qDebug() << "children widgets say they have not the focus but the whole dialog has it!";
 			} else {
-				//qDebug() << "search dialog has really lost the focus";
 				_searchDialog->hide();
 			}
 		}
 		return true;
-	} /*else if (event->type() == QEvent::MouseButtonPress) {
-		qDebug() << Q_FUNC_INFO << event;
-
-	} else if (event->type() == QEvent::MouseButtonPress) {
-		qDebug() << Q_FUNC_INFO << "???" << event;
-	} else if (event->type() == QEvent::FocusIn) {
-		qDebug() << Q_FUNC_INFO << "who gets the focus?" << event;
-	}*/
+	}
 	return LineEdit::eventFilter(obj, event);
 }
-
-/*void LibraryFilterLineEdit::focusInEvent(QFocusEvent *event)
-{
-	LineEdit::focusInEvent(event);
-	// Notify registered objets that one has clicked inside this widget.
-	// Useful to redisplay search results dialog
-	if (!text().isEmpty()) {
-		emit focusIn();
-	}
-}*/
-
-/*void LibraryFilterLineEdit::focusOutEvent(QFocusEvent *event)
-{
-	LineEdit::focusOutEvent(event);
-	emit focusOut();
-}*/
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {
@@ -100,10 +71,10 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 
 	/// FIXME
 	/// Use a path then fill it instead of using drawArc
-	p.fillRect(rect(), o.palette.base().color().lighter(110));
+	p.fillRect(rect(), o.palette.base().color());
 
-	static const int startAngle = 90 * 16;
-	static const int spanAngle = 180 * 16;
+	//static const int startAngle = 90 * 16;
+	//static const int spanAngle = 180 * 16;
 	QRect rLeft = QRect(o.rect.x(),
 						o.rect.y() + 1,
 						o.rect.height(),
@@ -114,18 +85,43 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 						 o.rect.y() + o.rect.height() - 2);
 	QRect rText = QRect(rLeft.topRight(), rRight.bottomLeft()).adjusted(0, 1, 0, -1);
 
+	QPen pen(o.palette.mid().color());
+	p.setPen(pen);
 	p.save();
-	if (o.state.testFlag(QStyle::State_HasFocus)) {
-		p.setPen(o.palette.highlight().color());
-	} else {
-		p.setPen(o.palette.mid().color());
-	}
+
 	p.setRenderHint(QPainter::Antialiasing, true);
-	p.drawArc(rLeft, startAngle, spanAngle);
-	p.drawArc(rRight, (180 * 16) + startAngle, spanAngle);
+	QPainterPath ppLeft, ppRight;
+	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1   <----10--9
+	// |   |        First cubic call is with points p1, p2 and p3                       |   |
+	// 3   +        Second is with points p3, p4 and p5                                 +   8
+	// |   |        With that, a half circle can be filled with linear gradient         |   |
+	// 4---5---->                                                                  <----6---7
+	ppLeft.moveTo(rText.topLeft());
+	ppLeft.cubicTo(rText.x(), rText.y(),
+				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y(),
+				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f);
+	ppLeft.cubicTo(rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f,
+				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height(),
+				   rLeft.x() + rLeft.width(), rLeft.y() + rLeft.height());
+
+	QPainterPath pp(ppLeft);
+
+	ppRight.moveTo(rRight.bottomLeft());
+	ppRight.cubicTo(rRight.x(), rRight.y() + rRight.height(),
+					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
+					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f);
+	ppRight.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
+					rRight.x() + rRight.width() / 2.0f, rRight.y(),
+					rRight.x(), rRight.y());
+
+	pp.connectPath(ppRight);
+
+	p.drawPath(ppLeft);
+	p.drawPath(ppRight);
+
 	p.setRenderHint(QPainter::Antialiasing, false);
-	p.drawLine(QPoint(rLeft.center().x(), rLeft.y() - 1), QPoint(rRight.center().x(), rRight.y() - 1));
-	p.drawLine(QPoint(rLeft.center().x(), rLeft.bottom() + 1), QPoint(rRight.center().x(), rRight.bottom() + 1));
+	p.drawLine(QPoint(rText.x(), rText.y() - 1), QPoint(rText.x() + rText.width(), rText.y() - 1));
+	p.drawLine(QPoint(rText.x(), rText.y() + rText.height()), QPoint(rText.x() + rText.width(), rText.y() + rText.height()));
 	p.restore();
 
 	// Paint text and cursor
@@ -218,6 +214,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		} else {
 			p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, text());
 		}
+		rText.adjust(0, 2, 0, -2);
 		this->drawCursor(&p, rText);
 	} else {
 		p.setPen(o.palette.mid().color());

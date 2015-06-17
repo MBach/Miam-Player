@@ -144,15 +144,11 @@ void SeekBar::paintEvent(QPaintEvent *)
 
 	pp.connectPath(ppRight);
 
-	p.save();
-	// Increase the width of the pen because of Antialising
-	pen.setWidthF(1.3);
-	p.setPen(pen);
 	p.drawPath(ppLeft);
 	p.drawPath(ppRight);
-	p.restore();
 
 	p.setRenderHint(QPainter::Antialiasing, false);
+	/// XXX: OS X has strange rendering with - 1 because of High DPI
 	p.drawLine(QPoint(rMid.x(), rMid.y() - 1), QPoint(rMid.x() + rMid.width(), rMid.y() - 1));
 	p.drawLine(QPoint(rMid.x(), rMid.y() + rMid.height()), QPoint(rMid.x() + rMid.width(), rMid.y() + rMid.height()));
 	p.restore();

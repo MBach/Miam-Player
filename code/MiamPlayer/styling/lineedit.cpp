@@ -19,19 +19,11 @@ LineEdit::LineEdit(QWidget *parent) :
 		this->repaint();
 	});
 
-	_fade.setEasingCurve(QEasingCurve::InOutCubic);
+	_fade.setEasingCurve(QEasingCurve::Linear);
 	QColor black(Qt::black), white(Qt::white);
-	QColor c, opposite;
-	if (QApplication::palette().windowText().color() == black) {
-		c = black;
-		opposite = white;
-	} else {
-		c = white;
-		opposite = black;
-	}
-	_fade.setStartValue(c);
-	_fade.setKeyValueAt(0.5, opposite);
-	_fade.setEndValue(c);
+	_fade.setStartValue(black);
+	_fade.setKeyValueAt(0.5, white);
+	_fade.setEndValue(black);
 	_fade.setDuration(1000);
 }
 
