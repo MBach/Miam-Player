@@ -1720,11 +1720,11 @@
            </widget>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_7" columnstretch="1,1">
+           <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="1,1">
             <property name="bottomMargin">
              <number>9</number>
             </property>
-            <item row="0" column="0">
+            <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
                <widget class="QRadioButton" name="radioButtonEnableStarDelegate">
@@ -1749,104 +1749,29 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="star1">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
+               <widget class="StarsWidget" name="starsLibrary" native="true">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>20</height>
+                 </size>
                 </property>
-                <property name="text">
-                 <string notr="true"/>
+                <property name="sizeIncrement">
+                 <size>
+                  <width>2</width>
+                  <height>2</height>
+                 </size>
                 </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_10"/>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="star2">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="star3">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="star4">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="star5">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
+               <spacer name="horizontalSpacer_4">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
@@ -1858,14 +1783,8 @@
               </item>
              </layout>
             </item>
-            <item row="0" column="1">
+            <item>
              <widget class="QRadioButton" name="radioButtonDisableStarDelegate">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
               <property name="toolTip">
                <string>This option will never show 5 gray stars if the track has not been rated </string>
               </property>
@@ -1890,7 +1809,29 @@
            </widget>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_6" columnstretch="1,1">
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
+             <widget class="QRadioButton" name="radioButtonShowNeverScoredTracks">
+              <property name="toolTip">
+               <string>This option will always displays 5 stars, even if the track has not been rated yet</string>
+              </property>
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>16</width>
+                <height>16</height>
+               </size>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroupEnableStarOutline</string>
+              </attribute>
+             </widget>
+            </item>
             <item row="0" column="1">
              <widget class="QRadioButton" name="radioButtonHideNeverScoredTracks">
               <property name="toolTip">
@@ -1903,140 +1844,6 @@
                <string notr="true">buttonGroupEnableStarOutline</string>
               </attribute>
              </widget>
-            </item>
-            <item row="0" column="0">
-             <layout class="QHBoxLayout" name="horizontalLayout_7">
-              <item>
-               <widget class="QRadioButton" name="radioButtonShowNeverScoredTracks">
-                <property name="toolTip">
-                 <string>This option will always displays 5 stars, even if the track has not been rated yet</string>
-                </property>
-                <property name="text">
-                 <string>Yes</string>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>16</width>
-                  <height>16</height>
-                 </size>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">buttonGroupEnableStarOutline</string>
-                </attribute>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="starOutline1">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite_outline</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="starOutline2">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite_outline</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="starOutline3">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite_outline</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="starOutline4">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite_outline</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="starOutline5">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string notr="true"/>
-                </property>
-                <property name="pixmap">
-                 <pixmap resource="mp.qrc">:/icons/favorite_outline</pixmap>
-                </property>
-                <property name="scaledContents">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
             </item>
            </layout>
           </item>
@@ -2173,6 +1980,12 @@
    <class>CustomizeThemeTagLineEdit</class>
    <extends>QLineEdit</extends>
    <header>dialogs/customizethemetaglineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StarsWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">starswidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
@@ -2550,160 +2363,16 @@
   <connection>
    <sender>radioButtonEnableStarDelegate</sender>
    <signal>toggled(bool)</signal>
-   <receiver>star1</receiver>
+   <receiver>starsLibrary</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>240</x>
-     <y>429</y>
+     <y>425</y>
     </hint>
     <hint type="destinationlabel">
-     <x>279</x>
-     <y>429</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonEnableStarDelegate</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>star2</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>429</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>309</x>
-     <y>429</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonEnableStarDelegate</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>star3</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>429</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>339</x>
-     <y>429</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonEnableStarDelegate</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>star4</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>429</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>369</x>
-     <y>429</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonEnableStarDelegate</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>star5</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>429</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>429</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonShowNeverScoredTracks</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>starOutline1</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>491</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>279</x>
-     <y>491</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonShowNeverScoredTracks</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>starOutline2</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>491</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>309</x>
-     <y>491</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonShowNeverScoredTracks</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>starOutline3</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>491</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>339</x>
-     <y>491</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonShowNeverScoredTracks</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>starOutline4</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>491</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>369</x>
-     <y>491</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButtonShowNeverScoredTracks</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>starOutline5</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>240</x>
-     <y>491</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>491</y>
+     <x>317</x>
+     <y>425</y>
     </hint>
    </hints>
   </connection>

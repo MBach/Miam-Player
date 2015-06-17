@@ -10,10 +10,13 @@
 #include "mainwindow.h"
 #include "settings.h"
 
+#include "starrating.h"
+
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
 	QDialog(NULL), _targetedColor(NULL), _animation(new QPropertyAnimation(this, "windowOpacity")), _timer(new QTimer(this))
 {
 	setupUi(this);
+
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	this->setWindowFlags(Qt::Tool);
@@ -227,10 +230,6 @@ void CustomizeThemeDialog::setupActions()
 		labelLibraryDelegates->setEnabled(b);
 		radioButtonShowNeverScoredTracks->setEnabled(b);
 		radioButtonHideNeverScoredTracks->setEnabled(b);
-		std::list<QWidget*> stars = { starOutline1, starOutline2, starOutline3, starOutline4, starOutline5 };
-		for (QWidget *star : stars) {
-			star->setEnabled(b && settings->isShowNeverScored());
-		}
 	});
 
 	connect(radioButtonShowNeverScoredTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setShowNeverScored);
@@ -417,10 +416,6 @@ void CustomizeThemeDialog::loadTheme()
 		radioButtonShowNeverScoredTracks->setChecked(true);
 	} else {
 		radioButtonHideNeverScoredTracks->setChecked(true);
-	}
-	std::list<QWidget*> stars = { starOutline1, starOutline2, starOutline3, starOutline4, starOutline5 };
-	for (QWidget *star : stars) {
-		star->setEnabled(settings->isStarDelegates() && settings->isShowNeverScored());
 	}
 }
 
