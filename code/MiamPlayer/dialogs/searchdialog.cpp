@@ -74,8 +74,6 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 	});
 
 	_mainWindow->installEventFilter(this);
-	//_mainWindow->searchBar->installEventFilter(this);
-	//this->installEventFilter(this);
 
 	this->setVisible(false);
 	_oldRect = this->geometry();
@@ -201,11 +199,10 @@ void SearchDialog::animate(qreal startValue, qreal stopValue)
 
 void SearchDialog::moveSearchDialog()
 {
-	QPoint globalMW = _mainWindow->mapToGlobal(QPoint(0, 0));
-	//QPoint globalSB = this->mapToGlobal(_mainWindow->searchBar->rect().topRight());
-	//QPoint globalSB = this->mapToParent(_mainWindow->widgetSearchBar->rect().bottomRight());
-	QPoint globalSB = this->mapToGlobal(_mainWindow->tabPlaylists->frameGeometry().topLeft());
-	move(globalSB);
+	QPoint tl = _mainWindow->widgetSearchBar->frameGeometry().topRight();
+	tl.setY(tl.y() - 1);
+	QPoint tl2 = _mainWindow->widgetSearchBar->mapTo(_mainWindow, tl);
+	this->move(tl2);
 }
 
 void SearchDialog::clear()
@@ -224,8 +221,6 @@ void SearchDialog::clear()
 void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 {
 	SqlDatabase *db = SqlDatabase::instance();
-	//db->open();
-
 	QSqlQuery selectTracks(*db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id " \
 		"INNER JOIN artists a ON t.artistId = a.id WHERE a.id = ? ORDER BY al.year");
@@ -241,15 +236,11 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 		p->insertMedias(-1, tracks);
 		this->clear();
 	}
-
-	//db->close();
 }
 
 void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 {
 	SqlDatabase *db = SqlDatabase::instance();
-	db->open();
-
 	QSqlQuery selectTracks(*db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id WHERE al.id = ?");
 	QString albumId = albumIndex.data(DT_Identifier).toString();
@@ -264,9 +255,7 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 		p->insertMedias(-1, tracks);
 		this->clear();
 	}
-
 	this->clear();
-	//db->close();
 }
 
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
@@ -315,9 +304,6 @@ void SearchDialog::search(const QString &text)
 	}
 
 	auto _db = SqlDatabase::instance();
-	if (!_db->isOpen()) {
-		_db->open();
-	}
 
 	/// XXX: Factorize this, 3 times the (almost) same code
 	QSqlQuery qSearchForArtists(*_db);
@@ -362,8 +348,6 @@ void SearchDialog::search(const QString &text)
 		}
 		this->processResults(Track, trackList);
 	}
-
-	//_db->close();
 }
 
 /** Expand this dialog to all available space. */
@@ -386,6 +370,7 @@ void SearchDialog::searchLabelWasClicked(const QString &link)
 		/// FIXME
 		//_mainWindow->moveSearchDialog();
 		this->resize(_oldRect.size());
+		this->moveSearchDialog();
 		_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 		_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 		_tracks->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

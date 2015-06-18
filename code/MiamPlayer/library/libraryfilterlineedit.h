@@ -1,7 +1,9 @@
 #ifndef LIBRARYFILTERLINEEDIT_H
 #define LIBRARYFILTERLINEEDIT_H
 
+#include <abstractsearchdialog.h>
 #include "styling/lineedit.h"
+
 #include <QPropertyAnimation>
 #include <QShortcut>
 #include <QTimer>
@@ -29,20 +31,14 @@ public:
 
 	void init(MainWindow *mainWindow);
 
+	AbstractSearchDialog* searchDialog() const;// { return _searchDialog; }
+
 protected:
-	bool eventFilter(QObject *obj, QEvent *event) override;
-
-	//virtual void focusInEvent(QFocusEvent *event) override;
-
-	//virtual void focusOutEvent(QFocusEvent *event) override;
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	virtual void paintEvent(QPaintEvent *) override;
 
 signals:
-	//void focusIn();
-
-	//void focusOut();
-
 	void aboutToStartSearch(const QString &text);
 };
 

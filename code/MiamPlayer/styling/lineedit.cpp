@@ -20,11 +20,17 @@ LineEdit::LineEdit(QWidget *parent) :
 	});
 
 	_fade.setEasingCurve(QEasingCurve::Linear);
-	QColor black(Qt::black), white(Qt::white);
-	_fade.setStartValue(black);
-	_fade.setKeyValueAt(0.5, white);
-	_fade.setEndValue(black);
+	QPalette p = QApplication::palette();
+	_fade.setStartValue(p.text().color());
+	_fade.setKeyValueAt(0.5, p.base().color());
+	_fade.setEndValue(p.text().color());
 	_fade.setDuration(1000);
+
+	connect(qApp, &QApplication::paletteChanged, this, [=](const QPalette &p) {
+		_fade.setStartValue(p.text().color());
+		_fade.setKeyValueAt(0.5, p.base().color());
+		_fade.setEndValue(p.text().color());
+	});
 }
 
 void LineEdit::drawCursor(QStylePainter *painter, const QRect &rText)

@@ -45,6 +45,11 @@ void LibraryFilterLineEdit::init(MainWindow *mainWindow)
 	_searchDialog->installEventFilter(this);
 }
 
+AbstractSearchDialog* LibraryFilterLineEdit::searchDialog() const
+{
+	return _searchDialog;
+}
+
 bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == this && event->type() == QEvent::FocusAboutToChange) {
@@ -55,6 +60,11 @@ bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 			}
 		}
 		return true;
+	} else if (obj == this && event->type() == QEvent::FocusIn) {
+		if (_searchDialog && !_searchDialog->hasFocus() && !text().isEmpty()) {
+			_searchDialog->moveSearchDialog();
+			_searchDialog->show();
+		}
 	}
 	return LineEdit::eventFilter(obj, event);
 }
@@ -69,12 +79,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	//qDebug() << o.rect.height() << p.fontMetrics().height();
 	//o.rect.setHeight(p.fontMetrics().height());
 
-	/// FIXME
-	/// Use a path then fill it instead of using drawArc
 	p.fillRect(rect(), o.palette.base().color());
-
-	//static const int startAngle = 90 * 16;
-	//static const int spanAngle = 180 * 16;
 	QRect rLeft = QRect(o.rect.x(),
 						o.rect.y() + 1,
 						o.rect.height(),
@@ -85,8 +90,11 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 						 o.rect.y() + o.rect.height() - 2);
 	QRect rText = QRect(rLeft.topRight(), rRight.bottomLeft()).adjusted(0, 1, 0, -1);
 
-	QPen pen(o.palette.mid().color());
-	p.setPen(pen);
+	if (hasFocus()) {
+		p.setPen(QPen(o.palette.highlight().color()));
+	} else {
+		p.setPen(QPen(o.palette.mid().color()));
+	}
 	p.save();
 
 	p.setRenderHint(QPainter::Antialiasing, true);
