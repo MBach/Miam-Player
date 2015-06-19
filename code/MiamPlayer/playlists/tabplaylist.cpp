@@ -144,6 +144,7 @@ void TabPlaylist::init()
 		for (int i = 0; i < list.count(); i++) {
 			this->loadPlaylist(list.at(i));
 		}
+		setCurrentIndex(settings->value("lastActiveTab").toInt());
 	}
 	if (playlists().isEmpty()) {
 		addPlaylist();

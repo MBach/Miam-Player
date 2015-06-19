@@ -489,6 +489,7 @@ void MainWindow::closeEvent(QCloseEvent *)
 			}
 		}
 		settings->setLastPlaylistSession(list);
+		settings->setValue("lastActiveTab", tabPlaylists->currentIndex());
 	}
 	QCoreApplication::quit();
 }
