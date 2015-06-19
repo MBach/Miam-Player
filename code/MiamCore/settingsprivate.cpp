@@ -361,6 +361,17 @@ QByteArray SettingsPrivate::lastActivePlaylistGeometry() const
 	return value("lastActivePlaylistGeometry").toByteArray();
 }
 
+/** Returns the last playlists that were opened when player was closed. */
+QList<uint> SettingsPrivate::lastPlaylistSession() const
+{
+	QList<QVariant> l = value("currentSessionPlaylists").toList();
+	QList<uint> playlistIds;
+	for (int i = 0; i < l.count(); i++) {
+		playlistIds.append(l.at(i).toUInt());
+	}
+	return playlistIds;
+}
+
 QStringList SettingsPrivate::libraryFilteredByArticles() const
 {
 	QVariant vArticles = value("libraryFilteredByArticles");
@@ -503,6 +514,16 @@ void SettingsPrivate::setCustomIcon(const QString &buttonName, const QString &ic
 void SettingsPrivate::setLanguage(const QString &lang)
 {
 	setValue("language", lang);
+}
+
+/** Sets the last playlists that were opened when player is about to close. */
+void SettingsPrivate::setLastPlaylistSession(const QList<uint> &ids)
+{
+	QList<QVariant> l;
+	for (int i = 0; i < ids.count(); i++) {
+		l.append(ids.at(i));
+	}
+	setValue("currentSessionPlaylists", l);
 }
 
 void SettingsPrivate::setMusicLocations(const QStringList &locations)

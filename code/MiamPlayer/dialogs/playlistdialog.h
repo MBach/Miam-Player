@@ -79,7 +79,7 @@ signals:
 	void aboutToLoadPlaylist(uint playlistId);
 	void aboutToSavePlaylist(Playlist *playlist, bool overwrite);
 	void aboutToRenamePlaylist(Playlist *playlist);
-	void aboutToRenameDAO(const PlaylistDAO &dao);
+	void aboutToRenameTab(const PlaylistDAO &dao);
 	void aboutToDeletePlaylist(uint playlistId);
 };
 

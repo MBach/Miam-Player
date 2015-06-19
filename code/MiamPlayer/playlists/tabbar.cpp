@@ -122,15 +122,18 @@ bool TabBar::eventFilter(QObject *obj, QEvent *event)
 		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
 		if (keyEvent->key() == Qt::Key_Escape) {
 			lineEdit->releaseMouse();
+			lineEdit->setText(lineEdit->text().trimmed());
 			lineEdit->close();
 		}
 	} else if (obj == lineEdit && event->type() == QEvent::FocusOut) {
 		lineEdit->releaseMouse();
+		lineEdit->setText(lineEdit->text().trimmed());
 		renameTab();
 	} else if (obj == lineEdit && event->type() == QEvent::MouseButtonPress) {
 		QMouseEvent *me = static_cast<QMouseEvent*>(event);
 		if (!lineEdit->rect().contains(me->pos())) {
 			lineEdit->releaseMouse();
+			lineEdit->setText(lineEdit->text().trimmed());
 			lineEdit->close();
 		}
 	} else if (obj == this && event->type() == QEvent::HoverLeave) {

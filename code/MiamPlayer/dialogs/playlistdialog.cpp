@@ -190,7 +190,6 @@ void PlaylistDialog::deleteSavedPlaylists()
 	}
 
 	for (QModelIndex index : indexes) {
-		qDebug() << Q_FUNC_INFO << index.data(PlaylistID).toUInt() << index.data(PlaylistID).toString();
 		emit aboutToDeletePlaylist(index.data(PlaylistID).toUInt());
 	}
 
@@ -331,13 +330,15 @@ void PlaylistDialog::populatePreviewFromUnsaved(const QItemSelection &, const QI
 void PlaylistDialog::renameItem(QStandardItem *item)
 {
 	if (item) {
+		item->setText(item->text().trimmed());
 		if (Playlist *p = _unsaved.value(item)) {
 			p->setTitle(item->text());
 			emit aboutToRenamePlaylist(p);
 		} else {
 			PlaylistDAO dao = _saved.value(item);
 			dao.setTitle(item->text());
-			emit aboutToRenameDAO(dao);
+			SqlDatabase::instance()->updateTablePlaylist(dao);
+			emit aboutToRenameTab(dao);
 		}
 	}
 }

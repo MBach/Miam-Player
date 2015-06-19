@@ -32,6 +32,7 @@ private:
 
 	MainWindow *_mainWindow;
 	QMenu *_contextMenu;
+	QAction *_deletePlaylist;
 
 public:
 	/** Default constructor. */
@@ -90,7 +91,7 @@ public slots:
 	void savePlaylist(Playlist *p, bool overwrite);
 
 	void renamePlaylist(Playlist *p);
-	void renamePlaylistDAO(const PlaylistDAO &dao);
+	void renameTab(const PlaylistDAO &dao);
 
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();

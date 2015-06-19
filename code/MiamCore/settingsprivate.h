@@ -143,6 +143,9 @@ public:
 	/** Returns the last active playlist header state. */
 	QByteArray lastActivePlaylistGeometry() const;
 
+	/** Returns the last playlists that were opened when player was closed. */
+	QList<uint> lastPlaylistSession() const;
+
 	QStringList libraryFilteredByArticles() const;
 
 	LibrarySearchMode librarySearchMode() const;
@@ -171,6 +174,9 @@ public:
 
 	/** Sets the language of the application. */
 	void setLanguage(const QString &lang);
+
+	/** Sets the last playlists that were opened when player is about to close. */
+	void setLastPlaylistSession(const QList<uint> &ids);
 
 	void setMusicLocations(const QStringList &locations);
 

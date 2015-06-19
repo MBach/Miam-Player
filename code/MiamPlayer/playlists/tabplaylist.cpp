@@ -53,21 +53,34 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	// Context menu to add few actions for each playlist
 	_contextMenu = new QMenu(this);
 	QAction *renamePlaylist = new QAction(tr("Rename playlist"), _contextMenu);
+	_deletePlaylist = new QAction(tr("Delete playlist..."), _contextMenu);
 	QAction *loadBackground = new QAction(tr("Load background..."), _contextMenu);
 	QAction *clearBackground = new QAction(tr("Clear background"), _contextMenu);
+
+	_deletePlaylist->setEnabled(false);
 	loadBackground->setEnabled(false);
 	clearBackground->setEnabled(false);
 
 	_contextMenu->addAction(renamePlaylist);
+	_contextMenu->addAction(_deletePlaylist);
 	_contextMenu->addSeparator();
 	_contextMenu->addAction(loadBackground);
 	_contextMenu->addAction(clearBackground);
 
 	connect(renamePlaylist, &QAction::triggered, this, [=]() {
-		QPoint p = _contextMenu->property("mouseRightClickPos").toPoint();
-		int index = tabBar->tabAt(p);
+		QPoint mrcp = _contextMenu->property("mouseRightClickPos").toPoint();
+		int index = tabBar->tabAt(mrcp);
 		this->setCurrentIndex(index);
 		tabBar->editTab(index);
+	});
+	connect(_deletePlaylist, &QAction::triggered, this, [=]() {
+		QPoint mrcp = _contextMenu->property("mouseRightClickPos").toPoint();
+		int index = tabBar->tabAt(mrcp);
+		Playlist *p = this->playlist(index);
+		QString deleteMessage = tr("You're about to delete '%1'. Are you sure you want to continue?").arg(p->title());
+		if (QMessageBox::Ok == QMessageBox::warning(this, tr("Warning"), deleteMessage, QMessageBox::Ok, QMessageBox::Cancel)) {
+			this->deletePlaylist(p->id());
+		}
 	});
 	connect(loadBackground, &QAction::triggered, this, [=]() {
 		qDebug() << Q_FUNC_INFO << "Load background not implemented yet";
@@ -125,9 +138,11 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 void TabPlaylist::init()
 {
 	blockSignals(true);
-	if (SettingsPrivate::instance()->playbackRestorePlaylistsAtStartup()) {
-		for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
-			this->loadPlaylist(playlist.id().toUInt());
+	auto settings = SettingsPrivate::instance();
+	if (settings->playbackRestorePlaylistsAtStartup()) {
+		QList<uint> list = settings->lastPlaylistSession();
+		for (int i = 0; i < list.count(); i++) {
+			this->loadPlaylist(list.at(i));
 		}
 	}
 	if (playlists().isEmpty()) {
@@ -201,6 +216,8 @@ void TabPlaylist::contextMenuEvent(QContextMenuEvent * event)
 	if (tab >= 0 && tab < count()) {
 		_contextMenu->move(mapToGlobal(event->pos()));
 		_contextMenu->setProperty("mouseRightClickPos", event->pos());
+		Playlist *p = playlist(tab);
+		_deletePlaylist->setEnabled(p && p->id() != 0);
 		_contextMenu->show();
 	}
 }
@@ -339,13 +356,12 @@ void TabPlaylist::renamePlaylist(Playlist *p)
 	}
 }
 
-void TabPlaylist::renamePlaylistDAO(const PlaylistDAO &dao)
+void TabPlaylist::renameTab(const PlaylistDAO &dao)
 {
 	for (int i = 0; i < playlists().count(); i++) {
 		Playlist *tmp = playlist(i);
 		if (tmp->id() == dao.id().toUInt()) {
 			this->setTabText(i, dao.title());
-			SqlDatabase::instance()->updateTablePlaylist(dao);
 			break;
 		}
 	}

@@ -478,12 +478,17 @@ void MainWindow::closeEvent(QCloseEvent *)
 	auto settings = SettingsPrivate::instance();
 
 	if (settings->playbackKeepPlaylists()) {
+		QList<uint> list = settings->lastPlaylistSession();
+		list.clear();
 		for (int i = 0; i < tabPlaylists->count(); i++) {
 			Playlist *p = tabPlaylists->playlist(i);
-			qDebug() << Q_FUNC_INFO << "about to save automatically" << p->title();
 			bool isOverwritting = p->id() != 0;
-			tabPlaylists->playlistManager()->savePlaylist(p, isOverwritting, true);
+			uint id = tabPlaylists->playlistManager()->savePlaylist(p, isOverwritting, true);
+			if (id != 0) {
+				list.append(id);
+			}
 		}
+		settings->setLastPlaylistSession(list);
 	}
 	QCoreApplication::quit();
 }
@@ -751,7 +756,7 @@ void MainWindow::openPlaylistManager()
 	connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
 	connect(playlistDialog, &PlaylistDialog::aboutToDeletePlaylist, tabPlaylists, &TabPlaylist::deletePlaylist);
 	connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
-	connect(playlistDialog, &PlaylistDialog::aboutToRenameDAO, tabPlaylists, &TabPlaylist::renamePlaylistDAO);
+	connect(playlistDialog, &PlaylistDialog::aboutToRenameTab, tabPlaylists, &TabPlaylist::renameTab);
 	connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);
 	playlistDialog->open();
 }
