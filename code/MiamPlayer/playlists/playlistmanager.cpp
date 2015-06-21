@@ -29,10 +29,6 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		}
 	}
 
-	if (isExiting) {
-		qDebug() << Q_FUNC_INFO << "about to save automatically" << p->title();
-	}
-
 	if (p && !p->mediaPlaylist()->isEmpty()) {
 
 		uint generateNewHash = p->generateNewHash();
@@ -56,7 +52,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 			if (isExiting) {
 				// When exiting, don't show a Dialog and just quit!
 				if (!isOverwriting) {
-					return 1;
+					return playlist.id().toUInt();
 				}
 			} else {
 				// Playlist exists in database and user is not exiting application -> showing a popup
@@ -78,8 +74,6 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 			}
 		}
 
-		qDebug() << Q_FUNC_INFO << "about to save 2" << p->title() << playlist.title();
-
 		playlist.setTitle(p->title());
 		playlist.setChecksum(QString::number(generateNewHash));
 
@@ -93,8 +87,6 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		}
 
 		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
-
-		qDebug() << Q_FUNC_INFO << "about to save 3" << id << isOverwriting << tracks.size();
 
 		p->setId(id);
 		p->setHash(generateNewHash);
