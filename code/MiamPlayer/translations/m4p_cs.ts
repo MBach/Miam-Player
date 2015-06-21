@@ -446,6 +446,14 @@
         <source>Default folder</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Startup &amp;&amp; Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -840,26 +848,6 @@
         <translation>Poslat do nynějšího seznamu skladeb</translation>
     </message>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation type="vanished">  Umělci/Alba</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation type="vanished">Různé</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation type="vanished">  Alba</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation type="vanished">  Umělci - Alba</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation type="vanished">  Roky</translation>
-    </message>
-    <message>
         <source>Send to the tag editor</source>
         <translation>Poslat do editoru značek</translation>
     </message>
@@ -1235,6 +1223,75 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     </message>
 </context>
 <context>
+    <name>PlaylistDialog</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation type="unfinished">Správce seznamů skladeb</translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation type="unfinished">Neuložené seznamy skladeb</translation>
+    </message>
+    <message>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation type="unfinished">Uložené seznamy skladeb</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">Nahrát</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Uložit</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Smazat</translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished">Vyvést...</translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation type="unfinished">Náhled na seznam skladeb</translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation type="unfinished">Název (Umělec - Album)</translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation type="unfinished">Tato náhledová oblast je prázdná.
+Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Varování</translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation type="unfinished">Vyvést seznam skladeb</translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation type="unfinished">Seznam skladeb (*.m3u8)</translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
+        <translation type="unfinished">A více skladeb...</translation>
+    </message>
+    <message>
+        <source>This playlist has changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
@@ -1267,48 +1324,6 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
 </context>
 <context>
     <name>PlaylistManager</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>Správce seznamů skladeb</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>Neuložené seznamy skladeb</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>Uložené seznamy skladeb</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>Nahrát</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Smazat</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>Náhled na seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>Vyvést...</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>Název (Umělec - Album)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>Tato náhledová oblast je prázdná.
-Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>A více skladeb...</translation>
-    </message>
     <message numerus="yes">
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
@@ -1316,22 +1331,6 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
             <numerusform>Chystáte se smazat %n seznamy skladeb. Jste si jistý, že chcete pokračovat?</numerusform>
             <numerusform>Chystáte se smazat %n seznamů skladeb. Jste si jistý, že chcete pokračovat?</numerusform>
         </translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Varování</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>Vyvést seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>Seznam skladeb (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
@@ -1465,6 +1464,18 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <message>
         <source>Clear background</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete playlist...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Varování</translation>
     </message>
 </context>
 <context>

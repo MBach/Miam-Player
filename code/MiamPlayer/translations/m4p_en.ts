@@ -446,6 +446,14 @@
         <source>Default folder</source>
         <translation>Default folder</translation>
     </message>
+    <message>
+        <source>Startup &amp;&amp; Exit</source>
+        <translation>Startup &amp;&amp; Exit</translation>
+    </message>
+    <message>
+        <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
+        <translation>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -840,26 +848,6 @@
         <translation>Send to the current playlist</translation>
     </message>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation type="vanished">  Artists \ Albums</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation type="vanished">Various</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation type="vanished">  Albums</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation type="vanished">  Artists – Albums</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation type="vanished">  Years</translation>
-    </message>
-    <message>
         <source>Send to the tag editor</source>
         <translation>Send to the tag editor</translation>
     </message>
@@ -868,43 +856,43 @@
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Save Log Output</translation>
     </message>
     <message>
         <source>%1/logfile.txt</source>
-        <translation type="unfinished"></translation>
+        <translation>%1/logfile.txt</translation>
     </message>
     <message>
         <source>Text Files (*.txt);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Text Files (*.txt);;All Files (*)</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Error</translation>
     </message>
     <message>
         <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation>Message</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Clear</translation>
     </message>
     <message>
         <source>Save output</source>
-        <translation type="unfinished"></translation>
+        <translation>Save output</translation>
     </message>
     <message>
         <source>Warning: </source>
-        <translation type="unfinished"></translation>
+        <translation>Warning: </translation>
     </message>
 </context>
 <context>
@@ -1232,6 +1220,75 @@ Select or drop tracks from your library or any external location.</translation>
     </message>
 </context>
 <context>
+    <name>PlaylistDialog</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation>Playlist Manager</translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation>Unsaved Playlists</translation>
+    </message>
+    <message>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation>Drag &amp; drop playlists below to save them</translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation>Saved playlists</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation>Load</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Delete</translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation>Export...</translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation>Preview playlist</translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation>Title (Artist - Album)</translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation>This preview area is empty.
+Select a playlist to display the first 30 tracks.</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation>Export playlist</translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation>Playlist (*.m3u8)</translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
+        <translation>And more tracks...</translation>
+    </message>
+    <message>
+        <source>This playlist has changed</source>
+        <translation>This playlist has changed</translation>
+    </message>
+</context>
+<context>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
@@ -1264,48 +1321,6 @@ Select or drop tracks from your library or any external location.</translation>
 </context>
 <context>
     <name>PlaylistManager</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>Playlist Manager</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>Unsaved Playlists</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>Saved playlists</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>Load</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Delete</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>Preview playlist</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>Export...</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>Title (Artist - Album)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>This preview area is empty.
-Select a playlist to display the first 30 tracks.</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>And more tracks...</translation>
-    </message>
     <message numerus="yes">
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translatorcomment>How many playlists does one want to remove?</translatorcomment>
@@ -1313,22 +1328,6 @@ Select a playlist to display the first 30 tracks.</translation>
             <numerusform>You&apos;re about to delete %n playlist. Are you sure you want to continue?</numerusform>
             <numerusform>You&apos;re about to delete %n playlists. Are you sure you want to continue?</numerusform>
         </translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Warning</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>Export playlist</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>Playlist (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation>Drag &amp; drop playlists below to save them</translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
@@ -1460,6 +1459,18 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>Clear background</source>
         <translation>Clear background</translation>
+    </message>
+    <message>
+        <source>Delete playlist...</source>
+        <translation>Delete playlist...</translation>
+    </message>
+    <message>
+        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
+        <translation>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
     </message>
 </context>
 <context>

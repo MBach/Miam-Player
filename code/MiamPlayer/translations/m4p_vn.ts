@@ -446,6 +446,14 @@
         <source>Default folder</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Startup &amp;&amp; Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -1208,6 +1216,74 @@ Select or drop tracks from your library or any external location.</source>
     </message>
 </context>
 <context>
+    <name>PlaylistDialog</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This playlist has changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
@@ -1240,68 +1316,11 @@ Select or drop tracks from your library or any external location.</source>
 </context>
 <context>
     <name>PlaylistManager</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message numerus="yes">
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
@@ -1430,6 +1449,18 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Clear background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete playlist...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

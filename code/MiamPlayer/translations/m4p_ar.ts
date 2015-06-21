@@ -446,6 +446,14 @@
         <source>Default folder</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Startup &amp;&amp; Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -840,26 +848,6 @@
         <translation>أرسل إلي قائِمة القراءة الحالية</translation>
     </message>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation type="vanished">  الفنانين \ الالبومات</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation type="vanished">منوعات</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation type="vanished">  الألبومات</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation type="vanished">  الفنانين – الألبومات</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation type="vanished">  السنوات</translation>
-    </message>
-    <message>
         <source>Send to the tag editor</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1244,6 +1232,74 @@ Select or drop tracks from your library or any external location.</source>
     </message>
 </context>
 <context>
+    <name>PlaylistDialog</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation type="unfinished">مسَيِّر قائمة القِراءة</translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation type="unfinished">قوائم القراءة التي لم يتم حفظها</translation>
+    </message>
+    <message>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation type="unfinished">قوائم القراءة المحفوظة</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation type="unfinished">حمِّل</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">حفظ</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">مسْحْ</translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation type="unfinished">...تصدير</translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation type="unfinished">مظهر مجموعة القراءة</translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation type="unfinished">عنوان ـ الفنان؛ ألبوم</translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation type="unfinished">منطقة المعاينة فارغة٠ أختيار قائمة قراءة لإظهار ثلاثون مسارا الأولى٠  </translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation type="unfinished">تصدير قوائم القِراءة</translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation type="unfinished">(*.m3u8)قائمة القِراءة</translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
+        <translation type="unfinished">...و مسارات أخرى</translation>
+    </message>
+    <message>
+        <source>This playlist has changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
@@ -1276,47 +1332,6 @@ Select or drop tracks from your library or any external location.</source>
 </context>
 <context>
     <name>PlaylistManager</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>مسَيِّر قائمة القِراءة</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>قوائم القراءة التي لم يتم حفظها</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>قوائم القراءة المحفوظة</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>حمِّل</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>مسْحْ</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>مظهر مجموعة القراءة</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>...تصدير</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>عنوان ـ الفنان؛ ألبوم</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>منطقة المعاينة فارغة٠ أختيار قائمة قراءة لإظهار ثلاثون مسارا الأولى٠  </translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>...و مسارات أخرى</translation>
-    </message>
     <message numerus="yes">
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
@@ -1327,22 +1342,6 @@ Select a playlist to display the first 30 tracks.</source>
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>أنتبِه</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>تصدير قوائم القِراءة</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>(*.m3u8)قائمة القِراءة</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
@@ -1481,6 +1480,18 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Clear background</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete playlist...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

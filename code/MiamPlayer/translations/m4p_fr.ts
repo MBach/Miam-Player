@@ -446,6 +446,14 @@
         <source>Default folder</source>
         <translation>Dossier par défaut</translation>
     </message>
+    <message>
+        <source>Startup &amp;&amp; Exit</source>
+        <translation>Démarrage &amp;&amp; Sortie</translation>
+    </message>
+    <message>
+        <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
+        <translation>Note : les nouvelles listes de lecture seront enregistées et celles modifiées seront automatiquement remplacées.</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -840,26 +848,6 @@
         <translation>Envoyer à la liste de lecture courante</translation>
     </message>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation type="vanished">  Artistes \ Albums</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation type="vanished">Divers</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation type="vanished">  Albums</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation type="vanished">  Artistes – Albums</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation type="vanished">  Année</translation>
-    </message>
-    <message>
         <source>Send to the tag editor</source>
         <translation>Envoyer à l&apos;éditeur de tags</translation>
     </message>
@@ -1232,6 +1220,75 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
     </message>
 </context>
 <context>
+    <name>PlaylistDialog</name>
+    <message>
+        <source>Playlist Manager</source>
+        <translation>Gestionnaire de liste de lecture</translation>
+    </message>
+    <message>
+        <source>Unsaved Playlists</source>
+        <translation>Listes de lecture non sauvegardées</translation>
+    </message>
+    <message>
+        <source>Drag &amp; drop playlists below to save them</source>
+        <translation>Glisser-déposer les listes de lecture vers le bas pour les sauvegarder</translation>
+    </message>
+    <message>
+        <source>Saved playlists</source>
+        <translation>Listes de lectures enregistrées</translation>
+    </message>
+    <message>
+        <source>Load</source>
+        <translation>Charger</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Sauvegarder</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <source>Export...</source>
+        <translation>Exporter...</translation>
+    </message>
+    <message>
+        <source>Preview playlist</source>
+        <translation>Aperçu de la liste de lecture</translation>
+    </message>
+    <message>
+        <source>Title (Artist - Album)</source>
+        <translation>Titre (Artiste - Album)</translation>
+    </message>
+    <message>
+        <source>This preview area is empty.
+Select a playlist to display the first 30 tracks.</source>
+        <translation>La zone de prévisualisation est vide.
+Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <source>Export playlist</source>
+        <translation>Exporter des listes de lecture</translation>
+    </message>
+    <message>
+        <source>Playlist (*.m3u8)</source>
+        <translation>Liste de lecture (*.m3u8)</translation>
+    </message>
+    <message>
+        <source>And more tracks...</source>
+        <translation>Et d&apos;autres pistes...</translation>
+    </message>
+    <message>
+        <source>This playlist has changed</source>
+        <translation>Cette liste de lecture a changé</translation>
+    </message>
+</context>
+<context>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
@@ -1264,70 +1321,12 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
 </context>
 <context>
     <name>PlaylistManager</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>Gestionnaire de liste de lecture</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>Listes de lecture non sauvegardées</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>Listes de lectures enregistrées</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Supprimer</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>Aperçu de la liste de lecture</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>Exporter...</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>Titre (Artiste - Album)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>La zone de prévisualisation est vide.
-Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>Et d&apos;autres pistes...</translation>
-    </message>
     <message numerus="yes">
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>Vous êtes sur le point de supprimer %n liste de lecture. Êtes-vous sûr de vouloir continuer ?</numerusform>
             <numerusform>Vous êtes sur le point de supprimer %n listes de lecture. Êtes-vous sûr de vouloir continuer ?</numerusform>
         </translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Attention</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>Exporter des listes de lecture</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>Liste de lecture (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation>Glisser-déposer les listes de lecture vers le bas pour les sauvegarder</translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
@@ -1459,6 +1458,18 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>Clear background</source>
         <translation>Supprimer l&apos;image d&apos;arrière-plan</translation>
+    </message>
+    <message>
+        <source>Delete playlist...</source>
+        <translation>Supprimer la liste de lecture...</translation>
+    </message>
+    <message>
+        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
+        <translation>Vous êtes sur le point de supprimer &apos;%1&apos;. Êtes-vous sûr de vouloir continuer ?</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Attention</translation>
     </message>
 </context>
 <context>
