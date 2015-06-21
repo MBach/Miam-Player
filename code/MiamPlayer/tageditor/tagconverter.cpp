@@ -87,7 +87,7 @@ void TagConverter::applyPatternToColumns()
 				characterClass = "[\\d]+"; // Digits
 				break;
 			default:
-				characterClass = "[\\w '-]+";	// Words, digits, dash and spaces
+				characterClass = "[\\w\\W]+";
 				break;
 			}
 			pattern += "(" + characterClass + ")";
@@ -97,9 +97,6 @@ void TagConverter::applyPatternToColumns()
 	}
 	pattern += "$";
 	QRegularExpression re(pattern, QRegularExpression::UseUnicodePropertiesOption);
-	///
-
-	//qDebug() << "regular expr" << re;
 
 	for (QModelIndex index : _tagEditor->selectionModel()->selectedRows()) {
 		QString filename = index.data().toString();
