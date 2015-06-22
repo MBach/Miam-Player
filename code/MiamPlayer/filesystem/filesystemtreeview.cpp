@@ -86,6 +86,40 @@ void FileSystemTreeView::contextMenuEvent(QContextMenuEvent *event)
 	_properties->exec(event->globalPos());
 }
 
+void FileSystemTreeView::keyPressEvent(QKeyEvent *event)
+{
+	switch (event->key()) {
+	// Move up in the filesystem
+	case Qt::Key_Backspace: {
+		QString path = _fileSystemModel->filePath(_theIndex);
+		QFileInfo fileInfo(path);
+		if (fileInfo.isDir()) {
+			QDir d(path);
+			if (d.cdUp()) {
+				emit folderChanged(d.absolutePath());
+			}
+		}
+		break;
+	}
+	// Change directory if selected one is a directory, otherwise, send track to playlist
+	case Qt::Key_Return:
+	case Qt::Key_Enter: {
+		if (selectedIndexes().size() == 1) {
+			QString path = _fileSystemModel->filePath(selectedIndexes().first());
+			QFileInfo fileInfo(path);
+			if (fileInfo.isDir()) {
+				emit folderChanged(fileInfo.absoluteFilePath());
+			} else if (FileHelper::suffixes().contains(fileInfo.suffix())) {
+				this->convertIndex(selectedIndexes().first());
+			}
+		}
+		break;
+	}
+	default:
+		this->scrollAndHighlight((QChar)event->key());
+	}
+}
+
 /** Reimplemented with a QDirIterator to quick count tracks. */
 int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 {
@@ -100,13 +134,57 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 	}
 	return files;
 }
+
+void FileSystemTreeView::scrollAndHighlight(const QChar &c)
+{
+	QModelIndexList rows = this->selectionModel()->selectedRows();
+
+	// If there's already an item matching the key which has just been typed
+	if (rows.size() == 1 &&	rows.first().data().toString().startsWith(c, Qt::CaseInsensitive)) {
+		QModelIndex next = rows.first().sibling(rows.first().row() + 1, 0);
+		if (next.isValid() && next.data().toString().startsWith(c, Qt::CaseInsensitive)) {
+			this->setCurrentIndex(next);
+			this->selectionModel()->select(next, QItemSelectionModel::Current);
+		} else {
+			// Find first with with letter corresponding to key
+			QModelIndex previous = next.sibling(next.row() - 1, 0);
+			QModelIndex previous_previous;
+			while (previous.isValid() && previous.data().toString().startsWith(c, Qt::CaseInsensitive)) {
+				previous_previous = previous.sibling(previous.row() - 1, 0);
+				if (previous_previous.isValid()) {
+					previous = previous_previous;
+				} else {
+					break;
+				}
+			}
+			// Move forward one last time
+			if (previous_previous.isValid()) {
+				previous = previous.sibling(previous.row() + 1, 0);
+			}
+			this->setCurrentIndex(previous);
+			this->selectionModel()->select(previous, QItemSelectionModel::Current);
+		}
+	} else {
+		// No item were selected or not from the key pressed, find the correct one (if exists)
+		for (int i = 0; i < _fileSystemModel->rowCount(_theIndex); i++) {
+			QModelIndex child = _fileSystemModel->index(i, 0, _theIndex);
+			if (child.data().toString().startsWith(c, Qt::CaseInsensitive)) {
+				this->scrollTo(child, QAbstractItemView::PositionAtTop);
+				this->setCurrentIndex(child);
+				this->selectionModel()->select(child, QItemSelectionModel::Current);
+				break;
+			}
+		}
+	}
+}
+
 /** Reload tree when the path has changed in the address bar. */
 void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 {
-	theIndex = _fileSystemModel->setRootPath(path.absolutePath());
-	this->setRootIndex(theIndex);
+	_theIndex = _fileSystemModel->setRootPath(path.absolutePath());
+	this->setRootIndex(_theIndex);
 	this->collapseAll();
-	this->update(theIndex);
+	this->update(_theIndex);
 }
 
 void FileSystemTreeView::updateSelectedTracks()

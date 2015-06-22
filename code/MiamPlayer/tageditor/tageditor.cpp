@@ -177,6 +177,7 @@ void TagEditor::replaceCover(Cover *newCover)
 /** Splits tracks into columns to be able to edit metadatas. */
 void TagEditor::addItemsToEditor(const QStringList &tracks)
 {
+	qDebug() << Q_FUNC_INFO << tracks;
 	this->tagEditorWidget->setFocus();
 
 	this->clear();
@@ -186,7 +187,9 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
+	qDebug() << Q_FUNC_INFO << "about to add items to editor";
 	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, covers);
+	qDebug() << Q_FUNC_INFO << "items added ? to editor";
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
 	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 
@@ -271,12 +274,16 @@ void TagEditor::commitChanges()
 	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
 	QSet<int> tracksToRescan;
 
+	QList<FileHelper*> _fhs;
+
 	// Detect changes
 	for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 		// A physical and unique file per row
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(row, 0);
 		QString absPath = itemFileName->data(Qt::UserRole).toString();
-		FileHelper fh(absPath);
+		FileHelper *fh = new FileHelper(absPath);
+		//FileHelper *fh = new FileHelper(absPath);
+		_fhs.append(fh);
 		bool trackWasModified = false;
 		for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
 
@@ -292,20 +299,20 @@ void TagEditor::commitChanges()
 
 				// Replace the field by using a key stored in the header (one key per column)
 				QString key = tagEditorWidget->horizontalHeaderItem(col)->data(TagEditorTableWidget::KEY).toString();
-				if (fh.file()->tag()) {
-					TagLib::PropertyMap pm = fh.file()->tag()->properties();
+				if (fh->file()->tag()) {
+					TagLib::PropertyMap pm = fh->file()->tag()->properties();
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
 					if (pm.contains(TagLib::String(key.toStdString(), TagLib::String::UTF8))) {
 						bool b = pm.replace(key.toStdString(), TagLib::String(item->text().toStdString(), TagLib::String::UTF8));
 						if (b) {
-							fh.file()->tag()->setProperties(pm);
-							if (fh.file()->tag()) {
+							fh->file()->tag()->setProperties(pm);
+							if (fh->file()->tag()) {
 								trackWasModified = true;
 							}
 						}
 					} else {
-						trackWasModified = trackWasModified || fh.insert(key, item->text());
+						trackWasModified = trackWasModified || fh->insert(key, item->text());
 					}
 				} else {
 					qDebug() << "no valid tag for this file";
@@ -325,7 +332,7 @@ void TagEditor::commitChanges()
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
 		// The Tree structure in the Library could have been modified
 		if (trackWasModified) {
-			if (!fh.save()) {
+			if (!fh->save()) {
 				qDebug() << "tag wasn't saved :(";
 			} else {
 				qDebug() << "tag was saved";
@@ -354,6 +361,7 @@ void TagEditor::commitChanges()
 					oldPaths << oldFilepath;
 					newPaths << newAbsPath;
 				}
+				f.close();
 			} else {
 				oldPaths << oldFilepath;
 				newPaths << QString();
@@ -369,6 +377,11 @@ void TagEditor::commitChanges()
 	// Reset buttons state
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
+
+	while (!_fhs.isEmpty()) {
+		FileHelper *fh = _fhs.takeFirst();
+		delete fh;
+	}
 }
 
 /** Displays a cover only if all the selected items have exactly the same cover. */

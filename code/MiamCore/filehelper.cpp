@@ -44,21 +44,27 @@ FileHelper::FileHelper(const QMediaContent &track)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 	if (!b) {
-		init(QDir::toNativeSeparators(track.canonicalUrl().toLocalFile()));
+		b = init(QDir::toNativeSeparators(track.canonicalUrl().toLocalFile()));
+	}
+	if (!b) {
+		if (_file != NULL) {
+			delete _file;
+			_file = NULL;
+		}
+		_fileType = UNKNOWN;
 	}
 }
 
 FileHelper::FileHelper(const QString &filePath)
 	: _file(NULL)
 {
-	//qDebug() << Q_FUNC_INFO << filePath;
-	if (!init(filePath)) {
-		//init(filePath.toStdString().c_str());
-		//qDebug() << Q_FUNC_INFO << "couldn't init file, second chance!";
-		bool b = init(filePath.toStdString().c_str());
-		if (!b) {
-			//qDebug() << Q_FUNC_INFO << "couldn't init second chance :(";
-		}
+	bool b = init(filePath);
+	if (!b) {
+		b = init(filePath.toStdString().c_str());
+	}
+	if (!b) {
+		delete _file;
+		_file = NULL;
 	}
 }
 

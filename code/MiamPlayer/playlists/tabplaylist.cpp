@@ -17,7 +17,7 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
 	this->setMovable(true);
-	messageBox = new TracksNotFoundMessageBox(this);
+	//messageBox = new TracksNotFoundMessageBox(this);
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
@@ -67,12 +67,15 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	_contextMenu->addAction(loadBackground);
 	_contextMenu->addAction(clearBackground);
 
+	// Rename a playlist
 	connect(renamePlaylist, &QAction::triggered, this, [=]() {
 		QPoint mrcp = _contextMenu->property("mouseRightClickPos").toPoint();
 		int index = tabBar->tabAt(mrcp);
 		this->setCurrentIndex(index);
 		tabBar->editTab(index);
 	});
+
+	// Ask one if he wants to delete a playlist
 	connect(_deletePlaylist, &QAction::triggered, this, [=]() {
 		QPoint mrcp = _contextMenu->property("mouseRightClickPos").toPoint();
 		int index = tabBar->tabAt(mrcp);
@@ -82,6 +85,8 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 			this->deletePlaylist(p->id());
 		}
 	});
+
+	// Add the possibility to draw a custom background for every playlist
 	connect(loadBackground, &QAction::triggered, this, [=]() {
 		qDebug() << Q_FUNC_INFO << "Load background not implemented yet";
 	});
@@ -92,9 +97,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	connect(corner, &CornerWidget::innerButtonClicked, this, &TabPlaylist::addPlaylist);
 	corner->installEventFilter(this);
 }
-
-TabPlaylist::~TabPlaylist()
-{}
 
 /** Get the current playlist. */
 Playlist* TabPlaylist::currentPlayList() const
@@ -197,21 +199,17 @@ void TabPlaylist::setMainWindow(MainWindow *mainWindow)
 	_mainWindow = mainWindow;
 }
 
-/** Retranslate tabs' name and all playlists in this widget. */
+/** Retranslate context menu. */
 void TabPlaylist::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
-		for (int i = 0; i < playlists().count(); i ++) {
-			for (QLabel *label : widget(i)->findChildren<QLabel*>()) {
-				if (label && !label->text().isEmpty()) {
-					label->setText(QApplication::translate("TabPlaylist", label->text().toStdString().data()));
-				}
-			}
+		for (QAction *action : _contextMenu->actions()) {
+			action->setText(QApplication::translate("TabPlaylist", action->text().toStdString().data()));
 		}
 	}
 }
 
-void TabPlaylist::contextMenuEvent(QContextMenuEvent * event)
+void TabPlaylist::contextMenuEvent(QContextMenuEvent *event)
 {
 	int tab = tabBar()->tabAt(event->pos());
 	if (tab >= 0 && tab < count()) {
@@ -267,7 +265,6 @@ Playlist* TabPlaylist::addPlaylist()
 			}
 		}
 		if (playlistTabIndex != -1) {
-			//if (p->hash() != p->generateNewHash()) {
 			if (p->isModified()) {
 				this->setTabIcon(playlistTabIndex, this->defaultIcon(QIcon::Normal));
 			}

@@ -22,31 +22,34 @@ private:
 	QString _toPlaylist;
 	QString _toTagEditor;
 	QMenu *_properties;
-	QModelIndex theIndex;
+	QModelIndex _theIndex;
 	QFileSystemModel *_fileSystemModel;
 
 public:
 	explicit FileSystemTreeView(QWidget *parent = 0);
 
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;
 
-	inline virtual void init() {}
+	inline virtual void init() override {}
 
-	virtual void updateSelectedTracks();
+	virtual void updateSelectedTracks() override;
 
 protected:
 	/** Reimplemented to display up to 3 actions. */
-	void contextMenuEvent(QContextMenuEvent *event);
+	virtual void contextMenuEvent(QContextMenuEvent *event) override;
+
+	virtual void keyPressEvent(QKeyEvent *event) override;
 
 private:
 	/** Reimplemented with a QDirIterator to quick count tracks. */
 	int countAll(const QModelIndexList &indexes) const;
 
+	void scrollAndHighlight(const QChar &c);
+
 public slots:
 	/** Reload tree when the path has changed in the address bar. */
 	void reloadWithNewPath(const QDir &path);
-
 
 private slots:
 	/** Get the folder which is the target of one's double-click. */

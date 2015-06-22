@@ -28,7 +28,7 @@ private:
 	PlaylistManager *_playlistManager;
 
 	/** A custom message box for handling errors. */
-	TracksNotFoundMessageBox *messageBox;
+	//TracksNotFoundMessageBox *messageBox;
 
 	MainWindow *_mainWindow;
 	QMenu *_contextMenu;
@@ -37,8 +37,6 @@ private:
 public:
 	/** Default constructor. */
 	explicit TabPlaylist(QWidget *parent = 0);
-
-	virtual ~TabPlaylist();
 
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const;
@@ -69,10 +67,10 @@ public:
 	void setMainWindow(MainWindow *mainWindow);
 
 protected:
-	/** Retranslate tabs' name and all playlists in this widget. */
-	virtual void changeEvent(QEvent *event);
+	/** Retranslate context menu. */
+	virtual void changeEvent(QEvent *event) override;
 
-	virtual void contextMenuEvent(QContextMenuEvent * event);
+	virtual void contextMenuEvent(QContextMenuEvent * event) override;
 
 public slots:
 	/** Add a new playlist tab. */

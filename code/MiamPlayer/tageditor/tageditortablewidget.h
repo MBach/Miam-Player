@@ -5,6 +5,7 @@
 #include <QTableWidget>
 
 #include <cover.h>
+#include <filehelper.h>
 
 /**
  * \brief		The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
