@@ -359,6 +359,7 @@ void TabPlaylist::renameTab(const PlaylistDAO &dao)
 	for (int i = 0; i < playlists().count(); i++) {
 		Playlist *tmp = playlist(i);
 		if (tmp->id() == dao.id().toUInt()) {
+			tmp->setTitle(dao.title());
 			this->setTabText(i, dao.title());
 			break;
 		}

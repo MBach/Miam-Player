@@ -10,11 +10,12 @@ class MIAMCORE_LIBRARY MediaPlaylist : public QMediaPlaylist
 	Q_OBJECT
 private:
 	std::vector<int> _randomIndexes;
+	int _idx;
 
 public:
 	explicit MediaPlaylist(QObject *parent = NULL);
 
-	//int currentIndex() const;
+	void shuffle();
 
 public slots:
 	void next();

@@ -205,6 +205,9 @@ void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 	}
 	_state = QMediaPlayer::StoppedState;
 	_playlist = playlist;
+	if (_playlist->playbackMode() == QMediaPlaylist::Random) {
+		_playlist->shuffle();
+	}
 	_playlist->setCurrentIndex(trackIndex);
 	this->play();
 }

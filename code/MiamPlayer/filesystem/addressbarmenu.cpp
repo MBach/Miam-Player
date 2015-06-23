@@ -19,7 +19,6 @@ AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
 
 	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
 		if (!item->flags().testFlag(Qt::NoItemFlags)) {
-			qDebug() << "itemClicked" << item->data(Qt::UserRole).toString();
 			_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
 			this->clear();
 			this->close();

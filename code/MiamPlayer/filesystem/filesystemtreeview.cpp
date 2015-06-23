@@ -112,10 +112,27 @@ void FileSystemTreeView::keyPressEvent(QKeyEvent *event)
 			} else if (FileHelper::suffixes().contains(fileInfo.suffix())) {
 				this->convertIndex(selectedIndexes().first());
 			}
+		} else {
+			for (QModelIndex index : selectedIndexes()) {
+				this->convertIndex(index);
+			}
 		}
 		break;
 	}
+	case Qt::Key_Space: {
+		if (selectedIndexes().isEmpty()) {
+			this->selectionModel()->select(_fileSystemModel->index(0, 0, _theIndex), QItemSelectionModel::Select);
+		}
+		break;
+	}
+	case Qt::Key_Left:
+	case Qt::Key_Right:
+	case Qt::Key_Up:
+	case Qt::Key_Down:
+		TreeView::keyPressEvent(event);
+		break;
 	default:
+		event->isAccepted();
 		this->scrollAndHighlight((QChar)event->key());
 	}
 }
@@ -185,6 +202,7 @@ void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 	this->setRootIndex(_theIndex);
 	this->collapseAll();
 	this->update(_theIndex);
+	this->setFocus();
 }
 
 void FileSystemTreeView::updateSelectedTracks()

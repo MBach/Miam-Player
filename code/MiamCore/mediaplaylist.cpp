@@ -1,10 +1,13 @@
 #include "mediaplaylist.h"
 
 #include <algorithm>
+#include <ctime>
+#include <random>
+
 #include <QtDebug>
 
 MediaPlaylist::MediaPlaylist(QObject *parent)
-	: QMediaPlaylist(parent)
+	: QMediaPlaylist(parent), _idx(0)
 {
 	connect(this, &QMediaPlaylist::playbackModeChanged, this, [=](PlaybackMode mode) {
 		if (mode == Random) {
@@ -15,36 +18,40 @@ MediaPlaylist::MediaPlaylist(QObject *parent)
 	});
 }
 
+void MediaPlaylist::shuffle()
+{
+	this->resetRandom();
+	this->createRandom();
+}
+
 void MediaPlaylist::createRandom()
 {
-	qDebug() << Q_FUNC_INFO;
 	for (int i = 0; i < mediaCount(); i++) {
 		_randomIndexes.push_back(i);
 	}
+
+	std::srand(std::time(nullptr));
 	std::random_shuffle(_randomIndexes.begin(), _randomIndexes.end());
+	_idx = _randomIndexes[0];
 }
 
 void MediaPlaylist::resetRandom()
 {
-	qDebug() << Q_FUNC_INFO;
 	_randomIndexes.clear();
+	_idx = 0;
 }
 
 void MediaPlaylist::next()
 {
-	qDebug() << Q_FUNC_INFO;
 	if (playbackMode() == Random) {
-		qDebug() << Q_FUNC_INFO;
-		for (int i = 0; i < mediaCount(); i++) {
-			qDebug() << "index" << i << _randomIndexes[i];
+		this->setCurrentIndex(_randomIndexes[_idx]);
+		if (_idx + 1 == this->mediaCount()) {
+			_idx = 0;
+		} else {
+			_idx++;
 		}
-		qDebug() << "_randomIndexes 1" << _randomIndexes[currentIndex()];
-		this->setCurrentIndex(_randomIndexes[QMediaPlaylist::currentIndex() + 1]);
-		qDebug() << "_randomIndexes 2" << _randomIndexes[currentIndex()];
 	} else {
-		qDebug() << "currentIndex 1" << currentIndex();
 		QMediaPlaylist::next();
-		qDebug() << "currentIndex 2" << currentIndex();
 	}
 }
 

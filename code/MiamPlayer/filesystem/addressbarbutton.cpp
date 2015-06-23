@@ -124,35 +124,57 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	// Highlight button if mouse is over
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
-	p.setPen(palette.highlight().color());
+	QBrush brush;
 	if (SettingsPrivate::instance()->isCustomColors()) {
 		if (_addressBar->isDown()) {
-			p.setBrush(palette.highlight().color().lighter(140));
+			brush = palette.highlight().color().lighter(140);
 		} else {
-			p.setBrush(palette.highlight().color().lighter());
+			brush = palette.highlight().color().lighter();
 		}
 	} else {
 		if (_addressBar->isDown()) {
-			p.setBrush(palette.highlight().color().lighter());
+			brush = palette.highlight().color().lighter();
 		} else {
-			p.setBrush(palette.highlight().color().lighter(160));
+			brush = palette.highlight().color().lighter(160);
 		}
 	}
-	if (_highlighted || _textRect.contains(pos)) {
+
+	if (_highlighted) {
+		p.setPen(palette.highlight().color());
+		p.setBrush(brush);
 		p.drawRect(_textRect);
-	} else if (_highlighted || _arrowRect.contains(pos)) {
-		p.drawRect(_textRect);
+		if (_atLeastOneSubDir) {
+			p.drawRect(_arrowRect);
+		}
 	} else {
-		p.setPen(Qt::NoPen);
-		p.setBrush(Qt::NoBrush);
-		p.drawRect(_textRect);
-	}
-	if (_atLeastOneSubDir) {
-		p.drawRect(_arrowRect);
+		if (_atLeastOneSubDir) {
+			if (_textRect.contains(pos)) {
+				p.setPen(palette.highlight().color());
+				p.setBrush(brush);
+				p.drawRect(_textRect);
+				p.drawRect(_arrowRect);
+			} else if (_arrowRect.contains(pos)) {
+				p.setPen(palette.mid().color());
+				p.setBrush(palette.midlight());
+				p.drawRect(_textRect);
+				p.setPen(palette.highlight().color());
+				p.setBrush(brush);
+				p.drawRect(_arrowRect);
+			} else {
+				p.setPen(Qt::NoPen);
+				p.setBrush(Qt::NoBrush);
+				p.drawRect(_textRect);
+				p.drawRect(_arrowRect);
+			}
+		} else {
+			if (_textRect.contains(pos)) {
+				p.setPen(palette.highlight().color());
+				p.setBrush(brush);
+				p.drawRect(_textRect);
+			}
+		}
 	}
 	p.restore();
-
-
 
 	// Draw folder's name
 	QColor lighterBG = palette.highlight().color().lighter();
