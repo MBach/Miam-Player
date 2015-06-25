@@ -206,9 +206,10 @@ void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 	_state = QMediaPlayer::StoppedState;
 	_playlist = playlist;
 	if (_playlist->playbackMode() == QMediaPlaylist::Random) {
-		_playlist->shuffle();
+		_playlist->shuffle(trackIndex);
+	} else {
+		_playlist->setCurrentIndex(trackIndex);
 	}
-	_playlist->setCurrentIndex(trackIndex);
 	this->play();
 }
 
@@ -220,9 +221,9 @@ void MediaPlayer::setVolume(int v)
 	} else {
 		if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
 			_player->audio()->setVolume(v);
-		} else {
+		}/* else {
 			qDebug() << Q_FUNC_INFO << "couldn't set volume to" << v;
-		}
+		}*/
 	}
 }
 
@@ -244,11 +245,9 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 
 		// Resume playback is file was previously opened
 		if (_state == QMediaPlayer::PausedState) {
-			qDebug() << Q_FUNC_INFO << "QMediaPlayer::PausedState";
 			_player->resume();
 			this->setState(QMediaPlayer::PlayingState);
 		} else {
-			qDebug() << Q_FUNC_INFO << _state << mc.canonicalUrl().toLocalFile();
 			QString file = mc.canonicalUrl().toLocalFile();
 			if (_media) {
 				delete _media;
@@ -265,6 +264,7 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 			_remotePlayer->play(mc.canonicalUrl());
 		}
 	}
+	this->setVolume(Settings::instance()->volume());
 }
 
 /** Current position in the media, percent-based. */
@@ -383,13 +383,12 @@ void MediaPlayer::skipBackward()
 		return;
 	}
 	this->stop();
-	_playlist->previous();
+	_playlist->skipBackward();
 	this->play();
 }
 
 void MediaPlayer::skipForward()
 {
-	qDebug() << Q_FUNC_INFO;
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
 		if (_state != QMediaPlayer::StoppedState) {
 			this->stop();
@@ -397,7 +396,7 @@ void MediaPlayer::skipForward()
 		return;
 	}
 	this->stop();
-	_playlist->next();
+	_playlist->skipForward();
 	this->play();
 }
 

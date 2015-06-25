@@ -143,15 +143,22 @@ void TabPlaylist::init()
 	auto settings = SettingsPrivate::instance();
 	if (settings->playbackRestorePlaylistsAtStartup()) {
 		QList<uint> list = settings->lastPlaylistSession();
-		for (int i = 0; i < list.count(); i++) {
-			this->loadPlaylist(list.at(i));
+		if (!list.isEmpty()) {
+			for (int i = 0; i < list.count(); i++) {
+				this->loadPlaylist(list.at(i));
+			}
+			int lastActiveTab = settings->value("lastActiveTab").toInt();
+			setCurrentIndex(lastActiveTab);
+			MediaPlayer::instance()->setPlaylist(playlist(lastActiveTab)->mediaPlaylist());
 		}
-		setCurrentIndex(settings->value("lastActiveTab").toInt());
 	}
 	if (playlists().isEmpty()) {
 		addPlaylist();
 	}
 	blockSignals(false);
+	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settings->value("lastActivePlaylistMode").toInt();
+	currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
+	emit updatePlaybackModeButton();
 }
 
 /** Load a playlist saved in database. */
