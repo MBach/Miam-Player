@@ -37,7 +37,7 @@ public:
 	enum PlaylistRoles { PlaylistID			= Qt::UserRole + 1,
 						 PlaylistModified	= Qt::UserRole + 2};
 
-	explicit PlaylistDialog(QWidget *parent = NULL);
+	explicit PlaylistDialog(QWidget *parent = nullptr);
 
 	inline void setPlaylists(const QList<Playlist*> &playlists) { _playlists = playlists; }
 

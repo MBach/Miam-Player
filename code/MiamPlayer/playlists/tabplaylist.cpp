@@ -12,7 +12,7 @@
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _playlistManager(new PlaylistManager(this)), _mainWindow(NULL)
+	QTabWidget(parent), _playlistManager(new PlaylistManager(this)), _mainWindow(nullptr)
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
@@ -119,7 +119,7 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 		return true;
 	} else if (event->type() == QEvent::Drop) {
 		QDropEvent *de = static_cast<QDropEvent*>(event);
-		if (de->source() == NULL) {
+		if (de->source() == nullptr) {
 			// Drag & Drop comes from another application but has landed in the playlist area
 			de->ignore();
 			QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
@@ -166,7 +166,7 @@ void TabPlaylist::init()
 /** Load a playlist saved in database. */
 void TabPlaylist::loadPlaylist(uint playlistId)
 {
-	Playlist *playlist = NULL;
+	Playlist *playlist = nullptr;
 	auto _db = SqlDatabase::instance();
 	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
 
@@ -317,7 +317,7 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	if (currentPlayList()->isModified()) {
 		this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	}
-	if (MediaPlayer::instance()->playlist() == NULL) {
+	if (MediaPlayer::instance()->playlist() == nullptr) {
 		MediaPlayer::instance()->setPlaylist(currentPlayList()->mediaPlaylist());
 	}
 	if (currentPlayList()->mediaPlaylist()->currentIndex() == -1) {

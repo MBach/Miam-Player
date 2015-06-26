@@ -11,8 +11,8 @@
 
 ClosePlaylistPopup::ClosePlaylistPopup(Playlist *playlist, int index, QWidget *parent) :
 	QDialog(parent), _playlist(playlist), _index(index),
-	_deleteButton(NULL),
-	_replaceButton(NULL)
+	_deleteButton(nullptr),
+	_replaceButton(nullptr)
 {
 	setupUi(this);
 

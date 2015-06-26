@@ -20,10 +20,10 @@
 
 #include <QDir>
 
-MediaPlayer* MediaPlayer::_mediaPlayer = NULL;
+MediaPlayer* MediaPlayer::_mediaPlayer = nullptr;
 
 MediaPlayer::MediaPlayer(QObject *parent) :
-	QObject(parent), _playlist(NULL), _state(QMediaPlayer::StoppedState), _media(NULL), _remotePlayer(NULL)
+	QObject(parent), _playlist(nullptr), _state(QMediaPlayer::StoppedState), _media(nullptr), _remotePlayer(nullptr)
   , _stopAfterCurrent(false)
 {
 #ifdef Q_OS_OSX
@@ -60,7 +60,7 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 
 MediaPlayer* MediaPlayer::instance()
 {
-	if (_mediaPlayer == NULL) {
+	if (_mediaPlayer == nullptr) {
 		_mediaPlayer = new MediaPlayer;
 	}
 	return _mediaPlayer;
@@ -77,7 +77,7 @@ void MediaPlayer::createLocalConnections()
 			p->disconnect();
 		}
 	}
-	_remotePlayer = NULL;
+	_remotePlayer = nullptr;
 	_player->disconnect();
 
 	connect(_player, &VlcMediaPlayer::opening, this, [=]() {
@@ -141,7 +141,7 @@ void MediaPlayer::createRemoteConnections(const QUrl &track)
 	// Reconnect the good one
 	RemoteMediaPlayer *p = _remotePlayers.value(track.host());
 	if (!p) {
-		_remotePlayer = NULL;
+		_remotePlayer = nullptr;
 		return;
 	}
 	_remotePlayer = p;

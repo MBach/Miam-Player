@@ -14,7 +14,7 @@
 const QList<int> QuickStart::ratios = QList<int>() << 0 << 3 << 2;
 
 QuickStart::QuickStart(QWidget *parent) :
-	QWidget(parent), _totalMusicFiles(0), _worker(NULL), _qsse(NULL)
+	QWidget(parent), _totalMusicFiles(0), _worker(nullptr), _qsse(nullptr)
 {
 	setupUi(this);
 

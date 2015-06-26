@@ -13,7 +13,7 @@
 #include "starrating.h"
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent) :
-	QDialog(NULL), _targetedColor(NULL), _animation(new QPropertyAnimation(this, "windowOpacity")), _timer(new QTimer(this))
+	QDialog(nullptr), _targetedColor(nullptr), _animation(new QPropertyAnimation(this, "windowOpacity")), _timer(new QTimer(this))
 {
 	setupUi(this);
 
@@ -303,6 +303,7 @@ void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {
+	qDebug() << Q_FUNC_INFO << b;
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setCustomColors(b);
 	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
@@ -314,6 +315,8 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 		}
 	}
 	if (b) {
+		qDebug() << Q_FUNC_INFO << settings->customColors(QPalette::Base) << settings->customColors(QPalette::Highlight);
+
 		bgPrimaryColorWidget->setColor(settings->customColors(QPalette::Base));
 		selectedItemColorWidget->setColor(settings->customColors(QPalette::Highlight));
 	} else {

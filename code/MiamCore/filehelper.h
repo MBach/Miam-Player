@@ -113,7 +113,7 @@ public:
 	inline TagLib::File *file() { return _file; }
 
 private:
-	QString convertKeyToID3v2Key(QString key);
+	QString convertKeyToID3v2Key(QString key) const;
 
 	QString extractFlacFeature(const QString &featureToExtract) const;
 	QString extractGenericFeature(const QString &featureToExtract) const;

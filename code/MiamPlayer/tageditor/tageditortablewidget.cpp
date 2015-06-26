@@ -128,7 +128,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		QTableWidgetItem *artist = new QTableWidgetItem(fh.artist());
 		QTableWidgetItem *artistAlbum = new QTableWidgetItem(fh.artistAlbum());
 		QTableWidgetItem *album = new QTableWidgetItem(fh.album());
-		QTableWidgetItem *trackNumber = NULL;
+		QTableWidgetItem *trackNumber = nullptr;
 		if (fh.trackNumber() == "00") {
 			trackNumber = new QTableWidgetItem();
 		} else {
@@ -163,7 +163,7 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
 		/// One in this class, one in TagEditor class ? But here is quite easy!
 		/*Cover *cover = fh.extractCover();
-		if (cover != NULL && !cover->byteArray().isEmpty()) {
+		if (cover != nullptr && !cover->byteArray().isEmpty()) {
 			covers.insert(row, cover);
 		}*/
 	}

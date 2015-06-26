@@ -518,7 +518,7 @@ void MainWindow::dragMoveEvent(QDragMoveEvent *event)
 void MainWindow::dropEvent(QDropEvent *event)
 {
 	// Ignore Drag & Drop if the source is a part of this player
-	if (event->source() != NULL) {
+	if (event->source() != nullptr) {
 		return;
 	}
 	this->dispatchDrop(event);

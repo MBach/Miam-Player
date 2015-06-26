@@ -114,7 +114,7 @@ void TableView::insertNode(GenericDAO *node)
 		QStandardItem *title = new QStandardItem(trackDao->title());
 		QStandardItem *length = new QStandardItem(trackDao->length());
 
-		_model->invisibleRootItem()->appendRow({NULL, track, title, length});
+		_model->invisibleRootItem()->appendRow({nullptr, track, title, length});
 		//_mediaPlaylist->addMedia(QMediaContent(trackDao->uri()));
 		break;
 	}

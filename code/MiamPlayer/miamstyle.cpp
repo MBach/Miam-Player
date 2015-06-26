@@ -172,28 +172,36 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 	case CE_MenuBarItem:{
 		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
 		const bool act = somi->state & (State_Sunken | State_Selected);
+		QPalette palette = QApplication::palette();
+		QBrush brush;
 		if (act) {
-			painter->save();
-			painter->setPen(QApplication::palette().highlight().color());
-			painter->setBrush(QApplication::palette().highlight().color().light());
+			painter->setPen(palette.highlight().color());
+			brush = palette.highlight().color().light();
+			painter->setBrush(brush);
 			painter->drawRect(option->rect.adjusted(0, 0, -1, -1));
-			painter->restore();
 		} else {
-			painter->fillRect(option->rect, QApplication::palette().window());
+			brush = palette.window();
+			painter->fillRect(option->rect, palette.window());
 		}
 
 		uint alignment = Qt::AlignCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
 		if (!proxy()->styleHint(SH_UnderlineShortcut, somi, widget)) {
 			alignment |= Qt::TextHideMnemonic;
 		}
+		if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
+			painter->setPen(palette.highlightedText().color());
+		} else {
+			painter->setPen(palette.text().color());
+		}
 		painter->drawText(option->rect, alignment, somi->text);
 		break;
 	}
 	case CE_MenuBarEmptyArea:{
-		//qDebug() << Q_FUNC_INFO << "CE_MenuBarEmptyArea";
 		painter->fillRect(option->rect, QApplication::palette().window());
 		break;
 	}
+	case CE_FocusFrame:
+		break;
 	default:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}
@@ -288,6 +296,37 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 			}
 			painter->restore();
 		}
+		break;
+	}
+	case PE_PanelLineEdit: {
+		QPen pen = opt->palette.window().color();
+		QBrush brush = opt->palette.base();
+		painter->setPen(pen);
+		painter->setBrush(brush);
+		painter->drawRect(widget->rect().adjusted(0, 0, -1, -1));
+		break;
+	}
+	case PE_FrameGroupBox: {
+		QPen pen = opt->palette.window().color();
+		QBrush brush = opt->palette.base();
+		painter->setPen(pen);
+		painter->setBrush(brush);
+		//painter->drawRect(widget->rect());
+		QProxyStyle::drawPrimitive(element, opt, painter, widget);
+
+		break;
+	}
+	case PE_FrameStatusBarItem:
+	case PE_FrameButtonTool:
+	case PE_FrameButtonBevel:
+	case PE_FrameFocusRect:
+		break;
+	case PE_FrameMenu: {
+		QPen pen = opt->palette.mid().color();
+		QBrush brush = opt->palette.window();
+		painter->setPen(pen);
+		painter->setBrush(brush);
+		painter->drawRect(widget->rect().adjusted(0, 0, -1, -1));
 		break;
 	}
 	case PE_FrameTabBarBase:

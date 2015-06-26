@@ -22,7 +22,7 @@ private:
 					 DF_IsRemote			= Qt::UserRole + 8,
 					 DF_IconPath			= Qt::UserRole + 9*/};
 public:
-	explicit TableFilterProxyModel(QObject *parent = NULL);
+	explicit TableFilterProxyModel(QObject *parent = nullptr);
 
 protected:
 	/** Redefined for custom sorting. */

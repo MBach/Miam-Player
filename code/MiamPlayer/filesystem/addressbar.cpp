@@ -11,7 +11,7 @@
 #include <QtDebug>
 
 AddressBar::AddressBar(QWidget *parent) :
-	QWidget(parent), _lastHighlightedButton(NULL), _isDown(false)
+	QWidget(parent), _lastHighlightedButton(nullptr), _isDown(false)
 {
 	hBoxLayout = new QHBoxLayout(this);
 	hBoxLayout->setContentsMargins(0, 0, 0, 0);
@@ -149,7 +149,7 @@ void AddressBar::clear()
 		// Delete items from the end
 		while (hBoxLayout->count() > 2) {
 			QLayoutItem *item = hBoxLayout->takeAt(1);
-			if (item != NULL && item->widget() != NULL) {
+			if (item != nullptr && item->widget() != nullptr) {
 				delete item->widget();
 			}
 		}
@@ -295,7 +295,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 			item->setFlags(Qt::NoItemFlags);
 		}
 		// Check if the new submenu has one of its items already displayed, then make it bold
-		if (nextButton != NULL && fileInfo.absoluteFilePath() == nextButton->path().absolutePath()) {
+		if (nextButton != nullptr && fileInfo.absoluteFilePath() == nextButton->path().absolutePath()) {
 			QFont font = item->font();
 			font.setBold(true);
 			item->setFont(font);
@@ -328,11 +328,11 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 {
 	// Delete existing entries
 	_menu->clear();
-	AddressBarButton *nextButton = NULL;
+	AddressBarButton *nextButton = nullptr;
 
 	for (int i = 1; i < hBoxLayout->count() - 2; i++) {
 		QLayoutItem *layoutItem = hBoxLayout->itemAt(i);
-		if (layoutItem != NULL && layoutItem->widget() != NULL && hBoxLayout->itemAt(i)->widget() == button) {
+		if (layoutItem != nullptr && layoutItem->widget() != nullptr && hBoxLayout->itemAt(i)->widget() == button) {
 			nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i + 1)->widget());
 			break;
 		}
@@ -349,7 +349,7 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 		item->setData(Qt::UserRole, absDirPath);
 
 		// Check if the new submenu has one of its items already displayed, then make it bold
-		if (nextButton != NULL && nextButton->path().absolutePath() == it.fileInfo().absoluteFilePath()) {
+		if (nextButton != nullptr && nextButton->path().absolutePath() == it.fileInfo().absoluteFilePath()) {
 			QFont font = item->font();
 			font.setBold(true);
 			item->setFont(font);

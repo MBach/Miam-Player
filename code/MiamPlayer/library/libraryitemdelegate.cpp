@@ -210,6 +210,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	}
 	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
 	QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+
 	this->paintText(painter, option, rectText, s, item);
 }
 
@@ -410,7 +411,7 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
 	} else {
 		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
-			if ((opt.palette.highlight().color().lighter(160).saturation() - opt.palette.highlightedText().color().saturation()) < 128) {
+			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {
 				p->setPen(opt.palette.text().color());
 			} else {
 				p->setPen(opt.palette.highlightedText().color());

@@ -11,7 +11,7 @@
 
 #include <QtDebug>
 
-SettingsPrivate* SettingsPrivate::settings = NULL;
+SettingsPrivate* SettingsPrivate::settings = nullptr;
 
 /** Private constructor. */
 SettingsPrivate::SettingsPrivate(const QString &organization, const QString &application)
@@ -35,7 +35,7 @@ SettingsPrivate::SettingsPrivate(const QString &organization, const QString &app
 /** Singleton pattern to be able to easily use SettingsPrivate everywhere in the app. */
 SettingsPrivate* SettingsPrivate::instance()
 {
-	if (settings == NULL) {
+	if (settings == nullptr) {
 		settings = new SettingsPrivate;
 	}
 	return settings;
@@ -104,8 +104,11 @@ QColor SettingsPrivate::customColors(QPalette::ColorRole cr) const
 	QMap<QString, QVariant> customCo = value("customColorsMap").toMap();
 	QColor color = customCo.value(QString(cr)).value<QColor>();
 	if (color.isValid()) {
+		qDebug() << Q_FUNC_INFO << "color is valid" << color;
 		return color;
 	} else {
+		qDebug() << Q_FUNC_INFO << "color is NOT valid" << QApplication::palette().color(cr);
+
 		return QApplication::palette().color(cr);
 	}
 }

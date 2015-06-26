@@ -10,7 +10,7 @@
 
 #include <QtDebug>
 
-Settings* Settings::settings = NULL;
+Settings* Settings::settings = nullptr;
 
 /** Private constructor. */
 Settings::Settings(const QString &organization, const QString &application)
@@ -22,7 +22,7 @@ Settings::Settings(const QString &organization, const QString &application)
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
 Settings* Settings::instance()
 {
-	if (settings == NULL) {
+	if (settings == nullptr) {
 		settings = new Settings;
 	}
 	return settings;

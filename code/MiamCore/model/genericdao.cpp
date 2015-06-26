@@ -1,7 +1,7 @@
 #include "genericdao.h"
 
 GenericDAO::GenericDAO(Miam::ItemType itemType, QObject *parent) :
-	QObject(parent), _parent(NULL), _type(itemType)
+	QObject(parent), _parent(nullptr), _type(itemType)
 {}
 
 GenericDAO::GenericDAO(const GenericDAO &remoteObject) :

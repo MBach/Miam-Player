@@ -18,7 +18,7 @@
 #include <QtDebug>
 
 LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(new LibraryItemModel(parent)), _searchBar(NULL)
+	TreeView(parent), _libraryModel(new LibraryItemModel(parent)), _searchBar(nullptr)
 {
 	auto settings = SettingsPrivate::instance();
 	int iconSize = settings->coverSize();
@@ -93,9 +93,9 @@ const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 	// proxy, etc
 	//if (_expandedCovers.contains(album)) {
 	//	qDebug() << _expandedCovers.value(album);
-		return _expandedCovers.value(album, NULL);
+		return _expandedCovers.value(album, nullptr);
 	//} else {
-	//	return NULL;
+	//	return nullptr;
 	//}
 }
 
@@ -140,14 +140,12 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
-		qDebug() << Q_FUNC_INFO << "about to extract cover for index" << item->text();
 		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
 		QString coverPath = albumItem->coverPath();
 		if (coverPath.isEmpty()) {
-			qDebug() << Q_FUNC_INFO << "no cover for this node, return";
 			return;
 		}
-		QImage *image = NULL;
+		QImage *image = nullptr;
 		if (coverPath.startsWith("file://")) {
 			FileHelper fh(coverPath);
 			Cover *cover = fh.extractCover();
@@ -155,15 +153,11 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 				image = new QImage();
 				image->loadFromData(cover->byteArray(), cover->format());
 				delete cover;
-			} else {
-				qDebug() << Q_FUNC_INFO << "couldn't extract cover";
 			}
 		} else {
 			image = new QImage(coverPath);
 		}
 		_expandedCovers.insert(albumItem, image);
-	} else {
-		qDebug() << Q_FUNC_INFO << "index isn't from Album type";
 	}
 }
 
@@ -351,9 +345,9 @@ void LibraryTreeView::highlightMatchingText(const QString &text)
 			item->setData(true, Miam::DF_Highlighted);
 			QStandardItem *parent = item->parent();
 			// For every item marked, mark also the top level item
-			while (parent != NULL) {
+			while (parent != nullptr) {
 				parent->setData(true, Miam::DF_Highlighted);
-				if (parent->parent() == NULL) {
+				if (parent->parent() == nullptr) {
 					lettersToHighlight << parent->data(Miam::DF_NormalizedString).toString().toUpper().at(0);
 				}
 				parent = parent->parent();
@@ -402,7 +396,7 @@ void LibraryTreeView::reloadCovers()
 /** Reimplemented. */
 void LibraryTreeView::reset()
 {
-	if (sender() == NULL) {
+	if (sender() == nullptr) {
 		return;
 	}
 	_circleProgressBar->show();

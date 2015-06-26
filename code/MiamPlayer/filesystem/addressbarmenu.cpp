@@ -133,7 +133,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 			p.setFont(it->font());
 			QColor lighterBG = palette.highlight().color().lighter();
 			QColor highlightedText = palette.highlightedText().color();
-			if (itemIsEnabled && isHighlighted && qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
+			if (itemIsEnabled && isHighlighted && qAbs(lighterBG.value() - highlightedText.value()) > 128) {
 				p.setPen(highlightedText);
 			} else {
 				if (itemIsEnabled) {

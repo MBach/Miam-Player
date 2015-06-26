@@ -11,7 +11,7 @@
 #include "model/selectedtracksmodel.h"
 #include "abstractsearchdialog.h"
 
-PluginManager* PluginManager::_pluginManager = NULL;
+PluginManager* PluginManager::_pluginManager = nullptr;
 
 /** Constructor with strong coupling. */
 PluginManager::PluginManager(QObject *parent) :
@@ -41,7 +41,7 @@ void PluginManager::setMainWindow(MainWindow *mainWindow)
 /** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
 PluginManager * PluginManager::instance()
 {
-	if (_pluginManager == NULL) {
+	if (_pluginManager == nullptr) {
 		_pluginManager = new PluginManager;
 	}
 	return _pluginManager;
@@ -146,7 +146,7 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 {
 	QWidget *view = mediaPlayerPlugin->providesView();
-	if (view != NULL) {
+	if (view != nullptr) {
 		// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
 		if (_mainWindow->menuView->actions().count() == 3) {
 			_mainWindow->menuView->addSeparator();
@@ -239,7 +239,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 		QMessageBox *m = new QMessageBox(QMessageBox::Warning, "Warning", message, QMessageBox::Close, _mainWindow);
 		m->show();
 	}
-	return NULL;
+	return nullptr;
 }
 
 /** Unload a plugin by its name. */
@@ -267,7 +267,7 @@ void PluginManager::unloadPlugin(const QString &pluginName)
 	_dependencies.remove(pluginName);
 	basic->cleanUpBeforeDestroy();
 	delete basic;
-	basic = NULL;
+	basic = nullptr;
 }
 
 /** Load or unload a plugin when one is switching a checkbox in the options. */

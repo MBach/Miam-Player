@@ -26,7 +26,7 @@ private:
 	QPushButton *_deleteButton, *_replaceButton;
 
 public:
-	explicit ClosePlaylistPopup(Playlist *playlist, int index, QWidget *parent = NULL);
+	explicit ClosePlaylistPopup(Playlist *playlist, int index, QWidget *parent = nullptr);
 
 private slots:
 	void execActionFromClosePopup(QAbstractButton *action);

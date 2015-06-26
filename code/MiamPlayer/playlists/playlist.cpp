@@ -22,7 +22,7 @@
 #include <QtDebug>
 
 Playlist::Playlist(QWidget *parent) :
-	QTableView(parent), _dropDownIndex(NULL), _hash(0), _id(0)
+	QTableView(parent), _dropDownIndex(nullptr), _hash(0), _id(0)
 {
 	_playlistModel = new PlaylistModel(this);
 
@@ -203,7 +203,7 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 {
 	QModelIndex index = this->indexAt(event->pos());
 	QStandardItem *item = _playlistModel->itemFromIndex(index);
-	if (item != NULL) {
+	if (item != nullptr) {
 		for (QAction *action : _trackProperties->actions()) {
 			action->setText(tr(action->text().toStdString().data()));
 		}
@@ -214,7 +214,7 @@ void Playlist::contextMenuEvent(QContextMenuEvent *event)
 void Playlist::dragEnterEvent(QDragEnterEvent *event)
 {
 	// If the source of the drag and drop is another application, do nothing?
-	if (event->source() == NULL) {
+	if (event->source() == nullptr) {
 		event->ignore();
 	} else {
 		event->acceptProposedAction();
@@ -284,7 +284,7 @@ void Playlist::dragMoveEvent(QDragMoveEvent *event)
 	this->setProperty("dragFromTreeview", event->mimeData()->hasFormat("treeview/x-treeview-item"));
 	this->viewport()->repaint();
 	delete _dropDownIndex;
-	_dropDownIndex = NULL;
+	_dropDownIndex = nullptr;
 }
 
 /** Redefined to be able to move tracks between playlists or internally. */
@@ -333,7 +333,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		qDebug() << "TODO drop on corner!";
 		event->ignore();
 		return;
-	} else if (source == NULL) {
+	} else if (source == nullptr) {
 		event->ignore();
 		return;
 	} else {

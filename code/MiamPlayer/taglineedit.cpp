@@ -56,7 +56,7 @@ void TagLineEdit::addTag(const QString &tag, int column)
 void TagLineEdit::backspace()
 {
 	bool oneTagNeedToBeRemoved = false;
-	TagButton *tag = NULL;
+	TagButton *tag = nullptr;
 	QPoint cursorCenter;
 
 	cursorBackward(false);

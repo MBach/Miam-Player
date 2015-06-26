@@ -107,7 +107,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
 			QColor lighterBG = o.palette.highlight().color().lighter(160);
 			QColor highlightedText = o.palette.highlightedText().color();
-			if (qAbs(lighterBG.saturation() - highlightedText.saturation()) > 128) {
+			if (qAbs(lighterBG.value() - highlightedText.value()) > 128) {
 				p.setPen(highlightedText);
 			} else {
 				p.setPen(o.palette.windowText().color());

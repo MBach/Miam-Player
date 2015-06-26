@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 AlbumCover::AlbumCover(QWidget *parent) :
-	QWidget(parent), _cover(NULL), _subMenuApplyTo(NULL)
+	QWidget(parent), _cover(nullptr), _subMenuApplyTo(nullptr)
 {
 	this->setAcceptDrops(true);
 	_imageMenu = new QMenu(this);
@@ -38,7 +38,7 @@ void AlbumCover::setCover(Cover *cover)
 /** Puts a default picture in this widget. */
 void AlbumCover::resetCover()
 {
-	_cover = NULL;
+	_cover = nullptr;
 	update();
 }
 
@@ -46,7 +46,7 @@ void AlbumCover::resetCover()
 void AlbumCover::createPixmapFromFile(const QString &fileName)
 {
 	/// XXX
-	if (_cover != NULL) {
+	if (_cover != nullptr) {
 		delete _cover;
 	}
 	_cover = new Cover(fileName);
@@ -59,7 +59,7 @@ void AlbumCover::createPixmapFromFile(const QString &fileName)
 /** Redefined to display a small context menu in the view. */
 void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 {
-	bool isDefaultCover = (_cover == NULL);
+	bool isDefaultCover = (_cover == nullptr);
 	_removeCoverAction->setDisabled(isDefaultCover);
 	_extractCoverAction->setDisabled(isDefaultCover);
 
@@ -67,7 +67,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	if (isCoverForUniqueAlbum) {
 		if (_applyCoverToCurrentAlbumAction) {
 			delete _applyCoverToCurrentAlbumAction;
-			_applyCoverToCurrentAlbumAction = NULL;
+			_applyCoverToCurrentAlbumAction = nullptr;
 		}
 		_applyCoverToCurrentAlbumAction = _imageMenu->addAction(tr("Apply cover to '%1'").arg(_album));
 		_applyCoverToCurrentAlbumAction->setDisabled(isDefaultCover);
@@ -76,7 +76,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	} else {
 		if (_subMenuApplyTo) {
 			delete _subMenuApplyTo;
-			_subMenuApplyTo = NULL;
+			_subMenuApplyTo = nullptr;
 		}
 		_subMenuApplyTo = _imageMenu->addMenu(tr("Apply cover"));
 		QAction *applyCoverToAlbumOnlyAction = _subMenuApplyTo->addAction(tr("to '%1' only").arg(_album));
@@ -98,7 +98,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 void AlbumCover::dragEnterEvent(QDragEnterEvent *event)
 {
 	// If the source of the drag and drop is another application
-	if (event->source() == NULL) {
+	if (event->source() == nullptr) {
 		event->acceptProposedAction();
 	}
 }
@@ -122,7 +122,7 @@ void AlbumCover::dropEvent(QDropEvent *event)
 void AlbumCover::paintEvent(QPaintEvent *)
 {
 	QPainter painter(this);
-	if (_cover == NULL || _cover->byteArray().isEmpty()) {
+	if (_cover == nullptr || _cover->byteArray().isEmpty()) {
 		painter.drawPixmap(rect(), QPixmap(":/icons/disc"));
 	} else {
 		QPixmap p;
@@ -138,7 +138,7 @@ void AlbumCover::paintEvent(QPaintEvent *)
 /** Removes the current cover from this object, and in the table. */
 void AlbumCover::removeCover()
 {
-	_cover = NULL;
+	_cover = nullptr;
 	emit coverHasChanged(_cover);
 	repaint();
 }

@@ -36,7 +36,7 @@ private:
 	QTimer *_timer;
 
 public:
-	CustomizeThemeDialog(QWidget *parent = NULL);
+	CustomizeThemeDialog(QWidget *parent = nullptr);
 
 	/** Load theme at startup. */
 	void loadTheme();

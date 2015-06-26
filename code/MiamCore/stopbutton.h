@@ -16,7 +16,7 @@ private:
 	QMenu _menu;
 
 public:
-	explicit StopButton(QWidget *parent = NULL);
+	explicit StopButton(QWidget *parent = nullptr);
 
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent *) override;

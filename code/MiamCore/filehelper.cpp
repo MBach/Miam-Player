@@ -40,23 +40,23 @@
 #include <QtDebug>
 
 FileHelper::FileHelper(const QMediaContent &track)
-	: _file(NULL), _fileType(UNKNOWN)
+	: _file(nullptr), _fileType(UNKNOWN)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 	if (!b) {
 		b = init(QDir::toNativeSeparators(track.canonicalUrl().toLocalFile()));
 	}
 	if (!b) {
-		if (_file != NULL) {
+		if (_file != nullptr) {
 			delete _file;
-			_file = NULL;
+			_file = nullptr;
 		}
 		_fileType = UNKNOWN;
 	}
 }
 
 FileHelper::FileHelper(const QString &filePath)
-	: _file(NULL)
+	: _file(nullptr)
 {
 	bool b = init(filePath);
 	if (!b) {
@@ -64,7 +64,7 @@ FileHelper::FileHelper(const QString &filePath)
 	}
 	if (!b) {
 		delete _file;
-		_file = NULL;
+		_file = nullptr;
 	}
 }
 
@@ -109,14 +109,14 @@ bool FileHelper::init(const QString &filePath)
 		_file = new TagLib::Ogg::Opus::File(fp);
 		_fileType = OGG;
 	} else {
-		_file = NULL;
+		_file = nullptr;
 		_fileType = UNKNOWN;
 	}
 	if (isValid()) {
 		return true;
-	} else if (_file != NULL) {
+	} else if (_file != nullptr) {
 		delete _file;
-		_file = NULL;
+		_file = nullptr;
 		_fileType = UNKNOWN;
 	}
 	return false;
@@ -124,9 +124,9 @@ bool FileHelper::init(const QString &filePath)
 
 FileHelper::~FileHelper()
 {
-	if (_file != NULL) {
+	if (_file != nullptr) {
 		delete _file;
-		_file = NULL;
+		_file = nullptr;
 	}
 }
 
@@ -178,7 +178,7 @@ QString FileHelper::artistAlbum() const
 		qDebug() << Q_FUNC_INFO << "Not yet implemented for ASF file";
 		break;
 	case FLAC:
-		artAlb = this->extractFlacFeature("TPE2");
+		artAlb = this->extractFlacFeature("ALBUMARTIST");
 		break;
 	case MP4:
 		artAlb = this->extractGenericFeature("aART");
@@ -262,10 +262,7 @@ int FileHelper::discNumber(bool canBeZero) const
 		qDebug() << Q_FUNC_INFO << "Not yet implemented for ASF file";
 		break;
 	case FLAC:
-		strDiscNumber = this->extractFlacFeature("TPOS");
-		if (strDiscNumber.isEmpty()) {
-			strDiscNumber = this->extractFlacFeature("DISCNUMBER");
-		}
+		strDiscNumber = this->extractFlacFeature("DISCNUMBER");
 		break;
 	case MP3:
 		strDiscNumber = this->extractMpegFeature("TPOS");
@@ -285,7 +282,7 @@ int FileHelper::discNumber(bool canBeZero) const
 
 Cover* FileHelper::extractCover()
 {
-	Cover *cover = NULL;
+	Cover *cover = nullptr;
 	switch (_fileType) {
 	case MP3: {
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
@@ -377,8 +374,8 @@ bool FileHelper::hasCover() const
 				for (TagLib::ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
 					TagLib::ID3v2::AttachedPictureFrame *pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
-					//atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty() && pictureFrame->type() != TagLib::ID3v2::AttachedPictureFrame::Other);
-					atLeastOnePicture = atLeastOnePicture || (pictureFrame != NULL && !pictureFrame->picture().isEmpty());
+					//atLeastOnePicture = atLeastOnePicture || (pictureFrame != nullptr && !pictureFrame->picture().isEmpty() && pictureFrame->type() != TagLib::ID3v2::AttachedPictureFrame::Other);
+					atLeastOnePicture = atLeastOnePicture || (pictureFrame != nullptr && !pictureFrame->picture().isEmpty());
 				}
 			}
 		}
@@ -446,7 +443,7 @@ void FileHelper::setCover(Cover *cover)
 					break;
 				}
 			}
-			if (cover != NULL) {
+			if (cover != nullptr) {
 				TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
 				TagLib::ID3v2::AttachedPictureFrame *pictureFrame = new TagLib::ID3v2::AttachedPictureFrame();
 				pictureFrame->setMimeType(cover->mimeType());
@@ -549,7 +546,7 @@ void FileHelper::setRating(int rating)
 
 bool FileHelper::isValid() const
 {
-	return (_file != NULL && _file->isValid());
+	return (_file != nullptr && _file->isValid());
 }
 
 QString FileHelper::title() const
@@ -639,7 +636,7 @@ bool FileHelper::save()
 	return false;
 }
 
-QString FileHelper::convertKeyToID3v2Key(QString key)
+QString FileHelper::convertKeyToID3v2Key(QString key) const
 {
 	/// TODO other relevant keys
 	if (key.compare("ARTISTALBUM") == 0) {
@@ -656,7 +653,8 @@ QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 	QString feature;
 	if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
 		if (flacFile->ID3v2Tag()) {
-			TagLib::ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[featureToExtract.toStdString().data()];
+			QString key = this->convertKeyToID3v2Key(featureToExtract);
+			TagLib::ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[key.toStdString().data()];
 			if (!l.isEmpty()) {
 				feature = QString(l.front()->toString().toCString(true));
 			}
@@ -747,7 +745,8 @@ void FileHelper::setFlacAttribute(const std::string &attribute, const QString &v
 	if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
 		if (flacFile->hasID3v2Tag()) {
 			TagLib::ID3v2::Tag *tag = flacFile->ID3v2Tag();
-			TagLib::ID3v2::FrameList l = tag->frameListMap()[attribute.data()];
+			QString key = this->convertKeyToID3v2Key(attribute.data());
+			TagLib::ID3v2::FrameList l = tag->frameListMap()[key.toStdString().data()];
 			if (!l.isEmpty()) {
 				tag->removeFrame(l.front());
 			}
@@ -774,7 +773,7 @@ void FileHelper::setRatingForID3v2(int rating, TagLib::ID3v2::Tag *tag)
 	if (rating == 0 && !l.isEmpty()) {
 		tag->removeFrame(l.front());
 	} else {
-		TagLib::ID3v2::PopularimeterFrame *pf = NULL;
+		TagLib::ID3v2::PopularimeterFrame *pf = nullptr;
 		if (l.isEmpty()) {
 			pf = new TagLib::ID3v2::PopularimeterFrame();
 			tag->addFrame(pf);

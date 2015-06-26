@@ -29,7 +29,7 @@ class LibraryItemModel : public QStandardItemModel
 	QHash<QString, QStandardItem*> _tracks;
 
 public:
-	explicit LibraryItemModel(QObject *parent = NULL);
+	explicit LibraryItemModel(QObject *parent = nullptr);
 
 	void clearCache();
 

@@ -120,7 +120,7 @@ SeparatorItem *LibraryItemModel::insertSeparator(const QStandardItem *node)
 	case SettingsPrivate::IP_Years: {
 		int year = node->text().toInt();
 		if (year == 0) {
-			return NULL;
+			return nullptr;
 		}
 		QString yearStr = QString::number(year - year % 10);
 		if (_letters.contains(yearStr)) {
@@ -190,7 +190,7 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 		return;
 	}
 
-	QStandardItem *nodeItem = NULL;
+	QStandardItem *nodeItem = nullptr;
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
 		nodeItem = new TrackItem(dao);
 		if (_tracks.contains(dao->uri())) {

@@ -149,10 +149,10 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 	QMutableMapIterator<int, Cover*> iterator(coversToRemove);
 	while (iterator.hasNext()) {
 		iterator.next();
-		qDebug() << Q_FUNC_INFO << "clearCovers" << iterator.key() << (iterator.value() == NULL);
-		if (iterator.value() != NULL) {
+		qDebug() << Q_FUNC_INFO << "clearCovers" << iterator.key() << (iterator.value() == nullptr);
+		if (iterator.value() != nullptr) {
 			delete iterator.value();
-			iterator.value() = NULL;
+			iterator.value() = nullptr;
 		}
 	}
 	coversToRemove.clear();
@@ -163,7 +163,7 @@ void TagEditor::replaceCover(Cover *newCover)
 	/*for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows()) {
 		Cover *previousCover = covers.value(index.row());
 		// It is sure that covers are different
-		if (!(previousCover == NULL || newCover == NULL || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
+		if (!(previousCover == nullptr || newCover == nullptr || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
 			newCover->setChanged(true);
 			qDebug() << "TagEditor::replaceCover DELETE";
 			delete previousCover;
@@ -243,7 +243,7 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 	if (isForAll) {
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 			Cover *c = covers.value(row);
-			if (c == NULL) {
+			if (c == nullptr) {
 				unsavedCovers.insert(row, new Cover(cover->byteArray(), QString::fromUtf8(cover->mimeType().c_str())));
 			} else {
 				// Do not replace the cover for the caller
@@ -322,7 +322,7 @@ void TagEditor::commitChanges()
 
 		/// FIXME
 		/*Cover *cover = unsavedCovers.value(row);
-		if (cover == NULL || (cover != NULL && cover->hasChanged())) {
+		if (cover == nullptr || (cover != nullptr && cover->hasChanged())) {
 			qDebug() << "setCover(" << i << ")";
 			fh.setCover(cover);
 			trackWasModified = true;
@@ -387,7 +387,7 @@ void TagEditor::commitChanges()
 /** Displays a cover only if all the selected items have exactly the same cover. */
 void TagEditor::displayCover()
 {
-	static Cover *_cover = NULL;
+	static Cover *_cover = nullptr;
 
 	QMap<int, Cover*> selectedCovers;
 	QMap<int, QString> selectedAlbums;
@@ -395,9 +395,9 @@ void TagEditor::displayCover()
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
 	tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename);
 	for (QModelIndex item : tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
-		Cover *cover = NULL;
+		Cover *cover = nullptr;
 		// Check if there's a cover in a temporary state (to allow rollback action)
-		if (unsavedCovers.value(item.row()) != NULL) {
+		if (unsavedCovers.value(item.row()) != nullptr) {
 			cover = unsavedCovers.value(item.row());
 		} else {
 			cover = covers.value(item.row());
@@ -405,7 +405,7 @@ void TagEditor::displayCover()
 
 		// Void items are excluded, so it will try display to something.
 		// E.g.: if a cover is missing for one track but the whole album is selected.
-		if (cover != NULL && !cover->byteArray().isEmpty()) {
+		if (cover != nullptr && !cover->byteArray().isEmpty()) {
 			selectedCovers.insert(item.row(), cover);
 		}
 		selectedAlbums.insert(item.row(), item.data().toString());
@@ -554,7 +554,7 @@ void TagEditor::rollbackChanges()
 	tagEditorWidget->resetTable();
 
 	// tagEditorWidget->blockSignals(true);
-	// this->replaceCover(NULL);
+	// this->replaceCover(nullptr);
 
 	// Reset the unsaved cover list only
 	// this->clearCovers(unsavedCovers);

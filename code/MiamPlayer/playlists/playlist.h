@@ -55,7 +55,7 @@ public:
 				 COL_ICON			= 7,
 				 COL_TRACK_DAO		= 8};
 
-	explicit Playlist(QWidget *parent = NULL);
+	explicit Playlist(QWidget *parent = nullptr);
 
 	inline MediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
 

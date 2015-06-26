@@ -16,9 +16,9 @@ public:
 
 	virtual bool hasSubMenu(const QString & /*view*/) const { return false; }
 
-	virtual QMenu * menu(const QString & /*view*/, QMenu * /*parent*/) { return NULL; }
+	virtual QMenu * menu(const QString & /*view*/, QMenu * /*parent*/) { return nullptr; }
 
-	virtual QAction * action(const QString & /*view*/, QMenu * /*parent*/) { return NULL; }
+	virtual QAction * action(const QString & /*view*/, QMenu * /*parent*/) { return nullptr; }
 
 	virtual void setSelectedTracksModel(const QString &view, SelectedTracksModel *) = 0;
 };

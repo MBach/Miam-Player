@@ -152,7 +152,7 @@ void SearchDialog::paintEvent(QPaintEvent *)
 /** Process results sent back from various search engines (local, remote). */
 void SearchDialog::processResults(Request type, const QStandardItemList &results)
 {
-	QListView *listToProcess = NULL;
+	QListView *listToProcess = nullptr;
 	switch (type) {
 	case Artist:
 		listToProcess = _artists;

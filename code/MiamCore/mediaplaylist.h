@@ -21,7 +21,7 @@ private:
 	int _idx;
 
 public:
-	explicit MediaPlaylist(QObject *parent = NULL);
+	explicit MediaPlaylist(QObject *parent = nullptr);
 
 	void shuffle(int idx);
 

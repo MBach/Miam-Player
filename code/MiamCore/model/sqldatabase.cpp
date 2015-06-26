@@ -20,7 +20,7 @@
 #include <chrono>
 #include <random>
 
-SqlDatabase* SqlDatabase::_sqlDatabase = NULL;
+SqlDatabase* SqlDatabase::_sqlDatabase = nullptr;
 
 SqlDatabase::SqlDatabase()
 	: QObject(), QSqlDatabase("QSQLITE")
@@ -104,7 +104,7 @@ SqlDatabase::SqlDatabase()
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
 SqlDatabase* SqlDatabase::instance()
 {
-	if (_sqlDatabase == NULL) {
+	if (_sqlDatabase == nullptr) {
 		_sqlDatabase = new SqlDatabase;
 	}
 	return _sqlDatabase;
@@ -319,7 +319,7 @@ void SqlDatabase::removeRecordsFromHost(const QString &host)
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 {
-	Cover *c = NULL;
+	Cover *c = nullptr;
 
 	QSqlQuery selectCover(*this);
 	selectCover.prepare("SELECT t.internalCover, a.cover, a.id FROM albums a INNER JOIN tracks t ON a.id = t.albumId " \
@@ -425,7 +425,7 @@ ArtistDAO* SqlDatabase::selectArtist(uint artistId)
 		artist->setHost(selectArtist.record().value(++i).toString());
 		return artist;
 	} else {
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -602,7 +602,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			//qDebug() << Q_FUNC_INFO << oldPath << QDir::fromNativeSeparators(oldPath);
 			updateTrack.addBindValue(oldPath);
 
-			AlbumDAO *albumDAO = NULL;
+			AlbumDAO *albumDAO = nullptr;
 			for (AlbumDAO *savedAlbum : albums) {
 				if (savedAlbum->id().toUInt() == albumId) {
 					albumDAO = savedAlbum;
@@ -610,7 +610,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 				}
 			}
 			if (updateTrack.exec()) {
-				if (albumDAO != NULL) {
+				if (albumDAO != nullptr) {
 					TrackDAO *trackDAO = new TrackDAO;
 					trackDAO->setUri(oldPath);
 					trackDAO->setTrackNumber(fh->trackNumber());
@@ -1068,8 +1068,8 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 
 	bool artistInserted = false;
 	bool albumInserted = false;
-	ArtistDAO *artistDAO = NULL;
-	AlbumDAO *albumDAO = NULL;
+	ArtistDAO *artistDAO = nullptr;
+	AlbumDAO *albumDAO = nullptr;
 
 	if (!insertTrack.exec()) {
 		qDebug() << Q_FUNC_INFO << insertTrack.lastError();
@@ -1123,7 +1123,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		if (QString::compare(selectAlbum.record().value(0).toString(), album) == 0) {
 			// Remote album with an icon in the treeview, then we add the exact same album from harddrive
 			// for example, first: listenned in streaming, second: enjoyed, then downloaded (legit DL of course)
-			updateAlbum.prepare("UPDATE albums SET host = NULL, icon = NULL WHERE id = ?");
+			updateAlbum.prepare("UPDATE albums SET host = nullptr, icon = nullptr WHERE id = ?");
 		} else {
 			// A previous record exists for this normalized name but the new name is different
 			updateAlbum.prepare("UPDATE albums SET name = ? WHERE id = ?");
@@ -1152,9 +1152,9 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	} else {
 		QSqlQuery updateArtist(*this);
 		if (QString::compare(selectArtist.record().value(0).toString(), artistAlbum) == 0) {
-			updateArtist.prepare("UPDATE artists SET host = NULL WHERE id = ?");
+			updateArtist.prepare("UPDATE artists SET host = nullptr WHERE id = ?");
 		} else {
-			updateArtist.prepare("UPDATE artists SET name = ?, host = NULL WHERE id = ?");
+			updateArtist.prepare("UPDATE artists SET name = ?, host = nullptr WHERE id = ?");
 			updateArtist.addBindValue(artistAlbum);
 		}
 		updateArtist.addBindValue(artistId);
