@@ -98,13 +98,8 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 
 	QPalette palette = QApplication::palette();
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
-	if (SettingsPrivate::instance()->isCustomColors()) {
-		g.setColorAt(0, palette.base().color().lighter(110));
-		g.setColorAt(1, palette.base().color());
-	} else {
-		g.setColorAt(0, palette.base().color());
-		g.setColorAt(1, palette.window().color());
-	}
+	g.setColorAt(0, palette.base().color());
+	g.setColorAt(1, palette.window().color());
 	p.fillRect(r, g);
 
 	// Compute size of rectangles to display text and right arrow
@@ -125,18 +120,10 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	QPoint pos = mapFromGlobal(QCursor::pos());
 	p.save();
 	QBrush brush;
-	if (SettingsPrivate::instance()->isCustomColors()) {
-		if (_addressBar->isDown()) {
-			brush = palette.highlight().color().lighter(140);
-		} else {
-			brush = palette.highlight().color().lighter();
-		}
+	if (_addressBar->isDown()) {
+		brush = palette.highlight().color().lighter();
 	} else {
-		if (_addressBar->isDown()) {
-			brush = palette.highlight().color().lighter();
-		} else {
-			brush = palette.highlight().color().lighter(160);
-		}
+		brush = palette.highlight().color().lighter(160);
 	}
 
 	if (_highlighted) {

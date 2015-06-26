@@ -156,9 +156,11 @@ void TabPlaylist::init()
 		addPlaylist();
 	}
 	blockSignals(false);
-	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settings->value("lastActivePlaylistMode").toInt();
-	currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
-	emit updatePlaybackModeButton();
+	if (settings->contains("lastActivePlaylistMode")) {
+		QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settings->value("lastActivePlaylistMode").toInt();
+		currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
+		emit updatePlaybackModeButton();
+	}
 }
 
 /** Load a playlist saved in database. */

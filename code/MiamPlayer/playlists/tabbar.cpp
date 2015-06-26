@@ -357,9 +357,9 @@ void TabBar::paintRoundedTabs(QStylePainter &p, int dist)
 			p.fillRect(midRect, o.palette.base());
 			p.fillPath(ppRight, o.palette.base());
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
-			p.fillPath(ppLeft, o.palette.highlight().color().lighter(170));
-			p.fillRect(midRect, o.palette.highlight().color().lighter(170));
-			p.fillPath(ppRight, o.palette.highlight().color().lighter(170));
+			p.fillPath(ppLeft, o.palette.highlight().color().lighter());
+			p.fillRect(midRect, o.palette.highlight().color().lighter());
+			p.fillPath(ppRight, o.palette.highlight().color().lighter());
 		} else {
 			p.fillPath(ppLeft, o.palette.window());
 			p.fillRect(midRect, o.palette.window());

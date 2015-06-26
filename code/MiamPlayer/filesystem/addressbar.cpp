@@ -76,13 +76,8 @@ void AddressBar::paintEvent(QPaintEvent *)
 	// Light gradient
 	QPalette palette = QApplication::palette();
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
-	if (SettingsPrivate::instance()->isCustomColors()) {
-		g.setColorAt(0, palette.base().color().lighter(110));
-		g.setColorAt(1, palette.base().color());
-	} else {
-		g.setColorAt(0, palette.base().color());
-		g.setColorAt(1, palette.window().color());
-	}
+	g.setColorAt(0, palette.base().color());
+	g.setColorAt(1, palette.window().color());
 	p.fillRect(rect(), g);
 
 	// Frame
