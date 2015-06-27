@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="cs_CZ" sourcelanguage="en_US">
+<TS version="2.0" language="cs_CZ" sourcelanguage="en_US">
 <context>
     <name>AlbumCover</name>
     <message>
@@ -68,15 +68,15 @@
     </message>
     <message>
         <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="unfinished"></translation>
+        <translation>Chystáte se zavřít seznam skladeb, který jste změnil. Co chcete udělat?</translation>
     </message>
     <message>
         <source>Delete this playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Smazat tento seznam skladeb</translation>
     </message>
     <message>
         <source>Replace this playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Nahradit tento seznam skladeb</translation>
     </message>
 </context>
 <context>
@@ -288,11 +288,11 @@
     </message>
     <message>
         <source>Would you like to keep your playlists in memory before exiting?</source>
-        <translation>Chtěl byste, aby byly seznamy skladeb před ukončením programu podrženy v paměti?</translation>
+        <translation>Chcete, aby byly seznamy skladeb před ukončením programu podrženy v paměti?</translation>
     </message>
     <message>
         <source>Would you like to restore existing playlists at startup?</source>
-        <translation>Chtěl byste, aby byly stávající seznamy skladeb při spuštění programu obnoveny?</translation>
+        <translation>Chcete, aby byly stávající seznamy skladeb při spuštění programu obnoveny?</translation>
     </message>
     <message>
         <source>Let me decide</source>
@@ -428,31 +428,31 @@
     </message>
     <message>
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
-        <translation>Mají se sledovat změny ve vašich složkách s hudbou? Vaše knihovna bude vždy sladěna automaticky.</translation>
+        <translation>Sledovat změny ve vašich složkách s hudbou? Vaše knihovna bude vždy sladěna automaticky.</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Nápověda</translation>
     </message>
     <message>
         <source>Show Debug Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat ladicí dialog</translation>
     </message>
     <message>
         <source>File Explorer</source>
-        <translation type="unfinished"></translation>
+        <translation>Průzkumník souborů</translation>
     </message>
     <message>
         <source>Default folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Výchozí složka</translation>
     </message>
     <message>
         <source>Startup &amp;&amp; Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Spuštění a ukončení</translation>
     </message>
     <message>
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
-        <translation type="unfinished"></translation>
+        <translation>Poznámka: Neuložené seznamy skladeb budou uloženy automaticky, změněné budou přepsány.</translation>
     </message>
 </context>
 <context>
@@ -583,7 +583,7 @@
     </message>
     <message>
         <source>Would you like to alternate colors in playlists?</source>
-        <translation>Chtěl byste změnit barvy v seznamech skladeb?</translation>
+        <translation>Chcete změnit barvy v seznamech skladeb?</translation>
     </message>
     <message>
         <source>Alternative colors</source>
@@ -607,7 +607,7 @@
     </message>
     <message>
         <source>Would you like to customize the colors of the player?</source>
-        <translation>Chtěl byste přizpůsobit barvy přehrávače?</translation>
+        <translation>Chcete přizpůsobit barvy přehrávače?</translation>
     </message>
     <message>
         <source>No, keep the colors provided by my Operating System</source>
@@ -675,7 +675,7 @@
     </message>
     <message>
         <source>Rounded tabs</source>
-        <translation>Zakulacené okraje</translation>
+        <translation>Kulaté okraje</translation>
     </message>
     <message>
         <source>Overlap on other tabs with</source>
@@ -699,31 +699,31 @@
     </message>
     <message>
         <source>Search bar</source>
-        <translation type="unfinished">Vyhledávací pole</translation>
+        <translation>Vyhledávací pole</translation>
     </message>
     <message>
         <source>Should I show automatically an extended search area next to the search bar?</source>
-        <translation type="unfinished"></translation>
+        <translation>Má se vedle vyhledávacího pole automaticky ukázat rozšířené vyhledávací pole?</translation>
     </message>
     <message>
         <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;The&quot; je v angličtině běžně užívaný člen, např. « The Beatles »</translation>
     </message>
     <message>
         <source>Do you want to display the article after the name?</source>
-        <translation type="unfinished"></translation>
+        <translation>Chcete člen zobrazit za názvem?</translation>
     </message>
     <message>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
-        <translation type="unfinished"></translation>
+        <translation>Příklad: Z « The Beatles » se stane « Beatles, the »</translation>
     </message>
     <message>
         <source>Would you like to display stars in the library, left to the track name?</source>
-        <translation type="unfinished"></translation>
+        <translation>Chcete, aby byly v knihovně nalevo od názvu skladby zobrazeny hvězdičky?</translation>
     </message>
     <message>
         <source>Display star outline if there&apos;s no rating yet for a track</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit obrys hvězdičky, pokud skladba ještě nebyla hodnocena</translation>
     </message>
 </context>
 <context>
@@ -768,30 +768,30 @@
     <name>LibraryItemDelegate</name>
     <message>
         <source>(empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(prázdné)</translation>
     </message>
 </context>
 <context>
     <name>LibraryItemModel</name>
     <message>
         <source>  Artists \ Albums</source>
-        <translation type="unfinished">  Umělci/Alba</translation>
+        <translation>  Umělci/Alba</translation>
     </message>
     <message>
         <source>  Albums</source>
-        <translation type="unfinished">  Alba</translation>
+        <translation>  Alba</translation>
     </message>
     <message>
         <source>  Artists – Albums</source>
-        <translation type="unfinished">  Umělci - Alba</translation>
+        <translation>  Umělci – Alba</translation>
     </message>
     <message>
         <source>  Years</source>
-        <translation type="unfinished">  Roky</translation>
+        <translation>  Roky</translation>
     </message>
     <message>
         <source>Various</source>
-        <translation type="unfinished">Různé</translation>
+        <translation>Různé</translation>
     </message>
 </context>
 <context>
@@ -834,11 +834,11 @@
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished">Umělec</translation>
+        <translation>Umělec</translation>
     </message>
     <message>
         <source>track</source>
-        <translation type="unfinished"></translation>
+        <translation>Skladba</translation>
     </message>
 </context>
 <context>
@@ -856,43 +856,43 @@
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit výstup zápisu</translation>
     </message>
     <message>
         <source>%1/logfile.txt</source>
-        <translation type="unfinished"></translation>
+        <translation>%1/logfile.txt</translation>
     </message>
     <message>
         <source>Text Files (*.txt);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Textové soubor (*.txt);;Všechny soubory (*)</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Chyba</translation>
     </message>
     <message>
         <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;nelze otevřít pro zápis.&lt;br/&gt;&lt;br/&gt;Výstup zápisu se &lt;b&gt;nepodařilo&lt;/b&gt; uložit!&lt;/nobr&gt;</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ</translation>
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation>Zpráva</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyprázdnit</translation>
     </message>
     <message>
         <source>Save output</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit výstup</translation>
     </message>
     <message>
         <source>Warning: </source>
-        <translation type="unfinished"></translation>
+        <translation>Varování:</translation>
     </message>
 </context>
 <context>
@@ -1142,59 +1142,59 @@
     </message>
     <message>
         <source>Show debug information...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat informace o ladění...</translation>
     </message>
     <message>
         <source>Every file type (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Všechny typy souborů (*)</translation>
     </message>
     <message>
         <source>Stop after current</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastavit po nynějším</translation>
     </message>
     <message>
         <source>Directory to open.</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresář k otevření.</translation>
     </message>
     <message>
         <source>dir</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresář</translation>
     </message>
     <message>
         <source>Medias are added into a new playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Záznamy jsou přidány do nového seznamu skladeb.</translation>
     </message>
     <message>
         <source>Medias are sent to tag editor.</source>
-        <translation type="unfinished"></translation>
+        <translation>Záznamy jsou poslány do editoru značek.</translation>
     </message>
     <message>
         <source>Directory is sent to library.</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresář je poslán do knihovny.</translation>
     </message>
     <message>
         <source>Play or pause track in active playlist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Přehrát nebo pozastavit skladbu v činném seznamu skladeb.</translation>
     </message>
     <message>
         <source>Stop playback.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastavit přehrávání.</translation>
     </message>
     <message>
         <source>Play next track.</source>
-        <translation type="unfinished"></translation>
+        <translation>Přehrát další skladbu.</translation>
     </message>
     <message>
         <source>Play previous track.</source>
-        <translation type="unfinished"></translation>
+        <translation>Přehrát předchozí skladbu.</translation>
     </message>
     <message>
         <source>Set volume of the player.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit hlasitost přehrávače.</translation>
     </message>
     <message>
         <source>volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Hlasitost</translation>
     </message>
 </context>
 <context>
@@ -1218,7 +1218,7 @@
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation type="unfinished">Tento seznam skladeb je prázdný.
+        <translation>Tento seznam skladeb je prázdný.
 Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umístění.</translation>
     </message>
 </context>
@@ -1226,69 +1226,69 @@ Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umí
     <name>PlaylistDialog</name>
     <message>
         <source>Playlist Manager</source>
-        <translation type="unfinished">Správce seznamů skladeb</translation>
+        <translation>Správce seznamů skladeb</translation>
     </message>
     <message>
         <source>Unsaved Playlists</source>
-        <translation type="unfinished">Neuložené seznamy skladeb</translation>
+        <translation>Neuložené seznamy skladeb</translation>
     </message>
     <message>
         <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
+        <translation>Přetáhněte seznamy skladeb dolů pro jejich uložení</translation>
     </message>
     <message>
         <source>Saved playlists</source>
-        <translation type="unfinished">Uložené seznamy skladeb</translation>
+        <translation>Uložené seznamy skladeb</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation type="unfinished">Nahrát</translation>
+        <translation>Nahrát</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Uložit</translation>
+        <translation>Uložit</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Smazat</translation>
+        <translation>Smazat</translation>
     </message>
     <message>
         <source>Export...</source>
-        <translation type="unfinished">Vyvést...</translation>
+        <translation>Vyvést...</translation>
     </message>
     <message>
         <source>Preview playlist</source>
-        <translation type="unfinished">Náhled na seznam skladeb</translation>
+        <translation>Náhled na seznam skladeb</translation>
     </message>
     <message>
         <source>Title (Artist - Album)</source>
-        <translation type="unfinished">Název (Umělec - Album)</translation>
+        <translation>Název (Umělec - Album)</translation>
     </message>
     <message>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
-        <translation type="unfinished">Tato náhledová oblast je prázdná.
+        <translation>Tato náhledová oblast je prázdná.
 Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">Varování</translation>
+        <translation>Varování</translation>
     </message>
     <message>
         <source>Export playlist</source>
-        <translation type="unfinished">Vyvést seznam skladeb</translation>
+        <translation>Vyvést seznam skladeb</translation>
     </message>
     <message>
         <source>Playlist (*.m3u8)</source>
-        <translation type="unfinished">Seznam skladeb (*.m3u8)</translation>
+        <translation>Seznam skladeb (*.m3u8)</translation>
     </message>
     <message>
         <source>And more tracks...</source>
-        <translation type="unfinished">A více skladeb...</translation>
+        <translation>A více skladeb...</translation>
     </message>
     <message>
         <source>This playlist has changed</source>
-        <translation type="unfinished"></translation>
+        <translation>Tento seznam skladeb se změnil</translation>
     </message>
 </context>
 <context>
@@ -1319,7 +1319,7 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>Source</source>
-        <translation type="unfinished"></translation>
+        <translation>Zdroj</translation>
     </message>
 </context>
 <context>
@@ -1334,22 +1334,22 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ve správci seznamů skladeb je přesně ten samý seznam skladeb (označen jako &apos;%1&apos;). Z toho důvodu jej není možné přidat dvakrát.</translation>
     </message>
 </context>
 <context>
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation type="unfinished"></translation>
+        <translation>Nelze pozměnit vzdálené záznamy</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation type="unfinished"></translation>
+        <translation>Místní</translation>
     </message>
     <message>
         <source>Local file</source>
-        <translation type="unfinished"></translation>
+        <translation>Místní soubor</translation>
     </message>
 </context>
 <context>
@@ -1367,21 +1367,21 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <name>QCoreApplication</name>
     <message>
         <source>Command line helper for Miam-Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomocník s příkazovým řádkem pro Miam Player</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Unknown</source>
-        <translation type="unfinished">Neznámý</translation>
+        <translation>Neznámý</translation>
     </message>
 </context>
 <context>
     <name>QuickStart</name>
     <message>
         <source>Would you like to add them? (you can uncheck some folders)</source>
-        <translation>Chtěl byste je přidat? (U některých složky můžete zrušit jejich zaškrtnutí)</translation>
+        <translation>Chcete je přidat? (U některých složky můžete zrušit jejich zaškrtnutí)</translation>
     </message>
     <message>
         <source>Click here to manually search for music</source>
@@ -1413,38 +1413,38 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>A default music folder has been found</source>
-        <translation type="unfinished"></translation>
+        <translation>Byla nalezena výchozí složka s hudbou</translation>
     </message>
     <message>
         <source>– or –</source>
-        <translation type="unfinished"></translation>
+        <translation>– nebo –</translation>
     </message>
     <message>
         <source>– otherwise –</source>
-        <translation type="unfinished"></translation>
+        <translation>– jinak –</translation>
     </message>
     <message>
         <source>Note: it&apos;s not possible to add your default location because 0 tracks where found</source>
-        <translation type="unfinished"></translation>
+        <translation>Poznámka: Nelze přidat vaše výchozí umístění, protože nebyla nalezena žádná skladba</translation>
     </message>
 </context>
 <context>
     <name>SearchDialog</name>
     <message>
         <source>Results are aggregated from:</source>
-        <translation type="unfinished"></translation>
+        <translation>Výsledky jsou souhrnem z:</translation>
     </message>
     <message>
         <source>Library</source>
-        <translation type="unfinished">Knihovna</translation>
+        <translation>Knihovna</translation>
     </message>
     <message>
         <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Hledat další výsledky...&lt;/a&gt;</translation>
     </message>
     <message>
         <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Ukázat menší počet výsledků&lt;/a&gt;</translation>
     </message>
 </context>
 <context>
@@ -1455,27 +1455,27 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>Rename playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Přejmenovat seznam skladeb</translation>
     </message>
     <message>
         <source>Load background...</source>
-        <translation type="unfinished"></translation>
+        <translation>Nahrát pozadí...</translation>
     </message>
     <message>
         <source>Clear background</source>
-        <translation type="unfinished"></translation>
+        <translation>Vyprázdnit pozadí</translation>
     </message>
     <message>
         <source>Delete playlist...</source>
-        <translation type="unfinished"></translation>
+        <translation>Smazat seznam skladeb...</translation>
     </message>
     <message>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Chystáte se smazat &apos;%1&apos;. Jste si jistý, že chcete pokračovat?</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">Varování</translation>
+        <translation>Varování</translation>
     </message>
 </context>
 <context>
@@ -1518,7 +1518,7 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>From File to Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Ze souboru do značky</translation>
     </message>
 </context>
 <context>

@@ -103,12 +103,6 @@ void CustomizeThemeDialog::setupActions()
 	// Fonts
 	connect(fontComboBoxPlaylist, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settings->setFont(SettingsPrivate::FF_Playlist, font);
-		mainWindow->tabPlaylists->updateRowHeight();
-		for (Playlist *playlist : mainWindow->tabPlaylists->playlists()) {
-			for (int i = 0; i < playlist->model()->columnCount(); i++) {
-				playlist->model()->setHeaderData(i, Qt::Horizontal, font, Qt::FontRole);
-			}
-		}
 		this->fade();
 	});
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
@@ -125,12 +119,6 @@ void CustomizeThemeDialog::setupActions()
 	// And fonts size
 	connect(spinBoxPlaylist, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
 		settings->setFontPointSize(SettingsPrivate::FF_Playlist, i);
-		mainWindow->tabPlaylists->updateRowHeight();
-		for (Playlist *playlist : mainWindow->tabPlaylists->playlists()) {
-			for (int i = 0; i < playlist->model()->columnCount(); i++) {
-				playlist->model()->setHeaderData(i, Qt::Horizontal, settings->font(SettingsPrivate::FF_Playlist), Qt::FontRole);
-			}
-		}
 		this->fade();
 	});
 	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {

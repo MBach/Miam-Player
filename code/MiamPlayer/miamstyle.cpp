@@ -200,8 +200,6 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 		painter->fillRect(option->rect, QApplication::palette().window());
 		break;
 	}
-	case CE_FocusFrame:
-		break;
 	default:
 		QProxyStyle::drawControl(element, option, painter, widget);
 	}

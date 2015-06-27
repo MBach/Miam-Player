@@ -139,7 +139,12 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	iconItem->setIcon(QIcon(":/icons/computer"));
 	iconItem->setToolTip(tr("Local file"));
 	if (FileHelper::suffixes(FileHelper::Standard).contains(fileHelper.fileInfo().suffix())) {
-		QString title(fileHelper.title());
+		QString title;
+		if (fileHelper.title().isEmpty()) {
+			title = fileHelper.fileInfo().baseName();
+		} else {
+			title = fileHelper.title();
+		}
 
 		// Then, construct a new row with correct informations
 		trackItem = new QStandardItem(fileHelper.trackNumber());
@@ -262,4 +267,7 @@ void PlaylistModel::removeTrack(int row)
 {
 	QStandardItemModel::removeRow(row);
 	_mediaPlaylist->removeMedia(row);
+	if (_mediaPlaylist->playbackMode() == QMediaPlaylist::Random) {
+		_mediaPlaylist->shuffle(-1);
+	}
 }

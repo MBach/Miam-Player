@@ -68,7 +68,11 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 
 		if (fe.state.testFlag(QStyle::State_MouseOver)) {
 			p.fillRect(fe.rect, pal.highlight().color().light());
-			p.setPen(pal.text().color());
+			if (qAbs(pal.highlightedText().color().light().value() - pal.highlight().color().value()) < 128) {
+				p.setPen(pal.text().color());
+			} else {
+				p.setPen(pal.highlightedText().color());
+			}
 			p.drawText(fe.rect, Qt::AlignCenter, fontMetrics().elidedText(fe.text, Qt::ElideRight, fe.rect.width()));
 			p.setPen(fe.palette.highlight().color());
 		} else {
@@ -116,7 +120,11 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		lib.rect.adjust(2, 2, -3, 0);
 		if (lib.state.testFlag(QStyle::State_MouseOver)) {
 			p.fillRect(lib.rect, pal.highlight().color().light());
-			p.setPen(pal.text().color());
+			if (qAbs(pal.highlightedText().color().light().value() - pal.highlight().color().value()) < 128) {
+				p.setPen(pal.text().color());
+			} else {
+				p.setPen(pal.highlightedText().color());
+			}
 			p.drawText(lib.rect, Qt::AlignCenter, fontMetrics().elidedText(lib.text, Qt::ElideRight, lib.rect.width()));
 			p.setPen(lib.palette.highlight().color());
 		} else {

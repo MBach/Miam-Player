@@ -1057,7 +1057,11 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 
 	insertTrack.addBindValue("file://" + absFilePath);
 	insertTrack.addBindValue(tn.toInt());
-	insertTrack.addBindValue(title);
+	if (title.isEmpty()) {
+		insertTrack.addBindValue(fh.fileInfo().baseName());
+	} else {
+		insertTrack.addBindValue(title);
+	}
 	insertTrack.addBindValue(artistId);
 	insertTrack.addBindValue(albumId);
 	insertTrack.addBindValue(fh.artistAlbum());

@@ -560,7 +560,7 @@ QString FileHelper::title() const
 
 QString FileHelper::trackNumber() const
 {
-	if (_file && _file->tag() && _file->tag()->track() < INT_MAX) {
+	if (_file && _file->tag() && _file->tag()->track() < UINT_MAX) {
 		return QString("%1").arg(QString::number(_file->tag()->track()), 2, QChar('0')).toUpper();
 	} else {
 		return QString("00");

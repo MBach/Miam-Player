@@ -99,8 +99,6 @@ public slots:
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
 
-	void updateRowHeight();
-
 	int closePlaylist(int index);
 
 signals:

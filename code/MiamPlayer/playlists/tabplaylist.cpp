@@ -50,6 +50,19 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 		}
 	});*/
 
+	auto settings = SettingsPrivate::instance();
+	connect(settings, &SettingsPrivate::fontHasChanged, [=](const SettingsPrivate::FontFamily ff, const QFont &font) {
+		if (ff == SettingsPrivate::FF_Playlist) {
+			int s = QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height();
+			for (Playlist *playlist : playlists()) {
+				for (int i = 0; i < playlist->model()->columnCount(); i++) {
+					playlist->model()->setHeaderData(i, Qt::Horizontal, font, Qt::FontRole);
+				}
+				playlist->verticalHeader()->setDefaultSectionSize(s);
+			}
+		}
+	});
+
 	// Context menu to add few actions for each playlist
 	_contextMenu = new QMenu(this);
 	QAction *renamePlaylist = new QAction(tr("Rename playlist"), _contextMenu);
@@ -323,6 +336,9 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	if (currentPlayList()->mediaPlaylist()->currentIndex() == -1) {
 		currentPlayList()->mediaPlaylist()->setCurrentIndex(0);
 	}
+	if (currentPlayList()->mediaPlaylist()->playbackMode() == QMediaPlaylist::Random) {
+		currentPlayList()->mediaPlaylist()->shuffle(-1);
+	}
 }
 
 void TabPlaylist::moveTracksDown()
@@ -425,16 +441,6 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		p->setId(0);
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
-	}
-}
-
-void TabPlaylist::updateRowHeight()
-{
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	for (int i = 0; i < count(); i++) {
-		if (Playlist *p = playlist(i)) {
-			p->verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
-		}
 	}
 }
 
