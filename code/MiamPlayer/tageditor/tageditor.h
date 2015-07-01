@@ -31,6 +31,8 @@ private:
 	QMap<int, Cover*> covers;
 	QMap<int, Cover*> unsavedCovers;
 
+	QMap<int, QSet<QString>> _cacheData;
+
 public:
 	/** An automatic helper for writing tags following regExp. */
 	TagConverter *tagConverter;

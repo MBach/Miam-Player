@@ -181,6 +181,17 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 	this->tagEditorWidget->setFocus();
 
 	this->clear();
+	// Information in the table is split into columns, using column index
+	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
+	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
+		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
+			QSet<QString> stringList = _cacheData.value(col);
+			auto item = tagEditorWidget->item(row, col);
+			stringList.insert(item->text());
+			_cacheData.insert(col, stringList);
+		}
+	}
+
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 
@@ -236,6 +247,7 @@ void TagEditor::clear()
 		combo->clear();
 	}
 	tagEditorWidget->clear();
+	_cacheData.clear();
 }
 
 void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
@@ -300,21 +312,7 @@ void TagEditor::commitChanges()
 				FileHelper::Field key = tagEditorWidget->horizontalHeaderItem(col)->data(TagEditorTableWidget::KEY).value<FileHelper::Field>();
 
 				if (fh->file()->tag()) {
-					TagLib::PropertyMap pm = fh->file()->tag()->properties();
-
-					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
-					std::string s = FileHelper::keyToStdString(key);
-					if (pm.contains(s)) {
-						bool b = pm.replace(s, TagLib::String(item->text().toStdString(), TagLib::String::UTF8));
-						if (b) {
-							fh->file()->tag()->setProperties(pm);
-							if (fh->file()->tag()) {
-								trackWasModified = true;
-							}
-						}
-					} else {
-						trackWasModified = trackWasModified || fh->insert(key, item->text());
-					}
+					trackWasModified = fh->insert(key, item->text()) || trackWasModified;
 				} else {
 					qDebug() << "no valid tag for this file";
 				}
@@ -333,10 +331,8 @@ void TagEditor::commitChanges()
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
 		// The Tree structure in the Library could have been modified
 		if (trackWasModified) {
-			if (fh->save()) {
-				qDebug() << "tag was saved";
-			} else {
-				qDebug() << "tag wasn't saved :(";
+			if (!fh->save()) {
+				qDebug() << Q_FUNC_INFO << "tag wasn't saved :(";
 			}
 			tracksToRescan.insert(row);
 		}
@@ -458,18 +454,6 @@ void TagEditor::displayTags()
 		return;
 	}
 
-	// Information in the table is split into columns, using column index
-	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
-	QMap<int, QSet<QString>> datas;
-	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
-		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
-			QSet<QString> stringList = datas.value(col);
-			auto item = tagEditorWidget->item(row, col);
-			stringList.insert(item->text());
-			datas.insert(col, stringList);
-		}
-	}
-
 	QMap<int, QSet<QString>> selectedDatas;
 	for (auto item : tagEditorWidget->selectedItems()) {
 		QSet<QString> stringList = selectedDatas.value(item->column());
@@ -482,6 +466,7 @@ void TagEditor::displayTags()
 	while (it.hasNext()) {
 		it.next();
 		QSet<QString> stringList = selectedDatas.value(it.key());
+		qDebug() << stringList;
 
 		// Beware: there are no comboBox for every column in the edit area below the table
 		QComboBox *combo = _combos.value(it.key());
@@ -502,6 +487,7 @@ void TagEditor::displayTags()
 					combo->addItem(genre);
 				}
 			}
+			combo->model()->sort(0);
 		} else {
 			combo->addItems(list);
 		}
@@ -511,17 +497,20 @@ void TagEditor::displayTags()
 			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
 				int result = combo->findText(list.first());
 				nextCurrentIndex = result + 2;
+				qDebug() << Q_FUNC_INFO << "1" << nextCurrentIndex;
 			} else {
 				nextCurrentIndex = 2;
+				qDebug() << Q_FUNC_INFO << "2" << nextCurrentIndex;
 			}
 		} else {
 			// Multiple tracks selected but for same attribute
 			nextCurrentIndex = 0;
+			qDebug() << Q_FUNC_INFO << "0" << nextCurrentIndex;
 		}
 
 		// Suggest data from the complete table
 		if (combo != titleComboBox && combo != genreComboBox) {
-			QSet<QString> allDatas = datas.value(it.key());
+			QSet<QString> allDatas = _cacheData.value(it.key());
 			combo->setDuplicatesEnabled(false);
 			for (QString c : allDatas) {
 				if (combo->findText(c) == -1) {
