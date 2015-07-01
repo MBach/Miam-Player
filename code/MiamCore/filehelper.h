@@ -16,6 +16,10 @@ namespace TagLib {
 	namespace ID3v2 {
 		class Tag;
 	}
+
+	namespace MP4 {
+		class Item;
+	}
 }
 
 /**
@@ -30,11 +34,13 @@ private:
 	TagLib::File *_file;
 
 	int _fileType;
+	bool _isValid;
 
 	QFileInfo _fileInfo;
 
 	Q_ENUMS(extension)
 	Q_ENUMS(ExtensionType)
+	Q_ENUMS(Field)
 
 public:
 	enum extension {
@@ -58,9 +64,26 @@ public:
 		Artist
 	};
 
+	enum Field {
+		Field_AbsPath		= 1,
+		Field_Album			= 2,
+		Field_Artist		= 3,
+		Field_ArtistAlbum	= 4,
+		Field_Comment		= 5,
+		Field_Cover			= 6,
+		Field_Disc			= 7,
+		Field_FileName		= 8,
+		Field_Genre			= 9,
+		Field_Title			= 10,
+		Field_Track			= 11,
+		Field_Year			= 12
+	};
+
 	FileHelper(const QMediaContent &track);
 
 	FileHelper(const QString &filePath);
+
+	static std::string keyToStdString(Field f);
 
 private:
 	bool init(const QString &filePath);
@@ -80,7 +103,7 @@ public:
 	/** Extract the inner picture if exists. */
 	Cover* extractCover();
 
-	bool insert(QString key, const QVariant &value);
+	bool insert(Field key, const QVariant &value);
 
 	/** Check if file has an inner picture. */
 	bool hasCover() const;
@@ -117,12 +140,17 @@ private:
 
 	QString extractFlacFeature(const QString &featureToExtract) const;
 	QString extractGenericFeature(const QString &featureToExtract) const;
+	QString extractMp4Feature(const QString &featureToExtract) const;
 	QString extractMpegFeature(const QString &featureToExtract) const;
 	QString extractVorbisFeature(const QString &featureToExtract) const;
 
 	int ratingForID3v2(TagLib::ID3v2::Tag *tag) const;
 	void setFlacAttribute(const std::string &attribute, const QString &value);
+	void setMp4Attribute(const std::string &attribute, const TagLib::MP4::Item &value);
 	void setRatingForID3v2(int rating, TagLib::ID3v2::Tag *tag);
 };
+
+/** Register this class to convert in QVariant. */
+Q_DECLARE_METATYPE(FileHelper::Field)
 
 #endif // FILEHELPER_H

@@ -282,7 +282,6 @@ void TagEditor::commitChanges()
 		QTableWidgetItem *itemFileName = tagEditorWidget->item(row, 0);
 		QString absPath = itemFileName->data(Qt::UserRole).toString();
 		FileHelper *fh = new FileHelper(absPath);
-		//FileHelper *fh = new FileHelper(absPath);
 		_fhs.append(fh);
 		bool trackWasModified = false;
 		for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
@@ -298,13 +297,15 @@ void TagEditor::commitChanges()
 				}
 
 				// Replace the field by using a key stored in the header (one key per column)
-				QString key = tagEditorWidget->horizontalHeaderItem(col)->data(TagEditorTableWidget::KEY).toString();
+				FileHelper::Field key = tagEditorWidget->horizontalHeaderItem(col)->data(TagEditorTableWidget::KEY).value<FileHelper::Field>();
+
 				if (fh->file()->tag()) {
 					TagLib::PropertyMap pm = fh->file()->tag()->properties();
 
 					// The map doesn't always contain all keys, like ArtistAlbum (not standard)
-					if (pm.contains(TagLib::String(key.toStdString(), TagLib::String::UTF8))) {
-						bool b = pm.replace(key.toStdString(), TagLib::String(item->text().toStdString(), TagLib::String::UTF8));
+					std::string s = FileHelper::keyToStdString(key);
+					if (pm.contains(s)) {
+						bool b = pm.replace(s, TagLib::String(item->text().toStdString(), TagLib::String::UTF8));
 						if (b) {
 							fh->file()->tag()->setProperties(pm);
 							if (fh->file()->tag()) {
@@ -332,14 +333,20 @@ void TagEditor::commitChanges()
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
 		// The Tree structure in the Library could have been modified
 		if (trackWasModified) {
-			if (!fh->save()) {
-				qDebug() << "tag wasn't saved :(";
-			} else {
+			if (fh->save()) {
 				qDebug() << "tag was saved";
+			} else {
+				qDebug() << "tag wasn't saved :(";
 			}
 			tracksToRescan.insert(row);
 		}
 	}
+
+	while (!_fhs.isEmpty()) {
+		FileHelper *fh = _fhs.takeFirst();
+		delete fh;
+	}
+	_fhs.clear();
 
 	// Track name has changed?
 	if (!tracksToRescan.isEmpty()) {
@@ -377,11 +384,6 @@ void TagEditor::commitChanges()
 	// Reset buttons state
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
-
-	while (!_fhs.isEmpty()) {
-		FileHelper *fh = _fhs.takeFirst();
-		delete fh;
-	}
 }
 
 /** Displays a cover only if all the selected items have exactly the same cover. */

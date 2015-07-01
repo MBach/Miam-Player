@@ -40,7 +40,7 @@
 #include <QtDebug>
 
 FileHelper::FileHelper(const QMediaContent &track)
-	: _file(nullptr), _fileType(UNKNOWN)
+	: _file(nullptr), _fileType(UNKNOWN), _isValid(false)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 	if (!b) {
@@ -56,7 +56,7 @@ FileHelper::FileHelper(const QMediaContent &track)
 }
 
 FileHelper::FileHelper(const QString &filePath)
-	: _file(nullptr)
+	: _file(nullptr), _fileType(UNKNOWN), _isValid(false)
 {
 	bool b = init(filePath);
 	if (!b) {
@@ -65,6 +65,33 @@ FileHelper::FileHelper(const QString &filePath)
 	if (!b) {
 		delete _file;
 		_file = nullptr;
+		_fileType = UNKNOWN;
+	}
+}
+
+std::string FileHelper::keyToStdString(Field f)
+{
+	switch (f) {
+	case Field_Album:
+		return "ALBUM";
+	case Field_Artist:
+		return "ARTIST";
+	case Field_ArtistAlbum:
+		return "ALBUMARTIST";
+	case Field_Comment:
+		return "COMMENT";
+	case Field_Disc:
+		return "ABSPATH";
+	case Field_Genre:
+		return "GENRE";
+	case Field_Title:
+		return "TITLE";
+	case Field_Track:
+		return "TRACKNUMBER";
+	case Field_Year:
+		return "DATE";
+	default:
+		return "";
 	}
 }
 
@@ -112,9 +139,10 @@ bool FileHelper::init(const QString &filePath)
 		_file = nullptr;
 		_fileType = UNKNOWN;
 	}
-	if (isValid()) {
+	if (_file != nullptr) {
+		_isValid = true;
 		return true;
-	} else if (_file != nullptr) {
+	} else {
 		delete _file;
 		_file = nullptr;
 		_fileType = UNKNOWN;
@@ -180,9 +208,10 @@ QString FileHelper::artistAlbum() const
 	case FLAC:
 		artAlb = this->extractFlacFeature("ALBUMARTIST");
 		break;
-	case MP4:
-		artAlb = this->extractGenericFeature("aART");
+	case MP4: {
+		artAlb = this->extractMp4Feature("aART");
 		break;
+	}
 	case MP3:
 		artAlb = this->extractMpegFeature("TPE2");
 		break;
@@ -198,14 +227,10 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 		break;
 	}
 	case MP4:{
-		TagLib::MP4::File *mp4File = static_cast<TagLib::MP4::File*>(_file);
-		TagLib::MP4::ItemListMap &items = mp4File->tag()->itemListMap();
-		/*for (TagLib::Map<TagLib::String, TagLib::MP4::Item>::Iterator i = items.begin(); i != items.end(); i++) {
-			if (i->first.toCString(true) == "aART") {
-
-			}
-		}*/
-		items.insert("aART", artistAlbum.toStdString().data());
+		TagLib::StringList l;
+		l.append(artistAlbum.toStdString().data());
+		TagLib::MP4::Item item(l);
+		this->setMp4Attribute("aART", item);
 		break;
 	}
 	case MPC:
@@ -253,7 +278,6 @@ int FileHelper::discNumber(bool canBeZero) const
 
 	switch (_fileType) {
 	case APE:
-	case MP4:
 	case MPC:
 	case OGG:
 		strDiscNumber = this->extractGenericFeature("DISCNUMBER");
@@ -267,6 +291,11 @@ int FileHelper::discNumber(bool canBeZero) const
 	case MP3:
 		strDiscNumber = this->extractMpegFeature("TPOS");
 		break;
+	case MP4:
+		strDiscNumber = this->extractGenericFeature("DISCNUMBER");
+		break;
+	default:
+		qDebug() << Q_FUNC_INFO << "Not yet implemented for this file type" << _fileType;
 	}
 	int disc = -1;
 	if (strDiscNumber.contains('/')) {
@@ -328,32 +357,41 @@ Cover* FileHelper::extractCover()
 	return cover;
 }
 
-bool FileHelper::insert(QString key, const QVariant &value)
+bool FileHelper::insert(Field key, const QVariant &value)
 {
 	// Standard tags
 	TagLib::String v = value.toString().toStdString();
 
 	/// XXX Create an enumeration somewhere
-
-	if (key == "ALBUM") {
+	switch (key) {
+	case Field_Album:
 		_file->tag()->setAlbum(v);
-	} else if (key == "ARTIST") {
+		break;
+	case Field_Artist:
 		_file->tag()->setArtist(v);
-	} else if (key == "COMMENT") {
+		break;
+	case Field_Comment:
 		_file->tag()->setComment(v);
-	} else if (key == "GENRE") {
+		break;
+	case Field_Genre:
 		_file->tag()->setGenre(v);
-	} else if (key == "TITLE") {
+		break;
+	case Field_Title:
 		_file->tag()->setTitle(v);
-	} else if (key == "TRACKNUMBER") {
+		break;
+	case Field_Track:
 		_file->tag()->setTrack(value.toUInt());
-	} else if (key == "YEAR") {
+		break;
+	case Field_Year:
 		_file->tag()->setYear(value.toUInt());
-	} else if (key == "ARTISTALBUM") {
+		break;
+	case Field_ArtistAlbum:
 		this->setArtistAlbum(value.toString());
-	} else if (key == "DISC") {
+		break;
+	case Field_Disc:
 		this->setDiscNumber(value.toString());
-	} else {
+		break;
+	default:
 		return false;
 	}
 	return true;
@@ -503,6 +541,11 @@ void FileHelper::setDiscNumber(const QString &disc)
 		}
 		break;
 	}
+	case MP4: {
+		TagLib::MP4::Item item(disc.toUInt());
+		this->setMp4Attribute("disk", item);
+		break;
+	}
 	default:
 		qDebug() << Q_FUNC_INFO << "Not implemented for this file type";
 		break;
@@ -546,7 +589,11 @@ void FileHelper::setRating(int rating)
 
 bool FileHelper::isValid() const
 {
-	return (_file != nullptr && _file->isValid());
+	/*if (_file) {
+		qDebug() << Q_FUNC_INFO << _file->isOpen() << _file->isValid();
+	}
+	return (_file != nullptr && _file->isValid());*/
+	return _isValid;
 }
 
 QString FileHelper::title() const
@@ -682,7 +729,30 @@ QString FileHelper::extractGenericFeature(const QString &featureToExtract) const
 	}
 	return feature;
 }
-
+QString FileHelper::extractMp4Feature(const QString &featureToExtract) const
+{
+	QString feature;
+	if (TagLib::MP4::File *mp4File = static_cast<TagLib::MP4::File*>(_file)) {
+		if (mp4File->tag()) {
+			TagLib::MP4::ItemListMap &items = mp4File->tag()->itemListMap();
+			if (items.contains(featureToExtract.toStdString().data())) {
+				TagLib::MP4::Item item = items[featureToExtract.toStdString().data()];
+				TagLib::StringList list = item.toStringList();
+				if (list.size() > 0) {
+					feature = list[0].toCString(true);
+				}
+				/*for (uint i = 0; i < list.size(); i++) {
+					TagLib::String s = list[i];
+					qDebug() << Q_FUNC_INFO << s.toCString(true);
+				}*/
+			}
+			/*for (auto it = items.begin(); it != items.end(); ++it) {
+				qDebug() << Q_FUNC_INFO << QString(it->first.toCString(false));
+			}*/
+		}
+	}
+	return feature;
+}
 QString FileHelper::extractMpegFeature(const QString &featureToExtract) const
 {
 	QString feature;
@@ -762,6 +832,16 @@ void FileHelper::setFlacAttribute(const std::string &attribute, const QString &v
 			} else {
 				xiph->addField(attribute.data(), value.toStdString().data());
 			}
+		}
+	}
+}
+
+void FileHelper::setMp4Attribute(const std::string &attribute, const TagLib::MP4::Item &value)
+{
+	if (TagLib::MP4::File *mp4File = static_cast<TagLib::MP4::File*>(_file)) {
+		if (mp4File->tag()) {
+			TagLib::MP4::ItemListMap &items = mp4File->tag()->itemListMap();
+			items.insert(attribute, value);
 		}
 	}
 }

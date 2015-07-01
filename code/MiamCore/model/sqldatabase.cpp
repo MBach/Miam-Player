@@ -505,7 +505,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 	Q_ASSERT(oldPaths.size() == newPaths.size());
 
 	QList<FileHelper*> olds;
-	QList<FileHelper*> news;
 	QList<ArtistDAO*> artists;
 	QList<AlbumDAO*> albums;
 
@@ -513,8 +512,12 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 	for (int i = 0; i < oldPaths.length(); i++) {
 		QString oldPath = "file://" + oldPaths.at(i);
 		if (newPaths.at(i).isEmpty()) {
-			//qDebug() << oldPath;
 			FileHelper *fh = new FileHelper(oldPath);
+			if (!fh->isValid()) {
+				qDebug() << Q_FUNC_INFO << "couldn't read oldPath" << oldPath;
+				delete fh;
+				continue;
+			}
 
 			QSqlQuery selectArtist(*this);
 			selectArtist.prepare("SELECT artistId, albumId FROM tracks WHERE uri = ?");
@@ -599,7 +602,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			updateTrack.addBindValue(rating);
 			updateTrack.addBindValue(discNumber);
 			updateTrack.addBindValue(fh->hasCover());
-			//qDebug() << Q_FUNC_INFO << oldPath << QDir::fromNativeSeparators(oldPath);
 			updateTrack.addBindValue(oldPath);
 
 			AlbumDAO *albumDAO = nullptr;
@@ -634,16 +636,21 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 					this->saveFileRef(newPath);
 				}
 			}
-
-			FileHelper *fh = new FileHelper(newPath);
-			news.append(fh);
 		}
 	}
+
 	if (this->cleanNodesWithoutTracks()) {
 		// Finally, tell views they need to update themselves
 		emit aboutToCleanView();
 	}
 	commit();
+
+	while (!olds.isEmpty()) {
+		FileHelper *fh = olds.takeFirst();
+		if (fh) {
+			delete fh;
+		}
+	}
 }
 
 /** When one has manually updated tracks with TagEditor, some nodes might in unstable state. */
@@ -1045,6 +1052,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 
 	QString tn = fh.trackNumber();
 	QString title = fh.title();
+	//qDebug() << Q_FUNC_INFO << fh.artistAlbum() << fh.artist();
 	QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
 	// Use Artist Album to reference tracks in table "tracks", not Artist
 	QString artistNorm = this->normalizeField(artistAlbum);

@@ -35,12 +35,13 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 void TagEditorTableWidget::init()
 {
 	// Always keep the same number of columns with this taglist
-	static const QStringList keys = (QStringList() << "FILENAME" << "ABSPATH" << "TITLE" << "ARTIST" << "ARTISTALBUM"
-		//<< "ALBUM" << "TRACKNUMBER" << "DISC" << "YEAR" << "GENRE" << "COMMENT" << "COVER";
-		<< "ALBUM" << "TRACKNUMBER" << "DISC" << "YEAR" << "GENRE" << "COMMENT");
+	QList<FileHelper::Field> fields;
+	fields << FileHelper::Field_FileName << FileHelper::Field_AbsPath << FileHelper::Field_Title << FileHelper::Field_Artist << FileHelper::Field_ArtistAlbum
+		<< FileHelper::Field_Album << FileHelper::Field_Track << FileHelper::Field_Disc << FileHelper::Field_Year << FileHelper::Field_Genre << FileHelper::Field_Comment;
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = new QTableWidgetItem();
-		header->setData(KEY, keys.at(column));
+		FileHelper::Field f = fields.at(column);
+		header->setData(KEY, QVariant::fromValue<FileHelper::Field>(f));
 		this->setHorizontalHeaderItem(column, header);
 	}
 }

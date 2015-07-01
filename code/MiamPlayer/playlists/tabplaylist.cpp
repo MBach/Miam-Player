@@ -440,6 +440,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		p->setHash(0);
 		p->setId(0);
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
+		p->setTitle(tabBar()->tabText(0));
 		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	}
 }

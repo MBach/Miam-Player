@@ -27,27 +27,6 @@ public:
 	virtual uint hash() const;
 };
 
-//#include <QHash>
-//#include <QtDebug>
-
-/*inline bool operator ==(const ArtistDAO &a1, const ArtistDAO &a2)
-{
-	qDebug() << Q_FUNC_INFO;
-	return a1.title() == a2.title() && a1.type() == a2.type();
-}
-
-inline uint qHash(const ArtistDAO &key, uint seed)
-{
-	qDebug() << Q_FUNC_INFO;
-	return qHash(key.title(), seed) ^ qHash(key.type(), seed);
-}
-
-inline uint qHash(const ArtistDAO *key, uint seed)
-{
-	qDebug() << Q_FUNC_INFO;
-	return qHash(key->title(), seed) ^ qHash(key->type(), seed);
-}*/
-
 /** Register this class to convert in QVariant. */
 Q_DECLARE_METATYPE(ArtistDAO)
 
