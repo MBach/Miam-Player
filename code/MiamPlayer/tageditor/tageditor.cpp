@@ -466,7 +466,6 @@ void TagEditor::displayTags()
 	while (it.hasNext()) {
 		it.next();
 		QSet<QString> stringList = selectedDatas.value(it.key());
-		qDebug() << stringList;
 
 		// Beware: there are no comboBox for every column in the edit area below the table
 		QComboBox *combo = _combos.value(it.key());
@@ -497,15 +496,12 @@ void TagEditor::displayTags()
 			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
 				int result = combo->findText(list.first());
 				nextCurrentIndex = result + 2;
-				qDebug() << Q_FUNC_INFO << "1" << nextCurrentIndex;
 			} else {
 				nextCurrentIndex = 2;
-				qDebug() << Q_FUNC_INFO << "2" << nextCurrentIndex;
 			}
 		} else {
 			// Multiple tracks selected but for same attribute
 			nextCurrentIndex = 0;
-			qDebug() << Q_FUNC_INFO << "0" << nextCurrentIndex;
 		}
 
 		// Suggest data from the complete table
@@ -564,7 +560,6 @@ void TagEditor::rollbackChanges()
 /** When one is changing a field, updates all rows in the table (the Artist for example). */
 void TagEditor::updateCells(QString text)
 {
-	qDebug() << Q_FUNC_INFO << sender() << text;
 	QComboBox *combo = findChild<QComboBox*>(sender()->objectName());
 	int column = combo->property("column").toInt();
 

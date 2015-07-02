@@ -514,7 +514,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 		if (newPaths.at(i).isEmpty()) {
 			FileHelper *fh = new FileHelper(oldPath);
 			if (!fh->isValid()) {
-				qDebug() << Q_FUNC_INFO << "couldn't read oldPath" << oldPath;
 				delete fh;
 				continue;
 			}
@@ -540,17 +539,24 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			uint albumId = artistId + qHash(albumNorm, 1);
 
 			// Check if Artist has changed (can change how tracks are displayed in the library)
+			ArtistDAO *artistDAO = new ArtistDAO;
 			if (oldArtistId != artistId) {
-				ArtistDAO *artistDAO = new ArtistDAO;
 				artistDAO->setId(QString::number(artistId));
 				artistDAO->setTitle(artistAlbum);
 				artistDAO->setTitleNormalized(artistNorm);
 				if (this->insertIntoTableArtists(artistDAO)) {
-					emit nodeExtracted(artistDAO);
 					artists << artistDAO;
 				} else {
 					delete artistDAO;
 				}
+			} else {
+				artistDAO->setId(QString::number(oldArtistId));
+				artistDAO->setTitle(artistAlbum);
+				artistDAO->setTitleNormalized(artistNorm);
+				artists << artistDAO;
+			}
+			if (artistDAO) {
+				emit nodeExtracted(artistDAO);
 			}
 
 			// Same thing for Album
@@ -568,7 +574,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 						albumDAO->setCover(queryAlbum.record().value(0).toString());
 					}
 					albums << albumDAO;
-					qDebug() << Q_FUNC_INFO << "saving temp albumDAO";
 				}
 			} else {
 				QSqlQuery queryAlbum("SELECT * FROM albums WHERE id = ?", *this);
@@ -585,7 +590,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 						} else {
 							// how to tie cover on the filesystem?
 						}
-						emit nodeExtracted(albumDAO);
 					} else {
 						delete albumDAO;
 					}
@@ -608,10 +612,13 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			for (AlbumDAO *savedAlbum : albums) {
 				if (savedAlbum->id().toUInt() == albumId) {
 					albumDAO = savedAlbum;
+					ArtistDAO *art = this->selectArtist(artistId);
+					albumDAO->setParentNode(art);
 					break;
 				}
 			}
 			if (updateTrack.exec()) {
+				emit nodeExtracted(albumDAO);
 				if (albumDAO != nullptr) {
 					TrackDAO *trackDAO = new TrackDAO;
 					trackDAO->setUri(oldPath);
@@ -641,7 +648,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 	if (this->cleanNodesWithoutTracks()) {
 		// Finally, tell views they need to update themselves
-		emit aboutToCleanView();
+		//emit aboutToCleanView();
 	}
 	commit();
 
