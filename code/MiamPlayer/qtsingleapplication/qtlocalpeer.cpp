@@ -64,6 +64,8 @@ namespace QtLP_Private {
 #endif
 }
 
+#include <QDataStream>
+
 const char* QtLocalPeer::ack = "ack";
 
 QtLocalPeer::QtLocalPeer(QObject* parent, const QString &appId)
