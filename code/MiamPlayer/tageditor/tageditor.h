@@ -58,6 +58,8 @@ protected:
 	virtual bool eventFilter(QObject *obj, QEvent *event);
 
 private:
+	void buildCache();
+
 	void clearCovers(QMap<int, Cover *> &coversToRemove);
 
 public slots:

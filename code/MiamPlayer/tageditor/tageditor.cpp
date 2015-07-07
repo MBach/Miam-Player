@@ -6,6 +6,7 @@
 
 #include <taglib/tfile.h>
 #include <taglib/tpropertymap.h>
+
 #include <QDir>
 #include <QDirIterator>
 #include <QDragEnterEvent>
@@ -144,6 +145,20 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
+void TagEditor::buildCache()
+{
+	// Information in the table is split into columns, using column index
+	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
+	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
+		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
+			QSet<QString> stringList = _cacheData.value(col);
+			auto item = tagEditorWidget->item(row, col);
+			stringList.insert(item->text());
+			_cacheData.insert(col, stringList);
+		}
+	}
+}
+
 void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 {
 	QMutableMapIterator<int, Cover*> iterator(coversToRemove);
@@ -177,20 +192,10 @@ void TagEditor::replaceCover(Cover *newCover)
 /** Splits tracks into columns to be able to edit metadatas. */
 void TagEditor::addItemsToEditor(const QStringList &tracks)
 {
-	qDebug() << Q_FUNC_INFO << tracks;
 	this->tagEditorWidget->setFocus();
 
 	this->clear();
-	// Information in the table is split into columns, using column index
-	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
-	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
-		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
-			QSet<QString> stringList = _cacheData.value(col);
-			auto item = tagEditorWidget->item(row, col);
-			stringList.insert(item->text());
-			_cacheData.insert(col, stringList);
-		}
-	}
+	this->buildCache();
 
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
@@ -380,6 +385,8 @@ void TagEditor::commitChanges()
 	// Reset buttons state
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
+
+	this->buildCache();
 }
 
 /** Displays a cover only if all the selected items have exactly the same cover. */

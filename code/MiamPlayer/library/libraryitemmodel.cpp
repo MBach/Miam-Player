@@ -186,7 +186,7 @@ void LibraryItemModel::removeNode(const QModelIndex &node)
 /** Find and insert a node in the hierarchy of items. */
 void LibraryItemModel::insertNode(GenericDAO *node)
 {
-	if (_hash.contains(node->hash())) {
+	if (!node || (node && _hash.contains(node->hash()))) {
 		return;
 	}
 
@@ -244,7 +244,7 @@ void LibraryItemModel::updateNode(GenericDAO *node)
 		album->setData(dao->cover(), Miam::DF_CoverPath);
 		album->setData(dao->icon(), Miam::DF_IconPath);
 		album->setData(!dao->icon().isEmpty(), Miam::DF_IsRemote);
-	} /*else if (TrackItem *track = static_cast<TrackItem*>(_hash.value(h))) {
+	}/* else if (TrackItem *track = static_cast<TrackItem*>(_hash.value(h))) {
 		TrackDAO *dao = qobject_cast<TrackDAO*>(node);
 	} else if (ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(h))) {
 		ArtistDAO *dao = qobject_cast<ArtistDAO*>(node);

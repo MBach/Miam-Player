@@ -410,6 +410,30 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 	return playlists;
 }
 
+AlbumDAO* SqlDatabase::selectAlbumFromArtist(ArtistDAO *artistDAO, uint albumId)
+{
+	QSqlQuery selectAlbum(*this);
+	selectAlbum.prepare("SELECT id, name, normalizedName, year, cover, icon, host FROM albums WHERE id = ?");
+	selectAlbum.addBindValue(albumId);
+	if (selectAlbum.exec() && selectAlbum.next()) {
+		AlbumDAO *album = new AlbumDAO;
+		int i = -1;
+		album->setId(selectAlbum.record().value(++i).toString());
+		album->setTitle(selectAlbum.record().value(++i).toString());
+		album->setTitleNormalized(selectAlbum.record().value(++i).toString());
+		album->setYear(selectAlbum.record().value(++i).toString());
+		album->setCover(selectAlbum.record().value(++i).toString());
+		album->setIcon(selectAlbum.record().value(++i).toString());
+		album->setHost(selectAlbum.record().value(++i).toString());
+		if (artistDAO) {
+			album->setArtist(artistDAO->title());
+		}
+		return album;
+	} else {
+		return nullptr;
+	}
+}
+
 ArtistDAO* SqlDatabase::selectArtist(uint artistId)
 {
 	QSqlQuery selectArtist(*this);
@@ -539,24 +563,17 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 			uint albumId = artistId + qHash(albumNorm, 1);
 
 			// Check if Artist has changed (can change how tracks are displayed in the library)
-			ArtistDAO *artistDAO = new ArtistDAO;
 			if (oldArtistId != artistId) {
+				ArtistDAO *artistDAO = new ArtistDAO;
 				artistDAO->setId(QString::number(artistId));
 				artistDAO->setTitle(artistAlbum);
 				artistDAO->setTitleNormalized(artistNorm);
 				if (this->insertIntoTableArtists(artistDAO)) {
 					artists << artistDAO;
+					emit nodeExtracted(artistDAO);
 				} else {
 					delete artistDAO;
 				}
-			} else {
-				artistDAO->setId(QString::number(oldArtistId));
-				artistDAO->setTitle(artistAlbum);
-				artistDAO->setTitleNormalized(artistNorm);
-				artists << artistDAO;
-			}
-			if (artistDAO) {
-				emit nodeExtracted(artistDAO);
 			}
 
 			// Same thing for Album
@@ -618,17 +635,27 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 				}
 			}
 			if (updateTrack.exec()) {
-				emit nodeExtracted(albumDAO);
-				if (albumDAO != nullptr) {
-					TrackDAO *trackDAO = new TrackDAO;
-					trackDAO->setUri(oldPath);
-					trackDAO->setTrackNumber(fh->trackNumber());
-					trackDAO->setTitle(fh->title());
-					trackDAO->setRating(rating);
-					trackDAO->setDisc(QString::number(discNumber));
-					trackDAO->setParentNode(albumDAO);
-					emit nodeExtracted(trackDAO);
+				TrackDAO *trackDAO = new TrackDAO;
+				trackDAO->setUri(oldPath);
+				trackDAO->setTrackNumber(fh->trackNumber());
+				trackDAO->setTitle(fh->title());
+				trackDAO->setRating(rating);
+				trackDAO->setDisc(QString::number(discNumber));
+
+				ArtistDAO *artist = nullptr;
+				for (ArtistDAO *savedArtist : artists) {
+					if (savedArtist->id().toUInt() == artistId) {
+						artist = savedArtist;
+						break;
+					}
 				}
+				if (artist) {
+					AlbumDAO *album = this->selectAlbumFromArtist(artist, albumId);
+					album->setParentNode(artist);
+					emit nodeExtracted(album);
+					trackDAO->setParentNode(album);
+				}
+				emit nodeExtracted(trackDAO);
 			}
 			olds.append(fh);
 		} else {
@@ -648,7 +675,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 	if (this->cleanNodesWithoutTracks()) {
 		// Finally, tell views they need to update themselves
-		//emit aboutToCleanView();
+		emit aboutToCleanView();
 	}
 	commit();
 

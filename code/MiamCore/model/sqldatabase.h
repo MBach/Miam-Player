@@ -64,6 +64,7 @@ public:
 	QList<PlaylistDAO> selectPlaylists();
 
 	ArtistDAO* selectArtist(uint artistId);
+	AlbumDAO* selectAlbumFromArtist(ArtistDAO *artistDAO, uint albumId);
 	TrackDAO selectTrackByURI(const QString &uri);
 
 	bool playlistHasBackgroundImage(uint playlistID);

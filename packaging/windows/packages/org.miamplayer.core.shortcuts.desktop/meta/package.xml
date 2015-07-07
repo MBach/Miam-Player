@@ -5,7 +5,7 @@
 	<Description>Put a shortcut of on the Desktop</Description>
 	<Description xml:lang="fr_fr">Placer un raccourci sur le Bureau</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2015-06-10</ReleaseDate>
+	<ReleaseDate>2015-06-28</ReleaseDate>
 	<Name>org.miamplayer.core.shortcuts.desktop</Name>
 	<Default>script</Default>
 	<Script>installscript.qs</Script>

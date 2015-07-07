@@ -3,7 +3,7 @@
 	<DisplayName>Miam-Player Start Screen shortcut</DisplayName>
 	<Description>Put a shortcut of Miam-Player in the Start Screen</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2015-06-10</ReleaseDate>
+	<ReleaseDate>2015-06-28</ReleaseDate>
 	<Name>org.miamplayer.core.shortcuts.startscreen</Name>
 	<Virtual>true</Virtual>
 	<SortingPriority>100</SortingPriority>

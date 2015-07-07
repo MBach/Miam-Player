@@ -606,7 +606,7 @@
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>&amp;Menu</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionOpenFiles"/>
     <addaction name="actionOpenFolder"/>
@@ -676,10 +676,10 @@
     <addaction name="actionViewTagEditor"/>
    </widget>
    <addaction name="menuMenu"/>
-   <addaction name="menuOptions"/>
    <addaction name="menuView"/>
    <addaction name="menuPlayback"/>
    <addaction name="menuPlaylist"/>
+   <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionExit">
