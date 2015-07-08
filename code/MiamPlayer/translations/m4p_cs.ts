@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="cs_CZ" sourcelanguage="en_US">
+<TS version="2.1" language="cs_CZ" sourcelanguage="en_US">
 <context>
     <name>AlbumCover</name>
     <message>
@@ -918,10 +918,6 @@
         <translation>Přetočit vpřed</translation>
     </message>
     <message>
-        <source>&amp;Menu</source>
-        <translation>&amp;Nabídka</translation>
-    </message>
-    <message>
         <source>Play&amp;list</source>
         <translation>&amp;Seznam skladeb</translation>
     </message>
@@ -1065,10 +1061,6 @@
         </translation>
     </message>
     <message>
-        <source>View</source>
-        <translation>Pohled</translation>
-    </message>
-    <message>
         <source>Playlist Mode</source>
         <translation>Režim seznamu skladeb</translation>
     </message>
@@ -1195,6 +1187,14 @@
     <message>
         <source>volume</source>
         <translation>Hlasitost</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

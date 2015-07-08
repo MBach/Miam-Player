@@ -316,7 +316,7 @@ void CustomizeOptionsDialog::open()
 		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
 	}
 	QDialog::open();
-	//this->activateWindow();
+	this->activateWindow();
 }
 
 void CustomizeOptionsDialog::checkShortcutsIntegrity()

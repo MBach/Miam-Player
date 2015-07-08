@@ -25,10 +25,12 @@
 
 #include <QtGui/qwindowdefs.h>
 
+#include "Config.h"
 #include "Enums.h"
 #include "SharedExportCore.h"
 
 class VlcAudio;
+class VlcEqualizer;
 class VlcInstance;
 class VlcMedia;
 class VlcVideo;
@@ -68,19 +70,27 @@ public:
         \brief Returns libvlc media player object.
         \return libvlc media player (libvlc_media_player_t *)
     */
-    libvlc_media_player_t *core();
+    libvlc_media_player_t *core() const;
 
     /*!
         \brief Returns audio manager object.
         \return audio manager (VlcAudio *)
     */
-    VlcAudio *audio();
+    VlcAudio *audio() const;
 
     /*!
         \brief Returns video manager object.
         \return video manager (VlcVideo *)
     */
-    VlcVideo *video();
+    VlcVideo *video() const;
+
+#if LIBVLC_VERSION >= 0x020200
+    /*!
+        \brief Returns equalizer object.
+        \return equalizer (VlcEqualizer *)
+    */
+    VlcEqualizer *equalizer() const;
+#endif
 
     /*!
         \brief Get the current movie length (in ms).
@@ -92,7 +102,7 @@ public:
         \brief Get current media object
         \return media object (VlcMedia *)
     */
-    VlcMedia *currentMedia();
+    VlcMedia *currentMedia() const;
 
     /*!
         \brief Get current media core object
@@ -112,6 +122,7 @@ public:
     */
     void openOnly(VlcMedia *media);
 
+public slots:
     /*! \brief Set the movie time (in ms).
 
         This has no effect if no media is being played. Not all formats and protocols support this.
@@ -120,6 +131,7 @@ public:
     */
     void setTime(int time);
 
+public:
     /*!
         \brief Get the current movie time (in ms).
         \return the movie time (in ms), or -1 if there is no media (const int)
@@ -150,7 +162,7 @@ public:
         \brief Get current video widget.
         \return current video widget (VlcVideoWidget *)
     */
-    VlcVideoDelegate *videoWidget();
+    VlcVideoDelegate *videoWidget() const;
 
     /*!
         \brief Get current video position.
@@ -158,6 +170,13 @@ public:
     */
     float position();
 
+    /*!
+        \brief Get sample aspect ratio for current video track( vlc >= 2.1.0 ).
+        \return sample aspect ratio (float)
+    */
+    float sampleAspectRatio();
+
+public slots:
     /*! \brief Set the movie position.
 
         This has no effect if no media is being played. Not all formats and protocols support this.
@@ -166,7 +185,6 @@ public:
     */
     void setPosition(float pos);
 
-public slots:
     /*!
         \brief Starts playing current media if possible
     */
@@ -201,9 +219,15 @@ signals:
 
     /*!
         \brief Signal sent on buffering
-        \param float buffer
+        \param float buffer in percent
     */
     void buffering(float);
+
+    /*!
+        \brief Signal sent on buffering
+        \param int buffer in percent
+    */
+    void buffering(int);
 
     /*!
         \brief Signal sent when end reached
@@ -318,6 +342,9 @@ private:
 
     VlcAudio *_vlcAudio;
     VlcVideo *_vlcVideo;
+#if LIBVLC_VERSION >= 0x020200
+    VlcEqualizer *_vlcEqualizer;
+#endif
 
     VlcVideoDelegate *_videoWidget;
     WId _currentWId;

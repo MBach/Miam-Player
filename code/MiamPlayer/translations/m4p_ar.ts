@@ -918,10 +918,6 @@
         <translation>إبحث إلى الأمام</translation>
     </message>
     <message>
-        <source>&amp;Menu</source>
-        <translation>&amp;قائمة</translation>
-    </message>
-    <message>
         <source>Play&amp;list</source>
         <translation>&amp;قائِمة القراءة</translation>
     </message>
@@ -1074,10 +1070,6 @@
         </translation>
     </message>
     <message>
-        <source>View</source>
-        <translation>مظهر</translation>
-    </message>
-    <message>
         <source>Playlist Mode</source>
         <translation>نوع مسار القراءة</translation>
     </message>
@@ -1205,6 +1197,14 @@
         <source>volume</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Playlist</name>
@@ -1280,7 +1280,7 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">أنتبه</translation>
     </message>
     <message>
         <source>Export playlist</source>
@@ -1492,7 +1492,7 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">أنتبه</translation>
     </message>
 </context>
 <context>

@@ -669,7 +669,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <addaction name="actionViewPlaylists"/>
     <addaction name="actionViewUniqueLibrary"/>

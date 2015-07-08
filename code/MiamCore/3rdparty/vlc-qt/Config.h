@@ -20,7 +20,14 @@
 #define VLCQT_CONFIG_H_
 
 // Version
-#define LIBVLCQT_VERSION "0.9.0"
-#define LIBVLCQT_VERSION_PATCH "d735d58-git"
+#define LIBVLCQT_VERSION "0.11.0"
+#define LIBVLCQT_VERSION_VCS ""
+
+#define LIBVLCQT_VERSION_MAJOR 0
+#define LIBVLCQT_VERSION_MINOR 11
+#define LIBVLCQT_VERSION_PATCH 0
+
+// libVLC this library is built with
+#define LIBVLC_VERSION 0x020200
 
 #endif // VLCQT_CONFIG_H_

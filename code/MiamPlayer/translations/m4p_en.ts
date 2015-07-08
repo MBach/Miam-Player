@@ -918,10 +918,6 @@
         <translation>Seek forword</translation>
     </message>
     <message>
-        <source>&amp;Menu</source>
-        <translation>&amp;Menu</translation>
-    </message>
-    <message>
         <source>Play&amp;list</source>
         <translation>Play&amp;list </translation>
     </message>
@@ -1062,10 +1058,6 @@
         </translation>
     </message>
     <message>
-        <source>View</source>
-        <translation>View</translation>
-    </message>
-    <message>
         <source>Playlist Mode</source>
         <translation>Playlist Mode</translation>
     </message>
@@ -1192,6 +1184,14 @@
     <message>
         <source>volume</source>
         <translation>volume</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;File</translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation>&amp;View</translation>
     </message>
 </context>
 <context>

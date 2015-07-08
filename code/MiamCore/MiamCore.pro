@@ -15,16 +15,16 @@ win32 {
     CONFIG += dll
     CONFIG(debug, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt-core
 	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt-core
 	}
     }
     CONFIG(release, debug|release) {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$PWD/../../lib/release/win-x86/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$PWD/../../lib/release/win-x86/vlc-qt/ -lvlc-qt-core
 	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$PWD/../../lib/release/win-x64/vlc-qt/ -lvlc-qt -lvlc-qt-widgets
+	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$PWD/../../lib/release/win-x64/vlc-qt/ -lvlc-qt-core
 	}
     }
 }
@@ -47,12 +47,12 @@ unix {
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
-    LIBS += -L$$OUT_PWD -L/usr/local/ -ltag -lvlc-qt -lvlc-qt-widgets
+    LIBS += -L$$OUT_PWD -L/usr/local/ -ltag -lvlc-qt-core
     target.path = /usr/lib/
     INSTALLS += target
 }
 macx {
-    LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt -lvlc-qt-widgets
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt-core
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_PRE_LINK = rm -f $$OUT_PWD/../MiamPlayer/MiamPlayer.app/Contents/MacOS/MiamPlayer
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.10

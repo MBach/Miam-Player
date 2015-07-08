@@ -918,10 +918,6 @@
         <translation>Vorwärtsspulen</translation>
     </message>
     <message>
-        <source>&amp;Menu</source>
-        <translation>&amp;Menü</translation>
-    </message>
-    <message>
         <source>Play&amp;list</source>
         <translation>Wiedergabe&amp;liste</translation>
     </message>
@@ -1062,10 +1058,6 @@
         </translation>
     </message>
     <message>
-        <source>View</source>
-        <translation>Anzeige</translation>
-    </message>
-    <message>
         <source>Playlist Mode</source>
         <translation>Wiedergabelistenmodus</translation>
     </message>
@@ -1191,6 +1183,14 @@
     </message>
     <message>
         <source>volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

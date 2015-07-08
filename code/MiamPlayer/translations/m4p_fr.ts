@@ -856,43 +856,43 @@
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Sauvegarder le fichier de log</translation>
     </message>
     <message>
         <source>%1/logfile.txt</source>
-        <translation type="unfinished"></translation>
+        <translation>%1/logfile.txt</translation>
     </message>
     <message>
         <source>Text Files (*.txt);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>Fichiers texte (*.txt);;Tous les fichiers (*)</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur</translation>
     </message>
     <message>
         <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;nobr&gt;Fichier &apos;%1&apos;&lt;br/&gt;ne peut être ouvert en écriture.&lt;br/&gt;&lt;br/&gt;Le fichier de log &lt;b&gt;n&apos;a pas&lt;/b&gt; été sauvegardé !&lt;/nobr&gt;</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Type</translation>
     </message>
     <message>
         <source>Message</source>
-        <translation type="unfinished"></translation>
+        <translation>Message</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacer</translation>
     </message>
     <message>
         <source>Save output</source>
-        <translation type="unfinished"></translation>
+        <translation>Sauvegarder la sortie</translation>
     </message>
     <message>
         <source>Warning: </source>
-        <translation type="unfinished"></translation>
+        <translation>Attention : </translation>
     </message>
 </context>
 <context>
@@ -916,10 +916,6 @@
     <message>
         <source>Seek forward</source>
         <translation>Rechercher en avant</translation>
-    </message>
-    <message>
-        <source>&amp;Menu</source>
-        <translation>&amp;Menu</translation>
     </message>
     <message>
         <source>Play&amp;list</source>
@@ -1062,10 +1058,6 @@
         </translation>
     </message>
     <message>
-        <source>View</source>
-        <translation>Vue</translation>
-    </message>
-    <message>
         <source>Playlist Mode</source>
         <translation>Type Liste de lecture</translation>
     </message>
@@ -1192,6 +1184,14 @@
     <message>
         <source>volume</source>
         <translation>volume</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>&amp;Fichier</translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation>&amp;Vue</translation>
     </message>
 </context>
 <context>

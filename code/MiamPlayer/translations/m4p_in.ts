@@ -914,10 +914,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Play&amp;list</source>
         <translation type="unfinished"></translation>
     </message>
@@ -931,10 +927,6 @@
     </message>
     <message>
         <source>&amp;Playback</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1191,6 +1183,14 @@
     </message>
     <message>
         <source>volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
