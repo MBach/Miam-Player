@@ -64,17 +64,21 @@ bool PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 	for (int i = 0; i < tracks.size(); i++) {
 		QString trackStr = tracks.at(i);
 		if (trackStr.startsWith("file")) {
-			_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(QUrl::fromLocalFile(trackStr.mid(7))));
-			this->insertMedia(rowIndex + i, FileHelper(trackStr));
-			continue;
+			FileHelper fh(trackStr);
+			// This is a file that Miam-Player can read. Do not accept txt files, covers (jpg), etc.
+			if (FileHelper::suffixes(FileHelper::All).contains(fh.fileInfo().suffix()) &&
+				_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(QUrl::fromLocalFile(fh.fileInfo().absoluteFilePath())))) {
+				this->insertMedia(rowIndex + i, fh);
+			}
+		} else {
+			/// XXX
+			/// A new class like TrackLoader should be created. It could be a unique place to dispatch URIs to relevant plugins which can load remote tracks
+			/// TrackDAO track = TrackLoader::instance()->loadFromUri(uri)
+			/// However, to avoid too much requests to remove server, it might be useful to update the line only before playback started
+			TrackDAO track = SqlDatabase::instance()->selectTrackByURI(trackStr);
+			//qDebug() << "remote track to be fully reloaded" << trackStr;
+			this->createLine(rowIndex + i, track);
 		}
-		/// XXX
-		/// A new class like TrackLoader should be created. It could be a unique place to dispatch URIs to relevant plugins which can load remote tracks
-		/// TrackDAO track = TrackLoader::instance()->loadFromUri(uri)
-		/// However, to avoid too much requests to remove server, it might be useful to update the line only before playback started
-		TrackDAO track = SqlDatabase::instance()->selectTrackByURI(trackStr);
-		//qDebug() << "remote track to be fully reloaded" << trackStr;
-		this->createLine(rowIndex + i, track);
 	}
 	return c < this->rowCount();
 }
