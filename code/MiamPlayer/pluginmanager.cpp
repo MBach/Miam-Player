@@ -179,6 +179,14 @@ void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchM
 	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchBar->searchDialog());
 }
 
+void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
+{
+	tagEditorPlugin->setSelectedTracksModel(_mainWindow->tagEditor);
+	tagEditorPlugin->setStackWidget(_mainWindow->tagEditor->extensibleWidgetArea);
+	tagEditorPlugin->setExtensibleLayout(_mainWindow->tagEditor->extensiblePushButtonArea);
+	tagEditorPlugin->setTagEditorWidget(_mainWindow->tagEditor->tagEditorWidget);
+}
+
 /** Load a plugin by its location on the hard drive. */
 BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 {
@@ -231,6 +239,8 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 			this->loadItemViewPlugin(itemViewPlugin);
 		} else if (RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
 			this->loadRemoteMediaPlayerPlugin(remoteMediaPlayerPlugin);
+		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
+			this->loadTagEditorPlugin(tagEditorPlugin);
 		}
 		return basic;
 	} else {

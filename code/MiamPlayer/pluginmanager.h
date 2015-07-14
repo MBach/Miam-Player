@@ -4,6 +4,7 @@
 #include <interfaces/itemviewplugin.h>
 #include <interfaces/searchmediaplayerplugin.h>
 #include <interfaces/remotemediaplayerplugin.h>
+#include <interfaces/tageditorplugin.h>
 
 #include <QDir>
 
@@ -73,6 +74,7 @@ private:
 	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
 	void loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin);
 	void loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin);
+	void loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin);
 
 	/** Unload a plugin by its name. */
 	void unloadPlugin(const QString &pluginName);

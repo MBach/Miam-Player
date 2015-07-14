@@ -37,7 +37,8 @@ void TagEditorTableWidget::init()
 	// Always keep the same number of columns with this taglist
 	QList<FileHelper::Field> fields;
 	fields << FileHelper::Field_FileName << FileHelper::Field_AbsPath << FileHelper::Field_Title << FileHelper::Field_Artist << FileHelper::Field_ArtistAlbum
-		<< FileHelper::Field_Album << FileHelper::Field_Track << FileHelper::Field_Disc << FileHelper::Field_Year << FileHelper::Field_Genre << FileHelper::Field_Comment;
+		   << FileHelper::Field_Album << FileHelper::Field_Track << FileHelper::Field_Disc << FileHelper::Field_Year << FileHelper::Field_Genre
+		   << FileHelper::Field_Comment;
 	for (int column = 0; column < this->columnCount(); column++) {
 		QTableWidgetItem *header = new QTableWidgetItem();
 		FileHelper::Field f = fields.at(column);
@@ -160,13 +161,10 @@ bool TagEditorTableWidget::addItemsToEditor(const QStringList &tracks, QMap<int,
 		}
 		_indexes.insert(row, fh.fileInfo().absoluteFilePath());
 
-		/// XXX is it really necessary to extract cover in this class?
-		/// It might be better to build a fileHelper outside, in the container (TagEditor), and iterate 2 times
-		/// One in this class, one in TagEditor class ? But here is quite easy!
-		/*Cover *cover = fh.extractCover();
+		Cover *cover = fh.extractCover();
 		if (cover != nullptr && !cover->byteArray().isEmpty()) {
 			covers.insert(row, cover);
-		}*/
+		}
 	}
 	return (artistAlbumSet.size() == 1);
 }

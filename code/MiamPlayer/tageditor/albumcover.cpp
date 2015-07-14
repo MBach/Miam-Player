@@ -14,7 +14,7 @@
 #include <QtDebug>
 
 AlbumCover::AlbumCover(QWidget *parent) :
-	QWidget(parent), _cover(nullptr), _subMenuApplyTo(nullptr)
+	QWidget(parent), _cover(nullptr), _subMenuApplyTo(nullptr), _applyCoverToCurrentAlbumAction(nullptr)
 {
 	this->setAcceptDrops(true);
 	_imageMenu = new QMenu(this);

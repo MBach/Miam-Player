@@ -85,6 +85,7 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/mediaplayerplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/searchmediaplayerplugin.h \
+    interfaces/tageditorplugin.h \
     library/jumptowidget.h \
     model/albumdao.h \
     model/artistdao.h \

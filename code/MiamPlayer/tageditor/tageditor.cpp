@@ -31,6 +31,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	QWidget(parent), SelectedTracksModel()
 {
 	setupUi(this);
+	extensibleWidgetArea->setVisible(false);
 
 	this->setAcceptDrops(true);
 
@@ -63,13 +64,14 @@ TagEditor::TagEditor(QWidget *parent) :
 
 	// General case: when one is selecting multiple items
 	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayTags);
+	connect(tagEditorWidget, &QTableWidget::itemSelectionChanged, this, &TagEditor::displayCover);
 
 	/// FIXME
-	//connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
-	//connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
+	connect(albumCover, &AlbumCover::coverHasChanged, this, &TagEditor::replaceCover);
+	connect(albumCover, &AlbumCover::aboutToApplyCoverToAll, this, &TagEditor::applyCoverToAll);
 
 	// The context menu in the area displaying a cover can be extended by third party
-	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << this;
+	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << extensiblePushButtonArea << extensibleWidgetArea << tagEditorWidget << this;
 	PluginManager::instance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);
@@ -136,8 +138,8 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	} else if (obj == tagEditorWidget->viewport() && event->type() == QEvent::MouseButtonPress) {
 		if (tagEditorWidget->selectionModel()->hasSelection()) {
 			/// FIXME
-			// qDebug() << "selection";
-			// this->displayCover();
+			qDebug() << "selection";
+			this->displayCover();
 		}
 		return QWidget::eventFilter(obj, event);
 	} else {
@@ -175,18 +177,18 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 
 void TagEditor::replaceCover(Cover *newCover)
 {
-	/*for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows()) {
-		Cover *previousCover = covers.value(index.row());
+	for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows()) {
+		Cover *previousCover = _covers.value(index.row());
 		// It is sure that covers are different
 		if (!(previousCover == nullptr || newCover == nullptr || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
 			newCover->setChanged(true);
 			qDebug() << "TagEditor::replaceCover DELETE";
 			delete previousCover;
 		}
-		unsavedCovers.insert(index.row(), newCover);
+		_unsavedCovers.insert(index.row(), newCover);
 	}
 	saveChangesButton->setEnabled(true);
-	cancelButton->setEnabled(true);*/
+	cancelButton->setEnabled(true);
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
@@ -203,10 +205,14 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 	// It's possible to edit single items by double-clicking in the table
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
-	qDebug() << Q_FUNC_INFO << "about to add items to editor";
-	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, covers);
-	qDebug() << Q_FUNC_INFO << "items added ? to editor";
+	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, _covers);
+	/*qDebug() << Q_FUNC_INFO << "when adding tracks, " << covers.size() << "covers were found";
+	for (int i = 0; i < covers.count(); i++) {
+		Cover *c = covers.value(i);
+		qDebug() << i << qHash(c->byteArray());
+	}*/
 	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
+
 	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 
 	// Sort by path
@@ -242,8 +248,8 @@ void TagEditor::addItemsToEditor(const QList<TrackDAO> &tracks)
 /** Clears all rows and comboboxes. */
 void TagEditor::clear()
 {
-	this->clearCovers(covers);
-	this->clearCovers(unsavedCovers);
+	//this->clearCovers(covers);
+	//this->clearCovers(unsavedCovers);
 
 	albumCover->resetCover();
 
@@ -259,13 +265,13 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 {
 	if (isForAll) {
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
-			Cover *c = covers.value(row);
+			Cover *c = _covers.value(row);
 			if (c == nullptr) {
-				unsavedCovers.insert(row, new Cover(cover->byteArray(), QString::fromUtf8(cover->mimeType().c_str())));
+				_unsavedCovers.insert(row, new Cover(cover->byteArray(), QString::fromUtf8(cover->mimeType().c_str())));
 			} else {
 				// Do not replace the cover for the caller
 				if (c != cover) {
-					unsavedCovers.insert(row, cover);
+					_unsavedCovers.insert(row, cover);
 				}
 			}
 		}
@@ -283,6 +289,7 @@ void TagEditor::close()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 	this->clear();
+	extensibleWidgetArea->setVisible(false);
 }
 
 /** Saves all fields in the media. */
@@ -325,12 +332,12 @@ void TagEditor::commitChanges()
 		}
 
 		/// FIXME
-		/*Cover *cover = unsavedCovers.value(row);
+		Cover *cover = _unsavedCovers.value(row);
 		if (cover == nullptr || (cover != nullptr && cover->hasChanged())) {
-			qDebug() << "setCover(" << i << ")";
-			fh.setCover(cover);
+			//qDebug() << "setCover(" << i << ")";
+			fh->setCover(cover);
 			trackWasModified = true;
-		}*/
+		}
 
 		// Save changes if at least one field was modified
 		// Also, tell the model to rescan the file because the artist or the album might have changed:
@@ -394,24 +401,24 @@ void TagEditor::displayCover()
 {
 	static Cover *_cover = nullptr;
 
-	QMap<int, Cover*> selectedCovers;
+	QMap<uint, Cover*> selectedCovers;
 	QMap<int, QString> selectedAlbums;
 	QString joinedTracks;
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
-	tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename);
 	for (QModelIndex item : tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
 		Cover *cover = nullptr;
+
 		// Check if there's a cover in a temporary state (to allow rollback action)
-		if (unsavedCovers.value(item.row()) != nullptr) {
-			cover = unsavedCovers.value(item.row());
+		if (_unsavedCovers.value(item.row()) != nullptr) {
+			cover = _unsavedCovers.value(item.row());
 		} else {
-			cover = covers.value(item.row());
+			cover = _covers.value(item.row());
 		}
 
 		// Void items are excluded, so it will try display to something.
 		// E.g.: if a cover is missing for one track but the whole album is selected.
 		if (cover != nullptr && !cover->byteArray().isEmpty()) {
-			selectedCovers.insert(item.row(), cover);
+			selectedCovers.insert(qHash(cover->byteArray()), cover);
 		}
 		selectedAlbums.insert(item.row(), item.data().toString());
 		QModelIndex track = item.sibling(item.row(), TagEditorTableWidget::COL_Filename);
@@ -420,8 +427,11 @@ void TagEditor::displayCover()
 	joinedTracks.append("\"\"");
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
-
-	QSqlQuery coverPathQuery = SqlDatabase::instance()->database().exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
+	SqlDatabase *db = SqlDatabase::instance();
+	if (!db->isOpen()) {
+		db->open();
+	}
+	QSqlQuery coverPathQuery = db->exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
 		coversPath << coverPathQuery.record().value(0).toString();
@@ -547,17 +557,17 @@ void TagEditor::rollbackChanges()
 
 	tagEditorWidget->resetTable();
 
-	// tagEditorWidget->blockSignals(true);
-	// this->replaceCover(nullptr);
+	tagEditorWidget->blockSignals(true);
+	this->replaceCover(nullptr);
 
 	// Reset the unsaved cover list only
-	// this->clearCovers(unsavedCovers);
+	this->clearCovers(_unsavedCovers);
 
-	// tagEditorWidget->blockSignals(false);
+	tagEditorWidget->blockSignals(false);
 	// qDebug() << "rollbackChanges";
 
 	// Then, reload info a second time
-	//this->displayCover();
+	this->displayCover();
 	this->displayTags();
 
 	saveChangesButton->setEnabled(false);

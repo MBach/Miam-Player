@@ -28,8 +28,8 @@ private:
 
 	static QStringList genres;
 
-	QMap<int, Cover*> covers;
-	QMap<int, Cover*> unsavedCovers;
+	QMap<int, Cover*> _covers;
+	QMap<int, Cover*> _unsavedCovers;
 
 	QMap<int, QSet<QString>> _cacheData;
 
@@ -41,21 +41,21 @@ public:
 
 	void addDirectory(const QDir &dir);
 
-	virtual void init() {}
+	virtual void init()  override {}
 
-	virtual QStringList selectedTracks();
+	virtual QStringList selectedTracks() override;
 
-	virtual void updateSelectedTracks();
+	virtual void updateSelectedTracks() override;
 
 protected:
-	virtual void dragEnterEvent(QDragEnterEvent *event);
+	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
-	virtual void dragMoveEvent(QDragMoveEvent *event);
+	virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
-	virtual void dropEvent(QDropEvent *event);
+	virtual void dropEvent(QDropEvent *event) override;
 
 	/** Redefined to filter context menu event for the cover album object. */
-	virtual bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
 	void buildCache();
