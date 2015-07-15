@@ -6,7 +6,10 @@
 #include "cover.h"
 
 /**
- * \brief The AlbumCover class is used to manipulate cover albums inside music files.
+ * \brief		The AlbumCover class is used to manipulate cover albums inside music files.
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class AlbumCover : public QWidget
 {
@@ -14,7 +17,7 @@ class AlbumCover : public QWidget
 private:
 	QMenu *_imageMenu;
 
-	bool isCoverForUniqueAlbum;
+	bool _isCoverForSingleAlbum;
 
 	Cover *_cover;
 	QString _album;
@@ -28,17 +31,17 @@ private:
 public:
 	AlbumCover(QWidget *parent = 0);
 
-	/** Displays a cover in the tag editor. */
-	void setCover(Cover *cover);
-
-	void setCoverForUniqueAlbum(bool isUnique) { isCoverForUniqueAlbum = isUnique; }
-
 	/** Puts a default picture in this widget. */
 	void resetCover();
 
-	void setAlbum(const QString &album) { _album = album; }
+	/** Displays a cover in the tag editor. */
+	void setCover(Cover *cover);
 
-	QString album() const { return _album; }
+	inline void setCoverForSingleAlbum(bool isCoverForSingleAlbum) { _isCoverForSingleAlbum = isCoverForSingleAlbum; }
+
+	inline void setAlbum(const QString &album) { _album = album; }
+
+	inline QString album() const { return _album; }
 
 	inline QMenu * contextMenu() const { return _imageMenu; }
 
@@ -48,22 +51,21 @@ private:
 
 protected:
 	/** Redefined to display a small context menu in the view. */
-	void contextMenuEvent(QContextMenuEvent *event);
+	void contextMenuEvent(QContextMenuEvent *event) override;
 
 	/** Redefined. */
-	void dragEnterEvent(QDragEnterEvent *event);
+	void dragEnterEvent(QDragEnterEvent *event) override;
 
 	/** Redefined. */
-	void dragMoveEvent(QDragMoveEvent *event);
+	void dragMoveEvent(QDragMoveEvent *event) override;
 
 	/** Allows one to drag & drop pictures from external software. */
-	void dropEvent(QDropEvent *event);
+	void dropEvent(QDropEvent *event) override;
 
 	/** Redefined to switch between images very quickly. */
-	void paintEvent(QPaintEvent *);
+	void paintEvent(QPaintEvent *) override;
 
 private slots:
-
 	/** Loads a file from the filesystem. */
 	void loadCover();
 

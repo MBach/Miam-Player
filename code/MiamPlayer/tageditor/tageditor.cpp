@@ -211,7 +211,7 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 		Cover *c = covers.value(i);
 		qDebug() << i << qHash(c->byteArray());
 	}*/
-	albumCover->setCoverForUniqueAlbum(onlyOneAlbumIsSelected);
+	albumCover->setCoverForSingleAlbum(onlyOneAlbumIsSelected);
 
 	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 
@@ -263,23 +263,29 @@ void TagEditor::clear()
 
 void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 {
+	qDebug() << Q_FUNC_INFO << isForAll << cover;
 	if (isForAll) {
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 			Cover *c = _covers.value(row);
 			if (c == nullptr) {
+				qDebug() << Q_FUNC_INFO << "for row" << row << "cover is null";
+				Cover *current = _unsavedCovers.value(row);
+				if (current != nullptr) {
+					qDebug() << Q_FUNC_INFO << "but there's already a cover waiting to be saved, deleting it and replacing it";
+					delete current;
+				}
 				_unsavedCovers.insert(row, new Cover(cover->byteArray(), QString::fromUtf8(cover->mimeType().c_str())));
 			} else {
 				// Do not replace the cover for the caller
 				if (c != cover) {
+					qDebug() << Q_FUNC_INFO << row << cover;
 					_unsavedCovers.insert(row, cover);
 				}
 			}
 		}
 	}
-
-	//saveChangesButton->setEnabled(true);
+	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
-	qDebug() << "applyCoverToAll" << isForAll;
 }
 
 /** Closes this Widget and tells its parent to switch views. */
@@ -331,11 +337,10 @@ void TagEditor::commitChanges()
 			}
 		}
 
-		/// FIXME
-		Cover *cover = _unsavedCovers.value(row);
-		if (cover == nullptr || (cover != nullptr && cover->hasChanged())) {
-			//qDebug() << "setCover(" << i << ")";
-			fh->setCover(cover);
+		Cover *previousCover = _covers.value(row);
+		Cover *currentCover = _unsavedCovers.value(row);
+		if ((previousCover == nullptr && currentCover != nullptr) || (previousCover != nullptr && currentCover == nullptr)) {
+			fh->setCover(currentCover);
 			trackWasModified = true;
 		}
 

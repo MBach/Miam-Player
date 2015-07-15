@@ -28,17 +28,17 @@ AlbumCover::AlbumCover(QWidget *parent) :
 	connect(_removeCoverAction, &QAction::triggered, this, &AlbumCover::removeCover);
 }
 
-/** Displays a cover in the tag editor. */
-void AlbumCover::setCover(Cover *cover)
-{
-	_cover = cover;
-	update();
-}
-
 /** Puts a default picture in this widget. */
 void AlbumCover::resetCover()
 {
 	_cover = nullptr;
+	update();
+}
+
+/** Displays a cover in the tag editor. */
+void AlbumCover::setCover(Cover *cover)
+{
+	_cover = cover;
 	update();
 }
 
@@ -64,7 +64,7 @@ void AlbumCover::contextMenuEvent(QContextMenuEvent *event)
 	_extractCoverAction->setDisabled(isDefaultCover);
 
 	// Adapt the context menu to the content of the table
-	if (isCoverForUniqueAlbum) {
+	if (_isCoverForSingleAlbum) {
 		if (_applyCoverToCurrentAlbumAction) {
 			delete _applyCoverToCurrentAlbumAction;
 			_applyCoverToCurrentAlbumAction = nullptr;

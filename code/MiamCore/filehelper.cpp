@@ -497,11 +497,13 @@ void FileHelper::setCover(Cover *cover)
 	case FLAC: {
 		TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file);
 		flacFile->removePictures();
-		TagLib::FLAC::Picture *picture = new TagLib::FLAC::Picture;
-		picture->setType(TagLib::FLAC::Picture::FrontCover);
-		TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
-		picture->setData(bv);
-		flacFile->addPicture(picture);
+		if (cover != nullptr) {
+			TagLib::FLAC::Picture *picture = new TagLib::FLAC::Picture;
+			picture->setType(TagLib::FLAC::Picture::FrontCover);
+			TagLib::ByteVector bv(cover->byteArray().data(), cover->byteArray().length());
+			picture->setData(bv);
+			flacFile->addPicture(picture);
+		}
 		break;
 	}
 	default:
