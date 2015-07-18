@@ -81,9 +81,9 @@ void TagConverter::applyPatternToColumns()
 		if (c == ':') {
 			c = text.at(++i);
 			switch (c.digitValue()) {
-			case TagEditorTableWidget::COL_Track:
-			case TagEditorTableWidget::COL_Year:
-			case TagEditorTableWidget::COL_Disc:
+			case Miam::COL_Track:
+			case Miam::COL_Year:
+			case Miam::COL_Disc:
 				characterClass = "[\\d]+"; // Digits
 				break;
 			default:

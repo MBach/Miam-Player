@@ -24,29 +24,44 @@ public:
 	{
 		IT_Artist		= QMetaType::User + 1,
 		IT_Album		= QMetaType::User + 2,
-		IT_ArtistAlbum		= QMetaType::User + 3,
+		IT_ArtistAlbum	= QMetaType::User + 3,
 		IT_Disc			= QMetaType::User + 4,
-		IT_Separator		= QMetaType::User + 5,
+		IT_Separator	= QMetaType::User + 5,
 		IT_Track		= QMetaType::User + 6,
 		IT_Year			= QMetaType::User + 7,
 		IT_Playlist		= QMetaType::User + 8,
-		IT_UnknownType		= QMetaType::User + 9
+		IT_UnknownType	= QMetaType::User + 9
 	};
 
 	// User defined data types (item->setData(QVariant, Field);)
 	enum DataField : int
 	{
-		DF_URI			= Qt::UserRole + 1,
-		DF_CoverPath		= Qt::UserRole + 2,
-		DF_TrackNumber		= Qt::UserRole + 3,
-		DF_DiscNumber		= Qt::UserRole + 4,
-		DF_NormalizedString	= Qt::UserRole + 5,
-		DF_Year			= Qt::UserRole + 6,
-		DF_Highlighted		= Qt::UserRole + 7,
-		DF_IsRemote		= Qt::UserRole + 8,
-		DF_IconPath		= Qt::UserRole + 9,
-		DF_Rating		= Qt::UserRole + 10,
+		DF_URI					= Qt::UserRole + 1,
+		DF_CoverPath			= Qt::UserRole + 2,
+		DF_TrackNumber			= Qt::UserRole + 3,
+		DF_DiscNumber			= Qt::UserRole + 4,
+		DF_NormalizedString		= Qt::UserRole + 5,
+		DF_Year					= Qt::UserRole + 6,
+		DF_Highlighted			= Qt::UserRole + 7,
+		DF_IsRemote				= Qt::UserRole + 8,
+		DF_IconPath				= Qt::UserRole + 9,
+		DF_Rating				= Qt::UserRole + 10,
 		DF_CustomDisplayText	= Qt::UserRole + 11
+	};
+
+	enum TagEditorColumns : int
+	{
+		COL_Filename	= 0,
+		COL_Path		= 1,
+		COL_Title		= 2,
+		COL_Artist		= 3,
+		COL_ArtistAlbum	= 4,
+		COL_Album		= 5,
+		COL_Track		= 6,
+		COL_Disc		= 7,
+		COL_Year		= 8,
+		COL_Genre		= 9,
+		COL_Comment		= 10
 	};
 };
 

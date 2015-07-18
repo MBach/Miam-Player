@@ -38,15 +38,15 @@ TagEditor::TagEditor(QWidget *parent) :
 	tagEditorWidget->init();
 	tagConverter = new TagConverter(convertPushButton, tagEditorWidget);
 
-	_combos.insert(TagEditorTableWidget::COL_Title, titleComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Artist, artistComboBox);
-	_combos.insert(TagEditorTableWidget::COL_ArtistAlbum, artistAlbumComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Album, albumComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Track, trackComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Disc, discComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Year, yearComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Genre, genreComboBox);
-	_combos.insert(TagEditorTableWidget::COL_Comment, commentComboBox);
+	_combos.insert(Miam::COL_Title, titleComboBox);
+	_combos.insert(Miam::COL_Artist, artistComboBox);
+	_combos.insert(Miam::COL_ArtistAlbum, artistAlbumComboBox);
+	_combos.insert(Miam::COL_Album, albumComboBox);
+	_combos.insert(Miam::COL_Track, trackComboBox);
+	_combos.insert(Miam::COL_Disc, discComboBox);
+	_combos.insert(Miam::COL_Year, yearComboBox);
+	_combos.insert(Miam::COL_Genre, genreComboBox);
+	_combos.insert(Miam::COL_Comment, commentComboBox);
 	coverPathComboBox->setEditable(false);
 
 	for (QComboBox *combo : _combos.values()) {
@@ -95,7 +95,7 @@ void TagEditor::addDirectory(const QDir &dir)
 QStringList TagEditor::selectedTracks()
 {
 	QStringList tracks;
-	for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Filename)) {
+	for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows(Miam::COL_Filename)) {
 		tracks << index.data(Qt::UserRole).toString();
 	}
 	return tracks;
@@ -217,8 +217,8 @@ void TagEditor::addItemsToEditor(const QStringList &tracks)
 
 	// Sort by path
 	tagEditorWidget->setSortingEnabled(true);
-	tagEditorWidget->sortItems(TagEditorTableWidget::COL_Filename);
-	tagEditorWidget->sortItems(TagEditorTableWidget::COL_Path);
+	tagEditorWidget->sortItems(Miam::COL_Filename);
+	tagEditorWidget->sortItems(Miam::COL_Path);
 	tagEditorWidget->resizeColumnsToContents();
 	tagEditorWidget->horizontalHeader()->setStretchLastSection(true);
 }
@@ -321,7 +321,7 @@ void TagEditor::commitChanges()
 			if (item && item->data(TagEditorTableWidget::MODIFIED).toBool()) {
 
 				// If it has changed, we need to rename the file after setting meta-datas
-				if (col == TagEditorTableWidget::COL_Filename) {
+				if (col == Miam::COL_Filename) {
 					trackWasModified = true;
 					qDebug() << absPath << "has been renamed";
 				}
@@ -370,11 +370,11 @@ void TagEditor::commitChanges()
 		while (it.hasNext()) {
 			int row = it.next();
 
-			QTableWidgetItem *filename = tagEditorWidget->item(row, TagEditorTableWidget::COL_Filename);
+			QTableWidgetItem *filename = tagEditorWidget->item(row, Miam::COL_Filename);
 			/// XXX: hard to find!
 			QString oldFilepath = filename->data(Qt::UserRole).toString();
 			if (filename->data(TagEditorTableWidget::MODIFIED).toBool()) {
-				QTableWidgetItem *path = tagEditorWidget->item(row, TagEditorTableWidget::COL_Path);
+				QTableWidgetItem *path = tagEditorWidget->item(row, Miam::COL_Path);
 				QString newAbsPath = path->text() + QDir::separator() + filename->text();
 				QFile f(oldFilepath);
 				if (f.rename(newAbsPath)) {
@@ -410,7 +410,7 @@ void TagEditor::displayCover()
 	QMap<int, QString> selectedAlbums;
 	QString joinedTracks;
 	// Extract only a subset of columns from the selected rows, in our case, only one column: displayed album name
-	for (QModelIndex item : tagEditorWidget->selectionModel()->selectedRows(TagEditorTableWidget::COL_Album)) {
+	for (QModelIndex item : tagEditorWidget->selectionModel()->selectedRows(Miam::COL_Album)) {
 		Cover *cover = nullptr;
 
 		// Check if there's a cover in a temporary state (to allow rollback action)
@@ -426,7 +426,7 @@ void TagEditor::displayCover()
 			selectedCovers.insert(qHash(cover->byteArray()), cover);
 		}
 		selectedAlbums.insert(item.row(), item.data().toString());
-		QModelIndex track = item.sibling(item.row(), TagEditorTableWidget::COL_Filename);
+		QModelIndex track = item.sibling(item.row(), Miam::COL_Filename);
 		joinedTracks += "\"" + track.data(Qt::UserRole).toString() + "\",";
 	}
 	joinedTracks.append("\"\"");
