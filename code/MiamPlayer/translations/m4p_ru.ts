@@ -542,36 +542,36 @@
         <translation>Общее</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3552"/>
+        <location filename="../customizeoptionsdialog.ui" line="3558"/>
         <source>Name</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3557"/>
+        <location filename="../customizeoptionsdialog.ui" line="3563"/>
         <source>Loaded</source>
         <translation>Загружен</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3562"/>
+        <location filename="../customizeoptionsdialog.ui" line="3568"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
     <message>
         <location filename="../dialogs/customizeoptionsdialog.cpp" line="49"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="203"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="253"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="371"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="434"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="205"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="255"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="373"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="436"/>
         <source>Add some music locations here</source>
         <translation>Добавьте сюда несколько папок с музыкой</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="295"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="297"/>
         <source>No translation is available for this language :(</source>
         <translation>Для этого языка перевод недоступен :(</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="420"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="422"/>
         <source>Select a location of your music</source>
         <translation>Укажите расположение вашей музыки</translation>
     </message>
@@ -1692,17 +1692,17 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlists/playlistmodel.cpp" line="106"/>
+        <location filename="../playlists/playlistmodel.cpp" line="110"/>
         <source>You cannot modify remote medias</source>
         <translation>Вы не можете изменять удалённые медиа-файлы</translation>
     </message>
     <message>
-        <location filename="../playlists/playlistmodel.cpp" line="138"/>
+        <location filename="../playlists/playlistmodel.cpp" line="142"/>
         <source>Local</source>
         <translation>Локальный</translation>
     </message>
     <message>
-        <location filename="../playlists/playlistmodel.cpp" line="140"/>
+        <location filename="../playlists/playlistmodel.cpp" line="144"/>
         <source>Local file</source>
         <translation>Локальный файл</translation>
     </message>
@@ -1715,7 +1715,7 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Вы отключили этот плагин, поэтому вы не можете получить сейчас доступ к его странице конфигурации.</translation>
     </message>
     <message>
-        <location filename="../pluginmanager.cpp" line="238"/>
+        <location filename="../pluginmanager.cpp" line="248"/>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Был найден плагин, но плееру не удалось загрузить его (файл %1)</translation>
     </message>
@@ -1927,144 +1927,144 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>TagEditor</name>
     <message>
-        <location filename="../tageditor.ui" line="34"/>
+        <location filename="../tageditor.ui" line="40"/>
         <source>Close Editor</source>
         <translation>Закрыть редактор</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="60"/>
+        <location filename="../tageditor.ui" line="75"/>
         <source>Converter</source>
         <translation>Конвертер</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="86"/>
+        <location filename="../tageditor.ui" line="107"/>
         <source>Save changes</source>
         <translation>Сохранить изменения</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="106"/>
+        <location filename="../tageditor.ui" line="133"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="149"/>
+        <location filename="../tageditor.ui" line="198"/>
         <source>Filename</source>
         <translation>Имя файла</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="154"/>
+        <location filename="../tageditor.ui" line="203"/>
         <source>Path</source>
         <translation>Путь</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="159"/>
+        <location filename="../tageditor.ui" line="208"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="164"/>
+        <location filename="../tageditor.ui" line="213"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="169"/>
+        <location filename="../tageditor.ui" line="218"/>
         <source>Artist Album</source>
         <translation>Исполнитель альбома</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="174"/>
+        <location filename="../tageditor.ui" line="223"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="179"/>
+        <location filename="../tageditor.ui" line="228"/>
         <source>Track</source>
         <translation>Трек</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="184"/>
+        <location filename="../tageditor.ui" line="233"/>
         <source>Disc</source>
         <translation>Диск</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="189"/>
+        <location filename="../tageditor.ui" line="238"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="194"/>
+        <location filename="../tageditor.ui" line="243"/>
         <source>Genre</source>
         <translation>Жанр</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="199"/>
+        <location filename="../tageditor.ui" line="248"/>
         <source>Comment</source>
         <translation>Коментарий</translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="245"/>
+        <location filename="../tageditor.ui" line="294"/>
         <source>Title: </source>
         <translation>Название: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="255"/>
+        <location filename="../tageditor.ui" line="304"/>
         <source>Artist Album: </source>
         <translation>Исполнитель альбома: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="265"/>
+        <location filename="../tageditor.ui" line="314"/>
         <source>Disc: </source>
         <translation>Диск: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="275"/>
+        <location filename="../tageditor.ui" line="324"/>
         <source>Album: </source>
         <translation>Альбом: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="298"/>
+        <location filename="../tageditor.ui" line="347"/>
         <source>Cover path:</source>
         <translation>Путь к обложке: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="354"/>
+        <location filename="../tageditor.ui" line="403"/>
         <source>Comment: </source>
         <translation>Комментарий: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="364"/>
+        <location filename="../tageditor.ui" line="413"/>
         <source>Track: </source>
         <translation>Трек: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="374"/>
+        <location filename="../tageditor.ui" line="423"/>
         <source>Artist: </source>
         <translation>Исполнитель: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="399"/>
+        <location filename="../tageditor.ui" line="448"/>
         <source>Year: </source>
         <translation>Год: </translation>
     </message>
     <message>
-        <location filename="../tageditor.ui" line="452"/>
+        <location filename="../tageditor.ui" line="501"/>
         <source>Genre: </source>
         <translation>Жанр: </translation>
     </message>
     <message>
-        <location filename="../tageditor/tageditor.cpp" line="52"/>
-        <location filename="../tageditor/tageditor.cpp" line="528"/>
+        <location filename="../tageditor/tageditor.cpp" line="53"/>
+        <location filename="../tageditor/tageditor.cpp" line="543"/>
         <source>(Keep)</source>
         <translation>(Сохранить)</translation>
     </message>
     <message>
-        <location filename="../tageditor/tageditor.cpp" line="53"/>
-        <location filename="../tageditor/tageditor.cpp" line="529"/>
+        <location filename="../tageditor/tageditor.cpp" line="54"/>
+        <location filename="../tageditor/tageditor.cpp" line="544"/>
         <source>(Delete)</source>
         <translation>(Удалить)</translation>
     </message>
     <message>
-        <location filename="../tageditor/tageditor.cpp" line="432"/>
+        <location filename="../tageditor/tageditor.cpp" line="447"/>
         <source>(Incompatible tracks selected)</source>
         <translation>(Выбраны несовместимые треки)</translation>
     </message>

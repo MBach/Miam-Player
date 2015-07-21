@@ -16,13 +16,12 @@
 #include <QtDebug>
 
 CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
-	QDialog(parent)
+	QDialog(parent, Qt::Tool)
 {
 	setupUi(this);
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 	listWidgetMusicLocations->setAttribute(Qt::WA_MacShowFocusRect, false);
 
-	this->setWindowFlags(Qt::Tool);
 	this->setModal(true);
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -34,8 +33,10 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 	if (!musicLocations.isEmpty()) {
-		QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocations.first()));
-		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocations.first()));
+		/// FIXME?
+		qDebug() << Q_FUNC_INFO << musicLocations.first();
+		//QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocations.first()));
+		comboBoxDefaultFileExplorer->addItem(QDir::toNativeSeparators(musicLocations.first()));
 	}
 
 	if (settings->librarySearchMode() == SettingsPrivate::LSM_Filter) {
@@ -49,14 +50,19 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		listWidgetMusicLocations->addItem(new QListWidgetItem(tr("Add some music locations here"), listWidgetMusicLocations));
 	} else {
 		for (QString path : locations) {
+			if (path.isEmpty()) {
+				continue;
+			}
 			QIcon icon = QFileIconProvider().icon(QFileInfo(path));
 			listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
 			if (musicLocations.isEmpty() || musicLocations.first() != path) {
 				comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
 			}
 		}
-		listWidgetMusicLocations->setCurrentRow(0);
-		pushButtonDeleteLocation->setEnabled(true);
+		if (listWidgetMusicLocations->count() > 0) {
+			listWidgetMusicLocations->setCurrentRow(0);
+			pushButtonDeleteLocation->setEnabled(true);
+		}
 	}
 
 
@@ -299,14 +305,14 @@ void CustomizeOptionsDialog::changeLanguage(const QString &language)
 /** Redefined to initialize theme from settings. */
 void CustomizeOptionsDialog::open()
 {
-	for (MediaButton *b : parent()->findChildren<MediaButton*>()) {
+	/*for (MediaButton *b : parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
 		if (button) {
 			button->setIcon(b->icon());
 			button->setEnabled(b->isVisible());
 			button->setChecked(b->isChecked());
 		}
-	}
+	}*/
 	this->initCloseActionForPlaylists();
 	this->initDragDropAction();
 	retranslateUi(this);

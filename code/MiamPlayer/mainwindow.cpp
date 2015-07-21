@@ -18,7 +18,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent)
+	QMainWindow(parent), customizeOptionsDialog(new CustomizeOptionsDialog)
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
@@ -39,9 +39,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	_uniqueLibrary->hide();
 
 	this->loadTheme();
-	// Instantiate dialogs
-	customizeOptionsDialog = new CustomizeOptionsDialog;
 
+	// Instantiate dialogs
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
 	this->installEventFilter(this);

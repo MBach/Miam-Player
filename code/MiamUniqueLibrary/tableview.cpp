@@ -71,6 +71,7 @@ void TableView::filterLibrary(const QString &filter)
 
 void TableView::insertNode(GenericDAO *node)
 {
+	Q_UNUSED(node)
 	/*if (!isVisible()) {
 		return;
 	}
