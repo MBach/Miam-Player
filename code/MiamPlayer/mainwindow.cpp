@@ -661,10 +661,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 		} else if (action == actionRemoveSelectedTracks) {
 			action->setShortcutContext(Qt::ApplicationShortcut);
 		}
-		connect(action, &QAction::triggered, this, [=]() {
-			qDebug() << sender();
-		});
-
 	// Specific actions not defined in main menu
 	} else if (objectName == "showTabLibrary" || objectName == "showTabFilesystem") {
 		leftTabs->setShortcut(objectName, keySequence);

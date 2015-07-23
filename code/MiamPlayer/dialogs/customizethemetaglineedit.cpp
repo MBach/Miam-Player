@@ -12,9 +12,9 @@ CustomizeThemeTagLineEdit::CustomizeThemeTagLineEdit(QWidget *parent)
 
 	connect(_timerTag, &QTimer::timeout, this, [=]() {
 		QString t = text();
-		this->blockSignals(true);
+		//this->blockSignals(true);
 		this->clear();
-		this->blockSignals(false);
+		//this->blockSignals(false);
 		this->addTag(t);
 		qDebug() << Q_FUNC_INFO;
 		emit taglistHasChanged(this->toStringList());
@@ -37,5 +37,6 @@ void CustomizeThemeTagLineEdit::closeTagButton(TagButton *t)
 {
 	qDebug() << Q_FUNC_INFO;
 	TagLineEdit::closeTagButton(t);
+	qDebug() << Q_FUNC_INFO << this->toStringList();
 	emit taglistHasChanged(this->toStringList());
 }

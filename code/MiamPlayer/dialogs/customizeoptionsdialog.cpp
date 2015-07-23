@@ -33,10 +33,10 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 
 	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 	if (!musicLocations.isEmpty()) {
-		/// FIXME?
-		qDebug() << Q_FUNC_INFO << musicLocations.first();
-		//QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocations.first()));
-		comboBoxDefaultFileExplorer->addItem(QDir::toNativeSeparators(musicLocations.first()));
+		/// FIXME Qt5.5.0?
+		//qDebug() << Q_FUNC_INFO << musicLocations.first();
+		QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocations.first()));
+		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocations.first()));
 	}
 
 	if (settings->librarySearchMode() == SettingsPrivate::LSM_Filter) {
