@@ -12,11 +12,17 @@ CustomizeThemeTagLineEdit::CustomizeThemeTagLineEdit(QWidget *parent)
 
 	connect(_timerTag, &QTimer::timeout, this, [=]() {
 		QString t = text();
-		//this->blockSignals(true);
-		this->clear();
-		//this->blockSignals(false);
+		int firstPos = INT_MAX;
+		int spaces = 0;
+		for (TagButton *tag : _tags) {
+			if (firstPos > tag->position()) {
+				firstPos = tag->position();
+			}
+			spaces += tag->spaceCount();
+		}
+		QString t2 = t.mid(firstPos, spaces);
+		this->setText(t2);
 		this->addTag(t);
-		qDebug() << Q_FUNC_INFO;
 		emit taglistHasChanged(this->toStringList());
 	});
 }
@@ -35,7 +41,6 @@ bool CustomizeThemeTagLineEdit::eventFilter(QObject *obj, QEvent *event)
 
 void CustomizeThemeTagLineEdit::closeTagButton(TagButton *t)
 {
-	qDebug() << Q_FUNC_INFO;
 	TagLineEdit::closeTagButton(t);
 	qDebug() << Q_FUNC_INFO << this->toStringList();
 	emit taglistHasChanged(this->toStringList());

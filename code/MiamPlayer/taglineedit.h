@@ -8,7 +8,7 @@ class TagLineEdit : public LineEdit
 {
 	Q_OBJECT
 
-private:
+protected:
 	QList<TagButton*> _tags;
 
 public:

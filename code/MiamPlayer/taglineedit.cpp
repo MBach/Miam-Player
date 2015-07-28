@@ -21,8 +21,6 @@ void TagLineEdit::addTag(const QString &tag, int column)
 	if (tag.trimmed().isEmpty()) {
 		return;
 	}
-	qDebug() << Q_FUNC_INFO << tag.trimmed();
-
 	for (TagButton *button : _tags) {
 		if (button->text() == tag.trimmed().toLower()) {
 			// It useless to add a tag more than once (IMHO)
@@ -42,7 +40,6 @@ void TagLineEdit::addTag(const QString &tag, int column)
 	});
 
 	_tags.append(t);
-	qDebug() << "added tag" << tag.trimmed();
 	this->setFocus();
 
 	// Unfortunately, we have to wait that a QShowEvent is emitted to have correct size of the Widget
@@ -89,7 +86,6 @@ void TagLineEdit::backspace()
 				button->setPosition(cursorPosition());
 			}
 		}
-		qDebug() << Q_FUNC_INFO << "about to remove" << tag->text();
 		_tags.removeOne(tag);
 		delete tag;
 		/// FIXME
@@ -135,6 +131,7 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 		QString k = event->text();
 		int w = fontMetrics().width(k);
 		if (event->key() == Qt::Key_Delete) {
+			qDebug() << Q_FUNC_INFO << "Key_Delete";
 			w = -w;
 		}
 		for (TagButton *t : _tags) {
@@ -142,9 +139,7 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 				t->move(t->x() + w, 0);
 			}
 		}
-		//qDebug() << "text before pressing" << event->text() << this->text();
 		LineEdit::keyPressEvent(event);
-		//qDebug() << "text after press" << this->text();
 	}
 }
 
@@ -158,12 +153,12 @@ void TagLineEdit::mousePressEvent(QMouseEvent *event)
 			if (r.x() + r.width() / 2 >= event->pos().x()) {
 				while (r.contains(cursorRect().center()) && cursorPosition() > 0) {
 					cursorBackward(false);
-					qDebug() << "cursorBackward" << r << cursorRect().center();
+					//qDebug() << "cursorBackward" << "pos" << t->position() << "spaces" << t->spaceCount();
 				}
 			} else {
 				while (r.contains(cursorRect().center()) && cursorPosition() < text().length()) {
 					cursorForward(false);
-					qDebug() << "cursorForward" << r << cursorRect().center() << cursorPosition();
+					//qDebug() << "cursorForward" << "pos" << t->position() << "spaces" << t->spaceCount();
 				}
 			}
 			break;
@@ -219,29 +214,29 @@ QStringList TagLineEdit::toStringList() const
 
 void TagLineEdit::closeTagButton(TagButton *t)
 {
-	qDebug() << Q_FUNC_INFO << "about to remove spaces for tag" << t->text() << t->position() << t->spaceCount();
-	qDebug() << Q_FUNC_INFO << this->toStringList();
+	int spaces = t->spaceCount();
 	this->setText(text().remove(t->position(), t->spaceCount()));
 	for (TagButton *otherTag : _tags) {
-		if (otherTag != t && otherTag->position() > t->position()) {
-			int dx = fontMetrics().width(" ") * t->spaceCount();
-			otherTag->move(otherTag->x() - dx, 0);
+		if (otherTag != t) {
+			if (otherTag->position() > t->position()) {
+				int dx = fontMetrics().width(" ") * t->spaceCount();
+				otherTag->move(otherTag->x() - dx, 0);
+			}
 		}
 	}
 	_tags.removeOne(t);
+	for (TagButton *otherTag : _tags) {
+		otherTag->setPosition(otherTag->position() - spaces);
+	}
 	t->deleteLater();
-	qDebug() << Q_FUNC_INFO << this->toStringList();
 }
 
 void TagLineEdit::clearTextAndTags(const QString &txt)
 {
-	//qDebug() << Q_FUNC_INFO << txt;
 	if (txt.isEmpty()) {
 		for (TagButton *tag : _tags) {
-			//qDebug() << "deleting tag" << tag->text();
 			tag->deleteLater();
 		}
-		qDebug() << Q_FUNC_INFO << "about to clear everything!";
 		_tags.clear();
 	}
 }
@@ -254,10 +249,7 @@ void TagLineEdit::insertSpaces()
 	t->setPosition(cursorPosition());
 	int numberOfSpace = 2;
 
-	/// FIXME
-	//qDebug() << Q_FUNC_INFO << this->text();
 	this->setText(this->text().insert(cursorPosition(), "  "));
-	//qDebug() << Q_FUNC_INFO << this->text();
 
 	cursorForward(false, 2);
 	while (t->frameGeometry().contains(cursorRect().center())) {
@@ -270,9 +262,9 @@ void TagLineEdit::insertSpaces()
 	t->disconnect();
 
 	for (TagButton *tag : _tags) {
-		//qDebug() << "trying to move tag";
+		//qDebug() << Q_FUNC_INFO << "trying to move tag";
 		if (t != tag && tag->frameGeometry().x() > cx) {
-			//qDebug() << "moving tag" << tag->text();
+			//qDebug() << Q_FUNC_INFO << "moving tag" << tag->text();
 			tag->move(tag->x() + fontMetrics().width(" ") * numberOfSpace, 0);
 		}
 	}

@@ -664,7 +664,11 @@ void SettingsPrivate::setLastActivePlaylistGeometry(const QByteArray &ba)
 
 void SettingsPrivate::setLibraryFilteredByArticles(const QStringList &tagList)
 {
-	setValue("libraryFilteredByArticles", tagList);
+	if (tagList.isEmpty()) {
+		remove("libraryFilteredByArticles");
+	} else {
+		setValue("libraryFilteredByArticles", tagList);
+	}
 }
 
 /** Sets if the button in parameter is visible or not. */
