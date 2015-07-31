@@ -50,6 +50,7 @@ SOURCES += \
     playlists/stareditor.cpp \
     styling/imageutils.cpp \
     styling/lineedit.cpp \
+    styling/miamslider.cpp \
     styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
@@ -71,8 +72,7 @@ SOURCES += \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
-    volumeslider.cpp \
-    styling/miamslider.cpp
+    volumeslider.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -123,6 +123,7 @@ HEADERS += \
     playlists/playlistframe.h \
     styling/imageutils.h \
     styling/lineedit.h \
+    styling/miamslider.h \
     styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
@@ -144,8 +145,7 @@ HEADERS += \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
     treeview.h \
-    volumeslider.h \
-    styling/miamslider.h
+    volumeslider.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \
@@ -226,12 +226,12 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix:!macx {
-    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
+    LIBS += -ltag -lvlc-qt-core -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     target.path = /usr/bin/
     INSTALLS += target
 }
 macx {
-    LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt -lvlc-qt-widgets -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt-core -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     #1 create Framework directory
     #2 copy third party library: TagLib, VLC-Qt
