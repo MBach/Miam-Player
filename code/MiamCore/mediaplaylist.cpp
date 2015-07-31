@@ -27,7 +27,7 @@ void MediaPlaylist::shuffle(int idx)
 	if (idx == -1) {
 		return;
 	}
-	for (int i = 0; i < _randomIndexes.size(); i++) {
+	for (uint i = 0; i < _randomIndexes.size(); i++) {
 		if (idx == _randomIndexes[i]) {
 			_idx = i;
 			break;

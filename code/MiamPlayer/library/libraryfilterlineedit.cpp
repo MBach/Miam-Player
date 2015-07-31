@@ -13,7 +13,7 @@
 #include <QtDebug>
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-	LineEdit(parent), shortcut(new QShortcut(this)), _searchDialog(nullptr)
+	LineEdit(parent), _searchDialog(nullptr), shortcut(new QShortcut(this))
 {
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {

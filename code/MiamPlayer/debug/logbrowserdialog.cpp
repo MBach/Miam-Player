@@ -76,6 +76,8 @@ void LogBrowserDialog::outputMessage(QtMsgType type, const QString &msg)
 		_browser->setItem(row, 0, new QTableWidgetItem(QIcon(":/debug/warning"), ""));
 		_browser->setItem(row, 1, new QTableWidgetItem(msg));
 		break;
+	default:
+		break;
 	}
 	/// XXX: Hack to have output in Qt Creator on Windows and at the same time in the application
 	/// Need to be tested too in Ubuntu

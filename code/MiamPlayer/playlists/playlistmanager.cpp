@@ -20,11 +20,11 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 	uint id = 0;
 	auto _db = SqlDatabase::instance();
 
-	int index = -1;
+	//int index = -1;
 	for (int i = 0; i < _tabPlaylists->count(); i++) {
 		Playlist *pl = _tabPlaylists->playlist(i);
 		if (pl == p) {
-			index = i;
+			//index = i;
 			break;
 		}
 	}

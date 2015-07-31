@@ -158,7 +158,7 @@ uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const st
 {
 	static std::uniform_int_distribution<uint> tt;
 	this->transaction();
-	uint id;
+	uint id = 0;
 	if (isOverwriting) {
 		if (this->updateTablePlaylist(playlist)) {
 			id = playlist.id().toUInt();
