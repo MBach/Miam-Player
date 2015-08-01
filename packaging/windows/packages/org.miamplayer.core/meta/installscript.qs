@@ -146,7 +146,6 @@ Component.prototype.createOperations = function()
 		component.createOperations();
 		if (installer.value("os") == "win") { 
 			try {
-				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
 				// only install c runtime if it is needed, no minor version check of the c runtime till we need it
 				// return value 3010 means it need a reboot, but in most cases it is not needed for run Qt application
 				// return value 5100 means there's a newer version of the runtime already installed

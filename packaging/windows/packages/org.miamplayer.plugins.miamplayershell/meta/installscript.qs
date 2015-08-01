@@ -51,7 +51,7 @@ function Component()
 Component.prototype.isDefault = function()
 {
 	// select the component by default
-	return true;
+	return false;
 }
 
 // called after everything is set up, but before any file is written

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package>
-	<DisplayName>Miam-Player Start Screen shortcut</DisplayName>
+	<DisplayName>Start Screen shortcut</DisplayName>
+	<DisplayName xml:lang="fr_fr">Raccourci dans le Menu Démarrer</DisplayName>
 	<Description>Put a shortcut of Miam-Player in the Start Screen</Description>
+	<Description xml:lang="fr_fr">Placer un raccourci dans le Menu Démarrer</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2015-06-28</ReleaseDate>
+	<ReleaseDate>2015-08-01</ReleaseDate>
 	<Name>org.miamplayer.core.shortcuts.startscreen</Name>
-	<Virtual>true</Virtual>
-	<SortingPriority>100</SortingPriority>
+	<Default>script</Default>
+	<Script>installscript.qs</Script>
+	<SortingPriority>98</SortingPriority>
 </Package>
