@@ -13,9 +13,11 @@ SOURCES += \
     dialogs/customizethemedialog.cpp \
     dialogs/customizethemetaglineedit.cpp \
     dialogs/dragdropdialog.cpp \
+    dialogs/equalizerdalog.cpp \
     dialogs/playlistdialog.cpp \
     dialogs/reflector.cpp \
     dialogs/searchdialog.cpp \
+    dialogs/starswidget.cpp \
     filesystem/addressbar.cpp \
     filesystem/addressbarbutton.cpp \
     filesystem/addressbarmenu.cpp \
@@ -29,6 +31,7 @@ SOURCES += \
     library/libraryfilterproxymodel.cpp \
     library/libraryheader.cpp \
     library/libraryitemdelegate.cpp \
+    library/libraryitemmodel.cpp \
     library/libraryorderdialog.cpp \
     library/libraryscrollbar.cpp \
     library/librarytreeview.cpp \
@@ -69,8 +72,7 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     treeview.cpp \
     volumeslider.cpp \
-    library/libraryitemmodel.cpp \
-    dialogs/starswidget.cpp
+    styling/miamslider.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -81,10 +83,12 @@ HEADERS += \
     dialogs/customizethemedialog.h \
     dialogs/customizethemetaglineedit.h \
     dialogs/dragdropdialog.h \
+    dialogs/equalizerdalog.h \
+    dialogs/paintablewidget.h \
     dialogs/playlistdialog.h \
     dialogs/reflector.h \
-    dialogs/paintablewidget.h \
     dialogs/searchdialog.h \
+    dialogs/starswidget.h \
     filesystem/addressbar.h \
     filesystem/addressbarbutton.h \
     filesystem/addressbarmenu.h \
@@ -98,6 +102,7 @@ HEADERS += \
     library/libraryfilterproxymodel.h \
     library/libraryheader.h \
     library/libraryitemdelegate.h \
+    library/libraryitemmodel.h \
     library/libraryfilterlineedit.h \
     library/libraryorderdialog.h \
     library/libraryscrollbar.h \
@@ -140,20 +145,20 @@ HEADERS += \
     tracksnotfoundmessagebox.h \
     treeview.h \
     volumeslider.h \
-    library/libraryitemmodel.h \
-    dialogs/starswidget.h
+    styling/miamslider.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \
     customizetheme.ui \
     dragdroppopup.ui \
+    equalizerdialog.ui \
     libraryorderdialog.ui \
     mainwindow.ui \
     playlistdialog.ui \
     quickstart.ui \
+    searchdialog.ui \
     tagconverter.ui \
-    tageditor.ui \
-    searchdialog.ui
+    tageditor.ui
 
 RESOURCES += mp.qrc
 
@@ -192,10 +197,10 @@ TRANSLATIONS = translations/m4p_ar.ts \
 CONFIG(debug, debug|release) {
     win32 {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	}
     }
@@ -208,10 +213,10 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
     win32 {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -L$$PWD/../../lib/release/win-x86/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
 	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -L$$PWD/../../lib/release/win-x64/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
 	}
     }

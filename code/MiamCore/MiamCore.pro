@@ -58,7 +58,7 @@ macx {
     QMAKE_CXXFLAGS += -mmacosx-version-min=10.10
 }
 
-SOURCES +=     library/jumptowidget.cpp \
+SOURCES += library/jumptowidget.cpp \
     model/albumdao.cpp \
     model/artistdao.cpp \
     model/genericdao.cpp \
@@ -72,13 +72,13 @@ SOURCES +=     library/jumptowidget.cpp \
     flowlayout.cpp \
     mediabutton.cpp \
     mediaplayer.cpp \
+    mediaplaylist.cpp \
     musicsearchengine.cpp \
     quickstartsearchengine.cpp \
     settings.cpp \
     settingsprivate.cpp \
-    timelabel.cpp \
     stopbutton.cpp \
-    mediaplaylist.cpp
+    timelabel.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -101,12 +101,12 @@ HEADERS += interfaces/basicplugin.h \
     flowlayout.h \
     mediabutton.h \
     mediaplayer.h \
+    mediaplaylist.h \
     miamcore_global.h \
     musicsearchengine.h \
     quickstartsearchengine.h \
     remotemediaplayer.h \
     settings.h \
     settingsprivate.h \
-    timelabel.h \
     stopbutton.h \
-    mediaplaylist.h
+    timelabel.h

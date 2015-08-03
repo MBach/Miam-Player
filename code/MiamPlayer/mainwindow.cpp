@@ -5,6 +5,7 @@
 #include <musicsearchengine.h>
 #include "dialogs/customizethemedialog.h"
 #include "dialogs/dragdropdialog.h"
+#include "dialogs/equalizerdalog.h"
 #include "playlists/playlist.h"
 #include "pluginmanager.h"
 
@@ -319,6 +320,12 @@ void MainWindow::setupActions()
 	connect(actionSkipForward, &QAction::triggered, mp, &MediaPlayer::skipForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+
+	connect(actionShowEqualizer, &QAction::triggered, this, [=]() {
+		EqualizerDialog *equalizerDialog = new EqualizerDialog(this);
+		equalizerDialog->show();
+		equalizerDialog->activateWindow();
+	});
 
 	// Sliders
 	connect(mp, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {

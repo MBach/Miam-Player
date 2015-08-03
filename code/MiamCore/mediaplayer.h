@@ -68,6 +68,8 @@ public:
 
 	qint64 time() const;
 
+	inline VlcMediaPlayer *vlcMediaPlayer() const { return _player; }
+
 private:
 	void createLocalConnections();
 

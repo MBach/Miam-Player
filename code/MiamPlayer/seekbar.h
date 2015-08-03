@@ -1,7 +1,7 @@
 #ifndef SEEKBAR_H
 #define SEEKBAR_H
 
-#include <QSlider>
+#include "styling/miamslider.h"
 
 #include "mediaplayer.h"
 
@@ -10,7 +10,7 @@
  * \author		Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class SeekBar : public QSlider
+class SeekBar : public MiamSlider
 {
 	Q_OBJECT
 public:
@@ -27,14 +27,6 @@ protected:
 	virtual void mousePressEvent(QMouseEvent *) override;
 
 	virtual void mouseReleaseEvent(QMouseEvent *) override;
-
-	/** Redefined to seek in current playing file. */
-	virtual void wheelEvent(QWheelEvent *e) override;
-
-	virtual void paintEvent(QPaintEvent *) override;
-
-private:
-	QLinearGradient interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o);
 };
 
 

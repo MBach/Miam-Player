@@ -10,6 +10,7 @@
 #include <mediaplayer.h>
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
+
 #include "library/librarytreeview.h"
 #include "playbackmodewidgetfactory.h"
 
