@@ -68,7 +68,7 @@ void PluginManager::init()
 	QDirIterator it(_pluginPath);
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	while (it.hasNext()) {
-		if (QLibrary::isLibrary(it.next())) {
+		if (QLibrary::isLibrary(it.next()) && !it.fileInfo().isSymLink()) {
 			QString pluginFileName = it.fileName();
 			QVariant vPluginInfo = settings->value(pluginFileName);
 			// If it is the first time we trying to load the plugin
