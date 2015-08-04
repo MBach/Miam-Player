@@ -557,21 +557,21 @@
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="49"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="205"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="255"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="373"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="436"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="50"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="209"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="259"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="377"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="440"/>
         <source>Add some music locations here</source>
         <translation>Добавьте сюда несколько папок с музыкой</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="297"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="301"/>
         <source>No translation is available for this language :(</source>
         <translation>Для этого языка перевод недоступен :(</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="422"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="426"/>
         <source>Select a location of your music</source>
         <translation>Укажите расположение вашей музыки</translation>
     </message>
@@ -962,6 +962,120 @@
     </message>
 </context>
 <context>
+    <name>EqualizerDialog</name>
+    <message>
+        <location filename="../equalizerdialog.ui" line="14"/>
+        <location filename="../equalizerdialog.ui" line="102"/>
+        <source>Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../equalizerdialog.ui" line="22"/>
+        <source>Activate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../equalizerdialog.ui" line="35"/>
+        <source>Preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../equalizerdialog.ui" line="113"/>
+        <source>Preamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="12"/>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="12"/>
+        <source>Classical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="12"/>
+        <source>Club</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="13"/>
+        <source>Dance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="13"/>
+        <source>Full bass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="13"/>
+        <source>Full bass and treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="13"/>
+        <source>Full treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="14"/>
+        <source>Headphones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="14"/>
+        <source>Large Hall</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="14"/>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="14"/>
+        <source>Party</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="14"/>
+        <source>Pop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="15"/>
+        <source>Reggae</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="15"/>
+        <source>Rock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="15"/>
+        <source>Ska</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="15"/>
+        <source>Soft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="15"/>
+        <source>Soft rock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../dialogs/equalizerdalog.cpp" line="15"/>
+        <source>Techno</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSystemTreeView</name>
     <message>
         <location filename="../filesystem/filesystemtreeview.cpp" line="33"/>
@@ -1113,32 +1227,32 @@
         <translation>Сохранить вывод</translation>
     </message>
     <message>
-        <location filename="../debug/logbrowserdialog.cpp" line="95"/>
+        <location filename="../debug/logbrowserdialog.cpp" line="97"/>
         <source>Save Log Output</source>
         <translation>Сохранить вывод журнала</translation>
     </message>
     <message>
-        <location filename="../debug/logbrowserdialog.cpp" line="96"/>
+        <location filename="../debug/logbrowserdialog.cpp" line="98"/>
         <source>%1/logfile.txt</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../debug/logbrowserdialog.cpp" line="97"/>
+        <location filename="../debug/logbrowserdialog.cpp" line="99"/>
         <source>Text Files (*.txt);;All Files (*)</source>
         <translation>Текстовые файлы (*.txt);;Все файлы (*)</translation>
     </message>
     <message>
-        <location filename="../debug/logbrowserdialog.cpp" line="105"/>
+        <location filename="../debug/logbrowserdialog.cpp" line="107"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../debug/logbrowserdialog.cpp" line="105"/>
+        <location filename="../debug/logbrowserdialog.cpp" line="107"/>
         <source>&lt;nobr&gt;File &apos;%1&apos;&lt;br/&gt;cannot be opened for writing.&lt;br/&gt;&lt;br/&gt;The log output could &lt;b&gt;not&lt;/b&gt; be saved!&lt;/nobr&gt;</source>
         <translation>&lt;nobr&gt;Файл &apos;%1&apos;&lt;br/&gt;не может быть открыт для записи.&lt;br/&gt;&lt;br/&gt;Вывод журнала &lt;b&gt;не&lt;/b&gt; сохранить!&lt;/nobr&gt;</translation>
     </message>
     <message>
-        <location filename="../debug/logbrowserdialog.cpp" line="113"/>
+        <location filename="../debug/logbrowserdialog.cpp" line="115"/>
         <source>Warning: </source>
         <translation>Внимание:</translation>
     </message>
@@ -1186,97 +1300,102 @@
         <translation>&amp;Воспроизведение</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="687"/>
+        <location filename="../mainwindow.ui" line="688"/>
         <source>E&amp;xit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="695"/>
+        <location filename="../mainwindow.ui" line="696"/>
         <source>&amp;Open files...</source>
         <translation>&amp;Открыть файлы...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="700"/>
+        <location filename="../mainwindow.ui" line="701"/>
         <source>&amp;Add a playlist</source>
         <translation>&amp;Добавить список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="705"/>
+        <location filename="../mainwindow.ui" line="706"/>
         <source>&amp;Customize appearance...</source>
         <translation>&amp;Настроить внешний вид...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="713"/>
+        <location filename="../mainwindow.ui" line="714"/>
         <source>About &amp;Qt...</source>
         <translation>О &amp;Qt...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="721"/>
+        <location filename="../mainwindow.ui" line="722"/>
         <source>&amp;Playlist manager...</source>
         <translation>&amp;Управление списками воспроизведения...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="726"/>
+        <location filename="../mainwindow.ui" line="727"/>
         <source>&amp;Rescan library</source>
         <translation>&amp;Пересканировать библиотеку</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="731"/>
+        <location filename="../mainwindow.ui" line="732"/>
         <source>Customize library...</source>
         <translation>Настроить библиотеку...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="739"/>
+        <location filename="../mainwindow.ui" line="740"/>
         <source>&amp;Check for a new version is available</source>
         <translation>&amp;Проверить обновление, если доступно</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="744"/>
+        <location filename="../mainwindow.ui" line="745"/>
         <source>Customize general &amp;options...</source>
         <translation>Изменить общие &amp;настройки...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="752"/>
+        <location filename="../mainwindow.ui" line="753"/>
         <source>&amp;About Miam Player...</source>
         <translation>&amp;О Miam Player...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="757"/>
+        <location filename="../mainwindow.ui" line="758"/>
         <source>&amp;Delete current playlist</source>
         <translation>&amp;Удалить текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="762"/>
+        <location filename="../mainwindow.ui" line="763"/>
         <source>Show &amp;help...</source>
         <translation>Показать &amp;справку...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="767"/>
+        <location filename="../mainwindow.ui" line="768"/>
         <source>Skip &amp;backward</source>
         <translation>Перейти к &amp;предыдущему</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="775"/>
+        <location filename="../mainwindow.ui" line="776"/>
         <source>Seek backward</source>
         <translation>Перемотать назад</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="780"/>
+        <location filename="../mainwindow.ui" line="781"/>
         <source>&amp;Play / pause</source>
         <translation>&amp;Воспроизведение / пауза</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="961"/>
+        <location filename="../mainwindow.ui" line="962"/>
         <source>Stop after current</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="969"/>
+        <location filename="../mainwindow.ui" line="970"/>
         <source>&amp;Stop</source>
         <translation>&amp;Стоп</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="788"/>
+        <location filename="../mainwindow.ui" line="975"/>
+        <source>Show Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mainwindow.ui" line="789"/>
         <source>Seek forward</source>
         <translation>Перемотать вперёд</translation>
     </message>
@@ -1286,112 +1405,112 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="672"/>
+        <location filename="../mainwindow.ui" line="673"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="793"/>
+        <location filename="../mainwindow.ui" line="794"/>
         <source>Skip &amp;forward</source>
         <translation>Перейти к &amp;следующему</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="801"/>
+        <location filename="../mainwindow.ui" line="802"/>
         <source>&amp;Repeat</source>
         <translation>&amp;Повторять</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="812"/>
+        <location filename="../mainwindow.ui" line="813"/>
         <source>S&amp;huffle</source>
         <translation>В &amp;случайном порядке</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="823"/>
+        <location filename="../mainwindow.ui" line="824"/>
         <source>&amp;Remove selected track</source>
         <translation>&amp;Удалить выбранный трек</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="831"/>
+        <location filename="../mainwindow.ui" line="832"/>
         <source>Move selected track &amp;up</source>
         <translation>Переместить выбранный трек &amp;вверх</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="839"/>
+        <location filename="../mainwindow.ui" line="840"/>
         <source>Move selected track &amp;down</source>
         <translation>Переместить выбранный трек &amp;вниз</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="844"/>
+        <location filename="../mainwindow.ui" line="845"/>
         <source>&amp;Mute</source>
         <translation>&amp;Отключить звук</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="849"/>
+        <location filename="../mainwindow.ui" line="850"/>
         <source>&amp;Increase volume</source>
         <translation>&amp;Увеличить громкость</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="854"/>
+        <location filename="../mainwindow.ui" line="855"/>
         <source>&amp;Decrease volume</source>
         <translation>&amp;Уменьшить громкость</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="862"/>
+        <location filename="../mainwindow.ui" line="863"/>
         <source>Current item &amp;once</source>
         <translation>Текущий элемент только &amp;один раз</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="876"/>
+        <location filename="../mainwindow.ui" line="877"/>
         <source>&amp;Normal</source>
         <translation>&amp;Нормальное</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="887"/>
+        <location filename="../mainwindow.ui" line="888"/>
         <source>Current item in &amp;loop</source>
         <translation>Текущий элемент &amp;циклично</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="901"/>
+        <location filename="../mainwindow.ui" line="902"/>
         <source>Playlist Mode</source>
         <translation>Режим списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="909"/>
+        <location filename="../mainwindow.ui" line="910"/>
         <source>Unique library Mode</source>
         <translation>Режим единой библиотеки</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="912"/>
+        <location filename="../mainwindow.ui" line="913"/>
         <source>This mode is currently under development</source>
         <translation>Сейчас этот режим находится в разработке</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="920"/>
+        <location filename="../mainwindow.ui" line="921"/>
         <source>&amp;Hide menus</source>
         <translation>&amp;Скрыть меню</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="928"/>
+        <location filename="../mainwindow.ui" line="929"/>
         <source>&amp;Make the player borderless</source>
         <translation>&amp;Убрать рамки списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="936"/>
+        <location filename="../mainwindow.ui" line="937"/>
         <source>Tag Editor</source>
         <translation>Редактор тегов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="941"/>
+        <location filename="../mainwindow.ui" line="942"/>
         <source>Open folder...</source>
         <translation>Открыть папку...</translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="950"/>
+        <location filename="../mainwindow.ui" line="951"/>
         <source>Show debug information...</source>
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="386"/>
+        <location filename="../mainwindow.cpp" line="392"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1401,7 +1520,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="387"/>
+        <location filename="../mainwindow.cpp" line="393"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1411,7 +1530,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="388"/>
+        <location filename="../mainwindow.cpp" line="394"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1421,97 +1540,97 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="428"/>
+        <location filename="../mainwindow.cpp" line="434"/>
         <source>There are more than 300 files to add to the %1 (%2 to add).</source>
         <translation>Вы добавляете более 300 файлов в %1 (добавляется %2).</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="430"/>
+        <location filename="../mainwindow.cpp" line="436"/>
         <source>Are you sure you want to continue? This might take some time.</source>
         <translation>Вы действительно хотите продолжить? Это может занять некотороое время.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="468"/>
+        <location filename="../mainwindow.cpp" line="474"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="571"/>
+        <location filename="../mainwindow.cpp" line="577"/>
         <source>Directory to open.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="571"/>
+        <location filename="../mainwindow.cpp" line="577"/>
         <source>dir</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="572"/>
+        <location filename="../mainwindow.cpp" line="578"/>
         <source>Medias are added into a new playlist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="573"/>
+        <location filename="../mainwindow.cpp" line="579"/>
         <source>Medias are sent to tag editor.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="574"/>
+        <location filename="../mainwindow.cpp" line="580"/>
         <source>Directory is sent to library.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="575"/>
+        <location filename="../mainwindow.cpp" line="581"/>
         <source>Play or pause track in active playlist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="576"/>
+        <location filename="../mainwindow.cpp" line="582"/>
         <source>Stop playback.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="577"/>
+        <location filename="../mainwindow.cpp" line="583"/>
         <source>Play next track.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="578"/>
+        <location filename="../mainwindow.cpp" line="584"/>
         <source>Play previous track.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="579"/>
+        <location filename="../mainwindow.cpp" line="585"/>
         <source>Set volume of the player.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="579"/>
+        <location filename="../mainwindow.cpp" line="585"/>
         <source>volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="714"/>
+        <location filename="../mainwindow.cpp" line="716"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="726"/>
+        <location filename="../mainwindow.cpp" line="728"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="728"/>
+        <location filename="../mainwindow.cpp" line="730"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="753"/>
+        <location filename="../mainwindow.cpp" line="755"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="450"/>
+        <location filename="../mainwindow.cpp" line="456"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
@@ -1723,7 +1842,7 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../mainwindow.cpp" line="568"/>
+        <location filename="../mainwindow.cpp" line="574"/>
         <source>Command line helper for Miam-Player</source>
         <translation type="unfinished"></translation>
     </message>

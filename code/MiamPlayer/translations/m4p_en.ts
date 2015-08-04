@@ -750,6 +750,97 @@
     </message>
 </context>
 <context>
+    <name>EqualizerDialog</name>
+    <message>
+        <source>Equalizer</source>
+        <translation>Equalizer</translation>
+    </message>
+    <message>
+        <source>Activate</source>
+        <translation>Activate</translation>
+    </message>
+    <message>
+        <source>Preset</source>
+        <translation>Preset</translation>
+    </message>
+    <message>
+        <source>Preamp</source>
+        <translation>Preamp</translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation>Flat</translation>
+    </message>
+    <message>
+        <source>Classical</source>
+        <translation>Classical</translation>
+    </message>
+    <message>
+        <source>Club</source>
+        <translation>Club</translation>
+    </message>
+    <message>
+        <source>Dance</source>
+        <translation>Dance</translation>
+    </message>
+    <message>
+        <source>Full bass</source>
+        <translation>Full bass</translation>
+    </message>
+    <message>
+        <source>Full bass and treble</source>
+        <translation>Full bass and treble</translation>
+    </message>
+    <message>
+        <source>Full treble</source>
+        <translation>Full treble</translation>
+    </message>
+    <message>
+        <source>Headphones</source>
+        <translation>Headphones</translation>
+    </message>
+    <message>
+        <source>Large Hall</source>
+        <translation>Large Hall</translation>
+    </message>
+    <message>
+        <source>Live</source>
+        <translation>Live</translation>
+    </message>
+    <message>
+        <source>Party</source>
+        <translation>Party</translation>
+    </message>
+    <message>
+        <source>Pop</source>
+        <translation>Pop</translation>
+    </message>
+    <message>
+        <source>Reggae</source>
+        <translation>Reggae</translation>
+    </message>
+    <message>
+        <source>Rock</source>
+        <translation>Rock</translation>
+    </message>
+    <message>
+        <source>Ska</source>
+        <translation>Ska</translation>
+    </message>
+    <message>
+        <source>Soft</source>
+        <translation>Soft</translation>
+    </message>
+    <message>
+        <source>Soft rock</source>
+        <translation>Soft rock</translation>
+    </message>
+    <message>
+        <source>Techno</source>
+        <translation>Techno</translation>
+    </message>
+</context>
+<context>
     <name>FileSystemTreeView</name>
     <message>
         <source>Add &quot;%1&quot; to playlist</source>
@@ -1192,6 +1283,10 @@
     <message>
         <source>&amp;View</source>
         <translation>&amp;View</translation>
+    </message>
+    <message>
+        <source>Show Equalizer</source>
+        <translation>Show Equalizer</translation>
     </message>
 </context>
 <context>

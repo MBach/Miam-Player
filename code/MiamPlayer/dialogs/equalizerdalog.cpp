@@ -9,6 +9,11 @@
 #include <QScrollBar>
 #include <QWheelEvent>
 
+QStringList EqualizerDialog::presets = (QStringList() << QT_TR_NOOP("Flat") << QT_TR_NOOP("Classical") << QT_TR_NOOP("Club")
+	<< QT_TR_NOOP("Dance") << QT_TR_NOOP("Full bass") << QT_TR_NOOP("Full bass and treble") << QT_TR_NOOP("Full treble")
+	<< QT_TR_NOOP("Headphones") << QT_TR_NOOP("Large Hall") << QT_TR_NOOP("Live") << QT_TR_NOOP("Party") << QT_TR_NOOP("Pop")
+	<< QT_TR_NOOP("Reggae") << QT_TR_NOOP("Rock") << QT_TR_NOOP("Ska") << QT_TR_NOOP("Soft") << QT_TR_NOOP("Soft rock") << QT_TR_NOOP("Techno"));
+
 EqualizerDialog::EqualizerDialog(QWidget *parent) :
 	QDialog(parent, Qt::Tool)
 {
@@ -34,7 +39,8 @@ EqualizerDialog::EqualizerDialog(QWidget *parent) :
 
 	// Fill Combo box with preset list
 	for (uint i = 0; i < equalizer->presetCount(); i++) {
-		QListWidgetItem *item = new QListWidgetItem(this->createPresetIcon(i), equalizer->presetNameAt(i));
+		QString preset = QApplication::translate("EqualizerDialog", equalizer->presetNameAt(i).toStdString().data());
+		QListWidgetItem *item = new QListWidgetItem(this->createPresetIcon(i), preset);
 		presetList->addItem(item);
 	}
 

@@ -15,6 +15,9 @@
 class EqualizerDialog : public QDialog, public Ui::EqualizerDialog
 {
 	Q_OBJECT
+private:
+	static QStringList presets;
+
 public:
 	explicit EqualizerDialog(QWidget *parent = 0);
 

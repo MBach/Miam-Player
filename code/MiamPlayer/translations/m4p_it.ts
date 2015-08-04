@@ -750,6 +750,97 @@
     </message>
 </context>
 <context>
+    <name>EqualizerDialog</name>
+    <message>
+        <source>Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Activate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Classical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Club</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full bass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full bass and treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full treble</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Headphones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Large Hall</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Live</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Party</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reggae</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ska</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Soft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Soft rock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Techno</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSystemTreeView</name>
     <message>
         <source>Add &quot;%1&quot; to playlist</source>
@@ -1191,6 +1282,10 @@
     </message>
     <message>
         <source>&amp;View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
