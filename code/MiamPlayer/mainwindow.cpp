@@ -482,7 +482,6 @@ void MainWindow::changeEvent(QEvent *event)
 void MainWindow::closeEvent(QCloseEvent *)
 {
 	auto settings = SettingsPrivate::instance();
-
 	if (settings->playbackKeepPlaylists()) {
 		QList<uint> list = settings->lastPlaylistSession();
 		list.clear();
@@ -502,7 +501,6 @@ void MainWindow::closeEvent(QCloseEvent *)
 		int m = p->mediaPlaylist()->playbackMode();
 		settings->setValue("lastActivePlaylistMode", m);
 	}
-	QCoreApplication::quit();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
