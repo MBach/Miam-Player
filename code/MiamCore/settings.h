@@ -33,7 +33,7 @@ public:
 	QString theme() const;
 
 	/** Returns volume from the slider. */
-	int volume() const;
+	qreal volume() const;
 
 public slots:
 	/** Sets the last view activated by the user. Used when reopening the player. */
@@ -43,7 +43,7 @@ public slots:
 	void setThemeName(const QString &theme);
 
 	/** Sets volume from the slider. */
-	void setVolume(int v);
+	void setVolume(qreal v);
 
 signals:
 	void themeHasChanged();

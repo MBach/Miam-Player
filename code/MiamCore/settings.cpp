@@ -50,12 +50,12 @@ QString Settings::theme() const
 }
 
 /** Returns volume from the slider. */
-int Settings::volume() const
+qreal Settings::volume() const
 {
    if (value("volume").isNull()) {
-	   return 90;
+	   return 0.9;
    } else {
-	   return value("volume").toInt();
+	   return value("volume").toReal();
    }
 }
 
@@ -74,7 +74,7 @@ void Settings::setThemeName(const QString &theme)
 }
 
 
-void Settings::setVolume(int v)
+void Settings::setVolume(qreal v)
 {
 	setValue("volume", v);
 }
