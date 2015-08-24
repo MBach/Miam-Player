@@ -3,36 +3,26 @@
 #include "settings.h"
 #include "settingsprivate.h"
 #include "model/sqldatabase.h"
+#include <QDir>
 #include <QGuiApplication>
 #include <QMediaContent>
 #include <QMediaPlaylist>
 #include <QWindow>
 
-#include "remotemediaplayer.h"
-
-#include "vlc-qt/Audio.h"
-#include "vlc-qt/Common.h"
-#include "vlc-qt/Instance.h"
-#include "vlc-qt/Media.h"
-#include "vlc-qt/MediaPlayer.h"
+#include "imediaplayer.h"
 
 #include <QtDebug>
 
-#include <QDir>
+#include <QtAV/AVPlayer.h>
 
 MediaPlayer* MediaPlayer::_mediaPlayer = nullptr;
 
 MediaPlayer::MediaPlayer(QObject *parent) :
-	QObject(parent), _playlist(nullptr), _state(QMediaPlayer::StoppedState), _media(nullptr), _remotePlayer(nullptr)
+	QObject(parent), _playlist(nullptr), _state(QMediaPlayer::StoppedState)
+  , _remotePlayer(nullptr)
   , _stopAfterCurrent(false)
 {
-#ifdef Q_OS_OSX
-	QDir d(QCoreApplication::applicationDirPath());
-	d.cd("../PlugIns/");
-	VlcCommon::setPluginPath(d.absolutePath());
-#endif
-	_instance = new VlcInstance(VlcCommon::args(), this);
-	_player = new VlcMediaPlayer(_instance);
+	_localPlayer = new QtAV::AVPlayer(this);
 	this->createLocalConnections();
 
 	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
@@ -47,7 +37,7 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 
 	// Link core multimedia actions
 	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
-		if (status == QMediaPlayer::EndOfMedia) {
+		if (_state != QMediaPlayer::StoppedState && status == QMediaPlayer::EndOfMedia) {
 			if (_stopAfterCurrent) {
 				stop();
 				_stopAfterCurrent = false;
@@ -69,77 +59,86 @@ MediaPlayer* MediaPlayer::instance()
 void MediaPlayer::createLocalConnections()
 {
 	// Disconnect remote players
-	QMapIterator<QString, RemoteMediaPlayer*> it(_remotePlayers);
+	QMapIterator<QString, IMediaPlayer*> it(_remotePlayers);
 	while (it.hasNext()) {
 		it.next();
-		RemoteMediaPlayer *p = it.value();
+		IMediaPlayer *p = it.value();
 		if (p) {
 			p->disconnect();
 		}
 	}
 	_remotePlayer = nullptr;
-	_player->disconnect();
+	_localPlayer->disconnect();
 
-	connect(_player, &VlcMediaPlayer::opening, this, [=]() {
-		emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
-	});
-
-	connect(_player, &VlcMediaPlayer::stopped, this, [=]() {
-		//qDebug() << "VlcMediaPlayer::stopped";
-		emit mediaStatusChanged(QMediaPlayer::NoMedia);
-		this->setState(QMediaPlayer::StoppedState);
-	});
-
-	connect(_player, &VlcMediaPlayer::paused, this, [=]() {
-		//qDebug() << "VlcMediaPlayer::paused";
-		this->setState(QMediaPlayer::PausedState);
-	});
-
-	connect(_player, static_cast<void (VlcMediaPlayer::*)(float)>(&VlcMediaPlayer::buffering), this, [=](float buffer) {
-		//qDebug() << "VlcMediaPlayer::buffering" << buffer;
-		if (buffer == 100) {
-			_player->audio()->setVolume(Settings::instance()->volume());
-			if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
-				this->setState(QMediaPlayer::PlayingState);
-			}
-			// useless signal?
-			//emit mediaStatusChanged(QMediaPlayer::BufferedMedia);
-		} else {
+	connect(_localPlayer, &QtAV::AVPlayer::mediaStatusChanged, this, [=](QtAV::MediaStatus status) {
+		switch (status) {
+		case QtAV::LoadingMedia:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "LoadingMedia";
+			emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
+			break;
+		case QtAV::NoMedia:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "NoMedia";
+			emit mediaStatusChanged(QMediaPlayer::NoMedia);
+			this->setState(QMediaPlayer::StoppedState);
+			break;
+		case QtAV::BufferingMedia:
+			//qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "BufferingMedia";
 			emit mediaStatusChanged(QMediaPlayer::BufferingMedia);
+			break;
+		case QtAV::BufferedMedia:
+			//qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "BufferedMedia";
+			_localPlayer->audio()->setVolume(Settings::instance()->volume());
+			/*if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
+				this->setState(QMediaPlayer::PlayingState);
+			}*/
+			break;
+		case QtAV::EndOfMedia:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "EndOfMedia";
+			emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
+			break;
+		case QtAV::InvalidMedia:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "InvalidMedia";
+			emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
+			break;
+		case QtAV::UnknownMediaStatus:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "UnknownMediaStatus";
+			break;
+		case QtAV::LoadedMedia:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "LoadedMedia";
+			//if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
+			emit currentMediaChanged("file://" + _localPlayer->file());
+			this->setState(QMediaPlayer::PlayingState);
+			//}
+			break;
+		case QtAV::StalledMedia:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "StalledMedia";
+			break;
+		default:
+			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << status;
+			break;
 		}
 	});
 
-	connect(_player, &VlcMediaPlayer::end, this, [=]() {
-		//qDebug() << "VlcMediaPlayer::end";
-		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
+	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool) {
+		qDebug() << "paused";
+		this->setState(QMediaPlayer::PausedState);
 	});
 
-	connect(_player, &VlcMediaPlayer::error, this, [=]() {
-		//qDebug() << "VlcMediaPlayer::error";
-		emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
+	connect(_localPlayer, &QtAV::AVPlayer::positionChanged, this, [=](qint64 pos) {
+		emit positionChanged(pos, _localPlayer->duration());
 	});
-
-	// VlcMediaPlayer::positionChanged is percent-based
-	connect(_player, &VlcMediaPlayer::positionChanged, this, [=](float f) {
-		//qDebug() << "VlcMediaPlayer::positionChanged";
-		qint64 pos = _player->length() * f;
-		emit positionChanged(pos, _player->length());
-	});
-
-	// Cannot use new signal/slot syntax because libvlc_media_t is not fully defined at compile time (just a forward declaration)
-	connect(_player, SIGNAL(mediaChanged(libvlc_media_t*)), this, SLOT(convertMedia(libvlc_media_t*)));
 }
 
 void MediaPlayer::createRemoteConnections(const QUrl &track)
 {
 	// Disconnect all existing remote players
-	QMapIterator<QString, RemoteMediaPlayer*> it(_remotePlayers);
+	QMapIterator<QString, IMediaPlayer*> it(_remotePlayers);
 	while (it.hasNext()) {
 		it.next().value()->disconnect();
 	}
 
 	// Reconnect the good one
-	RemoteMediaPlayer *p = _remotePlayers.value(track.host());
+	IMediaPlayer *p = _remotePlayers.value(track.host());
 	if (!p) {
 		_remotePlayer = nullptr;
 		return;
@@ -149,31 +148,31 @@ void MediaPlayer::createRemoteConnections(const QUrl &track)
 	_remotePlayer->setVolume(Settings::instance()->volume());
 
 	// Disconnect local player first
-	_player->disconnect();
+	_localPlayer->disconnect();
 
-	connect(_remotePlayer, &RemoteMediaPlayer::paused, this, [=]() {
+	connect(_remotePlayer, &IMediaPlayer::paused, this, [=]() {
 		this->setState(QMediaPlayer::PausedState);
 	});
-	connect(_remotePlayer, &RemoteMediaPlayer::positionChanged, [=](qint64 pos, qint64 duration) {
+	connect(_remotePlayer, &IMediaPlayer::positionChanged, [=](qint64 pos, qint64 duration) {
 		// Cannot set position with connect(...) in plugin. Maybe thread problem? (Tried all Qt::Connection in plugin)
 		_remotePlayer->setPosition(pos);
 		emit positionChanged(pos, duration);
 	});
-	connect(_remotePlayer, &RemoteMediaPlayer::started, this, [=](int duration) {
+	connect(_remotePlayer, &IMediaPlayer::started, this, [=](int duration) {
 		_remotePlayer->setTime(duration);
 		this->setState(QMediaPlayer::PlayingState);
 		emit currentMediaChanged(track.toString());
 	});
-	connect(_remotePlayer, &RemoteMediaPlayer::stopped, this, [=]() {
+	connect(_remotePlayer, &IMediaPlayer::stopped, this, [=]() {
 		this->setState(QMediaPlayer::StoppedState);
 	});
-	connect(_remotePlayer, &RemoteMediaPlayer::trackHasEnded, this, [=]() {
+	connect(_remotePlayer, &IMediaPlayer::trackHasEnded, this, [=]() {
 		this->setState(QMediaPlayer::StoppedState);
 		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
 	});
 }
 
-void MediaPlayer::addRemotePlayer(RemoteMediaPlayer *remotePlayer)
+void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 {
 	if (remotePlayer) {
 		_remotePlayers.insert(remotePlayer->host(), remotePlayer);
@@ -187,8 +186,8 @@ void MediaPlayer::changeTrack(const QMediaContent &mediaContent)
 		_remotePlayer->disconnect();
 		_remotePlayer->stop();
 	} else {
-		_player->disconnect();
-		_player->stop();
+		_localPlayer->disconnect();
+		_localPlayer->stop();
 	}
 	_state = QMediaPlayer::StoppedState;
 	this->playMediaContent(mediaContent);
@@ -200,8 +199,8 @@ void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 		_remotePlayer->disconnect();
 		_remotePlayer->stop();
 	} else {
-		_player->disconnect();
-		_player->stop();
+		_localPlayer->disconnect();
+		_localPlayer->stop();
 	}
 	_state = QMediaPlayer::StoppedState;
 	_playlist = playlist;
@@ -213,17 +212,13 @@ void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 	this->play();
 }
 
-void MediaPlayer::setVolume(int v)
+void MediaPlayer::setVolume(qreal v)
 {
 	Settings::instance()->setVolume(v);
 	if (_remotePlayer) {
 		_remotePlayer->setVolume(v);
 	} else {
-		if (_player && _player->audio() && (_player->state() == Vlc::State::Playing || _player->state() == Vlc::State::Paused)) {
-			_player->audio()->setVolume(v);
-		}/* else {
-			qDebug() << Q_FUNC_INFO << "couldn't set volume to" << v;
-		}*/
+		_localPlayer->audio()->setVolume(v);
 	}
 }
 
@@ -231,9 +226,9 @@ void MediaPlayer::setVolume(int v)
 qint64 MediaPlayer::duration()
 {
 	if (_remotePlayer) {
-		return _remotePlayer->length();
+		return _remotePlayer->duration();
 	} else {
-		return _player->length();
+		return _localPlayer->duration();
 	}
 }
 
@@ -245,15 +240,10 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 
 		// Resume playback is file was previously opened
 		if (_state == QMediaPlayer::PausedState) {
-			_player->resume();
+			_localPlayer->togglePause();
 			this->setState(QMediaPlayer::PlayingState);
 		} else {
-			QString file = mc.canonicalUrl().toLocalFile();
-			if (_media) {
-				delete _media;
-			}
-			_media = new VlcMedia(file, true, _instance);
-			_player->open(_media);
+			_localPlayer->play(mc.canonicalUrl().toLocalFile());
 		}
 	} else {
 		// Remote player is about to start
@@ -273,7 +263,7 @@ float MediaPlayer::position() const
 	if (_remotePlayer) {
 		return _remotePlayer->position();
 	} else {
-		return _player->position();
+		return _localPlayer->position();
 	}
 }
 
@@ -289,36 +279,32 @@ void MediaPlayer::setMute(bool b) const
 	if (_remotePlayer) {
 		_remotePlayer->setMute(b);
 	} else {
-		// To avoid some glitches with VLC, it's better to switch from a fake track than actually muting sound
-		if (b) {
-			_player->audio()->setVolume(0);
-		} else {
-			_player->audio()->setVolume(Settings::instance()->volume());
-		}
+		_localPlayer->audio()->setMute(b);
 	}
 }
 
-void MediaPlayer::setTime(qint64 t) const
+/*void MediaPlayer::setTime(qint64 t) const
 {
 	if (_remotePlayer) {
 		_remotePlayer->setTime(t);
 	} else {
-		_player->setTime(t);
+		/// FIXME
+		//_localPlayer->setTime(t);
 	}
-}
+}*/
 
-qint64 MediaPlayer::time() const
+/*qint64 MediaPlayer::time() const
 {
 	if (_remotePlayer) {
 		return _remotePlayer->time();
 	} else {
-		return _player->time();
+		/// FIXME
+		//return _localPlayer->time();
+		return 0;
 	}
-}
+}*/
 
-
-
-void MediaPlayer::seek(float pos)
+void MediaPlayer::seek(qreal pos)
 {
 	if (pos == 1.0) {
 		pos -= 0.001f;
@@ -327,7 +313,7 @@ void MediaPlayer::seek(float pos)
 	if (_remotePlayer) {
 		_remotePlayer->seek(pos);
 	} else {
-		_player->setPosition(pos);
+		_localPlayer->seek(pos);
 	}
 }
 
@@ -335,21 +321,20 @@ void MediaPlayer::seek(float pos)
 void MediaPlayer::seekBackward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
-		int currentPos = 0;
+		qint64 currentPos = 0;
+		qint64 duration = 0;
 		if (_remotePlayer) {
-			currentPos = _remotePlayer->position() * _remotePlayer->length();
+			currentPos = _remotePlayer->position() * _remotePlayer->duration();
+			duration = _remotePlayer->duration();
 		} else {
-			currentPos = _player->time();
+			currentPos = _localPlayer->position();
+			duration = _localPlayer->duration();
 		}
-		int time = currentPos - SettingsPrivate::instance()->playbackSeekTime();
-		if (time < 0) {
+		qint64 time = currentPos - SettingsPrivate::instance()->playbackSeekTime();
+		if (time < 0 || duration == 0) {
 			this->seek(0.0);
 		} else {
-			if (_remotePlayer) {
-				this->seek(time / (float)_remotePlayer->length());
-			} else {
-				_player->setTime(time);
-			}
+			this->seek(time / duration);
 		}
 	}
 }
@@ -359,19 +344,19 @@ void MediaPlayer::seekForward()
 {
 	if (state() == QMediaPlayer::PlayingState || state() == QMediaPlayer::PausedState) {
 		if (_remotePlayer) {
-			int currentPos = _remotePlayer->position() * _remotePlayer->length();
-			int time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
-			if (time > _remotePlayer->length()) {
+			qint64 currentPos = _remotePlayer->position() * _remotePlayer->duration();
+			qint64 time = currentPos + SettingsPrivate::instance()->playbackSeekTime();
+			if (time > _remotePlayer->duration()) {
 				skipForward();
 			} else {
-				this->seek(time / (float)_remotePlayer->length());
+				this->seek(time / (qreal)_remotePlayer->duration());
 			}
 		} else {
-			int time = _player->time() + SettingsPrivate::instance()->playbackSeekTime();
-			if (time > _player->length()) {
+			qint64 time = _localPlayer->position() + SettingsPrivate::instance()->playbackSeekTime();
+			if (time > _localPlayer->duration()) {
 				skipForward();
 			} else {
-				_player->setTime(time);
+				this->seek(time / (qreal)_localPlayer->duration());
 			}
 		}
 	}
@@ -409,8 +394,9 @@ void MediaPlayer::pause()
 	if (_remotePlayer) {
 		_remotePlayer->pause();
 	} else {
-		_player->pause();
+		_localPlayer->pause();
 	}
+	qDebug() << Q_FUNC_INFO;
 	this->setState(QMediaPlayer::PausedState);
 }
 
@@ -435,8 +421,9 @@ void MediaPlayer::stop()
 	if (_remotePlayer) {
 		_remotePlayer->stop();
 	} else {
-		_player->stop();
+		_localPlayer->stop();
 	}
+	this->setState(QMediaPlayer::StoppedState);
 }
 
 /** Activate or desactive audio output. */
@@ -445,15 +432,6 @@ void MediaPlayer::toggleMute() const
 	if (_remotePlayer) {
 		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
 	} else {
-		if (_player->audio()->track() == 0) {
-			_player->audio()->setTrack(-1);
-		} else {
-			_player->audio()->setTrack(0);
-		}
+		_localPlayer->audio()->setMute(!_localPlayer->audio()->isMute());
 	}
-}
-
-void MediaPlayer::convertMedia(libvlc_media_t *)
-{
-	emit currentMediaChanged("file://" + _player->currentMedia()->currentLocation());
 }

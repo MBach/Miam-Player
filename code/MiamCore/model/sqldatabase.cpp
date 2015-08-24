@@ -322,7 +322,7 @@ Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 	Cover *c = nullptr;
 
 	QSqlQuery selectCover(*this);
-	selectCover.prepare("SELECT t.internalCover, a.cover, a.id FROM albums a INNER JOIN tracks t ON a.id = t.albumId " \
+	selectCover.prepare("SELECT DISTINCT t.internalCover, a.cover, a.id FROM albums a INNER JOIN tracks t ON a.id = t.albumId " \
 		"WHERE t.uri = ?");
 	selectCover.addBindValue(uri);
 	if (selectCover.exec() && selectCover.next()) {
