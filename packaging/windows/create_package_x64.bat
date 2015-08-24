@@ -9,7 +9,6 @@ copy %MiamPlayerBuild%\MiamUniqueLibrary\release\MiamUniqueLibrary.dll packages\
 rem 3rd party
 set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
 copy %MiamPlayerLibs%\*.dll packages\org.miamplayer.core\data\
-xcopy %MiamPlayerLibs%\plugins packages\org.miamplayer.core.vlc\data\plugins /y/i/e
 
 rem qt libraries
 set QTDIR="C:\Qt\Qt5.4.2\5.4\msvc2013_64_opengl"
@@ -78,11 +77,10 @@ rem vc redist 2012 and 2013 are required too
 xcopy vcredist packages\org.miamplayer.core\data\vcredist /y/i/e
 
 rem create the final package
-binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.7.3.exe
+binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
 
 rem delete data folders
 rmdir packages\org.miamplayer.core\data\ /s /q
-rmdir packages\org.miamplayer.core.vlc\data\ /s /q
 rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
 rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
 rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q

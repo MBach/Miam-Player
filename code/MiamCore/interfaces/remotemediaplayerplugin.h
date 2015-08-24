@@ -2,7 +2,7 @@
 #define REMOTEMEDIAPLAYERPLUGIN_H
 
 #include "basicplugin.h"
-#include "remotemediaplayer.h"
+#include "imediaplayer.h"
 
 #include <QStandardItem>
 #include <QListView>
@@ -16,7 +16,7 @@ public:
 
 	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;
 
-	virtual RemoteMediaPlayer * player() const = 0;
+	virtual IMediaPlayer * player() const = 0;
 
 	virtual void sync(const QString &token) const = 0;
 };

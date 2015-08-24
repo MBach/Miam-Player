@@ -7,15 +7,15 @@ Miam-Player is a cross-platform open source music player
 ![general overview](http://www.miam-player.org/images/gallery/general_overview.png)
 
 # What's inside?
-* Fast and reliable (audio player is provided by VLC Media Player)
+* Fast and reliable
 * Read .mp3, .m4a (MP4), .flac, .ogg, .oga (OGG Vorbis), .asf, .ape (Monkey Audio), .opus and more!
 * Customize everything: User Interface, Covers, Shortcuts, Buttons, Themes
 * Read and edit metadata using [Taglib](http://taglib.github.io/)
 
 # Future work
+* 10-band equalizer
 * Add [projectM](http://projectm.sourceforge.net/) support for amazing visualizations
-* A spotify / deezer / jamendo plugin to stream music
-* Useful: 10-band equalizer using [VLC 2.2.0 SDK](http://www.videolan.org/developers/vlc.html)
+* A spotify / jamendo plugin to stream music
 ![equalizer](http://miam-player.org/images/work-in-progress/equalizer.png)
 * Useless: (scriptable) bitorrent client where you could browse results from your favorite tracker
 
@@ -46,7 +46,7 @@ Build files are generated using [QMake](http://doc.qt.io/qt-5/qmake-manual.html)
 
 If you feel brave to write a [CMake](http://www.cmake.org/) configuration, please contribute!
 
-You need to build dependencies first: VLC, VLC-Qt and TagLib. Pre-built libraries are provided for Windows and OSX in this repository.
+You need to build dependencies first: QtAV and TagLib. Pre-built libraries are provided for Windows and OSX in this repository.
 
 See the [wiki](http://www.miam-player.org/wiki/index.php?title=How-to-build-Miam-Player) for more details.
 

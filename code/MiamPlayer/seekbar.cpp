@@ -49,7 +49,7 @@ void SeekBar::mouseMoveEvent(QMouseEvent *)
 	int xPos = mapFromGlobal(QCursor::pos()).x();
 	static const int bound = 12;
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
-		float p = (float) xPos / (width() - 2 * bound);
+		qreal p = (qreal) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
 		MediaPlayer::instance()->seek(p);
 		this->setValue(posButton);
@@ -61,7 +61,7 @@ void SeekBar::mousePressEvent(QMouseEvent *)
 	int xPos = mapFromGlobal(QCursor::pos()).x();
 	static const int bound = 12;
 	if (xPos >= bound && xPos <= width() - 2 * bound) {
-		float p = (float) xPos / (width() - 2 * bound);
+		qreal p = (qreal) xPos / (width() - 2 * bound);
 		float posButton = p * 1000;
 		MediaPlayer::instance()->blockSignals(true);
 		MediaPlayer::instance()->setMute(true);
