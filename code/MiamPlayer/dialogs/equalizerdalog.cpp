@@ -1,8 +1,8 @@
 #include "equalizerdalog.h"
 #include "mediaplayer.h"
 
-#include <vlc-qt/MediaPlayer.h>
-#include <vlc-qt/Equalizer.h>
+//#include <vlc-qt/MediaPlayer.h>
+//#include <vlc-qt/Equalizer.h>
 #include "settingsprivate.h"
 
 #include <QPainter>
@@ -19,8 +19,8 @@ EqualizerDialog::EqualizerDialog(QWidget *parent) :
 {
 	setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose, true);
-	MediaPlayer *mediaPlayer = MediaPlayer::instance();
-	VlcEqualizer *equalizer = mediaPlayer->vlcMediaPlayer()->equalizer();
+//	MediaPlayer *mediaPlayer = MediaPlayer::instance();
+//	VlcEqualizer *equalizer = mediaPlayer->vlcMediaPlayer()->equalizer();
 
 	// Connect each slider to VLC's equalizer
 	for (QSlider *slider : findChildren<QSlider*>()) {
@@ -28,25 +28,25 @@ EqualizerDialog::EqualizerDialog(QWidget *parent) :
 		connect(slider, &QSlider::valueChanged, this, [=](int value) {
 			float f = value / 10.0f;
 			label->setText(QString::number(f, 'f', 1) + " db");
-			if (slider == preamp_slider) {
-				equalizer->setPreamplification(f);
-			} else {
-				int bandIndex = slider->objectName().mid(5, 2).toInt() - 1;
-				equalizer->setAmplificationForBandAt(f, bandIndex);
-			}
+//			if (slider == preamp_slider) {
+//				equalizer->setPreamplification(f);
+//			} else {
+//				int bandIndex = slider->objectName().mid(5, 2).toInt() - 1;
+//				equalizer->setAmplificationForBandAt(f, bandIndex);
+//			}
 		});
 	}
 
 	// Fill Combo box with preset list
-	for (uint i = 0; i < equalizer->presetCount(); i++) {
+	/*for (uint i = 0; i < equalizer->presetCount(); i++) {
 		QString preset = QApplication::translate("EqualizerDialog", equalizer->presetNameAt(i).toStdString().data());
 		QListWidgetItem *item = new QListWidgetItem(this->createPresetIcon(i), preset);
 		presetList->addItem(item);
-	}
+	}*/
 
 	connect(toggleEqualizer, &QCheckBox::toggled, this, &EqualizerDialog::toggle);
-	connect(presetList, &QListWidget::currentRowChanged, equalizer, &VlcEqualizer::loadFromPreset);
-	connect(equalizer, &VlcEqualizer::presetLoaded, this, &EqualizerDialog::applySelectedPreset);
+	//connect(presetList, &QListWidget::currentRowChanged, equalizer, &VlcEqualizer::loadFromPreset);
+	//connect(equalizer, &VlcEqualizer::presetLoaded, this, &EqualizerDialog::applySelectedPreset);
 
 	presetList->installEventFilter(this);
 
@@ -60,7 +60,7 @@ EqualizerDialog::EqualizerDialog(QWidget *parent) :
 		}
 
 		float preamp = s->value("equalizer/preampValue").toFloat();
-		equalizer->setPreamplification(preamp);
+		//equalizer->setPreamplification(preamp);
 		preamp_slider->setValue(preamp * 10.0f);
 
 		QMap<QString, QVariant> values = s->value("equalizer/bandValues").toMap();
@@ -73,8 +73,8 @@ EqualizerDialog::EqualizerDialog(QWidget *parent) :
 				float f = it.value().toFloat();
 				slider->setValue(f * 10.0f);
 
-				int bandIndex = slider->objectName().mid(5, 2).toInt() - 1;
-				equalizer->setAmplificationForBandAt(f, bandIndex);
+				//int bandIndex = slider->objectName().mid(5, 2).toInt() - 1;
+				//equalizer->setAmplificationForBandAt(f, bandIndex);
 			}
 		}
 	}
@@ -226,16 +226,16 @@ void EqualizerDialog::toggle(bool b)
 		label->setEnabled(b);
 	}
 	presetList->setEnabled(b);
-	auto equalizer = MediaPlayer::instance()->vlcMediaPlayer()->equalizer();
-	if (equalizer) {
-		equalizer->setEnabled(b);
-	}
+	//auto equalizer = MediaPlayer::instance()->vlcMediaPlayer()->equalizer();
+	//if (equalizer) {
+	//	equalizer->setEnabled(b);
+	//}
 }
 
 /** Apply a preset and update sliders. */
 void EqualizerDialog::applySelectedPreset()
 {
-	auto equalizer = MediaPlayer::instance()->vlcMediaPlayer()->equalizer();
+	/*auto equalizer = MediaPlayer::instance()->vlcMediaPlayer()->equalizer();
 	for (QSlider *slider : findChildren<QSlider*>()) {
 		QLabel *label = findChild<QLabel*>(slider->objectName().replace("slider", "label"));
 		if (slider == preamp_slider) {
@@ -247,5 +247,5 @@ void EqualizerDialog::applySelectedPreset()
 			int i = equalizer->amplificationForBandAt(bandIndex) * 10;
 			label->setText(QString::number(i / 10.0f, 'f', 1) + " db");
 		}
-	}
+	}*/
 }

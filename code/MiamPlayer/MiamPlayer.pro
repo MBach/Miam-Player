@@ -197,10 +197,10 @@ TRANSLATIONS = translations/m4p_ar.ts \
 CONFIG(debug, debug|release) {
     win32 {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -L$$PWD/../../lib/debug/win-x86/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -L$$PWD/../../lib/debug/win-x64/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	}
     }
@@ -213,10 +213,10 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
     win32 {
 	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -L$$PWD/../../lib/release/win-x86/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
 	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -L$$PWD/../../lib/release/win-x64/vlc-qt/ -lvlc-qt-core -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
 	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
 	}
     }
@@ -226,12 +226,12 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix:!macx {
-    LIBS += -ltag -lvlc-qt-core -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
+    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     target.path = /usr/bin/
     INSTALLS += target
 }
 macx {
-    LIBS += -L$$PWD/../../lib/osx/ -ltag -lvlc-qt-core -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     #1 create Framework directory
     #2 copy third party library: TagLib, VLC-Qt

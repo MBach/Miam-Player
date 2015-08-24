@@ -336,8 +336,10 @@ void MainWindow::setupActions()
 	});
 
 	// Volume bar
-	connect(volumeSlider, &QSlider::valueChanged, mp, &MediaPlayer::setVolume);
-	volumeSlider->setValue(Settings::instance()->volume());
+	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
+		mp->setVolume((qreal)value / 100.0);
+	});
+	volumeSlider->setValue(Settings::instance()->volume() * 100);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	library->setSearchBar(searchBar);
@@ -408,7 +410,7 @@ void MainWindow::setupActions()
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
-		Settings::instance()->setVolume(volumeSlider->value());
+		Settings::instance()->setVolume((qreal)volumeSlider->value() / 100.0);
 		settings->sync();
 	});
 
