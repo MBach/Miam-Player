@@ -7,7 +7,7 @@
 	<RunProgramDescription>Run MiamPlayer now!</RunProgramDescription>
 	<RunProgramDescription xml:lang="fr_fr">Lancer Miam-Player maintenant !</RunProgramDescription>
 	-->
-    <Version>0.7.3</Version>
+    <Version>0.8.0</Version>
     <Title>Miam-Player</Title>
 	<InstallerApplicationIcon>../../../code/MiamPlayer/mp</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
