@@ -371,6 +371,7 @@ bool FileHelper::insert(Field key, const QVariant &value)
 		_file->tag()->setArtist(v);
 		break;
 	case Field_Comment:
+		qDebug() << Q_FUNC_INFO << value;
 		_file->tag()->setComment(v);
 		break;
 	case Field_Genre:
