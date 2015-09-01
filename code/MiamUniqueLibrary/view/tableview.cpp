@@ -7,6 +7,10 @@
 #include "model/albumdao.h"
 #include "model/trackdao.h"
 
+#include "albumitem.h"
+#include "artistitem.h"
+#include "coveritem.h"
+
 #include <QtDebug>
 
 TableView::TableView(QWidget *parent)
@@ -18,6 +22,7 @@ TableView::TableView(QWidget *parent)
 	_proxyModel = new TableFilterProxyModel(this);
 	_proxyModel->setSourceModel(_model);
 	this->setModel(_proxyModel);
+	this->setSortingEnabled(true);
 
 	connect(this, &QTableView::doubleClicked, this, [=](const QModelIndex &index) {
 		int r = index.row();
@@ -72,42 +77,41 @@ void TableView::filterLibrary(const QString &filter)
 void TableView::insertNode(GenericDAO *node)
 {
 	Q_UNUSED(node)
-	/*if (!isVisible()) {
+	if (!isVisible()) {
 		return;
 	}
 
 	static bool isNewAlbum = false;
-	static bool isNewArtist = false;
+	//static bool isNewArtist = false;
 	static bool isNewTrack = false;
-	static int trackCount = 0;
+	//static int trackCount = 0;
 
-	int i = _model->rowCount();
 	switch (node->type()){
-	case GenericDAO::Artist: {
+	case Miam::IT_Artist: {
 		isNewTrack = false;
-		QStandardItem *artist = new QStandardItem;
+		QStandardItem *artist = new ArtistItem;
 		artist->setText("[ " + node->title() + " ]");
 		_model->invisibleRootItem()->appendRow(artist);
 		//_model->invisibleRootItem()->insertRow(i, artist);
-		setSpan(i, 0, 1, 4);
+		setSpan(_model->rowCount() - 1, 0, 1, 4);
 		break;
 	}
-	case GenericDAO::Album: {
+	case Miam::IT_Album: {
 		isNewAlbum = true;
 		isNewTrack = false;
 		AlbumDAO *album = static_cast<AlbumDAO*>(node);
-		QStandardItem *cover = new QStandardItem;
-		QStandardItem *albumYear = new QStandardItem;
+		QStandardItem *cover = new CoverItem;
+		QStandardItem *albumYear = new AlbumItem;
 		if (album->year().isEmpty()) {
 			albumYear->setText(album->title());
 		} else {
 			albumYear->setText(album->title() + " [" + album->year() + "]");
 		}
 		_model->invisibleRootItem()->appendRow({cover, albumYear});
-		setSpan(i, 1, 1, 3);
+		setSpan(_model->rowCount() - 1, 1, 1, 3);
 		break;
 	}
-	case GenericDAO::Track: {
+	case Miam::IT_Track: {
 		isNewTrack = true;
 		TrackDAO *trackDao = static_cast<TrackDAO*>(node);
 		QStandardItem *track = new QStandardItem(trackDao->trackNumber());
@@ -121,7 +125,7 @@ void TableView::insertNode(GenericDAO *node)
 	}
 	default:
 		break;
-	}*/
+	}
 }
 
 void TableView::updateNode(GenericDAO *)
@@ -129,6 +133,7 @@ void TableView::updateNode(GenericDAO *)
 	if (!isVisible()) {
 		return;
 	}
+	/// TODO
 }
 
 void TableView::reset()

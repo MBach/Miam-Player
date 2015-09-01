@@ -8,13 +8,19 @@ FORMS += \
     uniquelibrary.ui
 
 HEADERS += model/tablefilterproxymodel.h \
+    view/artistitem.h \
+    view/tableview.h \
     miamuniquelibrary_global.h \
     uniquelibrary.h \
-    tableview.h
+    view/coveritem.h \
+    view/albumitem.h
 
 SOURCES += model/tablefilterproxymodel.cpp \
+    view/artistitem.cpp \
+    view/tableview.cpp \
     uniquelibrary.cpp \
-    tableview.cpp
+    view/coveritem.cpp \
+    view/albumitem.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore

@@ -36,7 +36,7 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 
 void MusicSearchEngine::setWatchForChanges(bool b)
 {
-	qDebug() << Q_FUNC_INFO << b << MusicSearchEngine::isScanning;
+	qDebug() << Q_FUNC_INFO << b << "MusicSearchEngine::isScanning" << MusicSearchEngine::isScanning;
 	if (b) {
 		_timer->start();
 	} else {
