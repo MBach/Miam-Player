@@ -47,7 +47,7 @@ unix {
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
-    LIBS += -L$$OUT_PWD -L/usr/lib/x86_64-linux-gnu/ -ltag -lQt5AV
+    LIBS += -L$$OUT_PWD -L/usr/lib/x86_64-linux-gnu/ -ltag -lQtAV
     target.path = /usr/lib/
     INSTALLS += target
 }
