@@ -262,7 +262,7 @@
   <customwidget>
    <class>TableView</class>
    <extends>QTableView</extends>
-   <header>tableview.h</header>
+   <header>view/tableview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

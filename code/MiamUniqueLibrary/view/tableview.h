@@ -3,10 +3,10 @@
 
 #include <QStandardItemModel>
 #include <QTableView>
-#include "library/jumptowidget.h"
-#include "model/tablefilterproxymodel.h"
-#include "model/genericdao.h"
-#include "mediaplayer.h"
+#include <library/jumptowidget.h>
+#include <model/tablefilterproxymodel.h>
+#include <model/genericdao.h>
+#include <mediaplayer.h>
 
 class TableView : public QTableView
 {

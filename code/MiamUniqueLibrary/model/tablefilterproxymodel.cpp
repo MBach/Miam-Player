@@ -28,8 +28,9 @@ bool TableFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelInd
 	switch (lType) {
 	case Miam::IT_Artist: {
 		if (rType == Miam::IT_Artist) {
-			qDebug() << Q_FUNC_INFO << "Miam::IT_Artist" << left->text() << right->text();
 			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+		} else if (rType == Miam::IT_Cover) {
+
 		} else {
 			result = false;
 		}

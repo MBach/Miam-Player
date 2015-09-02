@@ -2,11 +2,14 @@
 #define ARTISTITEM_H
 
 #include <QStandardItem>
-#include "miamcore_global.h"
+#include <model/artistdao.h>
+#include <miamcore_global.h>
 
 class ArtistItem : public QStandardItem
 {
 public:
+	ArtistItem(const GenericDAO *dao);
+
 	virtual int type() const;
 };
 

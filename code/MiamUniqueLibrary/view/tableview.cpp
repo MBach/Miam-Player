@@ -89,10 +89,8 @@ void TableView::insertNode(GenericDAO *node)
 	switch (node->type()){
 	case Miam::IT_Artist: {
 		isNewTrack = false;
-		QStandardItem *artist = new ArtistItem;
-		artist->setText("[ " + node->title() + " ]");
+		ArtistItem *artist = new ArtistItem(node);
 		_model->invisibleRootItem()->appendRow(artist);
-		//_model->invisibleRootItem()->insertRow(i, artist);
 		setSpan(_model->rowCount() - 1, 0, 1, 4);
 		break;
 	}
@@ -100,12 +98,18 @@ void TableView::insertNode(GenericDAO *node)
 		isNewAlbum = true;
 		isNewTrack = false;
 		AlbumDAO *album = static_cast<AlbumDAO*>(node);
-		QStandardItem *cover = new CoverItem;
+		qDebug() << Q_FUNC_INFO << album->artist() << (album->parentNode() == nullptr);
+		CoverItem *cover = new CoverItem;
+		cover->setText("Cover (" + album->title() + ")");
 		QStandardItem *albumYear = new AlbumItem;
 		if (album->year().isEmpty()) {
 			albumYear->setText(album->title());
 		} else {
-			albumYear->setText(album->title() + " [" + album->year() + "]");
+			if (album->year().isEmpty() || album->year() == "0") {
+				albumYear->setText(album->title());
+			} else {
+				albumYear->setText(album->title() + " [" + album->year() + "]");
+			}
 		}
 		_model->invisibleRootItem()->appendRow({cover, albumYear});
 		setSpan(_model->rowCount() - 1, 1, 1, 3);

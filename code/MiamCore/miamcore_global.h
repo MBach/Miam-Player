@@ -30,7 +30,8 @@ public:
 		IT_Track		= QMetaType::User + 6,
 		IT_Year			= QMetaType::User + 7,
 		IT_Playlist		= QMetaType::User + 8,
-		IT_UnknownType	= QMetaType::User + 9
+		IT_UnknownType	= QMetaType::User + 9,
+		IT_Cover		= QMetaType::User + 10
 	};
 
 	// User defined data types (item->setData(QVariant, Field);)
