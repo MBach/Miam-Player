@@ -4,5 +4,6 @@ CONFIG += ordered
 
 SUBDIRS += \
     MiamCore \
+    MiamLibrary \
     MiamUniqueLibrary \
     MiamPlayer

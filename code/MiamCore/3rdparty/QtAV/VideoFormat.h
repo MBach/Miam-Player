@@ -28,14 +28,8 @@
 #include <QtGui/QImage>
 #include <QtAV/QtAV_Global.h>
 
-// FF_API_PIX_FMT
-#ifdef PixelFormat
-#undef PixelFormat
-#endif
-
 class QDebug;
 namespace QtAV {
-
 class VideoFormatPrivate;
 class Q_AV_EXPORT VideoFormat
 {
@@ -43,14 +37,15 @@ public:
     /*!
      * \brief The PixelFormat enum
      * 32 bit rgba format enum name indicates it's channel layout. For example,
-     * Format_ARGB32 layout is AARRGGBB, it's integer value is 0xAARRGGBB on big endian platforms
+     * Format_ARGB32 byte layout is AARRGGBB, it's integer value is 0xAARRGGBB on big endian platforms
      * and 0xBBGGRRAA on little endian platforms
      * Format_RGB32 and QImage::Format_ARGB32 are the same.
      * TODO: 0RGB, XRGB, not native endia use R8 or R16. ffmpeg does not have native endian format
+     * currently 0rgb xrgb use rgba formats and check hasAlpha() is required
      */
     enum PixelFormat {
         Format_Invalid = -1,
-        Format_ARGB32, // AARRGGBB
+        Format_ARGB32, // AARRGGBB or 00RRGGBB, check hasAlpha is required
         Format_BGRA32, //BBGGRRAA
         Format_ABGR32, // QImage.RGBA8888 le
         Format_RGBA32, // QImage. no
@@ -126,10 +121,20 @@ public:
         Format_BGR48,
         Format_BGR48LE,
         Format_BGR48BE,
+        Format_RGBA64, //native endian
+        Format_RGBA64LE,
+        Format_RGBA64BE,
+        Format_BGRA64, //native endian
+        Format_BGRA64LE,
+        Format_BGRA64BE,
         Format_User
     };
 
     static PixelFormat pixelFormatFromImageFormat(QImage::Format format);
+    /*!
+     * \brief imageFormatFromPixelFormat
+     * If returns a negative value, the QImage format is the positive one but R/G components are swapped because no direct support by QImage. QImage can swap R/G very fast.
+     */
     static QImage::Format imageFormatFromPixelFormat(PixelFormat format);
     static PixelFormat pixelFormatFromFFmpeg(int ff); //AVPixelFormat
     static int pixelFormatToFFmpeg(PixelFormat fmt);
@@ -169,9 +174,15 @@ public:
 
     /*!
      * \brief channels
-     * \return number of channels(components). e.g. RGBA has 4 channels, NV12 is 3
+     * \return number of channels(components) the the format. e.g. RGBA has 4 channels, NV12 is 3
      */
     int channels() const;
+    /*!
+     * \brief channels
+     * \param plane
+     * \return number of channels in a plane
+     */
+    int channels(int plane) const;
     /*!
      * \brief planeCount
      * \return -1 if not a valid format
@@ -187,6 +198,11 @@ public:
     int bitsPerPixelPadded(int plane) const;
     int bytesPerPixel() const;
     int bytesPerPixel(int plane) const;
+    /*!
+     * \brief bitsPerComponent
+     * \return number of bits per component (0 if uneven)
+     */
+    int bitsPerComponent() const;
 
     // return line size with given width
     int bytesPerLine(int width, int plane) const;

@@ -24,6 +24,7 @@
 #define QTAV_GLOBAL_H
 
 #include <stdarg.h>
+#include <QtCore/QByteArray> //QByteArrayLiteral check
 #include <QtCore/qglobal.h>
 #include "dptr.h"
 
@@ -73,6 +74,9 @@ Q_AV_EXPORT void setFFmpegLogHandler(void(*)(void *, int, const char *, va_list)
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 #define QStringLiteral(X) QString::fromUtf8(X)
 #endif //QT_VERSION
+#ifndef QByteArrayLiteral
+#define QByteArrayLiteral(str) QByteArray(str, sizeof(str) - 1)
+#endif
 /*
  * msvc sucks! can not deal with (defined QTAV_HAVE_##FEATURE && QTAV_HAVE_##FEATURE)
  */

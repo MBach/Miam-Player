@@ -61,24 +61,25 @@ public:
 
     /*!
      * \brief createEncoder
-     * Destroy old encoder and create a new one in filter chain. Filter has the ownership.
+     * Destroy old encoder and create a new one in filter chain. Filter has the ownership. You shall not manually open it. Transcoder will set the missing parameters open it.
      * \param name registered encoder name, for example "FFmpeg"
      * \return false if failed
      */
-    bool createVideoEncoder(const QString& name = "FFmpeg");
+    bool createVideoEncoder(const QString& name = QStringLiteral("FFmpeg"));
     /*!
      * \brief encoder
-     * Use this to set encoder properties and options
+     * Use this to set encoder properties and options.
+     * If frameRate is not set, source frame rate will be set if it's valid, otherwise VideoEncoder::defaultFrameRate() will be used internally
      * \return Encoder instance or null if createVideoEncoder failed
      */
     VideoEncoder* videoEncoder() const;
     /*!
      * \brief createEncoder
-     * Destroy old encoder and create a new one in filter chain. Filter has the ownership.
+     * Destroy old encoder and create a new one in filter chain. Filter has the ownership. You shall not manually open it. Transcoder will set the missing parameters open it.
      * \param name registered encoder name, for example "FFmpeg"
      * \return false if failed
      */
-    bool createAudioEncoder(const QString& name = "FFmpeg");
+    bool createAudioEncoder(const QString& name = QStringLiteral("FFmpeg"));
     /*!
      * \brief encoder
      * Use this to set encoder properties and options
@@ -90,6 +91,7 @@ public:
      * \return true if encoding started
      */
     bool isRunning() const;
+    bool isPaused() const;
     qint64 encodedSize() const;
     qreal startTimestamp() const;
     qreal encodedDuration() const;
@@ -99,7 +101,7 @@ Q_SIGNALS:
     void audioFrameEncoded(qreal timestamp);
     void started();
     void stopped();
-    //void paused(bool value);
+    void paused(bool value);
 
 public Q_SLOTS:
     void start();
@@ -109,9 +111,15 @@ public Q_SLOTS:
      * It's called internally when sourcePlayer() is stopped
      */
     void stop();
-    //void pause(bool value);
+    /*!
+     * \brief pause
+     * pause the encoders
+     * \param value
+     */
+    void pause(bool value);
 
 private Q_SLOTS:
+    void onSourceStarted();
     void prepareMuxer();
     void writeAudio(const QtAV::Packet& packet);
     void writeVideo(const QtAV::Packet& packet);

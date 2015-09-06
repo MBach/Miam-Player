@@ -985,7 +985,7 @@
   <customwidget>
    <class>LibraryTreeView</class>
    <extends>QTreeView</extends>
-   <header>library/librarytreeview.h</header>
+   <header location="global">librarytreeview.h</header>
   </customwidget>
   <customwidget>
    <class>MediaButton</class>

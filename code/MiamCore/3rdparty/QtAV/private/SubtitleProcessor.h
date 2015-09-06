@@ -70,7 +70,11 @@ public:
     virtual QList<SubtitleFrame> frames() const = 0;
     virtual bool canRender() const { return false;}
     // return false if not supported
-    virtual bool processHeader(const QByteArray& data) {return false;}
+    virtual bool processHeader(const QByteArray& codec, const QByteArray& data) {
+        Q_UNUSED(codec);
+        Q_UNUSED(data);
+        return false;
+    }
     // return timestamp, insert it to Subtitle's internal linkedlist. can be invalid if only support renderering
     virtual SubtitleFrame processLine(const QByteArray& data, qreal pts = -1, qreal duration = 0) = 0;
     virtual QString getText(qreal pts) const = 0;
@@ -78,6 +82,11 @@ public:
     virtual QImage getImage(qreal pts, QRect* boundingRect = 0);
     void setFrameSize(int width, int height);
     QSize frameSize() const;
+
+    // font properties: libass only now
+    virtual void setFontFile(const QString& file) {Q_UNUSED(file);}
+    virtual void setFontsDir(const QString& dir) {Q_UNUSED(dir);}
+    virtual void setFontFileForced(bool force) {Q_UNUSED(force);}
 protected:
     // default do nothing
     virtual void onFrameSizeChanged(int width, int height);

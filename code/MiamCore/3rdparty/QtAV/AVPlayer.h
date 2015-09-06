@@ -37,8 +37,9 @@ namespace QtAV {
 class MediaIO;
 class AudioOutput;
 class VideoRenderer;
-class AVClock;
 class Filter;
+class AudioFilter;
+class VideoFilter;
 class VideoCapture;
 
 class Q_AV_EXPORT AVPlayer : public QObject
@@ -174,11 +175,13 @@ public:
     QString externalAudio() const;
     /*!
      * \brief externalAudioTracks
+     * A list of QVariantMap. Using QVariantMap and QVariantList is mainly for QML support.
      * [ {id: 0, file: abc.dts, language: eng, title: xyz}, ...]
      * id: used for setAudioStream(id)
+     * \sa externalAudioTracksChanged
      */
-    QVariantList externalAudioTracks() const;
-    QVariantList internalAudioTracks() const;
+    const QVariantList& externalAudioTracks() const;
+    const QVariantList& internalAudioTracks() const;
     /*!
      * \brief setAudioStream
      * set an external audio file and stream number as audio track
@@ -201,6 +204,15 @@ public:
      */
     bool setAudioStream(int n);
     bool setVideoStream(int n);
+    /*!
+     * \brief internalAudioTracks
+     * A list of QVariantMap. Using QVariantMap and QVariantList is mainly for QML support.
+     * [ {id: 0, file: abc.dts, language: eng, title: xyz}, ...]
+     * id: used for setSubtitleStream(id)
+     * \sa internalSubtitleTracksChanged;
+     * Different with external audio tracks, the external subtitle is supported by class Subtitle.
+     */
+    const QVariantList& internalSubtitleTracks() const;
     bool setSubtitleStream(int n);
     int currentAudioStream() const;
     int currentVideoStream() const;
@@ -235,14 +247,10 @@ public:
     /*!
      * \brief audio
      * AVPlayer always has an AudioOutput instance. You can access or control audio output properties through audio().
+     * To disable audio output, set audio()->setBackends(QStringList() << "null") before starting playback
      * \return
      */
     AudioOutput* audio();
-    /// enableAudio(false): no audio thread will be started. broken now
-    void enableAudio(bool enable = true);
-    void disableAudio(bool disable = true);
-    Q_DECL_DEPRECATED void setMute(bool mute = true); // use audio()->setMute(bool) instead
-    Q_DECL_DEPRECATED bool isMute() const; // use audio()->isMute() instead
     /*!
      * \brief setSpeed set playback speed.
      * \param speed  speed > 0. 1.0: normal speed
@@ -283,10 +291,29 @@ public:
      * install the filter in AVThread. Filter will apply before rendering data
      * return false if filter is already registered or audio/video thread is not ready(will install when ready)
      */
-    bool installAudioFilter(Filter *filter);
-    bool installVideoFilter(Filter *filter);
-    bool uninstallFilter(Filter *filter);
-
+    QTAV_DEPRECATED bool installAudioFilter(Filter *filter);
+    QTAV_DEPRECATED bool installVideoFilter(Filter *filter);
+    QTAV_DEPRECATED bool uninstallFilter(Filter *filter);
+    /*!
+     * \brief installFilter
+     * Insert a filter at position 'index' of current filter list.
+     * If the filter is already installed, it will move to the correct index.
+     * \param index A nagative index == size() + index. If index >= size(), append at last
+     * \return false if audio/video thread is not ready. But the filter will be installed when thread is ready.
+     * false if already installed.
+     */
+    bool installFilter(AudioFilter* filter, int index = 0x7FFFFFFF);
+    bool installFilter(VideoFilter* filter, int index = 0x7FFFFFFF);
+    bool uninstallFilter(AudioFilter* filter);
+    bool uninstallFilter(VideoFilter* filter);
+    QList<Filter*> audioFilters() const;
+    QList<Filter*> videoFilters() const;
+    /*!
+     * \brief setPriority
+     * A suitable decoder will be applied when video is playing. The decoder does not change in current playback if no decoder is found.
+     * If not playing or no decoder found, the decoder will be changed at the next playback
+     * \param ids
+     */
     // TODO: name list
     void setPriority(const QVector<VideoDecoderId>& ids);
     //void setPriority(const QVector<AudioOutputId>& ids);
@@ -453,8 +480,21 @@ Q_SIGNALS:
     void contrastChanged(int val);
     void hueChanged(int val);
     void saturationChanged(int val);
+    void subtitleStreamChanged(int value);
+    /*!
+     * \brief internalAudioTracksChanged
+     * Emitted when media is loaded. \sa internalAudioTracks
+     */
     void internalAudioTracksChanged(const QVariantList& tracks);
     void externalAudioTracksChanged(const QVariantList& tracks);
+    void internalSubtitleTracksChanged(const QVariantList& tracks);
+    /*!
+     * \brief internalSubtitleHeaderRead
+     * Emitted when internal subtitle is loaded. Empty data if no data.
+     * codec is used by subtitle processors
+     */
+    void internalSubtitleHeaderRead(const QByteArray& codec, const QByteArray& data);
+    void internalSubtitlePacketRead(int track, const QtAV::Packet& packet);
 private Q_SLOTS:
     void loadInternal(); // simply load
     void playInternal(); // simply play

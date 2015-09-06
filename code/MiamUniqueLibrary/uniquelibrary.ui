@@ -236,7 +236,7 @@
     </widget>
    </item>
    <item>
-    <widget class="TableView" name="library">
+    <widget class="LibraryTreeView" name="library">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -246,23 +246,20 @@
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
-     <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
-     </attribute>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>LibraryTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">librarytreeview.h</header>
+  </customwidget>
+  <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header>mediabutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>TableView</class>
-   <extends>QTableView</extends>
-   <header>view/tableview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

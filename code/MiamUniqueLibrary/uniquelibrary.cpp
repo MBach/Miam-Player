@@ -18,10 +18,10 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	ui->setupUi(this);
 	ui->library->setSelectionBehavior(QAbstractItemView::SelectRows);
 	ui->library->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	ui->library->setShowGrid(false);
+	//ui->library->setShowGrid(false);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	connect(ui->searchBar, &QLineEdit::textEdited, ui->library, &TableView::filterLibrary);
+	//connect(ui->searchBar, &QLineEdit::textEdited, ui->library, &TableView::filterLibrary);
 }
 
 void UniqueLibrary::setVisible(bool visible)
@@ -29,10 +29,9 @@ void UniqueLibrary::setVisible(bool visible)
 	qDebug() << Q_FUNC_INFO << visible;
 	QWidget::setVisible(visible);
 	if (visible) {
-		qDebug() << "hh" << ui->library->horizontalHeader();
 		SqlDatabase::instance()->load();
-		ui->library->horizontalHeader()->setHighlightSections(false);
-		/*ui->library->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
+		/*ui->library->horizontalHeader()->setHighlightSections(false);
+		ui->library->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
 		ui->library->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
 		ui->library->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);*/
 	}
@@ -41,12 +40,13 @@ void UniqueLibrary::setVisible(bool visible)
 void UniqueLibrary::init()
 {
 	qDebug() << Q_FUNC_INFO;
+	ui->library->init();
 	auto db = SqlDatabase::instance();
 	// Build a tree directly by scanning the hard drive or from a previously saved file
-	connect(db, &SqlDatabase::aboutToLoad, ui->library, &TableView::reset);
+	//connect(db, &SqlDatabase::aboutToLoad, ui->library, &TableView::reset);
 	connect(db, &SqlDatabase::loaded, this, [=]() {
 		ui->library->sortByColumn(0);
 	});
-	connect(db, &SqlDatabase::nodeExtracted, ui->library, &TableView::insertNode);
-	connect(db, &SqlDatabase::aboutToUpdateNode, ui->library, &TableView::updateNode);
+	//connect(db, &SqlDatabase::nodeExtracted, ui->library, &TableView::insertNode);
+	//connect(db, &SqlDatabase::aboutToUpdateNode, ui->library, &TableView::updateNode);
 }

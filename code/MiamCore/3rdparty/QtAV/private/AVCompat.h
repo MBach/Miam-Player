@@ -143,6 +143,9 @@ int avformat_alloc_output_context2(AVFormatContext **avctx, AVOutputFormat *ofor
 #define GCC_VERSION_AT_LEAST(major, minor, patch) 0
 #endif
 
+//FFmpeg2.0, Libav10 2013-03-08 - Reference counted buffers - lavu 52.19.100/52.8.0, lavc 55.0.100 / 55.0.0, lavf 55.0.100 / 55.0.0, lavd 54.4.100 / 54.0.0, lavfi 3.5.0
+#define QTAV_HAVE_AVBUFREF AV_MODULE_CHECK(LIBAVUTIL, 52, 8, 0, 19, 100)
+
 /*TODO: libav
 avutil: error.h
 */
@@ -215,7 +218,7 @@ int64_t av_get_default_channel_layout(int nb_channels);
 #ifdef AVRESAMPLE_MAX_CHANNELS
 #define SWR_CH_MAX AVRESAMPLE_MAX_CHANNELS
 #else
-#define SWR_CH_MAX 32
+#define SWR_CH_MAX 64
 #endif //AVRESAMPLE_MAX_CHANNELS
 #endif //SWR_CH_MAX
 #define SwrContext AVAudioResampleContext
@@ -264,6 +267,10 @@ typedef enum PixelFormat AVPixelFormat; // so we must avoid using  enum AVPixelF
 typedef enum AVPixelFormat AVPixelFormat;
 #define QTAV_PIX_FMT_C(X) AV_PIX_FMT_##X
 #endif //AV_VERSION_INT(51, 42, 0)
+// FF_API_PIX_FMT
+#ifdef PixelFormat
+#undef PixelFormat
+#endif
 
 // AV_PIX_FMT_FLAG_XXX was PIX_FMT_XXX before FFmpeg 2.0
 // AV_PIX_FMT_FLAG_ALPHA was added at 52.2.0. but version.h not changed

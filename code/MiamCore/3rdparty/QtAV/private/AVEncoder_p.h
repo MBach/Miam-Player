@@ -28,11 +28,6 @@
 #include "QtAV/VideoFormat.h"
 #include "QtAV/private/AVCompat.h"
 
-// FF_API_PIX_FMT
-#ifdef PixelFormat
-#undef PixelFormat
-#endif
-
 namespace QtAV {
 
 class Q_AV_PRIVATE_EXPORT AVEncoderPrivate : public DPtrPrivate<AVEncoder>
@@ -42,6 +37,7 @@ public:
         avctx(0)
       , is_open(false)
       , bit_rate(0)
+      , timestamp_mode(0)
       , dict(0)
     {
     }
@@ -62,6 +58,7 @@ public:
     AVCodecContext *avctx; // null if not avcodec. allocated in ffmpeg based encoders
     bool is_open;
     int bit_rate;
+    int timestamp_mode;
     QString codec_name;
     QVariantHash options;
     AVDictionary *dict; // null if not avcodec
@@ -91,7 +88,7 @@ public:
         AVEncoderPrivate()
       , width(0)
       , height(0)
-      , frame_rate(25.0)
+      , frame_rate(-1)
       , format_used(VideoFormat::Format_Invalid)
       , format(format_used)
     {

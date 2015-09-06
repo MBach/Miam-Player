@@ -6,12 +6,12 @@
 #include <QScrollBar>
 #include <QTime>
 
+#include <librarytreeview.h>
+#include <scrollbar.h>
 #include "../columnutils.h"
-#include "../library/librarytreeview.h"
 #include "tabplaylist.h"
 #include "playlistheaderview.h"
 #include "playlistitemdelegate.h"
-#include "scrollbar.h"
 
 #include <QMimeData>
 #include <QDrag>

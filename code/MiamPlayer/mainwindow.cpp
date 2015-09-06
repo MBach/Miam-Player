@@ -96,7 +96,7 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 void MainWindow::init()
 {
-	searchBar->init(this);
+	//searchBar->init(this);
 	library->init();
 	_uniqueLibrary->init();
 	tagEditor->init();
@@ -343,6 +343,9 @@ void MainWindow::setupActions()
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	library->setSearchBar(searchBar);
+	connect(library, &QTreeView::doubleClicked, [=] (const QModelIndex &) {
+		library->appendToPlaylist();
+	});
 
 	// Core
 	connect(mp, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
@@ -467,7 +470,6 @@ void MainWindow::changeEvent(QEvent *event)
 		this->retranslateUi(this);
 		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
 		quickStart->retranslateUi(quickStart);
-		//playlistDialog->retranslateUi(playlistDialog);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);

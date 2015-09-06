@@ -78,7 +78,11 @@ SOURCES += library/jumptowidget.cpp \
     settings.cpp \
     settingsprivate.cpp \
     stopbutton.cpp \
-    timelabel.cpp
+    timelabel.cpp \
+    treeview.cpp \
+    styling/imageutils.cpp \
+    styling/lineedit.cpp \
+    starrating.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -109,6 +113,8 @@ HEADERS += interfaces/basicplugin.h \
     settings.h \
     settingsprivate.h \
     stopbutton.h \
-    timelabel.h
-
-DISTFILES +=
+    timelabel.h \
+    treeview.h \
+    styling/imageutils.h \
+    styling/lineedit.h \
+    starrating.h

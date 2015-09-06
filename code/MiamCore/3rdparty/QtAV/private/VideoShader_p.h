@@ -100,6 +100,14 @@ public:
         , target(GL_TEXTURE_2D)
         , try_pbo(true)
     {
+        textures.reserve(4);
+        texture_size.reserve(4);
+        texture_upload_size.reserve(4);
+        effective_tex_width.reserve(4);
+        internal_format.reserve(4);
+        data_format.reserve(4);
+        data_type.reserve(4);
+        texture_coords.reserve(4);
         static bool enable_pbo = qgetenv("QTAV_PBO").toInt() > 0;
         if (try_pbo)
             try_pbo = enable_pbo;
@@ -114,7 +122,6 @@ public:
     bool initPBO(int plane, int size);
     bool initTexture(GLuint tex, GLint internal_format, GLenum format, GLenum dataType, int width, int height);
     bool updateTextureParameters(const VideoFormat& fmt);
-    void updateChannelMap(const VideoFormat& fmt);
     bool ensureResources();
     bool ensureTextures();
     void setupQuality();
