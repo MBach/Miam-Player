@@ -72,9 +72,6 @@ public:
 
 	explicit LibraryTreeView(QWidget *parent = 0);
 
-	/** For every item in the library, gets the top level letter attached to it. */
-	QChar currentLetter() const;
-
 	const QImage *expandedCover(AlbumItem *album) const;
 
 	/** Reimplemented. */
@@ -103,6 +100,9 @@ protected:
 private:
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
+
+	/** For every item in the library, gets the top level letter attached to it. */
+	QChar currentLetter() const;
 
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;

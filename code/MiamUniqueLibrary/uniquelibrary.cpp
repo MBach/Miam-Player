@@ -41,11 +41,17 @@ void UniqueLibrary::init()
 {
 	qDebug() << Q_FUNC_INFO;
 	ui->library->init();
+	ui->library->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+	//auto delegate = ui->library->itemDelegate();
+	//ui->library->setItemDelegate(nullptr);
+	//delete delegate;
+
 	auto db = SqlDatabase::instance();
 	// Build a tree directly by scanning the hard drive or from a previously saved file
 	//connect(db, &SqlDatabase::aboutToLoad, ui->library, &TableView::reset);
 	connect(db, &SqlDatabase::loaded, this, [=]() {
 		ui->library->sortByColumn(0);
+		ui->library->expandAll();
 	});
 	//connect(db, &SqlDatabase::nodeExtracted, ui->library, &TableView::insertNode);
 	//connect(db, &SqlDatabase::aboutToUpdateNode, ui->library, &TableView::updateNode);

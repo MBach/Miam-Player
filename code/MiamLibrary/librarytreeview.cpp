@@ -100,18 +100,18 @@ const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 /** Reimplemented. */
 void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
-	if (_itemDelegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
-		if (item && item->hasChildren()) {
-			for (int i = 0; i < item->rowCount(); i++) {
-				// Recursive call on children
-				this->findAll(index.child(i, 0), tracks);
-			}
-			tracks.removeDuplicates();
-		} else if (item && item->type() == Miam::IT_Track) {
-			tracks << item->data(Miam::DF_URI).toString();
+	//if (_itemDelegate) {
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
+	if (item && item->hasChildren()) {
+		for (int i = 0; i < item->rowCount(); i++) {
+			// Recursive call on children
+			this->findAll(index.child(i, 0), tracks);
 		}
+		tracks.removeDuplicates();
+	} else if (item && item->type() == Miam::IT_Track) {
+		tracks << item->data(Miam::DF_URI).toString();
 	}
+	//}
 }
 
 void LibraryTreeView::findMusic(const QString &text)
@@ -249,17 +249,16 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 /** Recursive count for leaves only. */
 int LibraryTreeView::count(const QModelIndex &index) const
 {
-	if (_itemDelegate) {
-		QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
-		if (item) {
-			int tmp = 0;
-			for (int i = 0; i < item->rowCount(); i++) {
-				tmp += count(index.child(i, 0));
-			}
-			return (tmp == 0) ? 1 : tmp;
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
+	if (item) {
+		int tmp = 0;
+		for (int i = 0; i < item->rowCount(); i++) {
+			tmp += count(index.child(i, 0));
 		}
+		return (tmp == 0) ? 1 : tmp;
+	} else {
+		return 0;
 	}
-	return 0;
 }
 
 /** Reimplemented. */
@@ -269,6 +268,7 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 	for (QModelIndex index : indexes) {
 		c += this->count(index);
 	}
+	qDebug() << Q_FUNC_INFO << c;
 	return c;
 }
 
@@ -387,8 +387,10 @@ void LibraryTreeView::jumpTo(const QString &letter)
 /** Reload covers when one has changed cover size in options. */
 void LibraryTreeView::setCoverSize(int coverSize)
 {
-	_itemDelegate->setCoverSize(coverSize);
-	this->viewport()->update();
+	if (_itemDelegate) {
+		_itemDelegate->setCoverSize(coverSize);
+		this->viewport()->update();
+	}
 }
 
 /** Reimplemented. */

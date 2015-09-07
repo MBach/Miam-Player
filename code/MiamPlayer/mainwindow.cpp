@@ -98,6 +98,7 @@ void MainWindow::init()
 {
 	//searchBar->init(this);
 	library->init();
+	//library->setItemDelegate(new LibraryItemDelegate(library));
 	_uniqueLibrary->init();
 	tagEditor->init();
 

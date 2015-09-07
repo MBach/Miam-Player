@@ -19,7 +19,7 @@
 qreal LibraryItemDelegate::_iconOpacity = 1.0;
 
 LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy), _libraryTreeView(libraryTreeView), _timer(new QTimer(this)), _coverSize(64)
+	QStyledItemDelegate(proxy), _libraryTreeView(libraryTreeView), _timer(new QTimer(this)), _coverSize(48)
 {
 	_proxy = proxy;
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
