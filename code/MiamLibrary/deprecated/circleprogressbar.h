@@ -4,10 +4,10 @@
 #include <QProgressBar>
 #include "miamlibrary_global.h"
 
-/// XXX: DELETE or not?
 /// It is not really following Windows 10 UI guidelines. What about other OS?
 /// Moreover, one cannot interact with Library when full rescan is happening
 /// It should be replace by a thin horizontal progress bar in the bottom when library is populating!
+/// \deprecated
 class MIAMLIBRARY_LIBRARY CircleProgressBar : public QProgressBar
 {
 	Q_OBJECT
