@@ -15,8 +15,9 @@
 
 #include <QtDebug>
 
-PlaylistItemDelegate::PlaylistItemDelegate(Playlist *playlist) :
-	MiamStyledItemDelegate(playlist, true), _playlist(playlist)
+PlaylistItemDelegate::PlaylistItemDelegate(Playlist *playlist)
+	: MiamStyledItemDelegate(playlist, true)
+	, _playlist(playlist)
 {}
 
 /** Redefined. */
@@ -97,8 +98,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 
 	// Highlight the current playing item
 	QFont font = SettingsPrivate::instance()->font(SettingsPrivate::FF_Playlist);
-	MediaPlayer *mediaPlayer = nullptr;
-	if (_playlist->mediaPlaylist()->currentIndex() == index.row() && mediaPlayer->state() != QMediaPlayer::StoppedState) {
+	if (_playlist->mediaPlaylist()->currentIndex() == index.row() && _playlist->mediaPlayer()->state() != QMediaPlayer::StoppedState) {
 		font.setBold(true);
 		font.setItalic(true);
 	}

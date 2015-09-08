@@ -11,8 +11,12 @@
 #include "cornerwidget.h"
 
 /** Default constructor. */
-TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _playlistManager(new PlaylistManager(this)), _mainWindow(nullptr), _mediaPlayer(nullptr)
+TabPlaylist::TabPlaylist(QWidget *parent)
+	: QTabWidget(parent)
+	, _mediaPlayer(nullptr)
+	, _playlistManager(new PlaylistManager(this))
+	, _mainWindow(nullptr)
+	, _contextMenu(new QMenu(this))
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
@@ -64,7 +68,6 @@ TabPlaylist::TabPlaylist(QWidget *parent) :
 	});
 
 	// Context menu to add few actions for each playlist
-	_contextMenu = new QMenu(this);
 	QAction *renamePlaylist = new QAction(tr("Rename playlist"), _contextMenu);
 	_deletePlaylist = new QAction(tr("Delete playlist..."), _contextMenu);
 	QAction *loadBackground = new QAction(tr("Load background..."), _contextMenu);

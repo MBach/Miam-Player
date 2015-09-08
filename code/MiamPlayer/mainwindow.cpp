@@ -20,8 +20,10 @@
 
 #include <QtDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), customizeOptionsDialog(new CustomizeOptionsDialog), _mediaPlayer(new MediaPlayer(this))
+MainWindow::MainWindow(QWidget *parent)
+	: QMainWindow(parent)
+	, _mediaPlayer(new MediaPlayer(this))
+	, customizeOptionsDialog(new CustomizeOptionsDialog)
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
@@ -32,12 +34,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
 #endif
 
-
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
 				 << seekForwardButton << skipForwardButton << playbackModeButton;
-	for (MediaButton button : mediaButtons) {
-		button.setMediaPlayer(_mediaPlayer);
+	for (MediaButton *button : mediaButtons) {
+		button->setMediaPlayer(_mediaPlayer);
 	}
 	tabPlaylists->setMainWindow(this);
 
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->loadTheme();
 
 	// Instantiate dialogs
-	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
+	_playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
 	this->installEventFilter(this);
 }
@@ -138,7 +139,7 @@ void MainWindow::init()
 	// Load shortcuts
 	customizeOptionsDialog->initShortcuts();
 
-	playbackModeWidgetFactory->update();
+	_playbackModeWidgetFactory->update();
 }
 
 /** Plugins. */
@@ -214,7 +215,7 @@ void MainWindow::setupActions()
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
 			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
 			QString enu = actionPlayBack->property("PlaybackMode").toString();
-			playbackModeWidgetFactory->setPlaybackMode((QMediaPlaylist::PlaybackMode)metaEnum.keyToValue(enu.toStdString().data()));
+			_playbackModeWidgetFactory->setPlaybackMode((QMediaPlaylist::PlaybackMode)metaEnum.keyToValue(enu.toStdString().data()));
 		});
 	}
 
@@ -329,7 +330,7 @@ void MainWindow::setupActions()
 	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
 	connect(actionSkipForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
-	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+	connect(playbackModeButton, &MediaButton::mediaButtonChanged, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	connect(actionShowEqualizer, &QAction::triggered, this, [=]() {
 		EqualizerDialog *equalizerDialog = new EqualizerDialog(_mediaPlayer, this);
@@ -361,7 +362,7 @@ void MainWindow::setupActions()
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
 
 	// Playback
-	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 	connect(actionRemoveSelectedTracks, &QAction::triggered, this, [=]() {
 		if (tabPlaylists->currentPlayList()) {
 			tabPlaylists->currentPlayList()->removeSelectedTracks();
@@ -382,7 +383,7 @@ void MainWindow::setupActions()
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
 
 	// Playback modes
-	connect(playbackModeButton, &QPushButton::clicked, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
+	connect(playbackModeButton, &QPushButton::clicked, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
 		QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
@@ -557,7 +558,7 @@ bool MainWindow::event(QEvent *e)
 
 void MainWindow::moveEvent(QMoveEvent *event)
 {
-	playbackModeWidgetFactory->move();
+	_playbackModeWidgetFactory->move();
 	QMainWindow::moveEvent(event);
 }
 

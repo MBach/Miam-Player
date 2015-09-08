@@ -25,7 +25,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 	Q_OBJECT
 private:
 	/** Displays and animates the media button "PlaybackMode". */
-	PlaybackModeWidgetFactory *playbackModeWidgetFactory;
+	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
 
 	/** WIP. View object: display all your tracks in a huge and page. */
 	UniqueLibrary *_uniqueLibrary;
@@ -37,7 +37,7 @@ public:
 	QList<MediaButton*> mediaButtons;
 	CustomizeOptionsDialog *customizeOptionsDialog;
 
-	MainWindow(QWidget *parent = 0);
+	explicit MainWindow(QWidget *parent = 0);
 
 	void activateLastView();
 

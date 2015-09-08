@@ -60,8 +60,6 @@ private:
 	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
 	//LibraryItemDelegate *_itemDelegate;
 
-
-
 	/** Cache of expanded albums and their covers. */
 	QMap<AlbumItem*, QImage*> _expandedCovers;
 

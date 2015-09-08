@@ -167,6 +167,7 @@ SeparatorItem *LibraryItemModel::insertSeparator(const QStandardItem *node)
 			return separator;
 		}
 	}
+	return nullptr;
 }
 
 void LibraryItemModel::cleanDanglingNodes()

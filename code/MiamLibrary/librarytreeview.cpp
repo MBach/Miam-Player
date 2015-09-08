@@ -23,9 +23,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	, _searchBar(nullptr)
 	, _jumpToWidget(new JumpToWidget(this))
 	, _circleProgressBar(new CircleProgressBar(this))
+	, _properties(new QMenu(this))
 	, sendToCurrentPlaylist(new QShortcut(this))
 	, openTagEditor(new QShortcut(this))
-	, _properties(new QMenu(this))
 {
 	auto settings = SettingsPrivate::instance();
 	_proxyModel = _libraryModel->proxy();

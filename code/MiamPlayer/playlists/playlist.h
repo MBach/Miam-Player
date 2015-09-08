@@ -22,6 +22,8 @@ class Playlist : public QTableView
 	Q_OBJECT
 
 private:
+	MediaPlayer *_mediaPlayer;
+
 	/** TEST: a very basic context menu with one action: remove selected tracks. */
 	QMenu *_trackProperties;
 
@@ -57,10 +59,11 @@ public:
 
 	explicit Playlist(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
+	inline MediaPlayer *mediaPlayer() const { return _mediaPlayer; }
+
 	inline MediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
 
 	uint generateNewHash() const;
-
 
 	inline uint id() const { return _id; }
 	bool isModified() const;

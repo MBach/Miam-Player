@@ -15,11 +15,13 @@
 
 #include <QtAV/AVPlayer.h>
 
-MediaPlayer::MediaPlayer(QObject *parent) :
-	QObject(parent), _playlist(nullptr), _state(QMediaPlayer::StoppedState)
-  , _remotePlayer(nullptr)
-  , _stopAfterCurrent(false)
-  , _localPlayer(new QtAV::AVPlayer(this))
+MediaPlayer::MediaPlayer(QObject *parent)
+	: QObject(parent)
+	, _playlist(nullptr)
+	, _state(QMediaPlayer::StoppedState)
+	, _localPlayer(new QtAV::AVPlayer(this))
+	, _remotePlayer(nullptr)
+	, _stopAfterCurrent(false)
 {
 	this->createLocalConnections();
 

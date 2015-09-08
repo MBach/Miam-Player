@@ -21,8 +21,12 @@
 
 #include <QtDebug>
 
-Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent) :
-	QTableView(parent), _dropDownIndex(nullptr), _hash(0), _id(0)
+Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
+	: QTableView(parent)
+	, _mediaPlayer(mediaPlayer)
+	, _dropDownIndex(nullptr)
+	, _hash(0)
+	, _id(0)
 {
 	_playlistModel = new PlaylistModel(this);
 
