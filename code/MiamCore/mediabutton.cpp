@@ -7,9 +7,14 @@
 #include <QtDebug>
 
 MediaButton::MediaButton(QWidget *parent) :
-	QPushButton(parent)
+	QPushButton(parent), _mediaPlayer(nullptr)
 {
 	this->setFlat(SettingsPrivate::instance()->buttonsFlat());
+}
+
+void MediaButton::setMediaPlayer(MediaPlayer *mediaPlayer)
+{
+	_mediaPlayer = mediaPlayer;
 }
 
 /** Redefined to load custom icons saved in settings. */

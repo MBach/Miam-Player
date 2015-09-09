@@ -13,8 +13,13 @@
 class SeekBar : public MiamSlider
 {
 	Q_OBJECT
+private:
+	MediaPlayer *_mediaPlayer;
+
 public:
 	explicit SeekBar(QWidget *parent = 0);
+
+	void setMediaPlayer(MediaPlayer *mediaPlayer);
 
 protected:
 	/** Redefined to seek in current playing file. */

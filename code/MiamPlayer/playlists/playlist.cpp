@@ -21,7 +21,7 @@
 
 #include <QtDebug>
 
-Playlist::Playlist(QWidget *parent) :
+Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent) :
 	QTableView(parent), _dropDownIndex(nullptr), _hash(0), _id(0)
 {
 	_playlistModel = new PlaylistModel(this);
@@ -60,15 +60,14 @@ Playlist::Playlist(QWidget *parent) :
 	// Set row height
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
 
-	auto mp = MediaPlayer::instance();
 	connect(this, &Playlist::doubleClicked, this, [=] (const QModelIndex &track) {
-		mp->changeTrack(_playlistModel->mediaPlaylist(), track.row());
+		mediaPlayer->changeTrack(_playlistModel->mediaPlaylist(), track.row());
 		this->viewport()->update();
 	});
 
 	// Ensure current item in the playlist is visible when track has just changed to another one
-	connect(mp, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
-		if (mp->playlist() == this->mediaPlaylist() && !uri.isEmpty()) {
+	connect(mediaPlayer, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
+		if (mediaPlayer->playlist() == this->mediaPlaylist() && !uri.isEmpty()) {
 			int row = mediaPlaylist()->currentIndex();
 			this->scrollTo(_playlistModel->index(row, 0));
 			this->viewport()->update();

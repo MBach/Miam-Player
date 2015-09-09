@@ -25,6 +25,8 @@ class TabPlaylist : public QTabWidget
 	Q_OBJECT
 
 private:
+	MediaPlayer *_mediaPlayer;
+
 	PlaylistManager *_playlistManager;
 
 	/** A custom message box for handling errors. */
@@ -46,7 +48,7 @@ public:
 	/** Redefined to forward events to children. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
-	void init();
+	void init(MediaPlayer *mediaPlayer);
 
 	/** Load a playlist saved in database. */
 	void loadPlaylist(uint playlistId);

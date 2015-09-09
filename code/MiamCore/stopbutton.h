@@ -14,9 +14,12 @@ class MIAMCORE_LIBRARY StopButton : public MediaButton
 {
 private:
 	QMenu _menu;
+	QAction *_action;
 
 public:
 	explicit StopButton(QWidget *parent = nullptr);
+
+	virtual void setMediaPlayer(MediaPlayer *mediaPlayer) override;
 
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent *) override;

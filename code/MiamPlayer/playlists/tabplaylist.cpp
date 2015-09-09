@@ -12,7 +12,7 @@
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent) :
-	QTabWidget(parent), _playlistManager(new PlaylistManager(this)), _mainWindow(nullptr)
+	QTabWidget(parent), _playlistManager(new PlaylistManager(this)), _mainWindow(nullptr), _mediaPlayer(nullptr)
 {
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
@@ -150,8 +150,9 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 	}
 	return QTabWidget::eventFilter(obj, event);
 }
-void TabPlaylist::init()
+void TabPlaylist::init(MediaPlayer *mediaPlayer)
 {
+	_mediaPlayer = mediaPlayer;
 	blockSignals(true);
 	auto settings = SettingsPrivate::instance();
 	if (settings->playbackRestorePlaylistsAtStartup()) {
@@ -162,7 +163,7 @@ void TabPlaylist::init()
 			}
 			int lastActiveTab = settings->value("lastActiveTab").toInt();
 			setCurrentIndex(lastActiveTab);
-			MediaPlayer::instance()->setPlaylist(playlist(lastActiveTab)->mediaPlaylist());
+			_mediaPlayer->setPlaylist(playlist(lastActiveTab)->mediaPlaylist());
 		}
 	}
 	if (playlists().isEmpty()) {
@@ -219,6 +220,7 @@ Playlist* TabPlaylist::playlist(int index)
 void TabPlaylist::setMainWindow(MainWindow *mainWindow)
 {
 	_mainWindow = mainWindow;
+	_mediaPlayer = mainWindow->mediaPlayer();
 }
 
 /** Retranslate context menu. */
@@ -255,7 +257,7 @@ Playlist* TabPlaylist::addPlaylist()
 	}
 
 	// Then append a new empty playlist to the others
-	Playlist *p = new Playlist(this);
+	Playlist *p = new Playlist(_mediaPlayer, this);
 	p->setTitle(newPlaylistName);
 	p->installEventFilter(this);
 	if (!ba.isEmpty()) {
@@ -266,10 +268,9 @@ Playlist* TabPlaylist::addPlaylist()
 	int i = addTab(p, newPlaylistName);
 	this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 
-	auto mp = MediaPlayer::instance();
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
-		if (mp->playlist() == p->mediaPlaylist() && p->mediaPlaylist()->currentIndex() == start) {
-			mp->stop();
+		if (_mediaPlayer->playlist() == p->mediaPlaylist() && p->mediaPlaylist()->currentIndex() == start) {
+			_mediaPlayer->stop();
 		}
 	});
 
@@ -318,8 +319,8 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 
 	// Automatically plays the first track
 	if (isEmpty) {
-		MediaPlayer::instance()->setPlaylist(this->currentPlayList()->mediaPlaylist());
-		MediaPlayer::instance()->play();
+		_mediaPlayer->setPlaylist(this->currentPlayList()->mediaPlaylist());
+		_mediaPlayer->play();
 	}
 }
 
@@ -330,8 +331,8 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	if (currentPlayList()->isModified()) {
 		this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	}
-	if (MediaPlayer::instance()->playlist() == nullptr) {
-		MediaPlayer::instance()->setPlaylist(currentPlayList()->mediaPlaylist());
+	if (_mediaPlayer->playlist() == nullptr) {
+		_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
 	}
 	if (currentPlayList()->mediaPlaylist()->currentIndex() == -1) {
 		currentPlayList()->mediaPlaylist()->setCurrentIndex(0);
@@ -418,11 +419,10 @@ void TabPlaylist::deletePlaylist(uint playlistId)
 void TabPlaylist::removeTabFromCloseButton(int index)
 {
 	// Don't delete the first tab, if it's the last one remaining
-	auto mp = MediaPlayer::instance();
 	if (index > 0 || (index == 0 && count() > 1)) {
 		Playlist *p = playlist(index);
-		if (mp->playlist() == p->mediaPlaylist()) {
-			mp->stop();
+		if (_mediaPlayer->playlist() == p->mediaPlaylist()) {
+			_mediaPlayer->stop();
 		}
 		if (!p->mediaPlaylist()->isEmpty()) {
 			p->mediaPlaylist()->removeMedia(0, p->mediaPlaylist()->mediaCount() - 1);
@@ -432,8 +432,8 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 	} else {
 		// Clear the content of first tab
 		Playlist *p = playlist(index);
-		if (mp->playlist() == p->mediaPlaylist()) {
-			mp->stop();
+		if (_mediaPlayer->playlist() == p->mediaPlaylist()) {
+			_mediaPlayer->stop();
 		}
 		p->mediaPlaylist()->clear();
 		p->model()->removeRows(0, p->model()->rowCount());

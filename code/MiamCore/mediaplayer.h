@@ -30,12 +30,8 @@ private:
 	QMap<QString, IMediaPlayer*> _remotePlayers;
 	bool _stopAfterCurrent;
 
-	/** The unique instance of this class. */
-	static MediaPlayer *_mediaPlayer;
-
-	explicit MediaPlayer(QObject *parent = 0);
 public:
-	static MediaPlayer *instance();
+	explicit MediaPlayer(QObject *parent = 0);
 
 	void addRemotePlayer(IMediaPlayer *remotePlayer);
 

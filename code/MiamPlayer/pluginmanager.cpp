@@ -165,13 +165,13 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
 		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
 	}
-	mediaPlayerPlugin->setMediaPlayer(MediaPlayer::instance());
+	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 }
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
 	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchBar->searchDialog());
-	MediaPlayer::instance()->addRemotePlayer(remoteMediaPlayerPlugin->player());
+	_mainWindow->mediaPlayer()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)

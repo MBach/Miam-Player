@@ -30,6 +30,8 @@ private:
 	/** WIP. View object: display all your tracks in a huge and page. */
 	UniqueLibrary *_uniqueLibrary;
 
+	MediaPlayer *_mediaPlayer;
+
 public:
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
@@ -57,6 +59,8 @@ public:
 	static QMessageBox::StandardButton showWarning(const QString &target, int count);
 
 	void openFolder(const QString &dir);
+
+	MediaPlayer *mediaPlayer() const;
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */

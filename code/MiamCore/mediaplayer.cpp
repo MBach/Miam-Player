@@ -15,14 +15,12 @@
 
 #include <QtAV/AVPlayer.h>
 
-MediaPlayer* MediaPlayer::_mediaPlayer = nullptr;
-
 MediaPlayer::MediaPlayer(QObject *parent) :
 	QObject(parent), _playlist(nullptr), _state(QMediaPlayer::StoppedState)
   , _remotePlayer(nullptr)
   , _stopAfterCurrent(false)
+  , _localPlayer(new QtAV::AVPlayer(this))
 {
-	_localPlayer = new QtAV::AVPlayer(this);
 	this->createLocalConnections();
 
 	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
@@ -46,14 +44,6 @@ MediaPlayer::MediaPlayer(QObject *parent) :
 			}
 		}
 	});
-}
-
-MediaPlayer* MediaPlayer::instance()
-{
-	if (_mediaPlayer == nullptr) {
-		_mediaPlayer = new MediaPlayer;
-	}
-	return _mediaPlayer;
 }
 
 void MediaPlayer::createLocalConnections()

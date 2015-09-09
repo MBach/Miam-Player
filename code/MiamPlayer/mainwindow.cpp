@@ -19,7 +19,7 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), customizeOptionsDialog(new CustomizeOptionsDialog)
+	QMainWindow(parent), customizeOptionsDialog(new CustomizeOptionsDialog), _mediaPlayer(new MediaPlayer(this))
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
@@ -29,9 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
 #endif
 
+
 	// Special behaviour for media buttons
 	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
 				 << seekForwardButton << skipForwardButton << playbackModeButton;
+	for (MediaButton button : mediaButtons) {
+		button.setMediaPlayer(_mediaPlayer);
+	}
 	tabPlaylists->setMainWindow(this);
 
 	/// XXX
@@ -45,6 +49,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
 	this->installEventFilter(this);
+}
+
+MediaPlayer *MainWindow::mediaPlayer() const
+{
+	return _mediaPlayer;
 }
 
 void MainWindow::activateLastView()
@@ -101,6 +110,7 @@ void MainWindow::init()
 	//library->setItemDelegate(new LibraryItemDelegate(library));
 	_uniqueLibrary->init();
 	tagEditor->init();
+	seekSlider->setMediaPlayer(_mediaPlayer);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
@@ -127,7 +137,7 @@ void MainWindow::init()
 	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
-	tabPlaylists->init();
+	tabPlaylists->init(_mediaPlayer);
 
 	// Load shortcuts
 	customizeOptionsDialog->initShortcuts();
@@ -291,45 +301,43 @@ void MainWindow::setupActions()
 	});
 
 	// Media buttons and their shortcuts
-	auto mp = MediaPlayer::instance();
-	mp->setParent(this);
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
-		bool isPlaying = (mp->state() == QMediaPlayer::PlayingState || mp->state() == QMediaPlayer::PausedState);
+		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
 		actionSeekBackward->setEnabled(isPlaying);
 		actionStop->setEnabled(isPlaying);
 		actionStopAfterCurrent->setEnabled(isPlaying);
-		actionStopAfterCurrent->setChecked(mp->isStopAfterCurrent());
+		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
 		actionSeekForward->setEnabled(isPlaying);
 
-		bool notEmpty = mp->playlist() && !mp->playlist()->isEmpty();
+		bool notEmpty = _mediaPlayer->playlist() && !_mediaPlayer->playlist()->isEmpty();
 		actionSkipBackward->setEnabled(notEmpty);
 		actionPlay->setEnabled(notEmpty);
 		actionSkipForward->setEnabled(notEmpty);
 	});
-	connect(actionSkipBackward, &QAction::triggered, mp, &MediaPlayer::skipBackward);
-	connect(skipBackwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::skipBackward);
-	connect(actionSeekBackward, &QAction::triggered, mp, &MediaPlayer::seekBackward);
-	connect(seekBackwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::seekBackward);
-	connect(actionPlay, &QAction::triggered, mp, &MediaPlayer::play);
+	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipBackward);
+	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
+	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekBackward);
+	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
+	connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::play);
 
-	connect(playButton, &QAbstractButton::clicked, mp, &MediaPlayer::play);
-	connect(actionStop, &QAction::triggered, mp, &MediaPlayer::stop);
-	connect(actionStopAfterCurrent, &QAction::triggered, mp, &MediaPlayer::stopAfterCurrent);
-	connect(stopButton, &QAbstractButton::clicked, mp, &MediaPlayer::stop);
-	connect(actionSeekForward, &QAction::triggered, mp, &MediaPlayer::seekForward);
-	connect(seekForwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::seekForward);
-	connect(actionSkipForward, &QAction::triggered, mp, &MediaPlayer::skipForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, mp, &MediaPlayer::skipForward);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::play);
+	connect(actionStop, &QAction::triggered, _mediaPlayer, &MediaPlayer::stop);
+	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer, &MediaPlayer::stopAfterCurrent);
+	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::stop);
+	connect(actionSeekForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekForward);
+	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
+	connect(actionSkipForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
 	connect(playbackModeButton, &MediaButton::mediaButtonChanged, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	connect(actionShowEqualizer, &QAction::triggered, this, [=]() {
-		EqualizerDialog *equalizerDialog = new EqualizerDialog(this);
+		EqualizerDialog *equalizerDialog = new EqualizerDialog(_mediaPlayer, this);
 		equalizerDialog->show();
 		equalizerDialog->activateWindow();
 	});
 
 	// Sliders
-	connect(mp, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
 		if (duration > 0) {
 			seekSlider->setValue(1000 * pos / duration);
 			timeLabel->setTime(pos, duration);
@@ -338,7 +346,7 @@ void MainWindow::setupActions()
 
 	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
-		mp->setVolume((qreal)value / 100.0);
+		_mediaPlayer->setVolume((qreal)value / 100.0);
 	});
 	volumeSlider->setValue(Settings::instance()->volume() * 100);
 
@@ -349,7 +357,7 @@ void MainWindow::setupActions()
 	});
 
 	// Core
-	connect(mp, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
+	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
 
 	// Playback
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
@@ -361,7 +369,7 @@ void MainWindow::setupActions()
 	connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionOpenPlaylistManager, &QAction::triggered, this, &MainWindow::openPlaylistManager);
-	connect(actionMute, &QAction::triggered, mp, &MediaPlayer::toggleMute);
+	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
 	});
@@ -558,6 +566,7 @@ void MainWindow::loadTheme()
 	auto settings = Settings::instance();
 	auto settingsPrivate = SettingsPrivate::instance();
 	for (MediaButton *b : mediaButtons) {
+		b->setMediaPlayer(_mediaPlayer);
 		if (settingsPrivate->isThemeCustomized()) {
 			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
 		} else {
@@ -604,7 +613,6 @@ void MainWindow::processArgs(const QStringList &args)
 	bool isCreateNewPlaylist = parser.isSet(createNewPlaylist);
 	bool isSendToTagEditor = parser.isSet(sendToTagEditor);
 	bool isAddToLibrary = parser.isSet(addToLibrary);
-	auto mp = MediaPlayer::instance();
 
 	// -d <dir> and -f <files...> options are exclusive
 	// It could be possible to use them at the same time but it can be confusing. Directory takes precedence
@@ -639,17 +647,17 @@ void MainWindow::processArgs(const QStringList &args)
 			tabPlaylists->insertItemsToPlaylist(-1, tracks);
 		}
 	} else if (parser.isSet(playPause)) {
-		if (mp->state() == QMediaPlayer::PlayingState) {
-			mp->pause();
+		if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+			_mediaPlayer->pause();
 		} else {
-			mp->play();
+			_mediaPlayer->play();
 		}
 	} else if (parser.isSet(skipForward)) {
-		mp->skipForward();
+		_mediaPlayer->skipForward();
 	} else if (parser.isSet(skipBackward)) {
-		mp->skipBackward();
+		_mediaPlayer->skipBackward();
 	} else if (parser.isSet(stop)) {
-		mp->stop();
+		_mediaPlayer->stop();
 	} else if (parser.isSet(volume)) {
 		bool ok = false;
 		int vol = parser.value(volume).toInt(&ok);
@@ -687,7 +695,6 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 {
 	playButton->disconnect();
 	actionPlay->disconnect();
-	auto mp = MediaPlayer::instance();
 	if (state == QMediaPlayer::PlayingState) {
 		QString iconPath;
 		if (SettingsPrivate::instance()->hasCustomIcon("pauseButton")) {
@@ -696,13 +703,13 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 			iconPath = ":/player/" + Settings::instance()->theme() + "/pause";
 		}
 		playButton->setIcon(QIcon(iconPath));
-		connect(playButton, &QAbstractButton::clicked, mp, &MediaPlayer::pause);
-		connect(actionPlay, &QAction::triggered, mp, &MediaPlayer::pause);
+		connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::pause);
+		connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::pause);
 		seekSlider->setEnabled(true);
 	} else {
 		playButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/play"));
-		connect(playButton, &QAbstractButton::clicked, mp, &MediaPlayer::play);
-		connect(actionPlay, &QAction::triggered, mp, &MediaPlayer::play);
+		connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::play);
+		connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::play);
 		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		if (state == QMediaPlayer::StoppedState) {
 			seekSlider->setValue(0);

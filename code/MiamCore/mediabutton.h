@@ -2,6 +2,7 @@
 #define MEDIABUTTON_H
 
 #include <QPushButton>
+#include "mediaplayer.h"
 
 #include "miamcore_global.h"
 
@@ -14,7 +15,11 @@ class MIAMCORE_LIBRARY MediaButton : public QPushButton
 {
 	Q_OBJECT
 public:
+	MediaPlayer *_mediaPlayer;
+
 	MediaButton(QWidget *parent = 0);
+
+	virtual void setMediaPlayer(MediaPlayer *mediaPlayer);
 
 	/** Redefined to load custom icons saved in settings. */
 	void setIcon(const QIcon &);

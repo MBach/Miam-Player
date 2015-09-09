@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
-	qInstallMessageHandler(debugOutput);
+	//qInstallMessageHandler(debugOutput);
 
 	QtSingleApplication app(SOFT, argc, argv);
 	app.setOrganizationName(COMPANY);
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	app.setStyle(new MiamStyle);
+	//app.setStyle(new MiamStyle);
 	MainWindow *window = new MainWindow;
 	app.setActivationWindow(window);
 

@@ -2,6 +2,7 @@
 #define EQUALIZERDIALOG_H
 
 #include <QDialog>
+#include <mediaplayer.h>
 
 #include "ui_equalizerdialog.h"
 
@@ -18,8 +19,10 @@ class EqualizerDialog : public QDialog, public Ui::EqualizerDialog
 private:
 	static QStringList presets;
 
+	MediaPlayer *_mediaPlayer;
+
 public:
-	explicit EqualizerDialog(QWidget *parent = 0);
+	explicit EqualizerDialog(MediaPlayer *mediaPlayer, QWidget *parent = 0);
 
 	virtual ~EqualizerDialog();
 

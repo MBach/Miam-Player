@@ -14,8 +14,8 @@ QStringList EqualizerDialog::presets = (QStringList() << QT_TR_NOOP("Flat") << Q
 	<< QT_TR_NOOP("Headphones") << QT_TR_NOOP("Large Hall") << QT_TR_NOOP("Live") << QT_TR_NOOP("Party") << QT_TR_NOOP("Pop")
 	<< QT_TR_NOOP("Reggae") << QT_TR_NOOP("Rock") << QT_TR_NOOP("Ska") << QT_TR_NOOP("Soft") << QT_TR_NOOP("Soft rock") << QT_TR_NOOP("Techno"));
 
-EqualizerDialog::EqualizerDialog(QWidget *parent) :
-	QDialog(parent, Qt::Tool)
+EqualizerDialog::EqualizerDialog(MediaPlayer *mediaPlayer, QWidget *parent) :
+	QDialog(parent, Qt::Tool), _mediaPlayer(mediaPlayer)
 {
 	setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -125,8 +125,7 @@ bool EqualizerDialog::eventFilter(QObject *obj, QEvent *ev)
 void EqualizerDialog::setVisible(bool visible)
 {
 	if (visible) {
-		auto mediaPlayer = MediaPlayer::instance();
-		auto playlist = mediaPlayer->playlist();
+		auto playlist = _mediaPlayer->playlist();
 		if (playlist) {
 			QMediaContent mc = playlist->currentMedia();
 			toggleEqualizer->setEnabled(mc.canonicalUrl().isLocalFile());
