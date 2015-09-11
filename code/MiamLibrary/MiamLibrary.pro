@@ -22,7 +22,8 @@ SOURCES += \
     scrollbar.cpp \
     trackitem.cpp \
     yearitem.cpp \
-    deprecated/circleprogressbar.cpp
+    deprecated/circleprogressbar.cpp \
+    miamitemdelegate.cpp
 
 HEADERS += \
     albumitem.h \
@@ -44,7 +45,8 @@ HEADERS += \
     trackitem.h \
     yearitem.h \
     miamlibrary_global.h \
-    deprecated/circleprogressbar.h
+    deprecated/circleprogressbar.h \
+    miamitemdelegate.h
 
 FORMS += \
     libraryorderdialog.ui

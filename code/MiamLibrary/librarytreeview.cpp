@@ -21,15 +21,14 @@ LibraryTreeView::LibraryTreeView(QWidget *parent) :
 	TreeView(parent), _libraryModel(new LibraryItemModel(parent)), _searchBar(nullptr)
 {
 	auto settings = SettingsPrivate::instance();
+	_proxyModel = _libraryModel->proxy();
+	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
+	this->setItemDelegate(new LibraryItemDelegate(this, _proxyModel));
+	this->setModel(_proxyModel);
+
 	int iconSize = settings->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(iconSize, iconSize));
-
-	_proxyModel = new LibraryFilterProxyModel(this);
-	_proxyModel->setSourceModel(_libraryModel);
-	_proxyModel->setTopLevelItems(_libraryModel->topLevelItems());
-	_itemDelegate = new LibraryItemDelegate(this, _proxyModel);
-	this->setItemDelegate(_itemDelegate);
 
 	_circleProgressBar = new CircleProgressBar(this);
 	_circleProgressBar->setTransparentCenter(true);
@@ -168,11 +167,6 @@ void LibraryTreeView::updateSelectedTracks()
 
 void LibraryTreeView::init()
 {
-	SettingsPrivate *settings = SettingsPrivate::instance();
-
-	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
-	this->setModel(_proxyModel);
-
 	///FIXME
 	//QObjectList objetsToExtend = QObjectList() << _properties << this;
 	//PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
@@ -181,8 +175,8 @@ void LibraryTreeView::init()
 	vScrollBar->setFrameBorder(false, false, false, true);
 	this->setVerticalScrollBar(vScrollBar);
 
-	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
-	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
+	//connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
+	//connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
 }
 
 void LibraryTreeView::setSearchBar(LibraryFilterLineEdit *lfle) {
@@ -199,20 +193,17 @@ void LibraryTreeView::setSearchBar(LibraryFilterLineEdit *lfle) {
 	});
 }
 
-void LibraryTreeView::setVisible(bool visible)
+void LibraryTreeView::createConnectionsToDB()
 {
-	TreeView::setVisible(visible);
 	auto db = SqlDatabase::instance();
-	disconnect(db, 0, this, 0);
-	disconnect(db, 0, _circleProgressBar, 0);
-	if (visible) {
-		connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
-		connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-		connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-		connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
-		connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
-		connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
-	}
+	db->disconnect();
+	connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+	connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
+	connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
+	connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
+	connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
+	connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
+	db->load();
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -387,10 +378,10 @@ void LibraryTreeView::jumpTo(const QString &letter)
 /** Reload covers when one has changed cover size in options. */
 void LibraryTreeView::setCoverSize(int coverSize)
 {
-	if (_itemDelegate) {
+	/*if (_itemDelegate) {
 		_itemDelegate->setCoverSize(coverSize);
 		this->viewport()->update();
-	}
+	}*/
 }
 
 /** Reimplemented. */

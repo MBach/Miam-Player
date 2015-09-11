@@ -60,11 +60,13 @@ void MainWindow::activateLastView()
 {
 	// Find the last active view and connect database to it
 	QString viewName = Settings::instance()->lastActiveView();
-	QAction *lastActiveView = findChild<QAction*>(viewName);
-	if (lastActiveView) {
-		lastActiveView->trigger();
+	for (QAction *actionView : menuView->actions()) {
+		if (actionView->objectName() == viewName) {
+			qDebug() << Q_FUNC_INFO << viewName;
+			actionView->trigger();
+			break;
+		}
 	}
-	SqlDatabase::instance()->load();
 }
 
 void MainWindow::dispatchDrop(QDropEvent *event)
@@ -103,12 +105,12 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	}
 }
 
+#include <libraryitemdelegate.h>
+
 void MainWindow::init()
 {
 	//searchBar->init(this);
 	library->init();
-	//library->setItemDelegate(new LibraryItemDelegate(library));
-	_uniqueLibrary->init();
 	tagEditor->init();
 	seekSlider->setMediaPlayer(_mediaPlayer);
 
@@ -120,17 +122,12 @@ void MainWindow::init()
 	quickStart->setVisible(isEmpty);
 	libraryHeader->setVisible(!isEmpty);
 	changeHierarchyButton->setVisible(!isEmpty);
-	/// XXX For each view
-	library->setVisible(!isEmpty);
-	/// XXX
 
 	actionScanLibrary->setDisabled(isEmpty);
 	widgetSearchBar->setVisible(!isEmpty);
 	this->showTabPlaylists();
 	if (isEmpty) {
 		quickStart->searchMultimediaFiles();
-	} else {
-		// db->load();
 	}
 
 	Settings *settings = Settings::instance();
@@ -166,6 +163,7 @@ void MainWindow::setupActions()
 	// Load music
 	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
 		bool libraryIsEmpty = newLocations.isEmpty();
+		qDebug() << Q_FUNC_INFO << libraryIsEmpty;
 		quickStart->setVisible(libraryIsEmpty);
 		library->setVisible(!libraryIsEmpty);
 		libraryHeader->setVisible(!libraryIsEmpty);
@@ -191,13 +189,17 @@ void MainWindow::setupActions()
 	actionViewTagEditor->setActionGroup(viewModeGroup);
 
 	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
+		qDebug() << "actionViewPlaylists";
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setCurrentIndex(0);
 		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
+		library->createConnectionsToDB();
 	});
 	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
+		qDebug() << "actionViewUniqueLibrary";
 		stackedWidget->setCurrentIndex(1);
 		Settings::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
+		_uniqueLibrary->library->createConnectionsToDB();
 	});
 	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);

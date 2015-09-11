@@ -7,23 +7,17 @@
 #include "miamuniquelibrary_global.h"
 #include "model/sqldatabase.h"
 
-namespace Ui {
-class UniqueLibrary;
-}
+#include "ui_uniquelibrary.h"
 
-class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget
+class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::UniqueLibrary
 {
 	Q_OBJECT
 
 private:
-	Ui::UniqueLibrary *ui;
 	QSet<GenericDAO*> _set;
 
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);
-
-	void init();
-	void setVisible(bool visible);
 };
 
 #endif // UNIQUELIBRARY_H

@@ -16,9 +16,11 @@
 #include <QtDebug>
 
 LibraryItemModel::LibraryItemModel(QObject *parent)
-	: QStandardItemModel(parent)
+	: QStandardItemModel(0, 1, parent)
+	, _proxy(new LibraryFilterProxyModel(this))
 {
-	setColumnCount(1);
+	_proxy->setSourceModel(this);
+	_proxy->setTopLevelItems(this->topLevelItems());
 }
 
 void LibraryItemModel::clearCache()

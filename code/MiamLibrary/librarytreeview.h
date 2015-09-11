@@ -20,7 +20,7 @@ class CircleProgressBar;
 class JumpToWidget;
 class LibraryFilterLineEdit;
 class LibraryFilterProxyModel;
-class LibraryItemDelegate;
+//class LibraryItemDelegate;
 class ArtistItem;
 class AlbumItem;
 class DiscItem;
@@ -40,7 +40,7 @@ class MIAMLIBRARY_LIBRARY LibraryTreeView : public TreeView
 
 private:
 	/** This view uses a proxy to specify how items in the Tree should be ordered together. */
-	LibraryFilterProxyModel *_proxyModel;
+	QSortFilterProxyModel *_proxyModel;
 
 	/**
 	 * DEPRECATED: should be replaced with an horizontal progressbar in Modern UI style.
@@ -56,7 +56,7 @@ private:
 	LibraryItemModel *_libraryModel;
 
 	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
-	LibraryItemDelegate *_itemDelegate;
+	//LibraryItemDelegate *_itemDelegate;
 
 	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
@@ -72,6 +72,8 @@ public:
 
 	explicit LibraryTreeView(QWidget *parent = 0);
 
+	void createConnectionsToDB();
+
 	const QImage *expandedCover(AlbumItem *album) const;
 
 	/** Reimplemented. */
@@ -86,8 +88,6 @@ public:
 	inline LibraryItemModel* model() const { return _libraryModel; }
 
 	void setSearchBar(LibraryFilterLineEdit *lfle);
-
-	void setVisible(bool visible);
 
 	void setCoverSize(int size);
 

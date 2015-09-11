@@ -9,16 +9,21 @@ FORMS += \
 
 HEADERS += \
     miamuniquelibrary_global.h \
-    uniquelibrary.h
+    uniquelibrary.h \
+    listview.h \
+    uniquelibraryitemdelegate.h
 
 SOURCES += \
-    uniquelibrary.cpp
+    uniquelibrary.cpp \
+    listview.cpp \
+    uniquelibraryitemdelegate.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
+    UI_DIR = $$PWD
 }
 
 win32: DEFINES += Q_COMPILER_INITIALIZER_LISTS
@@ -28,6 +33,7 @@ CONFIG(release, debug|release) {
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
+    UI_DIR = $$PWD
 }
 win32 {
     TARGET = MiamUniqueLibrary

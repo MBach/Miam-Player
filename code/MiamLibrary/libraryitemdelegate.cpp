@@ -16,16 +16,10 @@
 
 #include <QtDebug>
 
-qreal LibraryItemDelegate::_iconOpacity = 1.0;
-
-LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy) :
-	QStyledItemDelegate(proxy), _libraryTreeView(libraryTreeView), _timer(new QTimer(this)), _coverSize(48)
+LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, QSortFilterProxyModel *proxy)
+	: MiamItemDelegate(proxy)
+	, _libraryTreeView(libraryTreeView)
 {
-	_proxy = proxy;
-	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
-	_showCovers = SettingsPrivate::instance()->isCoversEnabled();
-	_timer->setTimerType(Qt::PreciseTimer);
-	_timer->setInterval(10);
 	connect(_timer, &QTimer::timeout, this, [=]() {
 		_iconOpacity += 0.01;
 		_libraryTreeView->viewport()->update();
@@ -44,7 +38,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	painter->save();
 	auto settings = SettingsPrivate::instance();
 	painter->setFont(settings->font(SettingsPrivate::FF_Library));
-	QStandardItem *item = _libraryModel.data()->itemFromIndex(_proxy.data()->mapToSource(index));
+	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);
 	o.palette = QApplication::palette();
@@ -304,6 +298,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const TrackItem *track) const
 {
+	qDebug() << Q_FUNC_INFO;
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	const QImage *image = _libraryTreeView->expandedCover(static_cast<AlbumItem*>(track->parent()));
 	if (image && !image->isNull()) {

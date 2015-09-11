@@ -236,10 +236,7 @@
     </widget>
    </item>
    <item>
-    <widget class="LibraryTreeView" name="library">
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
-     </property>
+    <widget class="ListView" name="library">
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
@@ -252,14 +249,14 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>LibraryTreeView</class>
-   <extends>QTreeView</extends>
-   <header location="global">librarytreeview.h</header>
-  </customwidget>
-  <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header>mediabutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ListView</class>
+   <extends>QListView</extends>
+   <header>listview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

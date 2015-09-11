@@ -1,10 +1,7 @@
 #ifndef LIBRARYITEMDELEGATE_H
 #define LIBRARYITEMDELEGATE_H
 
-#include <QStyledItemDelegate>
-
-#include <QPainter>
-
+#include "miamitemdelegate.h"
 #include "libraryfilterproxymodel.h"
 #include "albumitem.h"
 #include "artistitem.h"
@@ -13,40 +10,21 @@
 #include "trackitem.h"
 #include "yearitem.h"
 
-#include <QPointer>
+#include <QPainter>
 #include <QPropertyAnimation>
 #include <QStandardItem>
 #include "miamlibrary_global.h"
 
 class LibraryTreeView;
 
-class MIAMLIBRARY_LIBRARY LibraryItemDelegate : public QStyledItemDelegate
+class MIAMLIBRARY_LIBRARY LibraryItemDelegate : public MiamItemDelegate
 {
 	Q_OBJECT
 private:
-	QPointer<LibraryFilterProxyModel> _proxy;
-
-	QPointer<QStandardItemModel> _libraryModel;
-
-	bool _showCovers;
-
-	static qreal _iconOpacity;
-
 	LibraryTreeView *_libraryTreeView;
 
-	/** Cache for covers displayed in the tree view.
-	 * This field is mutable because it's modified in paint() which is const by design.*/
-	//mutable QHash<AlbumItem*, bool> _loadedCovers;
-
-	/** This timer is used to animate album cover when one is scrolling.
-	 * It improves reactivity of the UI by temporarily disabling painting events.
-	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
-	QTimer *_timer;
-
-	int _coverSize;
-
 public:
-	LibraryItemDelegate(LibraryTreeView *libraryTreeView, LibraryFilterProxyModel *proxy);
+	explicit LibraryItemDelegate(LibraryTreeView *libraryTreeView, QSortFilterProxyModel *proxy);
 
 	/** Redefined. */
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;

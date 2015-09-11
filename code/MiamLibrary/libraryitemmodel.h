@@ -8,6 +8,8 @@
 #include "separatoritem.h"
 #include "miamlibrary_global.h"
 
+#include "libraryfilterproxymodel.h"
+
 /**
  * \brief		The LibraryItemModel class is used to cache information from the database, in order to increase performance.
  * \details
@@ -17,6 +19,8 @@
 class MIAMLIBRARY_LIBRARY LibraryItemModel : public QStandardItemModel
 {
 	Q_OBJECT
+private:
+	LibraryFilterProxyModel *_proxy;
 
 	/** This hash is a cache, used to insert nodes in this tree at the right location. */
 	QHash<uint, QStandardItem*> _hash;
@@ -42,6 +46,8 @@ public:
 	void reset();
 
 	inline QMultiHash<SeparatorItem*, QModelIndex> topLevelItems() const { return _topLevelItems; }
+
+	inline LibraryFilterProxyModel* proxy() const { return _proxy; }
 
 private:
 	SeparatorItem *insertSeparator(const QStandardItem *node);
