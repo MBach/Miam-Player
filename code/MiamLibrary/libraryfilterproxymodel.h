@@ -28,14 +28,14 @@ public:
 	inline void setTopLevelItems(const QMultiHash<SeparatorItem*, QModelIndex> &topLevelItems) { _topLevelItems = topLevelItems; }
 
 	/** Redefined to override Qt::FontRole. */
-	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
 protected:
 	/** Redefined from QSortFilterProxyModel. */
-	virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &parent) const;
+	virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &parent) const override;
 
 	/** Redefined for custom sorting. */
-	virtual bool lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const;
+	virtual bool lessThan(const QModelIndex &idxLeft, const QModelIndex &idxRight) const override;
 
 private:
 	bool filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const;

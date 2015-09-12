@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 
+#include <libraryitemdelegate.h>
+#include <musicsearchengine.h>
 #include <settings.h>
 #include <settingsprivate.h>
-#include <musicsearchengine.h>
+
 #include "dialogs/customizethemedialog.h"
 #include "dialogs/dragdropdialog.h"
 #include "dialogs/equalizerdalog.h"
@@ -23,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
+	seekSlider->setMediaPlayer(_mediaPlayer);
 
 	this->setAcceptDrops(true);
 #ifndef Q_OS_MAC
@@ -105,14 +108,9 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	}
 }
 
-#include <libraryitemdelegate.h>
-
 void MainWindow::init()
 {
 	//searchBar->init(this);
-	library->init();
-	tagEditor->init();
-	seekSlider->setMediaPlayer(_mediaPlayer);
 
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
@@ -120,6 +118,7 @@ void MainWindow::init()
 	auto settingsPrivate = SettingsPrivate::instance();
 	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
+	library->setVisible(!isEmpty);
 	libraryHeader->setVisible(!isEmpty);
 	changeHierarchyButton->setVisible(!isEmpty);
 
@@ -560,6 +559,12 @@ void MainWindow::moveEvent(QMoveEvent *event)
 {
 	playbackModeWidgetFactory->move();
 	QMainWindow::moveEvent(event);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *e)
+{
+	qDebug() << Q_FUNC_INFO << e->oldSize() << e->size();
+	QMainWindow::resizeEvent(e);
 }
 
 void MainWindow::loadTheme()

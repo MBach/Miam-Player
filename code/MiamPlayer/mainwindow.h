@@ -78,6 +78,8 @@ protected:
 
 	virtual void moveEvent(QMoveEvent *event) override;
 
+	virtual void resizeEvent(QResizeEvent *e) override;
+
 private:
 	void loadTheme();
 

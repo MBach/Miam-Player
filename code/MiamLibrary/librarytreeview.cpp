@@ -17,48 +17,55 @@
 
 #include <QtDebug>
 
-LibraryTreeView::LibraryTreeView(QWidget *parent) :
-	TreeView(parent), _libraryModel(new LibraryItemModel(parent)), _searchBar(nullptr)
+LibraryTreeView::LibraryTreeView(QWidget *parent)
+	: TreeView(parent)
+	, _libraryModel(new LibraryItemModel(parent))
+	, _searchBar(nullptr)
+	, _jumpToWidget(new JumpToWidget(this))
+	, _circleProgressBar(new CircleProgressBar(this))
+	, sendToCurrentPlaylist(new QShortcut(this))
+	, openTagEditor(new QShortcut(this))
+	, _properties(new QMenu(this))
 {
 	auto settings = SettingsPrivate::instance();
 	_proxyModel = _libraryModel->proxy();
 	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
-	this->setItemDelegate(new LibraryItemDelegate(this, _proxyModel));
+	LibraryItemDelegate *delegate = new LibraryItemDelegate(this, _proxyModel);
+
+	this->setItemDelegate(delegate);
 	this->setModel(_proxyModel);
-
-	int iconSize = settings->coverSize();
 	this->setFrameShape(QFrame::NoFrame);
-	this->setIconSize(QSize(iconSize, iconSize));
-
-	_circleProgressBar = new CircleProgressBar(this);
-	_circleProgressBar->setTransparentCenter(true);
+	this->setIconSize(QSize(settings->coverSize(), settings->coverSize()));
+	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
+	vScrollBar->setFrameBorder(false, false, false, true);
+	this->setVerticalScrollBar(vScrollBar);
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Send to the tag editor"), this);
-	_properties = new QMenu(this);
 	_properties->addAction(actionSendToCurrentPlaylist);
 	_properties->addSeparator();
 	_properties->addAction(actionOpenTagEditor);
 
-	sendToCurrentPlaylist = new QShortcut(this);
-	openTagEditor = new QShortcut(this);
-
-	// Context menu and shortcuts
-	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
-	connect(sendToCurrentPlaylist, &QShortcut::activated, this, &TreeView::appendToPlaylist);
-	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
-	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
-
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
 
-	_jumpToWidget = new JumpToWidget(this);
-	_jumpToWidget->setBackgroundRole(QPalette::Button);
-	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::jumpTo);
+	// Context menu and shortcuts
+	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
+	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
+	connect(sendToCurrentPlaylist, &QShortcut::activated, this, &TreeView::appendToPlaylist);
+	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
 	// Load album cover
 	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
+
+	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, delegate, &LibraryItemDelegate::displayIcon);
+	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, delegate, &LibraryItemDelegate::displayIcon);
+	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::jumpTo);
+
+	///FIXME
+	//QObjectList objetsToExtend = QObjectList() << _properties << this;
+	//PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 }
 
 /** For every item in the library, gets the top level letter attached to it. */
@@ -163,20 +170,6 @@ void LibraryTreeView::updateSelectedTracks()
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
 	qDebug() << Q_FUNC_INFO;
 	SqlDatabase::instance()->load();
-}
-
-void LibraryTreeView::init()
-{
-	///FIXME
-	//QObjectList objetsToExtend = QObjectList() << _properties << this;
-	//PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
-
-	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
-	vScrollBar->setFrameBorder(false, false, false, true);
-	this->setVerticalScrollBar(vScrollBar);
-
-	//connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
-	//connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, _itemDelegate, &LibraryItemDelegate::displayIcon);
 }
 
 void LibraryTreeView::setSearchBar(LibraryFilterLineEdit *lfle) {

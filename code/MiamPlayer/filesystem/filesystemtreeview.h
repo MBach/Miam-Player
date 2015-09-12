@@ -31,8 +31,6 @@ public:
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;
 
-	inline virtual void init() override {}
-
 	virtual void updateSelectedTracks() override;
 
 protected:

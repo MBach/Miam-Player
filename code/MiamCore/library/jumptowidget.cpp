@@ -23,6 +23,7 @@ JumpToWidget::JumpToWidget(QAbstractItemView *view) :
 			this->setFont(font);
 		}
 	});
+	this->setBackgroundRole(QPalette::Button);
 }
 
 bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)

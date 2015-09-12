@@ -16,8 +16,6 @@ public:
 	virtual QStringList selectedTracks() = 0;
 
 	virtual void updateSelectedTracks() = 0;
-
-	virtual void init() = 0;
 };
 
 #endif // SELECTEDTRACKSMODEL_H

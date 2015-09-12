@@ -89,10 +89,8 @@ void QuickStart::paintEvent(QPaintEvent *)
 	p.fillRect(this->rect(), palette.base());
 	p.setPen(palette.mid().color());
 	if (isLeftToRight()) {
-		p.drawLine(QPoint(rect().width() / 2 - 1, 0), rect().topRight());
 		p.drawLine(rect().topRight(), rect().bottomRight());
 	} else {
-		p.drawLine(rect().topLeft(), QPoint(rect().width() / 2 - 1, 0));
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 	}
 }

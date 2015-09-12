@@ -39,8 +39,13 @@ class MIAMLIBRARY_LIBRARY LibraryTreeView : public TreeView
 	Q_OBJECT
 
 private:
-	/** This view uses a proxy to specify how items in the Tree should be ordered together. */
-	QSortFilterProxyModel *_proxyModel;
+	/** The model used by this treeView is a simple QStandardItemModel. Hard work has been delegated to Proxy and ItemDelegate for the rending. */
+	LibraryItemModel *_libraryModel;
+
+	LibraryFilterLineEdit *_searchBar;
+
+	/** Shortcut widget to navigate quickly in a big treeview. */
+	JumpToWidget *_jumpToWidget;
 
 	/**
 	 * DEPRECATED: should be replaced with an horizontal progressbar in Modern UI style.
@@ -52,19 +57,16 @@ private:
 	 * Tag Editor, and custom plugin defined actions. */
 	QMenu *_properties;
 
-	/** The model used by this treeView is a simple QStandardItemModel. Hard work has been delegated to Proxy and ItemDelegate for the rending. */
-	LibraryItemModel *_libraryModel;
-
 	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
 	//LibraryItemDelegate *_itemDelegate;
 
-	/** Shortcut widget to navigate quickly in a big treeview. */
-	JumpToWidget *_jumpToWidget;
+
 
 	/** Cache of expanded albums and their covers. */
 	QMap<AlbumItem*, QImage*> _expandedCovers;
 
-	LibraryFilterLineEdit *_searchBar;
+	/** This view uses a proxy to specify how items in the Tree should be ordered together. */
+	QSortFilterProxyModel *_proxyModel;
 
 public:
 	QShortcut *sendToCurrentPlaylist;
@@ -80,8 +82,6 @@ public:
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
 
 	void findMusic(const QString &text);
-
-	virtual void init() override;
 
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
