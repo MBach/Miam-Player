@@ -87,7 +87,6 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 
 	auto settings = SettingsPrivate::instance();
 	connect(_mainWindow->searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-		_mainWindow->library->findMusic(text);
 		if (settings->isExtendedSearchVisible()) {
 			if (text.isEmpty()) {
 				this->clear();

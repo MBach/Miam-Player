@@ -5,6 +5,7 @@
 #include <QSortFilterProxyModel>
 #include <QTimer>
 #include "libraryitemmodel.h"
+#include "trackitem.h"
 
 #include "miamlibrary_global.h"
 
@@ -18,10 +19,6 @@ protected:
 	QSortFilterProxyModel *_proxy;
 	bool _showCovers;
 
-	/** Cache for covers displayed in the tree view.
-	 * This field is mutable because it's modified in paint() which is const by design.*/
-	//mutable QHash<AlbumItem*, bool> _loadedCovers;
-
 	/** This timer is used to animate album cover when one is scrolling.
 	 * It improves reactivity of the UI by temporarily disabling painting events.
 	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
@@ -31,6 +28,15 @@ protected:
 
 public:
 	MiamItemDelegate(QSortFilterProxyModel *proxy);
+
+protected:
+	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const;
+
+	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const;
+
+	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;
+
+	void paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text, const QStandardItem *item) const;
 };
 
 #endif // MIAMITEMDELEGATE_H

@@ -40,12 +40,9 @@ private:
 
 	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const;
 
-	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const;
-
-	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const;
+	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
 
 	void paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &option, const TrackItem *track) const;
-	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;
 
 	/** Check if color needs to be inverted then paint text. */
 	void paintText(QPainter *painter, const QStyleOptionViewItem &option, const QRect &rectText, const QString &text, const QStandardItem *item) const;

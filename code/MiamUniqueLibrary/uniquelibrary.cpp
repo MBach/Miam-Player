@@ -18,5 +18,5 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	library->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	//connect(searchBar, &QLineEdit::textEdited, ui->library, &TableView::filterLibrary);
+	//connect(searchBar, &QLineEdit::textEdited, library, &ListView::filterLibrary);
 }

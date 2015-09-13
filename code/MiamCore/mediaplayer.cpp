@@ -280,7 +280,6 @@ void MediaPlayer::setMute(bool b) const
 	if (_remotePlayer) {
 		_remotePlayer->setTime(t);
 	} else {
-		/// FIXME
 		//_localPlayer->setTime(t);
 	}
 }*/
@@ -290,7 +289,6 @@ void MediaPlayer::setMute(bool b) const
 	if (_remotePlayer) {
 		return _remotePlayer->time();
 	} else {
-		/// FIXME
 		//return _localPlayer->time();
 		return 0;
 	}

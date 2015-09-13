@@ -1,6 +1,8 @@
 #include "miamitemdelegate.h"
 
 #include <settingsprivate.h>
+#include <QGuiApplication>
+#include <QPainter>
 
 qreal MiamItemDelegate::_iconOpacity = 1.0;
 
@@ -13,3 +15,101 @@ MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
 	_timer->setInterval(10);
 }
 
+void MiamItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const
+{
+	// One cannot interact with an alphabetical separator
+	option.state = QStyle::State_None;
+	option.font.setBold(true);
+	QPointF p1 = option.rect.bottomLeft(), p2 = option.rect.bottomRight();
+	p1.setX(p1.x() + 2);
+	p2.setX(p2.x() - 2);
+	painter->setPen(Qt::gray);
+	painter->drawLine(p1, p2);
+	QStyledItemDelegate::paint(painter, option, item->index());
+}
+
+void MiamItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const
+{
+	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
+	/// QString title = settings->libraryItemTitle();
+	/// for example: zero padding
+	/*auto settings = SettingsPrivate::instance();
+	if (settings->isStarDelegates()) {
+		int r = track->data(Miam::DF_Rating).toInt();
+		QStyleOptionViewItem copy(option);
+		copy.rect = QRect(0, option.rect.y(), option.rect.x(), option.rect.height());
+		/// XXX: create an option to display stars right to the text, and fade them if text is too large
+		//copy.rect = QRect(option.rect.x() + option.rect.width() - option.rect.height() * 5, option.rect.y(), option.rect.height() * 5, option.rect.height());
+
+		StarRating starRating(r);
+		if (r > 0) {
+			starRating.paintStars(painter, copy, StarRating::ReadOnly);
+		} else if (settings->isShowNeverScored()) {
+			starRating.paintStars(painter, copy, StarRating::NoStarsYet);
+		}
+	}*/
+	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
+	if (trackNumber > 0) {
+		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
+	} else {
+		option.text = track->text();
+	}
+	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+	option.textElideMode = Qt::ElideRight;
+	QString s;
+	QRect rectText;
+	if (QGuiApplication::isLeftToRight()) {
+		QPoint topLeft(option.rect.x() + 5, option.rect.y());
+		rectText = QRect(topLeft, option.rect.bottomRight());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+	} else {
+		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
+		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+	}
+	this->paintText(painter, option, rectText, s, track);
+}
+
+void MiamItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewItem &option) const
+{
+	// Display a light selection rectangle when one is moving the cursor
+	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
+		painter->save();
+		painter->setPen(option.palette.highlight().color());
+		painter->setBrush(option.palette.highlight().color().lighter(160));
+		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
+		painter->restore();
+	} else if (option.state.testFlag(QStyle::State_Selected)) {
+		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
+		painter->save();
+		painter->setPen(option.palette.highlight().color());
+		painter->setBrush(option.palette.highlight().color().lighter(150));
+		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
+		painter->restore();
+	}
+}
+
+/** Check if color needs to be inverted then paint text. */
+void MiamItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, const QRect &rectText, const QString &text, const QStandardItem *item) const
+{
+	p->save();
+	if (text.isEmpty()) {
+		p->setPen(opt.palette.mid().color());
+		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
+	} else {
+		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
+			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {
+				p->setPen(opt.palette.text().color());
+			} else {
+				p->setPen(opt.palette.highlightedText().color());
+			}
+		}
+		if (item->data(Miam::DF_Highlighted).toBool()) {
+			QFont f = p->font();
+			f.setBold(true);
+			p->setFont(f);
+		}
+		p->drawText(rectText, Qt::AlignVCenter, text);
+	}
+	p->restore();
+}

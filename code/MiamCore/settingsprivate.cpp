@@ -713,7 +713,7 @@ void SettingsPrivate::setSearchAndExcludeLibrary(bool b)
 		lsm = LSM_HighlightOnly;
 	}
 	setValue("librarySearchMode", lsm);
-	emit librarySearchModeChanged(lsm);
+	emit librarySearchModeChanged();
 }
 
 void SettingsPrivate::setShowNeverScored(bool b)

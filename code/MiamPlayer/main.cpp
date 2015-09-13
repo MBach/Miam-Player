@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	//app.setStyle(new MiamStyle);
+	app.setStyle(new MiamStyle);
 	MainWindow *window = new MainWindow;
 	app.setActivationWindow(window);
 

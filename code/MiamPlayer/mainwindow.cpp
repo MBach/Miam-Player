@@ -66,7 +66,6 @@ void MainWindow::activateLastView()
 	QString viewName = Settings::instance()->lastActiveView();
 	for (QAction *actionView : menuView->actions()) {
 		if (actionView->objectName() == viewName) {
-			qDebug() << Q_FUNC_INFO << viewName;
 			actionView->trigger();
 			break;
 		}
@@ -352,10 +351,16 @@ void MainWindow::setupActions()
 	});
 	volumeSlider->setValue(Settings::instance()->volume() * 100);
 
-	// Filter the library when user is typing some text to find artist, album or tracks
-	library->setSearchBar(searchBar);
 	connect(library, &QTreeView::doubleClicked, [=] (const QModelIndex &) {
 		library->appendToPlaylist();
+	});
+
+	// Filter the library when user is typing some text to find artist, album or tracks
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
+	connect(settings, &SettingsPrivate::librarySearchModeChanged, this, [=]() {
+		QString text;
+		searchBar->setText(text);
+		library->findMusic(text);
 	});
 
 	// Core

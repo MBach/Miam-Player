@@ -3,15 +3,13 @@
 
 #include <abstractsearchdialog.h>
 #include "styling/lineedit.h"
+#include "dialogs/searchdialog.h"
 
 #include <QPropertyAnimation>
 #include <QShortcut>
 #include <QTimer>
 
 class MainWindow;
-class SearchDialog;
-
-#include "miamlibrary_global.h"
 
 /**
  * \brief		The LibraryFilterLineEdit class
@@ -19,7 +17,7 @@ class SearchDialog;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY LibraryFilterLineEdit : public LineEdit
+class LibraryFilterLineEdit : public LineEdit
 {
 	Q_OBJECT
 
@@ -31,12 +29,12 @@ public:
 
 	QShortcut *shortcut;
 
-	//void init(MainWindow *mainWindow);
+	void init(MainWindow *mainWindow);
 
-	AbstractSearchDialog* searchDialog() const;// { return _searchDialog; }
+	inline SearchDialog* searchDialog() const { return _searchDialog; }
 
 protected:
-	//virtual bool eventFilter(QObject *obj, QEvent *event) override;
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	virtual void paintEvent(QPaintEvent *) override;
 

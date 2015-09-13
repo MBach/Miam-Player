@@ -3,21 +3,18 @@
 
 #include <QListView>
 #include "miamuniquelibrary_global.h"
-#include <libraryitemmodel.h>
-
-//test
-#include <libraryfilterproxymodel.h>
+#include "uniquelibraryitemmodel.h"
 
 class MIAMUNIQUELIBRARY_LIBRARY ListView : public QListView
 {
 	Q_OBJECT
 private:
-	LibraryItemModel *_libraryModel;
+	UniqueLibraryItemModel *_model;
 
 public:
 	explicit ListView(QWidget *parent = 0);
 
-	inline LibraryItemModel *model() const { return _libraryModel; }
+	inline UniqueLibraryItemModel *model() const { return _model; }
 
 	void createConnectionsToDB();
 };

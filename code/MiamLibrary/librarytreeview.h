@@ -20,7 +20,6 @@ class CircleProgressBar;
 class JumpToWidget;
 class LibraryFilterLineEdit;
 class LibraryFilterProxyModel;
-//class LibraryItemDelegate;
 class ArtistItem;
 class AlbumItem;
 class DiscItem;
@@ -42,8 +41,6 @@ private:
 	/** The model used by this treeView is a simple QStandardItemModel. Hard work has been delegated to Proxy and ItemDelegate for the rending. */
 	LibraryItemModel *_libraryModel;
 
-	LibraryFilterLineEdit *_searchBar;
-
 	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
 
@@ -56,9 +53,6 @@ private:
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */
 	QMenu *_properties;
-
-	/** This class has its own delegate because each level of the tree has a very specific way to render itself on screen. */
-	//LibraryItemDelegate *_itemDelegate;
 
 	/** Cache of expanded albums and their covers. */
 	QMap<AlbumItem*, QImage*> _expandedCovers;
@@ -84,8 +78,6 @@ public:
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
 	inline LibraryItemModel* model() const { return _libraryModel; }
-
-	void setSearchBar(LibraryFilterLineEdit *lfle);
 
 	void setCoverSize(int size);
 

@@ -242,19 +242,6 @@ void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &opti
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
-void LibraryItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const
-{
-	// One cannot interact with an alphabetical separator
-	option.state = QStyle::State_None;
-	option.font.setBold(true);
-	QPointF p1 = option.rect.bottomLeft(), p2 = option.rect.bottomRight();
-	p1.setX(p1.x() + 2);
-	p2.setX(p2.x() - 2);
-	painter->setPen(Qt::gray);
-	painter->drawLine(p1, p2);
-	QStyledItemDelegate::paint(painter, option, item->index());
-}
-
 void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const
 {
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
@@ -275,30 +262,11 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 			starRating.paintStars(painter, copy, StarRating::NoStarsYet);
 		}
 	}
-	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
-	if (trackNumber > 0) {
-		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
-	} else {
-		option.text = track->text();
-	}
-	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
-	option.textElideMode = Qt::ElideRight;
-	QString s;
-	QRect rectText;
-	if (QGuiApplication::isLeftToRight()) {
-		QPoint topLeft(option.rect.x() + 5, option.rect.y());
-		rectText = QRect(topLeft, option.rect.bottomRight());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-	} else {
-		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
-	}
-	this->paintText(painter, option, rectText, s, track);
+	MiamItemDelegate::drawTrack(painter, option, track);
 }
 
 void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const TrackItem *track) const
 {
-	qDebug() << Q_FUNC_INFO;
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	const QImage *image = _libraryTreeView->expandedCover(static_cast<AlbumItem*>(track->parent()));
 	if (image && !image->isNull()) {
@@ -375,25 +343,6 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	}
 	painter->restore();
-}
-
-void LibraryItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewItem &option) const
-{
-	// Display a light selection rectangle when one is moving the cursor
-	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
-		painter->save();
-		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter(160));
-		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
-		painter->restore();
-	} else if (option.state.testFlag(QStyle::State_Selected)) {
-		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
-		painter->save();
-		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter(150));
-		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
-		painter->restore();
-	}
 }
 
 /** Check if color needs to be inverted then paint text. */

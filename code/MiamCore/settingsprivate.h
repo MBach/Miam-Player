@@ -262,7 +262,7 @@ public slots:
 signals:
 	void fontHasChanged(FontFamily, const QFont &font);
 
-	void librarySearchModeChanged(LibrarySearchMode);
+	void librarySearchModeChanged();
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

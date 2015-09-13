@@ -11,7 +11,6 @@
 #include "libraryorderdialog.h"
 #include "libraryitemdelegate.h"
 #include "libraryscrollbar.h"
-#include "libraryfilterlineedit.h"
 
 #include <functional>
 
@@ -20,7 +19,6 @@
 LibraryTreeView::LibraryTreeView(QWidget *parent)
 	: TreeView(parent)
 	, _libraryModel(new LibraryItemModel(parent))
-	, _searchBar(nullptr)
 	, _jumpToWidget(new JumpToWidget(this))
 	, _circleProgressBar(new CircleProgressBar(this))
 	, _properties(new QMenu(this))
@@ -60,8 +58,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
 
 	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, delegate, &LibraryItemDelegate::displayIcon);
-	connect(_jumpToWidget, &JumpToWidget::displayItemDelegate, delegate, &LibraryItemDelegate::displayIcon);
-	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::jumpTo);
+	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, [=](const QString &letter) {
+		delegate->displayIcon(false);
+		this->jumpTo(letter);
+		delegate->displayIcon(true);
+	});
 
 	///FIXME
 	//QObjectList objetsToExtend = QObjectList() << _properties << this;
@@ -170,20 +171,6 @@ void LibraryTreeView::updateSelectedTracks()
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
 	qDebug() << Q_FUNC_INFO;
 	SqlDatabase::instance()->load();
-}
-
-void LibraryTreeView::setSearchBar(LibraryFilterLineEdit *lfle) {
-	_searchBar = lfle;
-	// Reset filter or remove highlight when one is switching from one mode to another
-	connect(SettingsPrivate::instance(), &SettingsPrivate::librarySearchModeChanged, this, [=](SettingsPrivate::LibrarySearchMode lsm) {
-		QString text;
-		_searchBar->setText(text);
-		if (lsm == SettingsPrivate::LSM_Filter) {
-			this->highlightMatchingText(text);
-		} else {
-			this->filterLibrary(text);
-		}
-	});
 }
 
 void LibraryTreeView::createConnectionsToDB()
@@ -352,9 +339,9 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
-	if (_searchBar) {
+	/*if (_searchBar) {
 		_searchBar->setText(QString());
-	}
+	}*/
 	SqlDatabase::instance()->load();
 	this->highlightMatchingText(QString());
 }

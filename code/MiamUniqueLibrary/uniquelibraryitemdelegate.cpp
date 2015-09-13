@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QStandardItem>
 
-UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(LibraryFilterProxyModel *proxy)
+UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(QSortFilterProxyModel *proxy)
 	: MiamItemDelegate(proxy)
 {
 
@@ -32,18 +32,21 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	o.state &= ~QStyle::State_HasFocus;
 	switch (item->type()) {
 	case Miam::IT_Album:
+		this->paintRect(painter, o);
 		painter->drawText(o.rect, item->text());
 		break;
 	case Miam::IT_Artist:
+		this->paintRect(painter, o);
 		painter->drawText(o.rect, item->text());
 		break;
 	case Miam::IT_Disc:
 		break;
 	case Miam::IT_Separator:
-		painter->drawText(o.rect, item->text());
+		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
 	case Miam::IT_Track: {
-		painter->drawText(o.rect, item->text());
+		this->paintRect(painter, o);
+		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
 	}
 	default:

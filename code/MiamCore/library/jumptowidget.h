@@ -47,7 +47,6 @@ protected:
 
 signals:
 	void aboutToScrollTo(const QString &letter);
-	void displayItemDelegate(bool);
 };
 
 #endif // JUMPTOWIDGET_H

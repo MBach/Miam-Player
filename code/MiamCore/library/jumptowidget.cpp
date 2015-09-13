@@ -37,11 +37,7 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 			int v = mouseEvent->y() * 26 / height();
 			// in ASCII, the A letter is 65
 			QString s(v + 65);
-			emit displayItemDelegate(false);
-			/// FIXME
-			/// _libraryTreeView->jumpTo(s);
 			emit aboutToScrollTo(s);
-			emit displayItemDelegate(true);
 		}
 		return false;
 	} else {

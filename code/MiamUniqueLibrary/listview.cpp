@@ -7,9 +7,9 @@
 
 ListView::ListView(QWidget *parent)
 	: QListView(parent)
-	, _libraryModel(new LibraryItemModel(this))
+	, _model(new UniqueLibraryItemModel(this))
 {
-	this->setModel(_libraryModel->proxy());
+	this->setModel(_model->proxy());
 }
 
 void ListView::createConnectionsToDB()
@@ -18,14 +18,8 @@ void ListView::createConnectionsToDB()
 	auto db = SqlDatabase::instance();
 	db->disconnect();
 	connect(db, &SqlDatabase::aboutToLoad, this, &ListView::reset);
-	//connect(db, &SqlDatabase::loaded, this, [=]() {
-	//	qDebug() << "SqlDatabase::loaded" << _libraryModel->rowCount();
-	//});
-	connect(db, &SqlDatabase::nodeExtracted, this, [=](GenericDAO *node){
-		node->setParentNode(nullptr);
-		_libraryModel->insertNode(node);
-	});
-	connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
-	connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
+	connect(db, &SqlDatabase::nodeExtracted, _model, &UniqueLibraryItemModel::insertNode);
+	connect(db, &SqlDatabase::aboutToUpdateNode, _model, &UniqueLibraryItemModel::updateNode);
+	//connect(db, &SqlDatabase::aboutToCleanView, _model, &UniqueLibraryItemModel::cleanDanglingNodes);
 	db->load();
 }

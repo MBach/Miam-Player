@@ -50,7 +50,8 @@ SOURCES += \
     tagbutton.cpp \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
-    volumeslider.cpp
+    volumeslider.cpp \
+    libraryfilterlineedit.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -100,7 +101,8 @@ HEADERS += \
     tagbutton.h \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
-    volumeslider.h
+    volumeslider.h \
+    libraryfilterlineedit.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

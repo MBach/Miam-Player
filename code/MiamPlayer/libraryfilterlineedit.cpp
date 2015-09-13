@@ -7,9 +7,6 @@
 #include <QStyleOption>
 #include <QStylePainter>
 
-//#include "searchdialog.h"
-//#include "mainwindow.h"
-
 #include <QtDebug>
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
@@ -39,18 +36,13 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	this->setMouseTracking(true);
 }
 
-/*void LibraryFilterLineEdit::init(MainWindow *mainWindow)
+void LibraryFilterLineEdit::init(MainWindow *mainWindow)
 {
-	//_searchDialog = new SearchDialog(mainWindow);
-	//_searchDialog->installEventFilter(this);
-}*/
-
-AbstractSearchDialog* LibraryFilterLineEdit::searchDialog() const
-{
-	return nullptr;
+	_searchDialog = new SearchDialog(mainWindow);
+	_searchDialog->installEventFilter(this);
 }
 
-/*bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
+bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == this && event->type() == QEvent::FocusAboutToChange) {
 		if (_searchDialog && !_searchDialog->hasFocus()) {
@@ -67,7 +59,7 @@ AbstractSearchDialog* LibraryFilterLineEdit::searchDialog() const
 		}
 	}
 	return LineEdit::eventFilter(obj, event);
-}*/
+}
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {

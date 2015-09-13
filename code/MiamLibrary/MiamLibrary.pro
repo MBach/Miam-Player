@@ -5,12 +5,12 @@ TEMPLATE = lib
 DEFINES += MIAMLIBRARY_LIBRARY
 
 SOURCES += \
+    deprecated/circleprogressbar.cpp \
     albumitem.cpp \
     artistitem.cpp \
     changehierarchybutton.cpp \
     discitem.cpp \
     extendedtabbar.cpp \
-    libraryfilterlineedit.cpp \
     libraryfilterproxymodel.cpp \
     libraryheader.cpp \
     libraryitemdelegate.cpp \
@@ -18,14 +18,15 @@ SOURCES += \
     libraryorderdialog.cpp \
     libraryscrollbar.cpp \
     librarytreeview.cpp \
+    miamitemdelegate.cpp \
+    miamitemmodel.cpp \
     separatoritem.cpp \
     scrollbar.cpp \
     trackitem.cpp \
-    yearitem.cpp \
-    deprecated/circleprogressbar.cpp \
-    miamitemdelegate.cpp
+    yearitem.cpp
 
 HEADERS += \
+    deprecated/circleprogressbar.h \
     albumitem.h \
     artistitem.h \
     changehierarchybutton.h \
@@ -36,17 +37,16 @@ HEADERS += \
     libraryheader.h \
     libraryitemdelegate.h \
     libraryitemmodel.h \
-    libraryfilterlineedit.h \
     libraryorderdialog.h \
     libraryscrollbar.h \
     librarytreeview.h \
+    miamlibrary_global.h \
+    miamitemdelegate.h \
+    miamitemmodel.h \
     separatoritem.h \
     scrollbar.h \
     trackitem.h \
-    yearitem.h \
-    miamlibrary_global.h \
-    deprecated/circleprogressbar.h \
-    miamitemdelegate.h
+    yearitem.h
 
 FORMS += \
     libraryorderdialog.ui

@@ -1,10 +1,10 @@
 #ifndef LIBRARYITEMMODEL_H
 #define LIBRARYITEMMODEL_H
 
-#include <QStandardItemModel>
 #include <QSet>
 #include <model/genericdao.h>
 #include <filehelper.h>
+#include "miamitemmodel.h"
 #include "separatoritem.h"
 #include "miamlibrary_global.h"
 
@@ -16,22 +16,11 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY LibraryItemModel : public QStandardItemModel
+class MIAMLIBRARY_LIBRARY LibraryItemModel : public MiamItemModel
 {
 	Q_OBJECT
 private:
 	LibraryFilterProxyModel *_proxy;
-
-	/** This hash is a cache, used to insert nodes in this tree at the right location. */
-	QHash<uint, QStandardItem*> _hash;
-
-	/** Letters are items to groups separate of top levels items (items without parent). */
-	QHash<QString, SeparatorItem*> _letters;
-
-	/** Letter L returns all Artists (e.g.) starting with L. */
-	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
-
-	QHash<QString, QStandardItem*> _tracks;
 
 public:
 	explicit LibraryItemModel(QObject *parent = nullptr);
@@ -40,6 +29,8 @@ public:
 
 	inline QStandardItem* letterItem(const QString &letter) const { return _letters.value(letter); }
 
+	virtual LibraryFilterProxyModel* proxy() const override;
+
 	/** Rebuild the list of separators when one has changed grammatical articles in options. */
 	void rebuildSeparators();
 
@@ -47,21 +38,11 @@ public:
 
 	inline QMultiHash<SeparatorItem*, QModelIndex> topLevelItems() const { return _topLevelItems; }
 
-	inline LibraryFilterProxyModel* proxy() const { return _proxy; }
-
-private:
-	SeparatorItem *insertSeparator(const QStandardItem *node);
-
-	/** Recursively remove node and its parent if the latter has no more children. */
-	void removeNode(const QModelIndex &node);
-
 public slots:
 	void cleanDanglingNodes();
 
 	/** Find and insert a node in the hierarchy of items. */
 	void insertNode(GenericDAO *node);
-
-	void updateNode(GenericDAO *node);
 };
 
 #endif // LIBRARYITEMMODEL_H
