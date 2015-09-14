@@ -8,13 +8,13 @@
 
 UniqueLibraryItemModel::UniqueLibraryItemModel(QObject *parent)
 	: MiamItemModel(parent)
-	, _proxy(new QSortFilterProxyModel(this))
+	, _proxy(new UniqueLibraryFilterProxyModel(this))
 {
 	setColumnCount(1);
 	_proxy->setSourceModel(this);
 }
 
-QSortFilterProxyModel* UniqueLibraryItemModel::proxy() const
+UniqueLibraryFilterProxyModel *UniqueLibraryItemModel::proxy() const
 {
 	return _proxy;
 }
@@ -35,6 +35,10 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 			this->removeNode(rowToDelete->index());
 		}
 		_tracks.insert(dao->uri(), nodeItem);
+		//nodeItem->setData(dao->artist(), Miam::DF_Artist);
+		//nodeItem->setData(dao->album(), Miam::DF_Album);
+		nodeItem->setData(dao->parentNode()->titleNormalized(), Miam::DF_NormAlbum);
+		nodeItem->setData(dao->parentNode()->parentNode()->titleNormalized(), Miam::DF_NormArtist);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
 		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
 		if (album) {
@@ -42,6 +46,7 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 		} else {
 			nodeItem = new AlbumItem(dao);
 		}
+		nodeItem->setData(dao->parentNode()->titleNormalized(), Miam::DF_NormArtist);
 	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
 		ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(dao->hash()));
 		if (artist) {
@@ -58,10 +63,6 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 				_topLevelItems.insert(separator, nodeItem->index());
 			}
 		}
-	} else {
-		qDebug() << Q_FUNC_INFO << "nodeItem is null";
-	}
-	if (nodeItem) {
 		_hash.insert(node->hash(), nodeItem);
 	}
 }

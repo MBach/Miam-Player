@@ -47,7 +47,10 @@ public:
 		DF_IsRemote				= Qt::UserRole + 8,
 		DF_IconPath				= Qt::UserRole + 9,
 		DF_Rating				= Qt::UserRole + 10,
-		DF_CustomDisplayText	= Qt::UserRole + 11
+		DF_CustomDisplayText	= Qt::UserRole + 11,
+		DF_NormArtist			= Qt::UserRole + 12,
+		DF_NormAlbum			= Qt::UserRole + 13,
+		DF_Disc					= Qt::UserRole + 14
 	};
 
 	enum TagEditorColumns : int
