@@ -46,7 +46,7 @@ public:
 	QString source() const;
 	void setSource(const QString &source);
 
-	QString trackNumber() const;
+	QString trackNumber(bool twoDigits = false) const;
 	void setTrackNumber(const QString &trackNumber);
 
 	QString uri() const;

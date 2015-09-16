@@ -57,7 +57,15 @@ void TrackDAO::setRating(int rating) { _rating = rating; }
 QString TrackDAO::source() const { return _source; }
 void TrackDAO::setSource(const QString &source) { _source = source; }
 
-QString TrackDAO::trackNumber() const { return _trackNumber; }
+QString TrackDAO::trackNumber(bool twoDigits) const
+{
+	if (twoDigits) {
+		return QString("%1").arg(QString::number(_trackNumber.toInt()), 2, QChar('0')).toUpper();
+	} else {
+		return _trackNumber;
+	}
+}
+
 void TrackDAO::setTrackNumber(const QString &trackNumber) { _trackNumber = trackNumber; }
 
 QString TrackDAO::uri() const { return _uri; }

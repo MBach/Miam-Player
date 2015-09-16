@@ -29,24 +29,38 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 	QStandardItem *nodeItem = nullptr;
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
 		nodeItem = new TrackItem(dao);
+		QString normalized = dao->disc() + "|" + dao->trackNumber(true) + "|" + dao->title();
+		AlbumDAO *album = static_cast<AlbumDAO*>(dao->parentNode());
+		if (album) {
+			normalized.prepend(album->year() + "|" + album->title() + "|");
+			ArtistDAO *artist = static_cast<ArtistDAO*>(album->parentNode());
+			if (artist) {
+				normalized.prepend(artist->title() + "|");
+			}
+		}
+		nodeItem->setData(normalized, Miam::DF_NormalizedString);
+		//nodeItem->setData(normalized, Qt::DisplayRole);
 		if (_tracks.contains(dao->uri())) {
 			QStandardItem *rowToDelete = _tracks.value(dao->uri());
 			// Clean unused nodes
 			this->removeNode(rowToDelete->index());
 		}
 		_tracks.insert(dao->uri(), nodeItem);
-		//nodeItem->setData(dao->artist(), Miam::DF_Artist);
-		//nodeItem->setData(dao->album(), Miam::DF_Album);
-		nodeItem->setData(dao->parentNode()->titleNormalized(), Miam::DF_NormAlbum);
-		nodeItem->setData(dao->parentNode()->parentNode()->titleNormalized(), Miam::DF_NormArtist);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
+		QString normalized = dao->year() + "|" + dao->title();
+		ArtistDAO *artist = static_cast<ArtistDAO*>(dao->parentNode());
+		if (artist) {
+			normalized.prepend(artist->title() + "|");
+		}
 		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
 		if (album) {
 			nodeItem = album;
 		} else {
 			nodeItem = new AlbumItem(dao);
 		}
-		nodeItem->setData(dao->parentNode()->titleNormalized(), Miam::DF_NormArtist);
+		nodeItem->setData(normalized, Miam::DF_NormalizedString);
+		//nodeItem->setData(normalized, Qt::DisplayRole);
+
 	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
 		ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(dao->hash()));
 		if (artist) {
@@ -54,6 +68,8 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 		} else {
 			nodeItem = new ArtistItem(dao);
 		}
+		nodeItem->setData(dao->title() + "|", Miam::DF_NormalizedString);
+		//nodeItem->setData(dao->title() + "|", Qt::DisplayRole);
 	}
 
 	if (nodeItem){
