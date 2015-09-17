@@ -27,7 +27,7 @@ public:
 
 	void clearCache();
 
-	inline QStandardItem* letterItem(const QString &letter) const { return _letters.value(letter); }
+	virtual QChar currentLetter(const QModelIndex &index) const override;
 
 	virtual LibraryFilterProxyModel* proxy() const override;
 

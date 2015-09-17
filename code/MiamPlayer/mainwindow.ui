@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>781</width>
+    <height>328</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string notr="true">Miam Player</string>
   </property>
@@ -530,7 +538,7 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="tagEditorPage">
+           <widget class="TagEditor" name="tagEditor">
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <property name="spacing">
               <number>0</number>
@@ -547,9 +555,6 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="TagEditor" name="tagEditor" native="true"/>
-             </item>
             </layout>
            </widget>
           </widget>

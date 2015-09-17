@@ -380,3 +380,8 @@ void LibraryItemDelegate::displayIcon(bool b)
 		_iconOpacity = 0;
 	}
 }
+
+void LibraryItemDelegate::updateCoverSize()
+{
+	_coverSize = SettingsPrivate::instance()->coverSize();
+}

@@ -5,11 +5,10 @@
 #include <QPainter>
 #include <QStandardItem>
 
-UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(QSortFilterProxyModel *proxy)
+UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(JumpToWidget *jumpTo, QSortFilterProxyModel *proxy)
 	: MiamItemDelegate(proxy)
-{
-
-}
+	, _jumpTo(jumpTo)
+{}
 
 void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -23,22 +22,27 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	initStyleOption(&o, index);
 	o.palette = QApplication::palette();
 	if (QGuiApplication::isLeftToRight()) {
-		//o.rect.adjust(0, 0, -_libraryTreeView->jumpToWidget()->width(), 0);
+		o.rect.adjust(0, 0, -_jumpTo->width(), 0);
 	} else {
-		//o.rect.adjust(_libraryTreeView->jumpToWidget()->width(), 0, 0, 0);
+		o.rect.adjust(_jumpTo->width(), 0, 0, 0);
 	}
 
 	// Removes the dotted rectangle to the focused item
 	o.state &= ~QStyle::State_HasFocus;
 	switch (item->type()) {
-	case Miam::IT_Album:
-		this->paintRect(painter, o);
-		painter->drawText(o.rect, item->text());
-		break;
 	case Miam::IT_Artist:
+	case Miam::IT_Album: {
 		this->paintRect(painter, o);
 		painter->drawText(o.rect, item->text());
+		QPoint c = o.rect.center();
+		int textWidth = painter->fontMetrics().width(item->text());
+		painter->drawLine(textWidth + 5, c.y(), o.rect.right(), c.y());
 		break;
+	}
+	/*case Miam::IT_Artist:
+		this->paintRect(painter, o);
+		painter->drawText(o.rect, item->text());
+		break;*/
 	case Miam::IT_Disc:
 		break;
 	case Miam::IT_Separator:

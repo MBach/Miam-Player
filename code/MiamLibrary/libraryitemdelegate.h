@@ -50,7 +50,7 @@ private:
 public slots:
 	void displayIcon(bool b);
 
-	inline void setCoverSize(int coverSize) { _coverSize = coverSize; }
+	void updateCoverSize();
 };
 
 #endif // LIBRARYITEMDELEGATE_H

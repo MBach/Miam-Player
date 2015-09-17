@@ -165,9 +165,7 @@ void CustomizeThemeDialog::setupActions()
 		}
 		reloadCoverSizeTimer->start(1000);
 	});
-	connect(reloadCoverSizeTimer, &QTimer::timeout, this, [=]() {
-		mainWindow->library->setCoverSize(settings->coverSize());
-	});
+	connect(reloadCoverSizeTimer, &QTimer::timeout, mainWindow->library, &LibraryTreeView::aboutToUpdateCoverSize);
 
 	// Change big cover opacity
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {

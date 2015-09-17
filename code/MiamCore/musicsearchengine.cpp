@@ -74,6 +74,8 @@ void MusicSearchEngine::doSearch(const QStringList &delta)
 	QString coverPath;
 	QString lastFileScannedNextToCover;
 
+	QStringList suffixes = FileHelper::suffixes(FileHelper::All);
+
 	for (QDir location : locations) {
 		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
@@ -99,7 +101,7 @@ void MusicSearchEngine::doSearch(const QStringList &delta)
 				} else if (isNewDirectory) {
 					coverPath = qFileInfo.absoluteFilePath();
 				}
-			} else {
+			} else if (suffixes.contains(qFileInfo.suffix())) {
 				emit scannedFile(qFileInfo.absoluteFilePath());
 				atLeastOneAudioFileWasFound = true;
 				lastFileScannedNextToCover = qFileInfo.absoluteFilePath();

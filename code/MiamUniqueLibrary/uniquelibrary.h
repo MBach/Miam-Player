@@ -9,6 +9,12 @@
 
 #include "ui_uniquelibrary.h"
 
+/**
+* \brief
+* \details
+* \author      Matthieu Bachelier
+* \copyright   GNU General Public License v3
+* */
 class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::UniqueLibrary
 {
 	Q_OBJECT

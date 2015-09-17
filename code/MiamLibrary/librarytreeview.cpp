@@ -53,6 +53,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(sendToCurrentPlaylist, &QShortcut::activated, this, &TreeView::appendToPlaylist);
 	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
+	// Cover size
+	connect(this, &LibraryTreeView::aboutToUpdateCoverSize, delegate, &LibraryItemDelegate::updateCoverSize);
+
 	// Load album cover
 	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
@@ -67,30 +70,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	///FIXME
 	//QObjectList objetsToExtend = QObjectList() << _properties << this;
 	//PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
-}
-
-/** For every item in the library, gets the top level letter attached to it. */
-QChar LibraryTreeView::currentLetter() const
-{
-	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(iTop));
-
-	// Special item "Various" (on top) has no Normalized String
-	if (item && item->type() == Miam::IT_Separator && iTop.data(Miam::DF_NormalizedString).toString() == "0") {
-		return QChar();
-	} else if (!iTop.isValid()) {
-		return QChar();
-	} else {
-		// An item without a valid parent is a top level item, therefore we can extract the letter.
-		while (iTop.parent().isValid()) {
-			iTop = iTop.parent();
-		}
-		if (iTop.isValid() && !iTop.data(Miam::DF_NormalizedString).toString().isEmpty()) {
-			return iTop.data(Miam::DF_NormalizedString).toString().toUpper().at(0);
-		} else {
-			return QChar();
-		}
-	}
 }
 
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
@@ -175,15 +154,18 @@ void LibraryTreeView::updateSelectedTracks()
 
 void LibraryTreeView::createConnectionsToDB()
 {
-	auto db = SqlDatabase::instance();
-	db->disconnect();
-	connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
-	connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-	connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
-	connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
-	connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
-	connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
-	db->load();
+	if (!this->property("connected").toBool()) {
+		auto db = SqlDatabase::instance();
+		db->disconnect();
+		connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+		connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
+		connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
+		connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
+		connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
+		connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
+		db->load();
+		this->setProperty("connected", true);
+	}
 }
 
 /** Redefined to display a small context menu in the view. */
@@ -208,13 +190,15 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 		wVerticalScrollBar = verticalScrollBar()->width();
 	}
 	if (QGuiApplication::isLeftToRight()) {
+		///XXX: magic number
 		_jumpToWidget->move(frameGeometry().right() - 22 - wVerticalScrollBar, header()->height());
 	} else {
 		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, header()->height());
 	}
 	TreeView::paintEvent(event);
 	///XXX: analyze performance?
-	_jumpToWidget->setCurrentLetter(currentLetter());
+	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
+	_jumpToWidget->setCurrentLetter(_libraryModel->currentLetter(iTop));
 }
 
 /** Recursive count for leaves only. */
@@ -356,13 +340,13 @@ void LibraryTreeView::jumpTo(const QString &letter)
 }
 
 /** Reload covers when one has changed cover size in options. */
-void LibraryTreeView::setCoverSize(int coverSize)
+/*void LibraryTreeView::setCoverSize(int)
 {
-	/*if (_itemDelegate) {
-		_itemDelegate->setCoverSize(coverSize);
+	if (itemDelegate()) {
+		//_itemDelegate->setCoverSize(coverSize);
 		this->viewport()->update();
-	}*/
-}
+	}
+}*/
 
 /** Reimplemented. */
 void LibraryTreeView::reset()

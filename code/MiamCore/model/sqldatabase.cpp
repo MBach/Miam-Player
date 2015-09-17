@@ -1076,9 +1076,9 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		open();
 	}
 	FileHelper fh(absFilePath);
-	if (!fh.isValid()) {
+	/*if (!fh.isValid()) {
 		return;
-	}
+	}*/
 
 	QSqlQuery insertTrack(*this);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, " \

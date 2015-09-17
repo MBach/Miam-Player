@@ -8,6 +8,12 @@
 
 #include "miamlibrary_global.h"
 
+/**
+ * \brief		The MiamItemModel class
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMLIBRARY_LIBRARY MiamItemModel : public QStandardItemModel
 {
 	Q_OBJECT
@@ -25,6 +31,10 @@ protected:
 
 public:
 	MiamItemModel(QObject *parent = 0);
+
+	virtual QChar currentLetter(const QModelIndex &index) const = 0;
+
+	inline QStandardItem* letterItem(const QString &letter) const { return _letters.value(letter); }
 
 	virtual QSortFilterProxyModel* proxy() const = 0;
 

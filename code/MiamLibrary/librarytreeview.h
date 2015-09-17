@@ -79,7 +79,7 @@ public:
 
 	inline LibraryItemModel* model() const { return _libraryModel; }
 
-	void setCoverSize(int size);
+	//void setCoverSize(int);
 
 protected:
 	/** Redefined to display a small context menu in the view. */
@@ -92,7 +92,7 @@ private:
 	int count(const QModelIndex &index) const;
 
 	/** For every item in the library, gets the top level letter attached to it. */
-	QChar currentLetter() const;
+	//QChar currentLetter() const;
 
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;
@@ -125,6 +125,9 @@ private slots:
 	void removeExpandedCover(const QModelIndex &index);
 
 	void setExpandedCover(const QModelIndex &index);
+
+signals:
+	void aboutToUpdateCoverSize();
 };
 
 #endif // LIBRARYTREEVIEW_H

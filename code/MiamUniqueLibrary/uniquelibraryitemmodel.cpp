@@ -14,6 +14,23 @@ UniqueLibraryItemModel::UniqueLibraryItemModel(QObject *parent)
 	_proxy->setSourceModel(this);
 }
 
+QChar UniqueLibraryItemModel::currentLetter(const QModelIndex &index) const
+{
+	QStandardItem *item = itemFromIndex(_proxy->mapToSource(index));
+	if (item && item->type() == Miam::IT_Separator && index.data(Miam::DF_NormalizedString).toString() == "0") {
+		return QChar();
+	} else if (!index.isValid()) {
+		return QChar();
+	} else {
+		// An item without a valid parent is a top level item, therefore we can extract the letter.
+		if (!index.data(Miam::DF_NormalizedString).toString().isEmpty()) {
+			return index.data(Miam::DF_NormalizedString).toString().toUpper().at(0);
+		} else {
+			return QChar();
+		}
+	}
+}
+
 UniqueLibraryFilterProxyModel *UniqueLibraryItemModel::proxy() const
 {
 	return _proxy;
@@ -35,7 +52,7 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 			normalized.prepend(album->year() + "|" + album->title() + "|");
 			ArtistDAO *artist = static_cast<ArtistDAO*>(album->parentNode());
 			if (artist) {
-				normalized.prepend(artist->title() + "|");
+				normalized.prepend(artist->titleNormalized() + "|");
 			}
 		}
 		nodeItem->setData(normalized, Miam::DF_NormalizedString);
@@ -50,7 +67,7 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 		QString normalized = dao->year() + "|" + dao->title();
 		ArtistDAO *artist = static_cast<ArtistDAO*>(dao->parentNode());
 		if (artist) {
-			normalized.prepend(artist->title() + "|");
+			normalized.prepend(artist->titleNormalized() + "|");
 		}
 		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
 		if (album) {
@@ -68,7 +85,7 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 		} else {
 			nodeItem = new ArtistItem(dao);
 		}
-		nodeItem->setData(dao->title() + "|", Miam::DF_NormalizedString);
+		nodeItem->setData(dao->titleNormalized() + "|", Miam::DF_NormalizedString);
 		//nodeItem->setData(dao->title() + "|", Qt::DisplayRole);
 	}
 

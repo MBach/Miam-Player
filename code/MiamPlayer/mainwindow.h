@@ -18,7 +18,10 @@
 #include "ui_mainwindow.h"
 
 /**
- * \brief The MainWindow class is the entry point of this audio player.
+ * \brief		The MainWindow class is the entry point of this audio player.
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {

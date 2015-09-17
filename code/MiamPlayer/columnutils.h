@@ -4,6 +4,12 @@
 #include <QStandardItemModel>
 #include <QTableView>
 
+/**
+ * \brief	The ColumnUtils class
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class ColumnUtils
 {
 private:

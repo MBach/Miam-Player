@@ -3,6 +3,7 @@
 #include "ui_uniquelibrary.h"
 
 #include <QStandardItemModel>
+#include <library/jumptowidget.h>
 #include <filehelper.h>
 #include <settingsprivate.h>
 #include "uniquelibraryitemdelegate.h"
@@ -13,7 +14,7 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	QWidget(parent)
 {
 	setupUi(this);
-	library->setItemDelegate(new UniqueLibraryItemDelegate(library->model()->proxy()));
+	library->setItemDelegate(new UniqueLibraryItemDelegate(library->jumpToWidget(), library->model()->proxy()));
 	library->setSelectionBehavior(QAbstractItemView::SelectRows);
 	library->setSelectionMode(QAbstractItemView::ExtendedSelection);
 

@@ -9,6 +9,7 @@
 
 /**
  * \brief		The JumpToWidget class displays letters which can be clicked to jump to a particular position in your Library.
+ * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

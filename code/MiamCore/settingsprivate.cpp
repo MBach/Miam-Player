@@ -43,60 +43,36 @@ SettingsPrivate* SettingsPrivate::instance()
 
 qreal SettingsPrivate::bigCoverOpacity() const
 {
-	QVariant vOpacity = value("bigCoverOpacity");
-	if (vOpacity.isNull()) {
-		return 0.66;
-	} else {
-		return vOpacity.toReal();
-	}
+	return value("bigCoverOpacity", 0.66).toReal();
 }
 
 /** Return the actual size of media buttons. */
 int SettingsPrivate::buttonsSize() const
 {
-	int s = value("buttonsSize").toInt();
-	if (s == 0) {
-		return 36;
-	} else {
-		return s;
-	}
+	return value("buttonsSize", 36).toInt();
 }
 
 /** Returns true if buttons are displayed without any border. */
 bool SettingsPrivate::buttonsFlat() const
 {
-	QVariant ok = value("buttonsFlat");
-	if (ok.isValid()) {
-		return ok.toBool();
-	} else {
-		return true;
-	}
+	return value("buttonsFlat", true).toBool();
 }
 
 /** Returns true if the background color in playlist is using alternatative colors. */
 bool SettingsPrivate::colorsAlternateBG() const
 {
-	QVariant b = value("colorsAlternateBG");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	return value("colorsAlternateBG", true).toBool();
 }
 
 bool SettingsPrivate::copyTracksFromPlaylist() const
 {
-	return value("copyTracksFromPlaylist").toBool();
+	return value("copyTracksFromPlaylist", false).toBool();
 }
 
 /** Returns the size of a cover. */
 int SettingsPrivate::coverSize() const
 {
-	int size = value("coverSize").toInt();
-	if (size == 0) {
-		size = 48;
-	}
-	return size;
+	return value("coverSize", 48).toInt();
 }
 
 QColor SettingsPrivate::customColors(QPalette::ColorRole cr) const
@@ -209,63 +185,35 @@ SettingsPrivate::InsertPolicy SettingsPrivate::insertPolicy() const
 /** Returns true if big and faded covers are displayed in the library when an album is expanded. */
 bool SettingsPrivate::isBigCoverEnabled() const
 {
-	if (value("bigCovers").isNull()) {
-		return true;
-	} else {
-		return value("bigCovers").toBool();
-	}
+	return value("bigCovers", true).toBool();
 }
 
 /** Returns true if covers are displayed in the library. */
 bool SettingsPrivate::isCoversEnabled() const
 {
-	if (value("covers").isNull()) {
-		return true;
-	} else {
-		return value("covers").toBool();
-	}
+	return value("covers", true).toBool();
 }
 
 bool SettingsPrivate::isCustomColors() const
 {
-	QVariant b = value("customColors");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("customColors", false).toBool();
 }
 
 bool SettingsPrivate::isExtendedSearchVisible() const
 {
-	QVariant b = value("extendedSearchVisible");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	return value("extendedSearchVisible", true).toBool();
 }
 
 /** Returns true if background process is active to keep library up-to-date. */
 bool SettingsPrivate::isFileSystemMonitored() const
 {
-	QVariant b = value("monitorFileSystem");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	return value("monitorFileSystem", true).toBool();
 }
 
 /** Returns the hierarchical order of the library tree view. */
 bool SettingsPrivate::isLibraryFilteredByArticles() const
 {
-	QVariant b = value("isLibraryFilteredByArticles");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("isLibraryFilteredByArticles", false).toBool();
 }
 
 /** Returns true if the button in parameter is visible or not. */
@@ -282,68 +230,43 @@ bool SettingsPrivate::isMediaButtonVisible(const QString & buttonName) const
 
 bool SettingsPrivate::isPlaylistResizeColumns() const
 {
-	QVariant b = value("playlistResizeColumns");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	return value("playlistResizeColumns", true).toBool();
 }
 
 /** Returns true if tabs should be displayed like rectangles. */
 bool SettingsPrivate::isRectTabs() const
 {
-	QVariant b = value("rectangularTabs");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("rectangularTabs", false).toBool();
 }
 
 /** Returns true if the article should be displayed after artist's name. */
 bool SettingsPrivate::isReorderArtistsArticle() const
 {
-	QVariant b = value("reorderArtistsArticle");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("reorderArtistsArticle", false).toBool();
 }
 
 /** Returns true if star outline must be displayed in the library. */
 bool SettingsPrivate::isShowNeverScored() const
 {
-	QVariant b = value("showNeverScored");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("showNeverScored", false).toBool();
 }
 
 /** Returns true if stars are visible and active. */
 bool SettingsPrivate::isStarDelegates() const
 {
-	QVariant b = value("delegates");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return true;
-	}
+	return value("delegates", true).toBool();
 }
 
 /** Returns true if a user has modified one of defaults theme. */
 bool SettingsPrivate::isThemeCustomized() const
 {
-	return value("themeCustomized").toBool();
+	return value("themeCustomized", false).toBool();
 }
 
 /** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
 bool SettingsPrivate::isVolumeBarTextAlwaysVisible() const
 {
-	return value("volumeBarTextAlwaysVisible").toBool();
+	return value("volumeBarTextAlwaysVisible", false).toBool();
 }
 /** Returns the language of the application. */
 QString SettingsPrivate::language()
@@ -404,23 +327,13 @@ QStringList SettingsPrivate::musicLocations() const
 
 int SettingsPrivate::tabsOverlappingLength() const
 {
-	QVariant v = value("tabsOverlappingLength");
-	if (v.isValid()) {
-		return v.toInt();
-	} else {
-		return 10;
-	}
+	return value("tabsOverlappingLength", 10).toInt();
 }
 
 /// PlayBack options
 qint64 SettingsPrivate::playbackSeekTime() const
 {
-	qint64 t = value("playbackSeekTime").toLongLong();
-	if (t == 0) {
-		return 5000;
-	} else {
-		return t;
-	}
+	return value("playbackSeekTime", 5000).toLongLong();
 }
 
 /** Default action to execute when one is closing a playlist. */
@@ -432,23 +345,13 @@ SettingsPrivate::PlaylistDefaultAction SettingsPrivate::playbackDefaultActionFor
 /** Automatically save all playlists before exit. */
 bool SettingsPrivate::playbackKeepPlaylists() const
 {
-	QVariant b = value("playbackKeepPlaylists");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("playbackKeepPlaylists", false).toBool();
 }
 
 /** Automatically restore all saved playlists at startup. */
 bool SettingsPrivate::playbackRestorePlaylistsAtStartup() const
 {
-	QVariant b = value("playbackRestorePlaylistsAtStartup");
-	if (b.isValid()) {
-		return b.toBool();
-	} else {
-		return false;
-	}
+	return value("playbackRestorePlaylistsAtStartup", false).toBool();
 }
 
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)

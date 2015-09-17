@@ -7,8 +7,9 @@
 qreal MiamItemDelegate::_iconOpacity = 1.0;
 
 MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
-	: QStyledItemDelegate(proxy), _proxy(proxy), _timer(new QTimer(this)), _coverSize(48)
+	: QStyledItemDelegate(proxy), _proxy(proxy), _timer(new QTimer(this))
 {
+	_coverSize = SettingsPrivate::instance()->coverSize();
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_showCovers = SettingsPrivate::instance()->isCoversEnabled();
 	_timer->setTimerType(Qt::PreciseTimer);
@@ -30,24 +31,6 @@ void MiamItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &optio
 
 void MiamItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const
 {
-	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
-	/// QString title = settings->libraryItemTitle();
-	/// for example: zero padding
-	/*auto settings = SettingsPrivate::instance();
-	if (settings->isStarDelegates()) {
-		int r = track->data(Miam::DF_Rating).toInt();
-		QStyleOptionViewItem copy(option);
-		copy.rect = QRect(0, option.rect.y(), option.rect.x(), option.rect.height());
-		/// XXX: create an option to display stars right to the text, and fade them if text is too large
-		//copy.rect = QRect(option.rect.x() + option.rect.width() - option.rect.height() * 5, option.rect.y(), option.rect.height() * 5, option.rect.height());
-
-		StarRating starRating(r);
-		if (r > 0) {
-			starRating.paintStars(painter, copy, StarRating::ReadOnly);
-		} else if (settings->isShowNeverScored()) {
-			starRating.paintStars(painter, copy, StarRating::NoStarsYet);
-		}
-	}*/
 	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
 	if (trackNumber > 0) {
 		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());

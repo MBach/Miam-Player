@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 
-#include <libraryitemdelegate.h>
 #include <musicsearchengine.h>
 #include <settings.h>
 #include <settingsprivate.h>
@@ -66,6 +65,7 @@ void MainWindow::activateLastView()
 	QString viewName = Settings::instance()->lastActiveView();
 	for (QAction *actionView : menuView->actions()) {
 		if (actionView->objectName() == viewName) {
+			qDebug() << Q_FUNC_INFO << viewName;
 			actionView->trigger();
 			break;
 		}
@@ -188,23 +188,25 @@ void MainWindow::setupActions()
 	actionViewTagEditor->setActionGroup(viewModeGroup);
 
 	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
-		qDebug() << "actionViewPlaylists";
 		stackedWidget->setCurrentIndex(0);
+		stackedWidgetRight->setVisible(true);
 		stackedWidgetRight->setCurrentIndex(0);
 		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 		library->createConnectionsToDB();
 	});
 	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
-		qDebug() << "actionViewUniqueLibrary";
+		stackedWidgetRight->setVisible(false);
 		stackedWidget->setCurrentIndex(1);
 		Settings::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
 		_uniqueLibrary->library->createConnectionsToDB();
 	});
 	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
+		stackedWidgetRight->setVisible(true);
 		stackedWidgetRight->setCurrentIndex(1);
 		actionViewTagEditor->setChecked(true);
 		Settings::instance()->setLastActiveView(actionViewTagEditor->objectName());
+		library->createConnectionsToDB();
 	});
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);

@@ -29,6 +29,30 @@ void LibraryItemModel::clearCache()
 	_hash.clear();
 }
 
+/** For every item in the library, gets the top level letter attached to it. */
+QChar LibraryItemModel::currentLetter(const QModelIndex &iTop) const
+{
+	QStandardItem *item = itemFromIndex(_proxy->mapToSource(iTop));
+
+	// Special item "Various" (on top) has no Normalized String
+	if (item && item->type() == Miam::IT_Separator && iTop.data(Miam::DF_NormalizedString).toString() == "0") {
+		return QChar();
+	} else if (!iTop.isValid()) {
+		return QChar();
+	} else {
+		QModelIndex m = iTop;
+		// An item without a valid parent is a top level item, therefore we can extract the letter.
+		while (m.parent().isValid()) {
+			m = m.parent();
+		}
+		if (m.isValid() && !m.data(Miam::DF_NormalizedString).toString().isEmpty()) {
+			return m.data(Miam::DF_NormalizedString).toString().toUpper().at(0);
+		} else {
+			return QChar();
+		}
+	}
+}
+
 LibraryFilterProxyModel* LibraryItemModel::proxy() const
 {
 	return _proxy;
