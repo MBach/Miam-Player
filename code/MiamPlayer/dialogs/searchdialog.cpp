@@ -83,21 +83,21 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 	connect(_tracks, &QListView::doubleClicked, this, &SearchDialog::trackWasDoubleClicked);
 
 	// Splitter
-	connect(_mainWindow->splitter, &QSplitter::splitterMoved, this, &SearchDialog::moveSearchDialog);
+	//connect(_mainWindow->splitter, &QSplitter::splitterMoved, this, &SearchDialog::moveSearchDialog);
 
-	auto settings = SettingsPrivate::instance();
+	/*auto settings = SettingsPrivate::instance();
 	connect(_mainWindow->searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
 		if (settings->isExtendedSearchVisible()) {
 			if (text.isEmpty()) {
 				this->clear();
 			} else {
 				this->setSearchExpression(text);
-				this->moveSearchDialog();
+				this->moveSearchDialog(0, 0);
 				this->show();
 				this->raise();
 			}
 		}
-	});
+	});*/
 }
 
 /** Required interface from AbstractSearchDialog class. */
@@ -196,7 +196,7 @@ void SearchDialog::animate(qreal startValue, qreal stopValue)
 	_animation->start();
 }
 
-void SearchDialog::moveSearchDialog()
+void SearchDialog::moveSearchDialog(int, int)
 {
 	QPoint tl = _mainWindow->widgetSearchBar->frameGeometry().topRight();
 	tl.setY(tl.y() - 1);

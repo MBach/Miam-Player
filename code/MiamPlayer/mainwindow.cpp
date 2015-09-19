@@ -358,11 +358,14 @@ void MainWindow::setupActions()
 		library->appendToPlaylist();
 	});
 
+	// Main Splitter
+	connect(splitter, &QSplitter::splitterMoved, searchDialog, &SearchDialog::moveSearchDialog);
+
 	// Filter the library when user is typing some text to find artist, album or tracks
-	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
-	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-		qDebug() << "aboutToStartSearch" << text;
-	});
+	//connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
+	//connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
+	//	qDebug() << "aboutToStartSearch" << text;
+	//});
 	connect(settings, &SettingsPrivate::librarySearchModeChanged, this, [=]() {
 		QString text;
 		searchBar->setText(text);
