@@ -6,11 +6,10 @@
 
 #include <QtDebug>
 
-MediaButton::MediaButton(QWidget *parent) :
-	QPushButton(parent), _mediaPlayer(nullptr)
-{
-	this->setFlat(SettingsPrivate::instance()->buttonsFlat());
-}
+MediaButton::MediaButton(QWidget *parent)
+	: QPushButton(parent)
+	, _mediaPlayer(nullptr)
+{}
 
 void MediaButton::setMediaPlayer(MediaPlayer *mediaPlayer)
 {

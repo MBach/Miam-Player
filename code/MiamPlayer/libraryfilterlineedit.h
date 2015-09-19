@@ -3,7 +3,7 @@
 
 #include <abstractsearchdialog.h>
 #include "styling/lineedit.h"
-#include "dialogs/searchdialog.h"
+//#include "dialogs/searchdialog.h"
 
 #include <QPropertyAnimation>
 #include <QShortcut>
@@ -21,20 +21,20 @@ class LibraryFilterLineEdit : public LineEdit
 {
 	Q_OBJECT
 
-private:
-	SearchDialog *_searchDialog;
+//private:
+//	SearchDialog *_searchDialog;
 
 public:
 	LibraryFilterLineEdit(QWidget *parent = 0);
 
 	QShortcut *shortcut;
 
-	void init(MainWindow *mainWindow);
+	//void init(MainWindow *mainWindow);
 
-	inline SearchDialog* searchDialog() const { return _searchDialog; }
+	//inline SearchDialog* searchDialog() const { return _searchDialog; }
 
 protected:
-	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+	//virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	virtual void paintEvent(QPaintEvent *) override;
 

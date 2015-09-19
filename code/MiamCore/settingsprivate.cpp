@@ -52,12 +52,6 @@ int SettingsPrivate::buttonsSize() const
 	return value("buttonsSize", 36).toInt();
 }
 
-/** Returns true if buttons are displayed without any border. */
-bool SettingsPrivate::buttonsFlat() const
-{
-	return value("buttonsFlat", true).toBool();
-}
-
 /** Returns true if the background color in playlist is using alternatative colors. */
 bool SettingsPrivate::colorsAlternateBG() const
 {
@@ -490,11 +484,6 @@ void SettingsPrivate::setBigCovers(bool b)
 void SettingsPrivate::setButtonsSize(const int &s)
 {
 	setValue("buttonsSize", s);
-}
-
-void SettingsPrivate::setButtonsFlat(bool b)
-{
-	setValue("buttonsFlat", b);
 }
 
 /// Colors

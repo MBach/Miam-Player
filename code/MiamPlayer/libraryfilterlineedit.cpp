@@ -9,8 +9,10 @@
 
 #include <QtDebug>
 
-LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
-	LineEdit(parent), _searchDialog(nullptr), shortcut(new QShortcut(this))
+LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
+	: LineEdit(parent)
+	//, _searchDialog(nullptr)
+	, shortcut(new QShortcut(this))
 {
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {
@@ -32,17 +34,17 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent) :
 	connect(this, &QLineEdit::textEdited, this, [=]() {	timer->start(300); });
 	connect(timer, &QTimer::timeout, this, [=]() { emit aboutToStartSearch(this->text()); });
 
-	this->installEventFilter(this);
+	//this->installEventFilter(this);
 	this->setMouseTracking(true);
 }
 
-void LibraryFilterLineEdit::init(MainWindow *mainWindow)
+/*void LibraryFilterLineEdit::init(MainWindow *mainWindow)
 {
 	_searchDialog = new SearchDialog(mainWindow);
 	_searchDialog->installEventFilter(this);
-}
+}*/
 
-bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
+/*bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 {
 	if (obj == this && event->type() == QEvent::FocusAboutToChange) {
 		if (_searchDialog && !_searchDialog->hasFocus()) {
@@ -59,7 +61,7 @@ bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 		}
 	}
 	return LineEdit::eventFilter(obj, event);
-}
+}*/
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {

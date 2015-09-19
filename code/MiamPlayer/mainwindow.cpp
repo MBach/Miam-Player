@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, _mediaPlayer(new MediaPlayer(this))
 	, customizeOptionsDialog(new CustomizeOptionsDialog)
+	, searchDialog(new SearchDialog(this))
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
@@ -66,6 +67,7 @@ void MainWindow::activateLastView()
 	for (QAction *actionView : menuView->actions()) {
 		if (actionView->objectName() == viewName) {
 			qDebug() << Q_FUNC_INFO << viewName;
+			this->restoreGeometry(SettingsPrivate::instance()->value("mainWindowGeometry").toByteArray());
 			actionView->trigger();
 			break;
 		}
@@ -110,8 +112,6 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 void MainWindow::init()
 {
-	//searchBar->init(this);
-
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 
@@ -130,7 +130,6 @@ void MainWindow::init()
 	}
 
 	Settings *settings = Settings::instance();
-	this->restoreGeometry(settings->value("mainWindowGeometry").toByteArray());
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	tabPlaylists->init(_mediaPlayer);
@@ -190,6 +189,7 @@ void MainWindow::setupActions()
 	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setVisible(true);
+		//tabPlaylistPage->setVisible(false);
 		stackedWidgetRight->setCurrentIndex(0);
 		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 		library->createConnectionsToDB();
@@ -237,6 +237,7 @@ void MainWindow::setupActions()
 	});
 	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
+	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
 		db->rebuild();
@@ -359,6 +360,9 @@ void MainWindow::setupActions()
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
+		qDebug() << "aboutToStartSearch" << text;
+	});
 	connect(settings, &SettingsPrivate::librarySearchModeChanged, this, [=]() {
 		QString text;
 		searchBar->setText(text);
@@ -571,7 +575,7 @@ void MainWindow::moveEvent(QMoveEvent *event)
 
 void MainWindow::resizeEvent(QResizeEvent *e)
 {
-	qDebug() << Q_FUNC_INFO << e->oldSize() << e->size();
+	//qDebug() << Q_FUNC_INFO << e->oldSize() << e->size();
 	QMainWindow::resizeEvent(e);
 }
 
@@ -813,4 +817,9 @@ void MainWindow::showTagEditor()
 		Settings::instance()->setLastActiveView(actionViewTagEditor->objectName());
 	}
 	stackedWidgetRight->setCurrentIndex(1);
+}
+
+void MainWindow::toggleMenuBar(bool checked)
+{
+	qDebug() << Q_FUNC_INFO << "not yet implemented" << checked;
 }

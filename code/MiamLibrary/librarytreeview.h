@@ -79,8 +79,6 @@ public:
 
 	inline LibraryItemModel* model() const { return _libraryModel; }
 
-	//void setCoverSize(int);
-
 protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;
@@ -90,9 +88,6 @@ protected:
 private:
 	/** Recursive count for leaves only. */
 	int count(const QModelIndex &index) const;
-
-	/** For every item in the library, gets the top level letter attached to it. */
-	//QChar currentLetter() const;
 
 	/** Reimplemented. */
 	virtual int countAll(const QModelIndexList &indexes) const;

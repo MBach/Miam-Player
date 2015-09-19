@@ -10,6 +10,7 @@
 #include <mediaplayer.h>
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
+#include "dialogs/searchdialog.h"
 
 #include <librarytreeview.h>
 #include "playbackmodewidgetfactory.h"
@@ -39,6 +40,7 @@ public:
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
 	CustomizeOptionsDialog *customizeOptionsDialog;
+	SearchDialog *searchDialog;
 
 	explicit MainWindow(QWidget *parent = 0);
 
@@ -103,6 +105,8 @@ private slots:
 	void showTabPlaylists();
 
 	void showTagEditor();
+
+	void toggleMenuBar(bool checked);
 };
 
 #endif // MAINWINDOW_H

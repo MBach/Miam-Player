@@ -75,7 +75,7 @@
        <string>Buttons &amp; Bars</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="mp.qrc">
@@ -90,7 +90,7 @@
        <string>Fonts</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="mp.qrc">
@@ -102,7 +102,7 @@
        <string>Colors</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="mp.qrc">
@@ -114,7 +114,7 @@
        <string>Library</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="mp.qrc">
@@ -126,7 +126,7 @@
        <string>Tabs</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="mp.qrc">
@@ -931,23 +931,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="labelFlatButtons">
-            <property name="text">
-             <string>Make buttons flat</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QCheckBox" name="flatButtonsCheckBox">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -1320,13 +1303,20 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="labelBackgroundPrimary">
+            <item row="1" column="2">
+             <widget class="QToolButton" name="selectedItemColorToolButton">
               <property name="text">
-               <string>Background for playlists and the library</string>
+               <string/>
               </property>
-              <property name="wordWrap">
-               <bool>true</bool>
+              <property name="icon">
+               <iconset resource="mp.qrc">
+                <normaloff>:/config/colors</normaloff>:/config/colors</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -1344,6 +1334,16 @@
                 <width>24</width>
                 <height>24</height>
                </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="labelBackgroundPrimary">
+              <property name="text">
+               <string>Background for playlists and the library</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1367,8 +1367,37 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QToolButton" name="selectedItemColorToolButton">
+            <item row="2" column="0">
+             <widget class="QLabel" name="labelFontColor">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Text</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="Reflector" name="fontColorWidget" native="true">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="CustomColors" stdset="0">
+               <string notr="true" extracomment="QPalette::Highlight">12</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QToolButton" name="fontColorToolButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -1404,466 +1433,474 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="libraryPage">
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QGroupBox" name="groupBoxLibraryCovers">
-         <property name="title">
-          <string>Artist and albums lists</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="labelDisplayCovers">
-              <property name="text">
-               <string>Show covers</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="checkBoxDisplayCovers">
-              <property name="text">
-               <string/>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <property name="bottomMargin">
-             <number>9</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="labelCoverSize">
-              <property name="text">
-               <string>Size of covers</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="spinBoxCoverSize">
-              <property name="minimum">
-               <number>24</number>
-              </property>
-              <property name="maximum">
-               <number>512</number>
-              </property>
-              <property name="value">
-               <number>48</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelOpacity">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Should I display a large and faded cover when you're expanding an album?</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <item row="0" column="1">
-             <widget class="QRadioButton" name="radioButtonEnableBigCover">
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>16</width>
-                <height>16</height>
-               </size>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QRadioButton" name="radioButtonDisableBigCover">
-              <property name="text">
-               <string>No</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="labelBigCoverOpacity">
-              <property name="text">
-               <string>Opacity</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QSpinBox" name="spinBoxBigCoverOpacity">
-              <property name="minimum">
-               <number>0</number>
-              </property>
-              <property name="maximum">
-               <number>100</number>
-              </property>
-              <property name="value">
-               <number>66</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxSortingLibrary">
-         <property name="title">
-          <string>Sorting the library</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
-          <item>
-           <widget class="QLabel" name="labelIgnoreArticles">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>If there is an article at the beginning of an artist's name, should I ignore it?</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_9">
-            <item row="0" column="0">
-             <widget class="QRadioButton" name="radioButtonEnableArticles">
-              <property name="toolTip">
-               <string>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</string>
-              </property>
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupArtistsArticle</string>
-              </attribute>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QRadioButton" name="radioButtonDisableArticles">
-              <property name="text">
-               <string>No</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupArtistsArticle</string>
-              </attribute>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="CustomizeThemeTagLineEdit" name="articlesLineEdit">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="text">
-             <string notr="true"/>
-            </property>
-            <property name="maxLength">
-             <number>128</number>
-            </property>
-            <property name="placeholderText">
-             <string>&quot;The&quot; is very common English article, like in « The Beatles »</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>9</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelReorderArtistsArticle">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Do you want to display the article after the name?</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelReorderArtistsArticleExample">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Example:  « The Beatles » will become « Beatles, the »</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_8">
-            <item row="0" column="0">
-             <widget class="QRadioButton" name="radioButtonEnableReorderArtistsArticle">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupReorderArtists</string>
-              </attribute>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QRadioButton" name="radioButtonDisableReorderArtistsArticle">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>No</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupReorderArtists</string>
-              </attribute>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxLibraryDelegates">
-         <property name="toolTip">
-          <string notr="true"/>
-         </property>
-         <property name="title">
-          <string>Manage favorites</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <item>
-           <widget class="QLabel" name="labelLibraryDelegatesState">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Would you like to display stars in the library, left to the track name?</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="1,1">
-            <property name="bottomMargin">
-             <number>9</number>
-            </property>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QRadioButton" name="radioButtonEnableStarDelegate">
-                <property name="toolTip">
-                 <string>This option will always displays 5 stars, even if the track has not been rated yet</string>
-                </property>
-                <property name="text">
-                 <string>Yes</string>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>16</width>
-                  <height>16</height>
-                 </size>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
-                <attribute name="buttonGroup">
-                 <string notr="true">buttonGroupEnableStarDelegate</string>
-                </attribute>
-               </widget>
-              </item>
-              <item>
-               <widget class="StarsWidget" name="starsLibrary" native="true">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="sizeIncrement">
-                 <size>
-                  <width>2</width>
-                  <height>2</height>
-                 </size>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_10"/>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_4">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Expanding</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="radioButtonDisableStarDelegate">
-              <property name="toolTip">
-               <string>This option will never show 5 gray stars if the track has not been rated </string>
-              </property>
-              <property name="text">
-               <string>No</string>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupEnableStarDelegate</string>
-              </attribute>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="labelLibraryDelegates">
-            <property name="text">
-             <string>Display star outline if there's no rating yet for a track</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_6">
-            <item row="0" column="0">
-             <widget class="QRadioButton" name="radioButtonShowNeverScoredTracks">
-              <property name="toolTip">
-               <string>This option will always displays 5 stars, even if the track has not been rated yet</string>
-              </property>
-              <property name="text">
-               <string>Yes</string>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>16</width>
-                <height>16</height>
-               </size>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupEnableStarOutline</string>
-              </attribute>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QRadioButton" name="radioButtonHideNeverScoredTracks">
-              <property name="toolTip">
-               <string>This option will never show 5 gray stars if the track has not been rated </string>
-              </property>
-              <property name="text">
-               <string>No</string>
-              </property>
-              <attribute name="buttonGroup">
-               <string notr="true">buttonGroupEnableStarOutline</string>
-              </attribute>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+     <widget class="QTabWidget" name="tabAvailableViews">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabLibraryTreeView">
+       <attribute name="title">
+        <string>Library (tree)</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_16">
+        <item>
+         <widget class="QGroupBox" name="groupBoxLibraryCovers">
+          <property name="title">
+           <string>Artist and albums lists</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="labelDisplayCovers">
+               <property name="text">
+                <string>Show covers</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBoxDisplayCovers">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <property name="bottomMargin">
+              <number>9</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="labelCoverSize">
+               <property name="text">
+                <string>Size of covers</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="spinBoxCoverSize">
+               <property name="minimum">
+                <number>24</number>
+               </property>
+               <property name="maximum">
+                <number>512</number>
+               </property>
+               <property name="value">
+                <number>48</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelOpacity">
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>Should I display a large and faded cover when you're expanding an album?</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="radioButtonEnableBigCover">
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QRadioButton" name="radioButtonDisableBigCover">
+               <property name="text">
+                <string>No</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="labelBigCoverOpacity">
+               <property name="text">
+                <string>Opacity</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QSpinBox" name="spinBoxBigCoverOpacity">
+               <property name="minimum">
+                <number>0</number>
+               </property>
+               <property name="maximum">
+                <number>100</number>
+               </property>
+               <property name="value">
+                <number>66</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBoxSortingLibrary">
+          <property name="title">
+           <string>Sorting the library</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <widget class="QLabel" name="labelIgnoreArticles">
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>If there is an article at the beginning of an artist's name, should I ignore it?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="radioButtonEnableArticles">
+               <property name="toolTip">
+                <string>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</string>
+               </property>
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupArtistsArticle</string>
+               </attribute>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="radioButtonDisableArticles">
+               <property name="text">
+                <string>No</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupArtistsArticle</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="CustomizeThemeTagLineEdit" name="articlesLineEdit">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="maxLength">
+              <number>128</number>
+             </property>
+             <property name="placeholderText">
+              <string>&quot;The&quot; is very common English article, like in « The Beatles »</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>9</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelReorderArtistsArticle">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>Do you want to display the article after the name?</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelReorderArtistsArticleExample">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>Example:  « The Beatles » will become « Beatles, the »</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_8">
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="radioButtonEnableReorderArtistsArticle">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupReorderArtists</string>
+               </attribute>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="radioButtonDisableReorderArtistsArticle">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>No</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupReorderArtists</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBoxLibraryDelegates">
+          <property name="toolTip">
+           <string notr="true"/>
+          </property>
+          <property name="title">
+           <string>Manage favorites</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QLabel" name="labelLibraryDelegatesState">
+             <property name="font">
+              <font>
+               <italic>true</italic>
+              </font>
+             </property>
+             <property name="text">
+              <string>Would you like to display stars in the library, left to the track name?</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="1,1">
+             <property name="bottomMargin">
+              <number>9</number>
+             </property>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QRadioButton" name="radioButtonEnableStarDelegate">
+                 <property name="toolTip">
+                  <string>This option will always displays 5 stars, even if the track has not been rated yet</string>
+                 </property>
+                 <property name="text">
+                  <string>Yes</string>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>16</width>
+                   <height>16</height>
+                  </size>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">buttonGroupEnableStarDelegate</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="StarsWidget" name="starsLibrary" native="true">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>2</width>
+                   <height>2</height>
+                  </size>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_10"/>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="radioButtonDisableStarDelegate">
+               <property name="toolTip">
+                <string>This option will never show 5 gray stars if the track has not been rated </string>
+               </property>
+               <property name="text">
+                <string>No</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupEnableStarDelegate</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="labelLibraryDelegates">
+             <property name="text">
+              <string>Display star outline if there's no rating yet for a track</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_6">
+             <item row="0" column="0">
+              <widget class="QRadioButton" name="radioButtonShowNeverScoredTracks">
+               <property name="toolTip">
+                <string>This option will always displays 5 stars, even if the track has not been rated yet</string>
+               </property>
+               <property name="text">
+                <string>Yes</string>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>16</width>
+                 <height>16</height>
+                </size>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupEnableStarOutline</string>
+               </attribute>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QRadioButton" name="radioButtonHideNeverScoredTracks">
+               <property name="toolTip">
+                <string>This option will never show 5 gray stars if the track has not been rated </string>
+               </property>
+               <property name="text">
+                <string>No</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">buttonGroupEnableStarOutline</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabUniqueLibrary">
+       <attribute name="title">
+        <string>Unique Library (list)</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_18"/>
+      </widget>
      </widget>
      <widget class="QWidget" name="tabsPage">
       <layout class="QVBoxLayout" name="verticalLayout_13">
@@ -1883,7 +1920,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_11">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="labelShapeTabs">
             <property name="font">
              <font>
               <italic>true</italic>
@@ -2379,8 +2416,8 @@
  </connections>
  <buttongroups>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
-  <buttongroup name="buttonGroupArtistsArticle"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
+  <buttongroup name="buttonGroupArtistsArticle"/>
   <buttongroup name="buttonGroupReorderArtists"/>
  </buttongroups>
 </ui>

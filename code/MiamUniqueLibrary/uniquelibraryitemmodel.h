@@ -6,8 +6,9 @@
 #include "uniquelibraryfilterproxymodel.h"
 
 /**
- * \brief		The UniqueLibraryItemModel class
- * \details
+ * \brief		The UniqueLibraryItemModel class is the model used to store all tracks in a list view.
+ * \details		This class is populated from SqlDatabase where all relevant informations are gathered together:
+ *				A track is related to Artist, Album, Year so we can sort them nicely and draw cover albums.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

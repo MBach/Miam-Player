@@ -14,14 +14,10 @@
 * \details
 * \author      Matthieu Bachelier
 * \copyright   GNU General Public License v3
-* */
+*/
 class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::UniqueLibrary
 {
 	Q_OBJECT
-
-private:
-	QSet<GenericDAO*> _set;
-
 public:
 	explicit UniqueLibrary(QWidget *parent = 0);
 };

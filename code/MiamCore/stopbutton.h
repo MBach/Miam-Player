@@ -12,6 +12,7 @@
  */
 class MIAMCORE_LIBRARY StopButton : public MediaButton
 {
+	Q_OBJECT
 private:
 	QMenu _menu;
 	QAction *_action;

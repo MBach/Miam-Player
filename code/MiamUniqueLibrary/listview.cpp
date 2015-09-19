@@ -2,6 +2,7 @@
 
 #include <model/sqldatabase.h>
 #include <libraryfilterproxymodel.h>
+#include <libraryscrollbar.h>
 
 #include <QGuiApplication>
 #include <QScrollBar>
@@ -15,6 +16,8 @@ ListView::ListView(QWidget *parent)
 {
 	this->setModel(_model->proxy());
 	this->setVerticalScrollMode(ScrollPerPixel);
+	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
+	this->setVerticalScrollBar(vScrollBar);
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &ListView::jumpTo);
 }
 

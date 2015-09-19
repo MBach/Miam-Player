@@ -98,6 +98,9 @@
    </item>
    <item>
     <widget class="QGroupBox" name="groupBoxEqualizer">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Equalizer</string>
      </property>

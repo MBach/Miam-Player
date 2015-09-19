@@ -67,9 +67,6 @@ public:
 	/** Returns the actual size of media buttons. */
 	int buttonsSize() const;
 
-	/** Returns true if buttons are displayed without any border. */
-	bool buttonsFlat() const;
-
 	/** Returns true if the background color in playlist is using alternatative colors. */
 	bool colorsAlternateBG() const;
 
@@ -201,7 +198,6 @@ public slots:
 
 	/** Sets a new button size. */
 	void setButtonsSize(const int &s);
-	void setButtonsFlat(bool b);
 
 	/// Colors
 	void setColorsAlternateBG(bool b);

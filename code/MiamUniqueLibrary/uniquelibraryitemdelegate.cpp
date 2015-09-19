@@ -5,6 +5,8 @@
 #include <QPainter>
 #include <QStandardItem>
 
+#include <QtDebug>
+
 UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(JumpToWidget *jumpTo, QSortFilterProxyModel *proxy)
 	: MiamItemDelegate(proxy)
 	, _jumpTo(jumpTo)
@@ -31,24 +33,22 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	o.state &= ~QStyle::State_HasFocus;
 	switch (item->type()) {
 	case Miam::IT_Artist:
-	case Miam::IT_Album: {
 		this->paintRect(painter, o);
-		painter->drawText(o.rect, item->text());
-		QPoint c = o.rect.center();
-		int textWidth = painter->fontMetrics().width(item->text());
-		painter->drawLine(textWidth + 5, c.y(), o.rect.right(), c.y());
+		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
 		break;
-	}
-	/*case Miam::IT_Artist:
+	case Miam::IT_Album:
 		this->paintRect(painter, o);
-		painter->drawText(o.rect, item->text());
-		break;*/
+		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
+		break;
 	case Miam::IT_Disc:
+		//this->drawDisc(painter, o);
 		break;
 	case Miam::IT_Separator:
 		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
 		break;
 	case Miam::IT_Track: {
+		int coverSize = settings->coverSize();
+		o.rect.moveLeft(coverSize);
 		this->paintRect(painter, o);
 		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
@@ -58,4 +58,34 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		break;
 	}
 	painter->restore();
+}
+
+void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const
+{
+	auto settings = SettingsPrivate::instance();
+	int coverSize = settings->coverSize();
+	option.rect.moveLeft(coverSize);
+	QString text = item->text();
+	QString year = item->data(Miam::DF_Year).toString();
+	if (!year.isEmpty() && (year.compare("0") != 0)) {
+		text.append(" [" + item->data(Miam::DF_Year).toString() + "]");
+	}
+	painter->drawText(option.rect, text);
+	QPoint c = option.rect.center();
+	int textWidth = painter->fontMetrics().width(text);
+	painter->drawLine(coverSize + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
+
+	// Cover
+	QString coverPath = item->coverPath();
+	if (!coverPath.isEmpty()) {
+		qDebug() << Q_FUNC_INFO << coverPath;
+	}
+}
+
+void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const
+{
+	painter->drawText(option.rect, item->text());
+	QPoint c = option.rect.center();
+	int textWidth = painter->fontMetrics().width(item->text());
+	painter->drawLine(textWidth + 5, c.y(), option.rect.right() - 5, c.y());
 }

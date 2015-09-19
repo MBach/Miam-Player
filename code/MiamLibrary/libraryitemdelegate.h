@@ -3,8 +3,6 @@
 
 #include "miamitemdelegate.h"
 #include "libraryfilterproxymodel.h"
-#include "albumitem.h"
-#include "artistitem.h"
 #include "discitem.h"
 #include "separatoritem.h"
 #include "trackitem.h"
@@ -36,11 +34,11 @@ private:
 	/** Albums have covers usually. */
 	void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const;
 
-	void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const;
+	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
 
 	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const;
 
-	void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
+	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
 
 	void paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &option, const TrackItem *track) const;
 

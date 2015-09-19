@@ -4,11 +4,20 @@
 #include <QStyledItemDelegate>
 #include <QSortFilterProxyModel>
 #include <QTimer>
+#include "albumitem.h"
+#include "artistitem.h"
 #include "libraryitemmodel.h"
 #include "trackitem.h"
 
 #include "miamlibrary_global.h"
 
+/**
+ * \brief		The MiamItemDelegate class is the base class for drawing music informations in a QTreeView or a QListView
+ * \details		This class has been made pure virtual class, because we cannot render Albums or Tracks without knowing the underlying
+ *				context. But we can group here
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMLIBRARY_LIBRARY MiamItemDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
@@ -30,6 +39,10 @@ public:
 	MiamItemDelegate(QSortFilterProxyModel *proxy);
 
 protected:
+	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const = 0;
+
+	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const = 0;
+
 	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const;
 
 	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const;

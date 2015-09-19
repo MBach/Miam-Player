@@ -8,8 +8,8 @@
 #include <trackitem.h>
 
 /**
- * \brief		The UniqueLibraryItemDelegate class
- * \details
+ * \brief		The UniqueLibraryItemDelegate class is used to render item in a specific way.
+ * \details		This delegate is able to draw a cover on the left edge of a cover for example.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -24,6 +24,11 @@ public:
 
 	/** Redefined. */
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+
+private:
+	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const override;
+
+	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
 };
 
 #endif // UNIQUELIBRARYITEMDELEGATE_H

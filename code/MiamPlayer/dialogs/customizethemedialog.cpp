@@ -77,14 +77,6 @@ void CustomizeThemeDialog::setupActions()
 		}
 	}
 
-	// Make buttons flat
-	connect(flatButtonsCheckBox, &QCheckBox::toggled, this, [=] (bool isFlat) {
-		settings->setButtonsFlat(isFlat);
-		for(MediaButton *b : mainWindow->mediaButtons) {
-			b->setFlat(isFlat);
-		}
-	});
-
 	// Connect a file dialog to every button if one wants to customize everything
 	for (QPushButton *pushButton : customizeButtonsScrollArea->findChildren<QPushButton*>()) {
 		connect(pushButton, &QPushButton::clicked, this, &CustomizeThemeDialog::openChooseIconDialog);
@@ -325,7 +317,6 @@ void CustomizeThemeDialog::loadTheme()
 	customizeThemeCheckBox->setChecked(settings->isThemeCustomized());
 
 	sizeButtonsSpinBox->setValue(settings->buttonsSize());
-	flatButtonsCheckBox->setChecked(settings->buttonsFlat());
 
 	// Select the right drop-down item according to the theme
 	int i = 0;

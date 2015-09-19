@@ -170,13 +170,13 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
-	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchBar->searchDialog());
+	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
 	_mainWindow->mediaPlayer()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
 void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
 {
-	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchBar->searchDialog());
+	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
 }
 
 void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
