@@ -61,8 +61,6 @@ public:
 	/** Update fonts for menu and context menus. */
 	void updateFonts(const QFont &font);
 
-	static QMessageBox::StandardButton showWarning(const QString &target, int count);
-
 	void openFolder(const QString &dir);
 
 	MediaPlayer *mediaPlayer() const;

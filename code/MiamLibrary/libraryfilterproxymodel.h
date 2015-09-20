@@ -1,8 +1,8 @@
 #ifndef LIBRARYFILTERPROXYMODEL_H
 #define LIBRARYFILTERPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
 #include <QStandardItem>
+#include <miamsortfilterproxymodel.h>
 
 #include "miamcore_global.h"
 #include "separatoritem.h"
@@ -15,17 +15,11 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY LibraryFilterProxyModel : public QSortFilterProxyModel
+class MIAMLIBRARY_LIBRARY LibraryFilterProxyModel : public MiamSortFilterProxyModel
 {
 	Q_OBJECT
-private:
-	/** Top levels items are specific items, like letters 'A', 'B', ... in the library. Each letter has a reference to all items beginning with this letter. */
-	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
-
 public:
 	explicit LibraryFilterProxyModel(QObject *parent = 0);
-
-	inline void setTopLevelItems(const QMultiHash<SeparatorItem*, QModelIndex> &topLevelItems) { _topLevelItems = topLevelItems; }
 
 	/** Redefined to override Qt::FontRole. */
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

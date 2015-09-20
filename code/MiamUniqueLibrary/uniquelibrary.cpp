@@ -19,7 +19,7 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 	library->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	/*connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=]() {
-		qDebug() << Q_FUNC_INFO << "todo";
-	});*/
+	connect(searchBar, &SearchBar::aboutToStartSearch, [=](const QString &text) {
+		library->model()->proxy()->findMusic(text, Miam::DF_CustomSortRole);
+	});
 }

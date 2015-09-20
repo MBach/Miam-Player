@@ -6,12 +6,9 @@
 #include <QtDebug>
 
 LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
-	QSortFilterProxyModel(parent)
+	MiamSortFilterProxyModel(parent)
 {
-	this->setSortCaseSensitivity(Qt::CaseInsensitive);
-	this->setSortRole(Miam::DF_NormalizedString);
-	this->setDynamicSortFilter(false);
-	this->sort(0, Qt::AscendingOrder);
+
 }
 
 /** Redefined to override Qt::FontRole. */

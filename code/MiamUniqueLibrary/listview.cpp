@@ -19,6 +19,7 @@ ListView::ListView(QWidget *parent)
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	this->setVerticalScrollBar(vScrollBar);
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &ListView::jumpTo);
+	connect(_model->proxy(), &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
 }
 
 void ListView::createConnectionsToDB()

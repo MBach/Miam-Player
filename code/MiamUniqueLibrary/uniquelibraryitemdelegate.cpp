@@ -78,7 +78,7 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 	// Cover
 	QString coverPath = item->coverPath();
 	if (!coverPath.isEmpty()) {
-		qDebug() << Q_FUNC_INFO << coverPath;
+		//qDebug() << Q_FUNC_INFO << coverPath;
 	}
 }
 

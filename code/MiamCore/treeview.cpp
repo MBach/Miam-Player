@@ -42,9 +42,7 @@ QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QStri
 	// Quick count tracks before anything else
 	int count = this->countAll(selectedIndexes());
 
-	/// FIXME
-	//QMessageBox::StandardButton ret = MainWindow::showWarning(target, count);
-	QMessageBox::StandardButton ret = QMessageBox::Ok;
+	QMessageBox::StandardButton ret = Miam::showWarning(target, count);
 
 	if (ret == QMessageBox::Ok) {
 		// Gather all items (pure virtual call, this function must be reimplemented in subclasses: custom tree, file system, etc.)

@@ -58,7 +58,7 @@ private:
 	QMap<AlbumItem*, QImage*> _expandedCovers;
 
 	/** This view uses a proxy to specify how items in the Tree should be ordered together. */
-	QSortFilterProxyModel *_proxyModel;
+	MiamSortFilterProxyModel *_proxyModel;
 
 public:
 	QShortcut *sendToCurrentPlaylist;
@@ -71,7 +71,7 @@ public:
 	const QImage *expandedCover(AlbumItem *album) const;
 
 	/** Reimplemented. */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks) const;
+	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;
 
 	void findMusic(const QString &text);
 
@@ -93,10 +93,10 @@ private:
 	virtual int countAll(const QModelIndexList &indexes) const;
 
 	/** Reduce the size of the library when the user is typing text. */
-	void filterLibrary(const QString &filter);
+	//void filterLibrary(const QString &filter);
 
 	/** Highlight items in the Tree when one has activated this option in settings. */
-	void highlightMatchingText(const QString &text);
+	//void highlightMatchingText(const QString &text);
 
 	/** Reimplemented. */
 	virtual void updateSelectedTracks();

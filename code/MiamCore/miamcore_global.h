@@ -2,6 +2,7 @@
 #define MIAMCORE_GLOBAL_H
 
 #include <QtCore/qglobal.h>
+#include <QMessageBox>
 
 #ifdef MIAM_PLUGIN
 # define MIAMCORE_LIBRARY Q_DECL_EXPORT
@@ -50,7 +51,8 @@ public:
 		DF_CustomDisplayText	= Qt::UserRole + 11,
 		DF_NormArtist			= Qt::UserRole + 12,
 		DF_NormAlbum			= Qt::UserRole + 13,
-		DF_Disc					= Qt::UserRole + 14
+		DF_Disc					= Qt::UserRole + 14,
+		DF_CustomSortRole		= Qt::UserRole + 15
 	};
 
 	enum TagEditorColumns : int
@@ -67,6 +69,22 @@ public:
 		COL_Genre		= 9,
 		COL_Comment		= 10
 	};
+
+	inline static QMessageBox::StandardButton showWarning(const QString &target, int count)
+	{
+		QMessageBox::StandardButton ret = QMessageBox::Ok;
+		/// XXX: extract magic number (to where?)
+		if (count > 300) {
+			QMessageBox msgBox;
+			QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
+			msgBox.setText(totalFiles.arg(target).arg(count));
+			msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
+			msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+			msgBox.setDefaultButton(QMessageBox::Ok);
+			ret = (QMessageBox::StandardButton) msgBox.exec();
+		}
+		return ret;
+	}
 };
 
 #endif // MIAMCORE_GLOBAL_H

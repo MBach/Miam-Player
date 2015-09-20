@@ -362,10 +362,20 @@ void MainWindow::setupActions()
 	connect(splitter, &QSplitter::splitterMoved, searchDialog, &SearchDialog::moveSearchDialog);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	//connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
-	//connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-	//	qDebug() << "aboutToStartSearch" << text;
-	//});
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
+		if (settings->isExtendedSearchVisible()) {
+			if (text.isEmpty()) {
+				searchDialog->clear();
+			} else {
+				searchDialog->setSearchExpression(text);
+				searchDialog->moveSearchDialog(0, 0);
+				searchDialog->show();
+				searchDialog->raise();
+			}
+		}
+	});
+
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
 	connect(settings, &SettingsPrivate::librarySearchModeChanged, this, [=]() {
 		QString text;
 		searchBar->setText(text);
@@ -455,22 +465,6 @@ void MainWindow::updateFonts(const QFont &font)
 	}
 }
 
-QMessageBox::StandardButton MainWindow::showWarning(const QString &target, int count)
-{
-	QMessageBox::StandardButton ret = QMessageBox::Ok;
-	/// XXX: extract magic number (to where?)
-	if (count > 300) {
-		QMessageBox msgBox;
-		QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
-		msgBox.setText(totalFiles.arg(target).arg(count));
-		msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
-		msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
-		msgBox.setDefaultButton(QMessageBox::Ok);
-		ret = (QMessageBox::StandardButton) msgBox.exec();
-	}
-	return ret;
-}
-
 void MainWindow::openFolder(const QString &dir)
 {
 	Settings::instance()->setValue("lastOpenedLocation", dir);
@@ -483,7 +477,7 @@ void MainWindow::openFolder(const QString &dir)
 			tracks << "file://" + it.filePath();
 		}
 	}
-	if (showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {
+	if (Miam::showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	}
 }

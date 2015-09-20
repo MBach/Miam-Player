@@ -6,7 +6,7 @@
 #include <QtDebug>
 
 LineEdit::LineEdit(QWidget *parent) :
-	QLineEdit(parent), _timer(new QTimer(this)), _fps(0)
+	SearchBar(parent), _timer(new QTimer(this)), _fps(0)
 {
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 

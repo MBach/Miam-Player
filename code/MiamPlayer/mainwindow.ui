@@ -23,7 +23,7 @@
     </property>
     <widget class="ExtendedTabWidget" name="leftTabs">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -909,11 +909,6 @@
    <header>mediabutton.h</header>
   </customwidget>
   <customwidget>
-   <class>LibraryFilterLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">libraryfilterlineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>LibraryTreeView</class>
    <extends>QTreeView</extends>
    <header location="global">librarytreeview.h</header>
@@ -988,6 +983,11 @@
    <extends>QWidget</extends>
    <header>paintablewidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LibraryFilterLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">libraryfilterlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

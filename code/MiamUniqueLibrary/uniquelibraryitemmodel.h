@@ -1,9 +1,9 @@
 #ifndef UNIQUELIBRARYITEMMODEL_H
 #define UNIQUELIBRARYITEMMODEL_H
 
-#include <miamitemmodel.h>
 #include "miamuniquelibrary_global.h"
-#include "uniquelibraryfilterproxymodel.h"
+#include <miamitemmodel.h>
+#include <miamsortfilterproxymodel.h>
 
 /**
  * \brief		The UniqueLibraryItemModel class is the model used to store all tracks in a list view.
@@ -16,14 +16,14 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibraryItemModel : public MiamItemModel
 {
 	Q_OBJECT
 private:
-	UniqueLibraryFilterProxyModel *_proxy;
+	MiamSortFilterProxyModel *_proxy;
 
 public:
 	explicit UniqueLibraryItemModel(QObject *parent = 0);
 
 	virtual QChar currentLetter(const QModelIndex &index) const override;
 
-	virtual UniqueLibraryFilterProxyModel* proxy() const override;
+	virtual MiamSortFilterProxyModel* proxy() const override;
 
 public slots:
 	virtual void insertNode(GenericDAO *node) override;

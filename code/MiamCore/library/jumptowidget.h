@@ -30,8 +30,6 @@ public:
 
 	virtual bool eventFilter(QObject *obj, QEvent *event);
 
-	inline void highlightLetters(const QSet<QChar> &letters) { _lettersToHighlight = letters; }
-
 	void setCurrentLetter(const QChar &currentLetter);
 
 	virtual QSize sizeHint() const;
@@ -45,6 +43,9 @@ protected:
 
 	/** Reduce the font if this widget is too small. */
 	virtual void resizeEvent(QResizeEvent *event) override;
+
+public slots:
+	inline void highlightLetters(const QSet<QChar> &letters) { _lettersToHighlight = letters; }
 
 signals:
 	void aboutToScrollTo(const QString &letter);

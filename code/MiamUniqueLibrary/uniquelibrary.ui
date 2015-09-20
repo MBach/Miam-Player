@@ -226,12 +226,15 @@
     </layout>
    </item>
    <item>
-    <widget class="QLineEdit" name="searchBar">
+    <widget class="SearchBar" name="searchBar">
      <property name="maxLength">
       <number>100</number>
      </property>
      <property name="placeholderText">
       <string>Search...</string>
+     </property>
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -263,6 +266,11 @@
    <class>ListView</class>
    <extends>QListView</extends>
    <header>listview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SearchBar</class>
+   <extends>QLineEdit</extends>
+   <header location="global">searchbar.h</header>
   </customwidget>
  </customwidgets>
  <resources>

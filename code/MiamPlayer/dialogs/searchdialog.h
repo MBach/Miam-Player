@@ -30,11 +30,11 @@ public:
 	/** Constructor. */
 	explicit SearchDialog(MainWindow *mainWindow);
 
-	/** Required interface from AbstractSearchDialog class. */
-	virtual void addSource(QCheckBox *checkBox);
-
 	/** String to look for on every registered search engines. */
 	void setSearchExpression(const QString &text);
+
+	/** Required interface from AbstractSearchDialog class. */
+	virtual void addSource(QCheckBox *checkBox);
 
 	/** Required interface from AbstractSearchDialog class. */
 	inline virtual QListView * artists() const { return _artists; }
@@ -59,14 +59,14 @@ private:
 	void searchMoreResults();
 
 public slots:
+	virtual void aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks);
+
 	void clear();
 
 	void moveSearchDialog(int = -1, int = -1);
 
 	/** Process results sent back from various search engines (local, remote). */
 	virtual void processResults(Request type, const QStandardItemList &results);
-
-	virtual void aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks);
 
 private slots:
 	void artistWasDoubleClicked(const QModelIndex &artistIndex);
@@ -76,7 +76,7 @@ private slots:
 	void appendSelectedItem(const QModelIndex &index);
 
 	/** Local search for matching expressions. */
-	void search(const QString &text);
+	void localSearch(const QString &text);
 
 	/** Expand this dialog to all available space. */
 	void searchLabelWasClicked(const QString &link);

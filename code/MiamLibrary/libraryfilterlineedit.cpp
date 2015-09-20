@@ -11,7 +11,6 @@
 
 LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 	: LineEdit(parent)
-	//, _searchDialog(nullptr)
 	, shortcut(new QShortcut(this))
 {
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
@@ -28,21 +27,9 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 		this->setFocus(Qt::ShortcutFocusReason);
 	});
 
-	// Do not start search when one is typing. Add a 300ms delay after the last key pressed.
-	QTimer *timer = new QTimer(this);
-	timer->setSingleShot(true);
-	connect(this, &QLineEdit::textEdited, this, [=]() {	timer->start(300); });
-	connect(timer, &QTimer::timeout, this, [=]() { emit aboutToStartSearch(this->text()); });
-
 	//this->installEventFilter(this);
 	this->setMouseTracking(true);
 }
-
-/*void LibraryFilterLineEdit::init(MainWindow *mainWindow)
-{
-	_searchDialog = new SearchDialog(mainWindow);
-	_searchDialog->installEventFilter(this);
-}*/
 
 /*bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
 {

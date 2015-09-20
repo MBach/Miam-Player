@@ -62,7 +62,7 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 		});
 	}
 
-	connect(this, &SearchDialog::aboutToSearch, this, &SearchDialog::search);
+	connect(this, &SearchDialog::aboutToSearch, this, &SearchDialog::localSearch);
 
 	// Update font size
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
@@ -81,23 +81,6 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 	connect(_artists, &QListView::doubleClicked, this, &SearchDialog::artistWasDoubleClicked);
 	connect(_albums, &QListView::doubleClicked, this, &SearchDialog::albumWasDoubleClicked);
 	connect(_tracks, &QListView::doubleClicked, this, &SearchDialog::trackWasDoubleClicked);
-
-	// Splitter
-	//connect(_mainWindow->splitter, &QSplitter::splitterMoved, this, &SearchDialog::moveSearchDialog);
-
-	/*auto settings = SettingsPrivate::instance();
-	connect(_mainWindow->searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-		if (settings->isExtendedSearchVisible()) {
-			if (text.isEmpty()) {
-				this->clear();
-			} else {
-				this->setSearchExpression(text);
-				this->moveSearchDialog(0, 0);
-				this->show();
-				this->raise();
-			}
-		}
-	});*/
 }
 
 /** Required interface from AbstractSearchDialog class. */
@@ -296,7 +279,7 @@ void SearchDialog::appendSelectedItem(const QModelIndex &index)
 }
 
 /** Local search for matching expressions. */
-void SearchDialog::search(const QString &text)
+void SearchDialog::localSearch(const QString &text)
 {
 	if (!_checkBoxLibrary->isChecked()) {
 		return;

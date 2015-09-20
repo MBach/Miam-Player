@@ -7,8 +7,9 @@
 #include <QTimer>
 
 #include "miamcore_global.h"
+#include "searchbar.h"
 
-class MIAMCORE_LIBRARY LineEdit : public QLineEdit
+class MIAMCORE_LIBRARY LineEdit : public SearchBar
 {
 	Q_OBJECT
 

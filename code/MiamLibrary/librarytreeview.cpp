@@ -67,6 +67,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 		delegate->displayIcon(true);
 	});
 
+	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
+
 	///FIXME
 	//QObjectList objetsToExtend = QObjectList() << _properties << this;
 	//PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
@@ -102,11 +104,12 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 
 void LibraryTreeView::findMusic(const QString &text)
 {
-	if (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_Filter) {
+	_proxyModel->findMusic(text);
+	/*if (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_Filter) {
 		this->filterLibrary(text);
 	} else {
 		this->highlightMatchingText(text);
-	}
+	}*/
 }
 
 void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
@@ -228,7 +231,7 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 }
 
 /** Reduces the size of the library when the user is typing text. */
-void LibraryTreeView::filterLibrary(const QString &filter)
+/*void LibraryTreeView::filterLibrary(const QString &filter)
 {
 	if (filter.isEmpty()) {
 		_proxyModel->setFilterRole(Qt::DisplayRole);
@@ -251,10 +254,10 @@ void LibraryTreeView::filterLibrary(const QString &filter)
 			_proxyModel->sort(0, _proxyModel->sortOrder());
 		}
 	}
-}
+}*/
 
 /** Highlight items in the Tree when one has activated this option in settings. */
-void LibraryTreeView::highlightMatchingText(const QString &text)
+/*void LibraryTreeView::highlightMatchingText(const QString &text)
 {
 	// Clear highlight on every call
 	std::function<void(QStandardItem *item)> recursiveClearHighlight;
@@ -308,7 +311,7 @@ void LibraryTreeView::highlightMatchingText(const QString &text)
 		}
 	}
 	_jumpToWidget->highlightLetters(lettersToHighlight);
-}
+}*/
 
 /** Invert the current sort order. */
 void LibraryTreeView::changeSortOrder()
@@ -323,11 +326,13 @@ void LibraryTreeView::changeSortOrder()
 /** Redraw the treeview with a new display mode. */
 void LibraryTreeView::changeHierarchyOrder()
 {
+	/// FIXME
 	/*if (_searchBar) {
 		_searchBar->setText(QString());
 	}*/
 	SqlDatabase::instance()->load();
-	this->highlightMatchingText(QString());
+	_proxyModel->highlightMatchingText(QString());
+	//this->highlightMatchingText(QString());
 }
 
 /** Find index from current letter then scrolls to it. */
