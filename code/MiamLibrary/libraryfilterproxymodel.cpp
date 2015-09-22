@@ -7,9 +7,7 @@
 
 LibraryFilterProxyModel::LibraryFilterProxyModel(QObject *parent) :
 	MiamSortFilterProxyModel(parent)
-{
-
-}
+{}
 
 /** Redefined to override Qt::FontRole. */
 QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const

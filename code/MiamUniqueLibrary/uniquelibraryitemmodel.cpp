@@ -10,8 +10,9 @@ UniqueLibraryItemModel::UniqueLibraryItemModel(QObject *parent)
 	: MiamItemModel(parent)
 	, _proxy(new MiamSortFilterProxyModel(this))
 {
-	setColumnCount(1);
+	setColumnCount(3);
 	_proxy->setSourceModel(this);
+	_proxy->setFilterKeyColumn(-1);
 }
 
 QChar UniqueLibraryItemModel::currentLetter(const QModelIndex &index) const
@@ -43,24 +44,23 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 		return;
 	}
 
+	QList<QStandardItem*> row;
 	QStandardItem *nodeItem = nullptr;
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
 		nodeItem = new TrackItem(dao);
+		row << nodeItem;
 		QString normalized = dao->disc() + "|" + dao->trackNumber(true) + "|" + dao->title();
-		QString customSort = dao->title();
 		AlbumDAO *album = static_cast<AlbumDAO*>(dao->parentNode());
 		if (album) {
 			normalized.prepend(album->year() + "|" + album->title() + "|");
-			customSort.prepend(album->title() + "|");
+			row << new QStandardItem(album->title());
 			ArtistDAO *artist = static_cast<ArtistDAO*>(album->parentNode());
 			if (artist) {
 				normalized.prepend(artist->titleNormalized() + "|");
-				customSort.prepend(artist->title() + "|");
+				row << new QStandardItem(artist->title());
 			}
 		}
 		nodeItem->setData(normalized, Miam::DF_NormalizedString);
-		nodeItem->setData(customSort, Miam::DF_CustomSortRole);
-
 		if (_tracks.contains(dao->uri())) {
 			QStandardItem *rowToDelete = _tracks.value(dao->uri());
 			// Clean unused nodes
@@ -68,26 +68,23 @@ void UniqueLibraryItemModel::insertNode(GenericDAO *node)
 		}
 		_tracks.insert(dao->uri(), nodeItem);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
+		nodeItem = new AlbumItem(dao);
+		row << nodeItem;
 		QString normalized = dao->year() + "|" + dao->title();
-		QString customSort = dao->title();
-
 		ArtistDAO *artist = static_cast<ArtistDAO*>(dao->parentNode());
 		if (artist) {
 			normalized.prepend(artist->titleNormalized() + "|");
-			customSort.prepend(artist->title() + "|");
+			row << new QStandardItem(artist->title());
 		}
-		nodeItem = new AlbumItem(dao);
 		nodeItem->setData(normalized, Miam::DF_NormalizedString);
-		nodeItem->setData(customSort, Miam::DF_CustomSortRole);
-
 	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
 		nodeItem = new ArtistItem(dao);
 		nodeItem->setData(dao->titleNormalized() + "|", Miam::DF_NormalizedString);
-		nodeItem->setData(dao->title(), Miam::DF_CustomSortRole);
+		row << nodeItem;
 	}
 
-	if (nodeItem){
-		invisibleRootItem()->appendRow(nodeItem);
+	if (!row.isEmpty() && nodeItem){
+		invisibleRootItem()->appendRow(row);
 		if (nodeItem->type() == Miam::IT_Artist) {
 			if (SeparatorItem *separator = this->insertSeparator(nodeItem)) {
 				_topLevelItems.insert(separator, nodeItem->index());

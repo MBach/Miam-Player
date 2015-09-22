@@ -72,7 +72,8 @@ TagEditor::TagEditor(QWidget *parent) :
 
 	// The context menu in the area displaying a cover can be extended by third party
 	QObjectList objectsToExtend = QObjectList() << albumCover->contextMenu() << extensiblePushButtonArea << extensibleWidgetArea << tagEditorWidget << this;
-	PluginManager::instance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
+	/// FIXME
+	//PluginManager::instance()->registerExtensionPoint(this->metaObject()->className(), objectsToExtend);
 
 	albumCover->installEventFilter(this);
 	tagEditorWidget->viewport()->installEventFilter(this);

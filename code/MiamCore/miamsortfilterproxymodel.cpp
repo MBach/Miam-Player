@@ -16,16 +16,54 @@ MiamSortFilterProxyModel::MiamSortFilterProxyModel(QObject *parent)
 	this->sort(0, Qt::AscendingOrder);
 }
 
-void MiamSortFilterProxyModel::findMusic(const QString &text, int filterRole)
+void MiamSortFilterProxyModel::findMusic(const QString &text)
 {
 	if (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_Filter) {
-		this->filterLibrary(text, filterRole);
+		this->filterLibrary(text);
 	} else {
 		this->highlightMatchingText(text);
 	}
 }
 
-void MiamSortFilterProxyModel::filterLibrary(const QString &filter, int filterRole)
+bool MiamSortFilterProxyModel::filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const
+{
+
+	/*QModelIndex item = sourceModel()->index(0, sourceColumn, sourceParent);
+	if (!item.isValid()) {
+		return false;
+	} else {
+		qDebug() << Q_FUNC_INFO << item;
+	}*/
+
+	return QSortFilterProxyModel::filterAcceptsColumn(sourceColumn, sourceParent);
+}
+
+/*bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelIndex &sourceParent) const
+{
+	QModelIndex item = sourceModel()->index(sourceRow, 0, sourceParent);
+	if (!item.isValid()) {
+		return false;
+	}
+
+	// Check if there are children
+	int childCount = item.model()->rowCount(item);
+	if (childCount == 0) {
+		return false;
+	}
+
+	for (int i = 0; i < childCount; ++i) {
+		if (filterAcceptsRowItself(i, item)) {
+			return true;
+		}
+		// Recursive call
+		if (hasAcceptedChildren(i, item)) {
+			return true;
+		}
+	}
+	return false;
+}*/
+
+void MiamSortFilterProxyModel::filterLibrary(const QString &filter)
 {
 	if (filter.isEmpty()) {
 		this->setFilterRole(Qt::DisplayRole);
@@ -41,7 +79,7 @@ void MiamSortFilterProxyModel::filterLibrary(const QString &filter, int filterRo
 			this->setFilterRole(Miam::DF_Rating);
 			this->setFilterRegExp(QRegExp("[" + QString::number(filter.size()) + "-5]", Qt::CaseInsensitive, QRegExp::RegExp));
 		} else {
-			this->setFilterRole(filterRole);
+			this->setFilterRole(Qt::DisplayRole);
 			this->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
 		}
 		if (needToSortAgain) {

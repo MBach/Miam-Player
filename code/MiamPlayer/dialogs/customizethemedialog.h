@@ -25,7 +25,7 @@ class CustomizeThemeDialog : public QDialog, public Ui::CustomizeThemeDialog
 	Q_OBJECT
 
 private:
-	MainWindow *mainWindow;
+	MainWindow *_mainWindow;
 
 	Reflector *_targetedColor;
 
@@ -36,7 +36,7 @@ private:
 	QTimer *_timer;
 
 public:
-	CustomizeThemeDialog(QWidget *parent = nullptr);
+	CustomizeThemeDialog(MainWindow *parent = nullptr);
 
 	/** Load theme at startup. */
 	void loadTheme();

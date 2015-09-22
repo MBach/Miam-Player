@@ -18,14 +18,17 @@ public:
 
 	inline void setTopLevelItems(const QMultiHash<SeparatorItem*, QModelIndex> &topLevelItems) { _topLevelItems = topLevelItems; }
 
-	void findMusic(const QString &text, int filterRole = Qt::DisplayRole);
+	void findMusic(const QString &text);
 
 	/** Highlight items in the Tree when one has activated this option in settings. */
 	void highlightMatchingText(const QString &text);
 
+protected:
+	virtual bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const override;
+
 private:
 	/** Reduce the size of the library when the user is typing text. */
-	void filterLibrary(const QString &filter, int filterRole);
+	void filterLibrary(const QString &filter);
 
 signals:
 	void aboutToHighlightLetters(const QSet<QChar> &letters);

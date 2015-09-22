@@ -21,8 +21,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
+	, _uniqueLibrary(new UniqueLibrary(this))
 	, _mediaPlayer(new MediaPlayer(this))
-	, customizeOptionsDialog(new CustomizeOptionsDialog)
 	, searchDialog(new SearchDialog(this))
 {
 	setupUi(this);
@@ -43,11 +43,10 @@ MainWindow::MainWindow(QWidget *parent)
 	tabPlaylists->setMainWindow(this);
 
 	/// XXX
-	_uniqueLibrary = new UniqueLibrary(this);
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
 
-	this->loadTheme();
+	this->loadThemeAndSettings();
 
 	// Instantiate dialogs
 	_playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
@@ -80,7 +79,8 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	DragDropDialog *dragDropDialog = new DragDropDialog;
 
 	// Drag & Drop actions
-	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
+	/// FIXME
+	//connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
 	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
 
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
@@ -101,7 +101,8 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 			dragDropDialog->show();
 			break;
 		case SettingsPrivate::DD_AddToLibrary:
-			customizeOptionsDialog->addMusicLocations(dirs);
+			///FIXME
+			///customizeOptionsDialog->addMusicLocations(dirs);
 			break;
 		case SettingsPrivate::DD_AddToPlaylist:
 			tabPlaylists->addExtFolders(dirs);
@@ -135,7 +136,8 @@ void MainWindow::init()
 	tabPlaylists->init(_mediaPlayer);
 
 	// Load shortcuts
-	customizeOptionsDialog->initShortcuts();
+	///FIXME
+	///customizeOptionsDialog->initShortcuts();
 
 	_playbackModeWidgetFactory->update();
 }
@@ -143,14 +145,14 @@ void MainWindow::init()
 /** Plugins. */
 void MainWindow::loadPlugins()
 {
-	PluginManager *pm = PluginManager::instance();
-	pm->setMainWindow(this);
-	int row = Settings::instance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
+	///FIXME
+	_pluginManager = new PluginManager(this);
+	/*int row = Settings::instance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
 	if (customizeOptionsDialog->listWidget->isRowHidden(5) && row == 5) {
 		customizeOptionsDialog->listWidget->setCurrentRow(0);
 	} else {
 		customizeOptionsDialog->listWidget->setCurrentRow(row);
-	}
+	}*/
 }
 
 /** Set up all actions and behaviour. */
@@ -159,7 +161,7 @@ void MainWindow::setupActions()
 	SqlDatabase *db = SqlDatabase::instance();
 
 	// Load music
-	connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
+	/*connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
 		bool libraryIsEmpty = newLocations.isEmpty();
 		qDebug() << Q_FUNC_INFO << libraryIsEmpty;
 		quickStart->setVisible(libraryIsEmpty);
@@ -175,8 +177,8 @@ void MainWindow::setupActions()
 		} else {
 			db->rebuild(oldLocations, newLocations);
 		}
-	});
-	connect(customizeOptionsDialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
+	});*/
+	//connect(customizeOptionsDialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
 
 	connect(db, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
@@ -235,7 +237,10 @@ void MainWindow::setupActions()
 		customizeThemeDialog->loadTheme();
 		customizeThemeDialog->exec();
 	});
-	connect(actionShowOptions, &QAction::triggered, customizeOptionsDialog, &CustomizeOptionsDialog::open);
+	connect(actionShowOptions, &QAction::triggered, this, [=]() {
+		CustomizeOptionsDialog *customizeOptionsDialog = new CustomizeOptionsDialog(_pluginManager, this);
+		customizeOptionsDialog->open();
+	});
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
@@ -247,7 +252,10 @@ void MainWindow::setupActions()
 	});
 
 	// Quick Start
-	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, customizeOptionsDialog, &CustomizeOptionsDialog::open);
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, [=]() {
+		CustomizeOptionsDialog *customizeOptionsDialog = new CustomizeOptionsDialog(_pluginManager, this);
+		customizeOptionsDialog->open();
+	});
 
 	// Lambda function to reduce duplicate code
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -265,7 +273,8 @@ void MainWindow::setupActions()
 	// Set only one location in the Library: the default music folder
 	connect(quickStart->defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QString musicLocation = quickStart->defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
-		customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
+		/// FIXME
+		///customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
 		musicLocation = QDir::toNativeSeparators(musicLocation);
 		QStringList newLocations;
 		newLocations.append(musicLocation);
@@ -278,7 +287,8 @@ void MainWindow::setupActions()
 		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
 				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
-				customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
+				/// FIXME
+				///customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
 				musicLocation = QDir::toNativeSeparators(musicLocation);
 				newLocations.append(musicLocation);
 			}
@@ -295,7 +305,8 @@ void MainWindow::setupActions()
 	}
 
 	// Send one folder to the music locations
-	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
+	///FIXME
+	//connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
@@ -444,7 +455,8 @@ void MainWindow::setupActions()
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		delete PluginManager::instance();
+		///FIXME
+		///delete PluginManager::instance();
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
@@ -453,7 +465,8 @@ void MainWindow::setupActions()
 	});
 
 	// Shortcuts
-	connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
+	///FIXME
+	///connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 }
 
 /** Update fonts for menu and context menus. */
@@ -465,6 +478,7 @@ void MainWindow::updateFonts(const QFont &font)
 	}
 }
 
+/** Open a new Dialog where one can add a folder to current playlist. */
 void MainWindow::openFolder(const QString &dir)
 {
 	Settings::instance()->setValue("lastOpenedLocation", dir);
@@ -487,7 +501,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
 		this->retranslateUi(this);
-		customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
+		//customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
 		quickStart->retranslateUi(quickStart);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
@@ -576,11 +590,12 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 	QMainWindow::resizeEvent(e);
 }
 
-void MainWindow::loadTheme()
+void MainWindow::loadThemeAndSettings()
 {
-	// Buttons
 	auto settings = Settings::instance();
 	auto settingsPrivate = SettingsPrivate::instance();
+
+	// Buttons
 	for (MediaButton *b : mediaButtons) {
 		b->setMediaPlayer(_mediaPlayer);
 		if (settingsPrivate->isThemeCustomized()) {
@@ -641,7 +656,8 @@ void MainWindow::processArgs(const QStringList &args)
 			tagEditor->addDirectory(fileInfo.absoluteDir());
 			actionViewTagEditor->trigger();
 		} else if (isAddToLibrary) {
-			customizeOptionsDialog->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
+			///FIXME
+			///customizeOptionsDialog->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
 		} else {
 			if (isCreateNewPlaylist) {
 				tabPlaylists->addPlaylist();

@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QGuiApplication>
 #include <QHeaderView>
+#include <QLibraryInfo>
 #include <QScrollBar>
 #include <QStandardPaths>
 #include <QTabWidget>
@@ -37,6 +38,7 @@ SettingsPrivate* SettingsPrivate::instance()
 {
 	if (settings == nullptr) {
 		settings = new SettingsPrivate;
+		settings->initLanguage(settings->language());
 	}
 	return settings;
 }
@@ -411,9 +413,10 @@ void SettingsPrivate::setCustomIcon(const QString &buttonName, const QString &ic
 	}
 }
 
-void SettingsPrivate::setLanguage(const QString &lang)
+bool SettingsPrivate::setLanguage(const QString &lang)
 {
 	setValue("language", lang);
+	return this->initLanguage(lang);
 }
 
 /** Sets the last playlists that were opened when player is about to close. */
@@ -456,6 +459,16 @@ int SettingsPrivate::volumeBarHideAfter() const
 	} else {
 		return value("volumeBarHideAfter").toInt();
 	}
+}
+
+bool SettingsPrivate::initLanguage(const QString &lang)
+{
+	bool b = customTranslator.load(":/translations/" + lang);
+	defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+	/// TODO: reload plugin UI
+	b &= QApplication::installTranslator(&customTranslator);
+	QApplication::installTranslator(&defaultQtTranslator);
+	return b;
 }
 
 void SettingsPrivate::setDefaultLocationFileExplorer(const QString &location)

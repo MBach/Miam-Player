@@ -24,7 +24,7 @@ class PluginManager : public QObject
 	Q_OBJECT
 private:
 	/** The unique instance of this class. */
-	static PluginManager *_pluginManager;
+	//static PluginManager *_pluginManager;
 
 	/** Reference to the MainWindow instance (strong coupling). */
 	MainWindow *_mainWindow;
@@ -44,11 +44,11 @@ private:
 	/** Some instances in the software can be modified (menus, buttons, widgets, etc). */
 	QMultiMap<QString, QObject*> _extensionPoints;
 
+public:
 	PluginManager(QObject *parent = 0);
 
-public:
 	/** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
-	static PluginManager* instance();
+	//static PluginManager* instance();
 
 	void setMainWindow(MainWindow *mainWindow);
 
@@ -65,7 +65,7 @@ private:
 	void init();
 
 	/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
-	void insertRow(const PluginInfo &pluginInfo);
+	//void insertRow(const PluginInfo &pluginInfo);
 
 	/** Load a plugin by its location on the hard drive. */
 	BasicPlugin *loadPlugin(const QFileInfo &pluginFileInfo);
@@ -79,9 +79,12 @@ private:
 	/** Unload a plugin by its name. */
 	void unloadPlugin(const QString &pluginName);
 
-private slots:
+public slots:
 	/** Load or unload a plugin when one is switching a checkbox in the options. */
 	void loadOrUnload(QTableWidgetItem *item);
+
+signals:
+	void createDisabledPluginTab(const QString &pluginName);
 };
 
 #endif // PLUGINMANAGER_H

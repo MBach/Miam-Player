@@ -1,10 +1,10 @@
 #include "customizeoptionsdialog.h"
 
-#include "flowlayout.h"
-#include "mainwindow.h"
+#include <model/sqldatabase.h>
+#include <flowlayout.h>
+#include <musicsearchengine.h>
+#include <settingsprivate.h>
 #include "pluginmanager.h"
-#include "settingsprivate.h"
-#include "musicsearchengine.h"
 
 #include <QDesktopWidget>
 #include <QDir>
@@ -15,7 +15,7 @@
 
 #include <QtDebug>
 
-CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
+CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent) :
 	QDialog(parent, Qt::Tool)
 {
 	setupUi(this);
@@ -23,6 +23,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	listWidgetMusicLocations->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	this->setModal(true);
+	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
 
@@ -91,12 +92,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	QDir dir(":/languages");
 	for (QString i : dir.entryList()) {
 
-		// If the language is available, then store it
-		QFileInfo lang(":/translations/" + i);
-		if (lang.exists()) {
-			languages.insert(i, lang.filePath());
-		}
-
 		// Add a new country flag
 		QToolButton *languageButton = new QToolButton(this);
 		languageButton->setIconSize(QSize(48, 32));
@@ -105,13 +100,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 		languageButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
 		languageButton->setAutoRaise(true);
 		flowLayout->addWidget(languageButton);
-		connect(languageButton, &QToolButton::clicked, this, [=]() {
-			this->changeLanguage(languageButton->text());
-			for (QToolButton *b : this->findChildren<QToolButton*>()) {
-				b->setDown(false);
-			}
-			languageButton->setDown(true);
-		});
+		connect(languageButton, &QToolButton::clicked, this, &CustomizeOptionsDialog::changeLanguage);
 
 		// Pick the right button in User Interface
 		if (i == settings->language()) {
@@ -125,7 +114,17 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
 	connect(seekTimeSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setPlaybackSeekTime);
 
-	this->initCloseActionForPlaylists();
+	switch (settings->playbackDefaultActionForClose()) {
+	case SettingsPrivate::PL_AskUserForAction:
+		radioButtonAskAction->setChecked(true);
+		break;
+	case SettingsPrivate::PL_SaveOnClose:
+		radioButtonSavePlaylist->setChecked(true);
+		break;
+	case SettingsPrivate::PL_DiscardOnClose:
+		radioButtonDiscardPlaylist->setChecked(true);
+		break;
+	}
 	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_AskUserForAction); });
 	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose); });
 	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose); });
@@ -137,7 +136,17 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(radioButtonRestorePlaylists, &QRadioButton::toggled, settings, &SettingsPrivate::setPlaybackRestorePlaylistsAtStartup);
 
 	// Fifth panel: drag and drop
-	this->initDragDropAction();
+	switch (settings->dragDropAction()) {
+	case SettingsPrivate::DD_OpenPopup:
+		radioButtonDDOpenPopup->setChecked(true);
+		break;
+	case SettingsPrivate::DD_AddToLibrary:
+		radioButtonDDAddToLibrary->setChecked(true);
+		break;
+	case SettingsPrivate::DD_AddToPlaylist:
+		radioButtonDDAddToPlaylist->setChecked(true);
+		break;
+	}
 
 	settings->copyTracksFromPlaylist() ? radioButtonDDCopyPlaylistTracks->setChecked(true) : radioButtonDDMovePlaylistTracks->setChecked(true);
 
@@ -146,14 +155,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(QWidget *parent) :
 	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(SettingsPrivate::DD_AddToPlaylist); });
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
-	// Load the language of the application
-	customTranslator.load(languages.value(SettingsPrivate::instance()->language()));
-
-	// Translate standard buttons (OK, Cancel, ...)
-	defaultQtTranslator.load("qt_" + SettingsPrivate::instance()->language(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-
-	QApplication::installTranslator(&customTranslator);
-	QApplication::installTranslator(&defaultQtTranslator);
+	// Sixth panel: plugins
+	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, pluginManager, &PluginManager::loadOrUnload);
 
 	// Restore geometry
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
@@ -199,17 +202,6 @@ void CustomizeOptionsDialog::initShortcuts()
 			emit shortcut->editingFinished();
 		});
 	}
-}
-
-/** Is it necessary to redefined this from the UI class just for this init label? */
-void CustomizeOptionsDialog::retranslateUi(CustomizeOptionsDialog *dialog)
-{
-	if (listWidgetMusicLocations->count() > 0 &&
-			listWidgetMusicLocations->item(0)->text() == "Add some music locations here") {
-		listWidgetMusicLocations->item(0)->setText(QApplication::translate(
-			"CustomizeOptionsDialog", "Add some music locations here"));
-	}
-	Ui::CustomizeOptionsDialog::retranslateUi(dialog);
 }
 
 /** Redefined to add custom behaviour. */
@@ -284,35 +276,17 @@ void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 	this->updateMusicLocations();
 }
 
-/** Change language at runtime. */
-void CustomizeOptionsDialog::changeLanguage(const QString &language)
-{
-	QString lang = languages.value(language);
-	SettingsPrivate *settings = SettingsPrivate::instance();
-
-	// If the language is successfully loaded, tells every widget that they need to be redisplayed
-	if (!lang.isEmpty() && lang != settings->language() && customTranslator.load(lang)) {
-		settings->setLanguage(language);
-		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-		QApplication::installTranslator(&customTranslator);
-		/// TODO: reload plugin UI
-		QApplication::installTranslator(&defaultQtTranslator);
-	} else {
-		labelStatusLanguage->setText(tr("No translation is available for this language :("));
-	}
-}
-
 /** Redefined to initialize theme from settings. */
-void CustomizeOptionsDialog::open()
+/*void CustomizeOptionsDialog::open()
 {
-	/*for (MediaButton *b : parent()->findChildren<MediaButton*>()) {
+	for (MediaButton *b : parent()->findChildren<MediaButton*>()) {
 		QPushButton *button = findChild<QPushButton*>(b->objectName());
 		if (button) {
 			button->setIcon(b->icon());
 			button->setEnabled(b->isVisible());
 			button->setChecked(b->isChecked());
 		}
-	}*/
+	}
 	this->initCloseActionForPlaylists();
 	this->initDragDropAction();
 	retranslateUi(this);
@@ -323,6 +297,25 @@ void CustomizeOptionsDialog::open()
 	}
 	QDialog::open();
 	this->activateWindow();
+}*/
+
+void CustomizeOptionsDialog::changeLanguage()
+{
+	QToolButton *languageButton = qobject_cast<QToolButton*>(sender());
+	if (!languageButton) {
+		return;
+	}
+
+	if (SettingsPrivate::instance()->setLanguage(languageButton->text())) {
+		labelStatusLanguage->setText(QApplication::translate("CustomizeOptionsDialog", "Translation status: OK!"));
+	} else {
+		labelStatusLanguage->setText(tr("No translation is available for this language :("));
+	}
+
+	for (QToolButton *b : this->findChildren<QToolButton*>()) {
+		b->setDown(false);
+	}
+	languageButton->setDown(true);
 }
 
 void CustomizeOptionsDialog::checkShortcutsIntegrity()
@@ -390,36 +383,6 @@ void CustomizeOptionsDialog::deleteSelectedLocation()
 	}
 }
 
-void CustomizeOptionsDialog::initCloseActionForPlaylists()
-{
-	switch (SettingsPrivate::instance()->playbackDefaultActionForClose()) {
-	case SettingsPrivate::PL_AskUserForAction:
-		radioButtonAskAction->setChecked(true);
-		break;
-	case SettingsPrivate::PL_SaveOnClose:
-		radioButtonSavePlaylist->setChecked(true);
-		break;
-	case SettingsPrivate::PL_DiscardOnClose:
-		radioButtonDiscardPlaylist->setChecked(true);
-		break;
-	}
-}
-
-void CustomizeOptionsDialog::initDragDropAction()
-{
-	switch (SettingsPrivate::instance()->dragDropAction()) {
-	case SettingsPrivate::DD_OpenPopup:
-		radioButtonDDOpenPopup->setChecked(true);
-		break;
-	case SettingsPrivate::DD_AddToLibrary:
-		radioButtonDDAddToLibrary->setChecked(true);
-		break;
-	case SettingsPrivate::DD_AddToPlaylist:
-		radioButtonDDAddToPlaylist->setChecked(true);
-		break;
-	}
-}
-
 /** Open a dialog for letting the user to choose a music directory. */
 void CustomizeOptionsDialog::openLibraryDialog()
 {
@@ -458,4 +421,30 @@ void CustomizeOptionsDialog::updateMusicLocations()
 		settings->sync();
 		emit musicLocationsHaveChanged(savedLocations, newLocations);
 	}
+}
+
+////////
+
+/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
+void CustomizeOptionsDialog::insertRow(const PluginInfo &pluginInfo)
+{
+	// Add name, state and version info on a summary page
+	int row = pluginSummaryTableWidget->rowCount();
+	pluginSummaryTableWidget->insertRow(row);
+	QTableWidgetItem *checkbox = new QTableWidgetItem();
+	if (pluginInfo.isEnabled()) {
+		checkbox->setCheckState(Qt::Checked);
+	} else {
+		checkbox->setCheckState(Qt::Unchecked);
+	}
+	checkbox->setData(Qt::EditRole, QVariant::fromValue(pluginInfo));
+
+	// Temporarily disconnects signals to prevent infinite recursion!
+	pluginSummaryTableWidget->blockSignals(true);
+	pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(pluginInfo.pluginName()));
+	pluginSummaryTableWidget->setItem(row, 1, checkbox);
+	pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(pluginInfo.version()));
+	pluginSummaryTableWidget->blockSignals(false);
+
+	SettingsPrivate::instance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }

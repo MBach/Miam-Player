@@ -11,7 +11,7 @@
 #include "model/selectedtracksmodel.h"
 #include "abstractsearchdialog.h"
 
-PluginManager* PluginManager::_pluginManager = nullptr;
+//PluginManager* PluginManager::_pluginManager = nullptr;
 
 /** Constructor with strong coupling. */
 PluginManager::PluginManager(QObject *parent) :
@@ -23,7 +23,7 @@ void PluginManager::setMainWindow(MainWindow *mainWindow)
 	_mainWindow = mainWindow;
 	this->setParent(mainWindow);
 	// Load or unload when a checkbox state has changed
-	connect(_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &PluginManager::loadOrUnload);
+	//connect(_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &PluginManager::loadOrUnload);
 
 	QDir appDirPath = QDir(qApp->applicationDirPath());
 	if (appDirPath.cd("plugins")) {
@@ -31,21 +31,22 @@ void PluginManager::setMainWindow(MainWindow *mainWindow)
 		this->init();
 	}
 	// If no shared lib was found, it's useless to keep a plugin page empty
-	if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
+	/// FIXME
+	/*if (_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount() == 0) {
 		_mainWindow->customizeOptionsDialog->listWidget->setRowHidden(5, true);
-	}
+	}*/
 	/// XXX: should I react to filesystem changes in ./plugins directory when one drops plugins?
 	/// It could be nice
 }
 
 /** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
-PluginManager * PluginManager::instance()
+/*PluginManager * PluginManager::instance()
 {
 	if (_pluginManager == nullptr) {
 		_pluginManager = new PluginManager;
 	}
 	return _pluginManager;
-}
+}*/
 
 /** Explicitly destroys every plugin. */
 PluginManager::~PluginManager()
@@ -80,12 +81,13 @@ void PluginManager::init()
 					this->loadPlugin(it.fileInfo());
 				} else {
 					// Plugin exists in Settings, but one has chosen to disable it at startup
-					this->insertRow(pluginInfo);
+					//this->insertRow(pluginInfo);
 					if (pluginInfo.isConfigurable()) {
-						QWidget *fakeConfigPage = new QWidget();
-						int tab = _mainWindow->customizeOptionsDialog->tabPlugins->addTab(fakeConfigPage, pluginInfo.pluginName());
-						_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(tab, false);
-						_mainWindow->customizeOptionsDialog->tabPlugins->setTabToolTip(tab, tr("You have chosen to disable this plugin, therefore you cannot access to its configuration page right now."));
+						//QWidget *fakeConfigPage = new QWidget();
+						emit createDisabledPluginTab(pluginInfo.pluginName());
+						//int tab = _mainWindow->customizeOptionsDialog->tabPlugins->addTab(fakeConfigPage, pluginInfo.pluginName());
+						//_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(tab, false);
+						//_mainWindow->customizeOptionsDialog->tabPlugins->setTabToolTip(tab, tr("You have chosen to disable this plugin, therefore you cannot access to its configuration page right now."));
 					}
 					_plugins.insert(pluginInfo.pluginName(), it.fileInfo());
 				}
@@ -95,7 +97,7 @@ void PluginManager::init()
 }
 
 /** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
-void PluginManager::insertRow(const PluginInfo &pluginInfo)
+/*void PluginManager::insertRow(const PluginInfo &pluginInfo)
 {
 	// Add name, state and version info on a summary page
 	int row = _mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->rowCount();
@@ -116,7 +118,7 @@ void PluginManager::insertRow(const PluginInfo &pluginInfo)
 	_mainWindow->customizeOptionsDialog->pluginSummaryTableWidget->blockSignals(false);
 
 	SettingsPrivate::instance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
-}
+}*/
 
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 {
@@ -198,17 +200,17 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 			SettingsPrivate *settings = SettingsPrivate::instance();
 			// If one has previoulsy unloaded a plugin, and now wants to reload it (yeah, I know...), we don't need to append items once again
 			///FIXME
-			int idx = _mainWindow->customizeOptionsDialog->tabPlugins->count();
+			//int idx = _mainWindow->customizeOptionsDialog->tabPlugins->count();
 			if (_plugins.contains(basic->name())) {
 				if (basic->isConfigurable()) {
-					for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
+					/*for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
 						if (_mainWindow->customizeOptionsDialog->tabPlugins->tabText(i) == basic->name()) {
 							_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(i, true);
 							_mainWindow->customizeOptionsDialog->tabPlugins->widget(i)->deleteLater();
 							idx = i;
 							break;
 						}
-					}
+					}*/
 				}
 			} else {
 				PluginInfo pluginInfo;
@@ -217,7 +219,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 				pluginInfo.setVersion(basic->version());
 				pluginInfo.setConfigPage(basic->isConfigurable());
 				pluginInfo.setEnabled(true);
-				this->insertRow(pluginInfo);
+				//this->insertRow(pluginInfo);
 				_plugins.insert(basic->name(), pluginFileInfo);
 			}
 			if (basic->isConfigurable()) {
@@ -225,7 +227,7 @@ BasicPlugin *PluginManager::loadPlugin(const QFileInfo &pluginFileInfo)
 				if (basic->translator.load(pluginLang)) {
 					QApplication::installTranslator(&basic->translator);
 				}
-				_mainWindow->customizeOptionsDialog->tabPlugins->insertTab(idx, basic->configPage(), basic->name());
+				//_mainWindow->customizeOptionsDialog->tabPlugins->insertTab(idx, basic->configPage(), basic->name());
 			}
 			// Keep references of loaded plugins, to be able to unload them later
 			_instances.insert(basic->name(), basic);
@@ -266,12 +268,13 @@ void PluginManager::unloadPlugin(const QString &pluginName)
 	}
 	// Search and disable the config page in options page
 	if (basic->isConfigurable()) {
-		for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
+		/// FIXME
+		/*for (int i = 0; i < _mainWindow->customizeOptionsDialog->tabPlugins->count(); i++) {
 			if (_mainWindow->customizeOptionsDialog->tabPlugins->tabText(i) == basic->name()) {
 				_mainWindow->customizeOptionsDialog->tabPlugins->setTabEnabled(i, false);
 				break;
 			}
-		}
+		}*/
 	}
 	_instances.remove(pluginName);
 	_dependencies.remove(pluginName);

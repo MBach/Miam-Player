@@ -44,6 +44,10 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	app.installTranslator(&settings->customTranslator);
+	app.installTranslator(&settings->defaultQtTranslator);
+
 	app.setStyle(new MiamStyle);
 	MainWindow *window = new MainWindow;
 	app.setActivationWindow(window);
@@ -52,7 +56,6 @@ int main(int argc, char *argv[])
 	QObject::connect(window->actionShowDebug, &QAction::triggered, [=]() { logBrowser->show(); });
 	QObject::connect(&app, &QtSingleApplication::sendArgs, window, &MainWindow::processArgs);
 
-	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->isCustomColors()) {
 		app.setPalette(settings->value("customPalette").value<QPalette>());
 	}

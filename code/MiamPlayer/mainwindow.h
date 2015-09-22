@@ -6,16 +6,17 @@
 #include <QStack>
 
 #include <model/sqldatabase.h>
+#include <librarytreeview.h>
 #include <mediabutton.h>
 #include <mediaplayer.h>
+#include <uniquelibrary.h>
+
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
 #include "dialogs/searchdialog.h"
-
-#include <librarytreeview.h>
 #include "playbackmodewidgetfactory.h"
+#include "pluginmanager.h"
 
-#include "uniquelibrary.h"
 #include "ui_mainwindow.h"
 
 /**
@@ -31,15 +32,16 @@ private:
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
 
-	/** WIP. View object: display all your tracks in a huge and page. */
+	/** View object: display all your tracks in a huge list. */
 	UniqueLibrary *_uniqueLibrary;
 
 	MediaPlayer *_mediaPlayer;
 
+	PluginManager *_pluginManager;
+
 public:
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
-	CustomizeOptionsDialog *customizeOptionsDialog;
 	SearchDialog *searchDialog;
 
 	explicit MainWindow(QWidget *parent = 0);
@@ -53,6 +55,8 @@ public:
 	/** Plugins. */
 	void loadPlugins();
 
+	MediaPlayer *mediaPlayer() const;
+
 	//inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
 
 	/** Set up all actions and behaviour. */
@@ -61,9 +65,8 @@ public:
 	/** Update fonts for menu and context menus. */
 	void updateFonts(const QFont &font);
 
+	/** Open a new Dialog where one can add a folder to current playlist. */
 	void openFolder(const QString &dir);
-
-	MediaPlayer *mediaPlayer() const;
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
@@ -84,7 +87,7 @@ protected:
 	virtual void resizeEvent(QResizeEvent *e) override;
 
 private:
-	void loadTheme();
+	void loadThemeAndSettings();
 
 public slots:
 	void processArgs(const QStringList &args);

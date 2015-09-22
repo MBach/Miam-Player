@@ -20,6 +20,7 @@ UniqueLibrary::UniqueLibrary(QWidget *parent) :
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &SearchBar::aboutToStartSearch, [=](const QString &text) {
-		library->model()->proxy()->findMusic(text, Miam::DF_CustomSortRole);
+		//library->model()->proxy()->findMusic(text, Miam::DF_CustomSortRole);
+		library->model()->proxy()->findMusic(text);
 	});
 }

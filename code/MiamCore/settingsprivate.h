@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QPushButton>
 #include <QSettings>
+#include <QTranslator>
 
 #include "miamcore_global.h"
 
@@ -58,6 +59,8 @@ public:
 
 	enum LibrarySearchMode { LSM_Filter			= 0,
 							 LSM_HighlightOnly	= 1};
+
+	QTranslator customTranslator, defaultQtTranslator;
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();
@@ -170,7 +173,7 @@ public:
 	void setCustomIcon(const QString &buttonName, const QString &iconPath);
 
 	/** Sets the language of the application. */
-	void setLanguage(const QString &lang);
+	bool setLanguage(const QString &lang);
 
 	/** Sets the last playlists that were opened when player is about to close. */
 	void setLastPlaylistSession(const QList<uint> &ids);
@@ -184,6 +187,9 @@ public:
 	QMap<QString, QVariant> shortcuts() const;
 
 	int volumeBarHideAfter() const;
+
+private:
+	bool initLanguage(const QString &lang);
 
 public:
 	void setDefaultLocationFileExplorer(const QString &location);
