@@ -475,8 +475,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>280</width>
-            <height>285</height>
+            <width>574</width>
+            <height>440</height>
            </rect>
           </property>
           <attribute name="label">
@@ -509,7 +509,7 @@
            <item row="1" column="2">
             <widget class="QKeySequenceEdit" name="openFolders">
              <property name="keySequence">
-              <string notr="true">Ctrl+Shift+O</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -529,7 +529,7 @@
            <item row="0" column="2">
             <widget class="QKeySequenceEdit" name="openFiles">
              <property name="keySequence">
-              <string notr="true">Ctrl+O</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -543,7 +543,7 @@
            <item row="4" column="2">
             <widget class="QKeySequenceEdit" name="showCustomize">
              <property name="keySequence">
-              <string notr="true">F9</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -602,14 +602,14 @@
            <item row="6" column="2">
             <widget class="QKeySequenceEdit" name="showOptions">
              <property name="keySequence">
-              <string notr="true">F12</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="2" column="2">
             <widget class="QKeySequenceEdit" name="exit">
              <property name="keySequence">
-              <string notr="true">Ctrl+Q</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -661,7 +661,7 @@
            <item row="3" column="2">
             <widget class="QKeySequenceEdit" name="scanLibrary">
              <property name="keySequence">
-              <string notr="true">Ctrl+Shift+R</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -841,7 +841,7 @@
            <item row="8" column="2">
             <widget class="QKeySequenceEdit" name="showHelp">
              <property name="keySequence">
-              <string notr="true">F1</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -893,7 +893,7 @@
            <item row="9" column="2">
             <widget class="QKeySequenceEdit" name="showDebug">
              <property name="keySequence">
-              <string notr="true">F2</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -942,8 +942,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>208</width>
-            <height>540</height>
+            <width>574</width>
+            <height>440</height>
            </rect>
           </property>
           <attribute name="label">
@@ -953,7 +953,7 @@
            <item row="3" column="2">
             <widget class="QKeySequenceEdit" name="showTabFilesystem">
              <property name="keySequence">
-              <string notr="true">2</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -973,7 +973,7 @@
            <item row="1" column="2">
             <widget class="QKeySequenceEdit" name="showTabLibrary">
              <property name="keySequence">
-              <string notr="true">1</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -999,7 +999,7 @@
            <item row="0" column="2">
             <widget class="QKeySequenceEdit" name="viewPlaylists">
              <property name="keySequence">
-              <string notr="true">H</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -1208,11 +1208,7 @@
             </widget>
            </item>
            <item row="11" column="2">
-            <widget class="QKeySequenceEdit" name="viewTagEditor">
-             <property name="keySequence">
-              <string notr="true">J</string>
-             </property>
-            </widget>
+            <widget class="QKeySequenceEdit" name="viewTagEditor"/>
            </item>
            <item row="7" column="2">
             <widget class="QKeySequenceEdit" name="sendToTagEditor">
@@ -1260,7 +1256,7 @@
            <item row="4" column="2">
             <widget class="QKeySequenceEdit" name="search">
              <property name="keySequence">
-              <string notr="true">Ctrl+F</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -1422,8 +1418,8 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>299</width>
+            <y>-68</y>
+            <width>555</width>
             <height>508</height>
            </rect>
           </property>
@@ -1891,7 +1887,7 @@
            <item row="16" column="3">
             <widget class="QKeySequenceEdit" name="playbackRandom">
              <property name="keySequence">
-              <string notr="true">L</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -1912,35 +1908,35 @@
            <item row="12" column="3">
             <widget class="QKeySequenceEdit" name="playbackSequential">
              <property name="keySequence">
-              <string notr="true">K</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="4" column="3">
             <widget class="QKeySequenceEdit" name="play">
              <property name="keySequence">
-              <string notr="true">C</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="0" column="3">
             <widget class="QKeySequenceEdit" name="skipBackward">
              <property name="keySequence">
-              <string notr="true">Z</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="6" column="3">
             <widget class="QKeySequenceEdit" name="stop">
              <property name="keySequence">
-              <string notr="true">V</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="2" column="3">
             <widget class="QKeySequenceEdit" name="seekBackward">
              <property name="keySequence">
-              <string notr="true">X</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -1966,14 +1962,14 @@
            <item row="10" column="3">
             <widget class="QKeySequenceEdit" name="skipForward">
              <property name="keySequence">
-              <string notr="true">N</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="8" column="3">
             <widget class="QKeySequenceEdit" name="seekForward">
              <property name="keySequence">
-              <string notr="true">B</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -2205,21 +2201,21 @@
            <item row="23" column="3">
             <widget class="QKeySequenceEdit" name="mute">
              <property name="keySequence">
-              <string notr="true">M</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="25" column="3">
             <widget class="QKeySequenceEdit" name="increaseVolume">
              <property name="keySequence">
-              <string notr="true">Up</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="27" column="3">
             <widget class="QKeySequenceEdit" name="decreaseVolume">
              <property name="keySequence">
-              <string notr="true">Down</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -2715,8 +2711,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>307</width>
-            <height>212</height>
+            <width>574</width>
+            <height>440</height>
            </rect>
           </property>
           <attribute name="label">
@@ -2920,14 +2916,14 @@
            <item row="1" column="2">
             <widget class="QKeySequenceEdit" name="addPlaylist">
              <property name="keySequence">
-              <string notr="true">Ctrl+T</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="3" column="2">
             <widget class="QKeySequenceEdit" name="deleteCurrentPlaylist">
              <property name="keySequence">
-              <string notr="true">Ctrl+W</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -2941,21 +2937,21 @@
            <item row="7" column="2">
             <widget class="QKeySequenceEdit" name="moveTracksUp">
              <property name="keySequence">
-              <string notr="true">Shift+Up</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="9" column="2">
             <widget class="QKeySequenceEdit" name="moveTracksDown">
              <property name="keySequence">
-              <string notr="true">Shift+Down</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
            <item row="11" column="2">
             <widget class="QKeySequenceEdit" name="removeSelectedTracks">
              <property name="keySequence">
-              <string notr="true">Del</string>
+              <string notr="true"/>
              </property>
             </widget>
            </item>
@@ -3611,9 +3607,9 @@
  </connections>
  <buttongroups>
   <buttongroup name="buttonGroup_4"/>
-  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup"/>
-  <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

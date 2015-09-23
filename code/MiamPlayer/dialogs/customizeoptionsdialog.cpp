@@ -66,7 +66,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 		}
 	}
 
-
 	// Restore default location for the file explorer
 	for (int i = 0; i < comboBoxDefaultFileExplorer->count(); i++) {
 		if (comboBoxDefaultFileExplorer->itemText(i) == QDir::toNativeSeparators(settings->defaultLocationFileExplorer())) {
@@ -109,6 +108,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	}
 
 	// Third panel: @see initShortcuts
+	this->initShortcuts();
 
 	// Fourth panel: playback
 	seekTimeSpinBox->setValue(settings->playbackSeekTime()/1000);
@@ -178,9 +178,6 @@ void CustomizeOptionsDialog::initShortcuts()
 			sequence = QKeySequence(shortcutMap.value(shortCutName).toString());
 			shortcut->setKeySequence(sequence);
 		}
-
-		// Load current shortcut
-		emit aboutToBindShortcut(shortCutName, sequence);
 
 		// Forward signal to MainWindow
 		connect(shortcut, &QKeySequenceEdit::editingFinished, this, &CustomizeOptionsDialog::checkShortcutsIntegrity);
@@ -276,29 +273,7 @@ void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 	this->updateMusicLocations();
 }
 
-/** Redefined to initialize theme from settings. */
-/*void CustomizeOptionsDialog::open()
-{
-	for (MediaButton *b : parent()->findChildren<MediaButton*>()) {
-		QPushButton *button = findChild<QPushButton*>(b->objectName());
-		if (button) {
-			button->setIcon(b->icon());
-			button->setEnabled(b->isVisible());
-			button->setChecked(b->isChecked());
-		}
-	}
-	this->initCloseActionForPlaylists();
-	this->initDragDropAction();
-	retranslateUi(this);
-	if (SettingsPrivate::instance()->value("customizeOptionsDialogGeometry").isNull()) {
-		int w = qApp->desktop()->screenGeometry().width() / 2;
-		int h = qApp->desktop()->screenGeometry().height() / 2;
-		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
-	}
-	QDialog::open();
-	this->activateWindow();
-}*/
-
+/** Application can be retranslated dynamically at runtime. */
 void CustomizeOptionsDialog::changeLanguage()
 {
 	QToolButton *languageButton = qobject_cast<QToolButton*>(sender());
@@ -318,6 +293,7 @@ void CustomizeOptionsDialog::changeLanguage()
 	languageButton->setDown(true);
 }
 
+/** Verify that one hasn't tried to bind a key twice. */
 void CustomizeOptionsDialog::checkShortcutsIntegrity()
 {
 	bool ok = true;

@@ -39,12 +39,11 @@ public slots:
 	/** Adds a external music locations in the library (Drag & Drop). */
 	void addMusicLocations(const QList<QDir> &dirs);
 
-	/** Redefined to initialize theme from settings. */
-	//virtual void open() override;
-
 private slots:
+	/** Application can be retranslated dynamically at runtime. */
 	void changeLanguage();
 
+	/** Verify that one hasn't tried to bind a key twice. */
 	void checkShortcutsIntegrity();
 
 	/** Delete a music location previously chosen by the user. */

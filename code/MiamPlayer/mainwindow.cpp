@@ -78,6 +78,9 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	/** Popup shown to one when tracks are dropped from another application to MiamPlayer. */
 	DragDropDialog *dragDropDialog = new DragDropDialog;
 
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	settings->musicLocations();
+
 	// Drag & Drop actions
 	/// FIXME
 	//connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
@@ -117,6 +120,14 @@ void MainWindow::init()
 	this->setupActions();
 
 	auto settingsPrivate = SettingsPrivate::instance();
+
+	// Init shortcuts
+	QMapIterator<QString, QVariant> it(settingsPrivate->shortcuts());
+	while (it.hasNext()) {
+		it.next();
+		this->bindShortcut(it.key(), it.value().value<QKeySequence>());
+	}
+
 	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
 	quickStart->setVisible(isEmpty);
 	library->setVisible(!isEmpty);
@@ -134,11 +145,6 @@ void MainWindow::init()
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	tabPlaylists->init(_mediaPlayer);
-
-	// Load shortcuts
-	///FIXME
-	///customizeOptionsDialog->initShortcuts();
-
 	_playbackModeWidgetFactory->update();
 }
 
@@ -240,6 +246,7 @@ void MainWindow::setupActions()
 	connect(actionShowOptions, &QAction::triggered, this, [=]() {
 		CustomizeOptionsDialog *customizeOptionsDialog = new CustomizeOptionsDialog(_pluginManager, this);
 		customizeOptionsDialog->open();
+		connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 	});
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
@@ -463,10 +470,6 @@ void MainWindow::setupActions()
 		Settings::instance()->setVolume((qreal)volumeSlider->value() / 100.0);
 		settings->sync();
 	});
-
-	// Shortcuts
-	///FIXME
-	///connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 }
 
 /** Update fonts for menu and context menus. */

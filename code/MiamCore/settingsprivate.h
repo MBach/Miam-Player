@@ -191,6 +191,8 @@ public:
 private:
 	bool initLanguage(const QString &lang);
 
+	void initShortcuts();
+
 public:
 	void setDefaultLocationFileExplorer(const QString &location);
 
