@@ -16,16 +16,9 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 	originalLabel = labelHowToProceed->text();
 }
 
-/** Is it necessary to redefined this from the UI class just for this init label? */
-/*void DragDropDialog::retranslateUi(DragDropDialog *dialog)
-{
-	labelHowToProceed->setText("What would you like to do with %1?");
-	Ui::DragDropDialog::retranslateUi(dialog);
-}*/
-
 bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 {
-	_externalLocations.clear();
+	externalLocations.clear();
 	if (!mimeData->hasUrls()) {
 		return false;
 	}
@@ -45,10 +38,10 @@ bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 				newLabel.append(fileInfo.fileName()).append(", ");
 				folders++;
 			}
-			_externalLocations.append(fileInfo.absoluteFilePath());
+			externalLocations.append(fileInfo.absoluteFilePath());
 			onlyFiles = false;
 		} else if (fileInfo.isFile()){
-			_externalLocations.append(fileInfo.absoluteFilePath());
+			externalLocations.append(fileInfo.absoluteFilePath());
 			onlyFiles = onlyFiles && true;
 		}
 	}
@@ -68,7 +61,7 @@ void DragDropDialog::addExternalFoldersToLibrary()
 		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToLibrary);
 	}
 	QList<QDir> dirs;
-	for (QString dir : _externalLocations) {
+	for (QString dir : externalLocations) {
 		dirs << dir;
 	}
 	emit aboutToAddExtFoldersToLibrary(dirs);
@@ -81,7 +74,7 @@ void DragDropDialog::addExternalFoldersToPlaylist()
 		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToPlaylist);
 	}
 	QList<QDir> dirs;
-	for (QString dir : _externalLocations) {
+	for (QString dir : externalLocations) {
 		dirs << dir;
 	}
 	emit aboutToAddExtFoldersToPlaylist(dirs);

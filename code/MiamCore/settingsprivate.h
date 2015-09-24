@@ -200,6 +200,8 @@ public:
 	void setInsertPolicy(InsertPolicy ip);
 
 public slots:
+	void addMusicLocations(const QList<QDir> &dirs);
+
 	void setBigCoverOpacity(int v);
 
 	void setBigCovers(bool b);
@@ -267,6 +269,9 @@ signals:
 	void fontHasChanged(FontFamily, const QFont &font);
 
 	void librarySearchModeChanged();
+
+	/** Signal sent whether the music locations have changed or not. */
+	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

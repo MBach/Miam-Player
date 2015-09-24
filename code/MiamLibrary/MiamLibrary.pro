@@ -11,7 +11,7 @@ SOURCES += \
     changehierarchybutton.cpp \
     discitem.cpp \
     extendedtabbar.cpp \
-	libraryfilterlineedit.cpp \
+    libraryfilterlineedit.cpp \
     libraryfilterproxymodel.cpp \
     libraryheader.cpp \
     libraryitemdelegate.cpp \
@@ -34,7 +34,7 @@ HEADERS += \
     discitem.h \
     extendedtabbar.h \
     extendedtabwidget.h \
-	libraryfilterlineedit.h \
+    libraryfilterlineedit.h \
     libraryfilterproxymodel.h \
     libraryheader.h \
     libraryitemdelegate.h \

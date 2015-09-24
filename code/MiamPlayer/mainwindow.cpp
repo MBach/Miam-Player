@@ -79,33 +79,32 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	DragDropDialog *dragDropDialog = new DragDropDialog;
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	settings->musicLocations();
 
 	// Drag & Drop actions
-	/// FIXME
-	//connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
+	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, settings, &SettingsPrivate::addMusicLocations);
 	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
 
 	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
 	if (onlyFiles) {
 		QStringList tracks;
-		for (QString file : dragDropDialog->externalLocations()) {
+		for (QString file : dragDropDialog->externalLocations) {
 			tracks << "file://" + file;
 		}
 		tracks.sort(Qt::CaseInsensitive);
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	} else {
 		QList<QDir> dirs;
-		for (QString location : dragDropDialog->externalLocations()) {
+		for (QString location : dragDropDialog->externalLocations) {
 			dirs << location;
 		}
 		switch (SettingsPrivate::instance()->dragDropAction()) {
 		case SettingsPrivate::DD_OpenPopup:
 			dragDropDialog->show();
+			dragDropDialog->raise();
+			dragDropDialog->activateWindow();
 			break;
 		case SettingsPrivate::DD_AddToLibrary:
-			///FIXME
-			///customizeOptionsDialog->addMusicLocations(dirs);
+			settings->addMusicLocations(dirs);
 			break;
 		case SettingsPrivate::DD_AddToPlaylist:
 			tabPlaylists->addExtFolders(dirs);
@@ -165,27 +164,6 @@ void MainWindow::loadPlugins()
 void MainWindow::setupActions()
 {
 	SqlDatabase *db = SqlDatabase::instance();
-
-	// Load music
-	/*connect(customizeOptionsDialog, &CustomizeOptionsDialog::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
-		bool libraryIsEmpty = newLocations.isEmpty();
-		qDebug() << Q_FUNC_INFO << libraryIsEmpty;
-		quickStart->setVisible(libraryIsEmpty);
-		library->setVisible(!libraryIsEmpty);
-		libraryHeader->setVisible(!libraryIsEmpty);
-		changeHierarchyButton->setVisible(!libraryIsEmpty);
-		actionScanLibrary->setDisabled(libraryIsEmpty);
-		widgetSearchBar->setVisible(!libraryIsEmpty);
-
-		if (libraryIsEmpty) {
-			db->rebuild(oldLocations, QStringList());
-			quickStart->searchMultimediaFiles();
-		} else {
-			db->rebuild(oldLocations, newLocations);
-		}
-	});*/
-	//connect(customizeOptionsDialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
-
 	connect(db, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
 	// Adds a group where view mode are mutually exclusive
@@ -243,11 +221,7 @@ void MainWindow::setupActions()
 		customizeThemeDialog->loadTheme();
 		customizeThemeDialog->exec();
 	});
-	connect(actionShowOptions, &QAction::triggered, this, [=]() {
-		CustomizeOptionsDialog *customizeOptionsDialog = new CustomizeOptionsDialog(_pluginManager, this);
-		customizeOptionsDialog->open();
-		connect(customizeOptionsDialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-	});
+	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
@@ -259,14 +233,12 @@ void MainWindow::setupActions()
 	});
 
 	// Quick Start
-	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, [=]() {
-		CustomizeOptionsDialog *customizeOptionsDialog = new CustomizeOptionsDialog(_pluginManager, this);
-		customizeOptionsDialog->open();
-	});
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
 
 	// Lambda function to reduce duplicate code
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	auto applyButtonClicked = [this, db, settings] (const QStringList &newLocations) {
+		qDebug() << Q_FUNC_INFO << "applyButtonClicked";
 		settings->setMusicLocations(newLocations);
 		quickStart->hide();
 		library->show();
@@ -277,11 +249,30 @@ void MainWindow::setupActions()
 		db->rebuild();
 	};
 
+	// Load music
+	connect(settings, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
+		qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
+		bool libraryIsEmpty = newLocations.isEmpty();
+		quickStart->setVisible(libraryIsEmpty);
+		library->setVisible(!libraryIsEmpty);
+		libraryHeader->setVisible(!libraryIsEmpty);
+		changeHierarchyButton->setVisible(!libraryIsEmpty);
+		actionScanLibrary->setDisabled(libraryIsEmpty);
+		widgetSearchBar->setVisible(!libraryIsEmpty);
+
+		auto db = SqlDatabase::instance();
+		if (libraryIsEmpty) {
+			leftTabs->setCurrentIndex(0);
+			db->rebuild(oldLocations, QStringList());
+			quickStart->searchMultimediaFiles();
+		} else {
+			db->rebuild(oldLocations, newLocations);
+		}
+	});
+
 	// Set only one location in the Library: the default music folder
 	connect(quickStart->defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QString musicLocation = quickStart->defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
-		/// FIXME
-		///customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
 		musicLocation = QDir::toNativeSeparators(musicLocation);
 		QStringList newLocations;
 		newLocations.append(musicLocation);
@@ -294,8 +285,6 @@ void MainWindow::setupActions()
 		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
 			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
 				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
-				/// FIXME
-				///customizeOptionsDialog->addMusicLocation(QDir(musicLocation));
 				musicLocation = QDir::toNativeSeparators(musicLocation);
 				newLocations.append(musicLocation);
 			}
@@ -312,8 +301,7 @@ void MainWindow::setupActions()
 	}
 
 	// Send one folder to the music locations
-	///FIXME
-	//connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, customizeOptionsDialog, &CustomizeOptionsDialog::addMusicLocations);
+	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, settings, &SettingsPrivate::addMusicLocations);
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
@@ -659,8 +647,7 @@ void MainWindow::processArgs(const QStringList &args)
 			tagEditor->addDirectory(fileInfo.absoluteDir());
 			actionViewTagEditor->trigger();
 		} else if (isAddToLibrary) {
-			///FIXME
-			///customizeOptionsDialog->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
+			SettingsPrivate::instance()->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
 		} else {
 			if (isCreateNewPlaylist) {
 				tabPlaylists->addPlaylist();
@@ -724,6 +711,16 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}
+}
+
+void MainWindow::createCustomizeOptionsDialog()
+{
+	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
+
+	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
+	connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
+
+	dialog->open();
 }
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)

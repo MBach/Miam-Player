@@ -30,7 +30,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	// First panel: library
 	connect(radioButtonSearchAndExclude, &QRadioButton::toggled, settings, &SettingsPrivate::setSearchAndExcludeLibrary);
 	connect(pushButtonAddLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::openLibraryDialog);
-	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteSelectedLocation);
+	connect(pushButtonDeleteLocation, &QPushButton::clicked, this, &CustomizeOptionsDialog::deleteMusicLocation);
 
 	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 	if (!musicLocations.isEmpty()) {
@@ -204,13 +204,17 @@ void CustomizeOptionsDialog::initShortcuts()
 /** Redefined to add custom behaviour. */
 void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
 {
-	QDialog::closeEvent(e);
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	settings->setValue("customizeOptionsDialogGeometry", saveGeometry());
 	settings->setValue("customizeOptionsDialogCurrentTab", listWidget->currentRow());
 
 	// Drive is scanned only when the popup is closed
 	this->updateMusicLocations();
+
+	QStringList savedLocations = settings->value("musicLocations").toStringList();
+	qDebug() << Q_FUNC_INFO << savedLocations;
+
+	QDialog::closeEvent(e);
 }
 
 /** Redefined to inspect shortcuts. */
@@ -327,7 +331,7 @@ void CustomizeOptionsDialog::checkShortcutsIntegrity()
 }
 
 /** Delete a music location previously chosen by the user. */
-void CustomizeOptionsDialog::deleteSelectedLocation()
+void CustomizeOptionsDialog::deleteMusicLocation()
 {
 	// If the user didn't click on an item before activating delete button
 	int row = listWidgetMusicLocations->currentRow();
@@ -395,7 +399,6 @@ void CustomizeOptionsDialog::updateMusicLocations()
 	if (!musicLocationsAreIdenticals) {
 		settings->setMusicLocations(newLocations);
 		settings->sync();
-		emit musicLocationsHaveChanged(savedLocations, newLocations);
 	}
 }
 

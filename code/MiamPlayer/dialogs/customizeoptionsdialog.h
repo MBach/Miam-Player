@@ -47,7 +47,7 @@ private slots:
 	void checkShortcutsIntegrity();
 
 	/** Delete a music location previously chosen by the user. */
-	void deleteSelectedLocation();
+	void deleteMusicLocation();
 
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();
@@ -61,9 +61,6 @@ signals:
 	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);
 
 	void defaultLocationFileExplorerHasChanged(const QDir &location);
-
-	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
 };
 
 #endif // CUSTOMIZEOPTIONSDIALOG_H

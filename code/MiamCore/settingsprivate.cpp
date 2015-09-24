@@ -1,6 +1,7 @@
 #include "settingsprivate.h"
 
 #include <QDateTime>
+#include <QDir>
 #include <QFile>
 #include <QApplication>
 #include <QGuiApplication>
@@ -432,7 +433,13 @@ void SettingsPrivate::setLastPlaylistSession(const QList<uint> &ids)
 
 void SettingsPrivate::setMusicLocations(const QStringList &locations)
 {
+	//qDebug() << Q_FUNC_INFO << locations;
+	QStringList savedLocations = value("musicLocations", QStringList()).toStringList();
 	setValue("musicLocations", locations);
+	//if (!savedLocations.isEmpty()) {
+		qDebug() << Q_FUNC_INFO << "about to trigger signal";
+		emit musicLocationsHaveChanged(savedLocations, locations);
+	//}
 }
 
 void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -521,6 +528,19 @@ void SettingsPrivate::setInsertPolicy(SettingsPrivate::InsertPolicy ip)
 }
 
 /// SLOTS
+void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
+{
+	QStringList locations;
+	for (QDir d : dirs) {
+		locations << d.absolutePath();
+	}
+	QStringList old = value("musicLocations").toStringList();
+	QStringList newLocations(old);
+	newLocations.append(locations);
+	setValue("musicLocations", newLocations);
+	emit musicLocationsHaveChanged(old, newLocations);
+}
+
 void SettingsPrivate::setBigCoverOpacity(int v)
 {
 	setValue("bigCoverOpacity", (qreal)(v / 100.0));
