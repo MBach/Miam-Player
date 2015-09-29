@@ -34,8 +34,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 
 	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 	if (!musicLocations.isEmpty()) {
-		/// FIXME Qt5.5.0?
-		//qDebug() << Q_FUNC_INFO << musicLocations.first();
 		QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocations.first()));
 		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(musicLocations.first()));
 	}
@@ -157,9 +155,73 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 
 	// Sixth panel: plugins
 	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, pluginManager, &PluginManager::loadOrUnload);
+	this->initPlugins();
 
 	// Restore geometry
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
+}
+
+/** Redefined to add custom behaviour. */
+void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
+{
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	settings->setValue("customizeOptionsDialogGeometry", saveGeometry());
+	settings->setValue("customizeOptionsDialogCurrentTab", listWidget->currentRow());
+
+	// Drive is scanned only when the popup is closed
+	this->updateMusicLocations();
+
+	QDialog::closeEvent(e);
+}
+
+/** Redefined to inspect shortcuts. */
+bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
+{
+	QKeySequenceEdit *edit = qobject_cast<QKeySequenceEdit*>(obj);
+
+	// When one is clicking outside the area which is marked as dirty, just remove what has been typed
+	if (edit && e->type() == QEvent::FocusOut && edit->property("ambiguous").toBool()) {
+		edit->setProperty("ambiguous", false);
+		edit->setStyleSheet("");
+		edit->clear();
+		emit edit->editingFinished();
+
+		// Don't forget to clear ambiguous status for other QKeySequenceEdit widget
+		for (QKeySequenceEdit *other : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
+			if (other->property("ambiguous").toBool()) {
+				other->setProperty("ambiguous", false);
+				other->setStyleSheet("");
+			}
+		}
+	}
+	return QDialog::eventFilter(obj, e);
+}
+
+void CustomizeOptionsDialog::initPlugins()
+{
+	auto settings = SettingsPrivate::instance();
+	for (PluginInfo plugin : settings->plugins()) {
+		// Add name, state and version info on a summary page
+		int row = pluginSummaryTableWidget->rowCount();
+		pluginSummaryTableWidget->insertRow(row);
+		QTableWidgetItem *checkbox = new QTableWidgetItem();
+		if (plugin.isEnabled()) {
+			checkbox->setCheckState(Qt::Checked);
+		} else {
+			checkbox->setCheckState(Qt::Unchecked);
+		}
+		QVariant v = QVariant::fromValue(plugin);
+		checkbox->setData(Qt::EditRole, v);
+
+		// Temporarily disconnects signals to prevent infinite recursion!
+		pluginSummaryTableWidget->blockSignals(true);
+		pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(plugin.pluginName()));
+		pluginSummaryTableWidget->setItem(row, 1, checkbox);
+		pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(plugin.version()));
+		pluginSummaryTableWidget->blockSignals(false);
+
+		settings->setValue(plugin.fileName(), v);
+	}
 }
 
 /** Third panel in this dialog: shorcuts has to be initialized in the end. */
@@ -199,45 +261,6 @@ void CustomizeOptionsDialog::initShortcuts()
 			emit shortcut->editingFinished();
 		});
 	}
-}
-
-/** Redefined to add custom behaviour. */
-void CustomizeOptionsDialog::closeEvent(QCloseEvent *e)
-{
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	settings->setValue("customizeOptionsDialogGeometry", saveGeometry());
-	settings->setValue("customizeOptionsDialogCurrentTab", listWidget->currentRow());
-
-	// Drive is scanned only when the popup is closed
-	this->updateMusicLocations();
-
-	QStringList savedLocations = settings->value("musicLocations").toStringList();
-	qDebug() << Q_FUNC_INFO << savedLocations;
-
-	QDialog::closeEvent(e);
-}
-
-/** Redefined to inspect shortcuts. */
-bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
-{
-	QKeySequenceEdit *edit = qobject_cast<QKeySequenceEdit*>(obj);
-
-	// When one is clicking outside the area which is marked as dirty, just remove what has been typed
-	if (edit && e->type() == QEvent::FocusOut && edit->property("ambiguous").toBool()) {
-		edit->setProperty("ambiguous", false);
-		edit->setStyleSheet("");
-		edit->clear();
-		emit edit->editingFinished();
-
-		// Don't forget to clear ambiguous status for other QKeySequenceEdit widget
-		for (QKeySequenceEdit *other : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
-			if (other->property("ambiguous").toBool()) {
-				other->setProperty("ambiguous", false);
-				other->setStyleSheet("");
-			}
-		}
-	}
-	return QDialog::eventFilter(obj, e);
 }
 
 /** Adds a new music location in the library. */
@@ -373,6 +396,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 	}
 }
 
+/** Check if music locations have changed in order to rescan the filesystem. */
 void CustomizeOptionsDialog::updateMusicLocations()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -396,34 +420,9 @@ void CustomizeOptionsDialog::updateMusicLocations()
 		musicLocationsAreIdenticals = false;
 	}
 
+	// Trigger the MainWindow (and then the SearchEngine) to restart a scan
 	if (!musicLocationsAreIdenticals) {
 		settings->setMusicLocations(newLocations);
 		settings->sync();
 	}
-}
-
-////////
-
-/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
-void CustomizeOptionsDialog::insertRow(const PluginInfo &pluginInfo)
-{
-	// Add name, state and version info on a summary page
-	int row = pluginSummaryTableWidget->rowCount();
-	pluginSummaryTableWidget->insertRow(row);
-	QTableWidgetItem *checkbox = new QTableWidgetItem();
-	if (pluginInfo.isEnabled()) {
-		checkbox->setCheckState(Qt::Checked);
-	} else {
-		checkbox->setCheckState(Qt::Unchecked);
-	}
-	checkbox->setData(Qt::EditRole, QVariant::fromValue(pluginInfo));
-
-	// Temporarily disconnects signals to prevent infinite recursion!
-	pluginSummaryTableWidget->blockSignals(true);
-	pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(pluginInfo.pluginName()));
-	pluginSummaryTableWidget->setItem(row, 1, checkbox);
-	pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(pluginInfo.version()));
-	pluginSummaryTableWidget->blockSignals(false);
-
-	SettingsPrivate::instance()->setValue(pluginInfo.fileName(), QVariant::fromValue(pluginInfo));
 }

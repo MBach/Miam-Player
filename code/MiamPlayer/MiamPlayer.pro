@@ -43,7 +43,6 @@ SOURCES += \
     miamstyle.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
-    plugininfo.cpp \
     pluginmanager.cpp \
     quickstart.cpp \
     seekbar.cpp \
@@ -94,7 +93,6 @@ HEADERS += \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \
     pluginmanager.h \
-    plugininfo.h \
     quickstart.h \
     seekbar.h \
     tagbutton.h \

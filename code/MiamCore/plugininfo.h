@@ -3,6 +3,7 @@
 
 #include <QDataStream>
 #include <QObject>
+#include "miamcore_global.h"
 
 /**
  * \brief		The PluginInfo class is a Data Access Object
@@ -12,7 +13,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PluginInfo : public QObject
+class MIAMCORE_LIBRARY PluginInfo : public QObject
 {
 	Q_OBJECT
 

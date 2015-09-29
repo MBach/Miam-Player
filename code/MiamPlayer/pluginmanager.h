@@ -23,9 +23,6 @@ class PluginManager : public QObject
 {
 	Q_OBJECT
 private:
-	/** The unique instance of this class. */
-	//static PluginManager *_pluginManager;
-
 	/** Reference to the MainWindow instance (strong coupling). */
 	MainWindow *_mainWindow;
 
@@ -45,12 +42,7 @@ private:
 	QMultiMap<QString, QObject*> _extensionPoints;
 
 public:
-	PluginManager(QObject *parent = 0);
-
-	/** Singleton pattern to be able to easily use this plugin manager everywhere in the app. */
-	//static PluginManager* instance();
-
-	void setMainWindow(MainWindow *mainWindow);
+	explicit PluginManager(MainWindow *parent);
 
 	/** Explicitly destroys every plugin. */
 	virtual ~PluginManager();
@@ -61,14 +53,8 @@ public:
 	inline QList<BasicPlugin*> plugins() const { return _instances.values(); }
 
 private:
-	/** Search into the subdir "plugins" where the application is installed. */
-	void init();
-
-	/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
-	//void insertRow(const PluginInfo &pluginInfo);
-
 	/** Load a plugin by its location on the hard drive. */
-	BasicPlugin *loadPlugin(const QFileInfo &pluginFileInfo);
+	bool loadPlugin(const QFileInfo &pluginFileInfo);
 
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
 	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);

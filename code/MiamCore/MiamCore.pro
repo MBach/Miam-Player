@@ -83,7 +83,8 @@ SOURCES += library/jumptowidget.cpp \
     styling/imageutils.cpp \
     styling/lineedit.cpp \
     starrating.cpp \
-    miamsortfilterproxymodel.cpp
+    miamsortfilterproxymodel.cpp \
+    plugininfo.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -120,4 +121,5 @@ HEADERS += interfaces/basicplugin.h \
     styling/lineedit.h \
     starrating.h \
     searchbar.h \
-    miamsortfilterproxymodel.h
+    miamsortfilterproxymodel.h \
+    plugininfo.h

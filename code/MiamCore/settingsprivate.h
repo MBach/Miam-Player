@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QTranslator>
+#include "plugininfo.h"
 
 #include "miamcore_global.h"
 
@@ -166,6 +167,8 @@ public:
 
 	/** Automatically restore all saved playlists at startup. */
 	bool playbackRestorePlaylistsAtStartup() const;
+
+	QList<PluginInfo> plugins() const;
 
 	void setCustomColorRole(QPalette::ColorRole cr, const QColor &color);
 

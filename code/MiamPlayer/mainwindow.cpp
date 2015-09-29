@@ -150,14 +150,8 @@ void MainWindow::init()
 /** Plugins. */
 void MainWindow::loadPlugins()
 {
-	///FIXME
+	///XXX
 	_pluginManager = new PluginManager(this);
-	/*int row = Settings::instance()->value("customizeOptionsDialogCurrentTab", 0).toInt();
-	if (customizeOptionsDialog->listWidget->isRowHidden(5) && row == 5) {
-		customizeOptionsDialog->listWidget->setCurrentRow(0);
-	} else {
-		customizeOptionsDialog->listWidget->setCurrentRow(row);
-	}*/
 }
 
 /** Set up all actions and behaviour. */

@@ -352,6 +352,16 @@ bool SettingsPrivate::playbackRestorePlaylistsAtStartup() const
 	return value("playbackRestorePlaylistsAtStartup", false).toBool();
 }
 
+QList<PluginInfo> SettingsPrivate::plugins() const
+{
+	QList<QVariant> list = value("plugins").toList();
+	QList<PluginInfo> registeredPlugins;
+	for (QVariant v : list) {
+		registeredPlugins.append(v.value<PluginInfo>());
+	}
+	return registeredPlugins;
+}
+
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QMap<QString, QVariant> colors = value("customColorsMap").toMap();

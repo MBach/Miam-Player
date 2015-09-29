@@ -7,7 +7,6 @@
 
 #include "ui_customizeoptionsdialog.h"
 
-#include "plugininfo.h"
 #include "pluginmanager.h"
 
 /**
@@ -22,15 +21,19 @@ class CustomizeOptionsDialog : public QDialog, public Ui::CustomizeOptionsDialog
 public:
 	explicit CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent = 0);
 
-	/** Third panel in this dialog: shorcuts has to be initialized in the end. */
-	void initShortcuts();
-
 protected:
 	/** Redefined to add custom behaviour. */
 	virtual void closeEvent(QCloseEvent *) override;
 
 	/** Redefined to inspect shortcuts. */
 	virtual bool eventFilter(QObject *obj, QEvent *e) override;
+
+private:
+	/** Sixth and last panel: list all plugins (enabled of not). */
+	void initPlugins();
+
+	/** Third panel of this dialog: shorcuts. */
+	void initShortcuts();
 
 public slots:
 	/** Adds a new music location in the library. */
@@ -52,10 +55,8 @@ private slots:
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();
 
+	/** Check if music locations have changed in order to rescan the filesystem. */
 	void updateMusicLocations();
-
-	/** Insert a new row in the Plugin Page in Config Dialog with basic informations for each plugin. */
-	void insertRow(const PluginInfo &pluginInfo);
 
 signals:
 	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);
