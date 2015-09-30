@@ -66,6 +66,8 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();
 
+	void addPlugin(const PluginInfo &plugin);
+
 	qreal bigCoverOpacity() const;
 
 	/** Returns the actual size of media buttons. */
@@ -168,7 +170,7 @@ public:
 	/** Automatically restore all saved playlists at startup. */
 	bool playbackRestorePlaylistsAtStartup() const;
 
-	QList<PluginInfo> plugins() const;
+	QMap<QString, PluginInfo> plugins() const;
 
 	void setCustomColorRole(QPalette::ColorRole cr, const QColor &color);
 

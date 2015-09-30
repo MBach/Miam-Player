@@ -30,7 +30,7 @@ protected:
 
 private:
 	/** Sixth and last panel: list all plugins (enabled of not). */
-	void initPlugins();
+	void initPlugins(PluginManager *pluginManager);
 
 	/** Third panel of this dialog: shorcuts. */
 	void initShortcuts();

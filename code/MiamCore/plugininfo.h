@@ -16,12 +16,13 @@
 class MIAMCORE_LIBRARY PluginInfo : public QObject
 {
 	Q_OBJECT
-
 public:
 	PluginInfo(QObject *parent = 0);
 
 	/** Copy constructor required for converting in QVariant. */
-	PluginInfo(const PluginInfo &pluginInfo);
+	PluginInfo(const PluginInfo &other);
+
+	PluginInfo& operator=(const PluginInfo& other);
 
 	/** Destructor required for converting in QVariant. */
 	virtual ~PluginInfo() {}

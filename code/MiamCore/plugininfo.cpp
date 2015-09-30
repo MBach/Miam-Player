@@ -1,18 +1,30 @@
 #include "plugininfo.h"
 
-PluginInfo::PluginInfo(QObject *parent) :
-	QObject(parent)
+PluginInfo::PluginInfo(QObject *parent)
+	: QObject(parent)
+	, _configurable(false)
+	, _active(false)
 {}
 
 /** Copy constructor required for converting in QVariant. */
-PluginInfo::PluginInfo(const PluginInfo &pluginInfo) :
-	QObject(pluginInfo.parent())
+PluginInfo::PluginInfo(const PluginInfo &other) :
+	QObject(other.parent())
 {
-	_fileName = pluginInfo.fileName();
-	_pluginName = pluginInfo.pluginName();
-	_version = pluginInfo.version();
-	_configurable = pluginInfo.isConfigurable();
-	_active = pluginInfo.isEnabled();
+	_fileName = other.fileName();
+	_pluginName = other.pluginName();
+	_version = other.version();
+	_configurable = other.isConfigurable();
+	_active = other.isEnabled();
+}
+
+PluginInfo& PluginInfo::operator=(const PluginInfo& other)
+{
+	_fileName = other.fileName();
+	_pluginName = other.pluginName();
+	_version = other.version();
+	_configurable = other.isConfigurable();
+	_active = other.isEnabled();
+	return *this;
 }
 
 /** Sets the filename. */

@@ -30,7 +30,7 @@ private:
 	QMap<QString, QFileInfo> _plugins;
 
 	/** Loaded plugins are stored in this map. */
-	QMap<QString, BasicPlugin*> _instances;
+	QMap<QString, BasicPlugin*> _loadedPlugins;
 
 	/** Every plugin might instanciate objects that we need to be able to delete later (especially for unloading). */
 	QMultiMap<QString, QObject*> _dependencies;
@@ -50,9 +50,12 @@ public:
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 	void registerExtensionPoint(const char *className, QObjectList target);
 
-	inline QList<BasicPlugin*> plugins() const { return _instances.values(); }
+	inline QMap<QString, BasicPlugin*> loadedPlugins() const { return _loadedPlugins; }
 
 private:
+	/** Display a QMessageBox if at least one error was encountered when loading plugins. */
+	void alertUser(const QStringList &failedPlugins);
+
 	/** Load a plugin by its location on the hard drive. */
 	bool loadPlugin(const QFileInfo &pluginFileInfo);
 
@@ -70,7 +73,7 @@ public slots:
 	void loadOrUnload(QTableWidgetItem *item);
 
 signals:
-	void createDisabledPluginTab(const QString &pluginName);
+	void pluginWasDestroyed(const QString &pluginName);
 };
 
 #endif // PLUGINMANAGER_H

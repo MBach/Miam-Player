@@ -215,7 +215,17 @@ void MainWindow::setupActions()
 		customizeThemeDialog->loadTheme();
 		customizeThemeDialog->exec();
 	});
-	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);
+
+	auto createCustomizeOptionsDialog = [this] () -> void {
+		CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
+		connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
+		connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
+		dialog->show();
+		dialog->raise();
+		dialog->activateWindow();
+	};
+
+	connect(actionShowOptions, &QAction::triggered, createCustomizeOptionsDialog);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
@@ -227,7 +237,7 @@ void MainWindow::setupActions()
 	});
 
 	// Quick Start
-	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, createCustomizeOptionsDialog);
 
 	// Lambda function to reduce duplicate code
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -705,16 +715,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}
-}
-
-void MainWindow::createCustomizeOptionsDialog()
-{
-	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
-
-	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-	connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
-
-	dialog->open();
 }
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)

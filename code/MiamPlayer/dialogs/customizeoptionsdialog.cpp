@@ -155,7 +155,15 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 
 	// Sixth panel: plugins
 	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, pluginManager, &PluginManager::loadOrUnload);
-	this->initPlugins();
+	connect(pluginManager, &PluginManager::pluginWasDestroyed, this, [=](const QString &pluginName) {
+		for (int i = 1; i < tabPlugins->count(); i++) {
+			if (tabPlugins->tabText(i) == pluginName) {
+				tabPlugins->removeTab(i);
+				break;
+			}
+		}
+	});
+	this->initPlugins(pluginManager);
 
 	// Restore geometry
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
@@ -197,7 +205,7 @@ bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
 	return QDialog::eventFilter(obj, e);
 }
 
-void CustomizeOptionsDialog::initPlugins()
+void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
 {
 	auto settings = SettingsPrivate::instance();
 	for (PluginInfo plugin : settings->plugins()) {
@@ -210,17 +218,23 @@ void CustomizeOptionsDialog::initPlugins()
 		} else {
 			checkbox->setCheckState(Qt::Unchecked);
 		}
+
+		// If plugin brings its own UI, add a new page in the list
+		if (plugin.isConfigurable() && plugin.isEnabled()) {
+
+			BasicPlugin *p = pluginManager->loadedPlugins().value(plugin.pluginName());
+			tabPlugins->addTab(p->configPage(), p->name());
+		}
+
 		QVariant v = QVariant::fromValue(plugin);
 		checkbox->setData(Qt::EditRole, v);
 
 		// Temporarily disconnects signals to prevent infinite recursion!
-		pluginSummaryTableWidget->blockSignals(true);
+		//pluginSummaryTableWidget->blockSignals(true);
 		pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(plugin.pluginName()));
 		pluginSummaryTableWidget->setItem(row, 1, checkbox);
 		pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(plugin.version()));
-		pluginSummaryTableWidget->blockSignals(false);
-
-		settings->setValue(plugin.fileName(), v);
+		//pluginSummaryTableWidget->blockSignals(false);
 	}
 }
 

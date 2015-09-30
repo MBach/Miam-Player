@@ -45,6 +45,13 @@ SettingsPrivate* SettingsPrivate::instance()
 	return settings;
 }
 
+void SettingsPrivate::addPlugin(const PluginInfo &plugin)
+{
+	QMap<QString, QVariant> map = value("plugins").toMap();
+	map.insert(plugin.fileName(), QVariant::fromValue(plugin));
+	this->setValue("plugins", map);
+}
+
 qreal SettingsPrivate::bigCoverOpacity() const
 {
 	return value("bigCoverOpacity", 0.66).toReal();
@@ -352,12 +359,14 @@ bool SettingsPrivate::playbackRestorePlaylistsAtStartup() const
 	return value("playbackRestorePlaylistsAtStartup", false).toBool();
 }
 
-QList<PluginInfo> SettingsPrivate::plugins() const
+QMap<QString, PluginInfo> SettingsPrivate::plugins() const
 {
-	QList<QVariant> list = value("plugins").toList();
-	QList<PluginInfo> registeredPlugins;
-	for (QVariant v : list) {
-		registeredPlugins.append(v.value<PluginInfo>());
+	QMap<QString, QVariant> list = value("plugins").toMap();
+	QMapIterator<QString, QVariant> it(list);
+	QMap<QString, PluginInfo> registeredPlugins;
+	while (it.hasNext()) {
+		it.next();
+		registeredPlugins.insert(it.key(), std::move(it.value().value<PluginInfo>()));
 	}
 	return registeredPlugins;
 }
