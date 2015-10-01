@@ -19,7 +19,6 @@
 class MIAMCORE_LIBRARY SettingsPrivate : public QSettings
 {
 	Q_OBJECT
-
 private:
 	/** The unique instance of this class. */
 	static SettingsPrivate *settings;
@@ -66,7 +65,11 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();
 
+	/** Add an activated plugin to the application. */
 	void addPlugin(const PluginInfo &plugin);
+
+	/** Disable a previously registered plugin (so it still can be listed in options). */
+	void disablePlugin(const QString &fileName);
 
 	qreal bigCoverOpacity() const;
 
@@ -273,7 +276,7 @@ public slots:
 signals:
 	void fontHasChanged(FontFamily, const QFont &font);
 
-	void librarySearchModeChanged();
+	void librarySearchModeHasChanged();
 
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);

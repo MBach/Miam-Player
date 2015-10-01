@@ -7,10 +7,9 @@
 
 #include "filehelper.h"
 
-QuickStartSearchEngine::QuickStartSearchEngine(QObject *parent) :
-	QObject(parent)
-{
-}
+QuickStartSearchEngine::QuickStartSearchEngine(QObject *parent)
+	: QObject(parent)
+{}
 
 void QuickStartSearchEngine::doSearch()
 {

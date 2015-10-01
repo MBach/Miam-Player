@@ -15,8 +15,9 @@
 
 #include <QtDebug>
 
-CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent) :
-	QDialog(parent, Qt::Tool)
+CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent)
+	: QDialog(parent, Qt::Tool)
+	, _pluginManager(pluginManager)
 {
 	setupUi(this);
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -154,16 +155,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
 	// Sixth panel: plugins
-	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, pluginManager, &PluginManager::loadOrUnload);
-	connect(pluginManager, &PluginManager::pluginWasDestroyed, this, [=](const QString &pluginName) {
-		for (int i = 1; i < tabPlugins->count(); i++) {
-			if (tabPlugins->tabText(i) == pluginName) {
-				tabPlugins->removeTab(i);
-				break;
-			}
-		}
-	});
 	this->initPlugins(pluginManager);
+	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &CustomizeOptionsDialog::togglePlugin);
 
 	// Restore geometry
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
@@ -222,19 +215,16 @@ void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
 		// If plugin brings its own UI, add a new page in the list
 		if (plugin.isConfigurable() && plugin.isEnabled()) {
 
-			BasicPlugin *p = pluginManager->loadedPlugins().value(plugin.pluginName());
+			BasicPlugin *p = pluginManager->loadedPlugins().value(plugin.fileName());
 			tabPlugins->addTab(p->configPage(), p->name());
 		}
 
 		QVariant v = QVariant::fromValue(plugin);
 		checkbox->setData(Qt::EditRole, v);
 
-		// Temporarily disconnects signals to prevent infinite recursion!
-		//pluginSummaryTableWidget->blockSignals(true);
 		pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(plugin.pluginName()));
 		pluginSummaryTableWidget->setItem(row, 1, checkbox);
 		pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(plugin.version()));
-		//pluginSummaryTableWidget->blockSignals(false);
 	}
 }
 
@@ -407,6 +397,34 @@ void CustomizeOptionsDialog::openLibraryDialog()
 		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
 		this->addMusicLocation(QDir(libraryPath));
+	}
+}
+
+/** Load or unload a plugin when one is switching a checkbox in the options. */
+void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
+{
+	// Checkboxes are in the second column
+	if (item->column() == 1) {
+		QVariant vPluginInfo = item->data(Qt::EditRole);
+		PluginInfo pluginInfo = vPluginInfo.value<PluginInfo>();
+		if (item->checkState() == Qt::Checked) {
+
+			// Try to reload plugin
+			if (_pluginManager->loadPlugin(pluginInfo.fileName())) {
+				BasicPlugin *p = _pluginManager->loadedPlugins().value(pluginInfo.fileName());
+				tabPlugins->addTab(p->configPage(), p->name());
+			} else {
+				_pluginManager->alertUser(QStringList(pluginInfo.fileName()));
+			}
+
+		} else if (_pluginManager->unloadPlugin(pluginInfo.fileName())) {
+			for (int i = 1; i < tabPlugins->count(); i++) {
+				if (tabPlugins->tabText(i) == pluginInfo.pluginName()) {
+					tabPlugins->removeTab(i);
+					break;
+				}
+			}
+		}
 	}
 }
 

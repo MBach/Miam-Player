@@ -26,9 +26,6 @@ private:
 	/** Reference to the MainWindow instance (strong coupling). */
 	MainWindow *_mainWindow;
 
-	/** Every plugin can be located on the hard drive by its complete filename. */
-	QMap<QString, QFileInfo> _plugins;
-
 	/** Loaded plugins are stored in this map. */
 	QMap<QString, BasicPlugin*> _loadedPlugins;
 
@@ -39,7 +36,7 @@ private:
 	QString _pluginPath;
 
 	/** Some instances in the software can be modified (menus, buttons, widgets, etc). */
-	QMultiMap<QString, QObject*> _extensionPoints;
+	//QMultiMap<QString, QObject*> _extensionPoints;
 
 public:
 	explicit PluginManager(MainWindow *parent);
@@ -47,33 +44,26 @@ public:
 	/** Explicitly destroys every plugin. */
 	virtual ~PluginManager();
 
-	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
-	void registerExtensionPoint(const char *className, QObjectList target);
-
-	inline QMap<QString, BasicPlugin*> loadedPlugins() const { return _loadedPlugins; }
-
-private:
 	/** Display a QMessageBox if at least one error was encountered when loading plugins. */
 	void alertUser(const QStringList &failedPlugins);
 
-	/** Load a plugin by its location on the hard drive. */
-	bool loadPlugin(const QFileInfo &pluginFileInfo);
+	inline QMap<QString, BasicPlugin*> loadedPlugins() const { return _loadedPlugins; }
 
+	/** Load a plugin by its location on the hard drive. */
+	bool loadPlugin(const QString &fileName);
+
+	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
+	//void registerExtensionPoint(const char *className, QObjectList target);
+
+	/** Unload a plugin by its name. */
+	bool unloadPlugin(const QString &fileName);
+
+private:
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
 	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
 	void loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin);
 	void loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin);
 	void loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin);
-
-	/** Unload a plugin by its name. */
-	void unloadPlugin(const QString &pluginName);
-
-public slots:
-	/** Load or unload a plugin when one is switching a checkbox in the options. */
-	void loadOrUnload(QTableWidgetItem *item);
-
-signals:
-	void pluginWasDestroyed(const QString &pluginName);
 };
 
 #endif // PLUGINMANAGER_H

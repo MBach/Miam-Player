@@ -90,13 +90,7 @@ private:
 	int count(const QModelIndex &index) const;
 
 	/** Reimplemented. */
-	virtual int countAll(const QModelIndexList &indexes) const;
-
-	/** Reduce the size of the library when the user is typing text. */
-	//void filterLibrary(const QString &filter);
-
-	/** Highlight items in the Tree when one has activated this option in settings. */
-	//void highlightMatchingText(const QString &text);
+	virtual int countAll(const QModelIndexList &indexes) const override;
 
 	/** Reimplemented. */
 	virtual void updateSelectedTracks();

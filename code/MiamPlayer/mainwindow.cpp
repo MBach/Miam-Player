@@ -386,7 +386,7 @@ void MainWindow::setupActions()
 	});
 
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
-	connect(settings, &SettingsPrivate::librarySearchModeChanged, this, [=]() {
+	connect(settings, &SettingsPrivate::librarySearchModeHasChanged, this, [=]() {
 		QString text;
 		searchBar->setText(text);
 		library->findMusic(text);
@@ -454,8 +454,6 @@ void MainWindow::setupActions()
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		///FIXME
-		///delete PluginManager::instance();
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());

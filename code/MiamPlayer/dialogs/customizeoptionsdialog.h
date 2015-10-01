@@ -18,6 +18,9 @@
 class CustomizeOptionsDialog : public QDialog, public Ui::CustomizeOptionsDialog
 {
 	Q_OBJECT
+private:
+	PluginManager *_pluginManager;
+
 public:
 	explicit CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent = 0);
 
@@ -54,6 +57,9 @@ private slots:
 
 	/** Open a dialog for letting the user to choose a music directory. */
 	void openLibraryDialog();
+
+	/** Load or unload a plugin when one is switching a checkbox in the options. */
+	void togglePlugin(QTableWidgetItem *item);
 
 	/** Check if music locations have changed in order to rescan the filesystem. */
 	void updateMusicLocations();

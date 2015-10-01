@@ -95,7 +95,7 @@ void QuickStart::paintEvent(QPaintEvent *)
 	}
 }
 
-/** Check or uncheck rows when one is clicking not only on the checkbox. */
+/** Check or uncheck rows when one is clicking, but not only on the checkbox. */
 void QuickStart::checkRow(QTableWidgetItem *i)
 {
 	int row = i->row();

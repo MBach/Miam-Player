@@ -15,9 +15,7 @@ Settings* Settings::settings = nullptr;
 /** Private constructor. */
 Settings::Settings(const QString &organization, const QString &application)
 	: QSettings(organization, application)
-{
-
-}
+{}
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */
 Settings* Settings::instance()
@@ -30,33 +28,19 @@ Settings* Settings::instance()
 
 QString Settings::lastActiveView() const
 {
-	QString l = value("lastActiveView").toString();
-	if (l.isEmpty()) {
-		return "actionViewPlaylists";
-	} else {
-		return l;
-	}
+	return value("lastActiveView", "actionViewPlaylists").toString();
 }
 
 /** Returns the actual theme name. */
 QString Settings::theme() const
 {
-	QString theme = value("theme").toString();
-	if (theme.isEmpty()) {
-		return "oxygen";
-	} else {
-		return theme;
-	}
+	return value("theme", "oxygen").toString();
 }
 
 /** Returns volume from the slider. */
 qreal Settings::volume() const
 {
-   if (value("volume").isNull()) {
-	   return 0.9;
-   } else {
-	   return value("volume").toReal();
-   }
+	return value("volume", 0.9).toReal();
 }
 
 /// Slots

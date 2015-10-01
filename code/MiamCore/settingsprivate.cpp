@@ -45,10 +45,21 @@ SettingsPrivate* SettingsPrivate::instance()
 	return settings;
 }
 
+/** Add an activated plugin to the application. */
 void SettingsPrivate::addPlugin(const PluginInfo &plugin)
 {
 	QMap<QString, QVariant> map = value("plugins").toMap();
 	map.insert(plugin.fileName(), QVariant::fromValue(plugin));
+	this->setValue("plugins", map);
+}
+
+/** Disable a previously registered plugin (so it still can be listed in options). */
+void SettingsPrivate::disablePlugin(const QString &fileName)
+{
+	QMap<QString, QVariant> map = value("plugins").toMap();
+	PluginInfo pluginInfo = map.value(fileName).value<PluginInfo>();
+	pluginInfo.setEnabled(false);
+	map.insert(fileName, QVariant::fromValue(pluginInfo));
 	this->setValue("plugins", map);
 }
 
@@ -695,7 +706,7 @@ void SettingsPrivate::setSearchAndExcludeLibrary(bool b)
 		lsm = LSM_HighlightOnly;
 	}
 	setValue("librarySearchMode", lsm);
-	emit librarySearchModeChanged();
+	emit librarySearchModeHasChanged();
 }
 
 void SettingsPrivate::setShowNeverScored(bool b)

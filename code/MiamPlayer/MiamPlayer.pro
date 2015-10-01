@@ -186,7 +186,7 @@ macx {
     LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamLibrary/ -lmiam-library -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     #1 create Framework directory
-    #2 copy third party library: TagLib, VLC-Qt
+    #2 copy third party library: TagLib, QtAV
     #3 copy own libs
     QMAKE_POST_LINK += $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/libtag.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \

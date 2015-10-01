@@ -15,7 +15,7 @@
 /**
  * \brief		The AddressBar class is the place where subfolders (instance of AddressBarButton) will be appended.
  * \details		The path to a folder is splitted into folders. When there is not enough space to display the entire path,
- *				then first folder next to root are visually removed and stacked into a menu. When one triggers the root item,
+ *				then first folders next to root are visually removed and stacked into a menu. When one triggers the root item,
  *				previously saved items are displayed in reverse order.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
