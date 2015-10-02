@@ -52,7 +52,7 @@ void JumpToWidget::setCurrentLetter(const QChar &currentLetter)
 
 QSize JumpToWidget::sizeHint() const
 {
-	qDebug() << Q_FUNC_INFO << QSize(20, _view->height());
+	//qDebug() << Q_FUNC_INFO << QSize(20, _view->height());
 	return QSize(20, _view->height());
 }
 

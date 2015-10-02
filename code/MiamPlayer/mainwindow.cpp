@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
 	, _uniqueLibrary(new UniqueLibrary(this))
 	, _mediaPlayer(new MediaPlayer(this))
 	, searchDialog(new SearchDialog(this))
+	, _pluginManager(new PluginManager(this))
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
@@ -65,7 +66,6 @@ void MainWindow::activateLastView()
 	QString viewName = Settings::instance()->lastActiveView();
 	for (QAction *actionView : menuView->actions()) {
 		if (actionView->objectName() == viewName) {
-			qDebug() << Q_FUNC_INFO << viewName;
 			this->restoreGeometry(SettingsPrivate::instance()->value("mainWindowGeometry").toByteArray());
 			actionView->trigger();
 			break;
@@ -150,8 +150,15 @@ void MainWindow::init()
 /** Plugins. */
 void MainWindow::loadPlugins()
 {
-	///XXX
-	_pluginManager = new PluginManager(this);
+	QObjectList libraryObjectList;
+	libraryObjectList << library << library->properties;
+
+	QObjectList tagEditorObjectList;
+	tagEditorObjectList << tagEditor->albumCover->contextMenu() << tagEditor->extensiblePushButtonArea << tagEditor->extensibleWidgetArea << tagEditor->tagEditorWidget << tagEditor;
+
+	_pluginManager->registerExtensionPoint(library->metaObject()->className(), libraryObjectList);
+	_pluginManager->registerExtensionPoint(tagEditor->metaObject()->className(), tagEditorObjectList);
+	_pluginManager->init();
 }
 
 /** Set up all actions and behaviour. */

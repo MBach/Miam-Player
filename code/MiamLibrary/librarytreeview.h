@@ -50,10 +50,6 @@ private:
 	 */
 	CircleProgressBar *_circleProgressBar;
 
-	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
-	 * Tag Editor, and custom plugin defined actions. */
-	QMenu *_properties;
-
 	/** Cache of expanded albums and their covers. */
 	QMap<AlbumItem*, QImage*> _expandedCovers;
 
@@ -61,6 +57,10 @@ private:
 	MiamSortFilterProxyModel *_proxyModel;
 
 public:
+	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
+	 * Tag Editor, and custom plugin defined actions. */
+	QMenu *properties;
+
 	QShortcut *sendToCurrentPlaylist;
 	QShortcut *openTagEditor;
 

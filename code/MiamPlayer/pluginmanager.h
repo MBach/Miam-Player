@@ -36,13 +36,15 @@ private:
 	QString _pluginPath;
 
 	/** Some instances in the software can be modified (menus, buttons, widgets, etc). */
-	//QMultiMap<QString, QObject*> _extensionPoints;
+	QMultiMap<QString, QObject*> _extensionPoints;
 
 public:
 	explicit PluginManager(MainWindow *parent);
 
 	/** Explicitly destroys every plugin. */
 	virtual ~PluginManager();
+
+	void init();
 
 	/** Display a QMessageBox if at least one error was encountered when loading plugins. */
 	void alertUser(const QStringList &failedPlugins);
@@ -53,7 +55,7 @@ public:
 	bool loadPlugin(const QString &fileName);
 
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
-	//void registerExtensionPoint(const char *className, QObjectList target);
+	void registerExtensionPoint(const char *className, QObjectList target);
 
 	/** Unload a plugin by its name. */
 	bool unloadPlugin(const QString &fileName);

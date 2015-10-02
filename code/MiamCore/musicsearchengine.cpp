@@ -19,24 +19,17 @@ bool MusicSearchEngine::isScanning = false;
 MusicSearchEngine::MusicSearchEngine(QObject *parent) :
 	QObject(parent), _timer(new QTimer(this))
 {
-	//_timer->setInterval(5 * 60 * 1000);
 	_timer->setInterval(5000);
-	/// debug
-	///_timer->setSingleShot(true);
 	connect(_timer, &QTimer::timeout, this, &MusicSearchEngine::watchForChanges);
 
 	// Monitor filesystem
 	if (SettingsPrivate::instance()->isFileSystemMonitored()) {
-		qDebug() << Q_FUNC_INFO;
 		setWatchForChanges(true);
-	} else {
-		qDebug() << Q_FUNC_INFO;
 	}
 }
 
 void MusicSearchEngine::setWatchForChanges(bool b)
 {
-	qDebug() << Q_FUNC_INFO << b << "MusicSearchEngine::isScanning" << MusicSearchEngine::isScanning;
 	if (b) {
 		_timer->start();
 	} else {
@@ -46,7 +39,7 @@ void MusicSearchEngine::setWatchForChanges(bool b)
 
 void MusicSearchEngine::doSearch(const QStringList &delta)
 {
-	qDebug() << Q_FUNC_INFO << delta;
+	//qDebug() << Q_FUNC_INFO << delta;
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
 	QStringList pathsToSearch = delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : delta;

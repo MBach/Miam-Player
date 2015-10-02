@@ -21,7 +21,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	, _libraryModel(new LibraryItemModel(parent))
 	, _jumpToWidget(new JumpToWidget(this))
 	, _circleProgressBar(new CircleProgressBar(this))
-	, _properties(new QMenu(this))
+	, properties(new QMenu(this))
 	, sendToCurrentPlaylist(new QShortcut(this))
 	, openTagEditor(new QShortcut(this))
 {
@@ -40,9 +40,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Send to the tag editor"), this);
-	_properties->addAction(actionSendToCurrentPlaylist);
-	_properties->addSeparator();
-	_properties->addAction(actionOpenTagEditor);
+	properties->addAction(actionSendToCurrentPlaylist);
+	properties->addSeparator();
+	properties->addAction(actionOpenTagEditor);
 
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
@@ -68,10 +68,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	});
 
 	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
-
-	///FIXME
-	QObjectList objetsToExtend = QObjectList() << _properties << this;
-	//PluginManager::instance()->registerExtensionPoint(metaObject()->className(), objetsToExtend);
 }
 
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
@@ -176,12 +172,12 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(this->indexAt(event->pos())));
 	if (item) {
-		for (QAction *action : _properties->actions()) {
+		for (QAction *action : properties->actions()) {
 			action->setText(QApplication::translate("LibraryTreeView", action->text().toStdString().data()));
 			action->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 		}
 		if (item->type() != Miam::IT_Separator) {
-			_properties->exec(event->globalPos());
+			properties->exec(event->globalPos());
 		}
 	}
 }

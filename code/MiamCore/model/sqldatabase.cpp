@@ -713,7 +713,6 @@ bool SqlDatabase::cleanNodesWithoutTracks()
 /** Read all tracks entries in the database and send them to connected views. */
 void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 {
-	qDebug() << Q_FUNC_INFO << sendResetSignal << sender();
 	if (sendResetSignal) {
 		emit aboutToLoad();
 	}
@@ -1017,7 +1016,6 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 void SqlDatabase::load()
 {
 	if (open() && tables().contains("tracks")) {
-		qDebug() << Q_FUNC_INFO << sender();
 		this->loadFromFileDB();
 	} else {
 		this->rebuild();

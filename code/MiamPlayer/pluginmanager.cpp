@@ -15,10 +15,24 @@
 PluginManager::PluginManager(MainWindow *parent)
 	: QObject(parent)
 	, _mainWindow(parent)
+	, _pluginPath(QString())
 {
 	QDir appDirPath = QDir(qApp->applicationDirPath());
 	if (appDirPath.cd("plugins")) {
 		_pluginPath = appDirPath.absolutePath();
+	}
+}
+
+/** Explicitly destroys every plugin. */
+PluginManager::~PluginManager()
+{
+	qDeleteAll(_loadedPlugins);
+	_loadedPlugins.clear();
+}
+
+void PluginManager::init()
+{
+	if (!_pluginPath.isEmpty()) {
 		QDirIterator it(_pluginPath);
 		SettingsPrivate *settings = SettingsPrivate::instance();
 		QMap<QString, PluginInfo> plugins = settings->plugins();
@@ -42,13 +56,6 @@ PluginManager::PluginManager(MainWindow *parent)
 			this->alertUser(failedPlugins);
 		}
 	}
-}
-
-/** Explicitly destroys every plugin. */
-PluginManager::~PluginManager()
-{
-	qDeleteAll(_loadedPlugins);
-	_loadedPlugins.clear();
 }
 
 /** Display a QMessageBox if at least one error was encountered when loading plugins. */
@@ -86,7 +93,6 @@ bool PluginManager::loadPlugin(const QString &fileName)
 			pluginInfo.setVersion(basic->version());
 			pluginInfo.setConfigPage(basic->isConfigurable());
 			pluginInfo.setEnabled(true);
-			qDebug() << Q_FUNC_INFO << pluginInfo.pluginName() << "has been loaded";
 
 			settings->addPlugin(pluginInfo);
 			if (basic->isConfigurable()) {
@@ -119,12 +125,12 @@ bool PluginManager::loadPlugin(const QString &fileName)
 }
 
 /** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
-/*void PluginManager::registerExtensionPoint(const char *className, QObjectList source)
+void PluginManager::registerExtensionPoint(const char *className, QObjectList source)
 {
 	for (QObject *object : source) {
 		_extensionPoints.insert(QString(className), object);
 	}
-}*/
+}
 
 /** Unload a plugin by its name. */
 bool PluginManager::unloadPlugin(const QString &fileName)
@@ -146,26 +152,16 @@ bool PluginManager::unloadPlugin(const QString &fileName)
 	basic = nullptr;
 	auto settings = SettingsPrivate::instance();
 	settings->disablePlugin(fileName);
-	qDebug() << Q_FUNC_INFO << fileName << "has been unloaded";
 	return true;
 }
 
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 {
 	// Each View Plugin can extend multiple instances
-	qDebug() << Q_FUNC_INFO << itemViewPlugin->classesToExtend();
-
-	QMultiMap<QString, QObject*> extensionPoints;// = Settings::instance()->extensionPoints();
-
 	for (QString view : itemViewPlugin->classesToExtend()) {
 
-		qDebug() << "trying to extend view:" << view;
-
-
 		// Instances of classes which can be extended at runtime
-		for (QObject *obj : extensionPoints.values(view)) {
-
-			qDebug() << "extension point:" << obj->objectName() << obj;
+		for (QObject *obj : _extensionPoints.values(view)) {
 
 			// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
 			if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
