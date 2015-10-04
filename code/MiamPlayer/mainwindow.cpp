@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <musicsearchengine.h>
+#include <quickstart.h>
 #include <settings.h>
 #include <settingsprivate.h>
 
@@ -128,7 +129,6 @@ void MainWindow::init()
 	}
 
 	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
-	quickStart->setVisible(isEmpty);
 	library->setVisible(!isEmpty);
 	libraryHeader->setVisible(!isEmpty);
 	changeHierarchyButton->setVisible(!isEmpty);
@@ -137,6 +137,7 @@ void MainWindow::init()
 	widgetSearchBar->setVisible(!isEmpty);
 	this->showTabPlaylists();
 	if (isEmpty) {
+		QuickStart *quickStart = new QuickStart(this);
 		quickStart->searchMultimediaFiles();
 	}
 
@@ -176,7 +177,6 @@ void MainWindow::setupActions()
 	connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setVisible(true);
-		//tabPlaylistPage->setVisible(false);
 		stackedWidgetRight->setCurrentIndex(0);
 		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 		library->createConnectionsToDB();
@@ -223,16 +223,7 @@ void MainWindow::setupActions()
 		customizeThemeDialog->exec();
 	});
 
-	auto createCustomizeOptionsDialog = [this] () -> void {
-		CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
-		connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-		connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
-		dialog->show();
-		dialog->raise();
-		dialog->activateWindow();
-	};
-
-	connect(actionShowOptions, &QAction::triggered, createCustomizeOptionsDialog);
+	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
@@ -243,28 +234,11 @@ void MainWindow::setupActions()
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
 	});
 
-	// Quick Start
-	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, createCustomizeOptionsDialog);
-
-	// Lambda function to reduce duplicate code
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	auto applyButtonClicked = [this, db, settings] (const QStringList &newLocations) {
-		qDebug() << Q_FUNC_INFO << "applyButtonClicked";
-		settings->setMusicLocations(newLocations);
-		quickStart->hide();
-		library->show();
-		libraryHeader->show();
-		changeHierarchyButton->show();
-		widgetSearchBar->show();
-		actionScanLibrary->setEnabled(true);
-		db->rebuild();
-	};
-
 	// Load music
+	auto settings = SettingsPrivate::instance();
 	connect(settings, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
 		qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
 		bool libraryIsEmpty = newLocations.isEmpty();
-		quickStart->setVisible(libraryIsEmpty);
 		library->setVisible(!libraryIsEmpty);
 		libraryHeader->setVisible(!libraryIsEmpty);
 		changeHierarchyButton->setVisible(!libraryIsEmpty);
@@ -275,32 +249,11 @@ void MainWindow::setupActions()
 		if (libraryIsEmpty) {
 			leftTabs->setCurrentIndex(0);
 			db->rebuild(oldLocations, QStringList());
+			QuickStart *quickStart = new QuickStart(this);
 			quickStart->searchMultimediaFiles();
 		} else {
 			db->rebuild(oldLocations, newLocations);
 		}
-	});
-
-	// Set only one location in the Library: the default music folder
-	connect(quickStart->defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
-		QString musicLocation = quickStart->defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
-		musicLocation = QDir::toNativeSeparators(musicLocation);
-		QStringList newLocations;
-		newLocations.append(musicLocation);
-		applyButtonClicked(newLocations);
-	});
-
-	// Select only folders that are checked by one
-	connect(quickStart->quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
-		QStringList newLocations;
-		for (int i = 1; i < quickStart->quickStartTableWidget->rowCount(); i++) {
-			if (quickStart->quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
-				QString musicLocation = quickStart->quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
-				musicLocation = QDir::toNativeSeparators(musicLocation);
-				newLocations.append(musicLocation);
-			}
-		}
-		applyButtonClicked(newLocations);
 	});
 
 	for (TreeView *tab : this->findChildren<TreeView*>()) {
@@ -501,8 +454,7 @@ void MainWindow::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
 		this->retranslateUi(this);
-		//customizeOptionsDialog->retranslateUi(customizeOptionsDialog);
-		quickStart->retranslateUi(quickStart);
+		//quickStart->retranslateUi(quickStart);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
@@ -609,6 +561,16 @@ void MainWindow::loadThemeAndSettings()
 	// Fonts
 	this->updateFonts(settingsPrivate->font(SettingsPrivate::FF_Menu));
 	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
+}
+
+void MainWindow::createCustomizeOptionsDialog()
+{
+	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
+	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
+	connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
+	dialog->show();
+	dialog->raise();
+	dialog->activateWindow();
 }
 
 void MainWindow::processArgs(const QStringList &args)

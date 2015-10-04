@@ -8,6 +8,8 @@
 
 #include "ui_quickstart.h"
 
+class MainWindow;
+
 /**
  * \brief		The QuickStart class is used at startup to display a list of places where one can choose how to scan his harddrive.
  * \details		This class extends QWidget and offers to the user 3 differents ways to add filesystem path.
@@ -31,15 +33,19 @@ private:
 	QuickStartSearchEngine *_qsse;
 
 public:
-	explicit QuickStart(QWidget *parent = 0);
+	explicit QuickStart(MainWindow *mainWindow);
+
+	void searchMultimediaFiles();
 
 	virtual bool eventFilter(QObject *, QEvent *e) override;
 
-	/** The first time the player is launched, this function will scan for multimedia files. */
-	void searchMultimediaFiles();
-
 protected:
 	virtual void paintEvent(QPaintEvent *) override;
+
+private:
+	void applyButtonClicked(MainWindow *mainWindow, const QStringList &newLocations);
+
+	/** The first time the player is launched, this function will scan for multimedia files. */
 
 private slots:
 	/** Check or uncheck rows when one is clicking, but not only on the checkbox. */

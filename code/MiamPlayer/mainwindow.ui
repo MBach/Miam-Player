@@ -156,9 +156,6 @@
          </attribute>
         </widget>
        </item>
-       <item>
-        <widget class="QuickStart" name="quickStart" native="true"/>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabFileExplorer">
@@ -929,12 +926,6 @@
    <class>FileSystemTreeView</class>
    <extends>QTreeView</extends>
    <header>filesystem/filesystemtreeview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QuickStart</class>
-   <extends>QWidget</extends>
-   <header>quickstart.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>TimeLabel</class>

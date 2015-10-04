@@ -11,10 +11,15 @@
 
 #include <QtDebug>
 
+#include "mainwindow.h"
+
 const QList<int> QuickStart::ratios = QList<int>() << 0 << 3 << 2;
 
-QuickStart::QuickStart(QWidget *parent) :
-	QWidget(parent), _totalMusicFiles(0), _worker(nullptr), _qsse(nullptr)
+QuickStart::QuickStart(MainWindow *mainWindow)
+	: QWidget(mainWindow)
+	, _totalMusicFiles(0)
+	, _worker(nullptr)
+	, _qsse(nullptr)
 {
 	setupUi(this);
 
@@ -24,7 +29,6 @@ QuickStart::QuickStart(QWidget *parent) :
 		orLabel->setVisible(false);
 	} else {
 		defaultFolderTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
-
 		defaultFolderTableWidget->insertRow(0);
 		QTableWidgetItem *checkBox = new QTableWidgetItem;
 		checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
@@ -46,18 +50,30 @@ QuickStart::QuickStart(QWidget *parent) :
 	quickStartTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
 
 	connect(quickStartTableWidget, &QTableWidget::itemClicked, this, &QuickStart::checkRow);
-	this->installEventFilter(this);
-}
+	connect(commandLinkButtonLibrary, &QAbstractButton::clicked, mainWindow, &MainWindow::createCustomizeOptionsDialog);
 
-bool QuickStart::eventFilter(QObject *, QEvent *e)
-{
-	if (e->type() == QEvent::Show || e->type() == QEvent::Resize) {
-		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
-		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
-		return true;
-	} else {
-		return false;
-	}
+	// Set only one location in the Library: the default music folder
+	connect(defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
+		QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
+		musicLocation = QDir::toNativeSeparators(musicLocation);
+		this->applyButtonClicked(mainWindow, QStringList(musicLocation));
+	});
+
+	// Select only folders that are checked by one
+	connect(quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
+		QStringList newLocations;
+		for (int i = 1; i < quickStartTableWidget->rowCount(); i++) {
+			if (quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
+				QString musicLocation = quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
+				musicLocation = QDir::toNativeSeparators(musicLocation);
+				newLocations.append(musicLocation);
+			}
+		}
+		this->applyButtonClicked(mainWindow, newLocations);
+	});
+
+	mainWindow->tabLibrary->layout()->addWidget(this);
+	this->installEventFilter(this);
 }
 
 /** The first time the player is launched, this function will scan for multimedia files. */
@@ -80,6 +96,30 @@ void QuickStart::searchMultimediaFiles()
 		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
 		worker->start();
 	}
+}
+
+bool QuickStart::eventFilter(QObject *, QEvent *e)
+{
+	if (e->type() == QEvent::Show || e->type() == QEvent::Resize) {
+		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
+		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void QuickStart::applyButtonClicked(MainWindow *mainWindow, const QStringList &newLocations)
+{
+	qDebug() << Q_FUNC_INFO;
+	SettingsPrivate::instance()->setMusicLocations(newLocations);
+	mainWindow->library->show();
+	mainWindow->libraryHeader->show();
+	mainWindow->changeHierarchyButton->show();
+	mainWindow->widgetSearchBar->show();
+	mainWindow->actionScanLibrary->setEnabled(true);
+	SqlDatabase::instance()->rebuild();
+	this->deleteLater();
 }
 
 void QuickStart::paintEvent(QPaintEvent *)

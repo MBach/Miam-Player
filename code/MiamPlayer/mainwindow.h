@@ -90,6 +90,8 @@ private:
 	void loadThemeAndSettings();
 
 public slots:
+	void createCustomizeOptionsDialog();
+
 	void processArgs(const QStringList &args);
 
 private slots:

@@ -28,11 +28,11 @@ private:
 public:
 	explicit JumpToWidget(QAbstractItemView *view);
 
-	virtual bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	void setCurrentLetter(const QChar &currentLetter);
 
-	virtual QSize sizeHint() const;
+	virtual QSize sizeHint() const override;
 
 protected:
 	virtual void leaveEvent(QEvent *event) override;

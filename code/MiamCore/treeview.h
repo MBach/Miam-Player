@@ -18,7 +18,7 @@ public:
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const = 0;
 
-	virtual QStringList selectedTracks();
+	virtual QStringList selectedTracks() override;
 
 protected:
 	/** Explore items to count leaves (tracks). */
