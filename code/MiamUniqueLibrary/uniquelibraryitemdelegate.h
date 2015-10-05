@@ -20,7 +20,7 @@ private:
 	JumpToWidget *_jumpTo;
 
 public:
-	UniqueLibraryItemDelegate(JumpToWidget *jumpTo, QSortFilterProxyModel *proxy);
+	explicit UniqueLibraryItemDelegate(JumpToWidget *jumpTo, QSortFilterProxyModel *proxy);
 
 	/** Redefined. */
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
@@ -29,6 +29,8 @@ private:
 	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const override;
 
 	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
+
+	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
 };
 
 #endif // UNIQUELIBRARYITEMDELEGATE_H

@@ -36,7 +36,7 @@ protected:
 	int _coverSize;
 
 public:
-	MiamItemDelegate(QSortFilterProxyModel *proxy);
+	explicit MiamItemDelegate(QSortFilterProxyModel *proxy);
 
 protected:
 	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const = 0;

@@ -51,8 +51,8 @@ public:
 		DF_CustomDisplayText	= Qt::UserRole + 11,
 		DF_NormArtist			= Qt::UserRole + 12,
 		DF_NormAlbum			= Qt::UserRole + 13,
-		DF_Disc					= Qt::UserRole + 14/*,
-		DF_CustomSortRole		= Qt::UserRole + 15*/
+		DF_Disc					= Qt::UserRole + 14,
+		DF_TrackLength			= Qt::UserRole + 15
 	};
 
 	enum TagEditorColumns : int

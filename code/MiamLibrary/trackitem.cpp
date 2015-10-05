@@ -8,6 +8,7 @@ TrackItem::TrackItem(const TrackDAO *dao) :
 	//setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 	setData(dao->trackNumber(), Miam::DF_TrackNumber);
 	setData(dao->disc().toInt(), Miam::DF_DiscNumber);
+	setData(dao->length(), Miam::DF_TrackLength);
 	if (dao->rating() != -1) {
 		setData(dao->rating(), Miam::DF_Rating);
 	}

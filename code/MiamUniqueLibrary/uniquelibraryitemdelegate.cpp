@@ -48,7 +48,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		break;
 	case Miam::IT_Track: {
 		int coverSize = settings->coverSize();
-		o.rect.moveLeft(coverSize);
+		o.rect.adjust(coverSize, 0, 0, 0);
 		this->paintRect(painter, o);
 		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
 		break;
@@ -88,4 +88,62 @@ void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewIt
 	QPoint c = option.rect.center();
 	int textWidth = painter->fontMetrics().width(item->text());
 	painter->drawLine(textWidth + 5, c.y(), option.rect.right() - 5, c.y());
+}
+
+#include <QDateTime>
+
+void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &option, TrackItem *track) const
+{
+	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
+	if (trackNumber > 0) {
+		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
+	} else {
+		option.text = track->text();
+	}
+	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+	option.textElideMode = Qt::ElideRight;
+	QString s;
+	QString trackLength = QDateTime::fromTime_t(track->data(Miam::DF_TrackLength).toUInt()).toString("m:ss");
+	QRect titleRect, lengthRect;
+	if (QGuiApplication::isLeftToRight()) {
+
+		int w = fmf.width(trackLength);
+		lengthRect = QRect(option.rect.x() + option.rect.width() - (w + 5), option.rect.y(), w + 5, option.rect.height());
+		titleRect = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - lengthRect.width() - 5, option.rect.height());
+
+		s = fmf.elidedText(option.text, Qt::ElideRight, titleRect.width());
+	} else {
+		titleRect = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
+		s = fmf.elidedText(option.text, Qt::ElideRight, titleRect.width());
+	}
+
+	p->save();
+	// Draw track number and title
+	if (s.isEmpty()) {
+		p->setPen(option.palette.mid().color());
+		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
+		p->drawText(titleRect, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, titleRect.width()));
+	} else {
+		if (option.state.testFlag(QStyle::State_Selected) || option.state.testFlag(QStyle::State_MouseOver)) {
+			if (qAbs(option.palette.highlight().color().lighter(160).value() - option.palette.highlightedText().color().value()) < 128) {
+				p->setPen(option.palette.text().color());
+			} else {
+				p->setPen(option.palette.highlightedText().color());
+			}
+		}
+		if (track->data(Miam::DF_Highlighted).toBool()) {
+			QFont f = p->font();
+			f.setBold(true);
+			p->setFont(f);
+		}
+		p->drawText(titleRect, Qt::AlignVCenter, s);
+	}
+
+	// Draw track length
+	if (QGuiApplication::isLeftToRight()) {
+		p->drawText(lengthRect, Qt::AlignVCenter, trackLength);
+	} else {
+
+	}
+	p->restore();
 }
