@@ -22,8 +22,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
-	, _uniqueLibrary(new UniqueLibrary(this))
 	, _mediaPlayer(new MediaPlayer(this))
+	, _uniqueLibrary(new UniqueLibrary(_mediaPlayer, this))
 	, searchDialog(new SearchDialog(this))
 	, _pluginManager(new PluginManager(this))
 {
@@ -67,8 +67,8 @@ void MainWindow::activateLastView()
 	QString viewName = Settings::instance()->lastActiveView();
 	for (QAction *actionView : menuView->actions()) {
 		if (actionView->objectName() == viewName) {
-			this->restoreGeometry(SettingsPrivate::instance()->value("mainWindowGeometry").toByteArray());
 			actionView->trigger();
+			this->restoreGeometry(SettingsPrivate::instance()->value("mainWindowGeometry").toByteArray());
 			break;
 		}
 	}

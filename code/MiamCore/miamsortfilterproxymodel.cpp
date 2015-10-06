@@ -34,7 +34,6 @@ bool MiamSortFilterProxyModel::filterAcceptsColumn(int sourceColumn, const QMode
 	} else {
 		qDebug() << Q_FUNC_INFO << item;
 	}*/
-
 	return QSortFilterProxyModel::filterAcceptsColumn(sourceColumn, sourceParent);
 }
 

@@ -6,7 +6,7 @@
 #include "miamcore_global.h"
 
 /**
- * \brief		The MediaPlaylist class is has been created to have a custom Random mode.
+ * \brief		The MediaPlaylist class has been created to have a custom Random mode.
  * \details		Default Random mode doesn't keep in memory which tracks that were played. It can be very confusing to press 'Next'
  *				and to listen the track that just has been played before. Now, it's impossible to have the same track beein played twice
  *				unless all other tracks were played once. Moreover if one skips a track, it's still possible to rewind and play the latter.

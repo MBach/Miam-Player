@@ -60,6 +60,9 @@ public:
 
 	//qint64 time() const;
 
+	/** Play track directly in the player, without playlist. */
+	void playMediaContent(const QMediaContent &mc);
+
 private:
 	void createLocalConnections();
 
@@ -67,9 +70,6 @@ private:
 
 	/** Current duration of the media, in ms. */
 	qint64 duration();
-
-	/** Play track directly in the player, without playlist. */
-	void playMediaContent(const QMediaContent &mc);
 
 	/** Current position in the media, percent-based. */
 	float position() const;

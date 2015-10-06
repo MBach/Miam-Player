@@ -32,10 +32,10 @@ private:
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
 
+	MediaPlayer *_mediaPlayer;
+
 	/** View object: display all your tracks in a huge list. */
 	UniqueLibrary *_uniqueLibrary;
-
-	MediaPlayer *_mediaPlayer;
 
 	PluginManager *_pluginManager;
 

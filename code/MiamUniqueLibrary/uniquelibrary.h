@@ -18,8 +18,14 @@
 class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::UniqueLibrary
 {
 	Q_OBJECT
+private:
+	MediaPlayer *_mediaPlayer;
+
 public:
-	explicit UniqueLibrary(QWidget *parent = 0);
+	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = 0);
+
+private slots:
+	void playSingleTrack(const QModelIndex &index);
 };
 
 #endif // UNIQUELIBRARY_H

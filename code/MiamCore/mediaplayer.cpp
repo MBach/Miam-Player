@@ -394,13 +394,16 @@ void MediaPlayer::pause()
 void MediaPlayer::play()
 {
 	// Check if it's possible to play tracks first
+	qDebug() << "1";
 	if (!_playlist) {
 		return;
 	}
+	qDebug() << "2" << _playlist->currentIndex();
 	QMediaContent mc = _playlist->media(_playlist->currentIndex());
 	if (mc.isNull()) {
 		return;
 	}
+	qDebug() << "3";
 
 	this->playMediaContent(mc);
 }

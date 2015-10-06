@@ -24,7 +24,6 @@ ListView::ListView(QWidget *parent)
 
 void ListView::createConnectionsToDB()
 {
-	qDebug() << Q_FUNC_INFO;
 	auto db = SqlDatabase::instance();
 	db->disconnect();
 	connect(db, &SqlDatabase::loaded, this, [=]() {
