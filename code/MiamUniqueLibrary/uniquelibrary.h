@@ -21,11 +21,19 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::Uniqu
 private:
 	MediaPlayer *_mediaPlayer;
 
+	QStandardItem *_currentTrack;
+
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = 0);
 
 private slots:
 	void playSingleTrack(const QModelIndex &index);
+
+	void skipBackward();
+
+	void skipForward();
+
+	void toggleShuffle();
 };
 
 #endif // UNIQUELIBRARY_H

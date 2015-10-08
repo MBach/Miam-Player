@@ -50,6 +50,10 @@ MediaPlayer::MediaPlayer(QObject *parent)
 
 void MediaPlayer::createLocalConnections()
 {
+	/*if (_remotePlayer == nullptr) {
+		qDebug() << Q_FUNC_INFO << "do not recreate connections!";
+		return;
+	}*/
 	// Disconnect remote players
 	QMapIterator<QString, IMediaPlayer*> it(_remotePlayers);
 	while (it.hasNext()) {
@@ -62,57 +66,20 @@ void MediaPlayer::createLocalConnections()
 	_remotePlayer = nullptr;
 	_localPlayer->disconnect();
 
-	connect(_localPlayer, &QtAV::AVPlayer::mediaStatusChanged, this, [=](QtAV::MediaStatus status) {
-		switch (status) {
-		case QtAV::LoadingMedia:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "LoadingMedia";
-			emit mediaStatusChanged(QMediaPlayer::LoadingMedia);
-			break;
-		case QtAV::NoMedia:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "NoMedia";
-			emit mediaStatusChanged(QMediaPlayer::NoMedia);
-			this->setState(QMediaPlayer::StoppedState);
-			break;
-		case QtAV::BufferingMedia:
-			//qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "BufferingMedia";
-			emit mediaStatusChanged(QMediaPlayer::BufferingMedia);
-			break;
-		case QtAV::BufferedMedia:
-			//qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "BufferedMedia";
-			_localPlayer->audio()->setVolume(Settings::instance()->volume());
-			/*if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
-				this->setState(QMediaPlayer::PlayingState);
-			}*/
-			break;
-		case QtAV::EndOfMedia:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "EndOfMedia";
-			emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
-			break;
-		case QtAV::InvalidMedia:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "InvalidMedia";
-			emit mediaStatusChanged(QMediaPlayer::InvalidMedia);
-			break;
-		case QtAV::UnknownMediaStatus:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "UnknownMediaStatus";
-			break;
-		case QtAV::LoadedMedia:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "LoadedMedia";
-			//if (_state != QMediaPlayer::PlayingState && _state != QMediaPlayer::PausedState) {
-			emit currentMediaChanged("file://" + _localPlayer->file());
-			this->setState(QMediaPlayer::PlayingState);
-			//}
-			break;
-		case QtAV::StalledMedia:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << "StalledMedia";
-			break;
-		default:
-			qDebug() << "QtAV::AVPlayer::mediaStatusChanged" << status;
-			break;
-		}
+	connect(_localPlayer, &QtAV::AVPlayer::stopped, this, [=]() {
+		qDebug() << "QtAV::AVPlayer::stopped";
+		this->setState(QMediaPlayer::StoppedState);
 	});
 
-	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool) {
-		qDebug() << "paused";
+	connect(_localPlayer, &QtAV::AVPlayer::loaded, this, [=]() {
+		qDebug() << "QtAV::AVPlayer::loaded";
+		_localPlayer->audio()->setVolume(Settings::instance()->volume());
+		emit currentMediaChanged("file://" + _localPlayer->file());
+		this->setState(QMediaPlayer::PlayingState);
+	});
+
+	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool b) {
+		qDebug() << "QtAV::AVPlayer::paused" << b;
 		this->setState(QMediaPlayer::PausedState);
 	});
 
@@ -394,17 +361,13 @@ void MediaPlayer::pause()
 void MediaPlayer::play()
 {
 	// Check if it's possible to play tracks first
-	qDebug() << "1";
 	if (!_playlist) {
 		return;
 	}
-	qDebug() << "2" << _playlist->currentIndex();
 	QMediaContent mc = _playlist->media(_playlist->currentIndex());
 	if (mc.isNull()) {
 		return;
 	}
-	qDebug() << "3";
-
 	this->playMediaContent(mc);
 }
 
