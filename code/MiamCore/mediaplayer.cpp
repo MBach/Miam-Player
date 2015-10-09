@@ -23,7 +23,27 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	, _remotePlayer(nullptr)
 	, _stopAfterCurrent(false)
 {
-	this->createLocalConnections();
+	//this->createLocalConnections();
+	connect(_localPlayer, &QtAV::AVPlayer::stopped, this, [=]() {
+		qDebug() << "QtAV::AVPlayer::stopped";
+		this->setState(QMediaPlayer::StoppedState);
+	});
+
+	connect(_localPlayer, &QtAV::AVPlayer::loaded, this, [=]() {
+		qDebug() << "QtAV::AVPlayer::loaded";
+		_localPlayer->audio()->setVolume(Settings::instance()->volume());
+		emit currentMediaChanged("file://" + _localPlayer->file());
+		this->setState(QMediaPlayer::PlayingState);
+	});
+
+	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool b) {
+		qDebug() << "QtAV::AVPlayer::paused" << b;
+		this->setState(QMediaPlayer::PausedState);
+	});
+
+	connect(_localPlayer, &QtAV::AVPlayer::positionChanged, this, [=](qint64 pos) {
+		emit positionChanged(pos, _localPlayer->duration());
+	});
 
 	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
 		QWindow *w = QGuiApplication::topLevelWindows().first();
@@ -48,12 +68,8 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	});
 }
 
-void MediaPlayer::createLocalConnections()
+/*void MediaPlayer::createLocalConnections()
 {
-	/*if (_remotePlayer == nullptr) {
-		qDebug() << Q_FUNC_INFO << "do not recreate connections!";
-		return;
-	}*/
 	// Disconnect remote players
 	QMapIterator<QString, IMediaPlayer*> it(_remotePlayers);
 	while (it.hasNext()) {
@@ -107,7 +123,7 @@ void MediaPlayer::createRemoteConnections(const QUrl &track)
 	_remotePlayer->setVolume(Settings::instance()->volume());
 
 	// Disconnect local player first
-	_localPlayer->disconnect();
+	//_localPlayer->disconnect();
 
 	connect(_remotePlayer, &IMediaPlayer::paused, this, [=]() {
 		this->setState(QMediaPlayer::PausedState);
@@ -129,7 +145,7 @@ void MediaPlayer::createRemoteConnections(const QUrl &track)
 		this->setState(QMediaPlayer::StoppedState);
 		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
 	});
-}
+}*/
 
 void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 {
@@ -195,7 +211,7 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
 	// Everything is splitted in 2: local actions and remote actions
 	if (mc.canonicalUrl().isLocalFile()) {
-		this->createLocalConnections();
+		//this->createLocalConnections();
 
 		// Resume playback is file was previously opened
 		if (_state == QMediaPlayer::PausedState) {
@@ -206,7 +222,7 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 		}
 	} else {
 		// Remote player is about to start
-		this->createRemoteConnections(mc.canonicalUrl());
+		//this->createRemoteConnections(mc.canonicalUrl());
 		if (_state == QMediaPlayer::PausedState) {
 			_remotePlayer->resume();
 		} else {

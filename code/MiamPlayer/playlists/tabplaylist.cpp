@@ -166,7 +166,9 @@ void TabPlaylist::init(MediaPlayer *mediaPlayer)
 			}
 			int lastActiveTab = settings->value("lastActiveTab").toInt();
 			setCurrentIndex(lastActiveTab);
-			_mediaPlayer->setPlaylist(playlist(lastActiveTab)->mediaPlaylist());
+			if (playlist(lastActiveTab)) {
+				_mediaPlayer->setPlaylist(playlist(lastActiveTab)->mediaPlaylist());
+			}
 		}
 	}
 	if (playlists().isEmpty()) {

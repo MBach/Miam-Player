@@ -20,6 +20,9 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	library->setSelectionBehavior(QAbstractItemView::SelectRows);
 	library->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
+	_model = library->model();
+	_proxy = library->model()->proxy();
+
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &SearchBar::aboutToStartSearch, [=](const QString &text) {
 		library->model()->proxy()->findMusic(text);
@@ -45,26 +48,44 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 }
 
-void UniqueLibrary::playSingleTrack(const QModelIndex &index)
+bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 {
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	}
-	QStandardItem *item = library->model()->itemFromIndex(library->model()->proxy()->mapToSource(index));
+	QStandardItem *item = _model->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		_currentTrack = item;
+		return true;
+	} else {
+		return false;
 	}
 }
 
 void UniqueLibrary::skipBackward()
 {
 	qDebug() << Q_FUNC_INFO << "not yet implemented";
+	if (!_currentTrack) {
+		return;
+	}
 }
 
 void UniqueLibrary::skipForward()
 {
-	qDebug() << Q_FUNC_INFO << "not yet implemented";
+	if (!_currentTrack) {
+		return;
+	}
+	QModelIndex current = _proxy->mapFromSource(_model->index(_currentTrack->row(), 0));
+	int row = current.row();
+	while (row < _model->rowCount()) {
+		QModelIndex next = current.sibling(row + 1, 0);
+		if (this->playSingleTrack(next)) {
+			break;
+		} else {
+			row++;
+		}
+	}
 }
 
 void UniqueLibrary::toggleShuffle()

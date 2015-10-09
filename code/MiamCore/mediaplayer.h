@@ -64,9 +64,9 @@ public:
 	void playMediaContent(const QMediaContent &mc);
 
 private:
-	void createLocalConnections();
+	//void createLocalConnections();
 
-	void createRemoteConnections(const QUrl &track);
+	//void createRemoteConnections(const QUrl &track);
 
 	/** Current duration of the media, in ms. */
 	qint64 duration();

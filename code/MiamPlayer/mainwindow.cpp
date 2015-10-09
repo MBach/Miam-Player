@@ -22,10 +22,11 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
+	, _playbackModeWidgetFactory(nullptr)
 	, _mediaPlayer(new MediaPlayer(this))
 	, _uniqueLibrary(new UniqueLibrary(_mediaPlayer, this))
-	, searchDialog(new SearchDialog(this))
 	, _pluginManager(new PluginManager(this))
+	, searchDialog(new SearchDialog(this))
 {
 	setupUi(this);
 	widgetSearchBar->setFrameBorder(false, false, true, false);

@@ -23,11 +23,14 @@ private:
 
 	QStandardItem *_currentTrack;
 
+	UniqueLibraryItemModel *_model;
+	MiamSortFilterProxyModel *_proxy;
+
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = 0);
 
 private slots:
-	void playSingleTrack(const QModelIndex &index);
+	bool playSingleTrack(const QModelIndex &index);
 
 	void skipBackward();
 
