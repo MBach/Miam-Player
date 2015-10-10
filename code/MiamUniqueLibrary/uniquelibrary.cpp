@@ -46,6 +46,13 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 			}
 		}
 	});
+
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
+		if (_currentTrack) {
+			uint p = pos / 1000;
+			_currentTrack->setData(p, Miam::DF_CurrentPosition);
+		}
+	});
 }
 
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)

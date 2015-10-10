@@ -94,16 +94,27 @@ void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewIt
 
 void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &option, TrackItem *track) const
 {
+	p->save();
 	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
 	if (trackNumber > 0) {
 		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
 	} else {
 		option.text = track->text();
 	}
-	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
 	QString trackLength = QDateTime::fromTime_t(track->data(Miam::DF_TrackLength).toUInt()).toString("m:ss");
+
+	QFont f = SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
+	// Current track is being played
+	if (track->data(Miam::DF_Highlighted).toBool()) {
+		uint currentPos = track->data(Miam::DF_CurrentPosition).toUInt();
+		QString trackCurrentPos = QDateTime::fromTime_t(currentPos).toString("m:ss");
+		trackLength.prepend(trackCurrentPos + " / ");
+		f.setBold(true);
+	}
+	QFontMetrics fmf(f);
+
 	QRect titleRect, lengthRect;
 	if (QGuiApplication::isLeftToRight()) {
 
@@ -117,7 +128,6 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 		s = fmf.elidedText(option.text, Qt::ElideRight, titleRect.width());
 	}
 
-	p->save();
 	// Draw track number and title
 	if (s.isEmpty()) {
 		p->setPen(option.palette.mid().color());
