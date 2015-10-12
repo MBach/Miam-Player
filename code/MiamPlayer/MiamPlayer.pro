@@ -113,13 +113,12 @@ FORMS += closeplaylistpopup.ui \
     tageditor.ui
 
 RESOURCES += mp.qrc
-
+CONFIG += c++11
 win32 {
     RC_FILE += config/mp.rc
     TARGET = MiamPlayer
 }
 unix {
-    CONFIG += c++11
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {

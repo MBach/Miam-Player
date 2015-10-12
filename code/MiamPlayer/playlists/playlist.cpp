@@ -66,7 +66,6 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(this, &Playlist::doubleClicked, this, [=] (const QModelIndex &track) {
 		mediaPlayer->changeTrack(_playlistModel->mediaPlaylist(), track.row());
-		this->viewport()->update();
 	});
 
 	// Ensure current item in the playlist is visible when track has just changed to another one

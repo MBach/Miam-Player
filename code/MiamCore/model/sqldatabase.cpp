@@ -528,6 +528,9 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 	transaction();
 	Q_ASSERT(oldPaths.size() == newPaths.size());
 
+    qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
+    qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
+
 	QList<FileHelper*> olds;
 	QList<ArtistDAO*> artists;
 	QList<AlbumDAO*> albums;
@@ -655,6 +658,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 					emit nodeExtracted(album);
 					trackDAO->setParentNode(album);
 				}
+                qDebug() << Q_FUNC_INFO << "about to extract track" << trackDAO->artist() << trackDAO->artistAlbum() << trackDAO->album() << trackDAO->title();
 				emit nodeExtracted(trackDAO);
 			}
 			olds.append(fh);

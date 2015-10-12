@@ -52,22 +52,14 @@ public:
 
 	void setState(QMediaPlayer::State state);
 
-	//void setTime(qint64 t) const;
-
 	void setVolume(qreal v);
 
 	inline QMediaPlayer::State state() const { return _state; }
-
-	//qint64 time() const;
 
 	/** Play track directly in the player, without playlist. */
 	void playMediaContent(const QMediaContent &mc);
 
 private:
-	//void createLocalConnections();
-
-	//void createRemoteConnections(const QUrl &track);
-
 	/** Current duration of the media, in ms. */
 	qint64 duration();
 

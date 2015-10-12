@@ -29,9 +29,6 @@ private:
 
 	PlaylistManager *_playlistManager;
 
-	/** A custom message box for handling errors. */
-	//TracksNotFoundMessageBox *messageBox;
-
 	MainWindow *_mainWindow;
 	QMenu *_contextMenu;
 	QAction *_deletePlaylist;

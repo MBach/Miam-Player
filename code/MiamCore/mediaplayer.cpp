@@ -68,85 +68,6 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	});
 }
 
-/*void MediaPlayer::createLocalConnections()
-{
-	// Disconnect remote players
-	QMapIterator<QString, IMediaPlayer*> it(_remotePlayers);
-	while (it.hasNext()) {
-		it.next();
-		IMediaPlayer *p = it.value();
-		if (p) {
-			p->disconnect();
-		}
-	}
-	_remotePlayer = nullptr;
-	_localPlayer->disconnect();
-
-	connect(_localPlayer, &QtAV::AVPlayer::stopped, this, [=]() {
-		qDebug() << "QtAV::AVPlayer::stopped";
-		this->setState(QMediaPlayer::StoppedState);
-	});
-
-	connect(_localPlayer, &QtAV::AVPlayer::loaded, this, [=]() {
-		qDebug() << "QtAV::AVPlayer::loaded";
-		_localPlayer->audio()->setVolume(Settings::instance()->volume());
-		emit currentMediaChanged("file://" + _localPlayer->file());
-		this->setState(QMediaPlayer::PlayingState);
-	});
-
-	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool b) {
-		qDebug() << "QtAV::AVPlayer::paused" << b;
-		this->setState(QMediaPlayer::PausedState);
-	});
-
-	connect(_localPlayer, &QtAV::AVPlayer::positionChanged, this, [=](qint64 pos) {
-		emit positionChanged(pos, _localPlayer->duration());
-	});
-}
-
-void MediaPlayer::createRemoteConnections(const QUrl &track)
-{
-	// Disconnect all existing remote players
-	QMapIterator<QString, IMediaPlayer*> it(_remotePlayers);
-	while (it.hasNext()) {
-		it.next().value()->disconnect();
-	}
-
-	// Reconnect the good one
-	IMediaPlayer *p = _remotePlayers.value(track.host());
-	if (!p) {
-		_remotePlayer = nullptr;
-		return;
-	}
-	_remotePlayer = p;
-	_remotePlayer->disconnect();
-	_remotePlayer->setVolume(Settings::instance()->volume());
-
-	// Disconnect local player first
-	//_localPlayer->disconnect();
-
-	connect(_remotePlayer, &IMediaPlayer::paused, this, [=]() {
-		this->setState(QMediaPlayer::PausedState);
-	});
-	connect(_remotePlayer, &IMediaPlayer::positionChanged, [=](qint64 pos, qint64 duration) {
-		// Cannot set position with connect(...) in plugin. Maybe thread problem? (Tried all Qt::Connection in plugin)
-		_remotePlayer->setPosition(pos);
-		emit positionChanged(pos, duration);
-	});
-	connect(_remotePlayer, &IMediaPlayer::started, this, [=](int duration) {
-		_remotePlayer->setTime(duration);
-		this->setState(QMediaPlayer::PlayingState);
-		emit currentMediaChanged(track.toString());
-	});
-	connect(_remotePlayer, &IMediaPlayer::stopped, this, [=]() {
-		this->setState(QMediaPlayer::StoppedState);
-	});
-	connect(_remotePlayer, &IMediaPlayer::trackHasEnded, this, [=]() {
-		this->setState(QMediaPlayer::StoppedState);
-		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
-	});
-}*/
-
 void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 {
 	if (remotePlayer) {
@@ -157,26 +78,12 @@ void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 void MediaPlayer::changeTrack(const QMediaContent &mediaContent)
 {
 	qDebug() << Q_FUNC_INFO << mediaContent.canonicalUrl();
-	if (_remotePlayer) {
-		_remotePlayer->disconnect();
-		_remotePlayer->stop();
-	} else {
-		_localPlayer->disconnect();
-		_localPlayer->stop();
-	}
 	_state = QMediaPlayer::StoppedState;
 	this->playMediaContent(mediaContent);
 }
 
 void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 {
-	if (_remotePlayer) {
-		_remotePlayer->disconnect();
-		_remotePlayer->stop();
-	} else {
-		_localPlayer->disconnect();
-		_localPlayer->stop();
-	}
 	_state = QMediaPlayer::StoppedState;
 	_playlist = playlist;
 	if (_playlist->playbackMode() == QMediaPlaylist::Random) {

@@ -388,25 +388,17 @@ void MainWindow::setupActions()
 		action->setChecked(true);
 	});
 
-	// Lambda function to reduce duplicate code
-	auto updateActions = [this] (bool b) {
+	connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
+		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
 		actionRemoveSelectedTracks->setEnabled(b);
 		actionMoveTracksUp->setEnabled(b);
 		actionMoveTracksDown->setEnabled(b);
-	};
-
-	connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
-		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
-		updateActions(b);
 		if (b) {
 			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
 			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
 			actionMoveTracksUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
 			actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
-	});
-	connect(tabPlaylists, &TabPlaylist::selectionChanged, this, [=](bool isEmpty) {
-		updateActions(!isEmpty);
 	});
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);

@@ -40,10 +40,9 @@ CONFIG(release, debug|release) {
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
 }
-
+CONFIG += c++11
 unix {
     TARGET = miam-core
-    CONFIG += c++11
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {

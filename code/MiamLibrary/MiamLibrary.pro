@@ -61,8 +61,7 @@ CONFIG(debug, debug|release) {
     UI_DIR = $$PWD
 }
 
-win32: DEFINES += Q_COMPILER_INITIALIZER_LISTS
-
+CONFIG += c++11
 CONFIG(release, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/release/ -lMiamCore
     OBJECTS_DIR = release/.obj
@@ -76,7 +75,6 @@ win32 {
 unix {
     LIBS += -L$$OUT_PWD/../MiamCore/ -lmiam-core
     TARGET = miam-library
-    CONFIG += c++11
     QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {

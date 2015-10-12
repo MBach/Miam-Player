@@ -21,7 +21,6 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	TabBar *tabBar = new TabBar(this);
 	this->setTabBar(tabBar);
 	this->setMovable(true);
-	//messageBox = new TracksNotFoundMessageBox(this);
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
