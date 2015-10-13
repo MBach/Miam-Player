@@ -49,17 +49,17 @@ SettingsPrivate* SettingsPrivate::instance()
 void SettingsPrivate::addPlugin(const PluginInfo &plugin)
 {
 	QMap<QString, QVariant> map = value("plugins").toMap();
-	map.insert(plugin.fileName(), QVariant::fromValue(plugin));
+	map.insert(plugin.absFilePath(), QVariant::fromValue(plugin));
 	this->setValue("plugins", map);
 }
 
 /** Disable a previously registered plugin (so it still can be listed in options). */
-void SettingsPrivate::disablePlugin(const QString &fileName)
+void SettingsPrivate::disablePlugin(const QString &absFilePath)
 {
 	QMap<QString, QVariant> map = value("plugins").toMap();
-	PluginInfo pluginInfo = map.value(fileName).value<PluginInfo>();
+	PluginInfo pluginInfo = map.value(absFilePath).value<PluginInfo>();
 	pluginInfo.setEnabled(false);
-	map.insert(fileName, QVariant::fromValue(pluginInfo));
+	map.insert(absFilePath, QVariant::fromValue(pluginInfo));
 	this->setValue("plugins", map);
 }
 
@@ -377,7 +377,10 @@ QMap<QString, PluginInfo> SettingsPrivate::plugins() const
 	QMap<QString, PluginInfo> registeredPlugins;
 	while (it.hasNext()) {
 		it.next();
-		registeredPlugins.insert(it.key(), std::move(it.value().value<PluginInfo>()));
+		PluginInfo pluginInfo = it.value().value<PluginInfo>();
+		if (QFileInfo::exists(pluginInfo.absFilePath())) {
+			registeredPlugins.insert(pluginInfo.absFilePath(), std::move(pluginInfo));
+		}
 	}
 	return registeredPlugins;
 }

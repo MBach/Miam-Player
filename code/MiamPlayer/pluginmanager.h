@@ -32,9 +32,6 @@ private:
 	/** Every plugin might instanciate objects that we need to be able to delete later (especially for unloading). */
 	QMultiMap<QString, QObject*> _dependencies;
 
-	/** Plugins are stored in a subdirectory called "plugins" under the application path. */
-	QString _pluginPath;
-
 	/** Some instances in the software can be modified (menus, buttons, widgets, etc). */
 	QMultiMap<QString, QObject*> _extensionPoints;
 
@@ -52,13 +49,13 @@ public:
 	inline QMap<QString, BasicPlugin*> loadedPlugins() const { return _loadedPlugins; }
 
 	/** Load a plugin by its location on the hard drive. */
-	bool loadPlugin(const QString &fileName);
+	bool loadPlugin(const QString &pluginAbsPath);
 
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 	void registerExtensionPoint(const char *className, QObjectList target);
 
 	/** Unload a plugin by its name. */
-	bool unloadPlugin(const QString &fileName);
+	bool unloadPlugin(const QString &absFilePath);
 
 private:
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);

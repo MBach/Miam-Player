@@ -28,7 +28,7 @@ public:
 	virtual ~PluginInfo() {}
 
 	/** Sets the filename. */
-	void setFileName(const QString &f);
+	void setAbsFilePath(const QString &f);
 
 	/** Sets the name. */
 	void setPluginName(const QString &p);
@@ -43,7 +43,7 @@ public:
 	void setEnabled(bool b);
 
 	/** Gets the filename. */
-	inline const QString& fileName() const { return _fileName; }
+	inline const QString& absFilePath() const { return _absFilePath; }
 
 	/** Gets the name. */
 	inline const QString& pluginName() const { return _pluginName; }
@@ -58,7 +58,7 @@ public:
 	inline bool isEnabled() const { return _active; }
 
 private:
-	QString _fileName;
+	QString _absFilePath;
 	QString _pluginName;
 	QString _version;
 	bool _configurable;
@@ -68,7 +68,7 @@ private:
 /** Overloaded to be able to use with QVariant. */
 inline QDataStream & operator<<(QDataStream &out, const PluginInfo &p)
 {
-	out << p.fileName() << p.pluginName() << p.version() << p.isConfigurable() << p.isEnabled();
+	out << p.absFilePath() << p.pluginName() << p.version() << p.isConfigurable() << p.isEnabled();
 	return out;
 }
 
@@ -79,7 +79,7 @@ inline QDataStream & operator>>(QDataStream &in, PluginInfo &p)
 	in >> f >> n >> v;
 	bool c, e;
 	in >> c >> e;
-	p.setFileName(f);
+	p.setAbsFilePath(f);
 	p.setPluginName(n);
 	p.setVersion(v);
 	p.setConfigPage(c);

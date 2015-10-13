@@ -10,7 +10,7 @@ PluginInfo::PluginInfo(QObject *parent)
 PluginInfo::PluginInfo(const PluginInfo &other) :
 	QObject(other.parent())
 {
-	_fileName = other.fileName();
+	_absFilePath = other.absFilePath();
 	_pluginName = other.pluginName();
 	_version = other.version();
 	_configurable = other.isConfigurable();
@@ -19,7 +19,7 @@ PluginInfo::PluginInfo(const PluginInfo &other) :
 
 PluginInfo& PluginInfo::operator=(const PluginInfo& other)
 {
-	_fileName = other.fileName();
+	_absFilePath = other.absFilePath();
 	_pluginName = other.pluginName();
 	_version = other.version();
 	_configurable = other.isConfigurable();
@@ -28,9 +28,9 @@ PluginInfo& PluginInfo::operator=(const PluginInfo& other)
 }
 
 /** Sets the filename. */
-void PluginInfo::setFileName(const QString &n)
+void PluginInfo::setAbsFilePath(const QString &n)
 {
-	_fileName = n;
+	_absFilePath = n;
 }
 
 /** Sets the name. */

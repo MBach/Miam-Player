@@ -15,15 +15,14 @@
 
 #include <QtDebug>
 
-CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent)
-	: QDialog(parent, Qt::Tool)
+CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *)
+	: QDialog(nullptr)
 	, _pluginManager(pluginManager)
 {
 	setupUi(this);
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 	listWidgetMusicLocations->setAttribute(Qt::WA_MacShowFocusRect, false);
 
-	this->setModal(true);
 	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -200,11 +199,9 @@ bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
 
 void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
 {
-	auto settings = SettingsPrivate::instance();
-	for (PluginInfo plugin : settings->plugins()) {
-		// Add name, state and version info on a summary page
-		int row = pluginSummaryTableWidget->rowCount();
-		pluginSummaryTableWidget->insertRow(row);
+	QStringList failedOnes;
+	for (PluginInfo plugin : SettingsPrivate::instance()->plugins()) {
+
 		QTableWidgetItem *checkbox = new QTableWidgetItem();
 		if (plugin.isEnabled()) {
 			checkbox->setCheckState(Qt::Checked);
@@ -213,18 +210,33 @@ void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
 		}
 
 		// If plugin brings its own UI, add a new page in the list
+		bool pluginHasFailed = false;
 		if (plugin.isConfigurable() && plugin.isEnabled()) {
-
-			BasicPlugin *p = pluginManager->loadedPlugins().value(plugin.fileName());
-			tabPlugins->addTab(p->configPage(), p->name());
+			BasicPlugin *p = pluginManager->loadedPlugins().value(plugin.absFilePath());
+			if (p) {
+				tabPlugins->addTab(p->configPage(), p->name());
+			} else {
+				pluginHasFailed = true;
+			}
 		}
 
-		QVariant v = QVariant::fromValue(plugin);
-		checkbox->setData(Qt::EditRole, v);
-
-		pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(plugin.pluginName()));
-		pluginSummaryTableWidget->setItem(row, 1, checkbox);
-		pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(plugin.version()));
+		// Check first if it's possible to add the plugin into the list
+		if (pluginHasFailed) {
+			// Plugin might has been loaded elsewhere and there's an artifact in the settings
+			failedOnes << plugin.pluginName();
+		} else {
+			// Add name, state and version info on a summary page
+			QVariant v = QVariant::fromValue(plugin);
+			checkbox->setData(Qt::EditRole, v);
+			int row = pluginSummaryTableWidget->rowCount();
+			pluginSummaryTableWidget->insertRow(row);
+			pluginSummaryTableWidget->setItem(row, 0, new QTableWidgetItem(plugin.pluginName()));
+			pluginSummaryTableWidget->setItem(row, 1, checkbox);
+			pluginSummaryTableWidget->setItem(row, 2, new QTableWidgetItem(plugin.version()));
+		}
+	}
+	if (!failedOnes.isEmpty()) {
+		pluginManager->alertUser(failedOnes);
 	}
 }
 
@@ -410,14 +422,18 @@ void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
 		if (item->checkState() == Qt::Checked) {
 
 			// Try to reload plugin
-			if (_pluginManager->loadPlugin(pluginInfo.fileName())) {
-				BasicPlugin *p = _pluginManager->loadedPlugins().value(pluginInfo.fileName());
-				tabPlugins->addTab(p->configPage(), p->name());
+			if (_pluginManager->loadPlugin(pluginInfo.absFilePath())) {
+				BasicPlugin *p = _pluginManager->loadedPlugins().value(pluginInfo.absFilePath());
+				if (p) {
+					tabPlugins->addTab(p->configPage(), p->name());
+				} else {
+					_pluginManager->alertUser(QStringList(pluginInfo.absFilePath()));
+				}
 			} else {
-				_pluginManager->alertUser(QStringList(pluginInfo.fileName()));
+				_pluginManager->alertUser(QStringList(pluginInfo.absFilePath()));
 			}
 
-		} else if (_pluginManager->unloadPlugin(pluginInfo.fileName())) {
+		} else if (_pluginManager->unloadPlugin(pluginInfo.absFilePath())) {
 			for (int i = 1; i < tabPlugins->count(); i++) {
 				if (tabPlugins->tabText(i) == pluginInfo.pluginName()) {
 					tabPlugins->removeTab(i);

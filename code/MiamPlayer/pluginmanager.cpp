@@ -15,13 +15,7 @@
 PluginManager::PluginManager(MainWindow *parent)
 	: QObject(parent)
 	, _mainWindow(parent)
-	, _pluginPath(QString())
-{
-	QDir appDirPath = QDir(qApp->applicationDirPath());
-	if (appDirPath.cd("plugins")) {
-		_pluginPath = appDirPath.absolutePath();
-	}
-}
+{}
 
 /** Explicitly destroys every plugin. */
 PluginManager::~PluginManager()
@@ -32,20 +26,26 @@ PluginManager::~PluginManager()
 
 void PluginManager::init()
 {
-	if (!_pluginPath.isEmpty()) {
-		QDirIterator it(_pluginPath);
+	QDir appDirPath = QDir(qApp->applicationDirPath());
+	QString pluginPath;
+	if (appDirPath.cd("plugins")) {
+		pluginPath = appDirPath.absolutePath();
+	}
+
+	if (!pluginPath.isEmpty()) {
+		QDirIterator it(pluginPath);
 		SettingsPrivate *settings = SettingsPrivate::instance();
 		QMap<QString, PluginInfo> plugins = settings->plugins();
 		QStringList failedPlugins;
 		while (it.hasNext()) {
 			if (QLibrary::isLibrary(it.next()) && !it.fileInfo().isSymLink()) {
 				// If plugin was recognized by the App at least once
-				if (plugins.contains(it.fileName())) {
-					PluginInfo pluginInfo = plugins.value(it.fileName());
-					if (pluginInfo.isEnabled() && !this->loadPlugin(it.fileName())) {
+				if (plugins.contains(it.filePath())) {
+					PluginInfo pluginInfo = plugins.value(it.filePath());
+					if (pluginInfo.isEnabled() && !this->loadPlugin(it.filePath())) {
 						failedPlugins << it.fileName();
 					}
-				} else if (!this->loadPlugin(it.fileName())) {
+				} else if (!this->loadPlugin(it.filePath())) {
 					failedPlugins << it.fileName();
 				}
 			}
@@ -78,9 +78,8 @@ void PluginManager::alertUser(const QStringList &failedPlugins)
 }
 
 /** Load a plugin by its location on the hard drive. */
-bool PluginManager::loadPlugin(const QString &fileName)
+bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 {
-	QString pluginAbsPath = QDir::toNativeSeparators(_pluginPath + "/" + fileName);
 	QPluginLoader pluginLoader(pluginAbsPath, this);
 	QObject *plugin = pluginLoader.instance();
 	if (plugin) {
@@ -88,7 +87,7 @@ bool PluginManager::loadPlugin(const QString &fileName)
 		SettingsPrivate *settings = SettingsPrivate::instance();
 		if (basic) {
 			PluginInfo pluginInfo;
-			pluginInfo.setFileName(fileName);
+			pluginInfo.setAbsFilePath(pluginAbsPath);
 			pluginInfo.setPluginName(basic->name());
 			pluginInfo.setVersion(basic->version());
 			pluginInfo.setConfigPage(basic->isConfigurable());
@@ -103,7 +102,7 @@ bool PluginManager::loadPlugin(const QString &fileName)
 			}
 
 			// Keep references of loaded plugins, to be able to unload them later
-			_loadedPlugins.insert(fileName, basic);
+			_loadedPlugins.insert(pluginAbsPath, basic);
 		} else {
 			return false;
 		}
@@ -133,9 +132,9 @@ void PluginManager::registerExtensionPoint(const char *className, QObjectList so
 }
 
 /** Unload a plugin by its name. */
-bool PluginManager::unloadPlugin(const QString &fileName)
+bool PluginManager::unloadPlugin(const QString &absFilePath)
 {
-	BasicPlugin *basic = _loadedPlugins.value(fileName);
+	BasicPlugin *basic = _loadedPlugins.value(absFilePath);
 	for (QObject *dependency : _dependencies.values(basic->name())) {
 		if (QAction *action = qobject_cast<QAction*>(dependency)) {
 			QMenu *menu = qobject_cast<QMenu*>(action->parent());
@@ -145,13 +144,13 @@ bool PluginManager::unloadPlugin(const QString &fileName)
 		}
 	}
 
-	_loadedPlugins.remove(fileName);
+	_loadedPlugins.remove(absFilePath);
 	_dependencies.remove(basic->name());
 	basic->cleanUpBeforeDestroy();
 	delete basic;
 	basic = nullptr;
 	auto settings = SettingsPrivate::instance();
-	settings->disablePlugin(fileName);
+	settings->disablePlugin(absFilePath);
 	return true;
 }
 

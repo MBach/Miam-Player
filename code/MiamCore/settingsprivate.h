@@ -69,7 +69,7 @@ public:
 	void addPlugin(const PluginInfo &plugin);
 
 	/** Disable a previously registered plugin (so it still can be listed in options). */
-	void disablePlugin(const QString &fileName);
+	void disablePlugin(const QString &absFilePath);
 
 	qreal bigCoverOpacity() const;
 
