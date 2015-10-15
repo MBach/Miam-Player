@@ -4,7 +4,7 @@
 #include <QStandardItem>
 #include <model/yeardao.h>
 #include "libraryfilterproxymodel.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class MIAMLIBRARY_LIBRARY YearItem : public QStandardItem
 {

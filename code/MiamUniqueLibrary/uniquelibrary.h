@@ -4,7 +4,7 @@
 #include <QSet>
 #include <QWidget>
 
-#include "miamuniquelibrary_global.h"
+#include "miamuniquelibrary_global.hpp"
 #include "model/sqldatabase.h"
 
 #include "ui_uniquelibrary.h"

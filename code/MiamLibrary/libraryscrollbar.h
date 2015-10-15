@@ -2,7 +2,7 @@
 #define LIBRARYSCROLLBAR_H
 
 #include "scrollbar.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The LibraryScrollBar class is used to hide covers when scrolling.

@@ -4,7 +4,7 @@
 #include <QPushButton>
 
 #include "libraryorderdialog.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class MIAMLIBRARY_LIBRARY LibraryHeader : public QPushButton
 {

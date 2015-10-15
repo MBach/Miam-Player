@@ -3,7 +3,7 @@
 
 #include <QStandardItem>
 #include "model/trackdao.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class MIAMLIBRARY_LIBRARY TrackItem : public QStandardItem
 {

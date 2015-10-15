@@ -3,7 +3,7 @@
 
 #include <QListView>
 #include <library/jumptowidget.h>
-#include "miamuniquelibrary_global.h"
+#include "miamuniquelibrary_global.hpp"
 #include "uniquelibraryitemmodel.h"
 
 /**

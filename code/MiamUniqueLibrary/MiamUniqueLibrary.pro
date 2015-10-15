@@ -8,11 +8,11 @@ FORMS += \
     uniquelibrary.ui
 
 HEADERS += \
-    miamuniquelibrary_global.h \
     uniquelibrary.h \
     listview.h \
     uniquelibraryitemdelegate.h \
-    uniquelibraryitemmodel.h
+    uniquelibraryitemmodel.h \
+    miamuniquelibrary_global.hpp
 
 SOURCES += \
     uniquelibrary.cpp \

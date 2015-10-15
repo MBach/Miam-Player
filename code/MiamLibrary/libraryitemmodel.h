@@ -6,7 +6,7 @@
 #include <filehelper.h>
 #include "miamitemmodel.h"
 #include "separatoritem.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 #include "libraryfilterproxymodel.h"
 

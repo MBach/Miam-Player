@@ -9,7 +9,7 @@
 #include "libraryitemmodel.h"
 #include "trackitem.h"
 
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The MiamItemDelegate class is the base class for drawing music informations in a QTreeView or a QListView

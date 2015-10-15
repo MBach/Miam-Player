@@ -1,7 +1,7 @@
 #ifndef UNIQUELIBRARYITEMMODEL_H
 #define UNIQUELIBRARYITEMMODEL_H
 
-#include "miamuniquelibrary_global.h"
+#include "miamuniquelibrary_global.hpp"
 #include <miamitemmodel.h>
 #include <miamsortfilterproxymodel.h>
 

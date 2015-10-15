@@ -5,7 +5,7 @@
 #include <QTabWidget>
 
 #include "extendedtabbar.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The ExtendedTabWidget class does only one thing: bind shortcuts for tab Library and tab FileSystem.

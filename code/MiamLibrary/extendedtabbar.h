@@ -3,7 +3,7 @@
 
 #include <QTabBar>
 #include <QtDebug>
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The ExtendedTabBar class is only used in left-pane to display 2 tabs (Library - FileSystem) where each has maximum length.

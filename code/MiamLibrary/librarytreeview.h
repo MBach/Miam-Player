@@ -14,7 +14,7 @@
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTimer>
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class CircleProgressBar;
 class JumpToWidget;

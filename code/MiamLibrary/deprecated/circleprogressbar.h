@@ -2,7 +2,7 @@
 #define CIRCLEPROGRESSBAR_H
 
 #include <QProgressBar>
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /// It is not really following Windows 10 UI guidelines. What about other OS?
 /// Moreover, one cannot interact with Library when full rescan is happening

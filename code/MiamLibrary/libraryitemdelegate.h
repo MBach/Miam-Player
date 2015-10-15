@@ -11,7 +11,7 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QStandardItem>
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class LibraryTreeView;
 

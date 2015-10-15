@@ -3,7 +3,7 @@
 
 #include <miamitemdelegate.h>
 #include <library/jumptowidget.h>
-#include "miamuniquelibrary_global.h"
+#include "miamuniquelibrary_global.hpp"
 
 #include <trackitem.h>
 

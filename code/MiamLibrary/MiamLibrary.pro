@@ -42,13 +42,13 @@ HEADERS += \
     libraryorderdialog.h \
     libraryscrollbar.h \
     librarytreeview.h \
-    miamlibrary_global.h \
     miamitemdelegate.h \
     miamitemmodel.h \
     separatoritem.h \
     scrollbar.h \
     trackitem.h \
-    yearitem.h
+    yearitem.h \
+    miamlibrary_global.hpp
 
 FORMS += \
     libraryorderdialog.ui

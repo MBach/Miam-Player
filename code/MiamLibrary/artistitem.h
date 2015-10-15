@@ -4,7 +4,7 @@
 #include <QStandardItem>
 #include <model/artistdao.h>
 
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class MIAMLIBRARY_LIBRARY ArtistItem : public QStandardItem
 {

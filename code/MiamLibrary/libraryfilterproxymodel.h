@@ -6,7 +6,7 @@
 
 #include "miamcore_global.h"
 #include "separatoritem.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The LibraryFilterProxyModel class is used to filter Library by looking in all items

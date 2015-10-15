@@ -6,7 +6,7 @@
 #include <model/genericdao.h>
 #include "separatoritem.h"
 
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The MiamItemModel class

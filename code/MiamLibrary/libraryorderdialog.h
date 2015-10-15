@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "ui_libraryorderdialog.h"
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The LibraryOrderDialog class displays a small popup which allows one to change the hierarchy

@@ -2,7 +2,7 @@
 #define DISCITEM_H
 
 #include <QStandardItem>
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class MIAMLIBRARY_LIBRARY DiscItem : public QStandardItem
 {

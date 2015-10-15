@@ -2,7 +2,7 @@
 #define CHANGEHIERARCHYBUTTON_H
 
 #include <QPushButton>
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 class MIAMLIBRARY_LIBRARY ChangeHierarchyButton : public QPushButton
 {

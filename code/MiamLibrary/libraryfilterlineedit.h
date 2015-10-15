@@ -9,7 +9,7 @@
 #include <QShortcut>
 #include <QTimer>
 
-#include "miamlibrary_global.h"
+#include "miamlibrary_global.hpp"
 
 /**
  * \brief		The LibraryFilterLineEdit class
