@@ -63,7 +63,7 @@ Component.prototype.createOperations = function()
 	try {
 		// call the base create operations function
 		component.createOperations();
-		if (installer.value("os") == "win") { 
+		if (systemInfo.productType === "windows") { 
 			try {
 				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@StartMenuDir@\\MiamPlayer.lnk");
 			} catch (e) {

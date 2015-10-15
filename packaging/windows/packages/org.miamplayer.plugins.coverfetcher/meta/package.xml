@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package>
-	<DisplayName>Cover Fetcher plugin</DisplayName>
+	<DisplayName>Cover Fetcher</DisplayName>
+	<DisplayName xml:lang="fr_fr">Chercheur de pochettes</DisplayName>
 	<Description>This plugin is able to connect an Internet Repository (MusicBrainz) to get missing covers in your library.</Description>
 	<Description xml:lang="fr_fr">Cette extension est capable de se connecter à Internert à un dépôt (MusicBrainz) pour récupérer les pochettes manquantes dans votre bibliothèque.</Description>
 	<Version>0.5</Version>
-	<ReleaseDate>2015-10-13</ReleaseDate>
+	<ReleaseDate>2015-10-15</ReleaseDate>
 	<Name>org.miamplayer.plugins.coverfetcher</Name>
 	<Default>true</Default>
-	<SortingPriority>14</SortingPriority>
+	<SortingPriority>15</SortingPriority>
 </Package>

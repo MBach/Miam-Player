@@ -127,6 +127,12 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	SqlDatabase *db = SqlDatabase::instance();
+	db->open();
+	db->exec("PRAGMA journal_mode = MEMORY");
+	db->exec("PRAGMA synchronous = OFF");
+	db->exec("PRAGMA temp_store = 2");
+	db->exec("PRAGMA foreign_keys = 1");
+
 	QStringList newFoldersToAddInLibrary;
 	// Add folders that were not found first
 	for (QFileInfo f : dirs) {

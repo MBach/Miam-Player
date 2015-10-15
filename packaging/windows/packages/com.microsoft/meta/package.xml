@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+	<DisplayName>Microsoft Visual Studio Redistributable</DisplayName>
+	<Description>This C++ package is required for Miam-Player.</Description>
+	<Version>1.0</Version>
+	<ReleaseDate>2015-10-14</ReleaseDate>
+	<Name>com.microsoft</Name>
+	<Virtual>true</Virtual>
+	<ForcedInstallation>true</ForcedInstallation>
+</Package>

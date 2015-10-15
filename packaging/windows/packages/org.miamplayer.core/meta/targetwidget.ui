@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>327</width>
-    <height>260</height>
+    <width>308</width>
+    <height>252</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -90,7 +90,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>1</height>
+       <height>20</height>
       </size>
      </property>
     </spacer>
@@ -124,8 +124,11 @@
    </item>
    <item>
     <widget class="QCheckBox" name="clearCacheCheckBox">
+     <property name="toolTip">
+      <string>Cache is located in %USER%/AppData/Local/MmeMiamMiam/MiamPlayer</string>
+     </property>
      <property name="text">
-      <string>Remove database cache of audio files, etc. (recommended)</string>
+      <string>Remove database cache of audio files, etc.</string>
      </property>
      <property name="checked">
       <bool>true</bool>
@@ -134,26 +137,16 @@
    </item>
    <item>
     <widget class="QCheckBox" name="clearRegistryCheckBox">
+     <property name="toolTip">
+      <string>User settings are usually in %USER%/AppData/Roaming/MmeMiamMiam</string>
+     </property>
      <property name="text">
-      <string>Reset settings stored in Windows Registry (not necessary)</string>
+      <string>Remove user settings</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>1</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item>
     <widget class="QCheckBox" name="associateCommonFiletypesCheckBox">
@@ -171,7 +164,7 @@
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::Preferred</enum>
+      <enum>QSizePolicy::MinimumExpanding</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

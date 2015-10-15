@@ -17,7 +17,7 @@ SettingsPrivate* SettingsPrivate::settings = nullptr;
 
 /** Private constructor. */
 SettingsPrivate::SettingsPrivate(const QString &organization, const QString &application)
-	: QSettings(organization, application)
+	: QSettings(IniFormat, UserScope, organization, application)
 {
 	if (isCustomColors()) {
 		QMapIterator<QString, QVariant> it(value("customColorsMap").toMap());

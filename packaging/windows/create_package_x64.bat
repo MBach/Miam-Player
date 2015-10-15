@@ -2,7 +2,8 @@
 
 rem core
 set MiamPlayerBuild="C:\dev\Miam-Player-build\qt5.5.1"
-xcopy %MiamPlayerBuild%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\ /y/e
+mkdir packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamLibrary\release\MiamLibrary.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamPlayer\release\MiamPlayer.exe packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamUniqueLibrary\release\MiamUniqueLibrary.dll packages\org.miamplayer.core\data\
@@ -48,12 +49,14 @@ copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
+set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
 set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
 set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
-set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
+set MiamPlayerShellBuild="C:\dev\MiamShellProject-build"
 set MiniModeBuild="C:\dev\mini-mode-build\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
+xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
 xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
@@ -73,14 +76,16 @@ copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.plugins.deezer\data\Qt5Qui
 copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.plugins.deezer\data\Qt5Sensors.dll
 copy %QTDIR%\bin\Qt5WebChannel.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebChannel.dll
 
-rem vc redist 2012 and 2013 are required too
-xcopy vcredist packages\org.miamplayer.core\data\vcredist /y/i/e
+rem create only repository
+rem rmdir repository /s /q
+rem repogen -p packages repository
 
 rem create the final package
 binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
 
 rem delete data folders
 rmdir packages\org.miamplayer.core\data\ /s /q
+rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
 rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
 rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
 rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q

@@ -4,7 +4,7 @@
 	<Description>Miam-Player is the main program. It is required and cannot be unselected.</Description>
 	<Description xml:lang="fr_fr">Miam-Player est le programme principal. Il est requis et ne peut être désélectionné.</Description>
 	<Version>0.8.0</Version>
-	<ReleaseDate>2015-10-13</ReleaseDate>
+	<ReleaseDate>2015-10-14</ReleaseDate>
 	<Name>org.miamplayer.core</Name>
 	<Licenses>
 		<License name="GPL v3" file="gpl_v3.txt" />
@@ -13,7 +13,7 @@
 		<Translation>fr_fr.qm</Translation>
 	</Translations>
 	<Default>script</Default>
-	<Script>installscript.qs</Script>
+	<Script>installscript_core.js</Script>
 	<ForcedInstallation>true</ForcedInstallation>
 	<SortingPriority>100</SortingPriority>
 	<UserInterfaces>

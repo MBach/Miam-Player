@@ -42,16 +42,13 @@
 // Constructor
 function Component()
 {
-	var programFiles = installer.environmentVariable("PROGRAMW6432");
-	if (programFiles !== "") {
-		installer.setValue("TargetDir", programFiles + "/MiamPlayer");
-	}
+
 }
 
 Component.prototype.isDefault = function()
 {
 	// select the component by default
-	return false;
+	return true;
 }
 
 // called after everything is set up, but before any file is written
@@ -66,14 +63,13 @@ Component.prototype.createOperations = function()
 	try {
 		// call the base create operations function
 		component.createOperations();
-		
-		if (installer.value("os") == "win") { 
+		if (systemInfo.productType === "windows") { 
 			try {
-				// Register DLL
-				component.addElevatedOperation("Execute", "{0,3}", "regsvr32", "@TargetDir@\\MiamPlayerShell.dll", "/s",
-												"UNDOEXECUTE", "regsvr32", "/u", "@TargetDir@\\MiamPlayerShell.dll", "/s");
+				var userProfile = installer.environmentVariable("USERPROFILE");
+				installer.setValue("UserProfile", userProfile);
+				component.addOperation("CreateShortcut", "@TargetDir@\\MiamPlayer.exe", "@UserProfile@\\Desktop\\MiamPlayer.lnk");
 			} catch (e) {
-				
+				// Do nothing if key doesn't exist
 			}
 		}
 	} catch (e) {

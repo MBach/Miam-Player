@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>Miam-Player</Name>
-	
 	<RunProgram>@TargetDir@/MiamPlayer.exe</RunProgram>
     <Version>0.8.0</Version>
     <Title>Miam-Player</Title>
@@ -15,9 +14,14 @@
 	<TargetDir>@ApplicationsDir@\MiamPlayer</TargetDir>
 	<AdminTargetDir>@ApplicationsDir@\MiamPlayer</AdminTargetDir>
 	<RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
-	<RemoteRepositories>
+	<WizardDefaultWidth>640</WizardDefaultWidth>
+	<WizardDefaultHeight>480</WizardDefaultHeight>
+	<!--<RemoteRepositories>
         <Repository>
-            <Url>http://www.miam-player.org/downloads/</Url>
+            <Url>http://www.miam-player.org/repository</Url>
+			<Enabled>1</Enabled>
+			<DisplayName>Miam-Player Repository</DisplayName>
         </Repository>
     </RemoteRepositories>
+	-->
 </Installer>

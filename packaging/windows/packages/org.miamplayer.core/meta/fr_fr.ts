@@ -31,16 +31,24 @@
         <translation>Miam-Player étant encore en Beta, il est recommandé de supprimer tous les fichiers créés par ce logiciel</translation>
     </message>
     <message>
-        <source>Remove database cache of audio files, etc. (recommended)</source>
-        <translation>Supprimer la base de donnée des caches audios, etc. (recommandé)</translation>
+        <source>Cache is located in %USER%/AppData/Local/MmeMiamMiam/MiamPlayer</source>
+        <translation>Le cache se trouve %USER%/AppData/Local/MmeMiamMiam/MiamPlayer</translation>
     </message>
     <message>
-        <source>Reset settings stored in Windows Registry (not necessary)</source>
-        <translation>Effacer les paramètres stockés dans l&apos;Editeur du Registre de Windows (non obligatoire)</translation>
+        <source>Remove database cache of audio files, etc.</source>
+        <translation>Supprimer la base de donnée des caches audios, etc.</translation>
+    </message>
+    <message>
+        <source>User settings are usually in %USER%/AppData/Roaming/MmeMiamMiam</source>
+        <translation>Les préférences utilisateur se trouvent généralement dans %USER%/AppData/Roaming/MmeMiamMiam</translation>
+    </message>
+    <message>
+        <source>Remove user settings</source>
+        <translation>Supprimer les préférences utilisateur</translation>
     </message>
 </context>
 <context>
-    <name>installscript</name>
+    <name>installscript_core</name>
     <message>
         <source>Installation Folder</source>
         <translation>Dossier d&apos;installation</translation>

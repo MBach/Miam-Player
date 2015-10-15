@@ -77,6 +77,8 @@ public:
 
 	QString normalizeField(const QString &s) const;
 
+	void setPragmas();
+
 private:
 	/** When one has manually updated tracks with TagEditor, some nodes might in unstable state. */
 	bool cleanNodesWithoutTracks();

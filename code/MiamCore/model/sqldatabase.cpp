@@ -55,10 +55,7 @@ SqlDatabase::SqlDatabase()
 	setDatabaseName(dbPath);
 
 	if (open()) {
-		this->exec("PRAGMA journal_mode = MEMORY");
-		this->exec("PRAGMA synchronous = OFF");
-		this->exec("PRAGMA temp_store = 2");
-		this->exec("PRAGMA foreign_keys = 1");
+		this->setPragmas();
 		QSqlQuery createDb(*this);
 		createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), "\
 					  " icon varchar(255), host varchar(255), UNIQUE(normalizedName))");
@@ -513,6 +510,9 @@ void SqlDatabase::updateTablePlaylistWithBackgroundImage(uint playlistID, const 
 
 void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const QString &album, const QString &artist)
 {
+	open();
+	this->setPragmas();
+
 	QSqlQuery update(*this);
 	update.prepare("UPDATE albums SET cover = ? WHERE normalizedName = ? AND artistId = (SELECT id FROM artists WHERE normalizedName = ?)");
 	update.addBindValue(coverPath);
@@ -954,10 +954,7 @@ void SqlDatabase::rebuild()
 	emit aboutToLoad();
 
 	open();
-	this->exec("PRAGMA journal_mode = MEMORY");
-	this->exec("PRAGMA synchronous = OFF");
-	this->exec("PRAGMA temp_store = 2");
-	this->exec("PRAGMA foreign_keys = 1");
+	this->setPragmas();
 
 	QSqlQuery cleanDb(*this);
 	//cleanDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
@@ -981,10 +978,7 @@ void SqlDatabase::rebuild()
 void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &newLocations)
 {
 	open();
-	this->exec("PRAGMA journal_mode = MEMORY");
-	this->exec("PRAGMA synchronous = OFF");
-	this->exec("PRAGMA temp_store = 2");
-	this->exec("PRAGMA foreign_keys = 1");
+	this->setPragmas();
 
 	// Remove old locations from database cache
 	transaction();
@@ -1069,6 +1063,14 @@ QString SqlDatabase::normalizeField(const QString &s) const
 	} else {
 		return sNormed;
 	}
+}
+
+void SqlDatabase::setPragmas()
+{
+	this->exec("PRAGMA journal_mode = MEMORY");
+	this->exec("PRAGMA synchronous = OFF");
+	this->exec("PRAGMA temp_store = 2");
+	this->exec("PRAGMA foreign_keys = 1");
 }
 
 /** Reads a file from the filesystem and adds it into the library. */

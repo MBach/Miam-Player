@@ -8,6 +8,6 @@
 	<ReleaseDate>2015-10-13</ReleaseDate>
 	<Name>org.miamplayer.core.shortcuts.desktop</Name>
 	<Default>script</Default>
-	<Script>installscript.qs</Script>
+	<Script>installscript_shortcut_desktop.js</Script>
 	<SortingPriority>97</SortingPriority>
 </Package>

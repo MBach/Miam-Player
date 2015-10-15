@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+	<DisplayName>Plugins</DisplayName>
+	<DisplayName xml:lang="fr_fr">Extensions</DisplayName>
+	<Description>Plugins can greatly improve your experience of Miam-Player</Description>
+	<Description xml:lang="fr_fr">Les extensions peuvent grandement améliorer votre expérience de Miam-Player</Description>
+	<Version>1.0</Version>
+	<ReleaseDate>2015-10-14</ReleaseDate>
+	<Name>org.miamplayer.plugins</Name>
+	<Default>true</Default>
+	<SortingPriority>99</SortingPriority>
+</Package>

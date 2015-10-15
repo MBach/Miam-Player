@@ -14,7 +14,7 @@ Settings* Settings::settings = nullptr;
 
 /** Private constructor. */
 Settings::Settings(const QString &organization, const QString &application)
-	: QSettings(organization, application)
+	: QSettings(IniFormat, UserScope, organization, application)
 {}
 
 /** Singleton pattern to be able to easily use settings everywhere in the app. */

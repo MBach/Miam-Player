@@ -57,7 +57,7 @@ function Component()
 // Utility function
 var Dir = new function () {
     this.toNativeSparator = function (path) {
-        if (installer.value("os") == "win")
+        if (systemInfo.productType === "windows")
             return path.replace(/\//g, '\\');
         return path;
     }
@@ -101,14 +101,15 @@ Component.prototype.beginInstallation = function()
     // call default implementation which is necessary for most hooks in beginInstallation case it makes nothing
     component.beginInstallation();
 	
-	if (installer.value("os") === "win") {
+	if (systemInfo.productType === "windows") {
         installer.setValue("RunProgram", "@TargetDir@\\MiamPlayer.exe");
-    } else if (installer.value("os") === "x11") {
+    } else {
         installer.setValue("RunProgram", "@TargetDir@/MiamPlayer");
     }
 }
 
-Component.prototype.chooseTarget = function () {
+Component.prototype.chooseTarget = function ()
+{
     var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
     if (widget != null) {
         var newTarget = QFileDialog.getExistingDirectory(qsTr("Choose your target directory."), widget.targetDirectory.text);
@@ -144,7 +145,7 @@ Component.prototype.createOperations = function()
 	try {
 		// call the base create operations function
 		component.createOperations();
-		if (installer.value("os") == "win") { 
+		if (systemInfo.productType === "windows") { 
 			try {
 				// only install c runtime if it is needed, no minor version check of the c runtime till we need it
 				// return value 3010 means it need a reboot, but in most cases it is not needed for run Qt application
@@ -158,7 +159,7 @@ Component.prototype.createOperations = function()
 				var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
 				if (widget.associateCommonFiletypesCheckBox.checked) {
 					var index;
-					var extensions = ["ape", "asf", "flac", "m4a", "mpc", "mp3", "oga", "ogg"];
+					var extensions = ["ape", "asf", "flac", "m4a", "mpc", "mp3", "oga", "ogg", "opus"];
 					for (index = 0; index < extensions.length; ++index) {
 						var ext = extensions[index];
 						component.addOperation("RegisterFileType", ext,
@@ -170,16 +171,18 @@ Component.prototype.createOperations = function()
 					}
 				}
 				// Remove cache (folder including subfolders, sqlite database, etc)
+				var home = installer.environmentVariable("USERPROFILE");
 				if (widget.clearCacheCheckBox.checked && installer.value("softWasInstalledBefore") == "1") {
-					var home = installer.environmentVariable("USERPROFILE");
-					// Not working?
-					// component.addElevatedOperation("Rmdir", home + "\\AppData\\Local\\MmeMiamMiam\\");
+					/// FIXME
+					//component.addElevatedOperation("Rmdir", home + "\\AppData\\Local\\MmeMiamMiam");
 					component.addElevatedOperation("Delete", home + "\\AppData\\Local\\MmeMiamMiam\\MiamPlayer\\mp.db");
 				}
-				// Remove key and subkeys in Windows Registry
+				// Remove ini file
 				if (widget.clearRegistryCheckBox.checked && installer.value("softWasInstalledBefore") == "1") {
-					// Return codes are "0" == OK and "1" == KO even if a problem has occured. "1" can happens when one has manually deleted settings in Registry
-					component.addElevatedOperation("Execute", "{0,1}", "cmd", "/C", "reg", "delete", "HKEY_CURRENT_USER\\Software\\MmeMiamMiam", "/f");
+					// Return codes are "0" == OK and "1" == KO even if a problem has occured. "1" can happen when one has manually deleted settings
+					/// FIXME
+					//component.addElevatedOperation("Rmdir", home + "\\AppData\\Roaming\\MmeMiamMiam");
+					component.addElevatedOperation("Delete", home + "\\AppData\\Roaming\\MmeMiamMiam\\MiamPlayer.ini");
 				}
 			} catch (e) {
 				// Do nothing if key doesn't exist
