@@ -5,11 +5,12 @@ The folder `data` in each subdirectory is missing. It will be created by the scr
 ##List of variables to modify
     set MiamPlayerBuild="C:\dev\Miam-Player-build-x64"
     set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
-    set QTDIR="C:\Qt\Qt5.5.0\5.0\msvc2013_64"
-    set CoverFetcherBuild="C:\dev\cover-fetcher-build-x64\release"
-    set DeezerPluginBuild="C:\dev\deezer-plugin-build-x64\release"
-    set MiniModeBuild="C:\dev\mini-mode-build-x64\release"
-    set WindowsToolbarBuild="C:\dev\windows-toolbar-build-x64\release"
+    set QTDIR="C:\Qt\Qt5.5.1\5.0\msvc2013_64"
+    set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
+    set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
+    set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
+    set MiniModeBuild="C:\dev\mini-mode-build\release"
+    set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 ##That's it!
 You have nothing else to do.

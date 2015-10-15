@@ -57,6 +57,7 @@ set MiniModeBuild="C:\dev\mini-mode-build\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
+rem add chromaprint.dll !
 xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
