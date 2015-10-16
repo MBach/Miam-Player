@@ -6,6 +6,7 @@
     <Title>Miam-Player</Title>
 	<InstallerApplicationIcon>../../../code/MiamPlayer/mp</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
+	<ControlScript>controller.js</ControlScript>
     <Publisher>Matthieu Bachelier</Publisher>
     <StartMenuDir>Miam-Player</StartMenuDir>
 	<AllowNonAsciiCharacters>true</AllowNonAsciiCharacters>

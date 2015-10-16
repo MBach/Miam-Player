@@ -48,6 +48,17 @@
     </message>
 </context>
 <context>
+    <name>controller</name>
+    <message>
+        <source>Uninstalling - Miam-Player</source>
+        <translation>Désinstalleur - Miam-Player</translation>
+    </message>
+    <message>
+        <source>Welcome to the uninstaller of : Miam-Player</source>
+        <translation>Bienvenue dans l'assistant de désinstallation de : Miam-Player</translation>
+    </message>
+</context>
+<context>
     <name>installscript_core</name>
     <message>
         <source>Installation Folder</source>

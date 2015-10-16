@@ -19,6 +19,6 @@
 	<UserInterfaces>
 		<UserInterface>copybitcoinaddressform.ui</UserInterface>
 		<UserInterface>targetwidget.ui</UserInterface>
-		<UserInterface>readyforinstallation.ui</UserInterface>
+		<UserInterface>removeeverything.ui</UserInterface>
 	</UserInterfaces>
 </Package>

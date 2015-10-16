@@ -82,7 +82,7 @@ rem rmdir repository /s /q
 rem repogen -p packages repository
 
 rem create the final package
-binarycreator --offline-only -c config\config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
+binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
 
 rem delete data folders
 rmdir packages\org.miamplayer.core\data\ /s /q

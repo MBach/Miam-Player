@@ -46,7 +46,8 @@ function Component()
 	if (installer.isInstaller()) {
 		installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
 	} else {
-		installer.setDefaultPageVisible(QInstaller.ReadyForInstallation, false);
+		var r = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
+		//installer.addWizardPage(component, "RemoveEverything", QInstaller.PerformInstallation);
 	}
 	var programFiles = installer.environmentVariable("PROGRAMW6432");
 	if (programFiles !== "") {
@@ -80,13 +81,17 @@ Component.prototype.installerLoaded = function()
 			}
 		}
 		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
-
-	} else {
-	
-		if (installer.addWizardPage(component, "ReadyForInstallationWidget", QInstaller.ReadyForInstallation)) {
-			var widget = gui.pageWidgetByObjectName("DynamicReadyForInstallationWidget");
+	} /*else {
+		/// FIXME
+		var r = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
+		if (installer.addWizardPage(component, "RemoveEverything", QInstaller.PerformInstallation)) {
+			var clearAll = gui.pageWidgetByObjectName("DynamicRemoveEverything");
+			if (clearAll != null) {
+				var rr = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
+			}
 		}
-	}
+		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
+	}*/
 }
 
 Component.prototype.isDefault = function()
@@ -139,6 +144,17 @@ Component.prototype.targetChanged = function (text) {
         widget.complete = false;
     }
 }
+
+/*Component.prototype.removeEverything = function()
+{
+	var widget = gui.pageWidgetByObjectName("DynamicRemoveEverything");
+    if (widget != null) {
+		var r = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
+        if (widget.clearAllCheckBox.checked) {
+			var rr = QMessageBox["question"]("q", "Installer", "You should remove everything created by Miam-Player", QMessageBox.Ok);
+		}
+    }
+}*/
 
 Component.prototype.createOperations = function()
 {
