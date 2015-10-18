@@ -49,15 +49,17 @@ copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
+set AcoustIDSRC="C:\dev\acoustid-plugin\lib\release"
 set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
 set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
 set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
-set MiamPlayerShellBuild="C:\dev\MiamShellProject-build"
+set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
 set MiniModeBuild="C:\dev\mini-mode-build\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
-rem add chromaprint.dll !
+rem Chromaprint dependency isn't a plugin itself so it must be put next to FFMpeg
+copy %AcoustIDSRC%\chromaprint.dll packages\org.miamplayer.plugins.acoustid\data\chromaprint.dll
 xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
