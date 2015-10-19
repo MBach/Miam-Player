@@ -42,13 +42,7 @@
 // Constructor
 function Component()
 {
-	component.loaded.connect(this, Component.prototype.installerLoaded);
-	if (installer.isInstaller()) {
-		installer.setDefaultPageVisible(QInstaller.TargetDirectory, false);
-	} else {
-		var r = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
-		//installer.addWizardPage(component, "RemoveEverything", QInstaller.PerformInstallation);
-	}
+	component.loaded.connect(this, Component.prototype.installerLoaded);	
 	var programFiles = installer.environmentVariable("PROGRAMW6432");
 	if (programFiles !== "") {
 		installer.setValue("TargetDir", programFiles + "/MiamPlayer");
@@ -67,31 +61,43 @@ var Dir = new function () {
 // called as soon as the component was loaded
 Component.prototype.installerLoaded = function()
 {
-	// don't show when updating / de-installing
-	if (installer.isInstaller()) {
+	if (installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory)) {
+		var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
+		if (widget != null) {
+			widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
+			widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
 
-		if (installer.addWizardPage(component, "TargetWidget", QInstaller.TargetDirectory)) {
-			var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
-			if (widget != null) {
-				widget.targetDirectory.textChanged.connect(this, Component.prototype.targetChanged);
-				widget.targetChooser.clicked.connect(this, Component.prototype.chooseTarget);
-
-				widget.windowTitle = qsTr("Installation Folder");
-				widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
+			widget.windowTitle = qsTr("Installation Folder");
+			widget.targetDirectory.text = Dir.toNativeSparator(installer.value("TargetDir"));
+			
+			// Check if there are previous cache and settings files
+			var home = installer.environmentVariable("USERPROFILE");
+			if (installer.fileExists(home + "\\AppData\\Local\\MmeMiamMiam\\MiamPlayer\\mp.db")) {
+				installer.setValue("cacheExists", "1");
+				widget.clearCacheCheckBox.visible = true;
+			} else {
+				installer.setValue("cacheExists", "0");
+				widget.clearCacheCheckBox.visible = false;				
+			}
+			if (installer.fileExists(home + "\\AppData\\Roaming\\MmeMiamMiam\\MiamPlayer.ini")) {
+				installer.setValue("settingsExists", "1");
+				widget.clearSettingsCheckBox.visible = true;
+			} else {
+				installer.setValue("settingsExists", "0");
+				widget.clearSettingsCheckBox.visible = false;
+			}
+			
+			// Don't show label if nothing was detected
+			if (installer.value("cacheExists") === "1" || installer.value("settingsExists") === "1") {
+				widget.labelWarningPrevFilesImg.visible = true;
+				widget.labelWarningPrevFilesText.visible = true;
+			} else {
+				widget.labelWarningPrevFilesImg.visible = false;
+				widget.labelWarningPrevFilesText.visible = false;
 			}
 		}
-		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
-	} /*else {
-		/// FIXME
-		var r = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
-		if (installer.addWizardPage(component, "RemoveEverything", QInstaller.PerformInstallation)) {
-			var clearAll = gui.pageWidgetByObjectName("DynamicRemoveEverything");
-			if (clearAll != null) {
-				var rr = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
-			}
-		}
-		installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
-	}*/
+	}
+	installer.addWizardPageItem(component, "CopyBitcoinAddressForm", QInstaller.InstallationFinished);
 }
 
 Component.prototype.isDefault = function()
@@ -130,31 +136,17 @@ Component.prototype.targetChanged = function (text) {
         if (text != "") {
 			widget.complete = true;
 			installer.setValue("TargetDir", text);
-			if (!installer.fileExists(text + "/components.xml")) {
-				widget.labelOverwrite.visible = false;
-				widget.labelUserShouldRemove.visible = false;
-				widget.clearCacheCheckBox.visible = false;
-				widget.clearRegistryCheckBox.visible = false;
-				installer.setValue("softWasInstalledBefore", "0");
-			} else {
+			if (installer.fileExists(text + "/components.xml")) {
 				installer.setValue("softWasInstalledBefore", "1");
+			} else {
+				widget.labelOverwrite.visible = false;
+				installer.setValue("softWasInstalledBefore", "0");
 			}
 			return;
         }
         widget.complete = false;
     }
 }
-
-/*Component.prototype.removeEverything = function()
-{
-	var widget = gui.pageWidgetByObjectName("DynamicRemoveEverything");
-    if (widget != null) {
-		var r = QMessageBox["question"]("q", "Installer", installer.isUninstaller(), QMessageBox.Ok);
-        if (widget.clearAllCheckBox.checked) {
-			var rr = QMessageBox["question"]("q", "Installer", "You should remove everything created by Miam-Player", QMessageBox.Ok);
-		}
-    }
-}*/
 
 Component.prototype.createOperations = function()
 {
@@ -175,7 +167,7 @@ Component.prototype.createOperations = function()
 				var widget = gui.pageWidgetByObjectName("DynamicTargetWidget");
 				if (widget.associateCommonFiletypesCheckBox.checked) {
 					var index;
-					var extensions = ["ape", "asf", "flac", "m4a", "mpc", "mp3", "oga", "ogg", "opus"];
+					var extensions = ["ape", "asf", "flac", "m4a", "mp4", "mpc", "mp3", "oga", "ogg", "opus"];
 					for (index = 0; index < extensions.length; ++index) {
 						var ext = extensions[index];
 						component.addOperation("RegisterFileType", ext,
@@ -186,18 +178,14 @@ Component.prototype.createOperations = function()
 											   "ProgId=MiamPlayer." + ext);
 					}
 				}
-				// Remove cache (folder including subfolders, sqlite database, etc)
+				// Remove cache (folder including subfolders, sqlite database, etc) /// FIXME: removing folders
 				var home = installer.environmentVariable("USERPROFILE");
-				if (widget.clearCacheCheckBox.checked && installer.value("softWasInstalledBefore") == "1") {
-					/// FIXME
-					//component.addElevatedOperation("Rmdir", home + "\\AppData\\Local\\MmeMiamMiam");
+				if (widget.clearCacheCheckBox.checked || installer.value("cacheExists") === "1") {
 					component.addElevatedOperation("Delete", home + "\\AppData\\Local\\MmeMiamMiam\\MiamPlayer\\mp.db");
 				}
 				// Remove ini file
-				if (widget.clearRegistryCheckBox.checked && installer.value("softWasInstalledBefore") == "1") {
+				if (widget.clearSettingsCheckBox.checked || installer.value("settingsExists") === "1") {
 					// Return codes are "0" == OK and "1" == KO even if a problem has occured. "1" can happen when one has manually deleted settings
-					/// FIXME
-					//component.addElevatedOperation("Rmdir", home + "\\AppData\\Roaming\\MmeMiamMiam");
 					component.addElevatedOperation("Delete", home + "\\AppData\\Roaming\\MmeMiamMiam\\MiamPlayer.ini");
 				}
 			} catch (e) {

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>308</width>
-    <height>252</height>
+    <width>375</width>
+    <height>254</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -96,31 +96,64 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="labelUserShouldRemove">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>40</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <italic>true</italic>
-      </font>
+    <widget class="QCheckBox" name="associateCommonFiletypesCheckBox">
+     <property name="toolTip">
+      <string>Associate common audio file types (.ape, .asf, .flac, .m4a, .mp4, .mpc, .mp3, .oga, .ogg, .opus) with Miam-Player.</string>
      </property>
      <property name="text">
-      <string>Because Miam-Player is still in Beta, it is recommended to remove all files created from this software</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
+      <string>Associate common audio file types with Miam-Player.</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="labelWarningPrevFilesImg">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="../../../resources/additional.qrc">:/debug.png</pixmap>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelWarningPrevFilesText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string>Because Miam-Player is still in Beta, it's recommended to remove previously created files from this software</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QCheckBox" name="clearCacheCheckBox">
@@ -136,7 +169,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="clearRegistryCheckBox">
+    <widget class="QCheckBox" name="clearSettingsCheckBox">
      <property name="toolTip">
       <string>User settings are usually in %USER%/AppData/Roaming/MmeMiamMiam</string>
      </property>
@@ -145,16 +178,6 @@
      </property>
      <property name="checked">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QCheckBox" name="associateCommonFiletypesCheckBox">
-     <property name="toolTip">
-      <string>Associate common audio file types (.ape, .asf, .flac, .m4a, .mpc, .mp3, .oga, .ogg) with Miam-Player.</string>
-     </property>
-     <property name="text">
-      <string>Associate common audio file types with Miam-Player.</string>
      </property>
     </widget>
    </item>
@@ -176,6 +199,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../resources/additional.qrc"/>
+ </resources>
  <connections/>
 </ui>

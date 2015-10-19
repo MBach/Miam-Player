@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>bitcoin-logo.png</file>
+		<file>debug.png</file>
 		<file>../packages/org.miamplayer.core/meta/fr_fr.qm</file>
     </qresource>
 </RCC>

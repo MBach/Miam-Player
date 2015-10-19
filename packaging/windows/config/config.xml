@@ -6,9 +6,9 @@
     <Title>Miam-Player</Title>
 	<InstallerApplicationIcon>../../../code/MiamPlayer/mp</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
-	<ControlScript>controller.js</ControlScript>
     <Publisher>Matthieu Bachelier</Publisher>
     <StartMenuDir>Miam-Player</StartMenuDir>
+	<ControlScript>controller.js</ControlScript>
 	<AllowNonAsciiCharacters>true</AllowNonAsciiCharacters>
 	<AllowSpaceInPath>true</AllowSpaceInPath>
 	<ProductUrl>http://miam-player.org/</ProductUrl>
@@ -17,6 +17,9 @@
 	<RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
 	<WizardDefaultWidth>640</WizardDefaultWidth>
 	<WizardDefaultHeight>480</WizardDefaultHeight>
+	<MaintenanceToolName>Uninstall Miam-Player</MaintenanceToolName>
+	<MaintenanceToolIniFile>Uninstall Miam-Player.ini</MaintenanceToolIniFile>
+	<Translations>fr_fr.qm</Translations>
 	<!--<RemoteRepositories>
         <Repository>
             <Url>http://www.miam-player.org/repository</Url>

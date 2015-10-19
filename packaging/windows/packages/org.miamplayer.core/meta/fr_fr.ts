@@ -15,20 +15,12 @@
         <translation>Veuillez choisir le dossier où Miam-Player sera installé.</translation>
     </message>
     <message>
-        <source>Associate common audio file types (.ape, .asf, .flac, .m4a, .mpc, .mp3, .oga, .ogg) with Miam-Player.</source>
-        <translation>Associer les fichiers audio les plus communs (.ape, .asf, .flac, .m4a, .mpc, .mp3, .oga, .ogg) avec Miam-Player.</translation>
-    </message>
-    <message>
         <source>Associate common audio file types with Miam-Player.</source>
         <translation>Associer les fichiers audio les plus communs avec Miam-Player.</translation>
     </message>
     <message>
         <source>&lt;font color=&apos;red&apos;&gt;A previous installation exists in this folder. If you wish to continue, everything will be overwritten.&lt;/font&gt;</source>
         <translation>&lt;font color=&apos;red&apos;&gt;Une précédente installation se trouve déjà dans ce dossier. Si vous décidez de poursuivre, tout ce qui existe sera remplacé.&lt;/font&gt;</translation>
-    </message>
-    <message>
-        <source>Because Miam-Player is still in Beta, it is recommended to remove all files created from this software</source>
-        <translation>Miam-Player étant encore en Beta, il est recommandé de supprimer tous les fichiers créés par ce logiciel</translation>
     </message>
     <message>
         <source>Cache is located in %USER%/AppData/Local/MmeMiamMiam/MiamPlayer</source>
@@ -46,16 +38,13 @@
         <source>Remove user settings</source>
         <translation>Supprimer les préférences utilisateur</translation>
     </message>
-</context>
-<context>
-    <name>controller</name>
     <message>
-        <source>Uninstalling - Miam-Player</source>
-        <translation>Désinstalleur - Miam-Player</translation>
+        <source>Because Miam-Player is still in Beta, it&apos;s recommended to remove previously created files from this software</source>
+        <translation>Miam-Player étant encore en Beta, il est recommandé de supprimer tous les fichiers créés par une précédente installation</translation>
     </message>
     <message>
-        <source>Welcome to the uninstaller of : Miam-Player</source>
-        <translation>Bienvenue dans l'assistant de désinstallation de : Miam-Player</translation>
+        <source>Associate common audio file types (.ape, .asf, .flac, .m4a, .mp4, .mpc, .mp3, .oga, .ogg, .opus) with Miam-Player.</source>
+        <translation>Associer les fichiers audio les plus communs (.ape, .asf, .flac, .m4a, .mp4, .mpc, .mp3, .oga, .ogg, .opus) avec Miam-Player.</translation>
     </message>
 </context>
 <context>
