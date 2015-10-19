@@ -215,6 +215,7 @@ void MainWindow::setupActions()
 	connect(actionExit, &QAction::triggered, this, [=]() {
 		QCloseEvent event;
 		this->closeEvent(&event);
+		qApp->quit();
 	});
 	connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
