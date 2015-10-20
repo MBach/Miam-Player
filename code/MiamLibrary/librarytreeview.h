@@ -102,9 +102,6 @@ public slots:
 	/** Redraw the treeview with a new display mode. */
 	void changeHierarchyOrder();
 
-	/** Find index from current letter then scrolls to it. */
-	void jumpTo(const QString &letter);
-
 	/** Reimplemented. */
 	virtual void reset() override;
 

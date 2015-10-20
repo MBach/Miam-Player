@@ -30,7 +30,7 @@ public:
 
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
-	void setCurrentLetter(const QChar &currentLetter);
+	inline void setCurrentLetter(const QChar &currentLetter) { _currentLetter = currentLetter; }
 
 	virtual QSize sizeHint() const override;
 

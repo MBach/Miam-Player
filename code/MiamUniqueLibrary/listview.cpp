@@ -5,6 +5,7 @@
 #include <libraryscrollbar.h>
 
 #include <QGuiApplication>
+#include <QPainter>
 #include <QScrollBar>
 
 #include <QtDebug>
@@ -20,6 +21,10 @@ ListView::ListView(QWidget *parent)
 	this->setVerticalScrollBar(vScrollBar);
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &ListView::jumpTo);
 	connect(_model->proxy(), &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
+	connect(vScrollBar, &QAbstractSlider::valueChanged, this, [=](int) {
+		QModelIndex iTop = indexAt(viewport()->rect().topLeft());
+		_jumpToWidget->setCurrentLetter(_model->currentLetter(iTop));
+	});
 }
 
 void ListView::createConnectionsToDB()
@@ -49,11 +54,13 @@ void ListView::paintEvent(QPaintEvent *event)
 	} else {
 		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, 0);
 	}
-	QListView::paintEvent(event);
 
-	///XXX: analyze performance?
-	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-	_jumpToWidget->setCurrentLetter(_model->currentLetter(iTop));
+	if (_model->proxy()->rowCount() == 0) {
+		QPainter p(this->viewport());
+		p.drawText(this->viewport()->rect(), Qt::AlignCenter, tr("No matching results were found"));
+	} else {
+		QListView::paintEvent(event);
+	}
 }
 
 void ListView::jumpTo(const QString &letter)

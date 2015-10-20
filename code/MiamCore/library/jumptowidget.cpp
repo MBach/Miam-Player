@@ -45,11 +45,6 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
-void JumpToWidget::setCurrentLetter(const QChar &currentLetter)
-{
-	_currentLetter = currentLetter;
-}
-
 QSize JumpToWidget::sizeHint() const
 {
 	//qDebug() << Q_FUNC_INFO << QSize(20, _view->height());

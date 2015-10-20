@@ -130,13 +130,8 @@ void MainWindow::init()
 	}
 
 	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
-	library->setVisible(!isEmpty);
-	libraryHeader->setVisible(!isEmpty);
-	changeHierarchyButton->setVisible(!isEmpty);
-
 	actionScanLibrary->setDisabled(isEmpty);
-	widgetSearchBar->setVisible(!isEmpty);
-	this->showTabPlaylists();
+	//widgetSearchBar->setVisible(!isEmpty);
 	if (isEmpty) {
 		QuickStart *quickStart = new QuickStart(this);
 		quickStart->searchMultimediaFiles();
@@ -181,12 +176,18 @@ void MainWindow::setupActions()
 		stackedWidgetRight->setCurrentIndex(0);
 		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 		library->createConnectionsToDB();
+
+		QModelIndex iTop = library->indexAt(library->viewport()->rect().topLeft());
+		library->jumpToWidget()->setCurrentLetter(library->model()->currentLetter(iTop));
 	});
 	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidgetRight->setVisible(false);
 		stackedWidget->setCurrentIndex(1);
 		Settings::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
 		_uniqueLibrary->library->createConnectionsToDB();
+
+		QModelIndex iTop = _uniqueLibrary->library->indexAt(_uniqueLibrary->library->viewport()->rect().topLeft());
+		_uniqueLibrary->library->jumpToWidget()->setCurrentLetter(_uniqueLibrary->library->model()->currentLetter(iTop));
 	});
 	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);

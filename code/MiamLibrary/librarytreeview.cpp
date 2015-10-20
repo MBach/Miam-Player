@@ -61,9 +61,16 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
 
 	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, delegate, &LibraryItemDelegate::displayIcon);
+	connect(vScrollBar, &QAbstractSlider::valueChanged, this, [=](int) {
+		QModelIndex iTop = indexAt(viewport()->rect().topLeft());
+		_jumpToWidget->setCurrentLetter(_libraryModel->currentLetter(iTop));
+	});
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, [=](const QString &letter) {
 		delegate->displayIcon(false);
-		this->jumpTo(letter);
+		QStandardItem *item = _libraryModel->letterItem(letter);
+		if (item) {
+			this->scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
+		}
 		delegate->displayIcon(true);
 	});
 
@@ -84,7 +91,6 @@ const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 /** Reimplemented. */
 void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
 {
-	//if (_itemDelegate) {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item && item->hasChildren()) {
 		for (int i = 0; i < item->rowCount(); i++) {
@@ -95,17 +101,11 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 	} else if (item && item->type() == Miam::IT_Track) {
 		tracks << item->data(Miam::DF_URI).toString();
 	}
-	//}
 }
 
 void LibraryTreeView::findMusic(const QString &text)
 {
 	_proxyModel->findMusic(text);
-	/*if (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_Filter) {
-		this->filterLibrary(text);
-	} else {
-		this->highlightMatchingText(text);
-	}*/
 }
 
 void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
@@ -194,10 +194,12 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 	} else {
 		_jumpToWidget->move(frameGeometry().left() + wVerticalScrollBar, header()->height());
 	}
-	TreeView::paintEvent(event);
-	///XXX: analyze performance?
-	QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-	_jumpToWidget->setCurrentLetter(_libraryModel->currentLetter(iTop));
+	if (_proxyModel->rowCount() == 0) {
+		QPainter p(this->viewport());
+		p.drawText(this->viewport()->rect(), Qt::AlignCenter, tr("No matching results were found"));
+	} else {
+		TreeView::paintEvent(event);
+	}
 }
 
 /** Recursive count for leaves only. */
@@ -246,15 +248,6 @@ void LibraryTreeView::changeHierarchyOrder()
 	SqlDatabase::instance()->load();
 	_proxyModel->highlightMatchingText(QString());
 	//this->highlightMatchingText(QString());
-}
-
-/** Find index from current letter then scrolls to it. */
-void LibraryTreeView::jumpTo(const QString &letter)
-{
-	QStandardItem *item = _libraryModel->letterItem(letter);
-	if (item) {
-		this->scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
-	}
 }
 
 /** Reload covers when one has changed cover size in options. */
