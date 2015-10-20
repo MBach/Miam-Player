@@ -159,6 +159,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 
 	// Restore geometry
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
+	listWidget->setCurrentRow(settings->value("customizeOptionsDialogCurrentTab", 0).toInt());
 }
 
 /** Redefined to add custom behaviour. */

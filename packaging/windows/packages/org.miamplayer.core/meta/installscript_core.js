@@ -42,7 +42,7 @@
 // Constructor
 function Component()
 {
-	component.loaded.connect(this, Component.prototype.installerLoaded);	
+	component.loaded.connect(this, Component.prototype.installerLoaded);
 	var programFiles = installer.environmentVariable("PROGRAMW6432");
 	if (programFiles !== "") {
 		installer.setValue("TargetDir", programFiles + "/MiamPlayer");

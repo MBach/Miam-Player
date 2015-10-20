@@ -113,6 +113,7 @@ void QuickStart::applyButtonClicked(MainWindow *mainWindow, const QStringList &n
 {
 	qDebug() << Q_FUNC_INFO;
 	SettingsPrivate::instance()->setMusicLocations(newLocations);
+	this->hide();
 	mainWindow->library->show();
 	mainWindow->libraryHeader->show();
 	mainWindow->changeHierarchyButton->show();
