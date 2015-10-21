@@ -20,6 +20,11 @@ Name=Play
 Exec=miam-player --play
 TargetEnvironment=Unity
 
+[Pause Shortcut Group]
+Name=Pause
+Exec=miam-player --pause
+TargetEnvironment=Unity
+
 [Stop Shortcut Group]
 Name=Stop
 Exec=miam-player --stop
