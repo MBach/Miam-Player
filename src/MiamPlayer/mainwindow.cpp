@@ -161,9 +161,6 @@ void MainWindow::loadPlugins()
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
-	SqlDatabase *db = SqlDatabase::instance();
-	connect(db, &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
-
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
 	actionViewPlaylists->setActionGroup(viewModeGroup);
@@ -175,7 +172,9 @@ void MainWindow::setupActions()
 		stackedWidgetRight->setVisible(true);
 		stackedWidgetRight->setCurrentIndex(0);
 		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
+
 		library->createConnectionsToDB();
+		connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
 
 		QModelIndex iTop = library->indexAt(library->viewport()->rect().topLeft());
 		library->jumpToWidget()->setCurrentLetter(library->model()->currentLetter(iTop));
@@ -231,7 +230,7 @@ void MainWindow::setupActions()
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
 		searchBar->clear();
-		db->rebuild();
+		SqlDatabase::instance()->rebuild();
 	});
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
@@ -404,8 +403,12 @@ void MainWindow::setupActions()
 	});
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
-	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, library, &LibraryTreeView::changeHierarchyOrder);
-	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, this, static_cast<void (MainWindow::*)(void)>(&MainWindow::update));
+	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, this, [=]() {
+		searchBar->setText(QString());
+		searchDialog->clear();
+		SqlDatabase::instance()->load();
+		this->update();
+	});
 	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {

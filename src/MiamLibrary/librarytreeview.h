@@ -99,9 +99,6 @@ public slots:
 	/** Invert the current sort order. */
 	void changeSortOrder();
 
-	/** Redraw the treeview with a new display mode. */
-	void changeHierarchyOrder();
-
 	/** Reimplemented. */
 	virtual void reset() override;
 

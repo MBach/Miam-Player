@@ -238,18 +238,6 @@ void LibraryTreeView::changeSortOrder()
 	}
 }
 
-/** Redraw the treeview with a new display mode. */
-void LibraryTreeView::changeHierarchyOrder()
-{
-	/// FIXME
-	/*if (_searchBar) {
-		_searchBar->setText(QString());
-	}*/
-	SqlDatabase::instance()->load();
-	_proxyModel->highlightMatchingText(QString());
-	//this->highlightMatchingText(QString());
-}
-
 /** Reload covers when one has changed cover size in options. */
 /*void LibraryTreeView::setCoverSize(int)
 {
