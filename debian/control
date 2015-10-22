@@ -1,12 +1,17 @@
+
 Source: miam-player
+Section: sound
+Priority: extra
+Maintainer: Matthieu BACHELIER <bachelier.matthieu@gmail.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.6
+Homepage: http://miam-player.org
+
 Package: miam-player
 Section: sound
-Version: 
-Priority: optional
-Architecture: amd64
-Depends: libc6, libqt5widgets5, libqt5multimedia5, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5sql5, libtag1v5-vanilla, libqtav (>=1.8.0)
-Maintainer: Matthieu BACHELIER <bachelier.matthieu@gmail.com>
-Installed-Size: 3770
+Architecture: any
+Depends: ${misc:Depends}, libqt5widgets5, libqt5multimedia5, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5sql5, libtag1-vanilla, libqtav (>=1.8.0)
+Multi-Arch: same
 Description: Miam-Player
  Miam Player is a cross-platform open source music player.
  .
@@ -26,6 +31,4 @@ Description: Miam-Player
   * Get missing covers by looking at MusicBrainz' repository
  .
  * This software was developped using Qt5, QtAV and Taglib
- * Official website: http://www.miam-player.org/
- * Git: https://github.com/MBach/Miam-Player
- * Project page: https://sourceforge.net/projects/miammusicplayer/
+
