@@ -2,7 +2,7 @@
 #define PLUGINMANAGER_H
 
 #include <interfaces/itemviewplugin.h>
-#include <interfaces/searchmediaplayerplugin.h>
+#include <interfaces/mediaplayerplugin.h>
 #include <interfaces/remotemediaplayerplugin.h>
 #include <interfaces/tageditorplugin.h>
 
@@ -61,7 +61,6 @@ private:
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
 	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
 	void loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin);
-	void loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin);
 	void loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin);
 };
 

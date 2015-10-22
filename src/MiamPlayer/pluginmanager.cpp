@@ -107,9 +107,7 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 			return false;
 		}
 
-		if (SearchMediaPlayerPlugin *searchMediaPlayerPlugin = qobject_cast<SearchMediaPlayerPlugin*>(plugin)) {
-			this->loadSearchMediaPlayerPlugin(searchMediaPlayerPlugin);
-		} else if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
+		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
 		} else if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
 			this->loadItemViewPlugin(itemViewPlugin);
@@ -209,11 +207,6 @@ void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteM
 {
 	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
 	_mainWindow->mediaPlayer()->addRemotePlayer(remoteMediaPlayerPlugin->player());
-}
-
-void PluginManager::loadSearchMediaPlayerPlugin(SearchMediaPlayerPlugin *searchMediaPlayerPlugin)
-{
-	searchMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
 }
 
 void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
