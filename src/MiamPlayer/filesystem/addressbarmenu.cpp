@@ -59,7 +59,7 @@ void AddressBarMenu::insertSeparator()
 {
 	QListWidgetItem *s = new QListWidgetItem(this);
 	s->setSizeHint(QSize(width(), 9));
-	s->setData(Qt::UserRole + 1, true);
+    s->setData(Separator, true);
 	_hasSeparator = true;
 }
 
@@ -96,7 +96,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 		//qDebug() << "r" << r;
 		r.setWidth(r.width() - offsetSB);
 
-		if (it->data(Qt::UserRole + 1).toBool()) {
+        if (it->data(Separator).toBool()) {
 			p.save();
 			p.setPen(palette.midlight().color());
 			p.drawLine(r.x(), r.y() + (it->sizeHint().height()) / 2, r.width(), r.y() + (it->sizeHint().height()) / 2);

@@ -518,12 +518,25 @@ void MainWindow::dropEvent(QDropEvent *event)
 bool MainWindow::event(QEvent *e)
 {
 	bool b = QMainWindow::event(e);
-	// Init the address bar. It's really important to have the exact width on screen
-	if (e->type() == QEvent::Show) {
-		if (!filesystem->isVisible()) {
-			addressBar->setMinimumWidth(leftTabs->width());
+	if (e->type() == QEvent::KeyPress) {
+		if (!this->menuBar()->isVisible()) {
+			QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
+			if (keyEvent->key() == Qt::Key_Alt) {
+				qDebug() << Q_FUNC_INFO << "Alt was pressed";
+				this->setProperty("altKey", true);
+			} else {
+				this->setProperty("altKey", false);
+			}
 		}
-		addressBar->init(QDir(SettingsPrivate::instance()->defaultLocationFileExplorer()));
+	} else if (e->type() == QEvent::KeyRelease) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
+		if (this->property("altKey").toBool() && keyEvent->key() == Qt::Key_Alt) {
+			qDebug() << Q_FUNC_INFO << "Alt was released";
+			this->menuBar()->show();
+			this->menuBar()->setFocus();
+			this->setProperty("altKey", false);
+			actionHideMenuBar->setChecked(false);
+		}
 	}
 	return b;
 }
@@ -793,5 +806,9 @@ void MainWindow::showTagEditor()
 
 void MainWindow::toggleMenuBar(bool checked)
 {
-	qDebug() << Q_FUNC_INFO << "not yet implemented" << checked;
+	if (checked) {
+		menuBar()->hide();
+	} else {
+		/// todo
+	}
 }
