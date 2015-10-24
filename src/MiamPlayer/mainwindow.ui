@@ -623,6 +623,10 @@
    </property>
   </action>
   <action name="actionOpenFiles">
+   <property name="icon">
+    <iconset resource="mp.qrc">
+     <normaloff>:/config/music</normaloff>:/config/music</iconset>
+   </property>
    <property name="text">
     <string>&amp;Open files...</string>
    </property>
@@ -654,6 +658,10 @@
    </property>
   </action>
   <action name="actionScanLibrary">
+   <property name="icon">
+    <iconset resource="mp.qrc">
+     <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+   </property>
    <property name="text">
     <string>&amp;Rescan library</string>
    </property>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>660</height>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -163,14 +163,14 @@
           <item>
            <widget class="QComboBox" name="themeComboBox">
             <property name="currentIndex">
-             <number>3</number>
+             <number>0</number>
             </property>
             <item>
              <property name="text">
               <string notr="true">Fairytale</string>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset theme="fairytale" resource="mp.qrc">
                <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
              </property>
             </item>
@@ -179,7 +179,7 @@
               <string notr="true">Gnome</string>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset theme="gnome" resource="mp.qrc">
                <normaloff>:/player/gnome/play</normaloff>:/player/gnome/play</iconset>
              </property>
             </item>
@@ -188,7 +188,7 @@
               <string notr="true">Nuvola</string>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset theme="nuvola" resource="mp.qrc">
                <normaloff>:/player/nuvola/play</normaloff>:/player/nuvola/play</iconset>
              </property>
             </item>
@@ -197,7 +197,7 @@
               <string notr="true">Oxygen</string>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset theme="oxygen" resource="mp.qrc">
                <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
              </property>
             </item>
@@ -206,8 +206,17 @@
               <string notr="true">Tango</string>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset theme="tango" resource="mp.qrc">
                <normaloff>:/player/tango/play</normaloff>:/player/tango/play</iconset>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string notr="true">Orange White Pearls</string>
+             </property>
+             <property name="icon">
+              <iconset theme="orangewhitepearls" resource="mp.qrc">
+               <normaloff>:/player/orangewhitepearls/play</normaloff>:/player/orangewhitepearls/play</iconset>
              </property>
             </item>
            </widget>
@@ -2025,6 +2034,67 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>listWidget</tabstop>
+  <tabstop>themeComboBox</tabstop>
+  <tabstop>customizeThemeCheckBox</tabstop>
+  <tabstop>customizeButtonsScrollArea</tabstop>
+  <tabstop>skipBackwardCheckBox</tabstop>
+  <tabstop>skipBackward</tabstop>
+  <tabstop>seekBackwardCheckBox</tabstop>
+  <tabstop>seekBackward</tabstop>
+  <tabstop>playCheckBox</tabstop>
+  <tabstop>play</tabstop>
+  <tabstop>pause</tabstop>
+  <tabstop>stopCheckBox</tabstop>
+  <tabstop>stop</tabstop>
+  <tabstop>seekForwardCheckBox</tabstop>
+  <tabstop>seekForward</tabstop>
+  <tabstop>skipForwardCheckBox</tabstop>
+  <tabstop>skipForward</tabstop>
+  <tabstop>playbackModeCheckBox</tabstop>
+  <tabstop>sequential</tabstop>
+  <tabstop>repeat</tabstop>
+  <tabstop>shuffle</tabstop>
+  <tabstop>itemOnce</tabstop>
+  <tabstop>itemLoop</tabstop>
+  <tabstop>sizeButtonsSpinBox</tabstop>
+  <tabstop>radioButtonShowExtendedSearch</tabstop>
+  <tabstop>radioButtonHideExtendedSearch</tabstop>
+  <tabstop>radioButtonShowVolume</tabstop>
+  <tabstop>radioButtonHideVolume</tabstop>
+  <tabstop>spinBoxHideVolumeLabel</tabstop>
+  <tabstop>spinBoxLibrary</tabstop>
+  <tabstop>fontComboBoxPlaylist</tabstop>
+  <tabstop>fontComboBoxLibrary</tabstop>
+  <tabstop>spinBoxPlaylist</tabstop>
+  <tabstop>fontComboBoxMenus</tabstop>
+  <tabstop>spinBoxMenus</tabstop>
+  <tabstop>enableAlternateBGRadioButton</tabstop>
+  <tabstop>disableAlternateBGRadioButton</tabstop>
+  <tabstop>enableCustomColorsRadioButton</tabstop>
+  <tabstop>disableCustomColorsRadioButton</tabstop>
+  <tabstop>selectedItemColorToolButton</tabstop>
+  <tabstop>bgPrimaryColorToolButton</tabstop>
+  <tabstop>fontColorToolButton</tabstop>
+  <tabstop>checkBoxDisplayCovers</tabstop>
+  <tabstop>spinBoxCoverSize</tabstop>
+  <tabstop>radioButtonEnableBigCover</tabstop>
+  <tabstop>radioButtonDisableBigCover</tabstop>
+  <tabstop>spinBoxBigCoverOpacity</tabstop>
+  <tabstop>radioButtonEnableArticles</tabstop>
+  <tabstop>radioButtonDisableArticles</tabstop>
+  <tabstop>articlesLineEdit</tabstop>
+  <tabstop>radioButtonEnableReorderArtistsArticle</tabstop>
+  <tabstop>radioButtonDisableReorderArtistsArticle</tabstop>
+  <tabstop>radioButtonEnableStarDelegate</tabstop>
+  <tabstop>radioButtonDisableStarDelegate</tabstop>
+  <tabstop>radioButtonShowNeverScoredTracks</tabstop>
+  <tabstop>radioButtonHideNeverScoredTracks</tabstop>
+  <tabstop>radioButtonTabsRect</tabstop>
+  <tabstop>radioButtonTabsRounded</tabstop>
+  <tabstop>overlapTabsSpinBox</tabstop>
+ </tabstops>
  <resources>
   <include location="mp.qrc"/>
  </resources>
@@ -2415,8 +2485,8 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroupEnableStarDelegate"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
+  <buttongroup name="buttonGroupEnableStarDelegate"/>
   <buttongroup name="buttonGroupArtistsArticle"/>
   <buttongroup name="buttonGroupReorderArtists"/>
  </buttongroups>

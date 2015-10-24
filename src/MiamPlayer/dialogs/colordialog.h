@@ -3,24 +3,25 @@
 
 #include <QColorDialog>
 
-#include "reflector.h"
-
+/// Forward declaration
 class CustomizeThemeDialog;
 
+/**
+ * \brief		The ColorDialog class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class ColorDialog : public QColorDialog
 {
 	Q_OBJECT
 private:
-	/** Pointer to the item containing all the instances of repaintables elements. */
-	Reflector *reflector;
-
 	CustomizeThemeDialog *_customizeThemeDialog;
 
 public:
-	ColorDialog(CustomizeThemeDialog *parent);
+	explicit ColorDialog(CustomizeThemeDialog *parent);
 
 protected:
-	void closeEvent(QCloseEvent *);
+	virtual void closeEvent(QCloseEvent *) override;
 };
 
 #endif // COLORDIALOG_H

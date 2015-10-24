@@ -1,9 +1,8 @@
 #ifndef SEEKBAR_H
 #define SEEKBAR_H
 
+#include <mediaplayer.h>
 #include "styling/miamslider.h"
-
-#include "mediaplayer.h"
 
 /**
  * \brief       The SeekBar class is used to display a nice seek bar instead of default slider.

@@ -8,7 +8,6 @@
 
 /**
  * \brief		The Cover class
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

@@ -7,7 +7,8 @@
 #include "tabplaylist.h"
 
 PlaylistManager::PlaylistManager(TabPlaylist *parent)
-	: QObject(parent), _tabPlaylists(parent)
+	: QObject(parent)
+	, _tabPlaylists(parent)
 {}
 
 bool PlaylistManager::deletePlaylist(uint playlistId)

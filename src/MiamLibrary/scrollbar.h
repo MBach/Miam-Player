@@ -4,6 +4,11 @@
 #include <QScrollBar>
 #include "miamlibrary_global.hpp"
 
+/**
+ * \brief		The ScrollBar class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMLIBRARY_LIBRARY ScrollBar : public QScrollBar
 {
 	Q_OBJECT
@@ -18,11 +23,11 @@ public:
 	void setFrameBorder(bool top, bool left, bool bottom, bool right);
 
 protected:
-	virtual void mousePressEvent(QMouseEvent *e);
+	virtual void mousePressEvent(QMouseEvent *e) override;
 
-	virtual void mouseReleaseEvent(QMouseEvent *e);
+	virtual void mouseReleaseEvent(QMouseEvent *e) override;
 
-	virtual void paintEvent(QPaintEvent *e);
+	virtual void paintEvent(QPaintEvent *e) override;
 };
 
 #endif // SCROLLBAR_H

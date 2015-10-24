@@ -8,6 +8,11 @@
 #include <QStackedWidget>
 #include <QTableWidget>
 
+/**
+ * \brief		The TagEditorPlugin class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY TagEditorPlugin : public BasicPlugin
 {
 public:

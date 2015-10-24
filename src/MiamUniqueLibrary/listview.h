@@ -8,7 +8,6 @@
 
 /**
  * \brief		The ListView class is used to display thousands of tracks in a single list.
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

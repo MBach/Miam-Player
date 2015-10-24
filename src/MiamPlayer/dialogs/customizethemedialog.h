@@ -10,13 +10,14 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 
+/// Forward declaration
 class MainWindow;
 
 /**
  * \brief		The CustomizeThemeDialog class is a very important class. It is designed to help one to customize theme of Miam-Player.
  * \details		Almost everything can be customize: buttons, volume bar, fonts, colors, library and tabs. Lots of efforts have been made
- * to apply these effects at runtime, in real time, without classic "Apply button". Also, no buttons to reset defaults are present. It is a choice
- * and it won't be changed. Except for rare cases (colors) because it can be absolutely awful.
+ *		to apply these effects at runtime, in real time, without classic "Apply button". Also, no buttons to reset defaults are present. It is a choice
+ *		and it won't be changed. Except for rare cases (colors) because it can be absolutely awful.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -38,13 +39,14 @@ private:
 public:
 	CustomizeThemeDialog(MainWindow *parent = nullptr);
 
-	/** Load theme at startup. */
-	void loadTheme();
-
 	inline Reflector* targetedColor() const { return _targetedColor; }
 
 private:
 	void fade();
+
+	/** Load theme at startup. */
+	void loadTheme();
+
 	void setupActions();
 
 	void animate(qreal startValue, qreal stopValue);

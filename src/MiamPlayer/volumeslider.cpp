@@ -10,10 +10,11 @@
 
 #include <QtDebug>
 
-VolumeSlider::VolumeSlider(QWidget *parent) :
-	QSlider(parent), _isDown(false)
+VolumeSlider::VolumeSlider(QWidget *parent)
+	: QSlider(parent)
+	, _timer(new QTimer(this))
+	, _isDown(false)
 {
-	_timer = new QTimer(this);
 	_timer->setSingleShot(true);
 
 	// Update the volume instantly

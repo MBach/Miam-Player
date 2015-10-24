@@ -12,6 +12,7 @@
 
 #include "plugininfo.h"
 
+/// Forward declaration
 class MainWindow;
 
 /**

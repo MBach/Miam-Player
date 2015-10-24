@@ -44,7 +44,7 @@
 #include <QAbstractItemDelegate>
 #include <QWidget>
 
-#include "starrating.h"
+#include <starrating.h>
 
 /**
  * \brief		The StarEditor class is reusing the example provided with Qt Framework

@@ -29,6 +29,10 @@ MainWindow::MainWindow(QWidget *parent)
 	, searchDialog(new SearchDialog(this))
 {
 	setupUi(this);
+	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+	actionMute->setIcon(style()->standardIcon(QStyle::SP_MediaVolumeMuted));
+
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 	seekSlider->setMediaPlayer(_mediaPlayer);
 
@@ -54,7 +58,8 @@ MainWindow::MainWindow(QWidget *parent)
 	// Instantiate dialogs
 	_playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
-	this->installEventFilter(this);
+	//this->installEventFilter(this);
+	menubar->installEventFilter(this);
 }
 
 MediaPlayer *MainWindow::mediaPlayer() const
@@ -221,7 +226,6 @@ void MainWindow::setupActions()
 	connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
 		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
-		customizeThemeDialog->loadTheme();
 		customizeThemeDialog->exec();
 	});
 
@@ -533,12 +537,22 @@ bool MainWindow::event(QEvent *e)
 		if (this->property("altKey").toBool() && keyEvent->key() == Qt::Key_Alt) {
 			qDebug() << Q_FUNC_INFO << "Alt was released";
 			this->menuBar()->show();
+			//this->menuBar()->setProperty("dirtyHackMnemonic", true);
 			this->menuBar()->setFocus();
 			this->setProperty("altKey", false);
 			actionHideMenuBar->setChecked(false);
+			SettingsPrivate::instance()->setValue("isMenuHidden", false);
 		}
 	}
 	return b;
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+	if (watched == menubar) {
+		//qDebug() << Q_FUNC_INFO << event->type();
+	}
+	return QMainWindow::eventFilter(watched, event);
 }
 
 void MainWindow::moveEvent(QMoveEvent *event)
@@ -560,6 +574,7 @@ void MainWindow::loadThemeAndSettings()
 
 	// Buttons
 	for (MediaButton *b : mediaButtons) {
+		b->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
 		b->setMediaPlayer(_mediaPlayer);
 		if (settingsPrivate->isThemeCustomized()) {
 			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
@@ -572,6 +587,8 @@ void MainWindow::loadThemeAndSettings()
 	// Fonts
 	this->updateFonts(settingsPrivate->font(SettingsPrivate::FF_Menu));
 	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
+	qDebug() << Q_FUNC_INFO << settingsPrivate->value("isMenuHidden", false).toBool();
+	menubar->setVisible(settingsPrivate->value("isMenuHidden", false).toBool());
 }
 
 void MainWindow::createCustomizeOptionsDialog()
@@ -808,7 +825,6 @@ void MainWindow::toggleMenuBar(bool checked)
 {
 	if (checked) {
 		menuBar()->hide();
-	} else {
-		/// todo
 	}
+	SettingsPrivate::instance()->setValue("isMenuHidden", checked);
 }

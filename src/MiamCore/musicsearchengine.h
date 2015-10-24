@@ -7,6 +7,11 @@
 
 #include "miamcore_global.h"
 
+/**
+ * \brief		The MusicSearchEngine class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 {
 	Q_OBJECT

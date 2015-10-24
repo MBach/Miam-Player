@@ -7,7 +7,9 @@
 #include <model/trackdao.h>
 
 /**
- * \brief The TreeView class is the base class for displaying trees in the player.
+ * \brief		The TreeView class is the base class for displaying trees in the player.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class MIAMCORE_LIBRARY TreeView : public QTreeView, public SelectedTracksModel
 {
@@ -21,10 +23,10 @@ public:
 	virtual QStringList selectedTracks() override;
 
 protected:
+	QModelIndexList _cacheSelectedIndexes;
+
 	/** Explore items to count leaves (tracks). */
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
-
-	QModelIndexList _cacheSelectedIndexes;
 
 	virtual void startDrag(Qt::DropActions supportedActions) override;
 
@@ -34,7 +36,7 @@ private:
 
 public slots:
 	/** Sends folders or tracks to the end of a playlist. */
-	void appendToPlaylist() { this->insertToPlaylist(-1); }
+	inline void appendToPlaylist() { this->insertToPlaylist(-1); }
 
 	/** Sends folders or tracks to a specific position in a playlist. */
 	void insertToPlaylist(int rowIndex);

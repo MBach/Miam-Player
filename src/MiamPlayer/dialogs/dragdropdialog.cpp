@@ -13,7 +13,7 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 	connect(toolButtonLibrary, &QToolButton::clicked, this, &DragDropDialog::addExternalFoldersToLibrary);
 	connect(toolButtonPlaylist, &QToolButton::clicked, this, &DragDropDialog::addExternalFoldersToPlaylist);
 
-	originalLabel = labelHowToProceed->text();
+	_originalLabel = labelHowToProceed->text();
 }
 
 bool DragDropDialog::setMimeData(const QMimeData *mimeData)
@@ -28,7 +28,7 @@ bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 	int folders = 0;
 	int maxDisplayedInLabel = 3;
 
-	labelHowToProceed->setText(originalLabel);
+	labelHowToProceed->setText(_originalLabel);
 
 	for (int i = 0; i < urlList.size(); i++) {
 		QFileInfo fileInfo = urlList.at(i).toLocalFile();

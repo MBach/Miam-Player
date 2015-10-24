@@ -3,13 +3,18 @@
 
 #include <QProxyStyle>
 
+/**
+ * \brief		The MiamStyle class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MiamStyle : public QProxyStyle
 {
 	Q_OBJECT
 public:
 	explicit MiamStyle(QStyle *parent = 0);
 
-	QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const;
+	virtual QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const override;
 
 	virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0) const override;
 

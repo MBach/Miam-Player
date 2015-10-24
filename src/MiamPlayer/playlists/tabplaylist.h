@@ -11,8 +11,8 @@
 #include "../tracksnotfoundmessagebox.h"
 #include "playlist.h"
 #include "playlistmanager.h"
-#include "playlistframe.h"
 
+/// Forward declaration
 class MainWindow;
 
 /**

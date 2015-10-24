@@ -20,7 +20,7 @@
         <file alias="back">config/icons/back.png</file>
         <file alias="debug">config/icons/debug.png</file>
         <file alias="playlist">config/icons/playlist.png</file>
-		<file alias="playlist_modified">config/icons/playlist_modified.png</file>
+        <file alias="playlist_modified">config/icons/playlist_modified.png</file>
         <file alias="hierarchy">config/icons/hierarchy-128.png</file>
         <file>config/close_tabs_hover.png</file>
         <file>config/+linux/close_tabs_hover.png</file>
@@ -126,5 +126,14 @@
     <qresource prefix="/debug">
         <file alias="warning">config/icons/warning.png</file>
         <file alias="hexa">config/icons/hexa.png</file>
+    </qresource>
+    <qresource prefix="/player/orangewhitepearls">
+        <file alias="pause">player/orange-white-pearls/pause.png</file>
+        <file alias="play">player/orange-white-pearls/play.png</file>
+        <file alias="seekBackward">player/orange-white-pearls/seek-backward.png</file>
+        <file alias="seekForward">player/orange-white-pearls/seek-forward.png</file>
+        <file alias="skipBackward">player/orange-white-pearls/skip-backward.png</file>
+        <file alias="skipForward">player/orange-white-pearls/skip-forward.png</file>
+        <file alias="stop">player/orange-white-pearls/stop.png</file>
     </qresource>
 </RCC>

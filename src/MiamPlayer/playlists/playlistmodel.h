@@ -6,12 +6,15 @@
 #include <QMenu>
 #include <QStandardItemModel>
 
-#include "filehelper.h"
-#include "model/trackdao.h"
-#include "mediaplaylist.h"
+#include <model/trackdao.h>
+#include <filehelper.h>
+#include <mediaplaylist.h>
 
 /**
- * @brief The PlaylistModel class
+ * \brief		The PlaylistModel class is the underlying class for Playlist class.
+ * \details		This class add tracks in a table
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class PlaylistModel : public QStandardItemModel
 {
@@ -44,7 +47,7 @@ public:
 	/** Moves rows from various positions to a new one (discontiguous rows are grouped). */
 	QList<QStandardItem *> internalMove(QModelIndex dest, QModelIndexList selectedIndexes);
 
-	/** Redefined. */
+	/** Redefined. XXX: warning this method is not marked as Virtual in QStandardItemModel. */
 	void insertRow(int row, const QList<QStandardItem *> & items);
 
 	inline MediaPlaylist* mediaPlaylist() const { return _mediaPlaylist; }

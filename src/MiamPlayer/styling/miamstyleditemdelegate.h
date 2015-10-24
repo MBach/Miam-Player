@@ -4,6 +4,11 @@
 #include <QStyledItemDelegate>
 #include <QTableView>
 
+/**
+ * \brief		The MiamStyledItemDelegate class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MiamStyledItemDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT

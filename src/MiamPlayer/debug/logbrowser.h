@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+/// Forward declaration
 class LogBrowserDialog;
 
 /**

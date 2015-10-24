@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+/// Forward declarations
 class QTextBrowser;
 class QPushButton;
 class QTableWidget;
@@ -25,8 +26,8 @@ public:
 	~LogBrowserDialog() {}
 
 protected:
-	virtual void closeEvent(QCloseEvent *e);
-	virtual void keyPressEvent(QKeyEvent *e);
+	virtual void closeEvent(QCloseEvent *e) override;
+	virtual void keyPressEvent(QKeyEvent *e) override;
 
 public slots:
 	void outputMessage(QtMsgType type, const QString &msg);

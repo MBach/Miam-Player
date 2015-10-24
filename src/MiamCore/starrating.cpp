@@ -52,13 +52,13 @@ StarRating::StarRating(int starCount)
 	for (int i = 0; i < 5; ++i) {
 		QLineF l(0.5, 0.5, 0.5, 0);
 		l.setAngle(i * 72 + 18);
-		starPolygon << l.p2();
+		_starPolygon << l.p2();
 
 		QLineF l2(0.5, 0.5, 0.5, 0.71);
 		l2.setAngle(i * 72 + 54);
-		starPolygon << l2.p2();
+		_starPolygon << l2.p2();
 	}
-	diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
+	_diamondPolygon << QPointF(0.4, 0.5) << QPointF(0.5, 0.4) << QPointF(0.6, 0.5) << QPointF(0.5, 0.6) << QPointF(0.4, 0.5);
 }
 
 void StarRating::setStarCount(int starCount)
@@ -126,7 +126,7 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	}
 	painter->setPen(pen);
 
-	int yOffset = (opt.rect.height() - opt.rect.height() * starPolygon.boundingRect().height()) / 2;
+	int yOffset = (opt.rect.height() - opt.rect.height() * _starPolygon.boundingRect().height()) / 2;
 	painter->translate(opt.rect.x(), opt.rect.y() + yOffset);
 	if (opt.rect.height() < opt.rect.width() / 5) {
 		painter->scale(opt.rect.height(), opt.rect.height());
@@ -139,9 +139,9 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 
 	for (int i = 0; i < maxStarCount; ++i) {
 		if (i < _starCount || mode == NoStarsYet) {
-			painter->drawPolygon(starPolygon);
+			painter->drawPolygon(_starPolygon);
 		} else if (mode == Editable) {
-			painter->drawPolygon(diamondPolygon, Qt::WindingFill);
+			painter->drawPolygon(_diamondPolygon, Qt::WindingFill);
 		}
 		painter->translate(1.0, 0);
 	}

@@ -10,17 +10,16 @@
 # define MIAMCORE_LIBRARY Q_DECL_IMPORT
 #endif
 
+#include <QCoreApplication>
 #include <QMetaType>
-#include <QObject>
 
-class MIAMCORE_LIBRARY Miam : public QObject
+/**
+ * \brief		The Miam namespace contains Enums and utility functions. It's like Qt namespace.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
+namespace Miam
 {
-	Q_OBJECT
-private:
-	Q_ENUMS(ItemType)
-	Q_ENUMS(DataField)
-
-public:
 	enum ItemType : int
 	{
 		IT_Artist		= QMetaType::User + 1,
@@ -71,21 +70,21 @@ public:
 		COL_Comment		= 10
 	};
 
-	inline static QMessageBox::StandardButton showWarning(const QString &target, int count)
+	inline QMessageBox::StandardButton showWarning(const QString &target, int count)
 	{
 		QMessageBox::StandardButton ret = QMessageBox::Ok;
 		/// XXX: extract magic number (to where?)
 		if (count > 300) {
 			QMessageBox msgBox;
-			QString totalFiles = tr("There are more than 300 files to add to the %1 (%2 to add).");
+			QString totalFiles = QCoreApplication::tr("There are more than 300 files to add to the %1 (%2 to add).");
 			msgBox.setText(totalFiles.arg(target).arg(count));
-			msgBox.setInformativeText(tr("Are you sure you want to continue? This might take some time."));
+			msgBox.setInformativeText(QCoreApplication::tr("Are you sure you want to continue? This might take some time."));
 			msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
 			msgBox.setDefaultButton(QMessageBox::Ok);
 			ret = (QMessageBox::StandardButton) msgBox.exec();
 		}
 		return ret;
 	}
-};
+}
 
 #endif // MIAMCORE_GLOBAL_H

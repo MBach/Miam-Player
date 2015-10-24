@@ -29,7 +29,7 @@ public:
 	virtual void setVisible(bool visible) override;
 
 protected:
-	virtual bool eventFilter(QObject *obj, QEvent *ev);
+	virtual bool eventFilter(QObject *obj, QEvent *ev) override;
 
 private:
 	/** Create a preset icon from VLC's presets. */

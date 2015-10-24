@@ -4,8 +4,14 @@
 #include <QSortFilterProxyModel>
 #include "miamcore_global.h"
 
+/// Forward declaration
 class SeparatorItem;
 
+/**
+ * \brief		The MiamSortFilterProxyModel class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY MiamSortFilterProxyModel : public QSortFilterProxyModel
 {
 	Q_OBJECT

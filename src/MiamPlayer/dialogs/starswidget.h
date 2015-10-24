@@ -4,6 +4,11 @@
 #include "starrating.h"
 #include <QWidget>
 
+/**
+ * \brief		The StarsWidget class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class StarsWidget : public QWidget
 {
 	Q_OBJECT

@@ -36,7 +36,9 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	// The objectName in the UI file MUST match the alias in the QRC file!
 	QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
 	QIcon icon(iconFile);
-	if (!icon.isNull()) {
+	if (icon.isNull()) {
+		QPushButton::setIcon(QIcon(":/player/oxygen/" + this->objectName().remove("Button")));
+	} else {
 		QPushButton::setIcon(QIcon(iconFile));
 	}
 	emit mediaButtonChanged();

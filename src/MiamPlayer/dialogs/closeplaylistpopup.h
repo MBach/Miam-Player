@@ -5,6 +5,7 @@
 
 #include "ui_closeplaylistpopup.h"
 
+/// Forward declaration
 class Playlist;
 
 /**

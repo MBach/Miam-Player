@@ -4,6 +4,11 @@
 #include "styling/lineedit.h"
 #include "tagbutton.h"
 
+/**
+ * \brief		The TagLineEdit class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class TagLineEdit : public LineEdit
 {
 	Q_OBJECT

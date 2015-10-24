@@ -13,7 +13,7 @@
 /**
  * \brief		The Playlist class is used to display tracks in the MainWindow class.
  * \details		The QTableView uses a small custom model to manage tracks: the PlaylistModel class. Tracks can be moved from one playlist
- *		to another, or in the same playlist. You can also drop external files or folder into this table to create a new playlist.
+ *				to another, or in the same playlist. You can also drop external files or folder into this table to create a new playlist.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -36,7 +36,7 @@ private:
 	QModelIndexList _previouslySelectedRows;
 
 	/** Drag & drop events: when moving tracks, displays a thin line under the cursor. */
-	QModelIndex *_dropDownIndex;
+	//QModelIndex *_dropDownIndex;
 
 	uint _hash;
 

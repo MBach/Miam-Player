@@ -6,6 +6,11 @@
 #include "libraryorderdialog.h"
 #include "miamlibrary_global.hpp"
 
+/**
+ * \brief		The LibraryHeader class is a button which can switch the LibraryTreeView from Ascending to Descending order.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMLIBRARY_LIBRARY LibraryHeader : public QPushButton
 {
 	Q_OBJECT

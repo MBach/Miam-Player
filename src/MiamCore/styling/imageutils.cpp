@@ -1,9 +1,5 @@
 #include "imageutils.h"
 
-ImageUtils::ImageUtils()
-{
-}
-
 // Thanks StackOverflow for this algorithm (works like a charm without any changes)
 QImage ImageUtils::blurred(const QImage& image, const QRect& rect, int radius, bool alphaOnly)
 {

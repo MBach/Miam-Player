@@ -8,6 +8,7 @@
 
 #include "ui_quickstart.h"
 
+/// Forward declaration
 class MainWindow;
 
 /**

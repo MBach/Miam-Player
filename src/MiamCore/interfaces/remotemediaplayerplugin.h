@@ -7,8 +7,14 @@
 #include <QStandardItem>
 #include <QListView>
 
+/// Forward declaration
 class AbstractSearchDialog;
 
+/**
+ * \brief		The RemoteMediaPlayerPlugin class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY RemoteMediaPlayerPlugin : public BasicPlugin
 {
 public:

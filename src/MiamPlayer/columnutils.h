@@ -5,8 +5,7 @@
 #include <QTableView>
 
 /**
- * \brief	The ColumnUtils class
- * \details
+ * \brief		The ColumnUtils class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

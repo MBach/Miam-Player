@@ -5,6 +5,11 @@
 
 #include "tabplaylist.h"
 
+/**
+ * \brief		The CornerWidget class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class CornerWidget : public QPushButton
 {
 	Q_OBJECT
@@ -12,9 +17,9 @@ public:
 	explicit CornerWidget(TabPlaylist *parent);
 
 protected:
-	void mouseMoveEvent(QMouseEvent *e);
+	virtual void mouseMoveEvent(QMouseEvent *e) override;
 
-	void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 
 signals:
 	void innerButtonClicked();

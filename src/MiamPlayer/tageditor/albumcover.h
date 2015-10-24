@@ -7,7 +7,6 @@
 
 /**
  * \brief		The AlbumCover class is used to manipulate cover albums inside music files.
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

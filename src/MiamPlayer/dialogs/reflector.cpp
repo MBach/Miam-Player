@@ -4,7 +4,7 @@
 #include <QStylePainter>
 
 Reflector::Reflector(QWidget *parent) :
-	QWidget(parent), backgroundColor(QColor())
+	QWidget(parent), _backgroundColor(QColor())
 {}
 
 QPalette::ColorRole Reflector::colorRole() const
@@ -17,11 +17,11 @@ void Reflector::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
 	p.setPen(QApplication::palette().mid().color());
-	p.setBrush(backgroundColor);
+	p.setBrush(_backgroundColor);
 	p.drawRect(this->rect().adjusted(0, 0, -1, -1));
 }
 
 void Reflector::setColor(const QColor &color)
 {
-	this->backgroundColor = color;
+	this->_backgroundColor = color;
 }

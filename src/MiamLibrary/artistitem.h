@@ -6,6 +6,11 @@
 
 #include "miamlibrary_global.hpp"
 
+/**
+ * \brief		The ArtistItem class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMLIBRARY_LIBRARY ArtistItem : public QStandardItem
 {
 public:

@@ -9,6 +9,11 @@
 #include "miamcore_global.h"
 #include "searchbar.h"
 
+/**
+ * \brief		The LineEdit class
+ * \author		Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY LineEdit : public SearchBar
 {
 	Q_OBJECT

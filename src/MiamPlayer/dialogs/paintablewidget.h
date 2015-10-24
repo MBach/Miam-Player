@@ -31,7 +31,7 @@ public:
 	}
 
 protected:
-	virtual void paintEvent(QPaintEvent *)
+	virtual void paintEvent(QPaintEvent *) override
 	{
 		QPainter p(this);
 		p.setPen(Qt::NoPen);

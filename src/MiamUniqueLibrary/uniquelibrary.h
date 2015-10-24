@@ -10,19 +10,16 @@
 #include "ui_uniquelibrary.h"
 
 /**
-* \brief
-* \details
-* \author      Matthieu Bachelier
-* \copyright   GNU General Public License v3
-*/
+ * \brief		The UniqueLibrary class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::UniqueLibrary
 {
 	Q_OBJECT
 private:
 	MediaPlayer *_mediaPlayer;
-
 	QStandardItem *_currentTrack;
-
 	UniqueLibraryItemModel *_model;
 	MiamSortFilterProxyModel *_proxy;
 

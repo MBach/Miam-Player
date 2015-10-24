@@ -40,6 +40,8 @@ CustomizeThemeDialog::CustomizeThemeDialog(MainWindow *parent)
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	this->restoreGeometry(settings->value("customizeThemeDialogGeometry").toByteArray());
 	listWidget->setCurrentRow(settings->value("customizeThemeDialogCurrentTab").toInt());
+
+	this->loadTheme();
 }
 
 void CustomizeThemeDialog::setupActions()
@@ -468,7 +470,12 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 			if (settings->hasCustomIcon(button->objectName())) {
 				button->setIcon(QIcon(settings->customIcon(button->objectName())));
 			} else {
-				button->setIcon(QIcon(":/player/" + newTheme.toLower() + "/" + button->objectName()));
+				QIcon i(":/player/" + newTheme.replace(" ", "").toLower() + "/" + button->objectName());
+				if (i.isNull()) {
+					button->setIcon(QIcon(":/player/oxygen/" + button->objectName()));
+				} else {
+					button->setIcon(i);
+				}
 			}
 		}
 	}

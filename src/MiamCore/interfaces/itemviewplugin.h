@@ -7,6 +7,11 @@
 #include <QItemSelectionModel>
 #include <QMenu>
 
+/**
+ * \brief		The ItemViewPlugin class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY ItemViewPlugin : public BasicPlugin
 {
 public:

@@ -8,8 +8,10 @@
 
 #include <QFileInfo>
 
+/// Forward declaration
 class Cover;
 
+/// Forward declaration
 namespace TagLib {
 	class File;
 
@@ -23,8 +25,7 @@ namespace TagLib {
 }
 
 /**
- * \brief The FileHelper class is used to extract various but relevant fields in all types of tags (MP3, Flac, etc)
- * \details
+ * \brief		The FileHelper class is used to extract various but relevant fields in all types of tags (MP3, Flac, etc).
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

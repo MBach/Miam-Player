@@ -13,8 +13,14 @@
 #include <QStandardItem>
 #include "miamlibrary_global.hpp"
 
+/// Forward declaration
 class LibraryTreeView;
 
+/**
+ * \brief		The LibraryItemDelegate class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMLIBRARY_LIBRARY LibraryItemDelegate : public MiamItemDelegate
 {
 	Q_OBJECT
@@ -32,7 +38,7 @@ public:
 
 private:
 	/** Albums have covers usually. */
-	void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const;
+	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const override;
 
 	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
 

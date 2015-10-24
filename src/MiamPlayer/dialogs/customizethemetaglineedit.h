@@ -3,6 +3,11 @@
 
 #include "taglineedit.h"
 
+/**
+ * \brief		The CustomizeThemeTagLineEdit class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class CustomizeThemeTagLineEdit : public TagLineEdit
 {
 	Q_OBJECT

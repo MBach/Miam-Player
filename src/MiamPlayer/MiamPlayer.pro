@@ -79,7 +79,6 @@ HEADERS += \
     playlists/tabplaylist.h \
     playlists/playlistitemdelegate.h \
     playlists/stareditor.h \
-    playlists/playlistframe.h \
     styling/miamslider.h \
     styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \

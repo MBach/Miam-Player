@@ -6,6 +6,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+/**
+ * \brief		The PlaybackModeWidget class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class PlaybackModeWidget : public QWidget
 {
 	Q_OBJECT

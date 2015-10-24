@@ -16,6 +16,7 @@
 #include <QTimer>
 #include "miamlibrary_global.hpp"
 
+/// Forward declarations
 class CircleProgressBar;
 class JumpToWidget;
 class LibraryFilterLineEdit;
@@ -93,7 +94,7 @@ private:
 	virtual int countAll(const QModelIndexList &indexes) const override;
 
 	/** Reimplemented. */
-	virtual void updateSelectedTracks();
+	virtual void updateSelectedTracks() override;
 
 public slots:
 	/** Invert the current sort order. */

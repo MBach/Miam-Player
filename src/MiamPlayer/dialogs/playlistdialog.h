@@ -2,17 +2,18 @@
 #define PLAYLISTDIALOG_H
 
 #include <QDialog>
-
-#include "ui_playlistdialog.h"
-
-#include "../playlists/tabplaylist.h"
-
-#include "model/sqldatabase.h"
 #include <QStackedLayout>
 #include <QStandardItem>
 
+#include "ui_playlistdialog.h"
+
+#include <model/sqldatabase.h>
+#include "../playlists/tabplaylist.h"
+
 /**
- * \brief The PlaylistDialog class can save, load and export playlists in m3u format.
+ * \brief		The PlaylistDialog class can save, load and export playlists in m3u format.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
  */
 class PlaylistDialog : public QDialog, public Ui::PlaylistDialog
 {

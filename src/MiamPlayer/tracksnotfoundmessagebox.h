@@ -4,6 +4,11 @@
 #include <QMediaContent>
 #include <QMessageBox>
 
+/**
+ * \brief		The TracksNotFoundMessageBox class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class TracksNotFoundMessageBox : public QMessageBox
 {
 	Q_OBJECT

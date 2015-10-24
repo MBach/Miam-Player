@@ -3,9 +3,10 @@
 #include "playlist.h"
 #include "../treeview.h"
 
-#include <QtDebug>
-
+#include <QApplication>
 #include <QIcon>
+
+#include <QtDebug>
 
 TabBar::TabBar(TabPlaylist *parent) :
 	QTabBar(parent), lineEdit(new QLineEdit(this)), tabPlaylist(parent)

@@ -3,6 +3,7 @@
 
 #include <QLineEdit>
 #include <QMouseEvent>
+#include <QStylePainter>
 #include <QTabBar>
 #include <QTimer>
 

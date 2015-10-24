@@ -12,10 +12,10 @@ class MiamSlider : public QSlider
 {
 	Q_OBJECT
 public:
-	explicit MiamSlider(QWidget *parent = NULL);
+	explicit MiamSlider(QWidget *parent = nullptr);
 
 protected:
-	void paintEvent(QPaintEvent *) override;
+	virtual void paintEvent(QPaintEvent *) override;
 
 private:
 	void paintHorizontalSlider();

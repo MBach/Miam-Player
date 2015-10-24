@@ -6,8 +6,14 @@
 #include "miamcore_global.h"
 #include "model/trackdao.h"
 
+/// Forward declaration
 class SqlDatabase;
 
+/**
+ * \brief		The SelectedTracksModel class
+ * \author		Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY SelectedTracksModel
 {
 public:

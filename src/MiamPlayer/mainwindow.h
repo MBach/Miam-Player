@@ -21,7 +21,6 @@
 
 /**
  * \brief		The MainWindow class is the entry point of this audio player.
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -49,6 +48,8 @@ public:
 	void activateLastView();
 
 	void dispatchDrop(QDropEvent *event);
+
+	virtual bool eventFilter(QObject *watched, QEvent *event);
 
 	void init();
 

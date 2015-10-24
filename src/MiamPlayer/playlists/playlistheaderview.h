@@ -7,6 +7,11 @@
 
 #include "playlist.h"
 
+/**
+ * \brief		The PlaylistHeaderView class
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class PlaylistHeaderView : public QHeaderView
 {
 	Q_OBJECT
@@ -23,10 +28,10 @@ public:
 	void setFont(const QFont &newFont);
 
 	/** Redefined. */
-	void setModel(QAbstractItemModel *model);
+	virtual void setModel(QAbstractItemModel *model) override;
 
 protected:
-	virtual QSize sectionSizeFromContents(int logicalIndex) const;
+	virtual QSize sectionSizeFromContents(int logicalIndex) const override;
 
 	/** Redefined for dynamic translation. */
 	virtual void changeEvent(QEvent *event) override;

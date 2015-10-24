@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QToolButton>
 
+/// Forward declaration
 class TagLineEdit;
 
 /**

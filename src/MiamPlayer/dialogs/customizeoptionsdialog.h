@@ -11,7 +11,6 @@
 
 /**
  * \brief		The CustomizeOptionsDialog class is a very important class. It is designed to help one to customize options of Miam-Player.
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

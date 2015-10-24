@@ -56,8 +56,8 @@
 class MIAMCORE_LIBRARY StarRating
 {
 private:
-	QPolygonF starPolygon;
-	QPolygonF diamondPolygon;
+	QPolygonF _starPolygon;
+	QPolygonF _diamondPolygon;
 	int _starCount;
 
 public:

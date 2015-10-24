@@ -3,9 +3,15 @@
 
 #include <QObject>
 
+/// Forward declarations
 class TabPlaylist;
 class Playlist;
 
+/**
+ * \brief		The PlaylistManager class is used to Create/Read/Update/Delete playlists in SQLite DB.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class PlaylistManager : public QObject
 {
 	Q_OBJECT

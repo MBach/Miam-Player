@@ -12,7 +12,6 @@
 
 /**
  * \brief		The LibraryItemModel class is used to cache information from the database, in order to increase performance.
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

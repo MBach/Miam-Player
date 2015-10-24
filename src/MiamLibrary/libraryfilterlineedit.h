@@ -13,7 +13,6 @@
 
 /**
  * \brief		The LibraryFilterLineEdit class
- * \details
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

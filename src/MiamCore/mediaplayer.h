@@ -5,8 +5,10 @@
 #include "mediaplaylist.h"
 #include "miamcore_global.h"
 
+/// Forward declaration
 class IMediaPlayer;
 
+/// Forward declaration
 namespace QtAV {
 	class AVPlayer;
 }

@@ -4,10 +4,15 @@
 #include <QImage>
 #include "miamcore_global.h"
 
+/**
+ * \brief		The ImageUtils class contains algorithms on image processing.
+ * \author		Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY ImageUtils
 {
 private:
-	ImageUtils();
+	ImageUtils() {}
 
 public:
 	// Thanks StackOverflow for this algorithm (works like a charm without any changes)

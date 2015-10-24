@@ -6,8 +6,14 @@
 
 #include <QPropertyAnimation>
 
+/// Forward declaration
 class MainWindow;
 
+/**
+ * \brief		The SearchDialog class is a popup dialog which opens when one is typing text.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 {
 	Q_OBJECT
@@ -34,22 +40,22 @@ public:
 	void setSearchExpression(const QString &text);
 
 	/** Required interface from AbstractSearchDialog class. */
-	virtual void addSource(QCheckBox *checkBox);
+	virtual void addSource(QCheckBox *checkBox) override;
 
 	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListView * artists() const { return _artists; }
+	inline virtual QListView * artists() const override { return _artists; }
 
 	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListView * albums() const { return _albums; }
+	inline virtual QListView * albums() const override { return _albums; }
 
 	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListView * tracks() const { return _tracks; }
+	inline virtual QListView * tracks() const override { return _tracks; }
 
 protected:
-	bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	/** Custom rendering. */
-	void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 
 private:
 	/// XXX: factorize code
@@ -59,14 +65,14 @@ private:
 	void searchMoreResults();
 
 public slots:
-	virtual void aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks);
+	virtual void aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks) override;
 
 	void clear();
 
 	void moveSearchDialog(int = -1, int = -1);
 
 	/** Process results sent back from various search engines (local, remote). */
-	virtual void processResults(Request type, const QStandardItemList &results);
+	virtual void processResults(Request type, const QStandardItemList &results) override;
 
 private slots:
 	void artistWasDoubleClicked(const QModelIndex &artistIndex);

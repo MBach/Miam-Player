@@ -14,6 +14,7 @@
 #include <QThread>
 #include <QWeakPointer>
 
+/// Forward declarations
 class Cover;
 class FileHelper;
 class MusicSearchEngine;
