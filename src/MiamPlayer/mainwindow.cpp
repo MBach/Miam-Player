@@ -141,8 +141,11 @@ void MainWindow::init()
 
 	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
 	actionScanLibrary->setDisabled(isEmpty);
-	//widgetSearchBar->setVisible(!isEmpty);
 	if (isEmpty) {
+		widgetSearchBar->hide();
+		changeHierarchyButton->hide();
+		libraryHeader->hide();
+		library->hide();
 		QuickStart *quickStart = new QuickStart(this);
 		quickStart->searchMultimediaFiles();
 	}
