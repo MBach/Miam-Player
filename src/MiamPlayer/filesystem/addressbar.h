@@ -25,16 +25,14 @@ class AddressBar : public QWidget
 {
 	Q_OBJECT
 private:
-	QHBoxLayout *hBoxLayout;
+	QHBoxLayout *_hBoxLayout;
 	AddressBarMenu *_menu;
 	QStack<QDir> _hiddenFolders;
-
 	AddressBarButton *_lastHighlightedButton;
-
 	bool _isDown;
 
 public:
-	explicit AddressBar(QWidget *parent = 0);
+	explicit AddressBar(QWidget *parent = nullptr);
 
 	QString getVolumeInfo(const QString &drive) const;
 

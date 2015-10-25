@@ -10,19 +10,21 @@
 
 #include <QtDebug>
 
-AddressBar::AddressBar(QWidget *parent) :
-	QWidget(parent), _lastHighlightedButton(nullptr), _isDown(false)
+AddressBar::AddressBar(QWidget *parent)
+	: QWidget(parent)
+	, _hBoxLayout(new QHBoxLayout(this))
+	, _menu(new AddressBarMenu(this))
+	, _lastHighlightedButton(nullptr)
+	, _isDown(false)
 {
-	hBoxLayout = new QHBoxLayout(this);
-	hBoxLayout->setContentsMargins(0, 0, 0, 0);
-	hBoxLayout->setSpacing(0);
-	hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
-	this->setLayout(hBoxLayout);
+	_hBoxLayout->setContentsMargins(0, 0, 0, 0);
+	_hBoxLayout->setSpacing(0);
+	_hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
+	this->setLayout(_hBoxLayout);
 
 	// Create a special button with a computer icon, and shows a menu where previous items are stacked
 	this->createRoot();
 
-	_menu = new AddressBarMenu(this);
 	this->setMouseTracking(true);
 }
 
@@ -120,11 +122,11 @@ void AddressBar::resizeEvent(QResizeEvent *event)
 		}
 	} else { // One is reducing the address bar
 		if (avalaibleWidth() < 7) {
-			QLayoutItem *item = hBoxLayout->itemAt(1);
+			QLayoutItem *item = _hBoxLayout->itemAt(1);
 			AddressBarButton *button = qobject_cast<AddressBarButton*>(item->widget());
 
 			// Root button, current button, and spacer item
-			if (hBoxLayout->count() == 3) {
+			if (_hBoxLayout->count() == 3) {
 				// Keep at least one button, and resize it to the minimum size
 				if (button->width() > 70) {
 					qDebug() << Q_FUNC_INFO << "we should reduce size" << button->minimumSizeHint();
@@ -145,17 +147,17 @@ void AddressBar::resizeEvent(QResizeEvent *event)
 void AddressBar::clear()
 {
 	// If we have something to delete after the Root button (which is never deleted)
-	if (hBoxLayout->count() > 2) {
+	if (_hBoxLayout->count() > 2) {
 		// Delete items from the end
-		while (hBoxLayout->count() > 2) {
-			QLayoutItem *item = hBoxLayout->takeAt(1);
+		while (_hBoxLayout->count() > 2) {
+			QLayoutItem *item = _hBoxLayout->takeAt(1);
 			if (item != nullptr && item->widget() != nullptr) {
 				delete item->widget();
 			}
 		}
 	}
 	// Remove focus on root button
-	AddressBarButton *root = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(0)->widget());
+	AddressBarButton *root = qobject_cast<AddressBarButton*>(_hBoxLayout->itemAt(0)->widget());
 	if (root->isHighlighted()) {
 		root->setHighlighted(false);
 	}
@@ -171,7 +173,7 @@ void AddressBar::createRoot()
 {
 	AddressBarButton *buttonArrow = new AddressBarButton(QDir("/"), this);
 	connect(buttonArrow, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showDrivesAndPreviousFolders);
-	hBoxLayout->insertWidget(0, buttonArrow);
+	_hBoxLayout->insertWidget(0, buttonArrow);
 }
 
 /** Append a button to the address bar to navigate through the filesystem. */
@@ -185,7 +187,7 @@ int AddressBar::createSubDirButtons(const QDir &path)
 
 	// Insert after the root button and before other ones.
 	// Example: "C:\Music\Artist" will be created like this 1) 'Artist', 2) 'Music', 3) 'C:\'
-	hBoxLayout->insertWidget(1, buttonDir);
+	_hBoxLayout->insertWidget(1, buttonDir);
 	return buttonDir->width();
 }
 
@@ -273,8 +275,8 @@ void AddressBar::showDrivesAndPreviousFolders()
 		_menu->insertSeparator();
 	}
 
-	AddressBarButton *firstButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(0)->widget());
-	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(1)->widget());
+	AddressBarButton *firstButton = qobject_cast<AddressBarButton*>(_hBoxLayout->itemAt(0)->widget());
+	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(_hBoxLayout->itemAt(1)->widget());
 
 	// Insert Desktop, Documents, Downloads, Pictures, Music, Videos
 	QString desktop = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
@@ -330,10 +332,10 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 	_menu->clear();
 	AddressBarButton *nextButton = nullptr;
 
-	for (int i = 1; i < hBoxLayout->count() - 2; i++) {
-		QLayoutItem *layoutItem = hBoxLayout->itemAt(i);
-		if (layoutItem != nullptr && layoutItem->widget() != nullptr && hBoxLayout->itemAt(i)->widget() == button) {
-			nextButton = qobject_cast<AddressBarButton*>(hBoxLayout->itemAt(i + 1)->widget());
+	for (int i = 1; i < _hBoxLayout->count() - 2; i++) {
+		QLayoutItem *layoutItem = _hBoxLayout->itemAt(i);
+		if (layoutItem != nullptr && layoutItem->widget() != nullptr && _hBoxLayout->itemAt(i)->widget() == button) {
+			nextButton = qobject_cast<AddressBarButton*>(_hBoxLayout->itemAt(i + 1)->widget());
 			break;
 		}
 	}
