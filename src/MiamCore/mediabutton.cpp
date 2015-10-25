@@ -20,7 +20,7 @@ void MediaButton::setMediaPlayer(MediaPlayer *mediaPlayer)
 void MediaButton::setIcon(const QIcon &icon)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	if (settings->isThemeCustomized() && settings->hasCustomIcon(objectName())) {
+	if (settings->isButtonThemeCustomized() && settings->hasCustomIcon(objectName())) {
 		QPushButton::setIcon(QIcon(settings->customIcon(objectName())));
 	} else if (icon.isNull()){
 		settings->setCustomIcon(objectName(), QString());
@@ -36,9 +36,7 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	// The objectName in the UI file MUST match the alias in the QRC file!
 	QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
 	QIcon icon(iconFile);
-	if (icon.isNull()) {
-		QPushButton::setIcon(QIcon(":/player/oxygen/" + this->objectName().remove("Button")));
-	} else {
+	if (!icon.isNull()) {
 		QPushButton::setIcon(QIcon(iconFile));
 	}
 	emit mediaButtonChanged();

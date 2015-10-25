@@ -274,9 +274,9 @@ bool SettingsPrivate::isStarDelegates() const
 }
 
 /** Returns true if a user has modified one of defaults theme. */
-bool SettingsPrivate::isThemeCustomized() const
+bool SettingsPrivate::isButtonThemeCustomized() const
 {
-	return value("themeCustomized", false).toBool();
+	return value("buttonThemeCustomized", false).toBool();
 }
 
 /** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
@@ -732,9 +732,9 @@ void SettingsPrivate::setTabsRect(bool b)
 	setValue("rectangularTabs", b);
 }
 
-void SettingsPrivate::setThemeCustomized(bool b)
+void SettingsPrivate::setButtonThemeCustomized(bool b)
 {
-	setValue("themeCustomized", b);
+	setValue("buttonThemeCustomized", b);
 }
 
 void SettingsPrivate::setVolumeBarHideAfter(int seconds)

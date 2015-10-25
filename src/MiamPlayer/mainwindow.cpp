@@ -53,13 +53,17 @@ MainWindow::MainWindow(QWidget *parent)
 	stackedWidget->addWidget(_uniqueLibrary);
 	_uniqueLibrary->hide();
 
-	this->loadThemeAndSettings();
-
 	// Instantiate dialogs
 	_playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
 
+	// Fonts
+	auto settings = SettingsPrivate::instance();
+	searchBar->setFont(settings->font(SettingsPrivate::FF_Library));
+	this->updateFonts(settings->font(SettingsPrivate::FF_Menu));
+
 	//this->installEventFilter(this);
 	menubar->installEventFilter(this);
+	menubar->setHidden(settings->value("isMenuHidden", false).toBool());
 }
 
 MediaPlayer *MainWindow::mediaPlayer() const
@@ -124,6 +128,7 @@ void MainWindow::init()
 {
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
+	this->loadThemeAndSettings();
 
 	auto settingsPrivate = SettingsPrivate::instance();
 
@@ -381,6 +386,7 @@ void MainWindow::setupActions()
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
+	addressBar->init(settings->defaultLocationFileExplorer());
 
 	// Playback modes
 	connect(playbackModeButton, &QPushButton::clicked, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
@@ -456,7 +462,6 @@ void MainWindow::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
 		this->retranslateUi(this);
-		//quickStart->retranslateUi(quickStart);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
@@ -569,26 +574,23 @@ void MainWindow::resizeEvent(QResizeEvent *e)
 
 void MainWindow::loadThemeAndSettings()
 {
-	auto settings = Settings::instance();
-	auto settingsPrivate = SettingsPrivate::instance();
+	//auto settings = Settings::instance();
+	//auto settingsPrivate = SettingsPrivate::instance();
 
 	// Buttons
-	for (MediaButton *b : mediaButtons) {
+	/*for (MediaButton *b : mediaButtons) {
+		if (!b) {
+			continue;
+		}
 		b->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
 		b->setMediaPlayer(_mediaPlayer);
-		if (settingsPrivate->isThemeCustomized()) {
+		if (settingsPrivate->isButtonThemeCustomized()) {
 			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
 		} else {
 			b->setIconFromTheme(settings->theme());
 		}
 		b->setVisible(settingsPrivate->isMediaButtonVisible(b->objectName()));
-	}
-
-	// Fonts
-	this->updateFonts(settingsPrivate->font(SettingsPrivate::FF_Menu));
-	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
-	qDebug() << Q_FUNC_INFO << settingsPrivate->value("isMenuHidden", false).toBool();
-	menubar->setVisible(settingsPrivate->value("isMenuHidden", false).toBool());
+	}*/
 }
 
 void MainWindow::createCustomizeOptionsDialog()

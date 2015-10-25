@@ -54,7 +54,7 @@ void CustomizeThemeDialog::setupActions()
 	// Select button theme and size
 	connect(themeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &CustomizeThemeDialog::setThemeNameAndDialogButtons);
 	connect(customizeThemeCheckBox, &QCheckBox::toggled, this, [=](bool b) {
-		settings->setThemeCustomized(b);
+		settings->setButtonThemeCustomized(b);
 		if (!b) {
 			// Restore all buttons when unchecked
 			for (QCheckBox *button : customizeButtonsScrollArea->findChildren<QCheckBox*>()) {
@@ -318,7 +318,7 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 void CustomizeThemeDialog::loadTheme()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	customizeThemeCheckBox->setChecked(settings->isThemeCustomized());
+	customizeThemeCheckBox->setChecked(settings->isButtonThemeCustomized());
 
 	sizeButtonsSpinBox->setValue(settings->buttonsSize());
 
@@ -471,9 +471,7 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 				button->setIcon(QIcon(settings->customIcon(button->objectName())));
 			} else {
 				QIcon i(":/player/" + newTheme.replace(" ", "").toLower() + "/" + button->objectName());
-				if (i.isNull()) {
-					button->setIcon(QIcon(":/player/oxygen/" + button->objectName()));
-				} else {
+				if (!i.isNull()) {
 					button->setIcon(i);
 				}
 			}

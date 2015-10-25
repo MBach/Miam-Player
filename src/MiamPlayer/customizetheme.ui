@@ -167,56 +167,11 @@
             </property>
             <item>
              <property name="text">
-              <string notr="true">Fairytale</string>
-             </property>
-             <property name="icon">
-              <iconset theme="fairytale" resource="mp.qrc">
-               <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">Gnome</string>
-             </property>
-             <property name="icon">
-              <iconset theme="gnome" resource="mp.qrc">
-               <normaloff>:/player/gnome/play</normaloff>:/player/gnome/play</iconset>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">Nuvola</string>
-             </property>
-             <property name="icon">
-              <iconset theme="nuvola" resource="mp.qrc">
-               <normaloff>:/player/nuvola/play</normaloff>:/player/nuvola/play</iconset>
-             </property>
-            </item>
-            <item>
-             <property name="text">
               <string notr="true">Oxygen</string>
              </property>
              <property name="icon">
               <iconset theme="oxygen" resource="mp.qrc">
                <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">Tango</string>
-             </property>
-             <property name="icon">
-              <iconset theme="tango" resource="mp.qrc">
-               <normaloff>:/player/tango/play</normaloff>:/player/tango/play</iconset>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">Orange White Pearls</string>
-             </property>
-             <property name="icon">
-              <iconset theme="orangewhitepearls" resource="mp.qrc">
-               <normaloff>:/player/orangewhitepearls/play</normaloff>:/player/orangewhitepearls/play</iconset>
              </property>
             </item>
            </widget>

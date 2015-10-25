@@ -19,13 +19,11 @@ bool PlaylistManager::deletePlaylist(uint playlistId)
 uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiting)
 {
 	uint id = 0;
-	auto _db = SqlDatabase::instance();
+	auto db = SqlDatabase::instance();
 
-	//int index = -1;
 	for (int i = 0; i < _tabPlaylists->count(); i++) {
 		Playlist *pl = _tabPlaylists->playlist(i);
 		if (pl == p) {
-			//index = i;
 			break;
 		}
 	}
@@ -36,7 +34,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		PlaylistDAO playlist;
 
 		// Check first if one has the same playlist in database
-		for (PlaylistDAO dao : _db->selectPlaylists()) {
+		for (PlaylistDAO dao : db->selectPlaylists()) {
 			if (dao.checksum().toUInt() == generateNewHash) {
 				playlist = dao;
 				break;
@@ -74,7 +72,6 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 				}
 			}
 		}
-
 		playlist.setTitle(p->title());
 		playlist.setChecksum(QString::number(generateNewHash));
 
@@ -87,7 +84,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 			tracks.push_back(std::move(t));
 		}
 
-		id = _db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
+		id = db->insertIntoTablePlaylists(playlist, tracks, isOverwriting);
 
 		p->setId(id);
 		p->setHash(generateNewHash);

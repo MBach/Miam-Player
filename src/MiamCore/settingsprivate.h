@@ -138,7 +138,7 @@ public:
 	bool isStarDelegates() const;
 
 	/** Returns true if a user has modified one of defaults theme. */
-	bool isThemeCustomized() const;
+	bool isButtonThemeCustomized() const;
 
 	/** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
 	bool isVolumeBarTextAlwaysVisible() const;
@@ -268,7 +268,7 @@ public slots:
 
 	void setTabsRect(bool b);
 
-	void setThemeCustomized(bool b);
+	void setButtonThemeCustomized(bool b);
 
 	void setVolumeBarHideAfter(int seconds);
 	void setVolumeBarTextAlwaysVisible(bool b);
