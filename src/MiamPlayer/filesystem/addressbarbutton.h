@@ -23,11 +23,12 @@ private:
 	QRect _arrowRect;
 	bool _atLeastOneSubDir;
 	bool _highlighted;
+	bool _isAbsoluteRoot;
 
 	AddressBar *_addressBar;
 
 public:
-	explicit AddressBarButton(const QDir &newPath, AddressBar *parent);
+	explicit AddressBarButton(const QDir &newPath, AddressBar *parent, bool isAbsoluteRoot = false);
 
 	inline const QDir & path() const { return _path; }
 

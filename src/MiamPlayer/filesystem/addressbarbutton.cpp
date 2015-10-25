@@ -12,9 +12,13 @@
 
 #include <QtDebug>
 
-AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent) :
-	QPushButton(parent), _path(newPath),
-	_atLeastOneSubDir(false), _highlighted(false), _addressBar(parent)
+AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent, bool isAbsoluteRoot)
+	: QPushButton(parent)
+	, _path(newPath)
+	, _atLeastOneSubDir(false)
+	, _highlighted(false)
+	, _isAbsoluteRoot(isAbsoluteRoot)
+	, _addressBar(parent)
 {
 	this->setFlat(true);
 	this->setMouseTracking(true);
@@ -41,10 +45,10 @@ AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent) :
 					break;
 				}
 			}
-			if (absRoot) {
-				width += 15;
+			if (_isAbsoluteRoot) {
+				width += 20;
 			} else {
-				width += fontMetrics().width(_addressBar->getVolumeInfo(d.absolutePath()));
+				width += qMax(20, fontMetrics().width(AddressBar::getVolumeInfo(d.absolutePath())));
 			}
 		}
 		width += 28;
@@ -103,7 +107,6 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	p.fillRect(r, g);
 
 	// Compute size of rectangles to display text and right arrow
-	QDir dir(_path);
 	if (_atLeastOneSubDir) {
 		if (isLeftToRight()) {
 			_arrowRect = QRect(r.width() - arrowWidth, r.y(), arrowWidth, r.height());
@@ -174,36 +177,34 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 
 	// Special case for root and drives
 	bool root = false;
-	if (dir.isRoot()) {
-		bool absRoot = true;
-		for (QFileInfo fileInfo : QDir::drives()) {
-			if (fileInfo.absolutePath() == _path.absolutePath()) {
+	if (_path.isRoot()) {
+		QPixmap pixmap = QFileIconProvider().icon(QFileIconProvider::Computer).pixmap(20, 20);
+		QString drive;
+		if (_isAbsoluteRoot) {
+			pixmap = QFileIconProvider().icon(QFileIconProvider::Computer).pixmap(20, 20);
+			if (isLeftToRight()) {
+				p.drawPixmap(2, 3, 20, 20, pixmap);
+			} else {
+				p.drawPixmap(18, 3, 20, 20, pixmap);
+			}
+		} else {
+			drive = AddressBar::getVolumeInfo(_path.absolutePath());
+			if (!_isAbsoluteRoot && !drive.isEmpty()) {
 				// Add a small offset to simulate a pressed button
 				if (_highlighted) {
 					p.translate(1, 1);
 				}
-				p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter,
-						   _addressBar->getVolumeInfo(fileInfo.absolutePath()));
-				absRoot = false;
-				break;
+				p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignCenter, drive);
 			}
-		}
-		if (absRoot) {
-			root = true;
-			QPixmap computer = QFileIconProvider().icon(QFileIconProvider::Computer).pixmap(20, 20);
-			if (isLeftToRight()) {
-				p.drawPixmap(2, 3, 20, 20, computer);
-			} else {
-				p.drawPixmap(18, 3, 20, 20, computer);
-			}
+			pixmap = QFileIconProvider().icon(QFileIconProvider::Drive).pixmap(20, 20);
 		}
 	} else {
-		if (!dir.dirName().isEmpty()) {
+		if (!_path.dirName().isEmpty()) {
 			// Add a small offset to simulate a pressed button
 			if (_highlighted) {
 				p.translate(1, 1);
 			}
-			p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, dir.dirName());
+			p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignCenter, _path.dirName());
 		}
 	}
 

@@ -34,7 +34,7 @@ private:
 public:
 	explicit AddressBar(QWidget *parent = nullptr);
 
-	QString getVolumeInfo(const QString &drive) const;
+	static QString getVolumeInfo(const QString &drive);
 
 	/** Called by the popup menu when one is moving the mouse cursor. */
 	void findAndHighlightButton(const QPoint &p);

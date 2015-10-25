@@ -32,7 +32,7 @@ AddressBar::AddressBar(QWidget *parent)
 #ifdef Q_OS_WIN
 #include <qt_windows.h>
 // Retrieve volume names
-QString AddressBar::getVolumeInfo(const QString &drive) const
+QString AddressBar::getVolumeInfo(const QString &drive)
 {
 	WCHAR szVolumeName[256] ;
 	WCHAR szFileSystemName[256];
@@ -47,7 +47,7 @@ QString AddressBar::getVolumeInfo(const QString &drive) const
 	return vName.trimmed() + " (" + drive.left(drive.size() - 1) + ")";
 }
 #else
-QString AddressBar::getVolumeInfo(const QString &drive) const
+QString AddressBar::getVolumeInfo(const QString &drive)
 {
 	return drive;
 }
@@ -171,7 +171,7 @@ void AddressBar::clear()
 /** Create a special root arrow button.*/
 void AddressBar::createRoot()
 {
-	AddressBarButton *buttonArrow = new AddressBarButton(QDir("/"), this);
+	AddressBarButton *buttonArrow = new AddressBarButton(QDir("/"), this, true);
 	connect(buttonArrow, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showDrivesAndPreviousFolders);
 	_hBoxLayout->insertWidget(0, buttonArrow);
 }
@@ -263,7 +263,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 		QDir d = _hiddenFolders.at(i);
 		QString text;
 		if (d.dirName().isEmpty()) {
-			text = this->getVolumeInfo(d.absolutePath());
+			text = getVolumeInfo(d.absolutePath());
 		} else {
 			text = d.dirName();
 		}
@@ -313,7 +313,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 	for (QFileInfo drive : QDir::drives()) {
 		QString driveName = QDir::toNativeSeparators(drive.absoluteFilePath());
 		if (driveName.length() > 1) {
-			QString d = this->getVolumeInfo(driveName);
+			QString d = getVolumeInfo(driveName);
 			if (!d.isEmpty()) {
 				driveName = d;
 			}
