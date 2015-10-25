@@ -25,6 +25,7 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	: QTableView(parent)
 	, _mediaPlayer(mediaPlayer)
 	//, _dropDownIndex(nullptr)
+	, _isDragging(false)
 	, _hash(0)
 	, _id(0)
 {
@@ -128,12 +129,12 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 
 uint Playlist::generateNewHash() const
 {
-	if (mediaPlaylist()->mediaCount() == 0) {
+	if (_playlistModel->mediaPlaylist()->mediaCount() == 0) {
 		return 0;
 	} else {
 		QString hash("");
-		for (int i = 0; i < mediaPlaylist()->mediaCount(); i++) {
-			hash += mediaPlaylist()->media(i).canonicalUrl().toString();
+		for (int i = 0; i < _playlistModel->mediaPlaylist()->mediaCount(); i++) {
+			hash += _playlistModel->mediaPlaylist()->media(i).canonicalUrl().toString();
 		}
 		return qHash(hash);
 	}
@@ -226,11 +227,14 @@ void Playlist::dragEnterEvent(QDragEnterEvent *event)
 void Playlist::dragLeaveEvent(QDragLeaveEvent *event)
 {
 	this->setProperty("dragFromTreeview", false);
+	_isDragging = false;
 	QTableView::dragLeaveEvent(event);
 }
 
 void Playlist::startDrag(Qt::DropActions)
 {
+	qDebug() << Q_FUNC_INFO;
+	_isDragging = true;
 	QByteArray itemData;
 	//QDataStream dataStream(&itemData, QIODevice::WriteOnly);
 	QMimeData *mimeData = new QMimeData;
@@ -280,18 +284,15 @@ void Playlist::startDrag(Qt::DropActions)
 void Playlist::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
-	//_dropDownIndex = new QModelIndex();
-	// Kind of hack to keep track of position?
-	//*_dropDownIndex = indexAt(event->pos());
+	_isDragging = true;
 	this->setProperty("dragFromTreeview", event->mimeData()->hasFormat("treeview/x-treeview-item"));
-	//this->viewport()->repaint();
-	//delete _dropDownIndex;
-	//_dropDownIndex = nullptr;
+	this->viewport()->update();
 }
 
 /** Redefined to be able to move tracks between playlists or internally. */
 void Playlist::dropEvent(QDropEvent *event)
 {
+	_isDragging = false;
 	QObject *source = event->source();
 	int row = this->indexAt(event->pos()).row();
 	if (TreeView *view = qobject_cast<TreeView*>(source)) {
@@ -476,17 +477,17 @@ void Playlist::paintEvent(QPaintEvent *event)
 		} else {
 			p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
 		}
-		/// FIXME: when viewport has scrolled down a little, missing offset
-		// Let's assume this is correct when Drag & Drop is processing
-		qDebug() << QGuiApplication::mouseButtons();
-		if (!QGuiApplication::mouseButtons().testFlag(Qt::NoButton)) {
-			// Where to draw the indicator line
-			//int rowDest = _dropDownIndex->row() >= 0 ? _dropDownIndex->row() : _playlistModel->rowCount();
-			int rowDest = 1;
-			int height = this->rowHeight(0);
+		if (_isDragging) {
+			QPoint cursor = viewport()->mapFromGlobal(QCursor::pos());
+			QRect trackRect = visualRect(indexAt(cursor));
 			p.setPen(QApplication::palette().highlight().color());
-			p.drawLine(viewport()->rect().left(), rowDest * height,
-					   viewport()->rect().right(), rowDest * height);
+			if (cursor.y() >= trackRect.y() + trackRect.height() / 2) {
+				p.drawLine(viewport()->rect().left(), trackRect.y() + trackRect.height(),
+						   viewport()->rect().right(), trackRect.y() + trackRect.height());
+			} else {
+				p.drawLine(viewport()->rect().left(), trackRect.y(),
+						   viewport()->rect().right(), trackRect.y());
+			}
 		}
 		p.restore();
 	}
