@@ -14,18 +14,18 @@ win32 {
     TARGET = MiamCore
     CONFIG += dll
     CONFIG(debug, debug|release) {
-	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -lQtAV1
-	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -lQtAV1
-	}
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -lQtAV1
+        } else {
+            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -lQtAV1
+        }
     }
     CONFIG(release, debug|release) {
-	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -lQtAV1
-	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -lQtAV1
-	}
+        !contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -lQtAV1
+        } else {
+            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -lQtAV1
+        }
     }
 }
 
@@ -49,9 +49,9 @@ unix:!macx {
     LIBS += -L$$OUT_PWD -L/usr/lib/x86_64-linux-gnu/ -ltag
     # XXX
     isEqual(QT_MAJOR_VERSION, 5):isEqual(QT_MINOR_VERSION, 4):lessThan(QT_PATCH_VERSION, 2){
-	LIBS += -lQt5AV
+        LIBS += -lQt5AV
     } else {
-	LIBS += -lQtAV
+        LIBS += -lQtAV
     }
     target.path = /usr/lib/
     INSTALLS += target

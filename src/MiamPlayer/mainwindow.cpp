@@ -828,8 +828,6 @@ void MainWindow::showTagEditor()
 
 void MainWindow::toggleMenuBar(bool checked)
 {
-	if (checked) {
-		menuBar()->hide();
-	}
+	menuBar()->setVisible(!checked);
 	SettingsPrivate::instance()->setValue("isMenuHidden", checked);
 }
