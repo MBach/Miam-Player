@@ -23,16 +23,16 @@ private:
 public:
 	explicit CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent = 0);
 
+	/** Redefined to inspect shortcuts. */
+	virtual bool eventFilter(QObject *obj, QEvent *e) override;
+
 protected:
 	/** Redefined to add custom behaviour. */
 	virtual void closeEvent(QCloseEvent *) override;
 
-	/** Redefined to inspect shortcuts. */
-	virtual bool eventFilter(QObject *obj, QEvent *e) override;
-
 private:
 	/** Sixth and last panel: list all plugins (enabled of not). */
-	void initPlugins(PluginManager *pluginManager);
+	void initPlugins();
 
 	/** Third panel of this dialog: shorcuts. */
 	void initShortcuts();

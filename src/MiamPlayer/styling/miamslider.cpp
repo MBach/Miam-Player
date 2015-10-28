@@ -11,6 +11,48 @@ MiamSlider::MiamSlider(QWidget *parent)
 	: QSlider(parent)
 {}
 
+void MiamSlider::paintEvent(QPaintEvent *)
+{
+	if (orientation() == Qt::Horizontal) {
+		this->paintHorizontalSlider();
+	} else {
+		this->paintVerticalSlider();
+	}
+}
+
+QLinearGradient MiamSlider::interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o)
+{
+	QPropertyAnimation interpolator;
+	interpolator.setEasingCurve(QEasingCurve::Linear);
+
+	QColor startColor = o.palette.base().color();
+	interpolator.setStartValue(startColor);
+	if (o.state.testFlag(QStyle::State_Enabled)) {
+		interpolator.setEndValue(o.palette.highlight().color());
+	} else {
+		interpolator.setEndValue(o.palette.mid().color());
+	}
+	int total = maximum() - minimum() + 1;
+	interpolator.setDuration(total) ;
+	interpolator.setCurrentTime(value() - minimum()) ;
+	QColor c = interpolator.currentValue().value<QColor>();
+
+	QLinearGradient linearGradient;
+	if (orientation() == Qt::Horizontal) {
+		linearGradient.setStart(boudingRect.x(), 0);
+		linearGradient.setFinalStop(boudingRect.x() + boudingRect.width(), 0);
+	} else {
+		linearGradient.setStart(0, boudingRect.y() + boudingRect.height());
+		linearGradient.setFinalStop(0, boudingRect.y());
+	}
+	linearGradient.setColorAt(0.0, startColor);
+	linearGradient.setColorAt((qreal) (value() - minimum()) / total, c);
+	linearGradient.setColorAt((qreal) (value() - minimum()) / total + 0.001, o.palette.light().color());
+	linearGradient.setColorAt(1.0, o.palette.light().color());
+	return linearGradient;
+}
+
+
 void MiamSlider::paintHorizontalSlider()
 {
 	int h = height() / 3.0;
@@ -18,13 +60,7 @@ void MiamSlider::paintHorizontalSlider()
 	QStyleOptionSlider o;
 	initStyleOption(&o);
 	o.palette = QApplication::palette();
-
 	o.rect.adjust(10, 0, -10, 0);
-	static const int bound = 12;
-
-	// Inner rectangle
-	int w = width() - 2 * bound;
-	float posButton = (float) value() / 1000 * w + bound;
 
 	p.fillRect(rect(), o.palette.window());
 
@@ -80,32 +116,6 @@ void MiamSlider::paintHorizontalSlider()
 	p.drawLine(QPoint(rMid.x(), rMid.y() - 1), QPoint(rMid.x() + rMid.width(), rMid.y() - 1));
 	p.drawLine(QPoint(rMid.x(), rMid.y() + rMid.height()), QPoint(rMid.x() + rMid.width(), rMid.y() + rMid.height()));
 	p.restore();
-
-	// Exclude ErrorState from painting
-	/// FIXME
-	//if (MediaPlayer::instance()->state() == QMediaPlayer::PlayingState || MediaPlayer::instance()->state() == QMediaPlayer::PausedState) {
-
-		QLinearGradient linearGradient = this->interpolatedLinearGradient(pp.boundingRect(), o);
-
-		p.setRenderHint(QPainter::Antialiasing, true);
-		p.fillPath(pp, linearGradient);
-		p.setRenderHint(QPainter::Antialiasing, false);
-
-		p.save();
-		p.setRenderHint(QPainter::Antialiasing, true);
-		QPointF center(posButton, height() * 0.5);
-		QConicalGradient cGrad(center, 360 - 4 * (value() % 360));
-		//if (MediaPlayer::instance()->state() == QMediaPlayer::PlayingState) {
-			cGrad.setColorAt(0.0, o.palette.highlight().color());
-			cGrad.setColorAt(1.0, o.palette.highlight().color().lighter());
-		//} else {
-		//	cGrad.setColorAt(0.0, o.palette.mid().color());
-		//	cGrad.setColorAt(1.0, o.palette.mid().color().lighter());
-		//}
-		p.setBrush(cGrad);
-		p.drawEllipse(center, height() * 0.3, height() * 0.3);
-		p.restore();
-	//}
 }
 
 void MiamSlider::paintVerticalSlider()
@@ -201,43 +211,3 @@ void MiamSlider::paintVerticalSlider()
 	p.restore();
 }
 
-void MiamSlider::paintEvent(QPaintEvent *)
-{
-	if (orientation() == Qt::Horizontal) {
-		this->paintHorizontalSlider();
-	} else {
-		this->paintVerticalSlider();
-	}
-}
-
-QLinearGradient MiamSlider::interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o)
-{
-	QPropertyAnimation interpolator;
-	interpolator.setEasingCurve(QEasingCurve::Linear);
-
-	QColor startColor = o.palette.base().color();
-	interpolator.setStartValue(startColor);
-	if (o.state.testFlag(QStyle::State_Enabled)) {
-		interpolator.setEndValue(o.palette.highlight().color());
-	} else {
-		interpolator.setEndValue(o.palette.mid().color());
-	}
-	int total = maximum() - minimum() + 1;
-	interpolator.setDuration(total) ;
-	interpolator.setCurrentTime(value() - minimum()) ;
-	QColor c = interpolator.currentValue().value<QColor>();
-
-	QLinearGradient linearGradient;
-	if (orientation() == Qt::Horizontal) {
-		linearGradient.setStart(boudingRect.x(), 0);
-		linearGradient.setFinalStop(boudingRect.x() + boudingRect.width(), 0);
-	} else {
-		linearGradient.setStart(0, boudingRect.y() + boudingRect.height());
-		linearGradient.setFinalStop(0, boudingRect.y());
-	}
-	linearGradient.setColorAt(0.0, startColor);
-	linearGradient.setColorAt((qreal) (value() - minimum()) / total, c);
-	linearGradient.setColorAt((qreal) (value() - minimum()) / total + 0.001, o.palette.light().color());
-	linearGradient.setColorAt(1.0, o.palette.light().color());
-	return linearGradient;
-}

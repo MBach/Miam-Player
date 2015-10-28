@@ -43,7 +43,6 @@ void MediaPlaylist::skipBackward()
 		if (_idx < 0) {
 			_idx = this->mediaCount() - 1;
 		}
-
 		this->setCurrentIndex(_randomIndexes[_idx]);
 	} else {
 		this->previous();

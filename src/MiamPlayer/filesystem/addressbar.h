@@ -63,11 +63,11 @@ public slots:
 	void init(const QDir &initDir);
 
 private slots:
-	/** Show a popup menu with the content of the selected directory. */
-	void showSubDirMenu(AddressBarButton *button);
-
 	/** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */
 	void showDrivesAndPreviousFolders();
+
+	/** Show a popup menu with the content of the selected directory. */
+	void showSubDirMenu(AddressBarButton *button);
 
 signals:
 	void aboutToChangePath(const QDir &);

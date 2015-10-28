@@ -23,7 +23,6 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	, _remotePlayer(nullptr)
 	, _stopAfterCurrent(false)
 {
-	//this->createLocalConnections();
 	connect(_localPlayer, &QtAV::AVPlayer::stopped, this, [=]() {
 		qDebug() << "QtAV::AVPlayer::stopped";
 		this->setState(QMediaPlayer::StoppedState);
@@ -57,7 +56,9 @@ MediaPlayer::MediaPlayer(QObject *parent)
 
 	// Link core multimedia actions
 	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
+		//qDebug() << "lambda MediaPlayer::mediaStatusChanged" << status;
 		if (_state != QMediaPlayer::StoppedState && status == QMediaPlayer::EndOfMedia) {
+			//qDebug() << "lambda _state != QMediaPlayer::StoppedState";
 			if (_stopAfterCurrent) {
 				stop();
 				_stopAfterCurrent = false;
@@ -118,8 +119,6 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
 	// Everything is splitted in 2: local actions and remote actions
 	if (mc.canonicalUrl().isLocalFile()) {
-		//this->createLocalConnections();
-
 		// Resume playback is file was previously opened
 		if (_state == QMediaPlayer::PausedState) {
 			_localPlayer->togglePause();
@@ -129,7 +128,6 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 		}
 	} else {
 		// Remote player is about to start
-		//this->createRemoteConnections(mc.canonicalUrl());
 		if (_state == QMediaPlayer::PausedState) {
 			_remotePlayer->resume();
 		} else {
@@ -151,8 +149,22 @@ float MediaPlayer::position() const
 
 void MediaPlayer::setState(QMediaPlayer::State state)
 {
+	switch (state) {
+	case QMediaPlayer::StoppedState:
+		//qDebug() << Q_FUNC_INFO << "mediaStatus about to be emitted" << QMediaPlayer::EndOfMedia;
+		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
+		//qDebug() << Q_FUNC_INFO << "mediaStatus emitted";
+		break;
+	case QMediaPlayer::PlayingState:
+		break;
+	case QMediaPlayer::PausedState:
+		break;
+	}
 	_state = state;
+	//qDebug() << Q_FUNC_INFO << "state about to be emitted" << state;
 	emit stateChanged(_state);
+	//qDebug() << Q_FUNC_INFO << "state emitted";
+
 }
 
 /** Set mute on or off. */
@@ -247,7 +259,7 @@ void MediaPlayer::skipBackward()
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0)) {
 		return;
 	}
-	this->stop();
+	_state = QMediaPlayer::StoppedState;
 	_playlist->skipBackward();
 	this->play();
 }
@@ -260,7 +272,7 @@ void MediaPlayer::skipForward()
 		}
 		return;
 	}
-	this->stop();
+	_state = QMediaPlayer::StoppedState;
 	_playlist->skipForward();
 	this->play();
 }
@@ -297,12 +309,15 @@ void MediaPlayer::play()
 /** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
-	if (_remotePlayer) {
-		_remotePlayer->stop();
-	} else {
-		_localPlayer->stop();
+	if (_state != QMediaPlayer::StoppedState) {
+		if (_remotePlayer) {
+			_remotePlayer->stop();
+		} else {
+			_localPlayer->stop();
+		}
+		_state = QMediaPlayer::StoppedState;
+		this->setState(QMediaPlayer::StoppedState);
 	}
-	this->setState(QMediaPlayer::StoppedState);
 }
 
 /** Activate or desactive audio output. */

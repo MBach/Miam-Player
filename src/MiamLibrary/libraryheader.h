@@ -24,12 +24,12 @@ public:
 
 	explicit LibraryHeader(QWidget *parent = 0);
 
+	virtual bool eventFilter(QObject *obj, QEvent *event);
+
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent *);
 
 	virtual void paintEvent(QPaintEvent *);
-
-	virtual bool eventFilter(QObject *obj, QEvent *event);
 
 public slots:
 	void showDialog(bool enabled);

@@ -37,12 +37,12 @@ protected:
 	/** Reimplemented to display up to 3 actions. */
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
+	/** Reimplemented with a QDirIterator to quick count tracks. */
+	virtual int countAll(const QModelIndexList &indexes) const override;
+
 	virtual void keyPressEvent(QKeyEvent *event) override;
 
 private:
-	/** Reimplemented with a QDirIterator to quick count tracks. */
-	int countAll(const QModelIndexList &indexes) const;
-
 	void scrollAndHighlight(const QChar &c);
 
 public slots:

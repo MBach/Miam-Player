@@ -15,7 +15,7 @@ private:
 	QString _year;
 
 public:
-	explicit YearDAO(QObject *parent = 0);
+	explicit YearDAO(QObject *parent = nullptr);
 
 	YearDAO(const YearDAO &other);
 

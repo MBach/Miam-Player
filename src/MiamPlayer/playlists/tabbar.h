@@ -35,6 +35,9 @@ public:
 	/** Trigger a double click to rename a tab. */
 	void editTab(int indexTab);
 
+	/** Redefined to validate new tab name if the focus is lost. */
+	virtual bool eventFilter(QObject *, QEvent *);
+
 protected:
 	/** Redefined to accept D&D from another playlist or the library. */
 	virtual void dragEnterEvent(QDragEnterEvent *event);
@@ -44,9 +47,6 @@ protected:
 
 	/** Redefined to accept D&D from another playlist or the library. */
 	virtual void dropEvent(QDropEvent *event);
-
-	/** Redefined to validate new tab name if the focus is lost. */
-	virtual bool eventFilter(QObject *, QEvent *);
 
 	/** Redefined to display an editable area. */
 	virtual void mouseDoubleClickEvent(QMouseEvent *);

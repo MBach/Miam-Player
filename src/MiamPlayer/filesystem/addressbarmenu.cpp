@@ -50,11 +50,6 @@ bool AddressBarMenu::eventFilter(QObject *, QEvent *event)
 	return false;
 }
 
-bool AddressBarMenu::hasSeparator() const
-{
-	return _hasSeparator;
-}
-
 void AddressBarMenu::insertSeparator()
 {
 	QListWidgetItem *s = new QListWidgetItem(this);

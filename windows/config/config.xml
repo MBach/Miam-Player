@@ -19,7 +19,9 @@
 	<WizardDefaultHeight>480</WizardDefaultHeight>
 	<MaintenanceToolName>Uninstall Miam-Player</MaintenanceToolName>
 	<MaintenanceToolIniFile>Uninstall Miam-Player.ini</MaintenanceToolIniFile>
-	<Translations>fr_fr.qm</Translations>
+	<Translations>
+		<Translation>fr_fr.qm</Translation>
+	</Translations>
 	<!--<RemoteRepositories>
         <Repository>
             <Url>http://www.miam-player.org/repository</Url>

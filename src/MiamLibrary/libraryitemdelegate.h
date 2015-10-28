@@ -36,7 +36,7 @@ public:
 	/** Redefined to always display the same height for albums, even for those without one. */
 	virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-private:
+protected:
 	/** Albums have covers usually. */
 	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const override;
 

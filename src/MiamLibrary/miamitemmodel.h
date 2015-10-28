@@ -30,7 +30,7 @@ protected:
 	QHash<QString, QStandardItem*> _tracks;
 
 public:
-	MiamItemModel(QObject *parent = 0);
+	explicit MiamItemModel(QObject *parent = 0);
 
 	virtual QChar currentLetter(const QModelIndex &index) const = 0;
 

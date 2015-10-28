@@ -20,7 +20,7 @@ class AddressBar;
 class AddressBarMenu : public QListWidget
 {
 	Q_OBJECT
-    Q_ENUMS(SeparatorEnum)
+	Q_ENUMS(SeparatorEnum)
 private:
 	QList<AddressBarButton*> subfolders;
 
@@ -32,11 +32,11 @@ private:
 public:
 	explicit AddressBarMenu(AddressBar *addressBar);
 
-    enum SeparatorEnum { Separator = Qt::UserRole + 1};
+	enum SeparatorEnum { Separator = Qt::UserRole + 1};
 
 	bool eventFilter(QObject *, QEvent *e);
 
-	bool hasSeparator() const;
+	inline bool hasSeparator() const { return _hasSeparator; }
 
 	void insertSeparator();
 

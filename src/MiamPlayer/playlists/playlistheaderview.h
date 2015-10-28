@@ -31,8 +31,6 @@ public:
 	virtual void setModel(QAbstractItemModel *model) override;
 
 protected:
-	virtual QSize sectionSizeFromContents(int logicalIndex) const override;
-
 	/** Redefined for dynamic translation. */
 	virtual void changeEvent(QEvent *event) override;
 
@@ -41,6 +39,8 @@ protected:
 
 	/** Redefined. */
 	virtual void paintEvent(QPaintEvent *) override;
+
+	virtual QSize sectionSizeFromContents(int logicalIndex) const override;
 };
 
 #endif // PLAYLISTHEADERVIEW_H

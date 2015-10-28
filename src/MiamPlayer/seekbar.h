@@ -31,6 +31,8 @@ protected:
 	virtual void mousePressEvent(QMouseEvent *) override;
 
 	virtual void mouseReleaseEvent(QMouseEvent *) override;
+
+	virtual void paintEvent(QPaintEvent *) override;
 };
 
 

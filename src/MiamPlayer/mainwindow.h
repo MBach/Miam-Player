@@ -60,14 +60,14 @@ public:
 
 	//inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
 
+	/** Open a new Dialog where one can add a folder to current playlist. */
+	void openFolder(const QString &dir);
+
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
 	/** Update fonts for menu and context menus. */
 	void updateFonts(const QFont &font);
-
-	/** Open a new Dialog where one can add a folder to current playlist. */
-	void openFolder(const QString &dir);
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */

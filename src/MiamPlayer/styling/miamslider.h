@@ -17,12 +17,12 @@ public:
 protected:
 	virtual void paintEvent(QPaintEvent *) override;
 
+	QLinearGradient interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o);
+
 private:
 	void paintHorizontalSlider();
 
 	void paintVerticalSlider();
-
-	QLinearGradient interpolatedLinearGradient(const QRectF &boudingRect, QStyleOptionSlider &o);
 };
 
 #endif // MIAMSLIDER_H

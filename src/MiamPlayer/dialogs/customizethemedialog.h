@@ -42,14 +42,14 @@ public:
 	inline Reflector* targetedColor() const { return _targetedColor; }
 
 private:
+	void animate(qreal startValue, qreal stopValue);
+
 	void fade();
 
 	/** Load theme at startup. */
 	void loadTheme();
 
 	void setupActions();
-
-	void animate(qreal startValue, qreal stopValue);
 
 protected:
 	/** Automatically centers the parent window when closing this dialog. */
@@ -64,15 +64,16 @@ public slots:
 private slots:
 	void openChooseIconDialog();
 
+	/** Changes the current theme and updates this dialog too. */
+	void setThemeNameAndDialogButtons(QString);
+
 	/** Shows a color dialog and hides this dialog temporarily.
 	 * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 	void showColorDialog();
 
 	void toggleAlternativeBackgroundColor(bool);
-	void toggleCustomColors(bool);
 
-	/** Changes the current theme and updates this dialog too. */
-	void setThemeNameAndDialogButtons(QString);
+	void toggleCustomColors(bool);
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

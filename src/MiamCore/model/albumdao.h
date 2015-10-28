@@ -15,7 +15,7 @@ private:
 	QString _artist, _disc, _cover, _length, _source, _uri, _year;
 
 public:
-	explicit AlbumDAO(QObject *parentNode = 0);
+	explicit AlbumDAO(QObject *parent = nullptr);
 
 	AlbumDAO(const AlbumDAO &remoteAlbum);
 
@@ -44,7 +44,7 @@ public:
 	QString year() const;
 	void setYear(const QString &year);
 
-	virtual uint hash() const;
+	virtual uint hash() const override;
 };
 
 /** Register this class to convert in QVariant. */

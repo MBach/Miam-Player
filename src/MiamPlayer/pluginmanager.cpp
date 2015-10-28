@@ -22,6 +22,14 @@ PluginManager::~PluginManager()
 {
 	qDeleteAll(_loadedPlugins);
 	_loadedPlugins.clear();
+	qDeleteAll(_dependencies);
+	_dependencies.clear();
+
+	/*QMapIterator<QString, BasicPlugin*> it(_loadedPlugins);
+	while (it.hasNext()) {
+		it.next();
+		this->unloadPlugin(it.key());
+	}*/
 }
 
 void PluginManager::init()

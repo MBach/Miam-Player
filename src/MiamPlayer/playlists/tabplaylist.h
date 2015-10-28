@@ -78,6 +78,10 @@ public slots:
 	/** Add external folders (from a drag and drop) to the current playlist. */
 	void addExtFolders(const QList<QDir> &folders);
 
+	int closePlaylist(int index);
+
+	void deletePlaylist(uint playlistId);
+
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 	void insertItemsToPlaylist(int rowIndex, const QStringList &tracks);
 
@@ -85,20 +89,16 @@ public slots:
 
 	void moveTracksUp();
 
-	void savePlaylist(Playlist *p, bool overwrite);
+	/** Action sent from the menu. */
+	void removeCurrentPlaylist();
 
 	void renamePlaylist(Playlist *p);
 	void renameTab(const PlaylistDAO &dao);
 
-	/** Action sent from the menu. */
-	void removeCurrentPlaylist();
-
-	void deletePlaylist(uint playlistId);
-
 	/** Remove a playlist when clicking on a close button in the corner. */
 	void removeTabFromCloseButton(int index);
 
-	int closePlaylist(int index);
+	void savePlaylist(Playlist *p, bool overwrite);
 
 signals:
 	/** Forward the signal. */

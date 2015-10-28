@@ -20,7 +20,7 @@ private:
 	Miam::ItemType _type;
 
 public:
-	explicit GenericDAO(Miam::ItemType itemType = Miam::IT_UnknownType, QObject *parentNode = 0);
+	explicit GenericDAO(Miam::ItemType itemType = Miam::IT_UnknownType, QObject *parent = nullptr);
 
 	GenericDAO(const GenericDAO &remoteObject);
 

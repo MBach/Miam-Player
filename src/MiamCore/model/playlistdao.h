@@ -16,7 +16,7 @@ private:
 	QString _background, _length;
 
 public:
-	explicit PlaylistDAO(QObject *parentNode = 0);
+	explicit PlaylistDAO(QObject *parent = nullptr);
 
 	PlaylistDAO(const PlaylistDAO &other);
 

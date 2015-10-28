@@ -23,10 +23,10 @@ public:
 
 	explicit PlaylistItemDelegate(Playlist *playlist);
 
-	virtual bool eventFilter(QObject *object, QEvent *event) override;
-
 	/** Redefined. */
 	virtual QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const override;
+
+	virtual bool eventFilter(QObject *object, QEvent *event) override;
 
 	/** Redefined. */
 	virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;

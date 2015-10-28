@@ -224,7 +224,6 @@ int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 	for (QModelIndex index : indexes) {
 		c += this->count(index);
 	}
-	qDebug() << Q_FUNC_INFO << c;
 	return c;
 }
 

@@ -154,7 +154,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
 	// Sixth panel: plugins
-	this->initPlugins(pluginManager);
+	this->initPlugins();
 	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &CustomizeOptionsDialog::togglePlugin);
 
 	// Restore geometry
@@ -198,7 +198,7 @@ bool CustomizeOptionsDialog::eventFilter(QObject *obj, QEvent *e)
 	return QDialog::eventFilter(obj, e);
 }
 
-void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
+void CustomizeOptionsDialog::initPlugins()
 {
 	QStringList failedOnes;
 	for (PluginInfo plugin : SettingsPrivate::instance()->plugins()) {
@@ -213,7 +213,7 @@ void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
 		// If plugin brings its own UI, add a new page in the list
 		bool pluginHasFailed = false;
 		if (plugin.isConfigurable() && plugin.isEnabled()) {
-			BasicPlugin *p = pluginManager->loadedPlugins().value(plugin.absFilePath());
+			BasicPlugin *p = _pluginManager->loadedPlugins().value(plugin.absFilePath());
 			if (p) {
 				tabPlugins->addTab(p->configPage(), p->name());
 			} else {
@@ -237,7 +237,7 @@ void CustomizeOptionsDialog::initPlugins(PluginManager *pluginManager)
 		}
 	}
 	if (!failedOnes.isEmpty()) {
-		pluginManager->alertUser(failedOnes);
+		_pluginManager->alertUser(failedOnes);
 	}
 }
 

@@ -36,7 +36,6 @@ private:
 	QModelIndexList _previouslySelectedRows;
 
 	/** Drag & drop events: when moving tracks, displays a thin line under the cursor. */
-	//QModelIndex *_dropDownIndex;
 	bool _isDragging;
 
 	uint _hash;

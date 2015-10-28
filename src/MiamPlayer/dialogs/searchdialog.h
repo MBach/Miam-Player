@@ -36,24 +36,24 @@ public:
 	/** Constructor. */
 	explicit SearchDialog(MainWindow *mainWindow);
 
-	/** String to look for on every registered search engines. */
-	void setSearchExpression(const QString &text);
-
 	/** Required interface from AbstractSearchDialog class. */
 	virtual void addSource(QCheckBox *checkBox) override;
-
-	/** Required interface from AbstractSearchDialog class. */
-	inline virtual QListView * artists() const override { return _artists; }
 
 	/** Required interface from AbstractSearchDialog class. */
 	inline virtual QListView * albums() const override { return _albums; }
 
 	/** Required interface from AbstractSearchDialog class. */
+	inline virtual QListView * artists() const override { return _artists; }
+
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
+	/** String to look for on every registered search engines. */
+	void setSearchExpression(const QString &text);
+
+	/** Required interface from AbstractSearchDialog class. */
 	inline virtual QListView * tracks() const override { return _tracks; }
 
 protected:
-	virtual bool eventFilter(QObject *obj, QEvent *event) override;
-
 	/** Custom rendering. */
 	virtual void paintEvent(QPaintEvent *) override;
 

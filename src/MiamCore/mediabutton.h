@@ -24,15 +24,15 @@ public:
 	/** Redefined to load custom icons saved in settings. */
 	void setIcon(const QIcon &);
 
-signals:
-	void mediaButtonChanged();
-
 public slots:
 	/** Load an icon from a chosen theme in options. */
 	void setIconFromTheme(const QString &);
 
 	/** Change the size of icons from the options. */
 	void setSize(const int &);
+
+signals:
+	void mediaButtonChanged();
 };
 
 #endif // MEDIABUTTON_H

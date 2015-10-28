@@ -5,6 +5,7 @@
 
 #include "ui_tagconverter.h"
 
+/// Forward declaration
 class TagEditorTableWidget;
 
 /**

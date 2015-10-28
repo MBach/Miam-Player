@@ -1,19 +1,21 @@
 #include "genericdao.h"
 
-GenericDAO::GenericDAO(Miam::ItemType itemType, QObject *parent) :
-	QObject(parent), _parent(nullptr), _type(itemType)
+GenericDAO::GenericDAO(Miam::ItemType itemType, QObject *parent)
+	: QObject(parent)
+	, _parent(nullptr)
+	, _type(itemType)
 {}
 
-GenericDAO::GenericDAO(const GenericDAO &remoteObject) :
-	QObject(remoteObject.parentNode()),
-	_checksum(remoteObject.checksum()),
-	_host(remoteObject.host()),
-	_icon(remoteObject.icon()),
-	_id(remoteObject.id()),
-	_title(remoteObject.title()),
-	_titleNormalized(remoteObject.titleNormalized()),
-	_parent(remoteObject.parentNode()),
-	_type(remoteObject.type())
+GenericDAO::GenericDAO(const GenericDAO &remoteObject)
+	: QObject(remoteObject.parentNode())
+	, _checksum(remoteObject.checksum())
+	, _host(remoteObject.host())
+	, _icon(remoteObject.icon())
+	, _id(remoteObject.id())
+	, _title(remoteObject.title())
+	, _titleNormalized(remoteObject.titleNormalized())
+	, _parent(remoteObject.parentNode())
+	, _type(remoteObject.type())
 {}
 
 GenericDAO& GenericDAO::operator=(const GenericDAO& remoteObject)

@@ -1,7 +1,7 @@
 #include "albumdao.h"
 
-AlbumDAO::AlbumDAO(QObject *parent) :
-	GenericDAO(Miam::IT_Album, parent)
+AlbumDAO::AlbumDAO(QObject *parent)
+	: GenericDAO(Miam::IT_Album, parent)
 {}
 
 AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :

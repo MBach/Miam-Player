@@ -42,10 +42,10 @@ public:
 	/** Explicitly destroys every plugin. */
 	virtual ~PluginManager();
 
-	void init();
-
 	/** Display a QMessageBox if at least one error was encountered when loading plugins. */
 	void alertUser(const QStringList &failedPlugins);
+
+	void init();
 
 	inline QMap<QString, BasicPlugin*> loadedPlugins() const { return _loadedPlugins; }
 

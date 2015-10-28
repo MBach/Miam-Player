@@ -15,7 +15,7 @@ private:
 	QString _customData;
 
 public:
-	explicit ArtistDAO(QObject *parent = 0);
+	explicit ArtistDAO(QObject *parent = nullptr);
 
 	ArtistDAO(const ArtistDAO &remoteArtist);
 

@@ -17,7 +17,7 @@ private:
 	int _rating;
 
 public:
-	explicit TrackDAO(QObject *parentNode = 0);
+	explicit TrackDAO(QObject *parent = nullptr);
 
 	TrackDAO(const TrackDAO &other);
 
