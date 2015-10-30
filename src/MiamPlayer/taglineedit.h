@@ -28,6 +28,8 @@ public:
 	inline QList<TagButton*> tags() const { return _tags; }
 
 protected:
+	virtual void closeTagButton(TagButton *t);
+
 	virtual bool eventFilter(QObject *obj, QEvent *event);
 
 	/** Redefined to be able to move TagButton when typing. */
@@ -40,8 +42,6 @@ protected:
 	virtual void paintEvent(QPaintEvent *);
 
 	QStringList toStringList() const;
-
-	virtual void closeTagButton(TagButton *t);
 
 public slots:
 	void clearTextAndTags(const QString &txt);

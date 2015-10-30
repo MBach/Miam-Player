@@ -76,6 +76,17 @@ QuickStart::QuickStart(MainWindow *mainWindow)
 	this->installEventFilter(this);
 }
 
+bool QuickStart::eventFilter(QObject *, QEvent *e)
+{
+	if (e->type() == QEvent::Show || e->type() == QEvent::Resize) {
+		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
+		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
+		return true;
+	} else {
+		return false;
+	}
+}
+
 /** The first time the player is launched, this function will scan for multimedia files. */
 void QuickStart::searchMultimediaFiles()
 {
@@ -95,17 +106,6 @@ void QuickStart::searchMultimediaFiles()
 		connect(worker, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
 		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
 		worker->start();
-	}
-}
-
-bool QuickStart::eventFilter(QObject *, QEvent *e)
-{
-	if (e->type() == QEvent::Show || e->type() == QEvent::Resize) {
-		ColumnUtils::resizeColumns(defaultFolderTableWidget, ratios);
-		ColumnUtils::resizeColumns(quickStartTableWidget, ratios);
-		return true;
-	} else {
-		return false;
 	}
 }
 

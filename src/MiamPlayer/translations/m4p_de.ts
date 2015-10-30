@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de" sourcelanguage="en_US">
 <context>
+    <name>AddressBarMenu</name>
+    <message>
+        <source>Computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -454,6 +461,10 @@
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Translation status: OK!</source>
+        <translation type="unfinished">Übersetzungsstatus: OK!</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -576,10 +587,6 @@
     <message>
         <source>Shuffle</source>
         <translation>Mischen</translation>
-    </message>
-    <message>
-        <source>Make buttons flat</source>
-        <translation>Schaltflächen flach darstellen</translation>
     </message>
     <message>
         <source>Would you like to alternate colors in playlists?</source>
@@ -725,6 +732,18 @@
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library (tree)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unique Library (list)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -853,94 +872,6 @@
     <message>
         <source>Send &quot;%1&quot; to the tag editor</source>
         <translation>&quot;%1&quot; zum Tag Editor schicken</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemDelegate</name>
-    <message>
-        <source>(empty)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemModel</name>
-    <message>
-        <source>  Artists \ Albums</source>
-        <translation type="unfinished">  Interpreten \ Alben</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation type="unfinished">  Alben</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation type="unfinished">  Interpreten - Alben</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation type="unfinished">  Jahre</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation type="unfinished">Verschiedene</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryOrderDialog</name>
-    <message>
-        <source>Select how to display your library</source>
-        <translation>Wählen Sie, wie die Bibliothek dargestellt werden soll</translation>
-    </message>
-    <message>
-        <source>Artists \ Albums</source>
-        <translation>Interpreten \ Alben</translation>
-    </message>
-    <message>
-        <source>Albums</source>
-        <translation>Alben</translation>
-    </message>
-    <message>
-        <source>Artists – Albums</source>
-        <translation>Interpreten - Alben</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Jahre</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation>Album</translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation>Interpret - Album</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation>Jahr</translation>
-    </message>
-    <message>
-        <source>Artist \ Album</source>
-        <translation>Interpret \ Album</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="unfinished">Interpret</translation>
-    </message>
-    <message>
-        <source>track</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LibraryTreeView</name>
-    <message>
-        <source>Send to the current playlist</source>
-        <translation>Zur aktuellen Wiedergabeliste schicken</translation>
-    </message>
-    <message>
-        <source>Send to the tag editor</source>
-        <translation>Zum Tag Editor schicken</translation>
     </message>
 </context>
 <context>
@@ -1157,14 +1088,6 @@
         <translation>Unique Library-Modus</translation>
     </message>
     <message>
-        <source>&amp;Hide menus</source>
-        <translation>Menüs verstecken</translation>
-    </message>
-    <message>
-        <source>&amp;Make the player borderless</source>
-        <translation>Rand der Anwendung entfernen</translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation>Interpret \ Album</translation>
     </message>
@@ -1207,14 +1130,6 @@
     <message>
         <source>Choose a folder to open</source>
         <translation>Ordner zum Öffnen auswählen</translation>
-    </message>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>Es sind mehr als 300 Dateien zum Hinzufügen zu %1 (%2 ausstehend).</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>Möchten Sie fortfahren? Dies kann einige Zeit in Anspruch nehmen.</translation>
     </message>
     <message>
         <source>playlist</source>
@@ -1286,6 +1201,10 @@
     </message>
     <message>
         <source>Show Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1447,12 +1366,23 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
 <context>
     <name>PluginManager</name>
     <message>
-        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
-        <translation>Sie haben sich entschieden, dieses Plugin zu deaktivieren, wodurch Sie keinen Zugang zu dieser Konfigurationsseite haben.</translation>
-    </message>
-    <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Ein Plugin wurde gefunden, konnte jedoch nicht geladen werden (Datei %1)</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Warnung</translation>
+    </message>
+    <message>
+        <source>Some plugins were found but the player was unable to load them.
+
+The API has changed and you need to update these plugins too!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incompatible plugins:
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1460,13 +1390,6 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
     <message>
         <source>Command line helper for Miam-Player</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Unknown</source>
-        <translation type="unfinished">Unbekannt</translation>
     </message>
 </context>
 <context>
@@ -1743,17 +1666,6 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
     <message>
         <source>More tracks were not found.</source>
         <translation>Weitere Musiktitel wurden nicht gefunden.</translation>
-    </message>
-</context>
-<context>
-    <name>TreeView</name>
-    <message>
-        <source>tag editor</source>
-        <translation>Tag Editor</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>Wiedergabeliste</translation>
     </message>
 </context>
 </TS>

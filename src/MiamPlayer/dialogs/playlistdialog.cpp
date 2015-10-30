@@ -17,9 +17,10 @@
 
 #include <QtDebug>
 
-PlaylistDialog::PlaylistDialog(QWidget *parent) :
-	QDialog(parent, Qt::Tool),
-	_unsavedPlaylistModel(new QStandardItemModel(this)), _savedPlaylistModel(new QStandardItemModel(this))
+PlaylistDialog::PlaylistDialog(QWidget *parent)
+	: QDialog(parent, Qt::Tool)
+	, _unsavedPlaylistModel(new QStandardItemModel(this))
+	, _savedPlaylistModel(new QStandardItemModel(this))
 {
 	setupUi(this);
 	this->setAttribute(Qt::WA_DeleteOnClose);
@@ -124,7 +125,7 @@ bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)
 	} else {
 
 		if (obj == this && event->type() == QEvent::Close) {
-			SettingsPrivate::instance()->setValue("PlaylistManagerGeometry", this->saveGeometry());
+			SettingsPrivate::instance()->setValue("PlaylistDialogGeometry", this->saveGeometry());
 		}
 
 		// standard event processing
@@ -157,8 +158,8 @@ QString PlaylistDialog::convertNameToValidFileName(QString &name)
 void PlaylistDialog::open()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	if (settings->value("PlaylistManagerGeometry").isValid()) {
-		this->restoreGeometry(settings->value("PlaylistManagerGeometry").toByteArray());
+	if (settings->value("PlaylistDialogGeometry").isValid()) {
+		this->restoreGeometry(settings->value("PlaylistDialogGeometry").toByteArray());
 	}
 	this->clearPreview(false);
 
@@ -223,14 +224,15 @@ void PlaylistDialog::exportSelectedPlaylist()
 	if (indexes.isEmpty()) {
 		return;
 	}
-	QModelIndex index = indexes.first();
-	QStandardItem *item = _savedPlaylistModel->itemFromIndex(index);
-	/// FIXME
-	//QString pPath = item->data(PlaylistPath).toString();
-	QString pName = item->data(Qt::DisplayRole).toString();
+
+	QStandardItem *item = _savedPlaylistModel->itemFromIndex(indexes.first());
+	uint playlistId = item->data(PlaylistID).toUInt();
+	auto db = SqlDatabase::instance();
+	PlaylistDAO dao = db->selectPlaylist(playlistId);
+	QString title = this->convertNameToValidFileName(dao.title());
 
 	// Open a file dialog and ask the user to choose a location
-	QString newName = QFileDialog::getSaveFileName(this, tr("Export playlist"), exportedPlaylistLocation + QDir::separator() + pName, tr("Playlist (*.m3u8)"));
+	QString newName = QFileDialog::getSaveFileName(this, tr("Export playlist"), exportedPlaylistLocation + QDir::separator() + title, tr("Playlist (*.m3u8)"));
 	if (QFile::exists(newName)) {
 		QFile removePreviousOne(newName);
 		if (!removePreviousOne.remove()) {
@@ -239,6 +241,17 @@ void PlaylistDialog::exportSelectedPlaylist()
 	}
 	if (newName.isEmpty()) {
 		return;
+	} else {
+		QFile f(newName);
+		if (f.open(QIODevice::ReadWrite | QIODevice::Text)) {
+			QTextStream stream(&f);
+			QList<TrackDAO> tracks = db->selectPlaylistTracks(playlistId);
+			for (TrackDAO t : tracks) {
+				stream << t.uri();
+				endl(stream);
+			}
+		}
+		f.close();
 	}
 }
 

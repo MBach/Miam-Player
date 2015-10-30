@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="cs_CZ" sourcelanguage="en_US">
 <context>
+    <name>AddressBarMenu</name>
+    <message>
+        <source>Computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -454,6 +461,10 @@
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation>Poznámka: Neuložené seznamy skladeb budou uloženy automaticky, změněné budou přepsány.</translation>
     </message>
+    <message>
+        <source>Translation status: OK!</source>
+        <translation type="unfinished">Stav překladu: OK!</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -576,10 +587,6 @@
     <message>
         <source>Shuffle</source>
         <translation>Zamíchat</translation>
-    </message>
-    <message>
-        <source>Make buttons flat</source>
-        <translation>Udělat tlačítka rovná</translation>
     </message>
     <message>
         <source>Would you like to alternate colors in playlists?</source>
@@ -725,6 +732,18 @@
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation>Zobrazit obrys hvězdičky, pokud skladba ještě nebyla hodnocena</translation>
     </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library (tree)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unique Library (list)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -853,94 +872,6 @@
     <message>
         <source>Send &quot;%1&quot; to the tag editor</source>
         <translation>Poslat &quot;%1&quot; do editoru značek</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemDelegate</name>
-    <message>
-        <source>(empty)</source>
-        <translation>(prázdné)</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemModel</name>
-    <message>
-        <source>  Artists \ Albums</source>
-        <translation>  Umělci/Alba</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation>  Alba</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation>  Umělci – Alba</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation>  Roky</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation>Různé</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryOrderDialog</name>
-    <message>
-        <source>Select how to display your library</source>
-        <translation>Vyberte, jak má být zobrazována knihovna</translation>
-    </message>
-    <message>
-        <source>Artists \ Albums</source>
-        <translation>Umělci / Alba</translation>
-    </message>
-    <message>
-        <source>Albums</source>
-        <translation>Alba</translation>
-    </message>
-    <message>
-        <source>Artists – Albums</source>
-        <translation>Umělci - Alba</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Roky</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation>Album</translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation>Umělci – Alba</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation>Rok</translation>
-    </message>
-    <message>
-        <source>Artist \ Album</source>
-        <translation>Umělci / Alba</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation>Umělec</translation>
-    </message>
-    <message>
-        <source>track</source>
-        <translation>Skladba</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryTreeView</name>
-    <message>
-        <source>Send to the current playlist</source>
-        <translation>Poslat do nynějšího seznamu skladeb</translation>
-    </message>
-    <message>
-        <source>Send to the tag editor</source>
-        <translation>Poslat do editoru značek</translation>
     </message>
 </context>
 <context>
@@ -1160,14 +1091,6 @@
         <translation>Režim jedinečné knihovny</translation>
     </message>
     <message>
-        <source>&amp;Hide menus</source>
-        <translation>&amp;Skrýt nabídky</translation>
-    </message>
-    <message>
-        <source>&amp;Make the player borderless</source>
-        <translation>&amp;Udělat přehrávač bez okrajů</translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation>Umělci / Alba</translation>
     </message>
@@ -1210,14 +1133,6 @@
     <message>
         <source>Choose a folder to open</source>
         <translation>Vyberte složku k otevření</translation>
-    </message>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>Více než tři sta souborů k přidání do %1 (%2 k přidání).</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>Jste si jistý, že chcete pokračovat? Může to chvíli trvat.</translation>
     </message>
     <message>
         <source>playlist</source>
@@ -1289,6 +1204,10 @@
     </message>
     <message>
         <source>Show Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1450,12 +1369,23 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
 <context>
     <name>PluginManager</name>
     <message>
-        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
-        <translation>Zvolil jste zákaz tohoto přídavného modulu. Z tohoto důvodu právě teď nemůžete přistupovat ke stránce s jeho nastavením.</translation>
-    </message>
-    <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Byl nalezen přídavný modul, ale přehrávač nebyl schopen jej nahrát (soubor %1)</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished">Varování</translation>
+    </message>
+    <message>
+        <source>Some plugins were found but the player was unable to load them.
+
+The API has changed and you need to update these plugins too!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incompatible plugins:
+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1463,13 +1393,6 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <message>
         <source>Command line helper for Miam-Player</source>
         <translation>Pomocník s příkazovým řádkem pro Miam Player</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Unknown</source>
-        <translation>Neznámý</translation>
     </message>
 </context>
 <context>
@@ -1748,17 +1671,6 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <message>
         <source>More tracks were not found.</source>
         <translation>Více skladeb nebylo nalezeno.</translation>
-    </message>
-</context>
-<context>
-    <name>TreeView</name>
-    <message>
-        <source>tag editor</source>
-        <translation>Editor značek</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>Seznam skladeb</translation>
     </message>
 </context>
 </TS>

@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
+    <name>AddressBarMenu</name>
+    <message>
+        <source>Computer</source>
+        <translation>Ordinateur</translation>
+    </message>
+</context>
+<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -454,6 +461,10 @@
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation>Note : les nouvelles listes de lecture seront enregistées et celles modifiées seront automatiquement remplacées.</translation>
     </message>
+    <message>
+        <source>Translation status: OK!</source>
+        <translation>Statut de la traduction : OK !</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -576,10 +587,6 @@
     <message>
         <source>Shuffle</source>
         <translation>Aléatoire</translation>
-    </message>
-    <message>
-        <source>Make buttons flat</source>
-        <translation>Rendre les boutons plats</translation>
     </message>
     <message>
         <source>Would you like to alternate colors in playlists?</source>
@@ -725,6 +732,18 @@
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation>Afficher le contour des étoiles s&apos;il n&apos;y a pas encore de note pour une piste</translation>
     </message>
+    <message>
+        <source>Text</source>
+        <translation>Texte</translation>
+    </message>
+    <message>
+        <source>Library (tree)</source>
+        <translation>Bibliothèque (arborescence)</translation>
+    </message>
+    <message>
+        <source>Unique Library (list)</source>
+        <translation>Bibliothèque Unique (liste)</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -853,94 +872,6 @@
     <message>
         <source>Send &quot;%1&quot; to the tag editor</source>
         <translation>Envoyer &quot;%1&quot; à l&apos;éditeur de tags</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemDelegate</name>
-    <message>
-        <source>(empty)</source>
-        <translation>(vide)</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemModel</name>
-    <message>
-        <source>  Artists \ Albums</source>
-        <translation>  Artistes \ Albums</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation>  Albums</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation>  Artistes – Albums</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation>  Année</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation>Divers</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryOrderDialog</name>
-    <message>
-        <source>Select how to display your library</source>
-        <translation>Sélectionnez l&apos;ordre d&apos;affichage de votre bibliothèque</translation>
-    </message>
-    <message>
-        <source>Artists \ Albums</source>
-        <translation>Artistes \ Albums</translation>
-    </message>
-    <message>
-        <source>Albums</source>
-        <translation>Albums</translation>
-    </message>
-    <message>
-        <source>Artists – Albums</source>
-        <translation>Artistes – Albums</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Année</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation>Album</translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation>Artiste – Album</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation>Année</translation>
-    </message>
-    <message>
-        <source>Artist \ Album</source>
-        <translation>Artiste \ Album</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation>Artiste</translation>
-    </message>
-    <message>
-        <source>track</source>
-        <translation>piste</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryTreeView</name>
-    <message>
-        <source>Send to the current playlist</source>
-        <translation>Envoyer à la liste de lecture courante</translation>
-    </message>
-    <message>
-        <source>Send to the tag editor</source>
-        <translation>Envoyer à l&apos;éditeur de tags</translation>
     </message>
 </context>
 <context>
@@ -1157,14 +1088,6 @@
         <translation>Type Bibliothèque Unique</translation>
     </message>
     <message>
-        <source>&amp;Hide menus</source>
-        <translation>&amp;Cacher la barre de menus</translation>
-    </message>
-    <message>
-        <source>&amp;Make the player borderless</source>
-        <translation>&amp;Enlever les bords de la fenêtre</translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation>Artiste \ Album</translation>
     </message>
@@ -1207,14 +1130,6 @@
     <message>
         <source>Choose a folder to open</source>
         <translation>Choisissez un dossier à ouvrir</translation>
-    </message>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>Il y a plus de 300 fichiers à ajouter à %1 (%2 à ajouter).</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>Êtes-vous sûr de vouloir continuer ? Cela risque de prendre un peu de temps.</translation>
     </message>
     <message>
         <source>playlist</source>
@@ -1287,6 +1202,10 @@
     <message>
         <source>Show Equalizer</source>
         <translation>Afficher l&apos;egaliseur</translation>
+    </message>
+    <message>
+        <source>Hide menu bar</source>
+        <translation>Masquer le menu</translation>
     </message>
 </context>
 <context>
@@ -1446,12 +1365,26 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
 <context>
     <name>PluginManager</name>
     <message>
-        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
-        <translation>Vous avez choisi de désactiver cette extension. Par conséquent, vous ne pouvez accéder à sa page de configuration pour le moment.</translation>
-    </message>
-    <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Une extension a été trouvée mais le lecteur n&apos;a pu la charger (fichier %1)</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <source>Some plugins were found but the player was unable to load them.
+
+The API has changed and you need to update these plugins too!</source>
+        <translation>Des extensions ont été trouvées mais le lecteur n&apos;a pu les charger.
+
+L&apos;API a changé et vous devez mettre à jour ces extensions également !</translation>
+    </message>
+    <message>
+        <source>Incompatible plugins:
+</source>
+        <translation>Extensions incompatibles :
+</translation>
     </message>
 </context>
 <context>
@@ -1459,13 +1392,6 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>Command line helper for Miam-Player</source>
         <translation>Aide pour utiliser Miam-Player en ligne de commande</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Unknown</source>
-        <translation>Inconnu</translation>
     </message>
 </context>
 <context>
@@ -1742,17 +1668,6 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <source>More tracks were not found.</source>
         <translation>D&apos;autres pistes n&apos;ont pu être trouvées.</translation>
-    </message>
-</context>
-<context>
-    <name>TreeView</name>
-    <message>
-        <source>tag editor</source>
-        <translation>l&apos;éditeur de tags</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>la liste de lecture</translation>
     </message>
 </context>
 </TS>

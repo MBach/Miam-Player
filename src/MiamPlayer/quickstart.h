@@ -36,9 +36,9 @@ private:
 public:
 	explicit QuickStart(MainWindow *mainWindow);
 
-	void searchMultimediaFiles();
-
 	virtual bool eventFilter(QObject *, QEvent *e) override;
+
+	void searchMultimediaFiles();
 
 protected:
 	virtual void paintEvent(QPaintEvent *) override;

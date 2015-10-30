@@ -1363,7 +1363,7 @@
                <bool>false</bool>
               </property>
               <property name="text">
-               <string/>
+               <string notr="true"/>
               </property>
               <property name="icon">
                <iconset resource="mp.qrc">
@@ -2440,9 +2440,9 @@
   </connection>
  </connections>
  <buttongroups>
+  <buttongroup name="buttonGroupReorderArtists"/>
+  <buttongroup name="buttonGroupArtistsArticle"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
-  <buttongroup name="buttonGroupArtistsArticle"/>
-  <buttongroup name="buttonGroupReorderArtists"/>
  </buttongroups>
 </ui>

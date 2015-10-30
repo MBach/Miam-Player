@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="es" sourcelanguage="en_US">
 <context>
+    <name>AddressBarMenu</name>
+    <message>
+        <source>Computer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -454,6 +461,10 @@
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Translation status: OK!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -575,10 +586,6 @@
     </message>
     <message>
         <source>Shuffle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Make buttons flat</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -725,6 +732,18 @@
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Library (tree)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unique Library (list)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -852,94 +871,6 @@
     </message>
     <message>
         <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemDelegate</name>
-    <message>
-        <source>(empty)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemModel</name>
-    <message>
-        <source>  Artists \ Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LibraryOrderDialog</name>
-    <message>
-        <source>Select how to display your library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artists \ Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artists – Albums</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artist \ Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>track</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>LibraryTreeView</name>
-    <message>
-        <source>Send to the current playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Send to the tag editor</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1157,14 +1088,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Hide menus</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Make the player borderless</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1206,14 +1129,6 @@
     </message>
     <message>
         <source>Choose a folder to open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1286,6 +1201,10 @@
     </message>
     <message>
         <source>Show Equalizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1444,11 +1363,22 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PluginManager</name>
     <message>
-        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
+        <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>A plugin was found but was the player was unable to load it (file %1)</source>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some plugins were found but the player was unable to load them.
+
+The API has changed and you need to update these plugins too!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incompatible plugins:
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1456,13 +1386,6 @@ Select a playlist to display the first 30 tracks.</source>
     <name>QCoreApplication</name>
     <message>
         <source>Command line helper for Miam-Player</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Unknown</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1739,17 +1662,6 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>More tracks were not found.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TreeView</name>
-    <message>
-        <source>tag editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>playlist</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -33,6 +33,8 @@ protected:
 	virtual void mouseReleaseEvent(QMouseEvent *) override;
 
 	virtual void paintEvent(QPaintEvent *) override;
+
+	virtual void wheelEvent(QWheelEvent *e) override;
 };
 
 

@@ -226,7 +226,7 @@ void MediaPlayer::seekBackward()
 		if (time < 0 || duration == 0) {
 			this->seek(0.0);
 		} else {
-			this->seek(time / duration);
+			this->seek(time / (qreal)duration);
 		}
 	}
 }

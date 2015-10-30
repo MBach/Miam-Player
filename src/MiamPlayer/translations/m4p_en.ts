@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US" sourcelanguage="en_US">
 <context>
+    <name>AddressBarMenu</name>
+    <message>
+        <source>Computer</source>
+        <translation>Computer</translation>
+    </message>
+</context>
+<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -454,6 +461,10 @@
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</translation>
     </message>
+    <message>
+        <source>Translation status: OK!</source>
+        <translation>Translation status: OK!</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -576,10 +587,6 @@
     <message>
         <source>Shuffle</source>
         <translation>Shuffle</translation>
-    </message>
-    <message>
-        <source>Make buttons flat</source>
-        <translation>Make buttons flat</translation>
     </message>
     <message>
         <source>Would you like to alternate colors in playlists?</source>
@@ -725,6 +732,18 @@
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation>Display star outline if there&apos;s no rating yet for a track</translation>
     </message>
+    <message>
+        <source>Text</source>
+        <translation>Text</translation>
+    </message>
+    <message>
+        <source>Library (tree)</source>
+        <translation>Library (tree)</translation>
+    </message>
+    <message>
+        <source>Unique Library (list)</source>
+        <translation>Unique Library (list)</translation>
+    </message>
 </context>
 <context>
     <name>DragDropDialog</name>
@@ -853,94 +872,6 @@
     <message>
         <source>Send &quot;%1&quot; to the tag editor</source>
         <translation>Send &quot;%1&quot; to the tag editor</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemDelegate</name>
-    <message>
-        <source>(empty)</source>
-        <translation>(empty)</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryItemModel</name>
-    <message>
-        <source>  Artists \ Albums</source>
-        <translation>  Artists \ Albums</translation>
-    </message>
-    <message>
-        <source>  Albums</source>
-        <translation>  Albums</translation>
-    </message>
-    <message>
-        <source>  Artists – Albums</source>
-        <translation>  Artists – Albums</translation>
-    </message>
-    <message>
-        <source>  Years</source>
-        <translation>  Years</translation>
-    </message>
-    <message>
-        <source>Various</source>
-        <translation>Various</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryOrderDialog</name>
-    <message>
-        <source>Select how to display your library</source>
-        <translation>Select how to display your library</translation>
-    </message>
-    <message>
-        <source>Artists \ Albums</source>
-        <translation>Artists \ Albums</translation>
-    </message>
-    <message>
-        <source>Albums</source>
-        <translation>Albums</translation>
-    </message>
-    <message>
-        <source>Artists – Albums</source>
-        <translation>Artists – Albums</translation>
-    </message>
-    <message>
-        <source>Years</source>
-        <translation>Years</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation>Album</translation>
-    </message>
-    <message>
-        <source>Artist – Album</source>
-        <translation>Artist – Album</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation>Year</translation>
-    </message>
-    <message>
-        <source>Artist \ Album</source>
-        <translation>Artist \ Album</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation>Artist</translation>
-    </message>
-    <message>
-        <source>track</source>
-        <translation>track</translation>
-    </message>
-</context>
-<context>
-    <name>LibraryTreeView</name>
-    <message>
-        <source>Send to the current playlist</source>
-        <translation>Send to the current playlist</translation>
-    </message>
-    <message>
-        <source>Send to the tag editor</source>
-        <translation>Send to the tag editor</translation>
     </message>
 </context>
 <context>
@@ -1157,14 +1088,6 @@
         <translation>Unique library Mode</translation>
     </message>
     <message>
-        <source>&amp;Hide menus</source>
-        <translation>&amp;Hide menus</translation>
-    </message>
-    <message>
-        <source>&amp;Make the player borderless</source>
-        <translation>&amp;Make the player borderless</translation>
-    </message>
-    <message>
         <source>Artist \ Album</source>
         <translation>Artist \ Album</translation>
     </message>
@@ -1207,14 +1130,6 @@
     <message>
         <source>Choose a folder to open</source>
         <translation>Choose a folder to open</translation>
-    </message>
-    <message>
-        <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>There are more than 300 files to add to the %1 (%2 to add).</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>Are you sure you want to continue? This might take some time.</translation>
     </message>
     <message>
         <source>playlist</source>
@@ -1287,6 +1202,10 @@
     <message>
         <source>Show Equalizer</source>
         <translation>Show Equalizer</translation>
+    </message>
+    <message>
+        <source>Hide menu bar</source>
+        <translation>Hide menu bar</translation>
     </message>
 </context>
 <context>
@@ -1447,12 +1366,26 @@ Select a playlist to display the first 30 tracks.</translation>
 <context>
     <name>PluginManager</name>
     <message>
-        <source>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</source>
-        <translation>You have chosen to disable this plugin, therefore you cannot access to its configuration page right now.</translation>
-    </message>
-    <message>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>A plugin was found but was the player was unable to load it (file %1)</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <source>Some plugins were found but the player was unable to load them.
+
+The API has changed and you need to update these plugins too!</source>
+        <translation>Some plugins were found but the player was unable to load them.
+
+The API has changed and you need to update these plugins too!</translation>
+    </message>
+    <message>
+        <source>Incompatible plugins:
+</source>
+        <translation>Incompatible plugins:
+</translation>
     </message>
 </context>
 <context>
@@ -1460,13 +1393,6 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>Command line helper for Miam-Player</source>
         <translation>Command line helper for Miam-Player</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>Unknown</source>
-        <translation>Unknown</translation>
     </message>
 </context>
 <context>
@@ -1743,17 +1669,6 @@ Select a playlist to display the first 30 tracks.</translation>
     <message>
         <source>More tracks were not found.</source>
         <translation>More tracks were not found.</translation>
-    </message>
-</context>
-<context>
-    <name>TreeView</name>
-    <message>
-        <source>tag editor</source>
-        <translation>tag editor</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>playlist</translation>
     </message>
 </context>
 </TS>

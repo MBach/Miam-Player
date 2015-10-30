@@ -153,6 +153,10 @@ void SeekBar::paintEvent(QPaintEvent *)
 	// Exclude ErrorState from painting
 	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
 
+		// Remove enabled state (bitwise operator)
+		if (_mediaPlayer->state() == QMediaPlayer::PausedState) {
+			o.state &= ~QStyle::State_Enabled;
+		}
 		QLinearGradient linearGradient = this->interpolatedLinearGradient(pp.boundingRect(), o);
 
 		p.setRenderHint(QPainter::Antialiasing, true);
@@ -174,4 +178,15 @@ void SeekBar::paintEvent(QPaintEvent *)
 		p.drawEllipse(center, height() * 0.3, height() * 0.3);
 		p.restore();
 	}
+}
+
+void SeekBar::wheelEvent(QWheelEvent *e)
+{
+	_mediaPlayer->setMute(true);
+	if (e->angleDelta().y() > 0) {
+		_mediaPlayer->seekForward();
+	} else {
+		_mediaPlayer->seekBackward();
+	}
+	_mediaPlayer->setMute(false);
 }
