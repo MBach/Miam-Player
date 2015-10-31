@@ -11,7 +11,10 @@
  */
 class MIAMCORE_LIBRARY MediaPlayerPlugin : public BasicPlugin
 {
+	Q_OBJECT
 public:
+	MediaPlayerPlugin(QObject *parent = nullptr) : BasicPlugin(parent) {}
+
 	virtual ~MediaPlayerPlugin() {}
 
 	virtual QWidget* providesView() = 0;

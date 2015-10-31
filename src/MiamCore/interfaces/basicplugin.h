@@ -13,10 +13,13 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMCORE_LIBRARY BasicPlugin
+class MIAMCORE_LIBRARY BasicPlugin : public QObject
 {
+	Q_OBJECT
 public:
 	QTranslator translator;
+
+	BasicPlugin(QObject *parent = nullptr) : QObject(parent) {}
 
 	/** Default desctructor. */
 	virtual ~BasicPlugin() {}

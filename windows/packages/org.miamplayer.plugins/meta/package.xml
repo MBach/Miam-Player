@@ -8,5 +8,5 @@
 	<ReleaseDate>2015-10-14</ReleaseDate>
 	<Name>org.miamplayer.plugins</Name>
 	<Default>true</Default>
-	<SortingPriority>99</SortingPriority>
+	<SortingPriority>98</SortingPriority>
 </Package>

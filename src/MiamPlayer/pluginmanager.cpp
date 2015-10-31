@@ -92,6 +92,7 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 	QObject *plugin = pluginLoader.instance();
 	if (plugin) {
 		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
+		basic->setParent(this);
 		SettingsPrivate *settings = SettingsPrivate::instance();
 		if (basic) {
 			PluginInfo pluginInfo;
@@ -115,6 +116,7 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 			return false;
 		}
 
+		basic->init();
 		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
 		} else if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
@@ -124,7 +126,6 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
 			this->loadTagEditorPlugin(tagEditorPlugin);
 		}
-		basic->init();
 	}
 	return plugin != nullptr;
 }

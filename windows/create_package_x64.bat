@@ -1,7 +1,7 @@
 @echo off
 
 rem core
-set MiamPlayerBuild="C:\dev\Miam-Player-build\qt5.5.1"
+set MiamPlayerBuild="C:\dev\Miam-Player-build\qt5.6.0"
 mkdir packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamLibrary\release\MiamLibrary.dll packages\org.miamplayer.core\data\
@@ -13,7 +13,7 @@ set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
 copy %MiamPlayerLibs%\*.dll packages\org.miamplayer.core\data\
 
 rem qt libraries
-set QTDIR="C:\Qt\Qt5.5.1\5.5\msvc2013_64"
+set QTDIR="C:\Qt\Qt5.6.0\5.6\msvc2015_64"
 echo f | xcopy %QTDIR%\plugins\bearer\qgenericbearer.dll packages\org.miamplayer.core\data\bearer\qgenericbearer.dll /y/s
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\qtmedia_audioengine.dll packages\org.miamplayer.core\data\mediaservice\qtmedia_audioengine.dll /y/s
@@ -68,15 +68,15 @@ xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.
 
 rem Deezer talks to the Internet with QtWebKit
 xcopy %DeezerPluginBuild%\deezer-plugin.dll packages\org.miamplayer.plugins.deezer\data\plugins\ /y/e
-copy %QTDIR%\bin\Qt5WebKit.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebKit.dll
-copy %QTDIR%\bin\Qt5WebKitWidgets.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebKitWidgets.dll
+copy %QTDIR%\bin\Qt5WebEngine.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngine.dll
+copy %QTDIR%\bin\Qt5WebEngineCore.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngineCore.dll
 
 rem WebKit has a lot of dependencies!
-copy %QTDIR%\bin\Qt5Positioning.dll packages\org.miamplayer.plugins.deezer\data\Qt5Positioning.dll
-copy %QTDIR%\bin\Qt5PrintSupport.dll packages\org.miamplayer.plugins.deezer\data\Qt5PrintSupport.dll
+rem copy %QTDIR%\bin\Qt5Positioning.dll packages\org.miamplayer.plugins.deezer\data\Qt5Positioning.dll
+rem copy %QTDIR%\bin\Qt5PrintSupport.dll packages\org.miamplayer.plugins.deezer\data\Qt5PrintSupport.dll
 copy %QTDIR%\bin\Qt5Qml.dll packages\org.miamplayer.plugins.deezer\data\Qt5Qml.dll
 copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.plugins.deezer\data\Qt5Quick.dll
-copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.plugins.deezer\data\Qt5Sensors.dll
+rem copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.plugins.deezer\data\Qt5Sensors.dll
 copy %QTDIR%\bin\Qt5WebChannel.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebChannel.dll
 
 rem create only repository
