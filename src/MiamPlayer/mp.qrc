@@ -122,6 +122,7 @@
         <file alias="en">translations/m4p_en.qm</file>
         <file alias="fr">translations/m4p_fr.qm</file>
         <file alias="ru">translations/m4p_ru.qm</file>
+        <file alias="zh">translations/m4p_zh.qm</file>
     </qresource>
     <qresource prefix="/debug">
         <file alias="warning">config/icons/warning.png</file>
