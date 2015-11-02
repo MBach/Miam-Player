@@ -17,7 +17,10 @@ class AbstractSearchDialog;
  */
 class MIAMCORE_LIBRARY RemoteMediaPlayerPlugin : public BasicPlugin
 {
+	Q_OBJECT
 public:
+	explicit RemoteMediaPlayerPlugin(QObject *parent = nullptr) : BasicPlugin(parent) {}
+
 	virtual ~RemoteMediaPlayerPlugin() {}
 
 	virtual void setSearchDialog(AbstractSearchDialog *dialog) = 0;

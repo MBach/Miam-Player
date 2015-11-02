@@ -9,8 +9,10 @@
 
 #include <QtDebug>
 
-AddressBarMenu::AddressBarMenu(AddressBar *addressBar) :
-	QListWidget(addressBar), _addressBar(addressBar), _hasSeparator(false)
+AddressBarMenu::AddressBarMenu(AddressBar *addressBar)
+	: QListWidget(addressBar)
+	, _addressBar(addressBar)
+	, _hasSeparator(false)
 {
 	this->installEventFilter(this);
 	this->setMouseTracking(true);

@@ -2,6 +2,7 @@
 #define ADDRESSBARLINEEDIT_H
 
 #include <QLineEdit>
+#include "addressbardirectorylist.h"
 
 /// Forward declaration
 class AddressBar;
@@ -14,8 +15,10 @@ class AddressBar;
  */
 class AddressBarLineEdit : public QLineEdit
 {
+	Q_OBJECT
 private:
 	AddressBar *_addressBar;
+	AddressBarDirectoryList *_directoryList;
 
 public:
 	AddressBarLineEdit(AddressBar *parent);
@@ -25,7 +28,8 @@ protected:
 
 	virtual void keyPressEvent(QKeyEvent *e) override;
 
-
+signals:
+	void aboutToReloadAddressBar(const QString &dirPath);
 };
 
 #endif // ADDRESSBARLINEEDIT_H

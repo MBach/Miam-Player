@@ -175,12 +175,9 @@ void AddressBar::clear()
 	}
 }
 
-#include <QMessageBox>
-
 /** Create a special root arrow button.*/
 void AddressBar::createRoot()
 {
-	qDebug() << Q_FUNC_INFO;
 	AddressBarButton *buttonArrow = new AddressBarButton(QDir("/"), this, true);
 	connect(buttonArrow, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showDrivesAndPreviousFolders);
 	connect(buttonArrow, &AddressBarButton::triggerLineEdit, this, &AddressBar::feedLineEdit);
@@ -210,9 +207,8 @@ void AddressBar::init(const QDir &initDir)
 	static const int arrowRectWidth = 15;
 	static const int margin = 5;
 
-	qDebug() << Q_FUNC_INFO << initDir;
 	_isDown = false;
-	_initDir = initDir;
+	_currentDir = initDir;
 
 	QDir dir(initDir);
 	QDir dirTmp(initDir);
@@ -280,25 +276,19 @@ void AddressBar::feedLineEdit()
 
 	_lineEdit = new AddressBarLineEdit(this);
 	_lineEdit->setGeometry(parentWidget()->rect());
-	_lineEdit->setText(QDir::toNativeSeparators(_initDir.absolutePath()));
+	_lineEdit->setText(QDir::toNativeSeparators(_currentDir.absolutePath()));
 	_hBoxLayout->addWidget(_lineEdit);
 	_lineEdit->setFocus();
-	/*connect(_lineEdit, &QLineEdit::editingFinished, this, [=]() {
-		QFileInfo f(_lineEdit->text());
-		if (f.isDir()) {
-			_hBoxLayout->removeWidget(_lineEdit);
-			delete _lineEdit;
-			this->createRoot();
-			this->init(f.absoluteFilePath());
+	connect(_lineEdit, &AddressBarLineEdit::aboutToReloadAddressBar, this, [=](const QString &dirPath) {
+		_hBoxLayout->removeWidget(_lineEdit);
+		delete _lineEdit;
+		this->createRoot();
+		if (dirPath.isEmpty()) {
+			this->init(_currentDir);
 		} else {
-			QMessageBox::critical(this, tr("Error"), QString(tr("Miam-Player cannot find « %1 ». Please check the name and retry.")).arg(_lineEdit->text()));
-			//_hBoxLayout->removeWidget(_lineEdit);
-			//delete _lineEdit;
-			//this->createRoot();
-			qDebug() << Q_FUNC_INFO << f.absolutePath() << f.absoluteDir();
-			//this->init(f.absoluteDir());
+			this->init(dirPath);
 		}
-	});*/
+	});
 }
 
 /** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */

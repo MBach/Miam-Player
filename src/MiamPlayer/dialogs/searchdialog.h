@@ -4,8 +4,6 @@
 #include "abstractsearchdialog.h"
 #include "ui_searchdialog.h"
 
-#include <QPropertyAnimation>
-
 /// Forward declaration
 class MainWindow;
 
@@ -20,11 +18,6 @@ class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 private:
 	MainWindow *_mainWindow;
 
-	/** Used to make this dialog transparent to have a nice fading effect. */
-	QPropertyAnimation *_animation;
-
-	/** Duration of the fading effect. */
-	QTimer *_timer;
 	QRect _oldRect;
 
 	QCheckBox *_checkBoxLibrary;
@@ -58,9 +51,6 @@ protected:
 	virtual void paintEvent(QPaintEvent *) override;
 
 private:
-	/// XXX: factorize code
-	void animate(qreal startValue, qreal stopValue);
-
 	/** Start search again more but fetch more results. */
 	void searchMoreResults();
 

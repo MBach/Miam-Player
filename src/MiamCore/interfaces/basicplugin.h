@@ -19,7 +19,7 @@ class MIAMCORE_LIBRARY BasicPlugin : public QObject
 public:
 	QTranslator translator;
 
-	BasicPlugin(QObject *parent = nullptr) : QObject(parent) {}
+	explicit BasicPlugin(QObject *parent = nullptr) : QObject(parent) {}
 
 	/** Default desctructor. */
 	virtual ~BasicPlugin() {}

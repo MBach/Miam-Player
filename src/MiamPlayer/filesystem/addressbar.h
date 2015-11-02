@@ -31,7 +31,7 @@ private:
 	AddressBarButton *_lastHighlightedButton;
 	AddressBarLineEdit *_lineEdit;
 	bool _isDown;
-	QDir _initDir;
+	QDir _currentDir;
 
 public:
 	explicit AddressBar(QWidget *parent = nullptr);
@@ -41,8 +41,11 @@ public:
 	/** Called by the popup menu when one is moving the mouse cursor. */
 	void findAndHighlightButton(const QPoint &p);
 
+	inline QDir currentDir() const { return _currentDir; }
+
 	inline bool isDown() const { return _isDown; }
 	inline void setDown(bool down) { _isDown = down; }
+
 	inline bool hasHiddenFolders() const { return !_hiddenFolders.isEmpty(); }
 
 protected:

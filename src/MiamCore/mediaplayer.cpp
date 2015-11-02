@@ -267,9 +267,9 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
-		if (_state != QMediaPlayer::StoppedState) {
-			this->stop();
-		}
+		//if (_state != QMediaPlayer::StoppedState) {
+		//	this->stop();
+		//}
 		return;
 	}
 	_state = QMediaPlayer::StoppedState;
@@ -288,7 +288,6 @@ void MediaPlayer::pause()
 	} else {
 		_localPlayer->pause();
 	}
-	qDebug() << Q_FUNC_INFO;
 	this->setState(QMediaPlayer::PausedState);
 }
 

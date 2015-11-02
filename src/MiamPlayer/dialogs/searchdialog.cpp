@@ -16,8 +16,11 @@
 #include <QtDebug>
 
 /** Constructor. */
-SearchDialog::SearchDialog(MainWindow *mainWindow) :
-	AbstractSearchDialog(mainWindow, Qt::Widget), _mainWindow(mainWindow), _isMaximized(false)
+SearchDialog::SearchDialog(MainWindow *mainWindow)
+	: AbstractSearchDialog(mainWindow, Qt::Widget)
+	, _mainWindow(mainWindow)
+	, _checkBoxLibrary(new QCheckBox(tr("Library"), this))
+	, _isMaximized(false)
 {
 	this->setupUi(this);
 	_artists->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -33,20 +36,8 @@ SearchDialog::SearchDialog(MainWindow *mainWindow) :
 		_hiddenItems.insert(list, QList<QStandardItem*>());
 	}
 
-	_checkBoxLibrary = new QCheckBox(tr("Library"), this);
 	_checkBoxLibrary->setChecked(true);
 	this->addSource(_checkBoxLibrary);
-
-	/// XXX: factorize this
-	// Animates this Dialog
-	_timer = new QTimer(this);
-	_timer->setInterval(3000);
-	_timer->setSingleShot(true);
-	_animation = new QPropertyAnimation(this, "windowOpacity");
-	_animation->setDuration(400);
-	_animation->setTargetObject(this);
-
-	this->setWindowOpacity(0.0);
 
 	connect(closeButton, &QPushButton::clicked, this, &SearchDialog::clear);
 	connect(labelSearchMore, &QLabel::linkActivated, this, &SearchDialog::searchLabelWasClicked);
@@ -169,14 +160,6 @@ void SearchDialog::aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks)
 	Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
 	p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
 	this->clear();
-}
-
-/// XXX: factorize code
-void SearchDialog::animate(qreal startValue, qreal stopValue)
-{
-	_animation->setStartValue(startValue);
-	_animation->setEndValue(stopValue);
-	_animation->start();
 }
 
 void SearchDialog::moveSearchDialog(int, int)

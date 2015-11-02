@@ -15,7 +15,10 @@
  */
 class MIAMCORE_LIBRARY TagEditorPlugin : public BasicPlugin
 {
+	Q_OBJECT
 public:
+	explicit TagEditorPlugin(QObject *parent = nullptr) : BasicPlugin(parent) {}
+
 	virtual ~TagEditorPlugin() {}
 
 	virtual void setSelectedTracksModel(SelectedTracksModel *selectedTracksModel) = 0;
