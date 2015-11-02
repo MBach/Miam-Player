@@ -89,7 +89,13 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 		_addressBar->setDown(true);
 		this->update();
 	} else if (_textRect.contains(event->pos())) {
-		_addressBar->init(_path);
+		if (_isAbsoluteRoot) {
+			qDebug() << Q_FUNC_INFO;
+			emit triggerLineEdit();
+			event->accept();
+		} else {
+			_addressBar->init(_path);
+		}
 	}
 }
 
@@ -138,7 +144,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		}
 	} else {
 		if (_atLeastOneSubDir) {
-			if (_textRect.contains(pos)) {
+			if (_textRect.contains(pos) && !_isAbsoluteRoot) {
 				p.setPen(palette.highlight().color());
 				p.setBrush(brush);
 				p.drawRect(_textRect);

@@ -7,9 +7,9 @@
 #include <QWidget>
 
 #include "addressbarbutton.h"
+#include "addressbarlineedit.h"
 #include "addressbarmenu.h"
 
-#include <QLineEdit>
 #include <QStack>
 
 /**
@@ -29,7 +29,9 @@ private:
 	AddressBarMenu *_menu;
 	QStack<QDir> _hiddenFolders;
 	AddressBarButton *_lastHighlightedButton;
+	AddressBarLineEdit *_lineEdit;
 	bool _isDown;
+	QDir _initDir;
 
 public:
 	explicit AddressBar(QWidget *parent = nullptr);
@@ -44,9 +46,11 @@ public:
 	inline bool hasHiddenFolders() const { return !_hiddenFolders.isEmpty(); }
 
 protected:
-	virtual void paintEvent(QPaintEvent *);
+	virtual void mousePressEvent(QMouseEvent *) override;
 
-	virtual void resizeEvent(QResizeEvent *event);
+	virtual void paintEvent(QPaintEvent *) override;
+
+	virtual void resizeEvent(QResizeEvent *event) override;
 
 private:
 	/** Delete subdirectories located after the arrow button. */
@@ -63,6 +67,8 @@ public slots:
 	void init(const QDir &initDir);
 
 private slots:
+	void feedLineEdit();
+
 	/** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */
 	void showDrivesAndPreviousFolders();
 

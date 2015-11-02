@@ -16,10 +16,10 @@ AddressBar::AddressBar(QWidget *parent)
 	, _menu(new AddressBarMenu(this))
 	, _lastHighlightedButton(nullptr)
 	, _isDown(false)
+	, _lineEdit(nullptr)
 {
 	_hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	_hBoxLayout->setSpacing(0);
-	_hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
 	this->setLayout(_hBoxLayout);
 
 	// Create a special button with a computer icon, and shows a menu where previous items are stacked
@@ -69,6 +69,12 @@ void AddressBar::findAndHighlightButton(const QPoint &p)
 			}
 		}
 	}
+}
+
+void AddressBar::mousePressEvent(QMouseEvent *)
+{
+	qDebug() << Q_FUNC_INFO;
+	this->feedLineEdit();
 }
 
 void AddressBar::paintEvent(QPaintEvent *)
@@ -152,6 +158,7 @@ void AddressBar::clear()
 		while (_hBoxLayout->count() > 2) {
 			QLayoutItem *item = _hBoxLayout->takeAt(1);
 			if (item != nullptr && item->widget() != nullptr) {
+				qDebug() << Q_FUNC_INFO << item->widget() << item->widget()->objectName();
 				delete item->widget();
 			}
 		}
@@ -168,12 +175,18 @@ void AddressBar::clear()
 	}
 }
 
+#include <QMessageBox>
+
 /** Create a special root arrow button.*/
 void AddressBar::createRoot()
 {
+	qDebug() << Q_FUNC_INFO;
 	AddressBarButton *buttonArrow = new AddressBarButton(QDir("/"), this, true);
 	connect(buttonArrow, &AddressBarButton::aboutToShowMenu, this, &AddressBar::showDrivesAndPreviousFolders);
-	_hBoxLayout->insertWidget(0, buttonArrow);
+	connect(buttonArrow, &AddressBarButton::triggerLineEdit, this, &AddressBar::feedLineEdit);
+	_hBoxLayout->addWidget(buttonArrow);
+	_hBoxLayout->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Fixed));
+
 }
 
 /** Append a button to the address bar to navigate through the filesystem. */
@@ -194,9 +207,12 @@ int AddressBar::createSubDirButtons(const QDir &path)
 /** Init with an absolute path. Also used as a callback to a view. */
 void AddressBar::init(const QDir &initDir)
 {
-	_isDown = false;
 	static const int arrowRectWidth = 15;
 	static const int margin = 5;
+
+	qDebug() << Q_FUNC_INFO << initDir;
+	_isDown = false;
+	_initDir = initDir;
 
 	QDir dir(initDir);
 	QDir dirTmp(initDir);
@@ -251,6 +267,38 @@ void AddressBar::init(const QDir &initDir)
 		_hiddenFolders.prepend(dir);
 	}
 	emit aboutToChangePath(dirTmp);
+}
+
+void AddressBar::feedLineEdit()
+{
+	// Delete all items in the layout first
+	QLayoutItem *item;
+	while ((item = _hBoxLayout->takeAt(0))) {
+		delete item->widget();
+		delete item;
+	}
+
+	_lineEdit = new AddressBarLineEdit(this);
+	_lineEdit->setGeometry(parentWidget()->rect());
+	_lineEdit->setText(QDir::toNativeSeparators(_initDir.absolutePath()));
+	_hBoxLayout->addWidget(_lineEdit);
+	_lineEdit->setFocus();
+	/*connect(_lineEdit, &QLineEdit::editingFinished, this, [=]() {
+		QFileInfo f(_lineEdit->text());
+		if (f.isDir()) {
+			_hBoxLayout->removeWidget(_lineEdit);
+			delete _lineEdit;
+			this->createRoot();
+			this->init(f.absoluteFilePath());
+		} else {
+			QMessageBox::critical(this, tr("Error"), QString(tr("Miam-Player cannot find « %1 ». Please check the name and retry.")).arg(_lineEdit->text()));
+			//_hBoxLayout->removeWidget(_lineEdit);
+			//delete _lineEdit;
+			//this->createRoot();
+			qDebug() << Q_FUNC_INFO << f.absolutePath() << f.absoluteDir();
+			//this->init(f.absoluteDir());
+		}
+	});*/
 }
 
 /** Show logical drives (on Windows) or root item (on Unix). Also, when the path is too long, first folders are sent to this submenu. */

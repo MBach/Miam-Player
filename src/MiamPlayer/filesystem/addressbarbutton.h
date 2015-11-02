@@ -40,16 +40,18 @@ public:
 
 protected:
 	/** Redefined. */
-	virtual void mouseMoveEvent(QMouseEvent *);
+	virtual void mouseMoveEvent(QMouseEvent *) override;
 
 	/** Redefined. */
-	virtual void mousePressEvent(QMouseEvent *);
+	virtual void mousePressEvent(QMouseEvent *) override;
 
 	/** Redefined. */
-	virtual void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 
 signals:
 	void aboutToShowMenu();
+
+	void triggerLineEdit();
 };
 
 #endif // ADDRESSBARBUTTON_H
