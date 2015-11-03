@@ -18,8 +18,6 @@ AddressBarDirectoryList::AddressBarDirectoryList(const QDir &dir, QWidget *paren
 	setMaximumHeight(qMin(count(), 16) * this->sizeHintForRow(0) + 4);
 	setMinimumWidth(parent->width() - 32);
 
-	this->setMouseTracking(true);
-	this->installEventFilter(this);
 	this->setFocusPolicy(Qt::ClickFocus);
 }
 
@@ -32,28 +30,13 @@ void AddressBarDirectoryList::cd(const QString &path)
 
 void AddressBarDirectoryList::cdUp(const QString &path)
 {
-	qDebug() << Q_FUNC_INFO;
 	_dir.cdUp();
 	this->filterItems(path);
 }
 
-bool AddressBarDirectoryList::eventFilter(QObject *obj, QEvent *e)
-{
-	//qDebug() << Q_FUNC_INFO << e->type();
-	if (e->type() == QEvent::MouseButtonPress) {
-		QCursor::pos();
-		if (this->rect().contains(mapFromGlobal(QCursor::pos()))) {
-			qDebug() << Q_FUNC_INFO << "click inside!";
-		} else {
-			qDebug() << Q_FUNC_INFO <<  "click outside: we should close this dialog";
-		}
-	}
-	return QListWidget::eventFilter(obj, e);
-}
-
 void AddressBarDirectoryList::filterItems(const QString &path)
 {
-	qDebug() << Q_FUNC_INFO << path;
+	//qDebug() << Q_FUNC_INFO << path;
 	QDir d(path);
 	if (_dir == d) {
 		this->clear();
@@ -68,13 +51,8 @@ void AddressBarDirectoryList::filterItems(const QString &path)
 		}
 		this->clear();
 		this->addItems(list);
+		this->setVisible(!list.isEmpty());
 	}
 	setMinimumHeight(qMin(count(), 16) * this->sizeHintForRow(0) + 4);
 	setMaximumHeight(qMin(count(), 16) * this->sizeHintForRow(0) + 4);
-}
-
-void AddressBarDirectoryList::focusOutEvent(QFocusEvent *event)
-{
-	qDebug() << Q_FUNC_INFO;
-	QListWidget::focusOutEvent(event);
 }

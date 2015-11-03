@@ -23,12 +23,7 @@ public:
 
 	void cdUp(const QString &path);
 
-	virtual bool eventFilter(QObject *, QEvent *e) override;
-
 	void filterItems(const QString &path);
-
-protected:
-	virtual void focusOutEvent(QFocusEvent *event) override;
 };
 
 #endif // ADDRESSBARDIRECTORYLIST_H

@@ -146,12 +146,12 @@ void PlaylistDialog::clearPreview(bool aboutToInsertItems)
 }
 
 /** Remove all special characters for Windows, Unix, OSX. */
-QString PlaylistDialog::convertNameToValidFileName(QString &name)
+QString PlaylistDialog::convertNameToValidFileName(const QString &name)
 {
 	/// XXX: should be improved?
 	static const QRegularExpression re("[/\\:*?\"<>|]");
-	name.replace(re, "_");
-	return name;
+	QString ret(name);
+	return ret.replace(re, "_");
 }
 
 /** Redefined: clean preview area, populate once again lists. */

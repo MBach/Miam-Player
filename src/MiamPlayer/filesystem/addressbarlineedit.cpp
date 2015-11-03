@@ -24,7 +24,12 @@ void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
 	if (_directoryList && _directoryList->hasFocus()) {
 		return;
 	}
-	emit aboutToReloadAddressBar(QString());
+	if (e->reason() != Qt::ActiveWindowFocusReason) {
+		if (_directoryList) {
+			_directoryList->deleteLater();
+		}
+		emit aboutToReloadAddressBar(QString());
+	}
 }
 
 void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)

@@ -49,7 +49,7 @@ private:
 	void clearPreview(bool aboutToInsertItems = true);
 
 	/** Remove all special characters for Windows, Unix, OSX. */
-	static QString convertNameToValidFileName(QString &name);
+	static QString convertNameToValidFileName(const QString &name);
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */

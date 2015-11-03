@@ -15,8 +15,8 @@ AddressBar::AddressBar(QWidget *parent)
 	, _hBoxLayout(new QHBoxLayout(this))
 	, _menu(new AddressBarMenu(this))
 	, _lastHighlightedButton(nullptr)
-	, _isDown(false)
 	, _lineEdit(nullptr)
+	, _isDown(false)
 {
 	_hBoxLayout->setContentsMargins(0, 0, 0, 0);
 	_hBoxLayout->setSpacing(0);
@@ -129,20 +129,22 @@ void AddressBar::resizeEvent(QResizeEvent *event)
 	} else { // One is reducing the address bar
 		if (avalaibleWidth() < 7) {
 			QLayoutItem *item = _hBoxLayout->itemAt(1);
-			AddressBarButton *button = qobject_cast<AddressBarButton*>(item->widget());
+			if (item && item->widget()) {
+				AddressBarButton *button = qobject_cast<AddressBarButton*>(item->widget());
 
-			// Root button, current button, and spacer item
-			if (_hBoxLayout->count() == 3) {
-				// Keep at least one button, and resize it to the minimum size
-				if (button->width() > 70) {
-					qDebug() << Q_FUNC_INFO << "we should reduce size" << button->minimumSizeHint();
-					int actualTextWidth = fontMetrics().width(button->text());
-					qDebug() << Q_FUNC_INFO << "text width" << actualTextWidth << button->text() << button->path();
-					button->setText(fontMetrics().elidedText(button->text(), Qt::ElideRight, actualTextWidth - 5));
+				// Root button, current button, and spacer item
+				if (_hBoxLayout->count() == 3) {
+					// Keep at least one button, and resize it to the minimum size
+					if (button->width() > 70) {
+						qDebug() << Q_FUNC_INFO << "we should reduce size" << button->minimumSizeHint();
+						int actualTextWidth = fontMetrics().width(button->text());
+						qDebug() << Q_FUNC_INFO << "text width" << actualTextWidth << button->text() << button->path();
+						button->setText(fontMetrics().elidedText(button->text(), Qt::ElideRight, actualTextWidth - 5));
+					}
+				} else {
+					_hiddenFolders.push(QDir(button->path()));
+					delete button;
 				}
-			} else {
-				_hiddenFolders.push(QDir(button->path()));
-				delete button;
 			}
 		}
 	}
@@ -158,7 +160,6 @@ void AddressBar::clear()
 		while (_hBoxLayout->count() > 2) {
 			QLayoutItem *item = _hBoxLayout->takeAt(1);
 			if (item != nullptr && item->widget() != nullptr) {
-				qDebug() << Q_FUNC_INFO << item->widget() << item->widget()->objectName();
 				delete item->widget();
 			}
 		}
@@ -395,5 +396,6 @@ void AddressBar::showSubDirMenu(AddressBarButton *button)
 			item->setFont(font);
 		}
 	}
+	_menu->sortItems();
 	_menu->moveOrHide(button);
 }

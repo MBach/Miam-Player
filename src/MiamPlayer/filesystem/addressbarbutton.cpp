@@ -38,10 +38,9 @@ AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent, bool
 	if (_atLeastOneSubDir) {
 		// Special root folders like "/" or "D:\" on Windows are empty
 		if (d.isRoot()) {
-			bool absRoot = true;
+			/// XXX?
 			for (QFileInfo fileInfo : QDir::drives()) {
 				if (fileInfo.absolutePath() == _path.absolutePath()) {
-					absRoot = false;
 					break;
 				}
 			}
