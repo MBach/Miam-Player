@@ -21,11 +21,10 @@ AddressBarLineEdit::AddressBarLineEdit(AddressBar *parent)
 void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
 {
 	qDebug() << Q_FUNC_INFO << e;
-	if (_directoryList) {
-
-	} else {
-		emit aboutToReloadAddressBar(QString());
+	if (_directoryList && _directoryList->hasFocus()) {
+		return;
 	}
+	emit aboutToReloadAddressBar(QString());
 }
 
 void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
@@ -107,6 +106,9 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 								_directoryList->deleteLater();
 								emit aboutToReloadAddressBar(item->text());
 							});
+						} else {
+							qDebug() << "dir list already opened, updating" << fileInfo.absoluteFilePath();
+							_directoryList->cd(fileInfo.absoluteFilePath());
 						}
 					}
 				}

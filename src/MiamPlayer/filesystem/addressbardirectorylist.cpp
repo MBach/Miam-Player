@@ -23,6 +23,13 @@ AddressBarDirectoryList::AddressBarDirectoryList(const QDir &dir, QWidget *paren
 	this->setFocusPolicy(Qt::ClickFocus);
 }
 
+void AddressBarDirectoryList::cd(const QString &path)
+{
+	if (_dir.cd(path)) {
+		this->filterItems(path);
+	}
+}
+
 void AddressBarDirectoryList::cdUp(const QString &path)
 {
 	qDebug() << Q_FUNC_INFO;

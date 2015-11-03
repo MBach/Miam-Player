@@ -19,6 +19,8 @@ private:
 public:
 	explicit AddressBarDirectoryList(const QDir &dir, QWidget *parent = nullptr);
 
+	void cd(const QString &path);
+
 	void cdUp(const QString &path);
 
 	virtual bool eventFilter(QObject *, QEvent *e) override;
