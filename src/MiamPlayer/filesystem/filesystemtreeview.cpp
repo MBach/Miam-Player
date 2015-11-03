@@ -11,14 +11,13 @@
 
 #include <QtDebug>
 
-FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
-	TreeView(parent)
+FileSystemTreeView::FileSystemTreeView(QWidget *parent)
+	: TreeView(parent)
+	, _properties(new QMenu(this))
+	, _fileSystemModel(new QFileSystemModel(this))
 {
-	_fileSystemModel = new QFileSystemModel(this);
 	_fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
-
 	_fileSystemModel->setNameFilters(FileHelper::suffixes(FileHelper::All, true));
-
 	this->setModel(_fileSystemModel);
 
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
@@ -29,7 +28,6 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent) :
 	this->header()->hide();
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
 
-	_properties = new QMenu(this);
 	_toPlaylist = tr("Add \"%1\" to playlist");
 	_toLibrary = tr("Add \"%1\" to library");
 	_toTagEditor = tr("Send \"%1\" to the tag editor");

@@ -28,6 +28,8 @@ protected:
 
 	virtual void keyPressEvent(QKeyEvent *e) override;
 
+	virtual void paintEvent(QPaintEvent *e) override;
+
 signals:
 	void aboutToReloadAddressBar(const QString &dirPath);
 };

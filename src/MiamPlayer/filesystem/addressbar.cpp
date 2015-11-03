@@ -73,7 +73,6 @@ void AddressBar::findAndHighlightButton(const QPoint &p)
 
 void AddressBar::mousePressEvent(QMouseEvent *)
 {
-	qDebug() << Q_FUNC_INFO;
 	this->feedLineEdit();
 }
 
@@ -97,6 +96,7 @@ void AddressBar::paintEvent(QPaintEvent *)
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 		p.drawLine(rect().width() - 1, 0, rect().center().x() - 2, 0);
 	}
+	p.drawLine(0, rect().height() - 1, rect().x() + rect().width(), rect().height() - 1);
 }
 
 void AddressBar::resizeEvent(QResizeEvent *event)

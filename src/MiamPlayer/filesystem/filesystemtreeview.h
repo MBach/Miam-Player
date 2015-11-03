@@ -21,8 +21,8 @@ private:
 	QString _toLibrary;
 	QString _toPlaylist;
 	QString _toTagEditor;
-	QMenu *_properties;
 	QModelIndex _theIndex;
+	QMenu *_properties;
 	QFileSystemModel *_fileSystemModel;
 
 public:

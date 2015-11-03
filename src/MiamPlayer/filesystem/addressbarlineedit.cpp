@@ -2,8 +2,10 @@
 
 #include "addressbar.h"
 
+#include <QApplication>
 #include <QKeyEvent>
 #include <QMessageBox>
+#include <QPainter>
 
 #include <QtDebug>
 
@@ -12,7 +14,8 @@ AddressBarLineEdit::AddressBarLineEdit(AddressBar *parent)
 	, _addressBar(parent)
 	, _directoryList(nullptr)
 {
-
+	this->setMinimumHeight(parent->height());
+	this->setFocusPolicy(Qt::ClickFocus);
 }
 
 void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
@@ -28,9 +31,17 @@ void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
 void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 {
 	switch (e->key()) {
+	case Qt::Key_Escape:{
+			if (_directoryList) {
+				_directoryList->deleteLater();
+			}
+			emit aboutToReloadAddressBar(QString());
+			return;
+		}
+		break;
 	case Qt::Key_Enter:
 	case Qt::Key_Return:{
-			qDebug() << Q_FUNC_INFO << "enter pressed";
+			qDebug() << Q_FUNC_INFO << "enter pressed" << this->text();
 			QFileInfo fileInfo(this->text());
 			if (fileInfo.isDir()) {
 				if (_directoryList) {
@@ -39,13 +50,15 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 				emit aboutToReloadAddressBar(fileInfo.absoluteFilePath());
 				return;
 			} else {
+				qDebug() << Q_FUNC_INFO << "dir not recognized";
 				QMessageBox::critical(this, tr("Error"), QString(tr("Miam-Player cannot find « %1 ». Please check the name and retry.")).arg(this->text()));
+				return;
 			}
 		}
 		break;
 	case Qt::Key_Backspace:{
 			// Detect when separator was eaten
-			qDebug() << Q_FUNC_INFO << this->text() << e->key();
+			qDebug() << Q_FUNC_INFO << "About to process backspace on:" << this->text();
 			if (this->text().endsWith(QDir::separator())) {
 				QLineEdit::keyPressEvent(e);
 				if (_directoryList) {
@@ -64,10 +77,11 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 	case Qt::Key_Down:
 	case Qt::Key_PageUp:
 	case Qt::Key_PageDown: {
-			qDebug() << Q_FUNC_INFO << "key up or down pressed";
 			if (_directoryList) {
-				_directoryList->changeItemFromArrowKey(e->key());
-				this->setText(_directoryList->currentItem()->text());
+				QKeyEvent keyEvent(QEvent::KeyPress, e->key(), e->modifiers());
+				if (QCoreApplication::sendEvent(_directoryList, &keyEvent)) {
+					this->setText(_directoryList->currentItem()->text());
+				}
 			} else {
 				_directoryList = new AddressBarDirectoryList(text(), parentWidget()->parentWidget());
 				_directoryList->show();
@@ -106,4 +120,13 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 		}
 	}
 	QLineEdit::keyPressEvent(e);
+}
+
+void AddressBarLineEdit::paintEvent(QPaintEvent *e)
+{
+	QLineEdit::paintEvent(e);
+	QPainter p(this);
+	p.setPen(QApplication::palette().highlight().color());
+	p.drawRect(this->rect().adjusted(0, 0, -1, -1));
+
 }

@@ -90,7 +90,6 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 		this->update();
 	} else if (_textRect.contains(event->pos())) {
 		if (_isAbsoluteRoot) {
-			qDebug() << Q_FUNC_INFO;
 			emit triggerLineEdit();
 			event->accept();
 		} else {

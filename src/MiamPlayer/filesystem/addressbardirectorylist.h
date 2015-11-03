@@ -21,8 +21,6 @@ public:
 
 	void cdUp(const QString &path);
 
-	void changeItemFromArrowKey(int offset);
-
 	virtual bool eventFilter(QObject *, QEvent *e) override;
 
 	void filterItems(const QString &path);

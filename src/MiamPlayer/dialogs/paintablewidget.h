@@ -18,11 +18,15 @@ private:
 	bool _left, _top, _right, _bottom;
 
 public:
-	explicit PaintableWidget(QWidget *parent) : QWidget(parent),
-		_left(false), _top(false), _right(false), _bottom(false)
+	explicit PaintableWidget(QWidget *parent)
+		: QWidget(parent)
+		, _left(false)
+		, _top(false)
+		, _right(false)
+		, _bottom(false)
 	{}
 
-	void setFrameBorder(bool left, bool top, bool right, bool bottom)
+	inline void setFrameBorder(bool left, bool top, bool right, bool bottom)
 	{
 		_left = left;
 		_top = top;

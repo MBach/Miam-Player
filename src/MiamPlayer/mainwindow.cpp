@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
 	, searchDialog(new SearchDialog(this))
 {
 	setupUi(this);
+	paintableWidget->setFrameBorder(false, false, true, false);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
 	actionMute->setIcon(style()->standardIcon(QStyle::SP_MediaVolumeMuted));
@@ -61,7 +62,6 @@ MainWindow::MainWindow(QWidget *parent)
 	searchBar->setFont(settings->font(SettingsPrivate::FF_Library));
 	this->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 
-	//this->installEventFilter(this);
 	menubar->installEventFilter(this);
 	menubar->setHidden(settings->value("isMenuHidden", false).toBool());
 }
