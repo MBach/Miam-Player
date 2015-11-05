@@ -8,7 +8,9 @@
 #include <QtDebug>
 
 LibraryScrollBar::LibraryScrollBar(QWidget *parent)
-	: ScrollBar(Qt::Vertical, parent), _hasNotEmittedYet(true), _timer(new QTimer(this))
+	: ScrollBar(Qt::Vertical, parent)
+	, _hasNotEmittedYet(true)
+	, _timer(new QTimer(this))
 {
 	_timer->setSingleShot(true);
 	connect(_timer, &QTimer::timeout, this, [=]() {

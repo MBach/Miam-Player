@@ -4,8 +4,7 @@ TEMPLATE = lib
 
 DEFINES += MIAMLIBRARY_LIBRARY
 
-SOURCES += \
-    deprecated/circleprogressbar.cpp \
+SOURCES += deprecated/circleprogressbar.cpp \
     albumitem.cpp \
     artistitem.cpp \
     changehierarchybutton.cpp \
@@ -21,13 +20,12 @@ SOURCES += \
     librarytreeview.cpp \
     miamitemdelegate.cpp \
     miamitemmodel.cpp \
-    separatoritem.cpp \
     scrollbar.cpp \
+    separatoritem.cpp \
     trackitem.cpp \
     yearitem.cpp
 
-HEADERS += \
-    deprecated/circleprogressbar.h \
+HEADERS += deprecated/circleprogressbar.h \
     albumitem.h \
     artistitem.h \
     changehierarchybutton.h \
@@ -44,11 +42,11 @@ HEADERS += \
     librarytreeview.h \
     miamitemdelegate.h \
     miamitemmodel.h \
-    separatoritem.h \
+    miamlibrary_global.hpp \
     scrollbar.h \
+    separatoritem.h \
     trackitem.h \
-    yearitem.h \
-    miamlibrary_global.hpp
+    yearitem.h
 
 FORMS += \
     libraryorderdialog.ui
@@ -88,3 +86,21 @@ macx {
 
 INCLUDEPATH += $$PWD/../MiamCore/
 DEPENDPATH += $$PWD/../MiamCore
+
+TRANSLATIONS = translations/MiamLibrary_ar.ts \
+    translations/MiamLibrary_cs.ts \
+    translations/MiamLibrary_de.ts \
+    translations/MiamLibrary_en.ts \
+    translations/MiamLibrary_es.ts \
+    translations/MiamLibrary_fr.ts \
+    translations/MiamLibrary_in.ts \
+    translations/MiamLibrary_it.ts \
+    translations/MiamLibrary_ja.ts \
+    translations/MiamLibrary_kr.ts \
+    translations/MiamLibrary_pt.ts \
+    translations/MiamLibrary_ru.ts \
+    translations/MiamLibrary_th.ts \
+    translations/MiamLibrary_vn.ts \
+    translations/MiamLibrary_zh.ts
+
+RESOURCES += library.qrc

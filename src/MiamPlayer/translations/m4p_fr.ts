@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
+    <name>AddressBarLineEdit</name>
+    <message>
+        <source>Error</source>
+        <translation>Erreur</translation>
+    </message>
+    <message>
+        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
+        <translation>Miam-Player ne parvient pas à trouver « %1 ». Veuillez vérifier le nom avant de recommencer.</translation>
+    </message>
+</context>
+<context>
     <name>AddressBarMenu</name>
     <message>
         <source>Computer</source>

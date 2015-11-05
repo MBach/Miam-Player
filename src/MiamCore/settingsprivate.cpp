@@ -504,10 +504,12 @@ int SettingsPrivate::volumeBarHideAfter() const
 
 bool SettingsPrivate::initLanguage(const QString &lang)
 {
-	bool b = customTranslator.load(":/translations/" + lang);
+	bool b = playerTranslator.load(":/translations/" + lang);
+	b &= libraryTranslator.load(":/translations/MiamLibrary_" + lang);
 	defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	/// TODO: reload plugin UI
-	b &= QApplication::installTranslator(&customTranslator);
+	b &= QApplication::installTranslator(&playerTranslator);
+	b &= QApplication::installTranslator(&libraryTranslator);
 	QApplication::installTranslator(&defaultQtTranslator);
 	return b;
 }

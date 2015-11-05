@@ -3,11 +3,11 @@
 
 #include <QPushButton>
 
-#include "libraryorderdialog.h"
 #include "miamlibrary_global.hpp"
 
 /**
  * \brief		The LibraryHeader class is a button which can switch the LibraryTreeView from Ascending to Descending order.
+ * \details		This class also reimplements the contextMenuEvent handler to be able to display a small dialog.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -16,28 +16,24 @@ class MIAMLIBRARY_LIBRARY LibraryHeader : public QPushButton
 	Q_OBJECT
 private:
 	Qt::SortOrder _order;
-
 	bool _uncheck;
 
 public:
-	LibraryOrderDialog *libraryOrderDialog;
-
-	explicit LibraryHeader(QWidget *parent = 0);
-
-	virtual bool eventFilter(QObject *obj, QEvent *event);
+	explicit LibraryHeader(QWidget *parent = nullptr);
 
 protected:
-	virtual void contextMenuEvent(QContextMenuEvent *);
+	/** Reimplemented to display a dialog to with 4 hierarchies available to the user. */
+	virtual void contextMenuEvent(QContextMenuEvent *) override;
 
-	virtual void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 
 public slots:
-	void showDialog(bool enabled);
-
 	inline void resetSortOrder() { _order = Qt::AscendingOrder; }
 
 signals:
+	/** Forward signal to upper class. */
 	void aboutToChangeHierarchyOrder();
+
 	void aboutToChangeSortOrder();
 };
 

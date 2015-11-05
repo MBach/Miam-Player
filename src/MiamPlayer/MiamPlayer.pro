@@ -20,6 +20,7 @@ SOURCES += \
     dialogs/starswidget.cpp \
     filesystem/addressbar.cpp \
     filesystem/addressbarbutton.cpp \
+    filesystem/addressbardirectorylist.cpp \
     filesystem/addressbarlineedit.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
@@ -50,8 +51,7 @@ SOURCES += \
     tagbutton.cpp \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
-    volumeslider.cpp \
-    filesystem/addressbardirectorylist.cpp
+    volumeslider.cpp
 
 HEADERS += \
     debug/logbrowser.h \
@@ -70,6 +70,7 @@ HEADERS += \
     dialogs/starswidget.h \
     filesystem/addressbar.h \
     filesystem/addressbarbutton.h \
+    filesystem/addressbardirectorylist.h \
     filesystem/addressbarlineedit.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
@@ -100,8 +101,7 @@ HEADERS += \
     tagbutton.h \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
-    volumeslider.h \
-    filesystem/addressbardirectorylist.h
+    volumeslider.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

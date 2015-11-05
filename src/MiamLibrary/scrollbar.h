@@ -18,7 +18,7 @@ private:
 	bool _top, _left, _bottom, _right;
 
 public:
-	explicit ScrollBar(Qt::Orientation orientation, QWidget *parent = 0);
+	explicit ScrollBar(Qt::Orientation orientation, QWidget *parent = nullptr);
 
 	void setFrameBorder(bool top, bool left, bool bottom, bool right);
 

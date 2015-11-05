@@ -33,9 +33,12 @@
    <item>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <widget class="QTreeView" name="artistTreeView">
+      <widget class="QTreeWidget" name="artistTreeWidget">
        <property name="lineWidth">
         <number>0</number>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
        <property name="horizontalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -46,42 +49,207 @@
        <property name="showDropIndicator" stdset="0">
         <bool>false</bool>
        </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <column>
+        <property name="text">
+         <string>Artists \ Albums</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>Artist</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+        </property>
+        <item>
+         <property name="text">
+          <string>Album</string>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+         </property>
+         <item>
+          <property name="text">
+           <string>01. track #1</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>02. track #2</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+          </property>
+         </item>
+        </item>
+       </item>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QTreeView" name="albumTreeView">
+      <widget class="QTreeWidget" name="albumTreeWidget">
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
        <property name="showDropIndicator" stdset="0">
         <bool>false</bool>
        </property>
-       <attribute name="headerHighlightSections">
-        <bool>true</bool>
-       </attribute>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <column>
+        <property name="text">
+         <string>Albums</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>Album</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+        </property>
+        <item>
+         <property name="text">
+          <string>01. track #1</string>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>02. track #2</string>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+         </property>
+        </item>
+       </item>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QTreeView" name="artistAlbumTreeView">
+      <widget class="QTreeWidget" name="artistAlbumTreeWidget">
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
        <property name="showDropIndicator" stdset="0">
         <bool>false</bool>
        </property>
-       <attribute name="headerHighlightSections">
-        <bool>true</bool>
-       </attribute>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <column>
+        <property name="text">
+         <string>Artists – Albums</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>Artist – Album</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+        </property>
+        <item>
+         <property name="text">
+          <string>01. track #1</string>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>02. track #2</string>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+         </property>
+        </item>
+       </item>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QTreeView" name="yearTreeView">
+      <widget class="QTreeWidget" name="yearTreeWidget">
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <property name="verticalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
        <property name="showDropIndicator" stdset="0">
         <bool>false</bool>
        </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::MultiSelection</enum>
+       </property>
+       <column>
+        <property name="text">
+         <string notr="true">Years</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string notr="true">2016</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+        </property>
+        <item>
+         <property name="text">
+          <string>Artist – Album</string>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+         </property>
+         <item>
+          <property name="text">
+           <string>01. track #1</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>02. track #2</string>
+          </property>
+          <property name="flags">
+           <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+          </property>
+         </item>
+        </item>
+       </item>
       </widget>
      </item>
     </layout>

@@ -1,6 +1,8 @@
 #include "libraryheader.h"
 
-#include "settingsprivate.h"
+#include <settingsprivate.h>
+#include <libraryorderdialog.h>
+
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QLinearGradient>
@@ -8,8 +10,10 @@
 
 #include <QtDebug>
 
-LibraryHeader::LibraryHeader(QWidget *parent) :
-	QPushButton(parent), _order(Qt::AscendingOrder), _uncheck(false), libraryOrderDialog(new LibraryOrderDialog(this))
+LibraryHeader::LibraryHeader(QWidget *parent)
+	: QPushButton(parent)
+	, _order(Qt::AscendingOrder)
+	, _uncheck(false)
 {
 	connect(this, &QPushButton::clicked, [=]() {
 		if (_order == Qt::AscendingOrder) {
@@ -20,28 +24,15 @@ LibraryHeader::LibraryHeader(QWidget *parent) :
 		this->update();
 		emit aboutToChangeSortOrder();
 	});
-	connect(libraryOrderDialog, &LibraryOrderDialog::accepted, this, [=]() {
-		// Reset sort order before switch from one hierarchical order to another one
-		if (_order == Qt::DescendingOrder) {
-			emit aboutToChangeSortOrder();
-		}
-		emit aboutToChangeHierarchyOrder();
-	});
-	libraryOrderDialog->installEventFilter(this);
 }
 
-bool LibraryHeader::eventFilter(QObject *obj, QEvent *event)
-{
-	if (obj == libraryOrderDialog && event->type() == QEvent::Close) {
-		_uncheck = true;
-	}
-	return QPushButton::eventFilter(obj, event);
-}
-
+/** Reimplemented to display a dialog to with 4 hierarchies available to the user. */
 void LibraryHeader::contextMenuEvent(QContextMenuEvent *e)
 {
+	LibraryOrderDialog *libraryOrderDialog = new LibraryOrderDialog(this);
 	libraryOrderDialog->move(mapToGlobal(e->pos()));
 	libraryOrderDialog->show();
+	connect(libraryOrderDialog, &LibraryOrderDialog::aboutToChangeHierarchyOrder, this, &LibraryHeader::aboutToChangeHierarchyOrder);
 }
 
 void LibraryHeader::paintEvent(QPaintEvent *)
@@ -56,8 +47,25 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	p.fillRect(rect(), g);
 
 	// Text
-	QString header = libraryOrderDialog->headerValue();
-	QFont f = SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
+	QString header;
+	auto settings = SettingsPrivate::instance();
+	switch (settings->insertPolicy()) {
+	case SettingsPrivate::IP_Albums:
+		header = tr("Album");
+		break;
+	case SettingsPrivate::IP_ArtistsAlbums:
+		header = tr("Artist – Album");
+		break;
+	case SettingsPrivate::IP_Years:
+		header = tr("Year");
+		break;
+	case SettingsPrivate::IP_Artists:
+	default:
+		header = tr("Artist \\ Album");
+		break;
+	}
+
+	QFont f = settings->font(SettingsPrivate::FF_Library);
 	p.setFont(f);
 	QFontMetrics fm(f);
 	this->setMinimumHeight(fm.height());
@@ -116,18 +124,4 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	}
 	p.drawPolygon(sortIndicator);
 	p.restore();
-}
-
-void LibraryHeader::showDialog(bool enabled)
-{
-	QPushButton *b = qobject_cast<QPushButton*>(sender());
-	if (b) {
-		libraryOrderDialog->move(mapToGlobal(b->frameGeometry().topLeft()));
-	}
-	if (_uncheck) {
-		libraryOrderDialog->setVisible(true);
-		_uncheck = false;
-	} else {
-		libraryOrderDialog->setVisible(enabled);
-	}
 }

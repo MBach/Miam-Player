@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/MiamLibrary_en.qm</file>
+        <file>translations/MiamLibrary_fr.qm</file>
+    </qresource>
+</RCC>

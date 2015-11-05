@@ -15,11 +15,10 @@ class MIAMLIBRARY_LIBRARY LibraryOrderDialog : public QDialog, public Ui::Librar
 {
 	Q_OBJECT
 public:
-	explicit LibraryOrderDialog(QWidget *parent = 0);
+	explicit LibraryOrderDialog(QWidget *parent = nullptr);
 
-	QString headerValue() const;
-
-	void setVisible(bool b);
+signals:
+	void aboutToChangeHierarchyOrder();
 };
 
 #endif // LIBRARYORDERDIALOG_H

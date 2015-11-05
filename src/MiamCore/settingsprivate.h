@@ -60,7 +60,7 @@ public:
 	enum LibrarySearchMode { LSM_Filter			= 0,
 							 LSM_HighlightOnly	= 1};
 
-	QTranslator customTranslator, defaultQtTranslator;
+	QTranslator playerTranslator, libraryTranslator, defaultQtTranslator;
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static SettingsPrivate* instance();

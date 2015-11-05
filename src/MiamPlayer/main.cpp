@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 	}
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	app.installTranslator(&settings->customTranslator);
+	app.installTranslator(&settings->playerTranslator);
 	app.installTranslator(&settings->defaultQtTranslator);
 
 	app.setStyle(new MiamStyle);

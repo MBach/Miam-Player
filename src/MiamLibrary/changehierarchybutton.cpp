@@ -8,8 +8,8 @@
 
 #include <QtDebug>
 
-ChangeHierarchyButton::ChangeHierarchyButton(QWidget *parent) :
-	QPushButton(parent)
+ChangeHierarchyButton::ChangeHierarchyButton(QWidget *parent)
+	: QPushButton(parent)
 {}
 
 void ChangeHierarchyButton::paintEvent(QPaintEvent *)

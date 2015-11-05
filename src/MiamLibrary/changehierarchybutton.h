@@ -13,7 +13,7 @@ class MIAMLIBRARY_LIBRARY ChangeHierarchyButton : public QPushButton
 {
 	Q_OBJECT
 public:
-	explicit ChangeHierarchyButton(QWidget *parent = 0);
+	explicit ChangeHierarchyButton(QWidget *parent = nullptr);
 
 protected:
 	virtual void paintEvent(QPaintEvent *) override;

@@ -9,8 +9,13 @@
 
 #include <QtDebug>
 
-ScrollBar::ScrollBar(Qt::Orientation orientation, QWidget *parent) :
-	QScrollBar(orientation, parent), _isDown(-1), _top(false), _left(false), _bottom(false), _right(false)
+ScrollBar::ScrollBar(Qt::Orientation orientation, QWidget *parent)
+	: QScrollBar(orientation, parent)
+	, _isDown(-1)
+	, _top(false)
+	, _left(false)
+	, _bottom(false)
+	, _right(false)
 {}
 
 void ScrollBar::setFrameBorder(bool top, bool left, bool bottom, bool right)
@@ -33,11 +38,12 @@ void ScrollBar::mousePressEvent(QMouseEvent *e)
 	QRect subLineRect = style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSubLine, this);
 	QRect addLineRect = style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarAddLine, this);
 	QRect sliderRect = style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSlider, this);
-	if (subLineRect.contains(e->pos())) {
+	QPoint p = mapFromGlobal(QCursor::pos());
+	if (subLineRect.contains(p)) {
 		_isDown = 0;
-	} else if (sliderRect.contains(e->pos())) {
+	} else if (sliderRect.contains(p)) {
 		_isDown = 1;
-	} else if (addLineRect.contains(e->pos())) {
+	} else if (addLineRect.contains(p)) {
 		_isDown = 2;
 	}
 	QScrollBar::mousePressEvent(e);

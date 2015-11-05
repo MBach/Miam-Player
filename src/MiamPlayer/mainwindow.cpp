@@ -4,6 +4,7 @@
 #include <quickstart.h>
 #include <settings.h>
 #include <settingsprivate.h>
+#include <libraryorderdialog.h>
 
 #include "dialogs/customizethemedialog.h"
 #include "dialogs/dragdropdialog.h"
@@ -416,13 +417,22 @@ void MainWindow::setupActions()
 	});
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
-	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, this, [=]() {
+
+	// Factorize code with lambda slot connected to replicated signal
+	auto reloadLibrary = [this]() {
 		searchBar->setText(QString());
 		searchDialog->clear();
 		SqlDatabase::instance()->load();
 		this->update();
+	};
+
+	connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, reloadLibrary);
+	connect(changeHierarchyButton, &QPushButton::toggled, this, [=]() {
+		LibraryOrderDialog *libraryOrderDialog = new LibraryOrderDialog(this);
+		libraryOrderDialog->move(libraryOrderDialog->mapFromGlobal(QCursor::pos()));
+		libraryOrderDialog->show();
+		connect(libraryOrderDialog, &LibraryOrderDialog::aboutToChangeHierarchyOrder, reloadLibrary);
 	});
-	connect(changeHierarchyButton, &QPushButton::toggled, libraryHeader, &LibraryHeader::showDialog);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		settings->setValue("mainWindowGeometry", saveGeometry());
@@ -467,7 +477,7 @@ void MainWindow::changeEvent(QEvent *event)
 		this->retranslateUi(this);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
-		libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
+		//libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
 
 		// (need to be tested with Arabic language)
 		if (tr("LTR") == "RTL") {
