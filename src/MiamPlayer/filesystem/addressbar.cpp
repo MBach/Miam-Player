@@ -318,6 +318,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 	AddressBarButton *nextButton = qobject_cast<AddressBarButton*>(_hBoxLayout->itemAt(1)->widget());
 
 	// Insert Desktop, Documents, Downloads, Pictures, Music, Videos
+	QString home = QStandardPaths::standardLocations(QStandardPaths::HomeLocation).first();
 	QString desktop = QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first();
 	QString documents = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).first();
 	QString downloads = QStandardPaths::standardLocations(QStandardPaths::DownloadLocation).first();
@@ -326,7 +327,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 	QString videos = QStandardPaths::standardLocations(QStandardPaths::MoviesLocation).first();
 
 	QFileInfoList fil;
-	fil << desktop << documents << downloads << pictures << music << videos;
+	fil << home << desktop << documents << downloads << pictures << music << videos;
 
 	auto insertItemInMenu = [this, nextButton] (const QFileInfo &fileInfo, const QString &location) -> void {
 		QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(fileInfo), location, _menu);
