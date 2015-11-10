@@ -37,7 +37,7 @@ public:
 	/** An automatic helper for writing tags following regExp. */
 	TagConverter *tagConverter;
 
-	explicit TagEditor(QWidget *parent = 0);
+	explicit TagEditor(QWidget *parent = nullptr);
 
 	void addDirectory(const QDir &dir);
 

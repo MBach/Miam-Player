@@ -16,7 +16,6 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {
 			this->setFont(newFont);
-			//this->setMinimumHeight(fontMetrics().height() * 1.6);
 		}
 	});
 
@@ -27,28 +26,8 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 		this->setFocus(Qt::ShortcutFocusReason);
 	});
 
-	//this->installEventFilter(this);
 	this->setMouseTracking(true);
 }
-
-/*bool LibraryFilterLineEdit::eventFilter(QObject *obj, QEvent *event)
-{
-	if (obj == this && event->type() == QEvent::FocusAboutToChange) {
-		if (_searchDialog && !_searchDialog->hasFocus()) {
-			if (_searchDialog->rect().contains(_searchDialog->mapFromGlobal(QCursor::pos()))) {
-			} else {
-				_searchDialog->hide();
-			}
-		}
-		return true;
-	} else if (obj == this && event->type() == QEvent::FocusIn) {
-		if (_searchDialog && !_searchDialog->hasFocus() && !text().isEmpty()) {
-			_searchDialog->moveSearchDialog();
-			_searchDialog->show();
-		}
-	}
-	return LineEdit::eventFilter(obj, event);
-}*/
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {
@@ -210,5 +189,3 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, placeholderText());
 	}
 }
-
-

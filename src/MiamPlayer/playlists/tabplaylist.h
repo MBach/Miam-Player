@@ -35,7 +35,7 @@ private:
 
 public:
 	/** Default constructor. */
-	explicit TabPlaylist(QWidget *parent = 0);
+	explicit TabPlaylist(QWidget *parent = nullptr);
 
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const;

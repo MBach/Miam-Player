@@ -20,7 +20,7 @@ protected:
 	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
 
 public:
-	MiamSortFilterProxyModel(QObject *parent = 0);
+	MiamSortFilterProxyModel(QObject *parent = nullptr);
 
 	inline void setTopLevelItems(const QMultiHash<SeparatorItem*, QModelIndex> &topLevelItems) { _topLevelItems = topLevelItems; }
 

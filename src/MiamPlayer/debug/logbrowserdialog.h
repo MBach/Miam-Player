@@ -22,7 +22,7 @@ private:
 	QPushButton *_saveButton;
 
 public:
-	LogBrowserDialog(QWidget *parent = 0);
+	LogBrowserDialog(QWidget *parent = nullptr);
 	~LogBrowserDialog() {}
 
 protected:

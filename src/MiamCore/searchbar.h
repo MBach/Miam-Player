@@ -16,7 +16,7 @@ class MIAMCORE_LIBRARY SearchBar : public QLineEdit
 {
 	Q_OBJECT
 public:
-	SearchBar(QWidget *parent = 0) : QLineEdit(parent)
+	SearchBar(QWidget *parent = nullptr) : QLineEdit(parent)
 	{
 		// Do not start search when one is typing. Add a 300ms delay after the last key pressed.
 		QTimer *timer = new QTimer(this);

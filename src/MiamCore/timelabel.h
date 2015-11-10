@@ -24,7 +24,7 @@ private:
 
 public:
 	/** Default constructor. */
-	explicit TimeLabel(QWidget *parent = 0);
+	explicit TimeLabel(QWidget *parent = nullptr);
 
 	/** Redefined to filter mouse press event. */
 	bool eventFilter(QObject *obj, QEvent *event);

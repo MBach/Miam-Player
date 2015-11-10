@@ -166,8 +166,12 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 	// Each View Plugin can extend multiple instances
 	for (QString view : itemViewPlugin->classesToExtend()) {
 
+        qDebug() << Q_FUNC_INFO << "1" << view;
+
 		// Instances of classes which can be extended at runtime
 		for (QObject *obj : _extensionPoints.values(view)) {
+
+            qDebug() << Q_FUNC_INFO << "2" << obj;
 
 			// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
 			if (QMenu *menu = qobject_cast<QMenu*>(obj)) {

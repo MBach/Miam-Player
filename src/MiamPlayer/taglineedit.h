@@ -17,7 +17,7 @@ protected:
 	QList<TagButton*> _tags;
 
 public:
-	explicit TagLineEdit(QWidget *parent = 0);
+	explicit TagLineEdit(QWidget *parent = nullptr);
 
 	void addTag(const QString &tag, int column = -1);
 

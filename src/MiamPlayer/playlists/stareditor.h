@@ -55,7 +55,7 @@ class StarEditor : public QWidget
 {
 	Q_OBJECT
 public:
-	StarEditor(const QModelIndex &index, QWidget *parent = 0);
+	StarEditor(const QModelIndex &index, QWidget *parent = nullptr);
 
 	QModelIndex _index;
 	StarRating starRating;

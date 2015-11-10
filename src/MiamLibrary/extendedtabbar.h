@@ -15,7 +15,7 @@ class MIAMLIBRARY_LIBRARY ExtendedTabBar : public QTabBar
 	Q_OBJECT
 public:
 	/** Default constructor. */
-	explicit ExtendedTabBar(QWidget *parent = 0);
+	explicit ExtendedTabBar(QWidget *parent = nullptr);
 
 protected:
 	virtual QSize tabSizeHint(int) const override;

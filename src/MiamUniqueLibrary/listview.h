@@ -20,7 +20,7 @@ private:
 	JumpToWidget *_jumpToWidget;
 
 public:
-	explicit ListView(QWidget *parent = 0);
+	explicit ListView(QWidget *parent = nullptr);
 
 	inline UniqueLibraryItemModel *model() const { return _model; }
 

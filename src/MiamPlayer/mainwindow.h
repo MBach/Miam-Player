@@ -43,7 +43,7 @@ public:
 	QList<MediaButton*> mediaButtons;
 	SearchDialog *searchDialog;
 
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(QWidget *parent = nullptr);
 
 	void activateLastView();
 

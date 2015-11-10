@@ -24,7 +24,7 @@ private:
 	MiamSortFilterProxyModel *_proxy;
 
 public:
-	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = 0);
+	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
 private slots:
 	bool playSingleTrack(const QModelIndex &index);

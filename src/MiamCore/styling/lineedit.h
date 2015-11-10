@@ -24,7 +24,7 @@ private:
 	QPropertyAnimation _fade;
 
 public:
-	explicit LineEdit(QWidget *parent = 0);
+	explicit LineEdit(QWidget *parent = nullptr);
 
 protected:
 	virtual void drawCursor(QStylePainter *painter, const QRect &rText);

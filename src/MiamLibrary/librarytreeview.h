@@ -65,7 +65,7 @@ public:
 	QShortcut *sendToCurrentPlaylist;
 	QShortcut *openTagEditor;
 
-	explicit LibraryTreeView(QWidget *parent = 0);
+	explicit LibraryTreeView(QWidget *parent = nullptr);
 
 	void createConnectionsToDB();
 

@@ -16,7 +16,7 @@ private:
 	MediaPlayer *_mediaPlayer;
 
 public:
-	explicit SeekBar(QWidget *parent = 0);
+	explicit SeekBar(QWidget *parent = nullptr);
 
 	void setMediaPlayer(MediaPlayer *mediaPlayer);
 

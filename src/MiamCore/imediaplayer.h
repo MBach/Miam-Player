@@ -15,7 +15,7 @@ class MIAMCORE_LIBRARY IMediaPlayer : public QObject
 {
 	Q_OBJECT
 public:
-	explicit IMediaPlayer(QObject *parent = 0) : QObject(parent) {}
+	explicit IMediaPlayer(QObject *parent = nullptr) : QObject(parent) {}
 
 	virtual ~IMediaPlayer() {}
 

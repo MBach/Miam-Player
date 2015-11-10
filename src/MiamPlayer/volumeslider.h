@@ -23,7 +23,7 @@ private:
 	bool _isDown;
 
 public:
-	explicit VolumeSlider(QWidget *parent = 0);
+	explicit VolumeSlider(QWidget *parent = nullptr);
 
 	/** Redefined to react to default keys */
 	virtual bool eventFilter(QObject *obj, QEvent *e) override;

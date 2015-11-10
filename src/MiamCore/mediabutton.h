@@ -17,7 +17,7 @@ class MIAMCORE_LIBRARY MediaButton : public QPushButton
 public:
 	MediaPlayer *_mediaPlayer;
 
-	MediaButton(QWidget *parent = 0);
+	MediaButton(QWidget *parent = nullptr);
 
 	virtual void setMediaPlayer(MediaPlayer *mediaPlayer);
 

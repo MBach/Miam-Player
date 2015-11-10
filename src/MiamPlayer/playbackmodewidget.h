@@ -22,7 +22,7 @@ private:
 	QString _playbackMode;
 
 public:
-	explicit PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushButton *playbackModeButton = 0);
+	explicit PlaybackModeWidget(QMediaPlaylist::PlaybackMode mode, QPushButton *playbackModeButton = nullptr);
 
 	/** Convert Enum in QString to dynamically load icons. */
 	static QString nameFromMode(QMediaPlaylist::PlaybackMode mode);

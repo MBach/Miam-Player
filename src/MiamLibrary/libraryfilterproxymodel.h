@@ -19,7 +19,7 @@ class MIAMLIBRARY_LIBRARY LibraryFilterProxyModel : public MiamSortFilterProxyMo
 {
 	Q_OBJECT
 public:
-	explicit LibraryFilterProxyModel(QObject *parent = 0);
+	explicit LibraryFilterProxyModel(QObject *parent = nullptr);
 
 	/** Redefined to override Qt::FontRole. */
 	virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;

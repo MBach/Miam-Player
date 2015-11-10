@@ -28,7 +28,7 @@ private:
 	QAction *_applyCoverToCurrentAlbumAction;
 
 public:
-	AlbumCover(QWidget *parent = 0);
+	AlbumCover(QWidget *parent = nullptr);
 
 	/** Puts a default picture in this widget. */
 	void resetCover();

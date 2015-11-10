@@ -15,7 +15,7 @@ class NoFocusItemDelegate : public QItemDelegate
 {
 	Q_OBJECT
 public:
-	NoFocusItemDelegate(QWidget *parent = 0) : QItemDelegate(parent) {}
+	NoFocusItemDelegate(QWidget *parent = nullptr) : QItemDelegate(parent) {}
 
 protected:
 	/** Redefined as empty to remove the dotted rectangle when selecting an item. */

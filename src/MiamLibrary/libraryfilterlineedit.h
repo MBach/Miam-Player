@@ -21,13 +21,11 @@ class MIAMLIBRARY_LIBRARY LibraryFilterLineEdit : public LineEdit
 	Q_OBJECT
 
 public:
-	LibraryFilterLineEdit(QWidget *parent = 0);
+	LibraryFilterLineEdit(QWidget *parent = nullptr);
 
 	QShortcut *shortcut;
 
 protected:
-	//virtual bool eventFilter(QObject *obj, QEvent *event) override;
-
 	virtual void paintEvent(QPaintEvent *) override;
 };
 

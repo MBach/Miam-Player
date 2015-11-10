@@ -14,7 +14,7 @@ class MIAMCORE_LIBRARY QuickStartSearchEngine : public QObject
 {
 	Q_OBJECT
 public:
-	explicit QuickStartSearchEngine(QObject *parent = 0);
+	explicit QuickStartSearchEngine(QObject *parent = nullptr);
 
 public slots:
 	void doSearch();

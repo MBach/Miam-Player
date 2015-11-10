@@ -19,7 +19,7 @@ private:
 	MiamSortFilterProxyModel *_proxy;
 
 public:
-	explicit UniqueLibraryItemModel(QObject *parent = 0);
+	explicit UniqueLibraryItemModel(QObject *parent = nullptr);
 
 	virtual QChar currentLetter(const QModelIndex &index) const override;
 

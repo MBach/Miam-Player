@@ -19,7 +19,7 @@ private:
 	QTimer *_timer;
 
 public:
-	MusicSearchEngine(QObject *parent = 0);
+	MusicSearchEngine(QObject *parent = nullptr);
 
 	static bool isScanning;
 

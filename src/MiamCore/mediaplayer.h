@@ -33,7 +33,7 @@ private:
 	bool _stopAfterCurrent;
 
 public:
-	explicit MediaPlayer(QObject *parent = 0);
+	explicit MediaPlayer(QObject *parent = nullptr);
 
 	void addRemotePlayer(IMediaPlayer *remotePlayer);
 

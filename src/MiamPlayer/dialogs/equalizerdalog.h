@@ -22,7 +22,7 @@ private:
 	MediaPlayer *_mediaPlayer;
 
 public:
-	explicit EqualizerDialog(MediaPlayer *mediaPlayer, QWidget *parent = 0);
+	explicit EqualizerDialog(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
 	virtual ~EqualizerDialog();
 

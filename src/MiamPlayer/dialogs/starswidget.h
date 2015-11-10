@@ -16,7 +16,7 @@ private:
 	StarRating _starRating;
 
 public:
-	explicit StarsWidget(QWidget *parent = 0);
+	explicit StarsWidget(QWidget *parent = nullptr);
 
 protected:
 	virtual void paintEvent(QPaintEvent *) override;

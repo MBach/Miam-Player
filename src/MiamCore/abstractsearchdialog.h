@@ -29,7 +29,7 @@ public:
 	enum DataType { DT_Origin = Qt::UserRole + 1,
 					DT_Identifier = Qt::UserRole + 2};
 
-	explicit AbstractSearchDialog(QWidget *parent = 0, Qt::WindowFlags f = 0) : QWidget(parent, f) {}
+	explicit AbstractSearchDialog(QWidget *parent = nullptr, Qt::WindowFlags f = 0) : QWidget(parent, f) {}
 
 	virtual ~AbstractSearchDialog() {}
 

@@ -26,7 +26,7 @@ private:
 	QFileSystemModel *_fileSystemModel;
 
 public:
-	explicit FileSystemTreeView(QWidget *parent = 0);
+	explicit FileSystemTreeView(QWidget *parent = nullptr);
 
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;

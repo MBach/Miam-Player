@@ -26,7 +26,7 @@ private:
 	QRadialGradient grooveRadialGradient;
 
 public:
-	CircleProgressBar(QWidget *parent = 0);
+	CircleProgressBar(QWidget *parent = nullptr);
 
 	inline void setTransparentCenter(bool value) { isTransparentCenter = value; }
 	inline void setStartAngle(qreal startAngle) { this->startAngle = startAngle; }

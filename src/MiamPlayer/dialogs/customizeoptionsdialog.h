@@ -21,7 +21,7 @@ private:
 	PluginManager *_pluginManager;
 
 public:
-	explicit CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent = 0);
+	explicit CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent = nullptr);
 
 	/** Redefined to inspect shortcuts. */
 	virtual bool eventFilter(QObject *obj, QEvent *e) override;

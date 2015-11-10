@@ -16,7 +16,7 @@ class MIAMLIBRARY_LIBRARY ExtendedTabWidget : public QTabWidget
 {
 	Q_OBJECT
 public:
-	explicit ExtendedTabWidget(QWidget *parent = 0) : QTabWidget(parent) { setTabBar(new ExtendedTabBar(this)); }
+	explicit ExtendedTabWidget(QWidget *parent = nullptr) : QTabWidget(parent) { setTabBar(new ExtendedTabBar(this)); }
 
 	inline void setShortcut(const QString &objectName, const QKeySequence &sequence) {
 		int i = 0;

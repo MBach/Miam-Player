@@ -17,7 +17,7 @@ class MIAMCORE_LIBRARY PluginInfo : public QObject
 {
 	Q_OBJECT
 public:
-	PluginInfo(QObject *parent = 0);
+	PluginInfo(QObject *parent = nullptr);
 
 	/** Copy constructor required for converting in QVariant. */
 	PluginInfo(const PluginInfo &other);

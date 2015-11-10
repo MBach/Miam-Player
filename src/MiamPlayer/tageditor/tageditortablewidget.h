@@ -20,7 +20,7 @@ private:
 	QMap<int, QString> _indexes;
 
 public:
-	TagEditorTableWidget(QWidget *parent = 0);
+	TagEditorTableWidget(QWidget *parent = nullptr);
 
 	/** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
 	void init();

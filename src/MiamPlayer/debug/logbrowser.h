@@ -19,7 +19,7 @@ class LogBrowser : public QObject
 {
 	Q_OBJECT
 public:
-	explicit LogBrowser(QObject *parent = 0);
+	explicit LogBrowser(QObject *parent = nullptr);
 	~LogBrowser();
 
 public slots:

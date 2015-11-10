@@ -12,11 +12,11 @@ class MiamStyle : public QProxyStyle
 {
 	Q_OBJECT
 public:
-	explicit MiamStyle(QStyle *parent = 0);
+	explicit MiamStyle(QStyle *parent = nullptr);
 
 	virtual QRect subElementRect(SubElement element, const QStyleOption *option, const QWidget *widget) const override;
 
-	virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0) const override;
+	virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = nullptr) const override;
 
 	virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const override;
 

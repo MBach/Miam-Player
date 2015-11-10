@@ -25,7 +25,7 @@ private:
 public:
 	QStringList externalLocations;
 
-	explicit DragDropDialog(QWidget *parent = 0);
+	explicit DragDropDialog(QWidget *parent = nullptr);
 
 	bool setMimeData(const QMimeData *mimeData);
 

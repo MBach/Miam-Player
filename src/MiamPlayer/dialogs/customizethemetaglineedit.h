@@ -15,7 +15,7 @@ private:
 	QTimer *_timerTag;
 
 public:
-	explicit CustomizeThemeTagLineEdit(QWidget *parent = 0);
+	explicit CustomizeThemeTagLineEdit(QWidget *parent = nullptr);
 
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
