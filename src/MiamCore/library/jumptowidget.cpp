@@ -34,6 +34,7 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
 		if (mouseEvent) {
 			// The A-Z order has been chosen arbitrarily
+			// This Widget won't automatically adapt to non-latin languages, like Russian, Japanese hiraganas, etc.
 			int v = mouseEvent->y() * 26 / height();
 			// in ASCII, the A letter is 65
 			QString s(v + 65);

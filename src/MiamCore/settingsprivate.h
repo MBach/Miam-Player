@@ -192,14 +192,10 @@ public:
 
 	QKeySequence shortcut(const QString &objectName) const;
 
-	QMap<QString, QVariant> shortcuts() const;
-
 	int volumeBarHideAfter() const;
 
 private:
 	bool initLanguage(const QString &lang);
-
-	void initShortcuts();
 
 public:
 	void setDefaultLocationFileExplorer(const QString &location);

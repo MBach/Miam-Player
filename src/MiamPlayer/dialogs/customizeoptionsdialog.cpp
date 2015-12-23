@@ -3,6 +3,7 @@
 #include <model/sqldatabase.h>
 #include <flowlayout.h>
 #include <musicsearchengine.h>
+#include <settings.h>
 #include <settingsprivate.h>
 #include "pluginmanager.h"
 
@@ -244,7 +245,7 @@ void CustomizeOptionsDialog::initPlugins()
 /** Third panel in this dialog: shorcuts has to be initialized in the end. */
 void CustomizeOptionsDialog::initShortcuts()
 {
-	SettingsPrivate *settings = SettingsPrivate::instance();
+	Settings *settings = Settings::instance();
 	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
 	for (QKeySequenceEdit *shortcut : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {

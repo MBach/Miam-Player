@@ -22,6 +22,7 @@ Settings* Settings::instance()
 {
 	if (settings == nullptr) {
 		settings = new Settings;
+		settings->initShortcuts();
 	}
 	return settings;
 }
@@ -41,6 +42,48 @@ QString Settings::theme() const
 qreal Settings::volume() const
 {
 	return value("volume", 0.9).toReal();
+}
+
+QMap<QString, QVariant> Settings::shortcuts() const
+{
+	return value("shortcuts").toMap();
+}
+
+void Settings::initShortcuts()
+{
+	if (value("shortcuts").isNull()) {
+		QMap<QString, QVariant> shortcuts;
+		shortcuts.insert("openFiles", "Ctrl+O");
+		shortcuts.insert("openFolders", "Ctrl+Shift+O");
+		shortcuts.insert("showCustomize", "F9");
+		shortcuts.insert("showOptions", "F12");
+		shortcuts.insert("exit", "Ctrl+Q");
+		shortcuts.insert("scanLibrary", "Ctrl+Shift+Q");
+		shortcuts.insert("showHelp", "F1");
+		shortcuts.insert("showDebug", "F2");
+		shortcuts.insert("viewPlaylists", "H");
+		shortcuts.insert("showTabLibrary", "1");
+		shortcuts.insert("showTabFilesystem", "2");
+		shortcuts.insert("search", "Ctrl+F");
+		shortcuts.insert("viewTagEditor", "J");
+		shortcuts.insert("skipBackward", "Z");
+		shortcuts.insert("seekBackward", "X");
+		shortcuts.insert("play", "C");
+		shortcuts.insert("stop", "V");
+		shortcuts.insert("seekForward", "B");
+		shortcuts.insert("skipForward", "N");
+		shortcuts.insert("playbackSequential", "K");
+		shortcuts.insert("playbackRandom", "L");
+		shortcuts.insert("mute", "M");
+		shortcuts.insert("increaseVolume", "Up");
+		shortcuts.insert("decreaseVolume", "Down");
+		shortcuts.insert("addPlaylist", "Ctrl+T");
+		shortcuts.insert("deleteCurrentPlaylist", "Ctrl+W");
+		shortcuts.insert("moveTracksUp", "Maj+Up");
+		shortcuts.insert("moveTracksDown", "Maj+Down");
+		shortcuts.insert("removeSelectedTracks", "Delete");
+		setValue("shortcuts", shortcuts);
+	}
 }
 
 /// Slots

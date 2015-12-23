@@ -35,6 +35,11 @@ public:
 	/** Returns volume from the slider. */
 	qreal volume() const;
 
+	QMap<QString, QVariant> shortcuts() const;
+
+private:
+	void initShortcuts();
+
 public slots:
 	/** Sets the last view activated by the user. Used when reopening the player. */
 	void setLastActiveView(const QString &viewName);

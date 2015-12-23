@@ -131,16 +131,16 @@ void MainWindow::init()
 	this->setupActions();
 	this->loadThemeAndSettings();
 
-	auto settingsPrivate = SettingsPrivate::instance();
 
 	// Init shortcuts
-	QMapIterator<QString, QVariant> it(settingsPrivate->shortcuts());
+	Settings *settings = Settings::instance();
+	QMapIterator<QString, QVariant> it(settings->shortcuts());
 	while (it.hasNext()) {
 		it.next();
 		this->bindShortcut(it.key(), it.value().value<QKeySequence>());
 	}
 
-	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
+	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
 	actionScanLibrary->setDisabled(isEmpty);
 	if (isEmpty) {
 		widgetSearchBar->hide();
@@ -151,7 +151,6 @@ void MainWindow::init()
 		quickStart->searchMultimediaFiles();
 	}
 
-	Settings *settings = Settings::instance();
 	leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
 
 	tabPlaylists->init(_mediaPlayer);
@@ -725,6 +724,7 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}
+	//emit shortcutHaveChanged(keySequence);
 }
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)

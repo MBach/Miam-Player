@@ -7,6 +7,7 @@
 #include <settingsprivate.h>
 #include <treeview.h>
 
+#include "libraryitemdelegate.h"
 #include "libraryitemmodel.h"
 
 #include <QMenu>
@@ -57,6 +58,8 @@ private:
 	/** This view uses a proxy to specify how items in the Tree should be ordered together. */
 	MiamSortFilterProxyModel *_proxyModel;
 
+	LibraryItemDelegate *_delegate;
+
 public:
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */
@@ -84,6 +87,9 @@ protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
+	/** Redefined to override shortcuts that are mapped on simple keys. */
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
 	virtual void paintEvent(QPaintEvent *) override;
 
 private:
@@ -109,6 +115,8 @@ private slots:
 	void removeExpandedCover(const QModelIndex &index);
 
 	void setExpandedCover(const QModelIndex &index);
+
+	void scrollToLetter(const QString &letter);
 
 signals:
 	void aboutToUpdateCoverSize();

@@ -7,9 +7,7 @@
 #include <settingsprivate.h>
 #include "deprecated/circleprogressbar.h"
 #include "libraryfilterproxymodel.h"
-#include "libraryitemdelegate.h"
 #include "libraryorderdialog.h"
-#include "libraryitemdelegate.h"
 #include "libraryscrollbar.h"
 
 #include <functional>
@@ -25,12 +23,13 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	, sendToCurrentPlaylist(new QShortcut(this))
 	, openTagEditor(new QShortcut(this))
 {
+	this->installEventFilter(this);
 	auto settings = SettingsPrivate::instance();
 	_proxyModel = _libraryModel->proxy();
 	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
-	LibraryItemDelegate *delegate = new LibraryItemDelegate(this, _proxyModel);
+	_delegate = new LibraryItemDelegate(this, _proxyModel);
 
-	this->setItemDelegate(delegate);
+	this->setItemDelegate(_delegate);
 	this->setModel(_proxyModel);
 	this->setFrameShape(QFrame::NoFrame);
 	this->setIconSize(QSize(settings->coverSize(), settings->coverSize()));
@@ -54,25 +53,18 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
 	// Cover size
-	connect(this, &LibraryTreeView::aboutToUpdateCoverSize, delegate, &LibraryItemDelegate::updateCoverSize);
+	connect(this, &LibraryTreeView::aboutToUpdateCoverSize, _delegate, &LibraryItemDelegate::updateCoverSize);
 
 	// Load album cover
 	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
 
-	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, delegate, &LibraryItemDelegate::displayIcon);
+	connect(vScrollBar, &LibraryScrollBar::aboutToDisplayItemDelegate, _delegate, &LibraryItemDelegate::displayIcon);
 	connect(vScrollBar, &QAbstractSlider::valueChanged, this, [=](int) {
 		QModelIndex iTop = indexAt(viewport()->rect().topLeft());
 		_jumpToWidget->setCurrentLetter(_libraryModel->currentLetter(iTop));
 	});
-	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, [=](const QString &letter) {
-		delegate->displayIcon(false);
-		QStandardItem *item = _libraryModel->letterItem(letter);
-		if (item) {
-			this->scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
-		}
-		delegate->displayIcon(true);
-	});
+	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::scrollToLetter);
 
 	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
 }
@@ -144,6 +136,16 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 	}
 }
 
+void LibraryTreeView::scrollToLetter(const QString &letter)
+{
+	_delegate->displayIcon(false);
+	QStandardItem *item = _libraryModel->letterItem(letter);
+	if (item) {
+		this->scrollTo(_proxyModel->mapFromSource(item->index()), PositionAtTop);
+	}
+	_delegate->displayIcon(true);
+}
+
 void LibraryTreeView::updateSelectedTracks()
 {
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
@@ -165,6 +167,25 @@ void LibraryTreeView::createConnectionsToDB()
 		db->load();
 		this->setProperty("connected", true);
 	}
+}
+
+/** Redefined to override shortcuts that are mapped on simple keys. */
+bool LibraryTreeView::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::ShortcutOverride) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent) {
+			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+			// IMHO, it's better to trigger the JumpTo widget to 'N' section
+			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
+				this->scrollToLetter(QString(keyEvent->key()));
+				// We don't want this event to be propagated
+				event->accept();
+			}
+		}
+
+	}
+	return TreeView::eventFilter(obj, event);
 }
 
 /** Redefined to display a small context menu in the view. */
