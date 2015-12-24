@@ -24,19 +24,19 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	, _stopAfterCurrent(false)
 {
 	connect(_localPlayer, &QtAV::AVPlayer::stopped, this, [=]() {
-		qDebug() << "QtAV::AVPlayer::stopped";
+		//qDebug() << "QtAV::AVPlayer::stopped";
 		this->setState(QMediaPlayer::StoppedState);
 	});
 
 	connect(_localPlayer, &QtAV::AVPlayer::loaded, this, [=]() {
-		qDebug() << "QtAV::AVPlayer::loaded";
+		//qDebug() << "QtAV::AVPlayer::loaded";
 		_localPlayer->audio()->setVolume(Settings::instance()->volume());
 		emit currentMediaChanged("file://" + _localPlayer->file());
 		this->setState(QMediaPlayer::PlayingState);
 	});
 
-	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool b) {
-		qDebug() << "QtAV::AVPlayer::paused" << b;
+	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool) {
+		//qDebug() << "QtAV::AVPlayer::paused" << b;
 		this->setState(QMediaPlayer::PausedState);
 	});
 
@@ -56,9 +56,7 @@ MediaPlayer::MediaPlayer(QObject *parent)
 
 	// Link core multimedia actions
 	connect(this, &MediaPlayer::mediaStatusChanged, this, [=] (QMediaPlayer::MediaStatus status) {
-		//qDebug() << "lambda MediaPlayer::mediaStatusChanged" << status;
 		if (_state != QMediaPlayer::StoppedState && status == QMediaPlayer::EndOfMedia) {
-			//qDebug() << "lambda _state != QMediaPlayer::StoppedState";
 			if (_stopAfterCurrent) {
 				stop();
 				_stopAfterCurrent = false;
@@ -95,16 +93,6 @@ void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 	this->play();
 }
 
-void MediaPlayer::setVolume(qreal v)
-{
-	Settings::instance()->setVolume(v);
-	if (_remotePlayer) {
-		_remotePlayer->setVolume(v);
-	} else {
-		_localPlayer->audio()->setVolume(v);
-	}
-}
-
 /** Current duration of the media, in ms. */
 qint64 MediaPlayer::duration()
 {
@@ -115,16 +103,32 @@ qint64 MediaPlayer::duration()
 	}
 }
 
+void MediaPlayer::setVolume(qreal v)
+{
+	Settings::instance()->setVolume(v);
+	if (_remotePlayer) {
+		_remotePlayer->setVolume(v);
+	} else {
+		_localPlayer->audio()->setVolume(v);
+	}
+}
+
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
 	// Everything is splitted in 2: local actions and remote actions
 	if (mc.canonicalUrl().isLocalFile()) {
-		// Resume playback is file was previously opened
-		if (_state == QMediaPlayer::PausedState) {
+		switch (_state) {
+		case QMediaPlayer::PausedState:
+			// Resume playback is file was previously opened
 			_localPlayer->togglePause();
 			this->setState(QMediaPlayer::PlayingState);
-		} else {
+			break;
+		case QMediaPlayer::StoppedState:
 			_localPlayer->play(mc.canonicalUrl().toLocalFile());
+			break;
+		case QMediaPlayer::PlayingState:
+			// Rewind media
+			_localPlayer->setPosition(0);
 		}
 	} else {
 		// Remote player is about to start
@@ -151,9 +155,7 @@ void MediaPlayer::setState(QMediaPlayer::State state)
 {
 	switch (state) {
 	case QMediaPlayer::StoppedState:
-		//qDebug() << Q_FUNC_INFO << "mediaStatus about to be emitted" << QMediaPlayer::EndOfMedia;
 		emit mediaStatusChanged(QMediaPlayer::EndOfMedia);
-		//qDebug() << Q_FUNC_INFO << "mediaStatus emitted";
 		break;
 	case QMediaPlayer::PlayingState:
 		break;
@@ -161,10 +163,7 @@ void MediaPlayer::setState(QMediaPlayer::State state)
 		break;
 	}
 	_state = state;
-	//qDebug() << Q_FUNC_INFO << "state about to be emitted" << state;
 	emit stateChanged(_state);
-	//qDebug() << Q_FUNC_INFO << "state emitted";
-
 }
 
 /** Set mute on or off. */
@@ -176,25 +175,6 @@ void MediaPlayer::setMute(bool b) const
 		_localPlayer->audio()->setMute(b);
 	}
 }
-
-/*void MediaPlayer::setTime(qint64 t) const
-{
-	if (_remotePlayer) {
-		_remotePlayer->setTime(t);
-	} else {
-		//_localPlayer->setTime(t);
-	}
-}*/
-
-/*qint64 MediaPlayer::time() const
-{
-	if (_remotePlayer) {
-		return _remotePlayer->time();
-	} else {
-		//return _localPlayer->time();
-		return 0;
-	}
-}*/
 
 void MediaPlayer::seek(qreal pos)
 {
@@ -286,7 +266,7 @@ void MediaPlayer::pause()
 	if (_remotePlayer) {
 		_remotePlayer->pause();
 	} else {
-		_localPlayer->pause();
+		_localPlayer->pause(true);
 	}
 	this->setState(QMediaPlayer::PausedState);
 }

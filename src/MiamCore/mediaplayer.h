@@ -41,6 +41,9 @@ public:
 
 	void changeTrack(MediaPlaylist *playlist, int trackIndex);
 
+	/** Current duration of the media, in ms. */
+	qint64 duration();
+
 	inline bool isStopAfterCurrent() const { return _stopAfterCurrent; }
 
 	inline MediaPlaylist * playlist() { return _playlist; }
@@ -62,9 +65,6 @@ public:
 	void playMediaContent(const QMediaContent &mc);
 
 private:
-	/** Current duration of the media, in ms. */
-	qint64 duration();
-
 	/** Current position in the media, percent-based. */
 	float position() const;
 

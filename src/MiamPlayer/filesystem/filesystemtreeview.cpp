@@ -16,6 +16,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent)
 	, _properties(new QMenu(this))
 	, _fileSystemModel(new QFileSystemModel(this))
 {
+	this->installEventFilter(this);
 	_fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 	_fileSystemModel->setNameFilters(FileHelper::suffixes(FileHelper::All, true));
 	this->setModel(_fileSystemModel);
@@ -148,6 +149,22 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 		}
 	}
 	return files;
+}
+
+/** Redefined to override shortcuts that are mapped on simple keys. */
+bool FileSystemTreeView::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::ShortcutOverride) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent) {
+			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
+				// We don't want this event to be propagated
+				event->accept();
+			}
+		}
+	}
+	return TreeView::eventFilter(obj, event);
 }
 
 void FileSystemTreeView::scrollAndHighlight(const QChar &c)

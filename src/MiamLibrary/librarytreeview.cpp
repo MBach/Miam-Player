@@ -183,7 +183,6 @@ bool LibraryTreeView::eventFilter(QObject *obj, QEvent *event)
 				event->accept();
 			}
 		}
-
 	}
 	return TreeView::eventFilter(obj, event);
 }

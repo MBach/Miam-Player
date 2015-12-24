@@ -724,7 +724,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}
-	//emit shortcutHaveChanged(keySequence);
 }
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
