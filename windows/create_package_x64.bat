@@ -10,7 +10,8 @@ copy %MiamPlayerBuild%\MiamUniqueLibrary\release\MiamUniqueLibrary.dll packages\
 
 rem 3rd party
 set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
-copy %MiamPlayerLibs%\*.dll packages\org.miamplayer.core\data\
+mkdir packages\org.qtav\data\
+copy %MiamPlayerLibs%\*.dll packages\org.qtav\data\
 
 rem qt libraries
 set QTDIR="C:\Qt\Qt5.6.0\5.6\msvc2015_64"
@@ -74,10 +75,10 @@ copy %QTDIR%\bin\Qt5WebEngineCore.dll packages\org.miamplayer.plugins.deezer\dat
 rem WebKit has a lot of dependencies!
 rem copy %QTDIR%\bin\Qt5Positioning.dll packages\org.miamplayer.plugins.deezer\data\Qt5Positioning.dll
 rem copy %QTDIR%\bin\Qt5PrintSupport.dll packages\org.miamplayer.plugins.deezer\data\Qt5PrintSupport.dll
-copy %QTDIR%\bin\Qt5Qml.dll packages\org.miamplayer.plugins.deezer\data\Qt5Qml.dll
-copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.plugins.deezer\data\Qt5Quick.dll
+rem copy %QTDIR%\bin\Qt5Qml.dll packages\org.miamplayer.plugins.deezer\data\Qt5Qml.dll
+rem copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.plugins.deezer\data\Qt5Quick.dll
 rem copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.plugins.deezer\data\Qt5Sensors.dll
-copy %QTDIR%\bin\Qt5WebChannel.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebChannel.dll
+rem copy %QTDIR%\bin\Qt5WebChannel.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebChannel.dll
 
 rem create only repository
 rem rmdir repository /s /q
@@ -87,6 +88,7 @@ rem create the final package
 binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
 
 rem delete data folders
+rmdir packages\org.qtav\data\ /s /q
 rmdir packages\org.miamplayer.core\data\ /s /q
 rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
 rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q

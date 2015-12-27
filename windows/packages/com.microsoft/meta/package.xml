@@ -2,8 +2,9 @@
 <Package>
 	<DisplayName>Microsoft Visual Studio Redistributable</DisplayName>
 	<Description>This C++ package is required for Miam-Player.</Description>
+	<Description xml:lang="fr_fr">Ce paquet C++ est obligatoire pour Miam-Player.</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2015-10-30</ReleaseDate>
+	<ReleaseDate>2015-12-28</ReleaseDate>
 	<Name>com.microsoft</Name>
 	<Default>script</Default>
 	<Script>installscript_vcredist.js</Script>
