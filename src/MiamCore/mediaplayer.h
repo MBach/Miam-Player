@@ -95,6 +95,9 @@ public slots:
 	/** Activate or desactive audio output. */
 	void toggleMute() const;
 
+	/** Play or pause current track in the playlist depending of the state of the player. */
+	void togglePlayback();
+
 signals:
 	void currentMediaChanged(const QString &uri);
 	void mediaStatusChanged(QMediaPlayer::MediaStatus);

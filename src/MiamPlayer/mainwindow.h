@@ -56,9 +56,7 @@ public:
 	/** Plugins. */
 	void loadPlugins();
 
-	MediaPlayer *mediaPlayer() const;
-
-	//inline AbstractSearchDialog * searchDialog() const { return _searchDialog; }
+	inline MediaPlayer *mediaPlayer() const { return _mediaPlayer; }
 
 	/** Open a new Dialog where one can add a folder to current playlist. */
 	void openFolder(const QString &dir);

@@ -67,11 +67,6 @@ MainWindow::MainWindow(QWidget *parent)
 	menubar->setHidden(settings->value("isMenuHidden", false).toBool());
 }
 
-MediaPlayer *MainWindow::mediaPlayer() const
-{
-	return _mediaPlayer;
-}
-
 void MainWindow::activateLastView()
 {
 	// Find the last active view and connect database to it
@@ -130,7 +125,6 @@ void MainWindow::init()
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 	this->loadThemeAndSettings();
-
 
 	// Init shortcuts
 	Settings *settings = Settings::instance();
