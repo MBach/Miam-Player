@@ -31,12 +31,11 @@
 
 #define QXTGLOBALSHORTCUT_H
 
+#include "miamcore_global.h"
 #include "qxtglobal.h"
 #include <QObject>
 #include <QKeySequence>
 class QxtGlobalShortcutPrivate;
-
-#include "miamcore_global.h"
 
 class MIAMCORE_LIBRARY QxtGlobalShortcut : public QObject
 {

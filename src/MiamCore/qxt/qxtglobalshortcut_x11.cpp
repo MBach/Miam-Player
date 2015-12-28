@@ -1,4 +1,4 @@
-#ifdef Q_OS_LINUX
+#ifdef __linux
 #include "qxtglobalshortcut_p.h"
 /****************************************************************************
 ** Copyright (c) 2006 - 2011, the LibQxt project.
@@ -32,32 +32,29 @@
 
 #include <QVector>
 #include <X11/Xlib.h>
-#   include <QApplication>
-#   include <qpa/qplatformnativeinterface.h>
-#   include <xcb/xcb.h>
+#include <xcb/xcb.h>
+#include <QX11Info>
 
 namespace {
 
-const QVector<quint32> maskModifiers = QVector<quint32>()
-	<< 0 << Mod2Mask << LockMask << (Mod2Mask | LockMask);
+const QVector<quint32> maskModifiers = QVector<quint32>() << 0 << Mod2Mask << LockMask << (Mod2Mask | LockMask);
 
 typedef int (*X11ErrorHandler)(Display *display, XErrorEvent *event);
 
-class QxtX11ErrorHandler {
+class QxtX11ErrorHandler
+{
 public:
 	static bool error;
 
-	static int qxtX11ErrorHandler(Display *display, XErrorEvent *event)
-	{
+	static int qxtX11ErrorHandler(Display *display, XErrorEvent *event) {
 		Q_UNUSED(display);
-		switch (event->error_code)
-		{
+		switch (event->error_code) {
 			case BadAccess:
 			case BadValue:
 			case BadWindow:
-				if (event->request_code == 33 /* X_GrabKey */ ||
-						event->request_code == 34 /* X_UngrabKey */)
-				{
+				// X_GrabKey
+				// X_UngrabKe
+				if (event->request_code == 33  || event->request_code == 34) {
 					error = true;
 					//TODO:
 					//char errstr[256];
@@ -67,14 +64,12 @@ public:
 		return 0;
 	}
 
-	QxtX11ErrorHandler()
-	{
+	QxtX11ErrorHandler() {
 		error = false;
 		m_previousErrorHandler = XSetErrorHandler(qxtX11ErrorHandler);
 	}
 
-	~QxtX11ErrorHandler()
-	{
+	~QxtX11ErrorHandler() {
 		XSetErrorHandler(m_previousErrorHandler);
 	}
 
@@ -84,38 +79,27 @@ private:
 
 bool QxtX11ErrorHandler::error = false;
 
-class QxtX11Data {
+class QxtX11Data
+{
 public:
-	QxtX11Data()
-	{
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
+	QxtX11Data() {
 		m_display = QX11Info::display();
-#else
-		QPlatformNativeInterface *native = qApp->platformNativeInterface();
-		void *display = native->nativeResourceForScreen(QByteArray("display"),
-														QGuiApplication::primaryScreen());
-		m_display = reinterpret_cast<Display *>(display);
-#endif
 	}
 
-	bool isValid()
-	{
+	bool isValid() {
 		return m_display != 0;
 	}
 
-	Display *display()
-	{
+	Display *display() {
 		Q_ASSERT(isValid());
 		return m_display;
 	}
 
-	Window rootWindow()
-	{
+	Window rootWindow() {
 		return DefaultRootWindow(display());
 	}
 
-	bool grabKey(quint32 keycode, quint32 modifiers, Window window)
-	{
+	bool grabKey(quint32 keycode, quint32 modifiers, Window window) {
 		QxtX11ErrorHandler errorHandler;
 
 		for (int i = 0; !errorHandler.error && i < maskModifiers.size(); ++i) {
@@ -131,8 +115,7 @@ public:
 		return true;
 	}
 
-	bool ungrabKey(quint32 keycode, quint32 modifiers, Window window)
-	{
+	bool ungrabKey(quint32 keycode, quint32 modifiers, Window window) {
 		QxtX11ErrorHandler errorHandler;
 
 		foreach (quint32 maskMods, maskModifiers) {
@@ -148,18 +131,7 @@ private:
 
 } // namespace
 
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
-bool QxtGlobalShortcutPrivate::eventFilter(void *message)
-{
-	XEvent *event = static_cast<XEvent *>(message);
-	if (event->type == KeyPress)
-	{
-		XKeyEvent *key = reinterpret_cast<XKeyEvent *>(event);
-		unsigned int keycode = key->keycode;
-		unsigned int keystate = key->state;
-#else
-bool QxtGlobalShortcutPrivate::nativeEventFilter(const QByteArray & eventType,
-	void *message, long *result)
+bool QxtGlobalShortcutPrivate::nativeEventFilter(const QByteArray & eventType, void *message, long *result)
 {
 	Q_UNUSED(result);
 
@@ -181,16 +153,11 @@ bool QxtGlobalShortcutPrivate::nativeEventFilter(const QByteArray & eventType,
 			keystate |= Mod4Mask;
 		if(kev->state & XCB_MOD_MASK_SHIFT)
 			keystate |= ShiftMask;
-#endif
 		activateShortcut(keycode,
 			// Mod1Mask == Alt, Mod4Mask == Meta
 			keystate & (ShiftMask | ControlMask | Mod1Mask | Mod4Mask));
 	}
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
-	return prevEventFilter ? prevEventFilter(message) : false;
-#else
 	return false;
-#endif
 }
 
 quint32 QxtGlobalShortcutPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
@@ -220,8 +187,9 @@ quint32 QxtGlobalShortcutPrivate::nativeKeycode(Qt::Key key)
 		return 0;
 
 	KeySym keysym = XStringToKeysym(QKeySequence(key).toString().toLatin1().data());
-	if (keysym == NoSymbol)
+	if (keysym == NoSymbol) {
 		keysym = static_cast<ushort>(key);
+	}
 
 	return XKeysymToKeycode(x11.display(), keysym);
 }

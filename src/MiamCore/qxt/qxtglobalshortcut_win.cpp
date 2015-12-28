@@ -1,3 +1,4 @@
+#ifdef Q_OS_WIN
 #include "qxtglobalshortcut_p.h"
 /****************************************************************************
 ** Copyright (c) 2006 - 2011, the LibQxt project.
@@ -260,3 +261,4 @@ bool QxtGlobalShortcutPrivate::unregisterShortcut(quint32 nativeKey, quint32 nat
 	qDebug() << Q_FUNC_INFO << nativeKey << nativeMods;
 	return UnregisterHotKey(0, nativeMods ^ nativeKey);
 }
+#endif
