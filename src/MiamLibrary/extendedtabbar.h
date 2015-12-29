@@ -21,7 +21,7 @@ protected:
 	virtual QSize tabSizeHint(int) const override;
 
 	/** Redefined to be style-aware at runtime. */
-	virtual void paintEvent(QPaintEvent *);
+	virtual void paintEvent(QPaintEvent *) override;
 };
 
 #endif // EXTENDEDTABBAR_H

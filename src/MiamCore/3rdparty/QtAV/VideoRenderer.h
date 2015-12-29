@@ -27,7 +27,6 @@
 #include <QtCore/QRectF>
 #include <QtAV/AVOutput.h>
 #include <QtAV/VideoFrame.h>
-#include <QtAV/FactoryDefine.h>
 
 /*!
  * A bridge for VideoOutput(QObject based) and video renderer backend classes
@@ -41,9 +40,7 @@ class QGraphicsItem;
 namespace QtAV {
 
 typedef int VideoRendererId;
-class VideoRenderer;
-FACTORY_DECLARE(VideoRenderer)
-
+extern Q_AV_EXPORT VideoRendererId VideoRendererId_OpenGLWindow;
 class Filter;
 class VideoFormat;
 class VideoRendererPrivate;
@@ -64,6 +61,19 @@ public:
         QualityBest,
         QualityFastest
     };
+
+    template<class C>
+    static bool Register(VideoRendererId id, const char* name) { return Register(id, create<C>, name);}
+    static VideoRenderer* create(VideoRendererId id);
+    static VideoRenderer* create(const char* name);
+    /*!
+     * \brief next
+     * \param id NULL to get the first id address
+     * \return address of id or NULL if not found/end
+     */
+    static VideoRendererId* next(VideoRendererId* id = 0);
+    static const char* name(VideoRendererId id);
+    static VideoRendererId id(const char* name);
 
     VideoRenderer();
     virtual ~VideoRenderer();
@@ -196,7 +206,7 @@ protected:
     // TODO: parameter VideoFrame
     virtual void drawFrame() = 0; //You MUST reimplement this to display a frame. Other draw functions are not essential
     virtual void handlePaintEvent(); //has default. User don't have to implement it
-    void updateUi(); // schedual an UpdateRequest event on ui thread
+    virtual void updateUi(); // by default post an UpdateRequest event for window and UpdateLater event for widget to ensure ui update
 
 private: //used by VideoOutput class
     // property change
@@ -225,7 +235,14 @@ private: //used by VideoOutput class
     virtual bool onSetContrast(qreal contrast);
     virtual bool onSetHue(qreal hue);
     virtual bool onSetSaturation(qreal saturation);
+    virtual void onFrameSizeChanged(const QSize& size);
 private:
+    template<class C>
+    static VideoRenderer* create() {
+        return new C();
+    }
+    typedef VideoRenderer* (*VideoRendererCreator)();
+    static bool Register(VideoRendererId id, VideoRendererCreator, const char *name);
     friend class VideoOutput;
     //the size of decoded frame. get called in receiveFrame(). internal use only
     void setInSize(const QSize& s);

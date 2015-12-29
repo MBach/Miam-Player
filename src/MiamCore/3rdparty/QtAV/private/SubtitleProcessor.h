@@ -1,6 +1,6 @@
 /******************************************************************************
     QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2014 Wang Bin <wbsecg1@gmail.com>
+    Copyright (C) 2014-2015 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -25,16 +25,11 @@
 #include <QtCore/QList>
 #include <QtGui/QImage>
 #include <QtAV/QtAV_Global.h>
-#include <QtAV/FactoryDefine.h>
 #include <QtAV/Subtitle.h>
 
 namespace QtAV {
 
 typedef QString SubtitleProcessorId;
-class SubtitleProcessor;
-FACTORY_DECLARE(SubtitleProcessor)
-
-
 class Q_AV_PRIVATE_EXPORT SubtitleProcessor
 {
 public:
@@ -87,6 +82,23 @@ public:
     virtual void setFontFile(const QString& file) {Q_UNUSED(file);}
     virtual void setFontsDir(const QString& dir) {Q_UNUSED(dir);}
     virtual void setFontFileForced(bool force) {Q_UNUSED(force);}
+public:
+    static void registerAll();
+    template<class C> static bool Register(SubtitleProcessorId id, const char* name) { return Register(id, create<C>, name);}
+    static SubtitleProcessor* create(SubtitleProcessorId id);
+    static SubtitleProcessor* create(const char* name = "FFmpeg");
+    /*!
+     * \brief next
+     * \param id NULL to get the first id address
+     * \return address of id or NULL if not found/end
+     */
+    static SubtitleProcessorId* next(SubtitleProcessorId* id = 0);
+    static const char* name(SubtitleProcessorId id);
+    static SubtitleProcessorId id(const char* name);
+private:
+    template<class C> static SubtitleProcessor* create() { return new C();}
+    typedef SubtitleProcessor* (*SubtitleProcessorCreator)();
+    static bool Register(SubtitleProcessorId id, SubtitleProcessorCreator, const char *name);
 protected:
     // default do nothing
     virtual void onFrameSizeChanged(int width, int height);

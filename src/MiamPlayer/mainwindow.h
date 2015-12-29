@@ -49,7 +49,7 @@ public:
 
 	void dispatchDrop(QDropEvent *event);
 
-	virtual bool eventFilter(QObject *watched, QEvent *event);
+	virtual bool eventFilter(QObject *watched, QEvent *event) override;
 
 	void init();
 

@@ -50,22 +50,10 @@ public:
         Q_UNUSED(fmt);
         Q_UNUSED(handle);
         Q_UNUSED(plane);
-        return NULL;
-    }
-    /*!
-     * \brief map
-     * Map all planes. Maybe better performance than map planes one by one
-     * \param handles Array of address of real handle. Ends up with NULL
-     */
-    virtual void** map(SurfaceType type, const VideoFormat& fmt, void** handles) {
-        Q_UNUSED(type);
-        Q_UNUSED(fmt);
-        Q_UNUSED(handles);
-        return NULL;
+        return 0;
     }
     // TODO: SurfaceType. unmap is currenty used by opengl rendering
     virtual void unmap(void* handle) { Q_UNUSED(handle);}
-    virtual bool unmap(void** handle) { Q_UNUSED(handle); return false;}
     /*!
      * \brief createHandle
      * It is used by opengl renderer to create a texture when rendering frame from VDA decoder

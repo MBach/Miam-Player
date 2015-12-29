@@ -62,7 +62,15 @@ class Q_AV_EXPORT AVPlayer : public QObject
     Q_PROPERTY(int brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
     Q_PROPERTY(int contrast READ contrast WRITE setContrast NOTIFY contrastChanged)
     Q_PROPERTY(int saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
+    Q_PROPERTY(State state READ state WRITE setState NOTIFY stateChanged)
+    Q_ENUMS(State)
 public:
+    enum State {
+        StoppedState,
+        PlayingState, /// Start to play if it was stopped, or resume if it was paused
+        PausedState
+    };
+
     /// Supported input protocols. A static string list
     static const QStringList& supportedProtocols();
 
@@ -186,13 +194,13 @@ public:
      * \brief setAudioStream
      * set an external audio file and stream number as audio track
      * \param file external audio file. set empty to use internal audio tracks
-     * \param n audio stream number n=0, 1, ....
-     * TODO: if internal audio stream <0, disable audio
+     * \param n audio stream number n=0, 1, .... n<0: disable audio thread
      * \return false if fail
      */
     bool setAudioStream(const QString& file, int n = 0);
     /*!
      * set audio/video/subtitle stream to n. n=0, 1, 2..., means the 1st, 2nd, 3rd audio/video/subtitle stream
+     * If n < 0, there will be no audio thread and sound/
      * If a new file is set(except the first time) then a best stream will be selected. If the file not changed,
      * e.g. replay, then the stream not change
      * return: false if stream not changed, not valid
@@ -203,6 +211,7 @@ public:
      * Set audio stream number in current media or external audio file
      */
     bool setAudioStream(int n);
+    //TODO: n<0, no video thread
     bool setVideoStream(int n);
     /*!
      * \brief internalAudioTracks
@@ -237,6 +246,15 @@ public:
     bool play(const QString& path);
     bool isPlaying() const;
     bool isPaused() const;
+    /*!
+     * \brief state
+     * Player's playback state. Default is StoppedState.
+     * setState() is a replacement of play(), stop(), pause(bool)
+     * \return
+     */
+    State state() const;
+    void setState(State value);
+
     // TODO: use id as parameter and return ptr?
     void addVideoRenderer(VideoRenderer *renderer);
     void removeVideoRenderer(VideoRenderer *renderer);
@@ -314,8 +332,14 @@ public:
      * If not playing or no decoder found, the decoder will be changed at the next playback
      * \param ids
      */
-    // TODO: name list
     void setPriority(const QVector<VideoDecoderId>& ids);
+    /*!
+     * \brief setVideoDecoderPriority
+     * also can set in opt.priority
+     * \param names the video decoder name list in priority order. Name can be "FFmpeg", "CUDA", "DXVV", "VAAPI", "VDA", "VideoToolbox", case insensitive
+     */
+    void setVideoDecoderPriority(const QStringList& names);
+    QStringList videoDecoderPriority() const;
     //void setPriority(const QVector<AudioOutputId>& ids);
     /*!
      * below APIs are deprecated.
@@ -363,9 +387,17 @@ public slots:
      */
     void play(); //replay
     void stop();
-    void playNextFrame(); //deprecated
-    //void stepForward();
-    //void stepBackward();
+    QTAV_DEPRECATED void playNextFrame(); //deprecated. use stepForward instead
+    /*!
+     * \brief stepForward
+     * Play the next frame and pause
+     */
+    void stepForward();
+    /*!
+     * \brief stepBackward
+     * Play the previous frame and pause. Currently only support the previous decoded frames
+     */
+    void stepBackward();
 
     void setRelativeTimeMode(bool value);
     /*!
@@ -465,6 +497,7 @@ Q_SIGNALS:
     void paused(bool p);
     void started();
     void stopped();
+    void stateChanged(QtAV::AVPlayer::State state);
     void speedChanged(qreal speed);
     void repeatChanged(int r);
     void currentRepeatChanged(int r);

@@ -22,14 +22,13 @@
 #ifndef QAV_DECODER_H
 #define QAV_DECODER_H
 
-#include <QtAV/QtAV_Global.h>
 #include <QtAV/AVError.h>
-#include <QtAV/Packet.h>
 #include <QtCore/QVariant>
 #include <QtCore/QObject>
 
 namespace QtAV {
 
+class Packet;
 class AVDecoderPrivate;
 class Q_AV_EXPORT AVDecoder : public QObject
 {
@@ -53,7 +52,7 @@ public:
     void* codecContext() const;
     /*not available if AVCodecContext == 0*/
     bool isAvailable() const;
-    QTAV_DEPRECATED virtual bool decode(const QByteArray& encoded) = 0;
+    QTAV_DEPRECATED virtual bool decode(const QByteArray&) { return false;}
     virtual bool decode(const Packet& packet) = 0;
     int undecodedSize() const; //TODO: remove. always decode whole input data completely
 
@@ -77,11 +76,12 @@ public:
 Q_SIGNALS:
     void error(const QtAV::AVError& e); //explictly use QtAV::AVError in connection for Qt4 syntax
     void descriptionChanged();
-    virtual void codecNameChanged();
+    virtual void codecNameChanged();//signal can not be decared virtual (winrt)
+
 protected:
     AVDecoder(AVDecoderPrivate& d);
     DPTR_DECLARE(AVDecoder)
-    // force a codec. only used by avcodec sw decoders
+    // force a codec. only used by avcodec sw decoders. TODO: move to public? profile set?
     void setCodecName(const QString& name);
     QString codecName() const;
 private:

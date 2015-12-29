@@ -1,4 +1,5 @@
-#ifdef __linux
+#include <QtGlobal>
+#if defined(Q_OS_LINUX)
 #include "qxtglobalshortcut_p.h"
 /****************************************************************************
 ** Copyright (c) 2006 - 2011, the LibQxt project.

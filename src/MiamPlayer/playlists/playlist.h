@@ -76,7 +76,7 @@ public:
 	/** Insert remote medias to playlist. */
 	void insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
 
-	QSize minimumSizeHint() const;
+	virtual QSize minimumSizeHint() const override;
 
 	inline void forceDrop(QDropEvent *e) { this->dropEvent(e); }
 

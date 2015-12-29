@@ -18,17 +18,14 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ******************************************************************************/
-
 #ifndef QTAV_MediaIO_H
 #define QTAV_MediaIO_H
 
 #include <QtAV/QtAV_Global.h>
-#include <QtAV/FactoryDefine.h>
 #include <QtCore/QStringList>
 #include <QtCore/QObject>
 
 namespace QtAV {
-
 /*!
  * \brief MediaIO
  * Built-in io (use MediaIO::create(name), example: MediaIO *qio = MediaIO::create("QIODevice"))
@@ -40,11 +37,7 @@ namespace QtAV {
  *     device - read only. example: io->device()
  *   protocols: "", "qrc"
  */
-
 typedef int MediaIOId;
-class MediaIO;
-FACTORY_DECLARE(MediaIO)
-
 class MediaIOPrivate;
 class Q_AV_EXPORT MediaIO : public QObject
 {
@@ -60,7 +53,6 @@ public:
 
     /// Registered MediaIO::name(): "QIODevice", "QFile"
     static QStringList builtInNames();
-    static MediaIO* create(const QString& name);
     /*!
      * \brief createForProtocol
      * If an MediaIO subclass SomeInput.protocols() contains the protocol, return it's instance.
@@ -92,7 +84,7 @@ public:
     /// supported protocols. default is empty
     virtual const QStringList& protocols() const;
     virtual bool isSeekable() const = 0;
-    virtual bool isWritable() const = 0;
+    virtual bool isWritable() const { return false;}
     /*!
      * \brief read
      * read at most maxSize bytes to data, and return the bytes were actually read
@@ -102,19 +94,21 @@ public:
      * \brief write
      * write at most maxSize bytes from data, and return the bytes were actually written
      */
-    virtual qint64 write(const char* data, qint64 maxSize) = 0;
+    virtual qint64 write(const char* data, qint64 maxSize) {
+        Q_UNUSED(data);
+        Q_UNUSED(maxSize);
+        return 0;
+    }
     /*!
      * \brief seek
-     * \param from
-     * 0: seek to offset from beginning position
-     * 1: from current position
-     * 2: from end position
+     * \param from SEEK_SET, SEEK_CUR and SEEK_END from stdio.h
      * \return true if success
      */
     virtual bool seek(qint64 offset, int from) = 0;
     /*!
      * \brief position
      * MUST implement this. Used in seek
+     * TODO: implement internally by default
      */
     virtual qint64 position() const = 0;
     /*!
@@ -134,6 +128,23 @@ public:
     //struct AVIOContext; //anonymous struct in FFmpeg1.0.x
     void* avioContext(); //const?
     void release(); //TODO: how to remove it?
+public:
+    static void registerAll();
+    template<class C> static bool Register(MediaIOId id, const char* name) { return Register(id, create<C>, name);}
+    static MediaIO* create(MediaIOId id);
+    static MediaIO* create(const char* name);
+    /*!
+     * \brief next
+     * \param id NULL to get the first id address
+     * \return address of id or NULL if not found/end
+     */
+    static MediaIOId* next(MediaIOId* id = 0);
+    static const char* name(MediaIOId id);
+    static MediaIOId id(const char* name);
+private:
+    template<class C> static MediaIO* create() { return new C();}
+    typedef MediaIO* (*MediaIOCreator)();
+    static bool Register(MediaIOId id, MediaIOCreator, const char *name);
 protected:
     MediaIO(MediaIOPrivate& d, QObject* parent = 0);
     /*!

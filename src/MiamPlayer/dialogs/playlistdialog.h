@@ -53,7 +53,7 @@ private:
 
 public slots:
 	/** Redefined: clean preview area, populate once again lists. */
-	void open();
+	virtual void open() override;
 
 private slots:
 	/** Delete from the file system every selected playlists. Cannot be canceled. */

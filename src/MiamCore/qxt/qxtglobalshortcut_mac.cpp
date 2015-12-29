@@ -1,6 +1,6 @@
-#ifdef Q_OS_MAC
-#include <Carbon/Carbon.h>
-
+#include <QtGlobal>
+#if defined(Q_OS_OSX)
+#include "qxtglobalshortcut_p.h"
 /****************************************************************************
 ** Copyright (c) 2006 - 2011, the LibQxt project.
 ** See the Qxt AUTHORS file for a list of authors and copyright holders.
@@ -30,12 +30,12 @@
 **
 ** <http://libqxt.org>  <foundation@libqxt.org>
 *****************************************************************************/
-
-#include "qxtglobalshortcut_p.h"
 #include <QMap>
 #include <QHash>
 #include <QtDebug>
 #include <QApplication>
+#include <Carbon/Carbon.h>
+#include <CoreFoundation/CoreFoundation.h>
 
 typedef QPair<uint, uint> Identifier;
 static QMap<quint32, EventHotKeyRef> keyRefs;
@@ -47,30 +47,13 @@ OSStatus qxt_mac_handle_hot_key(EventHandlerCallRef nextHandler, EventRef event,
 {
 	Q_UNUSED(nextHandler);
 	Q_UNUSED(data);
-	if (GetEventClass(event) == kEventClassKeyboard && GetEventKind(event) == kEventHotKeyPressed)
-	{
+	if (GetEventClass(event) == kEventClassKeyboard && GetEventKind(event) == kEventHotKeyPressed) {
 		EventHotKeyID keyID;
 		GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(keyID), NULL, &keyID);
 		Identifier id = keyIDs.key(keyID.id);
 		QxtGlobalShortcutPrivate::activateShortcut(id.second, id.first);
 	}
 	return noErr;
-}
-
-quint32 QxtGlobalShortcutPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
-{
-	quint32 native = 0;
-	if (modifiers & Qt::ShiftModifier)
-		native |= shiftKey;
-	if (modifiers & Qt::ControlModifier)
-		native |= cmdKey;
-	if (modifiers & Qt::AltModifier)
-		native |= optionKey;
-	if (modifiers & Qt::MetaModifier)
-		native |= controlKey;
-	if (modifiers & Qt::KeypadModifier)
-		native |= kEventKeyModifierNumLockMask;
-	return native;
 }
 
 quint32 QxtGlobalShortcutPrivate::nativeKeycode(Qt::Key key)
@@ -184,7 +167,7 @@ quint32 QxtGlobalShortcutPrivate::nativeKeycode(Qt::Key key)
 	if (currentLayoutData == NULL)
 		return 0;
 
-	UCKeyboardLayout* header = (UCKeyboardLayout*)CFDataGetBytePtr(currentLayoutData);
+	UCKeyboardLayout* header = (UCKeyboardLayout*) CFDataGetBytePtr(currentLayoutData);
 	UCKeyboardTypeHeader* table = header->keyboardTypeList;
 
 	uint8_t *data = (uint8_t*)header;
@@ -225,6 +208,22 @@ quint32 QxtGlobalShortcutPrivate::nativeKeycode(Qt::Key key)
 	return 0;
 }
 
+quint32 QxtGlobalShortcutPrivate::nativeModifiers(Qt::KeyboardModifiers modifiers)
+{
+	quint32 native = 0;
+	if (modifiers & Qt::ShiftModifier)
+		native |= shiftKey;
+	if (modifiers & Qt::ControlModifier)
+		native |= cmdKey;
+	if (modifiers & Qt::AltModifier)
+		native |= optionKey;
+	if (modifiers & Qt::MetaModifier)
+		native |= controlKey;
+	if (modifiers & Qt::KeypadModifier)
+		native |= kEventKeyModifierNumLockMask;
+	return native;
+}
+
 bool QxtGlobalShortcutPrivate::registerShortcut(quint32 nativeKey, quint32 nativeMods)
 {
 	if (!qxt_mac_handler_installed)
@@ -241,8 +240,7 @@ bool QxtGlobalShortcutPrivate::registerShortcut(quint32 nativeKey, quint32 nativ
 
 	EventHotKeyRef ref = 0;
 	bool rv = !RegisterEventHotKey(nativeKey, nativeMods, keyID, GetApplicationEventTarget(), 0, &ref);
-	if (rv)
-	{
+	if (rv) {
 		keyIDs.insert(Identifier(nativeMods, nativeKey), keyID.id);
 		keyRefs.insert(keyID.id, ref);
 	}
@@ -258,4 +256,5 @@ bool QxtGlobalShortcutPrivate::unregisterShortcut(quint32 nativeKey, quint32 nat
 	keyIDs.remove(id);
 	return !UnregisterEventHotKey(ref);
 }
+
 #endif

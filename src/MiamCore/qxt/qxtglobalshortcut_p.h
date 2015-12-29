@@ -39,7 +39,7 @@
 #include <QAbstractNativeEventFilter>
 
 class QxtGlobalShortcutPrivate : public QxtPrivate<QxtGlobalShortcut>
-#if !defined(Q_OS_MAC)
+#ifndef Q_OS_MAC
 		,public QAbstractNativeEventFilter
 #endif
 {

@@ -73,7 +73,6 @@ public:
     int textureLocation(int index) const;
     int matrixLocation() const;
     int colorMatrixLocation() const;
-    int bppLocation() const;
     int opacityLocation() const;
     int channelMapLocation() const;
     VideoFormat videoFormat() const;
@@ -108,7 +107,8 @@ public:
     void setCurrentFrame(const VideoFrame& frame);
     VideoFormat currentFormat() const;
     VideoShader* createShader() const;
-    virtual const char* type() const;
+    virtual qint64 type() const;
+    static QString typeName(qint64 value);
 
     bool bind(); // TODO: roi
     void unbind();
@@ -119,6 +119,7 @@ public:
     const QMatrix4x4& matrix() const;
     const QMatrix4x4& channelMap() const;
     int bpp() const; //1st plane
+    QVector2D vectorTo8bit() const;
     int planeCount() const;
     /*!
      * \brief validTextureWidth

@@ -41,7 +41,7 @@ public slots:
 	void cleanDanglingNodes();
 
 	/** Find and insert a node in the hierarchy of items. */
-	void insertNode(GenericDAO *node);
+	void insertNode(GenericDAO *node) override;
 };
 
 #endif // LIBRARYITEMMODEL_H

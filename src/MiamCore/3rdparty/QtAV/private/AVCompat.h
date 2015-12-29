@@ -33,8 +33,9 @@
     (QTAV_USE_LIBAV(MODULE) && MODULE##_VERSION_INT >= AV_VERSION_INT(MAJOR, MINOR, MICRO))
 #define AV_MODULE_CHECK(MODULE, MAJOR, MINOR, MICRO, MINOR2, MICRO2) \
     (LIBAV_MODULE_CHECK(MODULE, MAJOR, MINOR, MICRO) || FFMPEG_MODULE_CHECK(MODULE, MAJOR, MINOR2, MICRO2))
-/// example: AV_ENSURE_OK(avcodec_close(avctx), false) will print error and return false if failed. AV_WARN just prints error.
+/// example: AV_ENSURE(avcodec_close(avctx), false) will print error and return false if failed. AV_WARN just prints error.
 #define AV_ENSURE_OK(FUNC, ...) AV_RUN_CHECK(FUNC, return, __VA_ARGS__)
+#define AV_ENSURE(FUNC, ...) AV_RUN_CHECK(FUNC, return, __VA_ARGS__)
 #define AV_WARN(FUNC) AV_RUN_CHECK(FUNC, void)
 
 #include "QtAV_Global.h"
@@ -49,6 +50,7 @@ extern "C"
 #include <libavutil/avutil.h>
 #include <libavutil/avstring.h>
 #include <libavutil/dict.h>
+#include <libavutil/imgutils.h>
 #include <libavutil/log.h>
 #include <libavutil/mathematics.h> //AV_ROUND_UP, av_rescale_rnd for libav
 #include <libavutil/cpu.h>
@@ -81,10 +83,6 @@ extern "C"
 #include <libavfilter/avfilter.h>
 #include <libavfilter/buffersink.h>
 #include <libavfilter/buffersrc.h>
-#if QTAV_USE_FFMPEG(LIBAVFILTER)
-/* used ffmpeg's by avfilter_copy_buf_props (now in avfilter.h). all deprecated in new versions*/
-#include <libavfilter/avcodec.h>
-#endif
 #endif //QTAV_HAVE(AVFILTER)
 
 #if QTAV_HAVE(AVDEVICE)
@@ -394,11 +392,29 @@ void av_packet_free_side_data(AVPacket *pkt);
 void avcodec_free_context(AVCodecContext **avctx);
 #endif
 
-#ifndef FF_API_OLD_GRAPH_PARSE
-#define avfilter_graph_parse_ptr(...) avfilter_graph_parse(__VA_ARGS__)
-#endif //FF_API_OLD_GRAPH_PARSE
-
-// helper functions
+// ffmpeg2.0 2013-07-03 - 838bd73 - lavfi 3.78.100 - avfilter.h
+#if QTAV_USE_LIBAV(LIBAVFILTER)
+#define avfilter_graph_parse_ptr(pGraph, pFilters, ppInputs, ppOutputs, pLog) avfilter_graph_parse(pGraph, pFilters, *ppInputs, *ppOutputs, pLog)
+#elif !FFMPEG_MODULE_CHECK(LIBAVFILTER, 3, 78, 100)
+#define avfilter_graph_parse_ptr(pGraph, pFilters, ppInputs, ppOutputs, pLog) avfilter_graph_parse(pGraph, pFilters, ppInputs, ppOutputs, pLog)
+#endif
+//ffmpeg1.0 2012-06-12 - c7b9eab / 84b9fbe - lavfi 2.79.100 / 2.22.0 - avfilter.h
+#if !AV_MODULE_CHECK(LIBAVFILTER, 2, 22, 0, 79, 100) //FF_API_AVFILTERPAD_PUBLIC
+const char *avfilter_pad_get_name(const AVFilterPad *pads, int pad_idx);
+enum AVMediaType avfilter_pad_get_type(const AVFilterPad *pads, int pad_idx);
+#endif
+///ffmpeg1.0 lavfi 2.74.100 / 2.17.0. was in ffmpeg <libavfilter/avcodec.h> in old ffmpeg and now are in avfilter.h and deprecated. declare here to avoid version check
+#if QTAV_USE_FFMPEG(LIBAVFILTER)
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+struct AVFilterBufferRef;
+int avfilter_copy_buf_props(AVFrame *dst, const AVFilterBufferRef *src);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+#endif
+/* helper functions */
 const char *get_codec_long_name(AVCodecID id);
 
 #define AV_RUN_CHECK(FUNC, RETURN, ...) do { \
