@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>581</width>
+    <width>911</width>
     <height>328</height>
    </rect>
   </property>
@@ -562,8 +562,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>581</width>
-     <height>21</height>
+     <width>911</width>
+     <height>22</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -677,7 +677,7 @@
     <string>&amp;Customize appearance...</string>
    </property>
    <property name="menuRole">
-    <enum>QAction::PreferencesRole</enum>
+    <enum>QAction::TextHeuristicRole</enum>
    </property>
   </action>
   <action name="actionAboutQt">

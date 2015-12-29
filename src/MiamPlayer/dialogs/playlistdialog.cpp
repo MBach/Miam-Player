@@ -18,7 +18,7 @@
 #include <QtDebug>
 
 PlaylistDialog::PlaylistDialog(QWidget *parent)
-	: QDialog(parent, Qt::Tool)
+	: QDialog(parent)
 	, _unsavedPlaylistModel(new QStandardItemModel(this))
 	, _savedPlaylistModel(new QStandardItemModel(this))
 {

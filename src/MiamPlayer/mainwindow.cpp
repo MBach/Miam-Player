@@ -41,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
 	this->setAcceptDrops(true);
 #ifndef Q_OS_MAC
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
+#else
+	actionHideMenuBar->setVisible(false);
 #endif
 
 	// Special behaviour for media buttons
@@ -439,10 +441,14 @@ void MainWindow::setupActions()
 /** Update fonts for menu and context menus. */
 void MainWindow::updateFonts(const QFont &font)
 {
+#ifndef Q_OS_OSX
 	menuBar()->setFont(font);
 	for (QAction *action : findChildren<QAction*>()) {
 		action->setFont(font);
 	}
+#else
+	Q_UNUSED(font)
+#endif
 }
 
 /** Open a new Dialog where one can add a folder to current playlist. */
@@ -808,7 +814,7 @@ void MainWindow::openPlaylistManager()
 	connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
 	connect(playlistDialog, &PlaylistDialog::aboutToRenameTab, tabPlaylists, &TabPlaylist::renameTab);
 	connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);
-	playlistDialog->open();
+	playlistDialog->exec();
 }
 
 void MainWindow::showTabPlaylists()
