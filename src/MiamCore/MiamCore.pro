@@ -60,14 +60,13 @@ unix:!macx {
     INSTALLS += target
 }
 macx {
-    QMAKE_LFLAGS += -F$$PWD/../../lib/osx/QtAV.framework
-    QMAKE_LFLAGS += -F/System/Library/Frameworks/Carbon.framework/
-    #LIBS += -L$$PWD/../../lib/osx/ -ltag -lQtAV
+    #auto clean
+    QMAKE_PRE_LINK = rm -f $$OUT_PWD/../MiamPlayer/MiamPlayer.app
+    QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
+    QMAKE_RPATHDIR += @executable_path/../Frameworks
+    QMAKE_LFLAGS += -F$$PWD/../../lib/osx/QtAV.framework -F/System/Library/Frameworks/Carbon.framework/
     LIBS += -L$$PWD/../../lib/osx/ -ltag -framework QtAV -framework Carbon
-    #QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
-    QMAKE_RPATHDIR = @executable_path/../Frameworks
-    QMAKE_PRE_LINK = rm -f $$OUT_PWD/../MiamPlayer/MiamPlayer.app/Contents/MacOS/MiamPlayer
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.11
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.9
 }
 
 SOURCES += library/jumptowidget.cpp \

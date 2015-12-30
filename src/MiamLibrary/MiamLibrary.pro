@@ -81,7 +81,7 @@ unix:!macx {
 }
 macx {
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.10
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.9
 }
 
 INCLUDEPATH += $$PWD/../MiamCore/

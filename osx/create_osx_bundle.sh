@@ -1,61 +1,50 @@
 #!/bin/bash
 
-libDir=../../lib/osx
+# (No need to be changed)
+libDir=../lib/osx
 
-# Where is installed Qt?
-qtDir=~/Qt5.4.1/
+# /!\ Where is installed Qt?
+qtDir=/Users/mbach/Qt5.6.0/5.6/clang_64
 
-# Where is the player built with QtCreator?
-build=~/dev/Miam-Player-build
+# /!\ Where is the player built with QtCreator?
+build=/Users/mbach/dev/Miam-Player-build/src
 
-# Where is installed VLC?
-vlcDir=/Applications/VLC.app
+# /!\ Current release
+version=0.8.0
 
-# Current release
-version=0.7.2
+# Everything else below should be straight forward
 
 ### Libraries
-# Modify uncomplete App first
+# Copy and modify uncomplete App first
 cp -R ${build}/MiamPlayer/MiamPlayer.app .
 frameworks=MiamPlayer.app/Contents/Frameworks
 mkdir -p ${frameworks}
-mkdir -p MiamPlayer.app/Contents/PlugIns
 
-# 3rd party dependencies (TagLib, VLC-Qt)
+# 3rd party dependencies (TagLib, QtAV)
 cp ${libDir}/*.dylib ${frameworks}
+cp -R ${libDir}/QtAV.framework ${frameworks}/QtAV.framework
 
-# Copy VLC libraries
-cp ${vlcDir}/Contents/MacOS/lib/liblzma.5.dylib ${frameworks}
-cp ${vlcDir}/Contents/MacOS/lib/libvlccore.8.dylib ${frameworks}
-cp ${vlcDir}/Contents/MacOS/lib/libvlc.5.dylib ${frameworks}
-
-install_name_tool -id "@executable_path/../Frameworks/liblzma.5.dylib" ${frameworks}/liblzma.5.dylib
-install_name_tool -id "@executable_path/../Frameworks/libvlccore.8.dylib" ${frameworks}/libvlccore.8.dylib
-
-# Copy VLC plugins (loaded at runtime)
-cp ${vlcDir}/Contents/MacOS/plugins/* MiamPlayer.app/Contents/PlugIns/
-for plugin in MiamPlayer.app/Contents/PlugIns/*.dylib
+# Change how MiamCore is linked to QtAV (removing absolute paths)
+for core in MiamPlayer.app/Contents/Frameworks/libmiam-core.*.dylib
 do
-    install_name_tool -change "@loader_path/../lib/libvlccore.8.dylib" "@loader_path/../Frameworks/libvlccore.8.dylib" ${plugin};
+    install_name_tool -change "${qtDir}/lib//QtAV.framework/Versions/1/QtAV" "@rpath/QtAV.framework/Versions/1/QtAV" ${core};
 done
-
-# Own dependencies
-cp ${build}/MiamCore/libmiam-core.*.dylib ${frameworks}
-cp ${build}/MiamUniqueLibrary/libmiam-uniquelibrary.*.dylib ${frameworks}
 
 ### Bundle
 cp Info.plist MiamPlayer.app/Contents/
-cp MiamPlayer.icns MiamPlayer.app/Contents/Resources/
 
 # Create bundle
-${qtDir}/5.4/clang_64/bin/macdeployqt MiamPlayer.app -always-overwrite
+${qtDir}/bin/macdeployqt MiamPlayer.app -always-overwrite -appstore-compliant
 
-# Wtf? If set before macdeployqt it's not written, unlike first 2 calls of install_name_tool
-install_name_tool -change "@loader_path/../lib/libvlccore.8.dylib" "@executable_path/../Frameworks/libvlccore.8.dylib" ${frameworks}/libvlc.5.dylib
+# Somehow, macdeployqt messes around with other packages
+# Change how QtAV is linked to Qt Framework
+install_name_tool -id "@rpath/QtAV.framework/Versions/1/QtAV" ${frameworks}/QtAV.framework/QtAV
+install_name_tool -change "${qtDir}/lib//QtGui.framework/Versions/5/QtGui" "@rpath/QtGui.framework/Versions/5/QtGui" ${frameworks}/QtAV.framework/QtAV
+install_name_tool -change "${qtDir}/lib//QtCore.framework/Versions/5/QtCore" "@rpath/QtCore.framework/Versions/5/QtCore" ${frameworks}/QtAV.framework/QtAV
 
 # Create the final redistributable package
 rm -rf MiamPlayer-${version}.dmg
 appdmg spec.json MiamPlayer-${version}.dmg > /dev/null 2>&1 || {
-    echo >&2 "appdmg is required to build the final package. Please install homebrew and appdmg. Aborting.";
+    echo >&2 "appdmg is required to build the final package. Please install npm and appdmg. Aborting.";
     exit 1;
 }

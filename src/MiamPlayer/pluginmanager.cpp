@@ -36,17 +36,24 @@ void PluginManager::init()
 {
 	QDir appDirPath = QDir(qApp->applicationDirPath());
 	QString pluginPath;
+	qDebug() << "appDirPath" << appDirPath;
+#if defined(Q_OS_OSX)
+	appDirPath.cdUp();
+	appDirPath.cd("PlugIns");
+	pluginPath = appDirPath.absolutePath();
+#else
 	if (appDirPath.cd("plugins")) {
 		pluginPath = appDirPath.absolutePath();
 	}
-
+#endif
 	if (!pluginPath.isEmpty()) {
 		QDirIterator it(pluginPath);
 		SettingsPrivate *settings = SettingsPrivate::instance();
 		QMap<QString, PluginInfo> plugins = settings->plugins();
 		QStringList failedPlugins;
 		while (it.hasNext()) {
-			if (QLibrary::isLibrary(it.next()) && !it.fileInfo().isSymLink()) {
+			it.next();
+			if (QLibrary::isLibrary(it.fileName()) && !it.fileInfo().isSymLink()) {
 				// If plugin was recognized by the App at least once
 				if (plugins.contains(it.filePath())) {
 					PluginInfo pluginInfo = plugins.value(it.filePath());
@@ -90,7 +97,9 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 {
 	QPluginLoader pluginLoader(pluginAbsPath, this);
 	QObject *plugin = pluginLoader.instance();
+	qDebug() << Q_FUNC_INFO << pluginAbsPath;
 	if (plugin) {
+		qDebug() << Q_FUNC_INFO << pluginAbsPath << "has been loaded!";
 		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
 		basic->setParent(this);
 		SettingsPrivate *settings = SettingsPrivate::instance();

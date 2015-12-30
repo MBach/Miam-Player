@@ -4,8 +4,7 @@ TEMPLATE = app
 
 include(qtsingleapplication/qtsingleapplication.pri)
 
-SOURCES += \
-    debug/logbrowser.cpp \
+SOURCES += debug/logbrowser.cpp \
     debug/logbrowserdialog.cpp \
     dialogs/closeplaylistpopup.cpp \
     dialogs/colordialog.cpp \
@@ -53,8 +52,7 @@ SOURCES += \
     tracksnotfoundmessagebox.cpp \
     volumeslider.cpp
 
-HEADERS += \
-    debug/logbrowser.h \
+HEADERS += debug/logbrowser.h \
     debug/logbrowserdialog.h \
     dialogs/closeplaylistpopup.h \
     dialogs/colordialog.h \
@@ -129,7 +127,7 @@ unix:!macx {
 }
 macx {
     TARGET = MiamPlayer
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.10
+    QMAKE_CXXFLAGS += -mmacosx-version-min=10.9
 }
 
 TRANSLATIONS = translations/m4p_ar.ts \
@@ -185,14 +183,17 @@ unix:!macx {
     INSTALLS += target
 }
 macx {
+    ICON = $$PWD/../../osx/MiamPlayer.icns
     LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamLibrary/ -lmiam-library -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
-    #1 create Framework directory
+    #1 create Framework and PlugIns directories
     #2 copy third party library: TagLib, QtAV
     #3 copy own libs
     QMAKE_POST_LINK += $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/PlugIns/) && \
      $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/libtag.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamCore/libmiam-core.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamLibrary/libmiam-library.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamUniqueLibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
 }
 
