@@ -25,6 +25,10 @@ protected:
 	/** Reimplemented to display a dialog to with 4 hierarchies available to the user. */
 	virtual void contextMenuEvent(QContextMenuEvent *) override;
 
+	virtual void leaveEvent(QEvent *event) override;
+
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+
 	virtual void paintEvent(QPaintEvent *) override;
 
 public slots:

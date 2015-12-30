@@ -60,12 +60,10 @@ unix:!macx {
     INSTALLS += target
 }
 macx {
-    QT += macextras
     QMAKE_LFLAGS += -F$$PWD/../../lib/osx/QtAV.framework
-    QMAKE_LFLAGS += -F/System/Library/Frameworks/CoreFoundation.framework/
     QMAKE_LFLAGS += -F/System/Library/Frameworks/Carbon.framework/
     #LIBS += -L$$PWD/../../lib/osx/ -ltag -lQtAV
-    LIBS += -L$$PWD/../../lib/osx/ -ltag -framework QtAV -framework CoreFoundation -framework Carbon
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -framework QtAV -framework Carbon
     #QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_RPATHDIR = @executable_path/../Frameworks
     QMAKE_PRE_LINK = rm -f $$OUT_PWD/../MiamPlayer/MiamPlayer.app/Contents/MacOS/MiamPlayer

@@ -98,7 +98,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 			// Display a light rectangle under the mouse pointer
 			p.fillRect(r, o.palette.highlight().color().lighter(160));
 		}
-		if (o.state.testFlag(QStyle::State_MouseOver) && r.contains(_pos)) {
+		if (o.state.testFlag(QStyle::State_MouseOver)) {
 			QColor lighterBG = o.palette.highlight().color().lighter(160);
 			QColor highlightedText = o.palette.highlightedText().color();
 			if (qAbs(lighterBG.value() - highlightedText.value()) > 128) {

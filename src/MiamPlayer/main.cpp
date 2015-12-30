@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 	app.setOrganizationName(COMPANY);
 	app.setApplicationName(SOFT);
 	app.setApplicationVersion(VERSION);
+	app.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
 	if (app.isRunning()) {
 		app.forwardArgsToServer();

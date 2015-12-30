@@ -24,6 +24,7 @@ LibraryHeader::LibraryHeader(QWidget *parent)
 		this->update();
 		emit aboutToChangeSortOrder();
 	});
+	this->setMouseTracking(true);
 }
 
 /** Reimplemented to display a dialog to with 4 hierarchies available to the user. */
@@ -33,6 +34,18 @@ void LibraryHeader::contextMenuEvent(QContextMenuEvent *e)
 	libraryOrderDialog->move(mapToGlobal(e->pos()));
 	libraryOrderDialog->show();
 	connect(libraryOrderDialog, &LibraryOrderDialog::aboutToChangeHierarchyOrder, this, &LibraryHeader::aboutToChangeHierarchyOrder);
+}
+
+void LibraryHeader::leaveEvent(QEvent *event)
+{
+	QPushButton::leaveEvent(event);
+	this->update();
+}
+
+void LibraryHeader::mouseMoveEvent(QMouseEvent *event)
+{
+	QPushButton::mouseMoveEvent(event);
+	this->update();
 }
 
 void LibraryHeader::paintEvent(QPaintEvent *)
@@ -102,7 +115,9 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	p.translate(minX, rect().height() / 2.5);
 
 	// Highlight the sort indicator if needed
-	if (rect().contains(mapFromGlobal(QCursor::pos()))) {
+	QStyleOptionButton option;
+	option.initFrom(this);
+	if (option.state.testFlag(QStyle::State_MouseOver)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.setBrush(QApplication::palette().highlight().color().lighter());
 	} else {

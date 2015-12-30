@@ -24,6 +24,9 @@ public:
 	/** Redefined to load custom icons saved in settings. */
 	void setIcon(const QIcon &);
 
+protected:
+	virtual void paintEvent(QPaintEvent *) override;
+
 public slots:
 	/** Load an icon from a chosen theme in options. */
 	void setIconFromTheme(const QString &);

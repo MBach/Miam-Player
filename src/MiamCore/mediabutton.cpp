@@ -3,13 +3,16 @@
 #include <settings.h>
 #include <settingsprivate.h>
 #include <QFile>
+#include <QPainter>
 
 #include <QtDebug>
 
 MediaButton::MediaButton(QWidget *parent)
 	: QPushButton(parent)
 	, _mediaPlayer(nullptr)
-{}
+{
+	this->setMaximumWidth(SettingsPrivate::instance()->buttonsSize() + 10);
+}
 
 void MediaButton::setMediaPlayer(MediaPlayer *mediaPlayer)
 {
@@ -30,6 +33,14 @@ void MediaButton::setIcon(const QIcon &icon)
 	}
 }
 
+void MediaButton::paintEvent(QPaintEvent *)
+{
+	QPainter p(this);
+	int x = (this->height() - iconSize().height()) / 2;
+	int y = (this->width() - iconSize().width()) / 2;
+	p.drawPixmap(QPoint(x, y), icon().pixmap(iconSize()));
+}
+
 /** Load an icon from a chosen theme in options. */
 void MediaButton::setIconFromTheme(const QString &theme)
 {
@@ -46,5 +57,6 @@ void MediaButton::setIconFromTheme(const QString &theme)
 void MediaButton::setSize(const int &s)
 {
 	this->setIconSize(QSize(s, s));
+	this->setMaximumWidth(s + 10);
 	emit mediaButtonChanged();
 }

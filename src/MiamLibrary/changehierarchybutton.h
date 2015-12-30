@@ -16,6 +16,10 @@ public:
 	explicit ChangeHierarchyButton(QWidget *parent = nullptr);
 
 protected:
+	virtual void leaveEvent(QEvent *event) override;
+
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+
 	virtual void paintEvent(QPaintEvent *) override;
 
 	virtual void resizeEvent(QResizeEvent *event) override;

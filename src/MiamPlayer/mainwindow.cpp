@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent)
 	paintableWidget->setFrameBorder(false, false, true, false);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-	actionMute->setIcon(style()->standardIcon(QStyle::SP_MediaVolumeMuted));
 
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 	seekSlider->setMediaPlayer(_mediaPlayer);
@@ -594,7 +593,7 @@ void MainWindow::loadThemeAndSettings()
 		if (!b) {
 			continue;
 		}
-		b->setIconSize(QSize(settingsPrivate->buttonsSize(), settingsPrivate->buttonsSize()));
+		//b->setSize(settingsPrivate->buttonsSize());
 		b->setMediaPlayer(_mediaPlayer);
 		if (settingsPrivate->isButtonThemeCustomized()) {
 			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));

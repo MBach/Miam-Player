@@ -115,6 +115,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="closeButton">
+       <property name="maximumSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -150,8 +156,17 @@
        </property>
        <item>
         <widget class="QLabel" name="iconArtists">
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
          <property name="pixmap">
           <pixmap resource="mp.qrc">:/icons/artist</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -215,8 +230,17 @@
        </property>
        <item>
         <widget class="QLabel" name="iconAlbums">
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
          <property name="pixmap">
           <pixmap resource="mp.qrc">:/icons/album</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -277,8 +301,17 @@
        </property>
        <item>
         <widget class="QLabel" name="iconTracks">
+         <property name="maximumSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
          <property name="pixmap">
           <pixmap resource="mp.qrc">:/icons/track</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

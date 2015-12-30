@@ -35,7 +35,6 @@
 #include <QtDebug>
 #include <QApplication>
 #include <Carbon/Carbon.h>
-#include <CoreFoundation/CoreFoundation.h>
 
 typedef QPair<uint, uint> Identifier;
 static QMap<quint32, EventHotKeyRef> keyRefs;

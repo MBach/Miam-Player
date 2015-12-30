@@ -122,8 +122,8 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
-             <height>24</height>
+             <width>32</width>
+             <height>32</height>
             </size>
            </property>
            <property name="text">
@@ -676,9 +676,6 @@
    <property name="text">
     <string>&amp;Customize appearance...</string>
    </property>
-   <property name="menuRole">
-    <enum>QAction::TextHeuristicRole</enum>
-   </property>
   </action>
   <action name="actionAboutQt">
    <property name="text">
@@ -945,6 +942,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>PaintableWidget</class>
+   <extends>QWidget</extends>
+   <header>paintablewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header>mediabutton.h</header>
@@ -1012,12 +1015,6 @@
    <class>StopButton</class>
    <extends>QPushButton</extends>
    <header>stopbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>PaintableWidget</class>
-   <extends>QWidget</extends>
-   <header>paintablewidget.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>LibraryFilterLineEdit</class>

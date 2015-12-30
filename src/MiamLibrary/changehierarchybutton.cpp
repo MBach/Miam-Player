@@ -4,13 +4,28 @@
 #include <QApplication>
 #include <QPaintEvent>
 #include <QResizeEvent>
+#include <QStyleOptionButton>
 #include <QStylePainter>
 
 #include <QtDebug>
 
 ChangeHierarchyButton::ChangeHierarchyButton(QWidget *parent)
 	: QPushButton(parent)
-{}
+{
+	this->setMouseTracking(true);
+}
+
+void ChangeHierarchyButton::leaveEvent(QEvent *event)
+{
+	QPushButton::leaveEvent(event);
+	this->update();
+}
+
+void ChangeHierarchyButton::mouseMoveEvent(QMouseEvent *event)
+{
+	QPushButton::mouseMoveEvent(event);
+	this->update();
+}
 
 void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 {
@@ -18,7 +33,9 @@ void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 	QColor base = QApplication::palette().base().color();
 
 	p.save();
-	if (rect().contains(mapFromGlobal(QCursor::pos()))) {
+	QStyleOptionButton option;
+	option.initFrom(this);
+	if (option.state.testFlag(QStyle::State_MouseOver)) {
 		p.setPen(Qt::NoPen);
 		p.setBrush(QApplication::palette().highlight());
 		p.drawRect(this->rect());

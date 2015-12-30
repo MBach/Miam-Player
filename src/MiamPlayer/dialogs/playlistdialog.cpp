@@ -33,7 +33,9 @@ PlaylistDialog::PlaylistDialog(QWidget *parent)
 	groupBoxPreview->setContentsMargins(11, 24, 11, 11);
 	QLabel *icon = new QLabel();
 	icon->setAlignment(Qt::AlignCenter);
-	icon->setPixmap(QPixmap(":/icons/emptyPlaylist"));
+	QPixmap emptyPlaylist(":/icons/emptyPlaylist");
+	emptyPlaylist.setDevicePixelRatio(2.0);
+	icon->setPixmap(emptyPlaylist);
 
 	_labelEmptyPreview = new QLabel(tr("This preview area is empty.\nSelect a playlist to display the first 30 tracks."));
 	_labelEmptyPreview->setAlignment(Qt::AlignCenter);
