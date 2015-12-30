@@ -50,6 +50,9 @@ void LibraryHeader::mouseMoveEvent(QMouseEvent *event)
 
 void LibraryHeader::paintEvent(QPaintEvent *)
 {
+	QStyleOptionButton option;
+	option.initFrom(this);
+
 	QStylePainter p(this);
 	QColor base = QApplication::palette().base().color();
 
@@ -115,8 +118,6 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 	p.translate(minX, rect().height() / 2.5);
 
 	// Highlight the sort indicator if needed
-	QStyleOptionButton option;
-	option.initFrom(this);
 	if (option.state.testFlag(QStyle::State_MouseOver)) {
 		p.setPen(QApplication::palette().highlight().color());
 		p.setBrush(QApplication::palette().highlight().color().lighter());

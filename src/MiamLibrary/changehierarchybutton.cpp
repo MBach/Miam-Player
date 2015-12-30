@@ -29,12 +29,12 @@ void ChangeHierarchyButton::mouseMoveEvent(QMouseEvent *event)
 
 void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 {
-	QStylePainter p(this);
-	QColor base = QApplication::palette().base().color();
-
-	p.save();
 	QStyleOptionButton option;
 	option.initFrom(this);
+
+	QStylePainter p(this);
+	QColor base = QApplication::palette().base().color();
+	p.save();
 	if (option.state.testFlag(QStyle::State_MouseOver)) {
 		p.setPen(Qt::NoPen);
 		p.setBrush(QApplication::palette().highlight());
@@ -51,7 +51,7 @@ void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 	p.fillRect(rect(), g);
 	p.restore();
 
-	if (!rect().contains(mapFromGlobal(QCursor::pos()))) {
+	if (!option.state.testFlag(QStyle::State_MouseOver)) {
 		p.drawPixmap(this->rect(), QPixmap(":/icons/hierarchy"));
 	}
 

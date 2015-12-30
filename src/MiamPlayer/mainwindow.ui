@@ -122,8 +122,8 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>32</width>
-             <height>32</height>
+             <width>24</width>
+             <height>24</height>
             </size>
            </property>
            <property name="text">
@@ -563,7 +563,7 @@
      <x>0</x>
      <y>0</y>
      <width>911</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -942,12 +942,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PaintableWidget</class>
-   <extends>QWidget</extends>
-   <header>paintablewidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header>mediabutton.h</header>
@@ -1015,6 +1009,12 @@
    <class>StopButton</class>
    <extends>QPushButton</extends>
    <header>stopbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PaintableWidget</class>
+   <extends>QWidget</extends>
+   <header>paintablewidget.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>LibraryFilterLineEdit</class>
