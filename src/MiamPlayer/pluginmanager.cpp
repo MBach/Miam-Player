@@ -36,7 +36,6 @@ void PluginManager::init()
 {
 	QDir appDirPath = QDir(qApp->applicationDirPath());
 	QString pluginPath;
-	qDebug() << "appDirPath" << appDirPath;
 #if defined(Q_OS_OSX)
 	appDirPath.cdUp();
 	appDirPath.cd("PlugIns");
@@ -97,13 +96,10 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 {
 	QPluginLoader pluginLoader(pluginAbsPath, this);
 	QObject *plugin = pluginLoader.instance();
-	qDebug() << Q_FUNC_INFO << pluginAbsPath;
 	if (plugin) {
-		qDebug() << Q_FUNC_INFO << pluginAbsPath << "has been loaded!";
-		BasicPlugin *basic = dynamic_cast<BasicPlugin*>(plugin);
-		basic->setParent(this);
-		SettingsPrivate *settings = SettingsPrivate::instance();
+		BasicPlugin *basic = static_cast<BasicPlugin*>(plugin);
 		if (basic) {
+			basic->setParent(this);
 			PluginInfo pluginInfo;
 			pluginInfo.setAbsFilePath(pluginAbsPath);
 			pluginInfo.setPluginName(basic->name());
@@ -111,6 +107,7 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 			pluginInfo.setConfigPage(basic->isConfigurable());
 			pluginInfo.setEnabled(true);
 
+			SettingsPrivate *settings = SettingsPrivate::instance();
 			settings->addPlugin(pluginInfo);
 			if (basic->isConfigurable()) {
 				QString pluginLang(":/translations/" + basic->name() + "_" + settings->language());

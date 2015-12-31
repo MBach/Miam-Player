@@ -45,9 +45,9 @@ CONFIG(release, debug|release) {
 CONFIG += c++11
 unix {
     TARGET = miam-core
+    #QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
-    QMAKE_CXXFLAGS += -std=c++11
     QT += x11extras
     LIBS += -L$$OUT_PWD -L/usr/lib/x86_64-linux-gnu/ -ltag
     # XXX
@@ -62,11 +62,11 @@ unix:!macx {
 macx {
     #auto clean
     QMAKE_PRE_LINK = rm -f $$OUT_PWD/../MiamPlayer/MiamPlayer.app
-    QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_RPATHDIR += @executable_path/../Frameworks
     QMAKE_LFLAGS += -F$$PWD/../../lib/osx/QtAV.framework -F/System/Library/Frameworks/Carbon.framework/
     LIBS += -L$$PWD/../../lib/osx/ -ltag -framework QtAV -framework Carbon
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.9
+    QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
 SOURCES += library/jumptowidget.cpp \

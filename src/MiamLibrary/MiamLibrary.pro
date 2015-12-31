@@ -71,9 +71,9 @@ win32 {
     TARGET = MiamLibrary
 }
 unix {
+    #QMAKE_CXXFLAGS += -std=c++11
     LIBS += -L$$OUT_PWD/../MiamCore/ -lmiam-core
     TARGET = miam-library
-    QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
     target.path = /usr/lib/
@@ -81,7 +81,7 @@ unix:!macx {
 }
 macx {
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.9
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
 INCLUDEPATH += $$PWD/../MiamCore/

@@ -120,14 +120,14 @@ win32 {
     TARGET = MiamPlayer
 }
 unix {
-    QMAKE_CXXFLAGS += -std=c++11
+    #QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
     TARGET = miam-player
 }
 macx {
     TARGET = MiamPlayer
-    QMAKE_CXXFLAGS += -mmacosx-version-min=10.9
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
 TRANSLATIONS = translations/m4p_ar.ts \
