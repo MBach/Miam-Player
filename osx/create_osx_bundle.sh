@@ -16,6 +16,9 @@ version=0.8.0
 
 ### Libraries
 # Copy and modify uncomplete App first
+if [ -d MiamPlayer.app ]; then
+    rm -rf MiamPlayer.app
+fi
 cp -R ${build}/MiamPlayer/MiamPlayer.app .
 frameworks=MiamPlayer.app/Contents/Frameworks
 mkdir -p ${frameworks}

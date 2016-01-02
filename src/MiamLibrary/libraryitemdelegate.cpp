@@ -354,7 +354,7 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
 		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
 	} else {
-		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
+		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {		
 			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {
 				p->setPen(opt.palette.text().color());
 			} else {

@@ -7,7 +7,9 @@
 qreal MiamItemDelegate::_iconOpacity = 1.0;
 
 MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
-	: QStyledItemDelegate(proxy), _proxy(proxy), _timer(new QTimer(this))
+	: QStyledItemDelegate(proxy)
+	, _proxy(proxy)
+	, _timer(new QTimer(this))
 {
 	_coverSize = SettingsPrivate::instance()->coverSize();
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());

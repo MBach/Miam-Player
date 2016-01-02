@@ -7,7 +7,7 @@
 #define SOFT "MiamPlayer"
 #define VERSION "0.8.0"
 
-#include "miamstyle.h"
+#include "styling/miamstyle.h"
 #include <plugininfo.h>
 #include <qtsingleapplication/QtSingleApplication>
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
-	qInstallMessageHandler(debugOutput);
+	//qInstallMessageHandler(debugOutput);
 
 	QtSingleApplication app(SOFT, argc, argv);
 	app.setOrganizationName(COMPANY);
