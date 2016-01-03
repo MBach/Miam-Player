@@ -24,8 +24,6 @@ private:
 public:
 	explicit LibraryItemModel(QObject *parent = nullptr);
 
-	void clearCache();
-
 	virtual QChar currentLetter(const QModelIndex &index) const override;
 
 	virtual LibraryFilterProxyModel* proxy() const override;

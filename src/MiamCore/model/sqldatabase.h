@@ -4,6 +4,7 @@
 #include "../miamcore_global.h"
 #include "artistdao.h"
 #include "albumdao.h"
+#include "settings.h"
 #include "trackdao.h"
 #include "playlistdao.h"
 #include "yeardao.h"
@@ -84,12 +85,14 @@ private:
 	/** When one has manually updated tracks with TagEditor, some nodes might in unstable state. */
 	bool cleanNodesWithoutTracks();
 
+	void loadFlatModel();
+
 	/** Read all tracks entries in the database and send them to connected views. */
 	void loadFromFileDB(bool sendResetSignal = true);
 
 public slots:
 	/** Load an existing database file or recreate it, if not found. */
-	void load();
+	void load(Settings::RequestSqlModel requestedModel = Settings::RSM_Hierarchical);
 
 	/** Delete and rescan local tracks. */
 	void rebuild();
@@ -111,6 +114,9 @@ signals:
 	void progressChanged(const int &);
 
 	void nodeExtracted(GenericDAO *node);
+	void tracksExtracted(const QList<TrackDAO> &);
+	void artistsExtracted(const QList<ArtistDAO> &);
+	void albumsExtracted(const QList<AlbumDAO> &);
 	void aboutToUpdateNode(GenericDAO *node);
 
 	//void aboutToUpdateView(const QList<FileHelper*> &olds, const QList<FileHelper*> &news);

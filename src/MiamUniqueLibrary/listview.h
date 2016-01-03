@@ -29,7 +29,9 @@ public:
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
 protected:
-	void paintEvent(QPaintEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
+	virtual void paintEvent(QPaintEvent *event) override;
 
 public slots:
 	void jumpTo(const QString &letter);

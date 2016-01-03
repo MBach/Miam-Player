@@ -14,6 +14,7 @@ MiamSortFilterProxyModel::MiamSortFilterProxyModel(QObject *parent)
 	this->setSortRole(Miam::DF_NormalizedString);
 	this->setDynamicSortFilter(false);
 	this->sort(0, Qt::AscendingOrder);
+	this->setSortLocaleAware(true);
 }
 
 void MiamSortFilterProxyModel::findMusic(const QString &text)
@@ -24,43 +25,6 @@ void MiamSortFilterProxyModel::findMusic(const QString &text)
 		this->highlightMatchingText(text);
 	}
 }
-
-bool MiamSortFilterProxyModel::filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const
-{
-
-	/*QModelIndex item = sourceModel()->index(0, sourceColumn, sourceParent);
-	if (!item.isValid()) {
-		return false;
-	} else {
-		qDebug() << Q_FUNC_INFO << item;
-	}*/
-	return QSortFilterProxyModel::filterAcceptsColumn(sourceColumn, sourceParent);
-}
-
-/*bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelIndex &sourceParent) const
-{
-	QModelIndex item = sourceModel()->index(sourceRow, 0, sourceParent);
-	if (!item.isValid()) {
-		return false;
-	}
-
-	// Check if there are children
-	int childCount = item.model()->rowCount(item);
-	if (childCount == 0) {
-		return false;
-	}
-
-	for (int i = 0; i < childCount; ++i) {
-		if (filterAcceptsRowItself(i, item)) {
-			return true;
-		}
-		// Recursive call
-		if (hasAcceptedChildren(i, item)) {
-			return true;
-		}
-	}
-	return false;
-}*/
 
 void MiamSortFilterProxyModel::filterLibrary(const QString &filter)
 {
@@ -142,6 +106,5 @@ void MiamSortFilterProxyModel::highlightMatchingText(const QString &text)
 			}
 		}
 	}
-	qDebug() << Q_FUNC_INFO << lettersToHighlight;
 	emit aboutToHighlightLetters(lettersToHighlight);
 }

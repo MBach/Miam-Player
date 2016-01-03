@@ -11,6 +11,7 @@ AlbumItem::AlbumItem(const AlbumDAO *dao) :
 	} else {
 		setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 	}
+	setData(dao->artist(), Miam::DF_Artist);
 	setData(dao->year(), Miam::DF_Year);
 	setData(dao->cover(), Miam::DF_CoverPath);
 	setData(dao->icon(), Miam::DF_IconPath);

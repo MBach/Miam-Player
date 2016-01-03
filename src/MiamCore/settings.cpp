@@ -32,6 +32,16 @@ QString Settings::lastActiveView() const
 	return value("lastActiveView", "actionViewPlaylists").toString();
 }
 
+Settings::RequestSqlModel Settings::sqlModel() const
+{
+	if (value("requestSqlModel").isNull()) {
+		return RSM_Hierarchical;
+	} else {
+		int i = value("requestSqlModel").toInt();
+		return (Settings::RequestSqlModel)i;
+	}
+}
+
 /** Returns the actual theme name. */
 QString Settings::theme() const
 {

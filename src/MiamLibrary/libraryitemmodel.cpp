@@ -24,11 +24,6 @@ LibraryItemModel::LibraryItemModel(QObject *parent)
 	_proxy->setTopLevelItems(this->topLevelItems());
 }
 
-void LibraryItemModel::clearCache()
-{
-	_hash.clear();
-}
-
 /** For every item in the library, gets the top level letter attached to it. */
 QChar LibraryItemModel::currentLetter(const QModelIndex &iTop) const
 {

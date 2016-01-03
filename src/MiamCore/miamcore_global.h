@@ -37,22 +37,25 @@ namespace Miam
 	// User defined data types (item->setData(QVariant, Field);)
 	enum DataField : int
 	{
-		DF_URI					= Qt::UserRole + 1,
-		DF_CoverPath			= Qt::UserRole + 2,
-		DF_TrackNumber			= Qt::UserRole + 3,
-		DF_DiscNumber			= Qt::UserRole + 4,
-		DF_NormalizedString		= Qt::UserRole + 5,
-		DF_Year					= Qt::UserRole + 6,
-		DF_Highlighted			= Qt::UserRole + 7,
-		DF_IsRemote				= Qt::UserRole + 8,
-		DF_IconPath				= Qt::UserRole + 9,
-		DF_Rating				= Qt::UserRole + 10,
-		DF_CustomDisplayText	= Qt::UserRole + 11,
-		DF_NormArtist			= Qt::UserRole + 12,
-		DF_NormAlbum			= Qt::UserRole + 13,
-		DF_Disc					= Qt::UserRole + 14,
-		DF_TrackLength			= Qt::UserRole + 15,
-		DF_CurrentPosition		= Qt::UserRole + 16
+		DF_ID					= Qt::UserRole + 1,
+		DF_URI					= Qt::UserRole + 2,
+		DF_CoverPath			= Qt::UserRole + 3,
+		DF_TrackNumber			= Qt::UserRole + 4,
+		DF_DiscNumber			= Qt::UserRole + 5,
+		DF_NormalizedString		= Qt::UserRole + 6,
+		DF_Year					= Qt::UserRole + 7,
+		DF_Highlighted			= Qt::UserRole + 8,
+		DF_IsRemote				= Qt::UserRole + 9,
+		DF_IconPath				= Qt::UserRole + 10,
+		DF_Rating				= Qt::UserRole + 11,
+		DF_CustomDisplayText	= Qt::UserRole + 12,
+		DF_NormArtist			= Qt::UserRole + 13,
+		DF_NormAlbum			= Qt::UserRole + 14,
+		DF_Disc					= Qt::UserRole + 15,
+		DF_TrackLength			= Qt::UserRole + 16,
+		DF_CurrentPosition		= Qt::UserRole + 17,
+		DF_Artist				= Qt::UserRole + 18,
+		DF_Album				= Qt::UserRole + 19
 	};
 
 	enum TagEditorColumns : int

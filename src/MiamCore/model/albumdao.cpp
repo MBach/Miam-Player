@@ -7,6 +7,8 @@ AlbumDAO::AlbumDAO(QObject *parent)
 AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
 	GenericDAO(remoteAlbum),
 	_artist(remoteAlbum.artist()),
+	_artistID(remoteAlbum.artistID()),
+	_artistNormalized(remoteAlbum.artistNormalized()),
 	_disc(remoteAlbum.disc()),
 	_cover(remoteAlbum.cover()),
 	_length(remoteAlbum.length()),
@@ -19,6 +21,8 @@ AlbumDAO& AlbumDAO::operator=(const AlbumDAO& other)
 {
 	GenericDAO::operator=(other);
 	_artist = other.artist();
+	_artistID = other.artistID();
+	_artistNormalized = other.artistNormalized();
 	_disc = other.disc();
 	_cover = other.cover();
 	_length = other.length();
@@ -30,8 +34,14 @@ AlbumDAO& AlbumDAO::operator=(const AlbumDAO& other)
 
 AlbumDAO::~AlbumDAO() {}
 
+uint AlbumDAO::artistID() const { return _artistID; }
+void AlbumDAO::setArtistID(const uint &artistID) { _artistID = artistID; }
+
 QString AlbumDAO::artist() const { return _artist; }
 void AlbumDAO::setArtist(const QString &artist) { _artist = artist; }
+
+QString AlbumDAO::artistNormalized() const { return _artistNormalized; }
+void AlbumDAO::setArtistNormalized(const QString &artistNormalized) { _artistNormalized = artistNormalized; }
 
 QString AlbumDAO::disc() const { return _disc; }
 void AlbumDAO::setDisc(const QString &disc) { _disc = disc; }

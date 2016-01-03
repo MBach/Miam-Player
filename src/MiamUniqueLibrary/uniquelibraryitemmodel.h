@@ -3,7 +3,10 @@
 
 #include "miamuniquelibrary_global.hpp"
 #include <miamitemmodel.h>
-#include <miamsortfilterproxymodel.h>
+#include "uniquelibraryfilterproxymodel.h"
+#include <model/trackdao.h>
+#include <model/albumdao.h>
+#include <model/artistdao.h>
 
 /**
  * \brief		The UniqueLibraryItemModel class is the model used to store all tracks in a list view.
@@ -16,7 +19,7 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibraryItemModel : public MiamItemModel
 {
 	Q_OBJECT
 private:
-	MiamSortFilterProxyModel *_proxy;
+	UniqueLibraryFilterProxyModel *_proxy;
 
 public:
 	explicit UniqueLibraryItemModel(QObject *parent = nullptr);
@@ -26,7 +29,11 @@ public:
 	virtual MiamSortFilterProxyModel* proxy() const override;
 
 public slots:
-	virtual void insertNode(GenericDAO *node) override;
+	void insertTracks(const QList<TrackDAO> nodes);
+
+	void insertAlbums(const QList<AlbumDAO> nodes);
+
+	void insertArtists(const QList<ArtistDAO> nodes);
 };
 
 #endif // UNIQUELIBRARYITEMMODEL_H

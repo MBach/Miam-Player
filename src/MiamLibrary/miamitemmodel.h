@@ -45,7 +45,7 @@ protected:
 	void removeNode(const QModelIndex &node);
 
 public slots:
-	virtual void insertNode(GenericDAO *node) = 0;
+	virtual void insertNode(GenericDAO *) {}
 
 	virtual void updateNode(GenericDAO *node);
 };

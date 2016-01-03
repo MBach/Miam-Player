@@ -16,8 +16,9 @@
 
 bool MusicSearchEngine::isScanning = false;
 
-MusicSearchEngine::MusicSearchEngine(QObject *parent) :
-	QObject(parent), _timer(new QTimer(this))
+MusicSearchEngine::MusicSearchEngine(QObject *parent)
+	: QObject(parent)
+	, _timer(new QTimer(this))
 {
 	_timer->setInterval(5000);
 	connect(_timer, &QTimer::timeout, this, &MusicSearchEngine::watchForChanges);
@@ -136,10 +137,14 @@ void MusicSearchEngine::watchForChanges()
 	QStringList newFoldersToAddInLibrary;
 	// Add folders that were not found first
 	for (QFileInfo f : dirs) {
-		QSqlQuery query = db->exec("SELECT * FROM filesystem WHERE path = \"" + f.absoluteFilePath() + "\"");
-		if (!query.next()) {
+		QSqlQuery query(*db);
+		query.setForwardOnly(true);
+		query.prepare("SELECT * FROM filesystem WHERE path = ?");
+		query.addBindValue(f.absoluteFilePath());
+		if (query.exec() && !query.next()) {
 			newFoldersToAddInLibrary << f.absoluteFilePath();
 			QSqlQuery prepared(*db);
+			prepared.setForwardOnly(true);
 			prepared.prepare("INSERT INTO filesystem (path, lastModified) VALUES (?, ?)");
 			prepared.addBindValue(f.absoluteFilePath());
 			prepared.addBindValue(f.lastModified().toTime_t());
@@ -152,19 +157,30 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	// Process in reverse mode to clean cache: from database file and check if entry exists in database
-	QStringList oldLocations;
-	QSqlQuery cache = db->exec("SELECT * FROM filesystem");
-	while (cache.next()) {
-		QDir d(cache.record().value(0).toString());
-		d.exists();
-		QFileInfo fileInfo(cache.record().value(0).toString());
-		// Remove folder in database because it couldn't be find in the filesystem
-		if (!fileInfo.exists()) {
-			db->exec("DELETE FROM filesystem WHERE path = \"" + fileInfo.absoluteFilePath() + "\"");
-			oldLocations << fileInfo.absoluteFilePath();
+	QSqlQuery cache("SELECT * FROM filesystem", *db);
+	qDebug() << Q_FUNC_INFO << "SELECT * FROM filesystem";
+	cache.setForwardOnly(true);
+	if (cache.exec()) {
+		QStringList oldLocations;
+		while (cache.next()) {
+			QDir d(cache.record().value(0).toString());
+			d.exists();
+			QFileInfo fileInfo(cache.record().value(0).toString());
+			// Remove folder in database because it couldn't be find in the filesystem
+			if (!fileInfo.exists()) {
+				QSqlQuery deleteFromFilesystem(*db);
+				deleteFromFilesystem.prepare("DELETE FROM filesystem WHERE path = ?");
+				deleteFromFilesystem.addBindValue(fileInfo.absoluteFilePath());
+				qDebug() << Q_FUNC_INFO << "DELETE FROM filesystem WHERE path = ?";
+
+				if (deleteFromFilesystem.exec()) {
+					oldLocations << fileInfo.absoluteFilePath();
+				}
+			}
 		}
-	}
-	if (!oldLocations.isEmpty()) {
-		db->rebuild(oldLocations, QStringList());
+		qDebug() << Q_FUNC_INFO << oldLocations;
+		if (!oldLocations.isEmpty()) {
+			db->rebuild(oldLocations, QStringList());
+		}
 	}
 }

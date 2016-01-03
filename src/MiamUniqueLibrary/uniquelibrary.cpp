@@ -61,7 +61,9 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	}
 	QStandardItem *item = _model->itemFromIndex(_proxy->mapToSource(index));
+	qDebug() << Q_FUNC_INFO << item->text();
 	if (item && item->type() == Miam::IT_Track) {
+		qDebug() << Q_FUNC_INFO << "about to play" << QUrl::fromLocalFile(index.data(Miam::DF_URI).toString());
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		_currentTrack = item;
 		return true;
@@ -86,6 +88,7 @@ void UniqueLibrary::skipForward()
 	QModelIndex current = _proxy->mapFromSource(_model->index(_currentTrack->row(), 0));
 	int row = current.row();
 	while (row < _model->rowCount()) {
+		qDebug() << Q_FUNC_INFO << row;
 		QModelIndex next = current.sibling(row + 1, 0);
 		if (this->playSingleTrack(next)) {
 			break;

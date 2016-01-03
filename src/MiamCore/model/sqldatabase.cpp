@@ -115,6 +115,7 @@ MusicSearchEngine * SqlDatabase::musicSearchEngine() const
 bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
 {
 	QSqlQuery insertArtist(*this);
+	insertArtist.setForwardOnly(true);
 	insertArtist.prepare("INSERT OR IGNORE INTO artists (id, name, normalizedName, host) VALUES (?, ?, ?, ?)");
 	QString artistNorm = this->normalizeField(artist->title());
 	uint artistId = qHash(artistNorm);
@@ -528,8 +529,8 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 	transaction();
 	Q_ASSERT(oldPaths.size() == newPaths.size());
 
-    qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
-    qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
+	qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
+	qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
 
 	QList<FileHelper*> olds;
 	QList<ArtistDAO*> artists;
@@ -658,7 +659,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 					emit nodeExtracted(album);
 					trackDAO->setParentNode(album);
 				}
-                qDebug() << Q_FUNC_INFO << "about to extract track" << trackDAO->artist() << trackDAO->artistAlbum() << trackDAO->album() << trackDAO->title();
+				qDebug() << Q_FUNC_INFO << "about to extract track" << trackDAO->artist() << trackDAO->artistAlbum() << trackDAO->album() << trackDAO->title();
 				emit nodeExtracted(trackDAO);
 			}
 			olds.append(fh);
@@ -714,6 +715,81 @@ bool SqlDatabase::cleanNodesWithoutTracks()
 	return lastError().type() == QSqlError::NoError;
 }
 
+void SqlDatabase::loadFlatModel()
+{
+	emit aboutToLoad();
+
+	QSqlQuery query(*this);
+	query.setForwardOnly(true);
+	if (query.exec("SELECT id, name, normalizedName, icon host FROM artists")) {
+		QList<ArtistDAO> artists;
+		while (query.next()) {
+			ArtistDAO artist;
+			int i = -1;
+			artist.setId(query.record().value(++i).toString());
+			artist.setTitle(query.record().value(++i).toString());
+			artist.setTitleNormalized(query.record().value(++i).toString());
+			artist.setIcon(query.record().value(++i).toString());
+			artist.setHost(query.record().value(++i).toString());
+			artists.append(artist);
+		}
+		emit artistsExtracted(artists);
+	} else {
+		qDebug() << Q_FUNC_INFO << lastError();
+	}
+
+	/*if (query.exec("SELECT alb.id, alb.name, alb.normalizedName, alb.year, alb.cover, art.normalizedName, alb.host, alb.icon " \
+				   "FROM albums alb " \
+				   "INNER JOIN artists art ON alb.artistId = art.id")) {*/
+	if (query.exec("select a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
+				   "alb.name, alb.year, alb.host, alb.icon " \
+				   "from artists a " \
+				   "inner join albums alb on a.id = alb.artistId")) {
+		QList<AlbumDAO> albums;
+		while (query.next()) {
+			AlbumDAO album;
+			int i = -1;
+			album.setTitleNormalized(query.record().value(++i).toString());
+			//album.setId(query.record().value(++i).toString());
+			album.setTitle(query.record().value(++i).toString());
+			album.setYear(query.record().value(++i).toString());
+			album.setHost(query.record().value(++i).toString());
+			album.setCover(query.record().value(++i).toString());
+			//album.setArtistNormalized(query.record().value(++i).toString());
+			album.setIcon(query.record().value(++i).toString());
+			albums.append(album);
+		}
+		emit albumsExtracted(albums);
+	} else {
+		qDebug() << Q_FUNC_INFO << lastError();
+	}
+
+	query.prepare("SELECT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || t.trackNumber  || '|' || t.title as merged, " \
+				  "t.uri, t.trackNumber, t.title, t.length, t.rating, t.disc, t.host, t.icon " \
+				  "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
+				  "INNER JOIN artists art ON t.artistId = art.id");
+	if (query.exec()) {
+		QList<TrackDAO> tracks;
+		while (query.next()) {
+			TrackDAO track;
+			int i = -1;
+			track.setTitleNormalized(query.record().value(++i).toString());
+			track.setUri(query.record().value(++i).toString());
+			track.setTrackNumber(query.record().value(++i).toString());
+			track.setTitle(query.record().value(++i).toString());
+			//track.setArtist(query.record().value(++i).toString());
+			//track.setAlbum(query.record().value(++i).toString());
+			//track.setArtistAlbum(query.record().value(++i).toString());
+			track.setLength(query.record().value(++i).toString());
+			track.setRating(query.record().value(++i).toInt());
+			track.setDisc(query.record().value(++i).toString());
+			track.setHost(query.record().value(++i).toString());
+			tracks.append(track);
+		}
+		emit tracksExtracted(tracks);
+	}
+}
+
 /** Read all tracks entries in the database and send them to connected views. */
 void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 {
@@ -763,6 +839,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 		// Level 1: Artists
 		QSqlQuery qArtists("SELECT id, name, normalizedName FROM artists", *this);
+		qArtists.setForwardOnly(true);
 		if (qArtists.exec()) {
 			while (qArtists.next()) {
 				QSqlRecord record = qArtists.record();
@@ -787,6 +864,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 				// Level 2: Albums
 				QSqlQuery qAlbums(*this);
+				qAlbums.setForwardOnly(true);
 				qAlbums.prepare("SELECT name, normalizedName, year, cover, host, icon, id FROM albums WHERE artistId = ?");
 				qAlbums.addBindValue(artistId);
 				if (qAlbums.exec()) {
@@ -810,6 +888,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(*this);
+						qTracks.setForwardOnly(true);
 						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
 										"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 										"INNER JOIN artists art ON t.artistId = art.id " \
@@ -828,6 +907,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 	case SettingsPrivate::IP_Albums: {
 		// Level 1: Albums
 		QSqlQuery qAlbums("SELECT name, normalizedName, year, cover, host, icon, id FROM albums", *this);
+		qAlbums.setForwardOnly(true);
 		if (qAlbums.exec()) {
 			while (qAlbums.next()) {
 				QSqlRecord r = qAlbums.record();
@@ -845,6 +925,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 				// Level 2: Tracks
 				QSqlQuery qTracks(*this);
+				qTracks.setForwardOnly(true);
 				qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
 								"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 								"INNER JOIN artists art ON t.artistId = art.id " \
@@ -862,6 +943,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 		QSqlQuery qAlbums("SELECT art.name || ' – ' || alb.name, art.normalizedName || alb.normalizedName, alb.year, alb.cover, alb.host, alb.icon, alb.id " \
 						  "FROM albums alb " \
 						  "INNER JOIN artists art ON alb.artistId = art.id", *this);
+		qAlbums.setForwardOnly(true);
 		if (qAlbums.exec()) {
 			while (qAlbums.next()) {
 				QSqlRecord r = qAlbums.record();
@@ -879,6 +961,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 				// Level 2: Tracks
 				QSqlQuery qTracks(*this);
+				qTracks.setForwardOnly(true);
 				qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
 								"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 								"INNER JOIN artists art ON t.artistId = art.id " \
@@ -894,6 +977,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 	case SettingsPrivate::IP_Years: {
 		// Level 1: Years
 		QSqlQuery qYears("SELECT DISTINCT year FROM albums ORDER BY year", *this);
+		qYears.setForwardOnly(true);
 		if (qYears.exec()) {
 			while (qYears.next()) {
 				QSqlRecord r = qYears.record();
@@ -905,6 +989,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 				// Level 2: Artist - Album
 				QSqlQuery qAlbums(*this);
+				qAlbums.setForwardOnly(true);
 				qAlbums.prepare("SELECT art.name || ' – ' || alb.name, art.normalizedName || alb.normalizedName, alb.year, alb.cover, alb.host, alb.icon, art.id, alb.id " \
 								"FROM albums alb INNER JOIN artists art ON alb.artistId = art.id " \
 								"WHERE alb.year = ?");
@@ -928,6 +1013,7 @@ void SqlDatabase::loadFromFileDB(bool sendResetSignal)
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(*this);
+						qTracks.setForwardOnly(true);
 						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
 										"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 										"INNER JOIN artists art ON t.artistId = art.id " \
@@ -957,6 +1043,7 @@ void SqlDatabase::rebuild()
 	this->setPragmas();
 
 	QSqlQuery cleanDb(*this);
+	cleanDb.setForwardOnly(true);
 	//cleanDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
 	//cleanDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
 	//cleanDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
@@ -985,6 +1072,7 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 	for (QString oldLocation : oldLocations) {
 		if (newLocations.isEmpty() || !newLocations.contains(oldLocation)) {
 			QSqlQuery syncDb(*this);
+			syncDb.setForwardOnly(true);
 			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
 			syncDb.bindValue(":path", "file://" + QDir::fromNativeSeparators(oldLocation) + "%");
 			syncDb.exec();
@@ -1003,7 +1091,7 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 	}
 
 	if (locationsToAdd.isEmpty()) {
-		this->load();
+		this->load(Settings::instance()->sqlModel());
 	} else {
 		_musicSearchEngine->moveToThread(&_workerThread);
 		_musicSearchEngine->doSearch(locationsToAdd);
@@ -1011,10 +1099,14 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 }
 
 /** Load an existing database file or recreate it, if not found. */
-void SqlDatabase::load()
+void SqlDatabase::load(Settings::RequestSqlModel requestedModel)
 {
 	if (open() && tables().contains("tracks")) {
-		this->loadFromFileDB();
+		if (requestedModel == Settings::RSM_Hierarchical) {
+			this->loadFromFileDB();
+		} else {
+			this->loadFlatModel();
+		}
 	} else {
 		this->rebuild();
 	}
@@ -1032,12 +1124,14 @@ void SqlDatabase::saveCoverRef(const QString &coverPath, const QString &track)
 	uint albumId = artistId + qHash(albumNorm, 1);
 
 	QSqlQuery updateCoverPath("UPDATE albums SET cover = ? WHERE id = ? AND artistId = ?", *this);
+	updateCoverPath.setForwardOnly(true);
 	updateCoverPath.addBindValue(coverPath);
 	updateCoverPath.addBindValue(albumId);
 	updateCoverPath.addBindValue(artistId);
 	bool b = updateCoverPath.exec();
 	if (b) {
 		QSqlQuery selectAlbum("SELECT id, name, normalizedName, year, cover, artistId FROM albums WHERE id = ? AND artistId = ?", *this);
+		selectAlbum.setForwardOnly(true);
 		selectAlbum.addBindValue(albumId);
 		selectAlbum.addBindValue(artistId);
 		if (selectAlbum.exec() && selectAlbum.next()) {
@@ -1085,6 +1179,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	}*/
 
 	QSqlQuery insertTrack(*this);
+	insertTrack.setForwardOnly(true);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, " \
 		"disc, internalCover, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -1137,12 +1232,14 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	trackDAO->setDisc(QString::number(dn));
 
 	QSqlQuery selectAlbum(*this);
+	selectAlbum.setForwardOnly(true);
 	selectAlbum.prepare("SELECT name, normalizedName FROM albums WHERE id = ? AND artistId = ?");
 	selectAlbum.addBindValue(albumId);
 	selectAlbum.addBindValue(artistId);
 	selectAlbum.exec();
 	if (!selectAlbum.next()) {
 		QSqlQuery insertAlbum(*this);
+		insertAlbum.setForwardOnly(true);
 		insertAlbum.prepare("INSERT INTO albums (id, name, normalizedName, year, artistId) VALUES (?, ?, ?, ?, ?)");
 		insertAlbum.addBindValue(albumId);
 		insertAlbum.addBindValue(album);
@@ -1170,6 +1267,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 
 	} else {
 		QSqlQuery updateAlbum(*this);
+		updateAlbum.setForwardOnly(true);
 		if (QString::compare(selectAlbum.record().value(0).toString(), album) == 0) {
 			// Remote album with an icon in the treeview, then we add the exact same album from harddrive
 			// for example, first: listenned in streaming, second: enjoyed, then downloaded (legit DL of course)
@@ -1183,11 +1281,13 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		updateAlbum.exec();
 	}
 	QSqlQuery selectArtist(*this);
+	selectArtist.setForwardOnly(true);
 	selectArtist.prepare("SELECT name, normalizedName FROM artists WHERE id = ?");
 	selectArtist.addBindValue(artistId);
 	selectArtist.exec();
 	if (!selectArtist.next()) {
 		QSqlQuery insertArtist(*this);
+		insertArtist.setForwardOnly(true);
 		insertArtist.prepare("INSERT INTO artists (id, name, normalizedName) VALUES (?, ?, ?)");
 		insertArtist.addBindValue(artistId);
 		insertArtist.addBindValue(artistAlbum);
@@ -1201,6 +1301,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		_cache.insert(artistId, artistDAO);
 	} else {
 		QSqlQuery updateArtist(*this);
+		updateArtist.setForwardOnly(true);
 		if (QString::compare(selectArtist.record().value(0).toString(), artistAlbum) == 0) {
 			updateArtist.prepare("UPDATE artists SET host = nullptr WHERE id = ?");
 		} else {

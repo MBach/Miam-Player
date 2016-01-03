@@ -286,5 +286,4 @@ void LibraryTreeView::endPopulateTree()
 	_proxyModel->setDynamicSortFilter(true);
 	_circleProgressBar->hide();
 	_circleProgressBar->setValue(0);
-	//_libraryModel->clearCache();
 }

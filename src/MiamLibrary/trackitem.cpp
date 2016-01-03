@@ -5,7 +5,7 @@ TrackItem::TrackItem(const TrackDAO *dao) :
 	QStandardItem(dao->title())
 {
 	setData(dao->uri(), Miam::DF_URI);
-	//setData(dao->titleNormalized(), Miam::DF_NormalizedString);
+	setData(dao->titleNormalized(), Miam::DF_NormalizedString);
 	setData(dao->trackNumber(), Miam::DF_TrackNumber);
 	setData(dao->disc().toInt(), Miam::DF_DiscNumber);
 	setData(dao->length(), Miam::DF_TrackLength);
