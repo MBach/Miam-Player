@@ -33,6 +33,7 @@ SOURCES += debug/logbrowser.cpp \
     playlists/playlistitemdelegate.cpp \
     playlists/stareditor.cpp \
     styling/miamslider.cpp \
+    styling/miamstyle.cpp \
     styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
@@ -41,7 +42,6 @@ SOURCES += debug/logbrowser.cpp \
     columnutils.cpp \
     main.cpp \
     mainwindow.cpp \
-    miamstyle.cpp \
     playbackmodewidget.cpp \
     playbackmodewidgetfactory.cpp \
     pluginmanager.cpp \
@@ -82,6 +82,7 @@ HEADERS += debug/logbrowser.h \
     playlists/playlistitemdelegate.h \
     playlists/stareditor.h \
     styling/miamslider.h \
+    styling/miamstyle.h \
     styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
@@ -89,7 +90,6 @@ HEADERS += debug/logbrowser.h \
     tageditor/tageditortablewidget.h \
     columnutils.h \
     mainwindow.h \
-    miamstyle.h \
     nofocusitemdelegate.h \
     playbackmodewidget.h \
     playbackmodewidgetfactory.h \

@@ -190,7 +190,7 @@ void TabBar::mousePressEvent(QMouseEvent *event)
 	}
 }
 
-void TabBar::paintEvent(QPaintEvent *)
+void TabBar::paintEvent(QPaintEvent *e)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QStylePainter p(this);
