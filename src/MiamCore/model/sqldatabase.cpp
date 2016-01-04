@@ -738,11 +738,8 @@ void SqlDatabase::loadFlatModel()
 		qDebug() << Q_FUNC_INFO << lastError();
 	}
 
-	/*if (query.exec("SELECT alb.id, alb.name, alb.normalizedName, alb.year, alb.cover, art.normalizedName, alb.host, alb.icon " \
-				   "FROM albums alb " \
-				   "INNER JOIN artists art ON alb.artistId = art.id")) {*/
 	if (query.exec("select a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
-				   "alb.name, alb.year, alb.host, alb.icon " \
+				   "alb.name, a.name, alb.year, alb.host, alb.icon " \
 				   "from artists a " \
 				   "inner join albums alb on a.id = alb.artistId")) {
 		QList<AlbumDAO> albums;
@@ -750,12 +747,11 @@ void SqlDatabase::loadFlatModel()
 			AlbumDAO album;
 			int i = -1;
 			album.setTitleNormalized(query.record().value(++i).toString());
-			//album.setId(query.record().value(++i).toString());
 			album.setTitle(query.record().value(++i).toString());
+			album.setArtist(query.record().value(++i).toString());
 			album.setYear(query.record().value(++i).toString());
 			album.setHost(query.record().value(++i).toString());
 			album.setCover(query.record().value(++i).toString());
-			//album.setArtistNormalized(query.record().value(++i).toString());
 			album.setIcon(query.record().value(++i).toString());
 			albums.append(album);
 		}
@@ -765,7 +761,7 @@ void SqlDatabase::loadFlatModel()
 	}
 
 	query.prepare("SELECT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || t.trackNumber  || '|' || t.title as merged, " \
-				  "t.uri, t.trackNumber, t.title, t.length, t.rating, t.disc, t.host, t.icon " \
+				  "t.uri, t.trackNumber, t.title, art.name, alb.name, t.length, t.rating, t.disc, t.host, t.icon " \
 				  "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
 				  "INNER JOIN artists art ON t.artistId = art.id");
 	if (query.exec()) {
@@ -777,8 +773,8 @@ void SqlDatabase::loadFlatModel()
 			track.setUri(query.record().value(++i).toString());
 			track.setTrackNumber(query.record().value(++i).toString());
 			track.setTitle(query.record().value(++i).toString());
-			//track.setArtist(query.record().value(++i).toString());
-			//track.setAlbum(query.record().value(++i).toString());
+			track.setArtist(query.record().value(++i).toString());
+			track.setAlbum(query.record().value(++i).toString());
 			//track.setArtistAlbum(query.record().value(++i).toString());
 			track.setLength(query.record().value(++i).toString());
 			track.setRating(query.record().value(++i).toInt());

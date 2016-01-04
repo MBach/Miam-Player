@@ -67,6 +67,15 @@ void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> nodes)
 	for (ArtistDAO artist : nodes) {
 		ArtistItem *item = new ArtistItem(&artist);
 		items.append(item);
+		/*qDebug() << Q_FUNC_INFO << this->rowCount();
+		SeparatorItem *separator = this->insertSeparator(item);
+		this->invisibleRootItem()->appendRow(new ArtistItem(artist.title()));
+		qDebug() << Q_FUNC_INFO << this->rowCount();
+		if (separator) {
+			_topLevelItems.insert(separator, separator->index());
+		} else {
+			qDebug() << Q_FUNC_INFO << "couldn't insert separator";
+		}*/
 	}
 	this->invisibleRootItem()->appendRows(items);
 }

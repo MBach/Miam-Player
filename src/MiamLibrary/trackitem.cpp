@@ -12,6 +12,8 @@ TrackItem::TrackItem(const TrackDAO *dao) :
 	if (dao->rating() != -1) {
 		setData(dao->rating(), Miam::DF_Rating);
 	}
+	setData(dao->artist(), Miam::DF_Artist);
+	setData(dao->album(), Miam::DF_Album);
 	setData(!dao->uri().startsWith("file://"), Miam::DF_IsRemote);
 }
 

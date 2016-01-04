@@ -3,6 +3,8 @@
 
 #include <settingsprivate.h>
 
+#include <QtDebug>
+
 MiamItemModel::MiamItemModel(QObject *parent)
 	: QStandardItemModel(parent)
 {
