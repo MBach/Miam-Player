@@ -81,7 +81,7 @@ void LogBrowserDialog::outputMessage(QtMsgType type, const QString &msg)
 	}
 	/// XXX: Hack to have output in Qt Creator on Windows and at the same time in the application
 	/// Need to be tested too in Ubuntu
-	#ifdef Q_OS_WIN
+	#if defined(Q_OS_WIN)
 	std::cerr << msg.toStdString() << std::endl;
 	#endif
 }

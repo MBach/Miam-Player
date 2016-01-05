@@ -2,6 +2,7 @@
 
 #include <settingsprivate.h>
 #include <QApplication>
+#include <QImageReader>
 #include <QPainter>
 #include <QStandardItem>
 
@@ -37,7 +38,8 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
 		break;
 	case Miam::IT_Album:
-		this->paintRect(painter, o);
+		//o.rect.adjust(settings->coverSize(), 0, 0, 0);
+		//this->paintRect(painter, o);
 		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
 		break;
 	case Miam::IT_Disc:
@@ -60,11 +62,89 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	painter->restore();
 }
 
+#include <memory>
+#include <cover.h>
+#include <QDir>
+
 void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const
 {
+	static QImageReader imageReader;
+
 	auto settings = SettingsPrivate::instance();
 	int coverSize = settings->coverSize();
-	option.rect.moveLeft(coverSize);
+
+	// Cover
+	QString coverPath = item->coverPath();
+	if (!coverPath.isEmpty()) {
+		//qDebug() << Q_FUNC_INFO << coverPath;
+	}
+
+	if (settings->isCoversEnabled() && _showCovers) {
+		coverPath = item->data(Miam::DF_CoverPath).toString();
+		//qDebug() << Q_FUNC_INFO << item->icon().isNull() << coverPath;
+		if (!coverPath.isEmpty() && item->icon().isNull()) {
+		//if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
+			FileHelper fh(coverPath);
+			// If it's an inner cover, load it
+			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
+				//qDebug() << Q_FUNC_INFO << "loading internal cover from file";
+				std::unique_ptr<Cover> cover(fh.extractCover());
+				//if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
+				if (cover) {
+					//qDebug() << Q_FUNC_INFO << "cover was extracted";
+					QPixmap p;
+					if (p.loadFromData(cover->byteArray(), cover->format())) {
+						p = p.scaled(_coverSize, _coverSize);
+						if (!p.isNull()) {
+							item->setIcon(p);
+							//_loadedCovers.insert(item, true);
+						}
+					} else {
+						//qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
+					}
+				} else {
+					//qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
+				}
+			} else {
+				//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
+				imageReader.setScaledSize(QSize(_coverSize, _coverSize));
+				item->setIcon(QPixmap::fromImage(imageReader.read()));
+				//_loadedCovers.insert(item, true);
+			}
+		}
+	}
+
+	if (settings->isCoversEnabled()) {
+		painter->save();
+		QRect cover;
+		if (QGuiApplication::isLeftToRight()) {
+			cover = QRect(option.rect.x() + 1, option.rect.y() + 1, _coverSize, _coverSize);
+		} else {
+			cover = QRect(option.rect.width() + 19 - _coverSize - 1, option.rect.y() + 1, _coverSize, _coverSize);
+		}
+		// If font size is greater than the cover, align it
+		if (_coverSize < option.rect.height() - 2) {
+			painter->translate(0, (option.rect.height() - 1 - _coverSize) / 2);
+		}
+
+		if (coverPath.isEmpty()) {
+			if (_iconOpacity <= 0.25) {
+				painter->setOpacity(_iconOpacity);
+			} else {
+				painter->setOpacity(0.25);
+			}
+			painter->drawPixmap(cover, QPixmap(":/icons/disc"));
+		} else {
+			painter->setOpacity(_iconOpacity);
+			QPixmap p = option.icon.pixmap(QSize(_coverSize, _coverSize));
+			painter->drawPixmap(cover, p);
+		}
+		painter->restore();
+	}
+
+	option.rect.adjust(coverSize, 0, 0, 0);
+	//option.rect.moveLeft(coverSize);
 	QString text = item->text();
 	QString year = item->data(Miam::DF_Year).toString();
 	if (!year.isEmpty() && (year.compare("0") != 0)) {
@@ -75,11 +155,7 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 	int textWidth = painter->fontMetrics().width(text);
 	painter->drawLine(coverSize + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
 
-	// Cover
-	QString coverPath = item->coverPath();
-	if (!coverPath.isEmpty()) {
-		//qDebug() << Q_FUNC_INFO << coverPath;
-	}
+
 }
 
 void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const

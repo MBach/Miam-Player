@@ -34,6 +34,9 @@ public slots:
 	void insertAlbums(const QList<AlbumDAO> nodes);
 
 	void insertArtists(const QList<ArtistDAO> nodes);
+
+private:
+	void insertSeparators();
 };
 
 #endif // UNIQUELIBRARYITEMMODEL_H

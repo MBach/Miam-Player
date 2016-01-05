@@ -29,7 +29,7 @@ AddressBar::AddressBar(QWidget *parent)
 }
 
 /// This is an exception in this source code to define a function depending if Q_OS_WIN exists or not
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN)
 #include <qt_windows.h>
 // Retrieve volume names
 QString AddressBar::getVolumeInfo(const QString &drive)
@@ -329,6 +329,7 @@ void AddressBar::showDrivesAndPreviousFolders()
 	QFileInfoList fil;
 	fil << home << desktop << documents << downloads << pictures << music << videos;
 
+
 	auto insertItemInMenu = [this, nextButton] (const QFileInfo &fileInfo, const QString &location) -> void {
 		QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(fileInfo), location, _menu);
 		item->setSizeHint(QSize(_menu->viewport()->width(), 24));
@@ -360,6 +361,11 @@ void AddressBar::showDrivesAndPreviousFolders()
 		}
 		insertItemInMenu(drive, driveName);
 	}
+
+	QListWidgetItem *item =  new QListWidgetItem(QFileIconProvider().icon(QFileIconProvider::Network), tr("Network"), _menu);
+	item->setSizeHint(QSize(_menu->viewport()->width(), 24));
+	item->setData(Qt::UserRole, "\\");
+	item->setFlags(Qt::NoItemFlags);
 
 	// Then display the menu and the possibly empty list of folders before the first visible folder
 	_menu->moveOrHide(firstButton);

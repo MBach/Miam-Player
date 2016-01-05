@@ -21,7 +21,11 @@ AddressBarMenu::AddressBarMenu(AddressBar *addressBar)
 
 	connect(this, &QListWidget::itemClicked, [=](QListWidgetItem *item) {
 		if (!item->flags().testFlag(Qt::NoItemFlags)) {
-			_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
+			if (item->data(Qt::UserRole).toString() == "\\") {
+				qDebug() << "browse network folders";
+			} else {
+				_addressBar->init(QDir(item->data(Qt::UserRole).toString()));
+			}
 			this->clear();
 			this->close();
 		}

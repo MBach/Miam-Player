@@ -94,6 +94,7 @@ void ListView::paintEvent(QPaintEvent *event)
 void ListView::jumpTo(const QString &letter)
 {
 	QStandardItem *item = _model->letterItem(letter);
+	qDebug() << Q_FUNC_INFO << letter << item;
 	if (item) {
 		this->scrollTo(_model->proxy()->mapFromSource(item->index()), PositionAtTop);
 	}

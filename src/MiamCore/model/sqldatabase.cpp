@@ -738,21 +738,22 @@ void SqlDatabase::loadFlatModel()
 		qDebug() << Q_FUNC_INFO << lastError();
 	}
 
-	if (query.exec("select a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
-				   "alb.name, a.name, alb.year, alb.host, alb.icon " \
+	if (query.exec("select alb.id, a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
+				   "alb.name, a.name, alb.year, alb.host, alb.icon, cover " \
 				   "from artists a " \
 				   "inner join albums alb on a.id = alb.artistId")) {
 		QList<AlbumDAO> albums;
 		while (query.next()) {
 			AlbumDAO album;
 			int i = -1;
+			album.setId(query.record().value(++i).toString());
 			album.setTitleNormalized(query.record().value(++i).toString());
 			album.setTitle(query.record().value(++i).toString());
 			album.setArtist(query.record().value(++i).toString());
 			album.setYear(query.record().value(++i).toString());
 			album.setHost(query.record().value(++i).toString());
-			album.setCover(query.record().value(++i).toString());
 			album.setIcon(query.record().value(++i).toString());
+			album.setCover(query.record().value(++i).toString());
 			albums.append(album);
 		}
 		emit albumsExtracted(albums);
