@@ -1,17 +1,13 @@
 #ifndef LISTVIEW_H
 #define LISTVIEW_H
 
-#include <QListView>
+#include <QTableView>
 #include <library/jumptowidget.h>
 #include "miamuniquelibrary_global.hpp"
 #include "uniquelibraryitemmodel.h"
 
-/**
- * \brief		The ListView class is used to display thousands of tracks in a single list.
- * \author      Matthieu Bachelier
- * \copyright   GNU General Public License v3
- */
-class MIAMUNIQUELIBRARY_LIBRARY ListView : public QListView
+
+class MIAMUNIQUELIBRARY_LIBRARY ListView : public QTableView
 {
 	Q_OBJECT
 private:
@@ -35,6 +31,9 @@ protected:
 
 public slots:
 	void jumpTo(const QString &letter);
+
+private slots:
+	void mergeGrid();
 };
 
 #endif // LISTVIEW_H

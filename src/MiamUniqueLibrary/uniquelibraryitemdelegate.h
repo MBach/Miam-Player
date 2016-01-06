@@ -30,6 +30,8 @@ protected:
 
 	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
 
+	void drawCover(QPainter *painter, const QStyleOptionViewItem &option, const QString &coverPath) const;
+
 	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
 };
 

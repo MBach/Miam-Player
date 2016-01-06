@@ -263,14 +263,14 @@
    <header>mediabutton.h</header>
   </customwidget>
   <customwidget>
-   <class>ListView</class>
-   <extends>QListView</extends>
-   <header>listview.h</header>
-  </customwidget>
-  <customwidget>
    <class>SearchBar</class>
    <extends>QLineEdit</extends>
    <header location="global">searchbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ListView</class>
+   <extends>QTableView</extends>
+   <header>listview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

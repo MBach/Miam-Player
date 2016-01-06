@@ -26,7 +26,7 @@ public:
 
 	virtual QChar currentLetter(const QModelIndex &index) const override;
 
-	virtual MiamSortFilterProxyModel* proxy() const override;
+	virtual UniqueLibraryFilterProxyModel* proxy() const override;
 
 public slots:
 	void insertTracks(const QList<TrackDAO> nodes);
@@ -37,6 +37,9 @@ public slots:
 
 private:
 	void insertSeparators();
+
+signals:
+	void aboutToMergeGrid();
 };
 
 #endif // UNIQUELIBRARYITEMMODEL_H

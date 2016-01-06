@@ -9,14 +9,20 @@
 
 UniqueLibraryFilterProxyModel::UniqueLibraryFilterProxyModel(QObject *parent)
 	: MiamSortFilterProxyModel(parent)
-{
+	, _model(nullptr)
+{}
 
+/** Redefined from QSortFilterProxyModel. */
+void UniqueLibraryFilterProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
+{
+	MiamSortFilterProxyModel::setSourceModel(sourceModel);
+	_model = qobject_cast<QStandardItemModel*>(sourceModel);
 }
 
+/** Redefined from MiamSortFilterProxyModel. */
 bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-	QStandardItemModel *model = qobject_cast<QStandardItemModel*>(sourceModel());
-	QStandardItem *item = model->itemFromIndex(model->index(sourceRow, 0, sourceParent));
+	QStandardItem *item = _model->itemFromIndex(_model->index(sourceRow, 1, sourceParent));
 	if (!item) {
 		return false;
 	}

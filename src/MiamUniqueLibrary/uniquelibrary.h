@@ -21,7 +21,7 @@ private:
 	MediaPlayer *_mediaPlayer;
 	QStandardItem *_currentTrack;
 	UniqueLibraryItemModel *_model;
-	MiamSortFilterProxyModel *_proxy;
+	UniqueLibraryFilterProxyModel *_proxy;
 
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);

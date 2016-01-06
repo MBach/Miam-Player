@@ -20,7 +20,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	library->setSelectionBehavior(QAbstractItemView::SelectRows);
 	library->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-	_model = library->model();
 	_proxy = library->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
@@ -85,11 +84,11 @@ void UniqueLibrary::skipForward()
 	if (!_currentTrack) {
 		return;
 	}
-	QModelIndex current = _proxy->mapFromSource(_model->index(_currentTrack->row(), 0));
+	QModelIndex current = _proxy->mapFromSource(_model->index(_currentTrack->row(), 1));
 	int row = current.row();
 	while (row < _model->rowCount()) {
 		qDebug() << Q_FUNC_INFO << row;
-		QModelIndex next = current.sibling(row + 1, 0);
+		QModelIndex next = current.sibling(row + 1, 1);
 		if (this->playSingleTrack(next)) {
 			break;
 		} else {

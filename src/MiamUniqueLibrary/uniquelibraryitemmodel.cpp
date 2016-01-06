@@ -3,6 +3,7 @@
 #include <albumitem.h>
 #include <artistitem.h>
 #include <trackitem.h>
+#include "coveritem.h"
 
 #include <QtDebug>
 
@@ -10,7 +11,7 @@ UniqueLibraryItemModel::UniqueLibraryItemModel(QObject *parent)
 	: MiamItemModel(parent)
 	, _proxy(new UniqueLibraryFilterProxyModel(this))
 {
-	setColumnCount(1);
+	setColumnCount(2);
 	_proxy->setSourceModel(this);
 }
 
@@ -31,44 +32,38 @@ QChar UniqueLibraryItemModel::currentLetter(const QModelIndex &index) const
 	}
 }
 
-MiamSortFilterProxyModel *UniqueLibraryItemModel::proxy() const
+UniqueLibraryFilterProxyModel *UniqueLibraryItemModel::proxy() const
 {
 	return _proxy;
 }
 
 void UniqueLibraryItemModel::insertTracks(const QList<TrackDAO> nodes)
 {
-	QList<QStandardItem*> items;
-	items.reserve(nodes.size());
 	for (TrackDAO track : nodes) {
 		TrackItem *item = new TrackItem(&track);
-		items.append(item);
+		appendRow({ nullptr, item });
 	}
-	this->invisibleRootItem()->appendRows(items);
-	this->proxy()->sort(0);
+	this->proxy()->sort(1);
 	this->proxy()->setDynamicSortFilter(true);
+	emit aboutToMergeGrid();
 }
 
 void UniqueLibraryItemModel::insertAlbums(const QList<AlbumDAO> nodes)
 {
-	QList<QStandardItem*> items;
-	items.reserve(nodes.size());
 	for (AlbumDAO album : nodes) {
-		AlbumItem *item = new AlbumItem(&album);
-		items.append(item);
+		if (album.cover().isEmpty()) {
+			appendRow({ nullptr, new AlbumItem(&album) });
+		} else {
+			appendRow({ new CoverItem(album.cover()), new AlbumItem(&album) });
+		}
 	}
-	this->invisibleRootItem()->appendRows(items);
 }
 
 void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> nodes)
 {
-	QList<QStandardItem*> items;
-	items.reserve(nodes.size());
 	for (ArtistDAO artist : nodes) {
-		ArtistItem *item = new ArtistItem(&artist);
-		items.append(item);
+		appendRow({ nullptr, new ArtistItem(&artist) });
 	}
-	this->invisibleRootItem()->appendRows(items);
 	this->insertSeparators();
 }
 

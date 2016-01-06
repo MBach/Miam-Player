@@ -13,14 +13,16 @@ HEADERS += \
     uniquelibraryitemdelegate.h \
     uniquelibraryitemmodel.h \
     miamuniquelibrary_global.hpp \
-    uniquelibraryfilterproxymodel.h
+    uniquelibraryfilterproxymodel.h \
+    coveritem.h
 
 SOURCES += \
     uniquelibrary.cpp \
     listview.cpp \
     uniquelibraryitemdelegate.cpp \
     uniquelibraryitemmodel.cpp \
-    uniquelibraryfilterproxymodel.cpp
+    uniquelibraryfilterproxymodel.cpp \
+    coveritem.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary
