@@ -1863,7 +1863,47 @@
        <attribute name="title">
         <string>Unique Library (list)</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_18"/>
+       <layout class="QVBoxLayout" name="verticalLayout_18">
+        <item>
+         <widget class="QGroupBox" name="groupBoxUniqueLibraryCovers">
+          <property name="title">
+           <string>Artist and albums lists</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="pinScrollLabel">
+             <property name="text">
+              <string>Pin when scrolling</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="pinScrollCheckBox">
+             <property name="text">
+              <string notr="true"/>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </widget>
      </widget>
      <widget class="QWidget" name="tabsPage">
@@ -2440,9 +2480,9 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroupReorderArtists"/>
-  <buttongroup name="buttonGroupArtistsArticle"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
+  <buttongroup name="buttonGroupReorderArtists"/>
+  <buttongroup name="buttonGroupArtistsArticle"/>
  </buttongroups>
 </ui>

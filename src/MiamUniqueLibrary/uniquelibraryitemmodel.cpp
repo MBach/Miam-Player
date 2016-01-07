@@ -43,9 +43,8 @@ void UniqueLibraryItemModel::insertTracks(const QList<TrackDAO> nodes)
 		TrackItem *item = new TrackItem(&track);
 		appendRow({ nullptr, item });
 	}
-	this->proxy()->sort(1);
+	this->proxy()->sort(this->proxy()->defaultSortColumn());
 	this->proxy()->setDynamicSortFilter(true);
-	emit aboutToMergeGrid();
 }
 
 void UniqueLibraryItemModel::insertAlbums(const QList<AlbumDAO> nodes)
@@ -64,10 +63,4 @@ void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> nodes)
 	for (ArtistDAO artist : nodes) {
 		appendRow({ nullptr, new ArtistItem(&artist) });
 	}
-	this->insertSeparators();
-}
-
-void UniqueLibraryItemModel::insertSeparators()
-{
-	qDebug() << Q_FUNC_INFO << "TODO";
 }

@@ -13,7 +13,7 @@ MiamSortFilterProxyModel::MiamSortFilterProxyModel(QObject *parent)
 	this->setSortCaseSensitivity(Qt::CaseInsensitive);
 	this->setSortRole(Miam::DF_NormalizedString);
 	this->setDynamicSortFilter(false);
-	this->sort(0, Qt::AscendingOrder);
+	this->sort(this->defaultSortColumn(), Qt::AscendingOrder);
 	this->setSortLocaleAware(true);
 }
 
@@ -31,7 +31,7 @@ void MiamSortFilterProxyModel::filterLibrary(const QString &filter)
 	if (filter.isEmpty()) {
 		this->setFilterRole(Qt::DisplayRole);
 		this->setFilterRegExp(QRegExp());
-		this->sort(0, this->sortOrder());
+		this->sort(this->defaultSortColumn(), this->sortOrder());
 	} else {
 		bool needToSortAgain = false;
 		if (this->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
@@ -46,7 +46,7 @@ void MiamSortFilterProxyModel::filterLibrary(const QString &filter)
 			this->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
 		}
 		if (needToSortAgain) {
-			this->sort(0, this->sortOrder());
+			this->sort(this->defaultSortColumn(), this->sortOrder());
 		}
 	}
 }

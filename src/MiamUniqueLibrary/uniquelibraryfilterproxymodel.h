@@ -15,10 +15,11 @@ private:
 public:
 	UniqueLibraryFilterProxyModel(QObject *parent = nullptr);
 
+	virtual int defaultSortColumn() const override { return 1; }
+
 	/** Redefined from QSortFilterProxyModel. */
 	void setSourceModel(QAbstractItemModel *sourceModel) override;
 
-protected:
 	/** Redefined from MiamSortFilterProxyModel. */
 	virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };

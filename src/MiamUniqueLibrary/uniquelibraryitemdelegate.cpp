@@ -24,7 +24,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 
 	if (index.column() == 0) {
 		QString cover = index.data(Miam::DF_CoverPath).toString();
-		if (!cover.isEmpty()) {
+		if (!cover.isEmpty() && SettingsPrivate::instance()->isCoversEnabled()) {
 			this->drawCover(painter, option, cover);
 		}
 		return;
@@ -77,8 +77,18 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 	if (!year.isEmpty() && (year.compare("0") != 0)) {
 		text.append(" [" + item->data(Miam::DF_Year).toString() + "]");
 	}
-	painter->drawText(option.rect, text);
 	QPoint c = option.rect.center();
+	if (text.isEmpty()) {
+		text = tr("(no title)");
+		painter->save();
+		QColor color = QApplication::palette().text().color();
+		color.setAlphaF(0.5);
+		painter->setPen(color);
+		painter->drawText(option.rect, text);
+		painter->restore();
+	} else {
+		painter->drawText(option.rect, text);
+	}
 	int textWidth = painter->fontMetrics().width(text);
 	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
 }
@@ -95,29 +105,23 @@ void UniqueLibraryItemDelegate::drawCover(QPainter *painter, const QStyleOptionV
 {
 	static QImageReader imageReader;
 
-	auto settings = SettingsPrivate::instance();
-	if (settings->isCoversEnabled() && _showCovers) {
+	FileHelper fh(coverPath);
+	// If it's an inner cover, load it
+	if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
+		qDebug() << Q_FUNC_INFO << "loading internal cover from file";
+		std::unique_ptr<Cover> cover(fh.extractCover());
+		if (cover) {
 
-		FileHelper fh(coverPath);
-		// If it's an inner cover, load it
-		if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-			qDebug() << Q_FUNC_INFO << "loading internal cover from file";
-			std::unique_ptr<Cover> cover(fh.extractCover());
-			if (cover) {
-
-			}
-		} else {
-			//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
-			imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
-			imageReader.setScaledSize(QSize(_coverSize, _coverSize));
-			//item->setIcon(QPixmap::fromImage(imageReader.read()));
 		}
+	} else {
+		//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+		imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
+		imageReader.setScaledSize(QSize(_coverSize, _coverSize));
+		//item->setIcon(QPixmap::fromImage(imageReader.read()));
 	}
 
-	if (settings->isCoversEnabled()) {
-		QRect r(option.rect.x(), option.rect.y(), _coverSize, _coverSize);
-		painter->drawImage(r, imageReader.read());
-	}
+	QRect r(option.rect.x(), option.rect.y(), _coverSize, _coverSize);
+	painter->drawImage(r, imageReader.read());
 }
 
 void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &option, TrackItem *track) const
@@ -131,7 +135,6 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 		option.text = track->text();
 	}
 	option.textElideMode = Qt::ElideRight;
-	QString s;
 	QString trackLength = QDateTime::fromTime_t(track->data(Miam::DF_TrackLength).toUInt()).toString("m:ss");
 
 	QFont f = SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
@@ -145,6 +148,8 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 	QFontMetrics fmf(f);
 
 	QRect titleRect, lengthRect;
+	QString s;
+
 	if (QGuiApplication::isLeftToRight()) {
 
 		int w = fmf.width(trackLength);

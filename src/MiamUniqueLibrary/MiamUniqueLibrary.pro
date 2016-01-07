@@ -9,20 +9,20 @@ FORMS += \
 
 HEADERS += \
     uniquelibrary.h \
-    listview.h \
     uniquelibraryitemdelegate.h \
     uniquelibraryitemmodel.h \
     miamuniquelibrary_global.hpp \
     uniquelibraryfilterproxymodel.h \
-    coveritem.h
+    coveritem.h \
+    tableview.h
 
 SOURCES += \
     uniquelibrary.cpp \
-    listview.cpp \
     uniquelibraryitemdelegate.cpp \
     uniquelibraryitemmodel.cpp \
     uniquelibraryfilterproxymodel.cpp \
-    coveritem.cpp
+    coveritem.cpp \
+    tableview.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary

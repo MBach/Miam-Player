@@ -29,6 +29,8 @@ public:
 	/** Highlight items in the Tree when one has activated this option in settings. */
 	void highlightMatchingText(const QString &text);
 
+	virtual int defaultSortColumn() const { return 0; }
+
 private:
 	/** Reduce the size of the library when the user is typing text. */
 	void filterLibrary(const QString &filter);

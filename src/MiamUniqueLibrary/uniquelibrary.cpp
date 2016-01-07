@@ -17,8 +17,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 {
 	setupUi(this);
 	library->setItemDelegate(new UniqueLibraryItemDelegate(library->jumpToWidget(), library->model()->proxy()));
-	library->setSelectionBehavior(QAbstractItemView::SelectRows);
-	library->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
 	_proxy = library->model()->proxy();
 
@@ -26,7 +24,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(searchBar, &SearchBar::aboutToStartSearch, [=](const QString &text) {
 		library->model()->proxy()->findMusic(text);
 	});
-	connect(library, &ListView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
+	connect(library, &TableView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
 
 	connect(skipBackwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipBackward);
 	connect(seekBackwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
