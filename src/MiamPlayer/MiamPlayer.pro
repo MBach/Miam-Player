@@ -116,6 +116,7 @@ FORMS += closeplaylistpopup.ui \
 RESOURCES += mp.qrc
 CONFIG += c++11
 win32 {
+    OTHER_FILES += config/mp.rc
     RC_FILE += config/mp.rc
     TARGET = MiamPlayer
 }
@@ -208,6 +209,3 @@ INCLUDEPATH += $$PWD/../MiamLibrary $$PWD/../MiamUniqueLibrary
 DEPENDPATH += $$PWD/../MiamCore
 DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/tageditor
 DEPENDPATH += $$PWD/../MiamLibrary $$PWD/../MiamUniqueLibrary
-
-OTHER_FILES += config/mp.rc \
-    qtsingleapplication/qtsingleapplication.pri

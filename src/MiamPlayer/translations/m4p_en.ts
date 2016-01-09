@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US" sourcelanguage="en_US">
 <context>
+    <name>AddressBar</name>
+    <message>
+        <source>Network</source>
+        <translation>Network</translation>
+    </message>
+</context>
+<context>
     <name>AddressBarLineEdit</name>
     <message>
         <source>Error</source>
@@ -476,6 +483,18 @@
         <source>Translation status: OK!</source>
         <translation>Translation status: OK!</translation>
     </message>
+    <message>
+        <source>Global</source>
+        <translation>Global</translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation>Clear</translation>
+    </message>
+    <message>
+        <source>Reset</source>
+        <translation>Reset</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -754,6 +773,10 @@
     <message>
         <source>Unique Library (list)</source>
         <translation>Unique Library (list)</translation>
+    </message>
+    <message>
+        <source>Pin when scrolling</source>
+        <translation>Pin when scrolling</translation>
     </message>
 </context>
 <context>

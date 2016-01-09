@@ -10,16 +10,11 @@
 #include <QTreeView>
 #include <QTableView>
 
-MiamStyledItemDelegate::MiamStyledItemDelegate(QAbstractItemView *parent, bool fallback) :
-	QStyledItemDelegate(parent), _itemView(parent), _fallback(fallback)
-{
-	/*
-	connect(_itemView->selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
-		/// XXX: how to bypass protected method?
-		_itemView->setDirtyRegion(QRegion(_itemView->viewport()->rect()));
-	});
-	*/
-}
+MiamStyledItemDelegate::MiamStyledItemDelegate(QAbstractItemView *parent, bool fallback)
+	: QStyledItemDelegate(parent)
+	, _itemView(parent)
+	, _fallback(fallback)
+{}
 
 /** Redefined. */
 void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, const QModelIndex &index) const

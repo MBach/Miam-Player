@@ -8,6 +8,7 @@
 #include <QGuiApplication>
 #include <QHeaderView>
 #include <QPainter>
+#include <QRegularExpression>
 #include <QScrollBar>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -32,6 +33,10 @@ TableView::TableView(QWidget *parent)
 	});
 	this->installEventFilter(this);
 	horizontalHeader()->resizeSection(0, SettingsPrivate::instance()->coverSize());
+
+	connect(selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
+		setDirtyRegion(QRegion(viewport()->rect()));
+	});
 }
 
 void TableView::createConnectionsToDB()
@@ -48,26 +53,26 @@ void TableView::createConnectionsToDB()
 	db->load(Settings::RSM_Flat);
 }
 
+/** Redefined to disable search in the table and trigger jumpToWidget's action. */
+void TableView::keyboardSearch(const QString &search)
+{
+	// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+	// IMHO, it's better to trigger the JumpTo widget to 'N' section
+	static QRegularExpression az("[a-z]", QRegularExpression::CaseInsensitiveOption | QRegularExpression::OptimizeOnFirstUsageOption);
+	if (az.match(search).hasMatch()) {
+		this->jumpTo(search);
+	}
+}
+
 /** Redefined to override shortcuts that are mapped on simple keys. */
 bool TableView::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::ShortcutOverride) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-		if (keyEvent) {
-			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
-			// IMHO, it's better to trigger the JumpTo widget to 'N' section
-			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
-
-				qDebug() << Q_FUNC_INFO;
-				this->jumpTo(QString(keyEvent->key()));
-
-				// We don't want this event to be propagated
-				event->accept();
-				return false;
-			}
-		}
+		event->accept();
+		return false;
+	} else {
+		return QTableView::eventFilter(obj, event);
 	}
-	return QTableView::eventFilter(obj, event);
 }
 
 /** Redefined to keep displayed covers untouched. */
@@ -113,7 +118,7 @@ void TableView::jumpTo(const QString &letter)
 {
 	SqlDatabase *db = SqlDatabase::instance();
 	QSqlQuery firstArtist(*db);
-	firstArtist.prepare("SELECT name FROM artists WHERE name LIKE ? ORDER BY name LIMIT 1");
+	firstArtist.prepare("SELECT name FROM artists WHERE name LIKE ? ORDER BY name COLLATE NOCASE LIMIT 1");
 	firstArtist.addBindValue(letter + "%");
 	if (firstArtist.exec() && firstArtist.next()) {
 		for (QStandardItem *i : _model->findItems(firstArtist.record().value(0).toString(), Qt::MatchExactly, 1)) {

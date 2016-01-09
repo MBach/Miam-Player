@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="uniqueLibrary_en">translations/uniqueLibrary_en.qm</file>
+        <file alias="uniqueLibrary_fr">translations/uniqueLibrary_fr.qm</file>
+    </qresource>
+</RCC>

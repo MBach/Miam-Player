@@ -59,3 +59,21 @@ macx {
 
 INCLUDEPATH += $$PWD/../MiamCore/ $$PWD/../MiamLibrary/
 DEPENDPATH += $$PWD/../MiamCore $$PWD/../MiamLibrary/
+
+RESOURCES += uniqueLibrary.qrc
+
+TRANSLATIONS = translations/uniqueLibrary_ar.ts \
+    translations/uniqueLibrary_cs.ts \
+    translations/uniqueLibrary_de.ts \
+    translations/uniqueLibrary_en.ts \
+    translations/uniqueLibrary_es.ts \
+    translations/uniqueLibrary_fr.ts \
+    translations/uniqueLibrary_in.ts \
+    translations/uniqueLibrary_it.ts \
+    translations/uniqueLibrary_ja.ts \
+    translations/uniqueLibrary_kr.ts \
+    translations/uniqueLibrary_pt.ts \
+    translations/uniqueLibrary_ru.ts \
+    translations/uniqueLibrary_th.ts \
+    translations/uniqueLibrary_vn.ts \
+    translations/uniqueLibrary_zh.ts

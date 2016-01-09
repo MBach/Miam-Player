@@ -119,13 +119,13 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	case Playlist::COL_LENGTH:
 		if (index.data().toInt() >= 0) {
 			text = QDateTime::fromTime_t(index.data().toInt()).toString("m:ss");
-			text = QFontMetrics(font).elidedText(text, o.textElideMode, textRect.width());
+			text = p->fontMetrics().elidedText(text, o.textElideMode, textRect.width());
 			style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
 		}
 		break;
 	case Playlist::COL_TRACK_NUMBER:
 	case Playlist::COL_YEAR:
-		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		text = p->fontMetrics().elidedText(index.data().toString(), o.textElideMode, textRect.width());
 		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
 		break;
 	case Playlist::COL_RATINGS:
@@ -136,7 +136,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		break;
 	case Playlist::COL_ICON:{
 		//QRect iconRect = style->subElementRect(QStyle::SE_ItemViewItemDecoration, &o, o.widget);
-		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		text = p->fontMetrics().elidedText(index.data().toString(), o.textElideMode, textRect.width());
 		QSize iconSize(textRect.height() * 0.8, textRect.height() * 0.8);
 		/// FIXME
 		//style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
@@ -147,7 +147,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	case Playlist::COL_ALBUM:
 	case Playlist::COL_ARTIST:
 	default:
-		text = QFontMetrics(font).elidedText(index.data().toString(), o.textElideMode, textRect.width());
+		text = p->fontMetrics().elidedText(index.data().toString(), o.textElideMode, textRect.width());
 		if (QApplication::isLeftToRight()) {
 			textRect.adjust(2, 0, 0, 0);
 		} else {

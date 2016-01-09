@@ -67,17 +67,23 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::scrollToLetter);
 
 	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
+
+	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+		QApplication::removeTranslator(&translator);
+		translator.load(":/MiamLibrary_" + newLanguage);
+		QApplication::installTranslator(&translator);
+	});
+
+	// Init language
+	translator.load(":/MiamLibrary_" + settings->language());
+	QApplication::installTranslator(&translator);
+
+	this->installEventFilter(this);
 }
 
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 {
-	// proxy, etc
-	//if (_expandedCovers.contains(album)) {
-	//	qDebug() << _expandedCovers.value(album);
-		return _expandedCovers.value(album, nullptr);
-	//} else {
-	//	return nullptr;
-	//}
+	return _expandedCovers.value(album, nullptr);
 }
 
 /** Reimplemented. */
@@ -93,11 +99,6 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 	} else if (item && item->type() == Miam::IT_Track) {
 		tracks << item->data(Miam::DF_URI).toString();
 	}
-}
-
-void LibraryTreeView::findMusic(const QString &text)
-{
-	_proxyModel->findMusic(text);
 }
 
 void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
@@ -169,24 +170,6 @@ void LibraryTreeView::createConnectionsToDB()
 	}
 }
 
-/** Redefined to override shortcuts that are mapped on simple keys. */
-bool LibraryTreeView::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::ShortcutOverride) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-		if (keyEvent) {
-			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
-			// IMHO, it's better to trigger the JumpTo widget to 'N' section
-			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
-				this->scrollToLetter(QString(keyEvent->key()));
-				// We don't want this event to be propagated
-				event->accept();
-			}
-		}
-	}
-	return TreeView::eventFilter(obj, event);
-}
-
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
@@ -199,6 +182,28 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 		if (item->type() != Miam::IT_Separator) {
 			properties->exec(event->globalPos());
 		}
+	}
+}
+
+/** Redefined to override shortcuts that are mapped on simple keys. */
+bool LibraryTreeView::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::ShortcutOverride) {
+		event->accept();
+		return false;
+	} else {
+		return TreeView::eventFilter(obj, event);
+	}
+}
+
+/** Redefined to disable search in the table and trigger jumpToWidget's action. */
+void LibraryTreeView::keyboardSearch(const QString &search)
+{
+	// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+	// IMHO, it's better to trigger the JumpTo widget to 'N' section
+	static QRegularExpression az("[a-z]", QRegularExpression::CaseInsensitiveOption | QRegularExpression::OptimizeOnFirstUsageOption);
+	if (az.match(search).hasMatch()) {
+		this->scrollToLetter(search.toUpper());
 	}
 }
 

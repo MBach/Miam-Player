@@ -39,17 +39,16 @@ void MiamItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option
 	} else {
 		option.text = track->text();
 	}
-	QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
 	option.textElideMode = Qt::ElideRight;
 	QString s;
 	QRect rectText;
 	if (QGuiApplication::isLeftToRight()) {
 		QPoint topLeft(option.rect.x() + 5, option.rect.y());
 		rectText = QRect(topLeft, option.rect.bottomRight());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		s = painter->fontMetrics().elidedText(option.text, Qt::ElideRight, rectText.width());
 	} else {
 		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
-		s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
+		s = painter->fontMetrics().elidedText(option.text, Qt::ElideRight, rectText.width());
 	}
 	this->paintText(painter, option, rectText, s, track);
 }
@@ -80,7 +79,7 @@ void MiamItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, c
 	if (text.isEmpty()) {
 		p->setPen(opt.palette.mid().color());
 		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
-		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
+		p->drawText(rectText, Qt::AlignVCenter, p->fontMetrics().elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
 	} else {
 		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
 			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {

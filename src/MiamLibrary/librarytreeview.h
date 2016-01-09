@@ -60,6 +60,8 @@ private:
 
 	LibraryItemDelegate *_delegate;
 
+	QTranslator translator;
+
 public:
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */
@@ -77,8 +79,6 @@ public:
 	/** Reimplemented. */
 	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;
 
-	void findMusic(const QString &text);
-
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
 	inline LibraryItemModel* model() const { return _libraryModel; }
@@ -89,6 +89,9 @@ protected:
 
 	/** Redefined to override shortcuts that are mapped on simple keys. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
+	/** Redefined to disable search in the table and trigger jumpToWidget's action. */
+	virtual void keyboardSearch(const QString &search) override;
 
 	virtual void paintEvent(QPaintEvent *) override;
 

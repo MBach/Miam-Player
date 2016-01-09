@@ -21,9 +21,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	_proxy = library->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	connect(searchBar, &SearchBar::aboutToStartSearch, [=](const QString &text) {
-		library->model()->proxy()->findMusic(text);
-	});
+	connect(searchBar, &SearchBar::aboutToStartSearch, library->model()->proxy(), &UniqueLibraryFilterProxyModel::findMusic);
 	connect(library, &TableView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
 
 	connect(skipBackwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipBackward);
@@ -50,6 +48,26 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 			_currentTrack->setData(p, Miam::DF_CurrentPosition);
 		}
 	});
+
+	auto settings = SettingsPrivate::instance();
+	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+		QApplication::removeTranslator(&translator);
+		translator.load(":/uniqueLibrary_" + newLanguage);
+		QApplication::installTranslator(&translator);
+	});
+
+	// Init language
+	translator.load(":/uniqueLibrary_" + settings->language());
+	QApplication::installTranslator(&translator);
+}
+
+void UniqueLibrary::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange) {
+		this->retranslateUi(this);
+	} else {
+		QWidget::changeEvent(event);
+	}
 }
 
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)

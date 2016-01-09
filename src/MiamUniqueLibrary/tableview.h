@@ -22,13 +22,17 @@ private:
 public:
 	explicit TableView(QWidget *parent = nullptr);
 
-	inline UniqueLibraryItemModel *model() const { return _model; }
-
 	void createConnectionsToDB();
 
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
+	/** Redefined to disable search in the table and trigger jumpToWidget's action. */
+	virtual void keyboardSearch(const QString &search) override;
+
+	inline UniqueLibraryItemModel *model() const { return _model; }
+
 protected:
+	/** Redefined to override shortcuts that are mapped on simple keys. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	/** Redefined to keep displayed covers untouched. */

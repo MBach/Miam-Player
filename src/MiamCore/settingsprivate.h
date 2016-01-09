@@ -270,6 +270,8 @@ public slots:
 	void setVolumeBarTextAlwaysVisible(bool b);
 
 signals:
+	void languageAboutToChange(const QString &newLanguage);
+
 	void fontHasChanged(FontFamily, const QFont &font);
 
 	void librarySearchModeHasChanged();

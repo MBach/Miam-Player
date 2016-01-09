@@ -354,11 +354,11 @@ void MainWindow::setupActions()
 		}
 	});
 
-	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library, &LibraryTreeView::findMusic);
+	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library->model()->proxy(), &LibraryFilterProxyModel::findMusic);
 	connect(settings, &SettingsPrivate::librarySearchModeHasChanged, this, [=]() {
 		QString text;
 		searchBar->setText(text);
-		library->findMusic(text);
+		library->model()->proxy()->findMusic(text);
 	});
 
 	// Core
@@ -475,7 +475,6 @@ void MainWindow::changeEvent(QEvent *event)
 		this->retranslateUi(this);
 		tagEditor->retranslateUi(tagEditor);
 		tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
-		//libraryHeader->libraryOrderDialog->retranslateUi(libraryHeader->libraryOrderDialog);
 
 		// (need to be tested with Arabic language)
 		if (tr("LTR") == "RTL") {

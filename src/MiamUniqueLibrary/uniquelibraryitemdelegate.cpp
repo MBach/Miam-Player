@@ -45,6 +45,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	o.state &= ~QStyle::State_HasFocus;
 	switch (item->type()) {
 	case Miam::IT_Artist:
+		o.rect.setX(0);
 		this->paintRect(painter, o);
 		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
 		break;
@@ -72,12 +73,13 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 
 void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const
 {
+	QPoint c = option.rect.center();
+
 	QString text = item->text();
 	QString year = item->data(Miam::DF_Year).toString();
 	if (!year.isEmpty() && (year.compare("0") != 0)) {
 		text.append(" [" + item->data(Miam::DF_Year).toString() + "]");
 	}
-	QPoint c = option.rect.center();
 	if (text.isEmpty()) {
 		text = tr("(no title)");
 		painter->save();
@@ -86,8 +88,12 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 		painter->setPen(color);
 		painter->drawText(option.rect, text);
 		painter->restore();
-	} else {
+	} else if (year.isEmpty()){
 		painter->drawText(option.rect, text);
+	} else {
+		text = painter->fontMetrics().elidedText(text, Qt::ElideRight, option.rect.width());
+		painter->drawText(option.rect, text);
+		//painter->drawText(option.rect, text);
 	}
 	int textWidth = painter->fontMetrics().width(text);
 	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
@@ -127,7 +133,6 @@ void UniqueLibraryItemDelegate::drawCover(QPainter *painter, const QStyleOptionV
 void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &option, TrackItem *track) const
 {
 	p->save();
-	p->setClipRegion(option.rect);
 	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
 	if (trackNumber > 0) {
 		option.text = QString("%1").arg(trackNumber, 2, 10, QChar('0')).append(". ").append(track->text());
@@ -145,28 +150,26 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 		trackLength.prepend(trackCurrentPos + " / ");
 		f.setBold(true);
 	}
-	QFontMetrics fmf(f);
 
 	QRect titleRect, lengthRect;
 	QString s;
 
 	if (QGuiApplication::isLeftToRight()) {
 
-		int w = fmf.width(trackLength);
+		int w = p->fontMetrics().width(trackLength);
 		lengthRect = QRect(option.rect.x() + option.rect.width() - (w + 5), option.rect.y(), w + 5, option.rect.height());
 		titleRect = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - lengthRect.width() - 5, option.rect.height());
 
-		s = fmf.elidedText(option.text, Qt::ElideRight, titleRect.width());
+		s = p->fontMetrics().elidedText(option.text, Qt::ElideRight, titleRect.width());
 	} else {
 		titleRect = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
-		s = fmf.elidedText(option.text, Qt::ElideRight, titleRect.width());
+		s = p->fontMetrics().elidedText(option.text, Qt::ElideRight, titleRect.width());
 	}
 
 	// Draw track number and title
 	if (s.isEmpty()) {
 		p->setPen(option.palette.mid().color());
-		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
-		p->drawText(titleRect, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, titleRect.width()));
+		p->drawText(titleRect, Qt::AlignVCenter, p->fontMetrics().elidedText(tr("(empty)"), Qt::ElideRight, titleRect.width()));
 	} else {
 		if (option.state.testFlag(QStyle::State_Selected) || option.state.testFlag(QStyle::State_MouseOver)) {
 			if (qAbs(option.palette.highlight().color().lighter(160).value() - option.palette.highlightedText().color().value()) < 128) {
