@@ -54,7 +54,7 @@
      <item>
       <widget class="QLineEdit" name="lineEdit">
        <property name="text">
-        <string notr="true">1D8odSXaZcwFzScsXPeBtiGHaqKhfU4CUT</string>
+        <string notr="true">39RBokXr4V9FPpuF7v1bM6PYcbgRRApp9W</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

@@ -75,12 +75,7 @@ void AddressBarMenu::mouseMoveEvent(QMouseEvent *e)
 void AddressBarMenu::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this->viewport());
-	// Vertical frame between icons and text
-	p.save();
 	QPalette palette = QApplication::palette();
-	p.setPen(palette.midlight().color());
-	p.drawLine(33, 0, 33, rect().height());
-	p.restore();
 
 	int offsetSB = 0;
 	if (verticalScrollBar()->isVisible()) {
@@ -116,8 +111,6 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 					p.setPen(palette.highlight().color());
 					p.setBrush(palette.highlight().color().lighter());
 					p.drawRect(r);
-					p.setPen(QColor(192, 192, 192, 128));
-					p.drawLine(33, r.top() + 1, 33, r.bottom());
 				}
 				p.restore();
 				p.drawPixmap(iconRect, it->icon().pixmap(QSize(19, 19)));

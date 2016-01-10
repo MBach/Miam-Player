@@ -86,13 +86,13 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 		QColor color = QApplication::palette().text().color();
 		color.setAlphaF(0.5);
 		painter->setPen(color);
-		painter->drawText(option.rect, text);
+		painter->drawText(option.rect, Qt::AlignVCenter, text);
 		painter->restore();
 	} else if (year.isEmpty()){
-		painter->drawText(option.rect, text);
+		painter->drawText(option.rect, Qt::AlignVCenter, text);
 	} else {
 		text = painter->fontMetrics().elidedText(text, Qt::ElideRight, option.rect.width());
-		painter->drawText(option.rect, text);
+		painter->drawText(option.rect, Qt::AlignVCenter, text);
 		//painter->drawText(option.rect, text);
 	}
 	int textWidth = painter->fontMetrics().width(text);
@@ -101,7 +101,7 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 
 void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const
 {
-	painter->drawText(option.rect, item->text());
+	painter->drawText(option.rect, Qt::AlignVCenter, item->text());
 	QPoint c = option.rect.center();
 	int textWidth = painter->fontMetrics().width(item->text());
 	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
