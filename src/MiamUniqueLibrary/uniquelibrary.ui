@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>298</width>
-    <height>163</height>
+    <height>167</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,6 +28,9 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
      <item>
       <widget class="MediaButton" name="skipBackwardButton">
        <property name="sizePolicy">
@@ -223,7 +226,30 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="VolumeSlider" name="volumeSlider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
+   </item>
+   <item>
+    <widget class="SeekBar" name="seekSlider">
+     <property name="maximum">
+      <number>999</number>
+     </property>
+     <property name="singleStep">
+      <number>10</number>
+     </property>
+     <property name="pageStep">
+      <number>100</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="SearchBar" name="searchBar">
@@ -282,6 +308,16 @@
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header>mediabutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SeekBar</class>
+   <extends>QSlider</extends>
+   <header location="global">seekbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>VolumeSlider</class>
+   <extends>QSlider</extends>
+   <header>volumeslider.h</header>
   </customwidget>
   <customwidget>
    <class>SearchBar</class>

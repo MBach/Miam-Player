@@ -3,6 +3,7 @@
 
 #include <QSlider>
 #include <QTimer>
+#include <miamcore_global.h>
 
 /**
  * \brief		The VolumeSlider class is used to display a nice volume bar instead of default slider.
@@ -12,7 +13,7 @@
  * \author		Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class VolumeSlider : public QSlider
+class MIAMCORE_LIBRARY VolumeSlider : public QSlider
 {
 	Q_OBJECT
 private:

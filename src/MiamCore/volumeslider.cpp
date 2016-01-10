@@ -15,6 +15,14 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 	, _timer(new QTimer(this))
 	, _isDown(false)
 {
+	this->setMinimumSize(50, 35);
+	this->setMaximumSize(100, 100);
+	this->setMaximum(100);
+	this->setPageStep(0);
+	this->setValue(99);
+	this->setTracking(false);
+	this->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
 	_timer->setSingleShot(true);
 
 	// Update the volume instantly

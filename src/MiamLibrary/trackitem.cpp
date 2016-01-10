@@ -14,7 +14,7 @@ TrackItem::TrackItem(const TrackDAO *dao) :
 	}
 	setData(dao->artist(), Miam::DF_Artist);
 	setData(dao->album(), Miam::DF_Album);
-	setData(!dao->uri().startsWith("file://"), Miam::DF_IsRemote);
+	setData(!dao->host().isEmpty(), Miam::DF_IsRemote);
 }
 
 int TrackItem::type() const

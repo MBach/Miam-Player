@@ -1,7 +1,7 @@
 @echo off
 
 rem core
-set MiamPlayerBuild="C:\dev\Miam-Player-build\qt5.6.0\src"
+set MiamPlayerBuild="C:\dev\Miam-Player-build\src"
 mkdir packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamLibrary\release\MiamLibrary.dll packages\org.miamplayer.core\data\

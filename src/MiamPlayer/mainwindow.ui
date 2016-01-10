@@ -497,34 +497,10 @@
          <item>
           <widget class="VolumeSlider" name="volumeSlider">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>35</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>100</height>
-            </size>
-           </property>
-           <property name="maximum">
-            <number>100</number>
-           </property>
-           <property name="pageStep">
-            <number>0</number>
-           </property>
-           <property name="value">
-            <number>100</number>
-           </property>
-           <property name="tracking">
-            <bool>false</bool>
            </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -947,6 +923,11 @@
    <header>mediabutton.h</header>
   </customwidget>
   <customwidget>
+   <class>SeekBar</class>
+   <extends>QSlider</extends>
+   <header location="global">seekbar.h</header>
+  </customwidget>
+  <customwidget>
    <class>LibraryTreeView</class>
    <extends>QTreeView</extends>
    <header location="global">librarytreeview.h</header>
@@ -994,11 +975,6 @@
    <class>LibraryHeader</class>
    <extends>QPushButton</extends>
    <header location="global">libraryheader.h</header>
-  </customwidget>
-  <customwidget>
-   <class>SeekBar</class>
-   <extends>QSlider</extends>
-   <header>seekbar.h</header>
   </customwidget>
   <customwidget>
    <class>ChangeHierarchyButton</class>

@@ -538,7 +538,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 	// If New Path exists, then fileName has changed.
 	for (int i = 0; i < oldPaths.length(); i++) {
-		QString oldPath = "file://" + oldPaths.at(i);
+		QString oldPath = oldPaths.at(i);
 		if (newPaths.at(i).isEmpty()) {
 			FileHelper *fh = new FileHelper(oldPath);
 			if (!fh->isValid()) {
@@ -1071,7 +1071,7 @@ void SqlDatabase::rebuild(const QStringList &oldLocations, const QStringList &ne
 			QSqlQuery syncDb(*this);
 			syncDb.setForwardOnly(true);
 			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
-			syncDb.bindValue(":path", "file://" + QDir::fromNativeSeparators(oldLocation) + "%");
+			syncDb.bindValue(":path", QDir::fromNativeSeparators(oldLocation) + "%");
 			syncDb.exec();
 			syncDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
 			syncDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
@@ -1193,7 +1193,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	uint albumId = artistId + qHash(albumNorm, 1);
 	int dn = fh.discNumber();
 
-	insertTrack.addBindValue("file://" + absFilePath);
+	insertTrack.addBindValue(absFilePath);
 	insertTrack.addBindValue(tn.toInt());
 	if (title.isEmpty()) {
 		insertTrack.addBindValue(fh.fileInfo().baseName());
@@ -1218,7 +1218,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		return;
 	}
 	TrackDAO *trackDAO = new TrackDAO;
-	trackDAO->setUri("file://" + absFilePath);
+	trackDAO->setUri(absFilePath);
 	trackDAO->setTrackNumber(tn);
 	trackDAO->setTitle(title);
 	trackDAO->setArtist(fh.artist());

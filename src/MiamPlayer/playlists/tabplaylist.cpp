@@ -314,7 +314,7 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 		while (it.hasNext()) {
 			it.next();
 			if (it.fileInfo().isFile()) {
-				tracks << "file://" + it.fileInfo().absoluteFilePath();
+				tracks << it.fileInfo().absoluteFilePath();
 			}
 		}
 	}
@@ -343,6 +343,14 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	}
 	if (currentPlayList()->mediaPlaylist()->playbackMode() == QMediaPlaylist::Random) {
 		currentPlayList()->mediaPlaylist()->shuffle(-1);
+	}
+}
+
+void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks)
+{
+	for (QUrl u : tracks) {
+		qDebug() << Q_FUNC_INFO << u.toLocalFile();
+
 	}
 }
 

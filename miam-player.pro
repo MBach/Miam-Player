@@ -7,4 +7,3 @@ SUBDIRS += \
     src/MiamLibrary \
     src/MiamUniqueLibrary \
     src/MiamPlayer
-

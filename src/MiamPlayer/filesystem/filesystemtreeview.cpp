@@ -41,14 +41,14 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) 
 {
 	QFileInfo fileInfo = _fileSystemModel->fileInfo(index);
 	if (fileInfo.isFile()) {
-		tracks << "file://" + fileInfo.absoluteFilePath();
+		tracks << fileInfo.absoluteFilePath();
 	} else {
 		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
 			QFileInfo fileInfo(entry);
 			if (fileInfo.isFile() && FileHelper::suffixes(FileHelper::All).contains(fileInfo.suffix())) {
-				tracks << "file://" + fileInfo.absoluteFilePath();
+				tracks << fileInfo.absoluteFilePath();
 			}
 		}
 	}
@@ -232,8 +232,6 @@ void FileSystemTreeView::convertIndex(const QModelIndex &index)
 	if (fileInfo.isDir()) {
 		emit folderChanged(_fileSystemModel->filePath(index));
 	} else {
-		QStringList tracks;
-		tracks << "file://" + fileInfo.absoluteFilePath();
-		emit aboutToInsertToPlaylist(-1, tracks);
+		emit aboutToInsertToPlaylist(-1, { fileInfo.absoluteFilePath() });
 	}
 }

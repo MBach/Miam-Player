@@ -16,8 +16,18 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	, _currentTrack(nullptr)
 {
 	setupUi(this);
-	library->setItemDelegate(new UniqueLibraryItemDelegate(library->jumpToWidget(), library->model()->proxy()));
+	seekSlider->setMediaPlayer(_mediaPlayer);
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
+		if (duration > 0) {
+			seekSlider->setValue(1000 * pos / duration);
+		}
+	});
+	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
+		_mediaPlayer->setVolume((qreal)value / 100.0);
+	});
+	volumeSlider->setValue(Settings::instance()->volume() * 100);
 
+	library->setItemDelegate(new UniqueLibraryItemDelegate(library->jumpToWidget(), library->model()->proxy()));
 	_proxy = library->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
@@ -72,13 +82,13 @@ void UniqueLibrary::changeEvent(QEvent *event)
 
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 {
+	qDebug() << Q_FUNC_INFO << index;
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	}
-	QStandardItem *item = _model->itemFromIndex(_proxy->mapToSource(index));
-	qDebug() << Q_FUNC_INFO << item->text();
+	QStandardItem *item = library->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
-		qDebug() << Q_FUNC_INFO << "about to play" << QUrl::fromLocalFile(index.data(Miam::DF_URI).toString());
+		qDebug() << Q_FUNC_INFO << "about to play" << index.data(Miam::DF_URI).toString();
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		_currentTrack = item;
 		return true;
@@ -100,9 +110,9 @@ void UniqueLibrary::skipForward()
 	if (!_currentTrack) {
 		return;
 	}
-	QModelIndex current = _proxy->mapFromSource(_model->index(_currentTrack->row(), 1));
+	QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
 	int row = current.row();
-	while (row < _model->rowCount()) {
+	while (row < library->model()->rowCount()) {
 		qDebug() << Q_FUNC_INFO << row;
 		QModelIndex next = current.sibling(row + 1, 1);
 		if (this->playSingleTrack(next)) {

@@ -20,7 +20,6 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::Uniqu
 private:
 	MediaPlayer *_mediaPlayer;
 	QStandardItem *_currentTrack;
-	UniqueLibraryItemModel *_model;
 	UniqueLibraryFilterProxyModel *_proxy;
 
 	QTranslator translator;

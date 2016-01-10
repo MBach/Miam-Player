@@ -32,7 +32,7 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	connect(_localPlayer, &QtAV::AVPlayer::loaded, this, [=]() {
 		//qDebug() << "QtAV::AVPlayer::loaded";
 		_localPlayer->audio()->setVolume(Settings::instance()->volume());
-		emit currentMediaChanged("file://" + _localPlayer->file());
+		emit currentMediaChanged(_localPlayer->file());
 		this->setState(QMediaPlayer::PlayingState);
 	});
 
@@ -128,6 +128,7 @@ void MediaPlayer::setVolume(qreal v)
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
 	// Everything is splitted in 2: local actions and remote actions
+	qDebug() << Q_FUNC_INFO << mc.canonicalUrl() << mc.canonicalUrl().isLocalFile();
 	if (mc.canonicalUrl().isLocalFile()) {
 		switch (_state) {
 		case QMediaPlayer::PausedState:
@@ -142,13 +143,15 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 			// Rewind media
 			_localPlayer->setPosition(0);
 		}
-	} else {
+	} else if (_remotePlayer) {
 		// Remote player is about to start
 		if (_state == QMediaPlayer::PausedState) {
 			_remotePlayer->resume();
 		} else {
 			_remotePlayer->play(mc.canonicalUrl());
 		}
+	} else {
+		qDebug() << Q_FUNC_INFO << "No compatible remote players were connected for this track";
 	}
 	this->setVolume(Settings::instance()->volume());
 }

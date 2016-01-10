@@ -32,7 +32,6 @@ SOURCES += debug/logbrowser.cpp \
     playlists/tabplaylist.cpp \
     playlists/playlistitemdelegate.cpp \
     playlists/stareditor.cpp \
-    styling/miamslider.cpp \
     styling/miamstyle.cpp \
     styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
@@ -46,11 +45,9 @@ SOURCES += debug/logbrowser.cpp \
     playbackmodewidgetfactory.cpp \
     pluginmanager.cpp \
     quickstart.cpp \
-    seekbar.cpp \
     tagbutton.cpp \
     taglineedit.cpp \
-    tracksnotfoundmessagebox.cpp \
-    volumeslider.cpp
+    tracksnotfoundmessagebox.cpp
 
 HEADERS += debug/logbrowser.h \
     debug/logbrowserdialog.h \
@@ -81,7 +78,6 @@ HEADERS += debug/logbrowser.h \
     playlists/tabplaylist.h \
     playlists/playlistitemdelegate.h \
     playlists/stareditor.h \
-    styling/miamslider.h \
     styling/miamstyle.h \
     styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
@@ -95,11 +91,9 @@ HEADERS += debug/logbrowser.h \
     playbackmodewidgetfactory.h \
     pluginmanager.h \
     quickstart.h \
-    seekbar.h \
     tagbutton.h \
     taglineedit.h \
-    tracksnotfoundmessagebox.h \
-    volumeslider.h
+    tracksnotfoundmessagebox.h
 
 FORMS += closeplaylistpopup.ui \
     customizeoptionsdialog.ui \

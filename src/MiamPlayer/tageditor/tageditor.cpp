@@ -82,7 +82,7 @@ void TagEditor::addDirectory(const QDir &dir)
 		QString entry = it.next();
 		QFileInfo fileInfo(entry);
 		if (fileInfo.isFile() && FileHelper::suffixes(FileHelper::All).contains(fileInfo.suffix())) {
-			tracks << "file://" + fileInfo.absoluteFilePath();
+			tracks << fileInfo.absoluteFilePath();
 		}
 	}
 	this->addItemsToEditor(tracks);

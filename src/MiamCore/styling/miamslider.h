@@ -2,13 +2,14 @@
 #define MIAMSLIDER_H
 
 #include <QSlider>
+#include <miamcore_global.h>
 
 /**
  * \brief		The MiamSlider class is a style aware class.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MiamSlider : public QSlider
+class MIAMCORE_LIBRARY MiamSlider : public QSlider
 {
 	Q_OBJECT
 public:

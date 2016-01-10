@@ -266,7 +266,7 @@ void MainWindow::setupActions()
 	});
 
 	for (TreeView *tab : this->findChildren<TreeView*>()) {
-		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
+		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, static_cast<void (TabPlaylist::*)(int, const QStringList &)>(&TabPlaylist::insertItemsToPlaylist));
 		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QStringList &tracks) {
 			this->showTagEditor();
 			tagEditor->addItemsToEditor(tracks);
@@ -375,6 +375,8 @@ void MainWindow::setupActions()
 	connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
 	connect(actionOpenPlaylistManager, &QAction::triggered, this, &MainWindow::openPlaylistManager);
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
+
+	/// FIXME: now we can have multiple views connected to this action
 	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
 		volumeSlider->setValue(volumeSlider->value() + 5);
 	});
@@ -456,15 +458,15 @@ void MainWindow::openFolder(const QString &dir)
 	Settings::instance()->setValue("lastOpenedLocation", dir);
 	QDirIterator it(dir, QDirIterator::Subdirectories);
 	QStringList suffixes = FileHelper::suffixes(FileHelper::All, false);
-	QStringList tracks;
+	QList<QUrl> localTracks;
 	while (it.hasNext()) {
 		it.next();
 		if (suffixes.contains(it.fileInfo().suffix())) {
-			tracks << "file://" + it.filePath();
+			localTracks << QUrl::fromLocalFile(it.filePath());
 		}
 	}
-	if (Miam::showWarning(tr("playlist"), tracks.count()) == QMessageBox::Ok) {
-		tabPlaylists->insertItemsToPlaylist(-1, tracks);
+	if (Miam::showWarning(tr("playlist"), localTracks.count()) == QMessageBox::Ok) {
+		tabPlaylists->insertItemsToPlaylist(-1, localTracks);
 	}
 }
 
@@ -675,7 +677,7 @@ void MainWindow::processArgs(const QStringList &args)
 			}
 			QStringList tracks;
 			for (QString p : positionalArgs) {
-				tracks << "file://" + p;
+				tracks << p;
 			}
 			tabPlaylists->insertItemsToPlaylist(-1, tracks);
 		}
@@ -779,7 +781,7 @@ void MainWindow::openFiles()
 		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
 		QStringList tracks;
 		for (QString file : files) {
-			tracks << "file://" + file;
+			tracks << file;
 		}
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	}
