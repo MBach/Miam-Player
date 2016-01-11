@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QFileSelector>
+#include <QGuiApplication>
 #include <QScrollBar>
 #include <QStyleOptionGroupBox>
 #include <QStyleOptionSlider>
@@ -177,7 +178,7 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 		//bool dirtyHackMnemonic = widget->property("dirtyHackMnemonic").toBool();
 		if (act/* || dirtyHackMnemonic && option->rect.x() == 0*/) {
 			painter->setPen(palette.highlight().color());
-			brush = palette.highlight().color().light();
+			brush = palette.highlight().color().lighter();
 			painter->setBrush(brush);
 			painter->drawRect(option->rect.adjusted(0, 0, -1, -1));
 		} else {
@@ -197,6 +198,111 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 		painter->drawText(option->rect, alignment, somi->text);
 		break;
 	}
+	case CE_MenuItem:
+		if (const QStyleOptionMenuItem *menuitem = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
+			QGuiApplication *app = static_cast<QGuiApplication*>(QGuiApplication::instance());
+			qreal checkcol = 25 / app->devicePixelRatio();
+			qreal gutterWidth = 3 / app->devicePixelRatio();
+			QRect rect = option->rect;
+			//draw vertical menu line
+			if (option->direction == Qt::LeftToRight)
+				checkcol += rect.x();
+			int x, y, w, h;
+			menuitem->rect.getRect(&x, &y, &w, &h);
+			int tab = menuitem->tabWidth;
+			bool dis = !(menuitem->state & State_Enabled);
+			bool checked = menuitem->checkType != QStyleOptionMenuItem::NotCheckable
+					? menuitem->checked : false;
+			bool act = menuitem->state & State_Selected;
+			if (menuitem->menuItemType == QStyleOptionMenuItem::Separator) {
+				int yoff = y - 1 + h / 2;
+				qreal separatorSize = 6 / app->devicePixelRatio();
+				QPoint p1 = QPoint(x + checkcol, yoff);
+				QPoint p2 = QPoint(x + w + separatorSize, yoff);
+				painter->save();
+				painter->setPen(option->palette.mid().color());
+				painter->drawLine(p1, p2);
+				painter->restore();
+				return;
+			}
+			QString s = menuitem->text;
+			if (act) {
+				QBrush fill = menuitem->palette.highlight().color().lighter();
+				painter->fillRect(menuitem->rect, fill);
+			}
+			QRect vCheckRect = visualRect(option->direction, menuitem->rect, QRect(menuitem->rect.x(),
+																				   menuitem->rect.y(), checkcol - (gutterWidth + menuitem->rect.x()), menuitem->rect.height()));
+			if (checked) {
+				/// TODO
+			}
+			if (!menuitem->icon.isNull()) {
+				QIcon::Mode mode = dis ? QIcon::Disabled : QIcon::Normal;
+				if (act && !dis) {
+					mode = QIcon::Active;
+				}
+				QPixmap pixmap;
+				if (checked) {
+					pixmap = menuitem->icon.pixmap(proxy()->pixelMetric(PM_SmallIconSize, option, widget), mode, QIcon::On);
+				} else {
+					pixmap = menuitem->icon.pixmap(proxy()->pixelMetric(PM_SmallIconSize, option, widget), mode);
+				}
+				const int pixw = pixmap.width() / pixmap.devicePixelRatio();
+				const int pixh = pixmap.height() / pixmap.devicePixelRatio();
+				QRect pmr(0, 0, pixw, pixh);
+				pmr.moveCenter(vCheckRect.center());
+				painter->setPen(menuitem->palette.text().color());
+				painter->drawPixmap(pmr.topLeft(), pixmap);
+			}
+			painter->setPen(menuitem->palette.buttonText().color());
+			QColor textColor = menuitem->palette.text().color();
+			if (dis) {
+				textColor = menuitem->palette.mid().color();
+				painter->setPen(textColor);
+			}
+			int xm = checkcol + 2 + (gutterWidth - menuitem->rect.x()) - 1;
+			int xpos = menuitem->rect.x() + xm;
+
+			///
+			int windowsItemVMargin = 3, windowsRightBorder = 3;
+			QRect textRect(xpos, y + windowsItemVMargin, w - xm - windowsRightBorder - tab + 1, h - 2 * windowsItemVMargin);
+			QRect vTextRect = visualRect(option->direction, menuitem->rect, textRect);
+			if (!s.isEmpty()) {    // draw text
+				painter->save();
+				int t = s.indexOf(QLatin1Char('\t'));
+				int text_flags = Qt::AlignVCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
+				if (!proxy()->styleHint(SH_UnderlineShortcut, menuitem, widget)) {
+					text_flags |= Qt::TextHideMnemonic;
+				}
+				text_flags |= Qt::AlignLeft;
+				if (t >= 0) {
+					QRect vShortcutRect = visualRect(option->direction, menuitem->rect,
+													 QRect(textRect.topRight(), QPoint(menuitem->rect.right(), textRect.bottom())));
+					painter->drawText(vShortcutRect, text_flags, s.mid(t + 1));
+					s = s.left(t);
+				}
+				QFont font = menuitem->font;
+				if (menuitem->menuItemType == QStyleOptionMenuItem::DefaultItem) {
+					font.setBold(true);
+				}
+				painter->setFont(font);
+				painter->setPen(textColor);
+				painter->drawText(vTextRect, text_flags, s.left(t));
+				painter->restore();
+			}
+			if (menuitem->menuItemType == QStyleOptionMenuItem::SubMenu) {// draw sub menu arrow
+				int dim = (h - 2 * 5) / 2;
+				PrimitiveElement arrow;
+				arrow = (option->direction == Qt::RightToLeft) ? PE_IndicatorArrowLeft : PE_IndicatorArrowRight;
+				xpos = x + w - 2 - 2 - dim;
+				QRect  vSubMenuRect = visualRect(option->direction, menuitem->rect, QRect(xpos, y + h / 2 - dim / 2, dim, dim));
+				QStyleOptionMenuItem newMI = *menuitem;
+				newMI.rect = vSubMenuRect;
+				newMI.state = dis ? State_None : State_Enabled;
+				proxy()->drawPrimitive(arrow, &newMI, painter, widget);
+			}
+
+		}
+		break;
 	case CE_MenuBarEmptyArea:{
 		painter->fillRect(option->rect, QApplication::palette().window());
 		break;
@@ -216,9 +322,9 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 		QProxyStyle::drawComplexControl(control, &gb2, p, widget);
 		break;
 	}
-	//case CC_ScrollBar:
-	//	this->drawScrollBar(p, widget);
-	//	break;
+		//case CC_ScrollBar:
+		//	this->drawScrollBar(p, widget);
+		//	break;
 	default:
 		QProxyStyle::drawComplexControl(control, option, p, widget);
 	}
