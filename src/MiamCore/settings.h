@@ -34,6 +34,8 @@ public:
 	/** Returns the last view activated by the user. Used when reopening the player. */
 	QString lastActiveView() const;
 
+	QMap<QString, QVariant> shortcuts() const;
+
 	RequestSqlModel sqlModel() const;
 
 	/** Returns the actual theme name. */
@@ -41,8 +43,6 @@ public:
 
 	/** Returns volume from the slider. */
 	qreal volume() const;
-
-	QMap<QString, QVariant> shortcuts() const;
 
 private:
 	void initShortcuts();

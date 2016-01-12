@@ -389,6 +389,7 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 	QMap<QString, QVariant> colors = value("customColorsMap").toMap();
 	colors.insert(QString::number(cr), color);
 	QPalette palette = QGuiApplication::palette();
+	static QPalette defaultPalette = QGuiApplication::palette();
 	palette.setColor(cr, color);
 
 	if (cr == QPalette::Base) {
@@ -397,17 +398,44 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		colors.insert(QString::number(QPalette::Button), color);
 
 		// Check if text color should be inverted when the base is too dark
-		QColor text;
+		QColor text, alternateBase;
 		if (color.value() < 128) {
+			alternateBase = palette.base().color().lighter(110);
+			QColor light = defaultPalette.light().color();
+			QColor midLight = defaultPalette.midlight().color();
+			QColor mid = defaultPalette.mid().color();
+			QColor dark = defaultPalette.dark().color();
+			QColor shadow = defaultPalette.shadow().color();
+
+			light.setRgb(255 - light.red(), 255 - light.green(), 255 - light.blue());
+			midLight.setRgb(255 - midLight.red(), 255 - midLight.green(), 255 - midLight.blue());
+			mid.setRgb(255 - mid.red(), 255 - mid.green(), 255 - mid.blue());
+			dark.setRgb(255 - dark.red(), 255 - dark.green(), 255 - dark.blue());
+			shadow.setRgb(255 - shadow.red(), 255 - shadow.green(), 255 - shadow.blue());
+
+			palette.setColor(QPalette::Light, light);
+			palette.setColor(QPalette::Midlight, midLight);
+			palette.setColor(QPalette::Mid, mid);
+			palette.setColor(QPalette::Dark, dark);
+			palette.setColor(QPalette::Shadow, shadow);
+
+			colors.insert(QString::number(QPalette::Light), light);
+			colors.insert(QString::number(QPalette::Midlight), midLight);
+			colors.insert(QString::number(QPalette::Mid), mid);
+			colors.insert(QString::number(QPalette::Dark), dark);
+			colors.insert(QString::number(QPalette::Shadow), shadow);
 			text = Qt::white;
 		} else {
+			alternateBase = palette.base().color().darker(110);
 			text = Qt::black;
 		}
+		palette.setColor(QPalette::AlternateBase, alternateBase);
 		palette.setColor(QPalette::BrightText, text);
 		palette.setColor(QPalette::ButtonText, text);
 		palette.setColor(QPalette::Text, text);
 		palette.setColor(QPalette::WindowText, text);
 
+		colors.insert(QString::number(QPalette::AlternateBase), alternateBase);
 		colors.insert(QString::number(QPalette::BrightText), text);
 		colors.insert(QString::number(QPalette::ButtonText), text);
 		colors.insert(QString::number(QPalette::Text), text);
@@ -422,6 +450,17 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 			windowColor = color.darker(110);
 		}
 		palette.setColor(QPalette::Window, windowColor);
+
+		qDebug() << "QPalette::Window" << palette.window().color().red() << palette.window().color().green() << palette.window().color().blue();
+		qDebug() << "QPalette::Base" << palette.base().color().red() << palette.base().color().green() << palette.base().color().blue();
+		qDebug() << "QPalette::Button" << palette.button().color().red() << palette.button().color().green() << palette.button().color().blue();
+
+		qDebug() << "QPalette::Light" << palette.light().color().red() << palette.light().color().green() << palette.light().color().blue();
+		qDebug() << "QPalette::Midlight" << palette.midlight().color().red() << palette.midlight().color().green() << palette.midlight().color().blue();
+		qDebug() << "QPalette::Mid" << palette.mid().color().red() << palette.mid().color().green() << palette.mid().color().blue();
+		qDebug() << "QPalette::Shadow" << palette.shadow().color().red() << palette.shadow().color().green() << palette.shadow().color().blue();
+
+
 		colors.insert(QString::number(QPalette::Window), windowColor);
 	} else if (cr == QPalette::Highlight) {
 		QColor highlightedText;

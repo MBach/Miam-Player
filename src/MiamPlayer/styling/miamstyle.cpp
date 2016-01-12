@@ -211,25 +211,28 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 			menuitem->rect.getRect(&x, &y, &w, &h);
 			int tab = menuitem->tabWidth;
 			bool dis = !(menuitem->state & State_Enabled);
-			bool checked = menuitem->checkType != QStyleOptionMenuItem::NotCheckable
-					? menuitem->checked : false;
+			bool checked = menuitem->checkType != QStyleOptionMenuItem::NotCheckable ? menuitem->checked : false;
 			bool act = menuitem->state & State_Selected;
+			QPalette palette = QApplication::palette();
 			if (menuitem->menuItemType == QStyleOptionMenuItem::Separator) {
 				int yoff = y - 1 + h / 2;
 				qreal separatorSize = 6 / app->devicePixelRatio();
 				QPoint p1 = QPoint(x + checkcol, yoff);
 				QPoint p2 = QPoint(x + w + separatorSize, yoff);
 				painter->save();
-				painter->setPen(option->palette.mid().color());
+				painter->setPen(palette.mid().color());
 				painter->drawLine(p1, p2);
 				painter->restore();
 				return;
 			}
 			QString s = menuitem->text;
+			QBrush fill;
 			if (act) {
-				QBrush fill = menuitem->palette.highlight().color().lighter();
-				painter->fillRect(menuitem->rect, fill);
+				fill = palette.highlight().color().lighter();
+			} else {
+				fill = palette.base();
 			}
+			painter->fillRect(menuitem->rect, fill);
 			QRect vCheckRect = visualRect(option->direction, menuitem->rect, QRect(menuitem->rect.x(),
 																				   menuitem->rect.y(), checkcol - (gutterWidth + menuitem->rect.x()), menuitem->rect.height()));
 			if (checked) {
@@ -250,13 +253,13 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 				const int pixh = pixmap.height() / pixmap.devicePixelRatio();
 				QRect pmr(0, 0, pixw, pixh);
 				pmr.moveCenter(vCheckRect.center());
-				painter->setPen(menuitem->palette.text().color());
+				painter->setPen(palette.text().color());
 				painter->drawPixmap(pmr.topLeft(), pixmap);
 			}
-			painter->setPen(menuitem->palette.buttonText().color());
-			QColor textColor = menuitem->palette.text().color();
+			painter->setPen(palette.buttonText().color());
+			QColor textColor = palette.text().color();
 			if (dis) {
-				textColor = menuitem->palette.mid().color();
+				textColor = palette.mid().color();
 				painter->setPen(textColor);
 			}
 			int xm = checkcol + 2 + (gutterWidth - menuitem->rect.x()) - 1;

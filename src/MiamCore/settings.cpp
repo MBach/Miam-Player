@@ -32,6 +32,11 @@ QString Settings::lastActiveView() const
 	return value("lastActiveView", "actionViewPlaylists").toString();
 }
 
+QMap<QString, QVariant> Settings::shortcuts() const
+{
+	return value("shortcuts").toMap();
+}
+
 Settings::RequestSqlModel Settings::sqlModel() const
 {
 	if (value("requestSqlModel").isNull()) {
@@ -52,11 +57,6 @@ QString Settings::theme() const
 qreal Settings::volume() const
 {
 	return value("volume", 0.9).toReal();
-}
-
-QMap<QString, QVariant> Settings::shortcuts() const
-{
-	return value("shortcuts").toMap();
 }
 
 void Settings::initShortcuts()
@@ -96,8 +96,6 @@ void Settings::initShortcuts()
 	}
 }
 
-/// Slots
-
 /** Sets the last view activated by the user. Used when reopening the player. */
 void Settings::setLastActiveView(const QString &viewName)
 {
@@ -109,7 +107,6 @@ void Settings::setThemeName(const QString &theme)
 	setValue("theme", theme.toLower());
 	emit themeHasChanged();
 }
-
 
 void Settings::setVolume(qreal v)
 {
