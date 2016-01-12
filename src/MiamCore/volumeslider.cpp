@@ -101,7 +101,7 @@ void VolumeSlider::paintEvent(QPaintEvent *)
 			p.setBrush(opt.palette.highlight().color().lighter(100 + 100 * y));
 		} else {
 			p.setPen(opt.palette.mid().color());
-			p.setBrush(opt.palette.midlight());
+			p.setBrush(opt.palette.window());
 		}
 		QRectF r;
 		if (isLeftToRight()) {

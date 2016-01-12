@@ -47,8 +47,8 @@ QLinearGradient MiamSlider::interpolatedLinearGradient(const QRectF &boudingRect
 	}
 	linearGradient.setColorAt(0.0, startColor);
 	linearGradient.setColorAt((qreal) (value() - minimum()) / total, c);
-	linearGradient.setColorAt((qreal) (value() - minimum()) / total + 0.001, o.palette.light().color());
-	linearGradient.setColorAt(1.0, o.palette.light().color());
+	linearGradient.setColorAt((qreal) (value() - minimum()) / total + 0.001, o.palette.window().color());
+	linearGradient.setColorAt(1.0, o.palette.window().color());
 	return linearGradient;
 }
 
