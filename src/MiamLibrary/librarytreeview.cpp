@@ -87,7 +87,7 @@ const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 }
 
 /** Reimplemented. */
-void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
+void LibraryTreeView::findAll(const QModelIndex &index, QList<QUrl> *tracks) const
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item && item->hasChildren()) {
@@ -95,9 +95,14 @@ void LibraryTreeView::findAll(const QModelIndex &index, QStringList &tracks) con
 			// Recursive call on children
 			this->findAll(index.child(i, 0), tracks);
 		}
-		tracks.removeDuplicates();
+		/// FIXME
+		//tracks.removeDuplicates();
 	} else if (item && item->type() == Miam::IT_Track) {
-		tracks << item->data(Miam::DF_URI).toString();
+		if (item->data(Miam::DF_IsRemote).toBool()) {
+			tracks->append(QUrl(item->data(Miam::DF_URI).toString()));
+		} else {
+			tracks->append(QUrl::fromLocalFile(item->data(Miam::DF_URI).toString()));
+		}
 	}
 }
 

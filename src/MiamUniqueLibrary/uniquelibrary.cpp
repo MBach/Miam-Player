@@ -36,20 +36,40 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(skipBackwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipBackward);
 	connect(seekBackwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::play);
+	connect(playButton, &MediaButton::clicked, this, [=]() {
+		if (_currentTrack && _mediaPlayer->state() == QMediaPlayer::StoppedState) {
+			this->playSingleTrack(_proxy->mapFromSource(_currentTrack->index()));
+		} else {
+			_mediaPlayer->togglePlayback();
+		}
+	});
 	connect(stopButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::stop);
 	connect(seekForwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
 	connect(skipForwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipForward);
 	connect(toggleShuffleButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
 
+	auto settings = Settings::instance();
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State state) {
-		if (_currentTrack) {
-			if (state == QMediaPlayer::StoppedState) {
+		qDebug() << "ici" << state;
+		switch (state) {
+		case QMediaPlayer::StoppedState:
+			if (_currentTrack) {
 				_currentTrack->setData(false, Miam::DF_Highlighted);
-			} else if (state == QMediaPlayer::PlayingState) {
+			}
+			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/play"));
+			seekSlider->setValue(0);
+			break;
+		case QMediaPlayer::PlayingState:
+			if (_currentTrack) {
 				_currentTrack->setData(true, Miam::DF_Highlighted);
 			}
+			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/pause"));
+			break;
+		case QMediaPlayer::PausedState:
+			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/play"));
+			break;
 		}
+		seekSlider->update();
 	});
 
 	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
@@ -59,15 +79,15 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		}
 	});
 
-	auto settings = SettingsPrivate::instance();
-	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+	auto settingsPrivate = SettingsPrivate::instance();
+	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
 		QApplication::removeTranslator(&translator);
 		translator.load(":/uniqueLibrary_" + newLanguage);
 		QApplication::installTranslator(&translator);
 	});
 
 	// Init language
-	translator.load(":/uniqueLibrary_" + settings->language());
+	translator.load(":/uniqueLibrary_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
 }
 
@@ -83,9 +103,6 @@ void UniqueLibrary::changeEvent(QEvent *event)
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 {
 	qDebug() << Q_FUNC_INFO << index;
-	if (_currentTrack) {
-		_currentTrack->setData(false, Miam::DF_Highlighted);
-	}
 	QStandardItem *item = library->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
 		qDebug() << Q_FUNC_INFO << "about to play" << index.data(Miam::DF_URI).toString();
@@ -100,30 +117,48 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 void UniqueLibrary::skipBackward()
 {
 	qDebug() << Q_FUNC_INFO << "not yet implemented";
-	if (!_currentTrack) {
+	if (_currentTrack) {
+		_currentTrack->setData(false, Miam::DF_Highlighted);
+	} else {
 		return;
+	}
+	if (toggleShuffleButton->isChecked()) {
+		this->playSingleTrack(_randomHistoryList.takeLast());
 	}
 }
 
 void UniqueLibrary::skipForward()
 {
-	if (!_currentTrack) {
+	if (_currentTrack) {
+		_currentTrack->setData(false, Miam::DF_Highlighted);
+	} else {
 		return;
 	}
-	QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
-	int row = current.row();
-	while (row < library->model()->rowCount()) {
-		qDebug() << Q_FUNC_INFO << row;
-		QModelIndex next = current.sibling(row + 1, 1);
-		if (this->playSingleTrack(next)) {
-			break;
-		} else {
-			row++;
+
+	if (toggleShuffleButton->isChecked()) {
+		//
+	} else {
+		QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
+		int row = current.row();
+		while (row < library->model()->rowCount()) {
+			QModelIndex next = current.sibling(row + 1, 1);
+			if (this->playSingleTrack(next)) {
+				library->scrollTo(next);
+				break;
+			} else {
+				row++;
+			}
 		}
 	}
 }
 
 void UniqueLibrary::toggleShuffle()
 {
-	qDebug() << Q_FUNC_INFO << "not yet implemented";
+	toggleShuffleButton->setChecked(toggleShuffleButton->isChecked());
+	qDebug() << Q_FUNC_INFO << "not yet implemented" << toggleShuffleButton->isChecked();
+	if (toggleShuffleButton->isChecked()) {
+
+	} else {
+		_randomHistoryList.clear();
+	}
 }

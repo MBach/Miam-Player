@@ -319,7 +319,11 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 		}
 	}
 	tracks.sort(Qt::CaseInsensitive);
-	this->insertItemsToPlaylist(-1, tracks);
+	QList<QUrl> urls;
+	for (QString t : tracks) {
+		urls << QUrl::fromLocalFile(t);
+	}
+	this->insertItemsToPlaylist(-1, urls);
 
 	// Automatically plays the first track
 	if (isEmpty) {
@@ -329,9 +333,14 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 }
 
 /** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
-void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
+void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks)
 {
-	currentPlayList()->insertMedias(rowIndex, tracks);
+	QList<QMediaContent> t;
+	for (QUrl u : tracks) {
+		t << QMediaContent(u);
+
+	}
+	currentPlayList()->insertMedias(rowIndex, t);
 	if (currentPlayList()->isModified()) {
 		this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
 	}
@@ -343,14 +352,6 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QStringList &tracks)
 	}
 	if (currentPlayList()->mediaPlaylist()->playbackMode() == QMediaPlaylist::Random) {
 		currentPlayList()->mediaPlaylist()->shuffle(-1);
-	}
-}
-
-void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks)
-{
-	for (QUrl u : tracks) {
-		qDebug() << Q_FUNC_INFO << u.toLocalFile();
-
 	}
 }
 

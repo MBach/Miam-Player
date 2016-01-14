@@ -29,7 +29,7 @@ public:
 	explicit FileSystemTreeView(QWidget *parent = nullptr);
 
 	/** Reimplemented with a QDirIterator to gather informations about tracks. */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;
+	virtual void findAll(const QModelIndex &index, QList<QUrl> *tracks) const override;
 
 	virtual void updateSelectedTracks() override;
 

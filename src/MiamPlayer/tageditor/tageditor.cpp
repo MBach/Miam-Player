@@ -88,11 +88,11 @@ void TagEditor::addDirectory(const QDir &dir)
 	this->addItemsToEditor(tracks);
 }
 
-QStringList TagEditor::selectedTracks()
+QList<QUrl> TagEditor::selectedTracks()
 {
-	QStringList tracks;
+	QList<QUrl> tracks;
 	for (QModelIndex index : tagEditorWidget->selectionModel()->selectedRows(Miam::COL_Filename)) {
-		tracks << index.data(Qt::UserRole).toString();
+		tracks << QUrl::fromLocalFile(index.data(Qt::UserRole).toString());
 	}
 	return tracks;
 }

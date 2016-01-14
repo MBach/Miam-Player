@@ -71,8 +71,6 @@ public:
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
-	void insertMedias(int rowIndex, const QStringList &tracks);
-
 	/** Insert remote medias to playlist. */
 	void insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
 

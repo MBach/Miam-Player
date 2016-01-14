@@ -86,14 +86,7 @@ void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 	}
 }
 
-void MediaPlayer::changeTrack(const QMediaContent &mediaContent)
-{
-	qDebug() << Q_FUNC_INFO << mediaContent.canonicalUrl();
-	_state = QMediaPlayer::StoppedState;
-	this->playMediaContent(mediaContent);
-}
-
-void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
+/*void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 {
 	_state = QMediaPlayer::StoppedState;
 	_playlist = playlist;
@@ -102,8 +95,7 @@ void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
 	} else {
 		_playlist->setCurrentIndex(trackIndex);
 	}
-	this->play();
-}
+}*/
 
 /** Current duration of the media, in ms. */
 qint64 MediaPlayer::duration()
@@ -130,28 +122,9 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 	// Everything is splitted in 2: local actions and remote actions
 	qDebug() << Q_FUNC_INFO << mc.canonicalUrl() << mc.canonicalUrl().isLocalFile();
 	if (mc.canonicalUrl().isLocalFile()) {
-		switch (_state) {
-		case QMediaPlayer::PausedState:
-			// Resume playback is file was previously opened
-			_localPlayer->togglePause();
-			this->setState(QMediaPlayer::PlayingState);
-			break;
-		case QMediaPlayer::StoppedState:
-			_localPlayer->play(mc.canonicalUrl().toLocalFile());
-			break;
-		case QMediaPlayer::PlayingState:
-			// Rewind media
-			_localPlayer->setPosition(0);
-		}
+		_localPlayer->play(mc.canonicalUrl().toLocalFile());
 	} else if (_remotePlayer) {
-		// Remote player is about to start
-		if (_state == QMediaPlayer::PausedState) {
-			_remotePlayer->resume();
-		} else {
-			_remotePlayer->play(mc.canonicalUrl());
-		}
-	} else {
-		qDebug() << Q_FUNC_INFO << "No compatible remote players were connected for this track";
+		_remotePlayer->play(mc.canonicalUrl());
 	}
 	this->setVolume(Settings::instance()->volume());
 }
@@ -275,20 +248,18 @@ void MediaPlayer::skipForward()
 /** Pause current playing track. */
 void MediaPlayer::pause()
 {
-	if (!_playlist) {
-		return;
-	}
 	if (_remotePlayer) {
 		_remotePlayer->pause();
 	} else {
 		_localPlayer->pause(true);
 	}
-	this->setState(QMediaPlayer::PausedState);
+	_state = QMediaPlayer::PausedState;
 }
 
 /** Play current track in the playlist. */
 void MediaPlayer::play()
 {
+	qDebug() << Q_FUNC_INFO;
 	// Check if it's possible to play tracks first
 	if (!_playlist) {
 		return;
@@ -303,6 +274,7 @@ void MediaPlayer::play()
 /** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
+	qDebug() << Q_FUNC_INFO << "about to stop";
 	if (_state != QMediaPlayer::StoppedState) {
 		if (_remotePlayer) {
 			_remotePlayer->stop();
@@ -310,7 +282,6 @@ void MediaPlayer::stop()
 			_localPlayer->stop();
 		}
 		_state = QMediaPlayer::StoppedState;
-		this->setState(QMediaPlayer::StoppedState);
 	}
 }
 
@@ -327,9 +298,28 @@ void MediaPlayer::toggleMute() const
 /** Play or pause current track in the playlist depending of the state of the player. */
 void MediaPlayer::togglePlayback()
 {
-	if (_state == QMediaPlayer::PausedState || _state == QMediaPlayer::StoppedState) {
+	switch (_state) {
+	case QMediaPlayer::PausedState:
+		qDebug() << Q_FUNC_INFO << "about to resume";
+		this->resume();
+		break;
+	case QMediaPlayer::StoppedState:
+		qDebug() << Q_FUNC_INFO << "about to play";
 		this->play();
-	} else if (_state == QMediaPlayer::PlayingState) {
+		break;
+	case QMediaPlayer::PlayingState:
+		qDebug() << Q_FUNC_INFO << "about to pause";
 		this->pause();
+		break;
 	}
+}
+
+void MediaPlayer::resume()
+{
+	if (_remotePlayer) {
+		_remotePlayer->resume();
+	} else {
+		_localPlayer->pause(false);
+	}
+	this->setState(QMediaPlayer::PlayingState);
 }

@@ -38,7 +38,11 @@ void MediaButton::paintEvent(QPaintEvent *)
 	QPainter p(this);
 	int x = (this->height() - iconSize().height()) / 2;
 	int y = (this->width() - iconSize().width()) / 2;
-	p.drawPixmap(QPoint(x, y), icon().pixmap(iconSize()));
+	if (this->isCheckable() && this->isChecked()) {
+		p.drawPixmap(QPoint(x, y), icon().pixmap(iconSize(), QIcon::Selected));
+	} else {
+		p.drawPixmap(QPoint(x, y), icon().pixmap(iconSize()));
+	}
 }
 
 /** Load an icon from a chosen theme in options. */

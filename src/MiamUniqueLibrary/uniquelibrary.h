@@ -24,6 +24,8 @@ private:
 
 	QTranslator translator;
 
+	QModelIndexList _randomHistoryList;
+
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 

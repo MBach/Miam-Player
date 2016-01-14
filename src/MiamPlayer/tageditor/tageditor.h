@@ -41,7 +41,7 @@ public:
 
 	void addDirectory(const QDir &dir);
 
-	virtual QStringList selectedTracks() override;
+	virtual QList<QUrl> selectedTracks() override;
 
 	virtual void updateSelectedTracks() override;
 

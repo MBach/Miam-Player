@@ -77,7 +77,7 @@ public:
 	const QImage *expandedCover(AlbumItem *album) const;
 
 	/** Reimplemented. */
-	virtual void findAll(const QModelIndex &index, QStringList &tracks) const override;
+	virtual void findAll(const QModelIndex &index, QList<QUrl> *tracks) const override;
 
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 

@@ -66,7 +66,9 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	verticalHeader()->setDefaultSectionSize(QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height());
 
 	connect(this, &Playlist::doubleClicked, this, [=] (const QModelIndex &track) {
-		mediaPlayer->changeTrack(_playlistModel->mediaPlaylist(), track.row());
+		_playlistModel->mediaPlaylist()->setCurrentIndex(track.row());
+		mediaPlayer->setPlaylist(_playlistModel->mediaPlaylist());
+		mediaPlayer->play();
 	});
 
 	// Ensure current item in the playlist is visible when track has just changed to another one
@@ -164,17 +166,6 @@ bool Playlist::isModified() const
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
 	if (_playlistModel->insertMedias(rowIndex, medias)) {
-		this->autoResize();
-	}
-}
-
-void Playlist::insertMedias(int rowIndex, const QStringList &tracks)
-{
-	// If the track needs to be appended at the end
-	if (rowIndex == -1) {
-		rowIndex = _playlistModel->rowCount();
-	}
-	if (_playlistModel->insertMedias(rowIndex, tracks)) {
 		this->autoResize();
 	}
 }

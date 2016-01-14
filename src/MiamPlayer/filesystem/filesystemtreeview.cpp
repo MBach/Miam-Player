@@ -37,23 +37,27 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent)
 }
 
 /** Reimplemented with a QDirIterator to gather informations about tracks. */
-void FileSystemTreeView::findAll(const QModelIndex &index, QStringList &tracks) const
+void FileSystemTreeView::findAll(const QModelIndex &index, QList<QUrl> *tracks) const
 {
 	QFileInfo fileInfo = _fileSystemModel->fileInfo(index);
+	QStringList files;
 	if (fileInfo.isFile()) {
-		tracks << fileInfo.absoluteFilePath();
+		files << fileInfo.absoluteFilePath();
 	} else {
 		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
 			QFileInfo fileInfo(entry);
 			if (fileInfo.isFile() && FileHelper::suffixes(FileHelper::All).contains(fileInfo.suffix())) {
-				tracks << fileInfo.absoluteFilePath();
+				files << fileInfo.absoluteFilePath();
 			}
 		}
 	}
-	tracks.sort(Qt::CaseInsensitive);
-	tracks.removeDuplicates();
+	files.sort(Qt::CaseInsensitive);
+	files.removeDuplicates();
+	for (QString f : files) {
+		tracks->append(QUrl::fromLocalFile(f));
+	}
 }
 
 /** Reimplemented to display up to 3 actions. */

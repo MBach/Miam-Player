@@ -99,7 +99,11 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 			tracks << "file://" + file;
 		}
 		tracks.sort(Qt::CaseInsensitive);
-		tabPlaylists->insertItemsToPlaylist(-1, tracks);
+		QList<QUrl> urls;
+		for (QString t : tracks) {
+			urls << QUrl::fromLocalFile(t);
+		}
+		tabPlaylists->insertItemsToPlaylist(-1, urls);
 	} else {
 		QList<QDir> dirs;
 		for (QString location : dragDropDialog->externalLocations) {
@@ -192,6 +196,7 @@ void MainWindow::setupActions()
 		stackedWidget->setCurrentIndex(1);
 		Settings::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
 		_uniqueLibrary->library->createConnectionsToDB();
+		_mediaPlayer->setPlaylist(nullptr);
 
 		QModelIndex iTop = _uniqueLibrary->library->indexAt(_uniqueLibrary->library->viewport()->rect().topLeft());
 		_uniqueLibrary->library->jumpToWidget()->setCurrentLetter(_uniqueLibrary->library->model()->currentLetter(iTop));
@@ -266,8 +271,8 @@ void MainWindow::setupActions()
 	});
 
 	for (TreeView *tab : this->findChildren<TreeView*>()) {
-		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, static_cast<void (TabPlaylist::*)(int, const QStringList &)>(&TabPlaylist::insertItemsToPlaylist));
-		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QStringList &tracks) {
+		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
+		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<QUrl> &tracks) {
 			this->showTagEditor();
 			tagEditor->addItemsToEditor(tracks);
 		});
@@ -301,9 +306,9 @@ void MainWindow::setupActions()
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
-	connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::play);
+	connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::togglePlayback);
 
-	connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::play);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::togglePlayback);
 	connect(actionStop, &QAction::triggered, _mediaPlayer, &MediaPlayer::stop);
 	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer, &MediaPlayer::stopAfterCurrent);
 	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::stop);
@@ -434,7 +439,6 @@ void MainWindow::setupActions()
 		settings->setValue("mainWindowGeometry", saveGeometry());
 		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
 		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
-		Settings::instance()->setVolume((qreal)volumeSlider->value() / 100.0);
 		settings->sync();
 	});
 }
@@ -675,9 +679,9 @@ void MainWindow::processArgs(const QStringList &args)
 			if (isCreateNewPlaylist) {
 				tabPlaylists->addPlaylist();
 			}
-			QStringList tracks;
+			QList<QUrl> tracks;
 			for (QString p : positionalArgs) {
-				tracks << p;
+				tracks << QUrl::fromLocalFile(p);
 			}
 			tabPlaylists->insertItemsToPlaylist(-1, tracks);
 		}
@@ -728,8 +732,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 
 void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 {
-	playButton->disconnect();
-	actionPlay->disconnect();
 	if (state == QMediaPlayer::PlayingState) {
 		QString iconPath;
 		if (SettingsPrivate::instance()->hasCustomIcon("pauseButton")) {
@@ -738,13 +740,9 @@ void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 			iconPath = ":/player/" + Settings::instance()->theme() + "/pause";
 		}
 		playButton->setIcon(QIcon(iconPath));
-		connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::pause);
-		connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::pause);
 		seekSlider->setEnabled(true);
 	} else {
 		playButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/play"));
-		connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::play);
-		connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::play);
 		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		if (state == QMediaPlayer::StoppedState) {
 			seekSlider->setValue(0);
@@ -779,9 +777,9 @@ void MainWindow::openFiles()
 	} else {
 		QFileInfo fileInfo(files.first());
 		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
-		QStringList tracks;
+		QList<QUrl> tracks;
 		for (QString file : files) {
-			tracks << file;
+			tracks << QUrl::fromLocalFile(file);
 		}
 		tabPlaylists->insertItemsToPlaylist(-1, tracks);
 	}

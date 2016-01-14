@@ -37,9 +37,7 @@ public:
 
 	void addRemotePlayer(IMediaPlayer *remotePlayer);
 
-	void changeTrack(const QMediaContent &mediaContent);
-
-	void changeTrack(MediaPlaylist *playlist, int trackIndex);
+	//void changeTrack(MediaPlaylist *playlist, int trackIndex);
 
 	/** Current duration of the media, in ms. */
 	qint64 duration();
@@ -97,6 +95,9 @@ public slots:
 
 	/** Play or pause current track in the playlist depending of the state of the player. */
 	void togglePlayback();
+
+private:
+	void resume();
 
 signals:
 	void currentMediaChanged(const QString &uri);

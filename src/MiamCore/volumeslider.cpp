@@ -1,5 +1,6 @@
 #include "volumeslider.h"
 #include "settingsprivate.h"
+#include "settings.h"
 
 #include <QApplication>
 #include <QMouseEvent>
@@ -49,6 +50,7 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 		// One can hold the left button more than 1 second
 		_isDown = false || QGuiApplication::mouseButtons().testFlag(Qt::LeftButton);
 		this->update();
+		Settings::instance()->setVolume((qreal)value() / 100.0);
 	});
 
 	connect(this, &QSlider::valueChanged, [=]() { _timer->start(settings->volumeBarHideAfter() * 1000); });
