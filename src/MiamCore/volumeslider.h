@@ -30,6 +30,8 @@ public:
 	virtual bool eventFilter(QObject *obj, QEvent *e) override;
 
 protected:
+	virtual void contextMenuEvent(QContextMenuEvent *e) override;
+
 	/** Redefined. */
 	virtual void mousePressEvent(QMouseEvent *event) override;
 

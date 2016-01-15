@@ -3,6 +3,7 @@
 #include "settings.h"
 
 #include <QApplication>
+#include <QMenu>
 #include <QMouseEvent>
 #include <QStyleOptionSlider>
 #include <QStylePainter>
@@ -71,11 +72,29 @@ bool VolumeSlider::eventFilter(QObject *obj, QEvent *e)
 	return QSlider::eventFilter(obj, e);
 }
 
+void VolumeSlider::contextMenuEvent(QContextMenuEvent *e)
+{
+	QMenu m(this);
+	QAction *actionBars = new QAction(tr("Bars"), this);
+	QAction *actionLine = new QAction(tr("Line"), this);
+	QAction *actionSlider = new QAction(tr("Slider"), this);
+
+	actionBars->setCheckable(true);
+	actionBars->setChecked(true);
+	actionLine->setDisabled(true);
+	actionSlider->setDisabled(true);
+
+	m.addActions({ actionBars, actionLine, actionSlider});
+	m.exec(e->globalPos());
+}
+
 /** Redefined. */
 void VolumeSlider::mousePressEvent(QMouseEvent *event)
 {
-	setValue(event->pos().x() * 100 / width());
-	QSlider::mousePressEvent(event);
+	if (event->button() == Qt::LeftButton) {
+		setValue(event->pos().x() * 100 / width());
+		QSlider::mousePressEvent(event);
+	}
 }
 
 /** Redefined for custom painting. */

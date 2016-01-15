@@ -102,10 +102,8 @@ void UniqueLibrary::changeEvent(QEvent *event)
 
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 {
-	qDebug() << Q_FUNC_INFO << index;
 	QStandardItem *item = library->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
-		qDebug() << Q_FUNC_INFO << "about to play" << index.data(Miam::DF_URI).toString();
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		_currentTrack = item;
 		return true;
@@ -116,7 +114,6 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 
 void UniqueLibrary::skipBackward()
 {
-	qDebug() << Q_FUNC_INFO << "not yet implemented";
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	} else {
@@ -124,6 +121,18 @@ void UniqueLibrary::skipBackward()
 	}
 	if (toggleShuffleButton->isChecked()) {
 		this->playSingleTrack(_randomHistoryList.takeLast());
+	} else {
+		QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
+		int row = current.row();
+		while (row >= 0) {
+			QModelIndex previous = current.sibling(row - 1, 1);
+			if (this->playSingleTrack(previous)) {
+				library->scrollTo(previous);
+				break;
+			} else {
+				row--;
+			}
+		}
 	}
 }
 

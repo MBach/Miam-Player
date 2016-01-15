@@ -236,7 +236,18 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 			QRect vCheckRect = visualRect(option->direction, menuitem->rect, QRect(menuitem->rect.x(),
 																				   menuitem->rect.y(), checkcol - (gutterWidth + menuitem->rect.x()), menuitem->rect.height()));
 			if (checked) {
-				/// TODO
+				QStyleOptionMenuItem newMi = *menuitem;
+				int windowsItemFrame = 2;
+				newMi.rect = visualRect(option->direction,
+										menuitem->rect,
+										QRect(menuitem->rect.x() + windowsItemFrame,
+											  menuitem->rect.y() + windowsItemFrame,
+											  checkcol - 2 * windowsItemFrame,
+											  menuitem->rect.height() - 2 * windowsItemFrame)
+										);
+				painter->setRenderHint(QPainter::Antialiasing, true);
+				proxy()->drawPrimitive(PE_IndicatorMenuCheckMark, &newMi, painter, widget);
+				painter->setRenderHint(QPainter::Antialiasing, false);
 			}
 			if (!menuitem->icon.isNull()) {
 				QIcon::Mode mode = dis ? QIcon::Disabled : QIcon::Normal;

@@ -5,6 +5,7 @@
 
 Miam-Player is a cross-platform open source music player
 ![general overview](http://www.miam-player.org/images/gallery/general_overview.png)
+![list mode overview](http://www.miam-player.org/images/gallery/unique_library_mode.png)
 
 # What's inside?
 * Fast and reliable
@@ -17,7 +18,7 @@ Miam-Player is a cross-platform open source music player
 * Add [projectM](http://projectm.sourceforge.net/) support for amazing visualizations
 * A spotify / jamendo plugin to stream music
 ![equalizer](http://miam-player.org/images/work-in-progress/equalizer.png)
-* Useless: (scriptable) bitorrent client where you could browse results from your favorite tracker
+* High DPI support
 
 # Plugins
 A plugin system has been introduced to extend possibilites of the player. Five official plugins come with the installer for Windows:
@@ -38,7 +39,6 @@ Latest source is also available via Git:
 
 Master branch is _not always_ stable but should work on all supported platforms. You can find specific working releases by browsing tags.
 
-
 ## Requirements
 
 Miam-Player can be built with any common compiler (g++, clang, MSVC, MinGW).
@@ -52,7 +52,7 @@ See the [wiki](http://www.miam-player.org/wiki/index.php?title=How-to-build-Miam
 
 ## Copyright info
 
-Copyright (C) 2012-2015 Matthieu Bachelier
+Copyright (C) 2012-2016 Matthieu Bachelier
 
 Miam-Player is free (libre) software. This means the complete player
 source code is available to public, anyone is welcome to research
