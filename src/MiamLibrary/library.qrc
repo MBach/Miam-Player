@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file alias="MiamLibrary_en">translations/MiamLibrary_en.qm</file>
         <file alias="MiamLibrary_fr">translations/MiamLibrary_fr.qm</file>
+        <file alias="MiamLibrary_ru">translations/MiamLibrary_ru.qm</file>
     </qresource>
 </RCC>
