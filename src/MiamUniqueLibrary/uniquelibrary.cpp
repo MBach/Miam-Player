@@ -8,6 +8,9 @@
 #include <settingsprivate.h>
 #include "uniquelibraryitemdelegate.h"
 
+#include <ctime>
+#include <random>
+
 #include <QtDebug>
 
 UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
@@ -43,26 +46,24 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 			_mediaPlayer->togglePlayback();
 		}
 	});
-	connect(stopButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::stop);
+	connect(stopButton, &MediaButton::clicked, this, [=]() {
+		if (_currentTrack) {
+			_currentTrack->setData(false, Miam::DF_Highlighted);
+		}
+		_mediaPlayer->stop();
+	});
 	connect(seekForwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
 	connect(skipForwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipForward);
 	connect(toggleShuffleButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
 
 	auto settings = Settings::instance();
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State state) {
-		qDebug() << "ici" << state;
 		switch (state) {
 		case QMediaPlayer::StoppedState:
-			if (_currentTrack) {
-				_currentTrack->setData(false, Miam::DF_Highlighted);
-			}
 			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/play"));
 			seekSlider->setValue(0);
 			break;
 		case QMediaPlayer::PlayingState:
-			if (_currentTrack) {
-				_currentTrack->setData(true, Miam::DF_Highlighted);
-			}
 			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/pause"));
 			break;
 		case QMediaPlayer::PausedState:
@@ -89,6 +90,8 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	// Init language
 	translator.load(":/uniqueLibrary_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
+
+	std::srand(std::time(nullptr));
 }
 
 void UniqueLibrary::changeEvent(QEvent *event)
@@ -105,7 +108,17 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 	QStandardItem *item = library->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
+		if (toggleShuffleButton->isChecked()) {
+			library->scrollTo(index, QAbstractItemView::PositionAtCenter);
+		} else {
+			library->scrollTo(index, QAbstractItemView::EnsureVisible);
+		}
+		// Clear highlight first
+		if (_currentTrack) {
+			_currentTrack->setData(false, Miam::DF_Highlighted);
+		}
 		_currentTrack = item;
+		_currentTrack->setData(true, Miam::DF_Highlighted);
 		return true;
 	} else {
 		return false;
@@ -114,13 +127,14 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 
 void UniqueLibrary::skipBackward()
 {
-	if (_currentTrack) {
-		_currentTrack->setData(false, Miam::DF_Highlighted);
-	} else {
+	if (!_currentTrack) {
 		return;
 	}
+
 	if (toggleShuffleButton->isChecked()) {
-		this->playSingleTrack(_randomHistoryList.takeLast());
+		if (!_randomHistoryList.isEmpty()) {
+			this->playSingleTrack(_randomHistoryList.takeLast());
+		}
 	} else {
 		QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
 		int row = current.row();
@@ -140,19 +154,30 @@ void UniqueLibrary::skipForward()
 {
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
-	} else {
-		return;
 	}
 
 	if (toggleShuffleButton->isChecked()) {
-		//
+		int rows = library->model()->rowCount();
+		if (rows > 0) {
+			int r = rand() % rows;
+			QModelIndex idx = library->model()->index(r, 1);
+			while (library->model()->itemFromIndex(idx)->type() != Miam::IT_Track) {
+				idx = library->model()->index(rand() % rows, 1);
+			}
+			QModelIndex next = _proxy->mapFromSource(idx);
+			this->playSingleTrack(next);
+		}
 	} else {
-		QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
+		QModelIndex current;
+		if (_currentTrack) {
+			current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
+		} else {
+			current = _proxy->index(0, 1);
+		}
 		int row = current.row();
 		while (row < library->model()->rowCount()) {
 			QModelIndex next = current.sibling(row + 1, 1);
 			if (this->playSingleTrack(next)) {
-				library->scrollTo(next);
 				break;
 			} else {
 				row++;
@@ -164,10 +189,7 @@ void UniqueLibrary::skipForward()
 void UniqueLibrary::toggleShuffle()
 {
 	toggleShuffleButton->setChecked(toggleShuffleButton->isChecked());
-	qDebug() << Q_FUNC_INFO << "not yet implemented" << toggleShuffleButton->isChecked();
-	if (toggleShuffleButton->isChecked()) {
-
-	} else {
+	if (!toggleShuffleButton->isChecked()) {
 		_randomHistoryList.clear();
 	}
 }

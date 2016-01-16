@@ -120,7 +120,6 @@ void MediaPlayer::setVolume(qreal v)
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
 	// Everything is splitted in 2: local actions and remote actions
-	qDebug() << Q_FUNC_INFO << mc.canonicalUrl() << mc.canonicalUrl().isLocalFile();
 	if (mc.canonicalUrl().isLocalFile()) {
 		_localPlayer->play(mc.canonicalUrl().toLocalFile());
 	} else if (_remotePlayer) {
