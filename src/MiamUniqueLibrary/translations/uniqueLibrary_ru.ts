@@ -6,15 +6,16 @@
     <message>
         <location filename="../tableview.cpp" line="111"/>
         <source>No matching results were found</source>
-        <translation type="unfinished"></translation>
+        <translation>Подходящих результатов не найдено</translation>
     </message>
 </context>
 <context>
     <name>UniqueLibrary</name>
     <message>
-        <location filename="../uniquelibrary.ui" line="234"/>
+        <location filename="../uniquelibrary.ui" line="263"/>
+        <location filename="../ui_uniquelibrary.h" line="207"/>
         <source>Search...</source>
-        <translation type="unfinished">Искать...</translation>
+        <translation>Искать...</translation>
     </message>
 </context>
 <context>
@@ -22,12 +23,12 @@
     <message>
         <location filename="../uniquelibraryitemdelegate.cpp" line="84"/>
         <source>(no title)</source>
-        <translation type="unfinished"></translation>
+        <translation>(без названия)</translation>
     </message>
     <message>
         <location filename="../uniquelibraryitemdelegate.cpp" line="172"/>
         <source>(empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(пусто)</translation>
     </message>
 </context>
 </TS>
