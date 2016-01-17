@@ -174,8 +174,16 @@ CONFIG(release, debug|release) {
 }
 unix:!macx {
     LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamLibrary/ -lmiam-library -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
-    target.path = /usr/bin/
-    INSTALLS += target
+
+    target.path = /usr/bin
+    desktop.path = /usr/share/applications
+    desktop.files = $$PWD/../../debian/usr/share/applications/miam-player.desktop
+    icon64.path = /usr/share/icons/hicolor/64x64/apps
+    icon64.files = $$PWD/../../debian/usr/share/icons/hicolor/64x64/apps/application-x-miamplayer.png
+
+    INSTALLS += desktop \
+        target \
+        icon64
 }
 macx {
     ICON = $$PWD/../../osx/MiamPlayer.icns
@@ -203,3 +211,6 @@ INCLUDEPATH += $$PWD/../MiamLibrary $$PWD/../MiamUniqueLibrary
 DEPENDPATH += $$PWD/../MiamCore
 DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/tageditor
 DEPENDPATH += $$PWD/../MiamLibrary $$PWD/../MiamUniqueLibrary
+
+
+
