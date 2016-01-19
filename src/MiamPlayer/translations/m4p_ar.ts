@@ -77,31 +77,19 @@
     <name>ClosePlaylistPopup</name>
     <message>
         <source>Your attention is required</source>
-        <translation>إنتباهكم مُهِمْ</translation>
+        <translation type="vanished">إنتباهكم مُهِمْ</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation>ستغلُقون مجموعة مِن القِراءات هل هذا ما تُريدون فِعْله؟</translation>
+        <translation type="vanished">ستغلُقون مجموعة مِن القِراءات هل هذا ما تُريدون فِعْله؟</translation>
     </message>
     <message>
         <source>This can be changed in options</source>
-        <translation>هذا الخَيار يمكِن تحْمِلُهُ فيمابعد في الخياراتْ</translation>
+        <translation type="vanished">هذا الخَيار يمكِن تحْمِلُهُ فيمابعد في الخياراتْ</translation>
     </message>
     <message>
         <source>Remember my choice in the future</source>
-        <translation>تذَكَرْ خَياري في المَرَّاتْ القادِمةْ</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete this playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Replace this playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">تذَكَرْ خَياري في المَرَّاتْ القادِمةْ</translation>
     </message>
 </context>
 <context>
@@ -1258,24 +1246,12 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
-        <translation>نزع من قائمة القراءة</translation>
-    </message>
-    <message>
-        <source>Edit tags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>in tag editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>inline</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">نزع من قائمة القراءة</translation>
     </message>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation type="unfinished">هذه القائمة فارغة
+        <translation type="obsolete">هذه القائمة فارغة
  أختر و ضع المسارات من المكتبة أو من برنامج خارجي٠</translation>
     </message>
 </context>
@@ -1351,31 +1327,27 @@ Select a playlist to display the first 30 tracks.</source>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
-        <translation>عنوان</translation>
+        <translation type="vanished">عنوان</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>ألبوم</translation>
+        <translation type="vanished">ألبوم</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>مُدة</translation>
+        <translation type="vanished">مُدة</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>فنَّان</translation>
+        <translation type="vanished">فنَّان</translation>
     </message>
     <message>
         <source>Rating</source>
-        <translation>علامة</translation>
+        <translation type="vanished">علامة</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>سنَة</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">سنَة</translation>
     </message>
 </context>
 <context>
@@ -1390,25 +1362,6 @@ Select a playlist to display the first 30 tracks.</source>
             <numerusform></numerusform>
             <numerusform></numerusform>
         </translation>
-    </message>
-    <message>
-        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistModel</name>
-    <message>
-        <source>You cannot modify remote medias</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Local file</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1520,31 +1473,11 @@ The API has changed and you need to update these plugins too!</source>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation>قائمة القراءة %1</translation>
-    </message>
-    <message>
-        <source>Rename playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load background...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete playlist...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">قائمة القراءة %1</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">أنتبه</translation>
+        <translation type="obsolete">أنتبه</translation>
     </message>
 </context>
 <context>

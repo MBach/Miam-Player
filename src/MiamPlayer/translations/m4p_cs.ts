@@ -77,31 +77,31 @@
     <name>ClosePlaylistPopup</name>
     <message>
         <source>Your attention is required</source>
-        <translation>Je vyžadována vaše pozornost</translation>
+        <translation type="vanished">Je vyžadována vaše pozornost</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation>Chystáte se zavřít seznam skladeb. Co chcete udělat?</translation>
+        <translation type="vanished">Chystáte se zavřít seznam skladeb. Co chcete udělat?</translation>
     </message>
     <message>
         <source>This can be changed in options</source>
-        <translation>Toto je možné změnit ve volbách</translation>
+        <translation type="vanished">Toto je možné změnit ve volbách</translation>
     </message>
     <message>
         <source>Remember my choice in the future</source>
-        <translation>Zapamatovat si moji volbu do budoucna</translation>
+        <translation type="vanished">Zapamatovat si moji volbu do budoucna</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation>Chystáte se zavřít seznam skladeb, který jste změnil. Co chcete udělat?</translation>
+        <translation type="vanished">Chystáte se zavřít seznam skladeb, který jste změnil. Co chcete udělat?</translation>
     </message>
     <message>
         <source>Delete this playlist</source>
-        <translation>Smazat tento seznam skladeb</translation>
+        <translation type="vanished">Smazat tento seznam skladeb</translation>
     </message>
     <message>
         <source>Replace this playlist</source>
-        <translation>Nahradit tento seznam skladeb</translation>
+        <translation type="vanished">Nahradit tento seznam skladeb</translation>
     </message>
 </context>
 <context>
@@ -1249,24 +1249,24 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
-        <translation>Odstranit ze seznamu skladeb</translation>
+        <translation type="vanished">Odstranit ze seznamu skladeb</translation>
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Upravit značky</translation>
+        <translation type="vanished">Upravit značky</translation>
     </message>
     <message>
         <source>in tag editor</source>
-        <translation>v editoru značek</translation>
+        <translation type="vanished">v editoru značek</translation>
     </message>
     <message>
         <source>inline</source>
-        <translation>zde</translation>
+        <translation type="vanished">zde</translation>
     </message>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation>Tento seznam skladeb je prázdný.
+        <translation type="vanished">Tento seznam skladeb je prázdný.
 Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umístění.</translation>
     </message>
 </context>
@@ -1343,31 +1343,31 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
-        <translation>Název</translation>
+        <translation type="vanished">Název</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>Album</translation>
+        <translation type="vanished">Album</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>Délka</translation>
+        <translation type="vanished">Délka</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>Umělec</translation>
+        <translation type="vanished">Umělec</translation>
     </message>
     <message>
         <source>Rating</source>
-        <translation>Hodnocení</translation>
+        <translation type="vanished">Hodnocení</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>Rok</translation>
+        <translation type="vanished">Rok</translation>
     </message>
     <message>
         <source>Source</source>
-        <translation>Zdroj</translation>
+        <translation type="vanished">Zdroj</translation>
     </message>
 </context>
 <context>
@@ -1382,22 +1382,22 @@ Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation>Ve správci seznamů skladeb je přesně ten samý seznam skladeb (označen jako &apos;%1&apos;). Z toho důvodu jej není možné přidat dvakrát.</translation>
+        <translation type="vanished">Ve správci seznamů skladeb je přesně ten samý seznam skladeb (označen jako &apos;%1&apos;). Z toho důvodu jej není možné přidat dvakrát.</translation>
     </message>
 </context>
 <context>
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation>Nelze pozměnit vzdálené záznamy</translation>
+        <translation type="vanished">Nelze pozměnit vzdálené záznamy</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation>Místní</translation>
+        <translation type="vanished">Místní</translation>
     </message>
     <message>
         <source>Local file</source>
-        <translation>Místní soubor</translation>
+        <translation type="vanished">Místní soubor</translation>
     </message>
 </context>
 <context>
@@ -1503,31 +1503,31 @@ The API has changed and you need to update these plugins too!</source>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation>Seznam skladeb %1</translation>
+        <translation type="vanished">Seznam skladeb %1</translation>
     </message>
     <message>
         <source>Rename playlist</source>
-        <translation>Přejmenovat seznam skladeb</translation>
+        <translation type="vanished">Přejmenovat seznam skladeb</translation>
     </message>
     <message>
         <source>Load background...</source>
-        <translation>Nahrát pozadí...</translation>
+        <translation type="vanished">Nahrát pozadí...</translation>
     </message>
     <message>
         <source>Clear background</source>
-        <translation>Vyprázdnit pozadí</translation>
+        <translation type="vanished">Vyprázdnit pozadí</translation>
     </message>
     <message>
         <source>Delete playlist...</source>
-        <translation>Smazat seznam skladeb...</translation>
+        <translation type="vanished">Smazat seznam skladeb...</translation>
     </message>
     <message>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation>Chystáte se smazat &apos;%1&apos;. Jste si jistý, že chcete pokračovat?</translation>
+        <translation type="vanished">Chystáte se smazat &apos;%1&apos;. Jste si jistý, že chcete pokračovat?</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation>Varování</translation>
+        <translation type="vanished">Varování</translation>
     </message>
 </context>
 <context>

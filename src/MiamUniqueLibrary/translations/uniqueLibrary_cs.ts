@@ -4,16 +4,8 @@
 <context>
     <name>TableView</name>
     <message>
-        <location filename="../tableview.cpp" line="111"/>
+        <location filename="../tableview.cpp" line="122"/>
         <source>No matching results were found</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>UniqueLibrary</name>
-    <message>
-        <location filename="../uniquelibrary.ui" line="234"/>
-        <source>Search...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -27,6 +19,14 @@
     <message>
         <location filename="../uniquelibraryitemdelegate.cpp" line="172"/>
         <source>(empty)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>uniqueLibrary</name>
+    <message>
+        <location filename="../uniquelibrary.ui" line="263"/>
+        <source>Search...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

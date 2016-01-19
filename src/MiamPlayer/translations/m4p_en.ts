@@ -77,31 +77,31 @@
     <name>ClosePlaylistPopup</name>
     <message>
         <source>Your attention is required</source>
-        <translation>Your attention is required</translation>
+        <translation type="vanished">Your attention is required</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation>You&apos;re about to close a playlist. What would you like to do?</translation>
+        <translation type="vanished">You&apos;re about to close a playlist. What would you like to do?</translation>
     </message>
     <message>
         <source>This can be changed in options</source>
-        <translation>This can be changed in options</translation>
+        <translation type="vanished">This can be changed in options</translation>
     </message>
     <message>
         <source>Remember my choice in the future</source>
-        <translation>Remember my choice in the future</translation>
+        <translation type="vanished">Remember my choice in the future</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation>You&apos;re about to close a playlist that you have modified. What would you like to do?</translation>
+        <translation type="vanished">You&apos;re about to close a playlist that you have modified. What would you like to do?</translation>
     </message>
     <message>
         <source>Delete this playlist</source>
-        <translation>Delete this playlist</translation>
+        <translation type="vanished">Delete this playlist</translation>
     </message>
     <message>
         <source>Replace this playlist</source>
-        <translation>Replace this playlist</translation>
+        <translation type="vanished">Replace this playlist</translation>
     </message>
 </context>
 <context>
@@ -1246,24 +1246,24 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
-        <translation>Remove from playlist</translation>
+        <translation type="vanished">Remove from playlist</translation>
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Edit tags</translation>
+        <translation type="vanished">Edit tags</translation>
     </message>
     <message>
         <source>in tag editor</source>
-        <translation>in tag editor</translation>
+        <translation type="vanished">in tag editor</translation>
     </message>
     <message>
         <source>inline</source>
-        <translation>inline</translation>
+        <translation type="vanished">inline</translation>
     </message>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation>This playlist is empty.
+        <translation type="vanished">This playlist is empty.
 Select or drop tracks from your library or any external location.</translation>
     </message>
 </context>
@@ -1340,31 +1340,31 @@ Select a playlist to display the first 30 tracks.</translation>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
-        <translation>Title</translation>
+        <translation type="vanished">Title</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>Album</translation>
+        <translation type="vanished">Album</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>Length</translation>
+        <translation type="vanished">Length</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>Artist</translation>
+        <translation type="vanished">Artist</translation>
     </message>
     <message>
         <source>Rating</source>
-        <translation>Rating</translation>
+        <translation type="vanished">Rating</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>Year</translation>
+        <translation type="vanished">Year</translation>
     </message>
     <message>
         <source>Source</source>
-        <translation>Source</translation>
+        <translation type="vanished">Source</translation>
     </message>
 </context>
 <context>
@@ -1379,22 +1379,22 @@ Select a playlist to display the first 30 tracks.</translation>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</translation>
+        <translation type="vanished">There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</translation>
     </message>
 </context>
 <context>
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation>You cannot modify remote medias</translation>
+        <translation type="vanished">You cannot modify remote medias</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation>Local</translation>
+        <translation type="vanished">Local</translation>
     </message>
     <message>
         <source>Local file</source>
-        <translation>Local file</translation>
+        <translation type="vanished">Local file</translation>
     </message>
 </context>
 <context>
@@ -1501,31 +1501,31 @@ The API has changed and you need to update these plugins too!</translation>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation>Playlist %1</translation>
+        <translation type="vanished">Playlist %1</translation>
     </message>
     <message>
         <source>Rename playlist</source>
-        <translation>Rename playlist</translation>
+        <translation type="vanished">Rename playlist</translation>
     </message>
     <message>
         <source>Load background...</source>
-        <translation>Load background...</translation>
+        <translation type="vanished">Load background...</translation>
     </message>
     <message>
         <source>Clear background</source>
-        <translation>Clear background</translation>
+        <translation type="vanished">Clear background</translation>
     </message>
     <message>
         <source>Delete playlist...</source>
-        <translation>Delete playlist...</translation>
+        <translation type="vanished">Delete playlist...</translation>
     </message>
     <message>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</translation>
+        <translation type="vanished">You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation>Warning</translation>
+        <translation type="vanished">Warning</translation>
     </message>
 </context>
 <context>

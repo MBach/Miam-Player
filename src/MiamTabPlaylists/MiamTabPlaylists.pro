@@ -53,7 +53,6 @@ win32 {
     TARGET = MiamTabPlaylists
 }
 unix {
-    #QMAKE_CXXFLAGS += -std=c++11
     LIBS += -L$$OUT_PWD/../MiamCore/ -lmiam-core
     TARGET = miam-tabplaylists
 }

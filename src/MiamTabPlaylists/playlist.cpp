@@ -159,6 +159,9 @@ bool Playlist::isModified() const
 
 void Playlist::insertMedias(int rowIndex, const QList<QMediaContent> &medias)
 {
+	if (rowIndex == -1) {
+		rowIndex = _playlistModel->rowCount();
+	}
 	if (_playlistModel->insertMedias(rowIndex, medias)) {
 		this->autoResize();
 	}

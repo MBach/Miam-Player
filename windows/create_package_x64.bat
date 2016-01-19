@@ -6,6 +6,7 @@ mkdir packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamCore\release\MiamCore.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamLibrary\release\MiamLibrary.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamPlayer\release\MiamPlayer.exe packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\MiamTabPlaylists\release\MiamTabPlaylists.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\MiamUniqueLibrary\release\MiamUniqueLibrary.dll packages\org.miamplayer.core\data\
 
 rem 3rd party

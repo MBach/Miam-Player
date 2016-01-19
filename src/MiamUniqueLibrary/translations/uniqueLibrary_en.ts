@@ -12,7 +12,7 @@
     <name>UniqueLibrary</name>
     <message>
         <source>Search...</source>
-        <translation>Search...</translation>
+        <translation type="vanished">Search...</translation>
     </message>
 </context>
 <context>
@@ -24,6 +24,13 @@
     <message>
         <source>(empty)</source>
         <translation>(empty)</translation>
+    </message>
+</context>
+<context>
+    <name>uniqueLibrary</name>
+    <message>
+        <source>Search...</source>
+        <translation type="unfinished">Search...</translation>
     </message>
 </context>
 </TS>

@@ -77,31 +77,31 @@
     <name>ClosePlaylistPopup</name>
     <message>
         <source>Your attention is required</source>
-        <translation>你需要注意</translation>
+        <translation type="vanished">你需要注意</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation>你将关闭播放列表. 你要作什么?</translation>
+        <translation type="vanished">你将关闭播放列表. 你要作什么?</translation>
     </message>
     <message>
         <source>This can be changed in options</source>
-        <translation>可以在选项中修改</translation>
+        <translation type="vanished">可以在选项中修改</translation>
     </message>
     <message>
         <source>Remember my choice in the future</source>
-        <translation>记住我的选择</translation>
+        <translation type="vanished">记住我的选择</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation>你将关闭被修改的播放列表. 你要作什么?</translation>
+        <translation type="vanished">你将关闭被修改的播放列表. 你要作什么?</translation>
     </message>
     <message>
         <source>Delete this playlist</source>
-        <translation>删除该列表</translation>
+        <translation type="vanished">删除该列表</translation>
     </message>
     <message>
         <source>Replace this playlist</source>
-        <translation>替换该播放列表</translation>
+        <translation type="vanished">替换该播放列表</translation>
     </message>
 </context>
 <context>
@@ -1243,24 +1243,24 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
-        <translation>从播放列表移除</translation>
+        <translation type="vanished">从播放列表移除</translation>
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>编辑标签</translation>
+        <translation type="vanished">编辑标签</translation>
     </message>
     <message>
         <source>in tag editor</source>
-        <translation>在标签编辑器里</translation>
+        <translation type="vanished">在标签编辑器里</translation>
     </message>
     <message>
         <source>inline</source>
-        <translation>内联</translation>
+        <translation type="vanished">内联</translation>
     </message>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation>这个播放列表为空.
+        <translation type="vanished">这个播放列表为空.
 选择或拖拽音轨到你的库中或外部位置.</translation>
     </message>
 </context>
@@ -1337,31 +1337,31 @@ Select a playlist to display the first 30 tracks.</source>
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
-        <translation>标题</translation>
+        <translation type="vanished">标题</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>专辑</translation>
+        <translation type="vanished">专辑</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>长度</translation>
+        <translation type="vanished">长度</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>艺术家</translation>
+        <translation type="vanished">艺术家</translation>
     </message>
     <message>
         <source>Rating</source>
-        <translation>等级</translation>
+        <translation type="vanished">等级</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>年份</translation>
+        <translation type="vanished">年份</translation>
     </message>
     <message>
         <source>Source</source>
-        <translation>源</translation>
+        <translation type="vanished">源</translation>
     </message>
 </context>
 <context>
@@ -1374,22 +1374,22 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation>播放列表管理区存在完全相同的播放列表 (&apos;%1&apos;), 无法再次添加.</translation>
+        <translation type="vanished">播放列表管理区存在完全相同的播放列表 (&apos;%1&apos;), 无法再次添加.</translation>
     </message>
 </context>
 <context>
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation>你不能修改远程媒体</translation>
+        <translation type="vanished">你不能修改远程媒体</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation>本地</translation>
+        <translation type="vanished">本地</translation>
     </message>
     <message>
         <source>Local file</source>
-        <translation>本地文件</translation>
+        <translation type="vanished">本地文件</translation>
     </message>
 </context>
 <context>
@@ -1493,31 +1493,31 @@ The API has changed and you need to update these plugins too!</source>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation>播放列表 %1</translation>
+        <translation type="vanished">播放列表 %1</translation>
     </message>
     <message>
         <source>Rename playlist</source>
-        <translation>重命名播放列表</translation>
+        <translation type="vanished">重命名播放列表</translation>
     </message>
     <message>
         <source>Load background...</source>
-        <translation>加载背景...</translation>
+        <translation type="vanished">加载背景...</translation>
     </message>
     <message>
         <source>Clear background</source>
-        <translation>清空背景</translation>
+        <translation type="vanished">清空背景</translation>
     </message>
     <message>
         <source>Delete playlist...</source>
-        <translation>删除播放列表...</translation>
+        <translation type="vanished">删除播放列表...</translation>
     </message>
     <message>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation>将要删除 &apos;%1&apos;. 是否确定继续?</translation>
+        <translation type="vanished">将要删除 &apos;%1&apos;. 是否确定继续?</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation>警告</translation>
+        <translation type="vanished">警告</translation>
     </message>
 </context>
 <context>

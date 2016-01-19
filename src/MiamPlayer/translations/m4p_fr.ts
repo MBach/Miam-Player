@@ -77,31 +77,31 @@
     <name>ClosePlaylistPopup</name>
     <message>
         <source>Your attention is required</source>
-        <translation>Votre attention est requise</translation>
+        <translation type="vanished">Votre attention est requise</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation>Vous êtes sur le point de fermer une liste de lecture. Que souhaitez-vous faire ?</translation>
+        <translation type="vanished">Vous êtes sur le point de fermer une liste de lecture. Que souhaitez-vous faire ?</translation>
     </message>
     <message>
         <source>This can be changed in options</source>
-        <translation>Cette option peut être changée ultérieurement dans les options</translation>
+        <translation type="vanished">Cette option peut être changée ultérieurement dans les options</translation>
     </message>
     <message>
         <source>Remember my choice in the future</source>
-        <translation>Se souvenir de mon choix à l&apos;avenir</translation>
+        <translation type="vanished">Se souvenir de mon choix à l&apos;avenir</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation>Vous êtes sur le point de fermer une liste de lecture que vous venez de modifier. Que souhaitez-vous faire ?</translation>
+        <translation type="vanished">Vous êtes sur le point de fermer une liste de lecture que vous venez de modifier. Que souhaitez-vous faire ?</translation>
     </message>
     <message>
         <source>Delete this playlist</source>
-        <translation>Supprimer cette liste de lecture</translation>
+        <translation type="vanished">Supprimer cette liste de lecture</translation>
     </message>
     <message>
         <source>Replace this playlist</source>
-        <translation>Remplacer cette liste de lecture</translation>
+        <translation type="vanished">Remplacer cette liste de lecture</translation>
     </message>
 </context>
 <context>
@@ -1246,24 +1246,24 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
-        <translation>Retirer de la liste de lecture</translation>
+        <translation type="vanished">Retirer de la liste de lecture</translation>
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Modifier les tags</translation>
+        <translation type="vanished">Modifier les tags</translation>
     </message>
     <message>
         <source>in tag editor</source>
-        <translation>dans l&apos;éditeur</translation>
+        <translation type="vanished">dans l&apos;éditeur</translation>
     </message>
     <message>
         <source>inline</source>
-        <translation>ici</translation>
+        <translation type="vanished">ici</translation>
     </message>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation>Cette liste de lecture est vide.
+        <translation type="vanished">Cette liste de lecture est vide.
 Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une application externe.</translation>
     </message>
 </context>
@@ -1340,31 +1340,31 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
-        <translation>Titre</translation>
+        <translation type="vanished">Titre</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>Album</translation>
+        <translation type="vanished">Album</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>Durée</translation>
+        <translation type="vanished">Durée</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>Artiste</translation>
+        <translation type="vanished">Artiste</translation>
     </message>
     <message>
         <source>Rating</source>
-        <translation>Note</translation>
+        <translation type="vanished">Note</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>Année</translation>
+        <translation type="vanished">Année</translation>
     </message>
     <message>
         <source>Source</source>
-        <translation>Source</translation>
+        <translation type="vanished">Source</translation>
     </message>
 </context>
 <context>
@@ -1378,22 +1378,22 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     </message>
     <message>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation>Il y a exactement la même liste de lecture dans le Gestionnaire (identifié comme &apos;%1&apos;), par conséquent il n&apos;est pas possible de l&apos;ajouter en double.</translation>
+        <translation type="vanished">Il y a exactement la même liste de lecture dans le Gestionnaire (identifié comme &apos;%1&apos;), par conséquent il n&apos;est pas possible de l&apos;ajouter en double.</translation>
     </message>
 </context>
 <context>
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation>Vous ne pouvez pas modifier des médias distants</translation>
+        <translation type="vanished">Vous ne pouvez pas modifier des médias distants</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation>Local</translation>
+        <translation type="vanished">Local</translation>
     </message>
     <message>
         <source>Local file</source>
-        <translation>Fichier en local</translation>
+        <translation type="vanished">Fichier en local</translation>
     </message>
 </context>
 <context>
@@ -1500,31 +1500,31 @@ L&apos;API a changé et vous devez mettre à jour ces extensions également !</t
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation>Liste de lecture %1</translation>
+        <translation type="vanished">Liste de lecture %1</translation>
     </message>
     <message>
         <source>Rename playlist</source>
-        <translation>Renommer une liste de lecture</translation>
+        <translation type="vanished">Renommer une liste de lecture</translation>
     </message>
     <message>
         <source>Load background...</source>
-        <translation>Charger une image en arrière-plan...</translation>
+        <translation type="vanished">Charger une image en arrière-plan...</translation>
     </message>
     <message>
         <source>Clear background</source>
-        <translation>Supprimer l&apos;image d&apos;arrière-plan</translation>
+        <translation type="vanished">Supprimer l&apos;image d&apos;arrière-plan</translation>
     </message>
     <message>
         <source>Delete playlist...</source>
-        <translation>Supprimer la liste de lecture...</translation>
+        <translation type="vanished">Supprimer la liste de lecture...</translation>
     </message>
     <message>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation>Vous êtes sur le point de supprimer &apos;%1&apos;. Êtes-vous sûr de vouloir continuer ?</translation>
+        <translation type="vanished">Vous êtes sur le point de supprimer &apos;%1&apos;. Êtes-vous sûr de vouloir continuer ?</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation>Attention</translation>
+        <translation type="vanished">Attention</translation>
     </message>
 </context>
 <context>

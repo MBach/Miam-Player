@@ -77,31 +77,19 @@
     <name>ClosePlaylistPopup</name>
     <message>
         <source>Your attention is required</source>
-        <translation>Ihre Aufmerksamkeit wird benötigt</translation>
+        <translation type="vanished">Ihre Aufmerksamkeit wird benötigt</translation>
     </message>
     <message>
         <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation>Sie schließen gerade eine Wiedergabeliste. Möchten Sie fortfahren ?</translation>
+        <translation type="vanished">Sie schließen gerade eine Wiedergabeliste. Möchten Sie fortfahren ?</translation>
     </message>
     <message>
         <source>This can be changed in options</source>
-        <translation>Dies kann in den Einstellungen verändert werden</translation>
+        <translation type="vanished">Dies kann in den Einstellungen verändert werden</translation>
     </message>
     <message>
         <source>Remember my choice in the future</source>
-        <translation>Meine Auswahl zukünftig speichern</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete this playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Replace this playlist</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Meine Auswahl zukünftig speichern</translation>
     </message>
 </context>
 <context>
@@ -1246,25 +1234,25 @@
     <name>Playlist</name>
     <message>
         <source>Remove from playlist</source>
-        <translation>Aus der Wiedergabeliste entfernen</translation>
+        <translation type="vanished">Aus der Wiedergabeliste entfernen</translation>
     </message>
     <message>
         <source>Edit tags</source>
-        <translation>Tags editieren</translation>
+        <translation type="vanished">Tags editieren</translation>
     </message>
     <message>
         <source>in tag editor</source>
-        <translation>im Tag Editor</translation>
+        <translation type="vanished">im Tag Editor</translation>
     </message>
     <message>
         <source>inline</source>
         <translatorcomment>order &quot;inzeilig&quot; ?</translatorcomment>
-        <translation>Inline</translation>
+        <translation type="vanished">Inline</translation>
     </message>
     <message>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
-        <translation type="unfinished">Diese Wiedergabeliste ist leer.
+        <translation type="obsolete">Diese Wiedergabeliste ist leer.
 Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</translation>
     </message>
 </context>
@@ -1341,31 +1329,31 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
     <name>PlaylistHeaderView</name>
     <message>
         <source>Title</source>
-        <translation>Titel</translation>
+        <translation type="vanished">Titel</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation>Album</translation>
+        <translation type="vanished">Album</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>Dauer</translation>
+        <translation type="vanished">Dauer</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>Interpret</translation>
+        <translation type="vanished">Interpret</translation>
     </message>
     <message>
         <source>Rating</source>
-        <translation>Bewertung</translation>
+        <translation type="vanished">Bewertung</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>Jahr</translation>
+        <translation type="vanished">Jahr</translation>
     </message>
     <message>
         <source>Source</source>
-        <translation>Quelle</translation>
+        <translation type="vanished">Quelle</translation>
     </message>
 </context>
 <context>
@@ -1377,24 +1365,16 @@ Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.<
             <numerusform></numerusform>
         </translation>
     </message>
-    <message>
-        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>PlaylistModel</name>
     <message>
         <source>You cannot modify remote medias</source>
-        <translation>Sie können keine fernen Medien verändern</translation>
+        <translation type="vanished">Sie können keine fernen Medien verändern</translation>
     </message>
     <message>
         <source>Local</source>
-        <translation>Lokal</translation>
-    </message>
-    <message>
-        <source>Local file</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Lokal</translation>
     </message>
 </context>
 <context>
@@ -1498,31 +1478,11 @@ The API has changed and you need to update these plugins too!</source>
     <name>TabPlaylist</name>
     <message>
         <source>Playlist %1</source>
-        <translation>Wiedergabeliste %1</translation>
-    </message>
-    <message>
-        <source>Rename playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load background...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clear background</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete playlist...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Wiedergabeliste %1</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">Warnung</translation>
+        <translation type="obsolete">Warnung</translation>
     </message>
 </context>
 <context>
