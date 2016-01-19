@@ -6,16 +6,17 @@
 #include <settingsprivate.h>
 
 #include "dialogs/closeplaylistpopup.h"
-#include "mainwindow.h"
+//#include "mainwindow.h"
 #include "tabbar.h"
 #include "cornerwidget.h"
+#include <model/sqldatabase.h>
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent)
 	: QTabWidget(parent)
 	, _mediaPlayer(nullptr)
 	, _playlistManager(new PlaylistManager(this))
-	, _mainWindow(nullptr)
+	//, _mainWindow(nullptr)
 	, _contextMenu(new QMenu(this))
 {
 	TabBar *tabBar = new TabBar(this);
@@ -138,7 +139,8 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			// Drag & Drop comes from another application but has landed in the playlist area
 			de->ignore();
 			QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
-			_mainWindow->dispatchDrop(d);
+			/// FIXME
+			//_mainWindow->dispatchDrop(d);
 			return true;
 		} else {
 			if (obj == cornerWidget()) {
@@ -221,11 +223,11 @@ Playlist* TabPlaylist::playlist(int index)
 	return qobject_cast<Playlist*>(this->widget(index));
 }
 
-void TabPlaylist::setMainWindow(MainWindow *mainWindow)
+/*void TabPlaylist::setMainWindow(MainWindow *mainWindow)
 {
 	_mainWindow = mainWindow;
 	_mediaPlayer = mainWindow->mediaPlayer();
-}
+}*/
 
 /** Retranslate context menu. */
 void TabPlaylist::changeEvent(QEvent *event)

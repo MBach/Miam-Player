@@ -165,7 +165,7 @@ void SearchDialog::aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks)
 void SearchDialog::moveSearchDialog(int, int)
 {
 	QPoint tl = _mainWindow->widgetSearchBar->frameGeometry().topRight();
-	tl.setY(tl.y() - 1);
+	tl.ry()--;
 	QPoint tl2 = _mainWindow->widgetSearchBar->mapTo(_mainWindow, tl);
 	this->move(tl2);
 }

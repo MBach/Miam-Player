@@ -3,13 +3,14 @@
 
 #include <QStyledItemDelegate>
 #include <QTableView>
+#include "miamcore_global.h"
 
 /**
  * \brief		The MiamStyledItemDelegate class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MiamStyledItemDelegate : public QStyledItemDelegate
+class MIAMCORE_LIBRARY MiamStyledItemDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 private:

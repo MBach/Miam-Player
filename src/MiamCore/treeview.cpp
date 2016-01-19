@@ -28,7 +28,17 @@ QList<QUrl> TreeView::selectedTracks()
 
 void TreeView::startDrag(Qt::DropActions)
 {
+	//QList<QVariant> vs;
 	QByteArray itemData;
+	QList<QUrl> urls = this->selectedTracks();
+	for (int i = 0; i < urls.size(); i++) {
+		QUrl u = urls.at(i);
+		itemData.append(u.toEncoded());
+		if (i + 1 < urls.size()) {
+			itemData.append('|');
+		}
+	}
+	qDebug() << Q_FUNC_INFO << urls.size();
 	QMimeData *mimeData = new QMimeData;
 	mimeData->setData("treeview/x-treeview-item", itemData);
 	QDrag *drag = new QDrag(this);
@@ -54,11 +64,11 @@ QMessageBox::StandardButton TreeView::beforeSending(const QString &target, QList
 }
 
 /** Send folders or tracks to a specific position in a playlist. */
-void TreeView::insertToPlaylist(int rowIndex)
+void TreeView::appendToPlaylist()
 {
 	QList<QUrl> tracks;
 	if (this->beforeSending(tr("playlist"), &tracks) == QMessageBox::Ok) {
-		emit aboutToInsertToPlaylist(rowIndex, tracks);
+		emit aboutToInsertToPlaylist(-1, tracks);
 	}
 }
 

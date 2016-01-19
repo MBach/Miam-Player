@@ -37,12 +37,11 @@ public:
 
 	void addRemotePlayer(IMediaPlayer *remotePlayer);
 
-	//void changeTrack(MediaPlaylist *playlist, int trackIndex);
-
 	/** Current duration of the media, in ms. */
 	qint64 duration();
 
 	inline bool isStopAfterCurrent() const { return _stopAfterCurrent; }
+	inline void setStopAfterCurrent(bool b) { _stopAfterCurrent = b; }
 
 	inline MediaPlaylist * playlist() { return _playlist; }
 

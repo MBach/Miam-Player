@@ -3,28 +3,21 @@
 #include <QApplication>
 #include <QDropEvent>
 #include <QHeaderView>
-#include <QScrollBar>
-#include <QTime>
 
-#include <librarytreeview.h>
 #include <scrollbar.h>
-#include "../columnutils.h"
-#include "tabplaylist.h"
 #include "playlistheaderview.h"
 #include "playlistitemdelegate.h"
+#include <settingsprivate.h>
 
 #include <QMimeData>
 #include <QDrag>
-#include <QItemSelection>
 #include <QPaintEngine>
-#include <QStylePainter>
 
 #include <QtDebug>
 
 Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	: QTableView(parent)
 	, _mediaPlayer(mediaPlayer)
-	//, _dropDownIndex(nullptr)
 	, _isDragging(false)
 	, _hash(0)
 	, _id(0)
@@ -44,6 +37,7 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	this->setFrameShape(QFrame::NoFrame);
 	this->setItemDelegate(new PlaylistItemDelegate(this));
 	this->setMouseTracking(true);
+
 	ScrollBar *hScrollBar = new ScrollBar(Qt::Vertical, this);
 	hScrollBar->setFrameBorder(false, true, true, false);
 	this->setHorizontalScrollBar(hScrollBar);
@@ -286,10 +280,7 @@ void Playlist::dropEvent(QDropEvent *event)
 	_isDragging = false;
 	QObject *source = event->source();
 	int row = this->indexAt(event->pos()).row();
-	if (TreeView *view = qobject_cast<TreeView*>(source)) {
-		view->insertToPlaylist(row);
-		this->setProperty("dragFromTreeview", false);
-	} else if (Playlist *target = qobject_cast<Playlist*>(source)) {
+	if (Playlist *target = qobject_cast<Playlist*>(source)) {
 		// Internal drag and drop (moving tracks)
 		if (target && target == this) {
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
@@ -331,7 +322,15 @@ void Playlist::dropEvent(QDropEvent *event)
 		event->ignore();
 		return;
 	} else {
-		qDebug() << "???" << source;
+		/// FIXME
+		QList<QMediaContent> medias;
+		QByteArray byteArray = event->mimeData()->data("treeview/x-treeview-item");
+		QList<QByteArray> encodedUrls = byteArray.split('|');
+		qDebug() << Q_FUNC_INFO << row << encodedUrls.size();
+		for (QByteArray encodedUrl : encodedUrls) {
+			medias << QMediaContent(QUrl::fromEncoded(encodedUrl));
+		}
+		this->insertMedias(row, medias);
 	}
 	if (QDrag *drag = findChild<QDrag*>()) {
 		drag->deleteLater();

@@ -1,9 +1,10 @@
 #ifndef PLAYLISTITEMDELEGATE_H
 #define PLAYLISTITEMDELEGATE_H
 
-#include "../styling/miamstyleditemdelegate.h"
+#include <styling/miamstyleditemdelegate.h>
 
 #include "stareditor.h"
+#include "miamtabplaylists_global.hpp"
 
 class Playlist;
 
@@ -12,7 +13,7 @@ class Playlist;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PlaylistItemDelegate : public MiamStyledItemDelegate
+class MIAMTABPLAYLISTS_LIBRARY PlaylistItemDelegate : public MiamStyledItemDelegate
 {
 	Q_OBJECT
 private:

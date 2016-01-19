@@ -45,13 +45,14 @@
 #include <QWidget>
 
 #include <starrating.h>
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The StarEditor class is reusing the example provided with Qt Framework
  * \author      Digia Plc
  * \copyright   GNU General Public License v3
  */
-class StarEditor : public QWidget
+class MIAMTABPLAYLISTS_LIBRARY StarEditor : public QWidget
 {
 	Q_OBJECT
 public:

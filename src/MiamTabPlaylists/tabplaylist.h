@@ -8,19 +8,20 @@
 #include <model/playlistdao.h>
 #include <mediabutton.h>
 #include <mediaplayer.h>
-#include "../tracksnotfoundmessagebox.h"
+//#include "../tracksnotfoundmessagebox.h"
 #include "playlist.h"
 #include "playlistmanager.h"
+#include "miamtabplaylists_global.hpp"
 
 /// Forward declaration
-class MainWindow;
+//class MainWindow;
 
 /**
  * \brief		The TabPlaylist class is used to manage mutiple playlists in the MainWindow class.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TabPlaylist : public QTabWidget
+class MIAMTABPLAYLISTS_LIBRARY TabPlaylist : public QTabWidget
 {
 	Q_OBJECT
 
@@ -29,7 +30,7 @@ private:
 
 	PlaylistManager *_playlistManager;
 
-	MainWindow *_mainWindow;
+	//MainWindow *_mainWindow;
 	QMenu *_contextMenu;
 	QAction *_deletePlaylist;
 
@@ -63,7 +64,7 @@ public:
 
 	inline PlaylistManager *playlistManager() const { return _playlistManager; }
 
-	void setMainWindow(MainWindow *mainWindow);
+	//void setMainWindow(MainWindow *mainWindow);
 
 protected:
 	/** Retranslate context menu. */

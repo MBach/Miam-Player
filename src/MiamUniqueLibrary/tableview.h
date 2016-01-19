@@ -19,6 +19,8 @@ private:
 
 	JumpToWidget *_jumpToWidget;
 
+	int _skipCount;
+
 public:
 	explicit TableView(QWidget *parent = nullptr);
 

@@ -2,6 +2,7 @@
 #define PLAYLISTMANAGER_H
 
 #include <QObject>
+#include "miamtabplaylists_global.hpp"
 
 /// Forward declarations
 class TabPlaylist;
@@ -12,7 +13,7 @@ class Playlist;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PlaylistManager : public QObject
+class MIAMTABPLAYLISTS_LIBRARY PlaylistManager : public QObject
 {
 	Q_OBJECT
 private:

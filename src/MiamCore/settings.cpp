@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include <QAction>
 #include <QDateTime>
 #include <QFile>
 #include <QApplication>
@@ -25,11 +26,6 @@ Settings* Settings::instance()
 		settings->initShortcuts();
 	}
 	return settings;
-}
-
-QString Settings::lastActiveView() const
-{
-	return value("lastActiveView", "actionViewPlaylists").toString();
 }
 
 QMap<QString, QVariant> Settings::shortcuts() const
@@ -94,12 +90,6 @@ void Settings::initShortcuts()
 		shortcuts.insert("removeSelectedTracks", "Delete");
 		setValue("shortcuts", shortcuts);
 	}
-}
-
-/** Sets the last view activated by the user. Used when reopening the player. */
-void Settings::setLastActiveView(const QString &viewName)
-{
-	setValue("lastActiveView", viewName);
 }
 
 void Settings::setThemeName(const QString &theme)

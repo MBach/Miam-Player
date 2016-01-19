@@ -1,7 +1,7 @@
 #include "tabbar.h"
 #include "settingsprivate.h"
 #include "playlist.h"
-#include "../treeview.h"
+//#include "../treeview.h"
 
 #include <QApplication>
 #include <QIcon>
@@ -109,10 +109,12 @@ void TabBar::dropEvent(QDropEvent *event)
 		if (!SettingsPrivate::instance()->copyTracksFromPlaylist()) {
 			origin->removeSelectedTracks();
 		}
-	} else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
+	}
+	/// FIXME
+	/* else if (TreeView *origin = qobject_cast<TreeView*>(event->source())) {
 		tabPlaylist->setCurrentIndex(tab);
 		origin->appendToPlaylist();
-	}
+	}*/
 }
 
 /** Redefined to validate new tab name if the focus is lost. */

@@ -6,7 +6,6 @@ include(qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += debug/logbrowser.cpp \
     debug/logbrowserdialog.cpp \
-    dialogs/closeplaylistpopup.cpp \
     dialogs/colordialog.cpp \
     dialogs/customizeoptionsdialog.cpp \
     dialogs/customizethemedialog.cpp \
@@ -23,17 +22,7 @@ SOURCES += debug/logbrowser.cpp \
     filesystem/addressbarlineedit.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
-    playlists/cornerwidget.cpp \
-    playlists/playlist.cpp \
-    playlists/playlistheaderview.cpp \
-    playlists/playlistmanager.cpp \
-    playlists/playlistmodel.cpp \
-    playlists/tabbar.cpp \
-    playlists/tabplaylist.cpp \
-    playlists/playlistitemdelegate.cpp \
-    playlists/stareditor.cpp \
     styling/miamstyle.cpp \
-    styling/miamstyleditemdelegate.cpp \
     tageditor/albumcover.cpp \
     tageditor/tagconverter.cpp \
     tageditor/tageditor.cpp \
@@ -41,8 +30,6 @@ SOURCES += debug/logbrowser.cpp \
     columnutils.cpp \
     main.cpp \
     mainwindow.cpp \
-    playbackmodewidget.cpp \
-    playbackmodewidgetfactory.cpp \
     pluginmanager.cpp \
     quickstart.cpp \
     tagbutton.cpp \
@@ -51,7 +38,6 @@ SOURCES += debug/logbrowser.cpp \
 
 HEADERS += debug/logbrowser.h \
     debug/logbrowserdialog.h \
-    dialogs/closeplaylistpopup.h \
     dialogs/colordialog.h \
     dialogs/customizeoptionsdialog.h \
     dialogs/customizethemedialog.h \
@@ -69,17 +55,7 @@ HEADERS += debug/logbrowser.h \
     filesystem/addressbarlineedit.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
-    playlists/cornerwidget.h \
-    playlists/playlist.h \
-    playlists/playlistheaderview.h \
-    playlists/playlistmanager.h \
-    playlists/playlistmodel.h \
-    playlists/tabbar.h \
-    playlists/tabplaylist.h \
-    playlists/playlistitemdelegate.h \
-    playlists/stareditor.h \
     styling/miamstyle.h \
-    styling/miamstyleditemdelegate.h \
     tageditor/albumcover.h \
     tageditor/tagconverter.h \
     tageditor/tageditor.h \
@@ -87,16 +63,13 @@ HEADERS += debug/logbrowser.h \
     columnutils.h \
     mainwindow.h \
     nofocusitemdelegate.h \
-    playbackmodewidget.h \
-    playbackmodewidgetfactory.h \
     pluginmanager.h \
     quickstart.h \
     tagbutton.h \
     taglineedit.h \
     tracksnotfoundmessagebox.h
 
-FORMS += closeplaylistpopup.ui \
-    customizeoptionsdialog.ui \
+FORMS += customizeoptionsdialog.ui \
     customizetheme.ui \
     dragdroppopup.ui \
     equalizerdialog.ui \
@@ -143,13 +116,21 @@ TRANSLATIONS = translations/m4p_ar.ts \
 
 CONFIG(debug, debug|release) {
     win32 {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
-        } else {
-            LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
-        }
+	!contains(QMAKE_TARGET.arch, x86_64) {
+	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag
+	    LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore
+	    LIBS += -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary
+	    LIBS += -L$$OUT_PWD/../MiamTabPlaylists/debug/ -lMiamTabPlaylists
+	    LIBS += -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
+	} else {
+	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
+	    LIBS += -L$$OUT_PWD/../MiamCore/debug/ -lMiamCore
+	    LIBS += -L$$OUT_PWD/../MiamLibrary/debug/ -lMiamLibrary
+	    LIBS += -L$$OUT_PWD/../MiamTabPlaylists/debug/ -lMiamTabPlaylists
+	    LIBS += -L$$OUT_PWD/../MiamUniqueLibrary/debug/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
+	}
     }
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
@@ -159,22 +140,34 @@ CONFIG(debug, debug|release) {
 
 CONFIG(release, debug|release) {
     win32 {
-        !contains(QMAKE_TARGET.arch, x86_64) {
-            LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/release/ -lMiamLibrary -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
-        } else {
-            LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -L$$OUT_PWD/../MiamCore/release/ -lMiamCore -L$$OUT_PWD/../MiamLibrary/release/ -lMiamLibrary -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
-            QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
-        }
+	!contains(QMAKE_TARGET.arch, x86_64) {
+	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag
+	    LIBS += -L$$OUT_PWD/../MiamCore/release/ -lMiamCore
+	    LIBS += -L$$OUT_PWD/../MiamLibrary/release/ -lMiamLibrary
+	    LIBS += -L$$OUT_PWD/../MiamTabPlaylists/release/ -lMiamTabPlaylists
+	    LIBS += -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
+	} else {
+	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
+	    LIBS += -L$$OUT_PWD/../MiamCore/release/ -lMiamCore
+	    LIBS += -L$$OUT_PWD/../MiamLibrary/release/ -lMiamLibrary
+	    LIBS += -L$$OUT_PWD/../MiamTabPlaylists/release/ -lMiamTabPlaylists
+	    LIBS += -L$$OUT_PWD/../MiamUniqueLibrary/release/ -lMiamUniqueLibrary
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
+	}
     }
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
     UI_DIR = $$PWD
 }
+unix {
+    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core
+    LIBS += -L$$OUT_PWD/../MiamLibrary/ -lmiam-library
+    LIBS += -L$$OUT_PWD/../MiamTabPlaylists/ -lmiam-tabplaylists
+    LIBS += -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
+}
 unix:!macx {
-    LIBS += -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamLibrary/ -lmiam-library -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
-
     target.path = /usr/bin
     desktop.path = /usr/share/applications
     desktop.files = $$PWD/../../debian/usr/share/applications/miam-player.desktop
@@ -182,12 +175,11 @@ unix:!macx {
     icon64.files = $$PWD/../../debian/usr/share/icons/hicolor/64x64/apps/application-x-miamplayer.png
 
     INSTALLS += desktop \
-        target \
-        icon64
+	target \
+	icon64
 }
 macx {
     ICON = $$PWD/../../osx/MiamPlayer.icns
-    LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../MiamCore/ -lmiam-core -L$$OUT_PWD/../MiamLibrary/ -lmiam-library -L$$OUT_PWD/../MiamUniqueLibrary/ -lmiam-uniquelibrary
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     #1 create Framework and PlugIns directories
     #2 copy third party library: TagLib, QtAV
@@ -197,6 +189,7 @@ macx {
      $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/libtag.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamCore/libmiam-core.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamLibrary/libmiam-library.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamTabPlaylists/libmiam-tabplaylists.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../MiamUniqueLibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
 }
 
@@ -204,13 +197,14 @@ macx {
 INCLUDEPATH += $$3rdpartyDir
 DEPENDPATH += $$3rdpartyDir
 
-INCLUDEPATH += $$PWD/../MiamCore
 INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/tageditor
-INCLUDEPATH += $$PWD/../MiamLibrary $$PWD/../MiamUniqueLibrary
+INCLUDEPATH += $$PWD/../MiamCore
+INCLUDEPATH += $$PWD/../MiamLibrary
+INCLUDEPATH += $$PWD/../MiamTabPlaylists
+INCLUDEPATH += $$PWD/../MiamUniqueLibrary
 
-DEPENDPATH += $$PWD/../MiamCore
 DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/tageditor
-DEPENDPATH += $$PWD/../MiamLibrary $$PWD/../MiamUniqueLibrary
-
-
-
+DEPENDPATH += $$PWD/../MiamCore
+DEPENDPATH += $$PWD/../MiamLibrary
+DEPENDPATH += $$PWD/../MiamTabPlaylists
+DEPENDPATH += $$PWD/../MiamUniqueLibrary

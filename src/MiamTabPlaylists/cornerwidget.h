@@ -5,12 +5,14 @@
 
 #include "tabplaylist.h"
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The CornerWidget class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class CornerWidget : public QPushButton
+class MIAMTABPLAYLISTS_LIBRARY CornerWidget : public QPushButton
 {
 	Q_OBJECT
 public:

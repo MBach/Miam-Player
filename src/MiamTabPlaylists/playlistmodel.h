@@ -9,6 +9,7 @@
 #include <model/trackdao.h>
 #include <filehelper.h>
 #include <mediaplaylist.h>
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The PlaylistModel class is the underlying class for Playlist class.
@@ -16,7 +17,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PlaylistModel : public QStandardItemModel
+class MIAMTABPLAYLISTS_LIBRARY PlaylistModel : public QStandardItemModel
 {
 	Q_OBJECT
 	Q_ENUMS(Origin)
@@ -29,18 +30,10 @@ public:
 
 	enum Origin { RemoteMedia = Qt::UserRole + 1 };
 
-	/** Redefined to add lazy-loading. */
-	//bool canFetchMore(const QModelIndex &index) const;
-
 	/** Clear the content of playlist. */
 	void clear();
 
-	/** Redefined to add lazy-loading. */
-	//void fetchMore(const QModelIndex &parent);
-
 	bool insertMedias(int rowIndex, const QList<QMediaContent> &tracks);
-
-	bool insertMedias(int rowIndex, const QStringList &tracks);
 
 	bool insertMedias(int rowIndex, const QList<TrackDAO> &tracks);
 

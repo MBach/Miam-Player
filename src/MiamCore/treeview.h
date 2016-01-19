@@ -36,10 +36,7 @@ private:
 
 public slots:
 	/** Sends folders or tracks to the end of a playlist. */
-	inline void appendToPlaylist() { this->insertToPlaylist(-1); }
-
-	/** Sends folders or tracks to a specific position in a playlist. */
-	void insertToPlaylist(int rowIndex);
+	void appendToPlaylist();
 
 	/** Sends folders or tracks to the tag editor. */
 	void openTagEditor();

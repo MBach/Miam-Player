@@ -31,9 +31,6 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* instance();
 
-	/** Returns the last view activated by the user. Used when reopening the player. */
-	QString lastActiveView() const;
-
 	QMap<QString, QVariant> shortcuts() const;
 
 	RequestSqlModel sqlModel() const;
@@ -48,9 +45,6 @@ private:
 	void initShortcuts();
 
 public slots:
-	/** Sets the last view activated by the user. Used when reopening the player. */
-	void setLastActiveView(const QString &viewName);
-
 	/** Sets a new theme. */
 	void setThemeName(const QString &theme);
 

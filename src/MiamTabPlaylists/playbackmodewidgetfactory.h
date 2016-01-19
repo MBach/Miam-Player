@@ -1,12 +1,14 @@
 #ifndef PLAYBACKMODEWIDGETFACTORY_H
 #define PLAYBACKMODEWIDGETFACTORY_H
 
-#include "mediabutton.h"
-#include "playlists/tabplaylist.h"
+#include <mediabutton.h>
+#include "tabplaylist.h"
 #include "playbackmodewidget.h"
 
+#include "miamtabplaylists_global.hpp"
+
 /// Factory or helper?
-class PlaybackModeWidgetFactory : public QObject
+class MIAMTABPLAYLISTS_LIBRARY PlaybackModeWidgetFactory : public QObject
 {
 	Q_OBJECT
 private:

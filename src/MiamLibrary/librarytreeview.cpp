@@ -46,6 +46,8 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
 
+	connect(this, &LibraryTreeView::doubleClicked, this, &LibraryTreeView::appendToPlaylist);
+
 	// Context menu and shortcuts
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);

@@ -9,6 +9,7 @@
 #include "model/trackdao.h"
 
 #include <mediaplayer.h>
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The Playlist class is used to display tracks in the MainWindow class.
@@ -17,7 +18,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class Playlist : public QTableView
+class MIAMTABPLAYLISTS_LIBRARY Playlist : public QTableView
 {
 	Q_OBJECT
 

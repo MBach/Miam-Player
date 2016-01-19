@@ -14,7 +14,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::UniqueLibrary
+class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::uniqueLibrary
 {
 	Q_OBJECT
 private:
@@ -29,8 +29,12 @@ private:
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
 protected:
 	virtual void changeEvent(QEvent *event) override;
+
+	virtual void closeEvent(QCloseEvent *event) override;
 
 private slots:
 	bool playSingleTrack(const QModelIndex &index);

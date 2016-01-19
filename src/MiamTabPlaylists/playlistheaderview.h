@@ -6,13 +6,14 @@
 #include <QMenu>
 
 #include "playlist.h"
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The PlaylistHeaderView class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PlaylistHeaderView : public QHeaderView
+class MIAMTABPLAYLISTS_LIBRARY PlaylistHeaderView : public QHeaderView
 {
 	Q_OBJECT
 

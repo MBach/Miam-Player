@@ -1,6 +1,6 @@
 #include "playbackmodewidget.h"
-#include "settings.h"
-#include "settingsprivate.h"
+#include <settings.h>
+#include <settingsprivate.h>
 
 /// FIXME: use Qt::Popup to avoir flicker effect when one clicks. The problem is to manage multiple popups on screen
 /// It seems difficult to handle more than one popup

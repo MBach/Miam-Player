@@ -2,14 +2,14 @@
 #define SCROLLBAR_H
 
 #include <QScrollBar>
-#include "miamlibrary_global.hpp"
+#include "miamcore_global.h"
 
 /**
  * \brief		The ScrollBar class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY ScrollBar : public QScrollBar
+class MIAMCORE_LIBRARY ScrollBar : public QScrollBar
 {
 	Q_OBJECT
 private:

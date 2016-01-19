@@ -81,6 +81,7 @@ SOURCES += library/jumptowidget.cpp \
     styling/imageutils.cpp \
     styling/lineedit.cpp \
     styling/miamslider.cpp \
+    styling/miamstyleditemdelegate.cpp \
     cover.cpp \
     filehelper.cpp \
     flowlayout.cpp \
@@ -91,6 +92,7 @@ SOURCES += library/jumptowidget.cpp \
     musicsearchengine.cpp \
     plugininfo.cpp \
     quickstartsearchengine.cpp \
+    scrollbar.cpp \
     seekbar.cpp \
     settings.cpp \
     settingsprivate.cpp \
@@ -117,6 +119,7 @@ HEADERS += interfaces/basicplugin.h \
     styling/imageutils.h \
     styling/lineedit.h \
     styling/miamslider.h \
+    styling/miamstyleditemdelegate.h \
     abstractsearchdialog.h \
     cover.h \
     filehelper.h \
@@ -130,6 +133,7 @@ HEADERS += interfaces/basicplugin.h \
     musicsearchengine.h \
     plugininfo.h \
     quickstartsearchengine.h \
+    scrollbar.h \
     searchbar.h \
     seekbar.h \
     settings.h \

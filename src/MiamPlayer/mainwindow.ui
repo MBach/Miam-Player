@@ -955,12 +955,6 @@
    <header>timelabel.h</header>
   </customwidget>
   <customwidget>
-   <class>TabPlaylist</class>
-   <extends>QTabWidget</extends>
-   <header>playlists/tabplaylist.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>VolumeSlider</class>
    <extends>QSlider</extends>
    <header>volumeslider.h</header>
@@ -996,6 +990,12 @@
    <class>LibraryFilterLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">libraryfilterlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TabPlaylist</class>
+   <extends>QTabWidget</extends>
+   <header location="global">tabplaylist.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

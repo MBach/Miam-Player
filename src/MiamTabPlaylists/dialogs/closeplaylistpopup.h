@@ -4,6 +4,7 @@
 #include <QDialog>
 
 #include "ui_closeplaylistpopup.h"
+#include "miamtabplaylists_global.hpp"
 
 /// Forward declaration
 class Playlist;
@@ -17,7 +18,7 @@ class Playlist;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class ClosePlaylistPopup : public QDialog, public Ui::ClosePlaylistPopup
+class MIAMTABPLAYLISTS_LIBRARY ClosePlaylistPopup : public QDialog, public Ui::ClosePlaylistPopup
 {
 	Q_OBJECT
 private:

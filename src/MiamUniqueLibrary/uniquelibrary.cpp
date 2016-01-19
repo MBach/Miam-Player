@@ -19,6 +19,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	, _currentTrack(nullptr)
 {
 	setupUi(this);
+	stopButton->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
 	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
 		if (duration > 0) {
@@ -30,12 +31,12 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 	volumeSlider->setValue(Settings::instance()->volume() * 100);
 
-	library->setItemDelegate(new UniqueLibraryItemDelegate(library->jumpToWidget(), library->model()->proxy()));
-	_proxy = library->model()->proxy();
+	uniqueTable->setItemDelegate(new UniqueLibraryItemDelegate(uniqueTable->jumpToWidget(), uniqueTable->model()->proxy()));
+	_proxy = uniqueTable->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	connect(searchBar, &SearchBar::aboutToStartSearch, library->model()->proxy(), &UniqueLibraryFilterProxyModel::findMusic);
-	connect(library, &TableView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
+	connect(searchBar, &SearchBar::aboutToStartSearch, uniqueTable->model()->proxy(), &UniqueLibraryFilterProxyModel::findMusic);
+	connect(uniqueTable, &TableView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
 
 	connect(skipBackwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipBackward);
 	connect(seekBackwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
@@ -73,6 +74,18 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		seekSlider->update();
 	});
 
+	connect(_mediaPlayer, &MediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
+		if (_mediaPlayer->state() != QMediaPlayer::StoppedState && status == QMediaPlayer::EndOfMedia) {
+			if (_mediaPlayer->isStopAfterCurrent()) {
+				_mediaPlayer->stop();
+				_mediaPlayer->setStopAfterCurrent(false);
+			} else {
+				qDebug() << Q_FUNC_INFO << "about to skip forward" << _mediaPlayer->state();
+				skipForward();
+			}
+		}
+	});
+
 	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
 		if (_currentTrack) {
 			uint p = pos / 1000;
@@ -92,6 +105,25 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	QApplication::installTranslator(&translator);
 
 	std::srand(std::time(nullptr));
+
+	/*connect(this, &UniqueLibrary::destroyed, this, [=]() {
+		qDebug() << Q_FUNC_INFO << this->objectName();
+		auto settings = Settings::instance();
+		settings->saveGeometryForView(this->objectName(), this->saveGeometry());
+		settings->sync();
+	});*/
+	this->installEventFilter(this);
+}
+
+bool UniqueLibrary::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::Resize) {
+		//qDebug() << Q_FUNC_INFO;
+		//auto settings = Settings::instance();
+		//settings->saveGeometryForView(this->objectName(), this->saveGeometry());
+		//settings->sync();
+	}
+	return QWidget::eventFilter(obj, event);
 }
 
 void UniqueLibrary::changeEvent(QEvent *event)
@@ -103,15 +135,21 @@ void UniqueLibrary::changeEvent(QEvent *event)
 	}
 }
 
+void UniqueLibrary::closeEvent(QCloseEvent *event)
+{
+
+	QWidget::closeEvent(event);
+}
+
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 {
-	QStandardItem *item = library->model()->itemFromIndex(_proxy->mapToSource(index));
+	QStandardItem *item = uniqueTable->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		if (toggleShuffleButton->isChecked()) {
-			library->scrollTo(index, QAbstractItemView::PositionAtCenter);
+			uniqueTable->scrollTo(index, QAbstractItemView::PositionAtCenter);
 		} else {
-			library->scrollTo(index, QAbstractItemView::EnsureVisible);
+			uniqueTable->scrollTo(index, QAbstractItemView::EnsureVisible);
 		}
 		// Clear highlight first
 		if (_currentTrack) {
@@ -136,12 +174,12 @@ void UniqueLibrary::skipBackward()
 			this->playSingleTrack(_randomHistoryList.takeLast());
 		}
 	} else {
-		QModelIndex current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
+		QModelIndex current = _proxy->mapFromSource(uniqueTable->model()->index(_currentTrack->row(), 1));
 		int row = current.row();
 		while (row >= 0) {
 			QModelIndex previous = current.sibling(row - 1, 1);
 			if (this->playSingleTrack(previous)) {
-				library->scrollTo(previous);
+				uniqueTable->scrollTo(previous);
 				break;
 			} else {
 				row--;
@@ -152,17 +190,19 @@ void UniqueLibrary::skipBackward()
 
 void UniqueLibrary::skipForward()
 {
+	qDebug() << Q_FUNC_INFO;
+
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	}
 
 	if (toggleShuffleButton->isChecked()) {
-		int rows = library->model()->rowCount();
+		int rows = uniqueTable->model()->rowCount();
 		if (rows > 0) {
 			int r = rand() % rows;
-			QModelIndex idx = library->model()->index(r, 1);
-			while (library->model()->itemFromIndex(idx)->type() != Miam::IT_Track) {
-				idx = library->model()->index(rand() % rows, 1);
+			QModelIndex idx = uniqueTable->model()->index(r, 1);
+			while (uniqueTable->model()->itemFromIndex(idx)->type() != Miam::IT_Track) {
+				idx = uniqueTable->model()->index(rand() % rows, 1);
 			}
 			QModelIndex next = _proxy->mapFromSource(idx);
 			this->playSingleTrack(next);
@@ -170,12 +210,12 @@ void UniqueLibrary::skipForward()
 	} else {
 		QModelIndex current;
 		if (_currentTrack) {
-			current = _proxy->mapFromSource(library->model()->index(_currentTrack->row(), 1));
+			current = _proxy->mapFromSource(uniqueTable->model()->index(_currentTrack->row(), 1));
 		} else {
 			current = _proxy->index(0, 1);
 		}
 		int row = current.row();
-		while (row < library->model()->rowCount()) {
+		while (row < uniqueTable->model()->rowCount()) {
 			QModelIndex next = current.sibling(row + 1, 1);
 			if (this->playSingleTrack(next)) {
 				break;

@@ -20,7 +20,6 @@ SOURCES += deprecated/circleprogressbar.cpp \
     librarytreeview.cpp \
     miamitemdelegate.cpp \
     miamitemmodel.cpp \
-    scrollbar.cpp \
     separatoritem.cpp \
     trackitem.cpp \
     yearitem.cpp
@@ -43,7 +42,6 @@ HEADERS += deprecated/circleprogressbar.h \
     miamitemdelegate.h \
     miamitemmodel.h \
     miamlibrary_global.hpp \
-    scrollbar.h \
     separatoritem.h \
     trackitem.h \
     yearitem.h

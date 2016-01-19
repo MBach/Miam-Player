@@ -6,12 +6,14 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The PlaybackModeWidget class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PlaybackModeWidget : public QWidget
+class MIAMTABPLAYLISTS_LIBRARY PlaybackModeWidget : public QWidget
 {
 	Q_OBJECT
 private:

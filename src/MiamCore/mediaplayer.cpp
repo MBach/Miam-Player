@@ -86,17 +86,6 @@ void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 	}
 }
 
-/*void MediaPlayer::changeTrack(MediaPlaylist *playlist, int trackIndex)
-{
-	_state = QMediaPlayer::StoppedState;
-	_playlist = playlist;
-	if (_playlist->playbackMode() == QMediaPlaylist::Random) {
-		_playlist->shuffle(trackIndex);
-	} else {
-		_playlist->setCurrentIndex(trackIndex);
-	}
-}*/
-
 /** Current duration of the media, in ms. */
 qint64 MediaPlayer::duration()
 {
@@ -150,6 +139,7 @@ void MediaPlayer::setState(QMediaPlayer::State state)
 		break;
 	}
 	_state = state;
+	qDebug() << Q_FUNC_INFO << _state;
 	emit stateChanged(_state);
 }
 
@@ -234,11 +224,9 @@ void MediaPlayer::skipBackward()
 void MediaPlayer::skipForward()
 {
 	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
-		//if (_state != QMediaPlayer::StoppedState) {
-		//	this->stop();
-		//}
 		return;
 	}
+
 	_state = QMediaPlayer::StoppedState;
 	_playlist->skipForward();
 	this->play();

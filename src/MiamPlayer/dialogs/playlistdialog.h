@@ -8,7 +8,7 @@
 #include "ui_playlistdialog.h"
 
 #include <model/sqldatabase.h>
-#include "../playlists/tabplaylist.h"
+#include <tabplaylist.h>
 
 /**
  * \brief		The PlaylistDialog class can save, load and export playlists in m3u format.

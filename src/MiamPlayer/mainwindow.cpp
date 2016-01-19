@@ -5,11 +5,11 @@
 #include <settings.h>
 #include <settingsprivate.h>
 #include <libraryorderdialog.h>
+#include <playlist.h>
 
 #include "dialogs/customizethemedialog.h"
 #include "dialogs/dragdropdialog.h"
 #include "dialogs/equalizerdalog.h"
-#include "playlists/playlist.h"
 #include "pluginmanager.h"
 
 #include <QDesktopServices>
@@ -17,7 +17,6 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QStandardPaths>
-#include <QtMultimedia/QAudioDeviceInfo>
 
 #include <QtDebug>
 
@@ -50,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
 	for (MediaButton *button : mediaButtons) {
 		button->setMediaPlayer(_mediaPlayer);
 	}
-	tabPlaylists->setMainWindow(this);
 
 	/// XXX
 	stackedWidget->addWidget(_uniqueLibrary);
@@ -71,14 +69,15 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::activateLastView()
 {
 	// Find the last active view and connect database to it
-	QString viewName = Settings::instance()->lastActiveView();
+	/// TODO
+	/*Settings *settings = Settings::instance();
+	QString actionViewName = settings->lastActiveView();
 	for (QAction *actionView : menuView->actions()) {
-		if (actionView->objectName() == viewName) {
+		if (actionView->objectName() == actionViewName) {
 			actionView->trigger();
-			this->restoreGeometry(SettingsPrivate::instance()->value("mainWindowGeometry").toByteArray());
 			break;
 		}
-	}
+	}*/
 }
 
 void MainWindow::dispatchDrop(QDropEvent *event)
@@ -173,6 +172,8 @@ void MainWindow::loadPlugins()
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
+	Settings *settings = Settings::instance();
+
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
 	actionViewPlaylists->setActionGroup(viewModeGroup);
@@ -183,7 +184,6 @@ void MainWindow::setupActions()
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setVisible(true);
 		stackedWidgetRight->setCurrentIndex(0);
-		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 
 		library->createConnectionsToDB();
 		connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
@@ -194,19 +194,18 @@ void MainWindow::setupActions()
 	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidgetRight->setVisible(false);
 		stackedWidget->setCurrentIndex(1);
-		Settings::instance()->setLastActiveView(actionViewUniqueLibrary->objectName());
-		_uniqueLibrary->library->createConnectionsToDB();
+		_uniqueLibrary->uniqueTable->createConnectionsToDB();
+		_uniqueLibrary->uniqueTable->setFocus();
 		_mediaPlayer->setPlaylist(nullptr);
 
-		QModelIndex iTop = _uniqueLibrary->library->indexAt(_uniqueLibrary->library->viewport()->rect().topLeft());
-		_uniqueLibrary->library->jumpToWidget()->setCurrentLetter(_uniqueLibrary->library->model()->currentLetter(iTop));
+		QModelIndex iTop = _uniqueLibrary->uniqueTable->indexAt(_uniqueLibrary->uniqueTable->viewport()->rect().topLeft());
+		_uniqueLibrary->uniqueTable->jumpToWidget()->setCurrentLetter(_uniqueLibrary->uniqueTable->model()->currentLetter(iTop));
 	});
 	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setVisible(true);
 		stackedWidgetRight->setCurrentIndex(1);
 		actionViewTagEditor->setChecked(true);
-		Settings::instance()->setLastActiveView(actionViewTagEditor->objectName());
 		library->createConnectionsToDB();
 	});
 
@@ -249,8 +248,8 @@ void MainWindow::setupActions()
 	});
 
 	// Load music
-	auto settings = SettingsPrivate::instance();
-	connect(settings, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
+	auto settingsPrivate = SettingsPrivate::instance();
+	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
 		qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
 		bool libraryIsEmpty = newLocations.isEmpty();
 		library->setVisible(!libraryIsEmpty);
@@ -279,7 +278,7 @@ void MainWindow::setupActions()
 	}
 
 	// Send one folder to the music locations
-	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, settings, &SettingsPrivate::addMusicLocations);
+	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, settingsPrivate, &SettingsPrivate::addMusicLocations);
 
 	// Send music to the tag editor
 	connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
@@ -336,18 +335,14 @@ void MainWindow::setupActions()
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
 		_mediaPlayer->setVolume((qreal)value / 100.0);
 	});
-	volumeSlider->setValue(Settings::instance()->volume() * 100);
-
-	connect(library, &QTreeView::doubleClicked, [=] (const QModelIndex &) {
-		library->appendToPlaylist();
-	});
+	volumeSlider->setValue(settings->volume() * 100);
 
 	// Main Splitter
 	connect(splitter, &QSplitter::splitterMoved, searchDialog, &SearchDialog::moveSearchDialog);
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-		if (settings->isExtendedSearchVisible()) {
+		if (settingsPrivate->isExtendedSearchVisible()) {
 			if (text.isEmpty()) {
 				searchDialog->clear();
 			} else {
@@ -360,7 +355,7 @@ void MainWindow::setupActions()
 	});
 
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library->model()->proxy(), &LibraryFilterProxyModel::findMusic);
-	connect(settings, &SettingsPrivate::librarySearchModeHasChanged, this, [=]() {
+	connect(settingsPrivate, &SettingsPrivate::librarySearchModeHasChanged, this, [=]() {
 		QString text;
 		searchBar->setText(text);
 		library->model()->proxy()->findMusic(text);
@@ -391,7 +386,7 @@ void MainWindow::setupActions()
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
-	addressBar->init(settings->defaultLocationFileExplorer());
+	addressBar->init(settingsPrivate->defaultLocationFileExplorer());
 
 	// Playback modes
 	connect(playbackModeButton, &QPushButton::clicked, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
@@ -436,10 +431,10 @@ void MainWindow::setupActions()
 	});
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		settings->setValue("mainWindowGeometry", saveGeometry());
-		settings->setValue("leftTabsIndex", leftTabs->currentIndex());
-		settings->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
-		settings->sync();
+		qDebug() << Q_FUNC_INFO << this->stackedWidget->objectName();
+		settingsPrivate->setValue("leftTabsIndex", leftTabs->currentIndex());
+		settingsPrivate->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
+		settingsPrivate->sync();
 	});
 }
 
@@ -493,9 +488,9 @@ void MainWindow::changeEvent(QEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-	auto settings = SettingsPrivate::instance();
-	if (settings->playbackKeepPlaylists()) {
-		QList<uint> list = settings->lastPlaylistSession();
+	auto settingsPrivate = SettingsPrivate::instance();
+	if (settingsPrivate->playbackKeepPlaylists()) {
+		QList<uint> list = settingsPrivate->lastPlaylistSession();
 		list.clear();
 		for (int i = 0; i < tabPlaylists->count(); i++) {
 			Playlist *p = tabPlaylists->playlist(i);
@@ -505,14 +500,17 @@ void MainWindow::closeEvent(QCloseEvent *)
 				list.append(id);
 			}
 		}
-		settings->setLastPlaylistSession(list);
+		settingsPrivate->setLastPlaylistSession(list);
 		int idx = tabPlaylists->currentIndex();
 		Playlist *p = tabPlaylists->playlist(idx);
-		settings->setValue("lastActiveTab", idx);
+		settingsPrivate->setValue("lastActiveTab", idx);
 		qDebug() << p->mediaPlaylist()->playbackMode();
 		int m = p->mediaPlaylist()->playbackMode();
-		settings->setValue("lastActivePlaylistMode", m);
+		settingsPrivate->setValue("lastActivePlaylistMode", m);
 	}
+	//auto settings = Settings::instance();
+	//qDebug() << Q_FUNC_INFO << settings->lastActiveView();
+	//settings->autoSaveGeometryForLastView();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -819,7 +817,6 @@ void MainWindow::showTabPlaylists()
 {
 	if (!actionViewPlaylists->isChecked()) {
 		actionViewPlaylists->setChecked(true);
-		Settings::instance()->setLastActiveView(actionViewPlaylists->objectName());
 	}
 	stackedWidgetRight->setCurrentIndex(0);
 }
@@ -828,7 +825,6 @@ void MainWindow::showTagEditor()
 {
 	if (!actionViewTagEditor->isChecked()) {
 		actionViewTagEditor->setChecked(true);
-		Settings::instance()->setLastActiveView(actionViewTagEditor->objectName());
 	}
 	stackedWidgetRight->setCurrentIndex(1);
 }

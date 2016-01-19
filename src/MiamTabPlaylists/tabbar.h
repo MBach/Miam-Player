@@ -9,6 +9,7 @@
 
 #include "playlist.h"
 #include "tabplaylist.h"
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The TabBar class is used to be able to rename a tab, e.g. a Playlist.
@@ -17,7 +18,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TabBar : public QTabBar
+class MIAMTABPLAYLISTS_LIBRARY TabBar : public QTabBar
 {
 	Q_OBJECT
 private:

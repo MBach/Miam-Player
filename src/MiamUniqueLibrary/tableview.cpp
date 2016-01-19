@@ -19,6 +19,7 @@ TableView::TableView(QWidget *parent)
 	: QTableView(parent)
 	, _model(new UniqueLibraryItemModel(this))
 	, _jumpToWidget(new JumpToWidget(this))
+	, _skipCount(1)
 {
 	_model->proxy()->setDynamicSortFilter(false);
 	this->setModel(_model->proxy());
@@ -36,6 +37,11 @@ TableView::TableView(QWidget *parent)
 
 	connect(selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
 		setDirtyRegion(QRegion(viewport()->rect()));
+	});
+
+	connect(qApp, &QGuiApplication::aboutToQuit, this, [=]() {
+		//Settings::instance()->setWidgetGeometry(this->objectName(), saveGeometry());
+		qDebug() << Q_FUNC_INFO << this->objectName();
 	});
 }
 
@@ -60,6 +66,11 @@ void TableView::keyboardSearch(const QString &search)
 	// IMHO, it's better to trigger the JumpTo widget to 'N' section
 	static QRegularExpression az("[a-z]", QRegularExpression::CaseInsensitiveOption | QRegularExpression::OptimizeOnFirstUsageOption);
 	if (az.match(search).hasMatch()) {
+		if (jumpToWidget()->currentLetter() == search.toUpper().at(0)) {
+			_skipCount++;
+		} else {
+			_skipCount = 1;
+		}
 		this->jumpTo(search);
 	}
 }
@@ -118,9 +129,14 @@ void TableView::jumpTo(const QString &letter)
 {
 	SqlDatabase *db = SqlDatabase::instance();
 	QSqlQuery firstArtist(*db);
-	firstArtist.prepare("SELECT name FROM artists WHERE name LIKE ? ORDER BY name COLLATE NOCASE LIMIT 1");
+	firstArtist.prepare("SELECT name FROM artists WHERE name LIKE ? ORDER BY name COLLATE NOCASE LIMIT ?");
 	firstArtist.addBindValue(letter + "%");
-	if (firstArtist.exec() && firstArtist.next()) {
+	firstArtist.addBindValue(_skipCount);
+	if (firstArtist.exec() && firstArtist.last()) {
+		if (_skipCount != firstArtist.at() + 1) {
+			firstArtist.first();
+			_skipCount = 1;
+		}
 		for (QStandardItem *i : _model->findItems(firstArtist.record().value(0).toString(), Qt::MatchExactly, 1)) {
 			if (i->type() == Miam::IT_Artist) {
 				this->scrollTo(_model->proxy()->mapFromSource(i->index()), PositionAtTop);

@@ -29,56 +29,17 @@ void PlaylistModel::clear()
 	}
 }
 
-/** Redefined to add lazy-loading. */
-/*bool PlaylistModel::canFetchMore(const QModelIndex &index) const
-{
-	bool b = QStandardItemModel::canFetchMore(index);
-	qDebug() << Q_FUNC_INFO << b;
-	return true;
-}*/
-
-/** Redefined to add lazy-loading. */
-/*void PlaylistModel::fetchMore(const QModelIndex &parent)
-{
-	qDebug() << Q_FUNC_INFO;
-	QStandardItemModel::fetchMore(parent);
-}*/
-
 bool PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
-	qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO << rowIndex << tracks.size();
 	int c = this->rowCount();
 	if (_mediaPlaylist->insertMedia(rowIndex, tracks)) {
 		for (QMediaContent track : tracks) {
 			FileHelper f(track);
 			if (f.isValid()) {
 				this->insertMedia(rowIndex++, f);
+				qDebug() << rowIndex << f.fileInfo().absoluteFilePath();
 			}
-		}
-	}
-	return c < this->rowCount();
-}
-
-bool PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
-{
-	int c = this->rowCount();
-	for (int i = 0; i < tracks.size(); i++) {
-		QString trackStr = tracks.at(i);
-		if (trackStr.startsWith("file")) {
-			FileHelper fh(trackStr);
-			// This is a file that Miam-Player can read. Do not accept txt files, covers (jpg), etc.
-			if (FileHelper::suffixes(FileHelper::All).contains(fh.fileInfo().suffix()) &&
-				_mediaPlaylist->insertMedia(rowIndex + i, QMediaContent(QUrl::fromLocalFile(fh.fileInfo().absoluteFilePath())))) {
-				this->insertMedia(rowIndex + i, fh);
-			}
-		} else {
-			/// XXX
-			/// A new class like TrackLoader should be created. It could be a unique place to dispatch URIs to relevant plugins which can load remote tracks
-			/// TrackDAO track = TrackLoader::instance()->loadFromUri(uri)
-			/// However, to avoid too much requests to remove server, it might be useful to update the line only before playback started
-			TrackDAO track = SqlDatabase::instance()->selectTrackByURI(trackStr);
-			//qDebug() << "remote track to be fully reloaded" << trackStr;
-			this->createLine(rowIndex + i, track);
 		}
 	}
 	return c < this->rowCount();
@@ -86,6 +47,8 @@ bool PlaylistModel::insertMedias(int rowIndex, const QStringList &tracks)
 
 bool PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
+	qDebug() << Q_FUNC_INFO << rowIndex;
+
 	int c = this->rowCount();
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
@@ -190,7 +153,6 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 		trackItem = new QStandardItem;
 		titleItem = new QStandardItem(fileHelper.fileInfo().baseName());
 		albumItem = new QStandardItem;
-		///XXX: how to use VLC to detect right length?
 		lengthItem = new QStandardItem(QString::number(-1));
 		artistItem = new QStandardItem;
 		ratingItem = new QStandardItem;
