@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>447</width>
+    <height>227</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">Miam Player</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>447</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="nativeMenuBar">
+    <bool>true</bool>
+   </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionOpenFiles"/>
+    <addaction name="actionOpenFolder"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuPlaylist">
+    <property name="title">
+     <string>Play&amp;list</string>
+    </property>
+    <addaction name="actionAddPlaylist"/>
+    <addaction name="actionDeleteCurrentPlaylist"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemoveSelectedTracks"/>
+    <addaction name="actionMoveTracksUp"/>
+    <addaction name="actionMoveTracksDown"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpenPlaylistManager"/>
+   </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>&amp;Options</string>
+    </property>
+    <addaction name="actionHideMenuBar"/>
+    <addaction name="actionScanLibrary"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowCustomize"/>
+    <addaction name="actionShowOptions"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionShowHelp"/>
+    <addaction name="actionCheckNewRelease"/>
+    <addaction name="separator"/>
+    <addaction name="actionAboutQt"/>
+    <addaction name="actionShowDebug"/>
+   </widget>
+   <widget class="QMenu" name="menuPlayback">
+    <property name="title">
+     <string>&amp;Playback</string>
+    </property>
+    <addaction name="actionSkipBackward"/>
+    <addaction name="actionSeekBackward"/>
+    <addaction name="actionPlay"/>
+    <addaction name="actionStop"/>
+    <addaction name="actionStopAfterCurrent"/>
+    <addaction name="actionSeekForward"/>
+    <addaction name="actionSkipForward"/>
+    <addaction name="separator"/>
+    <addaction name="actionPlaybackSequential"/>
+    <addaction name="actionPlaybackLoop"/>
+    <addaction name="actionPlaybackRandom"/>
+    <addaction name="actionPlaybackCurrentItemOnce"/>
+    <addaction name="actionPlaybackCurrentItemInLoop"/>
+    <addaction name="separator"/>
+    <addaction name="actionMute"/>
+    <addaction name="actionIncreaseVolume"/>
+    <addaction name="actionDecreaseVolume"/>
+    <addaction name="actionShowEqualizer"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionViewPlaylists"/>
+    <addaction name="actionViewUniqueLibrary"/>
+    <addaction name="actionViewTagEditor"/>
+   </widget>
+   <addaction name="menuMenu"/>
+   <addaction name="menuView"/>
+   <addaction name="menuPlayback"/>
+   <addaction name="menuPlaylist"/>
+   <addaction name="menuOptions"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionExit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenFiles">
+   <property name="icon">
+    <iconset resource="mp.qrc">
+     <normaloff>:/config/music</normaloff>:/config/music</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open files...</string>
+   </property>
+  </action>
+  <action name="actionAddPlaylist">
+   <property name="text">
+    <string>&amp;Add a playlist</string>
+   </property>
+  </action>
+  <action name="actionShowCustomize">
+   <property name="text">
+    <string>&amp;Customize appearance...</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About &amp;Qt...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutQtRole</enum>
+   </property>
+  </action>
+  <action name="actionOpenPlaylistManager">
+   <property name="text">
+    <string>&amp;Playlist manager...</string>
+   </property>
+  </action>
+  <action name="actionScanLibrary">
+   <property name="icon">
+    <iconset resource="mp.qrc">
+     <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Rescan library</string>
+   </property>
+  </action>
+  <action name="actionSetLibrary">
+   <property name="text">
+    <string>Customize library...</string>
+   </property>
+  </action>
+  <action name="actionCheckNewRelease">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Check for a new version is available</string>
+   </property>
+  </action>
+  <action name="actionShowOptions">
+   <property name="text">
+    <string>Customize general &amp;options...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::PreferencesRole</enum>
+   </property>
+  </action>
+  <action name="actionAboutMiamPlayer">
+   <property name="text">
+    <string>&amp;About Miam Player...</string>
+   </property>
+  </action>
+  <action name="actionDeleteCurrentPlaylist">
+   <property name="text">
+    <string>&amp;Delete current playlist</string>
+   </property>
+  </action>
+  <action name="actionShowHelp">
+   <property name="text">
+    <string>Show &amp;help...</string>
+   </property>
+  </action>
+  <action name="actionSkipBackward">
+   <property name="text">
+    <string>Skip &amp;backward</string>
+   </property>
+  </action>
+  <action name="actionSeekBackward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Seek backward</string>
+   </property>
+  </action>
+  <action name="actionPlay">
+   <property name="text">
+    <string>&amp;Play / pause</string>
+   </property>
+  </action>
+  <action name="actionSeekForward">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Seek forward</string>
+   </property>
+  </action>
+  <action name="actionSkipForward">
+   <property name="text">
+    <string>Skip &amp;forward</string>
+   </property>
+  </action>
+  <action name="actionPlaybackLoop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Repeat</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::Loop</string>
+   </property>
+  </action>
+  <action name="actionPlaybackRandom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>S&amp;huffle</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::Random</string>
+   </property>
+  </action>
+  <action name="actionRemoveSelectedTracks">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Remove selected track</string>
+   </property>
+  </action>
+  <action name="actionMoveTracksUp">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Move selected track &amp;up</string>
+   </property>
+  </action>
+  <action name="actionMoveTracksDown">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Move selected track &amp;down</string>
+   </property>
+  </action>
+  <action name="actionMute">
+   <property name="text">
+    <string>&amp;Mute</string>
+   </property>
+  </action>
+  <action name="actionIncreaseVolume">
+   <property name="text">
+    <string>&amp;Increase volume</string>
+   </property>
+  </action>
+  <action name="actionDecreaseVolume">
+   <property name="text">
+    <string>&amp;Decrease volume</string>
+   </property>
+  </action>
+  <action name="actionPlaybackCurrentItemOnce">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Current item &amp;once</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::CurrentItemOnce</string>
+   </property>
+  </action>
+  <action name="actionPlaybackSequential">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Normal</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::Sequential</string>
+   </property>
+  </action>
+  <action name="actionPlaybackCurrentItemInLoop">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Current item in &amp;loop</string>
+   </property>
+   <property name="PlaybackMode" stdset="0">
+    <string notr="true">QMediaPlaylist::CurrentItemInLoop</string>
+   </property>
+  </action>
+  <action name="actionViewPlaylists">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Playlist Mode</string>
+   </property>
+  </action>
+  <action name="actionViewUniqueLibrary">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Unique library Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>This mode is currently under development</string>
+   </property>
+  </action>
+  <action name="actionViewTagEditor">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Tag Editor</string>
+   </property>
+  </action>
+  <action name="actionOpenFolder">
+   <property name="text">
+    <string>Open folder...</string>
+   </property>
+  </action>
+  <action name="actionShowDebug">
+   <property name="icon">
+    <iconset resource="mp.qrc">
+     <normaloff>:/icons/debug</normaloff>:/icons/debug</iconset>
+   </property>
+   <property name="text">
+    <string>Show debug information...</string>
+   </property>
+  </action>
+  <action name="actionStopAfterCurrent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Stop after current</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Stop</string>
+   </property>
+  </action>
+  <action name="actionShowEqualizer">
+   <property name="text">
+    <string>Show Equalizer</string>
+   </property>
+  </action>
+  <action name="actionHideMenuBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide menu bar</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="mp.qrc"/>
+ </resources>
+ <connections/>
+</ui>
