@@ -23,10 +23,10 @@ SOURCES += debug/logbrowser.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
     styling/miamstyle.cpp \
-    tageditor/albumcover.cpp \
-    tageditor/tagconverter.cpp \
-    tageditor/tageditor.cpp \
-    tageditor/tageditortablewidget.cpp \
+    views/tageditor/albumcover.cpp \
+    views/tageditor/tagconverter.cpp \
+    views/tageditor/tageditor.cpp \
+    views/tageditor/tageditortablewidget.cpp \
     views/viewloader.cpp \
     columnutils.cpp \
     main.cpp \
@@ -58,10 +58,10 @@ HEADERS += debug/logbrowser.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
     styling/miamstyle.h \
-    tageditor/albumcover.h \
-    tageditor/tagconverter.h \
-    tageditor/tageditor.h \
-    tageditor/tageditortablewidget.h \
+    views/tageditor/albumcover.h \
+    views/tageditor/tagconverter.h \
+    views/tageditor/tageditor.h \
+    views/tageditor/tageditortablewidget.h \
     views/viewloader.h \
     columnutils.h \
     mainwindow.h \
@@ -203,13 +203,13 @@ macx {
 INCLUDEPATH += $$3rdpartyDir
 DEPENDPATH += $$3rdpartyDir
 
-INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/tageditor
+INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views $$PWD/views/tageditor
 INCLUDEPATH += $$PWD/../Core
 INCLUDEPATH += $$PWD/../Library
 INCLUDEPATH += $$PWD/../TabPlaylists
 INCLUDEPATH += $$PWD/../UniqueLibrary
 
-DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/tageditor
+DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views $$PWD/views/tageditor
 DEPENDPATH += $$PWD/../Core
 DEPENDPATH += $$PWD/../Library
 DEPENDPATH += $$PWD/../TabPlaylists

@@ -5,6 +5,8 @@
 #include "dialogs/searchdialog.h"
 #include "abstractview.h"
 
+#include <QMenu>
+
 #include "ui_viewplaylists.h"
 
 class ViewPlaylists : public AbstractView, public Ui::ViewPlaylists
@@ -15,13 +17,13 @@ private:
 
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
-	SearchDialog *searchDialog;
+	SearchDialog *_searchDialog;
 
 	/** Displays and animates the media button "PlaybackMode". */
 	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
 
 public:
-	ViewPlaylists(MediaPlayer *mediaPlayer);
+	ViewPlaylists(QMenu *menuPlaylist, MediaPlayer *mediaPlayer);
 
 protected:
 	virtual void moveEvent(QMoveEvent *event) override;

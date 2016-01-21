@@ -4,10 +4,10 @@
 #include <settingsprivate.h>
 #include <libraryorderdialog.h>
 
-ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
+ViewPlaylists::ViewPlaylists(QMenu *menuPlaylist, MediaPlayer *mediaPlayer)
 	: AbstractView(nullptr)
 	, _mediaPlayer(mediaPlayer)
-	, searchDialog(new SearchDialog(this))
+	, _searchDialog(new SearchDialog(this))
 	, _playbackModeWidgetFactory(nullptr)
 {
 	this->setupUi(this);
@@ -31,7 +31,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		if (!b) {
 			continue;
 		}
-		//b->setSize(settingsPrivate->buttonsSize());
+		b->setSize(settingsPrivate->buttonsSize());
 		b->setMediaPlayer(_mediaPlayer);
 		if (settingsPrivate->isButtonThemeCustomized()) {
 			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
@@ -61,8 +61,22 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	// Core
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &ViewPlaylists::mediaPlayerStateHasChanged);
 
+	/// FIXME
+	connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
+		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
+		//actionRemoveSelectedTracks->setEnabled(b);
+		//actionMoveTracksUp->setEnabled(b);
+		//actionMoveTracksDown->setEnabled(b);
+		if (b) {
+			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
+			//actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
+			//actionMoveTracksUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
+			//actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
+		}
+	});
+
 	// Main Splitter
-	connect(splitter, &QSplitter::splitterMoved, searchDialog, &SearchDialog::moveSearchDialog);
+	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
 
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library->model()->proxy(), &LibraryFilterProxyModel::findMusic);
 	connect(settingsPrivate, &SettingsPrivate::librarySearchModeHasChanged, this, [=]() {
@@ -73,6 +87,15 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 
 	// Playback
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
+
+	// Media buttons
+	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
+	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::togglePlayback);
+	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::stop);
+	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
+	connect(playbackModeButton, &MediaButton::mediaButtonChanged, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
@@ -86,7 +109,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	// Factorize code with lambda slot connected to replicated signal
 	auto reloadLibrary = [this]() {
 		searchBar->setText(QString());
-		searchDialog->clear();
+		_searchDialog->clear();
 		SqlDatabase::instance()->load();
 		this->update();
 	};
@@ -146,12 +169,12 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
 		if (settingsPrivate->isExtendedSearchVisible()) {
 			if (text.isEmpty()) {
-				searchDialog->clear();
+				_searchDialog->clear();
 			} else {
-				searchDialog->setSearchExpression(text);
-				searchDialog->moveSearchDialog(0, 0);
-				searchDialog->show();
-				searchDialog->raise();
+				_searchDialog->setSearchExpression(text);
+				_searchDialog->moveSearchDialog(0, 0);
+				_searchDialog->show();
+				_searchDialog->raise();
 			}
 		}
 	});

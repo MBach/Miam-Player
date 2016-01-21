@@ -8,12 +8,16 @@ ViewLoader::ViewLoader(MediaPlayer *mediaPlayer)
 
 }
 
-AbstractView* ViewLoader::load(const QString &action)
+AbstractView* ViewLoader::load(QMenu *menuPlaylist, const QString &menuAction)
 {
 	AbstractView *view = nullptr;
-	if (action == "actionViewPlaylists") {
-		ViewPlaylists *viewPlaylists = new ViewPlaylists(_mediaPlayer);
+	if (menuAction == "actionViewPlaylists") {
+		ViewPlaylists *viewPlaylists = new ViewPlaylists(menuPlaylist, _mediaPlayer);
 		view = viewPlaylists;
+	} else if (menuAction == "actionViewUniqueLibrary") {
+	} else if (menuAction == "actionViewTagEditor") {
+	} else {
+		/// TODO other view loaded from plugins?
 	}
 	return view;
 }

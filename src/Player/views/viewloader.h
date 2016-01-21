@@ -2,6 +2,7 @@
 #define VIEWLOADER_H
 
 #include <mediaplayer.h>
+#include <QMenuBar>
 #include <QString>
 #include "abstractview.h"
 
@@ -13,7 +14,7 @@ private:
 public:
 	ViewLoader(MediaPlayer *mediaPlayer);
 
-	AbstractView *load(const QString &action);
+	AbstractView *load(QMenu *menuPlaylist, const QString &menuAction);
 };
 
 #endif // VIEWLOADER_H

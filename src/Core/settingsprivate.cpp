@@ -302,6 +302,11 @@ QByteArray SettingsPrivate::lastActivePlaylistGeometry() const
 	return value("lastActivePlaylistGeometry").toByteArray();
 }
 
+QByteArray SettingsPrivate::lastActiveView(const QString &menuAction) const
+{
+	return value(menuAction).toByteArray();
+}
+
 /** Returns the last playlists that were opened when player was closed. */
 QList<uint> SettingsPrivate::lastPlaylistSession() const
 {
@@ -491,6 +496,11 @@ bool SettingsPrivate::setLanguage(const QString &lang)
 	setValue("language", lang);
 	emit languageAboutToChange(lang);
 	return this->initLanguage(lang);
+}
+
+void SettingsPrivate::setLastActiveView(const QString &menuAction, const QByteArray &viewGeometry)
+{
+	setValue(menuAction, viewGeometry);
 }
 
 /** Sets the last playlists that were opened when player is about to close. */

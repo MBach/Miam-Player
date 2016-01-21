@@ -237,26 +237,12 @@ void MainWindow::setupActions()
 		actionSkipForward->setEnabled(notEmpty);
 	});
 	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipBackward);
-	/// FIXME
-	//connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekBackward);
-	/// FIXME
-	//connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
 	connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::togglePlayback);
-
-	/// FIXME
-	//connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::togglePlayback);
 	connect(actionStop, &QAction::triggered, _mediaPlayer, &MediaPlayer::stop);
 	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer, &MediaPlayer::stopAfterCurrent);
-	/// FIXME
-	//connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::stop);
 	connect(actionSeekForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekForward);
-	/// FIXME
-	//connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
 	connect(actionSkipForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipForward);
-	/// FIXME
-	//connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
-	//connect(playbackModeButton, &MediaButton::mediaButtonChanged, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	connect(actionShowEqualizer, &QAction::triggered, this, [=]() {
 		EqualizerDialog *equalizerDialog = new EqualizerDialog(_mediaPlayer, this);
@@ -277,8 +263,6 @@ void MainWindow::setupActions()
 	connect(actionOpenPlaylistManager, &QAction::triggered, this, &MainWindow::openPlaylistManager);
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
 
-
-
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
 		//QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
 		const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
@@ -286,20 +270,6 @@ void MainWindow::setupActions()
 		//QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
 		//action->setChecked(true);
 	});
-
-	/// FIXME
-	/*connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
-		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
-		actionRemoveSelectedTracks->setEnabled(b);
-		actionMoveTracksUp->setEnabled(b);
-		actionMoveTracksDown->setEnabled(b);
-		if (b) {
-			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
-			actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
-			actionMoveTracksUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
-			actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
-		}
-	});*/
 }
 
 /** Update fonts for menu and context menus. */
@@ -554,15 +524,29 @@ void MainWindow::processArgs(const QStringList &args)
 
 void MainWindow::activateView(QAction *menuAction)
 {
+	if (this->centralWidget()) {
+		QWidget *w = this->takeCentralWidget();
+		w->deleteLater();
+	}
 	ViewLoader v(_mediaPlayer);
-	_currentView = v.load(menuAction->objectName());
+	_currentView = v.load(menuPlaylist, menuAction->objectName());
 	if (!_currentView) {
 		return;
 	}
 	this->setCentralWidget(_currentView);
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	this->restoreGeometry(settingsPrivate->lastActiveView(menuAction->objectName()));
 
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderIncrease);
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderDecrease);
+
+	connect(qApp, &QApplication::aboutToQuit, this, [=] {
+		if (_currentView) {
+			QActionGroup *actionGroup = this->findChild<QActionGroup*>();
+			settingsPrivate->setLastActiveView(actionGroup->checkedAction()->objectName(), this->saveGeometry());
+			settingsPrivate->sync();
+		}
+	});
 
 	/*connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidgetRight->setVisible(false);

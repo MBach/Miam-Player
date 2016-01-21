@@ -220,6 +220,7 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 				QPoint p1 = QPoint(x + checkcol, yoff);
 				QPoint p2 = QPoint(x + w + separatorSize, yoff);
 				painter->save();
+				painter->fillRect(menuitem->rect, palette.base());
 				painter->setPen(palette.mid().color());
 				painter->drawLine(p1, p2);
 				painter->restore();

@@ -154,6 +154,7 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 	}
 	return QTabWidget::eventFilter(obj, event);
 }
+
 void TabPlaylist::init(MediaPlayer *mediaPlayer)
 {
 	_mediaPlayer = mediaPlayer;
