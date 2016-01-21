@@ -8,9 +8,9 @@ ViewLoader::ViewLoader(MediaPlayer *mediaPlayer)
 
 }
 
-QWidget* ViewLoader::load(const QString &action)
+AbstractView* ViewLoader::load(const QString &action)
 {
-	QWidget *view = nullptr;
+	AbstractView *view = nullptr;
 	if (action == "actionViewPlaylists") {
 		ViewPlaylists *viewPlaylists = new ViewPlaylists(_mediaPlayer);
 		view = viewPlaylists;

@@ -224,7 +224,8 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
-	remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
+	/// FIXME
+	//remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
 	_mainWindow->mediaPlayer()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 

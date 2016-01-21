@@ -23,20 +23,13 @@
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
-	, _playbackModeWidgetFactory(nullptr)
 	, _mediaPlayer(new MediaPlayer(this))
-	, _uniqueLibrary(new UniqueLibrary(_mediaPlayer, this))
 	, _pluginManager(new PluginManager(this))
-	, searchDialog(new SearchDialog(this))
+	, _currentView(nullptr)
 {
 	setupUi(this);
-	/// FIXME
-	//paintableWidget->setFrameBorder(false, false, true, false);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-
-	//widgetSearchBar->setFrameBorder(false, false, true, false);
-	//seekSlider->setMediaPlayer(_mediaPlayer);
 
 	this->setAcceptDrops(true);
 #ifndef Q_OS_MAC
@@ -45,26 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
 	actionHideMenuBar->setVisible(false);
 #endif
 
-	// Special behaviour for media buttons
-	/// FIXME
-	//mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
-	//			 << seekForwardButton << skipForwardButton << playbackModeButton;
-	//for (MediaButton *button : mediaButtons) {
-	//	button->setMediaPlayer(_mediaPlayer);
-	//}
-
-	/// XXX
-	//stackedWidget->addWidget(_uniqueLibrary);
-	_uniqueLibrary->hide();
-
-	// Instantiate dialogs
-	/// FIXME
-	//_playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-
 	// Fonts
 	auto settings = SettingsPrivate::instance();
-	/// FIXME
-	//searchBar->setFont(settings->font(SettingsPrivate::FF_Library));
 	this->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 
 	menubar->installEventFilter(this);
@@ -137,7 +112,6 @@ void MainWindow::init()
 {
 	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
-	this->loadThemeAndSettings();
 
 	// Init shortcuts
 	Settings *settings = Settings::instance();
@@ -150,19 +124,9 @@ void MainWindow::init()
 	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
 	actionScanLibrary->setDisabled(isEmpty);
 	if (isEmpty) {
-		/// FIXME
-		//widgetSearchBar->hide();
-		//changeHierarchyButton->hide();
-		//libraryHeader->hide();
-		//library->hide();
 		QuickStart *quickStart = new QuickStart(this);
 		quickStart->searchMultimediaFiles();
 	}
-
-	/// FIXME
-	//leftTabs->setCurrentIndex(settings->value("leftTabsIndex").toInt());
-	//tabPlaylists->init(_mediaPlayer);
-	_playbackModeWidgetFactory->update();
 }
 
 /** Plugins. */
@@ -193,8 +157,6 @@ void MainWindow::setupActions()
 
 	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
 
-
-
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
 	for (QAction *actionPlayBack : findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
 		actionPlaybackGroup->addAction(actionPlayBack);
@@ -202,7 +164,8 @@ void MainWindow::setupActions()
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
 			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
 			QString enu = actionPlayBack->property("PlaybackMode").toString();
-			_playbackModeWidgetFactory->setPlaybackMode((QMediaPlaylist::PlaybackMode)metaEnum.keyToValue(enu.toStdString().data()));
+			/// FIXME
+			//_playbackModeWidgetFactory->setPlaybackMode((QMediaPlaylist::PlaybackMode)metaEnum.keyToValue(enu.toStdString().data()));
 		});
 	}
 
@@ -259,28 +222,6 @@ void MainWindow::setupActions()
 		}
 	});
 
-	for (TreeView *tab : this->findChildren<TreeView*>()) {
-		/// FIXME
-		//connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<QUrl> &tracks) {
-			this->showTagEditor();
-			/// FIXME
-			//tagEditor->addItemsToEditor(tracks);
-		});
-	}
-
-	// Send one folder to the music locations
-	/// FIXME
-	//connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, settingsPrivate, &SettingsPrivate::addMusicLocations);
-
-	// Send music to the tag editor
-	/// FIXME
-	//connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
-	/*connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
-		this->showTagEditor();
-		tagEditor->addItemsToEditor(tracks);
-	});*/
-
 	// Media buttons and their shortcuts
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
 		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
@@ -323,56 +264,7 @@ void MainWindow::setupActions()
 		equalizerDialog->activateWindow();
 	});
 
-	// Sliders
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
-		if (duration > 0) {
-			/// FIXME
-			//seekSlider->setValue(1000 * pos / duration);
-			//timeLabel->setTime(pos, duration);
-		}
-	});
-
-	// Volume bar
-	/// FIXME
-	/*connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
-		_mediaPlayer->setVolume((qreal)value / 100.0);
-	});
-	volumeSlider->setValue(settings->volume() * 100);*/
-
-	// Main Splitter
-	/// FIXME
-	//connect(splitter, &QSplitter::splitterMoved, searchDialog, &SearchDialog::moveSearchDialog);
-
-	// Filter the library when user is typing some text to find artist, album or tracks
-	/// FIXME
-	/*connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
-		if (settingsPrivate->isExtendedSearchVisible()) {
-			if (text.isEmpty()) {
-				searchDialog->clear();
-			} else {
-				searchDialog->setSearchExpression(text);
-				searchDialog->moveSearchDialog(0, 0);
-				searchDialog->show();
-				searchDialog->raise();
-			}
-		}
-	});*/
-
-	/// FIXME
-	//connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, library->model()->proxy(), &LibraryFilterProxyModel::findMusic);
-	connect(settingsPrivate, &SettingsPrivate::librarySearchModeHasChanged, this, [=]() {
-		QString text;
-		/// FIXME
-		//searchBar->setText(text);
-		//library->model()->proxy()->findMusic(text);
-	});
-
-	// Core
-	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &MainWindow::mediaPlayerStateHasChanged);
-
 	// Playback
-	/// FIXME
-	//connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 	connect(actionRemoveSelectedTracks, &QAction::triggered, this, [=]() {
 		/// FIXME
 		//if (tabPlaylists->currentPlayList()) {
@@ -385,20 +277,7 @@ void MainWindow::setupActions()
 	connect(actionOpenPlaylistManager, &QAction::triggered, this, &MainWindow::openPlaylistManager);
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
 
-	/// FIXME: now we can have multiple views connected to this action
-	connect(actionIncreaseVolume, &QAction::triggered, this, [=]() {
-		//volumeSlider->setValue(volumeSlider->value() + 5);
-	});
-	connect(actionDecreaseVolume, &QAction::triggered, this, [=]() {
-		//volumeSlider->setValue(volumeSlider->value() - 5);
-	});
 
-	//connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
-	//connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
-	//addressBar->init(settingsPrivate->defaultLocationFileExplorer());
-
-	// Playback modes
-	//connect(playbackModeButton, &QPushButton::clicked, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
 		//QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
@@ -421,33 +300,6 @@ void MainWindow::setupActions()
 			actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
 		}
 	});*/
-
-	//connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
-
-	// Factorize code with lambda slot connected to replicated signal
-	auto reloadLibrary = [this]() {
-		/// FIXME
-		//searchBar->setText(QString());
-		searchDialog->clear();
-		SqlDatabase::instance()->load();
-		this->update();
-	};
-
-	/// FIXME
-	//connect(libraryHeader, &LibraryHeader::aboutToChangeHierarchyOrder, reloadLibrary);
-	/*connect(changeHierarchyButton, &QPushButton::toggled, this, [=]() {
-		LibraryOrderDialog *libraryOrderDialog = new LibraryOrderDialog(this);
-		libraryOrderDialog->move(libraryOrderDialog->mapFromGlobal(QCursor::pos()));
-		libraryOrderDialog->show();
-		connect(libraryOrderDialog, &LibraryOrderDialog::aboutToChangeHierarchyOrder, reloadLibrary);
-	});*/
-
-	connect(qApp, &QApplication::aboutToQuit, this, [=] {
-		/// FIXME
-		//settingsPrivate->setValue("leftTabsIndex", leftTabs->currentIndex());
-		//settingsPrivate->setLastActivePlaylistGeometry(tabPlaylists->currentPlayList()->horizontalHeader()->saveState());
-		settingsPrivate->sync();
-	});
 }
 
 /** Update fonts for menu and context menus. */
@@ -590,38 +442,10 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	return QMainWindow::eventFilter(watched, event);
 }
 
-void MainWindow::moveEvent(QMoveEvent *event)
-{
-	/// FIXME
-	//_playbackModeWidgetFactory->move();
-	QMainWindow::moveEvent(event);
-}
-
 void MainWindow::resizeEvent(QResizeEvent *e)
 {
 	//qDebug() << Q_FUNC_INFO << e->oldSize() << e->size();
 	QMainWindow::resizeEvent(e);
-}
-
-void MainWindow::loadThemeAndSettings()
-{
-	//auto settings = Settings::instance();
-	//auto settingsPrivate = SettingsPrivate::instance();
-
-	// Buttons
-	/*for (MediaButton *b : mediaButtons) {
-		if (!b) {
-			continue;
-		}
-		//b->setSize(settingsPrivate->buttonsSize());
-		b->setMediaPlayer(_mediaPlayer);
-		if (settingsPrivate->isButtonThemeCustomized()) {
-			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
-		} else {
-			b->setIconFromTheme(settings->theme());
-		}
-		b->setVisible(settingsPrivate->isMediaButtonVisible(b->objectName()));
-	}*/
 }
 
 void MainWindow::createCustomizeOptionsDialog()
@@ -731,23 +555,16 @@ void MainWindow::processArgs(const QStringList &args)
 void MainWindow::activateView(QAction *menuAction)
 {
 	ViewLoader v(_mediaPlayer);
-	QWidget *widget = v.load(menuAction->objectName());
-	if (!widget) {
+	_currentView = v.load(menuAction->objectName());
+	if (!_currentView) {
 		return;
 	}
-	this->setCentralWidget(widget);
-	/*connect(actionViewPlaylists, &QAction::triggered, this, [=]() {
-		stackedWidget->setCurrentIndex(0);
-		stackedWidgetRight->setVisible(true);
-		stackedWidgetRight->setCurrentIndex(0);
+	this->setCentralWidget(_currentView);
 
-		library->createConnectionsToDB();
-		connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
+	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderIncrease);
+	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderDecrease);
 
-		QModelIndex iTop = library->indexAt(library->viewport()->rect().topLeft());
-		library->jumpToWidget()->setCurrentLetter(library->model()->currentLetter(iTop));
-	});
-	connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
+	/*connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
 		stackedWidgetRight->setVisible(false);
 		stackedWidget->setCurrentIndex(1);
 		_uniqueLibrary->uniqueTable->createConnectionsToDB();
@@ -789,33 +606,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}*/
-}
-
-void MainWindow::mediaPlayerStateHasChanged(QMediaPlayer::State state)
-{
-	if (state == QMediaPlayer::PlayingState) {
-		QString iconPath;
-		if (SettingsPrivate::instance()->hasCustomIcon("pauseButton")) {
-			iconPath = SettingsPrivate::instance()->customIcon("pauseButton");
-		} else {
-			iconPath = ":/player/" + Settings::instance()->theme() + "/pause";
-		}
-		/// FIXME
-		//playButton->setIcon(QIcon(iconPath));
-		//seekSlider->setEnabled(true);
-	} else {
-		/// FIXME
-		//playButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/play"));
-		//seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
-		if (state == QMediaPlayer::StoppedState) {
-			//seekSlider->setValue(0);
-			//timeLabel->setTime(0, 0);
-		}
-	}
-	// Remove bold font when player has stopped
-	/// FIXME
-	//tabPlaylists->currentPlayList()->viewport()->update();
-	//seekSlider->update();
 }
 
 void MainWindow::openFiles()

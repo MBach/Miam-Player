@@ -9,16 +9,16 @@
 #include <QSqlRecord>
 #include <QSqlError>
 
-#include "mainwindow.h"
+#include "views/viewplaylists.h"
 #include "settings.h"
 #include "pluginmanager.h"
 
 #include <QtDebug>
 
 /** Constructor. */
-SearchDialog::SearchDialog(MainWindow *mainWindow)
-	: AbstractSearchDialog(mainWindow, Qt::Widget)
-	, _mainWindow(mainWindow)
+SearchDialog::SearchDialog(ViewPlaylists *viewPlaylists)
+	: AbstractSearchDialog(viewPlaylists, Qt::Widget)
+	, _viewPlaylists(viewPlaylists)
 	, _checkBoxLibrary(new QCheckBox(tr("Library"), this))
 	, _isMaximized(false)
 {
@@ -64,7 +64,7 @@ SearchDialog::SearchDialog(MainWindow *mainWindow)
 		}
 	});
 
-	_mainWindow->installEventFilter(this);
+	_viewPlaylists->installEventFilter(this);
 
 	this->setVisible(false);
 	_oldRect = this->geometry();
@@ -98,10 +98,10 @@ void SearchDialog::setSearchExpression(const QString &text)
 
 bool SearchDialog::eventFilter(QObject *obj, QEvent *event)
 {
-	if (obj == _mainWindow && event->type() == QEvent::Resize) {
+	if (obj == _viewPlaylists && event->type() == QEvent::Resize) {
 		if (this->isVisible() && _isMaximized) {
 			this->move(0, 0);
-			this->resize(_mainWindow->rect().size());
+			this->resize(_viewPlaylists->rect().size());
 		}
 	}
 	return AbstractSearchDialog::eventFilter(obj, event);
@@ -157,19 +157,17 @@ void SearchDialog::processResults(Request type, const QStandardItemList &results
 
 void SearchDialog::aboutToProcessRemoteTracks(const std::list<TrackDAO> &tracks)
 {
-	/// FIXME
-	/*Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+	Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
 	p->insertMedias(-1, QList<TrackDAO>::fromStdList(tracks));
-	this->clear();*/
+	this->clear();
 }
 
 void SearchDialog::moveSearchDialog(int, int)
 {
-	/// FIXME
-	/*QPoint tl = _mainWindow->widgetSearchBar->frameGeometry().topRight();
+	QPoint tl = _viewPlaylists->widgetSearchBar->frameGeometry().topRight();
 	tl.ry()--;
-	QPoint tl2 = _mainWindow->widgetSearchBar->mapTo(_mainWindow, tl);
-	this->move(tl2);*/
+	QPoint tl2 = _viewPlaylists->widgetSearchBar->mapTo(_viewPlaylists, tl);
+	this->move(tl2);
 }
 
 void SearchDialog::clear()
@@ -199,10 +197,9 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 			tracks << QMediaContent(selectTracks.record().value(0).toString());
 		}
 
-		/// FIXME
-		/*Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
+		Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
 		p->insertMedias(-1, tracks);
-		this->clear();*/
+		this->clear();
 	}
 }
 
@@ -220,9 +217,8 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 			tracks << QMediaContent(selectTracks.record().value(0).toString());
 		}
 
-		/// FIXME
-		//Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-		//p->insertMedias(-1, tracks);
+		Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
+		p->insertMedias(-1, tracks);
 		this->clear();
 	}
 	this->clear();
@@ -230,9 +226,8 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
 {
-	/// FIXME
-	//Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-	//p->insertMedias(-1, { QMediaContent(track.data(DT_Identifier).toString()) });
+	Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
+	p->insertMedias(-1, { QMediaContent(track.data(DT_Identifier).toString()) });
 	this->clear();
 }
 
@@ -246,9 +241,7 @@ void SearchDialog::appendSelectedItem(const QModelIndex &index)
 
 	QListView *list = qobject_cast<QListView*>(sender());
 
-	//Playlist *p = _mainWindow->tabPlaylists->currentPlayList();
-	/// FIXME
-	Playlist *p = nullptr;
+	Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
 	if (item->data(AbstractSearchDialog::DT_Origin).toString() == _checkBoxLibrary->text()) {
 		QList<QMediaContent> tracks;
 		// Local items: easy to process! (SQL request)
@@ -259,7 +252,7 @@ void SearchDialog::appendSelectedItem(const QModelIndex &index)
 		} else /*if (list == _tracks)*/ {
 			// Nothing special
 		}
-		//p->insertMedias(-1, tracks);
+		p->insertMedias(-1, tracks);
 	} else {
 		// Remote items: apply strategy pattern to get remote information depending on the caller
 		///FIXME
@@ -330,7 +323,7 @@ void SearchDialog::searchLabelWasClicked(const QString &link)
 		iconSearchMore->setPixmap(QPixmap(":/icons/back"));
 		labelSearchMore->setText(tr("<a href='#less' style='text-decoration: none; color:#3399FF;'>Show less results</a>"));
 		this->move(0, 0);
-		this->resize(_mainWindow->rect().size());
+		this->resize(_viewPlaylists->rect().size());
 		this->searchMoreResults();
 		_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 		_albums->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -339,8 +332,6 @@ void SearchDialog::searchLabelWasClicked(const QString &link)
 		_isMaximized = false;
 		iconSearchMore->setPixmap(QPixmap(":/icons/search"));
 		labelSearchMore->setText(tr("<a href='#more' style='text-decoration: none; color:#3399FF;'>Search for more results...</a>"));
-		/// FIXME
-		//_mainWindow->moveSearchDialog();
 		this->resize(_oldRect.size());
 		this->moveSearchDialog();
 		_artists->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

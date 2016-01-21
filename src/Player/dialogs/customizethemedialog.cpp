@@ -8,9 +8,10 @@
 #include <QGraphicsOpacityEffect>
 
 #include "mainwindow.h"
-#include "settings.h"
-
 #include "starrating.h"
+
+#include <settings.h>
+#include <settingsprivate.h>
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
 	: QDialog(nullptr)

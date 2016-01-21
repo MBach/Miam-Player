@@ -137,7 +137,7 @@ void PlaybackModeWidgetFactory::togglePlaybackModes()
 void PlaybackModeWidgetFactory::update()
 {
 	/// FIXME
-	/*QMediaPlaylist::PlaybackMode mode = _tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
+	QMediaPlaylist::PlaybackMode mode = _tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
 	QString playbackMode = PlaybackModeWidget::nameFromMode(mode);
 	_playbackModeButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/" + playbackMode));
 
@@ -145,5 +145,5 @@ void PlaybackModeWidgetFactory::update()
 		w->adjustIcon();
 		w->adjustSize();
 	}
-	this->move();*/
+	this->move();
 }

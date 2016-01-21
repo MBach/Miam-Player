@@ -3,6 +3,7 @@
 
 #include <mediaplayer.h>
 #include <QString>
+#include "abstractview.h"
 
 class ViewLoader
 {
@@ -12,7 +13,7 @@ private:
 public:
 	ViewLoader(MediaPlayer *mediaPlayer);
 
-	QWidget *load(const QString &action);
+	AbstractView *load(const QString &action);
 };
 
 #endif // VIEWLOADER_H

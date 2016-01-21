@@ -12,6 +12,7 @@
 #include <QtDebug>
 
 #include "mainwindow.h"
+#include <settingsprivate.h>
 
 const QList<int> QuickStart::ratios = QList<int>() << 0 << 3 << 2;
 

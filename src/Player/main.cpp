@@ -7,6 +7,7 @@
 #define SOFT "MiamPlayer"
 #define VERSION "0.8.0"
 
+#include <settingsprivate.h>
 #include "styling/miamstyle.h"
 #include <plugininfo.h>
 #include <qtsingleapplication/QtSingleApplication>

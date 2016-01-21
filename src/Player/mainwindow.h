@@ -6,15 +6,13 @@
 #include <QStack>
 
 #include <model/sqldatabase.h>
-#include <librarytreeview.h>
 #include <mediabutton.h>
 #include <mediaplayer.h>
 #include <uniquelibrary.h>
 
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
-#include "dialogs/searchdialog.h"
-#include "playbackmodewidgetfactory.h"
+#include "views/abstractview.h"
 #include "pluginmanager.h"
 
 #include "ui_mainwindow.h"
@@ -28,21 +26,13 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 	Q_OBJECT
 private:
-	/** Displays and animates the media button "PlaybackMode". */
-	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
-
 	MediaPlayer *_mediaPlayer;
-
-	/** View object: display all your tracks in a huge list. */
-	UniqueLibrary *_uniqueLibrary;
 
 	PluginManager *_pluginManager;
 
-public:
-	// Play, pause, stop, etc.
-	QList<MediaButton*> mediaButtons;
-	SearchDialog *searchDialog;
+	AbstractView *_currentView;
 
+public:
 	explicit MainWindow(QWidget *parent = nullptr);
 
 	void activateLastView();
@@ -81,12 +71,7 @@ protected:
 
 	virtual bool event(QEvent *event) override;
 
-	virtual void moveEvent(QMoveEvent *event) override;
-
 	virtual void resizeEvent(QResizeEvent *e) override;
-
-private:
-	void loadThemeAndSettings();
 
 public slots:
 	void createCustomizeOptionsDialog();
@@ -97,8 +82,6 @@ private slots:
 	void activateView(QAction *menuAction);
 
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
-
-	void mediaPlayerStateHasChanged(QMediaPlayer::State state);
 
 	void openFiles();
 

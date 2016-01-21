@@ -5,7 +5,7 @@
 #include "ui_searchdialog.h"
 
 /// Forward declaration
-class MainWindow;
+class ViewPlaylists;
 
 /**
  * \brief		The SearchDialog class is a popup dialog which opens when one is typing text.
@@ -16,7 +16,7 @@ class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 {
 	Q_OBJECT
 private:
-	MainWindow *_mainWindow;
+	ViewPlaylists *_viewPlaylists;
 
 	QRect _oldRect;
 
@@ -27,7 +27,7 @@ private:
 
 public:
 	/** Constructor. */
-	explicit SearchDialog(MainWindow *mainWindow);
+	explicit SearchDialog(ViewPlaylists *viewPlaylists);
 
 	/** Required interface from AbstractSearchDialog class. */
 	virtual void addSource(QCheckBox *checkBox) override;

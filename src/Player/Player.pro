@@ -71,7 +71,8 @@ HEADERS += debug/logbrowser.h \
     tagbutton.h \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
-    views/viewplaylists.h
+    views/viewplaylists.h \
+    views/abstractview.h
 
 FORMS += customizeoptionsdialog.ui \
     customizetheme.ui \
