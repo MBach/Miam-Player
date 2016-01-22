@@ -11,6 +11,19 @@ MiamItemModel::MiamItemModel(QObject *parent)
 
 }
 
+MiamItemModel::~MiamItemModel()
+{
+	qDeleteAll(_letters);
+	//qDeleteAll(_topLevelItems);
+	//qDeleteAll(_hash);
+	qDeleteAll(_tracks);
+
+	_letters.clear();
+	_topLevelItems.clear();
+	_hash.clear();
+	_tracks.clear();
+}
+
 SeparatorItem *MiamItemModel::insertSeparator(const QStandardItem *node)
 {
 	// Items are grouped every ten years in this particular case

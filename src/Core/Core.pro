@@ -121,6 +121,7 @@ HEADERS += interfaces/basicplugin.h \
     styling/miamslider.h \
     styling/miamstyleditemdelegate.h \
     abstractsearchdialog.h \
+    abstractview.h \
     cover.h \
     filehelper.h \
     flowlayout.h \

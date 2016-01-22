@@ -194,5 +194,7 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 	}
 	if (nodeItem) {
 		_hash.insert(node->hash(), nodeItem);
+	} else {
+		delete node;
 	}
 }

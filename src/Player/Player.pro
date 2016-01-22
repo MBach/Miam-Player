@@ -63,6 +63,7 @@ HEADERS += debug/logbrowser.h \
     views/tageditor/tageditor.h \
     views/tageditor/tageditortablewidget.h \
     views/viewloader.h \
+    views/viewplaylists.h \
     columnutils.h \
     mainwindow.h \
     nofocusitemdelegate.h \
@@ -70,9 +71,7 @@ HEADERS += debug/logbrowser.h \
     quickstart.h \
     tagbutton.h \
     taglineedit.h \
-    tracksnotfoundmessagebox.h \
-    views/viewplaylists.h \
-    views/abstractview.h
+    tracksnotfoundmessagebox.h
 
 FORMS += customizeoptionsdialog.ui \
     customizetheme.ui \

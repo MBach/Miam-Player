@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 
+#include <abstractviewplaylists.h>
+#include <libraryorderdialog.h>
 #include <musicsearchengine.h>
 #include <quickstart.h>
 #include <settings.h>
 #include <settingsprivate.h>
-#include <libraryorderdialog.h>
-#include <playlist.h>
 
 #include "dialogs/customizethemedialog.h"
 #include "dialogs/dragdropdialog.h"
@@ -49,10 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::activateLastView()
 {
 	// Find the last active view and connect database to it
-	/// TODO
-	Settings *settings = Settings::instance();
-	//QString actionViewName = settings->lastActiveView();
-	QString actionViewName = "actionViewPlaylists";
+	QString actionViewName = SettingsPrivate::instance()->value("lastActiveView", "actionViewPlaylists").toString();
 	for (QAction *actionView : menuView->actions()) {
 		if (actionView->objectName() == actionViewName) {
 			actionView->trigger();
@@ -151,11 +148,11 @@ void MainWindow::setupActions()
 
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
+	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
 	actionViewPlaylists->setActionGroup(viewModeGroup);
 	actionViewUniqueLibrary->setActionGroup(viewModeGroup);
 	actionViewTagEditor->setActionGroup(viewModeGroup);
 
-	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
 	for (QAction *actionPlayBack : findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
@@ -178,9 +175,6 @@ void MainWindow::setupActions()
 		this->closeEvent(&event);
 		qApp->quit();
 	});
-	/// FIXME
-	//connect(actionAddPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::addPlaylist);
-	//connect(actionDeleteCurrentPlaylist, &QAction::triggered, tabPlaylists, &TabPlaylist::removeCurrentPlaylist);
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
 		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
 		customizeThemeDialog->exec();
@@ -529,13 +523,33 @@ void MainWindow::activateView(QAction *menuAction)
 		w->deleteLater();
 	}
 	ViewLoader v(_mediaPlayer);
-	_currentView = v.load(menuPlaylist, menuAction->objectName());
+	_currentView = v.load(menuAction->objectName());
 	if (!_currentView) {
 		return;
 	}
+
+	bool b = _currentView->hasPlaylistFeature();
+	menuPlaylist->menuAction()->setVisible(b);
+	if (b) {
+		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
+		connect(actionAddPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::addPlaylist);
+		connect(actionDeleteCurrentPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::removeCurrentPlaylist);
+		connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
+			int selectedTracks = viewPlaylists->selectedTracksInCurrentPlaylist();
+			bool b = selectedTracks > 0;
+			actionRemoveSelectedTracks->setEnabled(b);
+			actionMoveTracksUp->setEnabled(b);
+			actionMoveTracksDown->setEnabled(b);
+			if (selectedTracks > 1) {
+				actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedTracks));
+				actionMoveTracksUp->setText(tr("Move selected tracks &up", "Move upward", selectedTracks));
+				actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedTracks));
+			}
+		});
+	}
 	this->setCentralWidget(_currentView);
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	this->restoreGeometry(settingsPrivate->lastActiveView(menuAction->objectName()));
+	this->restoreGeometry(settingsPrivate->lastActiveViewGeometry(menuAction->objectName()));
 
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderIncrease);
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderDecrease);
@@ -543,22 +557,12 @@ void MainWindow::activateView(QAction *menuAction)
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		if (_currentView) {
 			QActionGroup *actionGroup = this->findChild<QActionGroup*>();
-			settingsPrivate->setLastActiveView(actionGroup->checkedAction()->objectName(), this->saveGeometry());
+			settingsPrivate->setLastActiveViewGeometry(actionGroup->checkedAction()->objectName(), this->saveGeometry());
 			settingsPrivate->sync();
 		}
 	});
 
-	/*connect(actionViewUniqueLibrary, &QAction::triggered, this, [=]() {
-		stackedWidgetRight->setVisible(false);
-		stackedWidget->setCurrentIndex(1);
-		_uniqueLibrary->uniqueTable->createConnectionsToDB();
-		_uniqueLibrary->uniqueTable->setFocus();
-		_mediaPlayer->setPlaylist(nullptr);
-
-		QModelIndex iTop = _uniqueLibrary->uniqueTable->indexAt(_uniqueLibrary->uniqueTable->viewport()->rect().topLeft());
-		_uniqueLibrary->uniqueTable->jumpToWidget()->setCurrentLetter(_uniqueLibrary->uniqueTable->model()->currentLetter(iTop));
-	});
-	connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
+	/*connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
 		stackedWidget->setCurrentIndex(0);
 		stackedWidgetRight->setVisible(true);
 		stackedWidgetRight->setCurrentIndex(1);

@@ -29,7 +29,8 @@ HEADERS += dialogs/closeplaylistpopup.h \
     tabbar.h \
     tabplaylist.h \
     stareditor.h \
-    miamtabPlaylists_global.hpp
+    miamtabPlaylists_global.hpp \
+    abstractviewplaylists.h
 
 FORMS += closeplaylistpopup.ui
 

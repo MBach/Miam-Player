@@ -6,13 +6,13 @@
 #include <QStack>
 
 #include <model/sqldatabase.h>
+#include <abstractview.h>
 #include <mediabutton.h>
 #include <mediaplayer.h>
 #include <uniquelibrary.h>
 
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
-#include "views/abstractview.h"
 #include "pluginmanager.h"
 
 #include "ui_mainwindow.h"

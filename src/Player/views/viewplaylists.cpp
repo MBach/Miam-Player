@@ -4,9 +4,8 @@
 #include <settingsprivate.h>
 #include <libraryorderdialog.h>
 
-ViewPlaylists::ViewPlaylists(QMenu *menuPlaylist, MediaPlayer *mediaPlayer)
-	: AbstractView(nullptr)
-	, _mediaPlayer(mediaPlayer)
+ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
+	: AbstractViewPlaylists(mediaPlayer)
 	, _searchDialog(new SearchDialog(this))
 	, _playbackModeWidgetFactory(nullptr)
 {
@@ -61,19 +60,7 @@ ViewPlaylists::ViewPlaylists(QMenu *menuPlaylist, MediaPlayer *mediaPlayer)
 	// Core
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &ViewPlaylists::mediaPlayerStateHasChanged);
 
-	/// FIXME
-	connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
-		bool b = tabPlaylists->currentPlayList()->selectionModel()->hasSelection();
-		//actionRemoveSelectedTracks->setEnabled(b);
-		//actionMoveTracksUp->setEnabled(b);
-		//actionMoveTracksDown->setEnabled(b);
-		if (b) {
-			int selectedRows = tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
-			//actionRemoveSelectedTracks->setText(tr("&Remove selected tracks", "Number of tracks to remove", selectedRows));
-			//actionMoveTracksUp->setText(tr("Move selected tracks &up", "Move upward", selectedRows));
-			//actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedRows));
-		}
-	});
+
 
 	// Main Splitter
 	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
@@ -180,12 +167,26 @@ ViewPlaylists::ViewPlaylists(QMenu *menuPlaylist, MediaPlayer *mediaPlayer)
 	});
 }
 
+int ViewPlaylists::selectedTracksInCurrentPlaylist() const
+{
+	return tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
+}
+
 void ViewPlaylists::moveEvent(QMoveEvent *event)
 {
-	qDebug() << Q_FUNC_INFO << event;
 	/// FIXME
 	_playbackModeWidgetFactory->move();
 	AbstractView::moveEvent(event);
+}
+
+void ViewPlaylists::addPlaylist()
+{
+	tabPlaylists->addPlaylist();
+}
+
+void ViewPlaylists::removeCurrentPlaylist()
+{
+	tabPlaylists->removeCurrentPlaylist();
 }
 
 void ViewPlaylists::volumeSliderDecrease()

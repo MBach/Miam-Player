@@ -1,20 +1,18 @@
 #ifndef VIEWPLAYLISTS_H
 #define VIEWPLAYLISTS_H
 
+#include <abstractviewplaylists.h>
 #include <playbackmodewidgetfactory.h>
 #include "dialogs/searchdialog.h"
-#include "abstractview.h"
 
 #include <QMenu>
 
 #include "ui_viewplaylists.h"
 
-class ViewPlaylists : public AbstractView, public Ui::ViewPlaylists
+class ViewPlaylists : public AbstractViewPlaylists, public Ui::ViewPlaylists
 {
 	Q_OBJECT
 private:
-	MediaPlayer *_mediaPlayer;
-
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
 	SearchDialog *_searchDialog;
@@ -23,10 +21,19 @@ private:
 	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
 
 public:
-	ViewPlaylists(QMenu *menuPlaylist, MediaPlayer *mediaPlayer);
+	ViewPlaylists(MediaPlayer *mediaPlayer);
+
+	inline virtual bool hasPlaylistFeature() const override { return true; }
+
+	virtual int selectedTracksInCurrentPlaylist() const override;
 
 protected:
 	virtual void moveEvent(QMoveEvent *event) override;
+
+public slots:
+	virtual void addPlaylist() override;
+
+	virtual void removeCurrentPlaylist() override;
 
 	virtual void volumeSliderDecrease() override;
 

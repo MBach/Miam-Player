@@ -149,7 +149,7 @@ public:
 	/** Returns the last active playlist header state. */
 	QByteArray lastActivePlaylistGeometry() const;
 
-	QByteArray lastActiveView(const QString &menuAction) const;
+	QByteArray lastActiveViewGeometry(const QString &menuAction) const;
 
 	/** Returns the last playlists that were opened when player was closed. */
 	QList<uint> lastPlaylistSession() const;
@@ -185,7 +185,7 @@ public:
 	/** Sets the language of the application. */
 	bool setLanguage(const QString &lang);
 
-	void setLastActiveView(const QString &menuAction, const QByteArray &viewGeometry);
+	void setLastActiveViewGeometry(const QString &menuAction, const QByteArray &viewGeometry);
 
 	/** Sets the last playlists that were opened when player is about to close. */
 	void setLastPlaylistSession(const QList<uint> &ids);

@@ -14,7 +14,7 @@ private:
 public:
 	ViewLoader(MediaPlayer *mediaPlayer);
 
-	AbstractView *load(QMenu *menuPlaylist, const QString &menuAction);
+	AbstractView *load(const QString &menuAction);
 };
 
 #endif // VIEWLOADER_H

@@ -16,9 +16,8 @@
 
 LibraryTreeView::LibraryTreeView(QWidget *parent)
 	: TreeView(parent)
-	, _libraryModel(new LibraryItemModel(parent))
+	, _libraryModel(new LibraryItemModel(this))
 	, _jumpToWidget(new JumpToWidget(this))
-	, _circleProgressBar(new CircleProgressBar(this))
 	, properties(new QMenu(this))
 	, sendToCurrentPlaylist(new QShortcut(this))
 	, openTagEditor(new QShortcut(this))
@@ -168,7 +167,6 @@ void LibraryTreeView::createConnectionsToDB()
 		db->disconnect();
 		connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
 		connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-		connect(db, &SqlDatabase::progressChanged, _circleProgressBar, &QProgressBar::setValue);
 		connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
 		connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
 		connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
@@ -284,7 +282,6 @@ void LibraryTreeView::reset()
 	if (sender() == nullptr) {
 		return;
 	}
-	_circleProgressBar->show();
 	if (_libraryModel->rowCount() > 0) {
 		_proxyModel->setFilterRegExp(QString());
 		this->verticalScrollBar()->setValue(0);
@@ -296,6 +293,4 @@ void LibraryTreeView::endPopulateTree()
 {
 	_proxyModel->sort(_proxyModel->defaultSortColumn());
 	_proxyModel->setDynamicSortFilter(true);
-	_circleProgressBar->hide();
-	_circleProgressBar->setValue(0);
 }

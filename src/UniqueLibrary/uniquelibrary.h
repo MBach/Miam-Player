@@ -2,8 +2,8 @@
 #define UNIQUELIBRARY_H
 
 #include <QTranslator>
-#include <QWidget>
 
+#include <abstractview.h>
 #include "miamuniquelibrary_global.hpp"
 #include "model/sqldatabase.h"
 
@@ -14,7 +14,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public QWidget, public Ui::uniqueLibrary
+class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public AbstractView, public Ui::uniqueLibrary
 {
 	Q_OBJECT
 private:
@@ -29,12 +29,17 @@ private:
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
-	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+	inline virtual bool hasPlaylistFeature() const override { return false; }
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
 
 	virtual void closeEvent(QCloseEvent *event) override;
+
+public slots:
+	virtual void volumeSliderDecrease() override;
+
+	virtual void volumeSliderIncrease() override;
 
 private slots:
 	bool playSingleTrack(const QModelIndex &index);

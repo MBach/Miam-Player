@@ -302,7 +302,7 @@ QByteArray SettingsPrivate::lastActivePlaylistGeometry() const
 	return value("lastActivePlaylistGeometry").toByteArray();
 }
 
-QByteArray SettingsPrivate::lastActiveView(const QString &menuAction) const
+QByteArray SettingsPrivate::lastActiveViewGeometry(const QString &menuAction) const
 {
 	return value(menuAction).toByteArray();
 }
@@ -498,8 +498,9 @@ bool SettingsPrivate::setLanguage(const QString &lang)
 	return this->initLanguage(lang);
 }
 
-void SettingsPrivate::setLastActiveView(const QString &menuAction, const QByteArray &viewGeometry)
+void SettingsPrivate::setLastActiveViewGeometry(const QString &menuAction, const QByteArray &viewGeometry)
 {
+	setValue("lastActiveView", menuAction);
 	setValue(menuAction, viewGeometry);
 }
 

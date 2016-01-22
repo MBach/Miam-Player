@@ -1,13 +1,16 @@
 #ifndef ABSTRACTVIEW_H
 #define ABSTRACTVIEW_H
 
+#include "miamcore_global.h"
 #include <QWidget>
 
-class AbstractView : public QWidget
+class MIAMCORE_LIBRARY AbstractView : public QWidget
 {
 	Q_OBJECT
 public:
 	AbstractView(QWidget *parent = nullptr) : QWidget(parent) {}
+
+	virtual bool hasPlaylistFeature() const = 0;
 
 public slots:
 	virtual void volumeSliderIncrease() = 0;

@@ -14,13 +14,18 @@
 #include <QtDebug>
 
 UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
-	: QWidget(parent)
+	: AbstractView(parent)
 	, _mediaPlayer(mediaPlayer)
 	, _currentTrack(nullptr)
 {
 	setupUi(this);
 	stopButton->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
+
+	uniqueTable->createConnectionsToDB();
+	uniqueTable->setFocus();
+	_mediaPlayer->setPlaylist(nullptr);
+
 	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
 		if (duration > 0) {
 			seekSlider->setValue(1000 * pos / duration);
@@ -29,7 +34,8 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
 		_mediaPlayer->setVolume((qreal)value / 100.0);
 	});
-	volumeSlider->setValue(Settings::instance()->volume() * 100);
+	auto settings = Settings::instance();
+	volumeSlider->setValue(settings->volume() * 100);
 
 	uniqueTable->setItemDelegate(new UniqueLibraryItemDelegate(uniqueTable->jumpToWidget(), uniqueTable->model()->proxy()));
 	_proxy = uniqueTable->model()->proxy();
@@ -57,7 +63,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(skipForwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipForward);
 	connect(toggleShuffleButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
 
-	auto settings = Settings::instance();
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State state) {
 		switch (state) {
 		case QMediaPlayer::StoppedState:
@@ -105,25 +110,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	QApplication::installTranslator(&translator);
 
 	std::srand(std::time(nullptr));
-
-	/*connect(this, &UniqueLibrary::destroyed, this, [=]() {
-		qDebug() << Q_FUNC_INFO << this->objectName();
-		auto settings = Settings::instance();
-		settings->saveGeometryForView(this->objectName(), this->saveGeometry());
-		settings->sync();
-	});*/
-	this->installEventFilter(this);
-}
-
-bool UniqueLibrary::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::Resize) {
-		//qDebug() << Q_FUNC_INFO;
-		//auto settings = Settings::instance();
-		//settings->saveGeometryForView(this->objectName(), this->saveGeometry());
-		//settings->sync();
-	}
-	return QWidget::eventFilter(obj, event);
 }
 
 void UniqueLibrary::changeEvent(QEvent *event)
@@ -139,6 +125,16 @@ void UniqueLibrary::closeEvent(QCloseEvent *event)
 {
 
 	QWidget::closeEvent(event);
+}
+
+void UniqueLibrary::volumeSliderDecrease()
+{
+	volumeSlider->setValue(volumeSlider->value() - 5);
+}
+
+void UniqueLibrary::volumeSliderIncrease()
+{
+	volumeSlider->setValue(volumeSlider->value() + 5);
 }
 
 bool UniqueLibrary::playSingleTrack(const QModelIndex &index)

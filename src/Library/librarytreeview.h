@@ -46,12 +46,6 @@ private:
 	/** Shortcut widget to navigate quickly in a big treeview. */
 	JumpToWidget *_jumpToWidget;
 
-	/**
-	 * DEPRECATED: should be replaced with an horizontal progressbar in Modern UI style.
-	 * However, future class and this class are not platform independant.
-	 */
-	CircleProgressBar *_circleProgressBar;
-
 	/** Cache of expanded albums and their covers. */
 	QMap<AlbumItem*, QImage*> _expandedCovers;
 

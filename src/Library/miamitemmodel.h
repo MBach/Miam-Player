@@ -32,6 +32,8 @@ protected:
 public:
 	explicit MiamItemModel(QObject *parent = nullptr);
 
+	virtual ~MiamItemModel();
+
 	virtual QChar currentLetter(const QModelIndex &index) const = 0;
 
 	inline QStandardItem* letterItem(const QString &letter) const { return _letters.value(letter); }
