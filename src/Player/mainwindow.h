@@ -48,9 +48,6 @@ public:
 
 	inline MediaPlayer *mediaPlayer() const { return _mediaPlayer; }
 
-	/** Open a new Dialog where one can add a folder to current playlist. */
-	void openFolder(const QString &dir);
-
 	/** Set up all actions and behaviour. */
 	void setupActions();
 
@@ -83,15 +80,9 @@ private slots:
 
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
 
-	void openFiles();
+	//void showTabPlaylists();
 
-	void openFolderPopup();
-
-	void openPlaylistManager();
-
-	void showTabPlaylists();
-
-	void showTagEditor();
+	//void showTagEditor();
 
 	void toggleMenuBar(bool checked);
 };

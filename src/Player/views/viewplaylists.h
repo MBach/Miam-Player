@@ -23,7 +23,11 @@ private:
 public:
 	ViewPlaylists(MediaPlayer *mediaPlayer);
 
+	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
+
 	inline virtual bool hasPlaylistFeature() const override { return true; }
+
+	virtual void openFolder(const QString &dir) const override;
 
 	virtual int selectedTracksInCurrentPlaylist() const override;
 
@@ -33,7 +37,19 @@ protected:
 public slots:
 	virtual void addPlaylist() override;
 
+	virtual void moveTracksDown() override;
+
+	virtual void moveTracksUp() override;
+
+	virtual void openFiles() override;
+
+	virtual void openFolderPopup() override;
+
+	virtual void openPlaylistManager() override;
+
 	virtual void removeCurrentPlaylist() override;
+
+	virtual void removeSelectedTracks() override;
 
 	virtual void volumeSliderDecrease() override;
 

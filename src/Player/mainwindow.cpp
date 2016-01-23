@@ -168,8 +168,6 @@ void MainWindow::setupActions()
 
 	// Link user interface
 	// Actions from the menu
-	connect(actionOpenFiles, &QAction::triggered, this, &MainWindow::openFiles);
-	connect(actionOpenFolder, &QAction::triggered, this, &MainWindow::openFolderPopup);
 	connect(actionExit, &QAction::triggered, this, [=]() {
 		QCloseEvent event;
 		this->closeEvent(&event);
@@ -244,17 +242,6 @@ void MainWindow::setupActions()
 		equalizerDialog->activateWindow();
 	});
 
-	// Playback
-	connect(actionRemoveSelectedTracks, &QAction::triggered, this, [=]() {
-		/// FIXME
-		//if (tabPlaylists->currentPlayList()) {
-		//	tabPlaylists->currentPlayList()->removeSelectedTracks();
-		//}
-	});
-	/// FIXME
-	//connect(actionMoveTracksUp, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksUp);
-	//connect(actionMoveTracksDown, &QAction::triggered, tabPlaylists, &TabPlaylist::moveTracksDown);
-	connect(actionOpenPlaylistManager, &QAction::triggered, this, &MainWindow::openPlaylistManager);
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
 
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
@@ -277,25 +264,6 @@ void MainWindow::updateFonts(const QFont &font)
 #else
 	Q_UNUSED(font)
 #endif
-}
-
-/** Open a new Dialog where one can add a folder to current playlist. */
-void MainWindow::openFolder(const QString &dir)
-{
-	Settings::instance()->setValue("lastOpenedLocation", dir);
-	/// FIXME
-	/*QDirIterator it(dir, QDirIterator::Subdirectories);
-	QStringList suffixes = FileHelper::suffixes(FileHelper::All, false);
-	QList<QUrl> localTracks;
-	while (it.hasNext()) {
-		it.next();
-		if (suffixes.contains(it.fileInfo().suffix())) {
-			localTracks << QUrl::fromLocalFile(it.filePath());
-		}
-	}
-	if (Miam::showWarning(tr("playlist"), localTracks.count()) == QMessageBox::Ok) {
-		tabPlaylists->insertItemsToPlaylist(-1, localTracks);
-	}*/
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -471,11 +439,14 @@ void MainWindow::processArgs(const QStringList &args)
 		} else if (isAddToLibrary) {
 			SettingsPrivate::instance()->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
 		} else {
-			if (isCreateNewPlaylist) {
-				/// FIXME
-				//tabPlaylists->addPlaylist();
+			if (_currentView) {
+				if (AbstractViewPlaylists *v = static_cast<AbstractViewPlaylists*>(_currentView)) {
+					if (isCreateNewPlaylist) {
+						v->addPlaylist();
+					}
+					v->openFolder(fileInfo.absoluteFilePath());
+				}
 			}
-			this->openFolder(fileInfo.absoluteFilePath());
 		}
 	} else if (!positionalArgs.isEmpty()) {
 		if (isSendToTagEditor) {
@@ -483,16 +454,18 @@ void MainWindow::processArgs(const QStringList &args)
 			//tagEditor->addItemsToEditor(positionalArgs);
 			actionViewTagEditor->trigger();
 		} else {
-			if (isCreateNewPlaylist) {
-				/// FIXME
-				//tabPlaylists->addPlaylist();
+			if (_currentView) {
+				if (AbstractViewPlaylists *v = static_cast<AbstractViewPlaylists*>(_currentView)) {
+					if (isCreateNewPlaylist) {
+						v->addPlaylist();
+					}
+					QList<QUrl> tracks;
+					for (QString p : positionalArgs) {
+						tracks << QUrl::fromLocalFile(p);
+					}
+					v->addToPlaylist(tracks);
+				}
 			}
-			QList<QUrl> tracks;
-			for (QString p : positionalArgs) {
-				tracks << QUrl::fromLocalFile(p);
-			}
-			/// FIXME
-			//tabPlaylists->insertItemsToPlaylist(-1, tracks);
 		}
 	} else if (parser.isSet(playPause)) {
 		if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
@@ -510,8 +483,7 @@ void MainWindow::processArgs(const QStringList &args)
 		bool ok = false;
 		int vol = parser.value(volume).toInt(&ok);
 		if (ok) {
-			/// FIXME
-			//volumeSlider->setValue(vol);
+			_mediaPlayer->setVolume((qreal)vol / 100.0);
 		}
 	}
 }
@@ -530,8 +502,15 @@ void MainWindow::activateView(QAction *menuAction)
 
 	bool b = _currentView->hasPlaylistFeature();
 	menuPlaylist->menuAction()->setVisible(b);
+	actionOpenFiles->setEnabled(b);
+	actionOpenFolder->setEnabled(b);
+
 	if (b) {
 		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
+
+		connect(actionOpenFiles, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFiles);
+		connect(actionOpenFolder, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFolderPopup);
+
 		connect(actionAddPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::addPlaylist);
 		connect(actionDeleteCurrentPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::removeCurrentPlaylist);
 		connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
@@ -546,6 +525,22 @@ void MainWindow::activateView(QAction *menuAction)
 				actionMoveTracksDown->setText(tr("Move selected tracks &down", "Move downward", selectedTracks));
 			}
 		});
+
+		// Playback
+		connect(actionRemoveSelectedTracks, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::removeSelectedTracks);
+		connect(actionMoveTracksUp, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::moveTracksUp);
+		connect(actionMoveTracksDown, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::moveTracksDown);
+		connect(actionOpenPlaylistManager, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openPlaylistManager);
+	} else {
+		disconnect(actionOpenFiles);
+		disconnect(actionOpenFolder);
+		disconnect(actionAddPlaylist);
+		disconnect(actionDeleteCurrentPlaylist);
+		disconnect(menuPlaylist);
+		disconnect(actionRemoveSelectedTracks);
+		disconnect(actionMoveTracksUp);
+		disconnect(actionMoveTracksDown);
+		disconnect(actionOpenPlaylistManager);
 	}
 	this->setCentralWidget(_currentView);
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
@@ -596,76 +591,11 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	}*/
 }
 
-void MainWindow::openFiles()
-{
-	QString audioFiles = tr("Audio files");
-	Settings *settings = Settings::instance();
-	QString lastOpenedLocation;
-	QString defaultMusicLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-	if (settings->value("lastOpenedLocation").toString().isEmpty()) {
-		lastOpenedLocation = defaultMusicLocation;
-	} else {
-		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
-	}
-
-	audioFiles.append(" (" + FileHelper::suffixes(FileHelper::Standard, true).join(" ") + ")");
-	audioFiles.append(";;Game Music Emu (" + FileHelper::suffixes(FileHelper::GameMusicEmu, true).join(" ") + ");;");
-	audioFiles.append(tr("Every file type (*)"));
-
-	QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose some files to open"), lastOpenedLocation,
-													  audioFiles);
-	if (files.isEmpty()) {
-		settings->setValue("lastOpenedLocation", defaultMusicLocation);
-	} else {
-		QFileInfo fileInfo(files.first());
-		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
-		QList<QUrl> tracks;
-		for (QString file : files) {
-			tracks << QUrl::fromLocalFile(file);
-		}
-		/// FIXME
-		//tabPlaylists->insertItemsToPlaylist(-1, tracks);
-	}
-}
-
-void MainWindow::openFolderPopup()
-{
-	Settings *settings = Settings::instance();
-	QString lastOpenedLocation;
-	QString defaultMusicLocation = QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first();
-	if (settings->value("lastOpenedLocation").toString().isEmpty()) {
-		lastOpenedLocation = defaultMusicLocation;
-	} else {
-		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
-	}
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose a folder to open"), lastOpenedLocation);
-	if (dir.isEmpty()) {
-		settings->setValue("lastOpenedLocation", defaultMusicLocation);
-	} else {
-		this->openFolder(dir);
-	}
-}
-
-void MainWindow::openPlaylistManager()
-{
-	PlaylistDialog *playlistDialog = new PlaylistDialog(this);
-	/// FIXME
-	/*playlistDialog->setPlaylists(tabPlaylists->playlists());
-	connect(playlistDialog, &PlaylistDialog::aboutToLoadPlaylist, tabPlaylists, &TabPlaylist::loadPlaylist);
-	connect(playlistDialog, &PlaylistDialog::aboutToDeletePlaylist, tabPlaylists, &TabPlaylist::deletePlaylist);
-	connect(playlistDialog, &PlaylistDialog::aboutToRenamePlaylist, tabPlaylists, &TabPlaylist::renamePlaylist);
-	connect(playlistDialog, &PlaylistDialog::aboutToRenameTab, tabPlaylists, &TabPlaylist::renameTab);
-	connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);*/
-	playlistDialog->exec();
-}
-
-void MainWindow::showTabPlaylists()
+/*void MainWindow::showTabPlaylists()
 {
 	if (!actionViewPlaylists->isChecked()) {
 		actionViewPlaylists->setChecked(true);
 	}
-	/// FIXME
-	//stackedWidgetRight->setCurrentIndex(0);
 }
 
 void MainWindow::showTagEditor()
@@ -673,9 +603,7 @@ void MainWindow::showTagEditor()
 	if (!actionViewTagEditor->isChecked()) {
 		actionViewTagEditor->setChecked(true);
 	}
-	/// FIXME
-	//stackedWidgetRight->setCurrentIndex(1);
-}
+}*/
 
 void MainWindow::toggleMenuBar(bool checked)
 {

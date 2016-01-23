@@ -21,12 +21,29 @@ protected:
 public:
 	AbstractViewPlaylists(MediaPlayer *mediaPlayer) : AbstractView(nullptr), _mediaPlayer(mediaPlayer) {}
 
+	virtual void addToPlaylist(const QList<QUrl> &tracks) = 0;
+
+	/** Open a new Dialog where one can add a folder to current playlist. */
+	virtual void openFolder(const QString &dir) const = 0;
+
 	virtual int selectedTracksInCurrentPlaylist() const = 0;
 
 public slots:
 	virtual void addPlaylist() = 0;
 
+	virtual void moveTracksUp() = 0;
+
+	virtual void moveTracksDown() = 0;
+
+	virtual void openFiles() = 0;
+
+	virtual void openFolderPopup() = 0;
+
+	virtual void openPlaylistManager() = 0;
+
 	virtual void removeCurrentPlaylist() = 0;
+
+	virtual void removeSelectedTracks() = 0;
 };
 
 #endif // ABSTRACTVIEWPLAYLISTS_H

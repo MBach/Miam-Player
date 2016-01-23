@@ -78,10 +78,6 @@ public slots:
 	/** Insert multiple tracks chosen by one from the library or the filesystem into a playlist. */
 	void insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks);
 
-	void moveTracksDown();
-
-	void moveTracksUp();
-
 	/** Action sent from the menu. */
 	void removeCurrentPlaylist();
 

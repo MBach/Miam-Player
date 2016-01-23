@@ -5,9 +5,10 @@
 #include <QHeaderView>
 #include <QStandardItemModel>
 
-#include "filehelper.h"
+#include <styling/miamstyleditemdelegate.h>
+#include <filehelper.h>
+#include <scrollbar.h>
 #include "nofocusitemdelegate.h"
-#include "styling/miamstyleditemdelegate.h"
 
 #include <QtDebug>
 
@@ -20,6 +21,7 @@ FileSystemTreeView::FileSystemTreeView(QWidget *parent)
 	_fileSystemModel->setFilter(QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot);
 	_fileSystemModel->setNameFilters(FileHelper::suffixes(FileHelper::All, true));
 	this->setModel(_fileSystemModel);
+	this->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 
 	// Hide columns "size" and "date modified" columns, useless for almost everyone
 	this->setColumnHidden(1, true);

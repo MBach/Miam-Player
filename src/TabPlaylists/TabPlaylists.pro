@@ -32,7 +32,8 @@ HEADERS += dialogs/closeplaylistpopup.h \
     miamtabPlaylists_global.hpp \
     abstractviewplaylists.h
 
-FORMS += closeplaylistpopup.ui
+FORMS += closeplaylistpopup.ui \
+    playlistdialog.ui
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore

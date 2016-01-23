@@ -358,20 +358,6 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks)
 	}
 }
 
-void TabPlaylist::moveTracksDown()
-{
-	if (currentPlayList()) {
-		currentPlayList()->moveTracksDown();
-	}
-}
-
-void TabPlaylist::moveTracksUp()
-{
-	if (currentPlayList()) {
-		currentPlayList()->moveTracksUp();
-	}
-}
-
 void TabPlaylist::savePlaylist(Playlist *p, bool overwrite)
 {
 	uint playlistId = _playlistManager->savePlaylist(p, overwrite, false);

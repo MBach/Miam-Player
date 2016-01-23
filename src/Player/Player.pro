@@ -78,7 +78,6 @@ FORMS += customizeoptionsdialog.ui \
     dragdroppopup.ui \
     equalizerdialog.ui \
     mainwindow.ui \
-    playlistdialog.ui \
     quickstart.ui \
     searchdialog.ui \
     tagconverter.ui \
