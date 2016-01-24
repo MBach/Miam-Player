@@ -14,6 +14,7 @@
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
 #include "pluginmanager.h"
+#include "views/tageditor/tageditor.h"
 
 #include "ui_mainwindow.h"
 
@@ -31,6 +32,7 @@ private:
 	PluginManager *_pluginManager;
 
 	AbstractView *_currentView;
+	TagEditor *_tagEditor;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -81,11 +83,9 @@ private slots:
 
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
 
-	//void showTabPlaylists();
-
-	//void showTagEditor();
-
 	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
+
+	void showTagEditor();
 
 	void toggleMenuBar(bool checked);
 };

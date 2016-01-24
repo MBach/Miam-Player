@@ -45,8 +45,6 @@ bool PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 
 bool PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 {
-	qDebug() << Q_FUNC_INFO << rowIndex;
-
 	int c = this->rowCount();
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);

@@ -95,7 +95,7 @@ signals:
 
 	void aboutToSavePlaylist(Playlist *p, int index, bool overwrite = false);
 
-	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
+	void aboutToSendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
 
 	void selectionChanged(bool isEmpty);
 

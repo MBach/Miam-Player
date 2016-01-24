@@ -31,6 +31,8 @@ public:
 
 	inline virtual bool hasPlaylistFeature() const override { return false; }
 
+	inline virtual bool hasOwnWindow() const override { return false; }
+
 protected:
 	virtual void changeEvent(QEvent *event) override;
 

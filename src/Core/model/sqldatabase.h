@@ -13,7 +13,7 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QThread>
-#include <QWeakPointer>
+#include <QUrl>
 
 /// Forward declarations
 class Cover;
@@ -119,7 +119,7 @@ signals:
 	void albumsExtracted(const QList<AlbumDAO> &);
 	void aboutToUpdateNode(GenericDAO *node);
 
-	//void aboutToUpdateView(const QList<FileHelper*> &olds, const QList<FileHelper*> &news);
+	void aboutToUpdateView(const QList<QUrl> &oldTracks, const QList<QUrl> &newTracks);
 	void aboutToCleanView();
 };
 

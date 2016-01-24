@@ -25,9 +25,15 @@ public:
 
 	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
 
+	inline virtual bool hasFileExplorerFeature() const override { return true; }
+
 	inline virtual bool hasPlaylistFeature() const override { return true; }
 
+	inline virtual bool hasOwnWindow() const override { return false; }
+
 	virtual void openFolder(const QString &dir) const override;
+
+	virtual void saveCurrentPlaylists() override;
 
 	virtual int selectedTracksInCurrentPlaylist() const override;
 
@@ -36,6 +42,8 @@ protected:
 
 public slots:
 	virtual void addPlaylist() override;
+
+	virtual void initFileExplorer(const QDir &dir) override;
 
 	virtual void moveTracksDown() override;
 

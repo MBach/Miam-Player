@@ -49,22 +49,19 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 
 	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
 
+	/// XXX ?
 	bool isEmpty = settingsPrivate->musicLocations().isEmpty();
 	if (isEmpty) {
 		widgetSearchBar->hide();
 		changeHierarchyButton->hide();
 		libraryHeader->hide();
 		library->hide();
-		//QuickStart *quickStart = new QuickStart(this);
-		//quickStart->searchMultimediaFiles();
 	}
 
 	leftTabs->setCurrentIndex(settingsPrivate->value("leftTabsIndex").toInt());
 
 	// Core
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &ViewPlaylists::mediaPlayerStateHasChanged);
-
-
 
 	// Main Splitter
 	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
@@ -115,24 +112,14 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 
 	for (TreeView *tab : this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::sendToTagEditor, this, [=](const QModelIndexList , const QList<QUrl> &tracks) {
-			/// FIXME
-			//this->showTagEditor();
-			//tagEditor->addItemsToEditor(tracks);
-		});
+		connect(tab, &TreeView::aboutToSendToTagEditor, this, &ViewPlaylists::aboutToSendToTagEditor);
 	}
 
 	// Send one folder to the music locations
 	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, settingsPrivate, &SettingsPrivate::addMusicLocations);
 
 	// Send music to the tag editor
-	/// FIXME
-	//connect(tagEditor, &TagEditor::aboutToCloseTagEditor, this, &MainWindow::showTabPlaylists);
-	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, [=](const QList<QUrl> &tracks) {
-		/// FIXME
-		//this->showTagEditor();
-		//tagEditor->addItemsToEditor(tracks);
-	});
+	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, this, &ViewPlaylists::aboutToSendToTagEditor);
 
 	// Sliders
 	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
@@ -215,9 +202,37 @@ void ViewPlaylists::openFolder(const QString &dir) const
 	}
 }
 
+void ViewPlaylists::saveCurrentPlaylists()
+{
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	QList<uint> list = settingsPrivate->lastPlaylistSession();
+	list.clear();
+	for (int i = 0; i < tabPlaylists->count(); i++) {
+		Playlist *p = tabPlaylists->playlist(i);
+		bool isOverwritting = p->id() != 0;
+		uint id = tabPlaylists->playlistManager()->savePlaylist(p, isOverwritting, true);
+		if (id != 0) {
+			list.append(id);
+		}
+	}
+
+	int idx = tabPlaylists->currentIndex();
+	Playlist *p = tabPlaylists->playlist(idx);
+	int m = p->mediaPlaylist()->playbackMode();
+
+	settingsPrivate->setLastPlaylistSession(list);
+	settingsPrivate->setValue("lastActiveTab", idx);
+	settingsPrivate->setValue("lastActivePlaylistMode", m);
+}
+
 void ViewPlaylists::addPlaylist()
 {
 	tabPlaylists->addPlaylist();
+}
+
+void ViewPlaylists::initFileExplorer(const QDir &dir)
+{
+	addressBar->init(dir);
 }
 
 void ViewPlaylists::moveTracksDown()

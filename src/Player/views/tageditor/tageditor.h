@@ -4,6 +4,7 @@
 #include <model/selectedtracksmodel.h>
 #include <model/sqldatabase.h>
 #include <cover.h>
+#include "abstractview.h"
 #include "tagconverter.h"
 
 #include "ui_tageditor.h"
@@ -19,7 +20,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TagEditor : public QWidget, public Ui::TagEditor, public SelectedTracksModel
+class TagEditor : public AbstractView, public Ui::TagEditor, public SelectedTracksModel
 {
 	Q_OBJECT
 
@@ -41,11 +42,17 @@ public:
 
 	void addDirectory(const QDir &dir);
 
+	inline virtual bool hasPlaylistFeature() const override { return false; }
+
+	inline virtual bool hasOwnWindow() const override { return true; }
+
 	virtual QList<QUrl> selectedTracks() override;
 
 	virtual void updateSelectedTracks() override;
 
 protected:
+	virtual void changeEvent(QEvent *event) override;
+
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
 	virtual void dragMoveEvent(QDragMoveEvent *event) override;
@@ -60,10 +67,10 @@ private:
 
 	void clearCovers(QMap<int, Cover *> &coversToRemove);
 
-public slots:
 	/** Splits tracks into columns to be able to edit metadatas. */
-	void addItemsToEditor(const QStringList &tracks);
+	void addTracks(const QStringList &tracks);
 
+public slots:
 	/** Wrapper for addItemsToEditor. */
 	void addItemsToEditor(const QList<QUrl> &tracks);
 
@@ -77,7 +84,7 @@ private slots:
 	void applyCoverToAll(bool isForAll, Cover *cover);
 
 	/** Closes this Widget and tells its parent to switch views. */
-	void close();
+	//void close();
 
 	/** Saves all fields in the media. */
 	void commitChanges();

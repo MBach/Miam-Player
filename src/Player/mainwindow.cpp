@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 	, _mediaPlayer(new MediaPlayer(this))
 	, _pluginManager(new PluginManager(this))
 	, _currentView(nullptr)
+	, _tagEditor(nullptr)
 {
 	setupUi(this);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -42,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
 	auto settings = SettingsPrivate::instance();
 	this->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 
-	menubar->installEventFilter(this);
+	//menubar->installEventFilter(this);
 	menubar->setHidden(settings->value("isMenuHidden", false).toBool());
 }
 
@@ -149,8 +150,7 @@ void MainWindow::setupActions()
 	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
 	actionViewPlaylists->setActionGroup(viewModeGroup);
 	actionViewUniqueLibrary->setActionGroup(viewModeGroup);
-	actionViewTagEditor->setActionGroup(viewModeGroup);
-
+	connect(actionViewTagEditor, &QAction::triggered, this, &MainWindow::showTagEditor);
 
 	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
 	for (QAction *actionPlayBack : findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
@@ -249,9 +249,6 @@ void MainWindow::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
 		this->retranslateUi(this);
-		/// FIXME
-		//tagEditor->retranslateUi(tagEditor);
-		//tagEditor->tagConverter->retranslateUi(tagEditor->tagConverter);
 
 		// (need to be tested with Arabic language)
 		if (tr("LTR") == "RTL") {
@@ -265,30 +262,11 @@ void MainWindow::changeEvent(QEvent *event)
 void MainWindow::closeEvent(QCloseEvent *)
 {
 	auto settingsPrivate = SettingsPrivate::instance();
-	if (settingsPrivate->playbackKeepPlaylists()) {
-		QList<uint> list = settingsPrivate->lastPlaylistSession();
-		list.clear();
-		/// FIXME
-		/*for (int i = 0; i < tabPlaylists->count(); i++) {
-			Playlist *p = tabPlaylists->playlist(i);
-			bool isOverwritting = p->id() != 0;
-			uint id = tabPlaylists->playlistManager()->savePlaylist(p, isOverwritting, true);
-			if (id != 0) {
-				list.append(id);
-			}
-		}*/
-		settingsPrivate->setLastPlaylistSession(list);
-		/// FIXME
-		/*int idx = tabPlaylists->currentIndex();
-		Playlist *p = tabPlaylists->playlist(idx);
-		settingsPrivate->setValue("lastActiveTab", idx);
-		qDebug() << p->mediaPlaylist()->playbackMode();
-		int m = p->mediaPlaylist()->playbackMode();
-		settingsPrivate->setValue("lastActivePlaylistMode", m);*/
+	if (_currentView && _currentView->hasPlaylistFeature() && settingsPrivate->playbackKeepPlaylists()) {
+		if (AbstractViewPlaylists *v = static_cast<AbstractViewPlaylists*>(_currentView)) {
+			v->saveCurrentPlaylists();
+		}
 	}
-	//auto settings = Settings::instance();
-	//qDebug() << Q_FUNC_INFO << settings->lastActiveView();
-	//settings->autoSaveGeometryForLastView();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -346,8 +324,10 @@ bool MainWindow::event(QEvent *e)
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-	if (watched == menubar) {
+	/*if (watched == menubar) {
 		//qDebug() << Q_FUNC_INFO << event->type();
+	} else*/ if (watched == _tagEditor && QEvent::Close) {
+		actionViewTagEditor->setChecked(false);
 	}
 	return QMainWindow::eventFilter(watched, event);
 }
@@ -369,8 +349,9 @@ void MainWindow::createCustomizeOptionsDialog()
 {
 	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
 	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-	/// FIXME
-	//connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, addressBar, &AddressBar::init);
+	if (_currentView && _currentView->hasFileExplorerFeature()) {
+		connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, _currentView, &AbstractView::initFileExplorer);
+	}
 	dialog->show();
 	dialog->raise();
 	dialog->activateWindow();
@@ -418,9 +399,8 @@ void MainWindow::processArgs(const QStringList &args)
 			parser.showHelp();
 		}
 		if (isSendToTagEditor) {
-			/// FIXME
-			//tagEditor->addDirectory(fileInfo.absoluteDir());
-			actionViewTagEditor->trigger();
+			this->showTagEditor();
+			_tagEditor->addDirectory(fileInfo.absoluteDir());
 		} else if (isAddToLibrary) {
 			SettingsPrivate::instance()->addMusicLocations(QList<QDir>() << QDir(fileInfo.absoluteFilePath()));
 		} else {
@@ -435,9 +415,12 @@ void MainWindow::processArgs(const QStringList &args)
 		}
 	} else if (!positionalArgs.isEmpty()) {
 		if (isSendToTagEditor) {
-			/// FIXME
-			//tagEditor->addItemsToEditor(positionalArgs);
-			actionViewTagEditor->trigger();
+			this->showTagEditor();
+			QList<QUrl> tracks;
+			for (QString p : positionalArgs) {
+				tracks << QUrl::fromLocalFile(p);
+			}
+			_tagEditor->addItemsToEditor(tracks);
 		} else {
 			if (_currentView) {
 				if (AbstractViewPlaylists *v = static_cast<AbstractViewPlaylists*>(_currentView)) {
@@ -475,17 +458,32 @@ void MainWindow::processArgs(const QStringList &args)
 
 void MainWindow::activateView(QAction *menuAction)
 {
-	// First, clean the view (can be a QuickStart instance)
-	if (this->centralWidget()) {
-		QWidget *w = this->takeCentralWidget();
-		w->deleteLater();
-	}
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
-	if (!_currentView) {
-		return;
+
+	if (_currentView) {
+		auto db = SqlDatabase::instance();
+		//connect(db, &SqlDatabase::aboutToUpdateView, _currentView, &AbstractView::updateModel);
+	}
+
+	if (_currentView && _currentView->hasOwnWindow()) {
+
+	} else {
+		if (!_currentView) {
+			return;
+		}
+		// First, clean the view (can be a QuickStart instance)
+		if (this->centralWidget()) {
+			QWidget *w = this->takeCentralWidget();
+			w->deleteLater();
+		}
+
+		// Replace the main widget
+		this->restoreGeometry(settingsPrivate->lastActiveViewGeometry(menuAction->objectName()));
+		this->setCentralWidget(_currentView);
 	}
 
 	// Basically, a music player provides a playlist feature or it does not.
@@ -500,6 +498,11 @@ void MainWindow::activateView(QAction *menuAction)
 
 	if (b) {
 		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
+		connect(viewPlaylists, &AbstractViewPlaylists::aboutToSendToTagEditor, this, [=](const QModelIndexList &, const QList<QUrl> &tracks) {
+			actionViewTagEditor->trigger();
+			/// TODO, refresh indexes when tags have changed
+			_tagEditor->addItemsToEditor(tracks);
+		});
 
 		connect(actionOpenFiles, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFiles);
 		connect(actionOpenFolder, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFolderPopup);
@@ -535,29 +538,18 @@ void MainWindow::activateView(QAction *menuAction)
 		disconnect(actionOpenPlaylistManager);
 	}
 
-	// Replace the main widget
-	this->setCentralWidget(_currentView);
-	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	this->restoreGeometry(settingsPrivate->lastActiveViewGeometry(menuAction->objectName()));
-
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderIncrease);
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderDecrease);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		if (_currentView) {
 			QActionGroup *actionGroup = this->findChild<QActionGroup*>();
-			settingsPrivate->setLastActiveViewGeometry(actionGroup->checkedAction()->objectName(), this->saveGeometry());
+			if (!_currentView->hasOwnWindow()) {
+				settingsPrivate->setLastActiveViewGeometry(actionGroup->checkedAction()->objectName(), this->saveGeometry());
+			}
 			settingsPrivate->sync();
 		}
 	});
-
-	/*connect(actionViewTagEditor, &QAction::triggered, this, [=]() {
-		stackedWidget->setCurrentIndex(0);
-		stackedWidgetRight->setVisible(true);
-		stackedWidgetRight->setCurrentIndex(1);
-		actionViewTagEditor->setChecked(true);
-		library->createConnectionsToDB();
-	});*/
 }
 
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -602,19 +594,25 @@ void MainWindow::musicLocationsHaveChanged(const QStringList &oldLocations, cons
 	}
 }
 
-/*void MainWindow::showTabPlaylists()
-{
-	if (!actionViewPlaylists->isChecked()) {
-		actionViewPlaylists->setChecked(true);
-	}
-}
-
 void MainWindow::showTagEditor()
 {
-	if (!actionViewTagEditor->isChecked()) {
-		actionViewTagEditor->setChecked(true);
+	if (actionViewTagEditor->isChecked()) {
+		if (_tagEditor) {
+			/// XXX
+			_tagEditor->deleteLater();
+			_tagEditor = nullptr;
+		}
+		_tagEditor = new TagEditor;
+		_tagEditor->installEventFilter(this);
+		_tagEditor->show();
+		_tagEditor->activateWindow();
+	} else {
+		if (_tagEditor) {
+			_tagEditor->deleteLater();
+			_tagEditor = nullptr;
+		}
 	}
-}*/
+}
 
 void MainWindow::toggleMenuBar(bool checked)
 {

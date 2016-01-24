@@ -28,8 +28,9 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 	<< "Rock & Roll" << "Hard Rock");
 
 TagEditor::TagEditor(QWidget *parent) :
-	QWidget(parent), SelectedTracksModel()
+	AbstractView(parent), SelectedTracksModel()
 {
+	this->setWindowFlags(Qt::Window);
 	setupUi(this);
 	extensibleWidgetArea->setVisible(false);
 
@@ -57,7 +58,7 @@ TagEditor::TagEditor(QWidget *parent) :
 	}
 
 	// Quit this widget when a request was send from this button
-	connect(closeTagEditorButton, &QPushButton::clicked, this, &TagEditor::close);
+	//connect(closeTagEditorButton, &QPushButton::clicked, this, &TagEditor::close);
 
 	connect(saveChangesButton, &QPushButton::clicked, this, &TagEditor::commitChanges);
 	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
@@ -85,7 +86,7 @@ void TagEditor::addDirectory(const QDir &dir)
 			tracks << fileInfo.absoluteFilePath();
 		}
 	}
-	this->addItemsToEditor(tracks);
+	this->addTracks(tracks);
 }
 
 QList<QUrl> TagEditor::selectedTracks()
@@ -101,6 +102,17 @@ void TagEditor::updateSelectedTracks()
 {
 	qDebug() << Q_FUNC_INFO << "Model has been updated, redraw selected tracks";
 	SqlDatabase::instance()->load();
+}
+
+/** Redefined to be able to retransltate User Interface at runtime. */
+void TagEditor::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange) {
+		this->retranslateUi(this);
+		tagConverter->retranslateUi(tagConverter);
+	} else {
+		QWidget::changeEvent(event);
+	}
 }
 
 void TagEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -188,7 +200,7 @@ void TagEditor::replaceCover(Cover *newCover)
 }
 
 /** Splits tracks into columns to be able to edit metadatas. */
-void TagEditor::addItemsToEditor(const QStringList &tracks)
+void TagEditor::addTracks(const QStringList &tracks)
 {
 	this->tagEditorWidget->setFocus();
 
@@ -228,7 +240,7 @@ void TagEditor::addItemsToEditor(const QList<QUrl> &tracks)
 			localFiles.append(url.toLocalFile());
 		}
 	}
-	this->addItemsToEditor(localFiles);
+	this->addTracks(localFiles);
 }
 
 /** Wrapper for addItemsToEditor. */
@@ -238,7 +250,7 @@ void TagEditor::addItemsToEditor(const QList<TrackDAO> &tracks)
 	for (TrackDAO track : tracks) {
 		localFiles.append(track.uri());
 	}
-	this->addItemsToEditor(localFiles);
+	this->addTracks(localFiles);
 }
 
 /** Clears all rows and comboboxes. */
@@ -285,14 +297,14 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 }
 
 /** Closes this Widget and tells its parent to switch views. */
-void TagEditor::close()
+/*void TagEditor::close()
 {
 	emit aboutToCloseTagEditor();
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 	this->clear();
 	extensibleWidgetArea->setVisible(false);
-}
+}*/
 
 /** Saves all fields in the media. */
 void TagEditor::commitChanges()

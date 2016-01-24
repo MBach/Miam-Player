@@ -3,6 +3,7 @@
 
 #include <abstractview.h>
 #include <mediaplayer.h>
+#include <QModelIndex>
 
 #include "miamtabplaylists_global.hpp"
 
@@ -26,6 +27,8 @@ public:
 	/** Open a new Dialog where one can add a folder to current playlist. */
 	virtual void openFolder(const QString &dir) const = 0;
 
+	virtual void saveCurrentPlaylists() = 0;
+
 	virtual int selectedTracksInCurrentPlaylist() const = 0;
 
 public slots:
@@ -44,6 +47,9 @@ public slots:
 	virtual void removeCurrentPlaylist() = 0;
 
 	virtual void removeSelectedTracks() = 0;
+
+signals:
+	void aboutToSendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
 };
 
 #endif // ABSTRACTVIEWPLAYLISTS_H

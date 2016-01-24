@@ -532,7 +532,8 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 	qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
 	qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
 
-	QList<FileHelper*> olds;
+	//QList<FileHelper*> olds;
+	QList<QUrl> olds;
 	QList<ArtistDAO*> artists;
 	QList<AlbumDAO*> albums;
 
@@ -662,7 +663,7 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 				qDebug() << Q_FUNC_INFO << "about to extract track" << trackDAO->artist() << trackDAO->artistAlbum() << trackDAO->album() << trackDAO->title();
 				emit nodeExtracted(trackDAO);
 			}
-			olds.append(fh);
+			olds.append(QUrl::fromLocalFile(oldPath));
 		} else {
 			QString newPath = newPaths.at(i);
 			QSqlQuery hasTrack("SELECT COUNT(*) FROM tracks WHERE uri = ?", *this);
@@ -680,16 +681,11 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 	if (this->cleanNodesWithoutTracks()) {
 		// Finally, tell views they need to update themselves
-		emit aboutToCleanView();
+		/// XXX
+		QList<QUrl> news;
+		emit aboutToUpdateView(olds, news);
 	}
 	commit();
-
-	while (!olds.isEmpty()) {
-		FileHelper *fh = olds.takeFirst();
-		if (fh) {
-			delete fh;
-		}
-	}
 }
 
 /** When one has manually updated tracks with TagEditor, some nodes might in unstable state. */

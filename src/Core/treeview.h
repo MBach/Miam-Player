@@ -46,7 +46,7 @@ signals:
 	void aboutToInsertToPlaylist(int rowIndex, const QList<QUrl> &tracks);
 
 	/** Adds tracks to the tag editor. */
-	void sendToTagEditor(const QModelIndexList indexes, const QList<QUrl> &tracks);
+	void aboutToSendToTagEditor(const QModelIndexList indexes, const QList<QUrl> &tracks);
 };
 
 #endif // TREEVIEW_H

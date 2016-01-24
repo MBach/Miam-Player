@@ -87,12 +87,14 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(removeFromCurrentPlaylist, &QAction::triggered, this, &Playlist::removeSelectedTracks);
 	connect(actionEditTagsInEditor, &QAction::triggered, this, [=]() {
+		QModelIndexList indexes;
 		QList<QUrl> selectedTracks;
 		for (QModelIndex index : selectionModel()->selectedRows()) {
 			QMediaContent mc = _playlistModel->mediaPlaylist()->media(index.row());
+			indexes << index;
 			selectedTracks.append(mc.canonicalUrl());
 		}
-		emit aboutToSendToTagEditor(selectedTracks);
+		emit aboutToSendToTagEditor(indexes, selectedTracks);
 	});
 	/// TODO
 	//connect(actionInlineTag, &QAction::triggered, this, &Playlist::editTagInline);
