@@ -68,7 +68,8 @@ protected:
 
 	virtual bool event(QEvent *event) override;
 
-	virtual void resizeEvent(QResizeEvent *e) override;
+private:
+	void initQuickStart();
 
 public slots:
 	void createCustomizeOptionsDialog();
@@ -83,6 +84,8 @@ private slots:
 	//void showTabPlaylists();
 
 	//void showTagEditor();
+
+	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
 
 	void toggleMenuBar(bool checked);
 };

@@ -22,8 +22,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	stopButton->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
 
-	uniqueTable->createConnectionsToDB();
-	uniqueTable->setFocus();
 	_mediaPlayer->setPlaylist(nullptr);
 
 	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
@@ -110,6 +108,9 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	QApplication::installTranslator(&translator);
 
 	std::srand(std::time(nullptr));
+
+	uniqueTable->createConnectionsToDB();
+	uniqueTable->setFocus();
 }
 
 void UniqueLibrary::changeEvent(QEvent *event)

@@ -169,6 +169,15 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 			}
 		}
 	});
+
+	/*connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
+		qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
+		bool libraryIsEmpty = newLocations.isEmpty();
+		library->setVisible(!libraryIsEmpty);
+		libraryHeader->setVisible(!libraryIsEmpty);
+		changeHierarchyButton->setVisible(!libraryIsEmpty);
+		widgetSearchBar->setVisible(!libraryIsEmpty);
+	});*/
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)

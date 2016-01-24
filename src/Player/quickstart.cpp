@@ -1,28 +1,30 @@
 #include "quickstart.h"
 
-#include "columnutils.h"
-#include "filehelper.h"
-#include "nofocusitemdelegate.h"
+#include <model/sqldatabase.h>
+#include <columnutils.h>
+#include <filehelper.h>
+#include <scrollbar.h>
+#include <settingsprivate.h>
 
 #include <QDir>
 #include <QFileIconProvider>
 #include <QStandardPaths>
 #include <QThread>
 
-#include <QtDebug>
+#include "nofocusitemdelegate.h"
 
-#include "mainwindow.h"
-#include <settingsprivate.h>
+#include <QtDebug>
 
 const QList<int> QuickStart::ratios = QList<int>() << 0 << 3 << 2;
 
-QuickStart::QuickStart(MainWindow *mainWindow)
-	: QWidget(mainWindow)
+QuickStart::QuickStart(QWidget *parent)
+	: QWidget(parent)
 	, _totalMusicFiles(0)
 	, _worker(nullptr)
 	, _qsse(nullptr)
 {
 	setupUi(this);
+	quickStartTableWidget->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 
 	QStringList musicLocations = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
 	if (musicLocations.isEmpty()) {
@@ -51,13 +53,16 @@ QuickStart::QuickStart(MainWindow *mainWindow)
 	quickStartTableWidget->setItemDelegate(new NoFocusItemDelegate(this));
 
 	connect(quickStartTableWidget, &QTableWidget::itemClicked, this, &QuickStart::checkRow);
-	connect(commandLinkButtonLibrary, &QAbstractButton::clicked, mainWindow, &MainWindow::createCustomizeOptionsDialog);
+
+	auto settingsPrivate = SettingsPrivate::instance();
+	auto db = SqlDatabase::instance();
 
 	// Set only one location in the Library: the default music folder
 	connect(defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
 		musicLocation = QDir::toNativeSeparators(musicLocation);
-		this->applyButtonClicked(mainWindow, QStringList(musicLocation));
+		settingsPrivate->setMusicLocations({ musicLocation });
+		db->rebuild();
 	});
 
 	// Select only folders that are checked by one
@@ -70,11 +75,10 @@ QuickStart::QuickStart(MainWindow *mainWindow)
 				newLocations.append(musicLocation);
 			}
 		}
-		this->applyButtonClicked(mainWindow, newLocations);
+		settingsPrivate->setMusicLocations(newLocations);
+		db->rebuild();
 	});
 
-	/// FIXME
-	//mainWindow->tabLibrary->layout()->addWidget(this);
 	this->installEventFilter(this);
 }
 
@@ -109,21 +113,6 @@ void QuickStart::searchMultimediaFiles()
 		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
 		worker->start();
 	}
-}
-
-void QuickStart::applyButtonClicked(MainWindow *mainWindow, const QStringList &newLocations)
-{
-	qDebug() << Q_FUNC_INFO;
-	SettingsPrivate::instance()->setMusicLocations(newLocations);
-	this->hide();
-	/// FIXME
-	//mainWindow->library->show();
-	//mainWindow->libraryHeader->show();
-	//mainWindow->changeHierarchyButton->show();
-	//mainWindow->widgetSearchBar->show();
-	//mainWindow->actionScanLibrary->setEnabled(true);
-	SqlDatabase::instance()->rebuild();
-	this->deleteLater();
 }
 
 void QuickStart::paintEvent(QPaintEvent *)

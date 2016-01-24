@@ -190,10 +190,14 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 		if (/*dirtyHackMnemonic == false &&*/ !styleHint(SH_UnderlineShortcut, somi, widget)) {
 			alignment |= Qt::TextHideMnemonic;
 		}
-		if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
-			painter->setPen(palette.highlightedText().color());
+		if (somi->state.testFlag(QStyle::State_Enabled)) {
+			if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
+				painter->setPen(palette.highlightedText().color());
+			} else {
+				painter->setPen(palette.text().color());
+			}
 		} else {
-			painter->setPen(palette.text().color());
+			painter->setPen(palette.mid().color());
 		}
 		painter->drawText(option->rect, alignment, somi->text);
 		break;

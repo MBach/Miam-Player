@@ -48,12 +48,20 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::activateLastView()
 {
-	// Find the last active view and connect database to it
-	QString actionViewName = SettingsPrivate::instance()->value("lastActiveView", "actionViewPlaylists").toString();
-	for (QAction *actionView : menuView->actions()) {
-		if (actionView->objectName() == actionViewName) {
-			actionView->trigger();
-			break;
+	qDebug() << Q_FUNC_INFO;
+
+	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
+	actionScanLibrary->setDisabled(isEmpty);
+	if (isEmpty) {
+		initQuickStart();
+	} else {
+		// Find the last active view and connect database to it
+		QString actionViewName = SettingsPrivate::instance()->value("lastActiveView", "actionViewPlaylists").toString();
+		for (QAction *actionView : menuView->actions()) {
+			if (actionView->objectName() == actionViewName) {
+				actionView->trigger();
+				break;
+			}
 		}
 	}
 }
@@ -107,7 +115,6 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 void MainWindow::init()
 {
-	// Load playlists at startup if any, otherwise just add an empty one
 	this->setupActions();
 
 	// Init shortcuts
@@ -116,13 +123,6 @@ void MainWindow::init()
 	while (it.hasNext()) {
 		it.next();
 		this->bindShortcut(it.key(), it.value().value<QKeySequence>());
-	}
-
-	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
-	actionScanLibrary->setDisabled(isEmpty);
-	if (isEmpty) {
-		QuickStart *quickStart = new QuickStart(this);
-		quickStart->searchMultimediaFiles();
 	}
 }
 
@@ -144,8 +144,6 @@ void MainWindow::loadPlugins()
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
-	Settings *settings = Settings::instance();
-
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
 	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
@@ -192,27 +190,7 @@ void MainWindow::setupActions()
 
 	// Load music
 	auto settingsPrivate = SettingsPrivate::instance();
-	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
-		qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
-		bool libraryIsEmpty = newLocations.isEmpty();
-		/// FIXME
-		//library->setVisible(!libraryIsEmpty);
-		//libraryHeader->setVisible(!libraryIsEmpty);
-		//changeHierarchyButton->setVisible(!libraryIsEmpty);
-		actionScanLibrary->setDisabled(libraryIsEmpty);
-		//widgetSearchBar->setVisible(!libraryIsEmpty);
-
-		auto db = SqlDatabase::instance();
-		if (libraryIsEmpty) {
-			/// FIXME
-			//leftTabs->setCurrentIndex(0);
-			db->rebuild(oldLocations, QStringList());
-			QuickStart *quickStart = new QuickStart(this);
-			quickStart->searchMultimediaFiles();
-		} else {
-			db->rebuild(oldLocations, newLocations);
-		}
-	});
+	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, &MainWindow::musicLocationsHaveChanged);
 
 	// Media buttons and their shortcuts
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
@@ -374,10 +352,17 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 	return QMainWindow::eventFilter(watched, event);
 }
 
-void MainWindow::resizeEvent(QResizeEvent *e)
+void MainWindow::initQuickStart()
 {
-	//qDebug() << Q_FUNC_INFO << e->oldSize() << e->size();
-	QMainWindow::resizeEvent(e);
+	QuickStart *quickStart = new QuickStart(this);
+	quickStart->searchMultimediaFiles();
+	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
+	this->setCentralWidget(quickStart);
+	actionOpenFiles->setDisabled(true);
+	actionOpenFolder->setDisabled(true);
+	menuView->setDisabled(true);
+	menuPlayback->setDisabled(true);
+	menuPlaylist->setDisabled(true);
 }
 
 void MainWindow::createCustomizeOptionsDialog()
@@ -490,17 +475,25 @@ void MainWindow::processArgs(const QStringList &args)
 
 void MainWindow::activateView(QAction *menuAction)
 {
+	// First, clean the view (can be a QuickStart instance)
 	if (this->centralWidget()) {
 		QWidget *w = this->takeCentralWidget();
 		w->deleteLater();
 	}
+
+	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
 	if (!_currentView) {
 		return;
 	}
 
+	// Basically, a music player provides a playlist feature or it does not.
+	// It implies a clean and separate way to display things, I suppose.
 	bool b = _currentView->hasPlaylistFeature();
+	menuView->setEnabled(true);
+	menuPlayback->setEnabled(true);
+	menuPlaylist->setEnabled(true);
 	menuPlaylist->menuAction()->setVisible(b);
 	actionOpenFiles->setEnabled(b);
 	actionOpenFolder->setEnabled(b);
@@ -510,7 +503,6 @@ void MainWindow::activateView(QAction *menuAction)
 
 		connect(actionOpenFiles, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFiles);
 		connect(actionOpenFolder, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFolderPopup);
-
 		connect(actionAddPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::addPlaylist);
 		connect(actionDeleteCurrentPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::removeCurrentPlaylist);
 		connect(menuPlaylist, &QMenu::aboutToShow, this, [=]() {
@@ -542,6 +534,8 @@ void MainWindow::activateView(QAction *menuAction)
 		disconnect(actionMoveTracksDown);
 		disconnect(actionOpenPlaylistManager);
 	}
+
+	// Replace the main widget
 	this->setCentralWidget(_currentView);
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	this->restoreGeometry(settingsPrivate->lastActiveViewGeometry(menuAction->objectName()));
@@ -589,6 +583,23 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}*/
+}
+
+void MainWindow::musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations)
+{
+	qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
+	bool libraryIsEmpty = newLocations.isEmpty();
+	actionScanLibrary->setDisabled(libraryIsEmpty);
+
+	auto db = SqlDatabase::instance();
+	if (libraryIsEmpty) {
+		db->rebuild(oldLocations, QStringList());
+		initQuickStart();
+
+	} else {
+		db->rebuild(oldLocations, newLocations);
+		this->activateLastView();
+	}
 }
 
 /*void MainWindow::showTabPlaylists()
