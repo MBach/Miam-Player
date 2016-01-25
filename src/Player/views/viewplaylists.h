@@ -2,7 +2,6 @@
 #define VIEWPLAYLISTS_H
 
 #include <abstractviewplaylists.h>
-#include <playbackmodewidgetfactory.h>
 #include "dialogs/searchdialog.h"
 
 #include <QMenu>
@@ -17,19 +16,10 @@ private:
 	QList<MediaButton*> mediaButtons;
 	SearchDialog *_searchDialog;
 
-	/** Displays and animates the media button "PlaybackMode". */
-	PlaybackModeWidgetFactory *_playbackModeWidgetFactory;
-
 public:
 	ViewPlaylists(MediaPlayer *mediaPlayer);
 
 	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
-
-	inline virtual bool hasFileExplorerFeature() const override { return true; }
-
-	inline virtual bool hasPlaylistFeature() const override { return true; }
-
-	inline virtual bool hasOwnWindow() const override { return false; }
 
 	virtual void openFolder(const QString &dir) const override;
 
@@ -37,8 +27,7 @@ public:
 
 	virtual int selectedTracksInCurrentPlaylist() const override;
 
-protected:
-	virtual void moveEvent(QMoveEvent *event) override;
+	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 public slots:
 	virtual void addPlaylist() override;
@@ -58,6 +47,8 @@ public slots:
 	virtual void removeCurrentPlaylist() override;
 
 	virtual void removeSelectedTracks() override;
+
+	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
 
 	virtual void volumeSliderDecrease() override;
 

@@ -2,6 +2,8 @@
 #define ABSTRACTVIEW_H
 
 #include "miamcore_global.h"
+#include <settingsprivate.h>
+
 #include <QDir>
 #include <QWidget>
 
@@ -11,14 +13,12 @@ class MIAMCORE_LIBRARY AbstractView : public QWidget
 public:
 	AbstractView(QWidget *parent = nullptr) : QWidget(parent) {}
 
-	virtual bool hasFileExplorerFeature() const { return false; }
-
-	virtual bool hasPlaylistFeature() const = 0;
-
-	virtual bool hasOwnWindow() const = 0;
+	virtual bool viewProperty(SettingsPrivate::ViewProperty) const { return false; }
 
 public slots:
 	virtual void initFileExplorer(const QDir &) {}
+
+	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) = 0;
 
 	virtual void volumeSliderIncrease() {}
 

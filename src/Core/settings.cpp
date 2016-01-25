@@ -95,7 +95,7 @@ void Settings::initShortcuts()
 void Settings::setThemeName(const QString &theme)
 {
 	setValue("theme", theme.toLower());
-	emit themeHasChanged();
+	emit themeHasChanged(theme);
 }
 
 void Settings::setVolume(qreal v)

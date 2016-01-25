@@ -12,6 +12,8 @@ MediaButton::MediaButton(QWidget *parent)
 	, _mediaPlayer(nullptr)
 {
 	this->setMaximumWidth(SettingsPrivate::instance()->buttonsSize() + 10);
+	auto settings = Settings::instance();
+	connect(settings, &Settings::themeHasChanged, this, &MediaButton::setIconFromTheme);
 }
 
 void MediaButton::setMediaPlayer(MediaPlayer *mediaPlayer)
@@ -54,7 +56,6 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	if (!icon.isNull()) {
 		QPushButton::setIcon(QIcon(iconFile));
 	}
-	emit mediaButtonChanged();
 }
 
 /** Change the size of icons from the options. */
@@ -62,5 +63,4 @@ void MediaButton::setSize(const int &s)
 {
 	this->setIconSize(QSize(s, s));
 	this->setMaximumWidth(s + 10);
-	emit mediaButtonChanged();
 }

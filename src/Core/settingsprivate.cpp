@@ -593,9 +593,10 @@ void SettingsPrivate::setBigCovers(bool b)
 }
 
 /** Sets a new button size. */
-void SettingsPrivate::setButtonsSize(const int &s)
+void SettingsPrivate::setButtonsSize(int s)
 {
 	setValue("buttonsSize", s);
+	emit viewPropertyChanged(VP_MediaControls, s);
 }
 
 /// Colors

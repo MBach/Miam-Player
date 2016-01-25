@@ -42,13 +42,11 @@ public:
 
 	void addDirectory(const QDir &dir);
 
-	inline virtual bool hasPlaylistFeature() const override { return false; }
-
-	inline virtual bool hasOwnWindow() const override { return true; }
-
 	virtual QList<QUrl> selectedTracks() override;
 
 	virtual void updateSelectedTracks() override;
+
+	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
@@ -79,6 +77,8 @@ public slots:
 
 	/** Clears all rows and comboboxes. */
 	void clear();
+
+	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
 
 private slots:
 	void applyCoverToAll(bool isForAll, Cover *cover);

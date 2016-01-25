@@ -6,8 +6,6 @@ DEFINES += MIAMTABPLAYLISTS_LIBRARY
 
 SOURCES += dialogs/closeplaylistpopup.cpp \
     cornerwidget.cpp \
-    playbackmodewidget.cpp \
-    playbackmodewidgetfactory.cpp \
     playlist.cpp \
     playlistheaderview.cpp \
     playlistmanager.cpp \
@@ -19,8 +17,6 @@ SOURCES += dialogs/closeplaylistpopup.cpp \
 
 HEADERS += dialogs/closeplaylistpopup.h \
     cornerwidget.h \
-    playbackmodewidget.h \
-    playbackmodewidgetfactory.h \
     playlist.h \
     playlistheaderview.h \
     playlistitemdelegate.h \

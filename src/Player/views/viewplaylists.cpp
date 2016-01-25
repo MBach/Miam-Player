@@ -11,7 +11,6 @@
 ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	: AbstractViewPlaylists(mediaPlayer)
 	, _searchDialog(new SearchDialog(this))
-	, _playbackModeWidgetFactory(nullptr)
 {
 	this->setupUi(this);
 	paintableWidget->setFrameBorder(false, false, true, false);
@@ -44,9 +43,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		b->setVisible(settingsPrivate->isMediaButtonVisible(b->objectName()));
 	}
 
-	// Instantiate dialogs
-	_playbackModeWidgetFactory = new PlaybackModeWidgetFactory(this, playbackModeButton, tabPlaylists);
-
 	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
 
 	/// XXX ?
@@ -73,9 +69,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		library->model()->proxy()->findMusic(text);
 	});
 
-	// Playback
-	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
-
 	// Media buttons
 	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
@@ -83,14 +76,10 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
 	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
-	connect(playbackModeButton, &MediaButton::mediaButtonChanged, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::update);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
 	addressBar->init(settingsPrivate->defaultLocationFileExplorer());
-
-	// Playback modes
-	connect(playbackModeButton, &QPushButton::clicked, _playbackModeWidgetFactory, &PlaybackModeWidgetFactory::togglePlaybackModes);
 
 	connect(libraryHeader, &LibraryHeader::aboutToChangeSortOrder, library, &LibraryTreeView::changeSortOrder);
 
@@ -165,6 +154,8 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		changeHierarchyButton->setVisible(!libraryIsEmpty);
 		widgetSearchBar->setVisible(!libraryIsEmpty);
 	});*/
+
+	connect(settingsPrivate, &SettingsPrivate::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
@@ -177,11 +168,14 @@ int ViewPlaylists::selectedTracksInCurrentPlaylist() const
 	return tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
 }
 
-void ViewPlaylists::moveEvent(QMoveEvent *event)
+bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
-	/// FIXME
-	_playbackModeWidgetFactory->move();
-	AbstractView::moveEvent(event);
+	switch (vp) {
+	case SettingsPrivate::VP_MediaControls:
+		return true;
+	default:
+		return AbstractView::viewProperty(vp);
+	}
 }
 
 /** Open a new Dialog where one can add a folder to current playlist. */
@@ -319,6 +313,19 @@ void ViewPlaylists::removeSelectedTracks()
 {
 	if (tabPlaylists->currentPlayList()) {
 		tabPlaylists->currentPlayList()->removeSelectedTracks();
+	}
+}
+
+void ViewPlaylists::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
+{
+	switch (vp) {
+	case SettingsPrivate::VP_MediaControls:
+		for (MediaButton *b : mediaButtons) {
+			b->setSize(value.toInt());
+		}
+		break;
+	default:
+		break;
 	}
 }
 

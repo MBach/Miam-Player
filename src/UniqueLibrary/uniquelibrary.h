@@ -29,9 +29,7 @@ private:
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
-	inline virtual bool hasPlaylistFeature() const override { return false; }
-
-	inline virtual bool hasOwnWindow() const override { return false; }
+	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
@@ -39,6 +37,8 @@ protected:
 	virtual void closeEvent(QCloseEvent *event) override;
 
 public slots:
+	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
+
 	virtual void volumeSliderDecrease() override;
 
 	virtual void volumeSliderIncrease() override;

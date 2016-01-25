@@ -38,6 +38,7 @@ private:
 	Q_ENUMS(InsertPolicy)
 	Q_ENUMS(PlaylistDefaultAction)
 	Q_ENUMS(LibrarySearchMode)
+	Q_ENUMS(ViewProperty)
 
 public:
 	enum DragDropAction { DD_OpenPopup		= 0,
@@ -59,6 +60,12 @@ public:
 
 	enum LibrarySearchMode { LSM_Filter			= 0,
 							 LSM_HighlightOnly	= 1};
+
+	enum ViewProperty { VP_MediaControls		= 0,
+						VP_SearchArea			= 1,
+						VP_OwnWindow			= 2,
+						VP_PlaylistFeature		= 3,
+						VP_FileExplorerFeature	= 4};
 
 	QTranslator playerTranslator, defaultQtTranslator;
 
@@ -215,7 +222,7 @@ public slots:
 	void setBigCovers(bool b);
 
 	/** Sets a new button size. */
-	void setButtonsSize(const int &s);
+	void setButtonsSize(int s);
 
 	/// Colors
 	void setColorsAlternateBG(bool b);
@@ -282,6 +289,8 @@ signals:
 
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
+
+	void viewPropertyChanged(ViewProperty vp, const QVariant &value);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

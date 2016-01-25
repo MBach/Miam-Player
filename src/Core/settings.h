@@ -52,7 +52,7 @@ public slots:
 	void setVolume(qreal v);
 
 signals:
-	void themeHasChanged();
+	void themeHasChanged(const QString &theme);
 };
 
 #endif // SETTINGS_H

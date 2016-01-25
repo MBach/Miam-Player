@@ -33,9 +33,6 @@ public slots:
 
 	/** Change the size of icons from the options. */
 	void setSize(const int &);
-
-signals:
-	void mediaButtonChanged();
 };
 
 #endif // MEDIABUTTON_H

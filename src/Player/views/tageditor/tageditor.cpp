@@ -104,6 +104,11 @@ void TagEditor::updateSelectedTracks()
 	SqlDatabase::instance()->load();
 }
 
+bool TagEditor::viewProperty(SettingsPrivate::ViewProperty vp) const
+{
+	return false;
+}
+
 /** Redefined to be able to retransltate User Interface at runtime. */
 void TagEditor::changeEvent(QEvent *event)
 {
@@ -267,6 +272,11 @@ void TagEditor::clear()
 	}
 	tagEditorWidget->clear();
 	_cacheData.clear();
+}
+
+void TagEditor::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
+{
+
 }
 
 void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)

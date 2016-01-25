@@ -14,8 +14,7 @@
 #include <settingsprivate.h>
 
 CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
-	: QDialog(nullptr)
-	//, _mainWindow(parent)
+	: QDialog(parent)
 	, _targetedColor(nullptr)
 	, _animation(new QPropertyAnimation(this, "windowOpacity"))
 	, _timer(new QTimer(this))
@@ -25,7 +24,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	this->setWindowFlags(Qt::Tool);
-	this->setAttribute(Qt::WA_DeleteOnClose);
+	//this->setAttribute(Qt::WA_DeleteOnClose);
 
 	buttonsListBox->setVisible(false);
 	spinBoxLibrary->setMouseTracking(true);
@@ -157,10 +156,6 @@ void CustomizeThemeDialog::loadTheme()
 void CustomizeThemeDialog::setupActions()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	/// FIXME
-	/*for (MediaButton *b : _mainWindow->mediaButtons) {
-		connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), b, &MediaButton::setSize);
-	}*/
 
 	// Select button theme and size
 	connect(themeComboBox, static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), this, &CustomizeThemeDialog::setThemeNameAndDialogButtons);
@@ -447,9 +442,6 @@ void CustomizeThemeDialog::setThemeNameAndDialogButtons(QString newTheme)
 		}
 	}
 	Settings::instance()->setThemeName(newTheme);
-	/*for (MediaButton *m : _mainWindow->mediaButtons) {
-		m->setIconFromTheme(newTheme);
-	}*/
 }
 
 /** Shows a color dialog and hides this dialog temporarily.

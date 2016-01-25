@@ -113,6 +113,11 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	uniqueTable->setFocus();
 }
 
+bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
+{
+	return false;
+}
+
 void UniqueLibrary::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
@@ -126,6 +131,11 @@ void UniqueLibrary::closeEvent(QCloseEvent *event)
 {
 
 	QWidget::closeEvent(event);
+}
+
+void UniqueLibrary::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
+{
+
 }
 
 void UniqueLibrary::volumeSliderDecrease()

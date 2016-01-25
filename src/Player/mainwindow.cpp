@@ -172,14 +172,25 @@ void MainWindow::setupActions()
 		qApp->quit();
 	});
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
-		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
-		customizeThemeDialog->exec();
+		/*CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
+		connect(customizeThemeDialog->sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=](int v) {
+			if (_currentView && _currentView->viewProperty(AbstractView::AV_MediaControls)) {
+				_currentView->setViewProperty(AbstractView::AV_MediaControls, v);
+			}
+		});
+		customizeThemeDialog->exec();*/
+		CustomizeThemeDialog customizeThemeDialog;
+		customizeThemeDialog.exec();
 	});
 
 	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
 	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
+		if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_SearchArea)) {
+			_currentView->setViewProperty(SettingsPrivate::VP_SearchArea, true);
+		}
+
 		/// FIXME
 		//searchBar->clear();
 		SqlDatabase::instance()->rebuild();
@@ -262,7 +273,7 @@ void MainWindow::changeEvent(QEvent *event)
 void MainWindow::closeEvent(QCloseEvent *)
 {
 	auto settingsPrivate = SettingsPrivate::instance();
-	if (_currentView && _currentView->hasPlaylistFeature() && settingsPrivate->playbackKeepPlaylists()) {
+	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_PlaylistFeature) && settingsPrivate->playbackKeepPlaylists()) {
 		if (AbstractViewPlaylists *v = static_cast<AbstractViewPlaylists*>(_currentView)) {
 			v->saveCurrentPlaylists();
 		}
@@ -349,7 +360,7 @@ void MainWindow::createCustomizeOptionsDialog()
 {
 	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
 	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-	if (_currentView && _currentView->hasFileExplorerFeature()) {
+	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_FileExplorerFeature)) {
 		connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, _currentView, &AbstractView::initFileExplorer);
 	}
 	dialog->show();
@@ -469,7 +480,7 @@ void MainWindow::activateView(QAction *menuAction)
 		//connect(db, &SqlDatabase::aboutToUpdateView, _currentView, &AbstractView::updateModel);
 	}
 
-	if (_currentView && _currentView->hasOwnWindow()) {
+	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 
 	} else {
 		if (!_currentView) {
@@ -488,7 +499,7 @@ void MainWindow::activateView(QAction *menuAction)
 
 	// Basically, a music player provides a playlist feature or it does not.
 	// It implies a clean and separate way to display things, I suppose.
-	bool b = _currentView->hasPlaylistFeature();
+	bool b = _currentView->viewProperty(SettingsPrivate::VP_PlaylistFeature);
 	menuView->setEnabled(true);
 	menuPlayback->setEnabled(true);
 	menuPlaylist->setEnabled(true);
@@ -544,7 +555,7 @@ void MainWindow::activateView(QAction *menuAction)
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		if (_currentView) {
 			QActionGroup *actionGroup = this->findChild<QActionGroup*>();
-			if (!_currentView->hasOwnWindow()) {
+			if (!_currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 				settingsPrivate->setLastActiveViewGeometry(actionGroup->checkedAction()->objectName(), this->saveGeometry());
 			}
 			settingsPrivate->sync();
