@@ -135,7 +135,14 @@ void UniqueLibrary::closeEvent(QCloseEvent *event)
 
 void UniqueLibrary::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
 {
-
+	Q_UNUSED(value)
+	switch (vp) {
+	case SettingsPrivate::VP_SearchArea:
+		searchBar->clear();
+		break;
+	default:
+		break;
+	}
 }
 
 void UniqueLibrary::volumeSliderDecrease()

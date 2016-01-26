@@ -25,7 +25,8 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
-		emit updatePlaybackModeButton();
+		QMediaPlaylist::PlaybackMode m = this->currentPlayList()->mediaPlaylist()->playbackMode();
+		emit updatePlaybackModeButton(m);
 	});
 
 	connect(this, &TabPlaylist::aboutToSavePlaylist, _playlistManager, &PlaylistManager::saveAndRemovePlaylist);
@@ -180,7 +181,7 @@ void TabPlaylist::init(MediaPlayer *mediaPlayer)
 	if (settings->contains("lastActivePlaylistMode")) {
 		QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settings->value("lastActivePlaylistMode").toInt();
 		currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
-		emit updatePlaybackModeButton();
+		emit updatePlaybackModeButton(mode);
 	}
 }
 

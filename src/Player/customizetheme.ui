@@ -176,6 +176,15 @@
             </item>
             <item>
              <property name="text">
+              <string>Flat</string>
+             </property>
+             <property name="icon">
+              <iconset resource="../Core/core.qrc">
+               <normaloff>:/player/flat/play</normaloff>:/player/flat/play</iconset>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Fairytale</string>
              </property>
              <property name="icon">
@@ -2136,8 +2145,8 @@
   <tabstop>overlapTabsSpinBox</tabstop>
  </tabstops>
  <resources>
-  <include location="player.qrc"/>
   <include location="../Core/core.qrc"/>
+  <include location="player.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -2528,7 +2537,7 @@
  <buttongroups>
   <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
-  <buttongroup name="buttonGroupArtistsArticle"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
+  <buttongroup name="buttonGroupArtistsArticle"/>
  </buttongroups>
 </ui>

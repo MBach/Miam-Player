@@ -28,6 +28,8 @@ public:
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 public slots:
+	virtual void addExtFolders(const QList<QDir> &folders) override;
+
 	virtual void addPlaylist() override;
 
 	virtual void initFileExplorer(const QDir &dir) override;

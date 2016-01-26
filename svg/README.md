@@ -34,3 +34,11 @@
 ###File *translate.svg*
 - Copyright: David Vignoni, Nuvola Team
 - Modifications: flat render
+
+###File *seek-forward.svg*
+- Copyright: "WebResponse"
+- Modifications: creating skip-forward button
+
+###File *seek-backward.svg*
+- Copyright: "WebResponse"
+- Modifications: creating skip-backward button

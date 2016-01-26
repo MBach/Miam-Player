@@ -64,19 +64,23 @@ void MainWindow::activateLastView()
 void MainWindow::dispatchDrop(QDropEvent *event)
 {
 	/** Popup shown to one when tracks are dropped from another application to MiamPlayer. */
-	DragDropDialog *dragDropDialog = new DragDropDialog;
+	DragDropDialog dragDropDialog;
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
 
-	// Drag & Drop actions
-	connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, settings, &SettingsPrivate::addMusicLocations);
-	/// FIXME
-	//connect(dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, tabPlaylists, &TabPlaylist::addExtFolders);
+	AbstractViewPlaylists *viewPlaylists = nullptr;
 
-	bool onlyFiles = dragDropDialog->setMimeData(event->mimeData());
+	// Drag & Drop actions
+	connect(&dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, settings, &SettingsPrivate::addMusicLocations);
+	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_PlaylistFeature)) {
+		viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
+		connect(&dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, viewPlaylists, &AbstractViewPlaylists::addExtFolders);
+	}
+
+	bool onlyFiles = dragDropDialog.setMimeData(event->mimeData());
 	if (onlyFiles) {
 		QStringList tracks;
-		for (QString file : dragDropDialog->externalLocations) {
+		for (QString file : dragDropDialog.externalLocations) {
 			tracks << "file://" + file;
 		}
 		tracks.sort(Qt::CaseInsensitive);
@@ -84,25 +88,25 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 		for (QString t : tracks) {
 			urls << QUrl::fromLocalFile(t);
 		}
-		/// FIXME
-		//tabPlaylists->insertItemsToPlaylist(-1, urls);
+		if (viewPlaylists) {
+			viewPlaylists->addToPlaylist(urls);
+		}
 	} else {
 		QList<QDir> dirs;
-		for (QString location : dragDropDialog->externalLocations) {
+		for (QString location : dragDropDialog.externalLocations) {
 			dirs << location;
 		}
 		switch (SettingsPrivate::instance()->dragDropAction()) {
 		case SettingsPrivate::DD_OpenPopup:
-			dragDropDialog->show();
-			dragDropDialog->raise();
-			dragDropDialog->activateWindow();
+			dragDropDialog.exec();
 			break;
 		case SettingsPrivate::DD_AddToLibrary:
 			settings->addMusicLocations(dirs);
 			break;
 		case SettingsPrivate::DD_AddToPlaylist:
-			/// FIXME
-			//tabPlaylists->addExtFolders(dirs);
+			if (viewPlaylists) {
+				viewPlaylists->addExtFolders(dirs);
+			}
 			break;
 		}
 	}
@@ -166,13 +170,6 @@ void MainWindow::setupActions()
 		qApp->quit();
 	});
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
-		/*CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog(this);
-		connect(customizeThemeDialog->sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=](int v) {
-			if (_currentView && _currentView->viewProperty(AbstractView::AV_MediaControls)) {
-				_currentView->setViewProperty(AbstractView::AV_MediaControls, v);
-			}
-		});
-		customizeThemeDialog->exec();*/
 		CustomizeThemeDialog customizeThemeDialog;
 		customizeThemeDialog.exec();
 	});
@@ -602,8 +599,9 @@ void MainWindow::musicLocationsHaveChanged(const QStringList &oldLocations, cons
 void MainWindow::showTagEditor()
 {
 	if (actionViewTagEditor->isChecked()) {
+		/// XXX
+		// Tag editor is opened, closing it
 		if (_tagEditor) {
-			/// XXX
 			_tagEditor->deleteLater();
 			_tagEditor = nullptr;
 		}

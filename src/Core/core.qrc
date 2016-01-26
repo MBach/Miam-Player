@@ -1,4 +1,24 @@
 <RCC>
+    <qresource prefix="/player/fairytale">
+        <file alias="pause">resources/fairytale/pause.png</file>
+        <file alias="play">resources/fairytale/play.png</file>
+        <file alias="seekBackward">resources/fairytale/seek-backward.png</file>
+        <file alias="seekForward">resources/fairytale/seek-forward.png</file>
+		<file alias="skipBackward">resources/fairytale/skip-backward.png</file>
+        <file alias="skipForward">resources/fairytale/skip-forward.png</file>
+        <file alias="stop">resources/fairytale/stop.png</file>
+    </qresource>
+    <qresource prefix="/player/flat">
+        <file alias="pause">resources/flat/pause.png</file>
+        <file alias="play">resources/flat/play.png</file>
+        <file alias="seekBackward">resources/flat/seek-backward.png</file>
+        <file alias="seekForward">resources/flat/seek-forward.png</file>
+		<file alias="skipBackward">resources/flat/skip-backward.png</file>
+        <file alias="skipForward">resources/flat/skip-forward.png</file>
+        <file alias="shuffle">resources/flat/shuffle.png</file>
+        <file alias="stop">resources/flat/stop.png</file>
+        <file alias="itemLoop">resources/flat/item-loop.png</file>
+    </qresource>
     <qresource prefix="/player/gnome">
         <file alias="pause">resources/gnome/pause.png</file>
         <file alias="play">resources/gnome/play.png</file>
@@ -7,8 +27,6 @@
         <file alias="skipBackward">resources/gnome/skip-backward.png</file>
         <file alias="skipForward">resources/gnome/skip-forward.png</file>
         <file alias="stop">resources/gnome/stop.png</file>
-        <file alias="repeat">resources/repeat.png</file>
-        <file alias="shuffle">resources/shuffle.png</file>
     </qresource>
     <qresource prefix="/player/nuvola">
         <file alias="pause">resources/nuvola/pause.png</file>
@@ -18,19 +36,15 @@
         <file alias="skipBackward">resources/nuvola/skip-backward.png</file>
         <file alias="skipForward">resources/nuvola/skip-forward.png</file>
         <file alias="stop">resources/nuvola/stop.png</file>
-        <file alias="repeat">resources/repeat.png</file>
-        <file alias="shuffle">resources/shuffle.png</file>
     </qresource>
-    <qresource prefix="/player/tango">
-        <file alias="pause">resources/tango/pause.png</file>
-        <file alias="play">resources/tango/play.png</file>
-        <file alias="seekBackward">resources/tango/seek-backward.png</file>
-        <file alias="seekForward">resources/tango/seek-forward.png</file>
-        <file alias="skipBackward">resources/tango/skip-backward.png</file>
-        <file alias="skipForward">resources/tango/skip-forward.png</file>
-        <file alias="stop">resources/tango/stop.png</file>
-        <file alias="repeat">resources/repeat.png</file>
-        <file alias="shuffle">resources/shuffle.png</file>
+    <qresource prefix="/player/orangewhitepearls">
+        <file alias="pause">resources/orange-white-pearls/pause.png</file>
+        <file alias="play">resources/orange-white-pearls/play.png</file>
+        <file alias="seekBackward">resources/orange-white-pearls/seek-backward.png</file>
+        <file alias="seekForward">resources/orange-white-pearls/seek-forward.png</file>
+        <file alias="skipBackward">resources/orange-white-pearls/skip-backward.png</file>
+        <file alias="skipForward">resources/orange-white-pearls/skip-forward.png</file>
+        <file alias="stop">resources/orange-white-pearls/stop.png</file>
     </qresource>
     <qresource prefix="/player/oxygen">
         <file alias="pause">resources/oxygen/pause.png</file>
@@ -45,16 +59,19 @@
         <file alias="itemLoop">resources/oxygen/item-loop.png</file>
         <file alias="itemOnce">resources/oxygen/item-once.png</file>
         <file alias="sequential">resources/oxygen/sequential.png</file>
-        <file alias="loading">resources/oxygen/loading.gif</file>
     </qresource>
-    <qresource prefix="/player/orangewhitepearls">
-        <file alias="pause">resources/orange-white-pearls/pause.png</file>
-        <file alias="play">resources/orange-white-pearls/play.png</file>
-        <file alias="seekBackward">resources/orange-white-pearls/seek-backward.png</file>
-        <file alias="seekForward">resources/orange-white-pearls/seek-forward.png</file>
-        <file alias="skipBackward">resources/orange-white-pearls/skip-backward.png</file>
-        <file alias="skipForward">resources/orange-white-pearls/skip-forward.png</file>
-        <file alias="stop">resources/orange-white-pearls/stop.png</file>
+    <qresource prefix="/player/tango">
+        <file alias="pause">resources/tango/pause.png</file>
+        <file alias="play">resources/tango/play.png</file>
+        <file alias="seekBackward">resources/tango/seek-backward.png</file>
+        <file alias="seekForward">resources/tango/seek-forward.png</file>
+        <file alias="skipBackward">resources/tango/skip-backward.png</file>
+        <file alias="skipForward">resources/tango/skip-forward.png</file>
+        <file alias="stop">resources/tango/stop.png</file>
+    </qresource>
+    <qresource prefix="/player/default">
+        <file alias="repeat">resources/repeat.png</file>
+        <file alias="shuffle">resources/shuffle.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file alias="mp_win32">mp.ico</file>

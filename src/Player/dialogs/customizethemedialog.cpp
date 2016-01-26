@@ -199,11 +199,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(radioButtonShowExtendedSearch, &QRadioButton::toggled, settings, &SettingsPrivate::setExtendedSearchVisible);
 
 	// Volume bar
-	connect(radioButtonShowVolume, &QRadioButton::toggled, this, [=](bool b) {
-		settings->setVolumeBarTextAlwaysVisible(b);
-		/// FIXME
-		//_mainWindow->volumeSlider->update();
-	});
+	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &SettingsPrivate::setVolumeBarTextAlwaysVisible);
 	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setVolumeBarHideAfter);
 
 	// Fonts

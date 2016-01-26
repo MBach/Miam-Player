@@ -19,6 +19,8 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	tabPlaylists->init(_mediaPlayer);
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
+	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeButton, &PlaybackModeButton::updateMode);
+
 	Settings *settings = Settings::instance();
 	volumeSlider->setValue(settings->volume() * 100);
 
@@ -173,6 +175,8 @@ bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
 	switch (vp) {
 	case SettingsPrivate::VP_MediaControls:
+	case SettingsPrivate::VP_SearchArea:
+	case SettingsPrivate::VP_PlaylistFeature:
 		return true;
 	default:
 		return AbstractView::viewProperty(vp);
@@ -218,6 +222,34 @@ void ViewPlaylists::saveCurrentPlaylists()
 	settingsPrivate->setLastPlaylistSession(list);
 	settingsPrivate->setValue("lastActiveTab", idx);
 	settingsPrivate->setValue("lastActivePlaylistMode", m);
+}
+
+void ViewPlaylists::addExtFolders(const QList<QDir> &folders)
+{
+	bool isEmpty = tabPlaylists->currentPlayList()->mediaPlaylist()->isEmpty();
+
+	QStringList tracks;
+	for (QDir folder : folders) {
+		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(FileHelper::Standard, true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+		while (it.hasNext()) {
+			it.next();
+			if (it.fileInfo().isFile()) {
+				tracks << it.fileInfo().absoluteFilePath();
+			}
+		}
+	}
+	tracks.sort(Qt::CaseInsensitive);
+	QList<QUrl> urls;
+	for (QString t : tracks) {
+		urls << QUrl::fromLocalFile(t);
+	}
+	tabPlaylists->insertItemsToPlaylist(-1, urls);
+
+	// Automatically plays the first track
+	if (isEmpty) {
+		_mediaPlayer->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
+		_mediaPlayer->play();
+	}
 }
 
 void ViewPlaylists::addPlaylist()
@@ -324,6 +356,12 @@ void ViewPlaylists::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant v
 		for (MediaButton *b : mediaButtons) {
 			b->setSize(value.toInt());
 		}
+		break;
+	case SettingsPrivate::VP_SearchArea:
+		if (_searchDialog) {
+			_searchDialog->clear();
+		}
+		searchBar->clear();
 		break;
 	default:
 		break;

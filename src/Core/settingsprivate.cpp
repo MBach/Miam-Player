@@ -754,4 +754,5 @@ void SettingsPrivate::setVolumeBarHideAfter(int seconds)
 void SettingsPrivate::setVolumeBarTextAlwaysVisible(bool b)
 {
 	setValue("volumeBarTextAlwaysVisible", b);
+	emit viewPropertyChanged(VP_VolumeIndicatorToggled, b);
 }

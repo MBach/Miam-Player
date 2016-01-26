@@ -32,6 +32,8 @@ public:
 	virtual int selectedTracksInCurrentPlaylist() const = 0;
 
 public slots:
+	virtual void addExtFolders(const QList<QDir> &) = 0;
+
 	virtual void addPlaylist() = 0;
 
 	virtual void moveTracksUp() = 0;

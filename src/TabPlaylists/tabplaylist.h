@@ -99,7 +99,7 @@ signals:
 
 	void selectionChanged(bool isEmpty);
 
-	void updatePlaybackModeButton();
+	void updatePlaybackModeButton(QMediaPlaylist::PlaybackMode mode);
 };
 
 #endif // TABPLAYLIST_H

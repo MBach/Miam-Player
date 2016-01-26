@@ -61,11 +61,12 @@ public:
 	enum LibrarySearchMode { LSM_Filter			= 0,
 							 LSM_HighlightOnly	= 1};
 
-	enum ViewProperty { VP_MediaControls		= 0,
-						VP_SearchArea			= 1,
-						VP_OwnWindow			= 2,
-						VP_PlaylistFeature		= 3,
-						VP_FileExplorerFeature	= 4};
+	enum ViewProperty { VP_MediaControls			= 0,
+						VP_SearchArea				= 1,
+						VP_OwnWindow				= 2,
+						VP_PlaylistFeature			= 3,
+						VP_FileExplorerFeature		= 4,
+						VP_VolumeIndicatorToggled	= 5};
 
 	QTranslator playerTranslator, defaultQtTranslator;
 

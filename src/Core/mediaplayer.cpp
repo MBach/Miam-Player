@@ -139,7 +139,7 @@ void MediaPlayer::setState(QMediaPlayer::State state)
 		break;
 	}
 	_state = state;
-	qDebug() << Q_FUNC_INFO << _state;
+	// qDebug() << Q_FUNC_INFO << _state;
 	emit stateChanged(_state);
 }
 
@@ -246,7 +246,7 @@ void MediaPlayer::pause()
 /** Play current track in the playlist. */
 void MediaPlayer::play()
 {
-	qDebug() << Q_FUNC_INFO;
+	// qDebug() << Q_FUNC_INFO;
 	// Check if it's possible to play tracks first
 	if (!_playlist) {
 		return;
@@ -261,7 +261,7 @@ void MediaPlayer::play()
 /** Stop current track in the playlist. */
 void MediaPlayer::stop()
 {
-	qDebug() << Q_FUNC_INFO << "about to stop";
+	// qDebug() << Q_FUNC_INFO << "about to stop";
 	if (_state != QMediaPlayer::StoppedState) {
 		if (_remotePlayer) {
 			_remotePlayer->stop();
@@ -287,15 +287,15 @@ void MediaPlayer::togglePlayback()
 {
 	switch (_state) {
 	case QMediaPlayer::PausedState:
-		qDebug() << Q_FUNC_INFO << "about to resume";
+		// qDebug() << Q_FUNC_INFO << "about to resume";
 		this->resume();
 		break;
 	case QMediaPlayer::StoppedState:
-		qDebug() << Q_FUNC_INFO << "about to play";
+		// qDebug() << Q_FUNC_INFO << "about to play";
 		this->play();
 		break;
 	case QMediaPlayer::PlayingState:
-		qDebug() << Q_FUNC_INFO << "about to pause";
+		// qDebug() << Q_FUNC_INFO << "about to pause";
 		this->pause();
 		break;
 	}

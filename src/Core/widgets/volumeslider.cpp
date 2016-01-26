@@ -41,6 +41,11 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 	});
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
+	connect(settings, &SettingsPrivate::viewPropertyChanged, this, [=](SettingsPrivate::ViewProperty vp, QVariant value) {
+		if (vp == SettingsPrivate::VP_VolumeIndicatorToggled) {
+			this->update();
+		}
+	});
 
 	// Used to hide percentage on the screen (like '75%')
 	connect(this, &QSlider::sliderReleased, [=]() { _timer->start(settings->volumeBarHideAfter() * 1000); });
