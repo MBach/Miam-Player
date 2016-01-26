@@ -43,7 +43,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
        </property>
        <property name="iconSize">
@@ -69,7 +69,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
        </property>
        <property name="iconSize">
@@ -95,7 +95,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
        </property>
        <property name="iconSize">
@@ -121,7 +121,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
        </property>
        <property name="iconSize">
@@ -147,7 +147,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
        </property>
        <property name="iconSize">
@@ -173,7 +173,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
        </property>
        <property name="iconSize">
@@ -199,7 +199,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../MiamPlayer/mp.qrc">
+        <iconset resource="../Player/mp.qrc">
          <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
        </property>
        <property name="iconSize">
@@ -308,26 +308,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MediaButton</class>
-   <extends>QPushButton</extends>
-   <header>mediabutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>SeekBar</class>
-   <extends>QSlider</extends>
-   <header location="global">seekbar.h</header>
-  </customwidget>
-  <customwidget>
-   <class>VolumeSlider</class>
-   <extends>QSlider</extends>
-   <header>volumeslider.h</header>
-  </customwidget>
-  <customwidget>
-   <class>StopButton</class>
-   <extends>QPushButton</extends>
-   <header>stopbutton.h</header>
-  </customwidget>
-  <customwidget>
    <class>SearchBar</class>
    <extends>QLineEdit</extends>
    <header location="global">searchbar.h</header>
@@ -337,9 +317,29 @@
    <extends>QTableView</extends>
    <header>tableview.h</header>
   </customwidget>
+  <customwidget>
+   <class>MediaButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">mediabuttons/mediabutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StopButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">mediabuttons/stopbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SeekBar</class>
+   <extends>QSlider</extends>
+   <header location="global">widgets/seekbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>VolumeSlider</class>
+   <extends>QSlider</extends>
+   <header location="global">widgets/volumeslider.h</header>
+  </customwidget>
  </customwidgets>
  <resources>
-  <include location="../MiamPlayer/mp.qrc"/>
+  <include location="../Player/mp.qrc"/>
  </resources>
  <connections/>
 </ui>

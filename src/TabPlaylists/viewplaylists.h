@@ -4,11 +4,9 @@
 #include <abstractviewplaylists.h>
 #include "dialogs/searchdialog.h"
 
-#include <QMenu>
-
 #include "ui_viewplaylists.h"
 
-class ViewPlaylists : public AbstractViewPlaylists, public Ui::ViewPlaylists
+class MIAMTABPLAYLISTS_LIBRARY ViewPlaylists : public AbstractViewPlaylists, public Ui::ViewPlaylists
 {
 	Q_OBJECT
 private:

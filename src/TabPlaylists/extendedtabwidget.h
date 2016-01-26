@@ -5,14 +5,14 @@
 #include <QTabWidget>
 
 #include "extendedtabbar.h"
-#include "miamlibrary_global.hpp"
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The ExtendedTabWidget class does only one thing: bind shortcuts for tab Library and tab FileSystem.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY ExtendedTabWidget : public QTabWidget
+class MIAMTABPLAYLISTS_LIBRARY ExtendedTabWidget : public QTabWidget
 {
 	Q_OBJECT
 public:

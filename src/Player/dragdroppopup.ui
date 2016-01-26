@@ -57,7 +57,7 @@
         <string>Add to library</string>
        </property>
        <property name="icon">
-        <iconset resource="mp.qrc">
+        <iconset resource="player.qrc">
          <normaloff>:/config/music-library</normaloff>:/config/music-library</iconset>
        </property>
        <property name="iconSize">
@@ -89,7 +89,7 @@
         <string>Add to playlist</string>
        </property>
        <property name="icon">
-        <iconset resource="mp.qrc">
+        <iconset resource="player.qrc">
          <normaloff>:/config/music</normaloff>:/config/music</iconset>
        </property>
        <property name="iconSize">
@@ -151,7 +151,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="mp.qrc"/>
+  <include location="player.qrc"/>
  </resources>
  <connections>
   <connection>

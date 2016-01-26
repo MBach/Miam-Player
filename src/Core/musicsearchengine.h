@@ -37,7 +37,7 @@ signals:
 
 	void scannedFile(const QString &);
 
-	void progressChanged(const int &);
+	void progressChanged(int);
 
 	void searchHasEnded();
 };

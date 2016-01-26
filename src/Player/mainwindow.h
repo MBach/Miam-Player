@@ -7,7 +7,6 @@
 
 #include <model/sqldatabase.h>
 #include <abstractview.h>
-#include <mediabutton.h>
 #include <mediaplayer.h>
 #include <uniquelibrary.h>
 

@@ -55,11 +55,13 @@ void MediaButton::setIconFromTheme(const QString &theme)
 	QIcon icon(iconFile);
 	if (!icon.isNull()) {
 		QPushButton::setIcon(QIcon(iconFile));
+	} else {
+		qDebug() << Q_FUNC_INFO << objectName();
 	}
 }
 
 /** Change the size of icons from the options. */
-void MediaButton::setSize(const int &s)
+void MediaButton::setSize(int s)
 {
 	this->setIconSize(QSize(s, s));
 	this->setMaximumWidth(s + 10);

@@ -12,16 +12,8 @@ SOURCES += debug/logbrowser.cpp \
     dialogs/customizethemetaglineedit.cpp \
     dialogs/dragdropdialog.cpp \
     dialogs/equalizerdalog.cpp \
-    dialogs/playlistdialog.cpp \
     dialogs/reflector.cpp \
-    dialogs/searchdialog.cpp \
     dialogs/starswidget.cpp \
-    filesystem/addressbar.cpp \
-    filesystem/addressbarbutton.cpp \
-    filesystem/addressbardirectorylist.cpp \
-    filesystem/addressbarlineedit.cpp \
-    filesystem/addressbarmenu.cpp \
-    filesystem/filesystemtreeview.cpp \
     styling/miamstyle.cpp \
     views/tageditor/albumcover.cpp \
     views/tageditor/tagconverter.cpp \
@@ -35,8 +27,7 @@ SOURCES += debug/logbrowser.cpp \
     quickstart.cpp \
     tagbutton.cpp \
     taglineedit.cpp \
-    tracksnotfoundmessagebox.cpp \
-    views/viewplaylists.cpp
+    tracksnotfoundmessagebox.cpp
 
 HEADERS += debug/logbrowser.h \
     debug/logbrowserdialog.h \
@@ -46,27 +37,16 @@ HEADERS += debug/logbrowser.h \
     dialogs/customizethemetaglineedit.h \
     dialogs/dragdropdialog.h \
     dialogs/equalizerdalog.h \
-    dialogs/paintablewidget.h \
-    dialogs/playlistdialog.h \
     dialogs/reflector.h \
-    dialogs/searchdialog.h \
     dialogs/starswidget.h \
-    filesystem/addressbar.h \
-    filesystem/addressbarbutton.h \
-    filesystem/addressbardirectorylist.h \
-    filesystem/addressbarlineedit.h \
-    filesystem/addressbarmenu.h \
-    filesystem/filesystemtreeview.h \
     styling/miamstyle.h \
     views/tageditor/albumcover.h \
     views/tageditor/tagconverter.h \
     views/tageditor/tageditor.h \
     views/tageditor/tageditortablewidget.h \
     views/viewloader.h \
-    views/viewplaylists.h \
     columnutils.h \
     mainwindow.h \
-    nofocusitemdelegate.h \
     pluginmanager.h \
     quickstart.h \
     tagbutton.h \
@@ -79,12 +59,10 @@ FORMS += customizeoptionsdialog.ui \
     equalizerdialog.ui \
     mainwindow.ui \
     quickstart.ui \
-    searchdialog.ui \
     tagconverter.ui \
-    tageditor.ui \
-    viewplaylists.ui
+    tageditor.ui
 
-RESOURCES += mp.qrc
+RESOURCES += player.qrc
 CONFIG += c++11
 win32 {
     OTHER_FILES += config/mp.rc
@@ -126,14 +104,14 @@ CONFIG(debug, debug|release) {
 	    LIBS += -L$$OUT_PWD/../Library/debug/ -lLibrary
 	    LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lTabPlaylists
 	    LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	} else {
 	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
 	    LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
 	    LIBS += -L$$OUT_PWD/../Library/debug/ -lLibrary
 	    LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lTabPlaylists
 	    LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/debug/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
 	}
     }
     OBJECTS_DIR = debug/.obj
@@ -150,14 +128,14 @@ CONFIG(release, debug|release) {
 	    LIBS += -L$$OUT_PWD/../Library/release/ -lLibrary
 	    LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lTabPlaylists
 	    LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
 	} else {
 	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
 	    LIBS += -L$$OUT_PWD/../Core/release/ -lCore
 	    LIBS += -L$$OUT_PWD/../Library/release/ -lLibrary
 	    LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lTabPlaylists
 	    LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/mp.ico) $$shell_path($$OUT_PWD/release/)
+	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
 	}
     }
     OBJECTS_DIR = release/.obj

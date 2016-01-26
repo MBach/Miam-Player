@@ -29,10 +29,10 @@ protected:
 
 public slots:
 	/** Load an icon from a chosen theme in options. */
-	void setIconFromTheme(const QString &);
+	virtual void setIconFromTheme(const QString &);
 
 	/** Change the size of icons from the options. */
-	void setSize(const int &);
+	void setSize(int);
 };
 
 #endif // MEDIABUTTON_H

@@ -1,9 +1,10 @@
 #include "viewplaylists.h"
 
 #include <library/jumptowidget.h>
-#include <settingsprivate.h>
 #include <libraryorderdialog.h>
-#include "playlistdialog.h"
+#include <settingsprivate.h>
+#include <settings.h>
+#include "dialogs/playlistdialog.h"
 
 #include <QFileDialog>
 #include <QStandardPaths>

@@ -5,7 +5,6 @@
 #include <filehelper.h>
 #include <settings.h>
 #include <settingsprivate.h>
-#include "deprecated/circleprogressbar.h"
 #include "libraryfilterproxymodel.h"
 #include "libraryorderdialog.h"
 #include "libraryscrollbar.h"

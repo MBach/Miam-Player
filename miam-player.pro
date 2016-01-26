@@ -8,3 +8,7 @@ SUBDIRS += \
     src/TabPlaylists \
     src/UniqueLibrary \
     src/Player
+
+RESOURCES += \
+    src/Player/mp.qrc \
+    src/Player/mp.qrc

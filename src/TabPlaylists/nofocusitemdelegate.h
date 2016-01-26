@@ -4,6 +4,8 @@
 #include <QItemDelegate>
 #include <QPainter>
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The NoFocusItemDelegate class cancel drawFocus method.
  * \details		This class does only one thing: ignore the "focus dotted rectangle" when a cell
@@ -11,7 +13,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class NoFocusItemDelegate : public QItemDelegate
+class MIAMTABPLAYLISTS_LIBRARY NoFocusItemDelegate : public QItemDelegate
 {
 	Q_OBJECT
 public:

@@ -1,11 +1,13 @@
 #ifndef FILESYSTEMTREEVIEW_H
 #define FILESYSTEMTREEVIEW_H
 
-#include "../treeview.h"
+#include <treeview.h>
 
 #include <QContextMenuEvent>
 #include <QFileSystemModel>
 #include <QMenu>
+
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The FileSystemTreeView class is displaying a standard file-system in a tree.
@@ -14,7 +16,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class FileSystemTreeView : public TreeView
+class MIAMTABPLAYLISTS_LIBRARY FileSystemTreeView : public TreeView
 {
 	Q_OBJECT
 private:

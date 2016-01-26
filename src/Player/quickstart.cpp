@@ -120,12 +120,6 @@ void QuickStart::paintEvent(QPaintEvent *)
 	QPainter p(this);
 	QPalette palette = QApplication::palette();
 	p.fillRect(this->rect(), palette.base());
-	p.setPen(palette.mid().color());
-	if (isLeftToRight()) {
-		p.drawLine(rect().topRight(), rect().bottomRight());
-	} else {
-		p.drawLine(rect().topLeft(), rect().bottomLeft());
-	}
 }
 
 /** Check or uncheck rows when one is clicking, but not only on the checkbox. */
@@ -236,7 +230,7 @@ void QuickStart::insertFirstRow()
 }
 
 /** Insert a row with a checkbox with folder's name and the number of files in this folder. */
-void QuickStart::insertRow(const QFileInfo &fileInfo, const int & musicFileNumber)
+void QuickStart::insertRow(const QFileInfo &fileInfo, int musicFileNumber)
 {
 	// A subfolder is displayed with its number of files on the right
 	QTableWidgetItem *checkBox = new QTableWidgetItem;

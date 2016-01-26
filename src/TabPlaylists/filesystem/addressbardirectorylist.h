@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QListWidget>
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The AddressBarDirectoryList class is used to mimic the behaviour of Windows' Explorer.
  * \details		When one is clicking in the AddressBar (but not on a button) it shows an edit area. Then, when one is typing a separator
@@ -11,7 +13,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class AddressBarDirectoryList : public QListWidget
+class MIAMTABPLAYLISTS_LIBRARY AddressBarDirectoryList : public QListWidget
 {
 	Q_OBJECT
 private:

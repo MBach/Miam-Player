@@ -111,7 +111,7 @@ signals:
 	void aboutToResyncRemoteSources();
 	void coverWasUpdated(const QFileInfo &);
 	void loaded();
-	void progressChanged(const int &);
+	void progressChanged(int);
 
 	void nodeExtracted(GenericDAO *node);
 	void tracksExtracted(const QList<TrackDAO> &);

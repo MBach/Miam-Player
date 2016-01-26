@@ -75,7 +75,7 @@
        <string>Library</string>
       </property>
       <property name="icon">
-       <iconset resource="mp.qrc">
+       <iconset resource="player.qrc">
         <normaloff>:/config/music-library</normaloff>:/config/music-library</iconset>
       </property>
      </item>
@@ -84,7 +84,7 @@
        <string>Languages</string>
       </property>
       <property name="icon">
-       <iconset resource="mp.qrc">
+       <iconset resource="player.qrc">
         <normaloff>:/config/translate</normaloff>:/config/translate</iconset>
       </property>
      </item>
@@ -93,7 +93,7 @@
        <string>Shortcuts</string>
       </property>
       <property name="icon">
-       <iconset resource="mp.qrc">
+       <iconset resource="player.qrc">
         <normaloff>:/config/keyboard-shortcuts</normaloff>:/config/keyboard-shortcuts</iconset>
       </property>
      </item>
@@ -102,7 +102,7 @@
        <string>Playback</string>
       </property>
       <property name="icon">
-       <iconset resource="mp.qrc">
+       <iconset resource="player.qrc">
         <normaloff>:/config/music</normaloff>:/config/music</iconset>
       </property>
      </item>
@@ -111,7 +111,7 @@
        <string>Drag &amp; Drop</string>
       </property>
       <property name="icon">
-       <iconset resource="mp.qrc">
+       <iconset resource="player.qrc">
         <normaloff>:/icons/drop-arrow</normaloff>:/icons/drop-arrow</iconset>
       </property>
      </item>
@@ -120,7 +120,7 @@
        <string>Plugins</string>
       </property>
       <property name="icon">
-       <iconset resource="mp.qrc">
+       <iconset resource="player.qrc">
         <normaloff>:/icons/plugin</normaloff>:/icons/plugin</iconset>
       </property>
      </item>
@@ -344,7 +344,7 @@
                <string>Yes</string>
               </property>
               <property name="icon">
-               <iconset resource="mp.qrc">
+               <iconset resource="player.qrc">
                 <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
               </property>
               <property name="checked">
@@ -475,8 +475,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>508</width>
-            <height>408</height>
+            <width>292</width>
+            <height>285</height>
            </rect>
           </property>
           <attribute name="label">
@@ -577,7 +577,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -609,7 +609,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -655,7 +655,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -680,7 +680,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -712,7 +712,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -737,7 +737,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -762,7 +762,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -787,7 +787,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -812,7 +812,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -837,7 +837,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -862,7 +862,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -894,7 +894,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -940,7 +940,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -965,7 +965,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1004,7 +1004,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1029,7 +1029,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1044,8 +1044,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>493</width>
-            <height>464</height>
+            <width>208</width>
+            <height>540</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1096,7 +1096,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1138,7 +1138,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1163,7 +1163,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1198,7 +1198,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1236,7 +1236,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1261,7 +1261,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1296,7 +1296,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1378,7 +1378,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -1427,7 +1427,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1452,7 +1452,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1477,7 +1477,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1502,7 +1502,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1527,7 +1527,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1552,7 +1552,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1577,7 +1577,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1602,7 +1602,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1617,8 +1617,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>493</width>
-            <height>686</height>
+            <width>338</width>
+            <height>528</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1661,7 +1661,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1692,7 +1692,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1724,7 +1724,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/sequential</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/sequential</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -1760,7 +1760,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1791,7 +1791,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1822,7 +1822,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -1883,7 +1883,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/stop</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/stop</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -1920,7 +1920,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/play</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/play</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -1956,7 +1956,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2040,7 +2040,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/skipBackward</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/skipBackward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2097,7 +2097,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/seekBackward</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/seekBackward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2133,7 +2133,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2164,7 +2164,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2195,7 +2195,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2282,7 +2282,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2320,7 +2320,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2371,7 +2371,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2403,7 +2403,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/itemOnce</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/itemOnce</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2453,7 +2453,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/repeat</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/repeat</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2490,7 +2490,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/shuffle</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/shuffle</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2527,7 +2527,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/itemLoop</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/itemLoop</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2597,7 +2597,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2641,7 +2641,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2672,7 +2672,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2716,7 +2716,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2747,7 +2747,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2778,7 +2778,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2826,7 +2826,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/skipForward</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/skipForward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2875,7 +2875,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -2945,7 +2945,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -2977,7 +2977,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="mp.qrc">:/player/oxygen/seekForward</pixmap>
+              <pixmap resource="../Core/core.qrc">:/player/oxygen/seekForward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -3026,7 +3026,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3057,7 +3057,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3088,7 +3088,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3119,7 +3119,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3150,7 +3150,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3181,7 +3181,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3212,7 +3212,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3243,7 +3243,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3466,8 +3466,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>508</width>
-            <height>408</height>
+            <width>307</width>
+            <height>212</height>
            </rect>
           </property>
           <attribute name="label">
@@ -3525,7 +3525,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -3550,7 +3550,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -3595,7 +3595,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -3633,7 +3633,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -3658,7 +3658,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -3683,7 +3683,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
              </property>
              <property name="flat">
@@ -3763,7 +3763,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3788,7 +3788,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3813,7 +3813,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3838,7 +3838,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3863,7 +3863,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -3888,7 +3888,7 @@
               <string notr="true"/>
              </property>
              <property name="icon">
-              <iconset resource="mp.qrc">
+              <iconset resource="player.qrc">
                <normaloff>:/config/closeButton</normaloff>:/config/closeButton</iconset>
              </property>
              <property name="flat">
@@ -4057,7 +4057,7 @@
                <string>Keep all columns visible</string>
               </property>
               <property name="icon">
-               <iconset resource="mp.qrc">
+               <iconset resource="player.qrc">
                 <normaloff>:/icons/warning</normaloff>:/icons/warning</iconset>
               </property>
               <property name="iconSize">
@@ -4407,12 +4407,13 @@
   <customwidget>
    <class>PaintableWidget</class>
    <extends>QWidget</extends>
-   <header>paintablewidget.h</header>
+   <header>dialogs/paintablewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="mp.qrc"/>
+  <include location="player.qrc"/>
+  <include location="../Core/core.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -4433,9 +4434,9 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup"/>
  </buttongroups>

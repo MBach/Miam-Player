@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
+#include <mediabuttons/mediabutton.h>
 #include <abstractviewplaylists.h>
-#include <libraryorderdialog.h>
 #include <musicsearchengine.h>
 #include <quickstart.h>
 #include <settings.h>
@@ -14,10 +14,6 @@
 #include "pluginmanager.h"
 
 #include <QDesktopServices>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QSqlQuery>
-#include <QStandardPaths>
 
 #include <QtDebug>
 
@@ -49,8 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::activateLastView()
 {
-	qDebug() << Q_FUNC_INFO;
-
 	bool isEmpty = SettingsPrivate::instance()->musicLocations().isEmpty();
 	actionScanLibrary->setDisabled(isEmpty);
 	if (isEmpty) {
@@ -475,10 +469,10 @@ void MainWindow::activateView(QAction *menuAction)
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
 
-	if (_currentView) {
-		auto db = SqlDatabase::instance();
-		//connect(db, &SqlDatabase::aboutToUpdateView, _currentView, &AbstractView::updateModel);
-	}
+	//if (_currentView) {
+	//	auto db = SqlDatabase::instance();
+	//	connect(db, &SqlDatabase::aboutToUpdateView, _currentView, &AbstractView::updateModel);
+	//}
 
 	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 

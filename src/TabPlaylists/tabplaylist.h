@@ -5,8 +5,8 @@
 #include <QTabWidget>
 #include <QMouseEvent>
 
+#include <mediabuttons/mediabutton.h>
 #include <model/playlistdao.h>
-#include <mediabutton.h>
 #include <mediaplayer.h>
 #include "playlist.h"
 #include "playlistmanager.h"

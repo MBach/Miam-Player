@@ -20,7 +20,7 @@ public slots:
 	void doSearch();
 
 signals:
-	void folderScanned(const QFileInfo &, const int &);
+	void folderScanned(const QFileInfo &, int);
 };
 
 #endif // QUICKSTARTSEARCHENGINE_H

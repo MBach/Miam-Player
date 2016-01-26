@@ -70,6 +70,8 @@ macx {
 }
 
 SOURCES += library/jumptowidget.cpp \
+    mediabuttons/mediabutton.cpp \
+    mediabuttons/stopbutton.cpp \
     model/albumdao.cpp \
     model/artistdao.cpp \
     model/genericdao.cpp \
@@ -82,10 +84,12 @@ SOURCES += library/jumptowidget.cpp \
     styling/lineedit.cpp \
     styling/miamslider.cpp \
     styling/miamstyleditemdelegate.cpp \
+    widgets/seekbar.cpp \
+    widgets/timelabel.cpp \
+    widgets/volumeslider.cpp \
     cover.cpp \
     filehelper.cpp \
     flowlayout.cpp \
-    mediabutton.cpp \
     mediaplayer.cpp \
     mediaplaylist.cpp \
     miamsortfilterproxymodel.cpp \
@@ -93,14 +97,10 @@ SOURCES += library/jumptowidget.cpp \
     plugininfo.cpp \
     quickstartsearchengine.cpp \
     scrollbar.cpp \
-    seekbar.cpp \
     settings.cpp \
     settingsprivate.cpp \
     starrating.cpp \
-    stopbutton.cpp \
-    timelabel.cpp \
-    treeview.cpp \
-    volumeslider.cpp
+    treeview.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -108,6 +108,8 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/remotemediaplayerplugin.h \
     interfaces/tageditorplugin.h \
     library/jumptowidget.h \
+    mediabuttons/mediabutton.h \
+    mediabuttons/stopbutton.h \
     model/albumdao.h \
     model/artistdao.h \
     model/genericdao.h \
@@ -120,13 +122,15 @@ HEADERS += interfaces/basicplugin.h \
     styling/lineedit.h \
     styling/miamslider.h \
     styling/miamstyleditemdelegate.h \
+    widgets/seekbar.h \
+    widgets/timelabel.h \
+    widgets/volumeslider.h \
     abstractsearchdialog.h \
     abstractview.h \
     cover.h \
     filehelper.h \
     flowlayout.h \
     imediaplayer.h \
-    mediabutton.h \
     mediaplayer.h \
     mediaplaylist.h \
     miamcore_global.h \
@@ -136,11 +140,9 @@ HEADERS += interfaces/basicplugin.h \
     quickstartsearchengine.h \
     scrollbar.h \
     searchbar.h \
-    seekbar.h \
     settings.h \
     settingsprivate.h \
     starrating.h \
-    stopbutton.h \
-    timelabel.h \
-    treeview.h \
-    volumeslider.h
+    treeview.h
+
+RESOURCES += core.qrc

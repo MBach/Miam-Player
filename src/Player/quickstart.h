@@ -51,7 +51,7 @@ public slots:
 	void insertFirstRow();
 
 	/** Insert a row with a checkbox with folder's name and the number of files in this folder. */
-	void insertRow(const QFileInfo &, const int &);
+	void insertRow(const QFileInfo &fileInfo, int musicFileNumber);
 };
 
 #endif // QUICKSTARTTABLEWIDGET_H

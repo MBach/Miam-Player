@@ -9,9 +9,9 @@
 #include <QSqlRecord>
 #include <QSqlError>
 
-#include "views/viewplaylists.h"
-#include "settings.h"
-#include "pluginmanager.h"
+#include "viewplaylists.h"
+#include <settings.h>
+#include <model/sqldatabase.h>
 
 #include <QtDebug>
 

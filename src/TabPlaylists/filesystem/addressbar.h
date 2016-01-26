@@ -12,6 +12,8 @@
 
 #include <QStack>
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The AddressBar class is the place where subfolders (instance of AddressBarButton) will be appended.
  * \details		The path to a folder is splitted into folders. When there is not enough space to display the entire path,
@@ -21,7 +23,7 @@
  * \copyright   GNU General Public License v3
  * \see			AddressBarMenu
  */
-class AddressBar : public QWidget
+class MIAMTABPLAYLISTS_LIBRARY AddressBar : public QWidget
 {
 	Q_OBJECT
 private:

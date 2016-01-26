@@ -4,12 +4,10 @@ TEMPLATE = lib
 
 DEFINES += MIAMLIBRARY_LIBRARY
 
-SOURCES += deprecated/circleprogressbar.cpp \
+SOURCES += \
     albumitem.cpp \
     artistitem.cpp \
-    changehierarchybutton.cpp \
     discitem.cpp \
-    extendedtabbar.cpp \
     libraryfilterlineedit.cpp \
     libraryfilterproxymodel.cpp \
     libraryheader.cpp \
@@ -24,13 +22,10 @@ SOURCES += deprecated/circleprogressbar.cpp \
     trackitem.cpp \
     yearitem.cpp
 
-HEADERS += deprecated/circleprogressbar.h \
+HEADERS += \
     albumitem.h \
     artistitem.h \
-    changehierarchybutton.h \
     discitem.h \
-    extendedtabbar.h \
-    extendedtabwidget.h \
     libraryfilterlineedit.h \
     libraryfilterproxymodel.h \
     libraryheader.h \

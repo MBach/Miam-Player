@@ -5,18 +5,45 @@ TEMPLATE = lib
 DEFINES += MIAMTABPLAYLISTS_LIBRARY
 
 SOURCES += dialogs/closeplaylistpopup.cpp \
+    dialogs/playlistdialog.cpp \
+    dialogs/searchdialog.cpp \
+    filesystem/addressbar.cpp \
+    filesystem/addressbarbutton.cpp \
+    filesystem/addressbardirectorylist.cpp \
+    filesystem/addressbarlineedit.cpp \
+    filesystem/addressbarmenu.cpp \
+    filesystem/filesystemtreeview.cpp \
+    mediabuttons/playbackmodebutton.cpp \
+    changehierarchybutton.cpp \
     cornerwidget.cpp \
+    extendedtabbar.cpp \
     playlist.cpp \
     playlistheaderview.cpp \
+    playlistitemdelegate.cpp \
     playlistmanager.cpp \
     playlistmodel.cpp \
     tabbar.cpp \
     tabplaylist.cpp \
-    playlistitemdelegate.cpp \
-    stareditor.cpp
+    stareditor.cpp \
+    viewplaylists.cpp
 
 HEADERS += dialogs/closeplaylistpopup.h \
+    dialogs/paintablewidget.h \
+    dialogs/playlistdialog.h \
+    dialogs/searchdialog.h \
+    filesystem/addressbar.h \
+    filesystem/addressbarbutton.h \
+    filesystem/addressbardirectorylist.h \
+    filesystem/addressbarlineedit.h \
+    filesystem/addressbarmenu.h \
+    filesystem/filesystemtreeview.h \
+    mediabuttons/playbackmodebutton.h \
+    abstractviewplaylists.h \
+    changehierarchybutton.h \
     cornerwidget.h \
+    extendedtabbar.h \
+    extendedtabwidget.h \
+    nofocusitemdelegate.h \
     playlist.h \
     playlistheaderview.h \
     playlistitemdelegate.h \
@@ -26,10 +53,12 @@ HEADERS += dialogs/closeplaylistpopup.h \
     tabplaylist.h \
     stareditor.h \
     miamtabPlaylists_global.hpp \
-    abstractviewplaylists.h
+    viewplaylists.h
 
 FORMS += closeplaylistpopup.ui \
-    playlistdialog.ui
+    playlistdialog.ui \
+    searchdialog.ui \
+    viewplaylists.ui
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
@@ -41,7 +70,7 @@ CONFIG(debug, debug|release) {
 
 CONFIG += c++11
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lCore
+    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lCore -L$$OUT_PWD/../Library/release/ -lLibrary
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
@@ -51,7 +80,7 @@ win32 {
     TARGET = TabPlaylists
 }
 unix {
-    LIBS += -L$$OUT_PWD/../Core/ -lmiam-core
+    LIBS += -L$$OUT_PWD/../Core/ -lmiam-core -L$$OUT_PWD/../Library/ -lmiam-library
     TARGET = miam-tabplaylists
 }
 unix:!macx {
@@ -63,8 +92,8 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
-INCLUDEPATH += $$PWD/../Core/
-DEPENDPATH += $$PWD/../Core
+INCLUDEPATH += $$PWD/../Core/ $$PWD/../Library/
+DEPENDPATH += $$PWD/../Core $$PWD/../Library/
 
 TRANSLATIONS = translations/TabPlaylists_ar.ts \
     translations/TabPlaylists_cs.ts \

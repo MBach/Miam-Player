@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QPushButton>
 
+#include "miamtabplaylists_global.hpp"
+
 /// Forward declaration
 class AddressBar;
 
@@ -13,7 +15,7 @@ class AddressBar;
  * \copyright   GNU General Public License v3
  * \see			AddressBarMenu
  */
-class AddressBarButton : public QPushButton
+class MIAMTABPLAYLISTS_LIBRARY AddressBarButton : public QPushButton
 {
 	Q_OBJECT
 private:

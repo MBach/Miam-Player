@@ -10,12 +10,14 @@
 #include <model/sqldatabase.h>
 #include <tabplaylist.h>
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The PlaylistDialog class can save, load and export playlists in m3u format.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PlaylistDialog : public QDialog, public Ui::PlaylistDialog
+class MIAMTABPLAYLISTS_LIBRARY PlaylistDialog : public QDialog, public Ui::PlaylistDialog
 {
 	Q_OBJECT
 

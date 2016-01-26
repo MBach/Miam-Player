@@ -140,7 +140,7 @@
              <string notr="true"/>
             </property>
             <property name="icon">
-             <iconset resource="mp.qrc">
+             <iconset resource="../Player/player.qrc">
               <normaloff>:/icons/hierarchy</normaloff>:/icons/hierarchy</iconset>
             </property>
             <property name="checkable">
@@ -323,7 +323,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
            </property>
            <property name="iconSize">
@@ -349,7 +349,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
            </property>
            <property name="iconSize">
@@ -375,7 +375,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
            </property>
            <property name="iconSize">
@@ -401,7 +401,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
            </property>
            <property name="iconSize">
@@ -427,7 +427,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
            </property>
            <property name="iconSize">
@@ -453,7 +453,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
            </property>
            <property name="iconSize">
@@ -468,7 +468,7 @@
           </widget>
          </item>
          <item>
-          <widget class="MediaButton" name="playbackModeButton">
+          <widget class="PlaybackModeButton" name="playbackModeButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -479,7 +479,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="mp.qrc">
+            <iconset resource="../Core/core.qrc">
              <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
            </property>
            <property name="iconSize">
@@ -529,66 +529,45 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>TabPlaylist</class>
+   <extends>QTabWidget</extends>
+   <header location="global">tabplaylist.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>
-   <header>mediabutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>SeekBar</class>
-   <extends>QSlider</extends>
-   <header location="global">seekbar.h</header>
-  </customwidget>
-  <customwidget>
-   <class>LibraryTreeView</class>
-   <extends>QTreeView</extends>
-   <header location="global">librarytreeview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>AddressBar</class>
-   <extends>QWidget</extends>
-   <header>filesystem/addressbar.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>FileSystemTreeView</class>
-   <extends>QTreeView</extends>
-   <header>filesystem/filesystemtreeview.h</header>
-  </customwidget>
-  <customwidget>
-   <class>TimeLabel</class>
-   <extends>QLabel</extends>
-   <header>timelabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>VolumeSlider</class>
-   <extends>QSlider</extends>
-   <header>volumeslider.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ExtendedTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>extendedtabwidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>LibraryHeader</class>
-   <extends>QPushButton</extends>
-   <header location="global">libraryheader.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ChangeHierarchyButton</class>
-   <extends>QPushButton</extends>
-   <header location="global">changehierarchybutton.h</header>
+   <header location="global">mediabuttons/mediabutton.h</header>
   </customwidget>
   <customwidget>
    <class>StopButton</class>
    <extends>QPushButton</extends>
-   <header>stopbutton.h</header>
+   <header location="global">mediabuttons/stopbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SeekBar</class>
+   <extends>QSlider</extends>
+   <header location="global">widgets/seekbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TimeLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">widgets/timelabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>VolumeSlider</class>
+   <extends>QSlider</extends>
+   <header location="global">widgets/volumeslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlaybackModeButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">mediabuttons/playbackmodebutton.h</header>
   </customwidget>
   <customwidget>
    <class>PaintableWidget</class>
    <extends>QWidget</extends>
-   <header>paintablewidget.h</header>
+   <header>dialogs/paintablewidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -597,14 +576,41 @@
    <header location="global">libraryfilterlineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>TabPlaylist</class>
-   <extends>QTabWidget</extends>
-   <header location="global">tabplaylist.h</header>
+   <class>LibraryTreeView</class>
+   <extends>QTreeView</extends>
+   <header location="global">librarytreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>FileSystemTreeView</class>
+   <extends>QTreeView</extends>
+   <header>filesystem/filesystemtreeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AddressBar</class>
+   <extends>QWidget</extends>
+   <header>filesystem/addressbar.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LibraryHeader</class>
+   <extends>QPushButton</extends>
+   <header location="global">libraryheader.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ExtendedTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>extendedtabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ChangeHierarchyButton</class>
+   <extends>QPushButton</extends>
+   <header>changehierarchybutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="mp.qrc"/>
+  <include location="../Player/player.qrc"/>
+  <include location="../Core/core.qrc"/>
  </resources>
  <connections/>
 </ui>

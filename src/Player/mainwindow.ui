@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>439</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
+     <width>439</width>
      <height>25</height>
     </rect>
    </property>
@@ -120,7 +120,7 @@
   </action>
   <action name="actionOpenFiles">
    <property name="icon">
-    <iconset resource="mp.qrc">
+    <iconset resource="player.qrc">
      <normaloff>:/config/music</normaloff>:/config/music</iconset>
    </property>
    <property name="text">
@@ -152,7 +152,7 @@
   </action>
   <action name="actionScanLibrary">
    <property name="icon">
-    <iconset resource="mp.qrc">
+    <iconset resource="player.qrc">
      <normaloff>:/config/resetButton</normaloff>:/config/resetButton</iconset>
    </property>
    <property name="text">
@@ -360,7 +360,7 @@
   </action>
   <action name="actionShowDebug">
    <property name="icon">
-    <iconset resource="mp.qrc">
+    <iconset resource="player.qrc">
      <normaloff>:/icons/debug</normaloff>:/icons/debug</iconset>
    </property>
    <property name="text">
@@ -401,7 +401,7 @@
   </action>
  </widget>
  <resources>
-  <include location="mp.qrc"/>
+  <include location="player.qrc"/>
  </resources>
  <connections/>
 </ui>

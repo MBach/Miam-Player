@@ -4,6 +4,8 @@
 #include <QLineEdit>
 #include "addressbardirectorylist.h"
 
+#include "miamtabplaylists_global.hpp"
+
 /// Forward declaration
 class AddressBar;
 
@@ -13,7 +15,7 @@ class AddressBar;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class AddressBarLineEdit : public QLineEdit
+class MIAMTABPLAYLISTS_LIBRARY AddressBarLineEdit : public QLineEdit
 {
 	Q_OBJECT
 private:

@@ -1,8 +1,10 @@
 #ifndef SEARCHDIALOG_H
 #define SEARCHDIALOG_H
 
-#include "abstractsearchdialog.h"
+#include <abstractsearchdialog.h>
 #include "ui_searchdialog.h"
+
+#include "miamtabplaylists_global.hpp"
 
 /// Forward declaration
 class ViewPlaylists;
@@ -12,7 +14,7 @@ class ViewPlaylists;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
+class MIAMTABPLAYLISTS_LIBRARY SearchDialog : public AbstractSearchDialog, public Ui::SearchDialog
 {
 	Q_OBJECT
 private:

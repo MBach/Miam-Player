@@ -40,7 +40,7 @@
         <string>Converter</string>
        </property>
        <property name="icon">
-        <iconset resource="mp.qrc">
+        <iconset resource="player.qrc">
          <normaloff>:/icons/rename</normaloff>:/icons/rename</iconset>
        </property>
        <property name="iconSize">
@@ -72,7 +72,7 @@
         <string>Save changes</string>
        </property>
        <property name="icon">
-        <iconset resource="mp.qrc">
+        <iconset resource="player.qrc">
          <normaloff>:/icons/save</normaloff>:/icons/save</iconset>
        </property>
        <property name="iconSize">
@@ -257,7 +257,7 @@
         <string notr="true"/>
        </property>
        <property name="pixmap" stdset="0">
-        <pixmap resource="mp.qrc">:/icons/disc</pixmap>
+        <pixmap resource="player.qrc">:/icons/disc</pixmap>
        </property>
        <property name="scaledContents" stdset="0">
         <bool>true</bool>
@@ -537,7 +537,7 @@
   <tabstop>coverPathComboBox</tabstop>
  </tabstops>
  <resources>
-  <include location="mp.qrc"/>
+  <include location="player.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -3,14 +3,14 @@
 
 #include <QTabBar>
 #include <QtDebug>
-#include "miamlibrary_global.hpp"
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The ExtendedTabBar class is only used in left-pane to display 2 tabs (Library - FileSystem) where each has maximum length.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY ExtendedTabBar : public QTabBar
+class MIAMTABPLAYLISTS_LIBRARY ExtendedTabBar : public QTabBar
 {
 	Q_OBJECT
 public:

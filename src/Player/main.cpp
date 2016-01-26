@@ -25,7 +25,8 @@ void debugOutput(QtMsgType type, const QMessageLogContext &, const QString &msg)
 
 int main(int argc, char *argv[])
 {
-	Q_INIT_RESOURCE(mp);
+	//Q_INIT_RESOURCE(core);
+	Q_INIT_RESOURCE(player);
 
 	qRegisterMetaType<GenericDAO>();
 	qRegisterMetaType<TrackDAO>();

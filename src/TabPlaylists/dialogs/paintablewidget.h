@@ -5,13 +5,15 @@
 #include <QPainter>
 #include <QWidget>
 
+#include "miamtabplaylists_global.hpp"
+
 /**
  * \brief		The PaintableWidget class is a small class which can react to color change.
  * \details		When one is updating colors in options, this class dynamically repaints itself by adapting the background color.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class PaintableWidget : public QWidget
+class MIAMTABPLAYLISTS_LIBRARY PaintableWidget : public QWidget
 {
 	Q_OBJECT
 private:

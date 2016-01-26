@@ -2,14 +2,14 @@
 #define CHANGEHIERARCHYBUTTON_H
 
 #include <QPushButton>
-#include "miamlibrary_global.hpp"
+#include "miamtabplaylists_global.hpp"
 
 /**
  * \brief		The ChangeHierarchyButton class is a button which changes how the LibraryTreeView class will display its content.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMLIBRARY_LIBRARY ChangeHierarchyButton : public QPushButton
+class MIAMTABPLAYLISTS_LIBRARY ChangeHierarchyButton : public QPushButton
 {
 	Q_OBJECT
 public:

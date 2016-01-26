@@ -5,6 +5,8 @@
 
 #include "addressbarbutton.h"
 
+#include "miamtabplaylists_global.hpp"
+
 /// Forward declaration
 class AddressBar;
 
@@ -17,7 +19,7 @@ class AddressBar;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class AddressBarMenu : public QListWidget
+class MIAMTABPLAYLISTS_LIBRARY AddressBarMenu : public QListWidget
 {
 	Q_OBJECT
 	Q_ENUMS(SeparatorEnum)
