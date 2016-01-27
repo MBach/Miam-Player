@@ -20,6 +20,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeButton, &PlaybackModeButton::updateMode);
+	connect(playbackModeButton, &PlaybackModeButton::aboutToChangeCurrentPlaylistPlaybackMode, tabPlaylists, &TabPlaylist::changeCurrentPlaylistPlaybackMode);
 
 	Settings *settings = Settings::instance();
 	volumeSlider->setValue(settings->volume() * 100);

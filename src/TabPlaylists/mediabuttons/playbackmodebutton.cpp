@@ -1,6 +1,7 @@
 #include "playbackmodebutton.h"
 
-#include "settingsprivate.h"
+#include <settings.h>
+#include <settingsprivate.h>
 
 #include <QContextMenuEvent>
 
@@ -8,39 +9,27 @@
 
 PlaybackModeButton::PlaybackModeButton(QWidget *parent)
 	: MediaButton(parent)
-	, _currentMode("sequential")
+	, _mode(QMediaPlaylist::Sequential)
 {
 	connect(&_menu, &QMenu::triggered, this, [=](QAction *a) {
-		qDebug() << Q_FUNC_INFO << a << a->data().toInt();
 		QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)a->data().toInt();
-		switch (mode) {
-		case QMediaPlaylist::Sequential:
-			_currentMode = "sequential";
-			break;
-		case QMediaPlaylist::Random:
-			_currentMode = "shuffle";
-			break;
-		case QMediaPlaylist::Loop:
-			_currentMode = "repeat";
-			break;
-		case QMediaPlaylist::CurrentItemOnce:
-			_currentMode = "itemOnce";
-			break;
-		case QMediaPlaylist::CurrentItemInLoop:
-			_currentMode = "itemLoop";
-			break;
-		}
+		this->updateMode(mode);
+	});
+
+	connect(this, &PlaybackModeButton::clicked, this, [=]() {
+		QContextMenuEvent e(QContextMenuEvent::Mouse, pos());
+		this->contextMenuEvent(&e);
 	});
 }
 
 void PlaybackModeButton::contextMenuEvent(QContextMenuEvent *e)
 {
 	_menu.clear();
-	QAction sequential(tr("Sequential"), &_menu);
-	QAction shuffle(tr("Shuffle"), &_menu);
-	QAction loop(tr("Loop"), &_menu);
-	QAction itemOnce(tr("Current track once"), &_menu);
-	QAction itemLoop(tr("Current track in loop"), &_menu);
+	QAction sequential(tr("Sequential"), nullptr);
+	QAction shuffle(tr("Shuffle"), nullptr);
+	QAction loop(tr("Loop"), nullptr);
+	QAction itemOnce(tr("Current track once"), nullptr);
+	QAction itemLoop(tr("Current track in loop"), nullptr);
 
 	sequential.setData(QMediaPlaylist::Sequential);
 	shuffle.setData(QMediaPlaylist::Random);
@@ -56,9 +45,10 @@ void PlaybackModeButton::contextMenuEvent(QContextMenuEvent *e)
 
 	for (QAction *action : _menu.actions()) {
 		action->setCheckable(true);
-		qDebug() << (QMediaPlaylist::PlaybackMode)action->data().toInt();
 		if ((QMediaPlaylist::PlaybackMode)action->data().toInt() == _mode) {
 			action->setChecked(true);
+		} else {
+			action->setChecked(false);
 		}
 	}
 	_menu.exec(e->globalPos());
@@ -66,20 +56,37 @@ void PlaybackModeButton::contextMenuEvent(QContextMenuEvent *e)
 
 void PlaybackModeButton::setIconFromTheme(const QString &theme)
 {
-	qDebug() << Q_FUNC_INFO << theme << this->objectName() ;
+	QString currentMode;
+	switch (_mode) {
+	case QMediaPlaylist::Sequential:
+		currentMode = "sequential";
+		break;
+	case QMediaPlaylist::Random:
+		currentMode = "shuffle";
+		break;
+	case QMediaPlaylist::Loop:
+		currentMode = "repeat";
+		break;
+	case QMediaPlaylist::CurrentItemOnce:
+		currentMode = "itemOnce";
+		break;
+	case QMediaPlaylist::CurrentItemInLoop:
+		currentMode = "itemLoop";
+		break;
+	}
 
 	// The objectName in the UI file MUST match the alias in the QRC file!
-	QString iconFile = ":/player/" + theme.toLower() + "/" + _currentMode;
+	QString iconFile = ":/player/" + theme.toLower() + "/" + currentMode;
 	QIcon icon(iconFile);
 	if (icon.isNull()) {
-		iconFile = ":/player/oxygen/" + _currentMode;
+		iconFile = ":/player/oxygen/" + currentMode;
 	}
 	QPushButton::setIcon(QIcon(iconFile));
 }
 
 void PlaybackModeButton::updateMode(QMediaPlaylist::PlaybackMode mode)
 {
-	qDebug() << Q_FUNC_INFO << mode;
 	_mode = mode;
-
+	this->setIconFromTheme(Settings::instance()->theme());
+	emit aboutToChangeCurrentPlaylistPlaybackMode(_mode);
 }

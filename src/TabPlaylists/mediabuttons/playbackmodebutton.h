@@ -16,7 +16,6 @@ class MIAMTABPLAYLISTS_LIBRARY PlaybackModeButton : public MediaButton
 	Q_OBJECT
 private:
 	QMenu _menu;
-	QString _currentMode;
 	QMediaPlaylist::PlaybackMode _mode;
 
 public:
@@ -30,6 +29,9 @@ public slots:
 	virtual void setIconFromTheme(const QString &theme) override;
 
 	void updateMode(QMediaPlaylist::PlaybackMode mode);
+
+signals:
+	void aboutToChangeCurrentPlaylistPlaybackMode(QMediaPlaylist::PlaybackMode mode);
 };
 
 #endif // PLAYBACKMODEBUTTON_H

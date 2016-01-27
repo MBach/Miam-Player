@@ -4,7 +4,7 @@
         <file alias="play">resources/fairytale/play.png</file>
         <file alias="seekBackward">resources/fairytale/seek-backward.png</file>
         <file alias="seekForward">resources/fairytale/seek-forward.png</file>
-		<file alias="skipBackward">resources/fairytale/skip-backward.png</file>
+        <file alias="skipBackward">resources/fairytale/skip-backward.png</file>
         <file alias="skipForward">resources/fairytale/skip-forward.png</file>
         <file alias="stop">resources/fairytale/stop.png</file>
     </qresource>
@@ -13,11 +13,12 @@
         <file alias="play">resources/flat/play.png</file>
         <file alias="seekBackward">resources/flat/seek-backward.png</file>
         <file alias="seekForward">resources/flat/seek-forward.png</file>
-		<file alias="skipBackward">resources/flat/skip-backward.png</file>
+        <file alias="skipBackward">resources/flat/skip-backward.png</file>
         <file alias="skipForward">resources/flat/skip-forward.png</file>
         <file alias="shuffle">resources/flat/shuffle.png</file>
         <file alias="stop">resources/flat/stop.png</file>
-        <file alias="itemLoop">resources/flat/item-loop.png</file>
+        <file alias="repeat">resources/flat/repeat.png</file>
+        <file alias="sequential">resources/flat/sequential.png</file>
     </qresource>
     <qresource prefix="/player/gnome">
         <file alias="pause">resources/gnome/pause.png</file>
