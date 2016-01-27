@@ -39,6 +39,14 @@ Latest source is also available via Git:
 
 Master branch is _not always_ stable but should work on all supported platforms. You can find specific working releases by browsing tags.
 
+### TL;DR
+
+```bash
+  qmake
+  make
+  make install
+```
+
 ## Requirements
 
 Miam-Player can be built with any common compiler (g++, clang, MSVC, MinGW).

@@ -31,12 +31,15 @@ void PlaybackModeButton::contextMenuEvent(QContextMenuEvent *e)
 	QAction itemOnce(tr("Current track once"), nullptr);
 	QAction itemLoop(tr("Current track in loop"), nullptr);
 
+	_menu.setToolTipsVisible(true);
 	sequential.setData(QMediaPlaylist::Sequential);
+	sequential.setToolTip(tr("Sequential mode is the most commun mode to play tracks in a playlist. It will play tracks from Top to Bottom."));
 	shuffle.setData(QMediaPlaylist::Random);
 	loop.setData(QMediaPlaylist::Loop);
 	itemOnce.setData(QMediaPlaylist::CurrentItemOnce);
 	itemLoop.setData(QMediaPlaylist::CurrentItemInLoop);
 
+	_menu.setDefaultAction(&sequential);
 	_menu.addAction(&sequential);
 	_menu.addAction(&shuffle);
 	_menu.addAction(&loop);
@@ -77,9 +80,8 @@ void PlaybackModeButton::setIconFromTheme(const QString &theme)
 
 	// The objectName in the UI file MUST match the alias in the QRC file!
 	QString iconFile = ":/player/" + theme.toLower() + "/" + currentMode;
-	QIcon icon(iconFile);
-	if (icon.isNull()) {
-		iconFile = ":/player/oxygen/" + currentMode;
+	if (!QFile::exists(iconFile)) {
+		iconFile = ":/player/flat/" + currentMode;
 	}
 	QPushButton::setIcon(QIcon(iconFile));
 }
