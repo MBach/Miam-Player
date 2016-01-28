@@ -338,38 +338,38 @@ Select a playlist to display the first 30 tracks.</translation>
 <context>
     <name>TabPlaylist</name>
     <message>
-        <location filename="../tabplaylist.cpp" line="260"/>
-        <location filename="../tabplaylist.cpp" line="452"/>
+        <location filename="../tabplaylist.cpp" line="252"/>
+        <location filename="../tabplaylist.cpp" line="444"/>
         <source>Playlist %1</source>
         <translation>Playlist %1</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="73"/>
+        <location filename="../tabplaylist.cpp" line="71"/>
         <source>Rename playlist</source>
         <translation>Rename playlist</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="75"/>
+        <location filename="../tabplaylist.cpp" line="73"/>
         <source>Load background...</source>
         <translation>Load background...</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="76"/>
+        <location filename="../tabplaylist.cpp" line="74"/>
         <source>Clear background</source>
         <translation>Clear background</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="74"/>
+        <location filename="../tabplaylist.cpp" line="72"/>
         <source>Delete playlist...</source>
         <translation>Delete playlist...</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="101"/>
+        <location filename="../tabplaylist.cpp" line="99"/>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
         <translation>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="102"/>
+        <location filename="../tabplaylist.cpp" line="100"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
@@ -397,27 +397,27 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>File explorer</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="200"/>
+        <location filename="../viewplaylists.cpp" line="209"/>
         <source>playlist</source>
         <translation>playlist</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="282"/>
+        <location filename="../viewplaylists.cpp" line="291"/>
         <source>Audio files</source>
         <translation>Audio files</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="294"/>
+        <location filename="../viewplaylists.cpp" line="303"/>
         <source>Every file type (*)</source>
         <translation>Every file type (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="296"/>
+        <location filename="../viewplaylists.cpp" line="305"/>
         <source>Choose some files to open</source>
         <translation>Choose some files to open</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="321"/>
+        <location filename="../viewplaylists.cpp" line="330"/>
         <source>Choose a folder to open</source>
         <translation>Choose a folder to open</translation>
     </message>

@@ -159,7 +159,19 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		widgetSearchBar->setVisible(!libraryIsEmpty);
 	});*/
 
+	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+		QApplication::removeTranslator(&translator);
+		translator.load(":/translations/tabPlaylists_" + newLanguage);
+		QApplication::installTranslator(&translator);
+	});
+
+	// Init language
+	translator.load(":/translations/tabPlaylists_" + settingsPrivate->language());
+	QApplication::installTranslator(&translator);
+
 	connect(settingsPrivate, &SettingsPrivate::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
+
+	this->installEventFilter(this);
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
@@ -181,6 +193,15 @@ bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
 		return true;
 	default:
 		return AbstractView::viewProperty(vp);
+	}
+}
+
+void ViewPlaylists::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange) {
+		this->retranslateUi(this);
+	} else {
+		AbstractViewPlaylists::changeEvent(event);
 	}
 }
 

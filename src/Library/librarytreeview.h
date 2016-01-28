@@ -54,8 +54,6 @@ private:
 
 	LibraryItemDelegate *_delegate;
 
-	QTranslator translator;
-
 public:
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */

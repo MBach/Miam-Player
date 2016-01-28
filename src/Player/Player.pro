@@ -69,9 +69,6 @@ win32 {
     RC_FILE += config/mp.rc
     TARGET = MiamPlayer
 }
-unix {
-    #QMAKE_CXXFLAGS += -std=c++11
-}
 unix:!macx {
     TARGET = miam-player
 }
@@ -80,21 +77,21 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
-TRANSLATIONS = translations/m4p_ar.ts \
-    translations/m4p_cs.ts \
-    translations/m4p_de.ts \
-    translations/m4p_en.ts \
-    translations/m4p_es.ts \
-    translations/m4p_fr.ts \
-    translations/m4p_in.ts \
-    translations/m4p_it.ts \
-    translations/m4p_ja.ts \
-    translations/m4p_kr.ts \
-    translations/m4p_pt.ts \
-    translations/m4p_ru.ts \
-    translations/m4p_th.ts \
-    translations/m4p_vn.ts \
-    translations/m4p_zh.ts
+TRANSLATIONS = translations/player_ar.ts \
+    translations/player_cs.ts \
+    translations/player_de.ts \
+    translations/player_en.ts \
+    translations/player_es.ts \
+    translations/player_fr.ts \
+    translations/player_in.ts \
+    translations/player_it.ts \
+    translations/player_ja.ts \
+    translations/player_kr.ts \
+    translations/player_pt.ts \
+    translations/player_ru.ts \
+    translations/player_th.ts \
+    translations/player_vn.ts \
+    translations/player_zh.ts
 
 CONFIG(debug, debug|release) {
     win32 {

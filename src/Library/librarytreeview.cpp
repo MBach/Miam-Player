@@ -67,18 +67,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::scrollToLetter);
 
 	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
-
-	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
-		QApplication::removeTranslator(&translator);
-		translator.load(":/Library_" + newLanguage);
-		QApplication::installTranslator(&translator);
-	});
-
-	// Init language
-	translator.load(":/Library_" + settings->language());
-	QApplication::installTranslator(&translator);
-
-	this->installEventFilter(this);
 }
 
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
@@ -225,7 +213,8 @@ void LibraryTreeView::paintEvent(QPaintEvent *event)
 	}
 	if (_proxyModel->rowCount() == 0) {
 		QPainter p(this->viewport());
-		p.drawText(this->viewport()->rect(), Qt::AlignCenter, tr("No matching results were found"));
+		QString s = fontMetrics().elidedText(tr("No matching results were found"), Qt::ElideMiddle, viewport()->width() - _jumpToWidget->width());
+		p.drawText(viewport()->rect().adjusted(0, 0, -_jumpToWidget->width(), 0), Qt::AlignCenter, s);
 	} else {
 		TreeView::paintEvent(event);
 	}

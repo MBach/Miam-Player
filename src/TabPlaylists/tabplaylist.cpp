@@ -6,7 +6,6 @@
 #include <settingsprivate.h>
 
 #include "dialogs/closeplaylistpopup.h"
-//#include "mainwindow.h"
 #include "tabbar.h"
 #include "cornerwidget.h"
 #include <model/sqldatabase.h>
@@ -16,7 +15,6 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	: QTabWidget(parent)
 	, _mediaPlayer(nullptr)
 	, _playlistManager(new PlaylistManager(this))
-	//, _mainWindow(nullptr)
 	, _contextMenu(new QMenu(this))
 {
 	TabBar *tabBar = new TabBar(this);
@@ -225,12 +223,6 @@ Playlist* TabPlaylist::playlist(int index)
 {
 	return qobject_cast<Playlist*>(this->widget(index));
 }
-
-/*void TabPlaylist::setMainWindow(MainWindow *mainWindow)
-{
-	_mainWindow = mainWindow;
-	_mediaPlayer = mainWindow->mediaPlayer();
-}*/
 
 /** Retranslate context menu. */
 void TabPlaylist::changeEvent(QEvent *event)

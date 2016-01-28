@@ -99,12 +99,12 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	auto settingsPrivate = SettingsPrivate::instance();
 	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
 		QApplication::removeTranslator(&translator);
-		translator.load(":/uniqueLibrary_" + newLanguage);
+		translator.load(":/translations/uniqueLibrary_" + newLanguage);
 		QApplication::installTranslator(&translator);
 	});
 
 	// Init language
-	translator.load(":/uniqueLibrary_" + settingsPrivate->language());
+	translator.load(":/translations/uniqueLibrary_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
 
 	std::srand(std::time(nullptr));

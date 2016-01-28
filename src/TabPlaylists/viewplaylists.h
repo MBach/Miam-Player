@@ -13,6 +13,7 @@ private:
 	// Play, pause, stop, etc.
 	QList<MediaButton*> mediaButtons;
 	SearchDialog *_searchDialog;
+	QTranslator translator;
 
 public:
 	ViewPlaylists(MediaPlayer *mediaPlayer);
@@ -26,6 +27,9 @@ public:
 	virtual int selectedTracksInCurrentPlaylist() const override;
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
+
+protected:
+	virtual void changeEvent(QEvent *event) override;
 
 public slots:
 	virtual void addExtFolders(const QList<QDir> &folders) override;

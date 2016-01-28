@@ -549,7 +549,7 @@ int SettingsPrivate::volumeBarHideAfter() const
 
 bool SettingsPrivate::initLanguage(const QString &lang)
 {
-	bool b = playerTranslator.load(":/translations/" + lang);
+	bool b = playerTranslator.load(":/translations/player_" + lang);
 	defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 	/// TODO: reload plugin UI
 	b &= QApplication::installTranslator(&playerTranslator);

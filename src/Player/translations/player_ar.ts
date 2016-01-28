@@ -1253,11 +1253,11 @@ The API has changed and you need to update these plugins too!</source>
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">فنان</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">الألبوم</translation>
     </message>
     <message>
         <source>Disc</source>
@@ -1269,7 +1269,7 @@ The API has changed and you need to update these plugins too!</source>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">سنة</translation>
     </message>
     <message>
         <source>From File to Tag</source>
