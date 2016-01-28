@@ -114,17 +114,17 @@
 <context>
     <name>LibraryTreeView</name>
     <message>
-        <location filename="../librarytreeview.cpp" line="40"/>
+        <location filename="../librarytreeview.cpp" line="38"/>
         <source>Send to the current playlist</source>
         <translation>Отправить в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="41"/>
+        <location filename="../librarytreeview.cpp" line="39"/>
         <source>Send to the tag editor</source>
         <translation>Отправить в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="231"/>
+        <location filename="../librarytreeview.cpp" line="228"/>
         <source>No matching results were found</source>
         <translation>Подходящих результатов не найдено</translation>
     </message>
@@ -140,7 +140,7 @@
 <context>
     <name>MiamItemModel</name>
     <message>
-        <location filename="../miamitemmodel.cpp" line="49"/>
+        <location filename="../miamitemmodel.cpp" line="62"/>
         <source>Various</source>
         <translation>Разные</translation>
     </message>

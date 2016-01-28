@@ -41,7 +41,7 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 	});
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
-	connect(settings, &SettingsPrivate::viewPropertyChanged, this, [=](SettingsPrivate::ViewProperty vp, QVariant value) {
+	connect(settings, &SettingsPrivate::viewPropertyChanged, this, [=](SettingsPrivate::ViewProperty vp, QVariant) {
 		if (vp == SettingsPrivate::VP_VolumeIndicatorToggled) {
 			this->update();
 		}

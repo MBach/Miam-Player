@@ -2,31 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pt" sourcelanguage="en_US">
 <context>
-    <name>AddressBar</name>
-    <message>
-        <source>Network</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarLineEdit</name>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarMenu</name>
-    <message>
-        <source>Computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -863,21 +838,6 @@
     </message>
 </context>
 <context>
-    <name>FileSystemTreeView</name>
-    <message>
-        <source>Add &quot;%1&quot; to playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add &quot;%1&quot; to library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
@@ -922,10 +882,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Search...</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Customize library...</source>
         <translation type="unfinished"></translation>
@@ -1091,10 +1047,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;About Miam Player...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1111,39 +1063,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Open folder...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Audio files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose some files to open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose a folder to open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Show debug information...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1209,84 +1133,6 @@
     <message>
         <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistDialog</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This playlist has changed</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistManager</name>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
     </message>
 </context>
 <context>
@@ -1368,25 +1214,6 @@ The API has changed and you need to update these plugins too!</source>
     </message>
 </context>
 <context>
-    <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>TagConverter</name>
     <message>
         <source>From Tag to File</source>
@@ -1431,10 +1258,6 @@ The API has changed and you need to update these plugins too!</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Close Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Converter</source>
         <translation type="unfinished"></translation>

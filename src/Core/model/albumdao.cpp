@@ -7,14 +7,14 @@ AlbumDAO::AlbumDAO(QObject *parent)
 AlbumDAO::AlbumDAO(const AlbumDAO &remoteAlbum) :
 	GenericDAO(remoteAlbum),
 	_artist(remoteAlbum.artist()),
-	_artistID(remoteAlbum.artistID()),
 	_artistNormalized(remoteAlbum.artistNormalized()),
 	_disc(remoteAlbum.disc()),
 	_cover(remoteAlbum.cover()),
 	_length(remoteAlbum.length()),
 	_source(remoteAlbum.source()),
 	_uri(remoteAlbum.uri()),
-	_year(remoteAlbum.year())
+	_year(remoteAlbum.year()),
+	_artistID(remoteAlbum.artistID())
 {}
 
 AlbumDAO& AlbumDAO::operator=(const AlbumDAO& other)

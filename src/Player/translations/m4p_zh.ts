@@ -2,31 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
-    <name>AddressBar</name>
-    <message>
-        <source>Network</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarLineEdit</name>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">错误</translation>
-    </message>
-    <message>
-        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarMenu</name>
-    <message>
-        <source>Computer</source>
-        <translation>计算机</translation>
-    </message>
-</context>
-<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -71,37 +46,6 @@
     <message>
         <source>Image (*.jpg)</source>
         <translation>图像 (*.jpg)</translation>
-    </message>
-</context>
-<context>
-    <name>ClosePlaylistPopup</name>
-    <message>
-        <source>Your attention is required</source>
-        <translation type="vanished">你需要注意</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation type="vanished">你将关闭播放列表. 你要作什么?</translation>
-    </message>
-    <message>
-        <source>This can be changed in options</source>
-        <translation type="vanished">可以在选项中修改</translation>
-    </message>
-    <message>
-        <source>Remember my choice in the future</source>
-        <translation type="vanished">记住我的选择</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="vanished">你将关闭被修改的播放列表. 你要作什么?</translation>
-    </message>
-    <message>
-        <source>Delete this playlist</source>
-        <translation type="vanished">删除该列表</translation>
-    </message>
-    <message>
-        <source>Replace this playlist</source>
-        <translation type="vanished">替换该播放列表</translation>
     </message>
 </context>
 <context>
@@ -894,21 +838,6 @@
     </message>
 </context>
 <context>
-    <name>FileSystemTreeView</name>
-    <message>
-        <source>Add &quot;%1&quot; to playlist</source>
-        <translation>添加 &quot;%1&quot; 至播放列表</translation>
-    </message>
-    <message>
-        <source>Add &quot;%1&quot; to library</source>
-        <translation>添加 &quot;%1&quot; 至库</translation>
-    </message>
-    <message>
-        <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation>发送 &quot;%1&quot; 至标签编辑器</translation>
-    </message>
-</context>
-<context>
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
@@ -953,10 +882,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Search...</source>
-        <translation>搜索...</translation>
-    </message>
     <message>
         <source>Customize library...</source>
         <translation>自定义库...</translation>
@@ -1119,10 +1044,6 @@
         <translation>独特的库模式</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>艺术家\专辑</translation>
-    </message>
-    <message>
         <source>&amp;About Miam Player...</source>
         <translation>&amp;A关于Miam Player...</translation>
     </message>
@@ -1139,40 +1060,12 @@
         <translation>&amp;O打开文件...</translation>
     </message>
     <message>
-        <source>Library</source>
-        <translation>库</translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation>文件浏览器</translation>
-    </message>
-    <message>
         <source>Open folder...</source>
         <translation>打开文件夹...</translation>
     </message>
     <message>
-        <source>Audio files</source>
-        <translation>音频文件</translation>
-    </message>
-    <message>
-        <source>Choose some files to open</source>
-        <translation>选择一些文件打开</translation>
-    </message>
-    <message>
-        <source>Choose a folder to open</source>
-        <translation>选择一个文件夹打开</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>播放列表</translation>
-    </message>
-    <message>
         <source>Show debug information...</source>
         <translation>显示调试信息...</translation>
-    </message>
-    <message>
-        <source>Every file type (*)</source>
-        <translation>所有类型 (*)</translation>
     </message>
     <message>
         <source>Stop after current</source>
@@ -1237,159 +1130,6 @@
     <message>
         <source>Hide menu bar</source>
         <translation>隐藏菜单栏</translation>
-    </message>
-</context>
-<context>
-    <name>Playlist</name>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">从播放列表移除</translation>
-    </message>
-    <message>
-        <source>Edit tags</source>
-        <translation type="vanished">编辑标签</translation>
-    </message>
-    <message>
-        <source>in tag editor</source>
-        <translation type="vanished">在标签编辑器里</translation>
-    </message>
-    <message>
-        <source>inline</source>
-        <translation type="vanished">内联</translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">这个播放列表为空.
-选择或拖拽音轨到你的库中或外部位置.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistDialog</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>播放列表管理</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>为保存的播放列表</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation>把播放列表拖至下方已保存</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>保存播放列表</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>加载</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation>保存</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>删除</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>导出...</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>预览播放列表</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>标题 (艺术家 - 专辑)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>该预览区域为空.
-选择一个播放列表以显示前30个音轨.</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>导出播放列表</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>播放列表 (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>更多轨道...</translation>
-    </message>
-    <message>
-        <source>This playlist has changed</source>
-        <translation>该播放列表已改变</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistHeaderView</name>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">标题</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="vanished">专辑</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <translation type="vanished">长度</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">艺术家</translation>
-    </message>
-    <message>
-        <source>Rating</source>
-        <translation type="vanished">等级</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="vanished">年份</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="vanished">源</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistManager</name>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translation>
-            <numerusform>将要删除 %n 播放列表. 是否要继续?</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="vanished">播放列表管理区存在完全相同的播放列表 (&apos;%1&apos;), 无法再次添加.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistModel</name>
-    <message>
-        <source>You cannot modify remote medias</source>
-        <translation type="vanished">你不能修改远程媒体</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">本地</translation>
-    </message>
-    <message>
-        <source>Local file</source>
-        <translation type="vanished">本地文件</translation>
     </message>
 </context>
 <context>
@@ -1471,56 +1211,6 @@ The API has changed and you need to update these plugins too!</source>
     </message>
 </context>
 <context>
-    <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation>结果搜集于:</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation>库</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;搜索更多结果...&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;显示更少结果&lt;/a&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>TabPlaylist</name>
-    <message>
-        <source>Playlist %1</source>
-        <translation type="vanished">播放列表 %1</translation>
-    </message>
-    <message>
-        <source>Rename playlist</source>
-        <translation type="vanished">重命名播放列表</translation>
-    </message>
-    <message>
-        <source>Load background...</source>
-        <translation type="vanished">加载背景...</translation>
-    </message>
-    <message>
-        <source>Clear background</source>
-        <translation type="vanished">清空背景</translation>
-    </message>
-    <message>
-        <source>Delete playlist...</source>
-        <translation type="vanished">删除播放列表...</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation type="vanished">将要删除 &apos;%1&apos;. 是否确定继续?</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="vanished">警告</translation>
-    </message>
-</context>
-<context>
     <name>TagConverter</name>
     <message>
         <source>From Tag to File</source>
@@ -1565,10 +1255,6 @@ The API has changed and you need to update these plugins too!</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Close Editor</source>
-        <translation>关闭编辑器</translation>
-    </message>
     <message>
         <source>Converter</source>
         <translation>转换器</translation>

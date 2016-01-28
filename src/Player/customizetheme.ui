@@ -75,7 +75,7 @@
        <string>Buttons &amp; Bars</string>
       </property>
       <property name="textAlignment">
-       <set>AlignCenter</set>
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -90,7 +90,7 @@
        <string>Fonts</string>
       </property>
       <property name="textAlignment">
-       <set>AlignCenter</set>
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -102,7 +102,7 @@
        <string>Colors</string>
       </property>
       <property name="textAlignment">
-       <set>AlignCenter</set>
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -114,7 +114,7 @@
        <string>Library</string>
       </property>
       <property name="textAlignment">
-       <set>AlignCenter</set>
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -126,7 +126,7 @@
        <string>Tabs</string>
       </property>
       <property name="textAlignment">
-       <set>AlignCenter</set>
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -176,7 +176,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Flat</string>
+              <string notr="true">Flat</string>
              </property>
              <property name="icon">
               <iconset resource="../Core/core.qrc">
@@ -185,7 +185,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Fairytale</string>
+              <string notr="true">Fairytale</string>
              </property>
              <property name="icon">
               <iconset theme="fairytale" resource="../Core/core.qrc">
@@ -194,7 +194,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Gnome</string>
+              <string notr="true">Gnome</string>
              </property>
              <property name="icon">
               <iconset theme="gnome" resource="../Core/core.qrc">
@@ -203,7 +203,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Nuvola</string>
+              <string notr="true">Nuvola</string>
              </property>
              <property name="icon">
               <iconset theme="nuvola" resource="../Core/core.qrc">
@@ -212,7 +212,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Tango</string>
+              <string notr="true">Tango</string>
              </property>
              <property name="icon">
               <iconset theme="tango" resource="../Core/core.qrc">
@@ -221,7 +221,7 @@
             </item>
             <item>
              <property name="text">
-              <string>Orange white pearls</string>
+              <string notr="true">Orange white pearls</string>
              </property>
              <property name="icon">
               <iconset resource="../Core/core.qrc">
@@ -292,8 +292,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>471</width>
-               <height>542</height>
+               <width>484</width>
+               <height>562</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1115,7 +1115,7 @@
            <widget class="QFontComboBox" name="fontComboBoxPlaylist">
             <property name="currentFont">
              <font>
-              <family>Arial</family>
+              <family>Liberation Sans</family>
              </font>
             </property>
            </widget>
@@ -1124,7 +1124,7 @@
            <widget class="QFontComboBox" name="fontComboBoxLibrary">
             <property name="currentFont">
              <font>
-              <family>Arial</family>
+              <family>Liberation Sans</family>
               <pointsize>8</pointsize>
              </font>
             </property>
@@ -1161,7 +1161,7 @@
            <widget class="QFontComboBox" name="fontComboBoxMenus">
             <property name="currentFont">
              <font>
-              <family>Arial</family>
+              <family>Liberation Sans</family>
              </font>
             </property>
            </widget>
@@ -2537,7 +2537,7 @@
  <buttongroups>
   <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
-  <buttongroup name="buttonGroupEnableStarOutline"/>
   <buttongroup name="buttonGroupArtistsArticle"/>
+  <buttongroup name="buttonGroupEnableStarOutline"/>
  </buttongroups>
 </ui>

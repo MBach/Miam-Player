@@ -2,31 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ar" sourcelanguage="en_US">
 <context>
-    <name>AddressBar</name>
-    <message>
-        <source>Network</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarLineEdit</name>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarMenu</name>
-    <message>
-        <source>Computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -71,25 +46,6 @@
     <message>
         <source>Image (*.jpg)</source>
         <translation>(*.jpg) صوِّر</translation>
-    </message>
-</context>
-<context>
-    <name>ClosePlaylistPopup</name>
-    <message>
-        <source>Your attention is required</source>
-        <translation type="vanished">إنتباهكم مُهِمْ</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation type="vanished">ستغلُقون مجموعة مِن القِراءات هل هذا ما تُريدون فِعْله؟</translation>
-    </message>
-    <message>
-        <source>This can be changed in options</source>
-        <translation type="vanished">هذا الخَيار يمكِن تحْمِلُهُ فيمابعد في الخياراتْ</translation>
-    </message>
-    <message>
-        <source>Remember my choice in the future</source>
-        <translation type="vanished">تذَكَرْ خَياري في المَرَّاتْ القادِمةْ</translation>
     </message>
 </context>
 <context>
@@ -882,21 +838,6 @@
     </message>
 </context>
 <context>
-    <name>FileSystemTreeView</name>
-    <message>
-        <source>Add &quot;%1&quot; to playlist</source>
-        <translation>إلى مجموعة القراءة &quot;%1&quot;إظافة </translation>
-    </message>
-    <message>
-        <source>Add &quot;%1&quot; to library</source>
-        <translation>إلى المكتبة &quot;%1&quot;إظافة</translation>
-    </message>
-    <message>
-        <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation>  إلى المحرر البيانات الوصفية &quot;%1&quot; إرسال </translation>
-    </message>
-</context>
-<context>
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
@@ -941,10 +882,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Search...</source>
-        <translation>بحث...</translation>
-    </message>
     <message>
         <source>Customize library...</source>
         <translation>تخصيص المكتبة...</translation>
@@ -1122,10 +1059,6 @@
         <translation>نوع مكتبة</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;About Miam Player...</source>
         <translation>Miam Player فيما يخص&amp;...</translation>
     </message>
@@ -1142,39 +1075,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Open folder...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Audio files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose some files to open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose a folder to open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation type="unfinished">قائمة القرائة</translation>
-    </message>
-    <message>
         <source>Show debug information...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1240,128 +1145,6 @@
     <message>
         <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Playlist</name>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">نزع من قائمة القراءة</translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="obsolete">هذه القائمة فارغة
- أختر و ضع المسارات من المكتبة أو من برنامج خارجي٠</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistDialog</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation type="unfinished">مسَيِّر قائمة القِراءة</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation type="unfinished">قوائم القراءة التي لم يتم حفظها</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation type="unfinished">قوائم القراءة المحفوظة</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation type="unfinished">حمِّل</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="unfinished">حفظ</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished">مسْحْ</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="unfinished">...تصدير</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation type="unfinished">مظهر مجموعة القراءة</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation type="unfinished">عنوان ـ الفنان؛ ألبوم</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation type="unfinished">منطقة المعاينة فارغة٠ أختيار قائمة قراءة لإظهار ثلاثون مسارا الأولى٠  </translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">أنتبه</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation type="unfinished">تصدير قوائم القِراءة</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation type="unfinished">(*.m3u8)قائمة القِراءة</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation type="unfinished">...و مسارات أخرى</translation>
-    </message>
-    <message>
-        <source>This playlist has changed</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistHeaderView</name>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">عنوان</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="vanished">ألبوم</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <translation type="vanished">مُدة</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">فنَّان</translation>
-    </message>
-    <message>
-        <source>Rating</source>
-        <translation type="vanished">علامة</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="vanished">سنَة</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistManager</name>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translation>
-            <numerusform>قائِمة القِراءة٠ هل أنتم متأكدون بأنكم تريدون المتابعة؟ %n أنتم على وشك مسح</numerusform>
-            <numerusform>قوائم القِراءة٠ هل أنتم متأكدون بأنكم تريدون المتابعة؟%n أنتم على وشك مسح</numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-        </translation>
     </message>
 </context>
 <context>
@@ -1451,36 +1234,6 @@ The API has changed and you need to update these plugins too!</source>
     </message>
 </context>
 <context>
-    <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TabPlaylist</name>
-    <message>
-        <source>Playlist %1</source>
-        <translation type="vanished">قائمة القراءة %1</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="obsolete">أنتبه</translation>
-    </message>
-</context>
-<context>
     <name>TagConverter</name>
     <message>
         <source>From Tag to File</source>
@@ -1525,10 +1278,6 @@ The API has changed and you need to update these plugins too!</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Close Editor</source>
-        <translation>أغلق المحرر</translation>
-    </message>
     <message>
         <source>Converter</source>
         <translation>محول</translation>

@@ -2,7 +2,7 @@ QT += multimedia sql widgets
 
 TEMPLATE = lib
 
-DEFINES += MIAMTABPLAYLISTS_LIBRARY
+DEFINES += MIAMtabPlaylists_LIBRARY
 
 SOURCES += dialogs/closeplaylistpopup.cpp \
     dialogs/playlistdialog.cpp \
@@ -95,18 +95,20 @@ macx {
 INCLUDEPATH += $$PWD/../Core/ $$PWD/../Library/
 DEPENDPATH += $$PWD/../Core $$PWD/../Library/
 
-TRANSLATIONS = translations/TabPlaylists_ar.ts \
-    translations/TabPlaylists_cs.ts \
-    translations/TabPlaylists_de.ts \
-    translations/TabPlaylists_en.ts \
-    translations/TabPlaylists_es.ts \
-    translations/TabPlaylists_fr.ts \
-    translations/TabPlaylists_in.ts \
-    translations/TabPlaylists_it.ts \
-    translations/TabPlaylists_ja.ts \
-    translations/TabPlaylists_kr.ts \
-    translations/TabPlaylists_pt.ts \
-    translations/TabPlaylists_ru.ts \
-    translations/TabPlaylists_th.ts \
-    translations/TabPlaylists_vn.ts \
-    translations/TabPlaylists_zh.ts
+RESOURCES += tabPlaylists.qrc
+
+TRANSLATIONS = translations/tabPlaylists_ar.ts \
+    translations/tabPlaylists_cs.ts \
+    translations/tabPlaylists_de.ts \
+    translations/tabPlaylists_en.ts \
+    translations/tabPlaylists_es.ts \
+    translations/tabPlaylists_fr.ts \
+    translations/tabPlaylists_in.ts \
+    translations/tabPlaylists_it.ts \
+    translations/tabPlaylists_ja.ts \
+    translations/tabPlaylists_kr.ts \
+    translations/tabPlaylists_pt.ts \
+    translations/tabPlaylists_ru.ts \
+    translations/tabPlaylists_th.ts \
+    translations/tabPlaylists_vn.ts \
+    translations/tabPlaylists_zh.ts

@@ -4,25 +4,22 @@ TEMPLATE = lib
 
 DEFINES += MIAMUNIQUELIBRARY_LIBRARY
 
-FORMS += \
-    uniquelibrary.ui
+FORMS += uniquelibrary.ui
 
-HEADERS += \
+HEADERS += coveritem.h \
+    tableview.h \
+    miamuniquelibrary_global.hpp \
     uniquelibrary.h \
     uniquelibraryitemdelegate.h \
     uniquelibraryitemmodel.h \
-    miamuniquelibrary_global.hpp \
-    uniquelibraryfilterproxymodel.h \
-    coveritem.h \
-    tableview.h
+    uniquelibraryfilterproxymodel.h
 
-SOURCES += \
+SOURCES += coveritem.cpp \
+    tableview.cpp \
     uniquelibrary.cpp \
     uniquelibraryitemdelegate.cpp \
     uniquelibraryitemmodel.cpp \
-    uniquelibraryfilterproxymodel.cpp \
-    coveritem.cpp \
-    tableview.cpp
+    uniquelibraryfilterproxymodel.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore -L$$OUT_PWD/../Library/debug/ -lLibrary
@@ -44,7 +41,6 @@ win32 {
     TARGET = UniqueLibrary
 }
 unix {
-    #QMAKE_CXXFLAGS += -std=c++11
     LIBS += -L$$OUT_PWD/../Core/ -lmiam-core -L$$OUT_PWD/../Library/ -lmiam-library
     TARGET = miam-uniquelibrary
 }

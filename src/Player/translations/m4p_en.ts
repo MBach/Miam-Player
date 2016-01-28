@@ -2,31 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US" sourcelanguage="en_US">
 <context>
-    <name>AddressBar</name>
-    <message>
-        <source>Network</source>
-        <translation>Network</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarLineEdit</name>
-    <message>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation>Miam-Player cannot find « %1 ». Please check the name and retry.</translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarMenu</name>
-    <message>
-        <source>Computer</source>
-        <translation>Computer</translation>
-    </message>
-</context>
-<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -71,37 +46,6 @@
     <message>
         <source>Image (*.jpg)</source>
         <translation>Image (*.jpg)</translation>
-    </message>
-</context>
-<context>
-    <name>ClosePlaylistPopup</name>
-    <message>
-        <source>Your attention is required</source>
-        <translation type="vanished">Your attention is required</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation type="vanished">You&apos;re about to close a playlist. What would you like to do?</translation>
-    </message>
-    <message>
-        <source>This can be changed in options</source>
-        <translation type="vanished">This can be changed in options</translation>
-    </message>
-    <message>
-        <source>Remember my choice in the future</source>
-        <translation type="vanished">Remember my choice in the future</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="vanished">You&apos;re about to close a playlist that you have modified. What would you like to do?</translation>
-    </message>
-    <message>
-        <source>Delete this playlist</source>
-        <translation type="vanished">Delete this playlist</translation>
-    </message>
-    <message>
-        <source>Replace this playlist</source>
-        <translation type="vanished">Replace this playlist</translation>
     </message>
 </context>
 <context>
@@ -894,21 +838,6 @@
     </message>
 </context>
 <context>
-    <name>FileSystemTreeView</name>
-    <message>
-        <source>Add &quot;%1&quot; to playlist</source>
-        <translation>Add &quot;%1&quot; to playlist</translation>
-    </message>
-    <message>
-        <source>Add &quot;%1&quot; to library</source>
-        <translation>Add &quot;%1&quot; to library</translation>
-    </message>
-    <message>
-        <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation>Send &quot;%1&quot; to the tag editor</translation>
-    </message>
-</context>
-<context>
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
@@ -953,10 +882,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Search...</source>
-        <translation>Search...</translation>
-    </message>
     <message>
         <source>Customize library...</source>
         <translation>Customize library...</translation>
@@ -1122,10 +1047,6 @@
         <translation>Unique library Mode</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>Artist \ Album</translation>
-    </message>
-    <message>
         <source>&amp;About Miam Player...</source>
         <translation>&amp;About Miam Player...</translation>
     </message>
@@ -1142,40 +1063,12 @@
         <translation>&amp;Open files...</translation>
     </message>
     <message>
-        <source>Library</source>
-        <translation>Library</translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation>File explorer</translation>
-    </message>
-    <message>
         <source>Open folder...</source>
         <translation>Open folder...</translation>
     </message>
     <message>
-        <source>Audio files</source>
-        <translation>Audio files</translation>
-    </message>
-    <message>
-        <source>Choose some files to open</source>
-        <translation>Choose some files to open</translation>
-    </message>
-    <message>
-        <source>Choose a folder to open</source>
-        <translation>Choose a folder to open</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>playlist</translation>
-    </message>
-    <message>
         <source>Show debug information...</source>
         <translation>Show debug information...</translation>
-    </message>
-    <message>
-        <source>Every file type (*)</source>
-        <translation>Every file type (*)</translation>
     </message>
     <message>
         <source>Stop after current</source>
@@ -1240,161 +1133,6 @@
     <message>
         <source>Hide menu bar</source>
         <translation>Hide menu bar</translation>
-    </message>
-</context>
-<context>
-    <name>Playlist</name>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">Remove from playlist</translation>
-    </message>
-    <message>
-        <source>Edit tags</source>
-        <translation type="vanished">Edit tags</translation>
-    </message>
-    <message>
-        <source>in tag editor</source>
-        <translation type="vanished">in tag editor</translation>
-    </message>
-    <message>
-        <source>inline</source>
-        <translation type="vanished">inline</translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">This playlist is empty.
-Select or drop tracks from your library or any external location.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistDialog</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>Playlist Manager</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>Unsaved Playlists</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation>Drag &amp; drop playlists below to save them</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>Saved playlists</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>Load</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation>Save</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Delete</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>Export...</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>Preview playlist</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>Title (Artist - Album)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>This preview area is empty.
-Select a playlist to display the first 30 tracks.</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Warning</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>Export playlist</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>Playlist (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>And more tracks...</translation>
-    </message>
-    <message>
-        <source>This playlist has changed</source>
-        <translation>This playlist has changed</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistHeaderView</name>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">Title</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="vanished">Album</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <translation type="vanished">Length</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">Artist</translation>
-    </message>
-    <message>
-        <source>Rating</source>
-        <translation type="vanished">Rating</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="vanished">Year</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="vanished">Source</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistManager</name>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translatorcomment>How many playlists does one want to remove?</translatorcomment>
-        <translation>
-            <numerusform>You&apos;re about to delete %n playlist. Are you sure you want to continue?</numerusform>
-            <numerusform>You&apos;re about to delete %n playlists. Are you sure you want to continue?</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="vanished">There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistModel</name>
-    <message>
-        <source>You cannot modify remote medias</source>
-        <translation type="vanished">You cannot modify remote medias</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">Local</translation>
-    </message>
-    <message>
-        <source>Local file</source>
-        <translation type="vanished">Local file</translation>
     </message>
 </context>
 <context>
@@ -1479,56 +1217,6 @@ The API has changed and you need to update these plugins too!</translation>
     </message>
 </context>
 <context>
-    <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation>Results are aggregated from:</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation>Library</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>TabPlaylist</name>
-    <message>
-        <source>Playlist %1</source>
-        <translation type="vanished">Playlist %1</translation>
-    </message>
-    <message>
-        <source>Rename playlist</source>
-        <translation type="vanished">Rename playlist</translation>
-    </message>
-    <message>
-        <source>Load background...</source>
-        <translation type="vanished">Load background...</translation>
-    </message>
-    <message>
-        <source>Clear background</source>
-        <translation type="vanished">Clear background</translation>
-    </message>
-    <message>
-        <source>Delete playlist...</source>
-        <translation type="vanished">Delete playlist...</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation type="vanished">You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="vanished">Warning</translation>
-    </message>
-</context>
-<context>
     <name>TagConverter</name>
     <message>
         <source>From Tag to File</source>
@@ -1573,10 +1261,6 @@ The API has changed and you need to update these plugins too!</translation>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Close Editor</source>
-        <translation>Close Editor</translation>
-    </message>
     <message>
         <source>Converter</source>
         <translation>Converter</translation>

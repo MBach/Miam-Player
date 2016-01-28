@@ -10,13 +10,6 @@
     </message>
 </context>
 <context>
-    <name>UniqueLibrary</name>
-    <message>
-        <source>Search...</source>
-        <translation type="vanished">Искать...</translation>
-    </message>
-</context>
-<context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <location filename="../uniquelibraryitemdelegate.cpp" line="84"/>
@@ -34,7 +27,7 @@
     <message>
         <location filename="../uniquelibrary.ui" line="263"/>
         <source>Search...</source>
-        <translation type="unfinished">Искать...</translation>
+        <translation>Искать...</translation>
     </message>
 </context>
 </TS>

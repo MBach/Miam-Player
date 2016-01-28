@@ -9,13 +9,6 @@
     </message>
 </context>
 <context>
-    <name>UniqueLibrary</name>
-    <message>
-        <source>Search...</source>
-        <translation type="obsolete">搜索...</translation>
-    </message>
-</context>
-<context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <source>(no title)</source>

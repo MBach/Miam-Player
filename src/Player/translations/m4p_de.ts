@@ -2,31 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de" sourcelanguage="en_US">
 <context>
-    <name>AddressBar</name>
-    <message>
-        <source>Network</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarLineEdit</name>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarMenu</name>
-    <message>
-        <source>Computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -71,25 +46,6 @@
     <message>
         <source>Image (*.jpg)</source>
         <translation>Bilddatei (*.jpg)</translation>
-    </message>
-</context>
-<context>
-    <name>ClosePlaylistPopup</name>
-    <message>
-        <source>Your attention is required</source>
-        <translation type="vanished">Ihre Aufmerksamkeit wird benötigt</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation type="vanished">Sie schließen gerade eine Wiedergabeliste. Möchten Sie fortfahren ?</translation>
-    </message>
-    <message>
-        <source>This can be changed in options</source>
-        <translation type="vanished">Dies kann in den Einstellungen verändert werden</translation>
-    </message>
-    <message>
-        <source>Remember my choice in the future</source>
-        <translation type="vanished">Meine Auswahl zukünftig speichern</translation>
     </message>
 </context>
 <context>
@@ -882,21 +838,6 @@
     </message>
 </context>
 <context>
-    <name>FileSystemTreeView</name>
-    <message>
-        <source>Add &quot;%1&quot; to playlist</source>
-        <translation>&quot;%1&quot; zur Wiedergabeliste hinzufügen</translation>
-    </message>
-    <message>
-        <source>Add &quot;%1&quot; to library</source>
-        <translation>&quot;%1&quot; zur Bibliothek hinzufügen</translation>
-    </message>
-    <message>
-        <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation>&quot;%1&quot; zum Tag Editor schicken</translation>
-    </message>
-</context>
-<context>
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
@@ -941,10 +882,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Search...</source>
-        <translation>Suchen...</translation>
-    </message>
     <message>
         <source>Customize library...</source>
         <translation>Bibliothek anpassen...</translation>
@@ -1110,10 +1047,6 @@
         <translation>Unique Library-Modus</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>Interpret \ Album</translation>
-    </message>
-    <message>
         <source>&amp;About Miam Player...</source>
         <translation>Über den Miam Player...</translation>
     </message>
@@ -1130,39 +1063,11 @@
         <translation>Dateien öffnen...</translation>
     </message>
     <message>
-        <source>Library</source>
-        <translation>Bibliothek</translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation>Datei-Explorer</translation>
-    </message>
-    <message>
         <source>Open folder...</source>
         <translation>Ordner öffnen...</translation>
     </message>
     <message>
-        <source>Audio files</source>
-        <translation>Audiodateien</translation>
-    </message>
-    <message>
-        <source>Choose some files to open</source>
-        <translation>Dateien zum Öffnen auswählen</translation>
-    </message>
-    <message>
-        <source>Choose a folder to open</source>
-        <translation>Ordner zum Öffnen auswählen</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>Wiedergabeliste</translation>
-    </message>
-    <message>
         <source>Show debug information...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1228,153 +1133,6 @@
     <message>
         <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Playlist</name>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">Aus der Wiedergabeliste entfernen</translation>
-    </message>
-    <message>
-        <source>Edit tags</source>
-        <translation type="vanished">Tags editieren</translation>
-    </message>
-    <message>
-        <source>in tag editor</source>
-        <translation type="vanished">im Tag Editor</translation>
-    </message>
-    <message>
-        <source>inline</source>
-        <translatorcomment>order &quot;inzeilig&quot; ?</translatorcomment>
-        <translation type="vanished">Inline</translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="obsolete">Diese Wiedergabeliste ist leer.
-Wählen Sie Musiktitel aus der Bibliothek oder externen Speicherstelle aus.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistDialog</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation type="unfinished">Wiedergabelistenmanager</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation type="unfinished">Nicht gespeicherte Wiedergabelisten</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation type="unfinished">Gespeicherte Wiedergabelisten</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation type="unfinished">Laden</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="unfinished">Speichern</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished">Löschen</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="unfinished">Exportieren...</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation type="unfinished">Vorschau der Wiedergabeliste</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation type="unfinished">Titel (Interpret - Album)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation type="unfinished">Diese Vorschau ist leer.
-Wählen Sie eine Wiedergabeliste aus, um die ersten 30 Musiktitel darzustellen.</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="unfinished">Warnung</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation type="unfinished">Wiedergabeliste exportieren</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation type="unfinished">Wiedergabeliste (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation type="unfinished">Und weitere Musiktitel...</translation>
-    </message>
-    <message>
-        <source>This playlist has changed</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistHeaderView</name>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">Titel</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="vanished">Album</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <translation type="vanished">Dauer</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">Interpret</translation>
-    </message>
-    <message>
-        <source>Rating</source>
-        <translation type="vanished">Bewertung</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="vanished">Jahr</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="vanished">Quelle</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistManager</name>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translation>
-            <numerusform>Sie sind dabei, die %n Wiedergabeliste(n) zu löschen. Möchten Sie dennoch fortfahren?</numerusform>
-            <numerusform></numerusform>
-        </translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistModel</name>
-    <message>
-        <source>You cannot modify remote medias</source>
-        <translation type="vanished">Sie können keine fernen Medien verändern</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">Lokal</translation>
     </message>
 </context>
 <context>
@@ -1456,36 +1214,6 @@ The API has changed and you need to update these plugins too!</source>
     </message>
 </context>
 <context>
-    <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation>Ergebnisse wurden gesammelt auf:</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation>Bibliothek</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>TabPlaylist</name>
-    <message>
-        <source>Playlist %1</source>
-        <translation type="vanished">Wiedergabeliste %1</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="obsolete">Warnung</translation>
-    </message>
-</context>
-<context>
     <name>TagConverter</name>
     <message>
         <source>From Tag to File</source>
@@ -1530,10 +1258,6 @@ The API has changed and you need to update these plugins too!</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Close Editor</source>
-        <translation>Editor schließen</translation>
-    </message>
     <message>
         <source>Converter</source>
         <translation>Umwandler</translation>

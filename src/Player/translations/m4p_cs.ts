@@ -2,31 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="cs_CZ" sourcelanguage="en_US">
 <context>
-    <name>AddressBar</name>
-    <message>
-        <source>Network</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarLineEdit</name>
-    <message>
-        <source>Error</source>
-        <translation type="unfinished">Chyba</translation>
-    </message>
-    <message>
-        <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AddressBarMenu</name>
-    <message>
-        <source>Computer</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>AlbumCover</name>
     <message>
         <source>Load a new cover...</source>
@@ -71,37 +46,6 @@
     <message>
         <source>Image (*.jpg)</source>
         <translation>Obrázek (*.jpg)</translation>
-    </message>
-</context>
-<context>
-    <name>ClosePlaylistPopup</name>
-    <message>
-        <source>Your attention is required</source>
-        <translation type="vanished">Je vyžadována vaše pozornost</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist. What would you like to do?</source>
-        <translation type="vanished">Chystáte se zavřít seznam skladeb. Co chcete udělat?</translation>
-    </message>
-    <message>
-        <source>This can be changed in options</source>
-        <translation type="vanished">Toto je možné změnit ve volbách</translation>
-    </message>
-    <message>
-        <source>Remember my choice in the future</source>
-        <translation type="vanished">Zapamatovat si moji volbu do budoucna</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to close a playlist that you have modified. What would you like to do?</source>
-        <translation type="vanished">Chystáte se zavřít seznam skladeb, který jste změnil. Co chcete udělat?</translation>
-    </message>
-    <message>
-        <source>Delete this playlist</source>
-        <translation type="vanished">Smazat tento seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Replace this playlist</source>
-        <translation type="vanished">Nahradit tento seznam skladeb</translation>
     </message>
 </context>
 <context>
@@ -894,21 +838,6 @@
     </message>
 </context>
 <context>
-    <name>FileSystemTreeView</name>
-    <message>
-        <source>Add &quot;%1&quot; to playlist</source>
-        <translation>Přidat &quot;%1&quot; do seznamu skladeb</translation>
-    </message>
-    <message>
-        <source>Add &quot;%1&quot; to library</source>
-        <translation>Přidat &quot;%1&quot; do knihovny</translation>
-    </message>
-    <message>
-        <source>Send &quot;%1&quot; to the tag editor</source>
-        <translation>Poslat &quot;%1&quot; do editoru značek</translation>
-    </message>
-</context>
-<context>
     <name>LogBrowserDialog</name>
     <message>
         <source>Save Log Output</source>
@@ -953,10 +882,6 @@
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <source>Search...</source>
-        <translation>Hledat...</translation>
-    </message>
     <message>
         <source>Customize library...</source>
         <translation>Přizpůsobit knihovnu...</translation>
@@ -1125,10 +1050,6 @@
         <translation>Režim jedinečné knihovny</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>Umělci / Alba</translation>
-    </message>
-    <message>
         <source>&amp;About Miam Player...</source>
         <translation>&amp;O programu Miam Player...</translation>
     </message>
@@ -1145,40 +1066,12 @@
         <translation>&amp;Otevřít soubory...</translation>
     </message>
     <message>
-        <source>Library</source>
-        <translation>Knihovna</translation>
-    </message>
-    <message>
-        <source>File explorer</source>
-        <translation>Průzkumník souborů</translation>
-    </message>
-    <message>
         <source>Open folder...</source>
         <translation>Otevřít složku...</translation>
     </message>
     <message>
-        <source>Audio files</source>
-        <translation>Zvukové soubory</translation>
-    </message>
-    <message>
-        <source>Choose some files to open</source>
-        <translation>Vyberte nějaké soubory k otevření</translation>
-    </message>
-    <message>
-        <source>Choose a folder to open</source>
-        <translation>Vyberte složku k otevření</translation>
-    </message>
-    <message>
-        <source>playlist</source>
-        <translation>Seznam skladeb</translation>
-    </message>
-    <message>
         <source>Show debug information...</source>
         <translation>Ukázat informace o ladění...</translation>
-    </message>
-    <message>
-        <source>Every file type (*)</source>
-        <translation>Všechny typy souborů (*)</translation>
     </message>
     <message>
         <source>Stop after current</source>
@@ -1243,161 +1136,6 @@
     <message>
         <source>Hide menu bar</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>Playlist</name>
-    <message>
-        <source>Remove from playlist</source>
-        <translation type="vanished">Odstranit ze seznamu skladeb</translation>
-    </message>
-    <message>
-        <source>Edit tags</source>
-        <translation type="vanished">Upravit značky</translation>
-    </message>
-    <message>
-        <source>in tag editor</source>
-        <translation type="vanished">v editoru značek</translation>
-    </message>
-    <message>
-        <source>inline</source>
-        <translation type="vanished">zde</translation>
-    </message>
-    <message>
-        <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation type="vanished">Tento seznam skladeb je prázdný.
-Vyberte nebo upusťte skladby ze své knihovny nebo jakéhokoli vnějšího umístění.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistDialog</name>
-    <message>
-        <source>Playlist Manager</source>
-        <translation>Správce seznamů skladeb</translation>
-    </message>
-    <message>
-        <source>Unsaved Playlists</source>
-        <translation>Neuložené seznamy skladeb</translation>
-    </message>
-    <message>
-        <source>Drag &amp; drop playlists below to save them</source>
-        <translation>Přetáhněte seznamy skladeb dolů pro jejich uložení</translation>
-    </message>
-    <message>
-        <source>Saved playlists</source>
-        <translation>Uložené seznamy skladeb</translation>
-    </message>
-    <message>
-        <source>Load</source>
-        <translation>Nahrát</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation>Uložit</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>Smazat</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation>Vyvést...</translation>
-    </message>
-    <message>
-        <source>Preview playlist</source>
-        <translation>Náhled na seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Title (Artist - Album)</source>
-        <translation>Název (Umělec - Album)</translation>
-    </message>
-    <message>
-        <source>This preview area is empty.
-Select a playlist to display the first 30 tracks.</source>
-        <translation>Tato náhledová oblast je prázdná.
-Vyberte seznam skladeb k zobrazení prvních třiceti skladeb.</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation>Varování</translation>
-    </message>
-    <message>
-        <source>Export playlist</source>
-        <translation>Vyvést seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Playlist (*.m3u8)</source>
-        <translation>Seznam skladeb (*.m3u8)</translation>
-    </message>
-    <message>
-        <source>And more tracks...</source>
-        <translation>A více skladeb...</translation>
-    </message>
-    <message>
-        <source>This playlist has changed</source>
-        <translation>Tento seznam skladeb se změnil</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistHeaderView</name>
-    <message>
-        <source>Title</source>
-        <translation type="vanished">Název</translation>
-    </message>
-    <message>
-        <source>Album</source>
-        <translation type="vanished">Album</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <translation type="vanished">Délka</translation>
-    </message>
-    <message>
-        <source>Artist</source>
-        <translation type="vanished">Umělec</translation>
-    </message>
-    <message>
-        <source>Rating</source>
-        <translation type="vanished">Hodnocení</translation>
-    </message>
-    <message>
-        <source>Year</source>
-        <translation type="vanished">Rok</translation>
-    </message>
-    <message>
-        <source>Source</source>
-        <translation type="vanished">Zdroj</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistManager</name>
-    <message numerus="yes">
-        <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
-        <translation>
-            <numerusform>Chystáte se smazat %n seznam skladeb. Jste si jistý, že chcete pokračovat?</numerusform>
-            <numerusform>Chystáte se smazat %n seznamy skladeb. Jste si jistý, že chcete pokračovat?</numerusform>
-            <numerusform>Chystáte se smazat %n seznamů skladeb. Jste si jistý, že chcete pokračovat?</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
-        <translation type="vanished">Ve správci seznamů skladeb je přesně ten samý seznam skladeb (označen jako &apos;%1&apos;). Z toho důvodu jej není možné přidat dvakrát.</translation>
-    </message>
-</context>
-<context>
-    <name>PlaylistModel</name>
-    <message>
-        <source>You cannot modify remote medias</source>
-        <translation type="vanished">Nelze pozměnit vzdálené záznamy</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">Místní</translation>
-    </message>
-    <message>
-        <source>Local file</source>
-        <translation type="vanished">Místní soubor</translation>
     </message>
 </context>
 <context>
@@ -1481,56 +1219,6 @@ The API has changed and you need to update these plugins too!</source>
     </message>
 </context>
 <context>
-    <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation>Výsledky jsou souhrnem z:</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation>Knihovna</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
-        <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Hledat další výsledky...&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
-        <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Ukázat menší počet výsledků&lt;/a&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>TabPlaylist</name>
-    <message>
-        <source>Playlist %1</source>
-        <translation type="vanished">Seznam skladeb %1</translation>
-    </message>
-    <message>
-        <source>Rename playlist</source>
-        <translation type="vanished">Přejmenovat seznam skladeb</translation>
-    </message>
-    <message>
-        <source>Load background...</source>
-        <translation type="vanished">Nahrát pozadí...</translation>
-    </message>
-    <message>
-        <source>Clear background</source>
-        <translation type="vanished">Vyprázdnit pozadí</translation>
-    </message>
-    <message>
-        <source>Delete playlist...</source>
-        <translation type="vanished">Smazat seznam skladeb...</translation>
-    </message>
-    <message>
-        <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
-        <translation type="vanished">Chystáte se smazat &apos;%1&apos;. Jste si jistý, že chcete pokračovat?</translation>
-    </message>
-    <message>
-        <source>Warning</source>
-        <translation type="vanished">Varování</translation>
-    </message>
-</context>
-<context>
     <name>TagConverter</name>
     <message>
         <source>From Tag to File</source>
@@ -1575,10 +1263,6 @@ The API has changed and you need to update these plugins too!</source>
 </context>
 <context>
     <name>TagEditor</name>
-    <message>
-        <source>Close Editor</source>
-        <translation>Zavřít editor</translation>
-    </message>
     <message>
         <source>Converter</source>
         <translation>Převaděč</translation>

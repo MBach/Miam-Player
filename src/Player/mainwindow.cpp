@@ -150,18 +150,6 @@ void MainWindow::setupActions()
 	actionViewUniqueLibrary->setActionGroup(viewModeGroup);
 	connect(actionViewTagEditor, &QAction::triggered, this, &MainWindow::showTagEditor);
 
-	QActionGroup *actionPlaybackGroup = new QActionGroup(this);
-	for (QAction *actionPlayBack : findChildren<QAction*>(QRegExp("actionPlayback*", Qt::CaseSensitive, QRegExp::Wildcard))) {
-		actionPlaybackGroup->addAction(actionPlayBack);
-		connect(actionPlayBack, &QAction::triggered, this, [=]() {
-			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
-			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
-			QString enu = actionPlayBack->property("PlaybackMode").toString();
-			/// FIXME
-			//_playbackModeWidgetFactory->setPlaybackMode((QMediaPlaylist::PlaybackMode)metaEnum.keyToValue(enu.toStdString().data()));
-		});
-	}
-
 	// Link user interface
 	// Actions from the menu
 	connect(actionExit, &QAction::triggered, this, [=]() {
@@ -224,13 +212,13 @@ void MainWindow::setupActions()
 
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
 
-	connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
+	//connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
 		//QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
-		const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
-		QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+		//const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+		//QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
 		//QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
 		//action->setChecked(true);
-	});
+	//});
 }
 
 /** Update fonts for menu and context menus. */

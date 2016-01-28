@@ -9,13 +9,6 @@
     </message>
 </context>
 <context>
-    <name>UniqueLibrary</name>
-    <message>
-        <source>Search...</source>
-        <translation type="vanished">Search...</translation>
-    </message>
-</context>
-<context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <source>(no title)</source>
@@ -30,7 +23,7 @@
     <name>uniqueLibrary</name>
     <message>
         <source>Search...</source>
-        <translation type="unfinished">Search...</translation>
+        <translation>Search...</translation>
     </message>
 </context>
 </TS>

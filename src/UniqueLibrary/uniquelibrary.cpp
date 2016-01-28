@@ -115,7 +115,14 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
-	return false;
+	switch (vp) {
+	case SettingsPrivate::VP_MediaControls:
+	case SettingsPrivate::VP_SearchArea:
+	case SettingsPrivate::VP_VolumeIndicatorToggled:
+		return true;
+	default:
+		return false;
+	}
 }
 
 void UniqueLibrary::changeEvent(QEvent *event)
