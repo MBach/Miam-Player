@@ -81,7 +81,7 @@ void PlaybackModeButton::setIconFromTheme(const QString &theme)
 	// The objectName in the UI file MUST match the alias in the QRC file!
 	QString iconFile = ":/player/" + theme.toLower() + "/" + currentMode;
 	if (!QFile::exists(iconFile)) {
-		iconFile = ":/player/flat/" + currentMode;
+		iconFile = ":/player/gnome/" + currentMode;
 	}
 	QPushButton::setIcon(QIcon(iconFile));
 }

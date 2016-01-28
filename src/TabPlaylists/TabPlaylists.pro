@@ -2,7 +2,7 @@ QT += multimedia sql widgets
 
 TEMPLATE = lib
 
-DEFINES += MIAMtabPlaylists_LIBRARY
+DEFINES += MIAMTABPLAYLISTS_LIBRARY
 
 SOURCES += dialogs/closeplaylistpopup.cpp \
     dialogs/playlistdialog.cpp \
@@ -22,9 +22,9 @@ SOURCES += dialogs/closeplaylistpopup.cpp \
     playlistitemdelegate.cpp \
     playlistmanager.cpp \
     playlistmodel.cpp \
+    stareditor.cpp \
     tabbar.cpp \
     tabplaylist.cpp \
-    stareditor.cpp \
     viewplaylists.cpp
 
 HEADERS += dialogs/closeplaylistpopup.h \
@@ -43,16 +43,16 @@ HEADERS += dialogs/closeplaylistpopup.h \
     cornerwidget.h \
     extendedtabbar.h \
     extendedtabwidget.h \
+    miamtabPlaylists_global.hpp \
     nofocusitemdelegate.h \
     playlist.h \
     playlistheaderview.h \
     playlistitemdelegate.h \
     playlistmanager.h \
     playlistmodel.h \
+    stareditor.h \
     tabbar.h \
     tabplaylist.h \
-    stareditor.h \
-    miamtabPlaylists_global.hpp \
     viewplaylists.h
 
 FORMS += closeplaylistpopup.ui \
