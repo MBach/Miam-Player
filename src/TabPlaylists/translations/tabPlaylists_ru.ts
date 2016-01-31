@@ -92,32 +92,32 @@
     <message>
         <location filename="../mediabuttons/playbackmodebutton.cpp" line="28"/>
         <source>Sequential</source>
-        <translation type="unfinished"></translation>
+        <translation>Последовательно</translation>
     </message>
     <message>
         <location filename="../mediabuttons/playbackmodebutton.cpp" line="29"/>
         <source>Shuffle</source>
-        <translation type="unfinished"></translation>
+        <translation>Случайный порядок</translation>
     </message>
     <message>
         <location filename="../mediabuttons/playbackmodebutton.cpp" line="30"/>
         <source>Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>Закольцевать</translation>
     </message>
     <message>
         <location filename="../mediabuttons/playbackmodebutton.cpp" line="31"/>
         <source>Current track once</source>
-        <translation type="unfinished"></translation>
+        <translation>Только текущая дорожка</translation>
     </message>
     <message>
         <location filename="../mediabuttons/playbackmodebutton.cpp" line="32"/>
         <source>Current track in loop</source>
-        <translation type="unfinished"></translation>
+        <translation>Закольцевать текущую дорожку</translation>
     </message>
     <message>
         <location filename="../mediabuttons/playbackmodebutton.cpp" line="36"/>
         <source>Sequential mode is the most commun mode to play tracks in a playlist. It will play tracks from Top to Bottom.</source>
-        <translation type="unfinished"></translation>
+        <translation>Последовательный режим это наиболее распространённый способ воспроизведения дорожек, находящихся в списке воспроизведения. Дорожки будут проигрываться сверху вниз.</translation>
     </message>
 </context>
 <context>
@@ -398,27 +398,27 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="209"/>
+        <location filename="../viewplaylists.cpp" line="221"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="291"/>
+        <location filename="../viewplaylists.cpp" line="303"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="303"/>
+        <location filename="../viewplaylists.cpp" line="315"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="305"/>
+        <location filename="../viewplaylists.cpp" line="317"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="330"/>
+        <location filename="../viewplaylists.cpp" line="342"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>
