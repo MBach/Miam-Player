@@ -565,12 +565,6 @@
    <header location="global">mediabuttons/playbackmodebutton.h</header>
   </customwidget>
   <customwidget>
-   <class>PaintableWidget</class>
-   <extends>QWidget</extends>
-   <header>dialogs/paintablewidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>LibraryFilterLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">libraryfilterlineedit.h</header>
@@ -606,6 +600,12 @@
    <class>ChangeHierarchyButton</class>
    <extends>QPushButton</extends>
    <header>changehierarchybutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PaintableWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">styling/paintablewidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

@@ -40,6 +40,8 @@ public slots:
 
 	/** Find and insert a node in the hierarchy of items. */
 	void insertNode(GenericDAO *node) override;
+
+	virtual void load() override;
 };
 
 #endif // LIBRARYITEMMODEL_H

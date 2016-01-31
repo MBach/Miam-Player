@@ -55,14 +55,12 @@ QuickStart::QuickStart(QWidget *parent)
 	connect(quickStartTableWidget, &QTableWidget::itemClicked, this, &QuickStart::checkRow);
 
 	auto settingsPrivate = SettingsPrivate::instance();
-	auto db = SqlDatabase::instance();
 
 	// Set only one location in the Library: the default music folder
 	connect(defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
 		QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
 		musicLocation = QDir::toNativeSeparators(musicLocation);
 		settingsPrivate->setMusicLocations({ musicLocation });
-		db->rebuild();
 	});
 
 	// Select only folders that are checked by one
@@ -76,7 +74,6 @@ QuickStart::QuickStart(QWidget *parent)
 			}
 		}
 		settingsPrivate->setMusicLocations(newLocations);
-		db->rebuild();
 	});
 
 	this->installEventFilter(this);

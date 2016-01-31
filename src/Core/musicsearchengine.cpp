@@ -38,12 +38,12 @@ void MusicSearchEngine::setWatchForChanges(bool b)
 	}
 }
 
-void MusicSearchEngine::doSearch(const QStringList &delta)
+void MusicSearchEngine::doSearch()
 {
-	//qDebug() << Q_FUNC_INFO << delta;
+	qDebug() << Q_FUNC_INFO;
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
-	QStringList pathsToSearch = delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : delta;
+	QStringList pathsToSearch = _delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : _delta;
 	for (QString musicPath : pathsToSearch) {
 		QDir location(musicPath);
 		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
@@ -104,7 +104,9 @@ void MusicSearchEngine::doSearch(const QStringList &delta)
 
 			if (currentEntry * 100 / entryCount > percent) {
 				percent = currentEntry * 100 / entryCount;
+				//qDebug() << "about to emit progress changed" << percent << "%";
 				emit progressChanged(percent);
+				qApp->processEvents();
 			}
 		}
 		atLeastOneAudioFileWasFound = false;
@@ -127,23 +129,23 @@ void MusicSearchEngine::watchForChanges()
 		}
 	}
 
-	SqlDatabase *db = SqlDatabase::instance();
-	db->open();
-	db->exec("PRAGMA journal_mode = MEMORY");
-	db->exec("PRAGMA synchronous = OFF");
-	db->exec("PRAGMA temp_store = 2");
-	db->exec("PRAGMA foreign_keys = 1");
+	SqlDatabase db;// = SqlDatabase::instance();
+	db.open();
+	db.exec("PRAGMA journal_mode = MEMORY");
+	db.exec("PRAGMA synchronous = OFF");
+	db.exec("PRAGMA temp_store = 2");
+	db.exec("PRAGMA foreign_keys = 1");
 
 	QStringList newFoldersToAddInLibrary;
 	// Add folders that were not found first
 	for (QFileInfo f : dirs) {
-		QSqlQuery query(*db);
+		QSqlQuery query(db);
 		query.setForwardOnly(true);
 		query.prepare("SELECT * FROM filesystem WHERE path = ?");
 		query.addBindValue(f.absoluteFilePath());
 		if (query.exec() && !query.next()) {
 			newFoldersToAddInLibrary << f.absoluteFilePath();
-			QSqlQuery prepared(*db);
+			QSqlQuery prepared(db);
 			prepared.setForwardOnly(true);
 			prepared.prepare("INSERT INTO filesystem (path, lastModified) VALUES (?, ?)");
 			prepared.addBindValue(f.absoluteFilePath());
@@ -153,11 +155,13 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	if (!newFoldersToAddInLibrary.isEmpty()) {
-		this->doSearch(newFoldersToAddInLibrary);
+		_delta = newFoldersToAddInLibrary;
+		this->doSearch();
+		//this->doSearch(newFoldersToAddInLibrary);
 	}
 
 	// Process in reverse mode to clean cache: from database file and check if entry exists in database
-	QSqlQuery cache("SELECT * FROM filesystem", *db);
+	QSqlQuery cache("SELECT * FROM filesystem", db);
 	qDebug() << Q_FUNC_INFO << "SELECT * FROM filesystem";
 	cache.setForwardOnly(true);
 	if (cache.exec()) {
@@ -168,7 +172,7 @@ void MusicSearchEngine::watchForChanges()
 			QFileInfo fileInfo(cache.record().value(0).toString());
 			// Remove folder in database because it couldn't be find in the filesystem
 			if (!fileInfo.exists()) {
-				QSqlQuery deleteFromFilesystem(*db);
+				QSqlQuery deleteFromFilesystem(db);
 				deleteFromFilesystem.prepare("DELETE FROM filesystem WHERE path = ?");
 				deleteFromFilesystem.addBindValue(fileInfo.absoluteFilePath());
 				qDebug() << Q_FUNC_INFO << "DELETE FROM filesystem WHERE path = ?";
@@ -180,7 +184,7 @@ void MusicSearchEngine::watchForChanges()
 		}
 		qDebug() << Q_FUNC_INFO << oldLocations;
 		if (!oldLocations.isEmpty()) {
-			db->rebuild(oldLocations, QStringList());
+			db.rebuildFomLocations(oldLocations, QStringList());
 		}
 	}
 }

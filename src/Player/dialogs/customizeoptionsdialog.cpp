@@ -80,7 +80,8 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	settings->isFileSystemMonitored() ? radioButtonEnableMonitorFS->setChecked(true) : radioButtonDisableMonitorFS->setChecked(true);
 	connect(radioButtonEnableMonitorFS, &QRadioButton::toggled, this, [=](bool b) {
 		settings->setMonitorFileSystem(b);
-		SqlDatabase::instance()->musicSearchEngine()->setWatchForChanges(b);
+		/// FIXME
+		//SqlDatabase().musicSearchEngine()->setWatchForChanges(b);
 	});
 
 	// Second panel: languages

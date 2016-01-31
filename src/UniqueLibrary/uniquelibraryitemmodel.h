@@ -34,6 +34,8 @@ public slots:
 	void insertAlbums(const QList<AlbumDAO> nodes);
 
 	void insertArtists(const QList<ArtistDAO> nodes);
+
+	virtual void load() override;
 };
 
 #endif // UNIQUELIBRARYITEMMODEL_H

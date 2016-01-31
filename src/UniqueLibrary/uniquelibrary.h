@@ -37,6 +37,8 @@ protected:
 	virtual void closeEvent(QCloseEvent *event) override;
 
 public slots:
+	virtual void setDatabase(SqlDatabase *db) override;
+
 	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
 
 	virtual void volumeSliderDecrease() override;

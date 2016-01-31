@@ -2,11 +2,16 @@
 
 #include "ui_uniquelibrary.h"
 
-#include <QStandardItemModel>
 #include <library/jumptowidget.h>
+#include <styling/paintablewidget.h>
 #include <filehelper.h>
+#include <musicsearchengine.h>
 #include <settingsprivate.h>
 #include "uniquelibraryitemdelegate.h"
+
+#include <QLabel>
+#include <QProgressBar>
+#include <QStandardItemModel>
 
 #include <ctime>
 #include <random>
@@ -109,7 +114,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	std::srand(std::time(nullptr));
 
-	uniqueTable->createConnectionsToDB();
 	uniqueTable->setFocus();
 }
 
@@ -119,6 +123,7 @@ bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
 	case SettingsPrivate::VP_MediaControls:
 	case SettingsPrivate::VP_SearchArea:
 	case SettingsPrivate::VP_VolumeIndicatorToggled:
+	case SettingsPrivate::VP_HasAreaForRescan:
 		return true;
 	default:
 		return false;
@@ -138,6 +143,46 @@ void UniqueLibrary::closeEvent(QCloseEvent *event)
 {
 
 	QWidget::closeEvent(event);
+}
+
+void UniqueLibrary::setDatabase(SqlDatabase *db)
+{
+	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
+
+		QVBoxLayout *vbox = new QVBoxLayout;
+		vbox->setMargin(0);
+		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
+
+		PaintableWidget *paintable = new PaintableWidget(uniqueTable);
+		paintable->setHalfTopBorder(false);
+		paintable->setFrameBorder(false, true, false, false);
+		vbox->addWidget(paintable);
+		QVBoxLayout *vbox2 = new QVBoxLayout;
+		vbox2->addWidget(new QLabel(tr("Your library is updating..."), paintable));
+		vbox2->addWidget(new QProgressBar(paintable));
+		paintable->setLayout(vbox2);
+		uniqueTable->setLayout(vbox);
+	});
+
+	connect(db->musicSearchEngine(), &MusicSearchEngine::progressChanged, this, [=](int p) {
+		if (QProgressBar *progress = this->findChild<QProgressBar*>()) {
+			progress->setValue(p);
+		}
+	});
+
+	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, this, [=]() {
+		auto l = uniqueTable->layout();
+		while (!l->isEmpty()) {
+			if (QLayoutItem *i = l->takeAt(0)) {
+				if (QWidget *w = i->widget()) {
+					delete w;
+				}
+				delete i;
+			}
+		}
+		delete uniqueTable->layout();
+		uniqueTable->model()->load();
+	});
 }
 
 void UniqueLibrary::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
@@ -212,7 +257,6 @@ void UniqueLibrary::skipBackward()
 void UniqueLibrary::skipForward()
 {
 	qDebug() << Q_FUNC_INFO;
-
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	}

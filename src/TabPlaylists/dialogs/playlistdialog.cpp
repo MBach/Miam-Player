@@ -229,8 +229,8 @@ void PlaylistDialog::exportSelectedPlaylist()
 
 	QStandardItem *item = _savedPlaylistModel->itemFromIndex(indexes.first());
 	uint playlistId = item->data(PlaylistID).toUInt();
-	auto db = SqlDatabase::instance();
-	PlaylistDAO dao = db->selectPlaylist(playlistId);
+	SqlDatabase db;
+	PlaylistDAO dao = db.selectPlaylist(playlistId);
 	QString title = this->convertNameToValidFileName(dao.title());
 
 	// Open a file dialog and ask the user to choose a location
@@ -247,7 +247,7 @@ void PlaylistDialog::exportSelectedPlaylist()
 		QFile f(newName);
 		if (f.open(QIODevice::ReadWrite | QIODevice::Text)) {
 			QTextStream stream(&f);
-			QList<TrackDAO> tracks = db->selectPlaylistTracks(playlistId);
+			QList<TrackDAO> tracks = db.selectPlaylistTracks(playlistId);
 			for (TrackDAO t : tracks) {
 				stream << t.uri();
 				endl(stream);
@@ -277,7 +277,7 @@ void PlaylistDialog::populatePreviewFromSaved(const QItemSelection &, const QIte
 	this->clearPreview(!empty);
 	if (indexes.size() == 1) {
 		uint playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toUInt();
-		QList<TrackDAO> tracks = SqlDatabase::instance()->selectPlaylistTracks(playlistId);
+		QList<TrackDAO> tracks = SqlDatabase().selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {
 			TrackDAO track = tracks.at(i);
 			QTreeWidgetItem *item = new QTreeWidgetItem;
@@ -352,7 +352,7 @@ void PlaylistDialog::renameItem(QStandardItem *item)
 		} else {
 			PlaylistDAO dao = _saved.value(item);
 			dao.setTitle(item->text());
-			SqlDatabase::instance()->updateTablePlaylist(dao);
+			SqlDatabase().updateTablePlaylist(dao);
 			emit aboutToRenameTab(dao);
 		}
 	}
@@ -373,7 +373,7 @@ void PlaylistDialog::updatePlaylists()
 		}
 	}
 
-	for (PlaylistDAO playlist : SqlDatabase::instance()->selectPlaylists()) {
+	for (PlaylistDAO playlist : SqlDatabase().selectPlaylists()) {
 		QStandardItem *item = new QStandardItem(playlist.title());
 		item->setData(playlist.id(), PlaylistID);
 		if (playlist.icon().isEmpty()) {

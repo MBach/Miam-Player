@@ -13,6 +13,11 @@ MiamItemModel::MiamItemModel(QObject *parent)
 
 MiamItemModel::~MiamItemModel()
 {
+	this->deleteCache();
+}
+
+void MiamItemModel::deleteCache()
+{
 	qDeleteAll(_letters);
 	//qDeleteAll(_topLevelItems);
 	//qDeleteAll(_hash);
@@ -22,6 +27,8 @@ MiamItemModel::~MiamItemModel()
 	_topLevelItems.clear();
 	_hash.clear();
 	_tracks.clear();
+
+	this->removeRows(0, this->rowCount());
 }
 
 SeparatorItem *MiamItemModel::insertSeparator(const QStandardItem *node)

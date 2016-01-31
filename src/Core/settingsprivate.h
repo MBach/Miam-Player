@@ -66,7 +66,8 @@ public:
 						VP_OwnWindow				= 2,
 						VP_PlaylistFeature			= 3,
 						VP_FileExplorerFeature		= 4,
-						VP_VolumeIndicatorToggled	= 5};
+						VP_VolumeIndicatorToggled	= 5,
+						VP_HasAreaForRescan			= 6};
 
 	QTranslator playerTranslator, defaultQtTranslator;
 

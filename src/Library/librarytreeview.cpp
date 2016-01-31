@@ -21,7 +21,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	, sendToCurrentPlaylist(new QShortcut(this))
 	, openTagEditor(new QShortcut(this))
 {
-	this->installEventFilter(this);
 	auto settings = SettingsPrivate::instance();
 	_proxyModel = _libraryModel->proxy();
 	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
@@ -67,6 +66,18 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &LibraryTreeView::scrollToLetter);
 
 	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
+
+	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+		QApplication::removeTranslator(&translator);
+		translator.load(":/translations/library_" + newLanguage);
+		QApplication::installTranslator(&translator);
+	});
+
+	// Init language
+	translator.load(":/translations/library_" + settings->language());
+	QApplication::installTranslator(&translator);
+
+	this->installEventFilter(this);
 }
 
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
@@ -144,23 +155,24 @@ void LibraryTreeView::updateSelectedTracks()
 {
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
 	qDebug() << Q_FUNC_INFO;
-	SqlDatabase::instance()->load();
+	/// FIXME
+	//SqlDatabase().load();
 }
 
-void LibraryTreeView::createConnectionsToDB()
+/*void LibraryTreeView::createConnectionsToDB()
 {
 	if (!this->property("connected").toBool()) {
-		auto db = SqlDatabase::instance();
-		db->disconnect();
-		connect(db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
-		connect(db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-		connect(db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
-		connect(db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
-		connect(db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
-		db->load();
+		//SqlDatabase db;
+		//db.disconnect();
+		//connect(&db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
+		//connect(&db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
+		//connect(&db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
+		//connect(&db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
+		//connect(&db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
+		//db.load();
 		this->setProperty("connected", true);
 	}
-}
+}*/
 
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)

@@ -28,7 +28,6 @@ SOURCES += dialogs/closeplaylistpopup.cpp \
     viewplaylists.cpp
 
 HEADERS += dialogs/closeplaylistpopup.h \
-    dialogs/paintablewidget.h \
     dialogs/playlistdialog.h \
     dialogs/searchdialog.h \
     filesystem/addressbar.h \

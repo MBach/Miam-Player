@@ -47,7 +47,7 @@ MediaPlayer::MediaPlayer(QObject *parent)
 
 	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
 		QWindow *w = QGuiApplication::topLevelWindows().first();
-		TrackDAO t = SqlDatabase::instance()->selectTrackByURI(uri);
+		TrackDAO t = SqlDatabase().selectTrackByURI(uri);
 		if (t.artist().isEmpty()) {
 			w->setTitle(t.title() + " - Miam Player");
 		} else {

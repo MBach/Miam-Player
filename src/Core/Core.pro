@@ -122,6 +122,7 @@ HEADERS += interfaces/basicplugin.h \
     styling/lineedit.h \
     styling/miamslider.h \
     styling/miamstyleditemdelegate.h \
+    styling/paintablewidget.h \
     widgets/seekbar.h \
     widgets/timelabel.h \
     widgets/volumeslider.h \

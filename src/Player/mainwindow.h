@@ -84,6 +84,8 @@ private slots:
 
 	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
 
+	void rescanLibrary();
+
 	void showTagEditor();
 
 	void toggleMenuBar(bool checked);

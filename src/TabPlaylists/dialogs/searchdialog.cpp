@@ -185,8 +185,8 @@ void SearchDialog::clear()
 
 void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 {
-	SqlDatabase *db = SqlDatabase::instance();
-	QSqlQuery selectTracks(*db);
+	SqlDatabase db;
+	QSqlQuery selectTracks(db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id " \
 		"INNER JOIN artists a ON t.artistId = a.id WHERE a.id = ? ORDER BY al.year");
 	QString artistId = artistIndex.data(DT_Identifier).toString();
@@ -205,8 +205,8 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 
 void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 {
-	SqlDatabase *db = SqlDatabase::instance();
-	QSqlQuery selectTracks(*db);
+	SqlDatabase db;
+	QSqlQuery selectTracks(db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id WHERE al.id = ?");
 	QString albumId = albumIndex.data(DT_Identifier).toString();
 	selectTracks.addBindValue(albumId);
@@ -268,10 +268,10 @@ void SearchDialog::localSearch(const QString &text)
 		return;
 	}
 
-	auto _db = SqlDatabase::instance();
+	SqlDatabase db;
 
 	/// XXX: Factorize this, 3 times the (almost) same code
-	QSqlQuery qSearchForArtists(*_db);
+	QSqlQuery qSearchForArtists(db);
 	qSearchForArtists.prepare("SELECT DISTINCT a.name, a.id FROM artists a WHERE a.name like :t LIMIT 5");
 	qSearchForArtists.bindValue(":t", "%" + text + "%");
 	if (qSearchForArtists.exec()) {
@@ -285,7 +285,7 @@ void SearchDialog::localSearch(const QString &text)
 		this->processResults(Artist, artistList);
 	}
 
-	QSqlQuery qSearchForAlbums(*_db);
+	QSqlQuery qSearchForAlbums(db);
 	qSearchForAlbums.prepare("SELECT DISTINCT alb.name, art.name, alb.id FROM albums alb INNER JOIN artists art ON alb.artistId = art.id WHERE alb.name like :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
 	if (qSearchForAlbums.exec()) {
@@ -299,7 +299,7 @@ void SearchDialog::localSearch(const QString &text)
 		this->processResults(Album, albumList);
 	}
 
-	QSqlQuery qSearchForTracks(*_db);
+	QSqlQuery qSearchForTracks(db);
 	qSearchForTracks.prepare("SELECT DISTINCT t.title, COALESCE(t.artistAlbum, art.name), uri FROM tracks t INNER JOIN artists art ON t.artistId = art.id WHERE t.title like :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {

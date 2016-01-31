@@ -101,10 +101,10 @@ QList<QUrl> TagEditor::selectedTracks()
 void TagEditor::updateSelectedTracks()
 {
 	qDebug() << Q_FUNC_INFO << "Model has been updated, redraw selected tracks";
-	SqlDatabase::instance()->load();
+	//SqlDatabase().load();
 }
 
-bool TagEditor::viewProperty(SettingsPrivate::ViewProperty vp) const
+bool TagEditor::viewProperty(SettingsPrivate::ViewProperty) const
 {
 	return false;
 }
@@ -408,7 +408,7 @@ void TagEditor::commitChanges()
 
 		// Check if files are already in the library, and then update them
 		if (!oldPaths.isEmpty()) {
-			SqlDatabase::instance()->updateTracks(oldPaths, newPaths);
+			SqlDatabase().updateTracks(oldPaths, newPaths);
 		}
 	}
 
@@ -450,11 +450,11 @@ void TagEditor::displayCover()
 	joinedTracks.append("\"\"");
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
-	SqlDatabase *db = SqlDatabase::instance();
-	if (!db->isOpen()) {
-		db->open();
+	SqlDatabase db;
+	if (!db.isOpen()) {
+		db.open();
 	}
-	QSqlQuery coverPathQuery = db->exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
+	QSqlQuery coverPathQuery = db.exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
 		coversPath << coverPathQuery.record().value(0).toString();

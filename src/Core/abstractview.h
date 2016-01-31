@@ -3,6 +3,7 @@
 
 #include "miamcore_global.h"
 #include <settingsprivate.h>
+#include <model/sqldatabase.h>
 
 #include <QDir>
 #include <QWidget>
@@ -13,10 +14,14 @@ class MIAMCORE_LIBRARY AbstractView : public QWidget
 public:
 	AbstractView(QWidget *parent = nullptr) : QWidget(parent) {}
 
+	virtual void setDatabase(SqlDatabase *) {}
+
 	virtual bool viewProperty(SettingsPrivate::ViewProperty) const { return false; }
 
 public slots:
 	virtual void initFileExplorer(const QDir &) {}
+
+	//virtual void initLibraryUpdateArea() {}
 
 	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) = 0;
 

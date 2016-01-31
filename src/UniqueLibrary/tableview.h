@@ -24,7 +24,7 @@ private:
 public:
 	explicit TableView(QWidget *parent = nullptr);
 
-	void createConnectionsToDB();
+	//void createConnectionsToDB();
 
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 

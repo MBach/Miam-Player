@@ -188,8 +188,8 @@ void TabPlaylist::init(MediaPlayer *mediaPlayer)
 void TabPlaylist::loadPlaylist(uint playlistId)
 {
 	Playlist *playlist = nullptr;
-	auto _db = SqlDatabase::instance();
-	PlaylistDAO playlistDao = _db->selectPlaylist(playlistId);
+	SqlDatabase db;
+	PlaylistDAO playlistDao = db.selectPlaylist(playlistId);
 
 	/// TODO: Do not load the playlist if it's already displayed
 
@@ -210,7 +210,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 
 	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
 	/// Use (host, id) or (uri)
-	QList<TrackDAO> tracks = _db->selectPlaylistTracks(playlistId);
+	QList<TrackDAO> tracks = db.selectPlaylistTracks(playlistId);
 	playlist->insertMedias(-1, tracks);
 	playlist->setId(playlistId);
 	playlist->setTitle(playlistDao.title());

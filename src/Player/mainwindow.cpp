@@ -165,15 +165,7 @@ void MainWindow::setupActions()
 	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
-	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
-		if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_SearchArea)) {
-			_currentView->setViewProperty(SettingsPrivate::VP_SearchArea, true);
-		}
-
-		/// FIXME
-		//searchBar->clear();
-		SqlDatabase::instance()->rebuild();
-	});
+	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::rescanLibrary);
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
 	});
@@ -314,9 +306,7 @@ bool MainWindow::event(QEvent *e)
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-	/*if (watched == menubar) {
-		//qDebug() << Q_FUNC_INFO << event->type();
-	} else*/ if (watched == _tagEditor && QEvent::Close) {
+	if (watched == _tagEditor && QEvent::Close) {
 		actionViewTagEditor->setChecked(false);
 	}
 	return QMainWindow::eventFilter(watched, event);
@@ -573,15 +563,41 @@ void MainWindow::musicLocationsHaveChanged(const QStringList &oldLocations, cons
 	bool libraryIsEmpty = newLocations.isEmpty();
 	actionScanLibrary->setDisabled(libraryIsEmpty);
 
-	auto db = SqlDatabase::instance();
+	//SqlDatabase db;
 	if (libraryIsEmpty) {
-		db->rebuild(oldLocations, QStringList());
-		initQuickStart();
+		//db.rebuildFomLocations(oldLocations, QStringList());
+		//initQuickStart();
 
 	} else {
-		db->rebuild(oldLocations, newLocations);
+		//db.rebuildFomLocations(oldLocations, newLocations);
 		this->activateLastView();
 	}
+}
+
+void MainWindow::rescanLibrary()
+{
+	if (!_currentView) {
+		return;
+	}
+
+	if (_currentView->viewProperty(SettingsPrivate::VP_SearchArea)) {
+		_currentView->setViewProperty(SettingsPrivate::VP_SearchArea, true);
+	}
+
+	SqlDatabase *db = new SqlDatabase;
+	db->init();
+	QThread *t = new QThread;
+	db->moveToThread(t);
+	connect(t, &QThread::started, db, &SqlDatabase::rebuild);
+	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, t, &QThread::quit);
+
+	if (_currentView->viewProperty(SettingsPrivate::VP_HasAreaForRescan)) {
+		_currentView->setDatabase(db);
+	}
+
+	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, db, &SqlDatabase::deleteLater);
+
+	t->start();
 }
 
 void MainWindow::showTagEditor()

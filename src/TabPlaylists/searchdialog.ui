@@ -77,7 +77,7 @@
         </size>
        </property>
        <property name="pixmap">
-        <pixmap resource="mp.qrc">:/icons/search</pixmap>
+        <pixmap resource="../Player/player.qrc">:/icons/search</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -125,7 +125,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="mp.qrc">
+        <iconset resource="../Player/player.qrc">
          <normaloff>:/icons/config/close_tabs_hover.png</normaloff>:/icons/config/close_tabs_hover.png</iconset>
        </property>
        <property name="flat">
@@ -163,7 +163,7 @@
           </size>
          </property>
          <property name="pixmap">
-          <pixmap resource="mp.qrc">:/icons/artist</pixmap>
+          <pixmap resource="../Player/player.qrc">:/icons/artist</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -237,7 +237,7 @@
           </size>
          </property>
          <property name="pixmap">
-          <pixmap resource="mp.qrc">:/icons/album</pixmap>
+          <pixmap resource="../Player/player.qrc">:/icons/album</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -308,7 +308,7 @@
           </size>
          </property>
          <property name="pixmap">
-          <pixmap resource="mp.qrc">:/icons/track</pixmap>
+          <pixmap resource="../Player/player.qrc">:/icons/track</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -408,7 +408,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="mp.qrc"/>
+  <include location="../Player/player.qrc"/>
  </resources>
  <connections/>
 </ui>

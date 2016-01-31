@@ -17,6 +17,7 @@ class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 	Q_OBJECT
 private:
 	QTimer *_timer;
+	QStringList _delta;
 
 public:
 	MusicSearchEngine(QObject *parent = nullptr);
@@ -26,7 +27,7 @@ public:
 	void setWatchForChanges(bool b);
 
 public slots:
-	void doSearch(const QStringList &delta = QStringList());
+	void doSearch();
 
 private slots:
 	void watchForChanges();

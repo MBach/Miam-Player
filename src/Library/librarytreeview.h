@@ -18,7 +18,6 @@
 #include "miamlibrary_global.hpp"
 
 /// Forward declarations
-class CircleProgressBar;
 class JumpToWidget;
 class LibraryFilterLineEdit;
 class LibraryFilterProxyModel;
@@ -54,6 +53,8 @@ private:
 
 	LibraryItemDelegate *_delegate;
 
+	QTranslator translator;
+
 public:
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */
@@ -64,7 +65,7 @@ public:
 
 	explicit LibraryTreeView(QWidget *parent = nullptr);
 
-	void createConnectionsToDB();
+	//void createConnectionsToDB();
 
 	const QImage *expandedCover(AlbumItem *album) const;
 

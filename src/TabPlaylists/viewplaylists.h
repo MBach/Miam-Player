@@ -14,6 +14,7 @@ private:
 	QList<MediaButton*> mediaButtons;
 	SearchDialog *_searchDialog;
 	QTranslator translator;
+	SqlDatabase *_db;
 
 public:
 	ViewPlaylists(MediaPlayer *mediaPlayer);
@@ -25,6 +26,8 @@ public:
 	virtual void saveCurrentPlaylists() override;
 
 	virtual int selectedTracksInCurrentPlaylist() const override;
+
+	virtual void setDatabase(SqlDatabase *db) override;
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 

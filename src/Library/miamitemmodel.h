@@ -38,9 +38,13 @@ public:
 
 	inline QStandardItem* letterItem(const QString &letter) const { return _letters.value(letter); }
 
+	virtual void load() = 0;
+
 	virtual QSortFilterProxyModel* proxy() const = 0;
 
 protected:
+	void deleteCache();
+
 	SeparatorItem *insertSeparator(const QStandardItem *node);
 
 	/** Recursively remove node and its parent if the latter has no more children. */

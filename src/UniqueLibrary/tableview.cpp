@@ -45,19 +45,19 @@ TableView::TableView(QWidget *parent)
 	});
 }
 
-void TableView::createConnectionsToDB()
+/*void TableView::createConnectionsToDB()
 {
-	auto db = SqlDatabase::instance();
-	db->disconnect();
-	connect(db, &SqlDatabase::aboutToLoad, _model, [=]() {
+	SqlDatabase db;
+	db.disconnect();
+	connect(&db, &SqlDatabase::aboutToLoad, _model, [=]() {
 		_model->removeRows(0, _model->rowCount());
 	});
-	connect(db, &SqlDatabase::tracksExtracted, _model, &UniqueLibraryItemModel::insertTracks);
-	connect(db, &SqlDatabase::albumsExtracted, _model, &UniqueLibraryItemModel::insertAlbums);
-	connect(db, &SqlDatabase::artistsExtracted, _model, &UniqueLibraryItemModel::insertArtists);
-	connect(db, &SqlDatabase::aboutToUpdateNode, _model, &UniqueLibraryItemModel::updateNode);
-	db->load(Settings::RSM_Flat);
-}
+	connect(&db, &SqlDatabase::tracksExtracted, _model, &UniqueLibraryItemModel::insertTracks);
+	connect(&db, &SqlDatabase::albumsExtracted, _model, &UniqueLibraryItemModel::insertAlbums);
+	connect(&db, &SqlDatabase::artistsExtracted, _model, &UniqueLibraryItemModel::insertArtists);
+	connect(&db, &SqlDatabase::aboutToUpdateNode, _model, &UniqueLibraryItemModel::updateNode);
+	//db.load(Settings::RSM_Flat);
+}*/
 
 /** Redefined to disable search in the table and trigger jumpToWidget's action. */
 void TableView::keyboardSearch(const QString &search)
@@ -127,8 +127,8 @@ void TableView::paintEvent(QPaintEvent *event)
 
 void TableView::jumpTo(const QString &letter)
 {
-	SqlDatabase *db = SqlDatabase::instance();
-	QSqlQuery firstArtist(*db);
+	SqlDatabase db;
+	QSqlQuery firstArtist(db);
 	firstArtist.prepare("SELECT name FROM artists WHERE name LIKE ? ORDER BY name COLLATE NOCASE LIMIT ?");
 	firstArtist.addBindValue(letter + "%");
 	firstArtist.addBindValue(_skipCount);

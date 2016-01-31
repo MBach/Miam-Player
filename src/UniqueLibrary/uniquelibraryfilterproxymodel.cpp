@@ -32,7 +32,8 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 		if (MiamSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent)) {
 			result = true;
 		} else {
-			QSqlQuery getArtist(*SqlDatabase::instance());
+			SqlDatabase db;
+			QSqlQuery getArtist(db);
 			getArtist.prepare("SELECT * FROM tracks WHERE title LIKE ? AND artistId = ?");
 			getArtist.addBindValue("%" + filterRegExp().pattern() + "%");
 			getArtist.addBindValue(item->data(Miam::DF_ID).toUInt());
@@ -45,7 +46,8 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 		} else if (filterRegExp().indexIn(item->data(Miam::DF_Artist).toString()) != -1) {
 			result = true;
 		} else {
-			QSqlQuery getAlbum(*SqlDatabase::instance());
+			SqlDatabase db;
+			QSqlQuery getAlbum(db);
 			getAlbum.prepare("SELECT * FROM tracks WHERE title LIKE ? AND albumId = ?");
 			getAlbum.addBindValue("%" + filterRegExp().pattern() + "%");
 			getAlbum.addBindValue(item->data(Miam::DF_ID).toUInt());

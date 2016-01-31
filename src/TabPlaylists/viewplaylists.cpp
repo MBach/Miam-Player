@@ -1,12 +1,15 @@
 #include "viewplaylists.h"
 
 #include <library/jumptowidget.h>
+#include <styling/paintablewidget.h>
 #include <libraryorderdialog.h>
+#include <musicsearchengine.h>
 #include <settingsprivate.h>
 #include <settings.h>
 #include "dialogs/playlistdialog.h"
 
 #include <QFileDialog>
+#include <QProgressBar>
 #include <QStandardPaths>
 
 ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
@@ -91,7 +94,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	auto reloadLibrary = [this]() {
 		searchBar->setText(QString());
 		_searchDialog->clear();
-		SqlDatabase::instance()->load();
 		this->update();
 	};
 
@@ -133,9 +135,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		settingsPrivate->sync();
 	});
 
-	library->createConnectionsToDB();
-	connect(SqlDatabase::instance(), &SqlDatabase::aboutToLoad, libraryHeader, &LibraryHeader::resetSortOrder);
-
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &LibraryFilterLineEdit::aboutToStartSearch, this, [=](const QString &text) {
 		if (settingsPrivate->isExtendedSearchVisible()) {
@@ -150,15 +149,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		}
 	});
 
-	/*connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, [=](const QStringList &oldLocations, const QStringList &newLocations) {
-		qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
-		bool libraryIsEmpty = newLocations.isEmpty();
-		library->setVisible(!libraryIsEmpty);
-		libraryHeader->setVisible(!libraryIsEmpty);
-		changeHierarchyButton->setVisible(!libraryIsEmpty);
-		widgetSearchBar->setVisible(!libraryIsEmpty);
-	});*/
-
 	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
 		QApplication::removeTranslator(&translator);
 		translator.load(":/translations/tabPlaylists_" + newLanguage);
@@ -170,6 +160,8 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	QApplication::installTranslator(&translator);
 
 	connect(settingsPrivate, &SettingsPrivate::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
+
+	library->model()->load();
 
 	this->installEventFilter(this);
 }
@@ -184,12 +176,54 @@ int ViewPlaylists::selectedTracksInCurrentPlaylist() const
 	return tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
 }
 
+void ViewPlaylists::setDatabase(SqlDatabase *db)
+{
+	//connect(db, &SqlDatabase::aboutToLoad, this, &ViewPlaylists::initLibraryUpdateArea);
+	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
+		QVBoxLayout *vbox = new QVBoxLayout;
+		vbox->setMargin(0);
+		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
+
+		PaintableWidget *paintable = new PaintableWidget(library);
+		paintable->setHalfTopBorder(false);
+		paintable->setFrameBorder(false, true, true, false);
+		vbox->addWidget(paintable);
+		QVBoxLayout *vbox2 = new QVBoxLayout;
+		vbox2->addWidget(new QLabel(tr("Your library is updating..."), paintable));
+		vbox2->addWidget(new QProgressBar(paintable));
+		paintable->setLayout(vbox2);
+		library->setLayout(vbox);
+	});
+
+	connect(db->musicSearchEngine(), &MusicSearchEngine::progressChanged, this, [=](int p) {
+		if (QProgressBar *progress = this->findChild<QProgressBar*>()) {
+			progress->setValue(p);
+		}
+	});
+
+	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, this, [=]() {
+		auto l = library->layout();
+		while (!l->isEmpty()) {
+			if (QLayoutItem *i = l->takeAt(0)) {
+				if (QWidget *w = i->widget()) {
+					delete w;
+				}
+				delete i;
+			}
+		}
+		delete library->layout();
+		library->model()->load();
+	});
+
+}
+
 bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
 	switch (vp) {
 	case SettingsPrivate::VP_MediaControls:
 	case SettingsPrivate::VP_SearchArea:
 	case SettingsPrivate::VP_PlaylistFeature:
+	case SettingsPrivate::VP_HasAreaForRescan:
 		return true;
 	default:
 		return AbstractView::viewProperty(vp);
@@ -283,6 +317,23 @@ void ViewPlaylists::initFileExplorer(const QDir &dir)
 {
 	addressBar->init(dir);
 }
+
+/*void ViewPlaylists::initLibraryUpdateArea()
+{
+	QVBoxLayout *vbox = new QVBoxLayout;
+	vbox->setMargin(0);
+	vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
+
+	PaintableWidget *paintable = new PaintableWidget(library);
+	paintable->setHalfTopBorder(false);
+	paintable->setFrameBorder(false, true, true, false);
+	vbox->addWidget(paintable);
+	QVBoxLayout *vbox2 = new QVBoxLayout;
+	vbox2->addWidget(new QLabel(tr("Your library is updating..."), paintable));
+	vbox2->addWidget(new QProgressBar(paintable));
+	paintable->setLayout(vbox2);
+	library->setLayout(vbox);
+}*/
 
 void ViewPlaylists::moveTracksDown()
 {

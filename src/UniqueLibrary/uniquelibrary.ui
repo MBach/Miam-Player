@@ -43,7 +43,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
        </property>
        <property name="iconSize">
@@ -69,7 +69,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
        </property>
        <property name="iconSize">
@@ -95,7 +95,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
        </property>
        <property name="iconSize">
@@ -121,7 +121,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
        </property>
        <property name="iconSize">
@@ -147,7 +147,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
        </property>
        <property name="iconSize">
@@ -173,7 +173,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
        </property>
        <property name="iconSize">
@@ -199,7 +199,7 @@
         <string notr="true"/>
        </property>
        <property name="icon">
-        <iconset resource="../Player/mp.qrc">
+        <iconset resource="../Core/core.qrc">
          <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
        </property>
        <property name="iconSize">
@@ -339,7 +339,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../Player/mp.qrc"/>
+  <include location="../Core/core.qrc"/>
  </resources>
  <connections/>
 </ui>
