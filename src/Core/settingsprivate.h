@@ -290,7 +290,7 @@ signals:
 	void librarySearchModeHasChanged();
 
 	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
+	void musicLocationsHaveChanged();
 
 	void viewPropertyChanged(ViewProperty vp, const QVariant &value);
 };

@@ -282,40 +282,35 @@ void CustomizeOptionsDialog::initShortcuts()
 	}
 }
 
-/** Adds a new music location in the library. */
-void CustomizeOptionsDialog::addMusicLocation(const QDir &musicLocation)
-{
-	QString path = musicLocation.absolutePath();
-	int existingItem = -1;
-	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
-		QListWidgetItem *item = listWidgetMusicLocations->item(i);
-		QDir itemDir(item->text());
-		if ((QString::compare(itemDir.absolutePath(), path) == 0) ||
-			QString::compare(item->text(), tr("Add some music locations here")) == 0) {
-			existingItem = i;
-			break;
-		}
-	}
-	if (existingItem >= 0) {
-		delete listWidgetMusicLocations->takeItem(existingItem);
-	}
-	QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocation.absolutePath()));
-	listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
-	pushButtonDeleteLocation->setEnabled(true);
-
-	// Add this music location in the defaults for the file explorer
-	QStringList l = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
-	if (l.isEmpty() || l.first() != path) {
-		comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
-	}
-}
-
 /** Adds a external music locations in the library (Drag & Drop). */
 void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 {
-	for (QDir folder : dirs) {
-		this->addMusicLocation(folder);
+	for (QDir musicLocation : dirs) {
+		QString path = musicLocation.absolutePath();
+		int existingItem = -1;
+		for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
+			QListWidgetItem *item = listWidgetMusicLocations->item(i);
+			QDir itemDir(item->text());
+			if ((QString::compare(itemDir.absolutePath(), path) == 0) ||
+				QString::compare(item->text(), tr("Add some music locations here")) == 0) {
+				existingItem = i;
+				break;
+			}
+		}
+		if (existingItem >= 0) {
+			delete listWidgetMusicLocations->takeItem(existingItem);
+		}
+		QIcon icon = QFileIconProvider().icon(QFileInfo(musicLocation.absolutePath()));
+		listWidgetMusicLocations->addItem(new QListWidgetItem(icon, QDir::toNativeSeparators(path), listWidgetMusicLocations));
+		pushButtonDeleteLocation->setEnabled(true);
+
+		// Add this music location in the defaults for the file explorer
+		QStringList l = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
+		if (l.isEmpty() || l.first() != path) {
+			comboBoxDefaultFileExplorer->addItem(icon, QDir::toNativeSeparators(path));
+		}
 	}
+
 	this->updateMusicLocations();
 }
 
@@ -411,7 +406,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 	QString libraryPath = QFileDialog::getExistingDirectory(this, tr("Select a location of your music"),
 		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
-		this->addMusicLocation(QDir(libraryPath));
+		this->addMusicLocations({ QDir(libraryPath) });
 	}
 }
 
@@ -447,11 +442,14 @@ void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
 	}
 }
 
+#include <QSqlQuery>
+
 /** Check if music locations have changed in order to rescan the filesystem. */
 void CustomizeOptionsDialog::updateMusicLocations()
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QStringList savedLocations = settings->musicLocations();
+	savedLocations.sort();
 	QStringList newLocations;
 	for (int i = 0; i < listWidgetMusicLocations->count(); i++) {
 		QString newLocation = listWidgetMusicLocations->item(i)->text();
@@ -460,7 +458,6 @@ void CustomizeOptionsDialog::updateMusicLocations()
 		}
 	}
 	newLocations.sort();
-	savedLocations.sort();
 
 	bool musicLocationsAreIdenticals = true;
 	if (savedLocations.size() == newLocations.size()) {
@@ -473,6 +470,31 @@ void CustomizeOptionsDialog::updateMusicLocations()
 
 	// Trigger the MainWindow (and then the SearchEngine) to restart a scan
 	if (!musicLocationsAreIdenticals) {
+
+		QStringList removedLocations;
+		for (QString savedLocation : savedLocations) {
+			if (!newLocations.contains(savedLocation)) {
+				removedLocations << savedLocation;
+			}
+		}
+		SqlDatabase db;
+		db.init();
+		db.open();
+		db.setPragmas();
+
+		// Remove old locations from database cache
+		db.transaction();
+		for (QString removedLocation : removedLocations) {
+			QSqlQuery syncDb(db);
+			syncDb.setForwardOnly(true);
+			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
+			syncDb.bindValue(":path", QDir::fromNativeSeparators(removedLocation) + "%");
+			syncDb.exec();
+			syncDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
+			syncDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
+		}
+		db.commit();
+
 		settings->setMusicLocations(newLocations);
 		settings->sync();
 	}

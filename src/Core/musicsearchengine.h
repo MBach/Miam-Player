@@ -26,6 +26,8 @@ public:
 
 	void setWatchForChanges(bool b);
 
+	void setDelta(const QStringList &delta);
+
 public slots:
 	void doSearch();
 

@@ -4,8 +4,7 @@ TEMPLATE = lib
 
 DEFINES += MIAMLIBRARY_LIBRARY
 
-SOURCES += \
-    albumitem.cpp \
+SOURCES += albumitem.cpp \
     artistitem.cpp \
     discitem.cpp \
     libraryfilterlineedit.cpp \
@@ -22,8 +21,7 @@ SOURCES += \
     trackitem.cpp \
     yearitem.cpp
 
-HEADERS += \
-    albumitem.h \
+HEADERS += albumitem.h \
     artistitem.h \
     discitem.h \
     libraryfilterlineedit.h \

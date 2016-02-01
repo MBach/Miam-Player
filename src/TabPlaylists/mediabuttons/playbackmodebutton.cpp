@@ -33,7 +33,7 @@ void PlaybackModeButton::contextMenuEvent(QContextMenuEvent *e)
 
 	_menu.setToolTipsVisible(true);
 	sequential.setData(QMediaPlaylist::Sequential);
-	sequential.setToolTip(tr("Sequential mode is the most commun mode to play tracks in a playlist. It will play tracks from Top to Bottom."));
+	sequential.setToolTip(tr("Sequential mode is the most common mode to play tracks in a playlist. It will play tracks from Top to Bottom."));
 	shuffle.setData(QMediaPlaylist::Random);
 	loop.setData(QMediaPlaylist::Loop);
 	itemOnce.setData(QMediaPlaylist::CurrentItemOnce);

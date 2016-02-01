@@ -82,8 +82,6 @@ private slots:
 
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
 
-	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
-
 	void rescanLibrary();
 
 	void showTagEditor();

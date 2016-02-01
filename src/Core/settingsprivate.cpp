@@ -516,13 +516,9 @@ void SettingsPrivate::setLastPlaylistSession(const QList<uint> &ids)
 
 void SettingsPrivate::setMusicLocations(const QStringList &locations)
 {
-	//qDebug() << Q_FUNC_INFO << locations;
-	QStringList savedLocations = value("musicLocations", QStringList()).toStringList();
+	value("musicLocations", QStringList()).toStringList();
 	setValue("musicLocations", locations);
-	//if (!savedLocations.isEmpty()) {
-		qDebug() << Q_FUNC_INFO << "about to trigger signal";
-		emit musicLocationsHaveChanged(savedLocations, locations);
-	//}
+	emit musicLocationsHaveChanged();
 }
 
 void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -579,7 +575,7 @@ void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 	QStringList newLocations(old);
 	newLocations.append(locations);
 	setValue("musicLocations", newLocations);
-	emit musicLocationsHaveChanged(old, newLocations);
+	emit musicLocationsHaveChanged();
 }
 
 void SettingsPrivate::setBigCoverOpacity(int v)

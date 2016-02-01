@@ -38,9 +38,6 @@ private:
 	void initShortcuts();
 
 public slots:
-	/** Adds a new music location in the library. */
-	void addMusicLocation(const QDir &musicLocation);
-
 	/** Adds a external music locations in the library (Drag & Drop). */
 	void addMusicLocations(const QList<QDir> &dirs);
 

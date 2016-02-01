@@ -54,6 +54,17 @@ SqlDatabase::SqlDatabase()
 	setDatabaseName(dbPath);
 }
 
+SqlDatabase::~SqlDatabase()
+{
+	if (_musicSearchEngine) {
+		delete _musicSearchEngine;
+		_musicSearchEngine = nullptr;
+	}
+	if (isOpen()) {
+		close();
+	}
+}
+
 void SqlDatabase::init()
 {
 	_musicSearchEngine = new MusicSearchEngine(this);
@@ -682,7 +693,7 @@ bool SqlDatabase::cleanNodesWithoutTracks()
 	return lastError().type() == QSqlError::NoError;
 }
 
-/** Delete and rescan local tracks. */
+/** Delete cache and rescan local tracks. */
 void SqlDatabase::rebuild()
 {
 	emit aboutToLoad();
@@ -726,44 +737,6 @@ void SqlDatabase::rebuild()
 	});
 
 	_musicSearchEngine->doSearch();
-}
-
-void SqlDatabase::rebuildFomLocations(const QStringList &oldLocations, const QStringList &newLocations)
-{
-	qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
-	open();
-	this->setPragmas();
-
-	// Remove old locations from database cache
-	transaction();
-	for (QString oldLocation : oldLocations) {
-		if (newLocations.isEmpty() || !newLocations.contains(oldLocation)) {
-			QSqlQuery syncDb(*this);
-			syncDb.setForwardOnly(true);
-			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
-			syncDb.bindValue(":path", QDir::fromNativeSeparators(oldLocation) + "%");
-			syncDb.exec();
-			syncDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
-			syncDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
-		}
-	}
-	commit();
-
-	// Restart the worker thread on new locations
-	QStringList locationsToAdd;
-	for (QString newLocation : newLocations) {
-		if (!oldLocations.contains(newLocation)) {
-			locationsToAdd.append(newLocation);
-		}
-	}
-
-	if (locationsToAdd.isEmpty()) {
-		//this->load(Settings::instance()->sqlModel());
-	} else {
-		qDebug() << Q_FUNC_INFO << locationsToAdd;
-		//emit aboutToDoWork(locationsToAdd);
-		//_musicSearchEngine->doSearch(locationsToAdd);
-	}
 }
 
 /** Reads an external picture which is close to multimedia files (same folder). */

@@ -178,7 +178,6 @@ int ViewPlaylists::selectedTracksInCurrentPlaylist() const
 
 void ViewPlaylists::setDatabase(SqlDatabase *db)
 {
-	//connect(db, &SqlDatabase::aboutToLoad, this, &ViewPlaylists::initLibraryUpdateArea);
 	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
 		QVBoxLayout *vbox = new QVBoxLayout;
 		vbox->setMargin(0);
@@ -214,7 +213,6 @@ void ViewPlaylists::setDatabase(SqlDatabase *db)
 		delete library->layout();
 		library->model()->load();
 	});
-
 }
 
 bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const

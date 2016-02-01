@@ -152,7 +152,8 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 	}
 	for (int i = 0; i < count(); i++) {
 		QRect r2(sectionPosition(i), viewport()->rect().y(), sectionSize(i), viewport()->rect().height());
-		p.drawText(r2, Qt::AlignCenter, model()->headerData(i, Qt::Horizontal).toString());
+		QString t = fontMetrics().elidedText(model()->headerData(i, Qt::Horizontal).toString(), Qt::ElideRight, r2.width());
+		p.drawText(r2, Qt::AlignCenter, t);
 		if (r2.contains(mapFromGlobal(QCursor::pos()))) {
 			r = r2;
 		}

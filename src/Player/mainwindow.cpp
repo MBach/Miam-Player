@@ -51,7 +51,8 @@ void MainWindow::activateLastView()
 		initQuickStart();
 	} else {
 		// Find the last active view and connect database to it
-		QString actionViewName = SettingsPrivate::instance()->value("lastActiveView", "actionViewPlaylists").toString();
+		SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+		QString actionViewName = settingsPrivate->value("lastActiveView", "actionViewPlaylists").toString();
 		for (QAction *actionView : menuView->actions()) {
 			if (actionView->objectName() == actionViewName) {
 				actionView->trigger();
@@ -172,7 +173,10 @@ void MainWindow::setupActions()
 
 	// Load music
 	auto settingsPrivate = SettingsPrivate::instance();
-	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, &MainWindow::musicLocationsHaveChanged);
+	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, [=]() {
+		this->activateLastView();
+		this->rescanLibrary();
+	});
 
 	// Media buttons and their shortcuts
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
@@ -314,6 +318,15 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::initQuickStart()
 {
+	qDebug() << Q_FUNC_INFO;
+
+	// Clean any existing view first
+	if (centralWidget()) {
+		delete takeCentralWidget();
+		_currentView = nullptr;
+	}
+
+	// Replace central widget with QuickStart
 	QuickStart *quickStart = new QuickStart(this);
 	quickStart->searchMultimediaFiles();
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
@@ -323,6 +336,7 @@ void MainWindow::initQuickStart()
 	menuView->setDisabled(true);
 	menuPlayback->setDisabled(true);
 	menuPlaylist->setDisabled(true);
+	this->resize(400, 500);
 }
 
 void MainWindow::createCustomizeOptionsDialog()
@@ -444,11 +458,6 @@ void MainWindow::activateView(QAction *menuAction)
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
 
-	//if (_currentView) {
-	//	auto db = SqlDatabase::instance();
-	//	connect(db, &SqlDatabase::aboutToUpdateView, _currentView, &AbstractView::updateModel);
-	//}
-
 	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 
 	} else {
@@ -530,6 +539,8 @@ void MainWindow::activateView(QAction *menuAction)
 			settingsPrivate->sync();
 		}
 	});
+
+	settingsPrivate->setValue("lastActiveView", menuAction->objectName());
 }
 
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -555,23 +566,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	} else if (objectName == "search") {
 		searchBar->shortcut->setKey(keySequence);
 	}*/
-}
-
-void MainWindow::musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations)
-{
-	qDebug() << Q_FUNC_INFO << oldLocations << newLocations;
-	bool libraryIsEmpty = newLocations.isEmpty();
-	actionScanLibrary->setDisabled(libraryIsEmpty);
-
-	//SqlDatabase db;
-	if (libraryIsEmpty) {
-		//db.rebuildFomLocations(oldLocations, QStringList());
-		//initQuickStart();
-
-	} else {
-		//db.rebuildFomLocations(oldLocations, newLocations);
-		this->activateLastView();
-	}
 }
 
 void MainWindow::rescanLibrary()

@@ -16,6 +16,11 @@
 
 bool MusicSearchEngine::isScanning = false;
 
+void MusicSearchEngine::setDelta(const QStringList &delta)
+{
+	_delta = delta;
+}
+
 MusicSearchEngine::MusicSearchEngine(QObject *parent)
 	: QObject(parent)
 	, _timer(new QTimer(this))
@@ -184,7 +189,9 @@ void MusicSearchEngine::watchForChanges()
 		}
 		qDebug() << Q_FUNC_INFO << oldLocations;
 		if (!oldLocations.isEmpty()) {
-			db.rebuildFomLocations(oldLocations, QStringList());
+			//db.rebuildFomLocations(oldLocations, QStringList());
+			db.musicSearchEngine()->setDelta(oldLocations);
+			db.rebuild();
 		}
 	}
 }

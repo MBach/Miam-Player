@@ -39,6 +39,8 @@ private:
 public:
 	SqlDatabase();
 
+	~SqlDatabase();
+
 	void init();
 
 	MusicSearchEngine * musicSearchEngine() const;
@@ -80,10 +82,8 @@ private:
 	bool cleanNodesWithoutTracks();
 
 public slots:
-	/** Delete and rescan local tracks. */
+	/** Delete cache and rescan local tracks. */
 	void rebuild();
-
-	void rebuildFomLocations(const QStringList &oldLocations, const QStringList &newLocations);
 
 private slots:
 	/** Reads an external picture which is close to multimedia files (same folder). */
@@ -93,17 +93,11 @@ private slots:
 	void saveFileRef(const QString &absFilePath);
 
 signals:
-	//void aboutToScan();
 	void aboutToLoad();
 	void aboutToResyncRemoteSources();
 	void coverWasUpdated(const QFileInfo &);
-	//void loaded();
-	//void progressChanged(int);
 
 	void nodeExtracted(GenericDAO *node);
-	//void tracksExtracted(const QList<TrackDAO> &);
-	//void artistsExtracted(const QList<ArtistDAO> &);
-	//void albumsExtracted(const QList<AlbumDAO> &);
 	void aboutToUpdateNode(GenericDAO *node);
 
 	void aboutToUpdateView(const QList<QUrl> &oldTracks, const QList<QUrl> &newTracks);

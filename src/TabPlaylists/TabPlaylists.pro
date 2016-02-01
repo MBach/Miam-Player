@@ -60,7 +60,7 @@ FORMS += closeplaylistpopup.ui \
     viewplaylists.ui
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
+    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore -L$$OUT_PWD/../Library/debug/ -lLibrary
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
