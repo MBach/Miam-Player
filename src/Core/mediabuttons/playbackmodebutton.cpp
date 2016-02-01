@@ -10,16 +10,26 @@
 PlaybackModeButton::PlaybackModeButton(QWidget *parent)
 	: MediaButton(parent)
 	, _mode(QMediaPlaylist::Sequential)
-{
-	connect(&_menu, &QMenu::triggered, this, [=](QAction *a) {
-		QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)a->data().toInt();
-		this->updateMode(mode);
-	});
+	, _toggleShuffleOnly(false)
+{}
 
-	connect(this, &PlaybackModeButton::clicked, this, [=]() {
-		QContextMenuEvent e(QContextMenuEvent::Mouse, pos());
-		this->contextMenuEvent(&e);
-	});
+void PlaybackModeButton::setToggleShuffleOnly(bool b)
+{
+	if (b) {
+		_mode = QMediaPlaylist::Random;
+		this->setContextMenuPolicy(Qt::PreventContextMenu);
+	} else {
+		this->setContextMenuPolicy(Qt::DefaultContextMenu);
+		connect(&_menu, &QMenu::triggered, this, [=](QAction *a) {
+			QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)a->data().toInt();
+			this->updateMode(mode);
+		});
+
+		connect(this, &PlaybackModeButton::clicked, this, [=]() {
+			QContextMenuEvent e(QContextMenuEvent::Mouse, pos());
+			this->contextMenuEvent(&e);
+		});
+	}
 }
 
 void PlaybackModeButton::contextMenuEvent(QContextMenuEvent *e)

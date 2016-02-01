@@ -26,6 +26,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	setupUi(this);
 	stopButton->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
+	playbackModeButton->setToggleShuffleOnly(true);
 
 	_mediaPlayer->setPlaylist(nullptr);
 
@@ -64,7 +65,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 	connect(seekForwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
 	connect(skipForwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipForward);
-	connect(toggleShuffleButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
+	connect(playbackModeButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
 
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State state) {
 		switch (state) {
@@ -107,6 +108,11 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		translator.load(":/translations/uniqueLibrary_" + newLanguage);
 		QApplication::installTranslator(&translator);
 	});
+
+	// Init button theme
+	for (MediaButton *b : this->findChildren<MediaButton*>()) {
+		b->setIconFromTheme(settings->theme());
+	}
 
 	// Init language
 	translator.load(":/translations/uniqueLibrary_" + settingsPrivate->language());
@@ -212,7 +218,7 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 	QStandardItem *item = uniqueTable->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
 		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
-		if (toggleShuffleButton->isChecked()) {
+		if (playbackModeButton->isChecked()) {
 			uniqueTable->scrollTo(index, QAbstractItemView::PositionAtCenter);
 		} else {
 			uniqueTable->scrollTo(index, QAbstractItemView::EnsureVisible);
@@ -235,7 +241,7 @@ void UniqueLibrary::skipBackward()
 		return;
 	}
 
-	if (toggleShuffleButton->isChecked()) {
+	if (playbackModeButton->isChecked()) {
 		if (!_randomHistoryList.isEmpty()) {
 			this->playSingleTrack(_randomHistoryList.takeLast());
 		}
@@ -261,7 +267,7 @@ void UniqueLibrary::skipForward()
 		_currentTrack->setData(false, Miam::DF_Highlighted);
 	}
 
-	if (toggleShuffleButton->isChecked()) {
+	if (playbackModeButton->isChecked()) {
 		int rows = uniqueTable->model()->rowCount();
 		if (rows > 0) {
 			int r = rand() % rows;
@@ -293,8 +299,8 @@ void UniqueLibrary::skipForward()
 
 void UniqueLibrary::toggleShuffle()
 {
-	toggleShuffleButton->setChecked(toggleShuffleButton->isChecked());
-	if (!toggleShuffleButton->isChecked()) {
+	playbackModeButton->setChecked(playbackModeButton->isChecked());
+	if (!playbackModeButton->isChecked()) {
 		_randomHistoryList.clear();
 	}
 }

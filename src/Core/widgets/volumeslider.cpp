@@ -89,6 +89,10 @@ void VolumeSlider::contextMenuEvent(QContextMenuEvent *e)
 	actionLine->setDisabled(true);
 	actionSlider->setDisabled(true);
 
+	m.setToolTipsVisible(true);
+	actionLine->setToolTip(tr("Not yet implemented"));
+	actionSlider->setToolTip(tr("Not yet implemented"));
+
 	m.addActions({ actionBars, actionLine, actionSlider});
 	m.exec(e->globalPos());
 }

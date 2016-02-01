@@ -39,8 +39,17 @@ MainWindow::MainWindow(QWidget *parent)
 	auto settings = SettingsPrivate::instance();
 	this->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 
-	//menubar->installEventFilter(this);
 	menubar->setHidden(settings->value("isMenuHidden", false).toBool());
+
+	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+		QApplication::removeTranslator(&_translator);
+		_translator.load(":/translations/core_" + newLanguage);
+		QApplication::installTranslator(&_translator);
+	});
+
+	// Init language
+	_translator.load(":/translations/core_" + settings->language());
+	QApplication::installTranslator(&_translator);
 }
 
 void MainWindow::activateLastView()
@@ -584,11 +593,9 @@ void MainWindow::rescanLibrary()
 	db->moveToThread(t);
 	connect(t, &QThread::started, db, &SqlDatabase::rebuild);
 	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, t, &QThread::quit);
-
 	if (_currentView->viewProperty(SettingsPrivate::VP_HasAreaForRescan)) {
 		_currentView->setDatabase(db);
 	}
-
 	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, db, &SqlDatabase::deleteLater);
 
 	t->start();

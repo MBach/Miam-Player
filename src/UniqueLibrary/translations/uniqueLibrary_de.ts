@@ -10,6 +10,14 @@
     </message>
 </context>
 <context>
+    <name>UniqueLibrary</name>
+    <message>
+        <location filename="../uniquelibrary.cpp" line="167"/>
+        <source>Your library is updating...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <location filename="../uniquelibraryitemdelegate.cpp" line="84"/>

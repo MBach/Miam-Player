@@ -32,6 +32,7 @@ private:
 
 	AbstractView *_currentView;
 	TagEditor *_tagEditor;
+	QTranslator _translator;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);

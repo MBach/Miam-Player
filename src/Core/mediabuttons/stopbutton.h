@@ -2,6 +2,7 @@
 #define STOPBUTTON_H
 
 #include "mediabutton.h"
+#include "mediaplayer.h"
 
 #include <QMenu>
 
@@ -16,11 +17,12 @@ class MIAMCORE_LIBRARY StopButton : public MediaButton
 private:
 	QMenu _menu;
 	QAction *_action;
+	MediaPlayer *_mediaPlayer;
 
 public:
 	explicit StopButton(QWidget *parent = nullptr);
 
-	virtual void setMediaPlayer(MediaPlayer *mediaPlayer) override;
+	void setMediaPlayer(MediaPlayer *mediaPlayer);
 
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent *) override;

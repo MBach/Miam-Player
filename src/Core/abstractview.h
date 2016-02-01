@@ -8,6 +8,13 @@
 #include <QDir>
 #include <QWidget>
 
+/**
+ * \brief		The AbstractView class is the base class for all views in Miam-Player.
+ * \details		Every view in the player should inherit from this hierarchy in order to provide minimal functionalities
+ *				to have a ready-to-work player. Usually, a view in a media player has a seekbar, a volume slider and some specific areas.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMCORE_LIBRARY AbstractView : public QWidget
 {
 	Q_OBJECT
@@ -20,8 +27,6 @@ public:
 
 public slots:
 	virtual void initFileExplorer(const QDir &) {}
-
-	//virtual void initLibraryUpdateArea() {}
 
 	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) = 0;
 

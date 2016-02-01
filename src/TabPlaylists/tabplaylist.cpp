@@ -1,14 +1,14 @@
 #include "tabplaylist.h"
 
-#include <QDirIterator>
-
+#include <model/sqldatabase.h>
 #include <settings.h>
 #include <settingsprivate.h>
 
 #include "dialogs/closeplaylistpopup.h"
 #include "tabbar.h"
 #include "cornerwidget.h"
-#include <model/sqldatabase.h>
+
+#include <QDirIterator>
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent)
@@ -189,6 +189,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 {
 	Playlist *playlist = nullptr;
 	SqlDatabase db;
+	db.open();
 	PlaylistDAO playlistDao = db.selectPlaylist(playlistId);
 
 	/// TODO: Do not load the playlist if it's already displayed

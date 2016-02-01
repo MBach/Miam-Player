@@ -13,7 +13,6 @@ SOURCES += dialogs/closeplaylistpopup.cpp \
     filesystem/addressbarlineedit.cpp \
     filesystem/addressbarmenu.cpp \
     filesystem/filesystemtreeview.cpp \
-    mediabuttons/playbackmodebutton.cpp \
     changehierarchybutton.cpp \
     cornerwidget.cpp \
     extendedtabbar.cpp \
@@ -36,7 +35,6 @@ HEADERS += dialogs/closeplaylistpopup.h \
     filesystem/addressbarlineedit.h \
     filesystem/addressbarmenu.h \
     filesystem/filesystemtreeview.h \
-    mediabuttons/playbackmodebutton.h \
     abstractviewplaylists.h \
     changehierarchybutton.h \
     cornerwidget.h \

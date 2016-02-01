@@ -8,7 +8,7 @@
 #include "miamtabplaylists_global.hpp"
 
 /**
- * \brief		The AbstractViewPlaylists class
+ * \brief		The AbstractViewPlaylists class is the base class for views which can handle playlists in Miam-Player.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

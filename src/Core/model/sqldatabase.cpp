@@ -730,8 +730,6 @@ void SqlDatabase::rebuild()
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
 
-		qDebug() << "searchHasEnded";
-
 		// Resync remote players and remote databases
 		emit aboutToResyncRemoteSources();
 	});

@@ -7,7 +7,7 @@
 
 #include <QtDebug>
 
-CornerWidget::CornerWidget(TabPlaylist *parent) :
+CornerWidget::CornerWidget(QWidget *parent) :
 	QPushButton("", parent)
 {
 	this->setAcceptDrops(true);

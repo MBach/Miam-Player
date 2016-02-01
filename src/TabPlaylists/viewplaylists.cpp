@@ -17,6 +17,9 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	, _searchDialog(new SearchDialog(this))
 {
 	this->setupUi(this);
+	stopButton->setMediaPlayer(mediaPlayer);
+	playbackModeButton->setToggleShuffleOnly(false);
+
 	paintableWidget->setFrameBorder(false, false, true, false);
 	seekSlider->setMediaPlayer(_mediaPlayer);
 	tabPlaylists->init(_mediaPlayer);
@@ -28,25 +31,14 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	Settings *settings = Settings::instance();
 	volumeSlider->setValue(settings->volume() * 100);
 
-	// Special behaviour for media buttons
-	mediaButtons << skipBackwardButton << seekBackwardButton << playButton << stopButton
-				 << seekForwardButton << skipForwardButton << playbackModeButton;
-
 	// Buttons
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	for (MediaButton *b : mediaButtons) {
-		b->setMediaPlayer(_mediaPlayer);
-
+	for (MediaButton *b : findChildren<MediaButton*>()) {
 		if (!b) {
 			continue;
 		}
 		b->setSize(settingsPrivate->buttonsSize());
-		b->setMediaPlayer(_mediaPlayer);
-		if (settingsPrivate->isButtonThemeCustomized()) {
-			b->setIcon(QIcon(settingsPrivate->customIcon(b->objectName())));
-		} else {
-			b->setIconFromTheme(settings->theme());
-		}
+		b->setIconFromTheme(settings->theme());
 		b->setVisible(settingsPrivate->isMediaButtonVisible(b->objectName()));
 	}
 
@@ -316,23 +308,6 @@ void ViewPlaylists::initFileExplorer(const QDir &dir)
 	addressBar->init(dir);
 }
 
-/*void ViewPlaylists::initLibraryUpdateArea()
-{
-	QVBoxLayout *vbox = new QVBoxLayout;
-	vbox->setMargin(0);
-	vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
-
-	PaintableWidget *paintable = new PaintableWidget(library);
-	paintable->setHalfTopBorder(false);
-	paintable->setFrameBorder(false, true, true, false);
-	vbox->addWidget(paintable);
-	QVBoxLayout *vbox2 = new QVBoxLayout;
-	vbox2->addWidget(new QLabel(tr("Your library is updating..."), paintable));
-	vbox2->addWidget(new QProgressBar(paintable));
-	paintable->setLayout(vbox2);
-	library->setLayout(vbox);
-}*/
-
 void ViewPlaylists::moveTracksDown()
 {
 	if (tabPlaylists->currentPlayList()) {
@@ -424,7 +399,7 @@ void ViewPlaylists::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant v
 {
 	switch (vp) {
 	case SettingsPrivate::VP_MediaControls:
-		for (MediaButton *b : mediaButtons) {
+		for (MediaButton *b : findChildren<MediaButton*>()) {
 			b->setSize(value.toInt());
 		}
 		break;

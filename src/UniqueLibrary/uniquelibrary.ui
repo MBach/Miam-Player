@@ -188,7 +188,7 @@
       </widget>
      </item>
      <item>
-      <widget class="MediaButton" name="toggleShuffleButton">
+      <widget class="PlaybackModeButton" name="playbackModeButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -336,6 +336,11 @@
    <class>VolumeSlider</class>
    <extends>QSlider</extends>
    <header location="global">widgets/volumeslider.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlaybackModeButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">mediabuttons/playbackmodebutton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

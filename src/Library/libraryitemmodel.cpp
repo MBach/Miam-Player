@@ -280,9 +280,7 @@ void LibraryItemModel::load()
 	}
 	}
 
-	db.close();
 	this->sort(0);
-	//emit loaded();
 }
 
 /** For every item in the library, gets the top level letter attached to it. */

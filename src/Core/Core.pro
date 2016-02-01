@@ -71,6 +71,7 @@ macx {
 
 SOURCES += library/jumptowidget.cpp \
     mediabuttons/mediabutton.cpp \
+    mediabuttons/playbackmodebutton.cpp \
     mediabuttons/stopbutton.cpp \
     model/albumdao.cpp \
     model/artistdao.cpp \
@@ -109,6 +110,7 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/tageditorplugin.h \
     library/jumptowidget.h \
     mediabuttons/mediabutton.h \
+    mediabuttons/playbackmodebutton.h \
     mediabuttons/stopbutton.h \
     model/albumdao.h \
     model/artistdao.h \
@@ -147,3 +149,19 @@ HEADERS += interfaces/basicplugin.h \
     treeview.h
 
 RESOURCES += core.qrc
+
+TRANSLATIONS = translations/core_ar.ts \
+    translations/core_cs.ts \
+    translations/core_de.ts \
+    translations/core_en.ts \
+    translations/core_es.ts \
+    translations/core_fr.ts \
+    translations/core_in.ts \
+    translations/core_it.ts \
+    translations/core_ja.ts \
+    translations/core_kr.ts \
+    translations/core_pt.ts \
+    translations/core_ru.ts \
+    translations/core_th.ts \
+    translations/core_vn.ts \
+    translations/core_zh.ts

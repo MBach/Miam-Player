@@ -25,7 +25,6 @@ void debugOutput(QtMsgType type, const QMessageLogContext &, const QString &msg)
 
 int main(int argc, char *argv[])
 {
-	//Q_INIT_RESOURCE(core);
 	Q_INIT_RESOURCE(player);
 
 	qRegisterMetaType<GenericDAO>();
@@ -34,7 +33,9 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QFileInfo>();
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
-	//qInstallMessageHandler(debugOutput);
+#if defined(Q_OS_WIN)
+	qInstallMessageHandler(debugOutput);
+#endif
 
 	QtSingleApplication app(SOFT, argc, argv);
 	app.setOrganizationName(COMPANY);

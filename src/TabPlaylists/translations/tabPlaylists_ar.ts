@@ -88,39 +88,6 @@
     </message>
 </context>
 <context>
-    <name>PlaybackModeButton</name>
-    <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="28"/>
-        <source>Sequential</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="29"/>
-        <source>Shuffle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="30"/>
-        <source>Loop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="31"/>
-        <source>Current track once</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="32"/>
-        <source>Current track in loop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="36"/>
-        <source>Sequential mode is the most commun mode to play tracks in a playlist. It will play tracks from Top to Bottom.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>Playlist</name>
     <message>
         <location filename="../playlist.cpp" line="80"/>
@@ -288,7 +255,7 @@ Select a playlist to display the first 30 tracks.</source>
         </translation>
     </message>
     <message>
-        <location filename="../playlistmanager.cpp" line="60"/>
+        <location filename="../playlistmanager.cpp" line="62"/>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -369,8 +336,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="252"/>
-        <location filename="../tabplaylist.cpp" line="444"/>
+        <location filename="../tabplaylist.cpp" line="253"/>
+        <location filename="../tabplaylist.cpp" line="445"/>
         <source>Playlist %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -398,27 +365,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="209"/>
+        <location filename="../viewplaylists.cpp" line="182"/>
+        <source>Your library is updating...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../viewplaylists.cpp" line="244"/>
         <source>playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="291"/>
+        <location filename="../viewplaylists.cpp" line="326"/>
         <source>Audio files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="303"/>
+        <location filename="../viewplaylists.cpp" line="338"/>
         <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="305"/>
+        <location filename="../viewplaylists.cpp" line="340"/>
         <source>Choose some files to open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="330"/>
+        <location filename="../viewplaylists.cpp" line="365"/>
         <source>Choose a folder to open</source>
         <translation type="unfinished"></translation>
     </message>

@@ -35,22 +35,22 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="129"/>
+        <location filename="../libraryitemmodel.cpp" line="388"/>
         <source>  Artists \ Albums</source>
         <translation>  Исполнители \ Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="132"/>
+        <location filename="../libraryitemmodel.cpp" line="391"/>
         <source>  Albums</source>
         <translation>  Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="135"/>
+        <location filename="../libraryitemmodel.cpp" line="394"/>
         <source>  Artists – Albums</source>
         <translation>  Исполнители – Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="138"/>
+        <location filename="../libraryitemmodel.cpp" line="397"/>
         <source>  Years</source>
         <translation>  Годы</translation>
     </message>
@@ -114,12 +114,12 @@
 <context>
     <name>LibraryTreeView</name>
     <message>
-        <location filename="../librarytreeview.cpp" line="38"/>
+        <location filename="../librarytreeview.cpp" line="37"/>
         <source>Send to the current playlist</source>
         <translation>Отправить в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="39"/>
+        <location filename="../librarytreeview.cpp" line="38"/>
         <source>Send to the tag editor</source>
         <translation>Отправить в редактор тегов</translation>
     </message>
@@ -140,7 +140,7 @@
 <context>
     <name>MiamItemModel</name>
     <message>
-        <location filename="../miamitemmodel.cpp" line="62"/>
+        <location filename="../miamitemmodel.cpp" line="69"/>
         <source>Various</source>
         <translation>Разные</translation>
     </message>

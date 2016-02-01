@@ -9,20 +9,14 @@
 
 MediaButton::MediaButton(QWidget *parent)
 	: QPushButton(parent)
-	, _mediaPlayer(nullptr)
 {
 	this->setMaximumWidth(SettingsPrivate::instance()->buttonsSize() + 10);
 	auto settings = Settings::instance();
 	connect(settings, &Settings::themeHasChanged, this, &MediaButton::setIconFromTheme);
 }
 
-void MediaButton::setMediaPlayer(MediaPlayer *mediaPlayer)
-{
-	_mediaPlayer = mediaPlayer;
-}
-
 /** Redefined to load custom icons saved in settings. */
-void MediaButton::setIcon(const QIcon &icon)
+/*void MediaButton::setIcon(const QIcon &icon)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->isButtonThemeCustomized() && settings->hasCustomIcon(objectName())) {
@@ -33,7 +27,7 @@ void MediaButton::setIcon(const QIcon &icon)
 	} else {
 		QPushButton::setIcon(icon);
 	}
-}
+}*/
 
 void MediaButton::paintEvent(QPaintEvent *)
 {
@@ -50,14 +44,20 @@ void MediaButton::paintEvent(QPaintEvent *)
 /** Load an icon from a chosen theme in options. */
 void MediaButton::setIconFromTheme(const QString &theme)
 {
-	// The objectName in the UI file MUST match the alias in the QRC file!
-	QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
-	QIcon icon(iconFile);
-	if (!icon.isNull()) {
-		QPushButton::setIcon(QIcon(iconFile));
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	if (settingsPrivate->isButtonThemeCustomized() && settingsPrivate->hasCustomIcon(objectName())) {
+		setIcon(QIcon(settingsPrivate->customIcon(objectName())));
 	} else {
-		qDebug() << Q_FUNC_INFO << objectName();
+		// The objectName in the UI file MUST match the alias in the QRC file!
+		QString iconFile = ":/player/" + theme.toLower() + "/" + this->objectName().remove("Button");
+		QIcon icon(iconFile);
+		if (!icon.isNull()) {
+			QPushButton::setIcon(QIcon(iconFile));
+		} else {
+			qDebug() << Q_FUNC_INFO << objectName();
+		}
 	}
+
 }
 
 /** Change the size of icons from the options. */

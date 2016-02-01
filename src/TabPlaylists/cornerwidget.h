@@ -3,8 +3,6 @@
 
 #include <QPushButton>
 
-#include "tabplaylist.h"
-
 #include "miamtabplaylists_global.hpp"
 
 /**
@@ -16,7 +14,7 @@ class MIAMTABPLAYLISTS_LIBRARY CornerWidget : public QPushButton
 {
 	Q_OBJECT
 public:
-	explicit CornerWidget(TabPlaylist *parent);
+	explicit CornerWidget(QWidget *parent);
 
 protected:
 	virtual void mouseMoveEvent(QMouseEvent *e) override;

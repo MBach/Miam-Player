@@ -10,8 +10,6 @@ class MIAMTABPLAYLISTS_LIBRARY ViewPlaylists : public AbstractViewPlaylists, pub
 {
 	Q_OBJECT
 private:
-	// Play, pause, stop, etc.
-	QList<MediaButton*> mediaButtons;
 	SearchDialog *_searchDialog;
 	QTranslator translator;
 	SqlDatabase *_db;

@@ -21,6 +21,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 {
 	uint id = 0;
 	SqlDatabase db;
+	db.init();
 
 	for (int i = 0; i < _tabPlaylists->count(); i++) {
 		Playlist *pl = _tabPlaylists->playlist(i);

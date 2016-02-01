@@ -9,6 +9,13 @@
     </message>
 </context>
 <context>
+    <name>UniqueLibrary</name>
+    <message>
+        <source>Your library is updating...</source>
+        <translation>Your library is updating...</translation>
+    </message>
+</context>
+<context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <source>(no title)</source>

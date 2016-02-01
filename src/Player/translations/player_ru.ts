@@ -534,24 +534,24 @@
     </message>
     <message>
         <location filename="../dialogs/customizeoptionsdialog.cpp" line="50"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="293"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="391"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="457"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="295"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="387"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="456"/>
         <source>Add some music locations here</source>
         <translation>Добавьте сюда несколько папок с музыкой</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="330"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="326"/>
         <source>Translation status: OK!</source>
         <translation>Статус перевода: OK!</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="332"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="328"/>
         <source>No translation is available for this language :(</source>
         <translation>Для этого языка перевод недоступен :(</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="410"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="406"/>
         <source>Select a location of your music</source>
         <translation>Укажите расположение вашей музыки</translation>
     </message>
@@ -1352,7 +1352,7 @@
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="508"/>
+        <location filename="../mainwindow.cpp" line="507"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1362,7 +1362,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="509"/>
+        <location filename="../mainwindow.cpp" line="508"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1372,7 +1372,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="510"/>
+        <location filename="../mainwindow.cpp" line="509"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1382,62 +1382,62 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="244"/>
+        <location filename="../mainwindow.cpp" line="240"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="356"/>
+        <location filename="../mainwindow.cpp" line="360"/>
         <source>Directory to open.</source>
         <translation>Открыть папку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="356"/>
+        <location filename="../mainwindow.cpp" line="360"/>
         <source>dir</source>
         <translation>папка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="357"/>
+        <location filename="../mainwindow.cpp" line="361"/>
         <source>Medias are added into a new playlist.</source>
         <translation>Мультимеда-данные будут добавлены в новый список воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="358"/>
+        <location filename="../mainwindow.cpp" line="362"/>
         <source>Medias are sent to tag editor.</source>
         <translation>Мультимеда-данные будут добавлены в редактор тегов.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="359"/>
+        <location filename="../mainwindow.cpp" line="363"/>
         <source>Directory is sent to library.</source>
         <translation>Папка отправлена в библиотеку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="360"/>
+        <location filename="../mainwindow.cpp" line="364"/>
         <source>Play or pause track in active playlist.</source>
         <translation>Воспроизведение или пауза дорожки в активном списке воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="361"/>
+        <location filename="../mainwindow.cpp" line="365"/>
         <source>Stop playback.</source>
         <translation>Остановить воспроизведение.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="362"/>
+        <location filename="../mainwindow.cpp" line="366"/>
         <source>Play next track.</source>
         <translation>Воспроизвести следующую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="363"/>
+        <location filename="../mainwindow.cpp" line="367"/>
         <source>Play previous track.</source>
         <translation>Воспроизвести предыдущую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="364"/>
+        <location filename="../mainwindow.cpp" line="368"/>
         <source>Set volume of the player.</source>
         <translation>Установить громкость плеера.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="364"/>
+        <location filename="../mainwindow.cpp" line="368"/>
         <source>volume</source>
         <translation>громкость</translation>
     </message>
@@ -1474,7 +1474,7 @@ API изменился, и Вам нужно обновоить эти плаг�
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../mainwindow.cpp" line="353"/>
+        <location filename="../mainwindow.cpp" line="357"/>
         <source>Command line helper for Miam-Player</source>
         <translation>Справка по опциям командной строки Miam-Player</translation>
     </message>
@@ -1512,9 +1512,9 @@ API изменился, и Вам нужно обновоить эти плаг�
         <translation>Нажмите здесь, чтобы искать музыку вручную</translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="190"/>
-        <location filename="../quickstart.cpp" line="217"/>
-        <location filename="../quickstart.cpp" line="248"/>
+        <location filename="../quickstart.cpp" line="187"/>
+        <location filename="../quickstart.cpp" line="214"/>
+        <location filename="../quickstart.cpp" line="245"/>
         <source>%n elements</source>
         <translation>
             <numerusform>%n элемент</numerusform>
@@ -1523,7 +1523,7 @@ API изменился, и Вам нужно обновоить эти плаг�
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="195"/>
+        <location filename="../quickstart.cpp" line="192"/>
         <source>%n folders</source>
         <translation>
             <numerusform>%n папка</numerusform>
@@ -1532,12 +1532,12 @@ API изменился, и Вам нужно обновоить эти плаг�
         </translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="207"/>
+        <location filename="../quickstart.cpp" line="204"/>
         <source>Note: it&apos;s not possible to add your default location because 0 tracks where found</source>
         <translation>Внимание: невозможно добавить вашу системную папку для музыки, потому что в ней не было найдено треков</translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="245"/>
+        <location filename="../quickstart.cpp" line="242"/>
         <source>empty folder</source>
         <translation>пустая папка</translation>
     </message>

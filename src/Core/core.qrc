@@ -89,4 +89,9 @@
     <qresource prefix="/icons">
         <file alias="mp_win32">mp.ico</file>
     </qresource>
+    <qresource prefix="/">
+        <file>translations/core_en.qm</file>
+        <file>translations/core_fr.qm</file>
+        <file>translations/core_ru.qm</file>
+    </qresource>
 </RCC>

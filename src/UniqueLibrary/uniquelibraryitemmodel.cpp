@@ -138,6 +138,4 @@ void UniqueLibraryItemModel::load()
 		}
 		this->insertTracks(tracks);
 	}
-
-	db.close();
 }
