@@ -38,26 +38,7 @@ TableView::TableView(QWidget *parent)
 	connect(selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
 		setDirtyRegion(QRegion(viewport()->rect()));
 	});
-
-	connect(qApp, &QGuiApplication::aboutToQuit, this, [=]() {
-		//Settings::instance()->setWidgetGeometry(this->objectName(), saveGeometry());
-		qDebug() << Q_FUNC_INFO << this->objectName();
-	});
 }
-
-/*void TableView::createConnectionsToDB()
-{
-	SqlDatabase db;
-	db.disconnect();
-	connect(&db, &SqlDatabase::aboutToLoad, _model, [=]() {
-		_model->removeRows(0, _model->rowCount());
-	});
-	connect(&db, &SqlDatabase::tracksExtracted, _model, &UniqueLibraryItemModel::insertTracks);
-	connect(&db, &SqlDatabase::albumsExtracted, _model, &UniqueLibraryItemModel::insertAlbums);
-	connect(&db, &SqlDatabase::artistsExtracted, _model, &UniqueLibraryItemModel::insertArtists);
-	connect(&db, &SqlDatabase::aboutToUpdateNode, _model, &UniqueLibraryItemModel::updateNode);
-	//db.load(Settings::RSM_Flat);
-}*/
 
 /** Redefined to disable search in the table and trigger jumpToWidget's action. */
 void TableView::keyboardSearch(const QString &search)

@@ -34,7 +34,7 @@ public:
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const;
 
-	QIcon defaultIcon(QIcon::Mode mode);
+	QIcon defaultIcon(QIcon::Mode mode) const;
 
 	/** Redefined to forward events to children. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
@@ -45,15 +45,9 @@ public:
 	void loadPlaylist(uint playlistId);
 
 	/** Get the playlist at index. */
-	Playlist *playlist(int index);
+	Playlist *playlist(int index) const;
 
-	inline QList<Playlist *> playlists() {
-		QList<Playlist*> _playlists;
-		for (int i = 0; i < count(); i++) {
-			_playlists.append(this->playlist(i));
-		}
-		return _playlists;
-	}
+	QList<Playlist *> playlists() const;
 
 	inline PlaylistManager *playlistManager() const { return _playlistManager; }
 

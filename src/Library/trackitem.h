@@ -15,6 +15,8 @@ class MIAMLIBRARY_LIBRARY TrackItem : public QStandardItem
 public:
 	explicit TrackItem(const TrackDAO *dao);
 
+	virtual ~TrackItem() {}
+
 	virtual int type() const override;
 };
 

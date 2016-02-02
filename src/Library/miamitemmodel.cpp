@@ -18,14 +18,14 @@ MiamItemModel::~MiamItemModel()
 
 void MiamItemModel::deleteCache()
 {
+	//qDeleteAll(_hash);
 	qDeleteAll(_letters);
 	//qDeleteAll(_topLevelItems);
-	//qDeleteAll(_hash);
 	qDeleteAll(_tracks);
 
+	_hash.clear();
 	_letters.clear();
 	_topLevelItems.clear();
-	_hash.clear();
 	_tracks.clear();
 
 	this->removeRows(0, this->rowCount());

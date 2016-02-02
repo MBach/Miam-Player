@@ -65,7 +65,7 @@ public:
 
 	explicit LibraryTreeView(QWidget *parent = nullptr);
 
-	//void createConnectionsToDB();
+	virtual ~LibraryTreeView();
 
 	const QImage *expandedCover(AlbumItem *album) const;
 

@@ -29,6 +29,8 @@ private:
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
+	virtual ~UniqueLibrary();
+
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 protected:

@@ -15,6 +15,11 @@ TreeView::TreeView(QWidget *parent) :
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
+TreeView::~TreeView()
+{
+
+}
+
 QList<QUrl> TreeView::selectedTracks()
 {
 	QList<QUrl> list;

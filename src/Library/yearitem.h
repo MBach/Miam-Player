@@ -16,6 +16,8 @@ class MIAMLIBRARY_LIBRARY YearItem : public QStandardItem
 public:
 	explicit YearItem(const YearDAO *dao);
 
+	virtual ~YearItem() {}
+
 	virtual int type() const override;
 };
 

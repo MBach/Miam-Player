@@ -1,8 +1,8 @@
 #include "trackitem.h"
 #include "miamcore_global.h"
 
-TrackItem::TrackItem(const TrackDAO *dao) :
-	QStandardItem(dao->title())
+TrackItem::TrackItem(const TrackDAO *dao)
+	: QStandardItem(dao->title())
 {
 	setData(dao->uri(), Miam::DF_URI);
 	setData(dao->titleNormalized(), Miam::DF_NormalizedString);

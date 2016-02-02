@@ -120,7 +120,7 @@ Playlist* TabPlaylist::currentPlayList() const
 	return qobject_cast<Playlist*>(this->currentWidget());
 }
 
-QIcon TabPlaylist::defaultIcon(QIcon::Mode mode)
+QIcon TabPlaylist::defaultIcon(QIcon::Mode mode) const
 {
 	QIcon icon(":/icons/playlistIcon");
 	QIcon displayedIcon(icon.pixmap(QSize(tabBar()->fontMetrics().ascent(), tabBar()->fontMetrics().ascent()), mode));
@@ -160,7 +160,6 @@ void TabPlaylist::init(MediaPlayer *mediaPlayer)
 	_mediaPlayer = mediaPlayer;
 	blockSignals(true);
 	auto settings = SettingsPrivate::instance();
-	qDebug() << Q_FUNC_INFO << settings->language();
 	if (settings->playbackRestorePlaylistsAtStartup()) {
 		QList<uint> list = settings->lastPlaylistSession();
 		if (!list.isEmpty()) {
@@ -221,9 +220,18 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 }
 
 /** Get the playlist at index. */
-Playlist* TabPlaylist::playlist(int index)
+Playlist* TabPlaylist::playlist(int index) const
 {
 	return qobject_cast<Playlist*>(this->widget(index));
+}
+
+QList<Playlist *> TabPlaylist::playlists() const
+{
+	QList<Playlist*> _playlists;
+	for (int i = 0; i < count(); i++) {
+		_playlists.append(this->playlist(i));
+	}
+	return _playlists;
 }
 
 /** Retranslate context menu. */
@@ -252,7 +260,6 @@ void TabPlaylist::contextMenuEvent(QContextMenuEvent *event)
 Playlist* TabPlaylist::addPlaylist()
 {
 	QString newPlaylistName = tr("Playlist %1").arg(count() + 1);
-	qDebug() << Q_FUNC_INFO << tr("Playlist %1");
 	QByteArray ba;
 	if (playlists().isEmpty()) {
 		ba = SettingsPrivate::instance()->lastActivePlaylistGeometry();

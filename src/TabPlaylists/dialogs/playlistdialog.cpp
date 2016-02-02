@@ -157,8 +157,10 @@ QString PlaylistDialog::convertNameToValidFileName(const QString &name)
 }
 
 /** Redefined: clean preview area, populate once again lists. */
-void PlaylistDialog::open()
+int PlaylistDialog::exec()
 {
+	qDebug() << Q_FUNC_INFO;
+
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->value("PlaylistDialogGeometry").isValid()) {
 		this->restoreGeometry(settings->value("PlaylistDialogGeometry").toByteArray());
@@ -175,8 +177,7 @@ void PlaylistDialog::open()
 	}
 	this->updatePlaylists();
 
-	QDialog::open();
-	this->activateWindow();
+	return QDialog::exec();
 }
 
 /** Delete from the file system every selected playlists. Cannot be canceled. */

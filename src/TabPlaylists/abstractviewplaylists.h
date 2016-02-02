@@ -22,6 +22,8 @@ protected:
 public:
 	AbstractViewPlaylists(MediaPlayer *mediaPlayer) : AbstractView(nullptr), _mediaPlayer(mediaPlayer) {}
 
+	virtual ~AbstractViewPlaylists() {}
+
 	virtual void addToPlaylist(const QList<QUrl> &tracks) = 0;
 
 	/** Open a new Dialog where one can add a folder to current playlist. */

@@ -28,6 +28,8 @@ private:
 public:
 	explicit JumpToWidget(QAbstractItemView *view);
 
+	virtual ~JumpToWidget();
+
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	inline void setCurrentLetter(const QChar &currentLetter) { _currentLetter = currentLetter; }

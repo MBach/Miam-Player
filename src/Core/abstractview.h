@@ -21,6 +21,8 @@ class MIAMCORE_LIBRARY AbstractView : public QWidget
 public:
 	AbstractView(QWidget *parent = nullptr) : QWidget(parent) {}
 
+	virtual ~AbstractView() {}
+
 	virtual void setDatabase(SqlDatabase *) {}
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty) const { return false; }

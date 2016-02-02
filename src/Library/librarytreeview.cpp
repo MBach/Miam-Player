@@ -80,6 +80,11 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	this->installEventFilter(this);
 }
 
+LibraryTreeView::~LibraryTreeView()
+{
+	SettingsPrivate::instance()->disconnect();
+}
+
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const
 {
 	return _expandedCovers.value(album, nullptr);
@@ -158,21 +163,6 @@ void LibraryTreeView::updateSelectedTracks()
 	/// FIXME
 	//SqlDatabase().load();
 }
-
-/*void LibraryTreeView::createConnectionsToDB()
-{
-	if (!this->property("connected").toBool()) {
-		//SqlDatabase db;
-		//db.disconnect();
-		//connect(&db, &SqlDatabase::aboutToLoad, this, &LibraryTreeView::reset);
-		//connect(&db, &SqlDatabase::loaded, this, &LibraryTreeView::endPopulateTree);
-		//connect(&db, &SqlDatabase::nodeExtracted, _libraryModel, &LibraryItemModel::insertNode);
-		//connect(&db, &SqlDatabase::aboutToUpdateNode, _libraryModel, &LibraryItemModel::updateNode);
-		//connect(&db, &SqlDatabase::aboutToCleanView, _libraryModel, &LibraryItemModel::cleanDanglingNodes);
-		//db.load();
-		this->setProperty("connected", true);
-	}
-}*/
 
 /** Redefined to display a small context menu in the view. */
 void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)

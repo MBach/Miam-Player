@@ -14,6 +14,8 @@ class MIAMLIBRARY_LIBRARY SeparatorItem : public QStandardItem
 public:
 	explicit SeparatorItem(const QString &text);
 
+	virtual ~SeparatorItem() {}
+
 	virtual int type() const override;
 };
 

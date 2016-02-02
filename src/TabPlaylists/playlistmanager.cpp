@@ -13,7 +13,6 @@ PlaylistManager::PlaylistManager(TabPlaylist *parent)
 
 bool PlaylistManager::deletePlaylist(uint playlistId)
 {
-	//return SqlDatabase::instance()->removePlaylist(playlistId);
 	return SqlDatabase().removePlaylist(playlistId);
 }
 

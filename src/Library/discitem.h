@@ -14,6 +14,8 @@ class MIAMLIBRARY_LIBRARY DiscItem : public QStandardItem
 public:
 	explicit DiscItem(const QString &text);
 
+	virtual ~DiscItem() {}
+
 	virtual int type() const override;
 };
 

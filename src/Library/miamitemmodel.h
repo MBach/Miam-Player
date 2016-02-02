@@ -5,6 +5,7 @@
 #include <QSortFilterProxyModel>
 #include <model/genericdao.h>
 #include "separatoritem.h"
+#include "trackitem.h"
 
 #include "miamlibrary_global.hpp"
 
@@ -27,7 +28,7 @@ protected:
 	/** Letter L returns all Artists (e.g.) starting with L. */
 	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
 
-	QHash<QString, QStandardItem*> _tracks;
+	QHash<QString, TrackItem*> _tracks;
 
 public:
 	explicit MiamItemModel(QObject *parent = nullptr);

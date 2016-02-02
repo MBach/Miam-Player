@@ -27,6 +27,11 @@ LibraryItemModel::LibraryItemModel(QObject *parent)
 	_proxy->setTopLevelItems(this->topLevelItems());
 }
 
+LibraryItemModel::~LibraryItemModel()
+{
+
+}
+
 /** Read all tracks entries in the database and send them to connected views. */
 void LibraryItemModel::load()
 {
@@ -418,13 +423,14 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 
 	QStandardItem *nodeItem = nullptr;
 	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
-		nodeItem = new TrackItem(dao);
+		TrackItem *trackItem = new TrackItem(dao);
 		if (_tracks.contains(dao->uri())) {
 			QStandardItem *rowToDelete = _tracks.value(dao->uri());
 			// Clean unused nodes
 			this->removeNode(rowToDelete->index());
 		}
-		_tracks.insert(dao->uri(), nodeItem);
+		nodeItem = trackItem;
+		_tracks.insert(dao->uri(), trackItem);
 	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
 		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
 		if (album) {

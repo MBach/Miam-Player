@@ -69,26 +69,28 @@ void SqlDatabase::init()
 {
 	_musicSearchEngine = new MusicSearchEngine(this);
 
-	if (open()) {
+	if (!isOpen()) {
+		open();
 		this->setPragmas();
-		QSqlQuery createDb(*this);
-		createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), "\
-					  " icon varchar(255), host varchar(255), UNIQUE(normalizedName))");
-		createDb.exec("CREATE TABLE IF NOT EXISTS albums (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), " \
-			"year INTEGER, cover varchar(255), artistId INTEGER, host varchar(255), icon varchar(255), UNIQUE(id, artistId))");
-		QString createTableTracks = "CREATE TABLE IF NOT EXISTS tracks (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, " \
-			"title varchar(255), artistId INTEGER, albumId INTEGER, artistAlbum varchar(255), length INTEGER, " \
-			"rating INTEGER, disc INTEGER, internalCover INTEGER DEFAULT 0, host varchar(255), icon varchar(255))";
-		createDb.exec(createTableTracks);
-		createDb.exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), " \
-					  "host varchar(255), background varchar(255), checksum varchar(255))");
-		createDb.exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
-					  "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), host varchar(255), id INTEGER, " \
-					  "url varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
-		/// TEST Monitor Filesystem
-		 createDb.exec("CREATE TABLE IF NOT EXISTS filesystem (path VARCHAR(255) PRIMARY KEY ASC, " \
-			"lastModified INTEGER);");
 	}
+
+	QSqlQuery createDb(*this);
+	createDb.exec("CREATE TABLE IF NOT EXISTS artists (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), "\
+				  " icon varchar(255), host varchar(255), UNIQUE(normalizedName))");
+	createDb.exec("CREATE TABLE IF NOT EXISTS albums (id INTEGER PRIMARY KEY, name varchar(255), normalizedName varchar(255), " \
+		"year INTEGER, cover varchar(255), artistId INTEGER, host varchar(255), icon varchar(255), UNIQUE(id, artistId))");
+	QString createTableTracks = "CREATE TABLE IF NOT EXISTS tracks (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, " \
+		"title varchar(255), artistId INTEGER, albumId INTEGER, artistAlbum varchar(255), length INTEGER, " \
+		"rating INTEGER, disc INTEGER, internalCover INTEGER DEFAULT 0, host varchar(255), icon varchar(255))";
+	createDb.exec(createTableTracks);
+	createDb.exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), " \
+				  "host varchar(255), background varchar(255), checksum varchar(255))");
+	createDb.exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
+				  "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), host varchar(255), id INTEGER, " \
+				  "url varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
+	/// TEST Monitor Filesystem
+	 createDb.exec("CREATE TABLE IF NOT EXISTS filesystem (path VARCHAR(255) PRIMARY KEY ASC, " \
+		"lastModified INTEGER);");
 }
 
 MusicSearchEngine * SqlDatabase::musicSearchEngine() const
@@ -98,6 +100,11 @@ MusicSearchEngine * SqlDatabase::musicSearchEngine() const
 
 bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery insertArtist(*this);
 	insertArtist.setForwardOnly(true);
 	insertArtist.prepare("INSERT OR IGNORE INTO artists (id, name, normalizedName, host) VALUES (?, ?, ?, ?)");
@@ -115,6 +122,11 @@ bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
 
 bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery insertAlbum(*this);
 	insertAlbum.prepare("INSERT OR IGNORE INTO albums (id, name, normalizedName, year, artistId, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?)");
 	QString albumNorm = this->normalizeField(album->title());
@@ -138,6 +150,11 @@ bool SqlDatabase::insertIntoTableAlbums(uint artistId, AlbumDAO *album)
 
 uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	static std::uniform_int_distribution<uint> tt;
 	this->transaction();
 	uint id = 0;
@@ -173,6 +190,11 @@ uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const st
 
 bool SqlDatabase::insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	this->transaction();
 	if (isOverwriting) {
 		QSqlQuery deleteTracks(*this);
@@ -205,6 +227,11 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(uint playlistId, const std::list
 
 bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery insertTrack(*this);
 	insertTrack.prepare("INSERT INTO tracks (uri, trackNumber, title, artistId, albumId, artistAlbum, length, rating, " \
 		"disc, host, icon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -232,6 +259,11 @@ bool SqlDatabase::insertIntoTableTracks(const TrackDAO &track)
 
 bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	bool b = true;
 	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
 		TrackDAO track = *it;
@@ -243,6 +275,10 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 
 bool SqlDatabase::removePlaylist(uint playlistId)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
 	this->transaction();
 	/// XXX: CASCADE not working?
 	QSqlQuery children(*this);
@@ -259,6 +295,11 @@ bool SqlDatabase::removePlaylist(uint playlistId)
 
 void SqlDatabase::removePlaylistsFromHost(const QString &host)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	this->transaction();
 
 	QSqlQuery children(*this);
@@ -276,6 +317,11 @@ void SqlDatabase::removePlaylistsFromHost(const QString &host)
 
 void SqlDatabase::removeRecordsFromHost(const QString &host)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	qDebug() << Q_FUNC_INFO << host;
 	this->transaction();
 	QSqlQuery removeTracks(*this);
@@ -300,6 +346,11 @@ void SqlDatabase::removeRecordsFromHost(const QString &host)
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	Cover *c = nullptr;
 
 	QSqlQuery selectCover(*this);
@@ -333,6 +384,11 @@ Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 
 QList<TrackDAO> SqlDatabase::selectPlaylistTracks(uint playlistID)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QList<TrackDAO> tracks;
 	QSqlQuery results(*this);
 	results.prepare("SELECT trackNumber, title, album, length, artist, rating, year, icon, id, url FROM playlistTracks WHERE playlistId = ?");
@@ -360,6 +416,11 @@ QList<TrackDAO> SqlDatabase::selectPlaylistTracks(uint playlistID)
 
 PlaylistDAO SqlDatabase::selectPlaylist(uint playlistId)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	PlaylistDAO playlist;
 	QSqlQuery results = exec("SELECT id, title, checksum, icon, background FROM playlists WHERE id = " + QString::number(playlistId));
 	if (results.next()) {
@@ -375,6 +436,11 @@ PlaylistDAO SqlDatabase::selectPlaylist(uint playlistId)
 
 QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QList<PlaylistDAO> playlists;
 	QSqlQuery results = exec("SELECT title, id, icon, background, checksum FROM playlists");
 	while (results.next()) {
@@ -393,6 +459,11 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 
 AlbumDAO* SqlDatabase::selectAlbumFromArtist(ArtistDAO *artistDAO, uint albumId)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery selectAlbum(*this);
 	selectAlbum.prepare("SELECT id, name, normalizedName, year, cover, icon, host FROM albums WHERE id = ?");
 	selectAlbum.addBindValue(albumId);
@@ -417,6 +488,11 @@ AlbumDAO* SqlDatabase::selectAlbumFromArtist(ArtistDAO *artistDAO, uint albumId)
 
 ArtistDAO* SqlDatabase::selectArtist(uint artistId)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery selectArtist(*this);
 	selectArtist.prepare("SELECT id, name, normalizedName, icon, host FROM artists WHERE id = ?");
 	selectArtist.addBindValue(artistId);
@@ -436,6 +512,11 @@ ArtistDAO* SqlDatabase::selectArtist(uint artistId)
 
 TrackDAO SqlDatabase::selectTrackByURI(const QString &uri)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	TrackDAO track;
 	QSqlQuery qTracks(*this);
 	qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, " \
@@ -466,6 +547,11 @@ TrackDAO SqlDatabase::selectTrackByURI(const QString &uri)
 
 bool SqlDatabase::playlistHasBackgroundImage(uint playlistID)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery query = exec("SELECT background FROM playlists WHERE id = " + QString::number(playlistID));
 	query.next();
 	bool result = !query.record().value(0).toString().isEmpty();
@@ -475,6 +561,11 @@ bool SqlDatabase::playlistHasBackgroundImage(uint playlistID)
 
 bool SqlDatabase::updateTablePlaylist(const PlaylistDAO &playlist)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery update(*this);
 	update.prepare("UPDATE playlists SET title = ?, checksum = ? WHERE id = ?");
 	update.addBindValue(playlist.title());
@@ -485,6 +576,11 @@ bool SqlDatabase::updateTablePlaylist(const PlaylistDAO &playlist)
 
 void SqlDatabase::updateTablePlaylistWithBackgroundImage(uint playlistID, const QString &backgroundImagePath)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery update(*this);
 	update.prepare("UPDATE playlists SET background = ? WHERE id = ?");
 	update.addBindValue(backgroundImagePath);
@@ -494,8 +590,10 @@ void SqlDatabase::updateTablePlaylistWithBackgroundImage(uint playlistID, const 
 
 void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const QString &album, const QString &artist)
 {
-	open();
-	this->setPragmas();
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
 
 	QSqlQuery update(*this);
 	update.prepare("UPDATE albums SET cover = ? WHERE normalizedName = ? AND artistId = (SELECT id FROM artists WHERE normalizedName = ?)");
@@ -508,6 +606,11 @@ void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const
 /** Update a list of tracks. If track name has changed, will be removed from Library then added right after. */
 void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &newPaths)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	// Signals are blocked to prevent saveFileRef method to emit one. Load method will tell connected views to rebuild themselves
 	transaction();
 	Q_ASSERT(oldPaths.size() == newPaths.size());
@@ -673,6 +776,11 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 /** When one has manually updated tracks with TagEditor, some nodes might in unstable state. */
 bool SqlDatabase::cleanNodesWithoutTracks()
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	QSqlQuery albumsWithoutTracks("SELECT DISTINCT a.id FROM albums a WHERE a.id NOT IN (SELECT DISTINCT t.albumId FROM tracks t)", *this);
 	if (albumsWithoutTracks.exec()) {
 		while (albumsWithoutTracks.next()) {
@@ -698,8 +806,10 @@ void SqlDatabase::rebuild()
 {
 	emit aboutToLoad();
 
-	open();
-	this->setPragmas();
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
 
 	QSqlQuery cleanDb(*this);
 	cleanDb.setForwardOnly(true);
@@ -740,6 +850,11 @@ void SqlDatabase::rebuild()
 /** Reads an external picture which is close to multimedia files (same folder). */
 void SqlDatabase::saveCoverRef(const QString &coverPath, const QString &track)
 {
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+
 	FileHelper fh(track);
 	QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
 	QString artistNorm = this->normalizeField(artistAlbum);
@@ -798,6 +913,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	if (!isOpen()) {
 		open();
 	}
+
 	FileHelper fh(absFilePath);
 	/*if (!fh.isValid()) {
 		return;

@@ -16,6 +16,8 @@ class MIAMLIBRARY_LIBRARY AlbumItem : public QStandardItem
 public:
 	explicit AlbumItem(const AlbumDAO *dao);
 
+	virtual ~AlbumItem() {}
+
 	QString coverPath() const;
 
 	QString iconPath() const;

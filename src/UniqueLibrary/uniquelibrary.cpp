@@ -123,6 +123,11 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	uniqueTable->setFocus();
 }
 
+UniqueLibrary::~UniqueLibrary()
+{
+	SettingsPrivate::instance()->disconnect();
+}
+
 bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
 	switch (vp) {

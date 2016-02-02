@@ -461,12 +461,16 @@ void MainWindow::processArgs(const QStringList &args)
 
 void MainWindow::activateView(QAction *menuAction)
 {
-	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	if (_currentView) {
+		delete _currentView;
+		_currentView = nullptr;
+	}
 
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
 
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 
 	} else {
@@ -593,10 +597,18 @@ void MainWindow::rescanLibrary()
 	db->moveToThread(t);
 	connect(t, &QThread::started, db, &SqlDatabase::rebuild);
 	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, t, &QThread::quit);
+	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
+		menuView->setEnabled(false);
+		actionScanLibrary->setEnabled(false);
+	});
 	if (_currentView->viewProperty(SettingsPrivate::VP_HasAreaForRescan)) {
 		_currentView->setDatabase(db);
 	}
 	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, db, &SqlDatabase::deleteLater);
+	connect(db, &SqlDatabase::destroyed, this, [=]() {
+		menuView->setEnabled(true);
+		actionScanLibrary->setEnabled(true);
+	});
 
 	t->start();
 }

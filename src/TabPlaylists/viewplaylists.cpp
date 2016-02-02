@@ -15,6 +15,7 @@
 ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	: AbstractViewPlaylists(mediaPlayer)
 	, _searchDialog(new SearchDialog(this))
+	, _db(nullptr)
 {
 	this->setupUi(this);
 	stopButton->setMediaPlayer(mediaPlayer);
@@ -157,6 +158,19 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	library->model()->load();
 
 	this->installEventFilter(this);
+}
+
+ViewPlaylists::~ViewPlaylists()
+{
+	if (_db) {
+		delete _db;
+		_db = nullptr;
+	}
+	if (_searchDialog) {
+		delete _searchDialog;
+		_searchDialog = nullptr;
+	}
+	SettingsPrivate::instance()->disconnect();
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)

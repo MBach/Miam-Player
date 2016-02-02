@@ -26,6 +26,11 @@ JumpToWidget::JumpToWidget(QAbstractItemView *view) :
 	this->setBackgroundRole(QPalette::Button);
 }
 
+JumpToWidget::~JumpToWidget()
+{
+	SettingsPrivate::instance()->disconnect();
+}
+
 bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::Wheel) {

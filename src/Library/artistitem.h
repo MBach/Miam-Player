@@ -16,6 +16,8 @@ class MIAMLIBRARY_LIBRARY ArtistItem : public QStandardItem
 public:
 	ArtistItem(const ArtistDAO *dao);
 
+	virtual ~ArtistItem() {}
+
 	virtual int type() const override;
 };
 

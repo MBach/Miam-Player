@@ -6,6 +6,11 @@
 
 #include "ui_viewplaylists.h"
 
+/**
+ * \brief		The ViewPlaylists class is the implementation of AbstractViewPlaylists.
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMTABPLAYLISTS_LIBRARY ViewPlaylists : public AbstractViewPlaylists, public Ui::ViewPlaylists
 {
 	Q_OBJECT
@@ -16,6 +21,8 @@ private:
 
 public:
 	ViewPlaylists(MediaPlayer *mediaPlayer);
+
+	virtual ~ViewPlaylists();
 
 	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
 

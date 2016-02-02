@@ -17,6 +17,8 @@ class MIAMCORE_LIBRARY TreeView : public QTreeView, public SelectedTracksModel
 public:
 	explicit TreeView(QWidget *parent = nullptr);
 
+	virtual ~TreeView();
+
 	/** Scan nodes and its subitems before dispatching tracks to a specific widget (playlist or tageditor). */
 	virtual void findAll(const QModelIndex &index, QList<QUrl> *tracks) const = 0;
 
