@@ -364,32 +364,32 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>File explorer</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="182"/>
+        <location filename="../viewplaylists.cpp" line="183"/>
         <source>Your library is updating...</source>
         <translation>Your library is updating...</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="244"/>
+        <location filename="../viewplaylists.cpp" line="245"/>
         <source>playlist</source>
         <translation>playlist</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="326"/>
+        <location filename="../viewplaylists.cpp" line="327"/>
         <source>Audio files</source>
         <translation>Audio files</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="338"/>
+        <location filename="../viewplaylists.cpp" line="339"/>
         <source>Every file type (*)</source>
         <translation>Every file type (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="340"/>
+        <location filename="../viewplaylists.cpp" line="341"/>
         <source>Choose some files to open</source>
         <translation>Choose some files to open</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="365"/>
+        <location filename="../viewplaylists.cpp" line="366"/>
         <source>Choose a folder to open</source>
         <translation>Choose a folder to open</translation>
     </message>

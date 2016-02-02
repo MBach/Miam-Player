@@ -160,6 +160,7 @@ void TabPlaylist::init(MediaPlayer *mediaPlayer)
 	_mediaPlayer = mediaPlayer;
 	blockSignals(true);
 	auto settings = SettingsPrivate::instance();
+	qDebug() << Q_FUNC_INFO << settings->language();
 	if (settings->playbackRestorePlaylistsAtStartup()) {
 		QList<uint> list = settings->lastPlaylistSession();
 		if (!list.isEmpty()) {
@@ -251,6 +252,7 @@ void TabPlaylist::contextMenuEvent(QContextMenuEvent *event)
 Playlist* TabPlaylist::addPlaylist()
 {
 	QString newPlaylistName = tr("Playlist %1").arg(count() + 1);
+	qDebug() << Q_FUNC_INFO << tr("Playlist %1");
 	QByteArray ba;
 	if (playlists().isEmpty()) {
 		ba = SettingsPrivate::instance()->lastActivePlaylistGeometry();

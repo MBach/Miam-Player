@@ -363,32 +363,32 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Explorateur de fichiers</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="182"/>
+        <location filename="../viewplaylists.cpp" line="183"/>
         <source>Your library is updating...</source>
         <translation>Votre bibliothèque se met à jour...</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="244"/>
+        <location filename="../viewplaylists.cpp" line="245"/>
         <source>playlist</source>
         <translation>liste de lecture</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="326"/>
+        <location filename="../viewplaylists.cpp" line="327"/>
         <source>Audio files</source>
         <translation>Fichiers audios</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="338"/>
+        <location filename="../viewplaylists.cpp" line="339"/>
         <source>Every file type (*)</source>
         <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="340"/>
+        <location filename="../viewplaylists.cpp" line="341"/>
         <source>Choose some files to open</source>
         <translation>Choisissez des fichiers à ouvrir</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="365"/>
+        <location filename="../viewplaylists.cpp" line="366"/>
         <source>Choose a folder to open</source>
         <translation>Choisissez un dossier à ouvrir</translation>
     </message>

@@ -58,7 +58,7 @@
 <context>
     <name>StopButton</name>
     <message>
-        <location filename="../mediabuttons/stopbutton.cpp" line="12"/>
+        <location filename="../mediabuttons/stopbutton.cpp" line="39"/>
         <source>Stop after current</source>
         <translation type="unfinished"></translation>
     </message>

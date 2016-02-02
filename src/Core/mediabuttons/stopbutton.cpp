@@ -8,31 +8,37 @@
 StopButton::StopButton(QWidget *parent)
 	: MediaButton(parent)
 	, _mediaPlayer(nullptr)
-{
-	_action = _menu.addAction(tr("Stop after current"));
-	_action->setCheckable(true);
-}
+{}
 
 void StopButton::setMediaPlayer(MediaPlayer *mediaPlayer)
 {
 	_mediaPlayer = mediaPlayer;
-	connect(_action, &QAction::triggered, this, [=](bool checked) {
+	connect(&_menu, &QMenu::triggered, this, [=](QAction *action) {
 		if (mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
-			mediaPlayer->stopAfterCurrent(checked);
+			mediaPlayer->stopAfterCurrent(action->isChecked());
 		}
 	});
 	connect(mediaPlayer, &MediaPlayer::currentMediaChanged, this, [=]() {
 		QList<QAction*> actions = _menu.actions();
-		actions.first()->setChecked(false);
+		if (!actions.isEmpty()) {
+			actions.first()->setChecked(false);
+		}
 	});
 }
 
 void StopButton::contextMenuEvent(QContextMenuEvent *e)
 {
 	if (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState) {
-		QList<QAction*> actions = _menu.actions();
-		actions.first()->setChecked(_mediaPlayer->isStopAfterCurrent());
+		if (_mediaPlayer->isStopAfterCurrent()) {
+			QList<QAction*> actions = _menu.actions();
+			if (!actions.isEmpty()) {
+				actions.first()->setChecked(true);
+			}
+		} else {
+			_menu.clear();
+			QAction *stopAfterCurrentAction = _menu.addAction(tr("Stop after current"));
+			stopAfterCurrentAction->setCheckable(true);
+		}
 		_menu.exec(e->globalPos());
 	}
 }
-

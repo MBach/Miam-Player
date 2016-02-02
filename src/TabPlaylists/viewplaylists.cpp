@@ -22,7 +22,13 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 
 	paintableWidget->setFrameBorder(false, false, true, false);
 	seekSlider->setMediaPlayer(_mediaPlayer);
+
+	// Init language before initiating tabPlaylists
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	translator.load(":/translations/tabPlaylists_" + settingsPrivate->language());
+	QApplication::installTranslator(&translator);
 	tabPlaylists->init(_mediaPlayer);
+
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeButton, &PlaybackModeButton::updateMode);
@@ -32,7 +38,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	volumeSlider->setValue(settings->volume() * 100);
 
 	// Buttons
-	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	for (MediaButton *b : findChildren<MediaButton*>()) {
 		if (!b) {
 			continue;
@@ -146,10 +151,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		translator.load(":/translations/tabPlaylists_" + newLanguage);
 		QApplication::installTranslator(&translator);
 	});
-
-	// Init language
-	translator.load(":/translations/tabPlaylists_" + settingsPrivate->language());
-	QApplication::installTranslator(&translator);
 
 	connect(settingsPrivate, &SettingsPrivate::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
 
