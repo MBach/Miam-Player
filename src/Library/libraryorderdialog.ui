@@ -215,7 +215,7 @@
        </property>
        <column>
         <property name="text">
-         <string notr="true">Years</string>
+         <string>Years</string>
         </property>
        </column>
        <item>

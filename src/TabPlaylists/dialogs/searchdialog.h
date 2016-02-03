@@ -31,6 +31,8 @@ public:
 	/** Constructor. */
 	explicit SearchDialog(ViewPlaylists *viewPlaylists);
 
+	virtual ~SearchDialog();
+
 	/** Required interface from AbstractSearchDialog class. */
 	virtual void addSource(QCheckBox *checkBox) override;
 

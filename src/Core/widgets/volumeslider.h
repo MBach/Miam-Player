@@ -26,6 +26,8 @@ private:
 public:
 	explicit VolumeSlider(QWidget *parent = nullptr);
 
+	virtual ~VolumeSlider();
+
 	/** Redefined to react to default keys */
 	virtual bool eventFilter(QObject *obj, QEvent *e) override;
 

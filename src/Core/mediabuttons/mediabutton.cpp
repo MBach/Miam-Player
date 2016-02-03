@@ -15,6 +15,11 @@ MediaButton::MediaButton(QWidget *parent)
 	connect(settings, &Settings::themeHasChanged, this, &MediaButton::setIconFromTheme);
 }
 
+MediaButton::~MediaButton()
+{
+	Settings::instance()->disconnect();
+}
+
 /** Redefined to load custom icons saved in settings. */
 /*void MediaButton::setIcon(const QIcon &icon)
 {

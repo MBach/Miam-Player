@@ -28,16 +28,12 @@ LibraryItemModel::LibraryItemModel(QObject *parent)
 }
 
 LibraryItemModel::~LibraryItemModel()
-{
-
-}
+{}
 
 /** Read all tracks entries in the database and send them to connected views. */
 void LibraryItemModel::load()
 {
-	//if (sendResetSignal) {
-	//	emit aboutToLoad();
-	//}
+	this->reset();
 
 	SqlDatabase db;
 	db.open();
@@ -66,12 +62,10 @@ void LibraryItemModel::load()
 			trackDAO->setIcon(r.value(11).toString());
 			trackDAO->setParentNode(albumDAO);
 			trackDAO->setYear(year);
-			//emit nodeExtracted(trackDAO);
 			this->insertNode(trackDAO);
 		}
 		if (internalCover) {
 			// Cover path is now pointing to the first track of this album, because it need to be extracted at runtime
-			//emit aboutToUpdateNode(albumDAO);
 			this->updateNode(albumDAO);
 		}
 	};
@@ -107,7 +101,6 @@ void LibraryItemModel::load()
 					}
 					artistDAO->setTitleNormalized(db.normalizeField(artist));
 				}
-				//emit nodeExtracted(artistDAO);
 				this->insertNode(artistDAO);
 
 				// Level 2: Albums
@@ -131,10 +124,7 @@ void LibraryItemModel::load()
 						albumDAO->setParentNode(artistDAO);
 						albumDAO->setArtist(artistDAO->title());
 						albumDAO->setId(QString::number(albumId));
-						//emit nodeExtracted(albumDAO);
 						this->insertNode(albumDAO);
-
-						//_cache.insert(albumId, albumDAO);
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(db);
@@ -171,7 +161,6 @@ void LibraryItemModel::load()
 				albumDAO->setHost(r.value(4).toString());
 				albumDAO->setIcon(r.value(5).toString());
 				uint albumId = r.value(6).toUInt();
-				//emit nodeExtracted(albumDAO);
 				this->insertNode(albumDAO);
 
 				// Level 2: Tracks
@@ -208,7 +197,6 @@ void LibraryItemModel::load()
 				albumDAO->setHost(r.value(4).toString());
 				albumDAO->setIcon(r.value(5).toString());
 				uint albumId = r.value(6).toUInt();
-				//emit nodeExtracted(albumDAO);
 				this->insertNode(albumDAO);
 
 				// Level 2: Tracks
@@ -237,7 +225,6 @@ void LibraryItemModel::load()
 				QVariant vYear = r.value(0);
 				yearDAO->setTitle(vYear.toString());
 				yearDAO->setTitleNormalized(vYear.toString());
-				//emit nodeExtracted(yearDAO);
 				this->insertNode(yearDAO);
 
 				// Level 2: Artist - Album
@@ -262,7 +249,6 @@ void LibraryItemModel::load()
 						uint artistId = r.value(6).toUInt();
 						uint albumId = r.value(7).toUInt();
 						albumDAO->setParentNode(yearDAO);
-						//emit nodeExtracted(albumDAO);
 						this->insertNode(albumDAO);
 
 						// Level 3: Tracks
@@ -382,12 +368,7 @@ void LibraryItemModel::rebuildSeparators()
 
 void LibraryItemModel::reset()
 {
-	_letters.clear();
-	_topLevelItems.clear();
-	_hash.clear();
-	_tracks.clear();
-
-	removeRows(0, rowCount());
+	this->deleteCache();
 	switch (SettingsPrivate::instance()->insertPolicy()) {
 	case SettingsPrivate::IP_Artists:
 		horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
@@ -456,7 +437,7 @@ void LibraryItemModel::insertNode(GenericDAO *node)
 	} else if (nodeItem){
 		invisibleRootItem()->appendRow(nodeItem);
 		if (nodeItem->type() != Miam::IT_Separator) {
-			if ( SeparatorItem *separator = this->insertSeparator(nodeItem)) {
+			if (SeparatorItem *separator = this->insertSeparator(nodeItem)) {
 				_topLevelItems.insert(separator, nodeItem->index());
 			}
 		}

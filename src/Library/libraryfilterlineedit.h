@@ -23,6 +23,8 @@ class MIAMLIBRARY_LIBRARY LibraryFilterLineEdit : public LineEdit
 public:
 	LibraryFilterLineEdit(QWidget *parent = nullptr);
 
+	virtual ~LibraryFilterLineEdit();
+
 	QShortcut *shortcut;
 
 protected:

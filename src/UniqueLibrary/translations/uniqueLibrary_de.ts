@@ -4,7 +4,7 @@
 <context>
     <name>TableView</name>
     <message>
-        <location filename="../tableview.cpp" line="122"/>
+        <location filename="../tableview.cpp" line="103"/>
         <source>No matching results were found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>UniqueLibrary</name>
     <message>
-        <location filename="../uniquelibrary.cpp" line="167"/>
+        <location filename="../uniquelibrary.cpp" line="175"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>

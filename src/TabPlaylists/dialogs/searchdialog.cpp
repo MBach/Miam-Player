@@ -74,6 +74,11 @@ SearchDialog::SearchDialog(ViewPlaylists *viewPlaylists)
 	connect(_tracks, &QListView::doubleClicked, this, &SearchDialog::trackWasDoubleClicked);
 }
 
+SearchDialog::~SearchDialog()
+{
+
+}
+
 /** Required interface from AbstractSearchDialog class. */
 void SearchDialog::addSource(QCheckBox *checkBox)
 {

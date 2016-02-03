@@ -178,28 +178,28 @@ Select a playlist to display the first 30 tracks.</source>
 Выберите список воспроизведения, чтобы отобразить первые 30 треков.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="191"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="192"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="237"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="238"/>
         <source>Export playlist</source>
         <translation>Экспортировать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="237"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="238"/>
         <source>Playlist (*.m3u8)</source>
         <translation>Список воспроизведения (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="289"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="339"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="290"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="340"/>
         <source>And more tracks...</source>
         <translation>И больше треков...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="384"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="385"/>
         <source>This playlist has changed</source>
         <translation>Этот список воспроизведения изменился</translation>
     </message>
@@ -246,12 +246,12 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistManager</name>
     <message>
-        <location filename="../playlistmanager.cpp" line="62"/>
+        <location filename="../playlistmanager.cpp" line="61"/>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
         <translation>Точно такой же список воспроизведения уже есть в диспетчере списков воспроизведения (называется &apos;%1&apos;), поэтому невозможно добавить его повторно.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="190"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="191"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>Вы собираетесь удалить %n список воспроизведения. Вы действительно хотите продолжить?</numerusform>
@@ -336,8 +336,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="253"/>
-        <location filename="../tabplaylist.cpp" line="445"/>
+        <location filename="../tabplaylist.cpp" line="262"/>
+        <location filename="../tabplaylist.cpp" line="454"/>
         <source>Playlist %1</source>
         <translation>Список воспроизведения %1</translation>
     </message>
@@ -365,32 +365,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="183"/>
+        <location filename="../viewplaylists.cpp" line="198"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="245"/>
+        <location filename="../viewplaylists.cpp" line="260"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="327"/>
+        <location filename="../viewplaylists.cpp" line="342"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="339"/>
+        <location filename="../viewplaylists.cpp" line="354"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="341"/>
+        <location filename="../viewplaylists.cpp" line="356"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="366"/>
+        <location filename="../viewplaylists.cpp" line="381"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>

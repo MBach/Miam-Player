@@ -16,6 +16,8 @@ class MIAMCORE_LIBRARY MediaButton : public QPushButton
 public:
 	MediaButton(QWidget *parent = nullptr);
 
+	virtual ~MediaButton();
+
 protected:
 	virtual void paintEvent(QPaintEvent *) override;
 

@@ -26,6 +26,8 @@ private:
 public:
 	explicit LineEdit(QWidget *parent = nullptr);
 
+	virtual ~LineEdit();
+
 protected:
 	virtual void drawCursor(QStylePainter *painter, const QRect &rText);
 

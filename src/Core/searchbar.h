@@ -25,6 +25,8 @@ public:
 		connect(timer, &QTimer::timeout, this, [=]() { emit aboutToStartSearch(this->text()); });
 	}
 
+	inline virtual ~SearchBar() {}
+
 signals:
 	void aboutToStartSearch(const QString &text);
 };

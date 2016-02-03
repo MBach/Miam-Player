@@ -92,6 +92,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	auto reloadLibrary = [this]() {
 		searchBar->setText(QString());
 		_searchDialog->clear();
+		library->model()->load();
 		this->update();
 	};
 

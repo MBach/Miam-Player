@@ -64,6 +64,11 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 	this->installEventFilter(this);
 }
 
+VolumeSlider::~VolumeSlider()
+{
+	SettingsPrivate::instance()->disconnect();
+}
+
 /** Redefined to react to default keys */
 bool VolumeSlider::eventFilter(QObject *obj, QEvent *e)
 {

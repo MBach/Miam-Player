@@ -35,22 +35,22 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="388"/>
+        <location filename="../libraryitemmodel.cpp" line="393"/>
         <source>  Artists \ Albums</source>
         <translation>  Исполнители \ Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="391"/>
+        <location filename="../libraryitemmodel.cpp" line="396"/>
         <source>  Albums</source>
         <translation>  Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="394"/>
+        <location filename="../libraryitemmodel.cpp" line="399"/>
         <source>  Artists – Albums</source>
         <translation>  Исполнители – Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="397"/>
+        <location filename="../libraryitemmodel.cpp" line="402"/>
         <source>  Years</source>
         <translation>  Годы</translation>
     </message>
@@ -110,6 +110,11 @@
         <source>Artist – Album</source>
         <translation>Исполнитель – Альбом</translation>
     </message>
+    <message>
+        <location filename="../libraryorderdialog.ui" line="218"/>
+        <source>Years</source>
+        <translation>Годы</translation>
+    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
@@ -124,7 +129,7 @@
         <translation>Отправить в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="228"/>
+        <location filename="../librarytreeview.cpp" line="218"/>
         <source>No matching results were found</source>
         <translation>Подходящих результатов не найдено</translation>
     </message>

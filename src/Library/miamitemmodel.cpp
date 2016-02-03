@@ -7,9 +7,7 @@
 
 MiamItemModel::MiamItemModel(QObject *parent)
 	: QStandardItemModel(parent)
-{
-
-}
+{}
 
 MiamItemModel::~MiamItemModel()
 {

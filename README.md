@@ -14,11 +14,12 @@ Miam-Player is a cross-platform open source music player
 * Read and edit metadata using [Taglib](http://taglib.github.io/)
 
 # Future work
+* Add [MPRIS](http://specifications.freedesktop.org/mpris-spec/latest/) implementation for Linux (Media Player Remote Interfacing Specification) to be able to control the player
 * 10-band equalizer
 * Add [projectM](http://projectm.sourceforge.net/) support for amazing visualizations
 * A spotify / jamendo plugin to stream music
 ![equalizer](http://miam-player.org/images/work-in-progress/equalizer.png)
-* High DPI support
+* High DPI support (for OSX first)
 
 # Plugins
 A plugin system has been introduced to extend possibilites of the player. Five official plugins come with the installer for Windows:

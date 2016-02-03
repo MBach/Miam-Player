@@ -66,12 +66,12 @@
 <context>
     <name>TreeView</name>
     <message>
-        <location filename="../treeview.cpp" line="69"/>
+        <location filename="../treeview.cpp" line="74"/>
         <source>playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../treeview.cpp" line="78"/>
+        <location filename="../treeview.cpp" line="83"/>
         <source>tag editor</source>
         <translation type="unfinished"></translation>
     </message>

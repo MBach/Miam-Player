@@ -5,8 +5,10 @@
 
 #include <QtDebug>
 
-LineEdit::LineEdit(QWidget *parent) :
-	SearchBar(parent), _timer(new QTimer(this)), _fps(0)
+LineEdit::LineEdit(QWidget *parent)
+	: SearchBar(parent)
+	, _timer(new QTimer(this))
+	, _fps(0)
 {
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 
@@ -31,6 +33,11 @@ LineEdit::LineEdit(QWidget *parent) :
 		_fade.setKeyValueAt(0.5, p.base().color());
 		_fade.setEndValue(p.text().color());
 	});
+}
+
+LineEdit::~LineEdit()
+{
+
 }
 
 void LineEdit::drawCursor(QStylePainter *painter, const QRect &rText)

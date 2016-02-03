@@ -29,6 +29,11 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 	this->setMouseTracking(true);
 }
 
+LibraryFilterLineEdit::~LibraryFilterLineEdit()
+{
+	SettingsPrivate::instance()->disconnect();
+}
+
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);

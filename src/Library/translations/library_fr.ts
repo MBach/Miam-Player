@@ -84,6 +84,10 @@
         <source>02. track #2</source>
         <translation>02. piste #2</translation>
     </message>
+    <message>
+        <source>Years</source>
+        <translation>Années</translation>
+    </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
