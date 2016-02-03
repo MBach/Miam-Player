@@ -43,15 +43,6 @@ QSize TimeLabel::minimumSizeHint() const
 	return s;
 }
 
-
-/** Setter. */
-void TimeLabel::setTime(qint64 time, qint64 total)
-{
-	_time = time;
-	_total = total;
-	emit timeChanged();
-}
-
 /** Display track length using the selected mode. */
 void TimeLabel::display()
 {
@@ -78,5 +69,15 @@ void TimeLabel::display()
 			this->setText(QDateTime::fromTime_t(_time / 1000).toString("mm:ss").append(" / ").append(QDateTime::fromTime_t(t).toString("mm:ss")));
 		}
 		break;
+	}
+}
+
+/** Setter. */
+void TimeLabel::setTime(qint64 time, qint64 total)
+{
+	if (total > 0) {
+		_time = time;
+		_total = total;
+		emit timeChanged();
 	}
 }

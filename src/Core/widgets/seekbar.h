@@ -35,6 +35,9 @@ protected:
 	virtual void paintEvent(QPaintEvent *) override;
 
 	virtual void wheelEvent(QWheelEvent *e) override;
+
+public slots:
+	void setPosition(qint64 pos, qint64 duration);
 };
 
 

@@ -28,7 +28,7 @@ JumpToWidget::JumpToWidget(QAbstractItemView *view) :
 
 JumpToWidget::~JumpToWidget()
 {
-	SettingsPrivate::instance()->disconnect();
+	//SettingsPrivate::instance()->disconnect();
 }
 
 bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)

@@ -36,8 +36,17 @@ TableView::TableView(QWidget *parent)
 	horizontalHeader()->resizeSection(0, SettingsPrivate::instance()->coverSize());
 
 	connect(selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
-		setDirtyRegion(QRegion(viewport()->rect()));
+		if (viewport()) {
+			setDirtyRegion(QRegion(viewport()->rect()));
+		}
 	});
+}
+
+TableView::~TableView()
+{
+	if (selectionModel()) {
+		selectionModel()->disconnect();
+	}
 }
 
 /** Redefined to disable search in the table and trigger jumpToWidget's action. */

@@ -17,7 +17,7 @@ MediaButton::MediaButton(QWidget *parent)
 
 MediaButton::~MediaButton()
 {
-	Settings::instance()->disconnect();
+	//Settings::instance()->disconnect();
 }
 
 /** Redefined to load custom icons saved in settings. */

@@ -327,6 +327,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		event->ignore();
 		return;
 	} else {
+		this->setProperty("dragFromTreeview", false);
 		QByteArray byteArray = event->mimeData()->data("treeview/x-treeview-item");
 		if (!byteArray.isEmpty()) {
 			QList<QMediaContent> medias;

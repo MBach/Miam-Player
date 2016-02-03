@@ -31,6 +31,8 @@ public:
 
 	virtual ~UniqueLibrary();
 
+	virtual bool hasTracksToDisplay() const override;
+
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 protected:

@@ -31,12 +31,12 @@ public:
 
 	QSize minimumSizeHint() const;
 
-	/** Setter. */
-	void setTime(qint64 time, qint64 total);
-
 private slots:
 	/** Display track length using the selected mode. */
 	void display();
+
+public slots:
+	void setTime(qint64 time, qint64 total);
 
 signals:
 	/** Sent when time has changed to update the label.*/

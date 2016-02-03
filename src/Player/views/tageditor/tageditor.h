@@ -42,6 +42,8 @@ public:
 
 	void addDirectory(const QDir &dir);
 
+	inline virtual bool hasTracksToDisplay() const override { return true; }
+
 	virtual QList<QUrl> selectedTracks() override;
 
 	virtual void updateSelectedTracks() override;

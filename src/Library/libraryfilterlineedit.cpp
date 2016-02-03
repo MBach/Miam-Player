@@ -31,7 +31,7 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 
 LibraryFilterLineEdit::~LibraryFilterLineEdit()
 {
-	SettingsPrivate::instance()->disconnect();
+	//SettingsPrivate::instance()->disconnect();
 }
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)

@@ -26,6 +26,8 @@ public:
 
 	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
 
+	virtual bool hasTracksToDisplay() const override;
+
 	virtual void openFolder(const QString &dir) const override;
 
 	virtual void saveCurrentPlaylists() override;

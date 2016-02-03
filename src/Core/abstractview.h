@@ -23,6 +23,8 @@ public:
 
 	virtual ~AbstractView() {}
 
+	virtual bool hasTracksToDisplay() const = 0;
+
 	virtual void setDatabase(SqlDatabase *) {}
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty) const { return false; }

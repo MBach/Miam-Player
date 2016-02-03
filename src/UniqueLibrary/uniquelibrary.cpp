@@ -30,11 +30,14 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	_mediaPlayer->setPlaylist(nullptr);
 
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
-		if (duration > 0) {
-			seekSlider->setValue(1000 * pos / duration);
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
+		if (_currentTrack) {
+			uint p = pos / 1000;
+			_currentTrack->setData(p, Miam::DF_CurrentPosition);
 		}
 	});
+
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
 		_mediaPlayer->setVolume((qreal)value / 100.0);
 	});
@@ -98,12 +101,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		}
 	});
 
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
-		if (_currentTrack) {
-			uint p = pos / 1000;
-			_currentTrack->setData(p, Miam::DF_CurrentPosition);
-		}
-	});
+
 
 	auto settingsPrivate = SettingsPrivate::instance();
 	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
@@ -128,7 +126,13 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 UniqueLibrary::~UniqueLibrary()
 {
-	SettingsPrivate::instance()->disconnect();
+	disconnect(_mediaPlayer, &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
+	_mediaPlayer->stop();
+}
+
+bool UniqueLibrary::hasTracksToDisplay() const
+{
+	return uniqueTable->model()->rowCount() > 0;
 }
 
 bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const

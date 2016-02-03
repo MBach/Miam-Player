@@ -116,12 +116,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, this, &ViewPlaylists::aboutToSendToTagEditor);
 
 	// Sliders
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, [=] (qint64 pos, qint64 duration) {
-		if (duration > 0) {
-			seekSlider->setValue(1000 * pos / duration);
-			timeLabel->setTime(pos, duration);
-		}
-	});
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, timeLabel, &TimeLabel::setTime);
 
 	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
@@ -156,9 +151,9 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 
 	connect(settingsPrivate, &SettingsPrivate::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
 
-	library->model()->load();
-
 	this->installEventFilter(this);
+
+	library->model()->load();
 }
 
 ViewPlaylists::~ViewPlaylists()
@@ -171,12 +166,17 @@ ViewPlaylists::~ViewPlaylists()
 		delete _searchDialog;
 		_searchDialog = nullptr;
 	}
-	SettingsPrivate::instance()->disconnect();
+	_mediaPlayer->stop();
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
 {
 	tabPlaylists->insertItemsToPlaylist(-1, tracks);
+}
+
+bool ViewPlaylists::hasTracksToDisplay() const
+{
+	return library->model()->rowCount() > 0;
 }
 
 int ViewPlaylists::selectedTracksInCurrentPlaylist() const

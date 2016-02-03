@@ -66,7 +66,10 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 
 VolumeSlider::~VolumeSlider()
 {
-	SettingsPrivate::instance()->disconnect();
+	this->disconnect();
+	if (_timer->isActive()) {
+		_timer->stop();
+	}
 }
 
 /** Redefined to react to default keys */

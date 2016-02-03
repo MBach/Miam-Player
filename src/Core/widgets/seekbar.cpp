@@ -190,3 +190,10 @@ void SeekBar::wheelEvent(QWheelEvent *e)
 	}
 	_mediaPlayer->setMute(false);
 }
+
+void SeekBar::setPosition(qint64 pos, qint64 duration)
+{
+	if (duration > 0) {
+		setValue(1000 * pos / duration);
+	}
+}

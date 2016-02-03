@@ -24,6 +24,8 @@ private:
 public:
 	explicit TableView(QWidget *parent = nullptr);
 
+	virtual ~TableView();
+
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
 	/** Redefined to disable search in the table and trigger jumpToWidget's action. */

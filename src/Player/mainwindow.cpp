@@ -470,6 +470,11 @@ void MainWindow::activateView(QAction *menuAction)
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
 
+	// Trigger a rescan of the library is there's nothing to display
+	if (_currentView && !_currentView->hasTracksToDisplay()) {
+		this->rescanLibrary();
+	}
+
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 
