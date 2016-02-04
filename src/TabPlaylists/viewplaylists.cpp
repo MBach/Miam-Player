@@ -29,9 +29,14 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	translator.load(":/translations/tabPlaylists_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
 	tabPlaylists->init(_mediaPlayer);
+	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settingsPrivate->value("lastActivePlaylistMode").toInt();
+	playbackModeButton->updateMode(mode);
+	_mediaPlayer->playlist()->setPlaybackMode(mode);
 
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
+	connect(_mediaPlayer->playlist(), &MediaPlaylist::playbackModeChanged, playbackModeButton, &PlaybackModeButton::updateMode);
+	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _mediaPlayer->playlist(), &MediaPlaylist::setPlaybackMode);
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeButton, &PlaybackModeButton::updateMode);
 	connect(playbackModeButton, &PlaybackModeButton::aboutToChangeCurrentPlaylistPlaybackMode, tabPlaylists, &TabPlaylist::changeCurrentPlaylistPlaybackMode);
 
@@ -184,9 +189,9 @@ int ViewPlaylists::selectedTracksInCurrentPlaylist() const
 	return tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
 }
 
-void ViewPlaylists::setDatabase(SqlDatabase *db)
+void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 {
-	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
+	connect(musicSearchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
 		QVBoxLayout *vbox = new QVBoxLayout;
 		vbox->setMargin(0);
 		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
@@ -202,13 +207,13 @@ void ViewPlaylists::setDatabase(SqlDatabase *db)
 		library->setLayout(vbox);
 	});
 
-	connect(db->musicSearchEngine(), &MusicSearchEngine::progressChanged, this, [=](int p) {
+	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, this, [=](int p) {
 		if (QProgressBar *progress = this->findChild<QProgressBar*>()) {
 			progress->setValue(p);
 		}
 	});
 
-	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, this, [=]() {
+	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, [=]() {
 		auto l = library->layout();
 		while (!l->isEmpty()) {
 			if (QLayoutItem *i = l->takeAt(0)) {

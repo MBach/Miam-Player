@@ -23,7 +23,7 @@
 SqlDatabase::SqlDatabase()
 	: QObject()
 	, QSqlDatabase("QSQLITE")
-	, _musicSearchEngine(nullptr)
+	//, _musicSearchEngine(nullptr)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QString path("%1/%2/%3");
@@ -56,10 +56,10 @@ SqlDatabase::SqlDatabase()
 
 SqlDatabase::~SqlDatabase()
 {
-	if (_musicSearchEngine) {
+	/*if (_musicSearchEngine) {
 		delete _musicSearchEngine;
 		_musicSearchEngine = nullptr;
-	}
+	}*/
 	if (isOpen()) {
 		close();
 	}
@@ -67,7 +67,7 @@ SqlDatabase::~SqlDatabase()
 
 void SqlDatabase::init()
 {
-	_musicSearchEngine = new MusicSearchEngine(this);
+	//_musicSearchEngine = new MusicSearchEngine(this);
 
 	if (!isOpen()) {
 		open();
@@ -93,10 +93,10 @@ void SqlDatabase::init()
 		"lastModified INTEGER);");
 }
 
-MusicSearchEngine * SqlDatabase::musicSearchEngine() const
+/*MusicSearchEngine SqlDatabase::musicSearchEngine() const
 {
 	return _musicSearchEngine;
-}
+}*/
 
 bool SqlDatabase::insertIntoTableArtists(ArtistDAO *artist)
 {
@@ -804,8 +804,6 @@ bool SqlDatabase::cleanNodesWithoutTracks()
 /** Delete cache and rescan local tracks. */
 void SqlDatabase::rebuild()
 {
-	emit aboutToLoad();
-
 	if (!isOpen()) {
 		open();
 		this->setPragmas();
@@ -826,25 +824,8 @@ void SqlDatabase::rebuild()
 	cleanDb.exec("DROP INDEX indexAlbumId");
 	transaction();
 
-	connect(_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &SqlDatabase::saveCoverRef);
-	connect(_musicSearchEngine, &MusicSearchEngine::scannedFile, this, &SqlDatabase::saveFileRef);
-
-	// When the scan is complete, save the model in the filesystem
-	connect(_musicSearchEngine, &MusicSearchEngine::searchHasEnded, [=] () {
-		commit();
-
-		QSqlQuery index(*this);
-		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
-
-		// Resync remote players and remote databases
-		emit aboutToResyncRemoteSources();
-	});
-
-	_musicSearchEngine->doSearch();
+	//connect(&_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &SqlDatabase::saveCoverRef);
+	//connect(&_musicSearchEngine, &MusicSearchEngine::scannedFile, this, &SqlDatabase::saveFileRef);
 }
 
 /** Reads an external picture which is close to multimedia files (same folder). */

@@ -34,7 +34,7 @@ public:
 
 	virtual int selectedTracksInCurrentPlaylist() const override;
 
-	virtual void setDatabase(SqlDatabase *db) override;
+	virtual void setMusicSearchEngine(MusicSearchEngine *musicSearchEngine) override;
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 

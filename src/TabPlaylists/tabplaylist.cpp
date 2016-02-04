@@ -177,11 +177,6 @@ void TabPlaylist::init(MediaPlayer *mediaPlayer)
 		addPlaylist();
 	}
 	blockSignals(false);
-	if (settings->contains("lastActivePlaylistMode")) {
-		QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settings->value("lastActivePlaylistMode").toInt();
-		currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
-		emit updatePlaybackModeButton(mode);
-	}
 }
 
 /** Load a playlist saved in database. */

@@ -41,7 +41,7 @@ protected:
 	virtual void closeEvent(QCloseEvent *event) override;
 
 public slots:
-	virtual void setDatabase(SqlDatabase *db) override;
+	virtual void setMusicSearchEngine(MusicSearchEngine *musicSearchEngine) override;
 
 	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
 

@@ -6,6 +6,7 @@
 #include <QTimer>
 
 #include "miamcore_global.h"
+#include <model/sqldatabase.h>
 
 /**
  * \brief		The MusicSearchEngine class
@@ -16,17 +17,18 @@ class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 {
 	Q_OBJECT
 private:
+	SqlDatabase _db;
 	QTimer *_timer;
 	QStringList _delta;
 
 public:
-	MusicSearchEngine(QObject *parent = nullptr);
-
 	static bool isScanning;
 
-	void setWatchForChanges(bool b);
+	MusicSearchEngine(QObject *parent = nullptr);
 
 	void setDelta(const QStringList &delta);
+
+	void setWatchForChanges(bool b);
 
 public slots:
 	void doSearch();
@@ -35,10 +37,7 @@ private slots:
 	void watchForChanges();
 
 signals:
-	/** A JPG or a PNG was found next to a valid audio file in the same directory. */
-	void scannedCover(const QString &, const QString &);
-
-	void scannedFile(const QString &);
+	void aboutToSearch();
 
 	void progressChanged(int);
 

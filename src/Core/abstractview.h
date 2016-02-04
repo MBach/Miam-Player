@@ -3,7 +3,8 @@
 
 #include "miamcore_global.h"
 #include <settingsprivate.h>
-#include <model/sqldatabase.h>
+//#include <model/sqldatabase.h>
+#include <musicsearchengine.h>
 
 #include <QDir>
 #include <QWidget>
@@ -25,7 +26,8 @@ public:
 
 	virtual bool hasTracksToDisplay() const = 0;
 
-	virtual void setDatabase(SqlDatabase *) {}
+	//virtual void setDatabase(SqlDatabase *) {}
+	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty) const { return false; }
 

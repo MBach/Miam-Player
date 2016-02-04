@@ -98,6 +98,7 @@ void PlaybackModeButton::setIconFromTheme(const QString &theme)
 
 void PlaybackModeButton::updateMode(QMediaPlaylist::PlaybackMode mode)
 {
+	qDebug() << Q_FUNC_INFO;
 	_mode = mode;
 	this->setIconFromTheme(Settings::instance()->theme());
 	emit aboutToChangeCurrentPlaylistPlaybackMode(_mode);

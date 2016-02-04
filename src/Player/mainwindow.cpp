@@ -28,6 +28,14 @@ MainWindow::MainWindow(QWidget *parent)
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
 
+	QActionGroup *actionGroup = new QActionGroup(this);
+	actionGroup->setObjectName("playbackActionGroup");
+	actionGroup->addAction(actionPlaybackSequential);
+	actionGroup->addAction(actionPlaybackRandom);
+	actionGroup->addAction(actionPlaybackLoop);
+	actionGroup->addAction(actionPlaybackCurrentItemOnce);
+	actionGroup->addAction(actionPlaybackCurrentItemInLoop);
+
 	this->setAcceptDrops(true);
 #ifndef Q_OS_MAC
 	this->setWindowIcon(QIcon(":/icons/mp_win32"));
@@ -139,10 +147,10 @@ void MainWindow::init()
 void MainWindow::loadPlugins()
 {
 	/// FIXME
-	QObjectList libraryObjectList;
+	//QObjectList libraryObjectList;
 	//libraryObjectList << library << library->properties;
 
-	QObjectList tagEditorObjectList;
+	//QObjectList tagEditorObjectList;
 	//tagEditorObjectList << tagEditor->albumCover->contextMenu() << tagEditor->extensiblePushButtonArea << tagEditor->extensibleWidgetArea << tagEditor->tagEditorWidget << tagEditor;
 
 	//_pluginManager->registerExtensionPoint(library->metaObject()->className(), libraryObjectList);
@@ -155,6 +163,7 @@ void MainWindow::setupActions()
 {
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
+	viewModeGroup->setObjectName("viewModeGroup");
 	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
 	actionViewPlaylists->setActionGroup(viewModeGroup);
 	actionViewUniqueLibrary->setActionGroup(viewModeGroup);
@@ -216,14 +225,6 @@ void MainWindow::setupActions()
 	});
 
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
-
-	//connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
-		//QMediaPlaylist::PlaybackMode mode = tabPlaylists->currentPlayList()->mediaPlaylist()->playbackMode();
-		//const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
-		//QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
-		//QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
-		//action->setChecked(true);
-	//});
 }
 
 /** Update fonts for menu and context menus. */
@@ -528,6 +529,22 @@ void MainWindow::activateView(QAction *menuAction)
 			}
 		});
 
+		connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
+			QMediaPlaylist::PlaybackMode mode = _mediaPlayer->playlist()->playbackMode();
+			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+			QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
+			action->setChecked(true);
+		});
+
+		QActionGroup *actionGroup = this->findChild<QActionGroup*>("playbackActionGroup");
+		connect(actionGroup, &QActionGroup::triggered, this, [=](QAction *action) {
+			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+			int mode = metaEnum.keyToValue(action->property("PlaybackMode").toString().toStdString().c_str());
+			_mediaPlayer->playlist()->setPlaybackMode((QMediaPlaylist::PlaybackMode)mode);
+		});
+
 		// Playback
 		connect(actionRemoveSelectedTracks, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::removeSelectedTracks);
 		connect(actionMoveTracksUp, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::moveTracksUp);
@@ -550,7 +567,7 @@ void MainWindow::activateView(QAction *menuAction)
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		if (_currentView) {
-			QActionGroup *actionGroup = this->findChild<QActionGroup*>();
+			QActionGroup *actionGroup = this->findChild<QActionGroup*>("viewModeGroup");
 			if (!_currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 				settingsPrivate->setLastActiveViewGeometry(actionGroup->checkedAction()->objectName(), this->saveGeometry());
 			}
@@ -596,21 +613,25 @@ void MainWindow::rescanLibrary()
 		_currentView->setViewProperty(SettingsPrivate::VP_SearchArea, true);
 	}
 
-	SqlDatabase *db = new SqlDatabase;
-	db->init();
 	QThread *t = new QThread;
-	db->moveToThread(t);
-	connect(t, &QThread::started, db, &SqlDatabase::rebuild);
-	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, t, &QThread::quit);
-	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
+	MusicSearchEngine *searchEngine = new MusicSearchEngine;
+	searchEngine->moveToThread(t);
+
+	connect(t, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
+	connect(searchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
 		menuView->setEnabled(false);
 		actionScanLibrary->setEnabled(false);
 	});
 	if (_currentView->viewProperty(SettingsPrivate::VP_HasAreaForRescan)) {
-		_currentView->setDatabase(db);
+		_currentView->setMusicSearchEngine(searchEngine);
 	}
-	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, db, &SqlDatabase::deleteLater);
-	connect(db, &SqlDatabase::destroyed, this, [=]() {
+	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
+		if (plugin && plugin->canInteractWithSearchEngine()) {
+			plugin->setMusicSearchEngine(searchEngine);
+		}
+	}
+	connect(searchEngine, &MusicSearchEngine::searchHasEnded, t, &QThread::quit);
+	connect(searchEngine, &MusicSearchEngine::destroyed, this, [=]() {
 		menuView->setEnabled(true);
 		actionScanLibrary->setEnabled(true);
 	});

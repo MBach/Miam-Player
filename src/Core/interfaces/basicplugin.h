@@ -7,6 +7,8 @@
 
 #include "miamcore_global.h"
 
+class MusicSearchEngine;
+
 /**
  * \brief		The BasicPlugin class is the base class for creating a plugin.
  * \details     Derived classes that will use this interface must reimplement almost everything (name, version, etc).
@@ -24,6 +26,8 @@ public:
 	/** Default desctructor. */
 	virtual ~BasicPlugin() {}
 
+	virtual bool canInteractWithSearchEngine() const { return false; }
+
 	/** This method can specify some classes to extend at runtime, like QMenu (for appending new items). */
 	virtual QStringList classesToExtend() { return QStringList(); }
 
@@ -36,6 +40,8 @@ public:
 
 	/** Must return true if this plugin provides a config page. */
 	virtual bool isConfigurable() const = 0;
+
+	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 
 	/** Name of plugin displayed in settings. */
 	virtual QString name() const = 0;

@@ -231,7 +231,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Repeat</string>
+    <string>&amp;Loop</string>
    </property>
    <property name="PlaybackMode" stdset="0">
     <string notr="true">QMediaPlaylist::Loop</string>
@@ -317,7 +317,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Current item in &amp;loop</string>
+    <string>Current item in l&amp;oop</string>
    </property>
    <property name="PlaybackMode" stdset="0">
     <string notr="true">QMediaPlaylist::CurrentItemInLoop</string>

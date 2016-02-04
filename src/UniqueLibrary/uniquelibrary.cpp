@@ -163,9 +163,9 @@ void UniqueLibrary::closeEvent(QCloseEvent *event)
 	QWidget::closeEvent(event);
 }
 
-void UniqueLibrary::setDatabase(SqlDatabase *db)
+void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 {
-	connect(db, &SqlDatabase::aboutToLoad, this, [=]() {
+	connect(musicSearchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
 
 		QVBoxLayout *vbox = new QVBoxLayout;
 		vbox->setMargin(0);
@@ -182,13 +182,13 @@ void UniqueLibrary::setDatabase(SqlDatabase *db)
 		uniqueTable->setLayout(vbox);
 	});
 
-	connect(db->musicSearchEngine(), &MusicSearchEngine::progressChanged, this, [=](int p) {
+	connect(musicSearchEngine, &MusicSearchEngine::progressChanged, this, [=](int p) {
 		if (QProgressBar *progress = this->findChild<QProgressBar*>()) {
 			progress->setValue(p);
 		}
 	});
 
-	connect(db->musicSearchEngine(), &MusicSearchEngine::searchHasEnded, this, [=]() {
+	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, [=]() {
 		auto l = uniqueTable->layout();
 		while (!l->isEmpty()) {
 			if (QLayoutItem *i = l->takeAt(0)) {

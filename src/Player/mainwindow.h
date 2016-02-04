@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QStack>
 
-#include <model/sqldatabase.h>
 #include <abstractview.h>
 #include <mediaplayer.h>
 #include <uniquelibrary.h>

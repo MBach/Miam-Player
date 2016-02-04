@@ -18,7 +18,6 @@
 /// Forward declarations
 class Cover;
 class FileHelper;
-class MusicSearchEngine;
 
 /**
  * \brief		The SqlDatabase class uses SQLite to store few but useful tables for tracks, playlists, etc.
@@ -29,9 +28,6 @@ class MIAMCORE_LIBRARY SqlDatabase : public QObject, public QSqlDatabase
 {
 	Q_OBJECT
 private:
-	/** Object than can iterate throught the FileSystem for Audio files. */
-	MusicSearchEngine *_musicSearchEngine;
-
 	QHash<uint, GenericDAO*> _cache;
 
 	Q_ENUMS(extension)
@@ -42,8 +38,6 @@ public:
 	~SqlDatabase();
 
 	void init();
-
-	MusicSearchEngine * musicSearchEngine() const;
 
 	bool insertIntoTableArtists(ArtistDAO *artist);
 	bool insertIntoTableAlbums(uint artistId, AlbumDAO *album);
@@ -85,7 +79,6 @@ public slots:
 	/** Delete cache and rescan local tracks. */
 	void rebuild();
 
-private slots:
 	/** Reads an external picture which is close to multimedia files (same folder). */
 	void saveCoverRef(const QString &coverPath, const QString &track);
 

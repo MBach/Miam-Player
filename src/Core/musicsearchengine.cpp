@@ -16,11 +16,6 @@
 
 bool MusicSearchEngine::isScanning = false;
 
-void MusicSearchEngine::setDelta(const QStringList &delta)
-{
-	_delta = delta;
-}
-
 MusicSearchEngine::MusicSearchEngine(QObject *parent)
 	: QObject(parent)
 	, _timer(new QTimer(this))
@@ -32,6 +27,11 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent)
 	if (SettingsPrivate::instance()->isFileSystemMonitored()) {
 		setWatchForChanges(true);
 	}
+}
+
+void MusicSearchEngine::setDelta(const QStringList &delta)
+{
+	_delta = delta;
 }
 
 void MusicSearchEngine::setWatchForChanges(bool b)
@@ -46,6 +46,25 @@ void MusicSearchEngine::setWatchForChanges(bool b)
 void MusicSearchEngine::doSearch()
 {
 	qDebug() << Q_FUNC_INFO;
+	emit aboutToSearch();
+
+	_db.init();
+
+	QSqlQuery cleanDb(_db);
+	cleanDb.setForwardOnly(true);
+	//cleanDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
+	//cleanDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
+	//cleanDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
+	cleanDb.exec("DELETE FROM tracks");
+	cleanDb.exec("DELETE FROM albums");
+	cleanDb.exec("DELETE FROM artists");
+	cleanDb.exec("DROP INDEX indexArtist");
+	cleanDb.exec("DROP INDEX indexAlbum");
+	cleanDb.exec("DROP INDEX indexPath");
+	cleanDb.exec("DROP INDEX indexArtistId");
+	cleanDb.exec("DROP INDEX indexAlbumId");
+	_db.transaction();
+
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
 	QStringList pathsToSearch = _delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : _delta;
@@ -85,7 +104,7 @@ void MusicSearchEngine::doSearch()
 			// Directory has changed: we can discard cover
 			if (qFileInfo.isDir()) {
 				if (!coverPath.isEmpty() && !lastFileScannedNextToCover.isEmpty()) {
-					emit scannedCover(coverPath, lastFileScannedNextToCover);
+					_db.saveCoverRef(coverPath, lastFileScannedNextToCover);
 					coverPath.clear();
 				}
 				isNewDirectory = true;
@@ -95,13 +114,13 @@ void MusicSearchEngine::doSearch()
 			} else if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
 				if (atLeastOneAudioFileWasFound) {
 					coverPath = qFileInfo.absoluteFilePath();
-					emit scannedCover(coverPath, lastFileScannedNextToCover);
+					_db.saveCoverRef(coverPath, lastFileScannedNextToCover);
 					coverPath.clear();
 				} else if (isNewDirectory) {
 					coverPath = qFileInfo.absoluteFilePath();
 				}
 			} else if (suffixes.contains(qFileInfo.suffix())) {
-				emit scannedFile(qFileInfo.absoluteFilePath());
+				_db.saveFileRef(qFileInfo.absoluteFilePath());
 				atLeastOneAudioFileWasFound = true;
 				lastFileScannedNextToCover = qFileInfo.absoluteFilePath();
 				isNewDirectory = false;
@@ -109,15 +128,29 @@ void MusicSearchEngine::doSearch()
 
 			if (currentEntry * 100 / entryCount > percent) {
 				percent = currentEntry * 100 / entryCount;
-				//qDebug() << "about to emit progress changed" << percent << "%";
 				emit progressChanged(percent);
 				qApp->processEvents();
 			}
 		}
 		atLeastOneAudioFileWasFound = false;
 	}
-	emit searchHasEnded();
+
+	QSqlQuery index(_db);
+	index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
+	index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
+	index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
+	index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
+	index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
+
+	_db.commit();
+
+	// Resync remote players and remote databases
+	//emit aboutToResyncRemoteSources();
+
 	MusicSearchEngine::isScanning = false;
+	emit searchHasEnded();
+
+	this->deleteLater();
 }
 
 void MusicSearchEngine::watchForChanges()
@@ -134,7 +167,7 @@ void MusicSearchEngine::watchForChanges()
 		}
 	}
 
-	SqlDatabase db;// = SqlDatabase::instance();
+	SqlDatabase db;
 	db.open();
 	db.exec("PRAGMA journal_mode = MEMORY");
 	db.exec("PRAGMA synchronous = OFF");
@@ -162,7 +195,6 @@ void MusicSearchEngine::watchForChanges()
 	if (!newFoldersToAddInLibrary.isEmpty()) {
 		_delta = newFoldersToAddInLibrary;
 		this->doSearch();
-		//this->doSearch(newFoldersToAddInLibrary);
 	}
 
 	// Process in reverse mode to clean cache: from database file and check if entry exists in database
@@ -190,7 +222,7 @@ void MusicSearchEngine::watchForChanges()
 		qDebug() << Q_FUNC_INFO << oldLocations;
 		if (!oldLocations.isEmpty()) {
 			//db.rebuildFomLocations(oldLocations, QStringList());
-			db.musicSearchEngine()->setDelta(oldLocations);
+			setDelta(oldLocations);
 			db.rebuild();
 		}
 	}
