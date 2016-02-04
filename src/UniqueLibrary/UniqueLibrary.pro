@@ -45,7 +45,7 @@ unix {
     TARGET = miam-uniquelibrary
 }
 unix:!macx {
-    target.path = /usr/lib/
+    target.path = /usr/lib$$LIB_SUFFIX/
     INSTALLS += target
 }
 macx {

@@ -45,18 +45,12 @@ CONFIG(release, debug|release) {
 CONFIG += c++11
 unix {
     TARGET = miam-core
-    #QMAKE_CXXFLAGS += -std=c++11
 }
 unix:!macx {
     QT += x11extras
     LIBS += -L$$OUT_PWD -L/usr/lib/x86_64-linux-gnu/ -ltag
-    # XXX
-    isEqual(QT_MAJOR_VERSION, 5):isEqual(QT_MINOR_VERSION, 4):lessThan(QT_PATCH_VERSION, 2){
-	LIBS += -lQt5AV
-    } else {
-	LIBS += -lQtAV
-    }
-    target.path = /usr/lib/
+    LIBS += -lQtAV
+    target.path = /usr/lib$$LIB_SUFFIX/
     INSTALLS += target
 }
 macx {
