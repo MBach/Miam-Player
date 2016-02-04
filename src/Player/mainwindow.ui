@@ -84,8 +84,8 @@
     <addaction name="actionSkipForward"/>
     <addaction name="separator"/>
     <addaction name="actionPlaybackSequential"/>
-    <addaction name="actionPlaybackLoop"/>
     <addaction name="actionPlaybackRandom"/>
+    <addaction name="actionPlaybackLoop"/>
     <addaction name="actionPlaybackCurrentItemOnce"/>
     <addaction name="actionPlaybackCurrentItemInLoop"/>
     <addaction name="separator"/>
