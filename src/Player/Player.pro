@@ -152,10 +152,12 @@ unix:!macx {
     desktop.files = $$PWD/../../debian/usr/share/applications/miam-player.desktop
     icon64.path = /usr/share/icons/hicolor/64x64/apps
     icon64.files = $$PWD/../../debian/usr/share/icons/hicolor/64x64/apps/application-x-miamplayer.png
-
+    appdata.path = /usr/share/appdata
+    appdata.files = $$PWD/../../fedora/miam-player.appdata.xml
     INSTALLS += desktop \
 	target \
-	icon64
+	icon64 \
+	appdata
 }
 macx {
     ICON = $$PWD/../../osx/MiamPlayer.icns

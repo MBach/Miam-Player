@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2016 Martin Gansser <martinkg@fedoraproject.org> -->
+<application>
+  <id type="desktop">miam-player.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>Miam-Player</name>
+  <summary>Miam-Player is a cross-platform open source music player based on Qt5</summary>
+  <description>
+    <p>What's inside?</p>
+    <ul> 
+        <li>Fast and reliable</li>
+        <li>Read .mp3, .m4a (MP4), .flac, .ogg, .oga (OGG Vorbis), .asf, .ape (Monkey Audio), .opus and more!</li>
+        <li>Customize everything: User Interface, Covers, Shortcuts, Buttons, Themes</li>
+        <li>Read and edit metadata using [Taglib]</li>
+    </ul>
+    <p>Future work</p>
+    <ul> 
+        <li>Add [MPRIS](http://specifications.freedesktop.org/mpris-spec/latest/) implementation for Linux (Media Player Remote Interfacing Specification) to be able to control the player</li>
+        <li>10-band equalizer</li>
+        <li>Add [projectM](http://projectm.sourceforge.net/) support for amazing visualizations</li>
+        <li>A spotify / jamendo plugin to stream music</li>
+        <li>[equalizer](http://miam-player.org/images/work-in-progress/equalizer.png)</li>
+        <li>High DPI support (for OSX first)</li>
+    </ul>
+    <p>Plugins</p>
+    <ul> 
+        <li>A plugin system has been introduced to extend possibilites of the player. Five official plugins come with the installer for Windows:</li>
+        <li>Support thumbnails buttons to control the player, green progress bar when playing, overlay icon</li>
+        <li>A mini-mode which is a tribute to the good ol' Winamp _shade mode_: [mini](http://www.miam-player.org/images/gallery/mini-mode.png)</li>
+        <li>Get missing covers by looking at [MusicBrainz'](https://musicbrainz.org/) repository</li>
+        <li>Shell explorer extension (up to 4 actions, like 'Send to current playlist')</li>
+        <li>Deezer plugin (technology preview): merge local and remote Artists / Albums: [mini](http://miam-player.org/images/work-in-progress/deezer.png)</li>
+    </ul>
+  </description>
+  <screenshots>
+    <screenshot type="default">http://www.miam-player.org/images/gallery/general_overview.png</screenshot>
+    <screenshot>http://www.miam-player.org/images/gallery/unique_library_mode.png</screenshot>
+    <screenshot>http://miam-player.org/images/work-in-progress/equalizer.png</screenshot>
+    <screenshot>http://miam-player.org/images/work-in-progress/deezer.png</screenshot>
+  </screenshots>
+  <url type="homepage">http://www.miam-player.org</url>
+  <updatecontact>bachelier.matthieu@gmail.com</updatecontact>
+  <kudos>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
+    <kudo>Notifications</kudo>
+  </kudos>
+  <keywords>
+    <keyword>audio</keyword>
+    <keyword>music</keyword>
+    <keyword>player</keyword>
+    <keyword>tag</keyword>
+    <keyword>library</keyword>
+  </keywords>
+</application>
