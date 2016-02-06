@@ -95,21 +95,12 @@ TRANSLATIONS = translations/player_ar.ts \
 
 CONFIG(debug, debug|release) {
     win32 {
-	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag
-	    LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
-	    LIBS += -L$$OUT_PWD/../Library/debug/ -lLibrary
-	    LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lTabPlaylists
-	    LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
-	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
-	    LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
-	    LIBS += -L$$OUT_PWD/../Library/debug/ -lLibrary
-	    LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lTabPlaylists
-	    LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
-	}
+	LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
+	LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
+	LIBS += -L$$OUT_PWD/../Library/debug/ -lLibrary
+	LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lTabPlaylists
+	LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lUniqueLibrary
+	QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
     }
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
@@ -119,21 +110,12 @@ CONFIG(debug, debug|release) {
 
 CONFIG(release, debug|release) {
     win32 {
-	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag
-	    LIBS += -L$$OUT_PWD/../Core/release/ -lCore
-	    LIBS += -L$$OUT_PWD/../Library/release/ -lLibrary
-	    LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lTabPlaylists
-	    LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
-	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
-	    LIBS += -L$$OUT_PWD/../Core/release/ -lCore
-	    LIBS += -L$$OUT_PWD/../Library/release/ -lLibrary
-	    LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lTabPlaylists
-	    LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lUniqueLibrary
-	    QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
-	}
+	LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
+	LIBS += -L$$OUT_PWD/../Core/release/ -lCore
+	LIBS += -L$$OUT_PWD/../Library/release/ -lLibrary
+	LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lTabPlaylists
+	LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lUniqueLibrary
+	QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
     }
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc

@@ -31,6 +31,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	tabPlaylists->init(_mediaPlayer);
 	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settingsPrivate->value("lastActivePlaylistMode").toInt();
 	playbackModeButton->updateMode(mode);
+	_mediaPlayer->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
 	_mediaPlayer->playlist()->setPlaybackMode(mode);
 
 	widgetSearchBar->setFrameBorder(false, false, true, false);

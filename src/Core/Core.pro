@@ -16,18 +16,10 @@ win32 {
     TARGET = Core
     CONFIG += dll
     CONFIG(debug, debug|release) {
-	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/debug/win-x86/ -ltag -lQtAV1 -lUser32
-	} else {
-	    LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -lQtAV1 -lUser32
-	}
+	LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -lQtAV1 -lUser32
     }
     CONFIG(release, debug|release) {
-	!contains(QMAKE_TARGET.arch, x86_64) {
-	    LIBS += -L$$PWD/../../lib/release/win-x86/ -ltag -lQtAV1 -lUser32
-	} else {
-	    LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -lQtAV1 -lUser32
-	}
+	LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -lQtAV1 -lUser32
     }
 }
 
