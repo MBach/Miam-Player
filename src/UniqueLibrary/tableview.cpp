@@ -118,6 +118,7 @@ void TableView::paintEvent(QPaintEvent *event)
 void TableView::jumpTo(const QString &letter)
 {
 	SqlDatabase db;
+	db.open();
 	QSqlQuery firstArtist(db);
 	firstArtist.prepare("SELECT name FROM artists WHERE name LIKE ? ORDER BY name COLLATE NOCASE LIMIT ?");
 	firstArtist.addBindValue(letter + "%");
