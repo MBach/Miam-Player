@@ -193,7 +193,6 @@ void MainWindow::setupActions()
 	auto settingsPrivate = SettingsPrivate::instance();
 	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, [=]() {
 		this->activateLastView();
-		this->rescanLibrary();
 	});
 
 	// Media buttons and their shortcuts
@@ -328,8 +327,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 void MainWindow::initQuickStart()
 {
-	qDebug() << Q_FUNC_INFO;
-
 	// Clean any existing view first
 	if (centralWidget()) {
 		delete takeCentralWidget();
@@ -473,6 +470,7 @@ void MainWindow::activateView(QAction *menuAction)
 
 	// Trigger a rescan of the library is there's nothing to display
 	if (_currentView && !_currentView->hasTracksToDisplay()) {
+		qDebug() << Q_FUNC_INFO;
 		this->rescanLibrary();
 	}
 
@@ -622,6 +620,7 @@ void MainWindow::rescanLibrary()
 		menuView->setEnabled(false);
 		actionScanLibrary->setEnabled(false);
 	});
+	qDebug() << Q_FUNC_INFO;
 	if (_currentView->viewProperty(SettingsPrivate::VP_HasAreaForRescan)) {
 		_currentView->setMusicSearchEngine(searchEngine);
 	}

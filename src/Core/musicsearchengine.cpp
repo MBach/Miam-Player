@@ -20,8 +20,8 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent)
 	: QObject(parent)
 	, _timer(new QTimer(this))
 {
-	_timer->setInterval(5000);
-	connect(_timer, &QTimer::timeout, this, &MusicSearchEngine::watchForChanges);
+	//_timer->setInterval(5000);
+	//connect(_timer, &QTimer::timeout, this, &MusicSearchEngine::watchForChanges);
 
 	// Monitor filesystem
 	if (SettingsPrivate::instance()->isFileSystemMonitored()) {
@@ -135,14 +135,14 @@ void MusicSearchEngine::doSearch()
 		atLeastOneAudioFileWasFound = false;
 	}
 
+	_db.commit();
+
 	QSqlQuery index(_db);
 	index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
 	index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
 	index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
 	index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
 	index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
-
-	_db.commit();
 
 	// Resync remote players and remote databases
 	//emit aboutToResyncRemoteSources();
@@ -155,6 +155,8 @@ void MusicSearchEngine::doSearch()
 
 void MusicSearchEngine::watchForChanges()
 {
+	qDebug() << Q_FUNC_INFO;
+
 	// Gather all folders registered on music locations
 	QFileInfoList dirs;
 	for (QString musicPath : SettingsPrivate::instance()->musicLocations()) {

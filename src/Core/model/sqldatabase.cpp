@@ -831,11 +831,6 @@ void SqlDatabase::rebuild()
 /** Reads an external picture which is close to multimedia files (same folder). */
 void SqlDatabase::saveCoverRef(const QString &coverPath, const QString &track)
 {
-	if (!isOpen()) {
-		open();
-		this->setPragmas();
-	}
-
 	FileHelper fh(track);
 	QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
 	QString artistNorm = this->normalizeField(artistAlbum);
@@ -891,14 +886,11 @@ void SqlDatabase::setPragmas()
 /** Reads a file from the filesystem and adds it into the library. */
 void SqlDatabase::saveFileRef(const QString &absFilePath)
 {
-	if (!isOpen()) {
-		open();
-	}
-
 	FileHelper fh(absFilePath);
-	/*if (!fh.isValid()) {
+	if (!fh.isValid()) {
+		qDebug() << Q_FUNC_INFO << "file is not valid, won't be saved";
 		return;
-	}*/
+	}
 
 	QSqlQuery insertTrack(*this);
 	insertTrack.setForwardOnly(true);
