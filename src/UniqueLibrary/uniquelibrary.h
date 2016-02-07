@@ -33,6 +33,8 @@ public:
 
 	virtual bool hasTracksToDisplay() const override;
 
+	inline virtual QSize sizeHint() const override { return QSize(420, 850); }
+
 	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
 
 protected:

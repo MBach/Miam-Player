@@ -23,7 +23,6 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
-		qDebug() << this->currentPlayList()->mediaPlaylist()->mediaCount();
 		QMediaPlaylist::PlaybackMode m = this->currentPlayList()->mediaPlaylist()->playbackMode();
 		emit updatePlaybackModeButton(m);
 	});
@@ -418,7 +417,6 @@ void TabPlaylist::deletePlaylist(uint playlistId)
 
 void TabPlaylist::changeCurrentPlaylistPlaybackMode(QMediaPlaylist::PlaybackMode mode)
 {
-	qDebug() << Q_FUNC_INFO << mode;
 	this->currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
 }
 

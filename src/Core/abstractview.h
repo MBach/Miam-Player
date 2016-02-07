@@ -26,7 +26,6 @@ public:
 
 	virtual bool hasTracksToDisplay() const = 0;
 
-	//virtual void setDatabase(SqlDatabase *) {}
 	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 
 	virtual bool viewProperty(SettingsPrivate::ViewProperty) const { return false; }

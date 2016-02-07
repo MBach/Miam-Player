@@ -29,14 +29,14 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	translator.load(":/translations/tabPlaylists_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
 	tabPlaylists->init(_mediaPlayer);
-	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settingsPrivate->value("lastActivePlaylistMode").toInt();
+	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settingsPrivate->value("lastActivePlaylistMode", 2).toInt();
 	playbackModeButton->updateMode(mode);
 	_mediaPlayer->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
 	_mediaPlayer->playlist()->setPlaybackMode(mode);
 
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
-	connect(_mediaPlayer->playlist(), &MediaPlaylist::playbackModeChanged, playbackModeButton, &PlaybackModeButton::updateMode);
+	connect(_mediaPlayer->playlist(), &QMediaPlaylist::playbackModeChanged, playbackModeButton, &PlaybackModeButton::updateMode);
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _mediaPlayer->playlist(), &MediaPlaylist::setPlaybackMode);
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeButton, &PlaybackModeButton::updateMode);
 	connect(playbackModeButton, &PlaybackModeButton::aboutToChangeCurrentPlaylistPlaybackMode, tabPlaylists, &TabPlaylist::changeCurrentPlaylistPlaybackMode);
@@ -236,6 +236,8 @@ bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
 	case SettingsPrivate::VP_SearchArea:
 	case SettingsPrivate::VP_PlaylistFeature:
 	case SettingsPrivate::VP_HasAreaForRescan:
+	case SettingsPrivate::VP_FileExplorerFeature:
+	case SettingsPrivate::VP_VolumeIndicatorToggled:
 		return true;
 	default:
 		return AbstractView::viewProperty(vp);

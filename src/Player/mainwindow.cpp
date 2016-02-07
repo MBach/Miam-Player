@@ -488,7 +488,12 @@ void MainWindow::activateView(QAction *menuAction)
 		}
 
 		// Replace the main widget
-		this->restoreGeometry(settingsPrivate->lastActiveViewGeometry(menuAction->objectName()));
+		QByteArray ba = settingsPrivate->lastActiveViewGeometry(menuAction->objectName());
+		if (ba.isEmpty()) {
+			this->resize(_currentView->sizeHint());
+		} else {
+			this->restoreGeometry(ba);
+		}
 		this->setCentralWidget(_currentView);
 	}
 
