@@ -73,6 +73,12 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 		QApplication::installTranslator(&translator);
 	});
 
+	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
+		if (ff == SettingsPrivate::FF_Library) {
+			this->viewport()->update();
+		}
+	});
+
 	// Init language
 	translator.load(":/translations/library_" + settings->language());
 	QApplication::installTranslator(&translator);

@@ -224,6 +224,12 @@ void MainWindow::setupActions()
 	});
 
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
+
+	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
+		if (ff == SettingsPrivate::FF_Menu) {
+			this->updateFonts(settingsPrivate->font(ff));
+		}
+	});
 }
 
 /** Update fonts for menu and context menus. */
@@ -475,6 +481,7 @@ void MainWindow::activateView(QAction *menuAction)
 	}
 
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	//connect(settingsPrivate, &SettingsPrivate::aboutToUpdateViews, _currentView, static_cast<void (AbstractView::*)(void)>(&AbstractView::update));
 	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
 
 	} else {

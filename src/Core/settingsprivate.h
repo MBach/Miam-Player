@@ -277,6 +277,10 @@ public slots:
 	void setVolumeBarTextAlwaysVisible(bool b);
 
 signals:
+	void aboutToUpdateViews();
+
+	void customIconForMediaButtonChanged(const QString &button);
+
 	void languageAboutToChange(const QString &newLanguage);
 
 	void fontHasChanged(FontFamily, const QFont &font);

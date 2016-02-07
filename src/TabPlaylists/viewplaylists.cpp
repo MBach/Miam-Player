@@ -18,6 +18,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 	, _db(nullptr)
 {
 	this->setupUi(this);
+	playButton->setMediaPlayer(mediaPlayer);
 	stopButton->setMediaPlayer(mediaPlayer);
 	playbackModeButton->setToggleShuffleOnly(false);
 
@@ -69,6 +70,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 
 	// Core
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &ViewPlaylists::mediaPlayerStateHasChanged);
+
 
 	// Main Splitter
 	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
@@ -451,16 +453,8 @@ void ViewPlaylists::volumeSliderIncrease()
 void ViewPlaylists::mediaPlayerStateHasChanged(QMediaPlayer::State state)
 {
 	if (state == QMediaPlayer::PlayingState) {
-		QString iconPath;
-		if (SettingsPrivate::instance()->hasCustomIcon("pauseButton")) {
-			iconPath = SettingsPrivate::instance()->customIcon("pauseButton");
-		} else {
-			iconPath = ":/player/" + Settings::instance()->theme() + "/pause";
-		}
-		playButton->setIcon(QIcon(iconPath));
 		seekSlider->setEnabled(true);
 	} else {
-		playButton->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/play"));
 		seekSlider->setDisabled(state == QMediaPlayer::StoppedState);
 		if (state == QMediaPlayer::StoppedState) {
 			seekSlider->setValue(0);

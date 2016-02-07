@@ -87,7 +87,8 @@ SOURCES += library/jumptowidget.cpp \
     settings.cpp \
     settingsprivate.cpp \
     starrating.cpp \
-    treeview.cpp
+    treeview.cpp \
+    mediabuttons/playbutton.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -132,7 +133,8 @@ HEADERS += interfaces/basicplugin.h \
     settings.h \
     settingsprivate.h \
     starrating.h \
-    treeview.h
+    treeview.h \
+    mediabuttons/playbutton.h
 
 RESOURCES += core.qrc
 

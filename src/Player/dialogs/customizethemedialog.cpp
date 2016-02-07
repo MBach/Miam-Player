@@ -64,10 +64,10 @@ void CustomizeThemeDialog::fade()
 /** Load theme at startup. */
 void CustomizeThemeDialog::loadTheme()
 {
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	customizeThemeCheckBox->setChecked(settings->isButtonThemeCustomized());
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	customizeThemeCheckBox->setChecked(settingsPrivate->isButtonThemeCustomized());
 
-	sizeButtonsSpinBox->setValue(settings->buttonsSize());
+	sizeButtonsSpinBox->setValue(settingsPrivate->buttonsSize());
 
 	// Select the right drop-down item according to the theme
 	int i = 0;
@@ -77,82 +77,76 @@ void CustomizeThemeDialog::loadTheme()
 	themeComboBox->setCurrentIndex(i);
 
 	// Buttons
-	/// FIXME
-	/*for (MediaButton *b : _mainWindow->mediaButtons) {
-
-		// Check or uncheck checkboxes in this customize interface
-		QCheckBox *checkBox = findChild<QCheckBox *>(b->objectName().replace("Button", "CheckBox"));
-		if (checkBox) {
-			checkBox->setChecked(settings->isMediaButtonVisible(b->objectName()));
+	Settings *settings = Settings::instance();
+	QList<QPushButton*> mediaPlayerButtons = buttonsListBox->findChildren<QPushButton*>();
+	for (QPushButton *mediaPlayerButton : mediaPlayerButtons) {
+		QString mediaButton = mediaPlayerButton->objectName() + "Button";
+		QCheckBox *checkbox = this->findChild<QCheckBox*>(mediaPlayerButton->objectName() + "CheckBox");
+		if (checkbox) {
+			checkbox->setChecked(settings->isMediaButtonVisible(mediaButton));
+		}
+		// Replace icon of the button in this dialog too
+		if (settingsPrivate->hasCustomIcon(mediaButton)) {
+			QString customIcon = settingsPrivate->customIcon(mediaButton);
+			mediaPlayerButton->setIcon(QIcon(customIcon));
 		}
 
-		// Display customs icons, if any
-		QPushButton *pushButton = findChild<QPushButton *>(b->objectName().remove("Button"));
-		if (pushButton) {
-			pushButton->setIcon(b->icon());
-		}
-	}*/
-
-	Settings *settings2 = Settings::instance();
-	QList<QCheckBox*> mediaPlayerButtons = buttonsListBox->findChildren<QCheckBox*>();
-	for (QCheckBox *mediaPlayerButton : mediaPlayerButtons) {
-		mediaPlayerButton->setChecked(settings2->isMediaButtonVisible(mediaPlayerButton->objectName().replace("CheckBox", "Button")));
 	}
 
 	// Extended Search Area
-	settings->isExtendedSearchVisible() ? radioButtonShowExtendedSearch->setChecked(true) : radioButtonHideExtendedSearch->setChecked(true);
+	settingsPrivate->isExtendedSearchVisible() ? radioButtonShowExtendedSearch->setChecked(true) : radioButtonHideExtendedSearch->setChecked(true);
 
 	// Volume bar
-	radioButtonShowVolume->setChecked(settings->isVolumeBarTextAlwaysVisible());
-	spinBoxHideVolumeLabel->setValue(settings->volumeBarHideAfter());
+	radioButtonShowVolume->setChecked(settingsPrivate->isVolumeBarTextAlwaysVisible());
+	spinBoxHideVolumeLabel->setValue(settingsPrivate->volumeBarHideAfter());
 
 	// Fonts
-	fontComboBoxPlaylist->setCurrentFont(settings->font(SettingsPrivate::FF_Playlist));
-	fontComboBoxLibrary->setCurrentFont(settings->font(SettingsPrivate::FF_Library));
-	fontComboBoxMenus->setCurrentFont(settings->font(SettingsPrivate::FF_Menu));
-	spinBoxPlaylist->setValue(settings->fontSize(SettingsPrivate::FF_Playlist));
+	fontComboBoxPlaylist->setCurrentFont(settingsPrivate->font(SettingsPrivate::FF_Playlist));
+	fontComboBoxLibrary->setCurrentFont(settingsPrivate->font(SettingsPrivate::FF_Library));
+	fontComboBoxMenus->setCurrentFont(settingsPrivate->font(SettingsPrivate::FF_Menu));
+	spinBoxPlaylist->setValue(settingsPrivate->fontSize(SettingsPrivate::FF_Playlist));
 	spinBoxLibrary->blockSignals(true);
-	spinBoxLibrary->setValue(settings->fontSize(SettingsPrivate::FF_Library));
+	spinBoxLibrary->setValue(settingsPrivate->fontSize(SettingsPrivate::FF_Library));
 	spinBoxLibrary->blockSignals(false);
-	spinBoxMenus->setValue(settings->fontSize(SettingsPrivate::FF_Menu));
+	spinBoxMenus->setValue(settingsPrivate->fontSize(SettingsPrivate::FF_Menu));
 
 	// Library
-	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
+	checkBoxDisplayCovers->setChecked(settingsPrivate->isCoversEnabled());
 	spinBoxCoverSize->blockSignals(true);
-	spinBoxCoverSize->setValue(settings->coverSize());
+	spinBoxCoverSize->setValue(settingsPrivate->coverSize());
 	spinBoxCoverSize->blockSignals(false);
 
 	// Colors
-	settings->colorsAlternateBG() ? enableAlternateBGRadioButton->setChecked(true) : disableAlternateBGRadioButton->setChecked(true);
-	settings->isCustomColors() ? enableCustomColorsRadioButton->setChecked(true) : disableCustomColorsRadioButton->setChecked(true);
-	this->toggleCustomColors(settings->isCustomColors());
+	settingsPrivate->colorsAlternateBG() ? enableAlternateBGRadioButton->setChecked(true) : disableAlternateBGRadioButton->setChecked(true);
+	settingsPrivate->isCustomColors() ? enableCustomColorsRadioButton->setChecked(true) : disableCustomColorsRadioButton->setChecked(true);
+	this->toggleCustomColors(settingsPrivate->isCustomColors());
 
 	// Covers
-	radioButtonEnableBigCover->setChecked(settings->isBigCoverEnabled());
-	spinBoxBigCoverOpacity->setValue(settings->bigCoverOpacity() * 100);
+	radioButtonEnableBigCover->setChecked(settingsPrivate->isBigCoverEnabled());
+	spinBoxBigCoverOpacity->setValue(settingsPrivate->bigCoverOpacity() * 100);
 
 	// Tabs
-	radioButtonTabsRect->setChecked(settings->isRectTabs());
-	overlapTabsSpinBox->setValue(settings->tabsOverlappingLength());
+	radioButtonTabsRect->setChecked(settingsPrivate->isRectTabs());
+	overlapTabsSpinBox->setValue(settingsPrivate->tabsOverlappingLength());
 
 	// Articles
 	radioButtonEnableArticles->blockSignals(true);
-	bool isFiltered = settings->isLibraryFilteredByArticles();
+	bool isFiltered = settingsPrivate->isLibraryFilteredByArticles();
 	radioButtonEnableArticles->setChecked(isFiltered);
 	std::list<QWidget*> enabled = { articlesLineEdit, labelReorderArtistsArticle, labelReorderArtistsArticleExample, radioButtonEnableReorderArtistsArticle, radioButtonDisableReorderArtistsArticle };
 	for (QWidget *w : enabled) {
 		w->setEnabled(isFiltered);
 	}
-	radioButtonEnableReorderArtistsArticle->setChecked(settings->isReorderArtistsArticle());
+	radioButtonEnableReorderArtistsArticle->setChecked(settingsPrivate->isReorderArtistsArticle());
 	radioButtonEnableArticles->blockSignals(false);
 
 	// Star delegate
-	if (settings->isStarDelegates()) {
+	if (settingsPrivate->isStarDelegates()) {
 		radioButtonEnableStarDelegate->setChecked(true);
 	} else {
 		radioButtonDisableStarDelegate->setChecked(true);
 	}
-	if (settings->isShowNeverScored()) {
+	if (settingsPrivate->isShowNeverScored()) {
 		radioButtonShowNeverScoredTracks->setChecked(true);
 	} else {
 		radioButtonHideNeverScoredTracks->setChecked(true);
@@ -174,11 +168,9 @@ void CustomizeThemeDialog::setupActions()
 					button->toggle();
 				}
 			}
-			// Restore default image
-			/// FIXME
-			/*for (MediaButton *b : _mainWindow->mediaButtons) {
-				b->setIcon(QIcon());
-			}*/
+			for (QPushButton *pushButton : customizeButtonsScrollArea->findChildren<QPushButton*>()) {
+				settingsPrivate->setCustomIcon(pushButton->objectName() + "Button", "");
+			}
 		}
 	});
 	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settingsPrivate, &SettingsPrivate::setButtonsSize);
@@ -212,14 +204,10 @@ void CustomizeThemeDialog::setupActions()
 	connect(fontComboBoxLibrary, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settingsPrivate->setFont(SettingsPrivate::FF_Library, font);
 		this->fade();
-		/// FIXME
-		//_mainWindow->library->viewport()->update();
 	});
 	connect(fontComboBoxMenus, &QFontComboBox::currentFontChanged, [=](const QFont &font) {
 		settingsPrivate->setFont(SettingsPrivate::FF_Menu, font);
 		this->fade();
-		/// FIXME
-		//_mainWindow->updateFonts(font);
 	});
 
 	// And fonts size
@@ -239,8 +227,6 @@ void CustomizeThemeDialog::setupActions()
 	});
 	connect(spinBoxMenus, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
 		settingsPrivate->setFontPointSize(SettingsPrivate::FF_Menu, i);
-		/// FIXME
-		//_mainWindow->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 		this->fade();
 	});
 
@@ -249,20 +235,13 @@ void CustomizeThemeDialog::setupActions()
 
 	// Colors
 	connect(enableCustomColorsRadioButton, &QCheckBox::toggled, this, &CustomizeThemeDialog::toggleCustomColors);
-	connect(enableAlternateBGRadioButton, &QRadioButton::toggled, this, &CustomizeThemeDialog::toggleAlternativeBackgroundColor);
+	connect(enableAlternateBGRadioButton, &QRadioButton::toggled, settingsPrivate, &SettingsPrivate::setColorsAlternateBG);
 	for (QToolButton *b : groupBoxCustomColors->findChildren<QToolButton*>()) {
 		connect(b, &QToolButton::clicked, this, &CustomizeThemeDialog::showColorDialog);
 	}
 
 	// Show covers in the Library
-	connect(checkBoxDisplayCovers, &QCheckBox::toggled, [=](bool b) {
-		settingsPrivate->setCovers(b);
-		/// FIXME
-		/*if (_mainWindow->library->model()) {
-			_mainWindow->library->model()->layoutChanged();
-			this->fade();
-		}*/
-	});
+	connect(checkBoxDisplayCovers, &QCheckBox::toggled, settingsPrivate, &SettingsPrivate::setCovers);
 
 	// Change cover size
 	QTimer *reloadCoverSizeTimer = new QTimer(this);
@@ -402,22 +381,11 @@ void CustomizeThemeDialog::openChooseIconDialog()
 	// Reset custom icon if path is empty (delete key in settings too)
 	settings->setCustomIcon(button->objectName() + "Button", path);
 
-	/// FIXME
-	/*for (MediaButton *b : _mainWindow->findChildren<MediaButton*>(button->objectName() + "Button")) {
-		if (b) {
-			b->setIcon(QIcon(path));
-		}
-	}*/
-
-	/// FIXME
-	//MediaButton *b = _mainWindow->findChild<MediaButton*>(button->objectName() + "Button");
 	if (path.isEmpty()) {
 		button->setIcon(QIcon(":/player/" + Settings::instance()->theme() + "/" + button->objectName()));
-		//b->setIcon(QIcon());
 	} else {
 		settings->setValue("customIcons/lastOpenPath", QFileInfo(path).absolutePath());
 		button->setIcon(QIcon(path));
-		//b->setIcon(QIcon(path));
 	}
 }
 
@@ -458,17 +426,6 @@ void CustomizeThemeDialog::showColorDialog()
 		colorDialog->exec();
 	}
 }
-
-void CustomizeThemeDialog::toggleAlternativeBackgroundColor(bool b)
-{
-	SettingsPrivate::instance()->setColorsAlternateBG(b);
-	/// FIXME
-	/*for (int i = 0; i < _mainWindow->tabPlaylists->count(); i++) {
-		Playlist *p = _mainWindow->tabPlaylists->playlist(i);
-		p->setAlternatingRowColors(b);
-	}*/
-}
-
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {

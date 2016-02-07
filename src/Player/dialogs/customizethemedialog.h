@@ -66,8 +66,6 @@ private slots:
 	 * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 	void showColorDialog();
 
-	void toggleAlternativeBackgroundColor(bool);
-
 	void toggleCustomColors(bool);
 };
 

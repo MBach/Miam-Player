@@ -84,7 +84,7 @@
       </widget>
      </item>
      <item>
-      <widget class="MediaButton" name="playButton">
+      <widget class="PlayButton" name="playButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -308,16 +308,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SearchBar</class>
-   <extends>QLineEdit</extends>
-   <header location="global">searchbar.h</header>
-  </customwidget>
-  <customwidget>
-   <class>TableView</class>
-   <extends>QTableView</extends>
-   <header>tableview.h</header>
-  </customwidget>
-  <customwidget>
    <class>MediaButton</class>
    <extends>QPushButton</extends>
    <header location="global">mediabuttons/mediabutton.h</header>
@@ -341,6 +331,21 @@
    <class>PlaybackModeButton</class>
    <extends>QPushButton</extends>
    <header location="global">mediabuttons/playbackmodebutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlayButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">mediabuttons/playbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SearchBar</class>
+   <extends>QLineEdit</extends>
+   <header location="global">searchbar.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TableView</class>
+   <extends>QTableView</extends>
+   <header>tableview.h</header>
   </customwidget>
  </customwidgets>
  <resources>

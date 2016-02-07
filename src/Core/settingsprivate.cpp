@@ -477,6 +477,7 @@ void SettingsPrivate::setCustomIcon(const QString &buttonName, const QString &ic
 	} else {
 		setValue("customIcons/" + buttonName, iconPath);
 	}
+	emit customIconForMediaButtonChanged(buttonName);
 }
 
 bool SettingsPrivate::setLanguage(const QString &lang)
@@ -597,6 +598,7 @@ void SettingsPrivate::setCopyTracksFromPlaylist(bool b)
 void SettingsPrivate::setCovers(bool b)
 {
 	setValue("covers", b);
+	emit aboutToUpdateViews();
 }
 
 void SettingsPrivate::setCoverSize(int s)

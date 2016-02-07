@@ -14,7 +14,7 @@ class MIAMCORE_LIBRARY MediaButton : public QPushButton
 {
 	Q_OBJECT
 public:
-	MediaButton(QWidget *parent = nullptr);
+	explicit MediaButton(QWidget *parent = nullptr);
 
 	virtual ~MediaButton();
 

@@ -10,12 +10,18 @@
 MediaButton::MediaButton(QWidget *parent)
 	: QPushButton(parent)
 {
-	this->setMaximumWidth(SettingsPrivate::instance()->buttonsSize() + 10);
+	auto settingsPrivate = SettingsPrivate::instance();
+	this->setMaximumWidth(settingsPrivate->buttonsSize() + 10);
 	auto settings = Settings::instance();
 	connect(settings, &Settings::themeHasChanged, this, &MediaButton::setIconFromTheme);
 	connect(settings, &Settings::mediaButtonVisibilityChanged, this, [=](const QString &buttonName, bool value) {
 		if (buttonName == objectName()) {
 			this->setVisible(value);
+		}
+	});
+	connect(settingsPrivate, &SettingsPrivate::customIconForMediaButtonChanged, this, [=](const QString &button) {
+		if (button == objectName()) {
+			this->setIconFromTheme(settings->theme());
 		}
 	});
 }
@@ -24,20 +30,6 @@ MediaButton::~MediaButton()
 {
 
 }
-
-/** Redefined to load custom icons saved in settings. */
-/*void MediaButton::setIcon(const QIcon &icon)
-{
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	if (settings->isButtonThemeCustomized() && settings->hasCustomIcon(objectName())) {
-		QPushButton::setIcon(QIcon(settings->customIcon(objectName())));
-	} else if (icon.isNull()){
-		settings->setCustomIcon(objectName(), QString());
-		setIconFromTheme(Settings::instance()->theme());
-	} else {
-		QPushButton::setIcon(icon);
-	}
-}*/
 
 void MediaButton::paintEvent(QPaintEvent *)
 {
@@ -63,8 +55,6 @@ void MediaButton::setIconFromTheme(const QString &theme)
 		QIcon icon(iconFile);
 		if (!icon.isNull()) {
 			QPushButton::setIcon(QIcon(iconFile));
-		} else {
-			qDebug() << Q_FUNC_INFO << objectName();
 		}
 	}
 }

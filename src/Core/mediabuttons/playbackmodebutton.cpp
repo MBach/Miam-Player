@@ -5,13 +5,15 @@
 
 #include <QContextMenuEvent>
 
-#include <QtDebug>
-
 PlaybackModeButton::PlaybackModeButton(QWidget *parent)
 	: MediaButton(parent)
 	, _mode(QMediaPlaylist::Sequential)
 	, _toggleShuffleOnly(false)
-{}
+{
+	connect(SettingsPrivate::instance(), &SettingsPrivate::customIconForMediaButtonChanged, this, [=](const QString &) {
+		this->setIconFromTheme(Settings::instance()->theme());
+	});
+}
 
 void PlaybackModeButton::setToggleShuffleOnly(bool b)
 {
@@ -88,12 +90,19 @@ void PlaybackModeButton::setIconFromTheme(const QString &theme)
 		break;
 	}
 
-	// The objectName in the UI file MUST match the alias in the QRC file!
-	QString iconFile = ":/player/" + theme.toLower() + "/" + currentMode;
-	if (!QFile::exists(iconFile)) {
-		iconFile = ":/player/gnome/" + currentMode;
+	auto settings = SettingsPrivate::instance();
+	QString iconPath;
+	if (settings->hasCustomIcon(currentMode + "Button")) {
+		iconPath = settings->customIcon(currentMode + "Button");
+	} else {
+		// The objectName in the UI file MUST match the alias in the QRC file!
+		iconPath = ":/player/" + theme.toLower() + "/" + currentMode;
+		if (!QFile::exists(iconPath)) {
+			iconPath = ":/player/gnome/" + currentMode;
+		}
 	}
-	QPushButton::setIcon(QIcon(iconFile));
+
+	QPushButton::setIcon(QIcon(iconPath));
 }
 
 void PlaybackModeButton::updateMode(QMediaPlaylist::PlaybackMode mode)

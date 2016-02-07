@@ -24,6 +24,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	, _currentTrack(nullptr)
 {
 	setupUi(this);
+	playButton->setMediaPlayer(_mediaPlayer);
 	stopButton->setMediaPlayer(_mediaPlayer);
 	seekSlider->setMediaPlayer(_mediaPlayer);
 	playbackModeButton->setToggleShuffleOnly(true);
@@ -69,19 +70,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(skipForwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipForward);
 	connect(playbackModeButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
 
-	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State state) {
-		switch (state) {
-		case QMediaPlayer::StoppedState:
-			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/play"));
-			seekSlider->setValue(0);
-			break;
-		case QMediaPlayer::PlayingState:
-			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/pause"));
-			break;
-		case QMediaPlayer::PausedState:
-			playButton->setIcon(QIcon(":/player/" + settings->theme() + "/play"));
-			break;
-		}
+	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State) {
 		seekSlider->update();
 	});
 

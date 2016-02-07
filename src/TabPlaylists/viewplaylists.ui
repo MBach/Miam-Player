@@ -364,7 +364,7 @@
           </widget>
          </item>
          <item>
-          <widget class="MediaButton" name="playButton">
+          <widget class="PlayButton" name="playButton">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -607,10 +607,15 @@
    <header location="global">styling/paintablewidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>PlayButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">mediabuttons/playbutton.h</header>
+  </customwidget>
  </customwidgets>
  <resources>
-  <include location="../Player/player.qrc"/>
   <include location="../Core/core.qrc"/>
+  <include location="../Player/player.qrc"/>
  </resources>
  <connections/>
 </ui>
