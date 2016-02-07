@@ -17,37 +17,13 @@ MiamSortFilterProxyModel::MiamSortFilterProxyModel(QObject *parent)
 	this->setSortLocaleAware(true);
 }
 
+/** Single entry point for filtering library, and dispatch to the chosen operation defined in settings. */
 void MiamSortFilterProxyModel::findMusic(const QString &text)
 {
 	if (SettingsPrivate::instance()->librarySearchMode() == SettingsPrivate::LSM_Filter) {
 		this->filterLibrary(text);
 	} else {
 		this->highlightMatchingText(text);
-	}
-}
-
-void MiamSortFilterProxyModel::filterLibrary(const QString &filter)
-{
-	if (filter.isEmpty()) {
-		this->setFilterRole(Qt::DisplayRole);
-		this->setFilterRegExp(QRegExp());
-		this->sort(this->defaultSortColumn(), this->sortOrder());
-	} else {
-		bool needToSortAgain = false;
-		if (this->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
-			needToSortAgain = true;
-		}
-		if (filter.contains(QRegExp("^(\\*){1,5}$"))) {
-			// Convert stars into [1-5], ..., [5-5] regular expression
-			this->setFilterRole(Miam::DF_Rating);
-			this->setFilterRegExp(QRegExp("[" + QString::number(filter.size()) + "-5]", Qt::CaseInsensitive, QRegExp::RegExp));
-		} else {
-			this->setFilterRole(Qt::DisplayRole);
-			this->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
-		}
-		if (needToSortAgain) {
-			this->sort(this->defaultSortColumn(), this->sortOrder());
-		}
 	}
 }
 
@@ -107,4 +83,30 @@ void MiamSortFilterProxyModel::highlightMatchingText(const QString &text)
 		}
 	}
 	emit aboutToHighlightLetters(lettersToHighlight);
+}
+
+/** Reduce the size of the library when the user is typing text. */
+void MiamSortFilterProxyModel::filterLibrary(const QString &filter)
+{
+	if (filter.isEmpty()) {
+		this->setFilterRole(Qt::DisplayRole);
+		this->setFilterRegExp(QRegExp());
+		this->sort(this->defaultSortColumn(), this->sortOrder());
+	} else {
+		bool needToSortAgain = false;
+		if (this->filterRegExp().pattern().size() < filter.size() && filter.size() > 1) {
+			needToSortAgain = true;
+		}
+		if (filter.contains(QRegExp("^(\\*){1,5}$"))) {
+			// Convert stars into [1-5], ..., [5-5] regular expression
+			this->setFilterRole(Miam::DF_Rating);
+			this->setFilterRegExp(QRegExp("[" + QString::number(filter.size()) + "-5]", Qt::CaseInsensitive, QRegExp::RegExp));
+		} else {
+			this->setFilterRole(Qt::DisplayRole);
+			this->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));
+		}
+		if (needToSortAgain) {
+			this->sort(this->defaultSortColumn(), this->sortOrder());
+		}
+	}
 }

@@ -288,6 +288,11 @@ void Playlist::dropEvent(QDropEvent *event)
 	if (Playlist *target = qobject_cast<Playlist*>(source)) {
 		// Internal drag and drop (moving tracks)
 		if (target && target == this) {
+			int c = -1;
+			if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
+				c = _mediaPlayer->playlist()->currentIndex();
+				qDebug() << Q_FUNC_INFO << "we should also change highlighted track" << c << row;
+			}
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			// Highlight rows that were just moved
 			for (QStandardItem *item : rowsToHighlight) {
@@ -296,6 +301,13 @@ void Playlist::dropEvent(QDropEvent *event)
 					selectionModel()->select(index, QItemSelectionModel::Select);
 				}
 			}
+			/*if (c >= 0) {
+				//_playlistModel->mediaPlaylist()->removeMedia(0, 4);
+
+				for (int i = 0; i < _playlistModel->mediaPlaylist()->mediaCount(); i++) {
+
+				}
+			}*/
 		} else if (target && target != this) {
 			// If the drop occurs at the end of the playlist, indexAt is invalid
 			if (row == -1) {
@@ -476,7 +488,15 @@ void Playlist::paintEvent(QPaintEvent *event)
 		}
 		if (_isDragging) {
 			QPoint cursor = viewport()->mapFromGlobal(QCursor::pos());
-			QRect trackRect = visualRect(indexAt(cursor));
+			QRect trackRect;
+
+			// If one is about to drop below the last track in the playlist (in an empty area), take the last row
+			QModelIndex target = indexAt(cursor);
+			if (target.row() == -1) {
+				trackRect = visualRect(_playlistModel->index(_playlistModel->rowCount() - 1, 0));
+			} else {
+				trackRect = visualRect(target);
+			}
 			p.setPen(QApplication::palette().highlight().color());
 			if (cursor.y() >= trackRect.y() + trackRect.height() / 2) {
 				p.drawLine(viewport()->rect().left(), trackRect.y() + trackRect.height(),

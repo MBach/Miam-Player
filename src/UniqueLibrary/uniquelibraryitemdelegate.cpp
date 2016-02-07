@@ -1,6 +1,7 @@
 #include "uniquelibraryitemdelegate.h"
 
 #include <settingsprivate.h>
+#include <discitem.h>
 #include <QApplication>
 #include <QDateTime>
 #include <QImageReader>
@@ -47,7 +48,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	case Miam::IT_Artist:
 		o.rect.setX(0);
 		this->paintRect(painter, o);
-		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
+		this->drawArtist(painter, o, item);
 		break;
 	case Miam::IT_Album:
 		o.rect.adjust(20, 0, 0, 0);
@@ -55,7 +56,9 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
 		break;
 	case Miam::IT_Disc:
-		//this->drawDisc(painter, o);
+		o.rect.adjust(30, 0, 0, 0);
+		this->paintRect(painter, o);
+		this->drawDisc(painter, o, item);
 		break;
 	case Miam::IT_Separator:
 		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
@@ -71,7 +74,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	}
 }
 
-void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const
+void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	QPoint c = option.rect.center();
 
@@ -99,7 +102,7 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
 }
 
-void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const
+void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	painter->drawText(option.rect, Qt::AlignVCenter, item->text());
 	QPoint c = option.rect.center();
@@ -123,14 +126,25 @@ void UniqueLibraryItemDelegate::drawCover(QPainter *painter, const QStyleOptionV
 		//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 		imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
 		imageReader.setScaledSize(QSize(_coverSize, _coverSize));
-		//item->setIcon(QPixmap::fromImage(imageReader.read()));
 	}
 
 	QRect r(option.rect.x(), option.rect.y(), _coverSize, _coverSize);
 	painter->drawImage(r, imageReader.read());
 }
 
-void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &option, TrackItem *track) const
+void UniqueLibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
+{
+	QPoint c = option.rect.center();
+
+	QString text = tr("Disc");
+	text.append(" ").append(item->text());
+	painter->drawText(option.rect, Qt::AlignVCenter, text);
+
+	int textWidth = painter->fontMetrics().width(text);
+	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
+}
+
+void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &option, QStandardItem *track) const
 {
 	p->save();
 	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();

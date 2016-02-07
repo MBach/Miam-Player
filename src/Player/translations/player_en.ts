@@ -972,7 +972,7 @@
     </message>
     <message>
         <source>&amp;Repeat</source>
-        <translation>&amp;Repeat</translation>
+        <translation type="vanished">&amp;Repeat</translation>
     </message>
     <message>
         <source>S&amp;huffle</source>
@@ -1012,7 +1012,7 @@
     </message>
     <message>
         <source>Current item in &amp;loop</source>
-        <translation>Current item in &amp;loop</translation>
+        <translation type="vanished">Current item in &amp;loop</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
@@ -1133,6 +1133,14 @@
     <message>
         <source>Hide menu bar</source>
         <translation>Hide menu bar</translation>
+    </message>
+    <message>
+        <source>&amp;Loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item in l&amp;oop</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

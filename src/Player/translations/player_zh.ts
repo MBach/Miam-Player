@@ -972,7 +972,7 @@
     </message>
     <message>
         <source>&amp;Repeat</source>
-        <translation>&amp;R重复</translation>
+        <translation type="vanished">&amp;R重复</translation>
     </message>
     <message>
         <source>S&amp;huffle</source>
@@ -1012,7 +1012,7 @@
     </message>
     <message>
         <source>Current item in &amp;loop</source>
-        <translation>当前 &amp;l循环</translation>
+        <translation type="vanished">当前 &amp;l循环</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
@@ -1130,6 +1130,14 @@
     <message>
         <source>Hide menu bar</source>
         <translation>隐藏菜单栏</translation>
+    </message>
+    <message>
+        <source>&amp;Loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item in l&amp;oop</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

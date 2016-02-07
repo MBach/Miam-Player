@@ -24,11 +24,6 @@ QString AlbumItem::coverPath() const
 	return data(Miam::DF_CoverPath).toString();
 }
 
-QString AlbumItem::iconPath() const
-{
-	return data(Miam::DF_IconPath).toString();
-}
-
 int AlbumItem::type() const
 {
 	return Miam::IT_Album;

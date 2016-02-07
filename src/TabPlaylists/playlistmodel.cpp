@@ -170,15 +170,19 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	std::sort(selectedIndexes.begin(), selectedIndexes.end(), [](const QModelIndex &a, const QModelIndex &b) { return b < a; });
 	QList<QList<QStandardItem*>> removedRows;
 	_mediaPlaylist->blockSignals(true);
-
 	int currentPlayingTrack = _mediaPlaylist->currentIndex();
+	qDebug() << "currentPlayingTrack" << currentPlayingTrack;
+
+
 	for (QModelIndex selectedIndex : selectedIndexes) {
 		int rowNumber = selectedIndex.row();
 		QList<QStandardItem*> row = this->takeRow(rowNumber);
 		rowsToHiglight << row.at(0);
 		removedRows.append(row);
 		mediasToMove.prepend(_mediaPlaylist->media(rowNumber));
+		qDebug() << "removing from playlist" << rowNumber << row.at(1)->text();
 		_mediaPlaylist->removeMedia(rowNumber);
+		currentPlayingTrack--;
 	}
 
 	// Dest equals -1 when rows are dropped at the bottom of the playlist
@@ -192,25 +196,36 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 
 	// Finally, reorder the inner QMediaPlaylist
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
+	currentPlayingTrack += mediasToMove.size();
 
-	int offset = 0;
-	for (QModelIndex selectedIndex : selectedIndexes) {
-		int rowNumber = selectedIndex.row();
-		if (rowNumber > currentPlayingTrack && currentPlayingTrack > insertPoint) {
-			offset++;
-		} else if (rowNumber < currentPlayingTrack && currentPlayingTrack < insertPoint) {
-			offset--;
-		} else if (currentPlayingTrack == rowNumber) {
-			offset = -rowNumber;
-		}
-	}
-	if (offset < 0) {
+
+	//_mediaPlaylist->removeMedia(0, 4);
+
+	//_mediaPlaylist->removeMedia(0, 4);
+
+
+//	int offset = 0;
+//	for (QModelIndex selectedIndex : selectedIndexes) {
+//		int rowNumber = selectedIndex.row();
+//		if (rowNumber > currentPlayingTrack && currentPlayingTrack > insertPoint) {
+//			offset++;
+//		} else if (rowNumber < currentPlayingTrack && currentPlayingTrack < insertPoint) {
+//			offset--;
+//		} else if (currentPlayingTrack == rowNumber) {
+//			offset = -rowNumber;
+//		}
+//	}
+	//if (offset < 0) {
 		//_mediaPlaylist->setCurrentIndex(-offset);
-	} else {
-		_mediaPlaylist->setCurrentIndex(currentPlayingTrack + offset);
-	}
+	//} else {
+	//	_mediaPlaylist->setCurrentIndex(currentPlayingTrack + offset);
+	//}
 
+	//_mediaPlaylist->setCurrentIndex(currentPlayingTrack);
 	_mediaPlaylist->blockSignals(false);
+
+	qDebug() << "currentPlayingTrack" << _mediaPlaylist->currentIndex() << currentPlayingTrack;
+
 
 	return rowsToHiglight;
 }

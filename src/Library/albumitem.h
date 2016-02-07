@@ -20,8 +20,6 @@ public:
 
 	QString coverPath() const;
 
-	QString iconPath() const;
-
 	virtual int type() const override;
 };
 

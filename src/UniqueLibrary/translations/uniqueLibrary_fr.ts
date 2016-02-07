@@ -25,6 +25,10 @@
         <source>(empty)</source>
         <translation>(vide)</translation>
     </message>
+    <message>
+        <source>Disc</source>
+        <translation>CD</translation>
+    </message>
 </context>
 <context>
     <name>uniqueLibrary</name>

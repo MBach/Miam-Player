@@ -38,15 +38,15 @@ public:
 
 protected:
 	/** Albums have covers usually. */
-	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const override;
+	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
 
-	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
+	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
 
-	void drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const;
+	virtual void drawDisc(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
 
-	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
+	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const override;
 
-	void paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &option, const TrackItem *track) const;
+	void paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &option, const QStandardItem *track) const;
 
 	/** Check if color needs to be inverted then paint text. */
 	void paintText(QPainter *painter, const QStyleOptionViewItem &option, const QRect &rectText, const QString &text, const QStandardItem *item) const;

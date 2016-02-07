@@ -26,13 +26,15 @@ public:
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 protected:
-	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const override;
+	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
 
-	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const override;
+	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
 
 	void drawCover(QPainter *painter, const QStyleOptionViewItem &option, const QString &coverPath) const;
 
-	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const override;
+	virtual void drawDisc(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
+
+	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const override;
 };
 
 #endif // UNIQUELIBRARYITEMDELEGATE_H

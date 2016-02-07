@@ -39,13 +39,15 @@ public:
 	explicit MiamItemDelegate(QSortFilterProxyModel *proxy);
 
 protected:
-	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const = 0;
+	virtual void drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const = 0;
 
-	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const = 0;
+	virtual void drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const = 0;
 
-	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const;
+	virtual void drawDisc(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const = 0;
 
-	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const;
+	void drawLetter(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const;
+
+	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const;
 
 	void paintRect(QPainter *painter, const QStyleOptionViewItem &option) const;
 

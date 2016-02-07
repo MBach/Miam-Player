@@ -6,6 +6,12 @@
 
 #include <QStandardItemModel>
 
+/**
+ * \brief		The UniqueLibraryFilterProxyModel class
+ * \details
+ * \author      Matthieu Bachelier
+ * \copyright   GNU General Public License v3
+ */
 class MIAMUNIQUELIBRARY_LIBRARY UniqueLibraryFilterProxyModel : public MiamSortFilterProxyModel
 {
 	Q_OBJECT
@@ -20,6 +26,7 @@ public:
 	/** Redefined from QSortFilterProxyModel. */
 	void setSourceModel(QAbstractItemModel *sourceModel) override;
 
+protected:
 	/** Redefined from MiamSortFilterProxyModel. */
 	virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 };

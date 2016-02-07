@@ -159,8 +159,6 @@ QString PlaylistDialog::convertNameToValidFileName(const QString &name)
 /** Redefined: clean preview area, populate once again lists. */
 int PlaylistDialog::exec()
 {
-	qDebug() << Q_FUNC_INFO;
-
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->value("PlaylistDialogGeometry").isValid()) {
 		this->restoreGeometry(settings->value("PlaylistDialogGeometry").toByteArray());

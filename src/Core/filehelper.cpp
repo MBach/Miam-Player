@@ -689,7 +689,7 @@ QString FileHelper::convertKeyToID3v2Key(QString key) const
 	/// TODO other relevant keys
 	if (key.compare("ARTISTALBUM") == 0) {
 		return "TPE2";
-	} else if (key.compare("DISC") == 0) {
+	} else if ((key.compare("DISC") == 0) || (key.compare("DISCNUMBER") == 0)) {
 		return "TPOS";
 	} else {
 		return "";
@@ -701,9 +701,18 @@ QString FileHelper::extractFlacFeature(const QString &featureToExtract) const
 	QString feature;
 	if (TagLib::FLAC::File *flacFile = static_cast<TagLib::FLAC::File*>(_file)) {
 		if (flacFile->ID3v2Tag()) {
+
 			QString key = this->convertKeyToID3v2Key(featureToExtract);
 			TagLib::ID3v2::FrameList l = flacFile->ID3v2Tag()->frameListMap()[key.toStdString().data()];
-			if (!l.isEmpty()) {
+			// Fallback to the generic map in case we didn't find the matching key
+			if (l.isEmpty()) {
+
+				TagLib::StringList list = flacFile->properties()[featureToExtract.toStdString()];
+				if (!list.isEmpty()) {
+					feature = list.front().toCString(true);
+				}
+
+			} else {
 				feature = QString(l.front()->toString().toCString(true));
 			}
 		} else if (flacFile->ID3v1Tag()) {

@@ -35,22 +35,22 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="393"/>
+        <location filename="../libraryitemmodel.cpp" line="374"/>
         <source>  Artists \ Albums</source>
         <translation>  Исполнители \ Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="396"/>
+        <location filename="../libraryitemmodel.cpp" line="377"/>
         <source>  Albums</source>
         <translation>  Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="399"/>
+        <location filename="../libraryitemmodel.cpp" line="380"/>
         <source>  Artists – Albums</source>
         <translation>  Исполнители – Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="402"/>
+        <location filename="../libraryitemmodel.cpp" line="383"/>
         <source>  Years</source>
         <translation>  Годы</translation>
     </message>
@@ -145,7 +145,7 @@
 <context>
     <name>MiamItemModel</name>
     <message>
-        <location filename="../miamitemmodel.cpp" line="69"/>
+        <location filename="../miamitemmodel.cpp" line="67"/>
         <source>Various</source>
         <translation>Разные</translation>
     </message>

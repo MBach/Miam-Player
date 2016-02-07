@@ -18,7 +18,7 @@ MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
 	_timer->setInterval(10);
 }
 
-void MiamItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, SeparatorItem *item) const
+void MiamItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	// One cannot interact with an alphabetical separator
 	option.state = QStyle::State_None;
@@ -31,7 +31,7 @@ void MiamItemDelegate::drawLetter(QPainter *painter, QStyleOptionViewItem &optio
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
-void MiamItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const
+void MiamItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const
 {
 	int trackNumber = track->data(Miam::DF_TrackNumber).toInt();
 	if (trackNumber > 0) {

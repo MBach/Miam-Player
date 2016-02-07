@@ -79,23 +79,23 @@
 <context>
     <name>VolumeSlider</name>
     <message>
-        <location filename="../widgets/volumeslider.cpp" line="83"/>
+        <location filename="../widgets/volumeslider.cpp" line="91"/>
         <source>Bars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/volumeslider.cpp" line="84"/>
+        <location filename="../widgets/volumeslider.cpp" line="92"/>
         <source>Line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/volumeslider.cpp" line="85"/>
+        <location filename="../widgets/volumeslider.cpp" line="93"/>
         <source>Slider</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/volumeslider.cpp" line="93"/>
-        <location filename="../widgets/volumeslider.cpp" line="94"/>
+        <location filename="../widgets/volumeslider.cpp" line="101"/>
+        <location filename="../widgets/volumeslider.cpp" line="102"/>
         <source>Not yet implemented</source>
         <translation type="unfinished"></translation>
     </message>

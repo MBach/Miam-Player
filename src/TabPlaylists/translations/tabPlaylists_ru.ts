@@ -110,7 +110,7 @@
         <translation>встроенный</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="453"/>
+        <location filename="../playlist.cpp" line="466"/>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
         <translation>Этот список воспроизведения пуст.
@@ -178,28 +178,28 @@ Select a playlist to display the first 30 tracks.</source>
 Выберите список воспроизведения, чтобы отобразить первые 30 треков.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="192"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="190"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="238"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
         <source>Export playlist</source>
         <translation>Экспортировать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="238"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
         <source>Playlist (*.m3u8)</source>
         <translation>Список воспроизведения (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="290"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="340"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="288"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="338"/>
         <source>And more tracks...</source>
         <translation>И больше треков...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="385"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="383"/>
         <source>This playlist has changed</source>
         <translation>Этот список воспроизведения изменился</translation>
     </message>
@@ -251,7 +251,7 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Точно такой же список воспроизведения уже есть в диспетчере списков воспроизведения (называется &apos;%1&apos;), поэтому невозможно добавить его повторно.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="191"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="189"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>Вы собираетесь удалить %n список воспроизведения. Вы действительно хотите продолжить?</numerusform>
@@ -282,8 +282,8 @@ Select a playlist to display the first 30 tracks.</source>
     <name>SearchDialog</name>
     <message>
         <location filename="../searchdialog.ui" line="96"/>
-        <location filename="../dialogs/searchdialog.cpp" line="178"/>
-        <location filename="../dialogs/searchdialog.cpp" line="334"/>
+        <location filename="../dialogs/searchdialog.cpp" line="183"/>
+        <location filename="../dialogs/searchdialog.cpp" line="339"/>
         <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Найти больше результатов...&lt;/a&gt;</translation>
     </message>
@@ -298,7 +298,7 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../dialogs/searchdialog.cpp" line="324"/>
+        <location filename="../dialogs/searchdialog.cpp" line="329"/>
         <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Посмотреть меньше результатов&lt;/a&gt;</translation>
     </message>
@@ -306,38 +306,38 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>TabPlaylist</name>
     <message>
-        <location filename="../tabplaylist.cpp" line="71"/>
+        <location filename="../tabplaylist.cpp" line="70"/>
         <source>Rename playlist</source>
         <translation>Переименовать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="72"/>
+        <location filename="../tabplaylist.cpp" line="71"/>
         <source>Delete playlist...</source>
         <translation>Удалить список воспроизведения...</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="73"/>
+        <location filename="../tabplaylist.cpp" line="72"/>
         <source>Load background...</source>
         <translation>Загрузить фон...</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="74"/>
+        <location filename="../tabplaylist.cpp" line="73"/>
         <source>Clear background</source>
         <translation>Очистить фон</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="99"/>
+        <location filename="../tabplaylist.cpp" line="98"/>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
         <translation>Вы собираетесь удалить «%1». Вы действительно хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="100"/>
+        <location filename="../tabplaylist.cpp" line="99"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="262"/>
-        <location filename="../tabplaylist.cpp" line="454"/>
+        <location filename="../tabplaylist.cpp" line="256"/>
+        <location filename="../tabplaylist.cpp" line="447"/>
         <source>Playlist %1</source>
         <translation>Список воспроизведения %1</translation>
     </message>
@@ -365,32 +365,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="198"/>
+        <location filename="../viewplaylists.cpp" line="205"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="260"/>
+        <location filename="../viewplaylists.cpp" line="269"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="342"/>
+        <location filename="../viewplaylists.cpp" line="351"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="354"/>
+        <location filename="../viewplaylists.cpp" line="363"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="356"/>
+        <location filename="../viewplaylists.cpp" line="365"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="381"/>
+        <location filename="../viewplaylists.cpp" line="390"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>

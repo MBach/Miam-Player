@@ -53,28 +53,28 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 	switch (item->type()) {
 	case Miam::IT_Album:
 		this->paintRect(painter, o);
-		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
+		this->drawAlbum(painter, o, item);
 		break;
 	case Miam::IT_Artist:
 		this->paintRect(painter, o);
-		this->drawArtist(painter, o, static_cast<ArtistItem*>(item));
+		this->drawArtist(painter, o, item);
 		break;
 	case Miam::IT_Disc:
 		this->paintRect(painter, o);
-		this->drawDisc(painter, o, static_cast<DiscItem*>(item));
+		this->drawDisc(painter, o, item);
 		break;
 	case Miam::IT_Separator:
-		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
+		this->drawLetter(painter, o, item);
 		break;
 	case Miam::IT_Track: {
 		SettingsPrivate::LibrarySearchMode lsm = settings->librarySearchMode();
 		if (settings->isBigCoverEnabled() && ((_proxy->filterRegExp().isEmpty() && lsm == SettingsPrivate::LSM_Filter) ||
 				lsm == SettingsPrivate::LSM_HighlightOnly)) {
-			this->paintCoverOnTrack(painter, o, static_cast<TrackItem*>(item));
+			this->paintCoverOnTrack(painter, o, item);
 		} else {
 			this->paintRect(painter, o);
 		}
-		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
+		this->drawTrack(painter, o, item);
 		break;
 	}
 	default:
@@ -98,7 +98,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 }
 
 /** Albums have covers usually. */
-void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, AlbumItem *item) const
+void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
@@ -178,7 +178,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 							 (option.rect.height() - iconSize)/ 2 + option.rect.y() + 2,
 							 iconSize,
 							 iconSize);
-		QPixmap iconRemote(item->iconPath());
+		QPixmap iconRemote(item->data(Miam::DF_IconPath).toString());
 		painter->save();
 		painter->setOpacity(0.5);
 		painter->drawPixmap(iconRemoteRect, iconRemote);
@@ -207,7 +207,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	this->paintText(painter, option, rectText, s, item);
 }
 
-void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, ArtistItem *item) const
+void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	auto settings = SettingsPrivate::instance();
 	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
@@ -231,7 +231,7 @@ void LibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &op
 	this->paintText(painter, option, rectText, s, item);
 }
 
-void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, DiscItem *item) const
+void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
 	option.state = QStyle::State_None;
 	QPointF p1 = option.rect.bottomLeft(), p2 = option.rect.bottomRight();
@@ -242,7 +242,7 @@ void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &opti
 	QStyledItemDelegate::paint(painter, option, item->index());
 }
 
-void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, TrackItem *track) const
+void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const
 {
 	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
 	/// QString title = settings->libraryItemTitle();
@@ -265,7 +265,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 	MiamItemDelegate::drawTrack(painter, option, track);
 }
 
-void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const TrackItem *track) const
+void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const QStandardItem *track) const
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	const QImage *image = _libraryTreeView->expandedCover(static_cast<AlbumItem*>(track->parent()));
@@ -354,7 +354,7 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 		QFontMetrics fmf(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
 		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
 	} else {
-		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {		
+		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
 			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {
 				p->setPen(opt.palette.text().color());
 			} else {

@@ -1,7 +1,6 @@
 #include "libraryfilterproxymodel.h"
 
 #include <settingsprivate.h>
-#include <model/sqldatabase.h>
 
 #include <QtDebug>
 
@@ -15,7 +14,7 @@ QVariant LibraryFilterProxyModel::data(const QModelIndex &index, int role) const
 	if (role == Qt::FontRole) {
 		return SettingsPrivate::instance()->font(SettingsPrivate::FF_Library);
 	} else {
-		return QSortFilterProxyModel::data(index, role);
+		return MiamSortFilterProxyModel::data(index, role);
 	}
 }
 
@@ -64,7 +63,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 	int rType = right->type();
 	switch (lType) {
 	case Miam::IT_Artist:
-		result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+		result = MiamSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		break;
 
 	case Miam::IT_Album:
@@ -74,7 +73,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 			if (SettingsPrivate::instance()->insertPolicy() == SettingsPrivate::IP_Artists && lYear >= 0 && rYear >= 0) {
 				if (sortOrder() == Qt::AscendingOrder) {
 					if (lYear == rYear) {
-						result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+						result = MiamSortFilterProxyModel::lessThan(idxLeft, idxRight);
 					} else {
 						result = lYear < rYear;
 					}
@@ -82,10 +81,10 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 					result = lYear > rYear;
 				}
 			} else {
-				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+				result = MiamSortFilterProxyModel::lessThan(idxLeft, idxRight);
 			}
 		} else {
-			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+			result = MiamSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 
@@ -116,7 +115,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 				// Again a very special case to keep the separator for "Various" on top of siblings
 				result = "9" < right->data(Miam::DF_NormalizedString).toString().left(1);
 			} else {
-				result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+				result = MiamSortFilterProxyModel::lessThan(idxLeft, idxRight);
 			}
 		}
 		break;
@@ -148,7 +147,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 			result = (dLeft < dRight && sortOrder() == Qt::AscendingOrder) ||
 					  (dRight < dLeft && sortOrder() == Qt::DescendingOrder);
 		} else {
-			result = QSortFilterProxyModel::lessThan(idxLeft, idxRight);
+			result = MiamSortFilterProxyModel::lessThan(idxLeft, idxRight);
 		}
 		break;
 	}
@@ -168,7 +167,7 @@ bool LibraryFilterProxyModel::lessThan(const QModelIndex &idxLeft, const QModelI
 
 bool LibraryFilterProxyModel::filterAcceptsRowItself(int sourceRow, const QModelIndex &sourceParent) const
 {
-	return QSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
+	return MiamSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent);
 }
 
 bool LibraryFilterProxyModel::hasAcceptedChildren(int sourceRow, const QModelIndex &sourceParent) const

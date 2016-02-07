@@ -4,7 +4,7 @@
 <context>
     <name>TableView</name>
     <message>
-        <location filename="../tableview.cpp" line="103"/>
+        <location filename="../tableview.cpp" line="112"/>
         <source>No matching results were found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12,7 +12,7 @@
 <context>
     <name>UniqueLibrary</name>
     <message>
-        <location filename="../uniquelibrary.cpp" line="175"/>
+        <location filename="../uniquelibrary.cpp" line="178"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20,12 +20,17 @@
 <context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
-        <location filename="../uniquelibraryitemdelegate.cpp" line="84"/>
+        <location filename="../uniquelibraryitemdelegate.cpp" line="87"/>
         <source>(no title)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../uniquelibraryitemdelegate.cpp" line="172"/>
+        <location filename="../uniquelibraryitemdelegate.cpp" line="139"/>
+        <source>Disc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../uniquelibraryitemdelegate.cpp" line="186"/>
         <source>(empty)</source>
         <translation type="unfinished"></translation>
     </message>

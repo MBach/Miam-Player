@@ -8,7 +8,10 @@
 class SeparatorItem;
 
 /**
- * \brief		The MiamSortFilterProxyModel class
+ * \brief		The MiamSortFilterProxyModel class provides support for the MiamItemModel class.
+ * \details		This class has 2 ways to filter music in a library when one is typing a string.
+ *				-# By excluding all terms which are not matching the filter
+ *				-# By keeping everything visible to the user, and highlighting (in bold) the terms that are matching input
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -20,15 +23,19 @@ protected:
 	QMultiHash<SeparatorItem*, QModelIndex> _topLevelItems;
 
 public:
-	MiamSortFilterProxyModel(QObject *parent = nullptr);
+	explicit MiamSortFilterProxyModel(QObject *parent = nullptr);
+
+	virtual ~MiamSortFilterProxyModel() {}
 
 	inline void setTopLevelItems(const QMultiHash<SeparatorItem*, QModelIndex> &topLevelItems) { _topLevelItems = topLevelItems; }
 
+	/** Single entry point for filtering library, and dispatch to the chosen operation defined in settings. */
 	void findMusic(const QString &text);
 
 	/** Highlight items in the Tree when one has activated this option in settings. */
 	void highlightMatchingText(const QString &text);
 
+	/** For classes that are subclassing this filter, allow to change sort column (for models based on a Table for example). */
 	virtual int defaultSortColumn() const { return 0; }
 
 private:

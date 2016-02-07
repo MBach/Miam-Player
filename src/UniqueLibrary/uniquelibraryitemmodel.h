@@ -29,11 +29,13 @@ public:
 	virtual UniqueLibraryFilterProxyModel* proxy() const override;
 
 public slots:
-	void insertTracks(const QList<TrackDAO> nodes);
+	void insertAlbums(const QList<AlbumDAO> &nodes);
 
-	void insertAlbums(const QList<AlbumDAO> nodes);
+	void insertArtists(const QList<ArtistDAO> &nodes);
 
-	void insertArtists(const QList<ArtistDAO> nodes);
+	void insertDiscs(const QList<AlbumDAO> &nodes);
+
+	void insertTracks(const QList<TrackDAO> &nodes);
 
 	virtual void load() override;
 };

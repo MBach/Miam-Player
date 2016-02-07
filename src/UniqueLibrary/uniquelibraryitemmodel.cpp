@@ -3,6 +3,7 @@
 #include <model/sqldatabase.h>
 #include <albumitem.h>
 #include <artistitem.h>
+#include <discitem.h>
 #include <trackitem.h>
 #include "coveritem.h"
 
@@ -42,17 +43,7 @@ UniqueLibraryFilterProxyModel *UniqueLibraryItemModel::proxy() const
 	return _proxy;
 }
 
-void UniqueLibraryItemModel::insertTracks(const QList<TrackDAO> nodes)
-{
-	for (TrackDAO track : nodes) {
-		TrackItem *item = new TrackItem(&track);
-		appendRow({ nullptr, item });
-	}
-	this->proxy()->sort(this->proxy()->defaultSortColumn());
-	this->proxy()->setDynamicSortFilter(true);
-}
-
-void UniqueLibraryItemModel::insertAlbums(const QList<AlbumDAO> nodes)
+void UniqueLibraryItemModel::insertAlbums(const QList<AlbumDAO> &nodes)
 {
 	for (AlbumDAO album : nodes) {
 		if (album.cover().isEmpty()) {
@@ -63,11 +54,29 @@ void UniqueLibraryItemModel::insertAlbums(const QList<AlbumDAO> nodes)
 	}
 }
 
-void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> nodes)
+void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> &nodes)
 {
 	for (ArtistDAO artist : nodes) {
 		appendRow({ nullptr, new ArtistItem(&artist) });
 	}
+}
+
+void UniqueLibraryItemModel::insertDiscs(const QList<AlbumDAO> &nodes)
+{
+	qDebug() << Q_FUNC_INFO << nodes.size();
+
+	for (AlbumDAO disc : nodes) {
+		appendRow({ nullptr, new DiscItem(&disc) });
+	}
+}
+
+void UniqueLibraryItemModel::insertTracks(const QList<TrackDAO> &nodes)
+{
+	for (TrackDAO track : nodes) {
+		appendRow({ nullptr, new TrackItem(&track) });
+	}
+	this->proxy()->sort(this->proxy()->defaultSortColumn());
+	this->proxy()->setDynamicSortFilter(true);
 }
 
 void UniqueLibraryItemModel::load()
@@ -94,10 +103,10 @@ void UniqueLibraryItemModel::load()
 		insertArtists(artists);
 	}
 
-	if (query.exec("select alb.id, a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
+	if (query.exec("SELECT alb.id, a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
 				   "alb.name, a.name, alb.year, alb.host, alb.icon, cover " \
-				   "from artists a " \
-				   "inner join albums alb on a.id = alb.artistId")) {
+				   "FROM artists a " \
+				   "INNER JOIN albums alb ON a.id = alb.artistId")) {
 		QList<AlbumDAO> albums;
 		while (query.next()) {
 			AlbumDAO album;
@@ -114,12 +123,27 @@ void UniqueLibraryItemModel::load()
 		}
 		this->insertAlbums(albums);
 	}
+	if (query.exec("SELECT DISTINCT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || substr('0' || t.disc, -1, 1) as merged, " \
+				   "art.name, alb.id, t.disc " \
+				   "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
+				   "INNER JOIN artists art ON t.artistId = art.id WHERE disc > 0")) {
+		QList<AlbumDAO> discs;
+		while (query.next()) {
+			AlbumDAO disc;
+			int i = -1;
+			disc.setTitleNormalized(query.record().value(++i).toString());
+			disc.setArtist(query.record().value(++i).toString());
+			disc.setId(query.record().value(++i).toString());
+			disc.setDisc(query.record().value(++i).toString());
+			discs.append(disc);
+		}
+		this->insertDiscs(discs);
+	}
 
-	query.prepare("SELECT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || t.trackNumber  || '|' || t.title as merged, " \
-				  "t.uri, t.trackNumber, t.title, art.name, alb.name, t.length, t.rating, t.disc, t.host, t.icon " \
-				  "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-				  "INNER JOIN artists art ON t.artistId = art.id");
-	if (query.exec()) {
+	if (query.exec("SELECT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || substr('0' || t.disc, -1, 1)  || '|' || substr('00' || t.trackNumber, -2, 2)  || '|' || t.title as merged, " \
+				   "t.uri, t.trackNumber, t.title, art.name, alb.name, t.length, t.rating, t.disc, t.host, t.icon " \
+				   "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
+				   "INNER JOIN artists art ON t.artistId = art.id")) {
 		QList<TrackDAO> tracks;
 		while (query.next()) {
 			TrackDAO track;

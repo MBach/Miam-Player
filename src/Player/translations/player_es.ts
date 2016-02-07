@@ -971,10 +971,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1008,10 +1004,6 @@
     </message>
     <message>
         <source>&amp;Normal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
@@ -1132,6 +1124,14 @@
     </message>
     <message>
         <source>Hide menu bar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Loop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current item in l&amp;oop</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -25,6 +25,10 @@
         <source>(empty)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Disc</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>uniqueLibrary</name>
