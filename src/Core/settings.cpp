@@ -28,6 +28,28 @@ Settings* Settings::instance()
 	return settings;
 }
 
+/** Returns true if the button in parameter is visible or not. */
+bool Settings::isMediaButtonVisible(const QString & buttonName) const
+{
+   QVariant ok = value(buttonName);
+   if (ok.isValid()) {
+	   return ok.toBool();
+   } else {
+	   // For the first run, show buttons anyway except seek back|forward buttons
+	   if (buttonName == "seekBackwardButton" || buttonName == "seekForwardButton") {
+		   return false;
+	   }
+	   return (QString::compare(buttonName, "pauseButton") != 0);
+   }
+}
+
+/** Sets if the button in parameter is visible or not. */
+void Settings::setMediaButtonVisible(const QString & buttonName, const bool &value)
+{
+	setValue(buttonName, value);
+	emit mediaButtonVisibilityChanged(buttonName, value);
+}
+
 QMap<QString, QVariant> Settings::shortcuts() const
 {
 	return value("shortcuts").toMap();

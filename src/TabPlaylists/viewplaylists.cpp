@@ -51,7 +51,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		}
 		b->setSize(settingsPrivate->buttonsSize());
 		b->setIconFromTheme(settings->theme());
-		b->setVisible(settingsPrivate->isMediaButtonVisible(b->objectName()));
+		b->setVisible(settings->isMediaButtonVisible(b->objectName()));
 	}
 
 	searchBar->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));

@@ -191,6 +191,7 @@ void SearchDialog::clear()
 void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 {
 	SqlDatabase db;
+	db.open();
 	QSqlQuery selectTracks(db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id " \
 		"INNER JOIN artists a ON t.artistId = a.id WHERE a.id = ? ORDER BY al.year");
@@ -211,6 +212,7 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 {
 	SqlDatabase db;
+	db.open();
 	QSqlQuery selectTracks(db);
 	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id WHERE al.id = ?");
 	QString albumId = albumIndex.data(DT_Identifier).toString();
@@ -274,6 +276,7 @@ void SearchDialog::localSearch(const QString &text)
 	}
 
 	SqlDatabase db;
+	db.open();
 
 	/// XXX: Factorize this, 3 times the (almost) same code
 	QSqlQuery qSearchForArtists(db);

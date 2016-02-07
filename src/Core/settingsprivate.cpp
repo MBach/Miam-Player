@@ -231,18 +231,6 @@ bool SettingsPrivate::isLibraryFilteredByArticles() const
 	return value("isLibraryFilteredByArticles", false).toBool();
 }
 
-/** Returns true if the button in parameter is visible or not. */
-bool SettingsPrivate::isMediaButtonVisible(const QString & buttonName) const
-{
-   QVariant ok = value(buttonName);
-   if (ok.isValid()) {
-	   return ok.toBool();
-   } else {
-	   // For the first run, show buttons anyway
-	   return (QString::compare(buttonName, "pauseButton") != 0);
-   }
-}
-
 bool SettingsPrivate::isPlaylistResizeColumns() const
 {
 	return value("playlistResizeColumns", true).toBool();
@@ -670,12 +658,6 @@ void SettingsPrivate::setLibraryFilteredByArticles(const QStringList &tagList)
 	} else {
 		setValue("libraryFilteredByArticles", tagList);
 	}
-}
-
-/** Sets if the button in parameter is visible or not. */
-void SettingsPrivate::setMediaButtonVisible(const QString & buttonName, const bool &value)
-{
-	setValue(buttonName, value);
 }
 
 /** Sets if MiamPlayer should launch background process to keep library up-to-date. */

@@ -31,6 +31,12 @@ public:
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* instance();
 
+	/** Returns true if the button in parameter is visible or not. */
+	bool isMediaButtonVisible(const QString & buttonName) const;
+
+	/** Sets if the button in parameter is visible or not. */
+	void setMediaButtonVisible(const QString & buttonName, const bool &value);
+
 	QMap<QString, QVariant> shortcuts() const;
 
 	RequestSqlModel sqlModel() const;
@@ -52,6 +58,8 @@ public slots:
 	void setVolume(qreal v);
 
 signals:
+	void mediaButtonVisibilityChanged(const QString &buttonName, bool value);
+
 	void themeHasChanged(const QString &theme);
 };
 

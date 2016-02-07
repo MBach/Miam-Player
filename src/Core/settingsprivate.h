@@ -129,9 +129,6 @@ public:
 	/** Returns the hierarchical order of the library tree view. */
 	bool isLibraryFilteredByArticles() const;
 
-	/** Returns true if the button in parameter is visible or not. */
-	bool isMediaButtonVisible(const QString & buttonName) const;
-
 	bool isPlaylistResizeColumns() const;
 
 	/** Returns true if tabs should be displayed like rectangles. */
@@ -255,9 +252,6 @@ public slots:
 	void setLastActivePlaylistGeometry(const QByteArray &);
 
 	void setLibraryFilteredByArticles(const QStringList &tagList);
-
-	/** Sets if the button in parameter is visible or not. */
-	void setMediaButtonVisible(const QString & buttonName, const bool &value);
 
 	/** Sets if MiamPlayer should launch background process to keep library up-to-date. */
 	void setMonitorFileSystem(bool b);

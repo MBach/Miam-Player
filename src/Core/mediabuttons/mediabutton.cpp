@@ -13,11 +13,16 @@ MediaButton::MediaButton(QWidget *parent)
 	this->setMaximumWidth(SettingsPrivate::instance()->buttonsSize() + 10);
 	auto settings = Settings::instance();
 	connect(settings, &Settings::themeHasChanged, this, &MediaButton::setIconFromTheme);
+	connect(settings, &Settings::mediaButtonVisibilityChanged, this, [=](const QString &buttonName, bool value) {
+		if (buttonName == objectName()) {
+			this->setVisible(value);
+		}
+	});
 }
 
 MediaButton::~MediaButton()
 {
-	//Settings::instance()->disconnect();
+
 }
 
 /** Redefined to load custom icons saved in settings. */
@@ -62,7 +67,6 @@ void MediaButton::setIconFromTheme(const QString &theme)
 			qDebug() << Q_FUNC_INFO << objectName();
 		}
 	}
-
 }
 
 /** Change the size of icons from the options. */
