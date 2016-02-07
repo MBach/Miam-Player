@@ -9,8 +9,9 @@
 
 #include <QtDebug>
 
-SeekBar::SeekBar(QWidget *parent) :
-	MiamSlider(parent), _mediaPlayer(nullptr)
+SeekBar::SeekBar(QWidget *parent)
+	: MiamSlider(parent)
+	, _mediaPlayer(nullptr)
 {
 	this->setMinimumHeight(30);
 	this->setSingleStep(0);
@@ -20,6 +21,7 @@ SeekBar::SeekBar(QWidget *parent) :
 void SeekBar::setMediaPlayer(MediaPlayer *mediaPlayer)
 {
 	_mediaPlayer = mediaPlayer;
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, &SeekBar::setPosition);
 }
 
 void SeekBar::keyPressEvent(QKeyEvent *e)
@@ -78,6 +80,9 @@ void SeekBar::mouseReleaseEvent(QMouseEvent *)
 {
 	_mediaPlayer->setMute(false);
 	_mediaPlayer->blockSignals(false);
+	if (_mediaPlayer->state() == QMediaPlayer::PausedState) {
+		_mediaPlayer->togglePlayback();
+	}
 }
 
 void SeekBar::paintEvent(QPaintEvent *)
