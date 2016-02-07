@@ -200,7 +200,7 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 	if (selectTracks.exec()) {
 		QList<QMediaContent> tracks;
 		while (selectTracks.next()) {
-			tracks << QMediaContent(selectTracks.record().value(0).toString());
+			tracks << QMediaContent(QUrl::fromLocalFile(selectTracks.record().value(0).toString()));
 		}
 
 		Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
@@ -220,8 +220,7 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 	if (selectTracks.exec()) {
 		QList<QMediaContent> tracks;
 		while (selectTracks.next()) {
-			/// FIXME?
-			tracks << QMediaContent(selectTracks.record().value(0).toString());
+			tracks << QMediaContent(QUrl::fromLocalFile(selectTracks.record().value(0).toString()));
 		}
 
 		Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
@@ -234,7 +233,7 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
 {
 	Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
-	p->insertMedias(-1, { QMediaContent(track.data(DT_Identifier).toString()) });
+	p->insertMedias(-1, { QMediaContent(QUrl::fromLocalFile(track.data(DT_Identifier).toString())) });
 	this->clear();
 }
 
