@@ -80,16 +80,13 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 				_mediaPlayer->stop();
 				_mediaPlayer->setStopAfterCurrent(false);
 			} else {
-				//qDebug() << Q_FUNC_INFO << "about to skip forward" << _mediaPlayer->state();
-				//skipForward();
 				if (playbackModeButton->isChecked()) {
 					_randomHistoryList.append(_proxy->mapFromSource(_currentTrack->index()));
 				}
+				skipForward();
 			}
 		}
 	});
-
-
 
 	auto settingsPrivate = SettingsPrivate::instance();
 	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
@@ -243,11 +240,10 @@ void UniqueLibrary::skipBackward()
 	_mediaPlayer->blockSignals(true);
 
 	if (playbackModeButton->isChecked()) {
-		qDebug() << Q_FUNC_INFO << "playbackModeButton is checked";
-		if (!_randomHistoryList.isEmpty()) {
-			this->playSingleTrack(_randomHistoryList.takeLast());
+		if (_randomHistoryList.isEmpty()) {
+			return;
 		} else {
-			qDebug() << Q_FUNC_INFO << "no history ?";
+			this->playSingleTrack(_randomHistoryList.takeLast());
 		}
 	} else {
 		QModelIndex current = _proxy->mapFromSource(uniqueTable->model()->index(_currentTrack->row(), 1));
@@ -267,11 +263,15 @@ void UniqueLibrary::skipBackward()
 
 void UniqueLibrary::skipForward()
 {
-	qDebug() << Q_FUNC_INFO;
 	_mediaPlayer->blockSignals(true);
 
 	if (_currentTrack) {
 		_currentTrack->setData(false, Miam::DF_Highlighted);
+
+		// Append to random history the track the player is playing
+		if (playbackModeButton->isChecked()) {
+			_randomHistoryList.append(_proxy->mapFromSource(_currentTrack->index()));
+		}
 	}
 
 	if (playbackModeButton->isChecked()) {
