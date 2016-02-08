@@ -115,11 +115,6 @@ UniqueLibrary::~UniqueLibrary()
 	_mediaPlayer->stop();
 }
 
-bool UniqueLibrary::hasTracksToDisplay() const
-{
-	return uniqueTable->model()->rowCount() > 0;
-}
-
 bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
 	switch (vp) {
@@ -128,6 +123,8 @@ bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
 	case SettingsPrivate::VP_VolumeIndicatorToggled:
 	case SettingsPrivate::VP_HasAreaForRescan:
 		return true;
+	case SettingsPrivate::VP_HasTracksToDisplay:
+		return uniqueTable->model()->rowCount() > 0;
 	default:
 		return false;
 	}

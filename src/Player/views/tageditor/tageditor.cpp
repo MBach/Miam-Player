@@ -57,9 +57,6 @@ TagEditor::TagEditor(QWidget *parent) :
 		combo->setProperty("column", _combos.key(combo));
 	}
 
-	// Quit this widget when a request was send from this button
-	//connect(closeTagEditorButton, &QPushButton::clicked, this, &TagEditor::close);
-
 	connect(saveChangesButton, &QPushButton::clicked, this, &TagEditor::commitChanges);
 	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
 
@@ -73,6 +70,8 @@ TagEditor::TagEditor(QWidget *parent) :
 
 	albumCover->installEventFilter(this);
 	tagEditorWidget->viewport()->installEventFilter(this);
+
+	this->restoreGeometry(SettingsPrivate::instance()->value("tagEditorGeometry").toByteArray());
 }
 
 void TagEditor::addDirectory(const QDir &dir)
@@ -87,6 +86,13 @@ void TagEditor::addDirectory(const QDir &dir)
 		}
 	}
 	this->addTracks(tracks);
+}
+
+QPair<QString, QObjectList> TagEditor::extensionPoints() const
+{
+	QObjectList tagEditorObjectList;
+	tagEditorObjectList << albumCover->contextMenu() << extensiblePushButtonArea << extensibleWidgetArea << tagEditorWidget;
+	return qMakePair(metaObject()->className(), tagEditorObjectList);
 }
 
 QList<QUrl> TagEditor::selectedTracks()
@@ -104,9 +110,15 @@ void TagEditor::updateSelectedTracks()
 	//SqlDatabase().load();
 }
 
-bool TagEditor::viewProperty(SettingsPrivate::ViewProperty) const
+bool TagEditor::viewProperty(SettingsPrivate::ViewProperty vp) const
 {
-	return false;
+	switch (vp) {
+	case SettingsPrivate::VP_OwnWindow:
+	case SettingsPrivate::VP_HasTracksToDisplay:
+		return true;
+	default:
+		return false;
+	}
 }
 
 /** Redefined to be able to retransltate User Interface at runtime. */
@@ -118,6 +130,12 @@ void TagEditor::changeEvent(QEvent *event)
 	} else {
 		QWidget::changeEvent(event);
 	}
+}
+
+void TagEditor::closeEvent(QCloseEvent *event)
+{
+	SettingsPrivate::instance()->setValue("tagEditorGeometry", saveGeometry());
+	AbstractView::closeEvent(event);
 }
 
 void TagEditor::dragEnterEvent(QDragEnterEvent *event)
@@ -207,6 +225,7 @@ void TagEditor::replaceCover(Cover *newCover)
 /** Splits tracks into columns to be able to edit metadatas. */
 void TagEditor::addTracks(const QStringList &tracks)
 {
+	_tracks = tracks;
 	this->tagEditorWidget->setFocus();
 
 	this->clear();

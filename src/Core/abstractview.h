@@ -24,7 +24,7 @@ public:
 
 	virtual ~AbstractView() {}
 
-	virtual bool hasTracksToDisplay() const = 0;
+	virtual QPair<QString, QObjectList> extensionPoints() const { return qMakePair(QString(), QObjectList()); }
 
 	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 

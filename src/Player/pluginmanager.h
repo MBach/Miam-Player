@@ -53,7 +53,7 @@ public:
 	bool loadPlugin(const QString &pluginAbsPath);
 
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
-	void registerExtensionPoint(const char *className, QObjectList target);
+	void registerExtensionPoint(QPair<QString, QObjectList> ext);
 
 	/** Unload a plugin by its name. */
 	bool unloadPlugin(const QString &absFilePath);

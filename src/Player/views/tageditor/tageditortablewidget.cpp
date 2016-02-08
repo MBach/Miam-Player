@@ -29,9 +29,9 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 		connect(scrollBar, &QScrollBar::sliderReleased, [=]() { viewport()->update(); });
 	}
 	///
-	connect(this, &QTableWidget::cellChanged, this, [=](int row, int column) {
+	/*connect(this, &QTableWidget::cellChanged, this, [=](int row, int column) {
 		qDebug() << Q_FUNC_INFO << "row" << row << "column" << column;
-	});
+	});*/
 }
 
 /** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */

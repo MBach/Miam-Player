@@ -125,8 +125,6 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 		basic->init();
 		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
-		} else if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
-			this->loadItemViewPlugin(itemViewPlugin);
 		} else if (RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
 			this->loadRemoteMediaPlayerPlugin(remoteMediaPlayerPlugin);
 		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
@@ -137,10 +135,19 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 }
 
 /** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
-void PluginManager::registerExtensionPoint(const char *className, QObjectList source)
+void PluginManager::registerExtensionPoint(QPair<QString, QObjectList> ext)
 {
-	for (QObject *object : source) {
-		_extensionPoints.insert(QString(className), object);
+	for (QObject *instance : ext.second) {
+		_extensionPoints.insert(ext.first, instance);
+	}
+
+	// Reload views
+	for (BasicPlugin *plugin : _loadedPlugins.values()) {
+		if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
+			this->loadItemViewPlugin(itemViewPlugin);
+		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
+			this->loadTagEditorPlugin(tagEditorPlugin);
+		}
 	}
 }
 
@@ -172,15 +179,11 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 	// Each View Plugin can extend multiple instances
 	for (QString view : itemViewPlugin->classesToExtend()) {
 
-		qDebug() << Q_FUNC_INFO << "1" << view;
-
 		// Instances of classes which can be extended at runtime
-		for (QObject *obj : _extensionPoints.values(view)) {
-
-			qDebug() << Q_FUNC_INFO << "2" << obj;
+		for (QObject *instance : _extensionPoints.values(view)) {
 
 			// QMenu and SelectedTracksModel are the 2 kinds of class which can be extended
-			if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
+			if (QMenu *menu = qobject_cast<QMenu*>(instance)) {
 				if (itemViewPlugin->hasSubMenu(view)) {
 					QMenu *subMenu = itemViewPlugin->menu(view, menu);
 					menu->addMenu(subMenu);
@@ -190,7 +193,7 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 					menu->addAction(action);
 					_dependencies.insert(itemViewPlugin->name(), action);
 				}
-			} else if (SelectedTracksModel *selectedTracksModel = dynamic_cast<SelectedTracksModel*>(obj)) {
+			} else if (SelectedTracksModel *selectedTracksModel = dynamic_cast<SelectedTracksModel*>(instance)) {
 				itemViewPlugin->setSelectedTracksModel(view, selectedTracksModel);
 			}
 		}
@@ -231,9 +234,16 @@ void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteM
 
 void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
 {
-	/// FIXME
-	/*tagEditorPlugin->setSelectedTracksModel(_mainWindow->tagEditor);
-	tagEditorPlugin->setStackWidget(_mainWindow->tagEditor->extensibleWidgetArea);
-	tagEditorPlugin->setExtensibleLayout(_mainWindow->tagEditor->extensiblePushButtonArea);
-	tagEditorPlugin->setTagEditorWidget(_mainWindow->tagEditor->tagEditorWidget);*/
+	// Instances of classes which can be extended at runtime
+	for (QObject *instance : _extensionPoints.values("TagEditor")) {
+		if (TagEditor *tagEditor = qobject_cast<TagEditor*>(instance)) {
+			tagEditorPlugin->setSelectedTracksModel(tagEditor);
+		} else if (QStackedWidget *extensibleWidgetArea = qobject_cast<QStackedWidget*>(instance)){
+			tagEditorPlugin->setStackWidget(extensibleWidgetArea);
+		} else if (QHBoxLayout *hbox = qobject_cast<QHBoxLayout*>(instance)) {
+			tagEditorPlugin->setExtensibleLayout(hbox);
+		} else if (QTableWidget *table = qobject_cast<QTableWidget*>(instance)) {
+			tagEditorPlugin->setTagEditorWidget(table);
+		}
+	}
 }

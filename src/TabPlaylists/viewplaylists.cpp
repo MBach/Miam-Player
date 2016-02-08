@@ -182,9 +182,11 @@ void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
 	tabPlaylists->insertItemsToPlaylist(-1, tracks);
 }
 
-bool ViewPlaylists::hasTracksToDisplay() const
+QPair<QString, QObjectList> ViewPlaylists::extensionPoints() const
 {
-	return library->model()->rowCount() > 0;
+	QObjectList libraryObjectList;
+	libraryObjectList << library << library->properties;
+	return qMakePair(library->metaObject()->className(), libraryObjectList);
 }
 
 int ViewPlaylists::selectedTracksInCurrentPlaylist() const
@@ -241,6 +243,8 @@ bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
 	case SettingsPrivate::VP_FileExplorerFeature:
 	case SettingsPrivate::VP_VolumeIndicatorToggled:
 		return true;
+	case SettingsPrivate::VP_HasTracksToDisplay:
+		return library->model()->rowCount() > 0;
 	default:
 		return AbstractView::viewProperty(vp);
 	}

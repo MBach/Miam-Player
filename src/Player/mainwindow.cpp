@@ -143,18 +143,8 @@ void MainWindow::init()
 	}
 }
 
-/** Plugins. */
 void MainWindow::loadPlugins()
 {
-	/// FIXME
-	//QObjectList libraryObjectList;
-	//libraryObjectList << library << library->properties;
-
-	//QObjectList tagEditorObjectList;
-	//tagEditorObjectList << tagEditor->albumCover->contextMenu() << tagEditor->extensiblePushButtonArea << tagEditor->extensibleWidgetArea << tagEditor->tagEditorWidget << tagEditor;
-
-	//_pluginManager->registerExtensionPoint(library->metaObject()->className(), libraryObjectList);
-	//_pluginManager->registerExtensionPoint(tagEditor->metaObject()->className(), tagEditorObjectList);
 	_pluginManager->init();
 }
 
@@ -474,35 +464,37 @@ void MainWindow::activateView(QAction *menuAction)
 	ViewLoader v(_mediaPlayer);
 	_currentView = v.load(menuAction->objectName());
 
+	if (!_currentView) {
+		qWarning() << Q_FUNC_INFO << menuAction->objectName() << "couldn't load it's attached view";
+		return;
+	}
+
 	// Trigger a rescan of the library is there's nothing to display
-	if (_currentView && !_currentView->hasTracksToDisplay()) {
-		qDebug() << Q_FUNC_INFO;
+	if (!_currentView->viewProperty(SettingsPrivate::VP_HasTracksToDisplay)) {
 		this->rescanLibrary();
 	}
 
-	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	//connect(settingsPrivate, &SettingsPrivate::aboutToUpdateViews, _currentView, static_cast<void (AbstractView::*)(void)>(&AbstractView::update));
-	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
-
-	} else {
-		if (!_currentView) {
-			return;
-		}
-		// First, clean the view (can be a QuickStart instance)
-		if (this->centralWidget()) {
-			QWidget *w = this->takeCentralWidget();
-			w->deleteLater();
-		}
-
-		// Replace the main widget
-		QByteArray ba = settingsPrivate->lastActiveViewGeometry(menuAction->objectName());
-		if (ba.isEmpty()) {
-			this->resize(_currentView->sizeHint());
-		} else {
-			this->restoreGeometry(ba);
-		}
-		this->setCentralWidget(_currentView);
+	// Attach plugins if views allow to receive some
+	QPair<QString, QObjectList> extensionPoints = _currentView->extensionPoints();
+	if (!extensionPoints.first.isEmpty()) {
+		_pluginManager->registerExtensionPoint(extensionPoints);
 	}
+
+	// First, clean the view (can be a QuickStart instance)
+	if (this->centralWidget()) {
+		QWidget *w = this->takeCentralWidget();
+		w->deleteLater();
+	}
+
+	// Replace the main widget
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	QByteArray ba = settingsPrivate->lastActiveViewGeometry(menuAction->objectName());
+	if (ba.isEmpty()) {
+		this->resize(_currentView->sizeHint());
+	} else {
+		this->restoreGeometry(ba);
+	}
+	this->setCentralWidget(_currentView);
 
 	// Basically, a music player provides a playlist feature or it does not.
 	// It implies a clean and separate way to display things, I suppose.
@@ -663,6 +655,11 @@ void MainWindow::showTagEditor()
 		_tagEditor->installEventFilter(this);
 		_tagEditor->show();
 		_tagEditor->activateWindow();
+
+		QPair<QString, QObjectList> extensionPoints = _tagEditor->extensionPoints();
+		if (!extensionPoints.first.isEmpty()) {
+			_pluginManager->registerExtensionPoint(extensionPoints);
+		}
 	} else {
 		if (_tagEditor) {
 			_tagEditor->deleteLater();

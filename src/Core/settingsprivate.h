@@ -67,7 +67,8 @@ public:
 						VP_PlaylistFeature			= 3,
 						VP_FileExplorerFeature		= 4,
 						VP_VolumeIndicatorToggled	= 5,
-						VP_HasAreaForRescan			= 6};
+						VP_HasAreaForRescan			= 6,
+						VP_HasTracksToDisplay		= 7};
 
 	QTranslator playerTranslator, defaultQtTranslator;
 

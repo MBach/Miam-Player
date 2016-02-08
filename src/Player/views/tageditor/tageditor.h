@@ -34,6 +34,8 @@ private:
 
 	QMap<int, QSet<QString>> _cacheData;
 
+	QStringList _tracks;
+
 public:
 	/** An automatic helper for writing tags following regExp. */
 	TagConverter *tagConverter;
@@ -42,7 +44,7 @@ public:
 
 	void addDirectory(const QDir &dir);
 
-	inline virtual bool hasTracksToDisplay() const override { return true; }
+	virtual QPair<QString, QObjectList> extensionPoints() const override;
 
 	virtual QList<QUrl> selectedTracks() override;
 
@@ -52,6 +54,8 @@ public:
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
+
+	virtual void closeEvent(QCloseEvent *event) override;
 
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
@@ -84,9 +88,6 @@ public slots:
 
 private slots:
 	void applyCoverToAll(bool isForAll, Cover *cover);
-
-	/** Closes this Widget and tells its parent to switch views. */
-	//void close();
 
 	/** Saves all fields in the media. */
 	void commitChanges();

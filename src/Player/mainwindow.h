@@ -44,7 +44,6 @@ public:
 
 	void init();
 
-	/** Plugins. */
 	void loadPlugins();
 
 	inline MediaPlayer *mediaPlayer() const { return _mediaPlayer; }
