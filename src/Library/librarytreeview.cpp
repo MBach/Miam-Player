@@ -207,6 +207,28 @@ void LibraryTreeView::keyboardSearch(const QString &search)
 	}
 }
 
+void LibraryTreeView::keyPressEvent(QKeyEvent *event)
+{
+	if (event->key() == Qt::Key_PageDown || event->key() == Qt::Key_PageUp) {
+		SettingsPrivate::InsertPolicy ip = SettingsPrivate::instance()->insertPolicy();
+		if (ip == SettingsPrivate::IP_Albums || ip == SettingsPrivate::IP_ArtistsAlbums) {
+			_delegate->displayIcon(false);
+		}
+	}
+	TreeView::keyPressEvent(event);
+}
+
+void LibraryTreeView::keyReleaseEvent(QKeyEvent *event)
+{
+	if (event->key() == Qt::Key_PageDown || event->key() == Qt::Key_PageUp) {
+		SettingsPrivate::InsertPolicy ip = SettingsPrivate::instance()->insertPolicy();
+		if (ip == SettingsPrivate::IP_Albums || ip == SettingsPrivate::IP_ArtistsAlbums) {
+			_delegate->displayIcon(true);
+		}
+	}
+	TreeView::keyReleaseEvent(event);
+}
+
 void LibraryTreeView::paintEvent(QPaintEvent *event)
 {
 	int wVerticalScrollBar = 0;

@@ -86,6 +86,10 @@ protected:
 	/** Redefined to disable search in the table and trigger jumpToWidget's action. */
 	virtual void keyboardSearch(const QString &search) override;
 
+	virtual void keyPressEvent(QKeyEvent *event) override;
+
+	virtual void keyReleaseEvent(QKeyEvent *event) override;
+
 	virtual void paintEvent(QPaintEvent *) override;
 
 private:
