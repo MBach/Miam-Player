@@ -34,8 +34,6 @@ private:
 
 	QMap<int, QSet<QString>> _cacheData;
 
-	QStringList _tracks;
-
 public:
 	/** An automatic helper for writing tags following regExp. */
 	TagConverter *tagConverter;
@@ -77,9 +75,6 @@ private:
 public slots:
 	/** Wrapper for addItemsToEditor. */
 	void addItemsToEditor(const QList<QUrl> &tracks);
-
-	/** Wrapper for addItemsToEditor. */
-	void addItemsToEditor(const QList<TrackDAO> &tracks);
 
 	/** Clears all rows and comboboxes. */
 	void clear();

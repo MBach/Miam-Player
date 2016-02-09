@@ -70,6 +70,7 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 			p->setPen(o.palette.text().color());
 		}
 		if (o.icon.isNull()) {
+			p->setFont(o.font);
 			p->drawText(o.rect, Qt::AlignLeft | Qt::AlignVCenter,
 						p->fontMetrics().elidedText(index.data().toString(), Qt::ElideRight, o.rect.width()));
 		} else {

@@ -32,6 +32,7 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	/*connect(this, &QTableWidget::cellChanged, this, [=](int row, int column) {
 		qDebug() << Q_FUNC_INFO << "row" << row << "column" << column;
 	});*/
+
 }
 
 /** It's not possible to initialize header in the constructor. The object has to be instantiated completely first. */
@@ -43,10 +44,9 @@ void TagEditorTableWidget::init()
 		   << FileHelper::Field_Album << FileHelper::Field_Track << FileHelper::Field_Disc << FileHelper::Field_Year << FileHelper::Field_Genre
 		   << FileHelper::Field_Comment;
 	for (int column = 0; column < this->columnCount(); column++) {
-		QTableWidgetItem *header = new QTableWidgetItem();
+		QTableWidgetItem *header = this->horizontalHeaderItem(column);
 		FileHelper::Field f = fields.at(column);
 		header->setData(KEY, QVariant::fromValue<FileHelper::Field>(f));
-		this->setHorizontalHeaderItem(column, header);
 	}
 }
 
@@ -89,6 +89,14 @@ void TagEditorTableWidget::resetTable()
 		year->setText(fh.year());
 		genre->setText(fh.genre());
 		comment->setText(fh.comment());
+
+		QList<QTableWidgetItem*> items = { filename, title, artist, artistAlbum, album, trackNumber, disc, year, genre, comment };
+		for (QTableWidgetItem *item : items) {
+			QFont f(item->font());
+			f.setBold(false);
+			item->setData(MODIFIED, false);
+			item->setFont(f);
+		}
 	}
 	this->setSortingEnabled(true);
 	this->sortItems(0);
@@ -100,6 +108,9 @@ void TagEditorTableWidget::updateCellData(int row, int column, const QString &te
 	QTableWidgetItem *i = this->item(row, column);
 	i->setText(text);
 	i->setData(MODIFIED, true);
+	QFont f(i->font());
+	f.setBold(true);
+	i->setFont(f);
 }
 
 void TagEditorTableWidget::updateColumnData(int column, const QString &text)
@@ -108,6 +119,9 @@ void TagEditorTableWidget::updateColumnData(int column, const QString &text)
 		QTableWidgetItem *i = this->itemFromIndex(index);
 		i->setText(text);
 		i->setData(MODIFIED, true);
+		QFont f(i->font());
+		f.setBold(true);
+		i->setFont(f);
 	}
 }
 

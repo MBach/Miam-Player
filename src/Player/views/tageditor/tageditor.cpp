@@ -180,16 +180,24 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 
 void TagEditor::buildCache()
 {
+	qDebug() << Q_FUNC_INFO;
+	tagEditorWidget->blockSignals(true);
+
 	// Information in the table is split into columns, using column index
 	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
 	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {
 			QSet<QString> stringList = _cacheData.value(col);
 			auto item = tagEditorWidget->item(row, col);
+			QFont f = item->font();
+			f.setBold(false);
+			item->setFont(f);
 			stringList.insert(item->text());
 			_cacheData.insert(col, stringList);
 		}
 	}
+
+	tagEditorWidget->blockSignals(false);
 }
 
 void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
@@ -225,7 +233,6 @@ void TagEditor::replaceCover(Cover *newCover)
 /** Splits tracks into columns to be able to edit metadatas. */
 void TagEditor::addTracks(const QStringList &tracks)
 {
-	_tracks = tracks;
 	this->tagEditorWidget->setFocus();
 
 	this->clear();
@@ -267,22 +274,11 @@ void TagEditor::addItemsToEditor(const QList<QUrl> &tracks)
 	this->addTracks(localFiles);
 }
 
-/** Wrapper for addItemsToEditor. */
-void TagEditor::addItemsToEditor(const QList<TrackDAO> &tracks)
-{
-	QStringList localFiles;
-	for (TrackDAO track : tracks) {
-		localFiles.append(track.uri());
-	}
-	this->addTracks(localFiles);
-}
-
 /** Clears all rows and comboboxes. */
 void TagEditor::clear()
 {
 	//this->clearCovers(covers);
 	//this->clearCovers(unsavedCovers);
-
 	albumCover->resetCover();
 
 	// Delete text contents, not the combobox itself
@@ -295,7 +291,8 @@ void TagEditor::clear()
 
 void TagEditor::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
 {
-
+	Q_UNUSED(vp)
+	Q_UNUSED(value)
 }
 
 void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
@@ -325,19 +322,10 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 	cancelButton->setEnabled(true);
 }
 
-/** Closes this Widget and tells its parent to switch views. */
-/*void TagEditor::close()
-{
-	emit aboutToCloseTagEditor();
-	saveChangesButton->setEnabled(false);
-	cancelButton->setEnabled(false);
-	this->clear();
-	extensibleWidgetArea->setVisible(false);
-}*/
-
 /** Saves all fields in the media. */
 void TagEditor::commitChanges()
 {
+	qDebug() << Q_FUNC_INFO;
 	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
 	QSet<int> tracksToRescan;
 
@@ -435,7 +423,10 @@ void TagEditor::commitChanges()
 	saveChangesButton->setEnabled(false);
 	cancelButton->setEnabled(false);
 
+	tagEditorWidget->selectionModel()->clearSelection();
 	this->buildCache();
+	this->displayTags();
+	tagEditorWidget->setFocus();
 }
 
 /** Displays a cover only if all the selected items have exactly the same cover. */
@@ -470,9 +461,8 @@ void TagEditor::displayCover()
 
 	// Fill the comboBox for the absolute path to the cover (if exists)
 	SqlDatabase db;
-	if (!db.isOpen()) {
-		db.open();
-	}
+	db.open();
+
 	QSqlQuery coverPathQuery = db.exec("SELECT DISTINCT cover FROM tracks WHERE uri IN (" + joinedTracks + ")");
 	QSet<QString> coversPath;
 	while (coverPathQuery.next()) {
@@ -551,7 +541,9 @@ void TagEditor::displayTags()
 		}
 
 		int nextCurrentIndex = -1;
-		if (list.count() == 1) { // Multiple tracks selected but same value
+
+		// Multiple tracks selected but same value
+		if (list.count() == 1) {
 			if (combo == genreComboBox || combo == trackComboBox || combo == yearComboBox) {
 				int result = combo->findText(list.first());
 				nextCurrentIndex = result + 2;
@@ -573,7 +565,6 @@ void TagEditor::displayTags()
 				}
 			}
 		}
-		combo->model()->sort(0);
 
 		// Map the combobox object with the number of the column in the table to dynamically reflect changes
 		// Arbitrarily adds the column number to the first item (Keep)
@@ -587,19 +578,22 @@ void TagEditor::displayTags()
 
 void TagEditor::recordSingleItemChange(QTableWidgetItem *item)
 {
+	qDebug() << Q_FUNC_INFO;
+
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
 	item->setData(TagEditorTableWidget::MODIFIED, true);
+	QFont f(item->font());
+	f.setBold(true);
+	item->setFont(f);
 }
 
 /** Cancels all changes made by the user. */
 void TagEditor::rollbackChanges()
 {
-	qDebug() << Q_FUNC_INFO;
-
+	tagEditorWidget->blockSignals(true);
 	tagEditorWidget->resetTable();
 
-	tagEditorWidget->blockSignals(true);
 	this->replaceCover(nullptr);
 
 	// Reset the unsaved cover list only
@@ -639,7 +633,12 @@ void TagEditor::updateCells(QString text)
 					   || combo == discComboBox || combo == genreComboBox || combo == commentComboBox) {
 				tagEditorWidget->item(index.row(), column)->setText(combo->itemText(2));
 			}
-			tagEditorWidget->item(index.row(), column)->setData(TagEditorTableWidget::MODIFIED, true);
+			auto item = tagEditorWidget->item(index.row(), column);
+			item->setData(TagEditorTableWidget::MODIFIED, true);
+			QFont f(item->font());
+			qDebug() << Q_FUNC_INFO << column;
+			f.setBold(true);
+			item->setFont(f);
 		}
 		break;
 	}
@@ -654,6 +653,7 @@ void TagEditor::updateCells(QString text)
 	}
 	//saveChangesButton->setEnabled(true);
 	//cancelButton->setEnabled(true);
+	tagEditorWidget->resizeColumnToContents(column);
 
 	combo->blockSignals(false);
 }
