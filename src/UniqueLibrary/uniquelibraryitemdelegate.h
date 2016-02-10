@@ -1,8 +1,9 @@
 #ifndef UNIQUELIBRARYITEMDELEGATE_H
 #define UNIQUELIBRARYITEMDELEGATE_H
 
-#include <miamitemdelegate.h>
 #include <library/jumptowidget.h>
+#include <miamitemdelegate.h>
+#include "tableview.h"
 #include "miamuniquelibrary_global.hpp"
 
 #include <trackitem.h>
@@ -20,7 +21,7 @@ private:
 	JumpToWidget *_jumpTo;
 
 public:
-	explicit UniqueLibraryItemDelegate(JumpToWidget *jumpTo, QSortFilterProxyModel *proxy);
+	explicit UniqueLibraryItemDelegate(TableView *tableView);
 
 	/** Redefined. */
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;

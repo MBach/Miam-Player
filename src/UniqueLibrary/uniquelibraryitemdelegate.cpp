@@ -14,9 +14,9 @@
 
 #include <QtDebug>
 
-UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(JumpToWidget *jumpTo, QSortFilterProxyModel *proxy)
-	: MiamItemDelegate(proxy)
-	, _jumpTo(jumpTo)
+UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(TableView *tableView)
+	: MiamItemDelegate(tableView->model()->proxy())
+	, _jumpTo(tableView->jumpToWidget())
 {}
 
 void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -163,20 +163,23 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 		QString trackCurrentPos = QDateTime::fromTime_t(currentPos).toString("m:ss");
 		trackLength.prepend(trackCurrentPos + " / ");
 		f.setBold(true);
+		p->setFont(f);
 	}
 
 	QRect titleRect, lengthRect;
 	QString s;
 
+	static int rightIndent = 5;
+
 	if (QGuiApplication::isLeftToRight()) {
 
 		int w = p->fontMetrics().width(trackLength);
-		lengthRect = QRect(option.rect.x() + option.rect.width() - (w + 5), option.rect.y(), w + 5, option.rect.height());
-		titleRect = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - lengthRect.width() - 5, option.rect.height());
+		lengthRect = QRect(option.rect.x() + option.rect.width() - (w + rightIndent), option.rect.y(), w + rightIndent, option.rect.height());
+		titleRect = QRect(option.rect.x() + rightIndent, option.rect.y(), option.rect.width() - lengthRect.width() - rightIndent, option.rect.height());
 
 		s = p->fontMetrics().elidedText(option.text, Qt::ElideRight, titleRect.width());
 	} else {
-		titleRect = QRect(option.rect.x(), option.rect.y(), option.rect.width() - 5, option.rect.height());
+		titleRect = QRect(option.rect.x(), option.rect.y(), option.rect.width() - rightIndent, option.rect.height());
 		s = p->fontMetrics().elidedText(option.text, Qt::ElideRight, titleRect.width());
 	}
 
@@ -191,11 +194,6 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 			} else {
 				p->setPen(option.palette.highlightedText().color());
 			}
-		}
-		if (track->data(Miam::DF_Highlighted).toBool()) {
-			QFont f = p->font();
-			f.setBold(true);
-			p->setFont(f);
 		}
 		p->drawText(titleRect, Qt::AlignVCenter, s);
 	}

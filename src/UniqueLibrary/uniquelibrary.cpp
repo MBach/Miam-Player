@@ -44,7 +44,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	auto settings = Settings::instance();
 	volumeSlider->setValue(settings->volume() * 100);
 
-	uniqueTable->setItemDelegate(new UniqueLibraryItemDelegate(uniqueTable->jumpToWidget(), uniqueTable->model()->proxy()));
+	uniqueTable->setItemDelegate(new UniqueLibraryItemDelegate(uniqueTable));
 	_proxy = uniqueTable->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
