@@ -519,9 +519,18 @@ int Playlist::sizeHintForColumn(int column) const
 {
 	if (column == COL_RATINGS) {
 		return rowHeight(COL_RATINGS) * 5;
-	} else {
-		return QTableView::sizeHintForColumn(column);
+	} else if (QStandardItem *item = _playlistModel->item(0, column)) {
+		int w = fontMetrics().width(item->text());
+		if (w > 0) {
+			QFont f = font();
+			f.setBold(true);
+			f.setItalic(true);
+			double ratio = QFontMetrics(f).width(item->text()) / (double) w;
+			return QTableView::sizeHintForColumn(column) * qMax(1.10, ratio);
+		}
 	}
+	// Adding ten percent should be enough for most fonts in bold + italic
+	return QTableView::sizeHintForColumn(column) * 1.10;
 }
 
 void Playlist::showEvent(QShowEvent *event)
