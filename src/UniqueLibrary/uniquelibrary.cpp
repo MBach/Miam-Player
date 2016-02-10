@@ -95,10 +95,16 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		QApplication::installTranslator(&translator);
 	});
 
+	connect(playbackModeButton, &PlaybackModeButton::toggled, this, [=](bool checked) {
+		settingsPrivate->setValue("uniqueLibraryIsInShuffleState", checked);
+	});
+
 	// Init button theme
 	for (MediaButton *b : this->findChildren<MediaButton*>()) {
 		b->setIconFromTheme(settings->theme());
 	}
+
+	playbackModeButton->setChecked(settingsPrivate->value("uniqueLibraryIsInShuffleState").toBool());
 
 	// Init language
 	translator.load(":/translations/uniqueLibrary_" + settingsPrivate->language());
