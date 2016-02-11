@@ -4,7 +4,7 @@
 	<RunProgram>@TargetDir@/MiamPlayer.exe</RunProgram>
     <Version>0.8.0</Version>
     <Title>Miam-Player</Title>
-	<InstallerApplicationIcon>../../src/MiamPlayer/mp</InstallerApplicationIcon>
+	<InstallerApplicationIcon>../../src/Player/mp</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
     <Publisher>Matthieu Bachelier</Publisher>
     <StartMenuDir>Miam-Player</StartMenuDir>

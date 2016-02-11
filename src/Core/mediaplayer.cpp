@@ -216,7 +216,10 @@ void MediaPlayer::seekForward()
 
 void MediaPlayer::skipBackward()
 {
-	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0)) {
+	if (!_playlist) {
+		return;
+	}
+	if (_playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->previousIndex() < 0) {
 		return;
 	}
 	_state = QMediaPlayer::StoppedState;
@@ -226,7 +229,10 @@ void MediaPlayer::skipBackward()
 
 void MediaPlayer::skipForward()
 {
-	if (!_playlist || (_playlist && _playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex())) {
+	if (!_playlist) {
+		return;
+	}
+	if (_playlist->playbackMode() == QMediaPlaylist::Sequential && _playlist->nextIndex() < _playlist->currentIndex()) {
 		return;
 	}
 	_state = QMediaPlayer::StoppedState;

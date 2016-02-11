@@ -28,6 +28,12 @@ Settings* Settings::instance()
 	return settings;
 }
 
+/** Return the actual size of media buttons. */
+int Settings::buttonsSize() const
+{
+	return value("buttonsSize", 36).toInt();
+}
+
 /** Returns true if the button in parameter is visible or not. */
 bool Settings::isMediaButtonVisible(const QString & buttonName) const
 {
@@ -123,4 +129,23 @@ void Settings::setThemeName(const QString &theme)
 void Settings::setVolume(qreal v)
 {
 	setValue("volume", v);
+}
+
+/** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
+bool Settings::isVolumeBarTextAlwaysVisible() const
+{
+	return value("volumeBarTextAlwaysVisible", false).toBool();
+}
+
+/** Sets a new button size. */
+void Settings::setButtonsSize(int s)
+{
+	setValue("buttonsSize", s);
+	emit viewPropertyChanged(VP_MediaControls, s);
+}
+
+void Settings::setVolumeBarTextAlwaysVisible(bool b)
+{
+	setValue("volumeBarTextAlwaysVisible", b);
+	emit viewPropertyChanged(VP_VolumeIndicatorToggled, b);
 }

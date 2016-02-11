@@ -10,16 +10,16 @@
 MediaButton::MediaButton(QWidget *parent)
 	: QPushButton(parent)
 {
-	auto settingsPrivate = SettingsPrivate::instance();
-	this->setMaximumWidth(settingsPrivate->buttonsSize() + 10);
 	auto settings = Settings::instance();
+	this->setMaximumWidth(settings->buttonsSize() + 10);
 	connect(settings, &Settings::themeHasChanged, this, &MediaButton::setIconFromTheme);
 	connect(settings, &Settings::mediaButtonVisibilityChanged, this, [=](const QString &buttonName, bool value) {
 		if (buttonName == objectName()) {
 			this->setVisible(value);
 		}
 	});
-	connect(settingsPrivate, &SettingsPrivate::customIconForMediaButtonChanged, this, [=](const QString &button) {
+
+	connect(SettingsPrivate::instance(), &SettingsPrivate::customIconForMediaButtonChanged, this, [=](const QString &button) {
 		if (button == objectName()) {
 			this->setIconFromTheme(settings->theme());
 		}

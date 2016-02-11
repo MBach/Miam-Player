@@ -19,8 +19,7 @@
 #include <QtDebug>
 
 UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
-	: AbstractView(parent)
-	, _mediaPlayer(mediaPlayer)
+	: AbstractView(mediaPlayer, parent)
 	, _currentTrack(nullptr)
 {
 	setupUi(this);
@@ -121,15 +120,15 @@ UniqueLibrary::~UniqueLibrary()
 	_mediaPlayer->stop();
 }
 
-bool UniqueLibrary::viewProperty(SettingsPrivate::ViewProperty vp) const
+bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
 {
 	switch (vp) {
-	case SettingsPrivate::VP_MediaControls:
-	case SettingsPrivate::VP_SearchArea:
-	case SettingsPrivate::VP_VolumeIndicatorToggled:
-	case SettingsPrivate::VP_HasAreaForRescan:
+	case Settings::VP_MediaControls:
+	case Settings::VP_SearchArea:
+	case Settings::VP_VolumeIndicatorToggled:
+	case Settings::VP_HasAreaForRescan:
 		return true;
-	case SettingsPrivate::VP_HasTracksToDisplay:
+	case Settings::VP_HasTracksToDisplay:
 		return uniqueTable->model()->rowCount() > 0;
 	default:
 		return false;
@@ -191,11 +190,11 @@ void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 	});
 }
 
-void UniqueLibrary::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
+void UniqueLibrary::setViewProperty(Settings::ViewProperty vp, QVariant value)
 {
 	Q_UNUSED(value)
 	switch (vp) {
-	case SettingsPrivate::VP_SearchArea:
+	case Settings::VP_SearchArea:
 		searchBar->clear();
 		break;
 	default:

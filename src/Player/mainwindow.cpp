@@ -90,7 +90,7 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 	// Drag & Drop actions
 	connect(&dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToLibrary, settings, &SettingsPrivate::addMusicLocations);
-	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_PlaylistFeature)) {
+	if (_currentView && _currentView->viewProperty(Settings::VP_PlaylistFeature)) {
 		viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
 		connect(&dragDropDialog, &DragDropDialog::aboutToAddExtFoldersToPlaylist, viewPlaylists, &AbstractViewPlaylists::addExtFolders);
 	}
@@ -253,7 +253,7 @@ void MainWindow::changeEvent(QEvent *event)
 void MainWindow::closeEvent(QCloseEvent *)
 {
 	auto settingsPrivate = SettingsPrivate::instance();
-	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_PlaylistFeature) && settingsPrivate->playbackKeepPlaylists()) {
+	if (_currentView && _currentView->viewProperty(Settings::VP_PlaylistFeature) && settingsPrivate->playbackKeepPlaylists()) {
 		if (AbstractViewPlaylists *v = static_cast<AbstractViewPlaylists*>(_currentView)) {
 			v->saveCurrentPlaylists();
 		}
@@ -346,7 +346,7 @@ void MainWindow::createCustomizeOptionsDialog()
 {
 	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
 	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
-	if (_currentView && _currentView->viewProperty(SettingsPrivate::VP_FileExplorerFeature)) {
+	if (_currentView && _currentView->viewProperty(Settings::VP_FileExplorerFeature)) {
 		connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, _currentView, &AbstractView::initFileExplorer);
 	}
 	dialog->show();
@@ -461,7 +461,8 @@ void MainWindow::activateView(QAction *menuAction)
 	}
 
 	// User a Helper to load views depending on which classes are attached to the QAction
-	ViewLoader v(_mediaPlayer);
+	ViewLoader v(_mediaPlayer, _pluginManager, this);
+	qDebug() << Q_FUNC_INFO << "Action triggered:" << menuAction->objectName();
 	_currentView = v.load(menuAction->objectName());
 
 	if (!_currentView) {
@@ -470,7 +471,7 @@ void MainWindow::activateView(QAction *menuAction)
 	}
 
 	// Trigger a rescan of the library is there's nothing to display
-	if (!_currentView->viewProperty(SettingsPrivate::VP_HasTracksToDisplay)) {
+	if (!_currentView->viewProperty(Settings::VP_HasTracksToDisplay)) {
 		this->rescanLibrary();
 	}
 
@@ -496,9 +497,14 @@ void MainWindow::activateView(QAction *menuAction)
 	}
 	this->setCentralWidget(_currentView);
 
+	// Check if current view can force the menuBar to hide itself
+	menubar->setVisible(!_currentView->viewProperty(Settings::VP_HideMenuBar));
+	qDebug() << Q_FUNC_INFO << _currentView->windowFlags();
+	//this->setWindowFlags(_currentView->windowFlags());
+
 	// Basically, a music player provides a playlist feature or it does not.
 	// It implies a clean and separate way to display things, I suppose.
-	bool b = _currentView->viewProperty(SettingsPrivate::VP_PlaylistFeature);
+	bool b = _currentView->viewProperty(Settings::VP_PlaylistFeature);
 	menuView->setEnabled(true);
 	menuPlayback->setEnabled(true);
 	menuPlaylist->setEnabled(true);
@@ -570,7 +576,7 @@ void MainWindow::activateView(QAction *menuAction)
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		if (_currentView) {
 			QActionGroup *actionGroup = this->findChild<QActionGroup*>("viewModeGroup");
-			if (!_currentView->viewProperty(SettingsPrivate::VP_OwnWindow)) {
+			if (!_currentView->viewProperty(Settings::VP_OwnWindow)) {
 				settingsPrivate->setLastActiveViewGeometry(actionGroup->checkedAction()->objectName(), this->saveGeometry());
 			}
 			settingsPrivate->sync();
@@ -611,8 +617,8 @@ void MainWindow::rescanLibrary()
 		return;
 	}
 
-	if (_currentView->viewProperty(SettingsPrivate::VP_SearchArea)) {
-		_currentView->setViewProperty(SettingsPrivate::VP_SearchArea, true);
+	if (_currentView->viewProperty(Settings::VP_SearchArea)) {
+		_currentView->setViewProperty(Settings::VP_SearchArea, true);
 	}
 
 	QThread *t = new QThread;
@@ -625,7 +631,7 @@ void MainWindow::rescanLibrary()
 		actionScanLibrary->setEnabled(false);
 	});
 	qDebug() << Q_FUNC_INFO;
-	if (_currentView->viewProperty(SettingsPrivate::VP_HasAreaForRescan)) {
+	if (_currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
 		_currentView->setMusicSearchEngine(searchEngine);
 	}
 	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {

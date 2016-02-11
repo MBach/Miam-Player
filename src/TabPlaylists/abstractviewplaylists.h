@@ -2,7 +2,6 @@
 #define ABSTRACTVIEWPLAYLISTS_H
 
 #include <abstractview.h>
-#include <mediaplayer.h>
 #include <QModelIndex>
 
 #include "miamtabplaylists_global.hpp"
@@ -15,12 +14,8 @@
 class MIAMTABPLAYLISTS_LIBRARY AbstractViewPlaylists : public AbstractView
 {
 	Q_OBJECT
-
-protected:
-	MediaPlayer *_mediaPlayer;
-
 public:
-	AbstractViewPlaylists(MediaPlayer *mediaPlayer) : AbstractView(nullptr), _mediaPlayer(mediaPlayer) {}
+	AbstractViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent = nullptr) : AbstractView(mediaPlayer, parent) {}
 
 	virtual ~AbstractViewPlaylists() {}
 

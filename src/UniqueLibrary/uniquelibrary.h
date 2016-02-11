@@ -3,9 +3,9 @@
 
 #include <QTranslator>
 
+#include <model/sqldatabase.h>
 #include <abstractview.h>
 #include "miamuniquelibrary_global.hpp"
-#include "model/sqldatabase.h"
 
 #include "ui_uniquelibrary.h"
 
@@ -18,7 +18,6 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public AbstractView, public Ui::
 {
 	Q_OBJECT
 private:
-	MediaPlayer *_mediaPlayer;
 	QStandardItem *_currentTrack;
 	UniqueLibraryFilterProxyModel *_proxy;
 
@@ -33,7 +32,7 @@ public:
 
 	inline virtual QSize sizeHint() const override { return QSize(420, 850); }
 
-	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
+	virtual bool viewProperty(Settings::ViewProperty vp) const override;
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
@@ -43,7 +42,7 @@ protected:
 public slots:
 	virtual void setMusicSearchEngine(MusicSearchEngine *musicSearchEngine) override;
 
-	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
+	virtual void setViewProperty(Settings::ViewProperty vp, QVariant value) override;
 
 	virtual void volumeSliderDecrease() override;
 

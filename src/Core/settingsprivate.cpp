@@ -67,12 +67,6 @@ qreal SettingsPrivate::bigCoverOpacity() const
 	return value("bigCoverOpacity", 0.66).toReal();
 }
 
-/** Return the actual size of media buttons. */
-int SettingsPrivate::buttonsSize() const
-{
-	return value("buttonsSize", 36).toInt();
-}
-
 /** Returns true if the background color in playlist is using alternatative colors. */
 bool SettingsPrivate::colorsAlternateBG() const
 {
@@ -266,11 +260,6 @@ bool SettingsPrivate::isButtonThemeCustomized() const
 	return value("buttonThemeCustomized", false).toBool();
 }
 
-/** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
-bool SettingsPrivate::isVolumeBarTextAlwaysVisible() const
-{
-	return value("volumeBarTextAlwaysVisible", false).toBool();
-}
 /** Returns the language of the application. */
 QString SettingsPrivate::language()
 {
@@ -577,13 +566,6 @@ void SettingsPrivate::setBigCovers(bool b)
 	setValue("bigCovers", b);
 }
 
-/** Sets a new button size. */
-void SettingsPrivate::setButtonsSize(int s)
-{
-	setValue("buttonsSize", s);
-	emit viewPropertyChanged(VP_MediaControls, s);
-}
-
 /// Colors
 void SettingsPrivate::setColorsAlternateBG(bool b)
 {
@@ -729,10 +711,4 @@ void SettingsPrivate::setButtonThemeCustomized(bool b)
 void SettingsPrivate::setVolumeBarHideAfter(int seconds)
 {
 	setValue("volumeBarHideAfter", seconds);
-}
-
-void SettingsPrivate::setVolumeBarTextAlwaysVisible(bool b)
-{
-	setValue("volumeBarTextAlwaysVisible", b);
-	emit viewPropertyChanged(VP_VolumeIndicatorToggled, b);
 }

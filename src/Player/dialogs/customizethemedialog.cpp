@@ -67,17 +67,17 @@ void CustomizeThemeDialog::loadTheme()
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	customizeThemeCheckBox->setChecked(settingsPrivate->isButtonThemeCustomized());
 
-	sizeButtonsSpinBox->setValue(settingsPrivate->buttonsSize());
+	Settings *settings = Settings::instance();
+	sizeButtonsSpinBox->setValue(settings->buttonsSize());
 
 	// Select the right drop-down item according to the theme
 	int i = 0;
-	while (Settings::instance()->theme() != themeComboBox->itemText(i).toLower()) {
+	while (settings->theme() != themeComboBox->itemText(i).toLower()) {
 		i++;
 	}
 	themeComboBox->setCurrentIndex(i);
 
 	// Buttons
-	Settings *settings = Settings::instance();
 	QList<QPushButton*> mediaPlayerButtons = buttonsListBox->findChildren<QPushButton*>();
 	for (QPushButton *mediaPlayerButton : mediaPlayerButtons) {
 		QString mediaButton = mediaPlayerButton->objectName() + "Button";
@@ -97,7 +97,7 @@ void CustomizeThemeDialog::loadTheme()
 	settingsPrivate->isExtendedSearchVisible() ? radioButtonShowExtendedSearch->setChecked(true) : radioButtonHideExtendedSearch->setChecked(true);
 
 	// Volume bar
-	radioButtonShowVolume->setChecked(settingsPrivate->isVolumeBarTextAlwaysVisible());
+	radioButtonShowVolume->setChecked(settings->isVolumeBarTextAlwaysVisible());
 	spinBoxHideVolumeLabel->setValue(settingsPrivate->volumeBarHideAfter());
 
 	// Fonts
@@ -173,11 +173,11 @@ void CustomizeThemeDialog::setupActions()
 			}
 		}
 	});
-	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settingsPrivate, &SettingsPrivate::setButtonsSize);
+	Settings *settings = Settings::instance();
+	connect(sizeButtonsSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &Settings::setButtonsSize);
 
 	// Hide buttons or not
 	QList<QCheckBox*> mediaPlayerButtons = buttonsListBox->findChildren<QCheckBox*>();
-	Settings *settings = Settings::instance();
 	for (QCheckBox *mediaPlayerButton : mediaPlayerButtons) {
 		connect(mediaPlayerButton, &QCheckBox::toggled, this, [=](bool value) {
 			settings->setMediaButtonVisible(mediaPlayerButton->objectName().replace("CheckBox", "Button"), value);
@@ -193,7 +193,7 @@ void CustomizeThemeDialog::setupActions()
 	connect(radioButtonShowExtendedSearch, &QRadioButton::toggled, settingsPrivate, &SettingsPrivate::setExtendedSearchVisible);
 
 	// Volume bar
-	connect(radioButtonShowVolume, &QRadioButton::toggled, settingsPrivate, &SettingsPrivate::setVolumeBarTextAlwaysVisible);
+	connect(radioButtonShowVolume, &QRadioButton::toggled, settings, &Settings::setVolumeBarTextAlwaysVisible);
 	connect(spinBoxHideVolumeLabel, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settingsPrivate, &SettingsPrivate::setVolumeBarHideAfter);
 
 	// Fonts

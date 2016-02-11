@@ -202,27 +202,17 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 
 void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 {
-	QWidget *view = mediaPlayerPlugin->providesView();
-	if (view != nullptr) {
-		// Add a separator before any plugin (3 views by default: Playlist, Unique Library and Tag Editor
-		if (_mainWindow->menuView->actions().count() == 3) {
-			_mainWindow->menuView->addSeparator();
-		}
-		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
-		actionAddViewToMenu->setObjectName(mediaPlayerPlugin->name());
-		_mainWindow->menuView->addAction(actionAddViewToMenu);
-		_mainWindow->updateFonts(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
-		connect(actionAddViewToMenu, &QAction::triggered, this, [=]() {
-			_mainWindow->close();
-			view->show();
-		});
-
-		// Link the view to the existing ActionGroup
-		actionAddViewToMenu->setCheckable(true);
-		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
-		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
-	}
 	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
+
+	QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
+	actionAddViewToMenu->setObjectName(mediaPlayerPlugin->name());
+	_mainWindow->menuView->insertAction(_mainWindow->actionViewTagEditor, actionAddViewToMenu);
+	_mainWindow->updateFonts(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
+
+	// Link the view to the existing ActionGroup
+	actionAddViewToMenu->setCheckable(true);
+	actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
+	_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
 }
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)

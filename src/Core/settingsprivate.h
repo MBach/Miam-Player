@@ -38,7 +38,6 @@ private:
 	Q_ENUMS(InsertPolicy)
 	Q_ENUMS(PlaylistDefaultAction)
 	Q_ENUMS(LibrarySearchMode)
-	Q_ENUMS(ViewProperty)
 
 public:
 	enum DragDropAction { DD_OpenPopup		= 0,
@@ -61,15 +60,6 @@ public:
 	enum LibrarySearchMode { LSM_Filter			= 0,
 							 LSM_HighlightOnly	= 1};
 
-	enum ViewProperty { VP_MediaControls			= 0,
-						VP_SearchArea				= 1,
-						VP_OwnWindow				= 2,
-						VP_PlaylistFeature			= 3,
-						VP_FileExplorerFeature		= 4,
-						VP_VolumeIndicatorToggled	= 5,
-						VP_HasAreaForRescan			= 6,
-						VP_HasTracksToDisplay		= 7};
-
 	QTranslator playerTranslator, defaultQtTranslator;
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
@@ -82,9 +72,6 @@ public:
 	void disablePlugin(const QString &absFilePath);
 
 	qreal bigCoverOpacity() const;
-
-	/** Returns the actual size of media buttons. */
-	int buttonsSize() const;
 
 	/** Returns true if the background color in playlist is using alternatative colors. */
 	bool colorsAlternateBG() const;
@@ -146,9 +133,6 @@ public:
 
 	/** Returns true if a user has modified one of defaults theme. */
 	bool isButtonThemeCustomized() const;
-
-	/** Returns true if the volume value in percent is always visible in the upper left corner of the widget. */
-	bool isVolumeBarTextAlwaysVisible() const;
 
 	/** Returns the language of the application. */
 	QString language();
@@ -221,9 +205,6 @@ public slots:
 
 	void setBigCovers(bool b);
 
-	/** Sets a new button size. */
-	void setButtonsSize(int s);
-
 	/// Colors
 	void setColorsAlternateBG(bool b);
 
@@ -275,7 +256,6 @@ public slots:
 	void setButtonThemeCustomized(bool b);
 
 	void setVolumeBarHideAfter(int seconds);
-	void setVolumeBarTextAlwaysVisible(bool b);
 
 signals:
 	void aboutToUpdateViews();
@@ -290,8 +270,6 @@ signals:
 
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHaveChanged();
-
-	void viewPropertyChanged(ViewProperty vp, const QVariant &value);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

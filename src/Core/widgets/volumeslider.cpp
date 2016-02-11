@@ -40,15 +40,15 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 		this->update();
 	});
 
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	connect(settings, &SettingsPrivate::viewPropertyChanged, this, [=](SettingsPrivate::ViewProperty vp, QVariant) {
-		if (vp == SettingsPrivate::VP_VolumeIndicatorToggled) {
+	connect(Settings::instance(), &Settings::viewPropertyChanged, this, [=](Settings::ViewProperty vp, QVariant) {
+		if (vp == Settings::VP_VolumeIndicatorToggled) {
 			this->update();
 		}
 	});
 
 	// Used to hide percentage on the screen (like '75%')
-	connect(this, &QSlider::sliderReleased, [=]() { _timer->start(settings->volumeBarHideAfter() * 1000); });
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	connect(this, &QSlider::sliderReleased, [=]() { _timer->start(settingsPrivate->volumeBarHideAfter() * 1000); });
 
 	// Simulate pressed / released event for wheel event too!
 	// A repaint event will occur later so text will be removed when one will move the mouse outside the widget
@@ -59,7 +59,7 @@ VolumeSlider::VolumeSlider(QWidget *parent)
 		Settings::instance()->setVolume((qreal)value() / 100.0);
 	});
 
-	connect(this, &QSlider::valueChanged, [=]() { _timer->start(settings->volumeBarHideAfter() * 1000); });
+	connect(this, &QSlider::valueChanged, [=]() { _timer->start(settingsPrivate->volumeBarHideAfter() * 1000); });
 	this->setSingleStep(5);
 	this->installEventFilter(this);
 }
@@ -154,7 +154,7 @@ void VolumeSlider::paintEvent(QPaintEvent *)
 	}
 
 	// When an action is triggered, display current volume in the upper left corner
-	if (_isDown || SettingsPrivate::instance()->isVolumeBarTextAlwaysVisible()) {
+	if (_isDown || Settings::instance()->isVolumeBarTextAlwaysVisible()) {
 		p.save();
 		p.setPen(opt.palette.highlight().color());
 		p.drawText(rect().adjusted(1, 2, 0, 0), Qt::AlignTop | Qt::AlignLeft, QString::number(value()).append("%"));

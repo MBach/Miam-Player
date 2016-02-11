@@ -12,8 +12,8 @@
 #include <QProgressBar>
 #include <QStandardPaths>
 
-ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
-	: AbstractViewPlaylists(mediaPlayer)
+ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
+	: AbstractViewPlaylists(mediaPlayer, parent)
 	, _searchDialog(new SearchDialog(this))
 	, _db(nullptr)
 {
@@ -50,7 +50,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		if (!b) {
 			continue;
 		}
-		b->setSize(settingsPrivate->buttonsSize());
+		b->setSize(settings->buttonsSize());
 		b->setIconFromTheme(settings->theme());
 		b->setVisible(settings->isMediaButtonVisible(b->objectName()));
 	}
@@ -157,7 +157,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer)
 		QApplication::installTranslator(&translator);
 	});
 
-	connect(settingsPrivate, &SettingsPrivate::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
+	connect(settings, &Settings::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
 
 	this->installEventFilter(this);
 
@@ -233,17 +233,17 @@ void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 	});
 }
 
-bool ViewPlaylists::viewProperty(SettingsPrivate::ViewProperty vp) const
+bool ViewPlaylists::viewProperty(Settings::ViewProperty vp) const
 {
 	switch (vp) {
-	case SettingsPrivate::VP_MediaControls:
-	case SettingsPrivate::VP_SearchArea:
-	case SettingsPrivate::VP_PlaylistFeature:
-	case SettingsPrivate::VP_HasAreaForRescan:
-	case SettingsPrivate::VP_FileExplorerFeature:
-	case SettingsPrivate::VP_VolumeIndicatorToggled:
+	case Settings::VP_MediaControls:
+	case Settings::VP_SearchArea:
+	case Settings::VP_PlaylistFeature:
+	case Settings::VP_HasAreaForRescan:
+	case Settings::VP_FileExplorerFeature:
+	case Settings::VP_VolumeIndicatorToggled:
 		return true;
-	case SettingsPrivate::VP_HasTracksToDisplay:
+	case Settings::VP_HasTracksToDisplay:
 		return library->model()->rowCount() > 0;
 	default:
 		return AbstractView::viewProperty(vp);
@@ -425,15 +425,15 @@ void ViewPlaylists::removeSelectedTracks()
 	}
 }
 
-void ViewPlaylists::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
+void ViewPlaylists::setViewProperty(Settings::ViewProperty vp, QVariant value)
 {
 	switch (vp) {
-	case SettingsPrivate::VP_MediaControls:
+	case Settings::VP_MediaControls:
 		for (MediaButton *b : findChildren<MediaButton*>()) {
 			b->setSize(value.toInt());
 		}
 		break;
-	case SettingsPrivate::VP_SearchArea:
+	case Settings::VP_SearchArea:
 		if (_searchDialog) {
 			_searchDialog->clear();
 		}

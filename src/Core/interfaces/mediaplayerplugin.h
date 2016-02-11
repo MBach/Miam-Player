@@ -4,6 +4,8 @@
 #include "basicplugin.h"
 #include "mediaplayer.h"
 
+class AbstractView;
+
 /**
  * \brief		The MediaPlayerPlugin class
  * \author      Matthieu Bachelier
@@ -17,7 +19,7 @@ public:
 
 	virtual ~MediaPlayerPlugin() {}
 
-	virtual QWidget* providesView() = 0;
+	virtual AbstractView* instanciateView() { return nullptr; }
 
 	virtual void setMediaPlayer(MediaPlayer *) = 0;
 

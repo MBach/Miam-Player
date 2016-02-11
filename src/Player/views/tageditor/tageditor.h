@@ -48,7 +48,7 @@ public:
 
 	virtual void updateSelectedTracks() override;
 
-	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
+	virtual bool viewProperty(Settings::ViewProperty vp) const override;
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
@@ -79,7 +79,7 @@ public slots:
 	/** Clears all rows and comboboxes. */
 	void clear();
 
-	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
+	virtual void setViewProperty(Settings::ViewProperty vp, QVariant value) override;
 
 private slots:
 	void applyCoverToAll(bool isForAll, Cover *cover);

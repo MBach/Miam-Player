@@ -47,6 +47,7 @@ public:
 
 	void init();
 
+	inline QMultiMap<QString, QObject*> dependencies() const { return _dependencies; }
 	inline QMap<QString, BasicPlugin*> loadedPlugins() const { return _loadedPlugins; }
 
 	/** Load a plugin by its location on the hard drive. */

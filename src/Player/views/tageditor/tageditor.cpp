@@ -1,8 +1,11 @@
 #include "tageditor.h"
-#include "filehelper.h"
-#include "settings.h"
+
+#include <filehelper.h>
+#include <settings.h>
+#include <settingsprivate.h>
+#include <treeview.h>
+
 #include "pluginmanager.h"
-#include "treeview.h"
 
 #include <taglib/tfile.h>
 #include <taglib/tpropertymap.h>
@@ -27,8 +30,9 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 	<< "Showtunes" << "Trailer" << "Lo-Fi" << "Tribal" << "Acid Punk" << "Acid Jazz" << "Polka" << "Retro" << "Musical"
 	<< "Rock & Roll" << "Hard Rock");
 
-TagEditor::TagEditor(QWidget *parent) :
-	AbstractView(parent), SelectedTracksModel()
+TagEditor::TagEditor(QWidget *parent)
+	: AbstractView(nullptr, parent)
+	, SelectedTracksModel()
 {
 	this->setWindowFlags(Qt::Window);
 	setupUi(this);
@@ -110,11 +114,11 @@ void TagEditor::updateSelectedTracks()
 	//SqlDatabase().load();
 }
 
-bool TagEditor::viewProperty(SettingsPrivate::ViewProperty vp) const
+bool TagEditor::viewProperty(Settings::ViewProperty vp) const
 {
 	switch (vp) {
-	case SettingsPrivate::VP_OwnWindow:
-	case SettingsPrivate::VP_HasTracksToDisplay:
+	case Settings::VP_OwnWindow:
+	case Settings::VP_HasTracksToDisplay:
 		return true;
 	default:
 		return false;
@@ -289,7 +293,7 @@ void TagEditor::clear()
 	_cacheData.clear();
 }
 
-void TagEditor::setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value)
+void TagEditor::setViewProperty(Settings::ViewProperty vp, QVariant value)
 {
 	Q_UNUSED(vp)
 	Q_UNUSED(value)

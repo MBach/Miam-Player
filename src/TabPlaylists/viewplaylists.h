@@ -20,7 +20,7 @@ private:
 	SqlDatabase *_db;
 
 public:
-	ViewPlaylists(MediaPlayer *mediaPlayer);
+	ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
 	virtual ~ViewPlaylists();
 
@@ -38,7 +38,7 @@ public:
 
 	inline virtual QSize sizeHint() const override { return QSize(1024, 768); }
 
-	virtual bool viewProperty(SettingsPrivate::ViewProperty vp) const override;
+	virtual bool viewProperty(Settings::ViewProperty vp) const override;
 
 protected:
 	virtual void changeEvent(QEvent *event) override;
@@ -64,7 +64,7 @@ public slots:
 
 	virtual void removeSelectedTracks() override;
 
-	virtual void setViewProperty(SettingsPrivate::ViewProperty vp, QVariant value) override;
+	virtual void setViewProperty(Settings::ViewProperty vp, QVariant value) override;
 
 	virtual void volumeSliderDecrease() override;
 
