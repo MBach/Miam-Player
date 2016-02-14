@@ -24,7 +24,8 @@ SOURCES += dialogs/closeplaylistpopup.cpp \
     stareditor.cpp \
     tabbar.cpp \
     tabplaylist.cpp \
-    viewplaylists.cpp
+    viewplaylists.cpp \
+    viewplaylistsmediaplayercontrol.cpp
 
 HEADERS += dialogs/closeplaylistpopup.h \
     dialogs/playlistdialog.h \
@@ -50,7 +51,8 @@ HEADERS += dialogs/closeplaylistpopup.h \
     stareditor.h \
     tabbar.h \
     tabplaylist.h \
-    viewplaylists.h
+    viewplaylists.h \
+    viewplaylistsmediaplayercontrol.h
 
 FORMS += closeplaylistpopup.ui \
     playlistdialog.ui \

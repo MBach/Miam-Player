@@ -3,6 +3,7 @@
 
 #include <abstractviewplaylists.h>
 #include "dialogs/searchdialog.h"
+#include "viewplaylistsmediaplayercontrol.h"
 
 #include "ui_viewplaylists.h"
 
@@ -20,7 +21,7 @@ private:
 	SqlDatabase *_db;
 
 public:
-	ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
+	explicit ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
 	virtual ~ViewPlaylists();
 
@@ -44,24 +45,34 @@ protected:
 	virtual void changeEvent(QEvent *event) override;
 
 public slots:
-	virtual void addExtFolders(const QList<QDir> &folders) override;
-
-	virtual void addPlaylist() override;
-
+	/** Redefined from AbstractView. */
 	virtual void initFileExplorer(const QDir &dir) override;
 
+	/** Redefined from AbstractViewPlaylists. */
+	virtual void addExtFolders(const QList<QDir> &folders) override;
+
+	/** Redefined from AbstractViewPlaylists. */
+	virtual void addPlaylist() override;
+
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void moveTracksDown() override;
 
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void moveTracksUp() override;
 
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void openFiles() override;
 
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void openFolderPopup() override;
 
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void openPlaylistManager() override;
 
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void removeCurrentPlaylist() override;
 
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void removeSelectedTracks() override;
 
 	virtual void setViewProperty(Settings::ViewProperty vp, QVariant value) override;

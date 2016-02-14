@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 	auto settings = SettingsPrivate::instance();
 	this->updateFonts(settings->font(SettingsPrivate::FF_Menu));
 
-	menubar->setHidden(settings->value("isMenuHidden", false).toBool());
+	menubar->setVisible(!settings->value("isMenuHidden", false).toBool());
 
 	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
 		QApplication::removeTranslator(&_translator);
@@ -70,11 +70,17 @@ void MainWindow::activateLastView()
 		// Find the last active view and connect database to it
 		SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 		QString actionViewName = settingsPrivate->value("lastActiveView", "actionViewPlaylists").toString();
+		QAction *defaultActionView = nullptr;
 		for (QAction *actionView : menuView->actions()) {
 			if (actionView->objectName() == actionViewName) {
+				defaultActionView = actionView;
 				actionView->trigger();
 				break;
 			}
+		}
+		// If no action was triggered, despite an entry in settings, it means some plugin was activated once, but now we couldn't find it
+		if (defaultActionView == nullptr) {
+			actionViewPlaylists->trigger();
 		}
 	}
 }
@@ -498,11 +504,14 @@ void MainWindow::activateView(QAction *menuAction)
 	this->setCentralWidget(_currentView);
 
 	// Check if current view can force the menuBar to hide itself
-	menubar->setVisible(!_currentView->viewProperty(Settings::VP_HideMenuBar));
-	qDebug() << Q_FUNC_INFO << _currentView->windowFlags();
+	if (menubar->isVisible()) {
+		menubar->setVisible(!_currentView->viewProperty(Settings::VP_HideMenuBar));
+	}
+	//qDebug() << Q_FUNC_INFO << _currentView->windowFlags();
 	//this->setWindowFlags(_currentView->windowFlags());
+	//this->show();
 
-	// Basically, a music player provides a playlist feature or it does not.
+	// Basically, a music player provides a playlist feature or it doesn't.
 	// It implies a clean and separate way to display things, I suppose.
 	bool b = _currentView->viewProperty(Settings::VP_PlaylistFeature);
 	menuView->setEnabled(true);

@@ -13,7 +13,7 @@
 #include <QStandardPaths>
 
 ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
-	: AbstractViewPlaylists(mediaPlayer, parent)
+	: AbstractViewPlaylists(new ViewPlaylistsMediaPlayerControl(mediaPlayer, parent), parent)
 	, _searchDialog(new SearchDialog(this))
 	, _db(nullptr)
 {
@@ -23,22 +23,22 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	playbackModeButton->setToggleShuffleOnly(false);
 
 	paintableWidget->setFrameBorder(false, false, true, false);
-	seekSlider->setMediaPlayer(_mediaPlayer);
+	seekSlider->setMediaPlayer(mediaPlayer);
 
 	// Init language before initiating tabPlaylists
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	translator.load(":/translations/tabPlaylists_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
-	tabPlaylists->init(_mediaPlayer);
+	tabPlaylists->init(mediaPlayer);
 	QMediaPlaylist::PlaybackMode mode = (QMediaPlaylist::PlaybackMode)settingsPrivate->value("lastActivePlaylistMode", 2).toInt();
 	playbackModeButton->updateMode(mode);
-	_mediaPlayer->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
-	_mediaPlayer->playlist()->setPlaybackMode(mode);
+	mediaPlayer->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
+	mediaPlayer->playlist()->setPlaybackMode(mode);
 
 	widgetSearchBar->setFrameBorder(false, false, true, false);
 
-	connect(_mediaPlayer->playlist(), &QMediaPlaylist::playbackModeChanged, playbackModeButton, &PlaybackModeButton::updateMode);
-	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, _mediaPlayer->playlist(), &MediaPlaylist::setPlaybackMode);
+	connect(mediaPlayer->playlist(), &QMediaPlaylist::playbackModeChanged, playbackModeButton, &PlaybackModeButton::updateMode);
+	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, mediaPlayer->playlist(), &MediaPlaylist::setPlaybackMode);
 	connect(tabPlaylists, &TabPlaylist::updatePlaybackModeButton, playbackModeButton, &PlaybackModeButton::updateMode);
 	connect(playbackModeButton, &PlaybackModeButton::aboutToChangeCurrentPlaylistPlaybackMode, tabPlaylists, &TabPlaylist::changeCurrentPlaylistPlaybackMode);
 
@@ -69,8 +69,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	leftTabs->setCurrentIndex(settingsPrivate->value("leftTabsIndex").toInt());
 
 	// Core
-	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &ViewPlaylists::mediaPlayerStateHasChanged);
-
+	connect(mediaPlayer, &MediaPlayer::stateChanged, this, &ViewPlaylists::mediaPlayerStateHasChanged);
 
 	// Main Splitter
 	connect(splitter, &QSplitter::splitterMoved, _searchDialog, &SearchDialog::moveSearchDialog);
@@ -83,12 +82,12 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	// Media buttons
-	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipBackward);
-	connect(seekBackwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::togglePlayback);
-	connect(stopButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::stop);
-	connect(seekForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayer, &MediaPlayer::skipForward);
+	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipBackward);
+	connect(seekBackwardButton, &QAbstractButton::clicked, mediaPlayer, &MediaPlayer::seekBackward);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::togglePlayback);
+	connect(stopButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::stop);
+	connect(seekForwardButton, &QAbstractButton::clicked, mediaPlayer, &MediaPlayer::seekForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipForward);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
@@ -124,11 +123,11 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, this, &ViewPlaylists::aboutToSendToTagEditor);
 
 	// Sliders
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, timeLabel, &TimeLabel::setTime);
+	connect(mediaPlayer, &MediaPlayer::positionChanged, timeLabel, &TimeLabel::setTime);
 
 	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
-		_mediaPlayer->setVolume((qreal)value / 100.0);
+		mediaPlayer->setVolume((qreal)value / 100.0);
 	});
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
@@ -174,7 +173,7 @@ ViewPlaylists::~ViewPlaylists()
 		delete _searchDialog;
 		_searchDialog = nullptr;
 	}
-	_mediaPlayer->stop();
+	_mediaPlayerControl->mediaPlayer()->stop();
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
@@ -185,7 +184,7 @@ void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
 QPair<QString, QObjectList> ViewPlaylists::extensionPoints() const
 {
 	QObjectList libraryObjectList;
-	libraryObjectList << library << library->properties;
+	libraryObjectList << library << library->properties << _mediaPlayerControl;
 	return qMakePair(library->metaObject()->className(), libraryObjectList);
 }
 
@@ -323,8 +322,8 @@ void ViewPlaylists::addExtFolders(const QList<QDir> &folders)
 
 	// Automatically plays the first track
 	if (isEmpty) {
-		_mediaPlayer->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
-		_mediaPlayer->play();
+		_mediaPlayerControl->mediaPlayer()->setPlaylist(tabPlaylists->currentPlayList()->mediaPlaylist());
+		_mediaPlayerControl->mediaPlayer()->play();
 	}
 }
 

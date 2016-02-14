@@ -98,6 +98,7 @@ HEADERS += interfaces/basicplugin.h \
     library/jumptowidget.h \
     mediabuttons/mediabutton.h \
     mediabuttons/playbackmodebutton.h \
+    mediabuttons/playbutton.h \
     mediabuttons/stopbutton.h \
     model/albumdao.h \
     model/artistdao.h \
@@ -134,7 +135,7 @@ HEADERS += interfaces/basicplugin.h \
     settingsprivate.h \
     starrating.h \
     treeview.h \
-    mediabuttons/playbutton.h
+    mediaplayercontrol.h
 
 RESOURCES += core.qrc
 

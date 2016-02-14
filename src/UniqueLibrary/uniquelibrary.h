@@ -5,6 +5,8 @@
 
 #include <model/sqldatabase.h>
 #include <abstractview.h>
+#include "uniquelibrarymediaplayercontrol.h"
+
 #include "miamuniquelibrary_global.hpp"
 
 #include "ui_uniquelibrary.h"
@@ -19,16 +21,23 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibrary : public AbstractView, public Ui::
 	Q_OBJECT
 private:
 	QStandardItem *_currentTrack;
+
 	UniqueLibraryFilterProxyModel *_proxy;
 
 	QTranslator translator;
 
-	QModelIndexList _randomHistoryList;
+	QModelIndexList *_randomHistoryList;
 
 public:
 	explicit UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
 	virtual ~UniqueLibrary();
+
+	inline QStandardItem* currentTrack() const { return _currentTrack; }
+
+	inline UniqueLibraryFilterProxyModel* proxy() const { return _proxy; }
+
+	inline QModelIndexList* randomHistoryList() const { return _randomHistoryList; }
 
 	inline virtual QSize sizeHint() const override { return QSize(420, 850); }
 
@@ -40,6 +49,8 @@ protected:
 	virtual void closeEvent(QCloseEvent *event) override;
 
 public slots:
+	bool playSingleTrack(const QModelIndex &index);
+
 	virtual void setMusicSearchEngine(MusicSearchEngine *musicSearchEngine) override;
 
 	virtual void setViewProperty(Settings::ViewProperty vp, QVariant value) override;
@@ -47,15 +58,6 @@ public slots:
 	virtual void volumeSliderDecrease() override;
 
 	virtual void volumeSliderIncrease() override;
-
-private slots:
-	bool playSingleTrack(const QModelIndex &index);
-
-	void skipBackward();
-
-	void skipForward();
-
-	void toggleShuffle();
 };
 
 #endif // UNIQUELIBRARY_H

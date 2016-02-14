@@ -202,17 +202,18 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 
 void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 {
-	mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
+	//mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
+	if (mediaPlayerPlugin->hasView()) {
+		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
+		actionAddViewToMenu->setObjectName(mediaPlayerPlugin->name());
+		_mainWindow->menuView->insertAction(_mainWindow->actionViewTagEditor, actionAddViewToMenu);
+		_mainWindow->updateFonts(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
 
-	QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
-	actionAddViewToMenu->setObjectName(mediaPlayerPlugin->name());
-	_mainWindow->menuView->insertAction(_mainWindow->actionViewTagEditor, actionAddViewToMenu);
-	_mainWindow->updateFonts(SettingsPrivate::instance()->font(SettingsPrivate::FF_Menu));
-
-	// Link the view to the existing ActionGroup
-	actionAddViewToMenu->setCheckable(true);
-	actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
-	_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
+		// Link the view to the existing ActionGroup
+		actionAddViewToMenu->setCheckable(true);
+		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
+		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
+	}
 }
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)

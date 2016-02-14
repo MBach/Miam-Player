@@ -3,6 +3,7 @@
 
 #include "miamcore_global.h"
 #include "mediaplayer.h"
+#include "mediaplayercontrol.h"
 #include "settings.h"
 #include <QDir>
 
@@ -20,16 +21,18 @@ class MIAMCORE_LIBRARY AbstractView : public QWidget
 {
 	Q_OBJECT
 protected:
-	MediaPlayer *_mediaPlayer;
+	MediaPlayerControl *_mediaPlayerControl;
 
 public:
-	AbstractView(MediaPlayer *mediaPlayer, QWidget *parent = nullptr)
+	AbstractView(MediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
 		: QWidget(parent)
-		, _mediaPlayer(mediaPlayer) {}
+		, _mediaPlayerControl(mediaPlayerControl) {}
 
 	virtual ~AbstractView() {}
 
 	virtual QPair<QString, QObjectList> extensionPoints() const { return qMakePair(QString(), QObjectList()); }
+
+	inline MediaPlayerControl* mediaPlayerControl() const { return _mediaPlayerControl; }
 
 	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 
@@ -43,14 +46,6 @@ public slots:
 	virtual void volumeSliderIncrease() {}
 
 	virtual void volumeSliderDecrease() {}
-
-	virtual void skipBackward() {}
-
-	virtual void skipForward() {}
-
-	virtual void playPause() {}
-
-	virtual void stop() {}
 };
 
 #endif // ABSTRACTVIEW_H

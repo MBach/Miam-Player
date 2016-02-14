@@ -19,8 +19,10 @@ AbstractView* ViewLoader::load(const QString &menuAction)
 		view = viewPlaylists;
 	} else if (menuAction == "actionViewUniqueLibrary") {
 		UniqueLibrary *uniqueLibrary = new UniqueLibrary(_mediaPlayer, _parent);
+		UniqueLibraryMediaPlayerControl *control = static_cast<UniqueLibraryMediaPlayerControl*>(uniqueLibrary->mediaPlayerControl());
+		control->setUniqueLibrary(uniqueLibrary);
 		view = uniqueLibrary;
-	}  else {
+	}  /*else {
 		// Other views loaded from plugins
 		QMultiMap<QString, QObject*> multiMap = _pluginManager->dependencies();
 		QObjectList dep = multiMap.values(menuAction);
@@ -36,6 +38,17 @@ AbstractView* ViewLoader::load(const QString &menuAction)
 
 			if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 				return mediaPlayerPlugin->instanciateView();
+			}
+		}
+	}*/
+	if (view) {
+		for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
+			if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
+				mediaPlayerPlugin->setMediaPlayerControl(view->mediaPlayerControl());
+				if (mediaPlayerPlugin->hasView()) {
+					return mediaPlayerPlugin->instanciateView();
+				}
+
 			}
 		}
 	}

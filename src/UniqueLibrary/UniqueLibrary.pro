@@ -12,14 +12,16 @@ HEADERS += coveritem.h \
     uniquelibrary.h \
     uniquelibraryitemdelegate.h \
     uniquelibraryitemmodel.h \
-    uniquelibraryfilterproxymodel.h
+    uniquelibraryfilterproxymodel.h \
+    uniquelibrarymediaplayercontrol.h
 
 SOURCES += coveritem.cpp \
     tableview.cpp \
     uniquelibrary.cpp \
     uniquelibraryitemdelegate.cpp \
     uniquelibraryitemmodel.cpp \
-    uniquelibraryfilterproxymodel.cpp
+    uniquelibraryfilterproxymodel.cpp \
+    uniquelibrarymediaplayercontrol.cpp
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore -L$$OUT_PWD/../Library/debug/ -lLibrary

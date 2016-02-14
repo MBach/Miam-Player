@@ -19,18 +19,19 @@
 #include <QtDebug>
 
 UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
-	: AbstractView(mediaPlayer, parent)
+	: AbstractView(new UniqueLibraryMediaPlayerControl(mediaPlayer, parent), parent)
 	, _currentTrack(nullptr)
+	, _randomHistoryList(new QModelIndexList())
 {
 	setupUi(this);
-	playButton->setMediaPlayer(_mediaPlayer);
-	stopButton->setMediaPlayer(_mediaPlayer);
-	seekSlider->setMediaPlayer(_mediaPlayer);
+	playButton->setMediaPlayer(mediaPlayer);
+	stopButton->setMediaPlayer(mediaPlayer);
+	seekSlider->setMediaPlayer(mediaPlayer);
 	playbackModeButton->setToggleShuffleOnly(true);
 
-	_mediaPlayer->setPlaylist(nullptr);
+	mediaPlayer->setPlaylist(nullptr);
 
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
+	connect(mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
 		if (_currentTrack) {
 			uint p = pos / 1000;
 			_currentTrack->setData(p, Miam::DF_CurrentPosition);
@@ -38,7 +39,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
-		_mediaPlayer->setVolume((qreal)value / 100.0);
+		mediaPlayer->setVolume((qreal)value / 100.0);
 	});
 	auto settings = Settings::instance();
 	volumeSlider->setValue(settings->volume() * 100);
@@ -50,39 +51,28 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(searchBar, &SearchBar::aboutToStartSearch, uniqueTable->model()->proxy(), &UniqueLibraryFilterProxyModel::findMusic);
 	connect(uniqueTable, &TableView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
 
-	connect(skipBackwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipBackward);
-	connect(seekBackwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &MediaButton::clicked, this, [=]() {
-		if (_currentTrack && _mediaPlayer->state() == QMediaPlayer::StoppedState) {
-			this->playSingleTrack(_proxy->mapFromSource(_currentTrack->index()));
-		} else {
-			_mediaPlayer->togglePlayback();
-		}
-	});
-	connect(stopButton, &MediaButton::clicked, this, [=]() {
-		if (_currentTrack) {
-			_currentTrack->setData(false, Miam::DF_Highlighted);
-		}
-		_mediaPlayer->stop();
-	});
-	connect(seekForwardButton, &MediaButton::clicked, _mediaPlayer, &MediaPlayer::seekForward);
-	connect(skipForwardButton, &MediaButton::clicked, this, &UniqueLibrary::skipForward);
-	connect(playbackModeButton, &MediaButton::clicked, this, &UniqueLibrary::toggleShuffle);
+	connect(skipBackwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipBackward);
+	connect(seekBackwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekBackward);
+	connect(playButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::togglePlayback);
+	connect(stopButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::stop);
+	connect(seekForwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekForward);
+	connect(skipForwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipForward);
+	connect(playbackModeButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::toggleShuffle);
 
-	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State) {
+	connect(mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State) {
 		seekSlider->update();
 	});
 
-	connect(_mediaPlayer, &MediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
-		if (_mediaPlayer->state() != QMediaPlayer::StoppedState && status == QMediaPlayer::EndOfMedia) {
-			if (_mediaPlayer->isStopAfterCurrent()) {
-				_mediaPlayer->stop();
-				_mediaPlayer->setStopAfterCurrent(false);
+	connect(mediaPlayer, &MediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
+		if (mediaPlayer->state() != QMediaPlayer::StoppedState && status == QMediaPlayer::EndOfMedia) {
+			if (mediaPlayer->isStopAfterCurrent()) {
+				mediaPlayer->stop();
+				mediaPlayer->setStopAfterCurrent(false);
 			} else {
 				if (playbackModeButton->isChecked()) {
-					_randomHistoryList.append(_proxy->mapFromSource(_currentTrack->index()));
+					_randomHistoryList->append(_proxy->mapFromSource(_currentTrack->index()));
 				}
-				skipForward();
+				_mediaPlayerControl->skipForward();
 			}
 		}
 	});
@@ -94,16 +84,15 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		QApplication::installTranslator(&translator);
 	});
 
-	connect(playbackModeButton, &PlaybackModeButton::toggled, this, [=](bool checked) {
-		settingsPrivate->setValue("uniqueLibraryIsInShuffleState", checked);
-	});
-
 	// Init button theme
-	for (MediaButton *b : this->findChildren<MediaButton*>()) {
+	auto buttons = this->findChildren<MediaButton*>();
+	for (MediaButton *b : buttons) {
 		b->setIconFromTheme(settings->theme());
+		b->setVisible(settings->isMediaButtonVisible(b->objectName()));
 	}
 
-	playbackModeButton->setChecked(settingsPrivate->value("uniqueLibraryIsInShuffleState").toBool());
+	//playbackModeButton->setChecked(settingsPrivate->value("uniqueLibraryIsInShuffleState").toBool());
+	playbackModeButton->setChecked(_mediaPlayerControl->isInShuffleState());
 
 	// Init language
 	translator.load(":/translations/uniqueLibrary_" + settingsPrivate->language());
@@ -116,8 +105,8 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 UniqueLibrary::~UniqueLibrary()
 {
-	disconnect(_mediaPlayer, &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
-	_mediaPlayer->stop();
+	disconnect(_mediaPlayerControl->mediaPlayer(), &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
+	_mediaPlayerControl->mediaPlayer()->stop();
 }
 
 bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
@@ -146,8 +135,29 @@ void UniqueLibrary::changeEvent(QEvent *event)
 
 void UniqueLibrary::closeEvent(QCloseEvent *event)
 {
-
 	QWidget::closeEvent(event);
+}
+
+bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
+{
+	QStandardItem *item = uniqueTable->model()->itemFromIndex(_proxy->mapToSource(index));
+	if (item && item->type() == Miam::IT_Track) {
+		_mediaPlayerControl->mediaPlayer()->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
+		if (playbackModeButton->isChecked()) {
+			uniqueTable->scrollTo(index, QAbstractItemView::PositionAtCenter);
+		} else {
+			uniqueTable->scrollTo(index, QAbstractItemView::EnsureVisible);
+		}
+		// Clear highlight first
+		if (_currentTrack) {
+			_currentTrack->setData(false, Miam::DF_Highlighted);
+		}
+		_currentTrack = item;
+		_currentTrack->setData(true, Miam::DF_Highlighted);
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
@@ -210,107 +220,4 @@ void UniqueLibrary::volumeSliderDecrease()
 void UniqueLibrary::volumeSliderIncrease()
 {
 	volumeSlider->setValue(volumeSlider->value() + 5);
-}
-
-bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
-{
-	QStandardItem *item = uniqueTable->model()->itemFromIndex(_proxy->mapToSource(index));
-	if (item && item->type() == Miam::IT_Track) {
-		_mediaPlayer->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
-		if (playbackModeButton->isChecked()) {
-			uniqueTable->scrollTo(index, QAbstractItemView::PositionAtCenter);
-		} else {
-			uniqueTable->scrollTo(index, QAbstractItemView::EnsureVisible);
-		}
-		// Clear highlight first
-		if (_currentTrack) {
-			_currentTrack->setData(false, Miam::DF_Highlighted);
-		}
-		_currentTrack = item;
-		_currentTrack->setData(true, Miam::DF_Highlighted);
-		return true;
-	} else {
-		return false;
-	}
-}
-
-void UniqueLibrary::skipBackward()
-{
-	if (!_currentTrack) {
-		return;
-	}
-	_mediaPlayer->blockSignals(true);
-
-	if (playbackModeButton->isChecked()) {
-		if (_randomHistoryList.isEmpty()) {
-			return;
-		} else {
-			this->playSingleTrack(_randomHistoryList.takeLast());
-		}
-	} else {
-		QModelIndex current = _proxy->mapFromSource(uniqueTable->model()->index(_currentTrack->row(), 1));
-		int row = current.row();
-		while (row >= 0) {
-			QModelIndex previous = current.sibling(row - 1, 1);
-			if (this->playSingleTrack(previous)) {
-				uniqueTable->scrollTo(previous);
-				break;
-			} else {
-				row--;
-			}
-		}
-	}
-	_mediaPlayer->blockSignals(false);
-}
-
-void UniqueLibrary::skipForward()
-{
-	_mediaPlayer->blockSignals(true);
-
-	if (_currentTrack) {
-		_currentTrack->setData(false, Miam::DF_Highlighted);
-
-		// Append to random history the track the player is playing
-		if (playbackModeButton->isChecked()) {
-			_randomHistoryList.append(_proxy->mapFromSource(_currentTrack->index()));
-		}
-	}
-
-	if (playbackModeButton->isChecked()) {
-		int rows = uniqueTable->model()->rowCount();
-		if (rows > 0) {
-			int r = rand() % rows;
-			QModelIndex idx = uniqueTable->model()->index(r, 1);
-			while (uniqueTable->model()->itemFromIndex(idx)->type() != Miam::IT_Track) {
-				idx = uniqueTable->model()->index(rand() % rows, 1);
-			}
-			QModelIndex next = _proxy->mapFromSource(idx);
-			this->playSingleTrack(next);
-		}
-	} else {
-		QModelIndex current;
-		if (_currentTrack) {
-			current = _proxy->mapFromSource(uniqueTable->model()->index(_currentTrack->row(), 1));
-		} else {
-			current = _proxy->index(0, 1);
-		}
-		int row = current.row();
-		while (row < uniqueTable->model()->rowCount()) {
-			QModelIndex next = current.sibling(row + 1, 1);
-			if (this->playSingleTrack(next)) {
-				break;
-			} else {
-				row++;
-			}
-		}
-	}
-	_mediaPlayer->blockSignals(false);
-}
-
-void UniqueLibrary::toggleShuffle()
-{
-	playbackModeButton->setChecked(playbackModeButton->isChecked());
-	if (!playbackModeButton->isChecked()) {
-		_randomHistoryList.clear();
-	}
 }
