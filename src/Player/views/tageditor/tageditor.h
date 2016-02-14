@@ -46,6 +46,8 @@ public:
 
 	virtual QList<QUrl> selectedTracks() override;
 
+	inline virtual ViewType type() const override { return VT_BuiltIn; }
+
 	virtual void updateSelectedTracks() override;
 
 	virtual bool viewProperty(Settings::ViewProperty vp) const override;

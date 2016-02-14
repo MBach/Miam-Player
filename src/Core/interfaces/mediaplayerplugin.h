@@ -24,8 +24,6 @@ public:
 
 	virtual AbstractView* instanciateView() { return nullptr; }
 
-	//virtual void setMediaPlayer(MediaPlayer *) = 0;
-
 	virtual void setMediaPlayerControl(MediaPlayerControl *) = 0;
 
 	virtual QStringList extensions() const = 0;

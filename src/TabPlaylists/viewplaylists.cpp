@@ -174,6 +174,7 @@ ViewPlaylists::~ViewPlaylists()
 		_searchDialog = nullptr;
 	}
 	_mediaPlayerControl->mediaPlayer()->stop();
+	qDebug() << Q_FUNC_INFO;
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)

@@ -202,7 +202,6 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 
 void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 {
-	//mediaPlayerPlugin->setMediaPlayer(_mainWindow->mediaPlayer());
 	if (mediaPlayerPlugin->hasView()) {
 		QAction *actionAddViewToMenu = new QAction(mediaPlayerPlugin->name(), _mainWindow->menuView);
 		actionAddViewToMenu->setObjectName(mediaPlayerPlugin->name());

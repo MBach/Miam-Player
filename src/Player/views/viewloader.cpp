@@ -11,7 +11,7 @@ ViewLoader::ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, Q
 
 }
 
-AbstractView* ViewLoader::load(const QString &menuAction)
+AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAction)
 {
 	AbstractView *view = nullptr;
 	if (menuAction == "actionViewPlaylists") {
@@ -22,7 +22,7 @@ AbstractView* ViewLoader::load(const QString &menuAction)
 		UniqueLibraryMediaPlayerControl *control = static_cast<UniqueLibraryMediaPlayerControl*>(uniqueLibrary->mediaPlayerControl());
 		control->setUniqueLibrary(uniqueLibrary);
 		view = uniqueLibrary;
-	}  /*else {
+	} else if (currentView != nullptr) {
 		// Other views loaded from plugins
 		QMultiMap<QString, QObject*> multiMap = _pluginManager->dependencies();
 		QObjectList dep = multiMap.values(menuAction);
@@ -34,21 +34,13 @@ AbstractView* ViewLoader::load(const QString &menuAction)
 			if (plugin->name() != menuAction) {
 				continue;
 			}
-			qDebug() << Q_FUNC_INFO << plugin;
 
+			// Check if we need to pass some objects from old view to new view, because new one can be brought by plugins
+			// For example, a plugin may need the MediaPlayerControl from the current view
 			if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
+				mediaPlayerPlugin->setMediaPlayerControl(currentView->mediaPlayerControl());
+				//currentView->hide();
 				return mediaPlayerPlugin->instanciateView();
-			}
-		}
-	}*/
-	if (view) {
-		for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
-			if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
-				mediaPlayerPlugin->setMediaPlayerControl(view->mediaPlayerControl());
-				if (mediaPlayerPlugin->hasView()) {
-					return mediaPlayerPlugin->instanciateView();
-				}
-
 			}
 		}
 	}

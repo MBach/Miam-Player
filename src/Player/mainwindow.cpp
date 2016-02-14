@@ -459,20 +459,18 @@ void MainWindow::processArgs(const QStringList &args)
 	}
 }
 
+#include <QWindow>
+
 void MainWindow::activateView(QAction *menuAction)
 {
-	if (_currentView) {
-		delete _currentView;
-		_currentView = nullptr;
-	}
-
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
 	qDebug() << Q_FUNC_INFO << "Action triggered:" << menuAction->objectName();
-	_currentView = v.load(menuAction->objectName());
+	_currentView = v.load(_currentView, menuAction->objectName());
 
 	if (!_currentView) {
 		qWarning() << Q_FUNC_INFO << menuAction->objectName() << "couldn't load it's attached view";
+		actionViewPlaylists->trigger();
 		return;
 	}
 
@@ -487,29 +485,46 @@ void MainWindow::activateView(QAction *menuAction)
 		_pluginManager->registerExtensionPoint(extensionPoints);
 	}
 
-	// First, clean the view (can be a QuickStart instance)
-	if (this->centralWidget()) {
-		QWidget *w = this->takeCentralWidget();
-		w->deleteLater();
-	}
-
-	// Replace the main widget
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	QByteArray ba = settingsPrivate->lastActiveViewGeometry(menuAction->objectName());
-	if (ba.isEmpty()) {
-		this->resize(_currentView->sizeHint());
+
+	// First, clean the view (can be a QuickStart instance)
+	if (_currentView->viewProperty(Settings::VP_OwnWindow)) {
+		connect(_currentView->windowHandle(), &QWindow::visibleChanged, this, [=](bool b) {
+			if (!b) {
+				_currentView->hide();
+				_currentView->deleteLater();
+				_currentView = nullptr;
+				this->show();
+			}
+		});
+		_currentView->show();
+		_currentView->activateWindow();
+		this->hide();
 	} else {
-		this->restoreGeometry(ba);
+		// Replace the main widget
+		if (this->centralWidget()) {
+			QWidget *w = this->takeCentralWidget();
+			w->deleteLater();
+		}
+		QByteArray ba = settingsPrivate->lastActiveViewGeometry(menuAction->objectName());
+		if (ba.isEmpty()) {
+			this->resize(_currentView->sizeHint());
+		} else {
+			this->restoreGeometry(ba);
+		}
+		this->setCentralWidget(_currentView);
 	}
-	this->setCentralWidget(_currentView);
 
 	// Check if current view can force the menuBar to hide itself
-	if (menubar->isVisible()) {
+	/*if (menubar->isVisible()) {
 		menubar->setVisible(!_currentView->viewProperty(Settings::VP_HideMenuBar));
+	} else {
+		menubar->setVisible(!settingsPrivate->value("isMenuHidden").toBool());
 	}
-	//qDebug() << Q_FUNC_INFO << _currentView->windowFlags();
-	//this->setWindowFlags(_currentView->windowFlags());
-	//this->show();
+
+	this->resize(_currentView->sizeHint());
+	this->setWindowFlags(_currentView->windowFlags());
+	this->show();*/
 
 	// Basically, a music player provides a playlist feature or it doesn't.
 	// It implies a clean and separate way to display things, I suppose.

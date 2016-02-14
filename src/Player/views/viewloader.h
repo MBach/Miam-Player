@@ -23,7 +23,7 @@ private:
 public:
 	ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, QWidget *parent = nullptr);
 
-	AbstractView *load(const QString &menuAction);
+	AbstractView *load(AbstractView *currentView, const QString &menuAction);
 };
 
 #endif // VIEWLOADER_H

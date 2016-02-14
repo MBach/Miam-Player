@@ -20,6 +20,11 @@ MediaPlaylist::MediaPlaylist(QObject *parent)
 	});
 }
 
+MediaPlaylist::~MediaPlaylist()
+{
+	qDebug() << Q_FUNC_INFO;
+}
+
 void MediaPlaylist::shuffle(int idx)
 {
 	this->resetRandom();

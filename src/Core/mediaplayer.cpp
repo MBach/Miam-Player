@@ -216,6 +216,7 @@ void MediaPlayer::seekForward()
 
 void MediaPlayer::skipBackward()
 {
+	qDebug() << Q_FUNC_INFO << playlist();
 	if (!_playlist) {
 		return;
 	}

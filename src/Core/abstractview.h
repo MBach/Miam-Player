@@ -20,6 +20,9 @@ class MusicSearchEngine;
 class MIAMCORE_LIBRARY AbstractView : public QWidget
 {
 	Q_OBJECT
+private:
+	Q_ENUMS(ViewType)
+
 protected:
 	MediaPlayerControl *_mediaPlayerControl;
 
@@ -28,6 +31,11 @@ public:
 		: QWidget(parent)
 		, _mediaPlayerControl(mediaPlayerControl) {}
 
+	enum ViewType {
+		VT_BuiltIn	= 0,
+		VT_Plugin	= 1
+	};
+
 	virtual ~AbstractView() {}
 
 	virtual QPair<QString, QObjectList> extensionPoints() const { return qMakePair(QString(), QObjectList()); }
@@ -35,6 +43,10 @@ public:
 	inline MediaPlayerControl* mediaPlayerControl() const { return _mediaPlayerControl; }
 
 	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
+
+	inline virtual void setMediaPlayerControl(MediaPlayerControl *mpc) { _mediaPlayerControl = mpc; }
+
+	virtual ViewType type() const = 0;
 
 	virtual bool viewProperty(Settings::ViewProperty) const { return false; }
 

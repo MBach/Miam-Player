@@ -39,6 +39,8 @@ public:
 
 	inline virtual QSize sizeHint() const override { return QSize(1024, 768); }
 
+	inline virtual ViewType type() const { return VT_BuiltIn; }
+
 	virtual bool viewProperty(Settings::ViewProperty vp) const override;
 
 protected:
