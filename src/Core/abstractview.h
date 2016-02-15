@@ -23,12 +23,15 @@ class MIAMCORE_LIBRARY AbstractView : public QWidget
 private:
 	Q_ENUMS(ViewType)
 
+	AbstractView *_origin;
+
 protected:
 	MediaPlayerControl *_mediaPlayerControl;
 
 public:
 	AbstractView(MediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
 		: QWidget(parent)
+		, _origin(nullptr)
 		, _mediaPlayerControl(mediaPlayerControl) {}
 
 	enum ViewType {
@@ -45,6 +48,9 @@ public:
 	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 
 	inline virtual void setMediaPlayerControl(MediaPlayerControl *mpc) { _mediaPlayerControl = mpc; }
+
+	inline void setOrigin(AbstractView *origin) { _origin = origin; }
+	inline AbstractView* origin() const { return _origin; }
 
 	virtual ViewType type() const = 0;
 

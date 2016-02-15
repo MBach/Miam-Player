@@ -467,6 +467,7 @@ void MainWindow::activateView(QAction *menuAction)
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
 	qDebug() << Q_FUNC_INFO << "Action triggered:" << menuAction->objectName();
 	_currentView = v.load(_currentView, menuAction->objectName());
+	qDebug() << Q_FUNC_INFO << _currentView;
 
 	if (!_currentView) {
 		qWarning() << Q_FUNC_INFO << menuAction->objectName() << "couldn't load it's attached view";
@@ -492,8 +493,9 @@ void MainWindow::activateView(QAction *menuAction)
 		connect(_currentView->windowHandle(), &QWindow::visibleChanged, this, [=](bool b) {
 			if (!b) {
 				_currentView->hide();
+				AbstractView *parent = _currentView->origin();
 				_currentView->deleteLater();
-				_currentView = nullptr;
+				_currentView = parent;
 				this->show();
 			}
 		});
@@ -514,17 +516,6 @@ void MainWindow::activateView(QAction *menuAction)
 		}
 		this->setCentralWidget(_currentView);
 	}
-
-	// Check if current view can force the menuBar to hide itself
-	/*if (menubar->isVisible()) {
-		menubar->setVisible(!_currentView->viewProperty(Settings::VP_HideMenuBar));
-	} else {
-		menubar->setVisible(!settingsPrivate->value("isMenuHidden").toBool());
-	}
-
-	this->resize(_currentView->sizeHint());
-	this->setWindowFlags(_currentView->windowFlags());
-	this->show();*/
 
 	// Basically, a music player provides a playlist feature or it doesn't.
 	// It implies a clean and separate way to display things, I suppose.

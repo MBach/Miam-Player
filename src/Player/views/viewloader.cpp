@@ -39,8 +39,8 @@ AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAct
 			// For example, a plugin may need the MediaPlayerControl from the current view
 			if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 				mediaPlayerPlugin->setMediaPlayerControl(currentView->mediaPlayerControl());
-				//currentView->hide();
-				return mediaPlayerPlugin->instanciateView();
+				view = mediaPlayerPlugin->instanciateView();
+				view->setOrigin(currentView);
 			}
 		}
 	}
