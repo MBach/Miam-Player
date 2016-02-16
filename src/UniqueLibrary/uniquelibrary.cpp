@@ -49,11 +49,15 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &SearchBar::aboutToStartSearch, uniqueTable->model()->proxy(), &UniqueLibraryFilterProxyModel::findMusic);
-	connect(uniqueTable, &TableView::doubleClicked, this, &UniqueLibrary::playSingleTrack);
+	connect(uniqueTable, &TableView::doubleClicked, this, [=](const QModelIndex &index) {
+		this->play(index, QAbstractItemView::EnsureVisible);
+	});
 
 	connect(skipBackwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipBackward);
 	connect(seekBackwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::togglePlayback);
+	connect(playButton, &MediaButton::clicked, this, [=]() {
+		this->play(uniqueTable->currentIndex(), QAbstractItemView::EnsureVisible);
+	});
 	connect(stopButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::stop);
 	connect(seekForwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekForward);
 	connect(skipForwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipForward);
@@ -101,12 +105,35 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	std::srand(std::time(nullptr));
 
 	uniqueTable->setFocus();
+
+	if (!settingsPrivate->value("uniqueLibraryLastPlayed").isNull()) {
+		int track = settingsPrivate->value("uniqueLibraryLastPlayed").toInt();
+		QModelIndex lastPlayed = uniqueTable->model()->index(track, 1);
+		if (lastPlayed.isValid()) {
+			QModelIndex p = uniqueTable->model()->proxy()->mapFromSource(lastPlayed);
+			QStandardItem *trackItem = uniqueTable->model()->itemFromIndex(lastPlayed);
+			if (p.isValid() && trackItem != nullptr) {
+				_currentTrack = trackItem;
+				uniqueTable->setCurrentIndex(p);
+				uniqueTable->scrollTo(p, QAbstractItemView::PositionAtCenter);
+			}
+		}
+	}
+
+	connect(qApp, &QApplication::aboutToQuit, this, [=]() {
+		if (_currentTrack) {
+			settingsPrivate->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
+		}
+	});
 }
 
 UniqueLibrary::~UniqueLibrary()
 {
 	disconnect(_mediaPlayerControl->mediaPlayer(), &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
 	_mediaPlayerControl->mediaPlayer()->stop();
+	if (_currentTrack) {
+		SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
+	}
 }
 
 bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
@@ -138,13 +165,13 @@ void UniqueLibrary::closeEvent(QCloseEvent *event)
 	QWidget::closeEvent(event);
 }
 
-bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
+bool UniqueLibrary::play(const QModelIndex &index, QAbstractItemView::ScrollHint sh)
 {
 	QStandardItem *item = uniqueTable->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
 		_mediaPlayerControl->mediaPlayer()->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		if (playbackModeButton->isChecked()) {
-			uniqueTable->scrollTo(index, QAbstractItemView::PositionAtCenter);
+			uniqueTable->scrollTo(index, sh);
 		} else {
 			uniqueTable->scrollTo(index, QAbstractItemView::EnsureVisible);
 		}
@@ -158,6 +185,11 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 	} else {
 		return false;
 	}
+}
+
+bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
+{
+	return this->play(index);
 }
 
 void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)

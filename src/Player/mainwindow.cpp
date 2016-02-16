@@ -14,6 +14,7 @@
 #include "pluginmanager.h"
 
 #include <QDesktopServices>
+#include <QWindow>
 
 #include <QtDebug>
 
@@ -459,8 +460,6 @@ void MainWindow::processArgs(const QStringList &args)
 	}
 }
 
-#include <QWindow>
-
 void MainWindow::activateView(QAction *menuAction)
 {
 	// User a Helper to load views depending on which classes are attached to the QAction
@@ -478,12 +477,6 @@ void MainWindow::activateView(QAction *menuAction)
 	// Trigger a rescan of the library is there's nothing to display
 	if (!_currentView->viewProperty(Settings::VP_HasTracksToDisplay)) {
 		this->rescanLibrary();
-	}
-
-	// Attach plugins if views allow to receive some
-	QPair<QString, QObjectList> extensionPoints = _currentView->extensionPoints();
-	if (!extensionPoints.first.isEmpty()) {
-		_pluginManager->registerExtensionPoint(extensionPoints);
 	}
 
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();

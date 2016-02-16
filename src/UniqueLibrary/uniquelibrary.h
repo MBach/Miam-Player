@@ -50,6 +50,9 @@ protected:
 
 	virtual void closeEvent(QCloseEvent *event) override;
 
+private:
+	bool play(const QModelIndex &index, QAbstractItemView::ScrollHint sh = QAbstractItemView::PositionAtCenter);
+
 public slots:
 	bool playSingleTrack(const QModelIndex &index);
 

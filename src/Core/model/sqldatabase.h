@@ -86,7 +86,6 @@ public slots:
 	void saveFileRef(const QString &absFilePath);
 
 signals:
-	void aboutToLoad();
 	void aboutToResyncRemoteSources();
 	void coverWasUpdated(const QFileInfo &);
 

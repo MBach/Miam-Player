@@ -24,6 +24,11 @@ public:
 	ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, QWidget *parent = nullptr);
 
 	AbstractView *load(AbstractView *currentView, const QString &menuAction);
+
+private:
+	void attachPluginToBuiltInView(AbstractView *view);
+
+	AbstractView *loadFromPlugin(AbstractView *currentView, const QString &menuAction);
 };
 
 #endif // VIEWLOADER_H

@@ -27,6 +27,9 @@ public:
 	virtual bool eventFilter(QObject *obj, QEvent *e) override;
 
 protected:
+	/** Redefined to be able to retransltate User Interface at runtime. */
+	virtual void changeEvent(QEvent *event) override;
+
 	/** Redefined to add custom behaviour. */
 	virtual void closeEvent(QCloseEvent *) override;
 

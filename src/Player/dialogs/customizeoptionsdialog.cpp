@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include <QFileIconProvider>
 #include <QLibraryInfo>
+#include <QSqlQuery>
 #include <QStandardPaths>
 
 #include <QtDebug>
@@ -162,6 +163,16 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	// Restore geometry
 	this->restoreGeometry(settings->value("customizeOptionsDialogGeometry").toByteArray());
 	listWidget->setCurrentRow(settings->value("customizeOptionsDialogCurrentTab", 0).toInt());
+}
+
+/** Redefined to be able to retransltate User Interface at runtime. */
+void CustomizeOptionsDialog::changeEvent(QEvent *event)
+{
+	if (event->type() == QEvent::LanguageChange) {
+		this->retranslateUi(this);
+	} else {
+		QDialog::changeEvent(event);
+	}
 }
 
 /** Redefined to add custom behaviour. */
@@ -332,6 +343,7 @@ void CustomizeOptionsDialog::changeLanguage()
 		b->setDown(false);
 	}
 	languageButton->setDown(true);
+	this->retranslateUi(this);
 }
 
 /** Verify that one hasn't tried to bind a key twice. */
@@ -441,8 +453,6 @@ void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
 		}
 	}
 }
-
-#include <QSqlQuery>
 
 /** Check if music locations have changed in order to rescan the filesystem. */
 void CustomizeOptionsDialog::updateMusicLocations()
