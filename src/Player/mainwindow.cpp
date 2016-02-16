@@ -24,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
 	, _pluginManager(new PluginManager(this))
 	, _currentView(nullptr)
 	, _tagEditor(nullptr)
+	, _shortcutSkipBackward(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaPrevious), this))
+	, _shortcutStop(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaStop), this))
+	, _shortcutPlayPause(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaPlay), this))
+	, _shortcutSkipForward(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaNext), this))
 {
 	setupUi(this);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
@@ -466,10 +470,9 @@ void MainWindow::activateView(QAction *menuAction)
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
 	qDebug() << Q_FUNC_INFO << "Action triggered:" << menuAction->objectName();
 	_currentView = v.load(_currentView, menuAction->objectName());
-	qDebug() << Q_FUNC_INFO << _currentView;
 
 	if (!_currentView) {
-		qWarning() << Q_FUNC_INFO << menuAction->objectName() << "couldn't load it's attached view";
+		qDebug() << Q_FUNC_INFO << menuAction->objectName() << "couldn't load it's attached view";
 		actionViewPlaylists->trigger();
 		return;
 	}
@@ -509,6 +512,16 @@ void MainWindow::activateView(QAction *menuAction)
 		}
 		this->setCentralWidget(_currentView);
 	}
+
+	// Init default multimedia keys
+	_shortcutSkipBackward->disconnect();
+	_shortcutPlayPause->disconnect();
+	_shortcutStop->disconnect();
+	_shortcutSkipForward->disconnect();
+	connect(_shortcutSkipBackward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipBackward);
+	connect(_shortcutPlayPause, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::togglePlayback);
+	connect(_shortcutStop, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::stop);
+	connect(_shortcutSkipForward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipForward);
 
 	// Basically, a music player provides a playlist feature or it doesn't.
 	// It implies a clean and separate way to display things, I suppose.

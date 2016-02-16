@@ -137,8 +137,6 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 /** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 void PluginManager::registerExtensionPoint(QPair<QString, QObjectList> ext)
 {
-	qDebug() << Q_FUNC_INFO << ext.first;
-
 	for (QObject *instance : ext.second) {
 		_extensionPoints.insert(ext.first, instance);
 	}
@@ -149,9 +147,7 @@ void PluginManager::registerExtensionPoint(QPair<QString, QObjectList> ext)
 			this->loadItemViewPlugin(itemViewPlugin);
 		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
 			this->loadTagEditorPlugin(tagEditorPlugin);
-		} /*else if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
-			mediaPlayerPlugin->setMediaPlayerControl(mpc);
-		}*/
+		}
 	}
 }
 

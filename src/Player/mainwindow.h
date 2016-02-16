@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QStack>
 
+#include <qxt/qxtglobalshortcut.h>
 #include <abstractview.h>
 #include <mediaplayer.h>
 #include <uniquelibrary.h>
@@ -26,11 +27,14 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 	Q_OBJECT
 private:
 	MediaPlayer *_mediaPlayer;
-
 	PluginManager *_pluginManager;
-
 	AbstractView *_currentView;
 	TagEditor *_tagEditor;
+	QxtGlobalShortcut *_shortcutSkipBackward;
+	QxtGlobalShortcut *_shortcutStop;
+	QxtGlobalShortcut *_shortcutPlayPause;
+	QxtGlobalShortcut *_shortcutSkipForward;
+
 	QTranslator _translator;
 
 public:

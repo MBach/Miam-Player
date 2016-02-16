@@ -14,7 +14,6 @@
 #include <QtDebug>
 
 #include <QtAV/AVPlayer.h>
-#include <qxt/qxtglobalshortcut.h>
 
 MediaPlayer::MediaPlayer(QObject *parent)
 	: QObject(parent)
@@ -66,17 +65,6 @@ MediaPlayer::MediaPlayer(QObject *parent)
 			}
 		}
 	});
-
-	// Init default multimedia keys
-	QxtGlobalShortcut *shortcutSkipBackward = new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaPrevious), this);
-	QxtGlobalShortcut *shortcutStop = new QxtGlobalShortcut(Qt::Key_MediaStop, this);
-	QxtGlobalShortcut *shortcutPlayPause = new QxtGlobalShortcut(Qt::Key_MediaPlay, this);
-	QxtGlobalShortcut *shortcutSkipForward = new QxtGlobalShortcut(Qt::Key_MediaNext, this);
-
-	connect(shortcutSkipBackward, &QxtGlobalShortcut::activated, this, &MediaPlayer::skipBackward);
-	connect(shortcutPlayPause, &QxtGlobalShortcut::activated, this, &MediaPlayer::togglePlayback);
-	connect(shortcutStop, &QxtGlobalShortcut::activated, this, &MediaPlayer::stop);
-	connect(shortcutSkipForward, &QxtGlobalShortcut::activated, this, &MediaPlayer::skipForward);
 }
 
 void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
