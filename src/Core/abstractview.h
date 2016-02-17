@@ -41,6 +41,8 @@ public:
 
 	virtual ~AbstractView() {}
 
+	virtual void bindShortcut(const QString & /*objectName*/, const QKeySequence & /*keySequence*/) {}
+
 	virtual QPair<QString, QObjectList> extensionPoints() const { return qMakePair(QString(), QObjectList()); }
 
 	inline MediaPlayerControl* mediaPlayerControl() const { return _mediaPlayerControl; }

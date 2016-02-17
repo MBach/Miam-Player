@@ -70,6 +70,7 @@ MediaPlayer::MediaPlayer(QObject *parent)
 void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 {
 	if (remotePlayer) {
+		qDebug() << Q_FUNC_INFO << remotePlayer << remotePlayer->host();
 		_remotePlayers.insert(remotePlayer->host(), remotePlayer);
 	}
 }
@@ -96,6 +97,7 @@ void MediaPlayer::setVolume(qreal v)
 
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
+	qDebug() << Q_FUNC_INFO << "remote is null?" << (_remotePlayer == nullptr);
 	if ((_state == QMediaPlayer::PlayingState) || (_state == QMediaPlayer::PausedState)) {
 		this->stop();
 	}
@@ -245,10 +247,12 @@ void MediaPlayer::play()
 {
 	// Check if it's possible to play tracks first
 	if (!_playlist) {
+		qDebug() << Q_FUNC_INFO << "no playlist!";
 		return;
 	}
 	QMediaContent mc = _playlist->media(_playlist->currentIndex());
 	if (mc.isNull()) {
+		qDebug() << Q_FUNC_INFO << "media content is null!";
 		return;
 	}
 	this->playMediaContent(mc);

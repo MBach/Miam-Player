@@ -20,6 +20,11 @@ private:
 	QTranslator translator;
 	SqlDatabase *_db;
 
+	QShortcut *_removeSelectedTracks;
+	QShortcut *_showTabLibrary;
+	QShortcut *_showTabFilesystem;
+	QShortcut *_goToSearch;
+
 public:
 	explicit ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
@@ -27,11 +32,15 @@ public:
 
 	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
 
+	virtual void bindShortcut(const QString & objectName, const QKeySequence & keySequence) override;
+
 	virtual QPair<QString, QObjectList> extensionPoints() const override;
 
 	virtual void openFolder(const QString &dir) const override;
 
 	virtual void saveCurrentPlaylists() override;
+
+	inline SearchDialog* searchDialog() const { return _searchDialog; }
 
 	virtual int selectedTracksInCurrentPlaylist() const override;
 

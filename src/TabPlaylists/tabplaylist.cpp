@@ -150,7 +150,11 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			}
 			return true;
 		}
-	}
+	} /*else if (event->type() == QEvent::ShortcutOverride) {
+		qDebug() << Q_FUNC_INFO << "QEvent::ShortcutOverride";
+		event->ignore();
+		return false;
+	}*/
 	return QTabWidget::eventFilter(obj, event);
 }
 

@@ -19,6 +19,7 @@ AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAct
 		if (menuAction == "actionViewPlaylists") {
 			ViewPlaylists *viewPlaylists = new ViewPlaylists(_mediaPlayer, _parent);
 			view = viewPlaylists;
+
 		} else {
 			UniqueLibrary *uniqueLibrary = new UniqueLibrary(_mediaPlayer, _parent);
 			UniqueLibraryMediaPlayerControl *control = static_cast<UniqueLibraryMediaPlayerControl*>(uniqueLibrary->mediaPlayerControl());
@@ -35,9 +36,9 @@ AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAct
 	return view;
 }
 
+/** Attach plugins if views allow to receive some. */
 void ViewLoader::attachPluginToBuiltInView(AbstractView *view)
 {
-	// Attach plugins if views allow to receive some
 	QPair<QString, QObjectList> extensionPoints = view->extensionPoints();
 	if (!extensionPoints.first.isEmpty()) {
 		_pluginManager->registerExtensionPoint(extensionPoints);
@@ -45,9 +46,14 @@ void ViewLoader::attachPluginToBuiltInView(AbstractView *view)
 
 	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
 
-		// Right now, only this type of plugin can extend built-in views
 		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 			mediaPlayerPlugin->setMediaPlayerControl(view->mediaPlayerControl());
+		} else if (RemoteMediaPlayerPlugin *remote = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
+
+			/// XXX: This is ultra-specific!
+			if (ViewPlaylists *vp = qobject_cast<ViewPlaylists*>(view)) {
+				remote->setSearchDialog(vp->searchDialog());
+			}
 		}
 	}
 }

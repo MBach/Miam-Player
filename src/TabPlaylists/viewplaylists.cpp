@@ -16,6 +16,10 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	: AbstractViewPlaylists(new ViewPlaylistsMediaPlayerControl(mediaPlayer, parent), parent)
 	, _searchDialog(new SearchDialog(this))
 	, _db(nullptr)
+	, _removeSelectedTracks(new QShortcut(this))
+	, _showTabLibrary(new QShortcut(this))
+	, _showTabFilesystem(new QShortcut(this))
+	, _goToSearch(new QShortcut(this))
 {
 	this->setupUi(this);
 	playButton->setMediaPlayer(mediaPlayer);
@@ -158,7 +162,24 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(settings, &Settings::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
 
-	this->installEventFilter(this);
+	QMapIterator<QString, QVariant> it(settings->shortcuts());
+	while (it.hasNext()) {
+		it.next();
+		this->bindShortcut(it.key(), it.value().value<QKeySequence>());
+	}
+
+	_removeSelectedTracks->setContext(Qt::WidgetWithChildrenShortcut);
+
+	_removeSelectedTracks->setObjectName("removeSelectedTracks");
+	_showTabLibrary->setObjectName("showTabLibrary");
+	_showTabFilesystem->setObjectName("showTabFilesystem");
+	_goToSearch->setObjectName("search");
+
+	// Bind shortcuts
+	connect(_removeSelectedTracks, &QShortcut::activated, tabPlaylists->currentPlayList(), &Playlist::removeSelectedTracks);
+	connect(_showTabLibrary, &QShortcut::activated, this, [=]() { leftTabs->setCurrentIndex(0);	});
+	connect(_showTabFilesystem, &QShortcut::activated, this, [=]() { leftTabs->setCurrentIndex(1); });
+	connect(_goToSearch, &QShortcut::activated, searchBar, static_cast<void (QWidget::*)(void)>(&QWidget::setFocus));
 
 	library->model()->load();
 }
@@ -174,12 +195,22 @@ ViewPlaylists::~ViewPlaylists()
 		_searchDialog = nullptr;
 	}
 	_mediaPlayerControl->mediaPlayer()->stop();
-	qDebug() << Q_FUNC_INFO;
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
 {
 	tabPlaylists->insertItemsToPlaylist(-1, tracks);
+}
+
+void ViewPlaylists::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
+{
+	qDebug() << Q_FUNC_INFO << "not yet implemented" << objectName << keySequence;
+	for (QShortcut *s : this->findChildren<QShortcut*>(objectName)) {
+		if (s) {
+			s->setKey(keySequence);
+			break;
+		}
+	}
 }
 
 QPair<QString, QObjectList> ViewPlaylists::extensionPoints() const

@@ -212,16 +212,12 @@ void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
 		actionAddViewToMenu->setCheckable(true);
 		actionAddViewToMenu->setActionGroup(_mainWindow->actionViewPlaylists->actionGroup());
 		_dependencies.insert(mediaPlayerPlugin->name(), actionAddViewToMenu);
-	} else {
-		// ?
-
 	}
 }
 
 void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin)
 {
-	/// FIXME
-	//remoteMediaPlayerPlugin->setSearchDialog(_mainWindow->searchDialog);
+	qDebug() << Q_FUNC_INFO << remoteMediaPlayerPlugin->player();
 	_mainWindow->mediaPlayer()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 

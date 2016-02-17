@@ -97,6 +97,8 @@ protected:
 	/** Redefined to be able to move tracks between playlists or internally. */
 	virtual void dropEvent(QDropEvent *event) override;
 
+	//virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
 	/** Redefined to handle escape key when editing ratings. */
 	virtual void keyPressEvent(QKeyEvent *event) override;
 

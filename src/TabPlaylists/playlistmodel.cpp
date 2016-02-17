@@ -48,6 +48,7 @@ bool PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 	int c = this->rowCount();
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
+		qDebug() << track.host();
 		this->createLine(rowIndex + i, track);
 	}
 	return c < this->rowCount();

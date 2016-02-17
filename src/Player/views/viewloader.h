@@ -26,6 +26,7 @@ public:
 	AbstractView *load(AbstractView *currentView, const QString &menuAction);
 
 private:
+	/** Attach plugins if views allow to receive some. */
 	void attachPluginToBuiltInView(AbstractView *view);
 
 	AbstractView *loadFromPlugin(AbstractView *currentView, const QString &menuAction);

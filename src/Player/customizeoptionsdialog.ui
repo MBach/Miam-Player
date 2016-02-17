@@ -475,8 +475,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>292</width>
-            <height>285</height>
+            <width>496</width>
+            <height>440</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1044,8 +1044,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>208</width>
-            <height>540</height>
+            <width>496</width>
+            <height>440</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1617,7 +1617,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>338</width>
+            <width>477</width>
             <height>528</height>
            </rect>
           </property>
@@ -3466,8 +3466,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>307</width>
-            <height>212</height>
+            <width>488</width>
+            <height>440</height>
            </rect>
           </property>
           <attribute name="label">
@@ -4436,8 +4436,8 @@
  <buttongroups>
   <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_4"/>
   <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_4"/>
   <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

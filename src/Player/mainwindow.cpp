@@ -358,6 +358,7 @@ void MainWindow::createCustomizeOptionsDialog()
 	CustomizeOptionsDialog *dialog = new CustomizeOptionsDialog(_pluginManager, this);
 	connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, this, &MainWindow::bindShortcut);
 	if (_currentView && _currentView->viewProperty(Settings::VP_FileExplorerFeature)) {
+		connect(dialog, &CustomizeOptionsDialog::aboutToBindShortcut, _currentView, &AbstractView::bindShortcut);
 		connect(dialog, &CustomizeOptionsDialog::defaultLocationFileExplorerHasChanged, _currentView, &AbstractView::initFileExplorer);
 	}
 	dialog->show();
@@ -612,24 +613,21 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
 	// Connect actions first
 	if (action) {
+		//qDebug() << Q_FUNC_INFO << action << keySequence;
 		action->setShortcut(keySequence);
 		// Some default shortcuts might interfer with other widgets, so we need to restrict where it applies
 		if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
 			action->setShortcutContext(Qt::WidgetShortcut);
 		} else if (action == actionRemoveSelectedTracks) {
-			action->setShortcutContext(Qt::ApplicationShortcut);
+			action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 		}
 	// Specific actions not defined in main menu
 	} /// FIXME
-	/*else if (objectName == "showTabLibrary" || objectName == "showTabFilesystem") {
-		leftTabs->setShortcut(objectName, keySequence);
-	} else if (objectName == "sendToCurrentPlaylist") {
+	/*else if (objectName == "sendToCurrentPlaylist") {
 		library->sendToCurrentPlaylist->setKey(keySequence);
 	} else if (objectName == "sendToTagEditor") {
 		library->openTagEditor->setKey(keySequence);
-	} else if (objectName == "search") {
-		searchBar->shortcut->setKey(keySequence);
-	}*/
+	*/
 }
 
 void MainWindow::rescanLibrary()
