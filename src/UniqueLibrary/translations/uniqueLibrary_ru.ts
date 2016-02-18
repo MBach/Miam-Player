@@ -12,7 +12,7 @@
 <context>
     <name>UniqueLibrary</name>
     <message>
-        <location filename="../uniquelibrary.cpp" line="178"/>
+        <location filename="../uniquelibrary.cpp" line="208"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -30,7 +30,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../uniquelibraryitemdelegate.cpp" line="186"/>
+        <location filename="../uniquelibraryitemdelegate.cpp" line="189"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>

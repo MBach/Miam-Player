@@ -119,17 +119,17 @@
 <context>
     <name>LibraryTreeView</name>
     <message>
-        <location filename="../librarytreeview.cpp" line="37"/>
+        <location filename="../librarytreeview.cpp" line="35"/>
         <source>Send to the current playlist</source>
         <translation>Отправить в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="38"/>
+        <location filename="../librarytreeview.cpp" line="36"/>
         <source>Send to the tag editor</source>
         <translation>Отправить в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="218"/>
+        <location filename="../librarytreeview.cpp" line="248"/>
         <source>No matching results were found</source>
         <translation>Подходящих результатов не найдено</translation>
     </message>

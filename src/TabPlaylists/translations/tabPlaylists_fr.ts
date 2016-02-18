@@ -110,7 +110,12 @@
         <translation>ici</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="466"/>
+        <location filename="../playlist.cpp" line="351"/>
+        <source>playlist</source>
+        <translation>la liste de lecture</translation>
+    </message>
+    <message>
+        <location filename="../playlist.cpp" line="481"/>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
         <translation>Cette liste de lecture est vide.
@@ -261,17 +266,17 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlistmodel.cpp" line="70"/>
+        <location filename="../playlistmodel.cpp" line="71"/>
         <source>You cannot modify remote medias</source>
         <translation>Vous ne pouvez pas modifier des médias distants</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="102"/>
+        <location filename="../playlistmodel.cpp" line="103"/>
         <source>Local</source>
         <translation>Local</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="104"/>
+        <location filename="../playlistmodel.cpp" line="105"/>
         <source>Local file</source>
         <translation>Fichier en local</translation>
     </message>
@@ -291,12 +296,12 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     <message>
         <location filename="../searchdialog.ui" line="96"/>
         <location filename="../dialogs/searchdialog.cpp" line="183"/>
-        <location filename="../dialogs/searchdialog.cpp" line="339"/>
+        <location filename="../dialogs/searchdialog.cpp" line="341"/>
         <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Obtenir plus de résultats...&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../dialogs/searchdialog.cpp" line="329"/>
+        <location filename="../dialogs/searchdialog.cpp" line="331"/>
         <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Montrer moins de résultats&lt;/a&gt;</translation>
     </message>
@@ -304,8 +309,8 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
 <context>
     <name>TabPlaylist</name>
     <message>
-        <location filename="../tabplaylist.cpp" line="256"/>
-        <location filename="../tabplaylist.cpp" line="447"/>
+        <location filename="../tabplaylist.cpp" line="263"/>
+        <location filename="../tabplaylist.cpp" line="454"/>
         <source>Playlist %1</source>
         <translation>Liste de lecture %1</translation>
     </message>
@@ -363,32 +368,32 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Explorateur de fichiers</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="205"/>
+        <location filename="../viewplaylists.cpp" line="257"/>
         <source>Your library is updating...</source>
         <translation>Votre bibliothèque se met à jour...</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="269"/>
+        <location filename="../viewplaylists.cpp" line="323"/>
         <source>playlist</source>
         <translation>liste de lecture</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="351"/>
+        <location filename="../viewplaylists.cpp" line="405"/>
         <source>Audio files</source>
         <translation>Fichiers audios</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="363"/>
+        <location filename="../viewplaylists.cpp" line="417"/>
         <source>Every file type (*)</source>
         <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="365"/>
+        <location filename="../viewplaylists.cpp" line="419"/>
         <source>Choose some files to open</source>
         <translation>Choisissez des fichiers à ouvrir</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="390"/>
+        <location filename="../viewplaylists.cpp" line="444"/>
         <source>Choose a folder to open</source>
         <translation>Choisissez un dossier à ouvrir</translation>
     </message>

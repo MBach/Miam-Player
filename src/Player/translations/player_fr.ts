@@ -1136,11 +1136,11 @@
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>En &amp;boucle</translation>
     </message>
     <message>
         <source>Current item in l&amp;oop</source>
-        <translation type="unfinished"></translation>
+        <translation>Une piste, toujours en bou&amp;cle</translation>
     </message>
 </context>
 <context>

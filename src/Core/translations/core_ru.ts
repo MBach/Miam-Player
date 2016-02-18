@@ -4,32 +4,32 @@
 <context>
     <name>PlaybackModeButton</name>
     <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="38"/>
+        <location filename="../mediabuttons/playbackmodebutton.cpp" line="40"/>
         <source>Sequential</source>
         <translation>Последовательно</translation>
     </message>
     <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="39"/>
+        <location filename="../mediabuttons/playbackmodebutton.cpp" line="41"/>
         <source>Shuffle</source>
         <translation>Случайный порядок</translation>
     </message>
     <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="40"/>
+        <location filename="../mediabuttons/playbackmodebutton.cpp" line="42"/>
         <source>Loop</source>
         <translation>Закольцевать</translation>
     </message>
     <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="41"/>
+        <location filename="../mediabuttons/playbackmodebutton.cpp" line="43"/>
         <source>Current track once</source>
         <translation>Только текущая дорожка</translation>
     </message>
     <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="42"/>
+        <location filename="../mediabuttons/playbackmodebutton.cpp" line="44"/>
         <source>Current track in loop</source>
         <translation>Закольцевать текущую дорожку</translation>
     </message>
     <message>
-        <location filename="../mediabuttons/playbackmodebutton.cpp" line="46"/>
+        <location filename="../mediabuttons/playbackmodebutton.cpp" line="48"/>
         <source>Sequential mode is the most common mode to play tracks in a playlist. It will play tracks from Top to Bottom.</source>
         <translation>Последовательный режим это наиболее распространённый способ воспроизведения дорожек, находящихся в списке воспроизведения. Дорожки будут проигрываться сверху вниз.</translation>
     </message>
@@ -66,12 +66,12 @@
 <context>
     <name>TreeView</name>
     <message>
-        <location filename="../treeview.cpp" line="74"/>
+        <location filename="../treeview.cpp" line="72"/>
         <source>playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../treeview.cpp" line="83"/>
+        <location filename="../treeview.cpp" line="81"/>
         <source>tag editor</source>
         <translation type="unfinished"></translation>
     </message>

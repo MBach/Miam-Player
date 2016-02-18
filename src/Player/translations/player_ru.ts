@@ -123,7 +123,7 @@
         <translation>Начальная папка</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4054"/>
+        <location filename="../customizeoptionsdialog.ui" line="4099"/>
         <source>Currently under development</source>
         <translation>В разработке</translation>
     </message>
@@ -149,15 +149,15 @@
     </message>
     <message>
         <location filename="../customizeoptionsdialog.ui" line="344"/>
-        <location filename="../customizeoptionsdialog.ui" line="4108"/>
         <location filename="../customizeoptionsdialog.ui" line="4153"/>
+        <location filename="../customizeoptionsdialog.ui" line="4198"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
         <location filename="../customizeoptionsdialog.ui" line="361"/>
-        <location filename="../customizeoptionsdialog.ui" line="4121"/>
         <location filename="../customizeoptionsdialog.ui" line="4166"/>
+        <location filename="../customizeoptionsdialog.ui" line="4211"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -273,285 +273,285 @@
         <translation>Искать</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1858"/>
+        <location filename="../customizeoptionsdialog.ui" line="1861"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1989"/>
+        <location filename="../customizeoptionsdialog.ui" line="1992"/>
         <source>Skip backward</source>
         <translation>Перейти к предыдущему</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2015"/>
+        <location filename="../customizeoptionsdialog.ui" line="2018"/>
         <source>Normal</source>
         <translation>Нормальное</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2002"/>
+        <location filename="../customizeoptionsdialog.ui" line="2005"/>
         <source>Seek backward</source>
         <translation>Перемотать назад</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2347"/>
+        <location filename="../customizeoptionsdialog.ui" line="2350"/>
         <source>Increase volume</source>
         <translation>Увеличить громкость</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2428"/>
+        <location filename="../customizeoptionsdialog.ui" line="2431"/>
         <source>Repeat</source>
         <translation>Повторять</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2573"/>
+        <location filename="../customizeoptionsdialog.ui" line="2576"/>
         <source>Current item in loop</source>
         <translation>Текущий элемент циклично</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2617"/>
+        <location filename="../customizeoptionsdialog.ui" line="2620"/>
         <source>Mute</source>
         <translation>Отключить звук</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2692"/>
+        <location filename="../customizeoptionsdialog.ui" line="2695"/>
         <source>Skip forward</source>
         <translation>Перейти к следующему</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2895"/>
+        <location filename="../customizeoptionsdialog.ui" line="2898"/>
         <source>Shuffle</source>
         <translation>В случайном порядке</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2851"/>
+        <location filename="../customizeoptionsdialog.ui" line="2854"/>
         <source>Decrease volume</source>
         <translation>Уменьшить громкость</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2921"/>
+        <location filename="../customizeoptionsdialog.ui" line="2924"/>
         <source>Seek forward</source>
         <translation>Перемотать вперёд</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2908"/>
+        <location filename="../customizeoptionsdialog.ui" line="2911"/>
         <source>Current item once</source>
         <translation>Текущий элемент только один раз</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3002"/>
+        <location filename="../customizeoptionsdialog.ui" line="3005"/>
         <source>Play / Pause</source>
         <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3474"/>
+        <location filename="../customizeoptionsdialog.ui" line="3519"/>
         <source>Playlist</source>
         <translation>Список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3480"/>
+        <location filename="../customizeoptionsdialog.ui" line="3525"/>
         <source>Move selected track down</source>
         <translation>Переместить выбранный трек вниз</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3487"/>
+        <location filename="../customizeoptionsdialog.ui" line="3532"/>
         <source>Move selected track up</source>
         <translation>Переместить выбранный трек вверх</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3507"/>
+        <location filename="../customizeoptionsdialog.ui" line="3552"/>
         <source>Open playlist manager...</source>
         <translation>Открыть управление списками воспроизведения...</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3577"/>
+        <location filename="../customizeoptionsdialog.ui" line="3622"/>
         <source>Remove selected tracks</source>
         <translation>Удалить выбранные треки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3615"/>
+        <location filename="../customizeoptionsdialog.ui" line="3660"/>
         <source>Add a new playlist</source>
         <translation>Добавить новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3703"/>
+        <location filename="../customizeoptionsdialog.ui" line="3748"/>
         <source>Delete current playlist</source>
         <translation>Удалить текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3910"/>
+        <location filename="../customizeoptionsdialog.ui" line="3955"/>
         <source>Playback options</source>
         <translation>Настройка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3916"/>
+        <location filename="../customizeoptionsdialog.ui" line="3961"/>
         <source>Seek time (forward or backward)</source>
         <translation>Перемотка (вперёд или назад)</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3939"/>
+        <location filename="../customizeoptionsdialog.ui" line="3984"/>
         <source>Playlists</source>
         <translation>Списки воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3953"/>
+        <location filename="../customizeoptionsdialog.ui" line="3998"/>
         <source>What should I do when you&apos;re closing a playlist?</source>
         <translation>Что делать, когда вы закрываете список воспроизведения?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3965"/>
+        <location filename="../customizeoptionsdialog.ui" line="4010"/>
         <source>Let me decide</source>
         <translation>Оставлять выбор за мной</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3978"/>
+        <location filename="../customizeoptionsdialog.ui" line="4023"/>
         <source>Save</source>
         <translation>Сохранить его</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3991"/>
+        <location filename="../customizeoptionsdialog.ui" line="4036"/>
         <source>Discard</source>
         <translation>Отказаться от закрытия</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4082"/>
+        <location filename="../customizeoptionsdialog.ui" line="4127"/>
         <source>Startup &amp;&amp; Exit</source>
         <translation>Запуск и выход</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4141"/>
+        <location filename="../customizeoptionsdialog.ui" line="4186"/>
         <source>Would you like to keep your playlists in memory before exiting?</source>
         <translation>Сохранять в памяти ваши списки воспроизведения перед выходом?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4093"/>
+        <location filename="../customizeoptionsdialog.ui" line="4138"/>
         <source>Would you like to restore existing playlists at startup?</source>
         <translation>Восстанавливать существующие списки воспроизведения при запуске?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3263"/>
+        <location filename="../customizeoptionsdialog.ui" line="3269"/>
         <source>Global</source>
         <translation>Общие</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3276"/>
+        <location filename="../customizeoptionsdialog.ui" line="3282"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3289"/>
+        <location filename="../customizeoptionsdialog.ui" line="3295"/>
         <source>Reset</source>
         <translation>Сбросить</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4029"/>
+        <location filename="../customizeoptionsdialog.ui" line="4074"/>
         <source>What is the behaviour for columns?</source>
         <translation>Выберите поведение для столбцов.</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4041"/>
+        <location filename="../customizeoptionsdialog.ui" line="4086"/>
         <source>Resize columns to contents</source>
         <translation>Изменять ширину в соответствии с содержимым</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4057"/>
+        <location filename="../customizeoptionsdialog.ui" line="4102"/>
         <source>Keep all columns visible</source>
         <translation>Поддерживать видимость всех столбцов</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4181"/>
+        <location filename="../customizeoptionsdialog.ui" line="4226"/>
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation>Внимание: несохранённые списки воспроизведения будут автоматически сохранены, изменённые будут перезаписаны.</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4229"/>
+        <location filename="../customizeoptionsdialog.ui" line="4274"/>
         <source>Drag and drop from external places</source>
         <translation>Перетаскивание из внешних источников</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4240"/>
+        <location filename="../customizeoptionsdialog.ui" line="4285"/>
         <source>What should I do when you&apos;re dropping here items from another application?</source>
         <translation>Что делать, когда вы перетаскиваете сюда элементы из других программ?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4250"/>
+        <location filename="../customizeoptionsdialog.ui" line="4295"/>
         <source>Open a Popup and ask how to proceed</source>
         <translation>Открыть всплывающее окно и спросить, что делать дальше</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4260"/>
+        <location filename="../customizeoptionsdialog.ui" line="4305"/>
         <source>Add folders to the library</source>
         <translation>Добавить папки в библиотеку</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4267"/>
+        <location filename="../customizeoptionsdialog.ui" line="4312"/>
         <source>Add folders to the current playlist</source>
         <translation>Добавить папки в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4274"/>
+        <location filename="../customizeoptionsdialog.ui" line="4319"/>
         <source>Note: tracks are automatically sent to the current playlist</source>
         <translation>Внимание: треки автоматически посылаются в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4284"/>
+        <location filename="../customizeoptionsdialog.ui" line="4329"/>
         <source>Drag and drop between two playlists</source>
         <translation>Перетаскивание треков между двумя списками воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4295"/>
+        <location filename="../customizeoptionsdialog.ui" line="4340"/>
         <source>What should I do when you&apos;re dragging tracks into another playlist?</source>
         <translation>Что делать, когда вы перетаскиваете треки в другой список воспроизведения?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4307"/>
+        <location filename="../customizeoptionsdialog.ui" line="4352"/>
         <source>Just move them</source>
         <translation>Просто переместить их</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4317"/>
+        <location filename="../customizeoptionsdialog.ui" line="4362"/>
         <source>Copy tracks in the new playlist</source>
         <translation>Копировать треки в новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4350"/>
+        <location filename="../customizeoptionsdialog.ui" line="4395"/>
         <source>Summary</source>
         <translation>Общее</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4381"/>
+        <location filename="../customizeoptionsdialog.ui" line="4426"/>
         <source>Name</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4386"/>
+        <location filename="../customizeoptionsdialog.ui" line="4431"/>
         <source>Loaded</source>
         <translation>Загружен</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4391"/>
+        <location filename="../customizeoptionsdialog.ui" line="4436"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="50"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="295"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="387"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="456"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="51"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="306"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="399"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="466"/>
         <source>Add some music locations here</source>
         <translation>Добавьте сюда несколько папок с музыкой</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="326"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="337"/>
         <source>Translation status: OK!</source>
         <translation>Статус перевода: OK!</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="328"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="339"/>
         <source>No translation is available for this language :(</source>
         <translation>Для этого языка перевод недоступен :(</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="406"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="418"/>
         <source>Select a location of your music</source>
         <translation>Укажите расположение вашей музыки</translation>
     </message>
@@ -919,12 +919,12 @@
         <translation>пикс</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizethemedialog.cpp" line="398"/>
+        <location filename="../dialogs/customizethemedialog.cpp" line="379"/>
         <source>Choose your custom icon</source>
         <translation>Выберите свой значок</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizethemedialog.cpp" line="398"/>
+        <location filename="../dialogs/customizethemedialog.cpp" line="379"/>
         <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation>Изображения (*.jpg *.jpeg *.png)</translation>
     </message>
@@ -1360,7 +1360,7 @@
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="529"/>
+        <location filename="../mainwindow.cpp" line="555"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1370,7 +1370,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="530"/>
+        <location filename="../mainwindow.cpp" line="556"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1380,7 +1380,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="531"/>
+        <location filename="../mainwindow.cpp" line="557"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1390,62 +1390,62 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="249"/>
+        <location filename="../mainwindow.cpp" line="256"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="367"/>
+        <location filename="../mainwindow.cpp" line="375"/>
         <source>Directory to open.</source>
         <translation>Открыть папку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="367"/>
+        <location filename="../mainwindow.cpp" line="375"/>
         <source>dir</source>
         <translation>папка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="368"/>
+        <location filename="../mainwindow.cpp" line="376"/>
         <source>Medias are added into a new playlist.</source>
         <translation>Мультимеда-данные будут добавлены в новый список воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="369"/>
+        <location filename="../mainwindow.cpp" line="377"/>
         <source>Medias are sent to tag editor.</source>
         <translation>Мультимеда-данные будут добавлены в редактор тегов.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="370"/>
+        <location filename="../mainwindow.cpp" line="378"/>
         <source>Directory is sent to library.</source>
         <translation>Папка отправлена в библиотеку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="371"/>
+        <location filename="../mainwindow.cpp" line="379"/>
         <source>Play or pause track in active playlist.</source>
         <translation>Воспроизведение или пауза дорожки в активном списке воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="372"/>
+        <location filename="../mainwindow.cpp" line="380"/>
         <source>Stop playback.</source>
         <translation>Остановить воспроизведение.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="373"/>
+        <location filename="../mainwindow.cpp" line="381"/>
         <source>Play next track.</source>
         <translation>Воспроизвести следующую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="374"/>
+        <location filename="../mainwindow.cpp" line="382"/>
         <source>Play previous track.</source>
         <translation>Воспроизвести предыдущую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="383"/>
         <source>Set volume of the player.</source>
         <translation>Установить громкость плеера.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="375"/>
+        <location filename="../mainwindow.cpp" line="383"/>
         <source>volume</source>
         <translation>громкость</translation>
     </message>
@@ -1482,7 +1482,7 @@ API изменился, и Вам нужно обновоить эти плаг�
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../mainwindow.cpp" line="364"/>
+        <location filename="../mainwindow.cpp" line="372"/>
         <source>Command line helper for Miam-Player</source>
         <translation>Справка по опциям командной строки Miam-Player</translation>
     </message>
@@ -1734,19 +1734,19 @@ API изменился, и Вам нужно обновоить эти плаг�
         <translation>Жанр: </translation>
     </message>
     <message>
-        <location filename="../views/tageditor/tageditor.cpp" line="54"/>
-        <location filename="../views/tageditor/tageditor.cpp" line="561"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="58"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="575"/>
         <source>(Keep)</source>
         <translation>(Сохранить)</translation>
     </message>
     <message>
-        <location filename="../views/tageditor/tageditor.cpp" line="55"/>
-        <location filename="../views/tageditor/tageditor.cpp" line="562"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="59"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="576"/>
         <source>(Delete)</source>
         <translation>(Удалить)</translation>
     </message>
     <message>
-        <location filename="../views/tageditor/tageditor.cpp" line="465"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="478"/>
         <source>(Incompatible tracks selected)</source>
         <translation>(Выбраны несовместимые треки)</translation>
     </message>

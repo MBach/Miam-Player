@@ -1136,11 +1136,11 @@
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Loop</translation>
     </message>
     <message>
         <source>Current item in l&amp;oop</source>
-        <translation type="unfinished"></translation>
+        <translation>Current item in l&amp;oop</translation>
     </message>
 </context>
 <context>
