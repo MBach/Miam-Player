@@ -34,6 +34,29 @@ int Settings::buttonsSize() const
 	return value("buttonsSize", 36).toInt();
 }
 
+qreal Settings::coverBelowTracksOpacity() const
+{
+	return value("bigCoverOpacity", 0.66).toReal();
+}
+
+/** Returns the size of a cover. */
+int Settings::coverSize() const
+{
+	return value("coverSize", 48).toInt();
+}
+
+/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
+bool Settings::isCoverBelowTracksEnabled() const
+{
+	return value("bigCovers", true).toBool();
+}
+
+/** Returns true if covers are displayed in the library. */
+bool Settings::isCoversEnabled() const
+{
+	return value("covers", true).toBool();
+}
+
 /** Returns true if the button in parameter is visible or not. */
 bool Settings::isMediaButtonVisible(const QString & buttonName) const
 {
@@ -49,11 +72,29 @@ bool Settings::isMediaButtonVisible(const QString & buttonName) const
    }
 }
 
+/** Returns true if star outline must be displayed in the library. */
+bool Settings::isShowNeverScored() const
+{
+	return value("showNeverScored", false).toBool();
+}
+
+/** Returns true if stars are visible and active. */
+bool Settings::libraryHasStars() const
+{
+	return value("delegates", true).toBool();
+}
+
 /** Sets if the button in parameter is visible or not. */
 void Settings::setMediaButtonVisible(const QString & buttonName, const bool &value)
 {
 	setValue(buttonName, value);
 	emit mediaButtonVisibilityChanged(buttonName, value);
+}
+
+void Settings::setShowNeverScored(bool b)
+{
+	setValue("showNeverScored", b);
+	emit viewPropertyChanged(VP_LibraryHasStarsForUnrated, b);
 }
 
 QMap<QString, QVariant> Settings::shortcuts() const
@@ -120,6 +161,13 @@ void Settings::initShortcuts()
 	}
 }
 
+/** Sets if stars are visible and active. */
+void Settings::setStarsInLibrary(const bool &value)
+{
+	setValue("delegates", value);
+	emit viewPropertyChanged(VP_LibraryHasStarsNextToTrack, value);
+}
+
 void Settings::setThemeName(const QString &theme)
 {
 	setValue("theme", theme.toLower());
@@ -135,6 +183,31 @@ void Settings::setVolume(qreal v)
 bool Settings::isVolumeBarTextAlwaysVisible() const
 {
 	return value("volumeBarTextAlwaysVisible", false).toBool();
+}
+
+void Settings::setCoverBelowTracksEnabled(bool b)
+{
+	setValue("bigCovers", b);
+	emit viewPropertyChanged(VP_LibraryHasCoverBelowTracks, b);
+}
+
+void Settings::setCoverBelowTracksOpacity(int v)
+{
+	qreal r = (qreal)(v / 100.0);
+	setValue("bigCoverOpacity", r);
+	emit viewPropertyChanged(VP_LibraryCoverBelowTracksOpacity, r);
+}
+
+void Settings::setCovers(bool b)
+{
+	setValue("covers", b);
+	emit viewPropertyChanged(VP_LibraryHasCoverBelowTracks, b);
+}
+
+void Settings::setCoverSize(int s)
+{
+	setValue("coverSize", s);
+	emit viewPropertyChanged(VP_LibraryCoverSize, s);
 }
 
 /** Sets a new button size. */

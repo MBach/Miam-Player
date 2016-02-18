@@ -71,15 +71,10 @@ public:
 	/** Disable a previously registered plugin (so it still can be listed in options). */
 	void disablePlugin(const QString &absFilePath);
 
-	qreal bigCoverOpacity() const;
-
 	/** Returns true if the background color in playlist is using alternatative colors. */
 	bool colorsAlternateBG() const;
 
 	bool copyTracksFromPlaylist() const;
-
-	/** Returns the size of a cover. */
-	int coverSize() const;
 
 	QColor customColors(QPalette::ColorRole cr) const;
 
@@ -101,12 +96,6 @@ public:
 
 	InsertPolicy insertPolicy() const;
 
-	/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
-	bool isBigCoverEnabled() const;
-
-	/** Returns true if covers are displayed in the library. */
-	bool isCoversEnabled() const;
-
 	bool isCustomColors() const;
 
 	bool isExtendedSearchVisible() const;
@@ -124,12 +113,6 @@ public:
 
 	/** Returns true if the article should be displayed after artist's name. */
 	bool isReorderArtistsArticle() const;
-
-	/** Returns true if star outline must be displayed in the library. */
-	bool isShowNeverScored() const;
-
-	/** Returns true if stars are visible and active. */
-	bool isStarDelegates() const;
 
 	/** Returns true if a user has modified one of defaults theme. */
 	bool isButtonThemeCustomized() const;
@@ -201,22 +184,12 @@ public:
 public slots:
 	void addMusicLocations(const QList<QDir> &dirs);
 
-	void setBigCoverOpacity(int v);
-
-	void setBigCovers(bool b);
-
 	/// Colors
 	void setColorsAlternateBG(bool b);
 
 	void setCopyTracksFromPlaylist(bool b);
 
-	void setCovers(bool b);
-	void setCoverSize(int s);
-
 	void setCustomColors(bool b);
-
-	/** Sets if stars are visible and active. */
-	void setDelegates(const bool &value);
 
 	void setDragDropAction(DragDropAction action);
 
@@ -247,7 +220,6 @@ public slots:
 	void setReorderArtistsArticle(bool b);
 
 	void setSearchAndExcludeLibrary(bool b);
-	void setShowNeverScored(bool b);
 
 	void setTabsOverlappingLength(int l);
 
@@ -258,8 +230,6 @@ public slots:
 	void setVolumeBarHideAfter(int seconds);
 
 signals:
-	void aboutToUpdateViews();
-
 	void customIconForMediaButtonChanged(const QString &button);
 
 	void languageAboutToChange(const QString &newLanguage);

@@ -68,7 +68,7 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 		break;
 	case Miam::IT_Track: {
 		SettingsPrivate::LibrarySearchMode lsm = settings->librarySearchMode();
-		if (settings->isBigCoverEnabled() && ((_proxy->filterRegExp().isEmpty() && lsm == SettingsPrivate::LSM_Filter) ||
+		if (Settings::instance()->isCoverBelowTracksEnabled() && ((_proxy->filterRegExp().isEmpty() && lsm == SettingsPrivate::LSM_Filter) ||
 				lsm == SettingsPrivate::LSM_HighlightOnly)) {
 			this->paintCoverOnTrack(painter, o, item);
 		} else {
@@ -87,10 +87,11 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 /** Redefined to always display the same height for albums, even for those without one. */
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	SettingsPrivate *settings = SettingsPrivate::instance();
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	Settings *settings = Settings::instance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	if (settings->isCoversEnabled() && item->type() == Miam::IT_Album) {
-		QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
+		QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
@@ -102,7 +103,8 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 {
 	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
-	SettingsPrivate *settings = SettingsPrivate::instance();
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	Settings *settings = Settings::instance();
 
 	QString coverPath;
 	if (settings->isCoversEnabled() && _showCovers) {
@@ -201,7 +203,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	} else {
 		rectText = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - 5, option.rect.height());
 	}
-	QFontMetrics fmf(settings->font(SettingsPrivate::FF_Library));
+	QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
 	QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 
 	this->paintText(painter, option, rectText, s, item);
@@ -244,11 +246,8 @@ void LibraryItemDelegate::drawDisc(QPainter *painter, QStyleOptionViewItem &opti
 
 void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const
 {
-	/// XXX: it will be a piece of cake to add an option that one can customize how track number will be displayed
-	/// QString title = settings->libraryItemTitle();
-	/// for example: zero padding
-	auto settings = SettingsPrivate::instance();
-	if (settings->isStarDelegates()) {
+	auto settings = Settings::instance();
+	if (settings->libraryHasStars()) {
 		int r = track->data(Miam::DF_Rating).toInt();
 		QStyleOptionViewItem copy(option);
 		copy.rect = QRect(0, option.rect.y(), option.rect.x(), option.rect.height());
@@ -267,7 +266,7 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptionViewItem &opt, const QStandardItem *track) const
 {
-	SettingsPrivate *settings = SettingsPrivate::instance();
+	Settings *settings = Settings::instance();
 	const QImage *image = _libraryTreeView->expandedCover(static_cast<AlbumItem*>(track->parent()));
 	if (image && !image->isNull()) {
 		// Copy QStyleOptionViewItem to be able to expand it to the left, and take the maximum available space
@@ -294,7 +293,7 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 		}
 
 		painter->save();
-		painter->setOpacity(1 - settings->bigCoverOpacity());
+		painter->setOpacity(1 - settings->coverBelowTracksOpacity());
 		painter->drawImage(option.rect, subImage);
 
 		// Over paint black pixel in white
@@ -312,7 +311,7 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 			// Because the expanded border can look strange to one, is blurred with some gaussian function
 			leftBorder = leftBorder.scaled(t.width(), option.rect.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 			leftBorder = ImageUtils::blurred(leftBorder, leftBorder.rect(), 10, false);
-			painter->setOpacity(1 - settings->bigCoverOpacity());
+			painter->setOpacity(1 - settings->coverBelowTracksOpacity());
 			painter->drawImage(t, leftBorder);
 
 			QLinearGradient linearAlphaBrush(0, 0, leftBorder.width(), 0);
@@ -383,5 +382,6 @@ void LibraryItemDelegate::displayIcon(bool b)
 
 void LibraryItemDelegate::updateCoverSize()
 {
-	_coverSize = SettingsPrivate::instance()->coverSize();
+	qDebug() << Q_FUNC_INFO;
+	_coverSize = Settings::instance()->coverSize();
 }

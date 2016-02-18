@@ -110,12 +110,11 @@ private slots:
 
 	void removeExpandedCover(const QModelIndex &index);
 
-	void setExpandedCover(const QModelIndex &index);
-
 	void scrollToLetter(const QString &letter);
 
-signals:
-	void aboutToUpdateCoverSize();
+	void setExpandedCover(const QModelIndex &index);
+
+	void updateViewProperty(Settings::ViewProperty vp, const QVariant &);
 };
 
 #endif // LIBRARYTREEVIEW_H

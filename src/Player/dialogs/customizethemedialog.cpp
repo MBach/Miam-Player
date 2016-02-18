@@ -111,9 +111,9 @@ void CustomizeThemeDialog::loadTheme()
 	spinBoxMenus->setValue(settingsPrivate->fontSize(SettingsPrivate::FF_Menu));
 
 	// Library
-	checkBoxDisplayCovers->setChecked(settingsPrivate->isCoversEnabled());
+	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
 	spinBoxCoverSize->blockSignals(true);
-	spinBoxCoverSize->setValue(settingsPrivate->coverSize());
+	spinBoxCoverSize->setValue(settings->coverSize());
 	spinBoxCoverSize->blockSignals(false);
 
 	// Colors
@@ -122,8 +122,8 @@ void CustomizeThemeDialog::loadTheme()
 	this->toggleCustomColors(settingsPrivate->isCustomColors());
 
 	// Covers
-	radioButtonEnableBigCover->setChecked(settingsPrivate->isBigCoverEnabled());
-	spinBoxBigCoverOpacity->setValue(settingsPrivate->bigCoverOpacity() * 100);
+	settings->isCoverBelowTracksEnabled() ? radioButtonEnableBigCover->setChecked(true) : radioButtonDisableBigCover->setChecked(true);
+	spinBoxBigCoverOpacity->setValue(settings->coverBelowTracksOpacity() * 100);
 
 	// Tabs
 	radioButtonTabsRect->setChecked(settingsPrivate->isRectTabs());
@@ -141,12 +141,12 @@ void CustomizeThemeDialog::loadTheme()
 	radioButtonEnableArticles->blockSignals(false);
 
 	// Star delegate
-	if (settingsPrivate->isStarDelegates()) {
+	if (settings->libraryHasStars()) {
 		radioButtonEnableStarDelegate->setChecked(true);
 	} else {
 		radioButtonDisableStarDelegate->setChecked(true);
 	}
-	if (settingsPrivate->isShowNeverScored()) {
+	if (settings->isShowNeverScored()) {
 		radioButtonShowNeverScoredTracks->setChecked(true);
 	} else {
 		radioButtonHideNeverScoredTracks->setChecked(true);
@@ -217,12 +217,8 @@ void CustomizeThemeDialog::setupActions()
 	});
 	connect(spinBoxLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
 		settingsPrivate->setFontPointSize(SettingsPrivate::FF_Library, i);
-		/// FIXME
-		//_mainWindow->library->model()->layoutChanged();
 		QFont lowerFont = settingsPrivate->font(SettingsPrivate::FF_Library);
 		lowerFont.setPointSize(lowerFont.pointSizeF() * 0.7);
-		/// FIXME
-		//_mainWindow->library->model()->setHeaderData(0, Qt::Horizontal, lowerFont, Qt::FontRole);
 		this->fade();
 	});
 	connect(spinBoxMenus, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int i) {
@@ -241,37 +237,25 @@ void CustomizeThemeDialog::setupActions()
 	}
 
 	// Show covers in the Library
-	connect(checkBoxDisplayCovers, &QCheckBox::toggled, settingsPrivate, &SettingsPrivate::setCovers);
+	connect(checkBoxDisplayCovers, &QCheckBox::toggled, settings, &Settings::setCovers);
 
 	// Change cover size
-	QTimer *reloadCoverSizeTimer = new QTimer(this);
-	reloadCoverSizeTimer->setSingleShot(true);
 	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
-		settingsPrivate->setCoverSize(cs);
-		/// FIXME
-		/*if (_mainWindow->library->model()) {
-			_mainWindow->library->model()->layoutChanged();
-			this->fade();
-		}*/
-		reloadCoverSizeTimer->start(1000);
+		settings->setCoverSize(cs);
+		this->fade();
 	});
-	/// FIXME
-	//connect(reloadCoverSizeTimer, &QTimer::timeout, _mainWindow->library, &LibraryTreeView::aboutToUpdateCoverSize);
 
 	// Change big cover opacity
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
-		settingsPrivate->setBigCovers(b);
+		qDebug() << Q_FUNC_INFO;
+		settings->setCoverBelowTracksEnabled(b);
 		labelBigCoverOpacity->setEnabled(b);
 		spinBoxBigCoverOpacity->setEnabled(b);
 		this->fade();
-		/// FIXME
-		//_mainWindow->library->viewport()->repaint();
 	});
 	connect(spinBoxBigCoverOpacity, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int v) {
-		settingsPrivate->setBigCoverOpacity(v);
+		settings->setCoverBelowTracksOpacity(v);
 		this->fade();
-		/// FIXME
-		//_mainWindow->library->viewport()->repaint();
 	});
 
 	// Filter library
@@ -312,13 +296,13 @@ void CustomizeThemeDialog::setupActions()
 
 	// Star delegates
 	connect(radioButtonEnableStarDelegate, &QRadioButton::toggled, this, [=](bool b) {
-		settingsPrivate->setDelegates(b);
+		settings->setStarsInLibrary(b);
 		labelLibraryDelegates->setEnabled(b);
 		radioButtonShowNeverScoredTracks->setEnabled(b);
 		radioButtonHideNeverScoredTracks->setEnabled(b);
 	});
 
-	connect(radioButtonShowNeverScoredTracks, &QRadioButton::toggled, settingsPrivate, &SettingsPrivate::setShowNeverScored);
+	connect(radioButtonShowNeverScoredTracks, &QRadioButton::toggled, settings, &Settings::setShowNeverScored);
 }
 
 /** Automatically centers the parent window when closing this dialog. */
@@ -348,12 +332,12 @@ void CustomizeThemeDialog::showEvent(QShowEvent *event)
 int CustomizeThemeDialog::exec()
 {
 	// Change the label that talks about star delegates
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	bool starDelegateState = settings->isStarDelegates();
+	bool starDelegateState = Settings::instance()->libraryHasStars();
 	labelLibraryDelegates->setEnabled(starDelegateState);
 	radioButtonShowNeverScoredTracks->setEnabled(starDelegateState);
 	radioButtonHideNeverScoredTracks->setEnabled(starDelegateState);
 
+	SettingsPrivate *settings = SettingsPrivate::instance();
 	if (settings->value("customizeThemeDialogGeometry").isNull()) {
 		int w = qApp->desktop()->screenGeometry().width() / 2;
 		int h = qApp->desktop()->screenGeometry().height() / 2;

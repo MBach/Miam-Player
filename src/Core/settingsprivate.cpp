@@ -62,11 +62,6 @@ void SettingsPrivate::disablePlugin(const QString &absFilePath)
 	this->setValue("plugins", map);
 }
 
-qreal SettingsPrivate::bigCoverOpacity() const
-{
-	return value("bigCoverOpacity", 0.66).toReal();
-}
-
 /** Returns true if the background color in playlist is using alternatative colors. */
 bool SettingsPrivate::colorsAlternateBG() const
 {
@@ -76,12 +71,6 @@ bool SettingsPrivate::colorsAlternateBG() const
 bool SettingsPrivate::copyTracksFromPlaylist() const
 {
 	return value("copyTracksFromPlaylist", false).toBool();
-}
-
-/** Returns the size of a cover. */
-int SettingsPrivate::coverSize() const
-{
-	return value("coverSize", 48).toInt();
 }
 
 QColor SettingsPrivate::customColors(QPalette::ColorRole cr) const
@@ -191,18 +180,6 @@ SettingsPrivate::InsertPolicy SettingsPrivate::insertPolicy() const
 	}
 }
 
-/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
-bool SettingsPrivate::isBigCoverEnabled() const
-{
-	return value("bigCovers", true).toBool();
-}
-
-/** Returns true if covers are displayed in the library. */
-bool SettingsPrivate::isCoversEnabled() const
-{
-	return value("covers", true).toBool();
-}
-
 bool SettingsPrivate::isCustomColors() const
 {
 	return value("customColors", false).toBool();
@@ -240,18 +217,6 @@ bool SettingsPrivate::isRectTabs() const
 bool SettingsPrivate::isReorderArtistsArticle() const
 {
 	return value("reorderArtistsArticle", false).toBool();
-}
-
-/** Returns true if star outline must be displayed in the library. */
-bool SettingsPrivate::isShowNeverScored() const
-{
-	return value("showNeverScored", false).toBool();
-}
-
-/** Returns true if stars are visible and active. */
-bool SettingsPrivate::isStarDelegates() const
-{
-	return value("delegates", true).toBool();
 }
 
 /** Returns true if a user has modified one of defaults theme. */
@@ -556,16 +521,6 @@ void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 	emit musicLocationsHaveChanged();
 }
 
-void SettingsPrivate::setBigCoverOpacity(int v)
-{
-	setValue("bigCoverOpacity", (qreal)(v / 100.0));
-}
-
-void SettingsPrivate::setBigCovers(bool b)
-{
-	setValue("bigCovers", b);
-}
-
 /// Colors
 void SettingsPrivate::setColorsAlternateBG(bool b)
 {
@@ -577,26 +532,9 @@ void SettingsPrivate::setCopyTracksFromPlaylist(bool b)
 	setValue("copyTracksFromPlaylist", b);
 }
 
-void SettingsPrivate::setCovers(bool b)
-{
-	setValue("covers", b);
-	emit aboutToUpdateViews();
-}
-
-void SettingsPrivate::setCoverSize(int s)
-{
-	setValue("coverSize", s);
-}
-
 void SettingsPrivate::setCustomColors(bool b)
 {
 	setValue("customColors", b);
-}
-
-/** Sets if stars are visible and active. */
-void SettingsPrivate::setDelegates(const bool &value)
-{
-	setValue("delegates", value);
 }
 
 void SettingsPrivate::setDragDropAction(DragDropAction action)
@@ -681,11 +619,6 @@ void SettingsPrivate::setSearchAndExcludeLibrary(bool b)
 	}
 	setValue("librarySearchMode", lsm);
 	emit librarySearchModeHasChanged();
-}
-
-void SettingsPrivate::setShowNeverScored(bool b)
-{
-	setValue("showNeverScored", b);
 }
 
 void SettingsPrivate::setPlaybackRestorePlaylistsAtStartup(bool b)

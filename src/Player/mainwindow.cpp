@@ -612,7 +612,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
 	// Connect actions first
 	if (action) {
-		//qDebug() << Q_FUNC_INFO << action << keySequence;
 		action->setShortcut(keySequence);
 		// Some default shortcuts might interfer with other widgets, so we need to restrict where it applies
 		if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
@@ -620,13 +619,7 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 		} else if (action == actionRemoveSelectedTracks) {
 			action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 		}
-	// Specific actions not defined in main menu
-	} /// FIXME
-	/*else if (objectName == "sendToCurrentPlaylist") {
-		library->sendToCurrentPlaylist->setKey(keySequence);
-	} else if (objectName == "sendToTagEditor") {
-		library->openTagEditor->setKey(keySequence);
-	*/
+	}
 }
 
 void MainWindow::rescanLibrary()

@@ -19,15 +19,18 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	, _jumpToWidget(new JumpToWidget(this))
 	, properties(new QMenu(this))
 {
-	auto settings = SettingsPrivate::instance();
+	auto settingsPrivate = SettingsPrivate::instance();
 	_proxyModel = _libraryModel->proxy();
-	_proxyModel->setHeaderData(0, Qt::Horizontal, settings->font(SettingsPrivate::FF_Menu), Qt::FontRole);
+	_proxyModel->setHeaderData(0, Qt::Horizontal, settingsPrivate->font(SettingsPrivate::FF_Menu), Qt::FontRole);
 	_delegate = new LibraryItemDelegate(this, _proxyModel);
 
 	this->setItemDelegate(_delegate);
 	this->setModel(_proxyModel);
 	this->setFrameShape(QFrame::NoFrame);
+
+	auto settings = Settings::instance();
 	this->setIconSize(QSize(settings->coverSize(), settings->coverSize()));
+
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	vScrollBar->setFrameBorder(false, false, false, true);
 	this->setVerticalScrollBar(vScrollBar);
@@ -47,9 +50,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
 
-	// Cover size
-	connect(this, &LibraryTreeView::aboutToUpdateCoverSize, _delegate, &LibraryItemDelegate::updateCoverSize);
-
 	// Load album cover
 	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);
 	connect(this, &QTreeView::collapsed, this, &LibraryTreeView::removeExpandedCover);
@@ -63,20 +63,26 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 
 	connect(_proxyModel, &MiamSortFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
 
-	connect(settings, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
+	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
 		QApplication::removeTranslator(&translator);
 		translator.load(":/translations/library_" + newLanguage);
 		QApplication::installTranslator(&translator);
 	});
 
-	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
+	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
 		if (ff == SettingsPrivate::FF_Library) {
 			this->viewport()->update();
 		}
 	});
 
+	QTimer *reloadCovers = new QTimer(this);
+	reloadCovers->setSingleShot(true);
+	connect(reloadCovers, &QTimer::timeout, _delegate, &LibraryItemDelegate::updateCoverSize);
+
+	connect(settings, &Settings::viewPropertyChanged, this, &LibraryTreeView::updateViewProperty);
+
 	// Init language
-	translator.load(":/translations/library_" + settings->language());
+	translator.load(":/translations/library_" + settingsPrivate->language());
 	QApplication::installTranslator(&translator);
 
 	this->installEventFilter(this);
@@ -115,7 +121,7 @@ void LibraryTreeView::findAll(const QModelIndex &index, QList<QUrl> *tracks) con
 void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
-	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
+	if (item->type() == Miam::IT_Album && Settings::instance()->isCoverBelowTracksEnabled()) {
 		AlbumItem *album = static_cast<AlbumItem*>(item);
 		QImage *image = _expandedCovers.value(album);
 		delete image;
@@ -126,7 +132,7 @@ void LibraryTreeView::removeExpandedCover(const QModelIndex &index)
 void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
-	if (item->type() == Miam::IT_Album && SettingsPrivate::instance()->isBigCoverEnabled()) {
+	if (item->type() == Miam::IT_Album && Settings::instance()->isCoverBelowTracksEnabled()) {
 		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
 		QString coverPath = albumItem->coverPath();
 		if (coverPath.isEmpty()) {
@@ -145,6 +151,27 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 			image = new QImage(coverPath);
 		}
 		_expandedCovers.insert(albumItem, image);
+	}
+}
+
+void LibraryTreeView::updateViewProperty(Settings::ViewProperty vp, const QVariant &)
+{
+	switch (vp) {
+	case Settings::VP_LibraryHasStarsForUnrated:
+	case Settings::VP_LibraryHasStarsNextToTrack:
+	case Settings::VP_LibraryHasCoverBelowTracks:
+	case Settings::VP_LibraryCoverBelowTracksOpacity:
+	case Settings::VP_LibraryHasCovers:
+		this->viewport()->update();
+		break;
+	case Settings::VP_LibraryCoverSize:
+		//if (!reloadCovers->isActive()) {
+		//	reloadCovers->start(1000);
+		//}
+		this->viewport()->update();
+		break;
+	default:
+		break;
 	}
 }
 

@@ -1,5 +1,6 @@
 #include "uniquelibraryitemdelegate.h"
 
+#include <settings.h>
 #include <settingsprivate.h>
 #include <discitem.h>
 #include <QApplication>
@@ -23,15 +24,16 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 {
 	/// Work In Progress
 
+	auto settingsPrivate = SettingsPrivate::instance();
+	auto settings = Settings::instance();
 	if (index.column() == 0) {
 		QString cover = index.data(Miam::DF_CoverPath).toString();
-		if (!cover.isEmpty() && SettingsPrivate::instance()->isCoversEnabled()) {
+		if (!cover.isEmpty() && settings->isCoversEnabled()) {
 			this->drawCover(painter, option, cover);
 		}
 		return;
 	}
-	auto settings = SettingsPrivate::instance();
-	painter->setFont(settings->font(SettingsPrivate::FF_Library));
+	painter->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);

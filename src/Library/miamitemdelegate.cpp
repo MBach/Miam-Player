@@ -1,5 +1,6 @@
 #include "miamitemdelegate.h"
 
+#include <settings.h>
 #include <settingsprivate.h>
 #include <QGuiApplication>
 #include <QPainter>
@@ -11,9 +12,10 @@ MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
 	, _proxy(proxy)
 	, _timer(new QTimer(this))
 {
-	_coverSize = SettingsPrivate::instance()->coverSize();
+	auto settings = Settings::instance();
+	_coverSize = settings->coverSize();
+	_showCovers = settings->isCoversEnabled();
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
-	_showCovers = SettingsPrivate::instance()->isCoversEnabled();
 	_timer->setTimerType(Qt::PreciseTimer);
 	_timer->setInterval(10);
 }
