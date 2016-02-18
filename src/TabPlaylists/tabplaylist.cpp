@@ -140,12 +140,15 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
 			/// FIXME
 			//_mainWindow->dispatchDrop(d);
+			qDebug() << Q_FUNC_INFO << "1";
+
 			return true;
 		} else {
 			if (obj == cornerWidget()) {
 				auto p = this->addPlaylist();
 				p->forceDrop(de);
 			} else {
+				qDebug() << Q_FUNC_INFO << "2";
 				currentPlayList()->forceDrop(de);
 			}
 			return true;

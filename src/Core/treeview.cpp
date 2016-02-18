@@ -23,9 +23,7 @@ TreeView::~TreeView()
 QList<QUrl> TreeView::selectedTracks()
 {
 	QList<QUrl> list;
-	_cacheSelectedIndexes.clear();
-	for (QModelIndex index : this->selectionModel()->selectedIndexes()) {
-		_cacheSelectedIndexes << index;
+	for (QModelIndex index : this->selectionModel()->selectedRows()) {
 		this->findAll(index, &list);
 	}
 	return list;
@@ -33,9 +31,9 @@ QList<QUrl> TreeView::selectedTracks()
 
 void TreeView::startDrag(Qt::DropActions)
 {
-	//QList<QVariant> vs;
 	QByteArray itemData;
 	QList<QUrl> urls = this->selectedTracks();
+
 	for (int i = 0; i < urls.size(); i++) {
 		QUrl u = urls.at(i);
 		itemData.append(u.toEncoded());

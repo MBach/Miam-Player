@@ -24,6 +24,8 @@ private:
 	QShortcut *_showTabLibrary;
 	QShortcut *_showTabFilesystem;
 	QShortcut *_goToSearch;
+	QShortcut *_sendToCurrentPlaylist;
+	QShortcut *_sendToTagEditor;
 
 public:
 	explicit ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
@@ -32,6 +34,7 @@ public:
 
 	virtual void addToPlaylist(const QList<QUrl> &tracks) override;
 
+	/** Bind a new shortcut to a specifc action in this view (like search for example). */
 	virtual void bindShortcut(const QString & objectName, const QKeySequence & keySequence) override;
 
 	virtual QPair<QString, QObjectList> extensionPoints() const override;

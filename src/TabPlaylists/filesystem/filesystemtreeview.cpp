@@ -46,7 +46,8 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QList<QUrl> *tracks) 
 	if (fileInfo.isFile()) {
 		files << fileInfo.absoluteFilePath();
 	} else {
-		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDirIterator::Subdirectories);
+		qDebug() << Q_FUNC_INFO;
+		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
 			QFileInfo fileInfo(entry);
@@ -162,12 +163,16 @@ bool FileSystemTreeView::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::ShortcutOverride) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-		if (keyEvent) {
+		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
 			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
 			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
 				// We don't want this event to be propagated
-				event->accept();
+				keyEvent->accept();
+				return true;
 			}
+		} else {
+			keyEvent->ignore();
+			return false;
 		}
 	}
 	return TreeView::eventFilter(obj, event);

@@ -1,9 +1,9 @@
 #ifndef LIBRARYTREEVIEW_H
 #define LIBRARYTREEVIEW_H
 
-#include <filehelper.h>
 #include <model/trackdao.h>
 #include <model/sqldatabase.h>
+#include <filehelper.h>
 #include <settingsprivate.h>
 #include <treeview.h>
 
@@ -11,7 +11,6 @@
 #include "libraryitemmodel.h"
 
 #include <QMenu>
-#include <QShortcut>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTimer>
@@ -59,9 +58,6 @@ public:
 	/** Extendable context menu shown on screen to dispatch tracks (or albums, etc) to Playlist,
 	 * Tag Editor, and custom plugin defined actions. */
 	QMenu *properties;
-
-	QShortcut *sendToCurrentPlaylist;
-	QShortcut *openTagEditor;
 
 	explicit LibraryTreeView(QWidget *parent = nullptr);
 

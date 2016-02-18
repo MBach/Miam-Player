@@ -55,9 +55,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(skipBackwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipBackward);
 	connect(seekBackwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &MediaButton::clicked, this, [=]() {
-		this->play(uniqueTable->currentIndex(), QAbstractItemView::EnsureVisible);
-	});
+	connect(playButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::togglePlayback);
 	connect(stopButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::stop);
 	connect(seekForwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekForward);
 	connect(skipForwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipForward);
@@ -78,6 +76,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 				}
 				_mediaPlayerControl->skipForward();
 			}
+			seekSlider->setValue(0);
 		}
 	});
 
@@ -169,6 +168,7 @@ bool UniqueLibrary::play(const QModelIndex &index, QAbstractItemView::ScrollHint
 {
 	QStandardItem *item = uniqueTable->model()->itemFromIndex(_proxy->mapToSource(index));
 	if (item && item->type() == Miam::IT_Track) {
+		seekSlider->setValue(0);
 		_mediaPlayerControl->mediaPlayer()->playMediaContent(QUrl::fromLocalFile(index.data(Miam::DF_URI).toString()));
 		if (playbackModeButton->isChecked()) {
 			uniqueTable->scrollTo(index, sh);

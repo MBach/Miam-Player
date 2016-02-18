@@ -63,8 +63,6 @@ void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> &nodes)
 
 void UniqueLibraryItemModel::insertDiscs(const QList<AlbumDAO> &nodes)
 {
-	qDebug() << Q_FUNC_INFO << nodes.size();
-
 	for (AlbumDAO disc : nodes) {
 		appendRow({ nullptr, new DiscItem(&disc) });
 	}

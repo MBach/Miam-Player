@@ -20,6 +20,8 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	, _showTabLibrary(new QShortcut(this))
 	, _showTabFilesystem(new QShortcut(this))
 	, _goToSearch(new QShortcut(this))
+	, _sendToCurrentPlaylist(new QShortcut(this))
+	, _sendToTagEditor(new QShortcut(this))
 {
 	this->setupUi(this);
 	playButton->setMediaPlayer(mediaPlayer);
@@ -162,24 +164,39 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(settings, &Settings::viewPropertyChanged, this, &ViewPlaylists::setViewProperty);
 
+	// Bind shortcuts
+	_removeSelectedTracks->setContext(Qt::WidgetWithChildrenShortcut);
+	_removeSelectedTracks->setObjectName("removeSelectedTracks");
+	_showTabLibrary->setObjectName("showTabLibrary");
+	_showTabFilesystem->setObjectName("showTabFilesystem");
+	_goToSearch->setObjectName("search");
+	_sendToCurrentPlaylist->setObjectName("sendToCurrentPlaylist");
+	_sendToTagEditor->setObjectName("sendToTagEditor");
+
 	QMapIterator<QString, QVariant> it(settings->shortcuts());
 	while (it.hasNext()) {
 		it.next();
 		this->bindShortcut(it.key(), it.value().value<QKeySequence>());
 	}
 
-	_removeSelectedTracks->setContext(Qt::WidgetWithChildrenShortcut);
-
-	_removeSelectedTracks->setObjectName("removeSelectedTracks");
-	_showTabLibrary->setObjectName("showTabLibrary");
-	_showTabFilesystem->setObjectName("showTabFilesystem");
-	_goToSearch->setObjectName("search");
-
-	// Bind shortcuts
 	connect(_removeSelectedTracks, &QShortcut::activated, tabPlaylists->currentPlayList(), &Playlist::removeSelectedTracks);
 	connect(_showTabLibrary, &QShortcut::activated, this, [=]() { leftTabs->setCurrentIndex(0);	});
 	connect(_showTabFilesystem, &QShortcut::activated, this, [=]() { leftTabs->setCurrentIndex(1); });
 	connect(_goToSearch, &QShortcut::activated, searchBar, static_cast<void (QWidget::*)(void)>(&QWidget::setFocus));
+	connect(_sendToCurrentPlaylist, &QShortcut::activated, this, [=]() {
+		if (leftTabs->currentIndex() == 0) {
+			library->appendToPlaylist();
+		} else {
+			filesystem->appendToPlaylist();
+		}
+	});
+	connect(_sendToTagEditor, &QShortcut::activated, this, [=]() {
+		if (leftTabs->currentIndex() == 0) {
+			library->openTagEditor();
+		} else {
+			filesystem->openTagEditor();
+		}
+	});
 
 	library->model()->load();
 }
@@ -202,9 +219,9 @@ void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
 	tabPlaylists->insertItemsToPlaylist(-1, tracks);
 }
 
+/** Bind a new shortcut to a specifc action in this view (like search for example). */
 void ViewPlaylists::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
-	qDebug() << Q_FUNC_INFO << "not yet implemented" << objectName << keySequence;
 	for (QShortcut *s : this->findChildren<QShortcut*>(objectName)) {
 		if (s) {
 			s->setKey(keySequence);

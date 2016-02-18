@@ -25,8 +25,6 @@ public:
 	virtual QList<QUrl> selectedTracks() override;
 
 protected:
-	QModelIndexList _cacheSelectedIndexes;
-
 	/** Explore items to count leaves (tracks). */
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
 

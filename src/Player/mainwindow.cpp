@@ -469,7 +469,6 @@ void MainWindow::activateView(QAction *menuAction)
 {
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
-	qDebug() << Q_FUNC_INFO << "Action triggered:" << menuAction->objectName();
 	_currentView = v.load(_currentView, menuAction->objectName());
 
 	if (!_currentView) {

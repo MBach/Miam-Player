@@ -348,7 +348,9 @@ void Playlist::dropEvent(QDropEvent *event)
 			for (QByteArray encodedUrl : encodedUrls) {
 				medias << QMediaContent(QUrl::fromEncoded(encodedUrl));
 			}
-			this->insertMedias(row, medias);
+			if (Miam::showWarning(tr("playlist"), medias.count()) == QMessageBox::Ok) {
+				this->insertMedias(row, medias);
+			}
 		}
 		event->accept();
 	}

@@ -97,7 +97,7 @@ void MediaPlayer::setVolume(qreal v)
 
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
-	qDebug() << Q_FUNC_INFO << "remote is null?" << (_remotePlayer == nullptr);
+	//qDebug() << Q_FUNC_INFO << "remote is null?" << (_remotePlayer == nullptr);
 	if ((_state == QMediaPlayer::PlayingState) || (_state == QMediaPlayer::PausedState)) {
 		this->stop();
 	}

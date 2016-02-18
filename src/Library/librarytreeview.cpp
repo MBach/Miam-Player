@@ -18,8 +18,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	, _libraryModel(new LibraryItemModel(this))
 	, _jumpToWidget(new JumpToWidget(this))
 	, properties(new QMenu(this))
-	, sendToCurrentPlaylist(new QShortcut(this))
-	, openTagEditor(new QShortcut(this))
 {
 	auto settings = SettingsPrivate::instance();
 	_proxyModel = _libraryModel->proxy();
@@ -45,11 +43,9 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 
 	connect(this, &LibraryTreeView::doubleClicked, this, &LibraryTreeView::appendToPlaylist);
 
-	// Context menu and shortcuts
+	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
-	connect(sendToCurrentPlaylist, &QShortcut::activated, this, &TreeView::appendToPlaylist);
-	connect(openTagEditor, &QShortcut::activated, this, &TreeView::openTagEditor);
 
 	// Cover size
 	connect(this, &LibraryTreeView::aboutToUpdateCoverSize, _delegate, &LibraryItemDelegate::updateCoverSize);
@@ -189,8 +185,14 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 bool LibraryTreeView::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::ShortcutOverride) {
-		event->accept();
-		return false;
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
+			keyEvent->accept();
+			return true;
+		} else {
+			keyEvent->ignore();
+			return false;
+		}
 	} else {
 		return TreeView::eventFilter(obj, event);
 	}
