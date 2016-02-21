@@ -69,11 +69,20 @@ void TableView::keyboardSearch(const QString &search)
 bool TableView::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::ShortcutOverride) {
-		event->accept();
-		return false;
-	} else {
-		return QTableView::eventFilter(obj, event);
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
+			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
+				// We don't want this event to be propagated
+				keyEvent->accept();
+				return true;
+			}
+		} else {
+			keyEvent->ignore();
+			return false;
+		}
 	}
+	return QTableView::eventFilter(obj, event);
 }
 
 /** Redefined to keep displayed covers untouched. */

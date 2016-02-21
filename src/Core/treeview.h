@@ -28,6 +28,9 @@ protected:
 	/** Explore items to count leaves (tracks). */
 	virtual int countAll(const QModelIndexList &indexes) const = 0;
 
+	/** Redefined to override shortcuts that are mapped on simple keys. */
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
+
 	virtual void startDrag(Qt::DropActions supportedActions) override;
 
 private:

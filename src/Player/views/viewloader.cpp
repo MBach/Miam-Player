@@ -79,8 +79,10 @@ AbstractView* ViewLoader::loadFromPlugin(AbstractView *currentView, const QStrin
 		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
 			qDebug() << Q_FUNC_INFO << mediaPlayerPlugin;
 			mediaPlayerPlugin->setMediaPlayerControl(currentView->mediaPlayerControl());
-			view = mediaPlayerPlugin->instanciateView();
-			view->setOrigin(currentView);
+			if (mediaPlayerPlugin->hasView()) {
+				view = mediaPlayerPlugin->instanciateView();
+				view->setOrigin(currentView);
+			}
 		}
 	}
 	return view;

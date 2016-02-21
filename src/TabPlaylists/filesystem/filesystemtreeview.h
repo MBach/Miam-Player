@@ -42,9 +42,6 @@ protected:
 	/** Reimplemented with a QDirIterator to quick count tracks. */
 	virtual int countAll(const QModelIndexList &indexes) const override;
 
-	/** Redefined to override shortcuts that are mapped on simple keys. */
-	virtual bool eventFilter(QObject *obj, QEvent *event) override;
-
 	virtual void keyPressEvent(QKeyEvent *event) override;
 
 private:

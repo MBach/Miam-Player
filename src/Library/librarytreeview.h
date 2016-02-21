@@ -76,9 +76,6 @@ protected:
 	/** Redefined to display a small context menu in the view. */
 	virtual void contextMenuEvent(QContextMenuEvent *event) override;
 
-	/** Redefined to override shortcuts that are mapped on simple keys. */
-	virtual bool eventFilter(QObject *obj, QEvent *event) override;
-
 	/** Redefined to disable search in the table and trigger jumpToWidget's action. */
 	virtual void keyboardSearch(const QString &search) override;
 

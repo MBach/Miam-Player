@@ -54,7 +54,7 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	});*/
 
 	auto settings = SettingsPrivate::instance();
-	connect(settings, &SettingsPrivate::fontHasChanged, [=](const SettingsPrivate::FontFamily ff, const QFont &font) {
+	connect(settings, &SettingsPrivate::fontHasChanged, this, [=](const SettingsPrivate::FontFamily ff, const QFont &font) {
 		if (ff == SettingsPrivate::FF_Playlist) {
 			int s = QFontMetrics(settings->font(SettingsPrivate::FF_Playlist)).height();
 			for (Playlist *playlist : playlists()) {
@@ -111,6 +111,11 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	this->setCornerWidget(corner, Qt::TopRightCorner);
 	connect(corner, &CornerWidget::innerButtonClicked, this, &TabPlaylist::addPlaylist);
 	corner->installEventFilter(this);
+}
+
+TabPlaylist::~TabPlaylist()
+{
+	this->disconnect();
 }
 
 /** Get the current playlist. */

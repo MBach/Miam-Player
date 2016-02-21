@@ -13,7 +13,7 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 	: LineEdit(parent)
 	, shortcut(new QShortcut(this))
 {
-	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+	connect(SettingsPrivate::instance(), &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
 		if (ff == SettingsPrivate::FF_Library) {
 			this->setFont(newFont);
 		}
@@ -31,7 +31,7 @@ LibraryFilterLineEdit::LibraryFilterLineEdit(QWidget *parent)
 
 LibraryFilterLineEdit::~LibraryFilterLineEdit()
 {
-	//SettingsPrivate::instance()->disconnect();
+	this->disconnect();
 }
 
 void LibraryFilterLineEdit::paintEvent(QPaintEvent *)

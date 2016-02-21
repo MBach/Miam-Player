@@ -208,23 +208,6 @@ void LibraryTreeView::contextMenuEvent(QContextMenuEvent *event)
 	}
 }
 
-/** Redefined to override shortcuts that are mapped on simple keys. */
-bool LibraryTreeView::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::ShortcutOverride) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
-			keyEvent->accept();
-			return true;
-		} else {
-			keyEvent->ignore();
-			return false;
-		}
-	} else {
-		return TreeView::eventFilter(obj, event);
-	}
-}
-
 /** Redefined to disable search in the table and trigger jumpToWidget's action. */
 void LibraryTreeView::keyboardSearch(const QString &search)
 {

@@ -158,26 +158,6 @@ int FileSystemTreeView::countAll(const QModelIndexList &indexes) const
 	return files;
 }
 
-/** Redefined to override shortcuts that are mapped on simple keys. */
-bool FileSystemTreeView::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::ShortcutOverride) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
-			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
-			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
-				// We don't want this event to be propagated
-				keyEvent->accept();
-				return true;
-			}
-		} else {
-			keyEvent->ignore();
-			return false;
-		}
-	}
-	return TreeView::eventFilter(obj, event);
-}
-
 void FileSystemTreeView::scrollAndHighlight(const QChar &c)
 {
 	QModelIndexList rows = this->selectionModel()->selectedRows();

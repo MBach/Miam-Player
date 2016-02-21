@@ -1,9 +1,9 @@
 #include "treeview.h"
 
-//#include "mainwindow.h"
 #include "settings.h"
 
 #include <QDrag>
+#include <QKeyEvent>
 #include <QMessageBox>
 #include <QMimeData>
 
@@ -27,6 +27,25 @@ QList<QUrl> TreeView::selectedTracks()
 		this->findAll(index, &list);
 	}
 	return list;
+}
+
+bool TreeView::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::ShortcutOverride) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
+			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
+				// We don't want this event to be propagated
+				keyEvent->accept();
+				return true;
+			}
+		} else {
+			keyEvent->ignore();
+			return false;
+		}
+	}
+	return QTreeView::eventFilter(obj, event);
 }
 
 void TreeView::startDrag(Qt::DropActions)
