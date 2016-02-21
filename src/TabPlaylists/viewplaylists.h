@@ -18,7 +18,6 @@ class MIAMTABPLAYLISTS_LIBRARY ViewPlaylists : public AbstractViewPlaylists, pub
 private:
 	SearchDialog *_searchDialog;
 	QTranslator translator;
-	SqlDatabase *_db;
 
 	QShortcut *_removeSelectedTracks;
 	QShortcut *_showTabLibrary;

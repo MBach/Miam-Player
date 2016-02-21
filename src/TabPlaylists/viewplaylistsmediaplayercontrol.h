@@ -15,7 +15,12 @@ class ViewPlaylistsMediaPlayerControl : public MediaPlayerControl
 public:
 	explicit ViewPlaylistsMediaPlayerControl(MediaPlayer *mediaPlayer, QObject *parent = nullptr);
 
-	virtual ~ViewPlaylistsMediaPlayerControl() {}
+	virtual ~ViewPlaylistsMediaPlayerControl()
+	{
+		if (mediaPlayer() && mediaPlayer()->state() != QMediaPlayer::PlayingState) {
+			mediaPlayer()->stop();
+		}
+	}
 
 	/** Returns true if current playlist has a plabackMode to Random. */
 	virtual bool isInShuffleState() const override;

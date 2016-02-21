@@ -4,7 +4,7 @@
 	<RunProgram>@TargetDir@/MiamPlayer.exe</RunProgram>
     <Version>0.8.0</Version>
     <Title>Miam-Player</Title>
-	<InstallerApplicationIcon>../../src/Player/mp</InstallerApplicationIcon>
+	<InstallerApplicationIcon>../../src/Core/mp</InstallerApplicationIcon>
 	<InstallerWindowIcon>installerWindowIcon.png</InstallerWindowIcon>
     <Publisher>Matthieu Bachelier</Publisher>
     <StartMenuDir>Miam-Player</StartMenuDir>
@@ -15,19 +15,11 @@
 	<TargetDir>@ApplicationsDir@\MiamPlayer</TargetDir>
 	<AdminTargetDir>@ApplicationsDir@\MiamPlayer</AdminTargetDir>
 	<RepositorySettingsPageVisible>false</RepositorySettingsPageVisible>
-	<WizardDefaultWidth>640</WizardDefaultWidth>
-	<WizardDefaultHeight>480</WizardDefaultHeight>
+	<WizardDefaultWidth>800</WizardDefaultWidth>
+	<WizardDefaultHeight>600</WizardDefaultHeight>
 	<MaintenanceToolName>Uninstall Miam-Player</MaintenanceToolName>
 	<MaintenanceToolIniFile>Uninstall Miam-Player.ini</MaintenanceToolIniFile>
 	<Translations>
 		<Translation>fr_fr.qm</Translation>
 	</Translations>
-	<!--<RemoteRepositories>
-        <Repository>
-            <Url>http://www.miam-player.org/repository</Url>
-			<Enabled>1</Enabled>
-			<DisplayName>Miam-Player Repository</DisplayName>
-        </Repository>
-    </RemoteRepositories>
-	-->
 </Installer>

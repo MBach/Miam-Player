@@ -13,6 +13,11 @@ ViewLoader::ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, Q
 
 AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAction)
 {
+	if (currentView) {
+		QPair<QString, QObjectList> extensions = currentView->extensionPoints();
+		_pluginManager->unregisterExtensionPoint(extensions.first);
+	}
+
 	AbstractView *view = nullptr;
 	if (menuAction == "actionViewPlaylists" || menuAction == "actionViewUniqueLibrary") {
 
@@ -40,6 +45,7 @@ AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAct
 void ViewLoader::attachPluginToBuiltInView(AbstractView *view)
 {
 	QPair<QString, QObjectList> extensionPoints = view->extensionPoints();
+	qDebug() << Q_FUNC_INFO << extensionPoints.first << extensionPoints.second;
 	if (!extensionPoints.first.isEmpty()) {
 		_pluginManager->registerExtensionPoint(extensionPoints);
 	}

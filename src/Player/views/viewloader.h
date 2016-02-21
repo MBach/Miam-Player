@@ -21,7 +21,7 @@ private:
 	QWidget *_parent;
 
 public:
-	ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, QWidget *parent = nullptr);
+	explicit ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, QWidget *parent = nullptr);
 
 	AbstractView *load(AbstractView *currentView, const QString &menuAction);
 

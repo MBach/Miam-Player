@@ -51,39 +51,28 @@ copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
-set AcoustIDSRC="C:\dev\acoustid-plugin\lib\release"
-set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
+rem set AcoustIDSRC="C:\dev\acoustid-plugin\lib\release"
+rem set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
 set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
-set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
-set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
+rem set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
+rem set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
 set MiniModeBuild="C:\dev\mini-mode-build\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
-xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
+rem FIXME
+rem xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
 rem Chromaprint dependency isn't a plugin itself so it must be put next to FFMpeg
-copy %AcoustIDSRC%\chromaprint.dll packages\org.miamplayer.plugins.acoustid\data\chromaprint.dll
+rem copy %AcoustIDSRC%\chromaprint.dll packages\org.miamplayer.plugins.acoustid\data\chromaprint.dll
 xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
-xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
-xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
+rem xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
+rem xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
 xcopy %MiniModeBuild%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
 xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
 
 rem Deezer talks to the Internet with QtWebKit
-xcopy %DeezerPluginBuild%\deezer-plugin.dll packages\org.miamplayer.plugins.deezer\data\plugins\ /y/e
-copy %QTDIR%\bin\Qt5WebEngine.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngine.dll
-copy %QTDIR%\bin\Qt5WebEngineCore.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngineCore.dll
-
-rem WebKit has a lot of dependencies!
-rem copy %QTDIR%\bin\Qt5Positioning.dll packages\org.miamplayer.plugins.deezer\data\Qt5Positioning.dll
-rem copy %QTDIR%\bin\Qt5PrintSupport.dll packages\org.miamplayer.plugins.deezer\data\Qt5PrintSupport.dll
-rem copy %QTDIR%\bin\Qt5Qml.dll packages\org.miamplayer.plugins.deezer\data\Qt5Qml.dll
-rem copy %QTDIR%\bin\Qt5Quick.dll packages\org.miamplayer.plugins.deezer\data\Qt5Quick.dll
-rem copy %QTDIR%\bin\Qt5Sensors.dll packages\org.miamplayer.plugins.deezer\data\Qt5Sensors.dll
-rem copy %QTDIR%\bin\Qt5WebChannel.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebChannel.dll
-
-rem create only repository
-rem rmdir repository /s /q
-rem repogen -p packages repository
+rem xcopy %DeezerPluginBuild%\deezer-plugin.dll packages\org.miamplayer.plugins.deezer\data\plugins\ /y/e
+rem copy %QTDIR%\bin\Qt5WebEngine.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngine.dll
+rem copy %QTDIR%\bin\Qt5WebEngineCore.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngineCore.dll
 
 rem create the final package
 binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
@@ -91,9 +80,9 @@ binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p
 rem delete data folders
 rmdir packages\org.qtav\data\ /s /q
 rmdir packages\org.miamplayer.core\data\ /s /q
-rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
+rem rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
 rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
-rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
-rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
+rem rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
+rem rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
 rmdir packages\org.miamplayer.plugins.minimode\data\ /s /q
 rmdir packages\org.miamplayer.plugins.windowstoolbar\data\ /s /q

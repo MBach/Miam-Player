@@ -210,13 +210,6 @@ void MainWindow::setupActions()
 		actionPlay->setEnabled(notEmpty);
 		actionSkipForward->setEnabled(notEmpty);
 	});
-	connect(actionSkipBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipBackward);
-	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekBackward);
-	connect(actionPlay, &QAction::triggered, _mediaPlayer, &MediaPlayer::togglePlayback);
-	connect(actionStop, &QAction::triggered, _mediaPlayer, &MediaPlayer::stop);
-	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer, &MediaPlayer::stopAfterCurrent);
-	connect(actionSeekForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekForward);
-	connect(actionSkipForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::skipForward);
 
 	connect(actionShowEqualizer, &QAction::triggered, this, [=]() {
 		EqualizerDialog *equalizerDialog = new EqualizerDialog(_mediaPlayer, this);
@@ -518,10 +511,23 @@ void MainWindow::activateView(QAction *menuAction)
 	_shortcutPlayPause->disconnect();
 	_shortcutStop->disconnect();
 	_shortcutSkipForward->disconnect();
+	qDebug() << Q_FUNC_INFO << _currentView->mediaPlayerControl();
 	connect(_shortcutSkipBackward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipBackward);
 	connect(_shortcutPlayPause, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::togglePlayback);
 	connect(_shortcutStop, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::stop);
 	connect(_shortcutSkipForward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipForward);
+
+	QList<QAction*> multimediaActions = { actionSkipBackward, actionSeekBackward, actionPlay, actionStop, actionStopAfterCurrent, actionSeekForward, actionSkipForward };
+	for (QAction *action : multimediaActions) {
+		action->disconnect();
+	}
+	connect(actionSkipBackward, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipBackward);
+	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekBackward);
+	connect(actionPlay, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::togglePlayback);
+	connect(actionStop, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::stop);
+	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer, &MediaPlayer::stopAfterCurrent);
+	connect(actionSeekForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekForward);
+	connect(actionSkipForward, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipForward);
 
 	// Basically, a music player provides a playlist feature or it doesn't.
 	// It implies a clean and separate way to display things, I suppose.
@@ -533,6 +539,11 @@ void MainWindow::activateView(QAction *menuAction)
 	actionOpenFiles->setEnabled(b);
 	actionOpenFolder->setEnabled(b);
 
+	QActionGroup *actionGroup = this->findChild<QActionGroup*>("playbackActionGroup");
+
+	actionPlaybackLoop->setEnabled(b);
+	actionPlaybackCurrentItemOnce->setEnabled(b);
+	actionPlaybackCurrentItemInLoop->setEnabled(b);
 	if (b) {
 		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
 		connect(viewPlaylists, &AbstractViewPlaylists::aboutToSendToTagEditor, this, [=](const QModelIndexList &, const QList<QUrl> &tracks) {
@@ -566,7 +577,6 @@ void MainWindow::activateView(QAction *menuAction)
 			action->setChecked(true);
 		});
 
-		QActionGroup *actionGroup = this->findChild<QActionGroup*>("playbackActionGroup");
 		connect(actionGroup, &QActionGroup::triggered, this, [=](QAction *action) {
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
 			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
@@ -580,19 +590,21 @@ void MainWindow::activateView(QAction *menuAction)
 		connect(actionMoveTracksDown, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::moveTracksDown);
 		connect(actionOpenPlaylistManager, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openPlaylistManager);
 	} else {
-		disconnect(actionOpenFiles);
-		disconnect(actionOpenFolder);
-		disconnect(actionAddPlaylist);
-		disconnect(actionDeleteCurrentPlaylist);
-		disconnect(menuPlaylist);
-		disconnect(actionRemoveSelectedTracks);
-		disconnect(actionMoveTracksUp);
-		disconnect(actionMoveTracksDown);
-		disconnect(actionOpenPlaylistManager);
+		actionOpenFiles->disconnect();
+		actionOpenFolder->disconnect();
+		actionAddPlaylist->disconnect();
+		actionDeleteCurrentPlaylist->disconnect();
+		menuPlaylist->disconnect();
+		menuPlayback->disconnect();
+		actionGroup->disconnect();
+		actionRemoveSelectedTracks->disconnect();
+		actionMoveTracksUp->disconnect();
+		actionMoveTracksDown->disconnect();
+		actionOpenPlaylistManager->disconnect();
 	}
 
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderIncrease);
-	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderDecrease);
+	connect(actionDecreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderDecrease);
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		if (_currentView) {
@@ -614,9 +626,10 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	if (action) {
 		action->setShortcut(keySequence);
 		// Some default shortcuts might interfer with other widgets, so we need to restrict where it applies
-		if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
+		/*if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
 			action->setShortcutContext(Qt::WidgetShortcut);
-		} else if (action == actionRemoveSelectedTracks) {
+		} else*/
+		if (action == actionRemoveSelectedTracks) {
 			action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 		}
 	}

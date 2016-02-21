@@ -138,17 +138,32 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 void PluginManager::registerExtensionPoint(QPair<QString, QObjectList> ext)
 {
 	for (QObject *instance : ext.second) {
+		qDebug() << Q_FUNC_INFO << ext.first << instance;
 		_extensionPoints.insert(ext.first, instance);
 	}
 
 	// Reload views
 	for (BasicPlugin *plugin : _loadedPlugins.values()) {
+		if (!plugin) {
+			qWarning() << Q_FUNC_INFO << "Plugin shouldn't be null";
+			continue;
+		}
 		if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
 			this->loadItemViewPlugin(itemViewPlugin);
 		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
 			this->loadTagEditorPlugin(tagEditorPlugin);
 		}
 	}
+}
+
+void PluginManager::unregisterExtensionPoint(const QString &ext)
+{
+	for (QObject *instance : _extensionPoints.values(ext)) {
+		if (instance) {
+			instance->deleteLater();
+		}
+	}
+	_extensionPoints.remove(ext);
 }
 
 /** Unload a plugin by its name. */

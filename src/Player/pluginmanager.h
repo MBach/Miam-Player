@@ -56,6 +56,8 @@ public:
 	/** Allow views to be extended by adding 1 or more entries in a context menu and items to interact with. */
 	void registerExtensionPoint(QPair<QString, QObjectList> ext);
 
+	void unregisterExtensionPoint(const QString &ext);
+
 	/** Unload a plugin by its name. */
 	bool unloadPlugin(const QString &absFilePath);
 

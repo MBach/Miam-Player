@@ -4,7 +4,7 @@
 	<Description>This plugin is a tribute to the good ol’ Winamp minimal player. It only occupies 8250 pixels on screen!</Description>
 	<Description xml:lang="fr_fr">Cette extension est un hommage à ce bon vieux Winamp en mode mini-lecteur. Il n'occupe que 8250 pixels à l'écran !</Description>
 	<Version>0.5</Version>
-	<ReleaseDate>2015-10-15</ReleaseDate>
+	<ReleaseDate>2016-02-21</ReleaseDate>
 	<Name>org.miamplayer.plugins.minimode</Name>
 	<Default>true</Default>
 	<SortingPriority>12</SortingPriority>

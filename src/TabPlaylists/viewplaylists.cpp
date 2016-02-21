@@ -15,7 +15,6 @@
 ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	: AbstractViewPlaylists(new ViewPlaylistsMediaPlayerControl(mediaPlayer, parent), parent)
 	, _searchDialog(new SearchDialog(this))
-	, _db(nullptr)
 	, _removeSelectedTracks(new QShortcut(this))
 	, _showTabLibrary(new QShortcut(this))
 	, _showTabFilesystem(new QShortcut(this))
@@ -203,15 +202,11 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 
 ViewPlaylists::~ViewPlaylists()
 {
-	if (_db) {
-		delete _db;
-		_db = nullptr;
-	}
+	this->disconnect();
 	if (_searchDialog) {
 		delete _searchDialog;
 		_searchDialog = nullptr;
 	}
-	_mediaPlayerControl->mediaPlayer()->stop();
 }
 
 void ViewPlaylists::addToPlaylist(const QList<QUrl> &tracks)
