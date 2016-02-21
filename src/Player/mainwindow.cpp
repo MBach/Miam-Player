@@ -511,7 +511,6 @@ void MainWindow::activateView(QAction *menuAction)
 	_shortcutPlayPause->disconnect();
 	_shortcutStop->disconnect();
 	_shortcutSkipForward->disconnect();
-	qDebug() << Q_FUNC_INFO << _currentView->mediaPlayerControl();
 	connect(_shortcutSkipBackward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipBackward);
 	connect(_shortcutPlayPause, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::togglePlayback);
 	connect(_shortcutStop, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::stop);

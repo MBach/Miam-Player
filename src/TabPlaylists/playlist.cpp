@@ -224,7 +224,6 @@ void Playlist::dragLeaveEvent(QDragLeaveEvent *event)
 
 void Playlist::startDrag(Qt::DropActions)
 {
-	qDebug() << Q_FUNC_INFO;
 	_isDragging = true;
 	QByteArray itemData;
 	//QDataStream dataStream(&itemData, QIODevice::WriteOnly);

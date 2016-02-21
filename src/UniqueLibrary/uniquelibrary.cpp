@@ -194,6 +194,10 @@ bool UniqueLibrary::playSingleTrack(const QModelIndex &index)
 
 void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 {
+	if (_currentTrack) {
+		delete _currentTrack;
+		_currentTrack = nullptr;
+	}
 	connect(musicSearchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
 
 		QVBoxLayout *vbox = new QVBoxLayout;

@@ -45,7 +45,6 @@ AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAct
 void ViewLoader::attachPluginToBuiltInView(AbstractView *view)
 {
 	QPair<QString, QObjectList> extensionPoints = view->extensionPoints();
-	qDebug() << Q_FUNC_INFO << extensionPoints.first << extensionPoints.second;
 	if (!extensionPoints.first.isEmpty()) {
 		_pluginManager->registerExtensionPoint(extensionPoints);
 	}
@@ -83,7 +82,6 @@ AbstractView* ViewLoader::loadFromPlugin(AbstractView *currentView, const QStrin
 		// Check if we need to pass some objects from old view to new view, because new one can be brought by plugins
 		// For example, a plugin may need the MediaPlayerControl from the current view
 		if (MediaPlayerPlugin *mediaPlayerPlugin = qobject_cast<MediaPlayerPlugin*>(plugin)) {
-			qDebug() << Q_FUNC_INFO << mediaPlayerPlugin;
 			mediaPlayerPlugin->setMediaPlayerControl(currentView->mediaPlayerControl());
 			if (mediaPlayerPlugin->hasView()) {
 				view = mediaPlayerPlugin->instanciateView();

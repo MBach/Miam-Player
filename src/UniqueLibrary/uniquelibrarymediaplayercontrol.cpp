@@ -46,7 +46,6 @@ void UniqueLibraryMediaPlayerControl::skipBackward()
 
 void UniqueLibraryMediaPlayerControl::skipForward()
 {
-	qDebug() << Q_FUNC_INFO;
 	mediaPlayer()->blockSignals(true);
 
 	if (_uniqueLibrary->currentTrack()) {

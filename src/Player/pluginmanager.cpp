@@ -138,7 +138,6 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 void PluginManager::registerExtensionPoint(QPair<QString, QObjectList> ext)
 {
 	for (QObject *instance : ext.second) {
-		qDebug() << Q_FUNC_INFO << ext.first << instance;
 		_extensionPoints.insert(ext.first, instance);
 	}
 
