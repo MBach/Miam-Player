@@ -12,7 +12,7 @@ EOF
 }
 
 DISTRIBUTIONS=(wily)
-DATE=`date -d @$(git log -n1 --format="%at") +%Y%m%d`
+DATE=`date -d @$(git log -n1 --format="%at") +%Y%m%d-%H%M%S`
 for D in ${DISTRIBUTIONS[@]}; do
   git checkout -- debian/changelog
   cp -avf debian/changelog $CHANGELOG_BAK
