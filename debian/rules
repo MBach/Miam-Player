@@ -2,7 +2,10 @@
 
 DEB_BUILD_MULTIARCH ?= $(shell dpkg-architecture -qDEB_BUILD_MULTIARCH)
 export QT_SELECT=qt5
+export QTDIR=/usr/share/qt5
 
 %:
 	dh $@ --parallel
+
+
 
