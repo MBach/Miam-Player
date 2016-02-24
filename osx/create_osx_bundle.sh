@@ -19,7 +19,7 @@ version=0.8.0
 if [ -d MiamPlayer.app ]; then
     rm -rf MiamPlayer.app
 fi
-cp -R ${build}/MiamPlayer/MiamPlayer.app .
+cp -R ${build}/Player/MiamPlayer.app .
 frameworks=MiamPlayer.app/Contents/Frameworks
 mkdir -p ${frameworks}
 

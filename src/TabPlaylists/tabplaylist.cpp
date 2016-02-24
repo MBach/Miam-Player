@@ -142,7 +142,7 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 		if (de->source() == nullptr) {
 			// Drag & Drop comes from another application but has landed in the playlist area
 			de->ignore();
-			QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
+			//QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
 			/// FIXME
 			//_mainWindow->dispatchDrop(d);
 			qDebug() << Q_FUNC_INFO << "1";

@@ -123,12 +123,12 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix {
-    LIBS += -ltag -L$$OUT_PWD/../Core/ -lmiam-core
     LIBS += -L$$OUT_PWD/../Library/ -lmiam-library
     LIBS += -L$$OUT_PWD/../TabPlaylists/ -lmiam-tabplaylists
     LIBS += -L$$OUT_PWD/../UniqueLibrary/ -lmiam-uniquelibrary
 }
 unix:!macx {
+    LIBS += -ltag -L$$OUT_PWD/../Core/ -lmiam-core
     target.path = /usr/bin
     desktop.path = /usr/share/applications
     desktop.files = $$PWD/../../debian/usr/share/applications/miam-player.desktop
@@ -142,6 +142,7 @@ unix:!macx {
 	appdata
 }
 macx {
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../Core/ -lmiam-core
     ICON = $$PWD/../../osx/MiamPlayer.icns
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     #1 create Framework and PlugIns directories
