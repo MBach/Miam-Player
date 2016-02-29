@@ -429,15 +429,15 @@
     </message>
     <message>
         <source>Global</source>
-        <translation type="unfinished"></translation>
+        <translation>全局</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished">清空</translation>
+        <translation>清空</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>重置</translation>
     </message>
 </context>
 <context>
@@ -750,15 +750,15 @@
     <name>EqualizerDialog</name>
     <message>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>均衡器</translation>
     </message>
     <message>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>激活</translation>
     </message>
     <message>
         <source>Preset</source>
-        <translation type="unfinished"></translation>
+        <translation>预配置</translation>
     </message>
     <message>
         <source>Preamp</source>
@@ -900,31 +900,31 @@
     </message>
     <message>
         <source>Play&amp;list</source>
-        <translation>播放列表&amp;l</translation>
+        <translation>播放列表(&amp;l)</translation>
     </message>
     <message>
         <source>&amp;Options</source>
-        <translation>选项&amp;O</translation>
+        <translation>选项(&amp;O)</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>帮助&amp;H</translation>
+        <translation>帮助(&amp;H)</translation>
     </message>
     <message>
         <source>&amp;Playback</source>
-        <translation>回放&amp;P</translation>
+        <translation>回放(&amp;P)</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation>退出&amp;E</translation>
+        <translation>退出(&amp;E)</translation>
     </message>
     <message>
         <source>&amp;Add a playlist</source>
-        <translation>&amp;A添加播放列表</translation>
+        <translation>添加播放列表(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Customize appearance...</source>
-        <translation>&amp;C自定义外观...</translation>
+        <translation>自定义外观(&amp;C)...</translation>
     </message>
     <message>
         <source>About &amp;Qt...</source>
@@ -932,93 +932,85 @@
     </message>
     <message>
         <source>&amp;Playlist manager...</source>
-        <translation>&amp;P播放列表管理...</translation>
+        <translation>播放列表管理(&amp;P)...</translation>
     </message>
     <message>
         <source>&amp;Rescan library</source>
-        <translation>&amp;R重新扫描库</translation>
+        <translation>重新扫描库(&amp;R)</translation>
     </message>
     <message>
         <source>&amp;Check for a new version is available</source>
-        <translation>&amp;C检查有一个可用新版本</translation>
+        <translation>检查有一个可用新版本(&amp;C)</translation>
     </message>
     <message>
         <source>Customize general &amp;options...</source>
-        <translation>自定义常规&amp;o选项...</translation>
+        <translation>自定义常规选项(&amp;o)...</translation>
     </message>
     <message>
         <source>&amp;Delete current playlist</source>
-        <translation>&amp;D删除当前播放列表</translation>
+        <translation>删除当前播放列表(&amp;D)</translation>
     </message>
     <message>
         <source>Show &amp;help...</source>
-        <translation>显示&amp;h帮助...</translation>
+        <translation>显示帮助(&amp;h)...</translation>
     </message>
     <message>
         <source>Skip &amp;backward</source>
-        <translation>&amp;b向后跳过</translation>
+        <translation>向后跳过(&amp;b)</translation>
     </message>
     <message>
         <source>&amp;Play / pause</source>
-        <translation>&amp;P播放/暂停</translation>
+        <translation>播放/暂停(&amp;P)</translation>
     </message>
     <message>
         <source>&amp;Stop</source>
-        <translation>&amp;S停止</translation>
+        <translation>停止(&amp;S)</translation>
     </message>
     <message>
         <source>Skip &amp;forward</source>
-        <translation>&amp;f向前跳过</translation>
-    </message>
-    <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">&amp;R重复</translation>
+        <translation>向前跳过(&amp;f)</translation>
     </message>
     <message>
         <source>S&amp;huffle</source>
-        <translation>&amp;h随机</translation>
+        <translation>随机(&amp;h)</translation>
     </message>
     <message>
         <source>Move selected track &amp;up</source>
-        <translation>&amp;u上移已选择音轨</translation>
+        <translation>上移已选择音轨(&amp;u)</translation>
     </message>
     <message>
         <source>Move selected track &amp;down</source>
-        <translation>&amp;d下移已选择音轨</translation>
+        <translation>下移已选择音轨(&amp;d)</translation>
     </message>
     <message>
         <source>&amp;Mute</source>
-        <translation>&amp;M静音</translation>
+        <translation>静音(&amp;M)</translation>
     </message>
     <message>
         <source>&amp;Increase volume</source>
-        <translation>&amp;I增加音量</translation>
+        <translation>增加音量(&amp;I)</translation>
     </message>
     <message>
         <source>&amp;Decrease volume</source>
-        <translation>&amp;D减小音量</translation>
+        <translation>减小音量(&amp;D)</translation>
     </message>
     <message>
         <source>&amp;Remove selected track</source>
-        <translation>&amp;R移除已选择音轨</translation>
+        <translation>移除已选择音轨(&amp;R)</translation>
     </message>
     <message>
         <source>Current item &amp;once</source>
-        <translation>当前&amp;o一次</translation>
+        <translation>当前一次(&amp;o)</translation>
     </message>
     <message>
         <source>&amp;Normal</source>
-        <translation>&amp;N普通</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">当前 &amp;l循环</translation>
+        <translation>普通(&amp;N)</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
-            <numerusform>&amp;R移除已选择%n音轨</numerusform>
+            <numerusform>移除已选择%n音轨(&amp;R)</numerusform>
         </translation>
     </message>
     <message numerus="yes">
@@ -1045,7 +1037,7 @@
     </message>
     <message>
         <source>&amp;About Miam Player...</source>
-        <translation>&amp;A关于Miam Player...</translation>
+        <translation>关于Miam Player(&amp;A)...</translation>
     </message>
     <message>
         <source>This mode is currently under development</source>
@@ -1057,7 +1049,7 @@
     </message>
     <message>
         <source>&amp;Open files...</source>
-        <translation>&amp;O打开文件...</translation>
+        <translation>打开文件(&amp;O)...</translation>
     </message>
     <message>
         <source>Open folder...</source>
@@ -1117,11 +1109,11 @@
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>&amp;F文件</translation>
+        <translation>文件(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation>&amp;查看</translation>
+        <translation>查看(&amp;V)</translation>
     </message>
     <message>
         <source>Show Equalizer</source>
@@ -1133,11 +1125,11 @@
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>循环(&amp;L)</translation>
     </message>
     <message>
         <source>Current item in l&amp;oop</source>
-        <translation type="unfinished"></translation>
+        <translation>重复当前(&amp;o)</translation>
     </message>
 </context>
 <context>
