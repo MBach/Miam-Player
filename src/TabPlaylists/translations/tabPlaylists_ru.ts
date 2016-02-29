@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="ru_RU" sourcelanguage="en_US">
 <context>
     <name>AddressBar</name>
     <message>
@@ -110,12 +110,12 @@
         <translation>встроенный</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="351"/>
+        <location filename="../playlist.cpp" line="350"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="481"/>
+        <location filename="../playlist.cpp" line="480"/>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
         <translation>Этот список воспроизведения пуст.
@@ -268,17 +268,17 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlistmodel.cpp" line="71"/>
+        <location filename="../playlistmodel.cpp" line="70"/>
         <source>You cannot modify remote medias</source>
         <translation>Вы не можете изменять удалённые медиа-файлы</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="103"/>
+        <location filename="../playlistmodel.cpp" line="102"/>
         <source>Local</source>
         <translation>Локальный</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="105"/>
+        <location filename="../playlistmodel.cpp" line="104"/>
         <source>Local file</source>
         <translation>Локальный файл</translation>
     </message>
@@ -341,8 +341,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="263"/>
-        <location filename="../tabplaylist.cpp" line="454"/>
+        <location filename="../tabplaylist.cpp" line="268"/>
+        <location filename="../tabplaylist.cpp" line="459"/>
         <source>Playlist %1</source>
         <translation>Список воспроизведения %1</translation>
     </message>
@@ -370,32 +370,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="257"/>
+        <location filename="../viewplaylists.cpp" line="252"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="323"/>
+        <location filename="../viewplaylists.cpp" line="318"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="405"/>
+        <location filename="../viewplaylists.cpp" line="400"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="417"/>
+        <location filename="../viewplaylists.cpp" line="412"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="419"/>
+        <location filename="../viewplaylists.cpp" line="414"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="444"/>
+        <location filename="../viewplaylists.cpp" line="439"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>

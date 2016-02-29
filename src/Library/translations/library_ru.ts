@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="ru_RU" sourcelanguage="en_US">
 <context>
     <name>LibraryHeader</name>
     <message>
@@ -27,7 +27,7 @@
 <context>
     <name>LibraryItemDelegate</name>
     <message>
-        <location filename="../libraryitemdelegate.cpp" line="355"/>
+        <location filename="../libraryitemdelegate.cpp" line="354"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>
@@ -119,17 +119,17 @@
 <context>
     <name>LibraryTreeView</name>
     <message>
-        <location filename="../librarytreeview.cpp" line="35"/>
+        <location filename="../librarytreeview.cpp" line="38"/>
         <source>Send to the current playlist</source>
         <translation>Отправить в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="36"/>
+        <location filename="../librarytreeview.cpp" line="39"/>
         <source>Send to the tag editor</source>
         <translation>Отправить в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="248"/>
+        <location filename="../librarytreeview.cpp" line="259"/>
         <source>No matching results were found</source>
         <translation>Подходящих результатов не найдено</translation>
     </message>
@@ -137,7 +137,7 @@
 <context>
     <name>MiamItemDelegate</name>
     <message>
-        <location filename="../miamitemdelegate.cpp" line="82"/>
+        <location filename="../miamitemdelegate.cpp" line="84"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>

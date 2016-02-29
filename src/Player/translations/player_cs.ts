@@ -971,10 +971,6 @@
         <translation>Skočit &amp;vpřed</translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">&amp;Opakovat</translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation>Za&amp;míchat</translation>
     </message>
@@ -1009,10 +1005,6 @@
     <message>
         <source>&amp;Normal</source>
         <translation>&amp;Normální</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">Současnou položku pořád do&amp;kola</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>

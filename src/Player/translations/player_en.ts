@@ -971,10 +971,6 @@
         <translation>Skip &amp;forward</translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">&amp;Repeat</translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation>&amp;Shuffle</translation>
     </message>
@@ -1009,10 +1005,6 @@
     <message>
         <source>&amp;Normal</source>
         <translation>&amp;Normal</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">Current item in &amp;loop</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>

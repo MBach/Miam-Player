@@ -99,6 +99,7 @@ RESOURCES += tabPlaylists.qrc
 TRANSLATIONS = translations/tabPlaylists_ar.ts \
     translations/tabPlaylists_cs.ts \
     translations/tabPlaylists_de.ts \
+    translations/tabPlaylists_el.ts \
     translations/tabPlaylists_en.ts \
     translations/tabPlaylists_es.ts \
     translations/tabPlaylists_fr.ts \

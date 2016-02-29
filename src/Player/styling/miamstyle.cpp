@@ -175,8 +175,7 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 		const bool act = somi->state & (State_Sunken | State_Selected);
 		QPalette palette = QApplication::palette();
 		QBrush brush;
-		//bool dirtyHackMnemonic = widget->property("dirtyHackMnemonic").toBool();
-		if (act/* || dirtyHackMnemonic && option->rect.x() == 0*/) {
+		if (act) {
 			painter->setPen(palette.highlight().color());
 			brush = palette.highlight().color().lighter();
 			painter->setBrush(brush);
@@ -187,7 +186,7 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 		}
 
 		uint alignment = Qt::AlignCenter | Qt::TextShowMnemonic | Qt::TextDontClip | Qt::TextSingleLine;
-		if (/*dirtyHackMnemonic == false &&*/ !styleHint(SH_UnderlineShortcut, somi, widget)) {
+		if (!styleHint(SH_UnderlineShortcut, somi, widget)) {
 			alignment |= Qt::TextHideMnemonic;
 		}
 		if (somi->state.testFlag(QStyle::State_Enabled)) {

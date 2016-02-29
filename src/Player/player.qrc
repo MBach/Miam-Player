@@ -54,6 +54,7 @@
         <file alias="th">language/th.png</file>
         <file alias="vn">language/vn.png</file>
         <file alias="zh">language/zh.png</file>
+        <file alias="gr">language/gr.png</file>
     </qresource>
     <qresource prefix="/">
         <file>translations/player_ar.qm</file>

@@ -142,6 +142,7 @@ RESOURCES += core.qrc
 TRANSLATIONS = translations/core_ar.ts \
     translations/core_cs.ts \
     translations/core_de.ts \
+    translations/core_el.ts \
     translations/core_en.ts \
     translations/core_es.ts \
     translations/core_fr.ts \

@@ -63,6 +63,7 @@ RESOURCES += uniqueLibrary.qrc
 TRANSLATIONS = translations/uniqueLibrary_ar.ts \
     translations/uniqueLibrary_cs.ts \
     translations/uniqueLibrary_de.ts \
+    translations/uniqueLibrary_el.ts \
     translations/uniqueLibrary_en.ts \
     translations/uniqueLibrary_es.ts \
     translations/uniqueLibrary_fr.ts \

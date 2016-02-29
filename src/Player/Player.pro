@@ -80,6 +80,7 @@ macx {
 TRANSLATIONS = translations/player_ar.ts \
     translations/player_cs.ts \
     translations/player_de.ts \
+    translations/player_el.ts \
     translations/player_en.ts \
     translations/player_es.ts \
     translations/player_fr.ts \

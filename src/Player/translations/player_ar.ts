@@ -971,10 +971,6 @@
         <translation type="unfinished">&amp;المسار اليالت</translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">تكرار&amp;</translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation>ئي&amp;عشوا</translation>
     </message>
@@ -1009,10 +1005,6 @@
     <message>
         <source>&amp;Normal</source>
         <translation>عادي&amp;</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">&amp;مسار دائِما مُكرر</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>

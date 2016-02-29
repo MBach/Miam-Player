@@ -971,10 +971,6 @@
         <translation>Vorwärts springen</translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">Wiederholen</translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation>Mischen</translation>
     </message>
@@ -1009,10 +1005,6 @@
     <message>
         <source>&amp;Normal</source>
         <translation>Normal</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">Aktueller Musiktitel ist in der Schleife</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>

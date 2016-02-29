@@ -110,12 +110,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="351"/>
+        <location filename="../playlist.cpp" line="350"/>
         <source>playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="481"/>
+        <location filename="../playlist.cpp" line="480"/>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
         <translation type="unfinished"></translation>
@@ -263,17 +263,17 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlistmodel.cpp" line="71"/>
+        <location filename="../playlistmodel.cpp" line="70"/>
         <source>You cannot modify remote medias</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="103"/>
+        <location filename="../playlistmodel.cpp" line="102"/>
         <source>Local</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="105"/>
+        <location filename="../playlistmodel.cpp" line="104"/>
         <source>Local file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -336,8 +336,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="263"/>
-        <location filename="../tabplaylist.cpp" line="454"/>
+        <location filename="../tabplaylist.cpp" line="268"/>
+        <location filename="../tabplaylist.cpp" line="459"/>
         <source>Playlist %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -365,32 +365,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="257"/>
+        <location filename="../viewplaylists.cpp" line="252"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="323"/>
+        <location filename="../viewplaylists.cpp" line="318"/>
         <source>playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="405"/>
+        <location filename="../viewplaylists.cpp" line="400"/>
         <source>Audio files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="417"/>
+        <location filename="../viewplaylists.cpp" line="412"/>
         <source>Every file type (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="419"/>
+        <location filename="../viewplaylists.cpp" line="414"/>
         <source>Choose some files to open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="444"/>
+        <location filename="../viewplaylists.cpp" line="439"/>
         <source>Choose a folder to open</source>
         <translation type="unfinished"></translation>
     </message>

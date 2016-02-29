@@ -437,8 +437,11 @@ void SettingsPrivate::setCustomIcon(const QString &buttonName, const QString &ic
 bool SettingsPrivate::setLanguage(const QString &lang)
 {
 	setValue("language", lang);
-	emit languageAboutToChange(lang);
-	return this->initLanguage(lang);
+	bool b = this->initLanguage(lang);
+	if (b) {
+		emit languageAboutToChange(lang);
+	}
+	return b;
 }
 
 void SettingsPrivate::setLastActiveViewGeometry(const QString &menuAction, const QByteArray &viewGeometry)
@@ -489,10 +492,14 @@ int SettingsPrivate::volumeBarHideAfter() const
 bool SettingsPrivate::initLanguage(const QString &lang)
 {
 	bool b = playerTranslator.load(":/translations/player_" + lang);
-	defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	/// TODO: reload plugin UI
-	b &= QApplication::installTranslator(&playerTranslator);
-	QApplication::installTranslator(&defaultQtTranslator);
+	qDebug() << Q_FUNC_INFO << lang << b << "A";
+	if (b) {
+		defaultQtTranslator.load("qt_" + lang, QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+		/// TODO: reload plugin UI
+		b &= QApplication::installTranslator(&playerTranslator);
+		qDebug() << Q_FUNC_INFO << lang << b << "B";
+		QApplication::installTranslator(&defaultQtTranslator);
+	}
 	return b;
 }
 

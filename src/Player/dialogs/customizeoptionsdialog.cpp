@@ -169,6 +169,7 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 void CustomizeOptionsDialog::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
+		qDebug() << Q_FUNC_INFO << event;
 		this->retranslateUi(this);
 	} else {
 		QDialog::changeEvent(event);
@@ -333,9 +334,13 @@ void CustomizeOptionsDialog::changeLanguage()
 		return;
 	}
 
-	if (SettingsPrivate::instance()->setLanguage(languageButton->text())) {
+	qDebug() << Q_FUNC_INFO;
+	bool b = SettingsPrivate::instance()->setLanguage(languageButton->text());
+	if (b) {
+		qDebug() << "1";
 		labelStatusLanguage->setText(QApplication::translate("CustomizeOptionsDialog", "Translation status: OK!"));
 	} else {
+		qDebug() << "2";
 		labelStatusLanguage->setText(tr("No translation is available for this language :("));
 	}
 
@@ -343,7 +348,11 @@ void CustomizeOptionsDialog::changeLanguage()
 		b->setDown(false);
 	}
 	languageButton->setDown(true);
-	this->retranslateUi(this);
+
+	if (b) {
+		qDebug() << "3";
+		this->retranslateUi(this);
+	}
 }
 
 /** Verify that one hasn't tried to bind a key twice. */

@@ -971,10 +971,6 @@
         <translation>Piste sui&amp;vante</translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">&amp;Répéter</translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation>Al&amp;éatoire</translation>
     </message>
@@ -1009,10 +1005,6 @@
     <message>
         <source>&amp;Normal</source>
         <translation>&amp;Normal</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">Une piste, &amp;toujours en boucle</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>

@@ -80,6 +80,7 @@ DEPENDPATH += $$PWD/../Core
 TRANSLATIONS = translations/library_ar.ts \
     translations/library_cs.ts \
     translations/library_de.ts \
+    translations/library_el.ts \
     translations/library_en.ts \
     translations/library_es.ts \
     translations/library_fr.ts \

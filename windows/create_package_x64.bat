@@ -75,7 +75,7 @@ rem copy %QTDIR%\bin\Qt5WebEngine.dll packages\org.miamplayer.plugins.deezer\dat
 rem copy %QTDIR%\bin\Qt5WebEngineCore.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngineCore.dll
 
 rem create the final package
-binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.0.exe
+binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.1.exe
 
 rem delete data folders
 rmdir packages\org.qtav\data\ /s /q
