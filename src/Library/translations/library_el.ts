@@ -5,124 +5,124 @@
     <name>LibraryHeader</name>
     <message>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Άλμπουμ</translation>
     </message>
     <message>
         <source>Artist – Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Καλλιτέχνης - Άλμπουμ</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Έτος</translation>
     </message>
     <message>
         <source>Artist \ Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Καλλιτέχνης \ Άλμπουμ</translation>
     </message>
 </context>
 <context>
     <name>LibraryItemDelegate</name>
     <message>
         <source>(empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Κενό)</translation>
     </message>
 </context>
 <context>
     <name>LibraryItemModel</name>
     <message>
         <source>  Artists \ Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>  Καλλιτέχνες \ Άλμπουμς</translation>
     </message>
     <message>
         <source>  Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>  Άλμπουμς</translation>
     </message>
     <message>
         <source>  Artists – Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>  Καλλιτέχνες - Άλμπουμς</translation>
     </message>
     <message>
         <source>  Years</source>
-        <translation type="unfinished"></translation>
+        <translation>  Έτη</translation>
     </message>
 </context>
 <context>
     <name>LibraryOrderDialog</name>
     <message>
         <source>Select how to display your library</source>
-        <translation type="unfinished"></translation>
+        <translation>Επέλεξε πως θα εμφανίζεται η βιοβλιοθήκη σου</translation>
     </message>
     <message>
         <source>Artists \ Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Καλλιτέχνες \ Άλμπουμς</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Καλλιτέχνης</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Άλμπουμ</translation>
     </message>
     <message>
         <source>01. track #1</source>
-        <translation type="unfinished"></translation>
+        <translation>01. Κομμάτι #1</translation>
     </message>
     <message>
         <source>02. track #2</source>
-        <translation type="unfinished"></translation>
+        <translation>02. Κομμάτι #2</translation>
     </message>
     <message>
         <source>Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Άλμπουμς</translation>
     </message>
     <message>
         <source>Artists – Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Καλλιτέχνες - Άλμπουμς</translation>
     </message>
     <message>
         <source>Artist – Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Καλλιτέχνης - Άλμπουμς</translation>
     </message>
     <message>
         <source>Years</source>
-        <translation type="unfinished"></translation>
+        <translation>Έτη</translation>
     </message>
 </context>
 <context>
     <name>LibraryTreeView</name>
     <message>
         <source>Send to the current playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Στείλε στην τρέχουσα λίστα αναπαραγωγής</translation>
     </message>
     <message>
         <source>Send to the tag editor</source>
-        <translation type="unfinished"></translation>
+        <translation>Στείλε στον επεξεργαστή ετικετών</translation>
     </message>
     <message>
         <source>No matching results were found</source>
-        <translation type="unfinished"></translation>
+        <translation>Δέ βρέθηκαν ταιραστά αποτελέσματα</translation>
     </message>
 </context>
 <context>
     <name>MiamItemDelegate</name>
     <message>
         <source>(empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(κενό)</translation>
     </message>
 </context>
 <context>
     <name>MiamItemModel</name>
     <message>
         <source>Various</source>
-        <translation type="unfinished"></translation>
+        <translation>Διάφορα</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Unknown</source>
-        <translation type="unfinished"></translation>
+        <translation>Άγνωστο</translation>
     </message>
 </context>
 </TS>

@@ -5,36 +5,36 @@
     <name>TableView</name>
     <message>
         <source>No matching results were found</source>
-        <translation type="unfinished"></translation>
+        <translation>Δέν βρέθηκαν αποτελέσματα</translation>
     </message>
 </context>
 <context>
     <name>UniqueLibrary</name>
     <message>
         <source>Your library is updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>Η βιβλιοθήκη ανανεώνεται...</translation>
     </message>
 </context>
 <context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <source>(no title)</source>
-        <translation type="unfinished"></translation>
+        <translation>(χωρίς τίτλο)</translation>
     </message>
     <message>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>Δίσκος</translation>
     </message>
     <message>
         <source>(empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(κενό)</translation>
     </message>
 </context>
 <context>
     <name>uniqueLibrary</name>
     <message>
         <source>Search...</source>
-        <translation type="unfinished"></translation>
+        <translation>Αναζήτηση...</translation>
     </message>
 </context>
 </TS>
