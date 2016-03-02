@@ -5,36 +5,36 @@
     <name>TableView</name>
     <message>
         <source>No matching results were found</source>
-        <translation type="unfinished"></translation>
+        <translation>未找到匹配结果</translation>
     </message>
 </context>
 <context>
     <name>UniqueLibrary</name>
     <message>
         <source>Your library is updating...</source>
-        <translation type="unfinished"></translation>
+        <translation>正在更新你的库...</translation>
     </message>
 </context>
 <context>
     <name>UniqueLibraryItemDelegate</name>
     <message>
         <source>(no title)</source>
-        <translation type="unfinished"></translation>
+        <translation>(无标题)</translation>
     </message>
     <message>
         <source>(empty)</source>
-        <translation type="unfinished"></translation>
+        <translation>(空)</translation>
     </message>
     <message>
         <source>Disc</source>
-        <translation type="unfinished"></translation>
+        <translation>磁盘</translation>
     </message>
 </context>
 <context>
     <name>uniqueLibrary</name>
     <message>
         <source>Search...</source>
-        <translation type="unfinished">搜索...</translation>
+        <translation>搜索...</translation>
     </message>
 </context>
 </TS>
