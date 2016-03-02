@@ -10,7 +10,7 @@ Homepage: http://miam-player.org
 Package: miam-player
 Section: sound
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5widgets5, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5sql5, libqtav (>=1.9.0~)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5widgets5, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5sql5, libqtav (>=1.10.0~)
 Multi-Arch: same
 Description: Miam Player
  Miam Player is a cross-platform open source music player
