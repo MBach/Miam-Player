@@ -1,7 +1,7 @@
 /******************************************************************************
 	QtAV:  Media play library based on Qt and FFmpeg
 	solve the version problem and diffirent api in FFmpeg and libav
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -320,9 +320,12 @@ typedef enum AVPixelFormat AVPixelFormat;
 // used by av_pix_fmt_count_planes
 #if !AV_MODULE_CHECK(LIBAVUTIL, 52, 3, 0, 13, 100)
 const AVPixFmtDescriptor *av_pix_fmt_desc_get(AVPixelFormat pix_fmt);
+const AVPixFmtDescriptor *av_pix_fmt_desc_next(const AVPixFmtDescriptor *prev);
+AVPixelFormat av_pix_fmt_desc_get_id(const AVPixFmtDescriptor *desc);
 #endif // !AV_MODULE_CHECK(LIBAVUTIL, 52, 3, 0, 13, 100)
-#if !FFMPEG_MODULE_CHECK(LIBAVUTIL, 52, 48, 101) // since ffmpeg2.1
+#if !FFMPEG_MODULE_CHECK(LIBAVUTIL, 52, 48, 101) // since ffmpeg2.1, libavutil53.16.0 (FF_API_AVFRAME_COLORSPACE), git 8c02adc
 enum AVColorSpace av_frame_get_colorspace(const AVFrame *frame);
+enum AVColorRange av_frame_get_color_range(const AVFrame *frame);
 #endif
 /*
  * lavu 52.9.0 git 2c328a907978b61949fd20f7c991803174337855

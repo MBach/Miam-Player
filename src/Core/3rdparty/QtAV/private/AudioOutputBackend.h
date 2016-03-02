@@ -1,8 +1,8 @@
 /******************************************************************************
     QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2015 Wang Bin <wbsecg1@gmail.com>
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
-*   This file is part of QtAV
+*   This file is part of QtAV (from 2015)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -38,6 +38,7 @@ public:
     int buffer_size;
     int buffer_count;
     AudioFormat format;
+    static QStringList defaultPriority();
     /*!
      * \brief AudioOutputBackend
      * Specify supported features by the backend. Use this for new backends.
@@ -49,6 +50,8 @@ public:
     virtual bool close() = 0;
     virtual bool write(const QByteArray& data) = 0; //MUST
     virtual bool play() = 0; //MUST
+    virtual bool flush() { return false;}
+    virtual bool clear() { return false;}
     virtual bool isSupported(const AudioFormat& format) const { return isSupported(format.sampleFormat()) && isSupported(format.channelLayout());}
     virtual bool isSupported(AudioFormat::SampleFormat) const { return true;}
     virtual bool isSupported(AudioFormat::ChannelLayout) const { return true;}

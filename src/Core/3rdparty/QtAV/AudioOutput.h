@@ -1,6 +1,6 @@
 /******************************************************************************
     QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -88,6 +88,17 @@ public:
      * backend name currently in use
      */
     QString backend() const;
+    /*!
+     * \brief flush
+     * Play the buffered audio data
+     * \return
+     */
+    void flush();
+    /*!
+     * \brief clear
+     * Clear audio buffers and set time to 0. The default behavior is flush and reset time
+     */
+    void clear();
     bool open();
     bool close();
     bool isOpen() const;
@@ -100,6 +111,7 @@ public:
      * \return true if play successfully
      */
     bool play(const QByteArray& data, qreal pts = 0.0);
+    /// TODO: requestAudioFormat(): check support after open, use the nearest format if not supported. Or use suitableFormat(AudioFormat requestedFmt) if requestedFmt is not supported.
     void setAudioFormat(const AudioFormat& format);
     AudioFormat& audioFormat();
     const AudioFormat& audioFormat() const;
@@ -156,12 +168,20 @@ public:
      */
     AudioFormat::ChannelLayout preferredChannelLayout() const;
     /*!
-     * \brief bufferSize
-     * chunk size that audio output accept. feed the audio output this size of data every time
+     * \brief bufferSamples
+     * Number of samples that audio output accept in 1 buffer. Feed the audio output this size of data every time.
+     * Smaller buffer samples gives more buffers for a given data to avoid stutter. But if it's too small, the duration of 1 buffer will be too small to play, for example 1ms. Currently the default value is 512.
+     * Some backends(OpenAL) are affected significantly by this property
      */
-    int bufferSize() const;
-    void setBufferSize(int value);
-    // for internal use
+    int bufferSamples() const;
+    void setBufferSamples(int value);
+    int bufferSize() const; /// bufferSamples()*bytesPerSample
+    /*!
+     * \brief bufferCount
+     * Total buffer count. If it's not large enough, playing high sample rate audio may be poor.
+     * The default value is 16. TODO: depending on audio format(sample rate?)
+     * Some backends(OpenAL) are affected significantly by this property
+     */
     int bufferCount() const;
     void setBufferCount(int value);
     int bufferSizeTotal() const { return bufferCount() * bufferSize();}
@@ -183,7 +203,7 @@ public:
     DeviceFeatures supportedDeviceFeatures() const;
     qreal timestamp() const;
     // timestamp of current playing data
-signals:
+Q_SIGNALS:
     void volumeChanged(qreal);
     void muteChanged(bool);
     void deviceFeaturesChanged();

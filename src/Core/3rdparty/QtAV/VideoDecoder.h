@@ -72,7 +72,6 @@ public:
     QString name() const; //name from factory
     virtual VideoFrame frame() = 0;
 public:
-    typedef int Id;
     static QVector<VideoDecoderId> registered();
     template<class C> static bool Register(VideoDecoderId id, const char* name) { return Register(id, create<C>, name);}
     /*!

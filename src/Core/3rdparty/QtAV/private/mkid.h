@@ -1,6 +1,6 @@
 /******************************************************************************
     mkid: map chars to int at build time. Template based. A replacement of FourCC
-    Copyright (C) 2012-2014 Wang Bin <wbsecg1@gmail.com>
+    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
