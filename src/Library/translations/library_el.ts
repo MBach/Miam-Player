@@ -50,7 +50,7 @@
     <name>LibraryOrderDialog</name>
     <message>
         <source>Select how to display your library</source>
-        <translation>Επέλεξε πως θα εμφανίζεται η βιοβλιοθήκη σου</translation>
+        <translation>Επέλεξε πως θα εμφανίζεται η βιβλιοθήκη σου</translation>
     </message>
     <message>
         <source>Artists \ Albums</source>

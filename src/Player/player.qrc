@@ -60,7 +60,8 @@
         <file>translations/player_ar.qm</file>
         <file>translations/player_cs.qm</file>
         <file>translations/player_de.qm</file>
-        <file>translations/player_en.qm</file>
+        <file>translations/player_el.qm</file>
+		<file>translations/player_en.qm</file>
         <file>translations/player_fr.qm</file>
         <file>translations/player_ru.qm</file>
         <file>translations/player_zh.qm</file>

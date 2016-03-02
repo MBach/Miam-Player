@@ -169,7 +169,6 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 void CustomizeOptionsDialog::changeEvent(QEvent *event)
 {
 	if (event->type() == QEvent::LanguageChange) {
-		qDebug() << Q_FUNC_INFO << event;
 		this->retranslateUi(this);
 	} else {
 		QDialog::changeEvent(event);
@@ -334,13 +333,11 @@ void CustomizeOptionsDialog::changeLanguage()
 		return;
 	}
 
-	qDebug() << Q_FUNC_INFO;
-	bool b = SettingsPrivate::instance()->setLanguage(languageButton->text());
+	auto settings = SettingsPrivate::instance();
+	bool b = settings->setLanguage(languageButton->text());
 	if (b) {
-		qDebug() << "1";
 		labelStatusLanguage->setText(QApplication::translate("CustomizeOptionsDialog", "Translation status: OK!"));
 	} else {
-		qDebug() << "2";
 		labelStatusLanguage->setText(tr("No translation is available for this language :("));
 	}
 
@@ -350,7 +347,6 @@ void CustomizeOptionsDialog::changeLanguage()
 	languageButton->setDown(true);
 
 	if (b) {
-		qDebug() << "3";
 		this->retranslateUi(this);
 	}
 }
