@@ -23,7 +23,6 @@
 SqlDatabase::SqlDatabase()
 	: QObject()
 	, QSqlDatabase("QSQLITE")
-	//, _musicSearchEngine(nullptr)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QString path("%1/%2/%3");
@@ -925,7 +924,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	insertTrack.addBindValue(fh.hasCover());
 	insertTrack.addBindValue(fh.rating());
 
-	bool artistInserted = false;
+	//bool artistInserted = false;
 	bool albumInserted = false;
 	ArtistDAO *artistDAO = nullptr;
 	AlbumDAO *albumDAO = nullptr;
@@ -1006,7 +1005,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		insertArtist.addBindValue(artistId);
 		insertArtist.addBindValue(artistAlbum);
 		insertArtist.addBindValue(artistNorm);
-		artistInserted = insertArtist.exec();
+		//artistInserted = insertArtist.exec();
 
 		artistDAO = new ArtistDAO;
 		artistDAO->setId(QString::number(artistId));
