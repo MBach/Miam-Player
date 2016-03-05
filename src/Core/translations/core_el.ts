@@ -32,11 +32,11 @@
     <name>QCoreApplication</name>
     <message>
         <source>There are more than 300 files to add to the %1 (%2 to add).</source>
-        <translation>Υπάρχουν πάνω απο 300 αρχεία για να προστεθούν στο 1% (2% για πρόσθεση).</translation>
+        <translation>Υπάρχουν πάνω απο 300 αρχεία για να προστεθούν στο %1 (%2 για πρόσθεση).</translation>
     </message>
     <message>
         <source>Are you sure you want to continue? This might take some time.</source>
-        <translation>"Είσαι σίγουρος πως θές να συνεχίσεις;; Αυτό μπορεί να πάρει λίγη ώρα.</translation>
+        <translation>&quot;Είσαι σίγουρος πως θές να συνεχίσεις;; Αυτό μπορεί να πάρει λίγη ώρα.</translation>
     </message>
 </context>
 <context>

@@ -42,6 +42,7 @@
         <file alias="ar">language/ar.png</file>
         <file alias="cs">language/cs.png</file>
         <file alias="de">language/de.png</file>
+        <file alias="el">language/el.png</file>
         <file alias="en">language/en.png</file>
         <file alias="es">language/es.png</file>
         <file alias="fr">language/fr.png</file>
@@ -54,14 +55,13 @@
         <file alias="th">language/th.png</file>
         <file alias="vn">language/vn.png</file>
         <file alias="zh">language/zh.png</file>
-        <file alias="gr">language/gr.png</file>
     </qresource>
     <qresource prefix="/">
         <file>translations/player_ar.qm</file>
         <file>translations/player_cs.qm</file>
         <file>translations/player_de.qm</file>
         <file>translations/player_el.qm</file>
-		<file>translations/player_en.qm</file>
+        <file>translations/player_en.qm</file>
         <file>translations/player_fr.qm</file>
         <file>translations/player_ru.qm</file>
         <file>translations/player_zh.qm</file>

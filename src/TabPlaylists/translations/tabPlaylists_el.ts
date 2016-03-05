@@ -16,7 +16,7 @@
     </message>
     <message>
         <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
-        <translation>Ο Miam-Player δέν μπορεί να βρεί το « %1 ». Παρακαλώ ελέγξε το όνομα και ξαναπροσπάθηστε </translation>
+        <translation>Ο Miam-Player δέν μπορεί να βρεί το « %1 ». Παρακαλώ ελέγξε το όνομα και ξαναπροσπάθηστε.</translation>
     </message>
 </context>
 <context>
@@ -98,7 +98,7 @@
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
         <translation>Αυτή η λίστα αναπαραγωγής είναι άδεια.
-Επέλεξε ή σύρε κομμάτια απο την βιβλιοθήκη ή απο εξωτερική τοποθεσία</translation>
+Επέλεξε ή σύρε κομμάτια απο την βιβλιοθήκη ή απο εξωτερική τοποθεσία.</translation>
     </message>
 </context>
 <context>
@@ -257,11 +257,11 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Delete playlist...</source>
-        <translation>Διαγραφή λίστας αναπαραγωγής</translation>
+        <translation>Διαγραφή λίστας αναπαραγωγής...</translation>
     </message>
     <message>
         <source>Load background...</source>
-        <translation>Φόρτωσε φόντο</translation>
+        <translation>Φόρτωσε φόντο...</translation>
     </message>
     <message>
         <source>Clear background</source>
@@ -300,7 +300,7 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Your library is updating...</source>
-        <translation>Η βιβλιοθήκη ενημερώνεται</translation>
+        <translation>Η βιβλιοθήκη ενημερώνεται...</translation>
     </message>
     <message>
         <source>playlist</source>
