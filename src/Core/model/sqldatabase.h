@@ -33,7 +33,7 @@ private:
 	Q_ENUMS(extension)
 
 public:
-	SqlDatabase();
+	explicit SqlDatabase();
 
 	~SqlDatabase();
 
