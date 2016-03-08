@@ -90,7 +90,7 @@ void AddressBar::paintEvent(QPaintEvent *)
 	// Frame
 	p.setPen(palette.mid().color());
 	if (isLeftToRight()) {
-		p.drawLine(rect().topRight(), rect().bottomRight());
+		p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
 		p.drawLine(0, 0, rect().center().x(), 0);
 	} else {
 		p.drawLine(rect().topLeft(), rect().bottomLeft());

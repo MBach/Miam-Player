@@ -64,9 +64,9 @@ void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 	// Border
 	p.setPen(QApplication::palette().mid().color());
 	if (isLeftToRight()) {
-		p.drawLine(rect().topRight(), rect().bottomRight());
+		p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
 	} else {
-		p.drawLine(rect().topLeft(), rect().bottomLeft());
+		p.drawLine(rect().x(), rect().y(), rect().x(), rect().y() + rect().height());
 	}
 }
 

@@ -8,8 +8,8 @@
 #include "miamcore_global.h"
 
 /**
- * \brief	The PaintableWidget class is a small class which can react to color change.
- * \details	When one is updating colors in options, this class dynamically repaints itself by adapting the background color.
+ * \brief		The PaintableWidget class is a small class which can react to color change.
+ * \details		When one is updating colors in options, this class dynamically repaints itself by adapting the background color.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
@@ -47,20 +47,26 @@ protected:
 		p.setBrush(QApplication::palette().base());
 		p.drawRect(this->rect());
 		p.setPen(QApplication::palette().mid().color());
-		if ((_left && isLeftToRight()) || (_right && !isLeftToRight())) p.drawLine(rect().topLeft(), rect().bottomLeft());
+		if ((_left && isLeftToRight()) || (_right && !isLeftToRight())) {
+			p.drawLine(rect().x(), rect().y(), rect().x(), rect().y() + rect().height());
+		}
 		if (_top) {
 			if (_halfTop) {
 				if (isLeftToRight()) {
-					p.drawLine(QPoint(rect().center().x() + 1, rect().y()), rect().topRight());
+					p.drawLine(rect().center().x() + 1, rect().y(), rect().x() + rect().width(), rect().y());
 				} else {
-					p.drawLine(rect().topLeft(), QPoint(rect().center().x(), rect().y()));
+					p.drawLine(rect().x(), rect().y(), rect().center().x(), rect().y());
 				}
 			} else {
-				p.drawLine(rect().topLeft(), rect().topRight());
+				p.drawLine(rect().x(), rect().y(), rect().x() + rect().width(), rect().y());
 			}
 		}
-		if ((_right && isLeftToRight()) || (_left && !isLeftToRight())) p.drawLine(rect().topRight(), rect().bottomRight());
-		if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());
+		if ((_right && isLeftToRight()) || (_left && !isLeftToRight())) {
+			p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
+		}
+		if (_bottom) {
+			p.drawLine(rect().x(), rect().y() + rect().height(), rect().x() + rect().width(), rect().y() + rect().height());
+		}
 	}
 };
 

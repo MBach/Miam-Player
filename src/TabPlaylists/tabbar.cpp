@@ -281,9 +281,9 @@ void TabBar::paintRectTabs(QStylePainter &p)
 			p.setPen(o.palette.mid().color());
 		}
 		// Frame tab, it is not a rectangle but only 3 lines
-		p.drawLine(o.rect.topLeft(), o.rect.bottomLeft());
-		p.drawLine(o.rect.topRight(), o.rect.bottomRight());
-		p.drawLine(o.rect.topLeft(), o.rect.topRight());
+		p.drawLine(o.rect.x(), o.rect.y(), o.rect.x(), o.rect.y() + o.rect.height());
+		p.drawLine(o.rect.x() + o.rect.width(), o.rect.y(), o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height());
+		p.drawLine(o.rect.x(), o.rect.y(), o.rect.x() + o.rect.width(), o.rect.y());
 		//}
 		p.restore();
 

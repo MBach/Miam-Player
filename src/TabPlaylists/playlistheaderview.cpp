@@ -171,12 +171,12 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 
 	// Bottom frame
 	p.setPen(QApplication::palette().mid().color());
-	p.drawLine(rect().bottomLeft(),  QPoint(rect().left() + rect().width(), rect().top() + rect().height()));
+	p.drawLine(rect().x(), rect().y() + rect().height(), rect().x() + rect().width(), rect().y() + rect().height());
 
 	// Vertical frame
 	if (QGuiApplication::isLeftToRight()) {
-		p.drawLine(rect().topLeft(), QPoint(rect().left(), rect().top() + rect().height()));
+		p.drawLine(rect().x(), rect().y(), rect().x(), rect().y() + rect().height());
 	} else {
-		p.drawLine(rect().topRight(), QPoint(rect().right(), rect().top() + rect().height()));
+		p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
 	}
 }

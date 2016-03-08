@@ -37,6 +37,10 @@ int main(int argc, char *argv[])
 	qInstallMessageHandler(debugOutput);
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
+	QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
 	QtSingleApplication app(SOFT, argc, argv);
 	app.setOrganizationName(COMPANY);
 	app.setApplicationName(SOFT);

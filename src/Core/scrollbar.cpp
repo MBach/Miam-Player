@@ -58,7 +58,6 @@ void ScrollBar::mouseReleaseEvent(QMouseEvent *e)
 
 void ScrollBar::paintEvent(QPaintEvent *)
 {
-	//QScrollBar::paintEvent(e);
 	QStylePainter p(this);
 	QStyleOptionSlider scrollbar;
 	initStyleOption(&scrollbar);
@@ -111,7 +110,8 @@ void ScrollBar::paintEvent(QPaintEvent *)
 	}
 	p.restore();
 
-	// Draw sort indicator
+	// Arrows
+#if !defined(Q_OS_OSX)
 	static const QPointF upArrow[3] = {
 		QPointF(0.0, 1.0),
 		QPointF(1.0, 0.0),
@@ -133,7 +133,6 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		QPointF(0.0, 2.0)
 	};
 
-	// Arrows
 	p.save();
 	if (scrollbar.palette.windowText().color().value() < 128) {
 		p.setPen(scrollbar.palette.dark().color());
@@ -177,24 +176,28 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		p.drawPolygon(right);
 	}
 	p.restore();
+#endif
 
 	// Frame border
-	/// FIXME bottomLeft right, topLeft topRight!
 	p.setPen(QApplication::palette().mid().color());
-	if (_top) p.drawLine(rect().topLeft(), rect().topRight());
-	if (_bottom) p.drawLine(rect().bottomLeft(), rect().bottomRight());
+	if (_top) {
+		p.drawLine(rect().x(), rect().y(), rect().x() + rect().width(), rect().y());
+	}
+	if (_bottom) {
+		p.drawLine(rect().x(), rect().y() + rect().height(), rect().x() + rect().width(), rect().y() + rect().height());
+	}
 	if (_left) {
 		if (isLeftToRight()) {
-			p.drawLine(rect().topLeft(), rect().bottomLeft());
+			p.drawLine(rect().x(), rect().y(), rect().x(), rect().y() + rect().height());
 		} else {
-			p.drawLine(rect().topRight(), rect().bottomRight());
+			p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
 		}
 	}
 	if (_right) {
 		if (isLeftToRight()) {
-			p.drawLine(rect().topRight(), rect().bottomRight());
+			p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
 		} else {
-			p.drawLine(rect().topLeft(), rect().bottomLeft());
+			p.drawLine(rect().x(), rect().y(), rect().x(), rect().y() + rect().height());
 		}
 	}
 }

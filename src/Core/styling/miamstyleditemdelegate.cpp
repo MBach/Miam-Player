@@ -39,13 +39,13 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 		// Table -> displays only left border for first column, right border for last column
 		// Tree -> displays both left and right borders
 		if (qobject_cast<QTreeView*>(_itemView)) {
-			p->drawLine(o.rect.topLeft(), o.rect.bottomLeft());
-			p->drawLine(o.rect.topRight(), o.rect.bottomRight());
+			p->drawLine(o.rect.x(), o.rect.y(), o.rect.x(), o.rect.y() + o.rect.height());
+			p->drawLine(o.rect.x() + o.rect.width(), o.rect.y(), o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height());
 		} else {
 			if (o.rect.left() == 1) {
-				p->drawLine(o.rect.x(), o.rect.y(), o.rect.x(), o.rect.bottom());
+				p->drawLine(o.rect.x(), o.rect.y(), o.rect.x(), o.rect.y() + o.rect.height());
 			} else if (o.rect.right() == _itemView->viewport()->rect().right()) {
-				p->drawLine(o.rect.topRight(), o.rect.bottomRight());
+				p->drawLine(o.rect.x() + o.rect.width(), o.rect.y(), o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height());
 			}
 		}
 

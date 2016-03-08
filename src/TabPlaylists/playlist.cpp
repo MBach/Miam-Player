@@ -496,9 +496,9 @@ void Playlist::paintEvent(QPaintEvent *event)
 		p.save();
 		p.setPen(QApplication::palette().mid().color());
 		if (isLeftToRight()) {
-			p.drawLine(viewport()->rect().topLeft(), viewport()->rect().bottomLeft());
+			p.drawLine(viewport()->rect().x(), viewport()->rect().y(), viewport()->rect().x(), viewport()->rect().y() + viewport()->rect().height());
 		} else {
-			p.drawLine(viewport()->rect().topRight(), viewport()->rect().bottomRight());
+			p.drawLine(viewport()->rect().x() + viewport()->rect().width(), viewport()->rect().y(), viewport()->rect().x() + viewport()->rect().width(), viewport()->rect().y() + viewport()->rect().height());
 		}
 		if (_isDragging) {
 			QPoint cursor = viewport()->mapFromGlobal(QCursor::pos());
