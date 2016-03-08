@@ -52,7 +52,7 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 		// Don't display the bottom line is the track underneath is selected
 		QModelIndex bottom = index.sibling(index.row() + 1, index.column());
 		if (!bottom.isValid() || !_itemView->selectionModel()->selectedIndexes().contains(bottom)) {
-			p->drawLine(0, o.rect.top() + o.rect.height(), o.rect.left() + o.rect.width(), o.rect.top() + o.rect.height());
+			p->drawLine(o.rect.x(), o.rect.y() + o.rect.height(), o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height());
 		}
 	} else {
 		//qDebug() << Q_FUNC_INFO << o.text;
