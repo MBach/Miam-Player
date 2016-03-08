@@ -47,7 +47,7 @@ unix:!macx {
 }
 macx {
     #auto clean
-    QMAKE_PRE_LINK = rm -f $$OUT_PWD/../Player/MiamPlayer.app
+    QMAKE_PRE_LINK = rm -rf $$OUT_PWD/../Player/MiamPlayer.app
     QMAKE_RPATHDIR += @executable_path/../Frameworks
     QMAKE_LFLAGS += -F$$PWD/../../lib/osx/QtAV.framework/ -F/System/Library/Frameworks/Carbon.framework/
     LIBS += -L$$PWD/../../lib/osx/ -ltag -framework QtAV -framework Carbon

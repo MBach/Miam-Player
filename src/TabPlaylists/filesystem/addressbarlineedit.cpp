@@ -16,6 +16,7 @@ AddressBarLineEdit::AddressBarLineEdit(AddressBar *parent)
 {
 	this->setMinimumHeight(parent->height());
 	this->setFocusPolicy(Qt::ClickFocus);
+	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
