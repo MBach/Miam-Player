@@ -80,7 +80,7 @@
     </message>
     <message>
         <source>Where is your music?</source>
-        <translation>Πού βρίσκεται η μουσική σου?</translation>
+        <translation>Πού βρίσκεται η μουσική σου;</translation>
     </message>
     <message>
         <source>Add location...</source>
@@ -104,7 +104,7 @@
     </message>
     <message>
         <source>What to do when typing text?</source>
-        <translation>Τι να γίνει οταν πληκτρολογείς κείμενο?</translation>
+        <translation>Τι να γίνει οταν πληκτρολογείς κείμενο;</translation>
     </message>
     <message>
         <source>Filter results and exclude everything else</source>
@@ -137,7 +137,7 @@
     <message>
         <source>Translation status: OK!</source>
         <comment>status</comment>
-        <translation>Κατάσταση μετάφραση: ΟΚ!</translation>
+        <translation>Κατάσταση: OK!</translation>
     </message>
     <message>
         <source>Menu &amp;&amp; Options</source>
@@ -237,7 +237,7 @@
     </message>
     <message>
         <source>Current item in loop</source>
-        <translation>Τρέχων αντικείμενο σε κύκλο</translation>
+        <translation>Τρέχων αντικείμενο σε Επανάληψη</translation>
     </message>
     <message>
         <source>Mute</source>
@@ -321,7 +321,7 @@
     </message>
     <message>
         <source>What should I do when you&apos;re closing a playlist?</source>
-        <translation>Τί να κάνω όταν κλείνεις μια λίστα αναπαραγωγής?</translation>
+        <translation>Τί να κάνω όταν κλείνεις μια λίστα αναπαραγωγής;</translation>
     </message>
     <message>
         <source>Let me decide</source>
@@ -588,7 +588,7 @@
     </message>
     <message>
         <source>Would you like to alternate colors in playlists?</source>
-        <translation>Θέλετε τα εναλλακτικά χρώματα στις λίστες αναπαραγωγής?</translation>
+        <translation>Θέλετε τα εναλλακτικά χρώματα στις λίστες αναπαραγωγής;</translation>
     </message>
     <message>
         <source>Custom colors</source>
@@ -596,7 +596,7 @@
     </message>
     <message>
         <source>Would you like to customize the colors of the player?</source>
-        <translation>Θά θέλατε να εξατομικεύσετε τα χρώματα στον αναπαραγωγό?</translation>
+        <translation>Θά θέλατε να εξατομικεύσετε τα χρώματα στον αναπαραγωγό;</translation>
     </message>
     <message>
         <source>No, keep the colors provided by my Operating System</source>
@@ -696,7 +696,7 @@
     </message>
     <message>
         <source>What kind of shape do you want for displaying tabs?</source>
-        <translation>Τί σχήμα θα θέλατε οταν εμφανίζονται οι ετικέτες?</translation>
+        <translation>Τί σχήμα θα θέλατε οταν εμφανίζονται οι ετικέτες;</translation>
     </message>
     <message>
         <source>Rectangle</source>
@@ -980,7 +980,7 @@
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation>&amp;Κύκλος</translation>
+        <translation>&amp;Επανάληψη</translation>
     </message>
     <message>
         <source>S&amp;huffle</source>
@@ -988,7 +988,7 @@
     </message>
     <message>
         <source>&amp;Remove selected track</source>
-        <translation>&amp;Αφαίρεση επιλε κομματιού</translation>
+        <translation>&amp;Αφαίρεση επιλεγμένου κομματιού</translation>
     </message>
     <message>
         <source>Move selected track &amp;up</source>
@@ -1114,8 +1114,8 @@
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>&amp;Αφαίρεση επιλεγμένων κομματιών</numerusform>
+            <numerusform>&amp;Αφαίρεση επιλεγμένων κομματιών</numerusform>
         </translation>
     </message>
     <message numerus="yes">

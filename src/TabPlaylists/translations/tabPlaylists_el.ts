@@ -206,8 +206,8 @@ Select a playlist to display the first 30 tracks.</source>
     <message numerus="yes">
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
-            <numerusform>Πρόκειται να διαγράψεις την %n λίστα αναπαραγωγής. Να συνεχίσω σίγουρα;</numerusform>
-            <numerusform>Πρόκειται να διαγράψεις την %n λίστα αναπαραγωγής. Να συνεχίσω σίγουρα;</numerusform>
+            <numerusform>Πρόκειται να διαγράψεις τις %n λίστες αναπαραγωγής. Να συνεχίσω σίγουρα;</numerusform>
+            <numerusform>Πρόκειται να διαγράψεις τις %n λίστες αναπαραγωγής. Να συνεχίσω σίγουρα;</numerusform>
         </translation>
     </message>
     <message>
