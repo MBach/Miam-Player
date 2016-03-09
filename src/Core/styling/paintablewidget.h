@@ -62,7 +62,7 @@ protected:
 			}
 		}
 		if ((_right && isLeftToRight()) || (_left && !isLeftToRight())) {
-			p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
+			p.drawLine(rect().x() + rect().width() - extra, rect().y(), rect().x() + rect().width() - extra, rect().y() + rect().height());
 		}
 		if (_bottom) {
 			p.drawLine(rect().x(), rect().y() + rect().height(), rect().x() + rect().width(), rect().y() + rect().height());

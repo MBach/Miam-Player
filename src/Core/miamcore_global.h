@@ -10,6 +10,12 @@
 # define MIAMCORE_LIBRARY Q_DECL_IMPORT
 #endif
 
+#if defined(Q_OS_OSX)
+int const extra = 0;
+#else
+int const extra = 1;
+#endif
+
 #include <QCoreApplication>
 #include <QMetaType>
 

@@ -90,9 +90,9 @@ void ExtendedTabBar::paintEvent(QPaintEvent *)
 		// Draw bottom line
 		p.setPen(pal.mid().color());
 		if (isLeftToRight()) {
-			p.drawLine(rect().x() + rect().width() / 2, rect().y() + rect().height() - 1, rect().x() + rect().width(), rect().y() + rect().height() - 1);
+			p.drawLine(rect().x() + rect().width() / 2, rect().y() + rect().height() - extra, rect().x() + rect().width(), rect().y() + rect().height() - extra);
 		} else {
-			p.drawLine(rect().x(), rect().y() + rect().height() - 1, rect().x() + rect().width() / 2, rect().y() + rect().height() - 1);
+			p.drawLine(rect().x(), rect().y() + rect().height() - extra, rect().x() + rect().width() / 2, rect().y() + rect().height() - extra);
 		}
 	} else {
 		p.fillRect(fe.rect, lib.palette.base().color());
