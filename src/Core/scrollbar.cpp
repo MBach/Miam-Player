@@ -298,7 +298,7 @@ void ScrollBar::paintEvent(QPaintEvent *)
 		p.drawLine(rect().x(), rect().y(), rect().x() + rect().width(), rect().y());
 	}
 	if (_bottom) {
-		p.drawLine(rect().x(), rect().y() + rect().height(), rect().x() + rect().width(), rect().y() + rect().height());
+		p.drawLine(rect().x(), rect().y() + rect().height() - extra, rect().x() + rect().width(), rect().y() + rect().height() - extra);
 	}
 	if (_left) {
 		if (isLeftToRight()) {

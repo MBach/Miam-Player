@@ -26,8 +26,11 @@ PlaylistDialog::PlaylistDialog(QWidget *parent)
 	setupUi(this);
 	unsavedPlaylists->verticalScrollBar()->deleteLater();
 	savedPlaylists->verticalScrollBar()->deleteLater();
+	previewPlaylist->verticalScrollBar()->deleteLater();
+
 	unsavedPlaylists->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 	savedPlaylists->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
+	previewPlaylist->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	unsavedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);
