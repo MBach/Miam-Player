@@ -2,6 +2,7 @@
 
 #include <model/playlistdao.h>
 #include <model/trackdao.h>
+#include <scrollbar.h>
 #include <filehelper.h>
 #include <settingsprivate.h>
 #include "starrating.h"
@@ -23,6 +24,11 @@ PlaylistDialog::PlaylistDialog(QWidget *parent)
 	, _savedPlaylistModel(new QStandardItemModel(this))
 {
 	setupUi(this);
+	unsavedPlaylists->verticalScrollBar()->deleteLater();
+	savedPlaylists->verticalScrollBar()->deleteLater();
+	unsavedPlaylists->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
+	savedPlaylists->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
+
 	this->setAttribute(Qt::WA_DeleteOnClose);
 	unsavedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);
 	savedPlaylists->setAttribute(Qt::WA_MacShowFocusRect, false);

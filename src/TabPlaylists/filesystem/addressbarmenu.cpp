@@ -1,6 +1,7 @@
 #include "addressbarmenu.h"
 
 #include "addressbar.h"
+#include <scrollbar.h>
 
 #include <QApplication>
 #include <QMouseEvent>
@@ -14,6 +15,7 @@ AddressBarMenu::AddressBarMenu(AddressBar *addressBar)
 	, _addressBar(addressBar)
 	, _hasSeparator(false)
 {
+	this->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 	this->installEventFilter(this);
 	this->setMouseTracking(true);
 	this->setUniformItemSizes(false);

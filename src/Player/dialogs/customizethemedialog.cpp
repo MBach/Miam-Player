@@ -10,6 +10,7 @@
 #include "mainwindow.h"
 #include "starrating.h"
 
+#include <scrollbar.h>
 #include <settings.h>
 #include <settingsprivate.h>
 
@@ -20,7 +21,8 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
 	, _timer(new QTimer(this))
 {
 	setupUi(this);
-
+	listWidget->verticalScrollBar()->deleteLater();
+	listWidget->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	this->setWindowFlags(Qt::Tool);
