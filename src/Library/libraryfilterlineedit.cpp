@@ -40,9 +40,7 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	QStyleOptionFrame o;
 	initStyleOption(&o);
 	o.palette = QApplication::palette();
-	//o.rect.adjust(10, 10, -10, -15);
-	//qDebug() << o.rect.height() << p.fontMetrics().height();
-	//o.rect.setHeight(p.fontMetrics().height());
+	//o.rect.adjust(0, 0, -1, 0);
 
 	p.fillRect(rect(), o.palette.base().color());
 	QRect rLeft = QRect(o.rect.x(),
@@ -53,7 +51,9 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 						 o.rect.y() + 1,
 						 o.rect.height(),
 						 o.rect.y() + o.rect.height() - 2);
-	QRect rText = QRect(rLeft.topRight(), rRight.bottomLeft()).adjusted(0, 1, 0, -1);
+	QRect rText = QRect(rLeft.x() + rLeft.width(), rLeft.y(), rRight.x(), rRight.y() + rRight.height());
+	rLeft.adjust(0, 1, 0, -1);
+	rRight.adjust(0, 1, 0, -1);
 
 	if (hasFocus()) {
 		p.setPen(QPen(o.palette.highlight().color()));
@@ -62,14 +62,14 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	}
 	p.save();
 
-	p.setRenderHint(QPainter::Antialiasing, true);
-	QPainterPath ppLeft, ppRight;
+	//p.setRenderHint(QPainter::Antialiasing, true);
+	QPainterPath ppLeft;
 	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1   <----10--9
 	// |   |        First cubic call is with points p1, p2 and p3                       |   |
 	// 3   +        Second is with points p3, p4 and p5                                 +   8
 	// |   |        With that, a half circle can be filled with linear gradient         |   |
 	// 4---5---->                                                                  <----6---7
-	ppLeft.moveTo(rText.topLeft());
+	ppLeft.moveTo(rText.x(), rText.y());
 	ppLeft.cubicTo(rText.x(), rText.y(),
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y(),
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f);
@@ -79,22 +79,22 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 
 	QPainterPath pp(ppLeft);
 
-	ppRight.moveTo(rRight.bottomLeft());
-	ppRight.cubicTo(rRight.x(), rRight.y() + rRight.height(),
+	ppLeft.lineTo(rRight.x(), rRight.y() + rRight.height());
+	ppLeft.cubicTo(rRight.x(), rRight.y() + rRight.height(),
 					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
 					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f);
-	ppRight.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
+	ppLeft.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
 					rRight.x() + rRight.width() / 2.0f, rRight.y(),
 					rRight.x(), rRight.y());
 
-	pp.connectPath(ppRight);
+	ppLeft.lineTo(rText.x(), rText.y());
 
 	p.drawPath(ppLeft);
-	p.drawPath(ppRight);
+	//p.drawPath(ppRight);
 
-	p.setRenderHint(QPainter::Antialiasing, false);
-	p.drawLine(QPoint(rText.x(), rText.y() - 1), QPoint(rText.x() + rText.width(), rText.y() - 1));
-	p.drawLine(QPoint(rText.x(), rText.y() + rText.height()), QPoint(rText.x() + rText.width(), rText.y() + rText.height()));
+	//p.setRenderHint(QPainter::Antialiasing, false);
+	//p.drawLine(QPoint(rText.x(), rText.y() - 1), QPoint(rText.x() + rText.width(), rText.y() - 1));
+	//p.drawLine(QPoint(rText.x(), rText.y() + rText.height()), QPoint(rText.x() + rText.width(), rText.y() + rText.height()));
 	p.restore();
 
 	// Paint text and cursor
