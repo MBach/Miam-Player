@@ -17,11 +17,15 @@
 
 #include <QtDebug>
 
+#include <scrollbar.h>
+
 CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *)
 	: QDialog(nullptr)
 	, _pluginManager(pluginManager)
 {
 	setupUi(this);
+	listWidget->verticalScrollBar()->deleteLater();
+	listWidget->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 	listWidgetMusicLocations->setAttribute(Qt::WA_MacShowFocusRect, false);
 
