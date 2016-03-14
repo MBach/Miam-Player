@@ -12,12 +12,12 @@
 <context>
     <name>AddressBarLineEdit</name>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="58"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="58"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
         <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
         <translation>Miam-Player не смог найти « %1 ». Проверьте, пожалуйста, имя и попытайтесь снова.</translation>
     </message>
@@ -25,7 +25,7 @@
 <context>
     <name>AddressBarMenu</name>
     <message>
-        <location filename="../filesystem/addressbarmenu.cpp" line="122"/>
+        <location filename="../filesystem/addressbarmenu.cpp" line="124"/>
         <source>Computer</source>
         <translation>Компьютер</translation>
     </message>
@@ -176,35 +176,35 @@ Select or drop tracks from your library or any external location.</source>
         <translation>Название (Исполнитель - Альбом)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="40"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="49"/>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>Эта область предварительного просмотра пуста.
 Выберите список воспроизведения, чтобы отобразить первые 30 треков.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="190"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="199"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
         <source>Export playlist</source>
         <translation>Экспортировать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
         <source>Playlist (*.m3u8)</source>
         <translation>Список воспроизведения (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="288"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="338"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="297"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="347"/>
         <source>And more tracks...</source>
         <translation>И больше треков...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="383"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="392"/>
         <source>This playlist has changed</source>
         <translation>Этот список воспроизведения изменился</translation>
     </message>
@@ -256,7 +256,7 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Точно такой же список воспроизведения уже есть в диспетчере списков воспроизведения (называется &apos;%1&apos;), поэтому невозможно добавить его повторно.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="189"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>Вы собираетесь удалить %n список воспроизведения. Вы действительно хотите продолжить?</numerusform>

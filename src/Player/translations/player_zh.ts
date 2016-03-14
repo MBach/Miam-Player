@@ -516,7 +516,7 @@
     </message>
     <message>
         <source>Show covers</source>
-        <translation>显示封面</translation>
+        <translation type="vanished">显示封面</translation>
     </message>
     <message>
         <source>Size of covers</source>

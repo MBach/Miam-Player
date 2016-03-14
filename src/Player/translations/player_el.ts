@@ -624,7 +624,7 @@
     </message>
     <message>
         <source>Show covers</source>
-        <translation>Εμφάνιση εξωφύλλου</translation>
+        <translation type="vanished">Εμφάνιση εξωφύλλου</translation>
     </message>
     <message>
         <source>Size of covers</source>
@@ -1240,7 +1240,7 @@ The API has changed and you need to update these plugins too!</source>
     </message>
     <message>
         <source>Artist Album</source>
-        <translation>Καλλιτέχνης άλμπουμ</translation>
+        <translation type="vanished">Καλλιτέχνης άλμπουμ</translation>
     </message>
     <message>
         <source>Title</source>
@@ -1257,6 +1257,10 @@ The API has changed and you need to update these plugins too!</source>
     <message>
         <source>From File to Tag</source>
         <translation>Από αρχείο σε ετικέτα</translation>
+    </message>
+    <message>
+        <source>ArtistAlbum</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

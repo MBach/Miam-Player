@@ -12,12 +12,12 @@
 <context>
     <name>AddressBarLineEdit</name>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="58"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
         <source>Error</source>
         <translation>Erreur</translation>
     </message>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="58"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
         <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
         <translation>Miam-Player ne parvient pas à trouver « %1 ». Veuillez vérifier le nom avant de recommencer.</translation>
     </message>
@@ -25,7 +25,7 @@
 <context>
     <name>AddressBarMenu</name>
     <message>
-        <location filename="../filesystem/addressbarmenu.cpp" line="122"/>
+        <location filename="../filesystem/addressbarmenu.cpp" line="124"/>
         <source>Computer</source>
         <translation>Ordinateur</translation>
     </message>
@@ -175,35 +175,35 @@ Selectionnez ou déposez des pistes à partir de la bibliothèque ou d&apos;une 
         <translation>Titre (Artiste - Album)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="40"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="49"/>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>La zone de prévisualisation est vide.
 Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="190"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="199"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
         <source>Export playlist</source>
         <translation>Exporter des listes de lecture</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
         <source>Playlist (*.m3u8)</source>
         <translation>Liste de lecture (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="288"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="338"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="297"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="347"/>
         <source>And more tracks...</source>
         <translation>Et d&apos;autres pistes...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="383"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="392"/>
         <source>This playlist has changed</source>
         <translation>Cette liste de lecture a changé</translation>
     </message>
@@ -250,7 +250,7 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
 <context>
     <name>PlaylistManager</name>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="189"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>Vous êtes sur le point de supprimer %n liste de lecture. Êtes-vous sûr de vouloir continuer ?</numerusform>

@@ -607,10 +607,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation type="unfinished"></translation>
     </message>

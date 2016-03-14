@@ -27,7 +27,7 @@
 <context>
     <name>LibraryItemDelegate</name>
     <message>
-        <location filename="../libraryitemdelegate.cpp" line="354"/>
+        <location filename="../libraryitemdelegate.cpp" line="356"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>
@@ -137,7 +137,7 @@
 <context>
     <name>MiamItemDelegate</name>
     <message>
-        <location filename="../miamitemdelegate.cpp" line="84"/>
+        <location filename="../miamitemdelegate.cpp" line="83"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>

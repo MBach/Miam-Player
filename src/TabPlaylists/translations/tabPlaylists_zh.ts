@@ -12,12 +12,12 @@
 <context>
     <name>AddressBarLineEdit</name>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="58"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="58"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
         <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
         <translation>Miam-Player 午饭找到 « %1 ». 请检查名字后重试.</translation>
     </message>
@@ -25,7 +25,7 @@
 <context>
     <name>AddressBarMenu</name>
     <message>
-        <location filename="../filesystem/addressbarmenu.cpp" line="122"/>
+        <location filename="../filesystem/addressbarmenu.cpp" line="124"/>
         <source>Computer</source>
         <translation>计算机</translation>
     </message>
@@ -175,35 +175,35 @@ Select or drop tracks from your library or any external location.</source>
         <translation>标题(艺术家 - 专辑)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="40"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="49"/>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>预览区域为空.
 选择一个播放列表以显示前30个音轨.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="190"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="199"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
         <source>Export playlist</source>
         <translation>导出播放列表</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="236"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
         <source>Playlist (*.m3u8)</source>
         <translation>播放列表(*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="288"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="338"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="297"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="347"/>
         <source>And more tracks...</source>
         <translation>更多音轨...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="383"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="392"/>
         <source>This playlist has changed</source>
         <translation>播放列表已改变</translation>
     </message>
@@ -250,7 +250,7 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistManager</name>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="189"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>你正要删除 %n 播放列表. 是否继续?</numerusform>

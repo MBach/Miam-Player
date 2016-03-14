@@ -37,12 +37,12 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../miamcore_global.h" line="82"/>
+        <location filename="../miamcore_global.h" line="88"/>
         <source>There are more than 300 files to add to the %1 (%2 to add).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../miamcore_global.h" line="84"/>
+        <location filename="../miamcore_global.h" line="90"/>
         <source>Are you sure you want to continue? This might take some time.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -50,7 +50,7 @@
 <context>
     <name>SqlDatabase</name>
     <message>
-        <location filename="../model/sqldatabase.cpp" line="40"/>
+        <location filename="../model/sqldatabase.cpp" line="39"/>
         <source>Cannot create path to store cache. Miam-Player might be able to run but it will be in limited mode</source>
         <translation type="unfinished"></translation>
     </message>

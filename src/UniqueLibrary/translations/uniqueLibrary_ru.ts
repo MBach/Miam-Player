@@ -25,12 +25,12 @@
         <translation>(без названия)</translation>
     </message>
     <message>
-        <location filename="../uniquelibraryitemdelegate.cpp" line="141"/>
+        <location filename="../uniquelibraryitemdelegate.cpp" line="142"/>
         <source>Disc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../uniquelibraryitemdelegate.cpp" line="191"/>
+        <location filename="../uniquelibraryitemdelegate.cpp" line="192"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>

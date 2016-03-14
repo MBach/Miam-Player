@@ -533,25 +533,25 @@
         <translation>Версия</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="51"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="55"/>
         <location filename="../dialogs/customizeoptionsdialog.cpp" line="306"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="399"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="466"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="404"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="471"/>
         <source>Add some music locations here</source>
         <translation>Добавьте сюда несколько папок с музыкой</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="337"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="339"/>
         <source>Translation status: OK!</source>
         <translation>Статус перевода: OK!</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="339"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="341"/>
         <source>No translation is available for this language :(</source>
         <translation>Для этого языка перевод недоступен :(</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="418"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="423"/>
         <source>Select a location of your music</source>
         <translation>Укажите расположение вашей музыки</translation>
     </message>
@@ -587,7 +587,7 @@
     </message>
     <message>
         <location filename="../customizetheme.ui" line="126"/>
-        <location filename="../customizetheme.ui" line="1977"/>
+        <location filename="../customizetheme.ui" line="1979"/>
         <source>Tabs</source>
         <translation>Вкладки</translation>
     </message>
@@ -696,22 +696,22 @@
         <location filename="../customizetheme.ui" line="1018"/>
         <location filename="../customizetheme.ui" line="1238"/>
         <location filename="../customizetheme.ui" line="1280"/>
-        <location filename="../customizetheme.ui" line="1534"/>
-        <location filename="../customizetheme.ui" line="1611"/>
-        <location filename="../customizetheme.ui" line="1718"/>
-        <location filename="../customizetheme.ui" line="1783"/>
-        <location filename="../customizetheme.ui" line="1867"/>
+        <location filename="../customizetheme.ui" line="1513"/>
+        <location filename="../customizetheme.ui" line="1590"/>
+        <location filename="../customizetheme.ui" line="1697"/>
+        <location filename="../customizetheme.ui" line="1762"/>
+        <location filename="../customizetheme.ui" line="1846"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
         <location filename="../customizetheme.ui" line="988"/>
         <location filename="../customizetheme.ui" line="1248"/>
-        <location filename="../customizetheme.ui" line="1550"/>
-        <location filename="../customizetheme.ui" line="1624"/>
-        <location filename="../customizetheme.ui" line="1734"/>
-        <location filename="../customizetheme.ui" line="1840"/>
-        <location filename="../customizetheme.ui" line="1889"/>
+        <location filename="../customizetheme.ui" line="1529"/>
+        <location filename="../customizetheme.ui" line="1603"/>
+        <location filename="../customizetheme.ui" line="1713"/>
+        <location filename="../customizetheme.ui" line="1819"/>
+        <location filename="../customizetheme.ui" line="1868"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
@@ -797,134 +797,135 @@
     </message>
     <message>
         <location filename="../customizetheme.ui" line="1466"/>
-        <location filename="../customizetheme.ui" line="1924"/>
+        <location filename="../customizetheme.ui" line="1903"/>
         <source>Artist and albums lists</source>
         <translation>Списки исполнителей и альбомов</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1474"/>
         <source>Show covers</source>
-        <translation>Показывать обложки</translation>
+        <translation type="vanished">Показывать обложки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1498"/>
+        <location filename="../customizetheme.ui" line="1477"/>
+        <location filename="../customizetheme.ui" line="1926"/>
         <source>Size of covers</source>
         <translation>Размер обложек</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1525"/>
+        <location filename="../customizetheme.ui" line="1504"/>
         <source>Should I display a large and faded cover when you&apos;re expanding an album?</source>
         <translation>Показывать большую полупрозрачную обложку, когда вы раскрываете альбом?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1766"/>
+        <location filename="../customizetheme.ui" line="1745"/>
         <source>Would you like to display stars in the library, left to the track name?</source>
         <translation>Отображать звёздочки в библиотеке слева от названия дорожки?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1852"/>
+        <location filename="../customizetheme.ui" line="1831"/>
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation>Показывать контуры звёздочек, даже если у дорожки нет рейтинга</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1918"/>
+        <location filename="../customizetheme.ui" line="1897"/>
         <source>Unique Library (list)</source>
         <translation>Единая библиотека (список)</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1930"/>
+        <location filename="../customizetheme.ui" line="1919"/>
         <source>Pin when scrolling</source>
         <translation>Закрепить при прокрутке</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1974"/>
+        <location filename="../customizetheme.ui" line="1976"/>
         <source>Currently under development</source>
         <translation>В разработке</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1560"/>
+        <location filename="../customizetheme.ui" line="1539"/>
         <source>Opacity</source>
         <translation>Непрозрачность</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1585"/>
+        <location filename="../customizetheme.ui" line="1564"/>
         <source>Sorting the library</source>
         <translation>Сортировка библиотеки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1596"/>
+        <location filename="../customizetheme.ui" line="1575"/>
         <source>If there is an article at the beginning of an artist&apos;s name, should I ignore it?</source>
         <translation>Игнорировать артикль, стоящий перед именем исполнителся?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1608"/>
+        <location filename="../customizetheme.ui" line="1587"/>
         <source>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
         <translation>Эта настройка будет фильтровать артикли. Например, &quot;The Beatles&quot; будет интерпретироваться как &quot;Beatles, the&quot;</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1654"/>
+        <location filename="../customizetheme.ui" line="1633"/>
         <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
         <translation>«The» — очень распространённый английский артикль, как в «The Beatles»</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1685"/>
+        <location filename="../customizetheme.ui" line="1664"/>
         <source>Do you want to display the article after the name?</source>
         <translation>Отображать артикль после названия?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1703"/>
+        <location filename="../customizetheme.ui" line="1682"/>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
         <translation>Пример: «The Beatles» станет «Beatles, the»</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1755"/>
+        <location filename="../customizetheme.ui" line="1734"/>
         <source>Manage favorites</source>
         <translation>Управление избранным</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1780"/>
-        <location filename="../customizetheme.ui" line="1864"/>
+        <location filename="../customizetheme.ui" line="1759"/>
+        <location filename="../customizetheme.ui" line="1843"/>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation>5 серых звёзд всегда будут видны, даже если трек не имеет рейтинга </translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1837"/>
-        <location filename="../customizetheme.ui" line="1886"/>
+        <location filename="../customizetheme.ui" line="1816"/>
+        <location filename="../customizetheme.ui" line="1865"/>
         <source>This option will never show 5 gray stars if the track has not been rated </source>
         <translation>5 серых звёзд не будут видны, если трек не имеет рейтинга </translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1988"/>
+        <location filename="../customizetheme.ui" line="1990"/>
         <source>What kind of shape do you want for displaying tabs?</source>
         <translation>Какую форму отображения использовать?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1995"/>
+        <location filename="../customizetheme.ui" line="1997"/>
         <source>Rectangle</source>
         <translation>Прямоугольная</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="2005"/>
+        <location filename="../customizetheme.ui" line="2007"/>
         <source>Rounded tabs</source>
         <translation>Скруглённые вкладки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="2020"/>
+        <location filename="../customizetheme.ui" line="2022"/>
         <source>Overlap on other tabs with</source>
         <translation>Наложение на другие вкладки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="2030"/>
+        <location filename="../customizetheme.ui" line="1933"/>
+        <location filename="../customizetheme.ui" line="2032"/>
         <source>px</source>
         <translation>пикс</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizethemedialog.cpp" line="363"/>
+        <location filename="../dialogs/customizethemedialog.cpp" line="361"/>
         <source>Choose your custom icon</source>
         <translation>Выберите свой значок</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizethemedialog.cpp" line="363"/>
+        <location filename="../dialogs/customizethemedialog.cpp" line="361"/>
         <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation>Изображения (*.jpg *.jpeg *.png)</translation>
     </message>
@@ -1352,7 +1353,7 @@
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="594"/>
+        <location filename="../mainwindow.cpp" line="611"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1362,7 +1363,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="595"/>
+        <location filename="../mainwindow.cpp" line="612"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1372,7 +1373,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="596"/>
+        <location filename="../mainwindow.cpp" line="613"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1382,62 +1383,62 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="265"/>
+        <location filename="../mainwindow.cpp" line="282"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="397"/>
+        <location filename="../mainwindow.cpp" line="414"/>
         <source>Directory to open.</source>
         <translation>Открыть папку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="397"/>
+        <location filename="../mainwindow.cpp" line="414"/>
         <source>dir</source>
         <translation>папка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="398"/>
+        <location filename="../mainwindow.cpp" line="415"/>
         <source>Medias are added into a new playlist.</source>
         <translation>Мультимеда-данные будут добавлены в новый список воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="399"/>
+        <location filename="../mainwindow.cpp" line="416"/>
         <source>Medias are sent to tag editor.</source>
         <translation>Мультимеда-данные будут добавлены в редактор тегов.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="400"/>
+        <location filename="../mainwindow.cpp" line="417"/>
         <source>Directory is sent to library.</source>
         <translation>Папка отправлена в библиотеку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="401"/>
+        <location filename="../mainwindow.cpp" line="418"/>
         <source>Play or pause track in active playlist.</source>
         <translation>Воспроизведение или пауза дорожки в активном списке воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="402"/>
+        <location filename="../mainwindow.cpp" line="419"/>
         <source>Stop playback.</source>
         <translation>Остановить воспроизведение.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="403"/>
+        <location filename="../mainwindow.cpp" line="420"/>
         <source>Play next track.</source>
         <translation>Воспроизвести следующую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="404"/>
+        <location filename="../mainwindow.cpp" line="421"/>
         <source>Play previous track.</source>
         <translation>Воспроизвести предыдущую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="405"/>
+        <location filename="../mainwindow.cpp" line="422"/>
         <source>Set volume of the player.</source>
         <translation>Установить громкость плеера.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="405"/>
+        <location filename="../mainwindow.cpp" line="422"/>
         <source>volume</source>
         <translation>громкость</translation>
     </message>
@@ -1474,7 +1475,7 @@ API изменился, и Вам нужно обновоить эти плаг�
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../mainwindow.cpp" line="394"/>
+        <location filename="../mainwindow.cpp" line="411"/>
         <source>Command line helper for Miam-Player</source>
         <translation>Справка по опциям командной строки Miam-Player</translation>
     </message>

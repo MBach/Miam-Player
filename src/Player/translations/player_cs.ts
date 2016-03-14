@@ -425,19 +425,19 @@
     </message>
     <message>
         <source>Translation status: OK!</source>
-        <translation type="unfinished">Stav překladu: OK!</translation>
+        <translation>Stav překladu: OK!</translation>
     </message>
     <message>
         <source>Global</source>
-        <translation type="unfinished"></translation>
+        <translation>Celkové</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished">Vyprázdnit</translation>
+        <translation>Vyprázdnit</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavit znovu</translation>
     </message>
 </context>
 <context>
@@ -516,7 +516,7 @@
     </message>
     <message>
         <source>Show covers</source>
-        <translation>Ukázat obaly</translation>
+        <translation type="vanished">Ukázat obaly</translation>
     </message>
     <message>
         <source>Size of covers</source>
@@ -708,19 +708,19 @@
     </message>
     <message>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Text</translation>
     </message>
     <message>
         <source>Library (tree)</source>
-        <translation type="unfinished"></translation>
+        <translation>Knihovna (strom)</translation>
     </message>
     <message>
         <source>Unique Library (list)</source>
-        <translation type="unfinished"></translation>
+        <translation>Jedinečná knihovna (seznam)</translation>
     </message>
     <message>
         <source>Pin when scrolling</source>
-        <translation type="unfinished"></translation>
+        <translation>Připnout při projíždění</translation>
     </message>
 </context>
 <context>
@@ -750,91 +750,91 @@
     <name>EqualizerDialog</name>
     <message>
         <source>Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekvalizér</translation>
     </message>
     <message>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Spustit</translation>
     </message>
     <message>
         <source>Preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Přednastavení</translation>
     </message>
     <message>
         <source>Preamp</source>
-        <translation type="unfinished"></translation>
+        <translation>Předzesílení</translation>
     </message>
     <message>
         <source>Flat</source>
-        <translation type="unfinished"></translation>
+        <translation>Ploché</translation>
     </message>
     <message>
         <source>Classical</source>
-        <translation type="unfinished"></translation>
+        <translation>Klasická hudba</translation>
     </message>
     <message>
         <source>Club</source>
-        <translation type="unfinished"></translation>
+        <translation>Klub</translation>
     </message>
     <message>
         <source>Dance</source>
-        <translation type="unfinished"></translation>
+        <translation>Taneční</translation>
     </message>
     <message>
         <source>Full bass</source>
-        <translation type="unfinished"></translation>
+        <translation>Plné hloubky</translation>
     </message>
     <message>
         <source>Full bass and treble</source>
-        <translation type="unfinished"></translation>
+        <translation>Plné hloubky a výšky</translation>
     </message>
     <message>
         <source>Full treble</source>
-        <translation type="unfinished"></translation>
+        <translation>Plné výšky</translation>
     </message>
     <message>
         <source>Headphones</source>
-        <translation type="unfinished"></translation>
+        <translation>Sluchátka</translation>
     </message>
     <message>
         <source>Large Hall</source>
-        <translation type="unfinished"></translation>
+        <translation>Velká hala</translation>
     </message>
     <message>
         <source>Live</source>
-        <translation type="unfinished"></translation>
+        <translation>Živě</translation>
     </message>
     <message>
         <source>Party</source>
-        <translation type="unfinished"></translation>
+        <translation>Oslava</translation>
     </message>
     <message>
         <source>Pop</source>
-        <translation type="unfinished"></translation>
+        <translation>Populární hudba</translation>
     </message>
     <message>
         <source>Reggae</source>
-        <translation type="unfinished"></translation>
+        <translation>Reggae</translation>
     </message>
     <message>
         <source>Rock</source>
-        <translation type="unfinished"></translation>
+        <translation>Rock</translation>
     </message>
     <message>
         <source>Ska</source>
-        <translation type="unfinished"></translation>
+        <translation>Ska</translation>
     </message>
     <message>
         <source>Soft</source>
-        <translation type="unfinished"></translation>
+        <translation>Měkké</translation>
     </message>
     <message>
         <source>Soft rock</source>
-        <translation type="unfinished"></translation>
+        <translation>Měkčí rock</translation>
     </message>
     <message>
         <source>Techno</source>
-        <translation type="unfinished"></translation>
+        <translation>Techno</translation>
     </message>
 </context>
 <context>
@@ -971,6 +971,10 @@
         <translation>Skočit &amp;vpřed</translation>
     </message>
     <message>
+        <source>&amp;Repeat</source>
+        <translation type="vanished">&amp;Opakovat</translation>
+    </message>
+    <message>
         <source>S&amp;huffle</source>
         <translation>Za&amp;míchat</translation>
     </message>
@@ -1005,6 +1009,10 @@
     <message>
         <source>&amp;Normal</source>
         <translation>&amp;Normální</translation>
+    </message>
+    <message>
+        <source>Current item in &amp;loop</source>
+        <translation type="vanished">Současnou položku pořád do&amp;kola</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
@@ -1115,27 +1123,27 @@
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Soubor</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pohled</translation>
     </message>
     <message>
         <source>Show Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Ukázat ekvalizér</translation>
     </message>
     <message>
         <source>Hide menu bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrýt pruh s nabídku</translation>
     </message>
     <message>
         <source>&amp;Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Smyčka</translation>
     </message>
     <message>
         <source>Current item in l&amp;oop</source>
-        <translation type="unfinished"></translation>
+        <translation>Současnou položku pořád &amp;dokola</translation>
     </message>
 </context>
 <context>
@@ -1146,18 +1154,20 @@
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished">Varování</translation>
+        <translation>Varování</translation>
     </message>
     <message>
         <source>Some plugins were found but the player was unable to load them.
 
 The API has changed and you need to update these plugins too!</source>
-        <translation type="unfinished"></translation>
+        <translation>Byly nalezeny některé přídavný modul, ale přehrávač nebyl je schopen nahrát.
+
+API se změnilo a je potřeba aktualizovat i tyto přídavné moduly!</translation>
     </message>
     <message>
         <source>Incompatible plugins:
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Neslučitelné přídavné moduly:</translation>
     </message>
 </context>
 <context>

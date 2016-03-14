@@ -516,7 +516,7 @@
     </message>
     <message>
         <source>Show covers</source>
-        <translation>إظهار الأغلِفة</translation>
+        <translation type="vanished">إظهار الأغلِفة</translation>
     </message>
     <message>
         <source>Size of covers</source>
