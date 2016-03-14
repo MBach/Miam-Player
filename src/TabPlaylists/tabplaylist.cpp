@@ -18,6 +18,7 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	, _contextMenu(new QMenu(this))
 {
 	TabBar *tabBar = new TabBar(this);
+	tabBar->setObjectName("tabBar");
 	this->setTabBar(tabBar);
 	this->setMovable(true);
 

@@ -163,6 +163,21 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 		default:
 			break;
 		}
+	} else {
+		if (widget && widget->objectName() == "tabBar") {
+			const QStyleOptionTab *sot = qstyleoption_cast<const QStyleOptionTab*>(option);
+			QStyleOptionTab tab = *sot;
+			//qDebug() << Q_FUNC_INFO << element << r;
+			if (element == SE_TabBarTabText) {
+				//tab.rect.setX(tab.rect.x() + 20);
+				//qDebug() << "SE_TabBarTabText" << sot->rect;
+
+				return sot->rect;
+			} else if (element == SE_CheckBoxContents) {
+				//qDebug() << "SE_CheckBoxContents" << sot->rect;
+				return sot->rect;
+			}
+		}
 	}
 	return r;
 }
@@ -170,6 +185,9 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
 	switch (element) {
+	case CE_PushButton: {
+		break;
+	}
 	case CE_MenuBarItem:{
 		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
 		const bool act = somi->state & (State_Sunken | State_Selected);
@@ -360,12 +378,23 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 		break;
 	}
 	case PE_IndicatorTabClose: {
+		QPixmap tabClosePixmap(24, 24);
+		int tabWdidth = widget->style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, opt, widget);
+		int tabHeight = widget->style()->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, opt, widget);
+#if defined(Q_OS_OSX)
+		QRect tabCloseRect(SettingsPrivate::instance()->tabsOverlappingLength() / 1.5, 0, tabHeight, tabHeight);
+#else
+		QRect tabCloseRect(0, 0, tabHeight, tabHeight);
+#endif
+
+		//qDebug() << Q_FUNC_INFO << tabWdidth;
+		QFileSelector fs;
 		if (opt->state.testFlag(State_MouseOver)) {
-			QFileSelector fs;
-			painter->drawPixmap(0, 0, 16, 16, QPixmap(fs.select(":/icons/config/close_tabs_hover.png")));
+			tabClosePixmap.load(fs.select(":/icons/config/close_tabs_hover.png"));
 		} else {
-			painter->drawPixmap(0, 0, 16, 16, QPixmap(":/icons/closeTabs"));
+			tabClosePixmap.load(fs.select(":/icons/config/close_tabs.png"));
 		}
+		painter->drawPixmap(tabCloseRect, tabClosePixmap);
 		break;
 	}
 	case PE_IndicatorBranch: {
@@ -464,4 +493,18 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 		break;
 	}
 	}
+}
+
+int MiamStyle::pixelMetric(QStyle::PixelMetric metric, const QStyleOption *opt, const QWidget *widget) const
+{
+	int pm = QProxyStyle::pixelMetric(metric, opt, widget);
+#if defined(Q_OS_OSX)
+	switch (metric) {
+	case PM_TabCloseIndicatorWidth:
+		return 12 + SettingsPrivate::instance()->tabsOverlappingLength() / 1.5;
+	default:
+		return pm;
+	}
+#endif
+	return pm;
 }

@@ -22,6 +22,8 @@ public:
 
 	virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
 
+	virtual int pixelMetric(PixelMetric metric, const QStyleOption *opt, const QWidget *widget = nullptr) const override;
+
 private:
 	void drawScrollBar(QPainter *p, const QWidget *widget) const;
 

@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="favorite">config/favorite.png</file>
-        <file alias="favorite_outline">config/favorite_outline.png</file>
         <file alias="rename">config/rename.png</file>
         <file alias="save">config/save.png</file>
         <file alias="disc">config/disc.png</file>
@@ -23,8 +21,9 @@
         <file alias="hierarchy">config/icons/hierarchy-128.png</file>
         <file>config/close_tabs_hover.png</file>
         <file>config/+linux/close_tabs_hover.png</file>
-        <file alias="closeTabs">config/close_tabs.png</file>
+        <file>config/close_tabs.png</file>
         <file>config/+osx/close_tabs_hover.png</file>
+        <file>config/+osx/close_tabs.png</file>
     </qresource>
     <qresource prefix="/config">
         <file alias="fonts">config/fonts.png</file>

@@ -63,7 +63,7 @@ protected:
 private:
 	void paintRectTabs(QStylePainter &p);
 
-	void paintRoundedTabs(QStylePainter &p, int dist);
+	void paintRoundedTabs(QStylePainter &p);
 
 private slots:
 	/** Rename a tab. */

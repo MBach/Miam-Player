@@ -2,6 +2,7 @@
 
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QFontComboBox>
 #include <QScrollBar>
 #include <QStandardPaths>
 
@@ -21,6 +22,9 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
 	, _timer(new QTimer(this))
 {
 	setupUi(this);
+	for (QSpinBox *spinBox : this->findChildren<QSpinBox*>()) {
+		spinBox->setAttribute(Qt::WA_MacShowFocusRect, false);
+	}
 	listWidget->verticalScrollBar()->deleteLater();
 	listWidget->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);

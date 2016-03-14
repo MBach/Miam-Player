@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>640</height>
+    <height>679</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -75,7 +75,7 @@
        <string>Buttons &amp; Bars</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -90,7 +90,7 @@
        <string>Fonts</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -102,7 +102,7 @@
        <string>Colors</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -114,7 +114,7 @@
        <string>Library</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -126,7 +126,7 @@
        <string>Tabs</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
       <property name="icon">
        <iconset resource="player.qrc">
@@ -292,8 +292,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>484</width>
-               <height>562</height>
+               <width>456</width>
+               <height>652</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1115,7 +1115,7 @@
            <widget class="QFontComboBox" name="fontComboBoxPlaylist">
             <property name="currentFont">
              <font>
-              <family>Liberation Sans</family>
+              <family>Lucida Grande</family>
              </font>
             </property>
            </widget>
@@ -1124,7 +1124,7 @@
            <widget class="QFontComboBox" name="fontComboBoxLibrary">
             <property name="currentFont">
              <font>
-              <family>Liberation Sans</family>
+              <family>Lucida Grande</family>
               <pointsize>8</pointsize>
              </font>
             </property>
@@ -1161,7 +1161,7 @@
            <widget class="QFontComboBox" name="fontComboBoxMenus">
             <property name="currentFont">
              <font>
-              <family>Liberation Sans</family>
+              <family>Lucida Grande</family>
              </font>
             </property>
            </widget>
@@ -2030,10 +2030,10 @@
                <string>px</string>
               </property>
               <property name="minimum">
-               <number>1</number>
+               <number>2</number>
               </property>
               <property name="maximum">
-               <number>40</number>
+               <number>20</number>
               </property>
               <property name="value">
                <number>10</number>
@@ -2145,8 +2145,8 @@
   <tabstop>overlapTabsSpinBox</tabstop>
  </tabstops>
  <resources>
-  <include location="../Core/core.qrc"/>
   <include location="player.qrc"/>
+  <include location="../Core/core.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -2535,9 +2535,9 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroupReorderArtists"/>
-  <buttongroup name="buttonGroupEnableStarDelegate"/>
   <buttongroup name="buttonGroupArtistsArticle"/>
+  <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
+  <buttongroup name="buttonGroupEnableStarDelegate"/>
  </buttongroups>
 </ui>
