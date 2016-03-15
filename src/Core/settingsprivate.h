@@ -33,6 +33,8 @@ private:
 	/** Store the family of each font used in the app. */
 	QMap<QString, QVariant> fontFamilyMap;
 
+	QPalette _standardPalette;
+
 	Q_ENUMS(DragDropAction)
 	Q_ENUMS(FontFamily)
 	Q_ENUMS(InsertPolicy)

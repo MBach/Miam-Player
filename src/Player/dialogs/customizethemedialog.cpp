@@ -439,6 +439,5 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
 		gray = qGray(highlight.rgb());
 		selectedItemColorWidget->setColor(QColor(gray, gray, gray));
-		QApplication::setPalette(style()->standardPalette());
 	}
 }

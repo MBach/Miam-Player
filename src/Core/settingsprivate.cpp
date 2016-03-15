@@ -542,6 +542,9 @@ void SettingsPrivate::setCopyTracksFromPlaylist(bool b)
 void SettingsPrivate::setCustomColors(bool b)
 {
 	setValue("customColors", b);
+	if (!b) {
+		QApplication::setPalette(_standardPalette);
+	}
 }
 
 void SettingsPrivate::setDragDropAction(DragDropAction action)
