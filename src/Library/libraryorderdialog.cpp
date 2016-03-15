@@ -17,6 +17,11 @@ LibraryOrderDialog::LibraryOrderDialog(QWidget *parent)
 	artistAlbumTreeWidget->expandAll();
 	yearTreeWidget->expandAll();
 
+	artistTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+	albumTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+	artistAlbumTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+	yearTreeWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
+
 	switch (settings->insertPolicy()) {
 	case SettingsPrivate::IP_Albums:
 		albumTreeWidget->selectAll();
