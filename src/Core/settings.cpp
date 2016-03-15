@@ -40,9 +40,14 @@ qreal Settings::coverBelowTracksOpacity() const
 }
 
 /** Returns the size of a cover. */
-int Settings::coverSize() const
+int Settings::coverSizeLibraryTree() const
 {
-	return value("coverSize", 48).toInt();
+	return value("coverSizeLibraryTree", 48).toInt();
+}
+
+int Settings::coverSizeUniqueLibrary() const
+{
+	return value("coverSizeUniqueLibrary", 100).toInt();
 }
 
 /** Returns true if big and faded covers are displayed in the library when an album is expanded. */
@@ -204,9 +209,15 @@ void Settings::setCovers(bool b)
 	emit viewPropertyChanged(VP_LibraryHasCoverBelowTracks, b);
 }
 
-void Settings::setCoverSize(int s)
+void Settings::setCoverSizeLibraryTree(int s)
 {
-	setValue("coverSize", s);
+	setValue("coverSizeLibraryTree", s);
+	emit viewPropertyChanged(VP_LibraryCoverSize, s);
+}
+
+void Settings::setCoverSizeUniqueLibrary(int s)
+{
+	setValue("coverSizeUniqueLibrary", s);
 	emit viewPropertyChanged(VP_LibraryCoverSize, s);
 }
 

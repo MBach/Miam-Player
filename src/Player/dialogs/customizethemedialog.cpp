@@ -116,12 +116,6 @@ void CustomizeThemeDialog::loadTheme()
 	spinBoxLibrary->blockSignals(false);
 	spinBoxMenus->setValue(settingsPrivate->fontSize(SettingsPrivate::FF_Menu));
 
-	// Library
-	checkBoxDisplayCovers->setChecked(settings->isCoversEnabled());
-	spinBoxCoverSize->blockSignals(true);
-	spinBoxCoverSize->setValue(settings->coverSize());
-	spinBoxCoverSize->blockSignals(false);
-
 	// Colors
 	settingsPrivate->colorsAlternateBG() ? enableAlternateBGRadioButton->setChecked(true) : disableAlternateBGRadioButton->setChecked(true);
 	settingsPrivate->isCustomColors() ? enableCustomColorsRadioButton->setChecked(true) : disableCustomColorsRadioButton->setChecked(true);
@@ -242,12 +236,15 @@ void CustomizeThemeDialog::setupActions()
 		connect(b, &QToolButton::clicked, this, &CustomizeThemeDialog::showColorDialog);
 	}
 
-	// Show covers in the Library
-	connect(checkBoxDisplayCovers, &QCheckBox::toggled, settings, &Settings::setCovers);
+	// Change cover size
+	connect(spinBoxCoverSizeLibraryTree, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
+		settings->setCoverSizeLibraryTree(cs);
+		this->fade();
+	});
 
 	// Change cover size
-	connect(spinBoxCoverSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
-		settings->setCoverSize(cs);
+	connect(spinBoxCoverSizeUniqueLibrary, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
+		settings->setCoverSizeLibraryTree(cs);
 		this->fade();
 	});
 

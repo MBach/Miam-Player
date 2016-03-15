@@ -54,7 +54,8 @@ public:
 	qreal coverBelowTracksOpacity() const;
 
 	/** Returns the size of a cover. */
-	int coverSize() const;
+	int coverSizeLibraryTree() const;
+	int coverSizeUniqueLibrary() const;
 
 	/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
 	bool isCoverBelowTracksEnabled() const;
@@ -80,7 +81,8 @@ public:
 
 	void setCovers(bool b);
 
-	void setCoverSize(int s);
+	void setCoverSizeLibraryTree(int s);
+	void setCoverSizeUniqueLibrary(int s);
 
 	/** Sets if the button in parameter is visible or not. */
 	void setMediaButtonVisible(const QString & buttonName, const bool &value);

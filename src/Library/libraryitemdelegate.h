@@ -27,6 +27,8 @@ class MIAMLIBRARY_LIBRARY LibraryItemDelegate : public MiamItemDelegate
 private:
 	LibraryTreeView *_libraryTreeView;
 
+	int _coverSize;
+
 public:
 	explicit LibraryItemDelegate(LibraryTreeView *libraryTreeView, QSortFilterProxyModel *proxy);
 

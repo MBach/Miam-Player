@@ -31,6 +31,8 @@ LibraryItemDelegate::LibraryItemDelegate(LibraryTreeView *libraryTreeView, QSort
 			_timer->start();
 		}
 	});
+
+	_coverSize = Settings::instance()->coverSizeLibraryTree();
 }
 
 void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -92,7 +94,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	if (settings->isCoversEnabled() && item->type() == Miam::IT_Album) {
 		QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
-		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSize() + 2));
+		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSizeLibraryTree() + 2));
 	} else {
 		return QStyledItemDelegate::sizeHint(option, index);
 	}
@@ -122,7 +124,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 					//qDebug() << Q_FUNC_INFO << "cover was extracted";
 					QPixmap p;
 					if (p.loadFromData(cover->byteArray(), cover->format())) {
-						p = p.scaled(_coverSize, _coverSize);
+						//p = p.scaled(_coverSize, _coverSize);
 						if (!p.isNull()) {
 							item->setIcon(p);
 							//_loadedCovers.insert(item, true);
@@ -383,5 +385,5 @@ void LibraryItemDelegate::displayIcon(bool b)
 void LibraryItemDelegate::updateCoverSize()
 {
 	qDebug() << Q_FUNC_INFO;
-	_coverSize = Settings::instance()->coverSize();
+	_coverSize = Settings::instance()->coverSizeLibraryTree();
 }

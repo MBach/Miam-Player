@@ -33,7 +33,6 @@ public:
 public slots:
 	void doSearch();
 
-private slots:
 	void watchForChanges();
 
 signals:

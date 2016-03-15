@@ -33,7 +33,7 @@ TableView::TableView(QWidget *parent)
 		_jumpToWidget->setCurrentLetter(_model->currentLetter(iTop.sibling(iTop.row(), 1)));
 	});
 	this->installEventFilter(this);
-	horizontalHeader()->resizeSection(0, Settings::instance()->coverSize());
+	horizontalHeader()->resizeSection(0, Settings::instance()->coverSizeUniqueLibrary());
 
 	connect(selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
 		if (viewport()) {

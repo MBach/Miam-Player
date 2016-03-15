@@ -593,6 +593,7 @@ void SettingsPrivate::setLibraryFilteredByArticles(const QStringList &tagList)
 void SettingsPrivate::setMonitorFileSystem(bool b)
 {
 	setValue("monitorFileSystem", b);
+	emit monitorFileSystemChanged(b);
 }
 
 /// PlayBack options

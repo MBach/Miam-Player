@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>679</height>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -292,8 +292,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>456</width>
-               <height>652</height>
+               <width>471</width>
+               <height>542</height>
               </rect>
              </property>
              <layout class="QGridLayout" name="gridLayout">
@@ -1115,7 +1115,7 @@
            <widget class="QFontComboBox" name="fontComboBoxPlaylist">
             <property name="currentFont">
              <font>
-              <family>Lucida Grande</family>
+              <family>Liberation Sans</family>
              </font>
             </property>
            </widget>
@@ -1124,7 +1124,7 @@
            <widget class="QFontComboBox" name="fontComboBoxLibrary">
             <property name="currentFont">
              <font>
-              <family>Lucida Grande</family>
+              <family>Liberation Sans</family>
               <pointsize>8</pointsize>
              </font>
             </property>
@@ -1161,7 +1161,7 @@
            <widget class="QFontComboBox" name="fontComboBoxMenus">
             <property name="currentFont">
              <font>
-              <family>Lucida Grande</family>
+              <family>Liberation Sans</family>
              </font>
             </property>
            </widget>
@@ -1467,40 +1467,19 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QLabel" name="labelDisplayCovers">
-               <property name="text">
-                <string>Show covers</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="checkBoxDisplayCovers">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <layout class="QGridLayout" name="gridLayout_7">
              <property name="bottomMargin">
               <number>9</number>
              </property>
-             <item>
-              <widget class="QLabel" name="labelCoverSize">
+             <item row="0" column="0">
+              <widget class="QLabel" name="labelCoverSizeLibraryTree">
                <property name="text">
                 <string>Size of covers</string>
                </property>
               </widget>
              </item>
-             <item>
-              <widget class="QSpinBox" name="spinBoxCoverSize">
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="spinBoxCoverSizeLibraryTree">
                <property name="minimum">
                 <number>24</number>
                </property>
@@ -1924,13 +1903,6 @@
            <string>Artist and albums lists</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
-            <widget class="QLabel" name="pinScrollLabel">
-             <property name="text">
-              <string>Pin when scrolling</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
             <widget class="QCheckBox" name="pinScrollCheckBox">
              <property name="text">
@@ -1938,6 +1910,36 @@
              </property>
              <property name="checked">
               <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="pinScrollLabel">
+             <property name="text">
+              <string>Pin when scrolling</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelCoverSizeUniqueLibrary">
+             <property name="text">
+              <string>Size of covers</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="spinBoxCoverSizeUniqueLibrary">
+             <property name="suffix">
+              <string>px</string>
+             </property>
+             <property name="minimum">
+              <number>50</number>
+             </property>
+             <property name="maximum">
+              <number>500</number>
+             </property>
+             <property name="value">
+              <number>100</number>
              </property>
             </widget>
            </item>
@@ -2030,10 +2032,10 @@
                <string>px</string>
               </property>
               <property name="minimum">
-               <number>2</number>
+               <number>1</number>
               </property>
               <property name="maximum">
-               <number>20</number>
+               <number>40</number>
               </property>
               <property name="value">
                <number>10</number>
@@ -2126,8 +2128,7 @@
   <tabstop>selectedItemColorToolButton</tabstop>
   <tabstop>bgPrimaryColorToolButton</tabstop>
   <tabstop>fontColorToolButton</tabstop>
-  <tabstop>checkBoxDisplayCovers</tabstop>
-  <tabstop>spinBoxCoverSize</tabstop>
+  <tabstop>spinBoxCoverSizeLibraryTree</tabstop>
   <tabstop>radioButtonEnableBigCover</tabstop>
   <tabstop>radioButtonDisableBigCover</tabstop>
   <tabstop>spinBoxBigCoverOpacity</tabstop>
@@ -2162,22 +2163,6 @@
     <hint type="destinationlabel">
      <x>383</x>
      <y>285</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxDisplayCovers</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>spinBoxCoverSize</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>497</x>
-     <y>54</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>497</x>
-     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -2535,9 +2520,9 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="buttonGroupArtistsArticle"/>
-  <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupEnableStarOutline"/>
+  <buttongroup name="buttonGroupReorderArtists"/>
   <buttongroup name="buttonGroupEnableStarDelegate"/>
+  <buttongroup name="buttonGroupArtistsArticle"/>
  </buttongroups>
 </ui>

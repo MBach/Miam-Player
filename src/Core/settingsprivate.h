@@ -238,6 +238,8 @@ signals:
 
 	void librarySearchModeHasChanged();
 
+	void monitorFileSystemChanged(bool);
+
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHaveChanged();
 };

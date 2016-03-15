@@ -90,13 +90,13 @@ void AddressBar::paintEvent(QPaintEvent *)
 	// Frame
 	p.setPen(palette.mid().color());
 	if (isLeftToRight()) {
-		p.drawLine(rect().x() + rect().width(), rect().y(), rect().x() + rect().width(), rect().y() + rect().height());
+		p.drawLine(rect().x() + rect().width() - extra, rect().y(), rect().x() + rect().width() - extra, rect().y() + rect().height());
 		p.drawLine(0, 0, rect().center().x(), 0);
 	} else {
 		p.drawLine(rect().topLeft(), rect().bottomLeft());
 		p.drawLine(rect().width() - 1, 0, rect().center().x() - 2, 0);
 	}
-	p.drawLine(0, rect().height() - 1, rect().x() + rect().width(), rect().height() - 1);
+	p.drawLine(0, rect().height() - extra, rect().x() + rect().width(), rect().height() - extra);
 }
 
 void AddressBar::resizeEvent(QResizeEvent *event)

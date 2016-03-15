@@ -75,6 +75,8 @@ protected:
 private:
 	void initQuickStart();
 
+	void toggleShortcutsOnMenuBar(bool enabled);
+
 public slots:
 	void createCustomizeOptionsDialog();
 

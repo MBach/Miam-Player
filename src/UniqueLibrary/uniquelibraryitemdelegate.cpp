@@ -115,6 +115,7 @@ void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewIt
 void UniqueLibraryItemDelegate::drawCover(QPainter *painter, const QStyleOptionViewItem &option, const QString &coverPath) const
 {
 	static QImageReader imageReader;
+	int coverSize = Settings::instance()->coverSizeUniqueLibrary();
 
 	FileHelper fh(coverPath);
 	// If it's an inner cover, load it
@@ -127,10 +128,10 @@ void UniqueLibraryItemDelegate::drawCover(QPainter *painter, const QStyleOptionV
 	} else {
 		//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 		imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
-		imageReader.setScaledSize(QSize(_coverSize, _coverSize));
+		imageReader.setScaledSize(QSize(coverSize, coverSize));
 	}
 
-	QRect r(option.rect.x(), option.rect.y(), _coverSize, _coverSize);
+	QRect r(option.rect.x(), option.rect.y(), coverSize, coverSize);
 	painter->drawImage(r, imageReader.read());
 }
 

@@ -141,17 +141,27 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	}
 }
 
+#include <QShortcut>
+
 void MainWindow::init()
 {
-	this->setupActions();
-
 	// Init shortcuts
 	Settings *settings = Settings::instance();
 	QMapIterator<QString, QVariant> it(settings->shortcuts());
+
 	while (it.hasNext()) {
 		it.next();
-		this->bindShortcut(it.key(), it.value().value<QKeySequence>());
+
+		QShortcut *s = new QShortcut(this);
+		s->setObjectName("action" + it.key().left(1).toUpper() + it.key().mid(1));
+		s->setKey(it.value().value<QKeySequence>());
 	}
+
+	if (menuBar()->isVisible()) {
+		this->toggleMenuBar(true);
+	}
+
+	this->setupActions();
 }
 
 void MainWindow::loadPlugins()
@@ -172,6 +182,12 @@ void MainWindow::setupActions()
 
 	// Link user interface
 	// Actions from the menu
+	QShortcut *exit = this->findChild<QShortcut*>("actionExit");
+	//actionExit->setShortcut(exit->key());
+	connect(exit, &QShortcut::activated, this, [=]() {
+		QAction *a = this->findChild<QAction*>(exit->objectName());
+		a->trigger();
+	});
 	connect(actionExit, &QAction::triggered, this, [=]() {
 		QCloseEvent event;
 		this->closeEvent(&event);
@@ -218,6 +234,23 @@ void MainWindow::setupActions()
 	});
 
 	connect(actionMute, &QAction::triggered, _mediaPlayer, &MediaPlayer::toggleMute);
+
+	connect(settingsPrivate, &SettingsPrivate::monitorFileSystemChanged, this, [=](bool b) {
+		if (b) {
+			MusicSearchEngine *musicSearchEngine = new MusicSearchEngine;
+			QThread *worker = new QThread;
+			musicSearchEngine->moveToThread(worker);
+			connect(worker, &QThread::started, musicSearchEngine, &MusicSearchEngine::watchForChanges);
+			worker->start();
+
+			if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
+				_currentView->setMusicSearchEngine(musicSearchEngine);
+			}
+			qDebug() << Q_FUNC_INFO << "create new instance of file system watcher";
+		} else {
+			qDebug() << Q_FUNC_INFO << "delete any instance of file system watcher";
+		}
+	});
 
 	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
 		if (ff == SettingsPrivate::FF_Menu) {
@@ -298,6 +331,15 @@ bool MainWindow::event(QEvent *e)
 			if (keyEvent->key() == Qt::Key_Alt) {
 				qDebug() << Q_FUNC_INFO << "Alt was pressed";
 				this->setProperty("altKey", true);
+				this->toggleShortcutsOnMenuBar(true);
+				// Reactivate shortcuts on the menuBar
+
+				QMapIterator<QString, QVariant> it(Settings::instance()->shortcuts());
+				while (it.hasNext()) {
+					it.next();
+					this->bindShortcut(it.key(), it.value().value<QKeySequence>());
+				}
+
 			} else {
 				this->setProperty("altKey", false);
 			}
@@ -307,7 +349,6 @@ bool MainWindow::event(QEvent *e)
 		if (this->property("altKey").toBool() && keyEvent->key() == Qt::Key_Alt) {
 			qDebug() << Q_FUNC_INFO << "Alt was released";
 			this->menuBar()->show();
-			//this->menuBar()->setProperty("dirtyHackMnemonic", true);
 			this->menuBar()->setFocus();
 			this->setProperty("altKey", false);
 			actionHideMenuBar->setChecked(false);
@@ -344,6 +385,11 @@ void MainWindow::initQuickStart()
 	menuPlayback->setDisabled(true);
 	menuPlaylist->setDisabled(true);
 	this->resize(400, 500);
+}
+
+void MainWindow::toggleShortcutsOnMenuBar(bool enabled)
+{
+	qDebug() << Q_FUNC_INFO << enabled;
 }
 
 void MainWindow::createCustomizeOptionsDialog()
@@ -621,13 +667,11 @@ void MainWindow::activateView(QAction *menuAction)
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
 	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
+	qDebug() << Q_FUNC_INFO << "action" + objectName.left(1).toUpper() + objectName.mid(1) << keySequence;
 	// Connect actions first
 	if (action) {
 		action->setShortcut(keySequence);
 		// Some default shortcuts might interfer with other widgets, so we need to restrict where it applies
-		/*if (action == actionIncreaseVolume || action == actionDecreaseVolume) {
-			action->setShortcutContext(Qt::WidgetShortcut);
-		} else*/
 		if (action == actionRemoveSelectedTracks) {
 			action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
 		}
@@ -701,4 +745,5 @@ void MainWindow::toggleMenuBar(bool checked)
 {
 	menuBar()->setVisible(!checked);
 	SettingsPrivate::instance()->setValue("isMenuHidden", checked);
+	this->toggleShortcutsOnMenuBar(!checked);
 }

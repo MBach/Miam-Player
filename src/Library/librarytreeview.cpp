@@ -29,7 +29,7 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	this->setFrameShape(QFrame::NoFrame);
 
 	auto settings = Settings::instance();
-	this->setIconSize(QSize(settings->coverSize(), settings->coverSize()));
+	this->setIconSize(QSize(settings->coverSizeLibraryTree(), settings->coverSizeLibraryTree()));
 
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	vScrollBar->setFrameBorder(false, false, false, true);

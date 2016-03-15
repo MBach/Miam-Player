@@ -33,8 +33,6 @@ protected:
 	 * When covers are becoming visible once again, they are redisplayed with a nice fading effect. */
 	QTimer *_timer;
 
-	int _coverSize;
-
 public:
 	explicit MiamItemDelegate(QSortFilterProxyModel *proxy);
 
