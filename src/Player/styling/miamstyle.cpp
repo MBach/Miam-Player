@@ -157,9 +157,15 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 			r.setX(minRect.x() + minRect.width() + 1);
 			r.setY(0);
 			break;
-		case SE_TabWidgetTabBar:
-			r = minRect.adjusted(0, 0, SettingsPrivate::instance()->tabsOverlappingLength(), 0);
+		case SE_TabWidgetTabBar: {
+			SettingsPrivate *settings = SettingsPrivate::instance();
+			if (!settings->isRectTabs()) {
+				r = minRect.adjusted(0, 0, settings->tabsOverlappingLength(), 0);
+			} else {
+				r = minRect;
+			}
 			break;
+		}
 		default:
 			break;
 		}
@@ -379,10 +385,15 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 	}
 	case PE_IndicatorTabClose: {
 		QPixmap tabClosePixmap(24, 24);
-		int tabWdidth = widget->style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, opt, widget);
 		int tabHeight = widget->style()->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, opt, widget);
 #if defined(Q_OS_OSX)
-		QRect tabCloseRect(SettingsPrivate::instance()->tabsOverlappingLength() / 1.5, 0, tabHeight, tabHeight);
+		SettingsPrivate *settings = SettingsPrivate::instance();
+		QRect tabCloseRect;
+		if (settings->isRectTabs()) {
+			tabCloseRect = QRect(0, 0, tabHeight, tabHeight);
+		} else {
+			tabCloseRect = QRect(settings->tabsOverlappingLength() / 1.5, 0, tabHeight, tabHeight);
+		}
 #else
 		QRect tabCloseRect(0, 0, tabHeight, tabHeight);
 #endif
@@ -500,8 +511,14 @@ int MiamStyle::pixelMetric(QStyle::PixelMetric metric, const QStyleOption *opt, 
 	int pm = QProxyStyle::pixelMetric(metric, opt, widget);
 #if defined(Q_OS_OSX)
 	switch (metric) {
-	case PM_TabCloseIndicatorWidth:
-		return 12 + SettingsPrivate::instance()->tabsOverlappingLength() / 1.5;
+	case PM_TabCloseIndicatorWidth: {
+		SettingsPrivate *settings = SettingsPrivate::instance();
+		if (settings->isRectTabs()) {
+			return 13;
+		} else {
+			return 12 + SettingsPrivate::instance()->tabsOverlappingLength() / 1.5;
+		}
+	}
 	default:
 		return pm;
 	}
