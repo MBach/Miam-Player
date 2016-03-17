@@ -37,7 +37,8 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	connect(tabBar, &TabBar::tabRenamed, this, [=](int index, const QString &text) {
 		Playlist *p = playlist(index);
 		p->setTitle(text);
-		this->setTabIcon(index, this->defaultIcon(QIcon::Normal));
+		/// FIXME
+		//this->setTabIcon(index, this->defaultIcon(QIcon::Normal));
 	});
 
 	/// FIXME: when changing font for saved and untouched playlists, overwritting to normal instead of disabled
@@ -125,12 +126,24 @@ Playlist* TabPlaylist::currentPlayList() const
 	return qobject_cast<Playlist*>(this->currentWidget());
 }
 
-QIcon TabPlaylist::defaultIcon(QIcon::Mode mode) const
+/*QIcon TabPlaylist::defaultIcon(QIcon::Mode mode) const
 {
+//	QPixmap i(QSize(64, 64));
+//	QPainter p(&i);
+
+//	p.setPen(Qt::NoPen);
+//	p.setBrush(QApplication::palette().highlight());
+//	p.drawRect(i.rect());
+//	p.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+//	p.drawPixmap(i.rect(), QPixmap(":/icons/playlistIcon"));
+//	p.setCompositionMode(QPainter::CompositionMode_DestinationOver);
+//	p.fillRect(i.rect(), QApplication::palette().base());
+
+//	return i;
 	QIcon icon(":/icons/playlistIcon");
-	QIcon displayedIcon(icon.pixmap(QSize(tabBar()->fontMetrics().ascent(), tabBar()->fontMetrics().ascent()), mode));
+	QIcon displayedIcon(icon.pixmap(QSize(64, 64), mode));
 	return displayedIcon;
-}
+}*/
 
 /** Redefined to forward events to children. */
 bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
@@ -223,7 +236,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 	playlist->setId(playlistId);
 	playlist->setTitle(playlistDao.title());
 
-	this->setTabIcon(index, defaultIcon(QIcon::Disabled));
+	//this->setTabIcon(index, defaultIcon(QIcon::Disabled));
 }
 
 /** Get the playlist at index. */
@@ -284,7 +297,7 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Always create an icon in Disabled mode. It will be enabled when one will provide some tracks
 	int i = addTab(p, newPlaylistName);
-	this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
+	//this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 
 	connect(p->mediaPlaylist(), &QMediaPlaylist::mediaRemoved, this, [=](int start, int) {
 		if (_mediaPlayer->playlist() == p->mediaPlaylist() && p->mediaPlaylist()->currentIndex() == start) {
@@ -307,7 +320,7 @@ Playlist* TabPlaylist::addPlaylist()
 		}
 		if (playlistTabIndex != -1) {
 			if (p->isModified()) {
-				this->setTabIcon(playlistTabIndex, this->defaultIcon(QIcon::Normal));
+				//this->setTabIcon(playlistTabIndex, this->defaultIcon(QIcon::Normal));
 			}
 		}
 	});
@@ -355,9 +368,9 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks)
 
 	}
 	currentPlayList()->insertMedias(rowIndex, t);
-	if (currentPlayList()->isModified()) {
-		this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
-	}
+	//if (currentPlayList()->isModified()) {
+		//this->setTabIcon(currentIndex(), this->defaultIcon(QIcon::Normal));
+	//}
 	if (_mediaPlayer->playlist() == nullptr) {
 		_mediaPlayer->setPlaylist(currentPlayList()->mediaPlaylist());
 	}
@@ -371,14 +384,14 @@ void TabPlaylist::insertItemsToPlaylist(int rowIndex, const QList<QUrl> &tracks)
 
 void TabPlaylist::savePlaylist(Playlist *p, bool overwrite)
 {
-	uint playlistId = _playlistManager->savePlaylist(p, overwrite, false);
-	for (int i = 0; i < this->count(); i++) {
+	/*uint playlistId =*/ _playlistManager->savePlaylist(p, overwrite, false);
+	/*for (int i = 0; i < this->count(); i++) {
 		Playlist *p2 = this->playlist(i);
 		if (p2->id() == playlistId) {
 			this->setTabIcon(i, this->defaultIcon(QIcon::Disabled));
 			break;
 		}
-	}
+	}*/
 }
 
 void TabPlaylist::renamePlaylist(Playlist *p)
@@ -387,7 +400,7 @@ void TabPlaylist::renamePlaylist(Playlist *p)
 		Playlist *tmp = playlist(i);
 		if (tmp == p) {
 			this->setTabText(i, p->title());
-			this->setTabIcon(i, this->defaultIcon(QIcon::Normal));
+			//this->setTabIcon(i, this->defaultIcon(QIcon::Normal));
 			break;
 		}
 	}
@@ -459,7 +472,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		p->setId(0);
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
 		p->setTitle(tabBar()->tabText(0));
-		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
+		//this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	}
 }
 
@@ -473,7 +486,7 @@ int TabPlaylist::closePlaylist(int index)
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
 	if (!p->isModified()) {
 		this->removeTabFromCloseButton(index);
-		this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
+		//this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	} else {
 		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
 		// Override default action and ask once again to user because it's not allowed to save empty playlist automatically

@@ -86,18 +86,23 @@ void CornerWidget::paintEvent(QPaintEvent *)
 			// horizontal offset, diagonal offset
 			const float oH = 3.0;
 			const float oDiag = dist / 10;
-			pp.moveTo(o.rect.x() + oDiag,
-					  o.rect.y() + oH);
-			pp.cubicTo(o.rect.x() + 4.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.15 + oDiag),
-					   o.rect.x() + 10.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.1 + oDiag),
-					   o.rect.x() + 7.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.3 + oDiag));
-			pp.lineTo(o.rect.x() + o.rect.width(),
-					  o.rect.y() + o.rect.height() - oH - oDiag);
+			QPointF p0(o.rect.x() + oDiag, o.rect.y() + oH);
+			pp.moveTo(p0);
+
+			QPointF p1, p2, p3;
+			p1 = QPointF(o.rect.x() + 4.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.15 + oDiag));
+			p2 = QPointF(o.rect.x() + 7.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.1 + oDiag));
+			p3 = QPointF(o.rect.x() + 10.0 + oDiag, o.rect.y() + o.rect.height() - (oH + 0.3 + oDiag));
+
+			pp.cubicTo(p1, p2, p3);
+
+			qDebug() << p1 << p2 << p3;
+
+			pp.lineTo(o.rect.x() + o.rect.width(), p3.y());
 			pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15,
-					   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.1,
-					   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.3);
-			pp.lineTo(o.rect.x() + oDiag,
-					  o.rect.y() + oH);
+					   o.rect.x() + o.rect.width() - 7.0, o.rect.y() + oH + 0.1,
+					   o.rect.x() + o.rect.width() - 10.0, o.rect.y() + oH + 0.3);
+			pp.lineTo(p0);
 		} else {
 			pp.moveTo(o.rect.topRight());
 			pp.cubicTo(o.rect.topRight(),

@@ -338,20 +338,11 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 		ppLeft.cubicTo(o.rect.x() + dist * 1, o.rect.y() + o.rect.height() - 1,
 					   o.rect.x() + dist * 1, o.rect.y(),
 					   o.rect.x() + dist * 2, o.rect.y());
-		//QPainterPath ppLeftCurve(ppLeft);
-		// Add another point to be able to fill the path afterwards
-		//ppLeft.lineTo(o.rect.x() + dist * 2, o.rect.y() + o.rect.height());
-
-		//QLine topHozLine(o.rect.x() + dist * 2, o.rect.y(),
-		//				 o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
 
 		ppLeft.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y());
 		ppLeft.cubicTo(o.rect.x() + o.rect.width() - dist * 0, o.rect.y(),
 						o.rect.x() + o.rect.width() - dist * 0, o.rect.y() + o.rect.height() - 1,
 						o.rect.x() + o.rect.width() + dist * 1, o.rect.y() + o.rect.height() - 1);
-		//QPainterPath ppRightCurve(ppRight);
-		// Like first curve
-		//ppLeft.lineTo(o.rect.x() + o.rect.width() - dist * 1, o.rect.y() + o.rect.height());
 
 		p.save();
 		if (o.state.testFlag(QStyle::State_MouseOver)) {
@@ -359,25 +350,16 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
-		//QRect midRect(topHozLine.p1(), QPoint(topHozLine.p2().x(), topHozLine.p2().y() + o.rect.height()));
 		if (i == currentIndex()) {
 			p.fillPath(ppLeft, o.palette.base());
-			//p.fillRect(midRect, o.palette.base());
-			//p.fillPath(ppRight, o.palette.base());
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
 			p.fillPath(ppLeft, o.palette.highlight().color().lighter());
-			//p.fillRect(midRect, o.palette.highlight().color().lighter());
-			//p.fillPath(ppRight, o.palette.highlight().color().lighter());
 		} else {
 			p.fillPath(ppLeft, o.palette.window());
-			//p.fillRect(midRect, o.palette.window());
-			//p.fillPath(ppRight, o.palette.window());
 		}
 		p.setRenderHint(QPainter::Antialiasing, true);
 		p.drawPath(ppLeft);
-		//p.drawPath(ppRightCurve);
 		p.setRenderHint(QPainter::Antialiasing, false);
-		//p.drawLine(topHozLine);
 
 		p.restore();
 
@@ -418,8 +400,11 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 		QRect r2(o.rect.x() + o.rect.width() - w - dist / 2, o.rect.y() + (o.rect.height() - w) / 2,
 				 w, w);
 
-		qDebug() << Q_FUNC_INFO << iconRect;
+		qDebug() << Q_FUNC_INFO << i << o.state;
+		qDebug() << Q_FUNC_INFO << i << o.state.testFlag(QStyle::State_Active) << o.state.testFlag(QStyle::State_On);
+
 		o.icon.paint(&p, r2, Qt::AlignLeft | Qt::AlignVCenter);
+		//p.drawPixmap(r2, QPixmap(":/icons/playlistIcon"));
 		//o.rect.setRight(iconRect.right());
 	}
 }

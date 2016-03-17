@@ -36,7 +36,7 @@ public:
 	/** Get the current playlist. */
 	Playlist *currentPlayList() const;
 
-	QIcon defaultIcon(QIcon::Mode mode) const;
+	//QIcon defaultIcon(QIcon::Mode mode) const;
 
 	/** Redefined to forward events to children. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
