@@ -221,6 +221,7 @@ void MainWindow::setupActions()
 		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
 		actionSeekForward->setEnabled(isPlaying);
 
+		qDebug() << Q_FUNC_INFO << _mediaPlayer->playlist();
 		bool notEmpty = _mediaPlayer->playlist() && !_mediaPlayer->playlist()->isEmpty();
 		actionSkipBackward->setEnabled(notEmpty);
 		actionPlay->setEnabled(notEmpty);

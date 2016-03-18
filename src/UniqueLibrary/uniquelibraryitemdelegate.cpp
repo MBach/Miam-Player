@@ -25,10 +25,9 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	/// Work In Progress
 
 	auto settingsPrivate = SettingsPrivate::instance();
-	auto settings = Settings::instance();
 	if (index.column() == 0) {
 		QString cover = index.data(Miam::DF_CoverPath).toString();
-		if (!cover.isEmpty() && settings->isCoversEnabled()) {
+		if (!cover.isEmpty()) {
 			this->drawCover(painter, option, cover);
 		}
 		return;

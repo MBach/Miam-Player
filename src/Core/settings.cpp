@@ -56,12 +56,6 @@ bool Settings::isCoverBelowTracksEnabled() const
 	return value("bigCovers", true).toBool();
 }
 
-/** Returns true if covers are displayed in the library. */
-bool Settings::isCoversEnabled() const
-{
-	return value("covers", true).toBool();
-}
-
 /** Returns true if the button in parameter is visible or not. */
 bool Settings::isMediaButtonVisible(const QString & buttonName) const
 {

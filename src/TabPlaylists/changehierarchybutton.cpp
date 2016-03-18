@@ -58,7 +58,7 @@ void ChangeHierarchyButton::paintEvent(QPaintEvent *)
 	// Draw a thin line before the treeview
 	p.save();
 	p.setPen(base.darker(115));
-	p.drawLine(rect().x(), rect().y() + rect().height(), rect().x() + rect().width(), rect().y() + rect().height());
+	p.drawLine(rect().x(), rect().y() + rect().height() - extra, rect().x() + rect().width(), rect().y() + rect().height() - extra);
 	p.restore();
 
 	// Border

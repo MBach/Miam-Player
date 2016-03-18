@@ -13,7 +13,6 @@ MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
 	, _timer(new QTimer(this))
 {
 	auto settings = Settings::instance();
-	_showCovers = settings->isCoversEnabled();
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_timer->setTimerType(Qt::PreciseTimer);
 	_timer->setInterval(10);

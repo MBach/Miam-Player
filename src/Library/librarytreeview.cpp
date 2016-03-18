@@ -134,9 +134,11 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && Settings::instance()->isCoverBelowTracksEnabled()) {
+		qDebug() << Q_FUNC_INFO;
 		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
 		QString coverPath = albumItem->coverPath();
 		if (coverPath.isEmpty()) {
+			qDebug() << Q_FUNC_INFO << "coverPath is empty, we should look for the first children with cover (if exists!)";
 			return;
 		}
 		QImage *image = nullptr;

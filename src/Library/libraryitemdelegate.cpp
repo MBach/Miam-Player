@@ -92,7 +92,7 @@ QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QM
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	Settings *settings = Settings::instance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
-	if (settings->isCoversEnabled() && item->type() == Miam::IT_Album) {
+	if (item->type() == Miam::IT_Album) {
 		QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
 		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSizeLibraryTree() + 2));
 	} else {
@@ -109,69 +109,65 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	Settings *settings = Settings::instance();
 
 	QString coverPath;
-	if (settings->isCoversEnabled() && _showCovers) {
-		coverPath = item->data(Miam::DF_CoverPath).toString();
-		//qDebug() << Q_FUNC_INFO << item->icon().isNull() << coverPath;
-		if (!coverPath.isEmpty() && item->icon().isNull()) {
-		//if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
-			FileHelper fh(coverPath);
-			// If it's an inner cover, load it
-			if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-				//qDebug() << Q_FUNC_INFO << "loading internal cover from file";
-				std::unique_ptr<Cover> cover(fh.extractCover());
-				//if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
-				if (cover) {
-					//qDebug() << Q_FUNC_INFO << "cover was extracted";
-					QPixmap p;
-					if (p.loadFromData(cover->byteArray(), cover->format())) {
-						//p = p.scaled(_coverSize, _coverSize);
-						if (!p.isNull()) {
-							item->setIcon(p);
-							//_loadedCovers.insert(item, true);
-						}
-					} else {
-						//qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
+	coverPath = item->data(Miam::DF_CoverPath).toString();
+	//qDebug() << Q_FUNC_INFO << item->icon().isNull() << coverPath;
+	if (!coverPath.isEmpty() && item->icon().isNull()) {
+	//if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
+		FileHelper fh(coverPath);
+		// If it's an inner cover, load it
+		if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
+			//qDebug() << Q_FUNC_INFO << "loading internal cover from file";
+			std::unique_ptr<Cover> cover(fh.extractCover());
+			//if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
+			if (cover) {
+				//qDebug() << Q_FUNC_INFO << "cover was extracted";
+				QPixmap p;
+				if (p.loadFromData(cover->byteArray(), cover->format())) {
+					//p = p.scaled(_coverSize, _coverSize);
+					if (!p.isNull()) {
+						item->setIcon(p);
+						//_loadedCovers.insert(item, true);
 					}
 				} else {
-					//qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
+					//qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
 				}
 			} else {
-				//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
-				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
-				imageReader.setScaledSize(QSize(_coverSize, _coverSize));
-				item->setIcon(QPixmap::fromImage(imageReader.read()));
-				//_loadedCovers.insert(item, true);
+				//qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
 			}
+		} else {
+			//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+			imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
+			imageReader.setScaledSize(QSize(_coverSize, _coverSize));
+			item->setIcon(QPixmap::fromImage(imageReader.read()));
+			//_loadedCovers.insert(item, true);
 		}
 	}
 
-	if (settings->isCoversEnabled()) {
-		painter->save();
-		QRect cover;
-		if (QGuiApplication::isLeftToRight()) {
-			cover = QRect(option.rect.x() + 1, option.rect.y() + 1, _coverSize, _coverSize);
-		} else {
-			cover = QRect(option.rect.width() + 19 - _coverSize - 1, option.rect.y() + 1, _coverSize, _coverSize);
-		}
-		// If font size is greater than the cover, align it
-		if (_coverSize < option.rect.height() - 2) {
-			painter->translate(0, (option.rect.height() - 1 - _coverSize) / 2);
-		}
+	painter->save();
+	QRect cover;
+	if (QGuiApplication::isLeftToRight()) {
+		cover = QRect(option.rect.x() + 1, option.rect.y() + 1, _coverSize, _coverSize);
+	} else {
+		cover = QRect(option.rect.width() + 19 - _coverSize - 1, option.rect.y() + 1, _coverSize, _coverSize);
+	}
+	// If font size is greater than the cover, align it
+	if (_coverSize < option.rect.height() - 2) {
+		painter->translate(0, (option.rect.height() - 1 - _coverSize) / 2);
+	}
 
-		if (coverPath.isEmpty()) {
-			if (_iconOpacity <= 0.25) {
-				painter->setOpacity(_iconOpacity);
-			} else {
-				painter->setOpacity(0.25);
-			}
-			painter->drawPixmap(cover, QPixmap(":/icons/disc"));
-		} else {
+	if (coverPath.isEmpty()) {
+		if (_iconOpacity <= 0.25) {
 			painter->setOpacity(_iconOpacity);
-			QPixmap p = option.icon.pixmap(QSize(_coverSize, _coverSize));
-			painter->drawPixmap(cover, p);
+		} else {
+			painter->setOpacity(0.25);
 		}
-		painter->restore();
+		painter->drawPixmap(cover, QPixmap(":/icons/disc"));
+	} else {
+		painter->setOpacity(_iconOpacity);
+		QPixmap p = option.icon.pixmap(QSize(_coverSize, _coverSize));
+		painter->drawPixmap(cover, p);
 	}
+	painter->restore();
 
 	// Add an icon on the right if album is from some remote location
 	bool isRemote = item->data(Miam::DF_IsRemote).toBool();
@@ -192,19 +188,17 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 
 	option.textElideMode = Qt::ElideRight;
 	QRect rectText;
-	if (settings->isCoversEnabled()) {
-		// It's possible to have missing covers in your library, so we need to keep alignment.
-		if (QGuiApplication::isLeftToRight()) {
-			rectText = QRect(option.rect.x() + _coverSize + 5,
-							 option.rect.y(),
-							 option.rect.width() - (_coverSize + 7) - offsetWidth,
-							 option.rect.height() - 1);
-		} else {
-			rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - _coverSize - 5, option.rect.height());
-		}
+
+	// It's possible to have missing covers in your library, so we need to keep alignment.
+	if (QGuiApplication::isLeftToRight()) {
+		rectText = QRect(option.rect.x() + _coverSize + 5,
+						 option.rect.y(),
+						 option.rect.width() - (_coverSize + 7) - offsetWidth,
+						 option.rect.height() - 1);
 	} else {
-		rectText = QRect(option.rect.x() + 5, option.rect.y(), option.rect.width() - 5, option.rect.height());
+		rectText = QRect(option.rect.x(), option.rect.y(), option.rect.width() - _coverSize - 5, option.rect.height());
 	}
+
 	QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
 	QString s = fmf.elidedText(option.text, Qt::ElideRight, rectText.width());
 
@@ -374,8 +368,7 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 
 void LibraryItemDelegate::displayIcon(bool b)
 {
-	_showCovers = b;
-	if (_showCovers) {
+	if (b) {
 		_timer->start();
 	} else {
 		_iconOpacity = 0;

@@ -61,8 +61,8 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 		p.setPen(QPen(o.palette.mid().color()));
 	}
 	p.save();
+	p.setRenderHint(QPainter::Antialiasing, true);
 
-	//p.setRenderHint(QPainter::Antialiasing, true);
 	QPainterPath ppLeft;
 	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1   <----10--9
 	// |   |        First cubic call is with points p1, p2 and p3                       |   |
@@ -77,8 +77,6 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height(),
 				   rLeft.x() + rLeft.width(), rLeft.y() + rLeft.height());
 
-	QPainterPath pp(ppLeft);
-
 	ppLeft.lineTo(rRight.x(), rRight.y() + rRight.height());
 	ppLeft.cubicTo(rRight.x(), rRight.y() + rRight.height(),
 					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
@@ -90,11 +88,8 @@ void LibraryFilterLineEdit::paintEvent(QPaintEvent *)
 	ppLeft.lineTo(rText.x(), rText.y());
 
 	p.drawPath(ppLeft);
-	//p.drawPath(ppRight);
 
-	//p.setRenderHint(QPainter::Antialiasing, false);
-	//p.drawLine(QPoint(rText.x(), rText.y() - 1), QPoint(rText.x() + rText.width(), rText.y() - 1));
-	//p.drawLine(QPoint(rText.x(), rText.y() + rText.height()), QPoint(rText.x() + rText.width(), rText.y() + rText.height()));
+	p.setRenderHint(QPainter::Antialiasing, false);
 	p.restore();
 
 	// Paint text and cursor

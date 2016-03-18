@@ -101,7 +101,7 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 void AddressBarButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
-	QRect r = rect().adjusted(0, 1, -1, -1);
+	QRect r = rect().adjusted(0, 1, -1, -2);
 	static const int arrowWidth = 18;
 
 	QPalette palette = QApplication::palette();

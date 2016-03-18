@@ -60,9 +60,6 @@ public:
 	/** Returns true if big and faded covers are displayed in the library when an album is expanded. */
 	bool isCoverBelowTracksEnabled() const;
 
-	/** Returns true if covers are displayed in the library. */
-	bool isCoversEnabled() const;
-
 	/** Returns true if the button in parameter is visible or not. */
 	bool isMediaButtonVisible(const QString & buttonName) const;
 

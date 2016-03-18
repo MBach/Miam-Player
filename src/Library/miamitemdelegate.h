@@ -26,7 +26,6 @@ protected:
 
 	QStandardItemModel *_libraryModel;
 	QSortFilterProxyModel *_proxy;
-	bool _showCovers;
 
 	/** This timer is used to animate album cover when one is scrolling.
 	 * It improves reactivity of the UI by temporarily disabling painting events.
