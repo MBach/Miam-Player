@@ -116,43 +116,35 @@ void SeekBar::paintEvent(QPaintEvent *)
 	p.setPen(pen);
 	p.save();
 	p.setRenderHint(QPainter::Antialiasing, true);
-	QPainterPath ppLeft, ppRight;
+	QPainterPath painterPath;
 	// 2---1---->   Left curve is painted with 2 calls to cubicTo, starting in 1   <----10--9
 	// |   |        First cubic call is with points p1, p2 and p3                       |   |
 	// 3   +        Second is with points p3, p4 and p5                                 +   8
 	// |   |        With that, a half circle can be filled with linear gradient         |   |
 	// 4---5---->                                                                  <----6---7
-	ppLeft.moveTo(rMid.topLeft());
-	ppLeft.cubicTo(rMid.x(), rMid.y(),
+	painterPath.moveTo(rMid.topLeft());
+	painterPath.cubicTo(rMid.x(), rMid.y(),
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y(),
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f);
-	ppLeft.cubicTo(rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f,
+	painterPath.cubicTo(rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height() / 2.0f,
 				   rLeft.x() + rLeft.width() / 2.0f, rLeft.y() + rLeft.height(),
 				   rLeft.x() + rLeft.width(), rLeft.y() + rLeft.height());
 
-	QPainterPath pp(ppLeft);
-
-	ppRight.moveTo(rRight.bottomLeft());
-	ppRight.cubicTo(rRight.x(), rRight.y() + rRight.height(),
+	painterPath.lineTo(rRight.x(), rRight.y() + rRight.height());
+	painterPath.cubicTo(rRight.x(), rRight.y() + rRight.height(),
 					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height(),
 					rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f);
-	ppRight.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
+	painterPath.cubicTo(rRight.x() + rRight.width() / 2.0f, rRight.y() + rRight.height() / 2.0f,
 					rRight.x() + rRight.width() / 2.0f, rRight.y(),
 					rRight.x(), rRight.y());
+	painterPath.closeSubpath();
 
-	pp.connectPath(ppRight);
-
-	p.save();
 	// Increase the width of the pen because of Antialising
 	pen.setWidthF(1.3);
 	p.setPen(pen);
-	p.drawPath(ppLeft);
-	p.drawPath(ppRight);
-	p.restore();
+	p.drawPath(painterPath);
 
 	p.setRenderHint(QPainter::Antialiasing, false);
-	p.drawLine(QPoint(rMid.x(), rMid.y() - 1), QPoint(rMid.x() + rMid.width(), rMid.y() - 1));
-	p.drawLine(QPoint(rMid.x(), rMid.y() + rMid.height()), QPoint(rMid.x() + rMid.width(), rMid.y() + rMid.height()));
 	p.restore();
 
 	// Exclude ErrorState from painting
@@ -162,10 +154,10 @@ void SeekBar::paintEvent(QPaintEvent *)
 		if (_mediaPlayer->state() == QMediaPlayer::PausedState) {
 			o.state &= ~QStyle::State_Enabled;
 		}
-		QLinearGradient linearGradient = this->interpolatedLinearGradient(pp.boundingRect(), o);
+		QLinearGradient linearGradient = this->interpolatedLinearGradient(painterPath.boundingRect(), o);
 
 		p.setRenderHint(QPainter::Antialiasing, true);
-		p.fillPath(pp, linearGradient);
+		p.fillPath(painterPath, linearGradient);
 		p.setRenderHint(QPainter::Antialiasing, false);
 
 		p.save();
@@ -182,6 +174,10 @@ void SeekBar::paintEvent(QPaintEvent *)
 		p.setBrush(cGrad);
 		p.drawEllipse(center, height() * 0.3, height() * 0.3);
 		p.restore();
+	} else {
+		p.setRenderHint(QPainter::Antialiasing, true);
+		p.fillPath(painterPath, o.palette.window().color());
+		p.setRenderHint(QPainter::Antialiasing, false);
 	}
 }
 

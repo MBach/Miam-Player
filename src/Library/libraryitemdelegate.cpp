@@ -106,7 +106,6 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	/// XXX: reload cover with high resolution when one has increased coverSize (every 64px)
 	static QImageReader imageReader;
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	Settings *settings = Settings::instance();
 
 	QString coverPath;
 	coverPath = item->data(Miam::DF_CoverPath).toString();
@@ -329,7 +328,7 @@ void LibraryItemDelegate::paintCoverOnTrack(QPainter *painter, const QStyleOptio
 	color.setAlphaF(0.66);
 	if (opt.state.testFlag(QStyle::State_MouseOver) && !opt.state.testFlag(QStyle::State_Selected)) {
 		painter->setPen(opt.palette.highlight().color());
-		painter->setBrush(color.lighter(160));
+		painter->setBrush(color.lighter(lighterValue));
 		painter->drawRect(opt.rect.adjusted(0, 0, -1, -1));
 	} else if (opt.state.testFlag(QStyle::State_Selected)) {
 		// Display a not so light rectangle when one has chosen an item. It's darker than the mouse over
@@ -350,7 +349,7 @@ void LibraryItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt
 		p->drawText(rectText, Qt::AlignVCenter, fmf.elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
 	} else {
 		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
-			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {
+			if (qAbs(opt.palette.highlight().color().lighter(lighterValue).value() - opt.palette.highlightedText().color().value()) < 128) {
 				p->setPen(opt.palette.text().color());
 			} else {
 				p->setPen(opt.palette.highlightedText().color());

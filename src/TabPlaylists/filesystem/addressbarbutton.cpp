@@ -101,7 +101,7 @@ void AddressBarButton::mousePressEvent(QMouseEvent *event)
 void AddressBarButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
-	QRect r = rect().adjusted(0, 1, -1, -2);
+	QRect r = rect().adjusted(0, 1, -1, -(1 + extra));
 	static const int arrowWidth = 18;
 
 	QPalette palette = QApplication::palette();
@@ -130,7 +130,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	if (_addressBar->isDown()) {
 		brush = palette.highlight().color().lighter();
 	} else {
-		brush = palette.highlight().color().lighter(160);
+		brush = palette.highlight().color().lighter(lighterValue);
 	}
 
 	if (_highlighted) {
@@ -235,7 +235,8 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			p.restore();
 		} else {
 			if (isLeftToRight()) {
-				o.rect = _arrowRect.adjusted(5, 7, -2, -4);
+				//o.rect = _arrowRect.adjusted(5, 7, -2, -4);
+				o.rect = _arrowRect;
 			} else {
 				o.rect = _arrowRect.adjusted(2, 7, -5, -4);
 			}

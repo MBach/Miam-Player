@@ -191,7 +191,7 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 		p->drawText(titleRect, Qt::AlignVCenter, p->fontMetrics().elidedText(tr("(empty)"), Qt::ElideRight, titleRect.width()));
 	} else {
 		if (option.state.testFlag(QStyle::State_Selected) || option.state.testFlag(QStyle::State_MouseOver)) {
-			if (qAbs(option.palette.highlight().color().lighter(160).value() - option.palette.highlightedText().color().value()) < 128) {
+			if (qAbs(option.palette.highlight().color().lighter(lighterValue).value() - option.palette.highlightedText().color().value()) < 128) {
 				p->setPen(option.palette.text().color());
 			} else {
 				p->setPen(option.palette.highlightedText().color());

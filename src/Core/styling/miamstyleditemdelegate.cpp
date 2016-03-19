@@ -61,7 +61,7 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 	p->restore();
 	if (!_fallback) {
 		if (o.state.testFlag(QStyle::State_Selected)) {
-			if ((o.palette.highlight().color().lighter(160).saturation() - o.palette.highlightedText().color().saturation()) < 128) {
+			if ((o.palette.highlight().color().lighter(lighterValue).saturation() - o.palette.highlightedText().color().saturation()) < 128) {
 				p->setPen(o.palette.text().color());
 			} else {
 				p->setPen(o.palette.highlightedText().color());

@@ -12,7 +12,6 @@ MiamItemDelegate::MiamItemDelegate(QSortFilterProxyModel *proxy)
 	, _proxy(proxy)
 	, _timer(new QTimer(this))
 {
-	auto settings = Settings::instance();
 	_libraryModel = qobject_cast<QStandardItemModel*>(_proxy->sourceModel());
 	_timer->setTimerType(Qt::PreciseTimer);
 	_timer->setInterval(10);
@@ -59,7 +58,7 @@ void MiamItemDelegate::paintRect(QPainter *painter, const QStyleOptionViewItem &
 	if (option.state.testFlag(QStyle::State_MouseOver) && !option.state.testFlag(QStyle::State_Selected)) {
 		painter->save();
 		painter->setPen(option.palette.highlight().color());
-		painter->setBrush(option.palette.highlight().color().lighter(160));
+		painter->setBrush(option.palette.highlight().color().lighter(lighterValue));
 		painter->drawRect(option.rect.adjusted(0, 0, -1, -1));
 		painter->restore();
 	} else if (option.state.testFlag(QStyle::State_Selected)) {
@@ -82,7 +81,7 @@ void MiamItemDelegate::paintText(QPainter *p, const QStyleOptionViewItem &opt, c
 		p->drawText(rectText, Qt::AlignVCenter, p->fontMetrics().elidedText(tr("(empty)"), Qt::ElideRight, rectText.width()));
 	} else {
 		if (opt.state.testFlag(QStyle::State_Selected) || opt.state.testFlag(QStyle::State_MouseOver)) {
-			if (qAbs(opt.palette.highlight().color().lighter(160).value() - opt.palette.highlightedText().color().value()) < 128) {
+			if (qAbs(opt.palette.highlight().color().lighter(lighterValue).value() - opt.palette.highlightedText().color().value()) < 128) {
 				p->setPen(opt.palette.text().color());
 			} else {
 				p->setPen(opt.palette.highlightedText().color());
