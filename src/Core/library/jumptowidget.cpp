@@ -93,7 +93,6 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 
 	QFont f = p.font();
 	for (int i = 0; i < 26; i++) {
-		p.save();
 		QChar qc(i + 65);
 		QRect r(0, height() * i / 26, 22, height() / 26);
 		if (_currentLetter == qc) {
@@ -103,7 +102,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 			// Display a light rectangle under the mouse pointer
 			p.fillRect(r, o.palette.highlight().color().lighter(lighterValue));
 		}
-		if (o.state.testFlag(QStyle::State_MouseOver)) {
+		if (r.contains(this->mapFromGlobal(QCursor::pos())) || _currentLetter == qc) {
 			QColor lighterBG = o.palette.highlight().color().lighter(lighterValue);
 			QColor highlightedText = o.palette.highlightedText().color();
 			if (qAbs(lighterBG.value() - highlightedText.value()) > 128) {
@@ -114,16 +113,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		} else {
 			p.setPen(o.palette.windowText().color());
 		}
-		if (_lettersToHighlight.contains(qc)) {
-			p.save();
-			f.setBold(true);
-			p.setFont(f);
-			p.drawText(r, Qt::AlignCenter, qc);
-			p.restore();
-		} else {
-			p.drawText(r, Qt::AlignCenter, qc);
-		}
-		p.restore();
+		p.drawText(r, Qt::AlignCenter, qc);
 	}
 
 	// Draw a vertical line if there are few items in the library
