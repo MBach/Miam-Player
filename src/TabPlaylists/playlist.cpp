@@ -336,6 +336,7 @@ void Playlist::dropEvent(QDropEvent *event)
 		event->ignore();
 		return;
 	} else if (source == nullptr) {
+		qDebug() << Q_FUNC_INFO << "No source, passing the drop event to parent";
 		event->ignore();
 		return;
 	} else {

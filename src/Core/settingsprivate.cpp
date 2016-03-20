@@ -464,7 +464,7 @@ void SettingsPrivate::setMusicLocations(const QStringList &locations)
 {
 	value("musicLocations", QStringList()).toStringList();
 	setValue("musicLocations", locations);
-	emit musicLocationsHaveChanged();
+	emit musicLocationsHaveChanged(QStringList());
 }
 
 void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -517,15 +517,20 @@ void SettingsPrivate::setInsertPolicy(SettingsPrivate::InsertPolicy ip)
 /// SLOTS
 void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 {
+	QStringList old = value("musicLocations").toStringList();
 	QStringList locations;
 	for (QDir d : dirs) {
-		locations << d.absolutePath();
+		if (!old.contains(QDir::toNativeSeparators(d.absolutePath()))) {
+			locations << d.absolutePath();
+		} else {
+			qDebug() << Q_FUNC_INFO << old << "already contains" << d.absolutePath();
+		}
 	}
-	QStringList old = value("musicLocations").toStringList();
 	QStringList newLocations(old);
 	newLocations.append(locations);
 	setValue("musicLocations", newLocations);
-	emit musicLocationsHaveChanged();
+	qDebug() << Q_FUNC_INFO << newLocations;
+	emit musicLocationsHaveChanged(locations);
 }
 
 /// Colors

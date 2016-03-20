@@ -36,6 +36,8 @@ public:
 	/** Bind a new shortcut to a specifc action in this view (like search for example). */
 	virtual void bindShortcut(const QString & objectName, const QKeySequence & keySequence) override;
 
+	//virtual bool eventFilter(QObject *watched, QEvent *event) override;
+
 	virtual QPair<QString, QObjectList> extensionPoints() const override;
 
 	virtual void openFolder(const QString &dir) const override;

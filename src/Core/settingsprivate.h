@@ -243,7 +243,7 @@ signals:
 	void monitorFileSystemChanged(bool);
 
 	/** Signal sent whether the music locations have changed or not. */
-	void musicLocationsHaveChanged();
+	void musicLocationsHaveChanged(const QStringList &newLocations);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

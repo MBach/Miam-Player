@@ -208,8 +208,25 @@ void MainWindow::setupActions()
 
 	// Load music
 	auto settingsPrivate = SettingsPrivate::instance();
-	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, [=]() {
+	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, [=](const QStringList &newLocations) {
+
+		qDebug() << Q_FUNC_INFO << newLocations;
+		if (newLocations.isEmpty()) {
+			return;
+		}
 		this->activateLastView();
+		QThread *worker = new QThread;
+		MusicSearchEngine *searchEngine = new MusicSearchEngine;
+		searchEngine->setDelta(newLocations);
+		searchEngine->moveToThread(worker);
+
+		connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
+		connect(searchEngine, &MusicSearchEngine::searchHasEnded, worker, &QThread::deleteLater);
+		worker->start();
+
+		if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
+			_currentView->setMusicSearchEngine(searchEngine);
+		}
 	});
 
 	// Media buttons and their shortcuts
@@ -238,14 +255,14 @@ void MainWindow::setupActions()
 
 	connect(settingsPrivate, &SettingsPrivate::monitorFileSystemChanged, this, [=](bool b) {
 		if (b) {
-			MusicSearchEngine *musicSearchEngine = new MusicSearchEngine;
+			MusicSearchEngine *searchEngine = new MusicSearchEngine;
 			QThread *worker = new QThread;
-			musicSearchEngine->moveToThread(worker);
-			connect(worker, &QThread::started, musicSearchEngine, &MusicSearchEngine::watchForChanges);
+			searchEngine->moveToThread(worker);
+			connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::watchForChanges);
 			worker->start();
 
 			if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
-				_currentView->setMusicSearchEngine(musicSearchEngine);
+				_currentView->setMusicSearchEngine(searchEngine);
 			}
 			qDebug() << Q_FUNC_INFO << "create new instance of file system watcher";
 		} else {
@@ -363,7 +380,11 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
 	if (watched == _tagEditor && QEvent::Close) {
 		actionViewTagEditor->setChecked(false);
+	} else if (event->type() == QEvent::Drop) {
+		QDropEvent *de = static_cast<QDropEvent*>(event);
+		this->dispatchDrop(de);
 	}
+	//qDebug() << Q_FUNC_INFO << watched;
 	return QMainWindow::eventFilter(watched, event);
 }
 
@@ -516,6 +537,7 @@ void MainWindow::activateView(QAction *menuAction)
 		actionViewPlaylists->trigger();
 		return;
 	}
+	_currentView->installEventFilter(this);
 
 	// Trigger a rescan of the library is there's nothing to display
 	if (!_currentView->viewProperty(Settings::VP_HasTracksToDisplay)) {
@@ -689,11 +711,11 @@ void MainWindow::rescanLibrary()
 		_currentView->setViewProperty(Settings::VP_SearchArea, true);
 	}
 
-	QThread *t = new QThread;
+	QThread *worker = new QThread;
 	MusicSearchEngine *searchEngine = new MusicSearchEngine;
-	searchEngine->moveToThread(t);
+	searchEngine->moveToThread(worker);
 
-	connect(t, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
+	connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
 	connect(searchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
 		menuView->setEnabled(false);
 		actionScanLibrary->setEnabled(false);
@@ -707,13 +729,13 @@ void MainWindow::rescanLibrary()
 			plugin->setMusicSearchEngine(searchEngine);
 		}
 	}
-	connect(searchEngine, &MusicSearchEngine::searchHasEnded, t, &QThread::quit);
+	connect(searchEngine, &MusicSearchEngine::searchHasEnded, worker, &QThread::deleteLater);
 	connect(searchEngine, &MusicSearchEngine::destroyed, this, [=]() {
 		menuView->setEnabled(true);
 		actionScanLibrary->setEnabled(true);
 	});
 
-	t->start();
+	worker->start();
 }
 
 void MainWindow::showTagEditor()

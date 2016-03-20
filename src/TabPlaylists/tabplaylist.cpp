@@ -107,7 +107,7 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	connect(loadBackground, &QAction::triggered, this, [=]() {
 		qDebug() << Q_FUNC_INFO << "Load background not implemented yet";
 	});
-	this->setAcceptDrops(true);
+	//this->setAcceptDrops(false);
 
 	CornerWidget *corner = new CornerWidget(this);
 	this->setCornerWidget(corner, Qt::TopRightCorner);
@@ -146,7 +146,7 @@ Playlist* TabPlaylist::currentPlayList() const
 }*/
 
 /** Redefined to forward events to children. */
-bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
+/*bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::DragEnter) {
 		event->accept();
@@ -159,9 +159,8 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			//QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
 			/// FIXME
 			//_mainWindow->dispatchDrop(d);
-			qDebug() << Q_FUNC_INFO << "1";
-
-			return true;
+			qDebug() << Q_FUNC_INFO << "I don't want the drop event now, I should delegate it to parent for the right action to do";
+			return false;
 		} else {
 			if (obj == cornerWidget()) {
 				auto p = this->addPlaylist();
@@ -172,13 +171,13 @@ bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
 			}
 			return true;
 		}
-	} /*else if (event->type() == QEvent::ShortcutOverride) {
-		qDebug() << Q_FUNC_INFO << "QEvent::ShortcutOverride";
-		event->ignore();
-		return false;
-	}*/
+	}// else if (event->type() == QEvent::ShortcutOverride) {
+	//	qDebug() << Q_FUNC_INFO << "QEvent::ShortcutOverride";
+	//	event->ignore();
+	//	return false;
+	//}
 	return QTabWidget::eventFilter(obj, event);
-}
+}*/
 
 void TabPlaylist::init(MediaPlayer *mediaPlayer)
 {

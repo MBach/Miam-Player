@@ -96,7 +96,7 @@ void CornerWidget::paintEvent(QPaintEvent *)
 
 			pp.cubicTo(p1, p2, p3);
 
-			qDebug() << p1 << p2 << p3;
+			//qDebug() << p1 << p2 << p3;
 
 			pp.lineTo(o.rect.x() + o.rect.width(), p3.y());
 			pp.cubicTo(o.rect.x() + o.rect.width() - 4.0, o.rect.y() + oH + 0.15,

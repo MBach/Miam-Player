@@ -198,6 +198,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	library->model()->load();
+	//tabPlaylists->installEventFilter(this);
 }
 
 ViewPlaylists::~ViewPlaylists()
@@ -225,6 +226,23 @@ void ViewPlaylists::bindShortcut(const QString &objectName, const QKeySequence &
 	}
 }
 
+/*bool ViewPlaylists::eventFilter(QObject *watched, QEvent *event)
+{
+	if (watched == tabPlaylists && event->type() == QEvent::Drop) {
+		QDropEvent *de = static_cast<QDropEvent*>(event);
+		if (de->source() == nullptr) {
+			// Drag & Drop comes from another application but has landed in the playlist area
+			//de->ignore();
+			//QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
+			/// FIXME
+			//_mainWindow->dispatchDrop(d);
+			qDebug() << Q_FUNC_INFO << "I don't want the drop event now, I should delegate it to parent for the right action to do";
+			return false;
+		}
+	}
+	return AbstractViewPlaylists::eventFilter(watched, event);
+}*/
+
 QPair<QString, QObjectList> ViewPlaylists::extensionPoints() const
 {
 	QObjectList libraryObjectList;
@@ -242,16 +260,17 @@ void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 	connect(musicSearchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
 		QVBoxLayout *vbox = new QVBoxLayout;
 		vbox->setMargin(0);
-		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
 
 		PaintableWidget *paintable = new PaintableWidget(library);
 		paintable->setHalfTopBorder(false);
 		paintable->setFrameBorder(false, true, true, false);
-		vbox->addWidget(paintable);
 		QVBoxLayout *vbox2 = new QVBoxLayout;
 		vbox2->addWidget(new QLabel(tr("Your library is updating..."), paintable));
 		vbox2->addWidget(new QProgressBar(paintable));
 		paintable->setLayout(vbox2);
+
+		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
+		vbox->addWidget(paintable);
 		library->setLayout(vbox);
 	});
 

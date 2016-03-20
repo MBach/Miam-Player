@@ -50,19 +50,18 @@ void MusicSearchEngine::doSearch()
 
 	_db.init();
 
-	QSqlQuery cleanDb(_db);
-	cleanDb.setForwardOnly(true);
-	//cleanDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
-	//cleanDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
-	//cleanDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
-	cleanDb.exec("DELETE FROM tracks");
-	cleanDb.exec("DELETE FROM albums");
-	cleanDb.exec("DELETE FROM artists");
-	cleanDb.exec("DROP INDEX indexArtist");
-	cleanDb.exec("DROP INDEX indexAlbum");
-	cleanDb.exec("DROP INDEX indexPath");
-	cleanDb.exec("DROP INDEX indexArtistId");
-	cleanDb.exec("DROP INDEX indexAlbumId");
+	if (_delta.isEmpty()) {
+		QSqlQuery cleanDb(_db);
+		cleanDb.setForwardOnly(true);
+		cleanDb.exec("DELETE FROM tracks");
+		cleanDb.exec("DELETE FROM albums");
+		cleanDb.exec("DELETE FROM artists");
+		cleanDb.exec("DROP INDEX indexArtist");
+		cleanDb.exec("DROP INDEX indexAlbum");
+		cleanDb.exec("DROP INDEX indexPath");
+		cleanDb.exec("DROP INDEX indexArtistId");
+		cleanDb.exec("DROP INDEX indexAlbumId");
+	}
 	_db.transaction();
 
 	MusicSearchEngine::isScanning = true;
@@ -136,13 +135,15 @@ void MusicSearchEngine::doSearch()
 	}
 
 	_db.commit();
+	if (_delta.isEmpty()) {
 
-	QSqlQuery index(_db);
-	index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
-	index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
-	index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
-	index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
-	index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
+		QSqlQuery index(_db);
+		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
+	}
 
 	// Resync remote players and remote databases
 	//emit aboutToResyncRemoteSources();
@@ -155,7 +156,10 @@ void MusicSearchEngine::doSearch()
 
 void MusicSearchEngine::watchForChanges()
 {
-	qDebug() << Q_FUNC_INFO;
+	if (isScanning) {
+		qDebug() << Q_FUNC_INFO << "the filesystem is already being analyzed by another process";
+		return;
+	}
 
 	// Gather all folders registered on music locations
 	QFileInfoList dirs;
