@@ -120,7 +120,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 	if (!_view->verticalScrollBar()->isVisible()) {
 		p.setPen(o.palette.mid().color());
 		if (isLeftToRight()) {
-			p.drawLine(rect().left() + rect().width(), rect().top(), rect().left() + rect().width(), rect().top() + rect().height());
+			p.drawLine(rect().left() + rect().width() - extra, rect().top(), rect().left() + rect().width() - extra, rect().top() + rect().height());
 		} else {
 			p.drawLine(rect().x(), rect().y(), rect().x(), rect().y() + rect().height());
 		}

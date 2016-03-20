@@ -810,9 +810,6 @@ void SqlDatabase::rebuild()
 
 	QSqlQuery cleanDb(*this);
 	cleanDb.setForwardOnly(true);
-	//cleanDb.exec("DELETE FROM tracks WHERE uri LIKE 'file:%'");
-	//cleanDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
-	//cleanDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
 	cleanDb.exec("DELETE FROM tracks");
 	cleanDb.exec("DELETE FROM albums");
 	cleanDb.exec("DELETE FROM artists");
@@ -822,9 +819,6 @@ void SqlDatabase::rebuild()
 	cleanDb.exec("DROP INDEX indexArtistId");
 	cleanDb.exec("DROP INDEX indexAlbumId");
 	transaction();
-
-	//connect(&_musicSearchEngine, &MusicSearchEngine::scannedCover, this, &SqlDatabase::saveCoverRef);
-	//connect(&_musicSearchEngine, &MusicSearchEngine::scannedFile, this, &SqlDatabase::saveFileRef);
 }
 
 /** Reads an external picture which is close to multimedia files (same folder). */
@@ -898,8 +892,8 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 
 	QString tn = fh.trackNumber();
 	QString title = fh.title();
-	//qDebug() << Q_FUNC_INFO << fh.artistAlbum() << fh.artist();
 	QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
+
 	// Use Artist Album to reference tracks in table "tracks", not Artist
 	QString artistNorm = this->normalizeField(artistAlbum);
 	QString album = fh.album();
@@ -924,7 +918,6 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	insertTrack.addBindValue(fh.hasCover());
 	insertTrack.addBindValue(fh.rating());
 
-	//bool artistInserted = false;
 	bool albumInserted = false;
 	ArtistDAO *artistDAO = nullptr;
 	AlbumDAO *albumDAO = nullptr;
@@ -1005,7 +998,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 		insertArtist.addBindValue(artistId);
 		insertArtist.addBindValue(artistAlbum);
 		insertArtist.addBindValue(artistNorm);
-		//artistInserted = insertArtist.exec();
+		insertArtist.exec();
 
 		artistDAO = new ArtistDAO;
 		artistDAO->setId(QString::number(artistId));

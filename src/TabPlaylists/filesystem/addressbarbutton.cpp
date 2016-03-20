@@ -235,8 +235,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			p.restore();
 		} else {
 			if (isLeftToRight()) {
-				//o.rect = _arrowRect.adjusted(5, 7, -2, -4);
-				o.rect = _arrowRect;
+				o.rect = _arrowRect.adjusted(5, 7, -2, -4);
 			} else {
 				o.rect = _arrowRect.adjusted(2, 7, -5, -4);
 			}
