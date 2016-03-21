@@ -191,6 +191,10 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
 	switch (element) {
+#if !defined(Q_OS_OSX)
+	case CE_Splitter:
+		break;
+#endif
 	case CE_MenuBarItem:{
 		const QStyleOptionMenuItem *somi = static_cast<const QStyleOptionMenuItem*>(option);
 		const bool act = somi->state & (State_Sunken | State_Selected);
