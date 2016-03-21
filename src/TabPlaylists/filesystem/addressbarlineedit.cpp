@@ -22,9 +22,9 @@ AddressBarLineEdit::AddressBarLineEdit(AddressBar *parent)
 	connect(openHistory, &QAction::triggered, this, [=]() {
 		QKeyEvent *ke;
 		if (QDir::separator() == '/') {
-			ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Backslash, Qt::AltModifier);
+			ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Slash, Qt::NoModifier);
 		} else {
-			ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Slash, Qt::AltModifier);
+			ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Backslash, Qt::NoModifier);
 		}
 		qApp->postEvent(this, ke);
 	});
