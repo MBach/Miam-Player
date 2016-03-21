@@ -1,5 +1,6 @@
 #include "addressbardirectorylist.h"
 
+#include <scrollbar.h>
 #include <QEvent>
 
 #include <QtDebug>
@@ -18,6 +19,8 @@ AddressBarDirectoryList::AddressBarDirectoryList(const QDir &dir, QWidget *paren
 	setMaximumHeight(qMin(count(), 16) * this->sizeHintForRow(0) + 4);
 	setMinimumWidth(parent->width() - 32);
 
+	this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	this->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
 	this->setFocusPolicy(Qt::ClickFocus);
 }
 
