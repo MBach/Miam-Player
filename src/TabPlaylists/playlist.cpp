@@ -123,7 +123,6 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(hScrollBar, &QScrollBar::sliderMoved, this, [=]() {	horizontalHeader()->viewport()->update(); });
 
 	this->hideColumn(COL_TRACK_DAO);
-	//this->installEventFilter(this);
 }
 
 uint Playlist::generateNewHash() const
@@ -358,18 +357,6 @@ void Playlist::dropEvent(QDropEvent *event)
 		drag->deleteLater();
 	}
 }
-
-/*bool Playlist::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::ShortcutOverride) {
-		qDebug() << Q_FUNC_INFO << "QEvent::ShortcutOverride";
-		event->ignore();
-		return false;
-	} else if (event->type() == QEvent::Shortcut) {
-		qDebug() << Q_FUNC_INFO << "QEvent::Shortcut";
-	}
-	return QTableView::eventFilter(obj, event);
-}*/
 
 /** Redefined to handle escape key when editing ratings. */
 void Playlist::keyPressEvent(QKeyEvent *event)

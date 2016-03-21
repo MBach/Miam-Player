@@ -17,11 +17,16 @@ AddressBarLineEdit::AddressBarLineEdit(AddressBar *parent)
 	this->setMinimumHeight(parent->height());
 	this->setFocusPolicy(Qt::ClickFocus);
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
+	this->addAction(style()->standardIcon(QStyle::SP_ComputerIcon), LeadingPosition);
+	QAction *openHistory = this->addAction(style()->standardIcon(QStyle::SP_ArrowDown), TrailingPosition);
+	connect(openHistory, &QAction::triggered, this, [=]() {
+		QKeyEvent *ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Backslash, Qt::AltModifier);
+		qApp->postEvent(this, ke);
+	});
 }
 
 void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
 {
-	qDebug() << Q_FUNC_INFO << e;
 	if (_directoryList && _directoryList->hasFocus()) {
 		return;
 	}
@@ -35,6 +40,7 @@ void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
 
 void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 {
+	qDebug() << Q_FUNC_INFO;
 	switch (e->key()) {
 	case Qt::Key_Escape:{
 			if (_directoryList) {

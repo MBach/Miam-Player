@@ -142,17 +142,10 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 		}
 	} else {
 		if (_atLeastOneSubDir) {
-			if (_textRect.contains(pos) && !_isAbsoluteRoot) {
+			if (_textRect.contains(pos) || _arrowRect.contains(pos)) {
 				p.setPen(palette.highlight().color());
 				p.setBrush(brush);
 				p.drawRect(_textRect);
-				p.drawRect(_arrowRect);
-			} else if (_arrowRect.contains(pos)) {
-				p.setPen(palette.mid().color());
-				p.setBrush(palette.midlight());
-				p.drawRect(_textRect);
-				p.setPen(palette.highlight().color());
-				p.setBrush(brush);
 				p.drawRect(_arrowRect);
 			} else {
 				p.setPen(Qt::NoPen);
