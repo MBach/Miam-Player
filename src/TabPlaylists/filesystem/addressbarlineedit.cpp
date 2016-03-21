@@ -20,7 +20,12 @@ AddressBarLineEdit::AddressBarLineEdit(AddressBar *parent)
 	this->addAction(style()->standardIcon(QStyle::SP_ComputerIcon), LeadingPosition);
 	QAction *openHistory = this->addAction(style()->standardIcon(QStyle::SP_ArrowDown), TrailingPosition);
 	connect(openHistory, &QAction::triggered, this, [=]() {
-		QKeyEvent *ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Backslash, Qt::AltModifier);
+		QKeyEvent *ke;
+		if (QDir::separator() == "/") {
+			ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Backslash, Qt::AltModifier);
+		} else {
+			ke = new QKeyEvent(QEvent::KeyPress, Qt::Key_Slash, Qt::AltModifier);
+		}
 		qApp->postEvent(this, ke);
 	});
 }
