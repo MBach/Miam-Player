@@ -115,7 +115,11 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 		tracks.sort(Qt::CaseInsensitive);
 		QList<QUrl> urls;
 		for (QString t : tracks) {
+#if defined (Q_OS_WIN)
 			urls << QUrl::fromLocalFile(t);
+#else
+			urls << QUrl(t);
+#endif
 		}
 		if (viewPlaylists) {
 			viewPlaylists->addToPlaylist(urls);
