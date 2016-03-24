@@ -211,10 +211,10 @@ void MainWindow::setupActions()
 	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, [=](const QStringList &newLocations) {
 
 		qDebug() << Q_FUNC_INFO << newLocations;
+		this->activateLastView();
 		if (newLocations.isEmpty()) {
 			return;
 		}
-		this->activateLastView();
 		QThread *worker = new QThread;
 		MusicSearchEngine *searchEngine = new MusicSearchEngine;
 		searchEngine->setDelta(newLocations);
