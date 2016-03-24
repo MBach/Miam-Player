@@ -45,12 +45,12 @@ AddressBarButton::AddressBarButton(const QDir &newPath, AddressBar *parent, bool
 				}
 			}
 			if (_isAbsoluteRoot) {
-				width += 20;
+				width += 10;
 			} else {
 				width += qMax(20, fontMetrics().width(AddressBar::getVolumeInfo(d.absolutePath())));
 			}
 		}
-		width += 28;
+		width += 28 + this->height() / 2;
 		this->setMinimumWidth(width);
 	} else {
 		this->setMinimumWidth(width + 18);
@@ -102,7 +102,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 {
 	QStylePainter p(this);
 	QRect r = rect().adjusted(0, 1, -1, -(1 + extra));
-	static const int arrowWidth = 18;
+	static const int arrowWidth = r.height();
 
 	QPalette palette = QApplication::palette();
 	QLinearGradient g(rect().topLeft(), rect().bottomLeft());
@@ -201,7 +201,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			if (_highlighted) {
 				p.translate(1, 1);
 			}
-			p.drawText(_textRect.adjusted(5, 0, 0, 0), Qt::AlignCenter, _path.dirName());
+			p.drawText(_textRect.adjusted(0, 0, 0, 0), Qt::AlignCenter, _path.dirName());
 		}
 	}
 
@@ -227,18 +227,43 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			p.drawLine(p2b, p3);
 			p.restore();
 		} else {
-			if (isLeftToRight()) {
-				o.rect = _arrowRect.adjusted(5, 7, -2, -4);
-			} else {
-				o.rect = _arrowRect.adjusted(2, 7, -5, -4);
-			}
+			int w = _arrowRect.width() / 3;
+			int h = this->rect().height() / 3;
+			QRect indicatorArrow(_arrowRect.x() + w + 1, _arrowRect.y() + h, w, h);
+
+			o.rect = indicatorArrow;
+			//qDebug() << Q_FUNC_INFO << o.rect << _arrowRect;
+			//p.drawRect(o.rect);
+
+			p.setRenderHint(QPainter::Antialiasing);
+
+			p.save();
+			QPen pen(palette.mid().color());
+			pen.setWidthF(1.5);
+			pen.setJoinStyle(Qt::MiterJoin);
+			p.setPen(pen);
+			QPolygon pol;
+			QPoint p1, p2, p3;
 			if (_highlighted) {
-				p.drawPrimitive(QStyle::PE_IndicatorArrowDown, o);
+				p.translate(0, -1);
+				p1 = QPoint(o.rect.x(), o.rect.y() + o.rect.height() / 2);
+				p2 = QPoint(o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height() / 2);
+				p3 = QPoint(o.rect.x() + o.rect.width() / 2, o.rect.y() + o.rect.height());
 			} else if (isLeftToRight()) {
-				p.drawPrimitive(QStyle::PE_IndicatorArrowRight, o);
+				p1 = QPoint(o.rect.x(), o.rect.y());
+				p2 = QPoint(o.rect.x(), o.rect.y() + o.rect.height());
+				p3 = QPoint(o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height() / 2);
 			} else {
-				p.drawPrimitive(QStyle::PE_IndicatorArrowLeft, o);
+				p1 = QPoint(o.rect.x() + o.rect.width(), o.rect.y());
+				p2 = QPoint(o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height());
+				p3 = QPoint(o.rect.x(), o.rect.y() + o.rect.height() / 2);
 			}
+			pol.append(p1);
+			pol.append(p2);
+			pol.append(p3);
+			p.drawPolygon(pol);
+			p.restore();
+			p.setRenderHint(QPainter::Antialiasing, false);
 		}
 		p.restore();
 	}
