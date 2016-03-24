@@ -198,8 +198,8 @@ void MainWindow::setupActions()
 		qApp->quit();
 	});
 	connect(actionShowCustomize, &QAction::triggered, this, [=]() {
-		CustomizeThemeDialog customizeThemeDialog;
-		customizeThemeDialog.exec();
+		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog;
+		customizeThemeDialog->show();
 	});
 
 	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);

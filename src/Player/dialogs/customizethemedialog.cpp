@@ -30,7 +30,7 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
 	listWidget->setAttribute(Qt::WA_MacShowFocusRect, false);
 
 	this->setWindowFlags(Qt::Tool);
-	//this->setAttribute(Qt::WA_DeleteOnClose);
+	this->setAttribute(Qt::WA_DeleteOnClose);
 
 	buttonsListBox->setVisible(false);
 	spinBoxLibrary->setMouseTracking(true);
@@ -403,14 +403,18 @@ void CustomizeThemeDialog::showColorDialog()
 {
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
-		qDebug() << _targetedColor->objectName() << _targetedColor->color();
+		//qDebug() << _targetedColor->objectName() << _targetedColor->color();
 		_targetedColor->setColor(SettingsPrivate::instance()->customColors(_targetedColor->colorRole()));
-		qDebug() << _targetedColor->objectName() << _targetedColor->color();
+		//qDebug() << _targetedColor->objectName() << _targetedColor->color();
+		this->setAttribute(Qt::WA_DeleteOnClose, false);
 		ColorDialog *colorDialog = new ColorDialog(this);
 		colorDialog->setCurrentColor(_targetedColor->color());
-		//qDebug() << colorDialog->currentColor() << _targetedColor->color();
 		this->hide();
-		colorDialog->exec();
+		int i = colorDialog->exec();
+		if (i >= 0) {
+			this->show();
+			this->setAttribute(Qt::WA_DeleteOnClose);
+		}
 	}
 }
 

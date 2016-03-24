@@ -27,10 +27,9 @@ ColorDialog::ColorDialog(CustomizeThemeDialog *parent) :
 
 void ColorDialog::closeEvent(QCloseEvent *event)
 {
-	qDebug() << Q_FUNC_INFO << currentColor();
+	//qDebug() << Q_FUNC_INFO << currentColor();
 	_customizeThemeDialog->targetedColor()->setColor(currentColor());
 	SettingsPrivate::instance()->setCustomColorRole(_customizeThemeDialog->targetedColor()->colorRole(), currentColor());
 	SettingsPrivate::instance()->sync();
 	QColorDialog::closeEvent(event);
-	//_customizeThemeDialog->exec();
 }
