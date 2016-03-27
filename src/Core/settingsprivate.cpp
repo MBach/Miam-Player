@@ -19,18 +19,19 @@ SettingsPrivate* SettingsPrivate::settings = nullptr;
 SettingsPrivate::SettingsPrivate(const QString &organization, const QString &application)
 	: QSettings(IniFormat, UserScope, organization, application)
 {
-	if (isCustomColors()) {
-		QMapIterator<QString, QVariant> it(value("customColorsMap").toMap());
-		QPalette p = QApplication::palette();
-		while (it.hasNext()) {
-			it.next();
-			QColor color = it.value().value<QColor>();
-			if (color.isValid()) {
-				p.setColor(static_cast<QPalette::ColorRole>(it.key().toInt()), color);
-			}
+	QMapIterator<QString, QVariant> it(value("customColorsMap").toMap());
+	QPalette p = QApplication::palette();
+	while (it.hasNext()) {
+		it.next();
+		QColor color = it.value().value<QColor>();
+		if (color.isValid()) {
+			p.setColor(static_cast<QPalette::ColorRole>(it.key().toInt()), color);
 		}
+	}
+	setValue("customPalette", p);
+
+	if (isCustomColors()) {
 		QApplication::setPalette(p);
-		setValue("customPalette", p);
 	}
 }
 
@@ -81,8 +82,7 @@ QColor SettingsPrivate::customColors(QPalette::ColorRole cr) const
 		qDebug() << Q_FUNC_INFO << "color is valid" << color;
 		return color;
 	} else {
-		qDebug() << Q_FUNC_INFO << "color is NOT valid" << QApplication::palette().color(cr);
-
+		qDebug() << Q_FUNC_INFO << "color is NOT valid" << color;
 		return QApplication::palette().color(cr);
 	}
 }
@@ -183,6 +183,11 @@ SettingsPrivate::InsertPolicy SettingsPrivate::insertPolicy() const
 bool SettingsPrivate::isCustomColors() const
 {
 	return value("customColors", false).toBool();
+}
+
+bool SettingsPrivate::isCustomTextColorOverriden() const
+{
+	return value("customTextColorOverriden", false).toBool();
 }
 
 bool SettingsPrivate::isExtendedSearchVisible() const
@@ -398,14 +403,14 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		}
 		palette.setColor(QPalette::Window, windowColor);
 
-		qDebug() << "QPalette::Window" << palette.window().color().red() << palette.window().color().green() << palette.window().color().blue();
-		qDebug() << "QPalette::Base" << palette.base().color().red() << palette.base().color().green() << palette.base().color().blue();
-		qDebug() << "QPalette::Button" << palette.button().color().red() << palette.button().color().green() << palette.button().color().blue();
+		//qDebug() << "QPalette::Window" << palette.window().color().red() << palette.window().color().green() << palette.window().color().blue();
+		//qDebug() << "QPalette::Base" << palette.base().color().red() << palette.base().color().green() << palette.base().color().blue();
+		//qDebug() << "QPalette::Button" << palette.button().color().red() << palette.button().color().green() << palette.button().color().blue();
 
-		qDebug() << "QPalette::Light" << palette.light().color().red() << palette.light().color().green() << palette.light().color().blue();
-		qDebug() << "QPalette::Midlight" << palette.midlight().color().red() << palette.midlight().color().green() << palette.midlight().color().blue();
-		qDebug() << "QPalette::Mid" << palette.mid().color().red() << palette.mid().color().green() << palette.mid().color().blue();
-		qDebug() << "QPalette::Shadow" << palette.shadow().color().red() << palette.shadow().color().green() << palette.shadow().color().blue();
+		//qDebug() << "QPalette::Light" << palette.light().color().red() << palette.light().color().green() << palette.light().color().blue();
+		//qDebug() << "QPalette::Midlight" << palette.midlight().color().red() << palette.midlight().color().green() << palette.midlight().color().blue();
+		//qDebug() << "QPalette::Mid" << palette.mid().color().red() << palette.mid().color().green() << palette.mid().color().blue();
+		//qDebug() << "QPalette::Shadow" << palette.shadow().color().red() << palette.shadow().color().green() << palette.shadow().color().blue();
 
 
 		colors.insert(QString::number(QPalette::Window), windowColor);
@@ -515,6 +520,8 @@ void SettingsPrivate::setInsertPolicy(SettingsPrivate::InsertPolicy ip)
 }
 
 /// SLOTS
+
+/** Add a list of folders to settings. */
 void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 {
 	QStringList old = value("musicLocations").toStringList();
@@ -533,17 +540,19 @@ void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 	emit musicLocationsHaveChanged(locations);
 }
 
-/// Colors
+/** Sets an alternate background color for playlists. */
 void SettingsPrivate::setColorsAlternateBG(bool b)
 {
 	setValue("colorsAlternateBG", b);
 }
 
+/** Copy or move tracks from one playlist to another. */
 void SettingsPrivate::setCopyTracksFromPlaylist(bool b)
 {
 	setValue("copyTracksFromPlaylist", b);
 }
 
+/** Sets custom colors for the whole application. */
 void SettingsPrivate::setCustomColors(bool b)
 {
 	setValue("customColors", b);
@@ -552,11 +561,19 @@ void SettingsPrivate::setCustomColors(bool b)
 	}
 }
 
+/** Sets custom text color instead of classic black or white. */
+void SettingsPrivate::setCustomTextColorOverride(bool b)
+{
+	setValue("customTextColorOverriden", b);
+}
+
+/** Sets the default action when one is dropping tracks or folders. */
 void SettingsPrivate::setDragDropAction(DragDropAction action)
 {
 	setValue("dragDropAction", action);
 }
 
+/** Sets a popup when one is searching text in Library (Playlist mode only). */
 void SettingsPrivate::setExtendedSearchVisible(bool b)
 {
 	setValue("extendedSearchVisible", b);
@@ -577,6 +594,7 @@ void SettingsPrivate::setFontPointSize(const FontFamily &fontFamily, int i)
 	emit fontHasChanged(fontFamily, font(fontFamily));
 }
 
+/** Sets user defined articles (like 'The', 'Le') to sort the Library. */
 void SettingsPrivate::setIsLibraryFilteredByArticles(bool b)
 {
 	setValue("isLibraryFilteredByArticles", b);
@@ -588,6 +606,7 @@ void SettingsPrivate::setLastActivePlaylistGeometry(const QByteArray &ba)
 	setValue("lastActivePlaylistGeometry", ba);
 }
 
+/** Sets user defined list of articles to sort the Library. */
 void SettingsPrivate::setLibraryFilteredByArticles(const QStringList &tagList)
 {
 	if (tagList.isEmpty()) {

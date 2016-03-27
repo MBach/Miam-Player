@@ -117,9 +117,25 @@ void CustomizeThemeDialog::loadTheme()
 	spinBoxMenus->setValue(settingsPrivate->fontSize(SettingsPrivate::FF_Menu));
 
 	// Colors
-	settingsPrivate->colorsAlternateBG() ? enableAlternateBGRadioButton->setChecked(true) : disableAlternateBGRadioButton->setChecked(true);
-	settingsPrivate->isCustomColors() ? enableCustomColorsRadioButton->setChecked(true) : disableCustomColorsRadioButton->setChecked(true);
+	// Alternate background colors in playlists
+	if (settingsPrivate->colorsAlternateBG()) {
+		enableAlternateBGRadioButton->setChecked(true);
+	} else {
+		disableAlternateBGRadioButton->setChecked(true);
+	}
+
+	// Custom colors in the whole application
+	if (settingsPrivate->isCustomColors()) {
+		enableCustomColorsRadioButton->setChecked(true);
+	}
+
+	// Override text color or not which is usually computed automatically
+	if (settingsPrivate->isCustomTextColorOverriden()) {
+		enableCustomTextColorsRadioButton->setChecked(true);
+	}
+
 	this->toggleCustomColors(settingsPrivate->isCustomColors());
+	this->toggleCustomTextColors(settingsPrivate->isCustomTextColorOverriden());
 
 	// Covers
 	settings->isCoverBelowTracksEnabled() ? radioButtonEnableBigCover->setChecked(true) : radioButtonDisableBigCover->setChecked(true);
@@ -230,11 +246,18 @@ void CustomizeThemeDialog::setupActions()
 	connect(_timer, &QTimer::timeout, [=]() { this->animate(0.5, 1.0); });
 
 	// Colors
-	connect(enableCustomColorsRadioButton, &QCheckBox::toggled, this, &CustomizeThemeDialog::toggleCustomColors);
 	connect(enableAlternateBGRadioButton, &QRadioButton::toggled, settingsPrivate, &SettingsPrivate::setColorsAlternateBG);
 	for (QToolButton *b : groupBoxCustomColors->findChildren<QToolButton*>()) {
 		connect(b, &QToolButton::clicked, this, &CustomizeThemeDialog::showColorDialog);
 	}
+	connect(enableCustomColorsRadioButton, &QCheckBox::toggled, this, [=](bool b) {
+		settingsPrivate->setCustomColors(b);
+		this->toggleCustomColors(b);
+	});
+	connect(enableCustomTextColorsRadioButton, &QCheckBox::toggled, this, [=](bool b) {
+		settingsPrivate->setCustomTextColorOverride(b);
+		this->toggleCustomTextColors(b);
+	});
 
 	// Change cover size
 	connect(spinBoxCoverSizeLibraryTree, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [=](int cs) {
@@ -403,9 +426,7 @@ void CustomizeThemeDialog::showColorDialog()
 {
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
-		//qDebug() << _targetedColor->objectName() << _targetedColor->color();
 		_targetedColor->setColor(SettingsPrivate::instance()->customColors(_targetedColor->colorRole()));
-		//qDebug() << _targetedColor->objectName() << _targetedColor->color();
 		this->setAttribute(Qt::WA_DeleteOnClose, false);
 		ColorDialog *colorDialog = new ColorDialog(this);
 		colorDialog->setCurrentColor(_targetedColor->color());
@@ -420,28 +441,46 @@ void CustomizeThemeDialog::showColorDialog()
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {
-	qDebug() << Q_FUNC_INFO << b;
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	settings->setCustomColors(b);
 	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
 		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
 			QLayoutItem *item = customColorsGridLayout->itemAtPosition(i, j);
 			if (item->widget()) {
+				//qDebug() << Q_FUNC_INFO << item->widget()->objectName();
 				item->widget()->setEnabled(b);
 			}
 		}
 	}
-	if (b) {
-		qDebug() << Q_FUNC_INFO << settings->customColors(QPalette::Base) << settings->customColors(QPalette::Highlight);
+	labelOverrideTextColor->setEnabled(b);
+	enableCustomTextColorsRadioButton->setEnabled(b);
+	disableCustomTextColorsRadioButton->setEnabled(b);
 
-		bgPrimaryColorWidget->setColor(settings->customColors(QPalette::Base));
-		selectedItemColorWidget->setColor(settings->customColors(QPalette::Highlight));
+	QPalette palette;
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	if (settingsPrivate->value("customPalette").isNull()) {
+		palette = QApplication::palette();
 	} else {
-		QColor base = style()->standardPalette().base().color();
-		QColor highlight = style()->standardPalette().highlight().color();
+		palette = settingsPrivate->value("customPalette").value<QPalette>();
+	}
+	QColor base = palette.base().color();
+	QColor highlight = palette.highlight().color();
+
+	if (b) {
+		bgPrimaryColorWidget->setColor(base);
+		selectedItemColorWidget->setColor(highlight);
+		fontColorWidget->setColor(palette.text().color());
+		QApplication::setPalette(palette);
+	} else {
 		int gray = qGray(base.rgb());
 		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
 		gray = qGray(highlight.rgb());
 		selectedItemColorWidget->setColor(QColor(gray, gray, gray));
+	}
+}
+
+void CustomizeThemeDialog::toggleCustomTextColors(bool b)
+{
+	QList<QWidget*> l =  { labelFontColor, labelInvertedFontColor, fontColorWidget, invertedFontColorWidget, fontColorToolButton };
+	for (QWidget *w : l) {
+		w->setEnabled(b);
 	}
 }

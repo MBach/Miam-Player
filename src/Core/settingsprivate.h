@@ -100,6 +100,8 @@ public:
 
 	bool isCustomColors() const;
 
+	bool isCustomTextColorOverriden() const;
+
 	bool isExtendedSearchVisible() const;
 
 	/** Returns true if background process is active to keep library up-to-date. */
@@ -184,17 +186,25 @@ public:
 	void setInsertPolicy(InsertPolicy ip);
 
 public slots:
+	/** Add a list of folders to settings. */
 	void addMusicLocations(const QList<QDir> &dirs);
 
-	/// Colors
+	/** Sets an alternate background color for playlists. */
 	void setColorsAlternateBG(bool b);
 
+	/** Copy or move tracks from one playlist to another. */
 	void setCopyTracksFromPlaylist(bool b);
 
+	/** Sets custom colors for the whole application. */
 	void setCustomColors(bool b);
 
+	/** Sets custom text color instead of classic black or white. */
+	void setCustomTextColorOverride(bool b);
+
+	/** Sets the default action when one is dropping tracks or folders. */
 	void setDragDropAction(DragDropAction action);
 
+	/** Sets a popup when one is searching text in Library (Playlist mode only). */
 	void setExtendedSearchVisible(bool b);
 
 	/** Sets the font of a part of the application. */
@@ -203,11 +213,13 @@ public slots:
 	/** Sets the font size of a part of the application. */
 	void setFontPointSize(const FontFamily &fontFamily, int i);
 
+	/** Sets user defined articles (like 'The', 'Le') to sort the Library. */
 	void setIsLibraryFilteredByArticles(bool b);
 
 	/** Save the last active playlist header state. */
 	void setLastActivePlaylistGeometry(const QByteArray &);
 
+	/** Sets user defined list of articles to sort the Library. */
 	void setLibraryFilteredByArticles(const QStringList &tagList);
 
 	/** Sets if MiamPlayer should launch background process to keep library up-to-date. */

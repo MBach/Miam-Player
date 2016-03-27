@@ -66,7 +66,9 @@ private slots:
 	 * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 	void showColorDialog();
 
-	void toggleCustomColors(bool);
+	void toggleCustomColors(bool b);
+
+	void toggleCustomTextColors(bool b);
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

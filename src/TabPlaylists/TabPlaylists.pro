@@ -57,7 +57,8 @@ HEADERS += dialogs/closeplaylistpopup.h \
 FORMS += closeplaylistpopup.ui \
     playlistdialog.ui \
     searchdialog.ui \
-    viewplaylists.ui
+    viewplaylists.ui \
+    customtags.ui
 
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore -L$$OUT_PWD/../Library/debug/ -lLibrary
@@ -112,3 +113,5 @@ TRANSLATIONS = translations/tabPlaylists_ar.ts \
     translations/tabPlaylists_th.ts \
     translations/tabPlaylists_vn.ts \
     translations/tabPlaylists_zh.ts
+
+DISTFILES +=
