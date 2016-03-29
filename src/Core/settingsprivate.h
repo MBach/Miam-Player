@@ -78,10 +78,10 @@ public:
 
 	bool copyTracksFromPlaylist() const;
 
-	QColor customColors(QPalette::ColorRole cr) const;
-
 	/** Custom icons in Customize(Theme) */
 	const QString customIcon(const QString &buttonName) const;
+
+	QPalette customPalette() const;
 
 	QString defaultLocationFileExplorer() const;
 

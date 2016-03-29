@@ -19,19 +19,11 @@ SettingsPrivate* SettingsPrivate::settings = nullptr;
 SettingsPrivate::SettingsPrivate(const QString &organization, const QString &application)
 	: QSettings(IniFormat, UserScope, organization, application)
 {
-	QMapIterator<QString, QVariant> it(value("customColorsMap").toMap());
 	QPalette p = QApplication::palette();
-	while (it.hasNext()) {
-		it.next();
-		QColor color = it.value().value<QColor>();
-		if (color.isValid()) {
-			p.setColor(static_cast<QPalette::ColorRole>(it.key().toInt()), color);
-		}
-	}
-	setValue("customPalette", p);
+	_standardPalette = p;
 
 	if (isCustomColors()) {
-		QApplication::setPalette(p);
+		QApplication::setPalette(this->customPalette());
 	}
 }
 
@@ -74,22 +66,18 @@ bool SettingsPrivate::copyTracksFromPlaylist() const
 	return value("copyTracksFromPlaylist", false).toBool();
 }
 
-QColor SettingsPrivate::customColors(QPalette::ColorRole cr) const
-{
-	QMap<QString, QVariant> customCo = value("customColorsMap").toMap();
-	QColor color = customCo.value(QString(cr)).value<QColor>();
-	if (color.isValid()) {
-		qDebug() << Q_FUNC_INFO << "color is valid" << color;
-		return color;
-	} else {
-		qDebug() << Q_FUNC_INFO << "color is NOT valid" << color;
-		return QApplication::palette().color(cr);
-	}
-}
-
 const QString SettingsPrivate::customIcon(const QString &buttonName) const
 {
 	return value("customIcons/" + buttonName).toString();
+}
+
+QPalette SettingsPrivate::customPalette() const
+{
+	if (value("customPalette").isNull()) {
+		return _standardPalette;
+	} else {
+		return value("customPalette").value<QPalette>();
+	}
 }
 
 QString SettingsPrivate::defaultLocationFileExplorer() const
@@ -338,26 +326,22 @@ QMap<QString, PluginInfo> SettingsPrivate::plugins() const
 
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
-	QMap<QString, QVariant> colors = value("customColorsMap").toMap();
-	colors.insert(QString::number(cr), color);
-	QPalette palette = QGuiApplication::palette();
-	static QPalette defaultPalette = QGuiApplication::palette();
+	QPalette palette = this->customPalette();
 	palette.setColor(cr, color);
 
 	if (cr == QPalette::Base) {
 
 		palette.setColor(QPalette::Button, color);
-		colors.insert(QString::number(QPalette::Button), color);
 
 		// Check if text color should be inverted when the base is too dark
 		QColor text, alternateBase;
 		if (color.value() < 128) {
 			alternateBase = palette.base().color().lighter(110);
-			QColor light = defaultPalette.light().color();
-			QColor midLight = defaultPalette.midlight().color();
-			QColor mid = defaultPalette.mid().color();
-			QColor dark = defaultPalette.dark().color();
-			QColor shadow = defaultPalette.shadow().color();
+			QColor light = _standardPalette.light().color();
+			QColor midLight = _standardPalette.midlight().color();
+			QColor mid = _standardPalette.mid().color();
+			QColor dark = _standardPalette.dark().color();
+			QColor shadow = _standardPalette.shadow().color();
 
 			light.setRgb(255 - light.red(), 255 - light.green(), 255 - light.blue());
 			midLight.setRgb(255 - midLight.red(), 255 - midLight.green(), 255 - midLight.blue());
@@ -371,11 +355,6 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 			palette.setColor(QPalette::Dark, dark);
 			palette.setColor(QPalette::Shadow, shadow);
 
-			colors.insert(QString::number(QPalette::Light), light);
-			colors.insert(QString::number(QPalette::Midlight), midLight);
-			colors.insert(QString::number(QPalette::Mid), mid);
-			colors.insert(QString::number(QPalette::Dark), dark);
-			colors.insert(QString::number(QPalette::Shadow), shadow);
 			text = Qt::white;
 		} else {
 			alternateBase = palette.base().color().darker(110);
@@ -387,12 +366,6 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		palette.setColor(QPalette::Text, text);
 		palette.setColor(QPalette::WindowText, text);
 
-		colors.insert(QString::number(QPalette::AlternateBase), alternateBase);
-		colors.insert(QString::number(QPalette::BrightText), text);
-		colors.insert(QString::number(QPalette::ButtonText), text);
-		colors.insert(QString::number(QPalette::Text), text);
-		colors.insert(QString::number(QPalette::WindowText), text);
-
 		// Automatically create a window color from the base one
 		QColor windowColor = color;
 		//windowColor.setAlphaF(0.5);
@@ -403,18 +376,7 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		}
 		palette.setColor(QPalette::Window, windowColor);
 
-		//qDebug() << "QPalette::Window" << palette.window().color().red() << palette.window().color().green() << palette.window().color().blue();
-		//qDebug() << "QPalette::Base" << palette.base().color().red() << palette.base().color().green() << palette.base().color().blue();
-		//qDebug() << "QPalette::Button" << palette.button().color().red() << palette.button().color().green() << palette.button().color().blue();
-
-		//qDebug() << "QPalette::Light" << palette.light().color().red() << palette.light().color().green() << palette.light().color().blue();
-		//qDebug() << "QPalette::Midlight" << palette.midlight().color().red() << palette.midlight().color().green() << palette.midlight().color().blue();
-		//qDebug() << "QPalette::Mid" << palette.mid().color().red() << palette.mid().color().green() << palette.mid().color().blue();
-		//qDebug() << "QPalette::Shadow" << palette.shadow().color().red() << palette.shadow().color().green() << palette.shadow().color().blue();
-
-
-		colors.insert(QString::number(QPalette::Window), windowColor);
-	} else if (cr == QPalette::Highlight) {
+	} else if (cr == QPalette::HighlightedText) {
 		QColor highlightedText;
 		if (qAbs(color.value() - QColor(Qt::white).value()) < 128) {
 			highlightedText = Qt::black;
@@ -422,11 +384,10 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 			highlightedText = Qt::white;
 		}
 		palette.setColor(QPalette::HighlightedText, highlightedText);
-		colors.insert(QString::number(QPalette::HighlightedText), highlightedText);
 	}
 
 	QApplication::setPalette(palette);
-	setValue("customColorsMap", colors);
+	this->setValue("customPalette", QVariant::fromValue<QPalette>(palette));
 }
 
 void SettingsPrivate::setCustomIcon(const QString &buttonName, const QString &iconPath)
@@ -565,6 +526,10 @@ void SettingsPrivate::setCustomColors(bool b)
 void SettingsPrivate::setCustomTextColorOverride(bool b)
 {
 	setValue("customTextColorOverriden", b);
+	if (!b) {
+		this->setCustomColorRole(QPalette::Text, _standardPalette.color(QPalette::Text));
+		this->setCustomColorRole(QPalette::HighlightedText, _standardPalette.color(QPalette::HighlightedText));
+	}
 }
 
 /** Sets the default action when one is dropping tracks or folders. */

@@ -19,9 +19,6 @@ private:
 
 public:
 	explicit ColorDialog(CustomizeThemeDialog *parent);
-
-protected:
-	virtual void closeEvent(QCloseEvent *) override;
 };
 
 #endif // COLORDIALOG_H

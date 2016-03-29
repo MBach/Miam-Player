@@ -125,7 +125,8 @@ void CustomizeThemeDialog::loadTheme()
 	}
 
 	// Custom colors in the whole application
-	if (settingsPrivate->isCustomColors()) {
+	bool customColors = settingsPrivate->isCustomColors();
+	if (customColors) {
 		enableCustomColorsRadioButton->setChecked(true);
 	}
 
@@ -134,8 +135,9 @@ void CustomizeThemeDialog::loadTheme()
 		enableCustomTextColorsRadioButton->setChecked(true);
 	}
 
-	this->toggleCustomColors(settingsPrivate->isCustomColors());
-	this->toggleCustomTextColors(settingsPrivate->isCustomTextColorOverriden());
+	this->toggleCustomColors(customColors);
+	// Custom text color can be enabled only if custom colors are enabled first!
+	this->toggleCustomTextColors(customColors && settingsPrivate->isCustomTextColorOverriden());
 
 	// Covers
 	settings->isCoverBelowTracksEnabled() ? radioButtonEnableBigCover->setChecked(true) : radioButtonDisableBigCover->setChecked(true);
@@ -426,7 +428,8 @@ void CustomizeThemeDialog::showColorDialog()
 {
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
-		_targetedColor->setColor(SettingsPrivate::instance()->customColors(_targetedColor->colorRole()));
+		_targetedColor->setColor(QApplication::palette().color(_targetedColor->colorRole()));
+
 		this->setAttribute(Qt::WA_DeleteOnClose, false);
 		ColorDialog *colorDialog = new ColorDialog(this);
 		colorDialog->setCurrentColor(_targetedColor->color());
@@ -441,11 +444,13 @@ void CustomizeThemeDialog::showColorDialog()
 
 void CustomizeThemeDialog::toggleCustomColors(bool b)
 {
+	qDebug() << Q_FUNC_INFO << b;
+
 	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
 		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
 			QLayoutItem *item = customColorsGridLayout->itemAtPosition(i, j);
-			if (item->widget()) {
-				//qDebug() << Q_FUNC_INFO << item->widget()->objectName();
+			if (item && item->widget()) {
+				qDebug() << Q_FUNC_INFO << item->widget()->objectName();
 				item->widget()->setEnabled(b);
 			}
 		}
@@ -454,21 +459,13 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 	enableCustomTextColorsRadioButton->setEnabled(b);
 	disableCustomTextColorsRadioButton->setEnabled(b);
 
-	QPalette palette;
-	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	if (settingsPrivate->value("customPalette").isNull()) {
-		palette = QApplication::palette();
-	} else {
-		palette = settingsPrivate->value("customPalette").value<QPalette>();
-	}
+	QPalette palette = QApplication::palette();
 	QColor base = palette.base().color();
 	QColor highlight = palette.highlight().color();
 
 	if (b) {
 		bgPrimaryColorWidget->setColor(base);
 		selectedItemColorWidget->setColor(highlight);
-		fontColorWidget->setColor(palette.text().color());
-		QApplication::setPalette(palette);
 	} else {
 		int gray = qGray(base.rgb());
 		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
@@ -479,8 +476,28 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 
 void CustomizeThemeDialog::toggleCustomTextColors(bool b)
 {
-	QList<QWidget*> l =  { labelFontColor, labelInvertedFontColor, fontColorWidget, invertedFontColorWidget, fontColorToolButton };
-	for (QWidget *w : l) {
-		w->setEnabled(b);
+	qDebug() << Q_FUNC_INFO << b;
+	for (int i = 0; i < customTextColorsGridLayout->rowCount(); i++) {
+		for (int j = 0; j < customTextColorsGridLayout->columnCount(); j++) {
+			QLayoutItem *item = customTextColorsGridLayout->itemAtPosition(i, j);
+			if (item && item->widget()) {
+				qDebug() << Q_FUNC_INFO << item->widget()->objectName();
+				item->widget()->setEnabled(b);
+			}
+		}
+	}
+
+	QPalette palette = QApplication::palette();
+	QColor text = palette.text().color();
+	QColor highlight = palette.highlightedText().color();
+
+	if (b) {
+		fontColorWidget->setColor(text);
+		selectedFontColorWidget->setColor(highlight);
+	} else {
+		int gray = qGray(text.rgb());
+		fontColorWidget->setColor(QColor(gray, gray, gray));
+		gray = qGray(highlight.rgb());
+		selectedFontColorWidget->setColor(QColor(gray, gray, gray));
 	}
 }

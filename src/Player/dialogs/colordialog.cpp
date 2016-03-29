@@ -17,19 +17,9 @@ ColorDialog::ColorDialog(CustomizeThemeDialog *parent) :
 	flags |= Qt::ForeignWindow;
 	this->setWindowFlags(flags);
 
-	//connect(this, &QColorDialog::currentColorChanged, _customizeThemeDialog->targetedColor(), &Reflector::setColor);
-	auto settings = SettingsPrivate::instance();
+	auto settingsPrivate = SettingsPrivate::instance();
 	connect(this, &QColorDialog::currentColorChanged, this, [=](const QColor &c) {
 		_customizeThemeDialog->targetedColor()->setColor(c);
-		settings->setCustomColorRole(_customizeThemeDialog->targetedColor()->colorRole(), currentColor());
+		settingsPrivate->setCustomColorRole(_customizeThemeDialog->targetedColor()->colorRole(), currentColor());
 	});
-}
-
-void ColorDialog::closeEvent(QCloseEvent *event)
-{
-	//qDebug() << Q_FUNC_INFO << currentColor();
-	_customizeThemeDialog->targetedColor()->setColor(currentColor());
-	SettingsPrivate::instance()->setCustomColorRole(_customizeThemeDialog->targetedColor()->colorRole(), currentColor());
-	SettingsPrivate::instance()->sync();
-	QColorDialog::closeEvent(event);
 }
