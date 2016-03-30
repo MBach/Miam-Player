@@ -145,40 +145,6 @@ Playlist* TabPlaylist::currentPlayList() const
 	return displayedIcon;
 }*/
 
-/** Redefined to forward events to children. */
-/*bool TabPlaylist::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::DragEnter) {
-		event->accept();
-		return true;
-	} else if (event->type() == QEvent::Drop) {
-		QDropEvent *de = static_cast<QDropEvent*>(event);
-		if (de->source() == nullptr) {
-			// Drag & Drop comes from another application but has landed in the playlist area
-			de->ignore();
-			//QDropEvent *d = new QDropEvent(de->pos(), de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
-			/// FIXME
-			//_mainWindow->dispatchDrop(d);
-			qDebug() << Q_FUNC_INFO << "I don't want the drop event now, I should delegate it to parent for the right action to do";
-			return false;
-		} else {
-			if (obj == cornerWidget()) {
-				auto p = this->addPlaylist();
-				p->forceDrop(de);
-			} else {
-				qDebug() << Q_FUNC_INFO << "2";
-				currentPlayList()->forceDrop(de);
-			}
-			return true;
-		}
-	}// else if (event->type() == QEvent::ShortcutOverride) {
-	//	qDebug() << Q_FUNC_INFO << "QEvent::ShortcutOverride";
-	//	event->ignore();
-	//	return false;
-	//}
-	return QTabWidget::eventFilter(obj, event);
-}*/
-
 void TabPlaylist::init(MediaPlayer *mediaPlayer)
 {
 	_mediaPlayer = mediaPlayer;

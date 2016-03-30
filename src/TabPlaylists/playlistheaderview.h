@@ -20,6 +20,8 @@ class MIAMTABPLAYLISTS_LIBRARY PlaylistHeaderView : public QHeaderView
 private:
 	QMenu *_columns;
 
+	Playlist *_playlist;
+
 public:
 	static QStringList labels;
 

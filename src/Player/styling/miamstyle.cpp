@@ -215,14 +215,16 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 			alignment |= Qt::TextHideMnemonic;
 		}
 		if (somi->state.testFlag(QStyle::State_Enabled)) {
-			if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
+			if (act && SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				painter->setPen(palette.highlightedText().color());
+			} else if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
 				painter->setPen(palette.highlightedText().color());
 			} else {
 				painter->setPen(palette.text().color());
 			}
-		} else {
+		} /*else if (act) {
 			painter->setPen(palette.mid().color());
-		}
+		}*/
 		painter->drawText(option->rect, alignment, somi->text);
 		break;
 	}
@@ -296,10 +298,13 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 				painter->setPen(palette.text().color());
 				painter->drawPixmap(pmr.topLeft(), pixmap);
 			}
-			painter->setPen(palette.buttonText().color());
+			//painter->setPen(palette.buttonText().color());
 			QColor textColor = palette.text().color();
 			if (dis) {
 				textColor = palette.mid().color();
+				painter->setPen(textColor);
+			} else if (act && SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				textColor = palette.highlightedText().color();
 				painter->setPen(textColor);
 			}
 			int xm = checkcol + 2 + (gutterWidth - menuitem->rect.x()) - 1;
@@ -373,9 +378,13 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 	}
 }
 
-void MiamStyle::drawItemText(QPainter *painter, const QRect &rect, int flags, const QPalette &pal, bool enabled, const QString &text, QPalette::ColorRole) const
+void MiamStyle::drawItemText(QPainter *painter, const QRect &rect, int flags, const QPalette &pal, bool enabled, const QString &text, QPalette::ColorRole cr) const
 {
-	QProxyStyle::drawItemText(painter, rect, flags, pal, enabled, text, QPalette::Text);
+	if (cr == QPalette::HighlightedText) {
+		QProxyStyle::drawItemText(painter, rect, flags, pal, enabled, text, QPalette::HighlightedText);
+	} else {
+		QProxyStyle::drawItemText(painter, rect, flags, pal, enabled, text, QPalette::Text);
+	}
 }
 
 void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *painter, const QWidget *widget) const

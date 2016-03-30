@@ -16,8 +16,9 @@ QStringList PlaylistHeaderView::labels = QStringList() << "#"
 													   << QT_TRANSLATE_NOOP("PlaylistHeaderView", "Source")
 													   << "TrackDAO";
 
-PlaylistHeaderView::PlaylistHeaderView(Playlist *parent) :
-	QHeaderView(Qt::Horizontal, parent)
+PlaylistHeaderView::PlaylistHeaderView(Playlist *parent)
+	: QHeaderView(Qt::Horizontal, parent)
+	, _playlist(parent)
 {
 	this->setHighlightSections(false);
 	this->setFrameShape(QFrame::NoFrame);
@@ -159,7 +160,7 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 		}
 	}
 	p.restore();
-	if (!r.isNull()) {
+	if (!r.isNull() && !_playlist->mediaPlaylist()->isEmpty()) {
 		p.save();
 		p.setPen(palette.highlight().color());
 		p.drawLine(r.x(), r.y() + r.height() / 4,

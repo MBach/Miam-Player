@@ -166,7 +166,10 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	// Draw folder's name
 	QColor lighterBG = palette.highlight().color().lighter();
 	QColor highlightedText = palette.highlightedText().color();
-	if (qAbs(lighterBG.value() - highlightedText.value()) > 128 && _highlighted) {
+
+	if (rect().contains(pos) && SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+		p.setPen(palette.highlightedText().color());
+	} else if (qAbs(lighterBG.value() - highlightedText.value()) > 128 && _highlighted) {
 		p.setPen(highlightedText);
 	} else {
 		p.setPen(palette.text().color());

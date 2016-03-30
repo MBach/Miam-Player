@@ -327,8 +327,6 @@ QMap<QString, PluginInfo> SettingsPrivate::plugins() const
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QPalette palette = this->customPalette();
-
-
 	if (cr == QPalette::Base) {
 
 		palette.setColor(QPalette::Button, color);
@@ -388,9 +386,8 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 			}
 		}
 		palette.setColor(cr, highlightedText);
-	} else {
-		palette.setColor(cr, color);
 	}
+	palette.setColor(cr, color);
 
 	QApplication::setPalette(palette);
 	this->setValue("customPalette", QVariant::fromValue<QPalette>(palette));

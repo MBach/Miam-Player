@@ -105,7 +105,7 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 		if (r.contains(this->mapFromGlobal(QCursor::pos())) || _currentLetter == qc) {
 			QColor lighterBG = o.palette.highlight().color().lighter(lighterValue);
 			QColor highlightedText = o.palette.highlightedText().color();
-			if (qAbs(lighterBG.value() - highlightedText.value()) > 128) {
+			if (SettingsPrivate::instance()->isCustomTextColorOverriden() || qAbs(lighterBG.value() - highlightedText.value()) > 128) {
 				p.setPen(highlightedText);
 			} else {
 				p.setPen(o.palette.text().color());

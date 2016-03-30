@@ -298,7 +298,11 @@ void TabBar::paintRectTabs(QStylePainter &p)
 		if (i == currentIndex()) {
 			p.setPen(o.palette.text().color());
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.text().color());
+			if (SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				p.setPen(o.palette.highlightedText().color());
+			} else {
+				p.setPen(o.palette.text().color());
+			}
 		} else {
 			p.setPen(o.palette.mid().color());
 		}
@@ -370,7 +374,11 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 		if (i == currentIndex()) {
 			p.setPen(o.palette.text().color());
 		} else if (o.state.testFlag(QStyle::State_MouseOver)) {
-			p.setPen(o.palette.text().color());
+			if (SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				p.setPen(o.palette.highlightedText().color());
+			} else {
+				p.setPen(o.palette.text().color());
+			}
 		} else {
 			p.setPen(o.palette.mid().color());
 		}

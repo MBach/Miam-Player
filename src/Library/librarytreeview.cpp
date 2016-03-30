@@ -108,8 +108,13 @@ void LibraryTreeView::findAll(const QModelIndex &index, QList<QUrl> *tracks) con
 			// Recursive call on children
 			this->findAll(index.child(i, 0), tracks);
 		}
-		/// FIXME
-		//tracks.removeDuplicates();
+		QList<QUrl> tmp;
+		for (QUrl track : *tracks) {
+			if (!tmp.contains(track)) {
+				tmp.append(track);
+			}
+		}
+		*tracks = tmp;
 	} else if (item && item->type() == Miam::IT_Track) {
 		if (item->data(Miam::DF_IsRemote).toBool()) {
 			tracks->append(QUrl(item->data(Miam::DF_URI).toString()));
@@ -284,6 +289,7 @@ int LibraryTreeView::count(const QModelIndex &index) const
 int LibraryTreeView::countAll(const QModelIndexList &indexes) const
 {
 	int c = 0;
+	/// XXX: this countAll() function also count duplicates!
 	for (QModelIndex index : indexes) {
 		c += this->count(index);
 	}

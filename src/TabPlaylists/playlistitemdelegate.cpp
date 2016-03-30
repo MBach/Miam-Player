@@ -105,12 +105,14 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 	p->setFont(font);
 
 	p->save();
+	QPalette::ColorRole cr = QPalette::Text;
 	if (o.state.testFlag(QStyle::State_Selected)) {
 		if ((opt.palette.highlight().color().lighter(lighterValue).saturation() - opt.palette.highlightedText().color().saturation()) < 128) {
 			p->setPen(opt.palette.text().color());
 		} else {
 			p->setPen(opt.palette.highlightedText().color());
 		}
+		cr = QPalette::HighlightedText;
 	}
 
 	QString text;
@@ -120,13 +122,13 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		if (index.data().toInt() >= 0) {
 			text = QDateTime::fromTime_t(index.data().toInt()).toString("m:ss");
 			text = p->fontMetrics().elidedText(text, o.textElideMode, textRect.width());
-			style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
+			style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text, cr);
 		}
 		break;
 	case Playlist::COL_TRACK_NUMBER:
 	case Playlist::COL_YEAR:
 		text = p->fontMetrics().elidedText(index.data().toString(), o.textElideMode, textRect.width());
-		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text);
+		style->drawItemText(p, textRect, Qt::AlignCenter, o.palette, true, text, cr);
 		break;
 	case Playlist::COL_RATINGS:
 		if (index.data().canConvert<StarRating>() || opt.state.testFlag(QStyle::State_Selected)) {
@@ -153,7 +155,7 @@ void PlaylistItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt, c
 		} else {
 			textRect.adjust(0, 0, -2, 0);
 		}
-		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, text);
+		style->drawItemText(p, textRect, Qt::AlignLeft | Qt::AlignVCenter, o.palette, true, text, cr);
 		break;
 	}
 	p->restore();

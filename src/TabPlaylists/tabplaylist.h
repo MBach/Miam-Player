@@ -38,9 +38,6 @@ public:
 
 	//QIcon defaultIcon(QIcon::Mode mode) const;
 
-	/** Redefined to forward events to children. */
-	//virtual bool eventFilter(QObject *obj, QEvent *event) override;
-
 	void init(MediaPlayer *mediaPlayer);
 
 	/** Load a playlist saved in database. */
