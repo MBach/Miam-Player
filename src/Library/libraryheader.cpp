@@ -88,7 +88,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 
 	// Check if label should be elided (in case of large font and small area on screen)
 	QString elided = fm.elidedText(header, Qt::ElideRight, parentWidget()->width());
-	p.setPen(QApplication::palette().windowText().color());
+	p.setPen(QApplication::palette().text().color());
 	p.drawText(rect().adjusted(10, 0, 0, 0), Qt::AlignVCenter | Qt::AlignLeft, elided);
 
 	// Draw a thin line before the treeview

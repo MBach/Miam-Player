@@ -20,6 +20,8 @@ public:
 
 	virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const override;
 
+	virtual void drawItemText(QPainter *painter, const QRect &rect, int flags, const QPalette &pal, bool enabled, const QString &text, QPalette::ColorRole = QPalette::NoRole) const override;
+
 	virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
 
 	virtual int pixelMetric(PixelMetric metric, const QStyleOption *opt, const QWidget *widget = nullptr) const override;

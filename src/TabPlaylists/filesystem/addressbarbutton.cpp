@@ -169,7 +169,7 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 	if (qAbs(lighterBG.value() - highlightedText.value()) > 128 && _highlighted) {
 		p.setPen(highlightedText);
 	} else {
-		p.setPen(palette.windowText().color());
+		p.setPen(palette.text().color());
 	}
 
 	// Special case for root and drives

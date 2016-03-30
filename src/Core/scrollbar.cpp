@@ -249,7 +249,7 @@ void ScrollBar::paintEvent(QPaintEvent *)
 	};
 
 	p.save();
-	if (scrollbar.palette.windowText().color().value() < 128) {
+	if (scrollbar.palette.text().color().value() < 128) {
 		p.setPen(scrollbar.palette.dark().color());
 		p.setBrush(scrollbar.palette.dark());
 	} else {

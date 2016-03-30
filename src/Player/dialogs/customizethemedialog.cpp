@@ -489,15 +489,15 @@ void CustomizeThemeDialog::toggleCustomTextColors(bool b)
 
 	QPalette palette = QApplication::palette();
 	QColor text = palette.text().color();
-	QColor highlight = palette.highlightedText().color();
+	QColor highlightedText = palette.highlightedText().color();
 
 	if (b) {
 		fontColorWidget->setColor(text);
-		selectedFontColorWidget->setColor(highlight);
+		selectedFontColorWidget->setColor(highlightedText);
 	} else {
 		int gray = qGray(text.rgb());
 		fontColorWidget->setColor(QColor(gray, gray, gray));
-		gray = qGray(highlight.rgb());
+		gray = qGray(highlightedText.rgb());
 		selectedFontColorWidget->setColor(QColor(gray, gray, gray));
 	}
 }

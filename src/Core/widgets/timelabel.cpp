@@ -8,8 +8,10 @@
 
 #include <QtDebug>
 
-TimeLabel::TimeLabel(QWidget *parent) :
-	QLabel(parent), _time(0), _total(0)
+TimeLabel::TimeLabel(QWidget *parent)
+	: QLabel(parent)
+	, _time(0)
+	, _total(0)
 {
 	this->installEventFilter(this);
 	this->setAlignment(Qt::AlignVCenter | Qt::AlignRight);

@@ -327,7 +327,7 @@ QMap<QString, PluginInfo> SettingsPrivate::plugins() const
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QPalette palette = this->customPalette();
-	palette.setColor(cr, color);
+
 
 	if (cr == QPalette::Base) {
 
@@ -377,13 +377,19 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		palette.setColor(QPalette::Window, windowColor);
 
 	} else if (cr == QPalette::HighlightedText) {
+		qDebug() << Q_FUNC_INFO << color << color.isValid();
 		QColor highlightedText;
-		if (qAbs(color.value() - QColor(Qt::white).value()) < 128) {
-			highlightedText = Qt::black;
-		} else {
-			highlightedText = Qt::white;
+
+		if (!isCustomTextColorOverriden()) {
+			if (qAbs(color.value() - QColor(Qt::white).value()) < 128) {
+				highlightedText = Qt::black;
+			} else {
+				highlightedText = Qt::white;
+			}
 		}
-		palette.setColor(QPalette::HighlightedText, highlightedText);
+		palette.setColor(cr, highlightedText);
+	} else {
+		palette.setColor(cr, color);
 	}
 
 	QApplication::setPalette(palette);

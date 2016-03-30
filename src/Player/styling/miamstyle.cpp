@@ -102,7 +102,7 @@ void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 
 	// Arrows
 	p->save();
-	if (scrollbar.palette.windowText().color().value() < 128) {
+	if (scrollbar.palette.text().color().value() < 128) {
 		p->setPen(scrollbar.palette.dark().color());
 		p->setBrush(scrollbar.palette.dark());
 	} else {
@@ -361,7 +361,7 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 	case CC_GroupBox:{
 		const QStyleOptionGroupBox *gb = qstyleoption_cast<const QStyleOptionGroupBox*>(option);
 		QStyleOptionGroupBox gb2(*gb);
-		gb2.textColor = QApplication::palette().windowText().color();
+		gb2.textColor = QApplication::palette().text().color();
 		QProxyStyle::drawComplexControl(control, &gb2, p, widget);
 		break;
 	}
@@ -371,6 +371,11 @@ void MiamStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 	default:
 		QProxyStyle::drawComplexControl(control, option, p, widget);
 	}
+}
+
+void MiamStyle::drawItemText(QPainter *painter, const QRect &rect, int flags, const QPalette &pal, bool enabled, const QString &text, QPalette::ColorRole) const
+{
+	QProxyStyle::drawItemText(painter, rect, flags, pal, enabled, text, QPalette::Text);
 }
 
 void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *painter, const QWidget *widget) const

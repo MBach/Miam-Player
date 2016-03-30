@@ -136,7 +136,7 @@ void AddressBarMenu::paintEvent(QPaintEvent *)
 				if (itemIsEnabled) {
 					p.setPen(palette.text().color());
 				} else {
-					p.setPen(palette.color(QPalette::Disabled, QPalette::WindowText));
+					p.setPen(palette.color(QPalette::Disabled, QPalette::Text));
 				}
 			}
 

@@ -108,10 +108,10 @@ void JumpToWidget::paintEvent(QPaintEvent *)
 			if (qAbs(lighterBG.value() - highlightedText.value()) > 128) {
 				p.setPen(highlightedText);
 			} else {
-				p.setPen(o.palette.windowText().color());
+				p.setPen(o.palette.text().color());
 			}
 		} else {
-			p.setPen(o.palette.windowText().color());
+			p.setPen(o.palette.text().color());
 		}
 		p.drawText(r, Qt::AlignCenter, qc);
 	}

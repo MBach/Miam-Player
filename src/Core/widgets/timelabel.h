@@ -27,9 +27,9 @@ public:
 	explicit TimeLabel(QWidget *parent = nullptr);
 
 	/** Redefined to filter mouse press event. */
-	bool eventFilter(QObject *obj, QEvent *event);
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
-	QSize minimumSizeHint() const;
+	virtual QSize minimumSizeHint() const override;
 
 private slots:
 	/** Display track length using the selected mode. */

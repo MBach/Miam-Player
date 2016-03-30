@@ -142,7 +142,7 @@ void PlaylistHeaderView::paintEvent(QPaintEvent *)
 	opt.initFrom(this->viewport());
 	p.fillRect(this->viewport()->rect(), QBrush(vLinearGradient));
 
-	p.setPen(opt.palette.windowText().color());
+	p.setPen(opt.palette.text().color());
 	QRect r;
 	p.save();
 	if (QGuiApplication::isLeftToRight()) {
