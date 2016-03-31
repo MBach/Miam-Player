@@ -308,7 +308,7 @@ void ViewPlaylists::openFolder(const QString &dir) const
 {
 	Settings::instance()->setValue("lastOpenedLocation", dir);
 	QDirIterator it(dir, QDirIterator::Subdirectories);
-	QStringList suffixes = FileHelper::suffixes(FileHelper::All, false);
+	QStringList suffixes = FileHelper::suffixes(FileHelper::ET_All, false);
 	QList<QUrl> localTracks;
 	while (it.hasNext()) {
 		it.next();
@@ -350,7 +350,7 @@ void ViewPlaylists::addExtFolders(const QList<QDir> &folders)
 
 	QStringList tracks;
 	for (QDir folder : folders) {
-		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(FileHelper::Standard, true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(FileHelper::ET_Standard, true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			if (it.fileInfo().isFile()) {
@@ -408,8 +408,8 @@ void ViewPlaylists::openFiles()
 		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
 	}
 
-	audioFiles.append(" (" + FileHelper::suffixes(FileHelper::Standard, true).join(" ") + ")");
-	audioFiles.append(";;Game Music Emu (" + FileHelper::suffixes(FileHelper::GameMusicEmu, true).join(" ") + ");;");
+	audioFiles.append(" (" + FileHelper::suffixes(FileHelper::ET_Standard, true).join(" ") + ")");
+	audioFiles.append(";;Game Music Emu (" + FileHelper::suffixes(FileHelper::ET_GameMusicEmu, true).join(" ") + ");;");
 	audioFiles.append(tr("Every file type (*)"));
 
 	QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose some files to open"), lastOpenedLocation,

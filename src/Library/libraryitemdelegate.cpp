@@ -251,9 +251,9 @@ void LibraryItemDelegate::drawTrack(QPainter *painter, QStyleOptionViewItem &opt
 
 		StarRating starRating(r);
 		if (r > 0) {
-			starRating.paintStars(painter, copy, StarRating::ReadOnly);
+			starRating.paintStars(painter, copy, StarRating::EM_ReadOnly);
 		} else if (settings->isShowNeverScored()) {
-			starRating.paintStars(painter, copy, StarRating::NoStarsYet);
+			starRating.paintStars(painter, copy, StarRating::EM_NoStarsYet);
 		}
 	}
 	MiamItemDelegate::drawTrack(painter, option, track);

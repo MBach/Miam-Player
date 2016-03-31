@@ -84,5 +84,5 @@ void StarEditor::paintEvent(QPaintEvent *)
 	QStyleOptionViewItem o;
 	o.rect = rect();
 	o.palette = this->palette();
-	starRating.paintStars(&painter, o, StarRating::Editable);
+	starRating.paintStars(&painter, o, StarRating::EM_Editable);
 }

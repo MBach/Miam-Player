@@ -30,8 +30,6 @@ class MIAMCORE_LIBRARY SqlDatabase : public QObject, public QSqlDatabase
 private:
 	QHash<uint, GenericDAO*> _cache;
 
-	Q_ENUMS(extension)
-
 public:
 	explicit SqlDatabase();
 

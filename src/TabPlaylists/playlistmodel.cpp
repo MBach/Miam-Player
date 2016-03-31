@@ -102,7 +102,7 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 	QStandardItem *iconItem = new QStandardItem(tr("Local"));
 	iconItem->setIcon(QIcon(":/icons/computer"));
 	iconItem->setToolTip(tr("Local file"));
-	if (FileHelper::suffixes(FileHelper::Standard).contains(fileHelper.fileInfo().suffix())) {
+	if (FileHelper::suffixes(FileHelper::ET_Standard).contains(fileHelper.fileInfo().suffix())) {
 		QString title;
 		if (fileHelper.title().isEmpty()) {
 			title = fileHelper.fileInfo().baseName();

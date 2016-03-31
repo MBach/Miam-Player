@@ -49,13 +49,13 @@ void ClosePlaylistPopup::execActionFromClosePopup(QAbstractButton *action)
 		switch(buttonBox->standardButton(action)) {
 		case QDialogButtonBox::Save:
 			if (checkBoxRememberChoice->isChecked()) {
-				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose);
+				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PDA_SaveOnClose);
 			}
 			emit aboutToSavePlaylist(false);
 			break;
 		case QDialogButtonBox::Discard:
 			if (checkBoxRememberChoice->isChecked()) {
-				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose);
+				SettingsPrivate::instance()->setPlaybackCloseAction(SettingsPrivate::PDA_DiscardOnClose);
 			}
 			emit aboutToRemoveTab(_index);
 			this->close();

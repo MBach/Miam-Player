@@ -88,11 +88,11 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 
 	pen.setWidthF(pen.widthF() / opt.rect.height());
 
-	if (_starCount == 0 && mode == ReadOnly && opt.state.testFlag(QStyle::State_Selected)) {
-		mode = NoStarsYet;
+	if (_starCount == 0 && mode == EM_ReadOnly && opt.state.testFlag(QStyle::State_Selected)) {
+		mode = EM_NoStarsYet;
 	}
 	switch (mode) {
-	case Editable:
+	case EM_Editable:
 		//if (SettingsPrivate::instance()->isCustomColors()) {
 		//	painter->fillRect(opt.rect, opt.palette.highlight().color());
 		//} else {
@@ -109,10 +109,10 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 		pen.setBrush(QBrush(linearGradientPen));
 		painter->setBrush(QBrush(linearGradientBrush));
 		break;
-	case NoStarsYet:
+	case EM_NoStarsYet:
 		pen.setColor(penColor.lighter(135));
 		break;
-	case ReadOnly:
+	case EM_ReadOnly:
 		linearGradientBrush.setColorAt(0, Qt::white);
 		linearGradientBrush.setColorAt(1, QColor(253, 230, 116));
 
@@ -138,9 +138,9 @@ void StarRating::paintStars(QPainter *painter, const QStyleOptionViewItem &o, Ed
 	}
 
 	for (int i = 0; i < maxStarCount; ++i) {
-		if (i < _starCount || mode == NoStarsYet) {
+		if (i < _starCount || mode == EM_NoStarsYet) {
 			painter->drawPolygon(_starPolygon);
-		} else if (mode == Editable) {
+		} else if (mode == EM_Editable) {
 			painter->drawPolygon(_diamondPolygon, Qt::WindingFill);
 		}
 		painter->translate(1.0, 0);

@@ -91,7 +91,7 @@ void MusicSearchEngine::doSearch()
 	QString coverPath;
 	QString lastFileScannedNextToCover;
 
-	QStringList suffixes = FileHelper::suffixes(FileHelper::All);
+	QStringList suffixes = FileHelper::suffixes(FileHelper::ET_All);
 
 	for (QDir location : locations) {
 		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);

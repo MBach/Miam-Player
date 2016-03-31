@@ -15,8 +15,8 @@ void StarsWidget::paintEvent(QPaintEvent *)
 	o.rect = rect();
 	o.palette = this->palette();
 	if (isEnabled()) {
-		_starRating.paintStars(&p, o, StarRating::ReadOnly);
+		_starRating.paintStars(&p, o, StarRating::EM_ReadOnly);
 	} else {
-		_starRating.paintStars(&p, o, StarRating::NoStarsYet);
+		_starRating.paintStars(&p, o, StarRating::EM_NoStarsYet);
 	}
 }

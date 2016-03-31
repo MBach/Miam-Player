@@ -38,8 +38,8 @@ private:
 	Q_ENUMS(DragDropAction)
 	Q_ENUMS(FontFamily)
 	Q_ENUMS(InsertPolicy)
-	Q_ENUMS(PlaylistDefaultAction)
 	Q_ENUMS(LibrarySearchMode)
+	Q_ENUMS(PlaylistDefaultAction)
 
 public:
 	enum DragDropAction { DD_OpenPopup		= 0,
@@ -55,12 +55,12 @@ public:
 						IP_ArtistsAlbums	= 2,
 						IP_Years			= 3};
 
-	enum PlaylistDefaultAction { PL_AskUserForAction	= 0,
-								 PL_SaveOnClose			= 1,
-								 PL_DiscardOnClose		= 2};
-
 	enum LibrarySearchMode { LSM_Filter			= 0,
 							 LSM_HighlightOnly	= 1};
+
+	enum PlaylistDefaultAction { PDA_AskUserForAction	= 0,
+								 PDA_SaveOnClose		= 1,
+								 PDA_DiscardOnClose		= 2};
 
 	QTranslator playerTranslator, defaultQtTranslator;
 

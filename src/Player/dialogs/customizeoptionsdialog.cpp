@@ -116,19 +116,19 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	connect(seekTimeSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setPlaybackSeekTime);
 
 	switch (settings->playbackDefaultActionForClose()) {
-	case SettingsPrivate::PL_AskUserForAction:
+	case SettingsPrivate::PDA_AskUserForAction:
 		radioButtonAskAction->setChecked(true);
 		break;
-	case SettingsPrivate::PL_SaveOnClose:
+	case SettingsPrivate::PDA_SaveOnClose:
 		radioButtonSavePlaylist->setChecked(true);
 		break;
-	case SettingsPrivate::PL_DiscardOnClose:
+	case SettingsPrivate::PDA_DiscardOnClose:
 		radioButtonDiscardPlaylist->setChecked(true);
 		break;
 	}
-	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_AskUserForAction); });
-	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_SaveOnClose); });
-	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PL_DiscardOnClose); });
+	connect(radioButtonAskAction, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PDA_AskUserForAction); });
+	connect(radioButtonSavePlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PDA_SaveOnClose); });
+	connect(radioButtonDiscardPlaylist, &QRadioButton::toggled, this, [=]() { settings->setPlaybackCloseAction(SettingsPrivate::PDA_DiscardOnClose); });
 
 	settings->playbackKeepPlaylists() ? radioButtonKeepPlaylists->setChecked(true) : radioButtonClearPlaylists->setChecked(true);
 	connect(radioButtonKeepPlaylists, &QRadioButton::toggled, settings, &SettingsPrivate::setPlaybackKeepPlaylists);

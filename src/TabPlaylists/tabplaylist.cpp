@@ -302,7 +302,7 @@ void TabPlaylist::addExtFolders(const QList<QDir> &folders)
 
 	QStringList tracks;
 	for (QDir folder : folders) {
-		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(FileHelper::Standard, true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+		QDirIterator it(folder.absolutePath(), FileHelper::suffixes(FileHelper::ET_Standard, true), QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
 			it.next();
 			if (it.fileInfo().isFile()) {
@@ -455,11 +455,11 @@ int TabPlaylist::closePlaylist(int index)
 	} else {
 		SettingsPrivate::PlaylistDefaultAction action = SettingsPrivate::instance()->playbackDefaultActionForClose();
 		// Override default action and ask once again to user because it's not allowed to save empty playlist automatically
-		if (p->mediaPlaylist()->isEmpty() && action == SettingsPrivate::PL_SaveOnClose) {
-			action = SettingsPrivate::PL_AskUserForAction;
+		if (p->mediaPlaylist()->isEmpty() && action == SettingsPrivate::PDA_SaveOnClose) {
+			action = SettingsPrivate::PDA_AskUserForAction;
 		}
 		switch (action) {
-		case SettingsPrivate::PL_AskUserForAction: {
+		case SettingsPrivate::PDA_AskUserForAction: {
 			int returnCode = 0;
 			ClosePlaylistPopup closePopup(p, index);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](bool overwrite) {
@@ -474,10 +474,10 @@ int TabPlaylist::closePlaylist(int index)
 			closePopup.exec();
 			return returnCode;
 		}
-		case SettingsPrivate::PL_SaveOnClose:
+		case SettingsPrivate::PDA_SaveOnClose:
 			emit aboutToSavePlaylist(p, false);
 			break;
-		case SettingsPrivate::PL_DiscardOnClose:
+		case SettingsPrivate::PDA_DiscardOnClose:
 			this->removeTabFromCloseButton(index);
 			break;
 		}
