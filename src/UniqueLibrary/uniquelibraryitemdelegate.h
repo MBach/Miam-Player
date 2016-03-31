@@ -36,6 +36,9 @@ protected:
 	virtual void drawDisc(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const override;
 
 	virtual void drawTrack(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *track) const override;
+
+private:
+	QPalette::ColorRole getColorRole(QStyleOptionViewItem &option) const;
 };
 
 #endif // UNIQUELIBRARYITEMDELEGATE_H
