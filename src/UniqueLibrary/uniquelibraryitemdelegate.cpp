@@ -40,7 +40,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	if (QGuiApplication::isLeftToRight()) {
 		o.rect.adjust(0, 0, -_jumpTo->width(), 0);
 	} else {
-		o.rect.adjust(_jumpTo->width(), 0, 0, 0);
+		o.rect.adjust(-17, 0, 0, 0);
 	}
 
 	// Removes the dotted rectangle to the focused item
@@ -77,6 +77,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 
 void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
+	option.rect.adjust(5, 0, 0, 0);
 	QPoint c = option.rect.center();
 
 	QString text = item->text();
@@ -84,28 +85,31 @@ void UniqueLibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewIte
 	if (!year.isEmpty() && (year.compare("0") != 0)) {
 		text.append(" [" + item->data(Miam::DF_Year).toString() + "]");
 	}
+	painter->save();
+	QStyle *style = QApplication::style();
+	QPalette::ColorRole cr = this->getColorRole(option);
 	if (text.isEmpty()) {
 		text = tr("(no title)");
-		painter->save();
 		QColor color = QApplication::palette().text().color();
 		color.setAlphaF(0.5);
 		painter->setPen(color);
-		painter->drawText(option.rect, Qt::AlignVCenter, text);
-		painter->restore();
 	} else if (year.isEmpty()){
-		painter->drawText(option.rect, Qt::AlignVCenter, text);
+		//style->drawItemText(painter, option.rect, Qt::AlignVCenter, option.palette, true, text, cr);
 	} else {
 		text = painter->fontMetrics().elidedText(text, Qt::ElideRight, option.rect.width());
-		painter->drawText(option.rect, Qt::AlignVCenter, text);
-		//painter->drawText(option.rect, text);
 	}
+	style->drawItemText(painter, option.rect, Qt::AlignVCenter, option.palette, true, text, cr);
+	painter->restore();
 	int textWidth = painter->fontMetrics().width(text);
 	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
 }
 
 void UniqueLibraryItemDelegate::drawArtist(QPainter *painter, QStyleOptionViewItem &option, QStandardItem *item) const
 {
-	painter->drawText(option.rect, Qt::AlignVCenter, item->text());
+	QStyle *style = QApplication::style();
+	QPalette::ColorRole cr = this->getColorRole(option);
+	style->drawItemText(painter, option.rect, Qt::AlignVCenter, option.palette, true, item->text(), cr);
+
 	QPoint c = option.rect.center();
 	int textWidth = painter->fontMetrics().width(item->text());
 	painter->drawLine(option.rect.x() + textWidth + 5, c.y(), option.rect.right() - 5, c.y());
@@ -172,39 +176,55 @@ void UniqueLibraryItemDelegate::drawTrack(QPainter *p, QStyleOptionViewItem &opt
 	QString s;
 
 	static int rightIndent = 5;
+	int w = p->fontMetrics().width(trackLength);
 
 	if (QGuiApplication::isLeftToRight()) {
 
-		int w = p->fontMetrics().width(trackLength);
 		lengthRect = QRect(option.rect.x() + option.rect.width() - (w + rightIndent), option.rect.y(), w + rightIndent, option.rect.height());
 		titleRect = QRect(option.rect.x() + rightIndent, option.rect.y(), option.rect.width() - lengthRect.width() - rightIndent, option.rect.height());
-
 		s = p->fontMetrics().elidedText(option.text, Qt::ElideRight, titleRect.width());
+
 	} else {
+
+		lengthRect = QRect(option.rect.x() + option.rect.width() - (w + rightIndent), option.rect.y(), w + rightIndent, option.rect.height());
 		titleRect = QRect(option.rect.x(), option.rect.y(), option.rect.width() - rightIndent, option.rect.height());
 		s = p->fontMetrics().elidedText(option.text, Qt::ElideRight, titleRect.width());
+
 	}
 
 	// Draw track number and title
+	QStyle *style = QApplication::style();
+	QPalette::ColorRole cr = this->getColorRole(option);
 	if (s.isEmpty()) {
-		p->setPen(option.palette.mid().color());
-		p->drawText(titleRect, Qt::AlignVCenter, p->fontMetrics().elidedText(tr("(empty)"), Qt::ElideRight, titleRect.width()));
+		style->drawItemText(p, titleRect, Qt::AlignVCenter, option.palette, false, p->fontMetrics().elidedText(tr("(empty)"), Qt::ElideRight, titleRect.width()));
 	} else {
-		if (option.state.testFlag(QStyle::State_Selected) || option.state.testFlag(QStyle::State_MouseOver)) {
-			if (qAbs(option.palette.highlight().color().lighter(lighterValue).value() - option.palette.highlightedText().color().value()) < 128) {
-				p->setPen(option.palette.text().color());
-			} else {
-				p->setPen(option.palette.highlightedText().color());
-			}
-		}
-		p->drawText(titleRect, Qt::AlignVCenter, s);
+		style->drawItemText(p, titleRect, Qt::AlignVCenter, option.palette, true, s, cr);
 	}
 
 	// Draw track length
 	if (QGuiApplication::isLeftToRight()) {
-		p->drawText(lengthRect, Qt::AlignVCenter, trackLength);
+		style->drawItemText(p, lengthRect, Qt::AlignVCenter, option.palette, true, trackLength, cr);
 	} else {
 
 	}
 	p->restore();
+}
+
+QPalette::ColorRole UniqueLibraryItemDelegate::getColorRole(QStyleOptionViewItem &option) const
+{
+	QPalette::ColorRole cr;
+	if (option.state.testFlag(QStyle::State_Selected)) {
+		if (qAbs(option.palette.highlight().color().lighter(lighterValue).value() - option.palette.highlightedText().color().value()) < 128) {
+			if (SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				cr = QPalette::HighlightedText;
+			} else {
+				cr = QPalette::Text;
+			}
+		} else {
+			cr = QPalette::HighlightedText;
+		}
+	} else {
+		cr = QPalette::Text;
+	}
+	return cr;
 }
