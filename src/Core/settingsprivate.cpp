@@ -374,18 +374,17 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 		}
 		palette.setColor(QPalette::Window, windowColor);
 
-	} else if (cr == QPalette::HighlightedText) {
-		qDebug() << Q_FUNC_INFO << color << color.isValid();
-		QColor highlightedText;
+	} else if (cr == QPalette::Highlight) {
 
 		if (!isCustomTextColorOverriden()) {
+			QColor highlightedText;
 			if (qAbs(color.value() - QColor(Qt::white).value()) < 128) {
 				highlightedText = Qt::black;
 			} else {
 				highlightedText = Qt::white;
 			}
+			palette.setColor(QPalette::HighlightedText, highlightedText);
 		}
-		palette.setColor(cr, highlightedText);
 	}
 	palette.setColor(cr, color);
 

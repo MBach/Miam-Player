@@ -215,12 +215,18 @@ void MiamStyle::drawControl(ControlElement element, const QStyleOption *option, 
 			alignment |= Qt::TextHideMnemonic;
 		}
 		if (somi->state.testFlag(QStyle::State_Enabled)) {
-			if (act && SettingsPrivate::instance()->isCustomTextColorOverriden()) {
-				painter->setPen(palette.highlightedText().color());
-			} else if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
-				painter->setPen(palette.highlightedText().color());
+			if (SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				if (act) {
+					painter->setPen(palette.highlightedText().color());
+				} else {
+					painter->setPen(palette.text().color());
+				}
 			} else {
-				painter->setPen(palette.text().color());
+				if (qAbs(palette.text().color().value() - brush.color().value()) < 128) {
+					painter->setPen(palette.highlightedText().color());
+				} else {
+					painter->setPen(palette.text().color());
+				}
 			}
 		} /*else if (act) {
 			painter->setPen(palette.mid().color());

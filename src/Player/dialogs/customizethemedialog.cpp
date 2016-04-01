@@ -428,7 +428,8 @@ void CustomizeThemeDialog::showColorDialog()
 {
 	_targetedColor = findChild<Reflector*>(sender()->objectName().replace("ToolButton", "Widget"));
 	if (_targetedColor) {
-		_targetedColor->setColor(QApplication::palette().color(_targetedColor->colorRole()));
+		QPalette::ColorRole cr = _targetedColor->colorRole();
+		_targetedColor->setColor(QApplication::palette().color(cr));
 
 		this->setAttribute(Qt::WA_DeleteOnClose, false);
 		ColorDialog *colorDialog = new ColorDialog(this);
@@ -436,6 +437,15 @@ void CustomizeThemeDialog::showColorDialog()
 		this->hide();
 		int i = colorDialog->exec();
 		if (i >= 0) {
+			// Automatically adjusts Reflector Widgets for Text colors if one hasn't check the option
+			if (!SettingsPrivate::instance()->isCustomTextColorOverriden()) {
+				QPalette palette = QApplication::palette();
+				if (cr == QPalette::Base) {
+					fontColorWidget->setColor(palette.color(QPalette::Text));
+				} else if (cr == QPalette::Highlight) {
+					selectedFontColorWidget->setColor(palette.color(QPalette::HighlightedText));
+				}
+			}
 			this->show();
 			this->setAttribute(Qt::WA_DeleteOnClose);
 		}
@@ -459,13 +469,15 @@ void CustomizeThemeDialog::toggleCustomColors(bool b)
 	enableCustomTextColorsRadioButton->setEnabled(b);
 	disableCustomTextColorsRadioButton->setEnabled(b);
 
-	QPalette palette = QApplication::palette();
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	QPalette palette = settings->customPalette();
 	QColor base = palette.base().color();
 	QColor highlight = palette.highlight().color();
 
 	if (b) {
 		bgPrimaryColorWidget->setColor(base);
 		selectedItemColorWidget->setColor(highlight);
+		QApplication::setPalette(settings->customPalette());
 	} else {
 		int gray = qGray(base.rgb());
 		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
