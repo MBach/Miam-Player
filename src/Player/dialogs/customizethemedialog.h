@@ -46,6 +46,10 @@ private:
 
 	void setupActions();
 
+	void toggleCustomColorsGridLayout(QGridLayout *gridLayout, bool enabled);
+
+	void toggleCustomColorsReflector(Reflector *one, Reflector *two, bool enabled);
+
 protected:
 	/** Automatically centers the parent window when closing this dialog. */
 	virtual void closeEvent(QCloseEvent *e) override;
@@ -66,9 +70,9 @@ private slots:
 	 * Also, reorder the mainWindow and the color dialog to avoid overlapping, if possible. */
 	void showColorDialog();
 
-	void toggleCustomColors(bool b);
+	void toggleCustomColors(bool enabled);
 
-	void toggleCustomTextColors(bool b);
+	void toggleCustomTextColors(bool enabled);
 };
 
 #endif // CUSTOMIZETHEMEDIALOG_H

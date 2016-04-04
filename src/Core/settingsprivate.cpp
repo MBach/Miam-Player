@@ -175,7 +175,8 @@ bool SettingsPrivate::isCustomColors() const
 
 bool SettingsPrivate::isCustomTextColorOverriden() const
 {
-	return value("customTextColorOverriden", false).toBool();
+	bool b = value("customTextColorOverriden", false).toBool();
+	return b && isCustomColors();
 }
 
 bool SettingsPrivate::isExtendedSearchVisible() const
@@ -385,7 +386,24 @@ void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &c
 			}
 			palette.setColor(QPalette::HighlightedText, highlightedText);
 		}
+	} else if (cr == QPalette::Text || cr == QPalette::HighlightedText) {
+		if (!isCustomTextColorOverriden()) {
+			QColor c1;
+			if (cr == QPalette::Text) {
+				c1 = palette.base().color();
+			} else {
+				c1 = palette.highlight().color();
+			}
+			QColor c2;
+			if (qAbs(c1.value() - QColor(Qt::white).value()) < 128) {
+				c2 = Qt::black;
+			} else {
+				c2 = Qt::white;
+			}
+			palette.setColor(cr, c2);
+		}
 	}
+	/// XXX
 	palette.setColor(cr, color);
 
 	QApplication::setPalette(palette);

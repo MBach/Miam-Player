@@ -41,6 +41,18 @@ CustomizeThemeDialog::CustomizeThemeDialog(QWidget *parent)
 	_animation->setDuration(200);
 	_animation->setTargetObject(this);
 
+	// Custom colors in the whole application
+	auto settingsPrivate = SettingsPrivate::instance();
+	bool customColors = settingsPrivate->isCustomColors();
+	if (customColors) {
+		enableCustomColorsRadioButton->setChecked(true);
+	}
+
+	// Override text color or not which is usually computed automatically
+	if (settingsPrivate->isCustomTextColorOverriden()) {
+		enableCustomTextColorsRadioButton->setChecked(true);
+	}
+
 	this->setupActions();
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -124,17 +136,7 @@ void CustomizeThemeDialog::loadTheme()
 		disableAlternateBGRadioButton->setChecked(true);
 	}
 
-	// Custom colors in the whole application
 	bool customColors = settingsPrivate->isCustomColors();
-	if (customColors) {
-		enableCustomColorsRadioButton->setChecked(true);
-	}
-
-	// Override text color or not which is usually computed automatically
-	if (settingsPrivate->isCustomTextColorOverriden()) {
-		enableCustomTextColorsRadioButton->setChecked(true);
-	}
-
 	this->toggleCustomColors(customColors);
 	// Custom text color can be enabled only if custom colors are enabled first!
 	this->toggleCustomTextColors(customColors && settingsPrivate->isCustomTextColorOverriden());
@@ -333,6 +335,36 @@ void CustomizeThemeDialog::setupActions()
 	connect(radioButtonShowNeverScoredTracks, &QRadioButton::toggled, settings, &Settings::setShowNeverScored);
 }
 
+void CustomizeThemeDialog::toggleCustomColorsGridLayout(QGridLayout *gridLayout, bool enabled)
+{
+	for (int i = 0; i < gridLayout->rowCount(); i++) {
+		for (int j = 0; j < gridLayout->columnCount(); j++) {
+			QLayoutItem *item = gridLayout->itemAtPosition(i, j);
+			if (item && item->widget()) {
+				item->widget()->setEnabled(enabled);
+			}
+		}
+	}
+}
+
+void CustomizeThemeDialog::toggleCustomColorsReflector(Reflector *one, Reflector *two, bool enabled)
+{
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	QPalette palette = settings->customPalette();
+	QColor colorOne = palette.color(one->colorRole());
+	QColor colorTwo = palette.color(two->colorRole());
+	if (enabled) {
+		one->setColor(colorOne);
+		two->setColor(colorTwo);
+		QApplication::setPalette(settings->customPalette());
+	} else {
+		int gray = qGray(colorOne.rgb());
+		one->setColor(QColor(gray, gray, gray));
+		gray = qGray(colorTwo.rgb());
+		two->setColor(QColor(gray, gray, gray));
+	}
+}
+
 /** Automatically centers the parent window when closing this dialog. */
 void CustomizeThemeDialog::closeEvent(QCloseEvent *e)
 {
@@ -452,64 +484,27 @@ void CustomizeThemeDialog::showColorDialog()
 	}
 }
 
-void CustomizeThemeDialog::toggleCustomColors(bool b)
+void CustomizeThemeDialog::toggleCustomColors(bool enabled)
 {
-	qDebug() << Q_FUNC_INFO << b;
+	qDebug() << Q_FUNC_INFO << enabled;
+	this->toggleCustomColorsGridLayout(customColorsGridLayout, enabled);
 
-	for (int i = 0; i < customColorsGridLayout->rowCount(); i++) {
-		for (int j = 0; j < customColorsGridLayout->columnCount(); j++) {
-			QLayoutItem *item = customColorsGridLayout->itemAtPosition(i, j);
-			if (item && item->widget()) {
-				qDebug() << Q_FUNC_INFO << item->widget()->objectName();
-				item->widget()->setEnabled(b);
-			}
-		}
-	}
-	labelOverrideTextColor->setEnabled(b);
-	enableCustomTextColorsRadioButton->setEnabled(b);
-	disableCustomTextColorsRadioButton->setEnabled(b);
+	labelOverrideTextColor->setEnabled(enabled);
+	enableCustomTextColorsRadioButton->setEnabled(enabled);
+	disableCustomTextColorsRadioButton->setEnabled(enabled);
 
-	SettingsPrivate *settings = SettingsPrivate::instance();
-	QPalette palette = settings->customPalette();
-	QColor base = palette.base().color();
-	QColor highlight = palette.highlight().color();
-
-	if (b) {
-		bgPrimaryColorWidget->setColor(base);
-		selectedItemColorWidget->setColor(highlight);
-		QApplication::setPalette(settings->customPalette());
+	this->toggleCustomColorsReflector(bgPrimaryColorWidget, selectedItemColorWidget, enabled);
+	if (enabled) {
+		this->toggleCustomTextColors(SettingsPrivate::instance()->isCustomTextColorOverriden());
 	} else {
-		int gray = qGray(base.rgb());
-		bgPrimaryColorWidget->setColor(QColor(gray, gray, gray));
-		gray = qGray(highlight.rgb());
-		selectedItemColorWidget->setColor(QColor(gray, gray, gray));
+		this->toggleCustomTextColors(false);
 	}
 }
 
-void CustomizeThemeDialog::toggleCustomTextColors(bool b)
+void CustomizeThemeDialog::toggleCustomTextColors(bool enabled)
 {
-	qDebug() << Q_FUNC_INFO << b;
-	for (int i = 0; i < customTextColorsGridLayout->rowCount(); i++) {
-		for (int j = 0; j < customTextColorsGridLayout->columnCount(); j++) {
-			QLayoutItem *item = customTextColorsGridLayout->itemAtPosition(i, j);
-			if (item && item->widget()) {
-				qDebug() << Q_FUNC_INFO << item->widget()->objectName();
-				item->widget()->setEnabled(b);
-			}
-		}
-	}
+	qDebug() << Q_FUNC_INFO << enabled;
 
-	QPalette palette = QApplication::palette();
-	QColor text = palette.text().color();
-	QColor highlightedText = palette.highlightedText().color();
-
-	if (b) {
-		fontColorWidget->setColor(text);
-		selectedFontColorWidget->setColor(highlightedText);
-	} else {
-		int gray = qGray(text.rgb());
-		fontColorWidget->setColor(QColor(gray, gray, gray));
-		gray = qGray(highlightedText.rgb());
-		selectedFontColorWidget->setColor(QColor(gray, gray, gray));
-	}
+	this->toggleCustomColorsGridLayout(customTextColorsGridLayout, enabled);
+	this->toggleCustomColorsReflector(fontColorWidget, selectedFontColorWidget, enabled);
 }
