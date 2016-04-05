@@ -24,6 +24,7 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 
 	// Add a new playlist
 	connect(this, &QTabWidget::currentChanged, this, [=]() {
+		qDebug() << Q_FUNC_INFO;
 		QMediaPlaylist::PlaybackMode m = this->currentPlayList()->mediaPlaylist()->playbackMode();
 		emit updatePlaybackModeButton(m);
 	});
@@ -441,11 +442,11 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 	}
 }
 
-int TabPlaylist::closePlaylist(int index)
+void TabPlaylist::closePlaylist(int index)
 {
 	Playlist *p = playlists().at(index);
 	if (!(p && p->mediaPlaylist())) {
-		return 0;
+		return;
 	}
 
 	// If playlist is a loaded one, and hasn't changed then just close it. As well if empty too
@@ -460,19 +461,19 @@ int TabPlaylist::closePlaylist(int index)
 		}
 		switch (action) {
 		case SettingsPrivate::PDA_AskUserForAction: {
-			int returnCode = 0;
+			//int returnCode = 0;
 			ClosePlaylistPopup closePopup(p, index);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToSavePlaylist, [=](bool overwrite) {
 				emit aboutToSavePlaylist(p, index, overwrite);
 			});
 			connect(&closePopup, &ClosePlaylistPopup::aboutToDeletePlaylist, this, &TabPlaylist::deletePlaylist);
 			connect(&closePopup, &ClosePlaylistPopup::aboutToRemoveTab, this, &TabPlaylist::removeTabFromCloseButton);
-			connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [&returnCode]() {
+			//connect(&closePopup, &ClosePlaylistPopup::aboutToCancel, this, [=]() {
 				// Interrupt exit!
-				returnCode = 1;
-			});
+				//returnCode = 1;
+			//});
 			closePopup.exec();
-			return returnCode;
+			break;
 		}
 		case SettingsPrivate::PDA_SaveOnClose:
 			emit aboutToSavePlaylist(p, false);
@@ -482,5 +483,4 @@ int TabPlaylist::closePlaylist(int index)
 			break;
 		}
 	}
-	return 0;
 }

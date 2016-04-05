@@ -63,7 +63,7 @@ public slots:
 	/** Add external folders (from a drag and drop) to the current playlist. */
 	void addExtFolders(const QList<QDir> &folders);
 
-	int closePlaylist(int index);
+	void closePlaylist(int index);
 
 	void deletePlaylist(uint playlistId);
 

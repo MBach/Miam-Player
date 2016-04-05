@@ -23,8 +23,6 @@ private:
 public:
 	explicit MediaPlaylist(QObject *parent = nullptr);
 
-	virtual ~MediaPlaylist();
-
 	void shuffle(int idx);
 
 	void skipBackward();

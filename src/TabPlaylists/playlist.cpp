@@ -18,12 +18,12 @@
 Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	: QTableView(parent)
 	, _mediaPlayer(mediaPlayer)
+	, _trackProperties(new QMenu(this))
+	, _playlistModel(new PlaylistModel(this))
 	, _isDragging(false)
 	, _hash(0)
 	, _id(0)
 {
-	_playlistModel = new PlaylistModel(this);
-
 	this->setModel(_playlistModel);
 
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -76,7 +76,6 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	// Context menu on tracks
 	/// TODO: sub menu tag -> send playlist to editor, edit in-line
-	_trackProperties = new QMenu(this);
 	QAction *removeFromCurrentPlaylist = _trackProperties->addAction(tr("Remove from playlist"));
 	QMenu *subMenuTag = new QMenu(tr("Edit tags"), this);
 	_trackProperties->addMenu(subMenuTag);

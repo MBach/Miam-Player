@@ -235,6 +235,7 @@ void MainWindow::setupActions()
 
 	// Media buttons and their shortcuts
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
+
 		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
 		actionSeekBackward->setEnabled(isPlaying);
 		actionStop->setEnabled(isPlaying);
@@ -242,8 +243,17 @@ void MainWindow::setupActions()
 		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
 		actionSeekForward->setEnabled(isPlaying);
 
-		qDebug() << Q_FUNC_INFO << _mediaPlayer->playlist();
-		bool notEmpty = _mediaPlayer->playlist() && !_mediaPlayer->playlist()->isEmpty();
+		bool notEmpty = false;
+		if (_mediaPlayer->playlist()) {
+			notEmpty = !_mediaPlayer->playlist()->isEmpty();
+
+			QMediaPlaylist::PlaybackMode mode = _mediaPlayer->playlist()->playbackMode();
+			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+			QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
+			action->setChecked(true);
+		}
+
 		actionSkipBackward->setEnabled(notEmpty);
 		actionPlay->setEnabled(notEmpty);
 		actionSkipForward->setEnabled(notEmpty);
@@ -641,13 +651,16 @@ void MainWindow::activateView(QAction *menuAction)
 			}
 		});
 
-		connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
+		/*connect(menuPlayback, &QMenu::aboutToShow, this, [=](){
+			if (!_mediaPlayer->playlist()) {
+				return;
+			}
 			QMediaPlaylist::PlaybackMode mode = _mediaPlayer->playlist()->playbackMode();
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
 			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
 			QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
 			action->setChecked(true);
-		});
+		});*/
 
 		connect(actionGroup, &QActionGroup::triggered, this, [=](QAction *action) {
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
@@ -667,7 +680,7 @@ void MainWindow::activateView(QAction *menuAction)
 		actionAddPlaylist->disconnect();
 		actionDeleteCurrentPlaylist->disconnect();
 		menuPlaylist->disconnect();
-		menuPlayback->disconnect();
+		//menuPlayback->disconnect();
 		actionGroup->disconnect();
 		actionRemoveSelectedTracks->disconnect();
 		actionMoveTracksUp->disconnect();
