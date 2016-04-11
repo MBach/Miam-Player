@@ -82,11 +82,15 @@ void PlaylistModel::createLine(int row, const TrackDAO &track)
 
 	QStandardItem *yearItem = new QStandardItem(track.year());
 	QStandardItem *iconItem = new QStandardItem;
-	if (!track.icon().isEmpty()) {
+	if (track.icon().isEmpty()) {
+		iconItem->setText(tr("Local"));
+		iconItem->setIcon(QIcon(":/icons/computer"));
+		iconItem->setToolTip(tr("Local file"));
+	} else {
 		iconItem->setIcon(QIcon(track.icon()));
+		iconItem->setToolTip(tr("Remote file"));
 	}
 	iconItem->setToolTip(track.source());
-	QUrl url(track.uri());
 
 	QStandardItem *trackDAO = new QStandardItem;
 	trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
