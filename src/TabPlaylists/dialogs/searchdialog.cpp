@@ -31,6 +31,10 @@ SearchDialog::SearchDialog(ViewPlaylists *viewPlaylists)
 	_albums->setModel(new QStandardItemModel(this));
 	_tracks->setModel(new QStandardItemModel(this));
 
+	_artists->setUniformItemSizes(true);
+	_albums->setUniformItemSizes(true);
+	_tracks->setUniformItemSizes(true);
+
 	// Init map with empty values
 	for (QListView *list : this->findChildren<QListView*>()) {
 		_hiddenItems.insert(list, QList<QStandardItem*>());
@@ -147,14 +151,20 @@ void SearchDialog::processResults(Request type, const QStandardItemList &results
 		m->insertRow(0, results.at(i));
 	}
 	m->sort(0);
-	//listToProcess->setMaximumHeight(listToProcess->count() * listToProcess->sizeHintForRow(0));
-	//listToProcess->setMinimumHeight(listToProcess->count() * listToProcess->sizeHintForRow(0));
-	//qDebug() << "number of items" << listToProcess->count();
+	listToProcess->setFixedHeight(listToProcess->model()->rowCount() * listToProcess->sizeHintForRow(0));
+	qDebug() << "number of items" << listToProcess->model()->rowCount();
+	qDebug() << "size h f r 1" << _artists->sizeHintForRow(0) << _albums->sizeHintForRow(0) << _tracks->sizeHintForRow(0);
+	qDebug() << "size h f r 2" << iconArtists->height() << iconAlbums->height() << iconTracks->height();
+	int ar = qMax(_artists->model()->rowCount() * _artists->sizeHintForRow(0), iconArtists->height());
+	int al = qMax(_albums->model()->rowCount() * _albums->sizeHintForRow(0), iconAlbums->height());
+	int tr = qMax(_tracks->model()->rowCount() * _tracks->sizeHintForRow(0), iconTracks->height());
+	artistLayoutWidget->setFixedHeight(ar);
+	albumLayoutWidget->setFixedHeight(al);
+	trackLayoutWidget->setFixedHeight(tr);
+	qDebug() << "ar al tr" << ar << al << tr;
 
-	/*int h = qMax(_artists->count() * _artists->sizeHintForRow(0), iconArtists->height()) +
-			qMax(_albums->count() * _albums->sizeHintForRow(0), iconAlbums->height()) +
-			qMax(_tracks->count() * _tracks->sizeHintForRow(0), iconTracks->height());*/
-	int h = 300;
+	int h = ar + al + tr;
+	//int h = 300;
 	h += labelSearchMore->height() + aggregated->height() + 3;
 	int minW = qMax(iconArtists->width() + _artists->sizeHintForColumn(0), 400);
 	this->resize(minW, h);

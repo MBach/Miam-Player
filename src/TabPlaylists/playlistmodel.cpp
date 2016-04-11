@@ -32,11 +32,18 @@ void PlaylistModel::clear()
 bool PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &tracks)
 {
 	int c = this->rowCount();
+	SqlDatabase db;
 	if (_mediaPlaylist->insertMedia(rowIndex, tracks)) {
 		for (QMediaContent track : tracks) {
-			FileHelper f(track);
-			if (f.isValid()) {
-				this->insertMedia(rowIndex++, f);
+			if (track.canonicalUrl().isLocalFile()) {
+				FileHelper f(track);
+				if (f.isValid()) {
+					this->insertMedia(rowIndex++, f);
+				}
+			} else {
+				qDebug() << Q_FUNC_INFO << track.canonicalUrl();
+				TrackDAO t = db.selectTrackByURI(track.canonicalUrl().toString());
+				this->createLine(rowIndex++, t);
 			}
 		}
 	}
@@ -48,13 +55,17 @@ bool PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 	int c = this->rowCount();
 	for (int i = 0; i < tracks.size(); i++) {
 		TrackDAO track = tracks.at(i);
-		this->createLine(rowIndex + i, track);
+		QMediaContent mc(QUrl(track.uri()));
+		if (_mediaPlaylist->insertMedia(rowIndex + i, mc)) {
+			this->createLine(rowIndex + i, track);
+		}
 	}
 	return c < this->rowCount();
 }
 
 void PlaylistModel::createLine(int row, const TrackDAO &track)
 {
+	qDebug() << Q_FUNC_INFO << row << track.artist() << track.album() << track.title();
 	QStandardItem *trackItem = new QStandardItem;
 	if (!track.trackNumber().isEmpty()) {
 		trackItem->setText(QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0')));
@@ -90,7 +101,6 @@ void PlaylistModel::createLine(int row, const TrackDAO &track)
 		  << yearItem << iconItem << trackDAO;
 
 	this->insertRow(row, items);
-	_mediaPlaylist->insertMedia(row, QMediaContent(url));
 }
 
 void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
