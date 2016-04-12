@@ -65,7 +65,6 @@ bool PlaylistModel::insertMedias(int rowIndex, const QList<TrackDAO> &tracks)
 
 void PlaylistModel::createLine(int row, const TrackDAO &track)
 {
-	qDebug() << Q_FUNC_INFO << row << track.artist() << track.album() << track.title();
 	QStandardItem *trackItem = new QStandardItem;
 	if (!track.trackNumber().isEmpty()) {
 		trackItem->setText(QString("%1").arg(track.trackNumber().toInt(), 2, 10, QChar('0')));
@@ -88,9 +87,8 @@ void PlaylistModel::createLine(int row, const TrackDAO &track)
 		iconItem->setToolTip(tr("Local file"));
 	} else {
 		iconItem->setIcon(QIcon(track.icon()));
-		iconItem->setToolTip(tr("Remote file"));
+		iconItem->setToolTip(track.source());
 	}
-	iconItem->setToolTip(track.source());
 
 	QStandardItem *trackDAO = new QStandardItem;
 	trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);

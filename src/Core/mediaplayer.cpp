@@ -70,7 +70,6 @@ MediaPlayer::MediaPlayer(QObject *parent)
 void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 {
 	if (remotePlayer) {
-		qDebug() << Q_FUNC_INFO << remotePlayer << remotePlayer->host();
 		_remotePlayers.insert(remotePlayer->host(), remotePlayer);
 	}
 }
@@ -97,7 +96,6 @@ void MediaPlayer::setVolume(qreal v)
 
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
 {
-	//qDebug() << Q_FUNC_INFO << "remote is null?" << (_remotePlayer == nullptr);
 	if ((_state == QMediaPlayer::PlayingState) || (_state == QMediaPlayer::PausedState)) {
 		this->stop();
 	}
@@ -105,8 +103,16 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 	// Everything is splitted in 2: local actions and remote actions
 	if (mc.canonicalUrl().isLocalFile()) {
 		_localPlayer->play(mc.canonicalUrl().toLocalFile());
-	} else if (_remotePlayer) {
-		_remotePlayer->play(mc.canonicalUrl());
+	} else {
+		// Find remote player attached to mediaContent
+		_remotePlayer = _remotePlayers.value(mc.canonicalUrl().host());
+		qDebug() << Q_FUNC_INFO << "about to play remote track" << mc.canonicalUrl().host() << _remotePlayer;
+		if (_remotePlayer) {
+			qDebug() << Q_FUNC_INFO << "about to play remote track" << mc.canonicalUrl();
+			_remotePlayer->play(mc.canonicalUrl());
+		} else {
+			qDebug() << Q_FUNC_INFO << "couldn't get remote player for" << mc.canonicalUrl();
+		}
 	}
 	this->setVolume(Settings::instance()->volume());
 }
