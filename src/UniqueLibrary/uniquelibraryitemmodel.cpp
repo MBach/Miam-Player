@@ -82,16 +82,16 @@ void UniqueLibraryItemModel::load()
 	this->deleteCache();
 
 	SqlDatabase db;
-	db.open();
+	db.init();
 
 	QSqlQuery query(db);
 	query.setForwardOnly(true);
-	if (query.exec("SELECT id, name, normalizedName, icon host FROM artists")) {
+	if (query.exec("SELECT DISTINCT artistAlbum, artistNormalized, icon host FROM cache")) {
 		QList<ArtistDAO> artists;
 		while (query.next()) {
 			ArtistDAO artist;
 			int i = -1;
-			artist.setId(query.record().value(++i).toString());
+			//artist.setId(query.record().value(++i).toString());
 			artist.setTitle(query.record().value(++i).toString());
 			artist.setTitleNormalized(query.record().value(++i).toString());
 			artist.setIcon(query.record().value(++i).toString());
@@ -101,15 +101,12 @@ void UniqueLibraryItemModel::load()
 		insertArtists(artists);
 	}
 
-	if (query.exec("SELECT alb.id, a.normalizedName || '|' || alb.year  || '|' || alb.normalizedName as merged, "\
-				   "alb.name, a.name, alb.year, alb.host, alb.icon, cover " \
-				   "FROM artists a " \
-				   "INNER JOIN albums alb ON a.id = alb.artistId")) {
+	if (query.exec("SELECT DISTINCT albumNormalized, album, year, host, icon, cover FROM cache")) {
 		QList<AlbumDAO> albums;
 		while (query.next()) {
 			AlbumDAO album;
 			int i = -1;
-			album.setId(query.record().value(++i).toString());
+			//album.setId(query.record().value(++i).toString());
 			album.setTitleNormalized(query.record().value(++i).toString());
 			album.setTitle(query.record().value(++i).toString());
 			album.setArtist(query.record().value(++i).toString());
@@ -121,32 +118,27 @@ void UniqueLibraryItemModel::load()
 		}
 		this->insertAlbums(albums);
 	}
-	if (query.exec("SELECT DISTINCT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || substr('0' || t.disc, -1, 1) as merged, " \
-				   "art.name, alb.id, t.disc " \
-				   "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-				   "INNER JOIN artists art ON t.artistId = art.id WHERE disc > 0")) {
+	if (query.exec("SELECT DISTINCT artistNormalized, artist, disc FROM cache WHERE disc > 0")) {
 		QList<AlbumDAO> discs;
 		while (query.next()) {
 			AlbumDAO disc;
 			int i = -1;
 			disc.setTitleNormalized(query.record().value(++i).toString());
 			disc.setArtist(query.record().value(++i).toString());
-			disc.setId(query.record().value(++i).toString());
+			//disc.setId(query.record().value(++i).toString());
 			disc.setDisc(query.record().value(++i).toString());
 			discs.append(disc);
 		}
 		this->insertDiscs(discs);
 	}
 
-	if (query.exec("SELECT art.normalizedName || '|' || alb.year  || '|' || alb.normalizedName || '|' || substr('0' || t.disc, -1, 1)  || '|' || substr('00' || t.trackNumber, -2, 2)  || '|' || t.title as merged, " \
-				   "t.uri, t.trackNumber, t.title, art.name, alb.name, t.length, t.rating, t.disc, t.host, t.icon " \
-				   "FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-				   "INNER JOIN artists art ON t.artistId = art.id")) {
+	if (query.exec("SELECT uri, trackNumber, trackTitle, artistAlbum, album, trackLength, rating, disc, host, icon " \
+				   "FROM cache")) {
 		QList<TrackDAO> tracks;
 		while (query.next()) {
 			TrackDAO track;
 			int i = -1;
-			track.setTitleNormalized(query.record().value(++i).toString());
+			//track.setTitleNormalized(query.record().value(++i).toString());
 			track.setUri(query.record().value(++i).toString());
 			track.setTrackNumber(query.record().value(++i).toString());
 			track.setTitle(query.record().value(++i).toString());

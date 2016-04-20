@@ -54,7 +54,7 @@ public:
 	QList<PlaylistDAO> selectPlaylists();
 
 	ArtistDAO* selectArtist(uint artistId);
-	AlbumDAO* selectAlbumFromArtist(ArtistDAO *artistDAO, uint albumId);
+	AlbumDAO* selectAlbumFromArtist(ArtistDAO *artistDAO, QString album);
 	TrackDAO selectTrackByURI(const QString &uri);
 
 	bool playlistHasBackgroundImage(uint playlistID);
@@ -68,10 +68,6 @@ public:
 	QString normalizeField(const QString &s) const;
 
 	void setPragmas();
-
-private:
-	/** When one has manually updated tracks with TagEditor, some nodes might in unstable state. */
-	bool cleanNodesWithoutTracks();
 
 public slots:
 	/** Delete cache and rescan local tracks. */

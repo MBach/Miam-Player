@@ -2,7 +2,6 @@
 
 #include "ui_uniquelibrary.h"
 
-#include <library/jumptowidget.h>
 #include <styling/paintablewidget.h>
 #include <filehelper.h>
 #include <musicsearchengine.h>
@@ -11,6 +10,7 @@
 
 #include <QLabel>
 #include <QProgressBar>
+#include <QScrollBar>
 #include <QStandardItemModel>
 
 #include <ctime>
@@ -48,7 +48,11 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	_proxy = uniqueTable->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
-	connect(searchBar, &SearchBar::aboutToStartSearch, uniqueTable->model()->proxy(), &UniqueLibraryFilterProxyModel::findMusic);
+	connect(searchBar, &SearchBar::aboutToStartSearch, this, [=](const QString &text) {
+		uniqueTable->model()->proxy()->findMusic(text);
+		uniqueTable->scrollToTop();
+		uniqueTable->verticalScrollBar()->setValue(0);
+	});
 	connect(uniqueTable, &TableView::doubleClicked, this, [=](const QModelIndex &index) {
 		this->play(index, QAbstractItemView::EnsureVisible);
 	});

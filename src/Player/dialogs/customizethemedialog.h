@@ -12,7 +12,7 @@
 
 /**
  * \brief		The CustomizeThemeDialog class is a very important class. It is designed to help one to customize theme of Miam-Player.
- * \details		Almost everything can be customize: buttons, volume bar, fonts, colors, library and tabs. Lots of efforts have been made
+ * \details		Almost everything can be customized: buttons, volume bar, fonts, colors, library and tabs. Lots of efforts have been made
  *		to apply these effects at runtime, in real time, without classic "Apply button". Also, no buttons to reset defaults are present. It is a choice
  *		and it won't be changed. Except for rare cases (colors) because it can be absolutely awful.
  * \author      Matthieu Bachelier

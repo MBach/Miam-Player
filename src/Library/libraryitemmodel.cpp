@@ -33,37 +33,41 @@ LibraryItemModel::~LibraryItemModel()
 /** Read all tracks entries in the database and send them to connected views. */
 void LibraryItemModel::load()
 {
+	qDebug() << Q_FUNC_INFO;
 	this->reset();
 
 	SqlDatabase db;
-	db.open();
+	db.init();
 
 	// Lambda function to reduce duplicate code which is relevant only in this method
 	auto loadTracks = [this] (QSqlQuery& qTracks, AlbumDAO *albumDAO, const QString &year) -> void {
 		bool internalCover = false;
+		int i = 0;
 		while (qTracks.next()) {
+			++i;
 			QSqlRecord r = qTracks.record();
-			TrackDAO *trackDAO = new TrackDAO;
+			TrackDAO trackDAO;
 			QString uri = r.value(0).toString();
-			trackDAO->setUri(uri);
-			trackDAO->setTrackNumber(r.value(1).toString());
-			trackDAO->setTitle(r.value(2).toString());
-			trackDAO->setArtist(r.value(3).toString());
-			trackDAO->setAlbum(r.value(4).toString());
-			trackDAO->setArtistAlbum(r.value(5).toString());
-			trackDAO->setLength(r.value(6).toString());
-			trackDAO->setRating(r.value(7).toInt());
-			trackDAO->setDisc(r.value(8).toString());
+			trackDAO.setUri(uri);
+			trackDAO.setTrackNumber(r.value(1).toString());
+			trackDAO.setTitle(r.value(2).toString());
+			trackDAO.setArtist(r.value(3).toString());
+			trackDAO.setAlbum(r.value(4).toString());
+			trackDAO.setArtistAlbum(r.value(5).toString());
+			trackDAO.setLength(r.value(6).toString());
+			trackDAO.setRating(r.value(7).toInt());
+			trackDAO.setDisc(r.value(8).toString());
 			if (!internalCover && r.value(9).toBool()) {
 				albumDAO->setCover(uri);
 				internalCover = true;
 			}
-			trackDAO->setHost(r.value(10).toString());
-			trackDAO->setIcon(r.value(11).toString());
-			trackDAO->setParentNode(albumDAO);
-			trackDAO->setYear(year);
-			this->insertNode(trackDAO);
+			trackDAO.setHost(r.value(10).toString());
+			trackDAO.setIcon(r.value(11).toString());
+			trackDAO.setParentNode(albumDAO);
+			trackDAO.setYear(year);
+			this->insertNode(&trackDAO);
 		}
+		qDebug() << albumDAO->title() << i;
 		if (internalCover) {
 			// Cover path is now pointing to the first track of this album, because it need to be extracted at runtime
 			this->updateNode(albumDAO);
@@ -79,18 +83,17 @@ void LibraryItemModel::load()
 		}
 
 		// Level 1: Artists
-		QSqlQuery qArtists("SELECT id, name, normalizedName FROM artists", db);
+		QSqlQuery qArtists("SELECT DISTINCT artistAlbum, artistNormalized FROM cache", db);
 		qArtists.setForwardOnly(true);
 		if (qArtists.exec()) {
 			while (qArtists.next()) {
 				QSqlRecord record = qArtists.record();
 				ArtistDAO *artistDAO = new ArtistDAO;
-				uint artistId = record.value(0).toUInt();
-				QString artist = record.value(1).toString();
-				artistDAO->setId(record.value(0).toString());
+				QString artist = record.value(0).toString();
+				//artistDAO->setId(record.value(0).toString());
 				artistDAO->setTitle(artist);
 				if (filters.isEmpty()) {
-					artistDAO->setTitleNormalized(record.value(2).toString());
+					artistDAO->setTitleNormalized(record.value(1).toString());
 				} else {
 					for (QString filter : filters) {
 						if (artist.startsWith(filter + " ", Qt::CaseInsensitive)) {
@@ -106,8 +109,8 @@ void LibraryItemModel::load()
 				// Level 2: Albums
 				QSqlQuery qAlbums(db);
 				qAlbums.setForwardOnly(true);
-				qAlbums.prepare("SELECT name, normalizedName, year, cover, host, icon, id FROM albums WHERE artistId = ?");
-				qAlbums.addBindValue(artistId);
+				qAlbums.prepare("SELECT DISTINCT album, albumNormalized, albumYear, cover, host, icon FROM cache WHERE artistNormalized = ?");
+				qAlbums.addBindValue(artistDAO->titleNormalized());
 				if (qAlbums.exec()) {
 					while (qAlbums.next()) {
 						QSqlRecord r = qAlbums.record();
@@ -120,21 +123,19 @@ void LibraryItemModel::load()
 						albumDAO->setCover(r.value(3).toString());
 						albumDAO->setHost(r.value(4).toString());
 						albumDAO->setIcon(r.value(5).toString());
-						uint albumId = r.value(6).toUInt();
+						//uint albumId = r.value(6).toUInt();
 						albumDAO->setParentNode(artistDAO);
 						albumDAO->setArtist(artistDAO->title());
-						albumDAO->setId(QString::number(albumId));
+						//albumDAO->setId(QString::number(albumId));
 						this->insertNode(albumDAO);
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(db);
 						qTracks.setForwardOnly(true);
-						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
-										"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-										"INNER JOIN artists art ON t.artistId = art.id " \
-										"WHERE t.artistId = ? AND t.albumId = ?");
-						qTracks.addBindValue(artistId);
-						qTracks.addBindValue(albumId);
+						qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
+										"host, icon FROM cache WHERE artist = ? AND album = ?");
+						qTracks.addBindValue(artist);
+						qTracks.addBindValue(album);
 						if (qTracks.exec()) {
 							loadTracks(qTracks, albumDAO, year);
 						}
@@ -146,31 +147,29 @@ void LibraryItemModel::load()
 	}
 	case SettingsPrivate::IP_Albums: {
 		// Level 1: Albums
-		QSqlQuery qAlbums("SELECT name, normalizedName, year, cover, host, icon, id FROM albums", db);
+		QSqlQuery qAlbums("SELECT DISTINCT album, albumNormalized, albumYear, cover, host, icon FROM cache", db);
 		qAlbums.setForwardOnly(true);
 		if (qAlbums.exec()) {
 			while (qAlbums.next()) {
 				QSqlRecord r = qAlbums.record();
 				AlbumDAO *albumDAO = new AlbumDAO;
-				QString album = r.value(0).toString();
-				albumDAO->setTitle(album);
-				albumDAO->setTitleNormalized(r.value(1).toString());
+				albumDAO->setTitle(r.value(0).toString());
+				QString albumNormalized = r.value(1).toString();
+				albumDAO->setTitleNormalized(albumNormalized);
 				QString year = r.value(2).toString();
 				albumDAO->setYear(year);
 				albumDAO->setCover(r.value(3).toString());
 				albumDAO->setHost(r.value(4).toString());
 				albumDAO->setIcon(r.value(5).toString());
-				uint albumId = r.value(6).toUInt();
+				//uint albumId = r.value(6).toUInt();
 				this->insertNode(albumDAO);
 
 				// Level 2: Tracks
 				QSqlQuery qTracks(db);
 				qTracks.setForwardOnly(true);
-				qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
-								"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-								"INNER JOIN artists art ON t.artistId = art.id " \
-								"WHERE t.albumId = ?");
-				qTracks.addBindValue(albumId);
+				qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
+								"host, icon FROM cache WHERE albumNormalized = ?");
+				qTracks.addBindValue(albumNormalized);
 				if (qTracks.exec()) {
 					loadTracks(qTracks, albumDAO, year);
 				}
@@ -180,33 +179,28 @@ void LibraryItemModel::load()
 	}
 	case SettingsPrivate::IP_ArtistsAlbums: {
 		// Level 1: Artist - Album
-		QSqlQuery qAlbums("SELECT art.name || ' – ' || alb.name, art.normalizedName || alb.normalizedName, alb.year, alb.cover, alb.host, alb.icon, alb.id " \
-						  "FROM albums alb " \
-						  "INNER JOIN artists art ON alb.artistId = art.id", db);
+		QSqlQuery qAlbums("SELECT artist || ' – ' || album, artistNormalized || '|' || albumNormalized, albumNormalized, albumYear, cover, host, icon FROM cache", db);
 		qAlbums.setForwardOnly(true);
 		if (qAlbums.exec()) {
 			while (qAlbums.next()) {
 				QSqlRecord r = qAlbums.record();
 				AlbumDAO *albumDAO = new AlbumDAO;
-				QString album = r.value(0).toString();
-				albumDAO->setTitle(album);
+				albumDAO->setTitle(r.value(0).toString());
 				albumDAO->setTitleNormalized(r.value(1).toString());
-				QString year = r.value(2).toString();
+				QString albumNorm = r.value(2).toString();
+				QString year = r.value(3).toString();
 				albumDAO->setYear(year);
-				albumDAO->setCover(r.value(3).toString());
-				albumDAO->setHost(r.value(4).toString());
-				albumDAO->setIcon(r.value(5).toString());
-				uint albumId = r.value(6).toUInt();
+				albumDAO->setCover(r.value(4).toString());
+				albumDAO->setHost(r.value(5).toString());
+				albumDAO->setIcon(r.value(6).toString());
 				this->insertNode(albumDAO);
 
 				// Level 2: Tracks
 				QSqlQuery qTracks(db);
 				qTracks.setForwardOnly(true);
-				qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
-								"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-								"INNER JOIN artists art ON t.artistId = art.id " \
-								"WHERE t.albumId = ?");
-				qTracks.addBindValue(albumId);
+				qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
+								"host, icon FROM cache WHERE albumNormalized = ?");
+				qTracks.addBindValue(albumNorm);
 				if (qTracks.exec()) {
 					loadTracks(qTracks, albumDAO, year);
 				}
@@ -216,7 +210,7 @@ void LibraryItemModel::load()
 	}
 	case SettingsPrivate::IP_Years: {
 		// Level 1: Years
-		QSqlQuery qYears("SELECT DISTINCT year FROM albums ORDER BY year", db);
+		QSqlQuery qYears("SELECT DISTINCT albumYear FROM cache ORDER BY albumYear", db);
 		qYears.setForwardOnly(true);
 		if (qYears.exec()) {
 			while (qYears.next()) {
@@ -230,36 +224,32 @@ void LibraryItemModel::load()
 				// Level 2: Artist - Album
 				QSqlQuery qAlbums(db);
 				qAlbums.setForwardOnly(true);
-				qAlbums.prepare("SELECT art.name || ' – ' || alb.name, art.normalizedName || alb.normalizedName, alb.year, alb.cover, alb.host, alb.icon, art.id, alb.id " \
-								"FROM albums alb INNER JOIN artists art ON alb.artistId = art.id " \
-								"WHERE alb.year = ?");
+				qAlbums.prepare("SELECT artist || ' – ' || album, artistNormalized, albumNormalized, albumYear, cover, host, icon " \
+								"FROM cache WHERE albumYear = ?");
 				qAlbums.addBindValue(vYear.toInt());
 				if (qAlbums.exec()) {
 					while (qAlbums.next()) {
 						QSqlRecord r = qAlbums.record();
 						AlbumDAO *albumDAO = new AlbumDAO;
-						QString album = r.value(0).toString();
-						albumDAO->setTitle(album);
-						albumDAO->setTitleNormalized(r.value(1).toString());
-						QString year = r.value(2).toString();
+						albumDAO->setTitle(r.value(0).toString());
+						QString artistNorm = r.value(1).toString();
+						QString albumNorm = r.value(2).toString();
+						albumDAO->setTitleNormalized(albumNorm);
+						QString year = r.value(3).toString();
 						albumDAO->setYear(year);
-						albumDAO->setCover(r.value(3).toString());
-						albumDAO->setHost(r.value(4).toString());
-						albumDAO->setIcon(r.value(5).toString());
-						uint artistId = r.value(6).toUInt();
-						uint albumId = r.value(7).toUInt();
+						albumDAO->setCover(r.value(4).toString());
+						albumDAO->setHost(r.value(5).toString());
+						albumDAO->setIcon(r.value(6).toString());
 						albumDAO->setParentNode(yearDAO);
 						this->insertNode(albumDAO);
 
 						// Level 3: Tracks
 						QSqlQuery qTracks(db);
 						qTracks.setForwardOnly(true);
-						qTracks.prepare("SELECT uri, trackNumber, title, art.name AS artist, alb.name AS album, artistAlbum, length, rating, disc, internalCover, " \
-										"t.host, t.icon FROM tracks t INNER JOIN albums alb ON t.albumId = alb.id " \
-										"INNER JOIN artists art ON t.artistId = art.id " \
-										"WHERE t.artistId = ? AND t.albumId = ?");
-						qTracks.addBindValue(artistId);
-						qTracks.addBindValue(albumId);
+						qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
+										"host, icon FROM cache WHERE artistNormalized = ? AND albumNormalized = ?");
+						qTracks.addBindValue(artistNorm);
+						qTracks.addBindValue(albumNorm);
 						if (qTracks.exec()) {
 							loadTracks(qTracks, albumDAO, year);
 						}

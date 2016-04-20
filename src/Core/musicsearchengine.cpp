@@ -138,11 +138,9 @@ void MusicSearchEngine::doSearch()
 	if (_delta.isEmpty()) {
 
 		QSqlQuery index(_db);
-		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON tracks (artistId)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON tracks (albumId)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON tracks (uri)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexArtistId ON artists (id)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexAlbumId ON albums (id)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON cache (artistNormalized)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON cache (albumNormalized)");
+		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON cache (uri)");
 	}
 
 	// Resync remote players and remote databases
@@ -174,11 +172,7 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	SqlDatabase db;
-	db.open();
-	db.exec("PRAGMA journal_mode = MEMORY");
-	db.exec("PRAGMA synchronous = OFF");
-	db.exec("PRAGMA temp_store = 2");
-	db.exec("PRAGMA foreign_keys = 1");
+	db.init();
 
 	QStringList newFoldersToAddInLibrary;
 	// Add folders that were not found first
