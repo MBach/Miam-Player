@@ -56,7 +56,7 @@ void LibraryItemModel::load()
 		}
 		trackItem->setData(r.value(3).toString(), Miam::DF_Artist);
 		trackItem->setData(r.value(5).toString(), Miam::DF_Album);
-		trackItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+		trackItem->setData(!r.value(14).toString().isEmpty(), Miam::DF_IsRemote);
 		return trackItem;
 	};
 
