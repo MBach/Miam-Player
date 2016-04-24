@@ -59,14 +59,11 @@ SOURCES += library/jumptowidget.cpp \
     mediabuttons/mediabutton.cpp \
     mediabuttons/playbackmodebutton.cpp \
     mediabuttons/stopbutton.cpp \
-    model/albumdao.cpp \
-    model/artistdao.cpp \
     model/genericdao.cpp \
     model/playlistdao.cpp \
     model/selectedtracksmodel.cpp \
     model/sqldatabase.cpp \
     model/trackdao.cpp \
-    model/yeardao.cpp \
     styling/imageutils.cpp \
     styling/lineedit.cpp \
     styling/miamslider.cpp \
@@ -100,14 +97,11 @@ HEADERS += interfaces/basicplugin.h \
     mediabuttons/playbackmodebutton.h \
     mediabuttons/playbutton.h \
     mediabuttons/stopbutton.h \
-    model/albumdao.h \
-    model/artistdao.h \
     model/genericdao.h \
     model/playlistdao.h \
     model/selectedtracksmodel.h \
     model/sqldatabase.h \
     model/trackdao.h \
-    model/yeardao.h \
     styling/imageutils.h \
     styling/lineedit.h \
     styling/miamslider.h \

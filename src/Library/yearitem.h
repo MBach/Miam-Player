@@ -2,7 +2,6 @@
 #define YEARITEM_H
 
 #include <QStandardItem>
-#include <model/yeardao.h>
 #include "libraryfilterproxymodel.h"
 #include "miamlibrary_global.hpp"
 

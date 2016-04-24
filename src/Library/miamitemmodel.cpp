@@ -16,9 +16,8 @@ MiamItemModel::~MiamItemModel()
 
 void MiamItemModel::deleteCache()
 {
-	//qDeleteAll(_hash);
+	qDeleteAll(_hash);
 	qDeleteAll(_letters);
-	//qDeleteAll(_topLevelItems);
 	qDeleteAll(_tracks);
 
 	_hash.clear();

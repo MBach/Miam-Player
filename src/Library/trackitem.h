@@ -2,7 +2,6 @@
 #define TRACKITEM_H
 
 #include <QStandardItem>
-#include "model/trackdao.h"
 #include "miamlibrary_global.hpp"
 
 /**

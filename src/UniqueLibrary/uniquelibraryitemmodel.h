@@ -5,8 +5,6 @@
 #include <miamitemmodel.h>
 #include "uniquelibraryfilterproxymodel.h"
 #include <model/trackdao.h>
-#include <model/albumdao.h>
-#include <model/artistdao.h>
 
 /**
  * \brief		The UniqueLibraryItemModel class is the model used to store all tracks in a list view.

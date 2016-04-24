@@ -59,11 +59,10 @@ namespace Miam
 		DF_CustomDisplayText	= Qt::UserRole + 12,
 		DF_NormArtist			= Qt::UserRole + 13,
 		DF_NormAlbum			= Qt::UserRole + 14,
-		//DF_Disc					= Qt::UserRole + 15,
-		DF_TrackLength			= Qt::UserRole + 16,
-		DF_CurrentPosition		= Qt::UserRole + 17,
-		DF_Artist				= Qt::UserRole + 18,
-		DF_Album				= Qt::UserRole + 19
+		DF_TrackLength			= Qt::UserRole + 15,
+		DF_CurrentPosition		= Qt::UserRole + 16,
+		DF_Artist				= Qt::UserRole + 17,
+		DF_Album				= Qt::UserRole + 18
 	};
 
 	enum TagEditorColumns : int

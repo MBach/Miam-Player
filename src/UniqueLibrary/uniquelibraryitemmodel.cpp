@@ -113,5 +113,5 @@ void UniqueLibraryItemModel::load()
 		}
 	}
 	this->proxy()->sort(this->proxy()->defaultSortColumn());
-	this->proxy()->setDynamicSortFilter(true);
+	this->proxy()->setDynamicSortFilter(false);
 }

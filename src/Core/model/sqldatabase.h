@@ -2,12 +2,9 @@
 #define SQLDATABASE_H
 
 #include "../miamcore_global.h"
-#include "artistdao.h"
-#include "albumdao.h"
 #include "settings.h"
 #include "trackdao.h"
 #include "playlistdao.h"
-#include "yeardao.h"
 
 #include <QFileInfo>
 #include <QSqlDatabase>
@@ -51,7 +48,7 @@ public:
 	PlaylistDAO selectPlaylist(uint playlistId);
 	QList<PlaylistDAO> selectPlaylists();
 
-	ArtistDAO* selectArtist(uint artistId);
+	//ArtistDAO* selectArtist(uint artistId);
 	TrackDAO selectTrackByURI(const QString &uri);
 
 	bool playlistHasBackgroundImage(uint playlistID);

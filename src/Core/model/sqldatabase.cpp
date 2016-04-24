@@ -15,7 +15,6 @@
 #include "settingsprivate.h"
 #include "musicsearchengine.h"
 #include "filehelper.h"
-#include "yeardao.h"
 
 #include <chrono>
 #include <random>
@@ -389,7 +388,7 @@ QList<PlaylistDAO> SqlDatabase::selectPlaylists()
 	return playlists;
 }
 
-ArtistDAO* SqlDatabase::selectArtist(uint artistId)
+/*ArtistDAO* SqlDatabase::selectArtist(uint artistId)
 {
 	if (!isOpen()) {
 		open();
@@ -411,7 +410,7 @@ ArtistDAO* SqlDatabase::selectArtist(uint artistId)
 	} else {
 		return nullptr;
 	}
-}
+}*/
 
 TrackDAO SqlDatabase::selectTrackByURI(const QString &uri)
 {

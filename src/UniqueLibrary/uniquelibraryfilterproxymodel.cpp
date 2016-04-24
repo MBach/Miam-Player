@@ -36,25 +36,21 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 			db.init();
 			QSqlQuery getArtist(db);
 			getArtist.setForwardOnly(true);
-			getArtist.prepare("SELECT * FROM tracks WHERE title LIKE ? AND artistId = ?");
+			getArtist.prepare("SELECT * FROM cache WHERE trackTitle LIKE ?");
 			getArtist.addBindValue("%" + filterRegExp().pattern() + "%");
-			getArtist.addBindValue(item->data(Miam::DF_ID).toUInt());
 			result = getArtist.exec() && getArtist.next();
 		}
 		break;
 	case Miam::IT_Album:
-		if (MiamSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent)) {
-			result = true;
-		} else if (filterRegExp().indexIn(item->data(Miam::DF_Artist).toString()) != -1) {
+		if (item->text().contains(filterRegExp().pattern(), Qt::CaseInsensitive)) {
 			result = true;
 		} else {
 			SqlDatabase db;
 			db.init();
 			QSqlQuery getAlbum(db);
 			getAlbum.setForwardOnly(true);
-			getAlbum.prepare("SELECT * FROM tracks WHERE title LIKE ? AND albumId = ?");
+			getAlbum.prepare("SELECT * FROM cache WHERE trackTitle LIKE ?");
 			getAlbum.addBindValue("%" + filterRegExp().pattern() + "%");
-			getAlbum.addBindValue(item->data(Miam::DF_ID).toUInt());
 			result = getAlbum.exec() && getAlbum.next();
 		}
 		break;
@@ -66,19 +62,19 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 			db.init();
 			QSqlQuery getDiscAlbum(db);
 			getDiscAlbum.setForwardOnly(true);
-			getDiscAlbum.prepare("SELECT * FROM tracks WHERE disc > 0 AND title LIKE ? AND albumId = ?");
+			getDiscAlbum.prepare("SELECT * FROM cache WHERE disc > 0 AND trackTitle LIKE ?");
 			getDiscAlbum.addBindValue("%" + filterRegExp().pattern() + "%");
-			getDiscAlbum.addBindValue(item->data(Miam::DF_ID).toUInt());
 			result = getDiscAlbum.exec() && getDiscAlbum.next();
 		}
 		break;
 	case Miam::IT_Track:
-		if (MiamSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent)) {
+		/*if (MiamSortFilterProxyModel::filterAcceptsRow(sourceRow, sourceParent)) {
 			result = true;
 		} else {
 			result = filterRegExp().indexIn(item->data(Miam::DF_Artist).toString()) != -1 ||
 					filterRegExp().indexIn(item->data(Miam::DF_Album).toString()) != -1;
-		}
+		}*/
+		result = item->text().contains(filterRegExp().pattern(), Qt::CaseInsensitive);
 		break;
 	case Miam::IT_Separator:
 		for (QModelIndex index : _topLevelItems.values(static_cast<SeparatorItem*>(item))) {
