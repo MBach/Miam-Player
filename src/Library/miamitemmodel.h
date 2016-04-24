@@ -50,11 +50,6 @@ protected:
 
 	/** Recursively remove node and its parent if the latter has no more children. */
 	void removeNode(const QModelIndex &node);
-
-public slots:
-	virtual void insertNode(GenericDAO *) {}
-
-	virtual void updateNode(GenericDAO *node);
 };
 
 #endif // MIAMITEMMODEL_H

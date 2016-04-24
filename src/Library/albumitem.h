@@ -2,8 +2,6 @@
 #define ALBUMITEM_H
 
 #include <QStandardItem>
-#include <model/albumdao.h>
-
 #include "miamlibrary_global.hpp"
 
 /**
@@ -14,13 +12,15 @@
 class MIAMLIBRARY_LIBRARY AlbumItem : public QStandardItem
 {
 public:
-	explicit AlbumItem(const AlbumDAO *dao);
+	explicit AlbumItem();
 
 	virtual ~AlbumItem() {}
 
 	QString coverPath() const;
 
 	virtual int type() const override;
+
+	uint hash() const;
 };
 
 #endif // ALBUMITEM_H

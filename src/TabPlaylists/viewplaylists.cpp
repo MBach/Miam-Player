@@ -104,6 +104,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	auto reloadLibrary = [this]() {
 		searchBar->setText(QString());
 		_searchDialog->clear();
+		library->scrollToTop();
 		library->model()->load();
 		this->update();
 	};

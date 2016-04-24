@@ -38,11 +38,6 @@ public:
 	inline QMultiHash<SeparatorItem*, QModelIndex> topLevelItems() const { return _topLevelItems; }
 
 public slots:
-	void cleanDanglingNodes();
-
-	/** Find and insert a node in the hierarchy of items. */
-	void insertNode(GenericDAO *node) override;
-
 	virtual void load() override;
 };
 

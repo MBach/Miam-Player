@@ -1,11 +1,7 @@
 #include "libraryitemmodel.h"
 
 #include <settingsprivate.h>
-#include <model/albumdao.h>
-#include <model/artistdao.h>
 #include <model/sqldatabase.h>
-#include <model/trackdao.h>
-#include <model/yeardao.h>
 #include "albumitem.h"
 #include "artistitem.h"
 #include "trackitem.h"
@@ -13,6 +9,7 @@
 
 #include <functional>
 
+#include <QRegularExpression>
 #include <QSqlQuery>
 #include <QSqlRecord>
 
@@ -39,39 +36,28 @@ void LibraryItemModel::load()
 	SqlDatabase db;
 	db.init();
 
-	// Lambda function to reduce duplicate code which is relevant only in this method
-	auto loadTracks = [this] (QSqlQuery& qTracks, AlbumDAO *albumDAO, const QString &year) -> void {
-		bool internalCover = false;
-		int i = 0;
-		while (qTracks.next()) {
-			++i;
-			QSqlRecord r = qTracks.record();
-			TrackDAO trackDAO;
-			QString uri = r.value(0).toString();
-			trackDAO.setUri(uri);
-			trackDAO.setTrackNumber(r.value(1).toString());
-			trackDAO.setTitle(r.value(2).toString());
-			trackDAO.setArtist(r.value(3).toString());
-			trackDAO.setAlbum(r.value(4).toString());
-			trackDAO.setArtistAlbum(r.value(5).toString());
-			trackDAO.setLength(r.value(6).toString());
-			trackDAO.setRating(r.value(7).toInt());
-			trackDAO.setDisc(r.value(8).toString());
-			if (!internalCover && r.value(9).toBool()) {
-				albumDAO->setCover(uri);
-				internalCover = true;
-			}
-			trackDAO.setHost(r.value(10).toString());
-			trackDAO.setIcon(r.value(11).toString());
-			trackDAO.setParentNode(albumDAO);
-			trackDAO.setYear(year);
-			this->insertNode(&trackDAO);
+	QSqlQuery q("SELECT uri, trackNumber, trackTitle, artist, artistNormalized, album, albumNormalized, artistAlbum, " \
+				"albumYear, trackLength, rating, disc, internalCover, cover, host, icon FROM cache", db);
+	q.setForwardOnly(true);
+	if (!q.exec()) {
+		return;
+	}
+
+	// Lambda function to reduce duplicate code which is relevant in this method only
+	auto loadTrack = [this] (QSqlRecord& r) -> TrackItem* {
+		TrackItem *trackItem = new TrackItem;
+		trackItem->setText(r.value(2).toString());
+		trackItem->setData(r.value(0).toString(), Miam::DF_URI);
+		trackItem->setData(r.value(1).toString(), Miam::DF_TrackNumber);
+		trackItem->setData(r.value(11).toString(), Miam::DF_DiscNumber);
+		trackItem->setData(r.value(9).toUInt(), Miam::DF_TrackLength);
+		if (r.value(10).toInt() != -1) {
+			trackItem->setData(r.value(10).toInt(), Miam::DF_Rating);
 		}
-		qDebug() << albumDAO->title() << i;
-		if (internalCover) {
-			// Cover path is now pointing to the first track of this album, because it need to be extracted at runtime
-			this->updateNode(albumDAO);
-		}
+		trackItem->setData(r.value(3).toString(), Miam::DF_Artist);
+		trackItem->setData(r.value(5).toString(), Miam::DF_Album);
+		trackItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+		return trackItem;
 	};
 
 	auto s = SettingsPrivate::instance();
@@ -82,180 +68,193 @@ void LibraryItemModel::load()
 			filters = s->libraryFilteredByArticles();
 		}
 
-		// Level 1: Artists
-		QSqlQuery qArtists("SELECT DISTINCT artistAlbum, artistNormalized FROM cache", db);
-		qArtists.setForwardOnly(true);
-		if (qArtists.exec()) {
-			while (qArtists.next()) {
-				QSqlRecord record = qArtists.record();
-				ArtistDAO *artistDAO = new ArtistDAO;
-				QString artist = record.value(0).toString();
-				//artistDAO->setId(record.value(0).toString());
-				artistDAO->setTitle(artist);
-				if (filters.isEmpty()) {
-					artistDAO->setTitleNormalized(record.value(1).toString());
-				} else {
-					for (QString filter : filters) {
-						if (artist.startsWith(filter + " ", Qt::CaseInsensitive)) {
-							artist = artist.mid(filter.length() + 1);
-							artistDAO->setCustomData(artist + ", " + filter);
-							break;
-						}
-					}
-					artistDAO->setTitleNormalized(db.normalizeField(artist));
-				}
-				this->insertNode(artistDAO);
+		QHash<uint, ArtistItem*> _artists;
+		QHash<uint, AlbumItem*> _albums;
 
-				// Level 2: Albums
-				QSqlQuery qAlbums(db);
-				qAlbums.setForwardOnly(true);
-				qAlbums.prepare("SELECT DISTINCT album, albumNormalized, albumYear, cover, host, icon FROM cache WHERE artistNormalized = ?");
-				qAlbums.addBindValue(artistDAO->titleNormalized());
-				if (qAlbums.exec()) {
-					while (qAlbums.next()) {
-						QSqlRecord r = qAlbums.record();
-						AlbumDAO *albumDAO = new AlbumDAO;
-						QString album = r.value(0).toString();
-						albumDAO->setTitle(album);
-						albumDAO->setTitleNormalized(r.value(1).toString());
-						QString year = r.value(2).toString();
-						albumDAO->setYear(year);
-						albumDAO->setCover(r.value(3).toString());
-						albumDAO->setHost(r.value(4).toString());
-						albumDAO->setIcon(r.value(5).toString());
-						//uint albumId = r.value(6).toUInt();
-						albumDAO->setParentNode(artistDAO);
-						albumDAO->setArtist(artistDAO->title());
-						//albumDAO->setId(QString::number(albumId));
-						this->insertNode(albumDAO);
+		while (q.next()) {
+			QSqlRecord r = q.record();
 
-						// Level 3: Tracks
-						QSqlQuery qTracks(db);
-						qTracks.setForwardOnly(true);
-						qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
-										"host, icon FROM cache WHERE artist = ? AND album = ?");
-						qTracks.addBindValue(artist);
-						qTracks.addBindValue(album);
-						if (qTracks.exec()) {
-							loadTracks(qTracks, albumDAO, year);
-						}
-					}
+			ArtistItem *artistItem = new ArtistItem;
+			QString artistNormalized = r.value(4).toString();
+			QString artist = r.value(3).toString();
+			QString artistAlbum = r.value(7).toString();
+			artistItem->setText(artistAlbum);
+			for (QString filter : filters) {
+				if (artist.startsWith(filter + " ", Qt::CaseInsensitive)) {
+					artist = artist.mid(filter.length() + 1);
+					artistItem->setData(artist + ", " + filter, Miam::DF_CustomDisplayText);
+					break;
 				}
 			}
+
+			if (artistNormalized.isEmpty() || !artistNormalized.contains(QRegularExpression("[\\w]"))) {
+				artistItem->setData("0", Miam::DF_NormalizedString);
+			} else {
+				artistItem->setData(artistNormalized, Miam::DF_NormalizedString);
+			}
+
+			// Add artist
+			if (_artists.contains(artistItem->hash())) {
+				auto it = _artists.find(artistItem->hash());
+				delete artistItem;
+				artistItem = (*it);
+			} else {
+				_artists.insert(artistItem->hash(), artistItem);
+				invisibleRootItem()->appendRow(artistItem);
+
+				// Also check if newly inserted artist needs to insert a separator
+				if (SeparatorItem *separator = this->insertSeparator(artistItem)) {
+					_topLevelItems.insert(separator, artistItem->index());
+				}
+			}
+
+			AlbumItem *albumItem = new AlbumItem;
+			albumItem->setText(r.value(5).toString());
+			if (r.value(6).toString().isEmpty() || !r.value(6).toString().contains(QRegularExpression("[\\w]"))) {
+				albumItem->setData("0", Miam::DF_NormalizedString);
+			} else {
+				albumItem->setData(r.value(6).toString(), Miam::DF_NormalizedString);
+			}
+			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
+			albumItem->setData(r.value(8).toString(), Miam::DF_Year);
+			albumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
+			albumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
+			albumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+
+			// Add album
+			if (_albums.contains(albumItem->hash())) {
+				auto it = _albums.find(albumItem->hash());
+				delete albumItem;
+				albumItem = *it;
+			} else {
+				_albums.insert(albumItem->hash(), albumItem);
+				artistItem->appendRow(albumItem);
+			}
+
+			// Add tracks
+			albumItem->appendRow(loadTrack(r));
 		}
 		break;
 	}
 	case SettingsPrivate::IP_Albums: {
-		// Level 1: Albums
-		QSqlQuery qAlbums("SELECT DISTINCT album, albumNormalized, albumYear, cover, host, icon FROM cache", db);
-		qAlbums.setForwardOnly(true);
-		if (qAlbums.exec()) {
-			while (qAlbums.next()) {
-				QSqlRecord r = qAlbums.record();
-				AlbumDAO *albumDAO = new AlbumDAO;
-				albumDAO->setTitle(r.value(0).toString());
-				QString albumNormalized = r.value(1).toString();
-				albumDAO->setTitleNormalized(albumNormalized);
-				QString year = r.value(2).toString();
-				albumDAO->setYear(year);
-				albumDAO->setCover(r.value(3).toString());
-				albumDAO->setHost(r.value(4).toString());
-				albumDAO->setIcon(r.value(5).toString());
-				//uint albumId = r.value(6).toUInt();
-				this->insertNode(albumDAO);
 
-				// Level 2: Tracks
-				QSqlQuery qTracks(db);
-				qTracks.setForwardOnly(true);
-				qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
-								"host, icon FROM cache WHERE albumNormalized = ?");
-				qTracks.addBindValue(albumNormalized);
-				if (qTracks.exec()) {
-					loadTracks(qTracks, albumDAO, year);
+		QHash<uint, AlbumItem*> _albums;
+		while (q.next()) {
+			QSqlRecord r = q.record();
+			QString artistNormalized = r.value(4).toString();
+
+			AlbumItem *albumItem = new AlbumItem;
+			albumItem->setText(r.value(5).toString());
+			if (r.value(6).toString().isEmpty() || !r.value(6).toString().contains(QRegularExpression("[\\w]"))) {
+				albumItem->setData("0", Miam::DF_NormalizedString);
+			} else {
+				albumItem->setData(r.value(6).toString(), Miam::DF_NormalizedString);
+			}
+			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
+			albumItem->setData(r.value(8).toString(), Miam::DF_Year);
+			albumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
+			albumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
+			albumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+
+			// Add album
+			if (_albums.contains(albumItem->hash())) {
+				auto it = _albums.find(albumItem->hash());
+				delete albumItem;
+				albumItem = (*it);
+			} else {
+				_albums.insert(albumItem->hash(), albumItem);
+				invisibleRootItem()->appendRow(albumItem);
+				// Also check if newly inserted artist needs to insert a separator
+				if (SeparatorItem *separator = this->insertSeparator(albumItem)) {
+					_topLevelItems.insert(separator, albumItem->index());
 				}
 			}
+
+			// Add tracks
+			albumItem->appendRow(loadTrack(r));
 		}
 		break;
 	}
 	case SettingsPrivate::IP_ArtistsAlbums: {
-		// Level 1: Artist - Album
-		QSqlQuery qAlbums("SELECT artist || ' – ' || album, artistNormalized || '|' || albumNormalized, albumNormalized, albumYear, cover, host, icon FROM cache", db);
-		qAlbums.setForwardOnly(true);
-		if (qAlbums.exec()) {
-			while (qAlbums.next()) {
-				QSqlRecord r = qAlbums.record();
-				AlbumDAO *albumDAO = new AlbumDAO;
-				albumDAO->setTitle(r.value(0).toString());
-				albumDAO->setTitleNormalized(r.value(1).toString());
-				QString albumNorm = r.value(2).toString();
-				QString year = r.value(3).toString();
-				albumDAO->setYear(year);
-				albumDAO->setCover(r.value(4).toString());
-				albumDAO->setHost(r.value(5).toString());
-				albumDAO->setIcon(r.value(6).toString());
-				this->insertNode(albumDAO);
+		QHash<uint, AlbumItem*> _albums;
+		while (q.next()) {
+			QSqlRecord r = q.record();
+			QString artistNormalized = r.value(4).toString();
+			QString albumNormalized = r.value(6).toString();
 
-				// Level 2: Tracks
-				QSqlQuery qTracks(db);
-				qTracks.setForwardOnly(true);
-				qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
-								"host, icon FROM cache WHERE albumNormalized = ?");
-				qTracks.addBindValue(albumNorm);
-				if (qTracks.exec()) {
-					loadTracks(qTracks, albumDAO, year);
+			AlbumItem *albumItem = new AlbumItem;
+			albumItem->setText(r.value(3).toString() + " – " + r.value(5).toString());
+			albumItem->setData(artistNormalized + "|" + albumNormalized, Miam::DF_NormalizedString);
+			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
+			albumItem->setData(r.value(8).toString(), Miam::DF_Year);
+			albumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
+			albumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
+			albumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+
+			// Add album
+			if (_albums.contains(albumItem->hash())) {
+				auto it = _albums.find(albumItem->hash());
+				delete albumItem;
+				albumItem = *it;
+			} else {
+				_albums.insert(albumItem->hash(), albumItem);
+				invisibleRootItem()->appendRow(albumItem);
+				// Also check if newly inserted artist needs to insert a separator
+				if (SeparatorItem *separator = this->insertSeparator(albumItem)) {
+					_topLevelItems.insert(separator, albumItem->index());
 				}
 			}
+
+			// Add tracks
+			albumItem->appendRow(loadTrack(r));
 		}
 		break;
 	}
 	case SettingsPrivate::IP_Years: {
-		// Level 1: Years
-		QSqlQuery qYears("SELECT DISTINCT albumYear FROM cache ORDER BY albumYear", db);
-		qYears.setForwardOnly(true);
-		if (qYears.exec()) {
-			while (qYears.next()) {
-				QSqlRecord r = qYears.record();
-				YearDAO *yearDAO = new YearDAO;
-				QVariant vYear = r.value(0);
-				yearDAO->setTitle(vYear.toString());
-				yearDAO->setTitleNormalized(vYear.toString());
-				this->insertNode(yearDAO);
 
-				// Level 2: Artist - Album
-				QSqlQuery qAlbums(db);
-				qAlbums.setForwardOnly(true);
-				qAlbums.prepare("SELECT artist || ' – ' || album, artistNormalized, albumNormalized, albumYear, cover, host, icon " \
-								"FROM cache WHERE albumYear = ?");
-				qAlbums.addBindValue(vYear.toInt());
-				if (qAlbums.exec()) {
-					while (qAlbums.next()) {
-						QSqlRecord r = qAlbums.record();
-						AlbumDAO *albumDAO = new AlbumDAO;
-						albumDAO->setTitle(r.value(0).toString());
-						QString artistNorm = r.value(1).toString();
-						QString albumNorm = r.value(2).toString();
-						albumDAO->setTitleNormalized(albumNorm);
-						QString year = r.value(3).toString();
-						albumDAO->setYear(year);
-						albumDAO->setCover(r.value(4).toString());
-						albumDAO->setHost(r.value(5).toString());
-						albumDAO->setIcon(r.value(6).toString());
-						albumDAO->setParentNode(yearDAO);
-						this->insertNode(albumDAO);
+		QHash<uint, YearItem*> _years;
+		QHash<uint, AlbumItem*> _artistAlbums;
 
-						// Level 3: Tracks
-						QSqlQuery qTracks(db);
-						qTracks.setForwardOnly(true);
-						qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, rating, disc, internalCover, " \
-										"host, icon FROM cache WHERE artistNormalized = ? AND albumNormalized = ?");
-						qTracks.addBindValue(artistNorm);
-						qTracks.addBindValue(albumNorm);
-						if (qTracks.exec()) {
-							loadTracks(qTracks, albumDAO, year);
-						}
-					}
+		while (q.next()) {
+			QSqlRecord r = q.record();
+			YearItem *yearItem = new YearItem(r.value(8).toString());
+
+			// Add year
+			if (_years.contains(yearItem->hash())) {
+				auto it = _years.find(yearItem->hash());
+				delete yearItem;
+				yearItem = (*it);
+			} else {
+				_years.insert(yearItem->hash(), yearItem);
+				invisibleRootItem()->appendRow(yearItem);
+
+				// Also check if newly inserted artist needs to insert a separator
+				if (SeparatorItem *separator = this->insertSeparator(yearItem)) {
+					_topLevelItems.insert(separator, yearItem->index());
 				}
 			}
+
+			// Add Artist - Album
+			AlbumItem *artistAlbumItem = new AlbumItem;
+			artistAlbumItem->setText(r.value(3).toString() + " – " + r.value(5).toString());
+			artistAlbumItem->setData(r.value(4).toString() + "|" + r.value(6).toString(), Miam::DF_NormalizedString);
+			artistAlbumItem->setData(r.value(4).toString(), Miam::DF_NormArtist);
+			artistAlbumItem->setData(r.value(8).toString(), Miam::DF_Year);
+			artistAlbumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
+			artistAlbumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
+			artistAlbumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+
+			if (_artistAlbums.contains(artistAlbumItem->hash())) {
+				auto it = _artistAlbums.find(artistAlbumItem->hash());
+				delete artistAlbumItem;
+				artistAlbumItem = *it;
+			} else {
+				_artistAlbums.insert(artistAlbumItem->hash(), artistAlbumItem);
+				yearItem->appendRow(artistAlbumItem);
+			}
+
+			// Add tracks
+			artistAlbumItem->appendRow(loadTrack(r));
 		}
 		break;
 	}
@@ -372,69 +371,5 @@ void LibraryItemModel::reset()
 	case SettingsPrivate::IP_Years:
 		horizontalHeaderItem(0)->setText(tr("  Years"));
 		break;
-	}
-}
-
-void LibraryItemModel::cleanDanglingNodes()
-{
-	/// XXX: there's an empty row sometimes caused by extra SeparatorItem
-	this->rebuildSeparators();
-}
-
-/** Find and insert a node in the hierarchy of items. */
-void LibraryItemModel::insertNode(GenericDAO *node)
-{
-	if (!node) {
-		return;
-	}
-	if (node && _hash.contains(node->hash())) {
-		node->deleteLater();
-		return;
-	}
-
-	QStandardItem *nodeItem = nullptr;
-	if (TrackDAO *dao = qobject_cast<TrackDAO*>(node)) {
-		TrackItem *trackItem = new TrackItem(dao);
-		if (_tracks.contains(dao->uri())) {
-			QStandardItem *rowToDelete = _tracks.value(dao->uri());
-			// Clean unused nodes
-			this->removeNode(rowToDelete->index());
-		}
-		nodeItem = trackItem;
-		_tracks.insert(dao->uri(), trackItem);
-	} else if (AlbumDAO *dao = qobject_cast<AlbumDAO*>(node)) {
-		AlbumItem *album = static_cast<AlbumItem*>(_hash.value(dao->hash()));
-		if (album) {
-			nodeItem = album;
-		} else {
-			nodeItem = new AlbumItem(dao);
-		}
-	} else if (ArtistDAO *dao = qobject_cast<ArtistDAO*>(node)) {
-		ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(dao->hash()));
-		if (artist) {
-			nodeItem = artist;
-		} else {
-			nodeItem = new ArtistItem(dao);
-		}
-	} else if (YearDAO *dao = qobject_cast<YearDAO*>(node)) {
-		nodeItem = new YearItem(dao);
-	}
-
-	if (node->parentNode()) {
-		if (QStandardItem *parentItem = _hash.value(node->parentNode()->hash())) {
-			parentItem->appendRow(nodeItem);
-		}
-	} else if (nodeItem){
-		invisibleRootItem()->appendRow(nodeItem);
-		if (nodeItem->type() != Miam::IT_Separator) {
-			if (SeparatorItem *separator = this->insertSeparator(nodeItem)) {
-				_topLevelItems.insert(separator, nodeItem->index());
-			}
-		}
-	}
-	if (nodeItem) {
-		_hash.insert(node->hash(), nodeItem);
-	} else {
-		delete node;
 	}
 }

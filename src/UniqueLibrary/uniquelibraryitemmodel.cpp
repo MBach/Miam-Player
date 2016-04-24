@@ -43,40 +43,6 @@ UniqueLibraryFilterProxyModel *UniqueLibraryItemModel::proxy() const
 	return _proxy;
 }
 
-void UniqueLibraryItemModel::insertAlbums(const QList<AlbumDAO> &nodes)
-{
-	for (AlbumDAO album : nodes) {
-		if (album.cover().isEmpty()) {
-			appendRow({ nullptr, new AlbumItem(&album) });
-		} else {
-			appendRow({ new CoverItem(album.cover()), new AlbumItem(&album) });
-		}
-	}
-}
-
-void UniqueLibraryItemModel::insertArtists(const QList<ArtistDAO> &nodes)
-{
-	for (ArtistDAO artist : nodes) {
-		appendRow({ nullptr, new ArtistItem(&artist) });
-	}
-}
-
-void UniqueLibraryItemModel::insertDiscs(const QList<AlbumDAO> &nodes)
-{
-	for (AlbumDAO disc : nodes) {
-		appendRow({ nullptr, new DiscItem(&disc) });
-	}
-}
-
-void UniqueLibraryItemModel::insertTracks(const QList<TrackDAO> &nodes)
-{
-	for (TrackDAO track : nodes) {
-		appendRow({ nullptr, new TrackItem(&track) });
-	}
-	this->proxy()->sort(this->proxy()->defaultSortColumn());
-	this->proxy()->setDynamicSortFilter(true);
-}
-
 void UniqueLibraryItemModel::load()
 {
 	this->deleteCache();
@@ -86,70 +52,66 @@ void UniqueLibraryItemModel::load()
 
 	QSqlQuery query(db);
 	query.setForwardOnly(true);
-	if (query.exec("SELECT DISTINCT artistAlbum, artistNormalized, icon host FROM cache")) {
-		QList<ArtistDAO> artists;
+	if (query.exec("SELECT DISTINCT artistAlbum, artistNormalized, icon, host FROM cache")) {
 		while (query.next()) {
-			ArtistDAO artist;
+			ArtistItem *artist = new ArtistItem;
 			int i = -1;
-			//artist.setId(query.record().value(++i).toString());
-			artist.setTitle(query.record().value(++i).toString());
-			artist.setTitleNormalized(query.record().value(++i).toString());
-			artist.setIcon(query.record().value(++i).toString());
-			artist.setHost(query.record().value(++i).toString());
-			artists.append(artist);
+			artist->setText(query.record().value(++i).toString());
+			artist->setData(query.record().value(++i).toString(), Miam::DF_NormalizedString);
+			artist->setData(query.record().value(++i).toString(), Miam::DF_IconPath);
+			artist->setData(!query.record().value(++i).toString().isEmpty(), Miam::DF_IsRemote);
+			appendRow({ nullptr, artist });
 		}
-		insertArtists(artists);
 	}
 
-	if (query.exec("SELECT DISTINCT albumNormalized, album, year, host, icon, cover FROM cache")) {
-		QList<AlbumDAO> albums;
+	if (query.exec("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, albumYear, host, icon, cover FROM cache")) {
 		while (query.next()) {
-			AlbumDAO album;
+			AlbumItem *album = new AlbumItem;
 			int i = -1;
-			//album.setId(query.record().value(++i).toString());
-			album.setTitleNormalized(query.record().value(++i).toString());
-			album.setTitle(query.record().value(++i).toString());
-			album.setArtist(query.record().value(++i).toString());
-			album.setYear(query.record().value(++i).toString());
-			album.setHost(query.record().value(++i).toString());
-			album.setIcon(query.record().value(++i).toString());
-			album.setCover(query.record().value(++i).toString());
-			albums.append(album);
+			album->setData(query.record().value(++i).toString(), Miam::DF_NormalizedString);
+			album->setText(query.record().value(++i).toString());
+			album->setData(query.record().value(++i).toString(), Miam::DF_Artist);
+			album->setData(query.record().value(++i).toString(), Miam::DF_Year);
+			++i;
+			album->setData(query.record().value(++i).toString(), Miam::DF_IconPath);
+			QString coverPath = query.record().value(++i).toString();
+			album->setData(coverPath, Miam::DF_CoverPath);
+			if (coverPath.isEmpty()) {
+				appendRow({ nullptr, album });
+			} else {
+				appendRow({ new CoverItem(coverPath), album });
+			}
 		}
-		this->insertAlbums(albums);
 	}
-	if (query.exec("SELECT DISTINCT artistNormalized, artist, disc FROM cache WHERE disc > 0")) {
-		QList<AlbumDAO> discs;
+	if (query.exec("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1), artistAlbum, disc FROM cache WHERE disc > 0")) {
 		while (query.next()) {
-			AlbumDAO disc;
+			DiscItem *disc = new DiscItem;
 			int i = -1;
-			disc.setTitleNormalized(query.record().value(++i).toString());
-			disc.setArtist(query.record().value(++i).toString());
-			//disc.setId(query.record().value(++i).toString());
-			disc.setDisc(query.record().value(++i).toString());
-			discs.append(disc);
+			disc->setData(query.record().value(++i).toString(), Miam::DF_NormalizedString);
+			disc->setData(query.record().value(++i).toString(), Miam::DF_Artist);
+			disc->setText(query.record().value(++i).toString());
+			appendRow({ nullptr, disc });
 		}
-		this->insertDiscs(discs);
 	}
 
-	if (query.exec("SELECT uri, trackNumber, trackTitle, artistAlbum, album, trackLength, rating, disc, host, icon " \
-				   "FROM cache")) {
-		QList<TrackDAO> tracks;
+	if (query.exec("SELECT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1) || '|' || substr('00' || trackNumber, -2, 2)  || '|' || trackTitle, " \
+				   "trackTitle, uri, trackNumber, artistAlbum, album, trackLength, rating, disc, host FROM cache")) {
 		while (query.next()) {
-			TrackDAO track;
+			TrackItem *track = new TrackItem;
 			int i = -1;
-			//track.setTitleNormalized(query.record().value(++i).toString());
-			track.setUri(query.record().value(++i).toString());
-			track.setTrackNumber(query.record().value(++i).toString());
-			track.setTitle(query.record().value(++i).toString());
-			track.setArtist(query.record().value(++i).toString());
-			track.setAlbum(query.record().value(++i).toString());
-			track.setLength(query.record().value(++i).toString());
-			track.setRating(query.record().value(++i).toInt());
-			track.setDisc(query.record().value(++i).toString());
-			track.setHost(query.record().value(++i).toString());
-			tracks.append(track);
+			track->setData(query.record().value(++i).toString(), Miam::DF_NormalizedString);
+			track->setText(query.record().value(++i).toString());
+			track->setData(query.record().value(++i).toString(), Miam::DF_URI);
+			track->setData(query.record().value(++i).toString(), Miam::DF_TrackNumber);
+			track->setData(query.record().value(++i).toString(), Miam::DF_Artist);
+			track->setData(query.record().value(++i).toString(), Miam::DF_Album);
+			track->setData(query.record().value(++i).toUInt(), Miam::DF_TrackLength);
+			track->setData(query.record().value(++i).toInt(), Miam::DF_Rating);
+			track->setData(query.record().value(++i).toString(), Miam::DF_DiscNumber);
+			track->setData(!query.record().value(++i).toString().isEmpty(), Miam::DF_IsRemote);
+			appendRow({ nullptr, track });
 		}
-		this->insertTracks(tracks);
 	}
+	this->proxy()->sort(this->proxy()->defaultSortColumn());
+	this->proxy()->setDynamicSortFilter(true);
 }

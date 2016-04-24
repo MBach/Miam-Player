@@ -289,35 +289,33 @@ void SearchDialog::localSearch(const QString &text)
 
 	/// XXX: Factorize this, 3 times the (almost) same code
 	QSqlQuery qSearchForArtists(db);
-	qSearchForArtists.prepare("SELECT DISTINCT a.name, a.id FROM artists a WHERE a.name like :t LIMIT 5");
+	qSearchForArtists.prepare("SELECT DISTINCT artist FROM cache WHERE artist LIKE :t LIMIT 5");
 	qSearchForArtists.bindValue(":t", "%" + text + "%");
 	if (qSearchForArtists.exec()) {
 		QList<QStandardItem*> artistList;
 		while (qSearchForArtists.next()) {
 			QStandardItem *artist = new QStandardItem(qSearchForArtists.record().value(0).toString());
 			artist->setData(_checkBoxLibrary->text(), DT_Origin);
-			artist->setData(qSearchForArtists.record().value(1).toString(), DT_Identifier);
 			artistList.append(artist);
 		}
 		this->processResults(Artist, artistList);
 	}
 
 	QSqlQuery qSearchForAlbums(db);
-	qSearchForAlbums.prepare("SELECT DISTINCT alb.name, art.name, alb.id FROM albums alb INNER JOIN artists art ON alb.artistId = art.id WHERE alb.name like :t LIMIT 5");
+	qSearchForAlbums.prepare("SELECT DISTINCT album, artist FROM cache WHERE album LIKE :t LIMIT 5");
 	qSearchForAlbums.bindValue(":t", "%" + text + "%");
 	if (qSearchForAlbums.exec()) {
 		QList<QStandardItem*> albumList;
 		while (qSearchForAlbums.next()) {
 			QStandardItem *album = new QStandardItem(qSearchForAlbums.record().value(0).toString() + " – " + qSearchForAlbums.record().value(1).toString());
 			album->setData(_checkBoxLibrary->text(), DT_Origin);
-			album->setData(qSearchForAlbums.record().value(2).toString(), DT_Identifier);
 			albumList.append(album);
 		}
 		this->processResults(Album, albumList);
 	}
 
 	QSqlQuery qSearchForTracks(db);
-	qSearchForTracks.prepare("SELECT DISTINCT t.title, COALESCE(t.artistAlbum, art.name), uri FROM tracks t INNER JOIN artists art ON t.artistId = art.id WHERE t.title like :t LIMIT 5");
+	qSearchForTracks.prepare("SELECT DISTINCT trackTitle, COALESCE(artistAlbum, artist), uri FROM cache WHERE trackTitle LIKE :t LIMIT 5");
 	qSearchForTracks.bindValue(":t", "%" + text + "%");
 	if (qSearchForTracks.exec()) {
 		QList<QStandardItem*> trackList;
@@ -325,7 +323,6 @@ void SearchDialog::localSearch(const QString &text)
 			QSqlRecord r = qSearchForTracks.record();
 			QStandardItem *track = new QStandardItem(r.value(0).toString() + " – " + r.value(1).toString());
 			track->setData(_checkBoxLibrary->text(), DT_Origin);
-			track->setData(r.value(2), DT_Identifier);
 			trackList.append(track);
 		}
 		this->processResults(Track, trackList);

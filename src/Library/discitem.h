@@ -3,7 +3,6 @@
 
 #include <QStandardItem>
 #include "miamlibrary_global.hpp"
-#include <model/albumdao.h>
 
 /**
  * \brief		The DiscItem class
@@ -13,9 +12,7 @@
 class MIAMLIBRARY_LIBRARY DiscItem : public QStandardItem
 {
 public:
-	explicit DiscItem(const QString &text);
-
-	explicit DiscItem(const AlbumDAO *dao);
+	explicit DiscItem();
 
 	virtual ~DiscItem() {}
 

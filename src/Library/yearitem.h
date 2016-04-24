@@ -14,11 +14,13 @@
 class MIAMLIBRARY_LIBRARY YearItem : public QStandardItem
 {
 public:
-	explicit YearItem(const YearDAO *dao);
+	explicit YearItem(const QString &year);
 
 	virtual ~YearItem() {}
 
 	virtual int type() const override;
+
+	uint hash() const;
 };
 
 #endif // YEARITEM_H

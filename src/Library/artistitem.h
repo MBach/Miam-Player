@@ -2,8 +2,6 @@
 #define ARTISTITEM_H
 
 #include <QStandardItem>
-#include <model/artistdao.h>
-
 #include "miamlibrary_global.hpp"
 
 /**
@@ -14,11 +12,13 @@
 class MIAMLIBRARY_LIBRARY ArtistItem : public QStandardItem
 {
 public:
-	ArtistItem(const ArtistDAO *dao);
+	explicit ArtistItem();
 
 	virtual ~ArtistItem() {}
 
 	virtual int type() const override;
+
+	uint hash() const;
 };
 
 #endif // ARTISTITEM_H

@@ -37,8 +37,6 @@ public:
 
 	void init();
 
-	bool insertIntoTableArtists(ArtistDAO *artist);
-	bool insertIntoTableAlbums(uint artistId, AlbumDAO *album);
 	uint insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting);
 	bool insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting = false);
 	bool insertIntoTableTracks(const TrackDAO &track);
@@ -54,7 +52,6 @@ public:
 	QList<PlaylistDAO> selectPlaylists();
 
 	ArtistDAO* selectArtist(uint artistId);
-	AlbumDAO* selectAlbumFromArtist(ArtistDAO *artistDAO, QString album);
 	TrackDAO selectTrackByURI(const QString &uri);
 
 	bool playlistHasBackgroundImage(uint playlistID);

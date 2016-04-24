@@ -13,7 +13,7 @@
 class MIAMLIBRARY_LIBRARY TrackItem : public QStandardItem
 {
 public:
-	explicit TrackItem(const TrackDAO *dao);
+	explicit TrackItem();
 
 	virtual ~TrackItem() {}
 

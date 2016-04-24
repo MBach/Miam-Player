@@ -1,7 +1,6 @@
 #include "libraryitemdelegate.h"
 
 #include <library/jumptowidget.h>
-#include <model/albumdao.h>
 #include <styling/imageutils.h>
 #include <cover.h>
 #include <librarytreeview.h>

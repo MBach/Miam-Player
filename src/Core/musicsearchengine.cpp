@@ -53,14 +53,10 @@ void MusicSearchEngine::doSearch()
 	if (_delta.isEmpty()) {
 		QSqlQuery cleanDb(_db);
 		cleanDb.setForwardOnly(true);
-		cleanDb.exec("DELETE FROM tracks");
-		cleanDb.exec("DELETE FROM albums");
-		cleanDb.exec("DELETE FROM artists");
+		cleanDb.exec("DELETE FROM cache");
 		cleanDb.exec("DROP INDEX indexArtist");
 		cleanDb.exec("DROP INDEX indexAlbum");
 		cleanDb.exec("DROP INDEX indexPath");
-		cleanDb.exec("DROP INDEX indexArtistId");
-		cleanDb.exec("DROP INDEX indexAlbumId");
 	}
 	_db.transaction();
 

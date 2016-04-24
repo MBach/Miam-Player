@@ -93,20 +93,3 @@ void MiamItemModel::removeNode(const QModelIndex &node)
 		this->removeNode(parent);
 	}
 }
-
-void MiamItemModel::updateNode(GenericDAO *node)
-{
-	uint h = node->hash();
-	/// Why do I have to update asynchronously this node? Can I just not fill all the information in the Database class?
-	if (AlbumItem *album = static_cast<AlbumItem*>(_hash.value(h))) {
-		AlbumDAO *dao = qobject_cast<AlbumDAO*>(node);
-		album->setData(dao->year(), Miam::DF_Year);
-		album->setData(dao->cover(), Miam::DF_CoverPath);
-		album->setData(dao->icon(), Miam::DF_IconPath);
-		album->setData(!dao->icon().isEmpty(), Miam::DF_IsRemote);
-	}/* else if (TrackItem *track = static_cast<TrackItem*>(_hash.value(h))) {
-		TrackDAO *dao = qobject_cast<TrackDAO*>(node);
-	} else if (ArtistItem *artist = static_cast<ArtistItem*>(_hash.value(h))) {
-		ArtistDAO *dao = qobject_cast<ArtistDAO*>(node);
-	}*/
-}
