@@ -749,20 +749,20 @@ void MainWindow::showTagEditor()
 		/// XXX
 		// Tag editor is opened, closing it
 		if (_tagEditor) {
+			_pluginManager->unregisterExtensionPoint(_tagEditor->extensionPoints().first);
 			_tagEditor->deleteLater();
 			_tagEditor = nullptr;
 		}
 		_tagEditor = new TagEditor;
+		_tagEditor->setOrigin(_currentView);
 		_tagEditor->installEventFilter(this);
 		_tagEditor->show();
 		_tagEditor->activateWindow();
 
-		QPair<QString, QObjectList> extensionPoints = _tagEditor->extensionPoints();
-		if (!extensionPoints.first.isEmpty()) {
-			_pluginManager->registerExtensionPoint(extensionPoints);
-		}
+		_pluginManager->registerExtensionPoint(_tagEditor->extensionPoints());
 	} else {
 		if (_tagEditor) {
+			_pluginManager->unregisterExtensionPoint(_tagEditor->extensionPoints().first);
 			_tagEditor->deleteLater();
 			_tagEditor = nullptr;
 		}

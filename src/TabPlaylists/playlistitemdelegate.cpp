@@ -55,7 +55,6 @@ bool PlaylistItemDelegate::eventFilter(QObject *object, QEvent *event)
 
 void PlaylistItemDelegate::commitAndClose()
 {
-	SqlDatabase db;
 	QStringList tracksToUpdate;
 	QStringList tracksToUpdate2;
 	// Multiple editors might have been opened by one, therefore it's required to commit and close all of them
@@ -69,6 +68,7 @@ void PlaylistItemDelegate::commitAndClose()
 		tracksToUpdate << fileName;
 		tracksToUpdate2 << QString();
 	}
+	SqlDatabase db;
 	db.updateTracks(tracksToUpdate, tracksToUpdate2);
 }
 

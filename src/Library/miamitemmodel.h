@@ -3,7 +3,6 @@
 
 #include <QStandardItemModel>
 #include <QSortFilterProxyModel>
-#include <model/genericdao.h>
 #include "separatoritem.h"
 #include "trackitem.h"
 
@@ -39,7 +38,7 @@ public:
 
 	inline QStandardItem* letterItem(const QString &letter) const { return _letters.value(letter); }
 
-	virtual void load() = 0;
+	virtual void load(const QString & = QString::null) = 0;
 
 	virtual QSortFilterProxyModel* proxy() const = 0;
 
@@ -47,9 +46,6 @@ protected:
 	void deleteCache();
 
 	SeparatorItem *insertSeparator(const QStandardItem *node);
-
-	/** Recursively remove node and its parent if the latter has no more children. */
-	void removeNode(const QModelIndex &node);
 };
 
 #endif // MIAMITEMMODEL_H

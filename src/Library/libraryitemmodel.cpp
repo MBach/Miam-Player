@@ -28,9 +28,8 @@ LibraryItemModel::~LibraryItemModel()
 {}
 
 /** Read all tracks entries in the database and send them to connected views. */
-void LibraryItemModel::load()
+void LibraryItemModel::load(const QString &)
 {
-	qDebug() << Q_FUNC_INFO;
 	this->reset();
 
 	SqlDatabase db;
@@ -95,6 +94,7 @@ void LibraryItemModel::load()
 
 			// Add artist
 			if (_artists.contains(artistItem->hash())) {
+				//qDebug() << "hash found:" << artistItem->hash() << "for" << artistItem->text() ;
 				auto it = _artists.find(artistItem->hash());
 				delete artistItem;
 				artistItem = (*it);

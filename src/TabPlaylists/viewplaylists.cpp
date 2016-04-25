@@ -156,6 +156,10 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 		}
 	});
 
+	connect(this, &AbstractView::modelReloadRequested, this, [=]() {
+		library->model()->load();
+	});
+
 	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {
 		QApplication::removeTranslator(&translator);
 		translator.load(":/translations/tabPlaylists_" + newLanguage);

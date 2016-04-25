@@ -11,5 +11,5 @@ int ArtistItem::type() const
 
 uint ArtistItem::hash() const
 {
-	return qHash(text(), 0x9e3779b9) ^ qHash(data(Miam::DF_NormalizedString).toString(), 0x9e3779b9) ^ qHash(type(), 0x9e3779b9);
+	return qHash(text()) * qHash(data(Miam::DF_NormalizedString).toString()) * qHash(type());
 }

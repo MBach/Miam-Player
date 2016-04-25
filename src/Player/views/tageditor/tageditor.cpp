@@ -390,7 +390,7 @@ void TagEditor::commitChanges()
 	}
 	_fhs.clear();
 
-	// Track name has changed?
+	// Track has changed?
 	if (!tracksToRescan.isEmpty()) {
 
 		qDebug() << tracksToRescan.size() << "tracksToRescan.size()";
@@ -419,7 +419,9 @@ void TagEditor::commitChanges()
 
 		// Check if files are already in the library, and then update them
 		if (!oldPaths.isEmpty()) {
-			SqlDatabase().updateTracks(oldPaths, newPaths);
+			SqlDatabase db;
+			connect(&db, &SqlDatabase::aboutToUpdateView, origin(), &AbstractView::modelReloadRequested);
+			db.updateTracks(oldPaths, newPaths);
 		}
 	}
 

@@ -73,8 +73,6 @@ private slots:
 	void albumWasDoubleClicked(const QModelIndex &albumIndex);
 	void trackWasDoubleClicked(const QModelIndex &track);
 
-	void appendSelectedItem(const QModelIndex &index);
-
 	/** Local search for matching expressions. */
 	void localSearch(const QString &text);
 

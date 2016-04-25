@@ -38,7 +38,7 @@ public:
 	inline QMultiHash<SeparatorItem*, QModelIndex> topLevelItems() const { return _topLevelItems; }
 
 public slots:
-	virtual void load() override;
+	virtual void load(const QString & = QString::null) override;
 };
 
 #endif // LIBRARYITEMMODEL_H

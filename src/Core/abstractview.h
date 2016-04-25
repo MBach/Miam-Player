@@ -66,6 +66,9 @@ public slots:
 	virtual void volumeSliderIncrease() {}
 
 	virtual void volumeSliderDecrease() {}
+
+signals:
+	void modelReloadRequested();
 };
 
 #endif // ABSTRACTVIEW_H

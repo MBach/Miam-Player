@@ -28,7 +28,7 @@ private:
 	QHash<uint, GenericDAO*> _cache;
 
 public:
-	explicit SqlDatabase();
+	explicit SqlDatabase(QObject *parent = nullptr);
 
 	~SqlDatabase();
 
@@ -61,7 +61,10 @@ public:
 
 	QString normalizeField(const QString &s) const;
 
+private:
 	void setPragmas();
+
+	void updateTrack(const QString &absFilePath);
 
 public slots:
 	/** Delete cache and rescan local tracks. */
@@ -74,14 +77,12 @@ public slots:
 	void saveFileRef(const QString &absFilePath);
 
 signals:
-	void aboutToResyncRemoteSources();
-	void coverWasUpdated(const QFileInfo &);
-
-	void nodeExtracted(GenericDAO *node);
-	void aboutToUpdateNode(GenericDAO *node);
-
-	void aboutToUpdateView(const QList<QUrl> &oldTracks, const QList<QUrl> &newTracks);
-	void aboutToCleanView();
+	void aboutToUpdateView();
+	//void aboutToResyncRemoteSources();
+	//void coverWasUpdated(const QFileInfo &);
+	//void nodeExtracted(GenericDAO *node);
+	//void aboutToUpdateNode(GenericDAO *node);
+	//void aboutToCleanView();
 };
 
 #endif // SQLDATABASE_H

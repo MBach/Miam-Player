@@ -197,8 +197,7 @@ void LibraryTreeView::updateSelectedTracks()
 {
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
 	qDebug() << Q_FUNC_INFO;
-	/// FIXME
-	//SqlDatabase().load();
+	model()->load();
 }
 
 /** Redefined to display a small context menu in the view. */

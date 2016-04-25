@@ -19,8 +19,8 @@
 #include <chrono>
 #include <random>
 
-SqlDatabase::SqlDatabase()
-	: QObject()
+SqlDatabase::SqlDatabase(QObject *parent)
+	: QObject(parent)
 	, QSqlDatabase("QSQLITE")
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
@@ -272,8 +272,6 @@ void SqlDatabase::removeRecordsFromHost(const QString &host)
 	removeTracks.exec();
 
 	this->commit();
-	/// FIXME
-	//this->loadFromFileDB();
 }
 
 Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
@@ -503,29 +501,83 @@ void SqlDatabase::updateTableAlbumWithCoverImage(const QString &coverPath, const
 	update.exec();
 }
 
+
+void SqlDatabase::updateTrack(const QString &absFilePath)
+{
+	FileHelper fh(absFilePath);
+	if (!fh.isValid()) {
+		qDebug() << Q_FUNC_INFO << "file is not valid, won't be updated";
+		return;
+	}
+
+	QSqlQuery updateTrack(*this);
+	updateTrack.setForwardOnly(true);
+	updateTrack.prepare("UPDATE cache SET trackNumber = ?, trackTitle = ?, artist = ?, artistNormalized = ?, album = ?, albumNormalized = ?, " \
+						"albumYear = ?, artistAlbum = ?, trackLength = ?, disc = ?, internalCover = ?, rating = ? WHERE uri = ?");
+
+	QString tn = fh.trackNumber();
+	QString title = fh.title();
+	QString artistAlbum = fh.artistAlbum().isEmpty() ? fh.artist() : fh.artistAlbum();
+
+	// Use Artist Album to reference tracks in table "tracks", not Artist
+	QString artistNorm = this->normalizeField(artistAlbum);
+	QString album = fh.album();
+	QString albumNorm = this->normalizeField(album);
+	QString length = fh.length();
+	int dn = fh.discNumber();
+
+	updateTrack.addBindValue(tn.toInt());
+	if (title.isEmpty()) {
+		updateTrack.addBindValue(fh.fileInfo().baseName());
+	} else {
+		updateTrack.addBindValue(title);
+	}
+	updateTrack.addBindValue(fh.artist());
+	updateTrack.addBindValue(artistNorm);
+	updateTrack.addBindValue(fh.album());
+	updateTrack.addBindValue(albumNorm);
+	updateTrack.addBindValue(fh.year());
+	updateTrack.addBindValue(artistAlbum);
+	updateTrack.addBindValue(length);
+	updateTrack.addBindValue(dn);
+	updateTrack.addBindValue(fh.hasCover());
+	updateTrack.addBindValue(fh.rating());
+	updateTrack.addBindValue(absFilePath);
+
+	if (!updateTrack.exec()) {
+		qDebug() << Q_FUNC_INFO << updateTrack.lastError();
+	}
+}
+
 /** Update a list of tracks. If track name has changed, will be removed from Library then added right after. */
 void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &newPaths)
 {
-	if (!isOpen()) {
-		open();
-		this->setPragmas();
-	}
+	this->init();
 
 	// Signals are blocked to prevent saveFileRef method to emit one. Load method will tell connected views to rebuild themselves
 	transaction();
 	Q_ASSERT(oldPaths.size() == newPaths.size());
 
-	qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
-	qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
+	//qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
+	//qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
+	for (int i = 0; i < newPaths.size(); i++) {
+		QString newPath = newPaths.at(i);
+		QString oldPath = oldPaths.at(i);
+		if (newPath.isEmpty()) {
+			this->updateTrack(oldPath);
+		} else {
 
-	QList<QUrl> olds;
+			QSqlQuery removeTrack(*this);
+			removeTrack.prepare("DELETE FROM cache WHERE uri = :h");
+			removeTrack.bindValue(":h", oldPath);
+			removeTrack.exec();
 
-	// If New Path exists, then fileName has changed.
-	/// TODO
+			this->saveFileRef(newPath);
+		}
+	}
 
-	QList<QUrl> news;
-	emit aboutToUpdateView(olds, news);
 	commit();
+	emit aboutToUpdateView();
 }
 
 /** Delete cache and rescan local tracks. */

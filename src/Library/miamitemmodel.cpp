@@ -82,13 +82,3 @@ SeparatorItem *MiamItemModel::insertSeparator(const QStandardItem *node)
 	}
 	return nullptr;
 }
-
-/** Recursively remove node and its parent if the latter has no more children. */
-void MiamItemModel::removeNode(const QModelIndex &node)
-{
-	QModelIndex parent = node.parent();
-	this->removeRow(node.row(), parent);
-	if (!hasChildren(parent)) {
-		this->removeNode(parent);
-	}
-}

@@ -27,7 +27,7 @@ public:
 	virtual UniqueLibraryFilterProxyModel* proxy() const override;
 
 public slots:
-	virtual void load() override;
+	virtual void load(const QString & filter = QString::null) override;
 };
 
 #endif // UNIQUELIBRARYITEMMODEL_H

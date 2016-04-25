@@ -48,17 +48,18 @@ void MusicSearchEngine::doSearch()
 	qDebug() << Q_FUNC_INFO;
 	emit aboutToSearch();
 
-	_db.init();
+	SqlDatabase db;
+	db.init();
 
 	if (_delta.isEmpty()) {
-		QSqlQuery cleanDb(_db);
+		QSqlQuery cleanDb(db);
 		cleanDb.setForwardOnly(true);
 		cleanDb.exec("DELETE FROM cache");
 		cleanDb.exec("DROP INDEX indexArtist");
 		cleanDb.exec("DROP INDEX indexAlbum");
 		cleanDb.exec("DROP INDEX indexPath");
 	}
-	_db.transaction();
+	db.transaction();
 
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
@@ -99,7 +100,7 @@ void MusicSearchEngine::doSearch()
 			// Directory has changed: we can discard cover
 			if (qFileInfo.isDir()) {
 				if (!coverPath.isEmpty() && !lastFileScannedNextToCover.isEmpty()) {
-					_db.saveCoverRef(coverPath, lastFileScannedNextToCover);
+					db.saveCoverRef(coverPath, lastFileScannedNextToCover);
 					coverPath.clear();
 				}
 				isNewDirectory = true;
@@ -109,13 +110,13 @@ void MusicSearchEngine::doSearch()
 			} else if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
 				if (atLeastOneAudioFileWasFound) {
 					coverPath = qFileInfo.absoluteFilePath();
-					_db.saveCoverRef(coverPath, lastFileScannedNextToCover);
-					coverPath.clear();
+					//db.saveCoverRef(coverPath, lastFileScannedNextToCover);
+					//coverPath.clear();
 				} else if (isNewDirectory) {
 					coverPath = qFileInfo.absoluteFilePath();
 				}
 			} else if (suffixes.contains(qFileInfo.suffix())) {
-				_db.saveFileRef(qFileInfo.absoluteFilePath());
+				db.saveFileRef(qFileInfo.absoluteFilePath());
 				atLeastOneAudioFileWasFound = true;
 				lastFileScannedNextToCover = qFileInfo.absoluteFilePath();
 				isNewDirectory = false;
@@ -127,13 +128,18 @@ void MusicSearchEngine::doSearch()
 				qApp->processEvents();
 			}
 		}
+		if (!coverPath.isEmpty() && !lastFileScannedNextToCover.isEmpty()) {
+			db.saveCoverRef(coverPath, lastFileScannedNextToCover);
+			coverPath.clear();
+			lastFileScannedNextToCover.clear();
+		}
 		atLeastOneAudioFileWasFound = false;
 	}
 
-	_db.commit();
+	db.commit();
 	if (_delta.isEmpty()) {
 
-		QSqlQuery index(_db);
+		QSqlQuery index(db);
 		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON cache (artistNormalized)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON cache (albumNormalized)");
 		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON cache (uri)");

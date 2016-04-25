@@ -200,42 +200,46 @@ void SearchDialog::clear()
 
 void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 {
+	const QStandardItemModel *m = qobject_cast<const QStandardItemModel*>(artistIndex.model());
+	QStandardItem *item = m->itemFromIndex(artistIndex);
+
 	SqlDatabase db;
 	db.init();
-	QSqlQuery selectTracks(db);
-	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id " \
-		"INNER JOIN artists a ON t.artistId = a.id WHERE a.id = ? ORDER BY al.year");
-	QString artistId = artistIndex.data(DT_Identifier).toString();
-	selectTracks.addBindValue(artistId);
-	if (selectTracks.exec()) {
+
+	QSqlQuery q(db);
+	q.prepare("SELECT uri FROM cache WHERE artist = ?");
+	q.addBindValue(item->data(Miam::DF_Artist).toString());
+	if (q.exec()) {
 		QList<QMediaContent> tracks;
-		while (selectTracks.next()) {
-			tracks << QMediaContent(QUrl::fromLocalFile(selectTracks.record().value(0).toString()));
+		while (q.next()) {
+			tracks.append(QMediaContent(QUrl::fromLocalFile(q.record().value(0).toString())));
 		}
 
 		Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
 		p->insertMedias(-1, tracks);
-		this->clear();
 	}
+	this->clear();
 }
 
 void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 {
+	const QStandardItemModel *m = qobject_cast<const QStandardItemModel*>(albumIndex.model());
+	QStandardItem *item = m->itemFromIndex(albumIndex);
+
 	SqlDatabase db;
 	db.init();
-	QSqlQuery selectTracks(db);
-	selectTracks.prepare("SELECT t.uri FROM tracks t INNER JOIN albums al ON t.albumId = al.id WHERE al.id = ?");
-	QString albumId = albumIndex.data(DT_Identifier).toString();
-	selectTracks.addBindValue(albumId);
-	if (selectTracks.exec()) {
-		QList<QMediaContent> tracks;
-		while (selectTracks.next()) {
-			tracks << QMediaContent(QUrl::fromLocalFile(selectTracks.record().value(0).toString()));
-		}
 
+	QSqlQuery q(db);
+	q.prepare("SELECT uri FROM cache WHERE album = ?");
+	qDebug() << Q_FUNC_INFO << item->data(Miam::DF_Album).toString();
+	q.addBindValue(item->data(Miam::DF_Album).toString());
+	if (q.exec()) {
+		QList<QMediaContent> tracks;
+		while (q.next()) {
+			tracks.append(QMediaContent(QUrl::fromLocalFile(q.record().value(0).toString())));
+		}
 		Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
 		p->insertMedias(-1, tracks);
-		this->clear();
 	}
 	this->clear();
 }
@@ -243,38 +247,8 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 void SearchDialog::trackWasDoubleClicked(const QModelIndex &track)
 {
 	Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
-	p->insertMedias(-1, { QMediaContent(QUrl::fromLocalFile(track.data(DT_Identifier).toString())) });
+	p->insertMedias(-1, { QMediaContent(QUrl::fromLocalFile(track.data(Miam::DF_URI).toString())) });
 	this->clear();
-}
-
-void SearchDialog::appendSelectedItem(const QModelIndex &index)
-{
-	const QStandardItemModel *m = qobject_cast<const QStandardItemModel*>(index.model());
-
-	// At this point, we have to decide if the object that has been double clicked is local or remote
-	QStandardItem *item = m->itemFromIndex(index);
-	qDebug() << Q_FUNC_INFO << item->text();
-
-	QListView *list = qobject_cast<QListView*>(sender());
-
-	Playlist *p = _viewPlaylists->tabPlaylists->currentPlayList();
-	if (item->data(AbstractSearchDialog::DT_Origin).toString() == _checkBoxLibrary->text()) {
-		QList<QMediaContent> tracks;
-		// Local items: easy to process! (SQL request)
-		if (list == _artists) {
-			// Select all tracks from this Artist
-		} else if (list == _albums) {
-			// Select all tracks from this Album
-		} else /*if (list == _tracks)*/ {
-			// Nothing special
-		}
-		p->insertMedias(-1, tracks);
-	} else {
-		// Remote items: apply strategy pattern to get remote information depending on the caller
-		///FIXME
-		//QList<TrackDAO> tracks;
-		//p->insertMedias(-1, tracks);
-	}
 }
 
 /** Local search for matching expressions. */
@@ -294,7 +268,9 @@ void SearchDialog::localSearch(const QString &text)
 	if (qSearchForArtists.exec()) {
 		QList<QStandardItem*> artistList;
 		while (qSearchForArtists.next()) {
-			QStandardItem *artist = new QStandardItem(qSearchForArtists.record().value(0).toString());
+			QString artistName = qSearchForArtists.record().value(0).toString();
+			QStandardItem *artist = new QStandardItem(artistName);
+			artist->setData(artistName, Miam::DF_Artist);
 			artist->setData(_checkBoxLibrary->text(), DT_Origin);
 			artistList.append(artist);
 		}
@@ -308,6 +284,7 @@ void SearchDialog::localSearch(const QString &text)
 		QList<QStandardItem*> albumList;
 		while (qSearchForAlbums.next()) {
 			QStandardItem *album = new QStandardItem(qSearchForAlbums.record().value(0).toString() + " – " + qSearchForAlbums.record().value(1).toString());
+			album->setData(qSearchForAlbums.record().value(0).toString(), Miam::DF_Album);
 			album->setData(_checkBoxLibrary->text(), DT_Origin);
 			albumList.append(album);
 		}
@@ -322,6 +299,7 @@ void SearchDialog::localSearch(const QString &text)
 		while (qSearchForTracks.next()) {
 			QSqlRecord r = qSearchForTracks.record();
 			QStandardItem *track = new QStandardItem(r.value(0).toString() + " – " + r.value(1).toString());
+			track->setData(r.value(2).toString(), Miam::DF_URI);
 			track->setData(_checkBoxLibrary->text(), DT_Origin);
 			trackList.append(track);
 		}
