@@ -11,7 +11,7 @@ miam-player ($1) $2; urgency=low
 EOF
 }
 
-DISTRIBUTIONS=(trusty vivid wily)
+DISTRIBUTIONS=(trusty vivid wily xenial)
 DATE=`date -d @$(git log -n1 --format="%at") +%Y%m%d%H%M%S`
 for D in ${DISTRIBUTIONS[@]}; do
   git checkout -- debian/changelog
