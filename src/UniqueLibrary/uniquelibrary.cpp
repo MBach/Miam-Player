@@ -50,6 +50,10 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &SearchBar::aboutToStartSearch, this, [=](const QString &text) {
 		//uniqueTable->model()->proxy()->findMusic(text);
+        if (_currentTrack) {
+            delete _currentTrack;
+            _currentTrack = nullptr;
+        }
 		uniqueTable->model()->load(text);
 		uniqueTable->scrollToTop();
 		uniqueTable->verticalScrollBar()->setValue(0);
@@ -138,6 +142,7 @@ UniqueLibrary::~UniqueLibrary()
 	if (_currentTrack) {
 		SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
 	}
+    this->disconnect();
 }
 
 bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
