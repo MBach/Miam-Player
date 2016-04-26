@@ -41,21 +41,23 @@ void LibraryItemModel::load(const QString &)
 	if (!q.exec()) {
 		return;
 	}
+	const int uri = 0, trackNumber = 1, trackTitle = 2, artist = 3, artistNorm = 4, album = 5, albumNorm = 6, artistAlbum = 7,
+			year = 8, trackLength = 9, rating = 10, disc = 11, internalCover = 12, cover = 13, host = 14, icon = 15;
 
 	// Lambda function to reduce duplicate code which is relevant in this method only
-	auto loadTrack = [this] (QSqlRecord& r) -> TrackItem* {
+	auto loadTrack = [=] (QSqlRecord& r) -> TrackItem* {
 		TrackItem *trackItem = new TrackItem;
-		trackItem->setText(r.value(2).toString());
-		trackItem->setData(r.value(0).toString(), Miam::DF_URI);
-		trackItem->setData(r.value(1).toString(), Miam::DF_TrackNumber);
-		trackItem->setData(r.value(11).toString(), Miam::DF_DiscNumber);
-		trackItem->setData(r.value(9).toUInt(), Miam::DF_TrackLength);
-		if (r.value(10).toInt() != -1) {
-			trackItem->setData(r.value(10).toInt(), Miam::DF_Rating);
+		trackItem->setText(r.value(trackTitle).toString());
+		trackItem->setData(r.value(uri).toString(), Miam::DF_URI);
+		trackItem->setData(r.value(trackNumber).toString(), Miam::DF_TrackNumber);
+		trackItem->setData(r.value(disc).toString(), Miam::DF_DiscNumber);
+		trackItem->setData(r.value(trackLength).toUInt(), Miam::DF_TrackLength);
+		if (r.value(rating).toInt() != -1) {
+			trackItem->setData(r.value(rating).toInt(), Miam::DF_Rating);
 		}
-		trackItem->setData(r.value(3).toString(), Miam::DF_Artist);
-		trackItem->setData(r.value(5).toString(), Miam::DF_Album);
-		trackItem->setData(!r.value(14).toString().isEmpty(), Miam::DF_IsRemote);
+		trackItem->setData(r.value(artist).toString(), Miam::DF_Artist);
+		trackItem->setData(r.value(album).toString(), Miam::DF_Album);
+		trackItem->setData(!r.value(host).toString().isEmpty(), Miam::DF_IsRemote);
 		return trackItem;
 	};
 
@@ -74,10 +76,10 @@ void LibraryItemModel::load(const QString &)
 			QSqlRecord r = q.record();
 
 			ArtistItem *artistItem = new ArtistItem;
-			QString artistNormalized = r.value(4).toString();
+			QString artistNormalized = r.value(artistNorm).toString();
 			QString artist = r.value(3).toString();
-			QString artistAlbum = r.value(7).toString();
-			artistItem->setText(artistAlbum);
+			QString aa = r.value(artistAlbum).toString();
+			artistItem->setText(aa);
 			for (QString filter : filters) {
 				if (artist.startsWith(filter + " ", Qt::CaseInsensitive)) {
 					artist = artist.mid(filter.length() + 1);
@@ -109,17 +111,23 @@ void LibraryItemModel::load(const QString &)
 			}
 
 			AlbumItem *albumItem = new AlbumItem;
-			albumItem->setText(r.value(5).toString());
-			if (r.value(6).toString().isEmpty() || !r.value(6).toString().contains(QRegularExpression("[\\w]"))) {
+			albumItem->setText(r.value(album).toString());
+			if (r.value(albumNorm).toString().isEmpty() || !r.value(albumNorm).toString().contains(QRegularExpression("[\\w]"))) {
 				albumItem->setData("0", Miam::DF_NormalizedString);
 			} else {
-				albumItem->setData(r.value(6).toString(), Miam::DF_NormalizedString);
+				albumItem->setData(r.value(albumNorm).toString(), Miam::DF_NormalizedString);
 			}
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
-			albumItem->setData(r.value(8).toString(), Miam::DF_Year);
-			albumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
-			albumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
-			albumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
+
+			if (r.value(internalCover).toBool()) {
+				qDebug() << Q_FUNC_INFO << r.value(album).toString() << r.value(trackTitle).toString();
+				albumItem->setData(true, Miam::DF_InternalCover);
+				albumItem->setData(r.value(uri).toString(), Miam::DF_URI);
+			}
+			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
+			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
+			albumItem->setData(!r.value(host).toString().isEmpty(), Miam::DF_IsRemote);
 
 			// Add album
 			if (_albums.contains(albumItem->hash())) {
@@ -141,20 +149,24 @@ void LibraryItemModel::load(const QString &)
 		QHash<uint, AlbumItem*> _albums;
 		while (q.next()) {
 			QSqlRecord r = q.record();
-			QString artistNormalized = r.value(4).toString();
+			QString artistNormalized = r.value(artistNorm).toString();
 
 			AlbumItem *albumItem = new AlbumItem;
-			albumItem->setText(r.value(5).toString());
-			if (r.value(6).toString().isEmpty() || !r.value(6).toString().contains(QRegularExpression("[\\w]"))) {
+			albumItem->setText(r.value(album).toString());
+			if (r.value(albumNorm).toString().isEmpty() || !r.value(albumNorm).toString().contains(QRegularExpression("[\\w]"))) {
 				albumItem->setData("0", Miam::DF_NormalizedString);
 			} else {
-				albumItem->setData(r.value(6).toString(), Miam::DF_NormalizedString);
+				albumItem->setData(r.value(albumNorm).toString(), Miam::DF_NormalizedString);
 			}
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
-			albumItem->setData(r.value(8).toString(), Miam::DF_Year);
-			albumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
-			albumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
-			albumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
+			if (r.value(internalCover).toBool()) {
+				albumItem->setData(true, Miam::DF_InternalCover);
+				albumItem->setData(r.value(uri).toString(), Miam::DF_URI);
+			}
+			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
+			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
+			albumItem->setData(!r.value(host).toString().isEmpty(), Miam::DF_IsRemote);
 
 			// Add album
 			if (_albums.contains(albumItem->hash())) {
@@ -179,17 +191,17 @@ void LibraryItemModel::load(const QString &)
 		QHash<uint, AlbumItem*> _albums;
 		while (q.next()) {
 			QSqlRecord r = q.record();
-			QString artistNormalized = r.value(4).toString();
-			QString albumNormalized = r.value(6).toString();
+			QString artistNormalized = r.value(artistNorm).toString();
+			QString albumNormalized = r.value(albumNorm).toString();
 
 			AlbumItem *albumItem = new AlbumItem;
-			albumItem->setText(r.value(3).toString() + " – " + r.value(5).toString());
+			albumItem->setText(r.value(artist).toString() + " – " + r.value(album).toString());
 			albumItem->setData(artistNormalized + "|" + albumNormalized, Miam::DF_NormalizedString);
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
-			albumItem->setData(r.value(8).toString(), Miam::DF_Year);
-			albumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
-			albumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
-			albumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
+			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
+			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
+			albumItem->setData(!r.value(host).toString().isEmpty(), Miam::DF_IsRemote);
 
 			// Add album
 			if (_albums.contains(albumItem->hash())) {
@@ -217,7 +229,7 @@ void LibraryItemModel::load(const QString &)
 
 		while (q.next()) {
 			QSqlRecord r = q.record();
-			YearItem *yearItem = new YearItem(r.value(8).toString());
+			YearItem *yearItem = new YearItem(r.value(year).toString());
 
 			// Add year
 			if (_years.contains(yearItem->hash())) {
@@ -236,13 +248,13 @@ void LibraryItemModel::load(const QString &)
 
 			// Add Artist - Album
 			AlbumItem *artistAlbumItem = new AlbumItem;
-			artistAlbumItem->setText(r.value(3).toString() + " – " + r.value(5).toString());
-			artistAlbumItem->setData(r.value(4).toString() + "|" + r.value(6).toString(), Miam::DF_NormalizedString);
-			artistAlbumItem->setData(r.value(4).toString(), Miam::DF_NormArtist);
-			artistAlbumItem->setData(r.value(8).toString(), Miam::DF_Year);
-			artistAlbumItem->setData(r.value(13).toString(), Miam::DF_CoverPath);
-			artistAlbumItem->setData(r.value(14).toString(), Miam::DF_IconPath);
-			artistAlbumItem->setData(!r.value(12).toString().isEmpty(), Miam::DF_IsRemote);
+			artistAlbumItem->setText(r.value(3).toString() + " – " + r.value(album).toString());
+			artistAlbumItem->setData(r.value(artistNorm).toString() + "|" + r.value(albumNorm).toString(), Miam::DF_NormalizedString);
+			artistAlbumItem->setData(r.value(artistNorm).toString(), Miam::DF_NormArtist);
+			artistAlbumItem->setData(r.value(year).toString(), Miam::DF_Year);
+			artistAlbumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
+			artistAlbumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
+			artistAlbumItem->setData(!r.value(14).toString().isEmpty(), Miam::DF_IsRemote);
 
 			if (_artistAlbums.contains(artistAlbumItem->hash())) {
 				auto it = _artistAlbums.find(artistAlbumItem->hash());

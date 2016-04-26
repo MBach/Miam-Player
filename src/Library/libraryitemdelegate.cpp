@@ -106,38 +106,36 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	static QImageReader imageReader;
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 
-	QString coverPath;
-	coverPath = item->data(Miam::DF_CoverPath).toString();
-	//qDebug() << Q_FUNC_INFO << item->icon().isNull() << coverPath;
-	if (!coverPath.isEmpty() && item->icon().isNull()) {
-	//if (!_loadedCovers.contains(item) && !coverPath.isEmpty()) {
-		FileHelper fh(coverPath);
-		// If it's an inner cover, load it
-		if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-			//qDebug() << Q_FUNC_INFO << "loading internal cover from file";
+	// Album has no picture yet
+	bool itemHasNoIcon = item->icon().isNull();
+	if (itemHasNoIcon) {
+
+		// Check first if an inner cover should be displayed
+		if (item->data(Miam::DF_InternalCover).toBool()) {
+			FileHelper fh(item->data(Miam::DF_URI).toString());
 			std::unique_ptr<Cover> cover(fh.extractCover());
-			//if (cover && p.loadFromData(cover->byteArray(), cover->format())) {
 			if (cover) {
-				//qDebug() << Q_FUNC_INFO << "cover was extracted";
 				QPixmap p;
 				if (p.loadFromData(cover->byteArray(), cover->format())) {
-					//p = p.scaled(_coverSize, _coverSize);
 					if (!p.isNull()) {
 						item->setIcon(p);
-						//_loadedCovers.insert(item, true);
+						itemHasNoIcon = false;
 					}
 				} else {
-					//qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
+					qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
 				}
 			} else {
-				//qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
+				qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
 			}
 		} else {
-			//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
-			imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
-			imageReader.setScaledSize(QSize(_coverSize, _coverSize));
-			item->setIcon(QPixmap::fromImage(imageReader.read()));
-			//_loadedCovers.insert(item, true);
+			QString coverPath = item->data(Miam::DF_CoverPath).toString();
+			if (!coverPath.isEmpty()) {
+				qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
+				imageReader.setScaledSize(QSize(_coverSize, _coverSize));
+				item->setIcon(QPixmap::fromImage(imageReader.read()));
+				itemHasNoIcon = false;
+			}
 		}
 	}
 
@@ -153,7 +151,7 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		painter->translate(0, (option.rect.height() - 1 - _coverSize) / 2);
 	}
 
-	if (coverPath.isEmpty()) {
+	if (itemHasNoIcon) {
 		if (_iconOpacity <= 0.25) {
 			painter->setOpacity(_iconOpacity);
 		} else {

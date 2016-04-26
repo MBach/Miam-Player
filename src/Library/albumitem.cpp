@@ -4,11 +4,6 @@
 AlbumItem::AlbumItem()
 {}
 
-QString AlbumItem::coverPath() const
-{
-	return data(Miam::DF_CoverPath).toString();
-}
-
 int AlbumItem::type() const
 {
 	return Miam::IT_Album;
@@ -25,5 +20,5 @@ uint AlbumItem::hash() const
 	}
 	uint h3 = qHash(data(Miam::DF_NormArtist).toString(), 0x9e3779b9);
 	uint h4 = qHash(type(), 0x9e3779b9);
-    return h1 * h2 * h3 * h4;
+	return h1 * h2 * h3 * h4;
 }

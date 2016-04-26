@@ -16,8 +16,6 @@ public:
 
 	virtual ~AlbumItem() {}
 
-	QString coverPath() const;
-
 	virtual int type() const override;
 
 	uint hash() const;

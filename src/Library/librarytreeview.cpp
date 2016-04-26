@@ -10,6 +10,7 @@
 #include "libraryscrollbar.h"
 
 #include <functional>
+#include <memory>
 
 #include <QtDebug>
 
@@ -140,25 +141,26 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && Settings::instance()->isCoverBelowTracksEnabled()) {
 		qDebug() << Q_FUNC_INFO;
-		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
-		QString coverPath = albumItem->coverPath();
-		if (coverPath.isEmpty()) {
-			qDebug() << Q_FUNC_INFO << "coverPath is empty, we should look for the first children with cover (if exists!)";
-			return;
-		}
 		QImage *image = nullptr;
-		if (coverPath.startsWith("file://")) {
-			FileHelper fh(coverPath);
-			Cover *cover = fh.extractCover();
+		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
+		if (albumItem->data(Miam::DF_InternalCover).toBool()) {
+
+			FileHelper fh(albumItem->data(Miam::DF_URI).toString());
+			std::unique_ptr<Cover> cover(fh.extractCover());
 			if (cover) {
 				image = new QImage();
 				image->loadFromData(cover->byteArray(), cover->format());
-				delete cover;
 			}
 		} else {
-			image = new QImage(coverPath);
+			QString coverPath = albumItem->data(Miam::DF_CoverPath).toString();
+			if (!coverPath.isEmpty()) {
+				image = new QImage(coverPath);
+			}
 		}
-		_expandedCovers.insert(albumItem, image);
+
+		if (image) {
+			_expandedCovers.insert(albumItem, image);
+		}
 	}
 }
 
