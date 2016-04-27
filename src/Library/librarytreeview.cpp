@@ -72,6 +72,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 
 	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
 		if (ff == SettingsPrivate::FF_Library) {
+			auto delegate = itemDelegate();
+			_delegate = new LibraryItemDelegate(this, _proxyModel);
+			this->setItemDelegate(_delegate);
+			delegate->deleteLater();
 			this->viewport()->update();
 		}
 	});
@@ -146,12 +150,12 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 		if (albumItem->data(Miam::DF_InternalCover).toString().isEmpty()) {
 
 			QString coverPath = albumItem->data(Miam::DF_CoverPath).toString();
-            qDebug() << Q_FUNC_INFO << "loading external cover" << coverPath;
+			qDebug() << Q_FUNC_INFO << "loading external cover" << coverPath;
 			if (!coverPath.isEmpty()) {
 				image = new QImage(coverPath);
 			}
 		} else {
-            qDebug() << Q_FUNC_INFO << "loading internal cover";
+			qDebug() << Q_FUNC_INFO << "loading internal cover";
 
 			FileHelper fh(albumItem->data(Miam::DF_InternalCover).toString());
 			std::unique_ptr<Cover> cover(fh.extractCover());

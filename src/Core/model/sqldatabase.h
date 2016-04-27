@@ -32,8 +32,6 @@ public:
 
 	~SqlDatabase();
 
-	void init();
-
 	uint insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting);
 	bool insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting = false);
 	bool insertIntoTableTracks(const TrackDAO &track);
@@ -62,6 +60,8 @@ public:
 	QString normalizeField(const QString &s) const;
 
 private:
+	void init();
+
 	void setPragmas();
 
 	void updateTrack(const QString &absFilePath);

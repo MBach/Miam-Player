@@ -493,7 +493,6 @@ void CustomizeOptionsDialog::updateMusicLocations()
 			}
 		}
 		SqlDatabase db;
-		db.init();
 
 		// Remove old locations from database cache
 		db.transaction();

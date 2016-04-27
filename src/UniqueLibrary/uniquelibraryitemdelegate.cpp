@@ -24,7 +24,6 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 {
 	/// Work In Progress
 
-	auto settingsPrivate = SettingsPrivate::instance();
 	if (index.column() == 0) {
 		QString internalCover = index.data(Miam::DF_InternalCover).toString();
 		QString cover = index.data(Miam::DF_CoverPath).toString();
@@ -35,7 +34,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		}
 		return;
 	}
-	painter->setFont(settingsPrivate->font(SettingsPrivate::FF_Library));
+	painter->setFont(SettingsPrivate::instance()->font(SettingsPrivate::FF_Library));
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	QStyleOptionViewItem o = option;
 	initStyleOption(&o, index);

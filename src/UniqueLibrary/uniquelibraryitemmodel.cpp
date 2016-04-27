@@ -48,14 +48,13 @@ void UniqueLibraryItemModel::load(const QString &filter)
 	this->deleteCache();
 
 	SqlDatabase db;
-	db.init();
 
 	QSqlQuery query(db);
 	query.setForwardOnly(true);
 	QString q = "SELECT DISTINCT artistAlbum, artistNormalized, icon, host FROM cache WHERE 1 = 1 ";
 	QString where;
 	if (!filter.isEmpty()) {
-		where = "AND trackTitle LIKE '%" + filter + "%' OR artist LIKE '%" + filter + "%' OR album LIKE '%" + filter + "%'";
+		where = " AND trackTitle LIKE '%" + filter + "%' OR artist LIKE '%" + filter + "%' OR album LIKE '%" + filter + "%' ";
 	}
 	q.append(where);
 	if (query.exec(q)) {
@@ -72,7 +71,7 @@ void UniqueLibraryItemModel::load(const QString &filter)
 
 	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, albumYear, icon, internalCover, cover FROM cache WHERE 1 = 1 ";
 	q.append(where);
-	q.append(" ORDER BY uri, internalCover");
+	q.append("ORDER BY uri, internalCover");
 	if (query.exec(q)) {
 		QString normalizedStringPrevious;
 		while (query.next()) {
@@ -135,6 +134,7 @@ void UniqueLibraryItemModel::load(const QString &filter)
 			track->setData(!query.record().value(++i).toString().isEmpty(), Miam::DF_IsRemote);
 			appendRow({ nullptr, track });
 		}
+
 	}
 	this->proxy()->sort(this->proxy()->defaultSortColumn());
 	this->proxy()->setDynamicSortFilter(false);

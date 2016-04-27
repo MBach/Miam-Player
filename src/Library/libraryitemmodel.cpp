@@ -33,7 +33,6 @@ void LibraryItemModel::load(const QString &)
 	this->reset();
 
 	SqlDatabase db;
-	db.init();
 
 	QSqlQuery q("SELECT uri, trackNumber, trackTitle, artist, artistNormalized, album, albumNormalized, artistAlbum, " \
 				"albumYear, trackLength, rating, disc, internalCover, cover, host, icon FROM cache ORDER BY uri, internalCover", db);

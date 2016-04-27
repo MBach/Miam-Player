@@ -29,6 +29,8 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	seekSlider->setMediaPlayer(mediaPlayer);
 	playbackModeButton->setToggleShuffleOnly(true);
 
+	setAttribute(Qt::WA_StaticContents);
+
 	mediaPlayer->setPlaylist(nullptr);
 
 	connect(mediaPlayer, &MediaPlayer::positionChanged, this, [=](qint64 pos, qint64) {
@@ -50,10 +52,10 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	// Filter the library when user is typing some text to find artist, album or tracks
 	connect(searchBar, &SearchBar::aboutToStartSearch, this, [=](const QString &text) {
 		//uniqueTable->model()->proxy()->findMusic(text);
-        if (_currentTrack) {
-            delete _currentTrack;
-            _currentTrack = nullptr;
-        }
+		if (_currentTrack) {
+			delete _currentTrack;
+			_currentTrack = nullptr;
+		}
 		uniqueTable->model()->load(text);
 		uniqueTable->scrollToTop();
 		uniqueTable->verticalScrollBar()->setValue(0);
@@ -142,7 +144,7 @@ UniqueLibrary::~UniqueLibrary()
 	if (_currentTrack) {
 		SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
 	}
-    this->disconnect();
+	this->disconnect();
 }
 
 bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const

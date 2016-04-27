@@ -33,7 +33,6 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 			result = true;
 		} else {
 			SqlDatabase db;
-			db.init();
 			QSqlQuery getArtist(db);
 			getArtist.setForwardOnly(true);
 			getArtist.prepare("SELECT * FROM cache WHERE trackTitle LIKE ?");
@@ -46,7 +45,6 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 			result = true;
 		} else {
 			SqlDatabase db;
-			db.init();
 			QSqlQuery getAlbum(db);
 			getAlbum.setForwardOnly(true);
 			getAlbum.prepare("SELECT * FROM cache WHERE trackTitle LIKE ?");
@@ -59,7 +57,6 @@ bool UniqueLibraryFilterProxyModel::filterAcceptsRow(int sourceRow, const QModel
 			result = true;
 		} else {
 			SqlDatabase db;
-			db.init();
 			QSqlQuery getDiscAlbum(db);
 			getDiscAlbum.setForwardOnly(true);
 			getDiscAlbum.prepare("SELECT * FROM cache WHERE disc > 0 AND trackTitle LIKE ?");

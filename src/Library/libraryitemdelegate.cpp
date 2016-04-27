@@ -89,13 +89,13 @@ void LibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 QSize LibraryItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-	Settings *settings = Settings::instance();
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxy->mapToSource(index));
 	if (item->type() == Miam::IT_Album) {
 		QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
-		return QSize(option.rect.width(), qMax(fmf.height(), settings->coverSizeLibraryTree() + 2));
+		return QSize(option.rect.width(), qMax(fmf.height(), Settings::instance()->coverSizeLibraryTree() + 2));
 	} else {
-		return QStyledItemDelegate::sizeHint(option, index);
+		QFontMetrics fmf(settingsPrivate->font(SettingsPrivate::FF_Library));
+		return QSize(option.rect.width(), fmf.height());
 	}
 }
 

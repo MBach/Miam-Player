@@ -40,6 +40,23 @@ TableView::TableView(QWidget *parent)
 			setDirtyRegion(QRegion(viewport()->rect()));
 		}
 	});
+
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
+	QFont f = settingsPrivate->font(SettingsPrivate::FF_Library);
+
+	auto loadFont = [this] (const QFont &f) -> void {
+		this->setFont(f);
+		QFontMetrics fm = this->fontMetrics();
+		verticalHeader()->setDefaultSectionSize(fm.height());
+	};
+	loadFont(f);
+
+	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff, const QFont &newFont) {
+		if (ff == SettingsPrivate::FF_Library) {
+			loadFont(newFont);
+		}
+	});
+
 }
 
 TableView::~TableView()
@@ -127,7 +144,6 @@ void TableView::paintEvent(QPaintEvent *event)
 void TableView::jumpTo(const QString &letter)
 {
 	SqlDatabase db;
-	db.init();
 	QSqlQuery firstArtist(db);
 	firstArtist.prepare("SELECT artist FROM cache WHERE artist LIKE ? ORDER BY artist COLLATE NOCASE LIMIT ?");
 	firstArtist.addBindValue(letter + "%");

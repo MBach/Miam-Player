@@ -176,7 +176,6 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 {
 	Playlist *playlist = nullptr;
 	SqlDatabase db;
-	db.init();
 	PlaylistDAO playlistDao = db.selectPlaylist(playlistId);
 
 	/// TODO: Do not load the playlist if it's already displayed

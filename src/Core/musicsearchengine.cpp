@@ -49,7 +49,6 @@ void MusicSearchEngine::doSearch()
 	emit aboutToSearch();
 
 	SqlDatabase db;
-	db.init();
 
 	if (_delta.isEmpty()) {
 		QSqlQuery cleanDb(db);
@@ -174,7 +173,6 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	SqlDatabase db;
-	db.init();
 
 	QStringList newFoldersToAddInLibrary;
 	// Add folders that were not found first

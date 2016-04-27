@@ -204,7 +204,6 @@ void SearchDialog::artistWasDoubleClicked(const QModelIndex &artistIndex)
 	QStandardItem *item = m->itemFromIndex(artistIndex);
 
 	SqlDatabase db;
-	db.init();
 
 	QSqlQuery q(db);
 	q.prepare("SELECT uri FROM cache WHERE artist = ?");
@@ -227,7 +226,6 @@ void SearchDialog::albumWasDoubleClicked(const QModelIndex &albumIndex)
 	QStandardItem *item = m->itemFromIndex(albumIndex);
 
 	SqlDatabase db;
-	db.init();
 
 	QSqlQuery q(db);
 	q.prepare("SELECT uri FROM cache WHERE album = ?");
@@ -259,7 +257,6 @@ void SearchDialog::localSearch(const QString &text)
 	}
 
 	SqlDatabase db;
-	db.init();
 
 	/// XXX: Factorize this, 3 times the (almost) same code
 	QSqlQuery qSearchForArtists(db);

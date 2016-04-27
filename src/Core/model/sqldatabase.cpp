@@ -42,7 +42,9 @@ SqlDatabase::SqlDatabase(QObject *parent)
 	setDatabaseName(dbPath);
 
 	// DB folder exists but DB file doesn't: can be first launch or file was deleted manually
-	if (!dbFile.exists()) {
+	if (dbFile.exists()) {
+		this->init();
+	} else {
 
 		dbFile.open(QIODevice::ReadWrite);
 		dbFile.close();
@@ -84,10 +86,8 @@ SqlDatabase::~SqlDatabase()
 
 void SqlDatabase::init()
 {
-	if (!isOpen()) {
-		open();
-		this->setPragmas();
-	}
+	open();
+	this->setPragmas();
 }
 
 uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting)
