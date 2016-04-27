@@ -36,7 +36,7 @@ void LibraryItemModel::load(const QString &)
 	db.init();
 
 	QSqlQuery q("SELECT uri, trackNumber, trackTitle, artist, artistNormalized, album, albumNormalized, artistAlbum, " \
-				"albumYear, trackLength, rating, disc, internalCover, cover, host, icon FROM cache", db);
+				"albumYear, trackLength, rating, disc, internalCover, cover, host, icon FROM cache ORDER BY uri, internalCover", db);
 	q.setForwardOnly(true);
 	if (!q.exec()) {
 		return;
@@ -111,7 +111,6 @@ void LibraryItemModel::load(const QString &)
 			}
 
 			AlbumItem *albumItem = new AlbumItem;
-			albumItem->setText(r.value(album).toString());
 			if (r.value(albumNorm).toString().isEmpty() || !r.value(albumNorm).toString().contains(QRegularExpression("[\\w]"))) {
 				albumItem->setData("0", Miam::DF_NormalizedString);
 			} else {
@@ -120,19 +119,28 @@ void LibraryItemModel::load(const QString &)
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
 			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
 
-			if (!r.value(internalCover).toString().isEmpty()) {
-				albumItem->setData(r.value(internalCover).toString(), Miam::DF_InternalCover);
-			}
-			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
-			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
-			albumItem->setData(!r.value(host).toString().isEmpty(), Miam::DF_IsRemote);
+			QString internalCoverPath = r.value(internalCover).toString();
+			QString coverPath = r.value(cover).toString();
 
 			// Add album
 			if (_albums.contains(albumItem->hash())) {
 				auto it = _albums.find(albumItem->hash());
 				delete albumItem;
 				albumItem = *it;
+				if (albumItem->data(Miam::DF_InternalCover).toString().isEmpty() && !internalCoverPath.isEmpty()) {
+					albumItem->setData(internalCoverPath, Miam::DF_InternalCover);
+				}
+				if (albumItem->data(Miam::DF_CoverPath).toString().isEmpty() && !coverPath.isEmpty()) {
+					albumItem->setData(coverPath, Miam::DF_CoverPath);
+				}
 			} else {
+
+				albumItem->setText(r.value(album).toString());
+				albumItem->setData(internalCoverPath, Miam::DF_InternalCover);
+				albumItem->setData(coverPath, Miam::DF_CoverPath);
+				albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
+				albumItem->setData(!r.value(host).toString().isEmpty(), Miam::DF_IsRemote);
+
 				_albums.insert(albumItem->hash(), albumItem);
 				artistItem->appendRow(albumItem);
 			}

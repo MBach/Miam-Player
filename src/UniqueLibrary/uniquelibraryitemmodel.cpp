@@ -72,6 +72,7 @@ void UniqueLibraryItemModel::load(const QString &filter)
 
 	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, albumYear, icon, internalCover, cover FROM cache WHERE 1 = 1 ";
 	q.append(where);
+	q.append(" ORDER BY uri, internalCover");
 	if (query.exec(q)) {
 		QString normalizedStringPrevious;
 		while (query.next()) {
