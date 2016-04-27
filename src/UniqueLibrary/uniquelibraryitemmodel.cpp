@@ -54,7 +54,7 @@ void UniqueLibraryItemModel::load(const QString &filter)
 	query.setForwardOnly(true);
 	QString q = "SELECT DISTINCT artistAlbum, artistNormalized, icon, host FROM cache WHERE 1 = 1 ";
 	QString where;
-	if (!filter.isNull()) {
+	if (!filter.isEmpty()) {
 		where = "AND trackTitle LIKE '%" + filter + "%' OR artist LIKE '%" + filter + "%' OR album LIKE '%" + filter + "%'";
 	}
 	q.append(where);
@@ -70,25 +70,36 @@ void UniqueLibraryItemModel::load(const QString &filter)
 		}
 	}
 
-	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, albumYear, host, icon, cover FROM cache WHERE 1 = 1 ";
+	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, albumYear, icon, internalCover, cover FROM cache WHERE 1 = 1 ";
 	q.append(where);
 	if (query.exec(q)) {
+		QString normalizedStringPrevious;
 		while (query.next()) {
-			AlbumItem *album = new AlbumItem;
 			int i = -1;
-			album->setData(query.record().value(++i).toString(), Miam::DF_NormalizedString);
+			QString normalizedString = query.record().value(++i).toString();
+			if (normalizedStringPrevious == normalizedString) {
+				continue;
+			} else {
+				normalizedStringPrevious = normalizedString;
+			}
+			AlbumItem *album = new AlbumItem;
+			album->setData(normalizedString, Miam::DF_NormalizedString);
 			album->setText(query.record().value(++i).toString());
 			album->setData(query.record().value(++i).toString(), Miam::DF_Artist);
 			album->setData(query.record().value(++i).toString(), Miam::DF_Year);
-			++i;
 			album->setData(query.record().value(++i).toString(), Miam::DF_IconPath);
+			QString internalCover = query.record().value(++i).toString();
 			QString coverPath = query.record().value(++i).toString();
-			album->setData(coverPath, Miam::DF_CoverPath);
-			if (coverPath.isEmpty()) {
-				appendRow({ nullptr, album });
-			} else {
-				appendRow({ new CoverItem(coverPath), album });
+			CoverItem *cover = nullptr;
+			if (!internalCover.isEmpty() || !coverPath.isEmpty()) {
+				cover = new CoverItem;
+				if (internalCover.isEmpty()) {
+					cover->setData(coverPath, Miam::DF_CoverPath);
+				} else {
+					cover->setData(internalCover, Miam::DF_InternalCover);
+				}
 			}
+			appendRow({ cover, album });
 		}
 	}
 	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1), artistAlbum, disc FROM cache WHERE disc > 0 ";

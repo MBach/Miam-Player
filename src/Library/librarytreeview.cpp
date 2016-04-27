@@ -143,18 +143,17 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 		qDebug() << Q_FUNC_INFO;
 		QImage *image = nullptr;
 		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
-		if (albumItem->data(Miam::DF_InternalCover).toBool()) {
-
-			FileHelper fh(albumItem->data(Miam::DF_URI).toString());
+		if (albumItem->data(Miam::DF_InternalCover).toString().isEmpty()) {
+			QString coverPath = albumItem->data(Miam::DF_CoverPath).toString();
+			if (!coverPath.isEmpty()) {
+				image = new QImage(coverPath);
+			}
+		} else {
+			FileHelper fh(albumItem->data(Miam::DF_InternalCover).toString());
 			std::unique_ptr<Cover> cover(fh.extractCover());
 			if (cover) {
 				image = new QImage();
 				image->loadFromData(cover->byteArray(), cover->format());
-			}
-		} else {
-			QString coverPath = albumItem->data(Miam::DF_CoverPath).toString();
-			if (!coverPath.isEmpty()) {
-				image = new QImage(coverPath);
 			}
 		}
 

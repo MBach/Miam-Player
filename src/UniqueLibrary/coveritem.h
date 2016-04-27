@@ -12,7 +12,7 @@
 class MIAMUNIQUELIBRARY_LIBRARY CoverItem : public QStandardItem
 {
 public:
-	CoverItem(const QString &coverPath);
+	explicit CoverItem();
 
 	virtual int type() const override;
 };

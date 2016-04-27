@@ -111,8 +111,17 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 	if (itemHasNoIcon) {
 
 		// Check first if an inner cover should be displayed
-		if (item->data(Miam::DF_InternalCover).toBool()) {
-			FileHelper fh(item->data(Miam::DF_URI).toString());
+		if (item->data(Miam::DF_InternalCover).toString().isEmpty()) {
+			QString coverPath = item->data(Miam::DF_CoverPath).toString();
+			if (!coverPath.isEmpty()) {
+				// qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
+				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
+				imageReader.setScaledSize(QSize(_coverSize, _coverSize));
+				item->setIcon(QPixmap::fromImage(imageReader.read()));
+				itemHasNoIcon = false;
+			}
+		} else {
+			FileHelper fh(item->data(Miam::DF_InternalCover).toString());
 			std::unique_ptr<Cover> cover(fh.extractCover());
 			if (cover) {
 				QPixmap p;
@@ -121,20 +130,11 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 						item->setIcon(p);
 						itemHasNoIcon = false;
 					}
-				} else {
-					qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
+				//} else {
+				//	qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
 				}
-			} else {
-				qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
-			}
-		} else {
-			QString coverPath = item->data(Miam::DF_CoverPath).toString();
-			if (!coverPath.isEmpty()) {
-				qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
-				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
-				imageReader.setScaledSize(QSize(_coverSize, _coverSize));
-				item->setIcon(QPixmap::fromImage(imageReader.read()));
-				itemHasNoIcon = false;
+			//} else {
+			//	qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
 			}
 		}
 	}

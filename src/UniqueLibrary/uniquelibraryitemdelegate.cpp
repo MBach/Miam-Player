@@ -26,8 +26,11 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 
 	auto settingsPrivate = SettingsPrivate::instance();
 	if (index.column() == 0) {
+		QString internalCover = index.data(Miam::DF_InternalCover).toString();
 		QString cover = index.data(Miam::DF_CoverPath).toString();
-		if (!cover.isEmpty()) {
+		if (!internalCover.isEmpty()) {
+			this->drawCover(painter, option, internalCover);
+		} else if (!cover.isEmpty()) {
 			this->drawCover(painter, option, cover);
 		}
 		return;
@@ -54,7 +57,7 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 	case Miam::IT_Album:
 		o.rect.adjust(20, 0, 0, 0);
 		this->paintRect(painter, o);
-		this->drawAlbum(painter, o, static_cast<AlbumItem*>(item));
+		this->drawAlbum(painter, o, item);
 		break;
 	case Miam::IT_Disc:
 		o.rect.adjust(30, 0, 0, 0);
@@ -62,12 +65,12 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		this->drawDisc(painter, o, item);
 		break;
 	case Miam::IT_Separator:
-		this->drawLetter(painter, o, static_cast<SeparatorItem*>(item));
+		this->drawLetter(painter, o, item);
 		break;
 	case Miam::IT_Track:
 		o.rect.adjust(40, 0, 0, 0);
 		this->paintRect(painter, o);
-		this->drawTrack(painter, o, static_cast<TrackItem*>(item));
+		this->drawTrack(painter, o, item);
 		break;
 	default:
 		QStyledItemDelegate::paint(painter, o, index);
@@ -120,21 +123,22 @@ void UniqueLibraryItemDelegate::drawCover(QPainter *painter, const QStyleOptionV
 	static QImageReader imageReader;
 	int coverSize = Settings::instance()->coverSizeUniqueLibrary();
 
+	QRect r(option.rect.x(), option.rect.y(), coverSize, coverSize);
+
 	FileHelper fh(coverPath);
 	// If it's an inner cover, load it
 	if (FileHelper::suffixes().contains(fh.fileInfo().suffix())) {
-		qDebug() << Q_FUNC_INFO << "loading internal cover from file";
 		std::unique_ptr<Cover> cover(fh.extractCover());
 		if (cover) {
-
+			QPixmap p;
+			if (p.loadFromData(cover->byteArray(), cover->format()) && !p.isNull()) {
+				painter->drawPixmap(r, p);
+			}
 		}
 	} else {
-		//qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 		imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
 		imageReader.setScaledSize(QSize(coverSize, coverSize));
 	}
-
-	QRect r(option.rect.x(), option.rect.y(), coverSize, coverSize);
 	painter->drawImage(r, imageReader.read());
 }
 

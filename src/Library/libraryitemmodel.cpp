@@ -120,10 +120,8 @@ void LibraryItemModel::load(const QString &)
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
 			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
 
-			if (r.value(internalCover).toBool()) {
-				qDebug() << Q_FUNC_INFO << r.value(album).toString() << r.value(trackTitle).toString();
-				albumItem->setData(true, Miam::DF_InternalCover);
-				albumItem->setData(r.value(uri).toString(), Miam::DF_URI);
+			if (!r.value(internalCover).toString().isEmpty()) {
+				albumItem->setData(r.value(internalCover).toString(), Miam::DF_InternalCover);
 			}
 			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
 			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
@@ -160,9 +158,8 @@ void LibraryItemModel::load(const QString &)
 			}
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
 			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
-			if (r.value(internalCover).toBool()) {
-				albumItem->setData(true, Miam::DF_InternalCover);
-				albumItem->setData(r.value(uri).toString(), Miam::DF_URI);
+			if (!r.value(internalCover).toString().isEmpty()) {
+				albumItem->setData(r.value(internalCover).toString(), Miam::DF_InternalCover);
 			}
 			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
 			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);

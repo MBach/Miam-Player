@@ -53,7 +53,7 @@ SqlDatabase::SqlDatabase(QObject *parent)
 		createDb.exec("CREATE TABLE IF NOT EXISTS cache (uri varchar(255) PRIMARY KEY ASC, trackNumber INTEGER, trackTitle varchar(255), trackLength INTEGER, " \
 					  "artist varchar(255), artistNormalized varchar(255), " \
 					  "album varchar(255), albumNormalized varchar(255), artistAlbum varchar(255), albumYear INTEGER,  " \
-					  "rating INTEGER, disc INTEGER, cover varchar(255), internalCover INTEGER DEFAULT 0, host varchar(255), icon varchar(255))");
+					  "rating INTEGER, disc INTEGER, cover varchar(255), internalCover varchar(255), host varchar(255), icon varchar(255))");
 
 		createDb.exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), " \
 					  "host varchar(255), background varchar(255), checksum varchar(255))");
@@ -287,20 +287,20 @@ Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 	selectCover.prepare("SELECT DISTINCT internalCover, cover FROM cache WHERE uri = ?");
 	selectCover.addBindValue(uri);
 	if (selectCover.exec() && selectCover.next()) {
-		bool internalCover = selectCover.record().value(0).toBool();
+		QString internalCover = selectCover.record().value(0).toString();
 		QString coverPath = selectCover.record().value(1).toString();
 		QString album = selectCover.record().value(2).toString();
-		if (internalCover || !coverPath.isEmpty()) {
+		if (!internalCover.isEmpty() || !coverPath.isEmpty()) {
 			// If URI has an internal cover, i.e. uri points to a local file
-			if (internalCover) {
+			if (internalCover.isEmpty()) {
+				c = new Cover(coverPath);
+			} else {
 				FileHelper fh(uri);
 				c = fh.extractCover();
-			} else {
-				c = new Cover(coverPath);
 			}
 		} else {
 			// No direct cover for this file, let's search for the entire album if one track has an inner cover
-			selectCover.prepare("SELECT uri FROM cache WHERE album = ? AND internalCover = 1 LIMIT 1");
+			selectCover.prepare("SELECT uri FROM cache WHERE album = ? AND internalCover <> NULL LIMIT 1");
 			selectCover.addBindValue(album);
 			if (selectCover.exec() && selectCover.next()) {
 				FileHelper fh(selectCover.record().value(0).toString());
@@ -420,7 +420,7 @@ TrackDAO SqlDatabase::selectTrackByURI(const QString &uri)
 	TrackDAO track;
 	QSqlQuery qTracks(*this);
 	qTracks.prepare("SELECT uri, trackNumber, trackTitle, artist, album, artistAlbum, trackLength, " \
-					"rating, disc, internalCover, host, icon, albumYear " \
+					"rating, disc, host, icon, albumYear " \
 					"FROM cache WHERE uri = ?");
 	qTracks.addBindValue(uri);
 	if (qTracks.exec() && qTracks.next()) {
@@ -435,7 +435,6 @@ TrackDAO SqlDatabase::selectTrackByURI(const QString &uri)
 		track.setLength(r.value(++j).toString());
 		track.setRating(r.value(++j).toInt());
 		track.setDisc(r.value(++j).toString());
-		++j;
 		track.setHost(r.value(++j).toString());
 		track.setIcon(r.value(++j).toString());
 		track.setYear(r.value(++j).toString());
@@ -540,7 +539,11 @@ void SqlDatabase::updateTrack(const QString &absFilePath)
 	updateTrack.addBindValue(artistAlbum);
 	updateTrack.addBindValue(length);
 	updateTrack.addBindValue(dn);
-	updateTrack.addBindValue(fh.hasCover());
+	if (fh.hasCover()) {
+		updateTrack.addBindValue(absFilePath);
+	} else {
+		updateTrack.addBindValue(QVariant());
+	}
 	updateTrack.addBindValue(fh.rating());
 	updateTrack.addBindValue(absFilePath);
 
@@ -670,7 +673,11 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 	insertTrack.addBindValue(artistAlbum);
 	insertTrack.addBindValue(length);
 	insertTrack.addBindValue(dn);
-	insertTrack.addBindValue(fh.hasCover());
+	if (fh.hasCover()) {
+		insertTrack.addBindValue(absFilePath);
+	} else {
+		insertTrack.addBindValue(QVariant());
+	}
 	insertTrack.addBindValue(fh.rating());
 
 	if (!insertTrack.exec()) {

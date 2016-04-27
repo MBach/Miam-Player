@@ -411,7 +411,6 @@ bool FileHelper::hasCover() const
 				for (TagLib::ID3v2::FrameList::ConstIterator it = listOfMp3Frames.begin(); it != listOfMp3Frames.end() ; it++) {
 					// Cast a Frame* to AttachedPictureFrame*
 					TagLib::ID3v2::AttachedPictureFrame *pictureFrame = static_cast<TagLib::ID3v2::AttachedPictureFrame*>(*it);
-					//atLeastOnePicture = atLeastOnePicture || (pictureFrame != nullptr && !pictureFrame->picture().isEmpty() && pictureFrame->type() != TagLib::ID3v2::AttachedPictureFrame::Other);
 					atLeastOnePicture = atLeastOnePicture || (pictureFrame != nullptr && !pictureFrame->picture().isEmpty());
 				}
 			}

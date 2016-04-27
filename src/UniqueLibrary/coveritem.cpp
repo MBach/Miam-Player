@@ -2,10 +2,10 @@
 
 #include <miamcore_global.h>
 
-CoverItem::CoverItem(const QString &coverPath)
+CoverItem::CoverItem()
 	: QStandardItem()
 {
-	this->setData(coverPath, Miam::DF_CoverPath);
+
 }
 
 int CoverItem::type() const
