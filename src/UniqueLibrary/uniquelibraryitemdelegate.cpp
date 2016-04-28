@@ -17,8 +17,11 @@
 
 UniqueLibraryItemDelegate::UniqueLibraryItemDelegate(TableView *tableView)
 	: MiamItemDelegate(tableView->model()->proxy())
+	, _tableView(tableView)
 	, _jumpTo(tableView->jumpToWidget())
 {}
+
+#include <QHeaderView>
 
 void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
@@ -68,6 +71,10 @@ void UniqueLibraryItemDelegate::paint(QPainter *painter, const QStyleOptionViewI
 		break;
 	case Miam::IT_Track:
 		o.rect.adjust(40, 0, 0, 0);
+
+		if (o.rect.height() != _tableView->verticalHeader()->defaultSectionSize()) {
+			o.rect.setHeight(_tableView->verticalHeader()->defaultSectionSize());
+		}
 		this->paintRect(painter, o);
 		this->drawTrack(painter, o, item);
 		break;

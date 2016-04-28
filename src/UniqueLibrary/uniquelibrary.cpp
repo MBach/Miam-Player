@@ -57,6 +57,8 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 			_currentTrack = nullptr;
 		}
 		uniqueTable->model()->load(text);
+		uniqueTable->adjust();
+
 		uniqueTable->scrollToTop();
 		uniqueTable->verticalScrollBar()->setValue(0);
 	});
@@ -245,6 +247,7 @@ void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 		}
 		delete uniqueTable->layout();
 		uniqueTable->model()->load();
+		uniqueTable->adjust();
 	});
 }
 

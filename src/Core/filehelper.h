@@ -80,9 +80,9 @@ public:
 		Field_Year			= 12
 	};
 
-	FileHelper(const QMediaContent &track);
+	explicit FileHelper(const QMediaContent &track);
 
-	FileHelper(const QString &filePath);
+	explicit FileHelper(const QString &filePath);
 
 	static std::string keyToStdString(Field f);
 

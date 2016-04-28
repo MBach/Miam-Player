@@ -7,6 +7,7 @@
 
 #include <QGuiApplication>
 #include <QHeaderView>
+#include <QMenu>
 #include <QPainter>
 #include <QRegularExpression>
 #include <QScrollBar>
@@ -56,13 +57,38 @@ TableView::TableView(QWidget *parent)
 			loadFont(newFont);
 		}
 	});
-
+	this->adjust();
 }
 
 TableView::~TableView()
 {
 	if (selectionModel()) {
 		selectionModel()->disconnect();
+	}
+}
+
+/** Adjust row height of last track when tracks in an album have an height lower than cover size. */
+void TableView::adjust()
+{
+	int rowHeightForAlbum = 0;
+	int dss = verticalHeader()->defaultSectionSize();
+	int coverSize = Settings::instance()->coverSizeUniqueLibrary();
+	QStandardItem *previous = nullptr;
+	for (int i = 0; i < model()->proxy()->rowCount(); i++) {
+
+		QModelIndex index = model()->proxy()->index(i, 1);
+		auto item = model()->itemFromIndex(model()->proxy()->mapToSource(index));
+		if (item && item->type() == Miam::IT_Track) {
+			rowHeightForAlbum += dss;
+			previous = item;
+		} else {
+			// Set new row height for previous track
+			if (rowHeightForAlbum != 0 && rowHeightForAlbum < coverSize && previous != nullptr) {
+				setRowHeight(index.row() - 1, coverSize - rowHeightForAlbum + dss / 2);
+			}
+			rowHeightForAlbum = 0;
+			previous = nullptr;
+		}
 	}
 }
 
@@ -80,6 +106,20 @@ void TableView::keyboardSearch(const QString &search)
 		}
 		this->jumpTo(search);
 	}
+}
+
+void TableView::contextMenuEvent(QContextMenuEvent *e)
+{
+	QMenu menu;
+	if (selectedIndexes().count() == 1) {
+		QStandardItem *item = model()->itemFromIndex(model()->proxy()->mapToSource(selectedIndexes().first()));
+		if (item) {
+			menu.addAction(tr("Send '%1' to the Tag Editor").arg(item->text().replace("&", "&&")));
+		}
+	} else if (selectedIndexes().count() > 1) {
+		menu.addAction(tr("Send to tag editor"));
+	}
+	menu.exec(e->globalPos());
 }
 
 /** Redefined to override shortcuts that are mapped on simple keys. */

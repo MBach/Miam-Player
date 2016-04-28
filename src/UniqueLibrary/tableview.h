@@ -26,6 +26,9 @@ public:
 
 	virtual ~TableView();
 
+	/** Adjust row height of last track when tracks in an album have an height lower than cover size. */
+	void adjust();
+
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
 	/** Redefined to disable search in the table and trigger jumpToWidget's action. */
@@ -34,6 +37,8 @@ public:
 	inline UniqueLibraryItemModel *model() const { return _model; }
 
 protected:
+	virtual void contextMenuEvent(QContextMenuEvent *e) override;
+
 	/** Redefined to override shortcuts that are mapped on simple keys. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 

@@ -51,13 +51,16 @@ void UniqueLibraryItemModel::load(const QString &filter)
 
 	QSqlQuery query(db);
 	query.setForwardOnly(true);
-	QString q = "SELECT DISTINCT artistAlbum, artistNormalized, icon, host FROM cache WHERE 1 = 1 ";
-	QString where;
-	if (!filter.isEmpty()) {
-		where = " AND trackTitle LIKE '%" + filter + "%' OR artist LIKE '%" + filter + "%' OR album LIKE '%" + filter + "%' ";
+	if (filter.isEmpty()) {
+		query.prepare("SELECT DISTINCT artistAlbum, artistNormalized, icon, host FROM cache");
+	} else {
+		query.prepare("SELECT DISTINCT artistAlbum, artistNormalized, icon, host FROM cache " \
+					  "WHERE trackTitle LIKE :t OR artist LIKE :ar OR album LIKE :al");
+		query.bindValue(":t", "%" + filter + "%");
+		query.bindValue(":ar", "%" + filter + "%");
+		query.bindValue(":al", "%" + filter + "%");
 	}
-	q.append(where);
-	if (query.exec(q)) {
+	if (query.exec()) {
 		while (query.next()) {
 			ArtistItem *artist = new ArtistItem;
 			int i = -1;
@@ -69,10 +72,17 @@ void UniqueLibraryItemModel::load(const QString &filter)
 		}
 	}
 
-	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, albumYear, icon, internalCover, cover FROM cache WHERE 1 = 1 ";
-	q.append(where);
-	q.append("ORDER BY uri, internalCover");
-	if (query.exec(q)) {
+	if (filter.isEmpty()) {
+		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, " \
+					  "albumYear, icon, internalCover, cover FROM cache ORDER BY uri, internalCover");
+	} else {
+		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, " \
+					  "albumYear, icon, internalCover, cover FROM cache WHERE trackTitle LIKE :t OR artist LIKE :ar OR album LIKE :al ORDER BY uri, internalCover");
+		query.bindValue(":t", "%" + filter + "%");
+		query.bindValue(":ar", "%" + filter + "%");
+		query.bindValue(":al", "%" + filter + "%");
+	}
+	if (query.exec()) {
 		QString normalizedStringPrevious;
 		while (query.next()) {
 			int i = -1;
@@ -102,9 +112,18 @@ void UniqueLibraryItemModel::load(const QString &filter)
 			appendRow({ cover, album });
 		}
 	}
-	q = "SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1), artistAlbum, disc FROM cache WHERE disc > 0 ";
-	q.append(where);
-	if (query.exec(q)) {
+
+	if (filter.isEmpty()) {
+		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1)" \
+					  ", artistAlbum, disc FROM cache WHERE disc > 0");
+	} else {
+		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1)" \
+					  ", artistAlbum, disc FROM cache WHERE (disc > 0) AND (trackTitle LIKE :t OR artist LIKE :ar OR album LIKE :al)");
+		query.bindValue(":t", "%" + filter + "%");
+		query.bindValue(":ar", "%" + filter + "%");
+		query.bindValue(":al", "%" + filter + "%");
+	}
+	if (query.exec()) {
 		while (query.next()) {
 			DiscItem *disc = new DiscItem;
 			int i = -1;
@@ -115,10 +134,17 @@ void UniqueLibraryItemModel::load(const QString &filter)
 		}
 	}
 
-	q = "SELECT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1) || '|' || substr('00' || trackNumber, -2, 2)  || '|' || trackTitle, " \
-		"trackTitle, uri, trackNumber, artistAlbum, album, trackLength, rating, disc, host FROM cache WHERE 1 = 1 ";
-	q.append(where);
-	if (query.exec(q)) {
+	if (filter.isEmpty()) {
+		query.prepare("SELECT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1) || '|' || substr('00' || trackNumber, -2, 2)  || '|' || trackTitle, " \
+					  "trackTitle, uri, trackNumber, artistAlbum, album, trackLength, rating, disc, host FROM cache");
+	} else {
+		query.prepare("SELECT artistNormalized || '|' || albumYear  || '|' || albumNormalized || '|' || substr('0' || disc, -1, 1) || '|' || substr('00' || trackNumber, -2, 2)  || '|' || trackTitle, " \
+					  "trackTitle, uri, trackNumber, artistAlbum, album, trackLength, rating, disc, host FROM cache WHERE trackTitle LIKE :t OR artist LIKE :ar OR album LIKE :al");
+		query.bindValue(":t", "%" + filter + "%");
+		query.bindValue(":ar", "%" + filter + "%");
+		query.bindValue(":al", "%" + filter + "%");
+	}
+	if (query.exec()) {
 		while (query.next()) {
 			TrackItem *track = new TrackItem;
 			int i = -1;

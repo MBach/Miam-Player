@@ -18,6 +18,7 @@ class MIAMUNIQUELIBRARY_LIBRARY UniqueLibraryItemDelegate : public MiamItemDeleg
 {
 	Q_OBJECT
 private:
+	TableView *_tableView;
 	JumpToWidget *_jumpTo;
 
 public:

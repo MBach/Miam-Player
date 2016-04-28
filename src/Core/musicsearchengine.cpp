@@ -58,7 +58,6 @@ void MusicSearchEngine::doSearch()
 		cleanDb.exec("DROP INDEX indexAlbum");
 		cleanDb.exec("DROP INDEX indexPath");
 	}
-	db.transaction();
 
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
@@ -89,6 +88,7 @@ void MusicSearchEngine::doSearch()
 
 	QStringList suffixes = FileHelper::suffixes(FileHelper::ET_All);
 
+	db.transaction();
 	for (QDir location : locations) {
 		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (it.hasNext()) {
@@ -134,8 +134,8 @@ void MusicSearchEngine::doSearch()
 		}
 		atLeastOneAudioFileWasFound = false;
 	}
-
 	db.commit();
+
 	if (_delta.isEmpty()) {
 
 		QSqlQuery index(db);

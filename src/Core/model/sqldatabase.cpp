@@ -627,10 +627,11 @@ QString SqlDatabase::normalizeField(const QString &s) const
 
 void SqlDatabase::setPragmas()
 {
-	this->exec("PRAGMA journal_mode = MEMORY");
+	this->exec("PRAGMA journal_mode = OFF");
 	this->exec("PRAGMA synchronous = OFF");
 	this->exec("PRAGMA temp_store = 2");
 	this->exec("PRAGMA foreign_keys = 1");
+	this->exec("PRAGMA count_changes = OFF");
 }
 
 /** Reads a file from the filesystem and adds it into the library. */

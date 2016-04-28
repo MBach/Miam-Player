@@ -40,7 +40,9 @@
 #include <QtDebug>
 
 FileHelper::FileHelper(const QMediaContent &track)
-	: _file(nullptr), _fileType(EXT_UNKNOWN), _isValid(false)
+	: _file(nullptr)
+	, _fileType(EXT_UNKNOWN)
+	, _isValid(false)
 {
 	bool b = init(QDir::fromNativeSeparators(track.canonicalUrl().toLocalFile()));
 	if (!b) {
@@ -56,7 +58,9 @@ FileHelper::FileHelper(const QMediaContent &track)
 }
 
 FileHelper::FileHelper(const QString &filePath)
-	: _file(nullptr), _fileType(EXT_UNKNOWN), _isValid(false)
+	: _file(nullptr)
+	, _fileType(EXT_UNKNOWN)
+	, _isValid(false)
 {
 	bool b = init(filePath);
 	if (!b) {
