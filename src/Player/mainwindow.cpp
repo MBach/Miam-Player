@@ -558,6 +558,15 @@ void MainWindow::activateView(QAction *menuAction)
 		this->rescanLibrary();
 	}
 
+	if (_currentView->viewProperty(Settings::VP_CanSendTracksToEditor)) {
+		connect(_currentView, &AbstractView::aboutToSendToTagEditor, this, [=](const QModelIndexList &, const QList<QUrl> &tracks) {
+			actionViewTagEditor->trigger();
+			qDebug() << Q_FUNC_INFO << "aboutToSendToTagEditor" << tracks;
+			/// TODO, refresh indexes when tags have changed
+			_tagEditor->addItemsToEditor(tracks);
+		});
+	}
+
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 
 	// First, clean the view (can be a QuickStart instance)
@@ -628,12 +637,6 @@ void MainWindow::activateView(QAction *menuAction)
 	actionPlaybackCurrentItemInLoop->setEnabled(b);
 	if (b) {
 		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
-		connect(viewPlaylists, &AbstractViewPlaylists::aboutToSendToTagEditor, this, [=](const QModelIndexList &, const QList<QUrl> &tracks) {
-			actionViewTagEditor->trigger();
-			/// TODO, refresh indexes when tags have changed
-			_tagEditor->addItemsToEditor(tracks);
-		});
-
 		connect(actionOpenFiles, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFiles);
 		connect(actionOpenFolder, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFolderPopup);
 		connect(actionAddPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::addPlaylist);

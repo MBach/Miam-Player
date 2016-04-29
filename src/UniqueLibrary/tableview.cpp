@@ -7,7 +7,6 @@
 
 #include <QGuiApplication>
 #include <QHeaderView>
-#include <QMenu>
 #include <QPainter>
 #include <QRegularExpression>
 #include <QScrollBar>
@@ -21,6 +20,7 @@ TableView::TableView(QWidget *parent)
 	, _model(new UniqueLibraryItemModel(this))
 	, _jumpToWidget(new JumpToWidget(this))
 	, _skipCount(1)
+	, _actionSendToTagEditor(new QAction)
 {
 	_model->proxy()->setDynamicSortFilter(false);
 	this->setModel(_model->proxy());
@@ -42,9 +42,18 @@ TableView::TableView(QWidget *parent)
 		}
 	});
 
+	connect(_actionSendToTagEditor, &QAction::triggered, this, [=]() {
+		int c = this->selectedIndexes().count();
+		if (Miam::showWarning(tr("tag editor"), c) == QMessageBox::Ok) {
+			qDebug() << Q_FUNC_INFO << "todo tag editor OK";
+			emit sendToTagEditor(this->selectedIndexes(), QList<QUrl>());
+		}
+	});
+	_menu.addAction(_actionSendToTagEditor);
+
+	// Theme
 	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	QFont f = settingsPrivate->font(SettingsPrivate::FF_Library);
-
 	auto loadFont = [this] (const QFont &f) -> void {
 		this->setFont(f);
 		QFontMetrics fm = this->fontMetrics();
@@ -110,16 +119,15 @@ void TableView::keyboardSearch(const QString &search)
 
 void TableView::contextMenuEvent(QContextMenuEvent *e)
 {
-	QMenu menu;
 	if (selectedIndexes().count() == 1) {
 		QStandardItem *item = model()->itemFromIndex(model()->proxy()->mapToSource(selectedIndexes().first()));
 		if (item) {
-			menu.addAction(tr("Send '%1' to the Tag Editor").arg(item->text().replace("&", "&&")));
+			_actionSendToTagEditor->setText(tr("Send '%1' to the tag editor").arg(item->text().replace("&", "&&")));
 		}
 	} else if (selectedIndexes().count() > 1) {
-		menu.addAction(tr("Send to tag editor"));
+		_actionSendToTagEditor->setText(tr("Send to tag editor"));
 	}
-	menu.exec(e->globalPos());
+	_menu.exec(e->globalPos());
 }
 
 /** Redefined to override shortcuts that are mapped on simple keys. */

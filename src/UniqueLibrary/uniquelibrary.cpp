@@ -47,6 +47,7 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	volumeSlider->setValue(settings->volume() * 100);
 
 	uniqueTable->setItemDelegate(new UniqueLibraryItemDelegate(uniqueTable));
+	connect(uniqueTable, &TableView::sendToTagEditor, this, &UniqueLibrary::aboutToSendToTagEditor);
 	_proxy = uniqueTable->model()->proxy();
 
 	// Filter the library when user is typing some text to find artist, album or tracks
@@ -156,6 +157,7 @@ bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
 	case Settings::VP_SearchArea:
 	case Settings::VP_VolumeIndicatorToggled:
 	case Settings::VP_HasAreaForRescan:
+	case Settings::VP_CanSendTracksToEditor:
 		return true;
 	case Settings::VP_HasTracksToDisplay:
 		return uniqueTable->model()->rowCount() > 0;

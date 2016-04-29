@@ -5,7 +5,9 @@
 #include "mediaplayer.h"
 #include "mediaplayercontrol.h"
 #include "settings.h"
+
 #include <QDir>
+#include <QModelIndex>
 
 class MusicSearchEngine;
 
@@ -69,6 +71,8 @@ public slots:
 
 signals:
 	void modelReloadRequested();
+
+	void aboutToSendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
 };
 
 #endif // ABSTRACTVIEW_H

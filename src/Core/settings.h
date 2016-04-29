@@ -43,7 +43,8 @@ public:
 						VP_LibraryHasCoverBelowTracks		= 11,
 						VP_LibraryCoverBelowTracksOpacity	= 12,
 						VP_LibraryHasStarsNextToTrack		= 13,
-						VP_LibraryHasStarsForUnrated		= 14};
+						VP_LibraryHasStarsForUnrated		= 14,
+						VP_CanSendTracksToEditor			= 15};
 
 	/** Singleton Pattern to easily use Settings everywhere in the app. */
 	static Settings* instance();

@@ -1,7 +1,9 @@
 #ifndef TABLEVIEW_H
 #define TABLEVIEW_H
 
+#include <QMenu>
 #include <QTableView>
+
 #include <library/jumptowidget.h>
 #include "miamuniquelibrary_global.hpp"
 #include "uniquelibraryitemmodel.h"
@@ -20,6 +22,9 @@ private:
 	JumpToWidget *_jumpToWidget;
 
 	int _skipCount;
+
+	QMenu _menu;
+	QAction *_actionSendToTagEditor;
 
 public:
 	explicit TableView(QWidget *parent = nullptr);
@@ -52,6 +57,9 @@ protected:
 
 public slots:
 	void jumpTo(const QString &letter);
+
+signals:
+	void sendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
 };
 
 #endif // TABLEVIEW_H

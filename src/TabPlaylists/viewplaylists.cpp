@@ -119,14 +119,14 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	for (TreeView *tab : this->findChildren<TreeView*>()) {
 		connect(tab, &TreeView::aboutToInsertToPlaylist, tabPlaylists, &TabPlaylist::insertItemsToPlaylist);
-		connect(tab, &TreeView::aboutToSendToTagEditor, this, &ViewPlaylists::aboutToSendToTagEditor);
+		connect(tab, &TreeView::aboutToSendToTagEditor, this, &AbstractView::aboutToSendToTagEditor);
 	}
 
 	// Send one folder to the music locations
 	connect(filesystem, &FileSystemTreeView::aboutToAddMusicLocations, settingsPrivate, &SettingsPrivate::addMusicLocations);
 
 	// Send music to the tag editor
-	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, this, &ViewPlaylists::aboutToSendToTagEditor);
+	connect(tabPlaylists, &TabPlaylist::aboutToSendToTagEditor, this, &AbstractView::aboutToSendToTagEditor);
 
 	// Sliders
 	connect(mediaPlayer, &MediaPlayer::positionChanged, timeLabel, &TimeLabel::setTime);

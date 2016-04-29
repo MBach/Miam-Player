@@ -3,7 +3,6 @@
 
 #include <abstractview.h>
 #include <mediaplayercontrol.h>
-#include <QModelIndex>
 
 #include "miamtabplaylists_global.hpp"
 
@@ -48,9 +47,6 @@ public slots:
 	virtual void removeCurrentPlaylist() = 0;
 
 	virtual void removeSelectedTracks() = 0;
-
-signals:
-	void aboutToSendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
 };
 
 #endif // ABSTRACTVIEWPLAYLISTS_H
