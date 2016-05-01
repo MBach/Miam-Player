@@ -45,8 +45,7 @@ TableView::TableView(QWidget *parent)
 	connect(_actionSendToTagEditor, &QAction::triggered, this, [=]() {
 		int c = this->selectedIndexes().count();
 		if (Miam::showWarning(tr("tag editor"), c) == QMessageBox::Ok) {
-			qDebug() << Q_FUNC_INFO << "todo tag editor OK";
-			emit sendToTagEditor(this->selectedIndexes(), QList<QUrl>());
+			emit sendToTagEditor(this->selectedTracks());
 		}
 	});
 	_menu.addAction(_actionSendToTagEditor);
@@ -115,6 +114,54 @@ void TableView::keyboardSearch(const QString &search)
 		}
 		this->jumpTo(search);
 	}
+}
+
+QList<QUrl> TableView::selectedTracks()
+{
+	QStringList results;
+	auto proxy = model()->proxy();
+	QStringList artists, albums, tracks;
+	for (QModelIndex i : selectedIndexes()) {
+		if (QStandardItem *item = model()->itemFromIndex(proxy->mapToSource(i))) {
+			if (item->type() == Miam::IT_Artist) {
+				artists << '"' + item->data(Miam::DF_NormalizedString).toString() + '"';
+			} else if (item->type() == Miam::IT_Album) {
+				albums << '"' + item->data(Miam::DF_NormAlbum).toString() + '"';
+			} else if (item->type() == Miam::IT_Track) {
+				tracks << '"' + item->data(Miam::DF_URI).toString() + '"';
+			}
+		}
+	}
+	SqlDatabase db;
+	QSqlQuery q(db);
+	if (q.exec("SELECT uri FROM cache WHERE artistNormalized IN (" + artists.join(",") + ")")) {
+		while (q.next()) {
+			results << q.record().value(0).toString();
+		}
+	}
+	if (q.exec("SELECT uri FROM cache WHERE albumNormalized IN (" + albums.join(",") + ")")) {
+		while (q.next()) {
+			results << q.record().value(0).toString();
+		}
+	}
+	if (q.exec("SELECT uri FROM cache WHERE uri IN (" + tracks.join(",") + ")")) {
+		while (q.next()) {
+			results << q.record().value(0).toString();
+		}
+	}
+
+	results.removeDuplicates();
+	results.sort();
+	QList<QUrl> urls;
+	for (QString result : results) {
+		urls << QUrl::fromLocalFile(result);
+	}
+	return urls;
+}
+
+void TableView::updateSelectedTracks()
+{
+
 }
 
 void TableView::contextMenuEvent(QContextMenuEvent *e)

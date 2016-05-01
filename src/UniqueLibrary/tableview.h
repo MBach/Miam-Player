@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QTableView>
 
+#include <model/selectedtracksmodel.h>
 #include <library/jumptowidget.h>
 #include "miamuniquelibrary_global.hpp"
 #include "uniquelibraryitemmodel.h"
@@ -13,7 +14,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
 */
-class MIAMUNIQUELIBRARY_LIBRARY TableView : public QTableView
+class MIAMUNIQUELIBRARY_LIBRARY TableView : public QTableView, public SelectedTracksModel
 {
 	Q_OBJECT
 private:
@@ -41,6 +42,10 @@ public:
 
 	inline UniqueLibraryItemModel *model() const { return _model; }
 
+	virtual QList<QUrl> selectedTracks() override;
+
+	virtual void updateSelectedTracks() override;
+
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent *e) override;
 
@@ -59,7 +64,7 @@ public slots:
 	void jumpTo(const QString &letter);
 
 signals:
-	void sendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
+	void sendToTagEditor(const QList<QUrl> &tracks);
 };
 
 #endif // TABLEVIEW_H

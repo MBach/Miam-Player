@@ -93,7 +93,7 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 			indexes << index;
 			selectedTracks.append(mc.canonicalUrl());
 		}
-		emit aboutToSendToTagEditor(indexes, selectedTracks);
+		emit aboutToSendToTagEditor(selectedTracks);
 	});
 	/// TODO
 	//connect(actionInlineTag, &QAction::triggered, this, &Playlist::editTagInline);

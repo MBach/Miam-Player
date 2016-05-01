@@ -72,7 +72,7 @@ public slots:
 signals:
 	void modelReloadRequested();
 
-	void aboutToSendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
+	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 };
 
 #endif // ABSTRACTVIEW_H

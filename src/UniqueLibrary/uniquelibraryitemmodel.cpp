@@ -73,10 +73,10 @@ void UniqueLibraryItemModel::load(const QString &filter)
 	}
 
 	if (filter.isEmpty()) {
-		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, " \
+		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, albumNormalized, album, artistAlbum, " \
 					  "albumYear, icon, internalCover, cover FROM cache ORDER BY uri, internalCover");
 	} else {
-		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, album, artistAlbum, " \
+		query.prepare("SELECT DISTINCT artistNormalized || '|' || albumYear  || '|' || albumNormalized, albumNormalized, album, artistAlbum, " \
 					  "albumYear, icon, internalCover, cover FROM cache WHERE trackTitle LIKE :t OR artist LIKE :ar OR album LIKE :al ORDER BY uri, internalCover");
 		query.bindValue(":t", "%" + filter + "%");
 		query.bindValue(":ar", "%" + filter + "%");
@@ -94,6 +94,7 @@ void UniqueLibraryItemModel::load(const QString &filter)
 			}
 			AlbumItem *album = new AlbumItem;
 			album->setData(normalizedString, Miam::DF_NormalizedString);
+			album->setData(query.record().value(++i).toString(), Miam::DF_NormAlbum);
 			album->setText(query.record().value(++i).toString());
 			album->setData(query.record().value(++i).toString(), Miam::DF_Artist);
 			album->setData(query.record().value(++i).toString(), Miam::DF_Year);

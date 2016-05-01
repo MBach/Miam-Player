@@ -559,10 +559,8 @@ void MainWindow::activateView(QAction *menuAction)
 	}
 
 	if (_currentView->viewProperty(Settings::VP_CanSendTracksToEditor)) {
-		connect(_currentView, &AbstractView::aboutToSendToTagEditor, this, [=](const QModelIndexList &, const QList<QUrl> &tracks) {
+		connect(_currentView, &AbstractView::aboutToSendToTagEditor, this, [=](const QList<QUrl> &tracks) {
 			actionViewTagEditor->trigger();
-			qDebug() << Q_FUNC_INFO << "aboutToSendToTagEditor" << tracks;
-			/// TODO, refresh indexes when tags have changed
 			_tagEditor->addItemsToEditor(tracks);
 		});
 	}

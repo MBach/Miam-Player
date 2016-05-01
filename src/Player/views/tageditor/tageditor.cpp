@@ -172,8 +172,6 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 		return tagEditorWidget->selectedItems().isEmpty();
 	} else if (obj == tagEditorWidget->viewport() && event->type() == QEvent::MouseButtonPress) {
 		if (tagEditorWidget->selectionModel()->hasSelection()) {
-			/// FIXME
-			qDebug() << "selection";
 			this->displayCover();
 		}
 		return QWidget::eventFilter(obj, event);
@@ -184,7 +182,6 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 
 void TagEditor::buildCache()
 {
-	qDebug() << Q_FUNC_INFO;
 	tagEditorWidget->blockSignals(true);
 
 	// Information in the table is split into columns, using column index
@@ -209,7 +206,6 @@ void TagEditor::clearCovers(QMap<int, Cover*> &coversToRemove)
 	QMutableMapIterator<int, Cover*> iterator(coversToRemove);
 	while (iterator.hasNext()) {
 		iterator.next();
-		qDebug() << Q_FUNC_INFO << "clearCovers" << iterator.key() << (iterator.value() == nullptr);
 		if (iterator.value() != nullptr) {
 			delete iterator.value();
 			iterator.value() = nullptr;
@@ -225,7 +221,6 @@ void TagEditor::replaceCover(Cover *newCover)
 		// It is sure that covers are different
 		if (!(previousCover == nullptr || newCover == nullptr || qHash(previousCover->byteArray()) == qHash(newCover->byteArray()))) {
 			newCover->setChanged(true);
-			qDebug() << "TagEditor::replaceCover DELETE";
 			delete previousCover;
 		}
 		_unsavedCovers.insert(index.row(), newCover);
@@ -249,11 +244,7 @@ void TagEditor::addTracks(const QStringList &tracks)
 	// So, temporarily disconnect this signal
 	disconnect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
 	bool onlyOneAlbumIsSelected = tagEditorWidget->addItemsToEditor(tracks, _covers);
-	/*qDebug() << Q_FUNC_INFO << "when adding tracks, " << covers.size() << "covers were found";
-	for (int i = 0; i < covers.count(); i++) {
-		Cover *c = covers.value(i);
-		qDebug() << i << qHash(c->byteArray());
-	}*/
+
 	albumCover->setCoverForSingleAlbum(onlyOneAlbumIsSelected);
 
 	connect(tagEditorWidget, &QTableWidget::itemChanged, this, &TagEditor::recordSingleItemChange);
@@ -329,7 +320,6 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 /** Saves all fields in the media. */
 void TagEditor::commitChanges()
 {
-	qDebug() << Q_FUNC_INFO;
 	// Create a subset of all modified tracks that needs to be rescanned by the model afterwards.
 	QSet<int> tracksToRescan;
 
@@ -352,7 +342,6 @@ void TagEditor::commitChanges()
 				// If it has changed, we need to rename the file after setting meta-datas
 				if (col == Miam::COL_Filename) {
 					trackWasModified = true;
-					qDebug() << absPath << "has been renamed";
 				}
 
 				// Replace the field by using a key stored in the header (one key per column)
@@ -360,8 +349,6 @@ void TagEditor::commitChanges()
 
 				if (fh->file()->tag()) {
 					trackWasModified = fh->insert(key, item->text()) || trackWasModified;
-				} else {
-					qDebug() << "no valid tag for this file";
 				}
 			}
 		}
@@ -378,7 +365,7 @@ void TagEditor::commitChanges()
 		// The Tree structure in the Library could have been modified
 		if (trackWasModified) {
 			if (!fh->save()) {
-				qDebug() << Q_FUNC_INFO << "tag wasn't saved :(";
+				qWarning() << Q_FUNC_INFO << "tag wasn't saved :(";
 			}
 			tracksToRescan.insert(row);
 		}
@@ -393,7 +380,6 @@ void TagEditor::commitChanges()
 	// Track has changed?
 	if (!tracksToRescan.isEmpty()) {
 
-		qDebug() << tracksToRescan.size() << "tracksToRescan.size()";
 		QSetIterator<int> it(tracksToRescan);
 		QStringList oldPaths, newPaths;
 		while (it.hasNext()) {
@@ -583,8 +569,6 @@ void TagEditor::displayTags()
 
 void TagEditor::recordSingleItemChange(QTableWidgetItem *item)
 {
-	qDebug() << Q_FUNC_INFO;
-
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
 	item->setData(TagEditorTableWidget::MODIFIED, true);
@@ -605,7 +589,6 @@ void TagEditor::rollbackChanges()
 	this->clearCovers(_unsavedCovers);
 
 	tagEditorWidget->blockSignals(false);
-	// qDebug() << "rollbackChanges";
 
 	// Then, reload info a second time
 	this->displayCover();
@@ -641,7 +624,6 @@ void TagEditor::updateCells(QString text)
 			auto item = tagEditorWidget->item(index.row(), column);
 			item->setData(TagEditorTableWidget::MODIFIED, true);
 			QFont f(item->font());
-			qDebug() << Q_FUNC_INFO << column;
 			f.setBold(true);
 			item->setFont(f);
 		}

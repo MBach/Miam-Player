@@ -128,7 +128,7 @@ public slots:
 	void removeSelectedTracks();
 
 signals:
-	void aboutToSendToTagEditor(const QModelIndexList &indexes, const QList<QUrl> &tracks);
+	void aboutToSendToTagEditor(const QList<QUrl> &tracks);
 
 	void contentHasChanged();
 

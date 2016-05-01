@@ -291,6 +291,7 @@ bool ViewPlaylists::viewProperty(Settings::ViewProperty vp) const
 	case Settings::VP_HasAreaForRescan:
 	case Settings::VP_FileExplorerFeature:
 	case Settings::VP_VolumeIndicatorToggled:
+	case Settings::VP_CanSendTracksToEditor:
 		return true;
 	case Settings::VP_HasTracksToDisplay:
 		return library->model()->rowCount() > 0;
