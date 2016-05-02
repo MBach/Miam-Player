@@ -355,9 +355,14 @@ void TagEditor::commitChanges()
 
 		Cover *previousCover = _covers.value(row);
 		Cover *currentCover = _unsavedCovers.value(row);
-		if ((previousCover == nullptr && currentCover != nullptr) || (previousCover != nullptr && currentCover == nullptr)) {
+		if (previousCover == nullptr && currentCover != nullptr) {
 			fh->setCover(currentCover);
 			trackWasModified = true;
+		} else if (previousCover != nullptr && currentCover == nullptr) {
+			if (previousCover->hasChanged()) {
+				fh->setCover(previousCover);
+				trackWasModified = true;
+			}
 		}
 
 		// Save changes if at least one field was modified
