@@ -13,6 +13,9 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
+#include <QLabel>
+#include <QVBoxLayout>
+
 #include <QtDebug>
 
 TableView::TableView(QWidget *parent)
@@ -21,19 +24,39 @@ TableView::TableView(QWidget *parent)
 	, _jumpToWidget(new JumpToWidget(this))
 	, _skipCount(1)
 	, _actionSendToTagEditor(new QAction)
+	, _artistHeader(new QWidget(this))
 {
 	_model->proxy()->setDynamicSortFilter(false);
 	this->setModel(_model->proxy());
 	this->setVerticalScrollMode(ScrollPerPixel);
 	LibraryScrollBar *vScrollBar = new LibraryScrollBar(this);
 	this->setVerticalScrollBar(vScrollBar);
+
+	QVBoxLayout *vBoxLayout = new QVBoxLayout;
+	vBoxLayout->setSpacing(0);
+	vBoxLayout->setContentsMargins(0, 0, 0, 0);
+	QLabel *artist = new QLabel(_artistHeader);
+	artist->setContentsMargins(0, 0, 0, 0);
+	artist->setText("Test");
+	vBoxLayout->addWidget(artist);
+	_artistHeader->setContentsMargins(0, 0, 0, 0);
+	_artistHeader->setLayout(vBoxLayout);
+
 	connect(_jumpToWidget, &JumpToWidget::aboutToScrollTo, this, &TableView::jumpTo);
 	connect(_model->proxy(), &UniqueLibraryFilterProxyModel::aboutToHighlightLetters, _jumpToWidget, &JumpToWidget::highlightLetters);
 	connect(vScrollBar, &QAbstractSlider::valueChanged, this, [=](int) {
-		QModelIndex iTop = indexAt(viewport()->rect().topLeft());
-		_jumpToWidget->setCurrentLetter(_model->currentLetter(iTop.sibling(iTop.row(), 1)));
+		QModelIndex iTop = indexAt(viewport()->rect().topRight());
+		QModelIndex sourceTop = _model->proxy()->mapToSource(iTop);
+		QStandardItem *item = _model->itemFromIndex(_model->index(sourceTop.row(), sourceTop.column()));
+		if (item) {
+			if (item->type() == Miam::IT_Artist) {
+				artist->setText(item->text());
+			} else {
+				artist->setText(item->data(Miam::DF_Artist).toString());
+			}
+		}
+		_jumpToWidget->setCurrentLetter(_model->currentLetter(iTop));
 	});
-	this->installEventFilter(this);
 	horizontalHeader()->resizeSection(0, Settings::instance()->coverSizeUniqueLibrary());
 
 	connect(selectionModel(), &QItemSelectionModel::selectionChanged, [=](const QItemSelection &, const QItemSelection &) {
@@ -66,6 +89,30 @@ TableView::TableView(QWidget *parent)
 		}
 	});
 	this->adjust();
+	this->installEventFilter(this);
+}
+
+bool TableView::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::ShowToParent) {
+		qDebug() << Q_FUNC_INFO << "so what?";
+		//QShowEvent *showEvent = static_cast<QShowEvent*>(event);
+		_artistHeader->setMinimumWidth(this->width());
+	} else if (event->type() == QEvent::ShortcutOverride) {
+		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
+			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
+			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
+				// We don't want this event to be propagated
+				keyEvent->accept();
+				return true;
+			}
+		} else {
+			keyEvent->ignore();
+			return false;
+		}
+	}
+	return QTableView::eventFilter(obj, event);
 }
 
 TableView::~TableView()
@@ -175,26 +222,6 @@ void TableView::contextMenuEvent(QContextMenuEvent *e)
 		_actionSendToTagEditor->setText(tr("Send to tag editor"));
 	}
 	_menu.exec(e->globalPos());
-}
-
-/** Redefined to override shortcuts that are mapped on simple keys. */
-bool TableView::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::ShortcutOverride) {
-		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-		if (keyEvent->modifiers().testFlag(Qt::NoModifier)) {
-			// If one has assigned a simple key like 'N' to 'Skip Forward' we don't actually want to skip the track
-			if (65 <= keyEvent->key() && keyEvent->key() <= 90) {
-				// We don't want this event to be propagated
-				keyEvent->accept();
-				return true;
-			}
-		} else {
-			keyEvent->ignore();
-			return false;
-		}
-	}
-	return QTableView::eventFilter(obj, event);
 }
 
 /** Redefined to keep displayed covers untouched. */

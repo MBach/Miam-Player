@@ -27,6 +27,8 @@ private:
 	QMenu _menu;
 	QAction *_actionSendToTagEditor;
 
+	QWidget *_artistHeader;
+
 public:
 	explicit TableView(QWidget *parent = nullptr);
 
@@ -34,6 +36,9 @@ public:
 
 	/** Adjust row height of last track when tracks in an album have an height lower than cover size. */
 	void adjust();
+
+	/** Redefined to override shortcuts that are mapped on simple keys. */
+	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	inline JumpToWidget* jumpToWidget() const { return _jumpToWidget; }
 
@@ -48,9 +53,6 @@ public:
 
 protected:
 	virtual void contextMenuEvent(QContextMenuEvent *e) override;
-
-	/** Redefined to override shortcuts that are mapped on simple keys. */
-	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 	/** Redefined to keep displayed covers untouched. */
 	virtual void mouseMoveEvent(QMouseEvent *event) override;
