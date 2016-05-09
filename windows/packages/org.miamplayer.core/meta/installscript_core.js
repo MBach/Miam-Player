@@ -162,11 +162,11 @@ Component.prototype.createOperations = function()
 		}
 		// Remove cache (folder including subfolders, sqlite database, etc) /// FIXME: removing folders
 		var home = installer.environmentVariable("USERPROFILE");
-		if (widget.clearCacheCheckBox.checked || installer.value("cacheExists") === "1") {
+		if (widget.clearCacheCheckBox.checked) {
 			component.addElevatedOperation("Delete", home + "\\AppData\\Local\\MmeMiamMiam\\MiamPlayer\\mp.db");
 		}
 		// Remove ini file
-		if (widget.clearSettingsCheckBox.checked || installer.value("settingsExists") === "1") {
+		if (widget.clearSettingsCheckBox.checked) {
 			// Return codes are "0" == OK and "1" == KO even if a problem has occured. "1" can happen when one has manually deleted settings
 			component.addElevatedOperation("Delete", home + "\\AppData\\Roaming\\MmeMiamMiam\\MiamPlayer.ini");
 		}
