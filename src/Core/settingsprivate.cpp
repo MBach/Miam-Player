@@ -448,9 +448,9 @@ void SettingsPrivate::setLastPlaylistSession(const QList<uint> &ids)
 
 void SettingsPrivate::setMusicLocations(const QStringList &locations)
 {
-	value("musicLocations", QStringList()).toStringList();
+	QStringList old = value("musicLocations").toStringList();
 	setValue("musicLocations", locations);
-	emit musicLocationsHaveChanged(QStringList());
+	emit musicLocationsHaveChanged(old, locations);
 }
 
 void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -518,7 +518,7 @@ void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 	newLocations.append(locations);
 	setValue("musicLocations", newLocations);
 	qDebug() << Q_FUNC_INFO << newLocations;
-	emit musicLocationsHaveChanged(locations);
+	emit musicLocationsHaveChanged(old, locations);
 }
 
 /** Sets an alternate background color for playlists. */

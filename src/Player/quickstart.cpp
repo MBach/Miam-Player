@@ -8,6 +8,7 @@
 
 #include <QDir>
 #include <QFileIconProvider>
+#include <QMenuBar>
 #include <QStandardPaths>
 #include <QThread>
 
@@ -17,11 +18,12 @@
 
 const QList<int> QuickStart::ratios = QList<int>() << 0 << 3 << 2;
 
-QuickStart::QuickStart(QWidget *parent)
+QuickStart::QuickStart(QMainWindow *parent)
 	: QWidget(parent)
 	, _totalMusicFiles(0)
 	, _worker(nullptr)
 	, _qsse(nullptr)
+	, _mainWindow(parent)
 {
 	setupUi(this);
 	quickStartTableWidget->setVerticalScrollBar(new ScrollBar(Qt::Vertical, this));
@@ -54,27 +56,8 @@ QuickStart::QuickStart(QWidget *parent)
 
 	connect(quickStartTableWidget, &QTableWidget::itemClicked, this, &QuickStart::checkRow);
 
-	auto settingsPrivate = SettingsPrivate::instance();
-
-	// Set only one location in the Library: the default music folder
-	connect(defaultFolderApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
-		QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
-		musicLocation = QDir::toNativeSeparators(musicLocation);
-		settingsPrivate->setMusicLocations({ musicLocation });
-	});
-
-	// Select only folders that are checked by one
-	connect(quickStartApplyButton, &QDialogButtonBox::clicked, [=] (QAbstractButton *) {
-		QStringList newLocations;
-		for (int i = 1; i < quickStartTableWidget->rowCount(); i++) {
-			if (quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
-				QString musicLocation = quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
-				musicLocation = QDir::toNativeSeparators(musicLocation);
-				newLocations.append(musicLocation);
-			}
-		}
-		settingsPrivate->setMusicLocations(newLocations);
-	});
+	connect(defaultFolderApplyButton, &QDialogButtonBox::clicked, this, &QuickStart::setDefaultFolder);
+	connect(quickStartApplyButton, &QDialogButtonBox::clicked, this, &QuickStart::setCheckedFolders);
 
 	this->installEventFilter(this);
 }
@@ -158,6 +141,30 @@ void QuickStart::checkRow(QTableWidgetItem *i)
 	} else {
 		quickStartTableWidget->item(0, 0)->setCheckState(Qt::Unchecked);
 	}
+}
+
+/** Select only folders that are checked by one. */
+void QuickStart::setCheckedFolders()
+{
+	QStringList newLocations;
+	for (int i = 1; i < quickStartTableWidget->rowCount(); i++) {
+		if (quickStartTableWidget->item(i, 0)->checkState() == Qt::Checked) {
+			QString musicLocation = quickStartTableWidget->item(i, 1)->data(Qt::UserRole).toString();
+			musicLocation = QDir::toNativeSeparators(musicLocation);
+			newLocations.append(musicLocation);
+		}
+	}
+	SettingsPrivate::instance()->setMusicLocations(newLocations);
+	_mainWindow->menuBar()->show();
+}
+
+/** Set only one location in the Library: the default music folder. */
+void QuickStart::setDefaultFolder()
+{
+	QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
+	musicLocation = QDir::toNativeSeparators(musicLocation);
+	SettingsPrivate::instance()->setMusicLocations({ musicLocation });
+	_mainWindow->menuBar()->show();
 }
 
 /** Insert above other rows a new one with a Master checkbox to select/unselect all. */

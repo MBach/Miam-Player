@@ -29,10 +29,10 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent)
 	}
 }
 
-void MusicSearchEngine::setDelta(const QStringList &delta)
+/*void MusicSearchEngine::setDelta(const QStringList &delta)
 {
 	_delta = delta;
-}
+}*/
 
 void MusicSearchEngine::setWatchForChanges(bool b)
 {
@@ -45,24 +45,14 @@ void MusicSearchEngine::setWatchForChanges(bool b)
 
 void MusicSearchEngine::doSearch()
 {
-	qDebug() << Q_FUNC_INFO;
+	//qDebug() << Q_FUNC_INFO << "_delta" << _delta;
 	emit aboutToSearch();
-
-	SqlDatabase db;
-
-	if (_delta.isEmpty()) {
-		QSqlQuery cleanDb(db);
-		cleanDb.setForwardOnly(true);
-		cleanDb.exec("DELETE FROM cache");
-		cleanDb.exec("DROP INDEX indexArtist");
-		cleanDb.exec("DROP INDEX indexAlbum");
-		cleanDb.exec("DROP INDEX indexPath");
-	}
 
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
-	QStringList pathsToSearch = _delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : _delta;
-	for (QString musicPath : pathsToSearch) {
+	//QStringList pathsToSearch = _delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : _delta;
+	//for (QString musicPath : pathsToSearch) {
+	for (QString musicPath : SettingsPrivate::instance()->musicLocations()) {
 		QDir location(musicPath);
 		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
 		locations.append(location);
@@ -88,6 +78,7 @@ void MusicSearchEngine::doSearch()
 
 	QStringList suffixes = FileHelper::suffixes(FileHelper::ET_All);
 
+	SqlDatabase db;
 	db.transaction();
 	for (QDir location : locations) {
 		QDirIterator it(location.absolutePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
@@ -136,13 +127,9 @@ void MusicSearchEngine::doSearch()
 	}
 	db.commit();
 
-	if (_delta.isEmpty()) {
-
-		QSqlQuery index(db);
-		index.exec("CREATE INDEX IF NOT EXISTS indexArtist ON cache (artistNormalized)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON cache (albumNormalized)");
-		index.exec("CREATE INDEX IF NOT EXISTS indexPath ON cache (uri)");
-	}
+	db.exec("CREATE INDEX IF NOT EXISTS indexArtist ON cache (artistNormalized)");
+	db.exec("CREATE INDEX IF NOT EXISTS indexAlbum ON cache (albumNormalized)");
+	db.exec("CREATE INDEX IF NOT EXISTS indexPath ON cache (uri)");
 
 	// Resync remote players and remote databases
 	//emit aboutToResyncRemoteSources();
@@ -193,7 +180,7 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	if (!newFoldersToAddInLibrary.isEmpty()) {
-		_delta = newFoldersToAddInLibrary;
+		//_delta = newFoldersToAddInLibrary;
 		this->doSearch();
 	}
 
@@ -222,8 +209,9 @@ void MusicSearchEngine::watchForChanges()
 		qDebug() << Q_FUNC_INFO << oldLocations;
 		if (!oldLocations.isEmpty()) {
 			//db.rebuildFomLocations(oldLocations, QStringList());
-			setDelta(oldLocations);
-			db.rebuild();
+			//setDelta(oldLocations);
+			//db.exec("DELETE FROM cache");
+			//db.exec("DROP INDEX indexUri");
 		}
 	}
 }

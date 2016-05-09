@@ -91,6 +91,8 @@ private slots:
 
 	void showTagEditor();
 
+	void syncLibrary(const QStringList &oldLocations, const QStringList &newLocations);
+
 	void toggleMenuBar(bool checked);
 };
 

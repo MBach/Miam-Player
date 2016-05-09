@@ -84,6 +84,14 @@ SqlDatabase::~SqlDatabase()
 	}
 }
 
+void SqlDatabase::reset()
+{
+	exec("DELETE FROM cache");
+	exec("DROP INDEX indexArtist");
+	exec("DROP INDEX indexAlbum");
+	exec("DROP INDEX indexPath");
+}
+
 void SqlDatabase::init()
 {
 	open();
@@ -581,21 +589,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 
 	commit();
 	emit aboutToUpdateView();
-}
-
-/** Delete cache and rescan local tracks. */
-void SqlDatabase::rebuild()
-{
-	if (!isOpen()) {
-		open();
-		this->setPragmas();
-	}
-
-	QSqlQuery cleanDb(*this);
-	cleanDb.setForwardOnly(true);
-	cleanDb.exec("DELETE FROM cache");
-	cleanDb.exec("DROP INDEX indexUri");
-	transaction();
 }
 
 /** Reads an external picture which is close to multimedia files (same folder). */

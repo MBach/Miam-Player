@@ -32,6 +32,8 @@ public:
 
 	~SqlDatabase();
 
+	void reset();
+
 	uint insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting);
 	bool insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting = false);
 	bool insertIntoTableTracks(const TrackDAO &track);
@@ -46,7 +48,6 @@ public:
 	PlaylistDAO selectPlaylist(uint playlistId);
 	QList<PlaylistDAO> selectPlaylists();
 
-	//ArtistDAO* selectArtist(uint artistId);
 	TrackDAO selectTrackByURI(const QString &uri);
 
 	bool playlistHasBackgroundImage(uint playlistID);
@@ -67,9 +68,6 @@ private:
 	void updateTrack(const QString &absFilePath);
 
 public slots:
-	/** Delete cache and rescan local tracks. */
-	void rebuild();
-
 	/** Reads an external picture which is close to multimedia files (same folder). */
 	void saveCoverRef(const QString &coverPath, const QString &track);
 
@@ -78,11 +76,6 @@ public slots:
 
 signals:
 	void aboutToUpdateView();
-	//void aboutToResyncRemoteSources();
-	//void coverWasUpdated(const QFileInfo &);
-	//void nodeExtracted(GenericDAO *node);
-	//void aboutToUpdateNode(GenericDAO *node);
-	//void aboutToCleanView();
 };
 
 #endif // SQLDATABASE_H

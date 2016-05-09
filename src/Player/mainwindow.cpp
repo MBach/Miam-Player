@@ -212,26 +212,7 @@ void MainWindow::setupActions()
 
 	// Load music
 	auto settingsPrivate = SettingsPrivate::instance();
-	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, [=](const QStringList &newLocations) {
-
-		qDebug() << Q_FUNC_INFO << newLocations;
-		this->activateLastView();
-		if (newLocations.isEmpty()) {
-			return;
-		}
-		QThread *worker = new QThread;
-		MusicSearchEngine *searchEngine = new MusicSearchEngine;
-		searchEngine->setDelta(newLocations);
-		searchEngine->moveToThread(worker);
-
-		connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
-		connect(searchEngine, &MusicSearchEngine::searchHasEnded, worker, &QThread::deleteLater);
-		worker->start();
-
-		if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
-			_currentView->setMusicSearchEngine(searchEngine);
-		}
-	});
+	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, &MainWindow::syncLibrary);
 
 	// Media buttons and their shortcuts
 	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
@@ -415,11 +396,7 @@ void MainWindow::initQuickStart()
 	quickStart->searchMultimediaFiles();
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
 	this->setCentralWidget(quickStart);
-	actionOpenFiles->setDisabled(true);
-	actionOpenFolder->setDisabled(true);
-	menuView->setDisabled(true);
-	menuPlayback->setDisabled(true);
-	menuPlaylist->setDisabled(true);
+	this->menuBar()->hide();
 	this->resize(400, 500);
 }
 
@@ -717,6 +694,9 @@ void MainWindow::rescanLibrary()
 		_currentView->setViewProperty(Settings::VP_SearchArea, true);
 	}
 
+	SqlDatabase db;
+	db.reset();
+
 	QThread *worker = new QThread;
 	MusicSearchEngine *searchEngine = new MusicSearchEngine;
 	searchEngine->moveToThread(worker);
@@ -767,6 +747,43 @@ void MainWindow::showTagEditor()
 			_tagEditor->deleteLater();
 			_tagEditor = nullptr;
 		}
+	}
+}
+
+void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList &newLocations)
+{
+	qDebug() << Q_FUNC_INFO << newLocations;
+	this->activateLastView();
+	if (newLocations.isEmpty()) {
+		return;
+	}
+
+	bool same = true;
+	if (oldLocations.size() == newLocations.size()) {
+		for (int i = 0; i < newLocations.size(); i++) {
+			same = same && QString::compare(newLocations.at(i), oldLocations.at(i)) == 0;
+		}
+
+	} else {
+		same = false;
+	}
+
+	if (!same) {
+		SqlDatabase db;
+		db.reset();
+	}
+
+	QThread *worker = new QThread;
+	MusicSearchEngine *searchEngine = new MusicSearchEngine;
+	//searchEngine->setDelta(newLocations);
+	searchEngine->moveToThread(worker);
+
+	connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
+	connect(searchEngine, &MusicSearchEngine::searchHasEnded, worker, &QThread::deleteLater);
+	worker->start();
+
+	if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
+		_currentView->setMusicSearchEngine(searchEngine);
 	}
 }
 

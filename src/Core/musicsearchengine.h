@@ -17,14 +17,14 @@ class MIAMCORE_LIBRARY MusicSearchEngine : public QObject
 	Q_OBJECT
 private:
 	QTimer *_timer;
-	QStringList _delta;
+	//QStringList _delta;
 
 public:
 	static bool isScanning;
 
 	MusicSearchEngine(QObject *parent = nullptr);
 
-	void setDelta(const QStringList &delta);
+	//void setDelta(const QStringList &delta);
 
 	void setWatchForChanges(bool b);
 

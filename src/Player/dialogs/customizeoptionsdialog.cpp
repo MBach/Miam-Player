@@ -476,12 +476,16 @@ void CustomizeOptionsDialog::updateMusicLocations()
 
 	bool musicLocationsAreIdenticals = true;
 	if (savedLocations.size() == newLocations.size()) {
-		for (int i = 0; i < savedLocations.count() && musicLocationsAreIdenticals; i++) {
-			musicLocationsAreIdenticals = (QString::compare(savedLocations.at(i), newLocations.at(i)) == 0);
+		for (int i = 0; i < newLocations.count(); i++) {
+			musicLocationsAreIdenticals = musicLocationsAreIdenticals && (QString::compare(savedLocations.at(i), newLocations.at(i)) == 0);
 		}
 	} else {
 		musicLocationsAreIdenticals = false;
 	}
+
+	qDebug() << Q_FUNC_INFO << "savedLocations" << savedLocations;
+	qDebug() << Q_FUNC_INFO << "newLocations" << newLocations;
+	qDebug() << Q_FUNC_INFO << "musicLocationsAreIdenticals" << musicLocationsAreIdenticals;
 
 	// Trigger the MainWindow (and then the SearchEngine) to restart a scan
 	if (!musicLocationsAreIdenticals) {

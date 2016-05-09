@@ -2,6 +2,7 @@
 #define QUICKSTARTTABLEWIDGET_H
 
 #include <QFileInfo>
+#include <QMainWindow>
 #include <QWidget>
 
 #include <quickstartsearchengine.h>
@@ -30,8 +31,10 @@ private:
 	QThread *_worker;
 	QuickStartSearchEngine *_qsse;
 
+	QMainWindow *_mainWindow;
+
 public:
-	explicit QuickStart(QWidget *parent = nullptr);
+	explicit QuickStart(QMainWindow *parent);
 
 	virtual bool eventFilter(QObject *, QEvent *e) override;
 
@@ -44,6 +47,12 @@ protected:
 private slots:
 	/** Check or uncheck rows when one is clicking, but not only on the checkbox. */
 	void checkRow(QTableWidgetItem *i);
+
+	/** Select only folders that are checked by one. */
+	void setCheckedFolders();
+
+	/** Set only one location in the Library: the default music folder. */
+	void setDefaultFolder();
 
 public slots:
 

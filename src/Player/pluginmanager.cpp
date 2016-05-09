@@ -159,6 +159,7 @@ void PluginManager::unregisterExtensionPoint(const QString &ext)
 {
 	for (QObject *instance : _extensionPoints.values(ext)) {
 		if (instance) {
+			qDebug() << Q_FUNC_INFO << "about to delete" << instance << "for" << ext;
 			instance->deleteLater();
 		}
 	}
@@ -174,7 +175,7 @@ bool PluginManager::unloadPlugin(const QString &absFilePath)
 			QMenu *menu = qobject_cast<QMenu*>(action->parent());
 			menu->removeAction(action);
 		} else if (QMenu *menu = qobject_cast<QMenu*>(dependency)) {
-			delete menu;
+			menu->deleteLater();
 		}
 	}
 
