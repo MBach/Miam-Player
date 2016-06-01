@@ -241,7 +241,7 @@ void QuickStart::insertRow(const QFileInfo &fileInfo, int musicFileNumber)
 	checkBox->setFlags(checkBox->flags() | Qt::ItemIsUserCheckable);
 	checkBox->setCheckState(Qt::Checked);
 
-	QTableWidgetItem *musicSubFolderName = new QTableWidgetItem(QFileIconProvider().icon(fileInfo), fileInfo.baseName());
+    QTableWidgetItem *musicSubFolderName = new QTableWidgetItem(QFileIconProvider().icon(fileInfo), fileInfo.fileName());
 	musicSubFolderName->setData(Qt::UserRole, fileInfo.absoluteFilePath());
 
 	QTableWidgetItem *musicSubFolderCount;
