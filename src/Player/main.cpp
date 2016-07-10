@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<PluginInfo>();
 	qRegisterMetaTypeStreamOperators<PluginInfo>("PluginInfo");
 #if defined(Q_OS_WIN)
-	qInstallMessageHandler(debugOutput);
+	//qInstallMessageHandler(debugOutput);
 #endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)

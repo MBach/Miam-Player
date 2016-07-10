@@ -36,6 +36,7 @@
         <file alias="translate">config/translate.png</file>
         <file alias="resetButton">config/reset.png</file>
         <file alias="music_64">config/music_64.png</file>
+        <file alias="advanced">config/advanced.png</file>
     </qresource>
     <qresource prefix="/languages">
         <file alias="ar">language/ar.png</file>

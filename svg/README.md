@@ -1,6 +1,11 @@
 ##In this folder you will find some [*.svg](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics) files used in [Miam-Player](http://www.miam-player.org/)
 
 #Dialogs
+###File *application_x_desktop*
+- Original file name: `application_x_desktop.svg`
+- Copyright: Oxygen Team
+- Modifications: flat render
+
 ###File *colors.svg*
 - Original file name: `application_x_kcsrc.svg`
 - Copyright: Oxygen Team
