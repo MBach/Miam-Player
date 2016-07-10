@@ -23,7 +23,7 @@ TableView::TableView(QWidget *parent)
 	, _model(new UniqueLibraryItemModel(this))
 	, _jumpToWidget(new JumpToWidget(this))
 	, _skipCount(1)
-	, _actionSendToTagEditor(new QAction)
+	, _actionSendToTagEditor(new QAction(this))
 	, _artistHeader(new QWidget(this))
 {
 	_model->proxy()->setDynamicSortFilter(false);
