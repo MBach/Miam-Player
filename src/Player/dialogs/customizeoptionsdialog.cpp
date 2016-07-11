@@ -156,7 +156,19 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(SettingsPrivate::DD_AddToPlaylist); });
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
-	// Sixth panel: plugins
+
+	// Sixth panel: advanced
+	connect(enableRemoteControlCheckBox, &QCheckBox::toggled, this, [=](bool b) {
+		remoteControlLabelPort->setEnabled(b);
+		remoteControlPortSpinBox->setEnabled(b);
+		qDebug() << "Remote control not yet implemented";
+		settings->setRemoteControlEnabled(b);
+	});
+	if (settings->isRemoteControlEnabled()) {
+		enableRemoteControlCheckBox->toggle();
+	}
+
+	// Seventh panel: plugins
 	this->initPlugins();
 	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &CustomizeOptionsDialog::togglePlugin);
 

@@ -115,6 +115,8 @@ public:
 	/** Returns true if tabs should be displayed like rectangles. */
 	bool isRectTabs() const;
 
+	bool isRemoteControlEnabled() const;
+
 	/** Returns true if the article should be displayed after artist's name. */
 	bool isReorderArtistsArticle() const;
 
@@ -169,6 +171,8 @@ public:
 	void setLastPlaylistSession(const QList<uint> &ids);
 
 	void setMusicLocations(const QStringList &locations);
+
+	void setRemoteControlEnabled(bool b);
 
 	void setShortcut(const QString &objectName, const QKeySequence &keySequence);
 

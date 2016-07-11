@@ -207,6 +207,11 @@ bool SettingsPrivate::isRectTabs() const
 	return value("rectangularTabs", false).toBool();
 }
 
+bool SettingsPrivate::isRemoteControlEnabled() const
+{
+	return value("remoteControl").toBool();
+}
+
 /** Returns true if the article should be displayed after artist's name. */
 bool SettingsPrivate::isReorderArtistsArticle() const
 {
@@ -451,6 +456,11 @@ void SettingsPrivate::setMusicLocations(const QStringList &locations)
 	QStringList old = value("musicLocations").toStringList();
 	setValue("musicLocations", locations);
 	emit musicLocationsHaveChanged(old, locations);
+}
+
+void SettingsPrivate::setRemoteControlEnabled(bool b)
+{
+	setValue("remoteControl", b);
 }
 
 void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence &keySequence)
