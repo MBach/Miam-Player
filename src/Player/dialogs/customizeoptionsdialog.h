@@ -8,6 +8,7 @@
 #include "ui_customizeoptionsdialog.h"
 
 #include "pluginmanager.h"
+#include "remotecontrol.h"
 
 /**
  * \brief		The CustomizeOptionsDialog class is a very important class. It is designed to help one to customize options of Miam-Player.
@@ -19,6 +20,8 @@ class CustomizeOptionsDialog : public QDialog, public Ui::CustomizeOptionsDialog
 	Q_OBJECT
 private:
 	PluginManager *_pluginManager;
+
+	RemoteControl *_remoteControl;
 
 public:
 	explicit CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *parent = nullptr);
@@ -59,6 +62,8 @@ private slots:
 
 	/** Load or unload a plugin when one is switching a checkbox in the options. */
 	void togglePlugin(QTableWidgetItem *item);
+
+	void toggleRemoteControl(bool enabled);
 
 	/** Check if music locations have changed in order to rescan the filesystem. */
 	void updateMusicLocations();

@@ -27,7 +27,8 @@ SOURCES += debug/logbrowser.cpp \
     quickstart.cpp \
     tagbutton.cpp \
     taglineedit.cpp \
-    tracksnotfoundmessagebox.cpp
+    tracksnotfoundmessagebox.cpp \
+    remotecontrol.cpp
 
 HEADERS += debug/logbrowser.h \
     debug/logbrowserdialog.h \
@@ -51,7 +52,8 @@ HEADERS += debug/logbrowser.h \
     quickstart.h \
     tagbutton.h \
     taglineedit.h \
-    tracksnotfoundmessagebox.h
+    tracksnotfoundmessagebox.h \
+    remotecontrol.h
 
 FORMS += customizeoptionsdialog.ui \
     customizetheme.ui \

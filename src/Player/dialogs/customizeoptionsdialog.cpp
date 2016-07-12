@@ -22,6 +22,7 @@
 CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *)
 	: QDialog(nullptr)
 	, _pluginManager(pluginManager)
+	, _remoteControl(nullptr)
 {
 	setupUi(this);
 	listWidget->verticalScrollBar()->deleteLater();
@@ -158,14 +159,11 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 
 
 	// Sixth panel: advanced
-	connect(enableRemoteControlCheckBox, &QCheckBox::toggled, this, [=](bool b) {
-		remoteControlLabelPort->setEnabled(b);
-		remoteControlPortSpinBox->setEnabled(b);
-		qDebug() << "Remote control not yet implemented";
-		settings->setRemoteControlEnabled(b);
-	});
+	connect(enableRemoteControlCheckBox, &QCheckBox::toggled, this, &CustomizeOptionsDialog::toggleRemoteControl);
+
 	if (settings->isRemoteControlEnabled()) {
 		enableRemoteControlCheckBox->toggle();
+		connect(remoteControlPortSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), _remoteControl, &RemoteControl::changeServerPort);
 	}
 
 	// Seventh panel: plugins
@@ -468,6 +466,19 @@ void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
 				}
 			}
 		}
+	}
+}
+
+void CustomizeOptionsDialog::toggleRemoteControl(bool enabled)
+{
+	remoteControlLabelPort->setEnabled(enabled);
+	remoteControlPortSpinBox->setEnabled(enabled);
+	SettingsPrivate::instance()->setRemoteControlEnabled(enabled);
+	if (enabled) {
+		_remoteControl = new RemoteControl(remoteControlPortSpinBox->value(), this);
+		_remoteControl->startServer();
+	} else {
+		_remoteControl->deleteLater();
 	}
 }
 
