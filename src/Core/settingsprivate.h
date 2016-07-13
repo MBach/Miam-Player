@@ -157,6 +157,8 @@ public:
 
 	QMap<QString, PluginInfo> plugins() const;
 
+	uint remoteControlPort() const;
+
 	void setCustomColorRole(QPalette::ColorRole cr, const QColor &color);
 
 	/** Custom icons in CustomizeTheme */
@@ -235,6 +237,8 @@ public slots:
 	void setPlaybackKeepPlaylists(bool b);
 	void setPlaybackRestorePlaylistsAtStartup(bool b);
 
+	void setRemoteControlPort(uint port);
+
 	void setReorderArtistsArticle(bool b);
 
 	void setSearchAndExcludeLibrary(bool b);
@@ -260,6 +264,8 @@ signals:
 
 	/** Signal sent whether the music locations have changed or not. */
 	void musicLocationsHaveChanged(const QStringList &oldLocations, const QStringList &newLocations);
+
+	void remoteControlChanged(bool enabled, uint port);
 };
 
 Q_DECLARE_METATYPE(QPalette::ColorRole)

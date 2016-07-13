@@ -22,7 +22,6 @@
 CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWidget *)
 	: QDialog(nullptr)
 	, _pluginManager(pluginManager)
-	, _remoteControl(nullptr)
 {
 	setupUi(this);
 	listWidget->verticalScrollBar()->deleteLater();
@@ -157,14 +156,16 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	connect(radioButtonDDAddToPlaylist, &QRadioButton::toggled, this, [=]() { settings->setDragDropAction(SettingsPrivate::DD_AddToPlaylist); });
 	connect(radioButtonDDCopyPlaylistTracks, &QRadioButton::toggled, settings, &SettingsPrivate::setCopyTracksFromPlaylist);
 
-
 	// Sixth panel: advanced
-	connect(enableRemoteControlCheckBox, &QCheckBox::toggled, this, &CustomizeOptionsDialog::toggleRemoteControl);
+	bool isRemote = settings->isRemoteControlEnabled();
+	enableRemoteControlCheckBox->setChecked(isRemote);
+	remoteControlPortSpinBox->setValue(settings->remoteControlPort());
 
-	if (settings->isRemoteControlEnabled()) {
-		enableRemoteControlCheckBox->toggle();
-		connect(remoteControlPortSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), _remoteControl, &RemoteControl::changeServerPort);
-	}
+	remoteControlLabelPort->setEnabled(isRemote);
+	remoteControlPortSpinBox->setEnabled(isRemote);
+
+	connect(remoteControlPortSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setRemoteControlPort);
+	connect(enableRemoteControlCheckBox, &QCheckBox::toggled, this, &CustomizeOptionsDialog::toggleRemoteControl);
 
 	// Seventh panel: plugins
 	this->initPlugins();
@@ -471,15 +472,10 @@ void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
 
 void CustomizeOptionsDialog::toggleRemoteControl(bool enabled)
 {
+	qDebug() << Q_FUNC_INFO;
 	remoteControlLabelPort->setEnabled(enabled);
 	remoteControlPortSpinBox->setEnabled(enabled);
 	SettingsPrivate::instance()->setRemoteControlEnabled(enabled);
-	if (enabled) {
-		_remoteControl = new RemoteControl(remoteControlPortSpinBox->value(), this);
-		_remoteControl->startServer();
-	} else {
-		_remoteControl->deleteLater();
-	}
 }
 
 /** Check if music locations have changed in order to rescan the filesystem. */

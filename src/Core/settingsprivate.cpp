@@ -330,6 +330,11 @@ QMap<QString, PluginInfo> SettingsPrivate::plugins() const
 	return registeredPlugins;
 }
 
+uint SettingsPrivate::remoteControlPort() const
+{
+	return value("remoteControlPort", 5600).toUInt();
+}
+
 void SettingsPrivate::setCustomColorRole(QPalette::ColorRole cr, const QColor &color)
 {
 	QPalette palette = this->customPalette();
@@ -461,6 +466,7 @@ void SettingsPrivate::setMusicLocations(const QStringList &locations)
 void SettingsPrivate::setRemoteControlEnabled(bool b)
 {
 	setValue("remoteControl", b);
+	emit remoteControlChanged(b, value("remoteControlPort").toUInt());
 }
 
 void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -654,6 +660,12 @@ void SettingsPrivate::setSearchAndExcludeLibrary(bool b)
 void SettingsPrivate::setPlaybackRestorePlaylistsAtStartup(bool b)
 {
 	setValue("playbackRestorePlaylistsAtStartup", b);
+}
+
+void SettingsPrivate::setRemoteControlPort(uint port)
+{
+	setValue("remoteControlPort", port);
+	emit remoteControlChanged(true, port);
 }
 
 void SettingsPrivate::setTabsOverlappingLength(int l)

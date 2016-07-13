@@ -13,6 +13,7 @@
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
 #include "pluginmanager.h"
+#include "remotecontrol.h"
 #include "views/tageditor/tageditor.h"
 
 #include "ui_mainwindow.h"
@@ -28,6 +29,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 private:
 	MediaPlayer *_mediaPlayer;
 	PluginManager *_pluginManager;
+	RemoteControl *_remoteControl;
 	AbstractView *_currentView;
 	TagEditor *_tagEditor;
 	QxtGlobalShortcut *_shortcutSkipBackward;

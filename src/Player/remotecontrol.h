@@ -26,6 +26,8 @@ public:
 public slots:
 	void changeServerPort(int port);
 
+	void sendWelcomeToClient();
+
 };
 
 #endif // REMOTECONTROL_H

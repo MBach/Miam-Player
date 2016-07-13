@@ -14,6 +14,7 @@
 #include "pluginmanager.h"
 
 #include <QDesktopServices>
+#include <QShortcut>
 #include <QWindow>
 
 #include <QtDebug>
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
 	, _mediaPlayer(new MediaPlayer(this))
 	, _pluginManager(new PluginManager(this))
+	, _remoteControl(nullptr)
 	, _currentView(nullptr)
 	, _tagEditor(nullptr)
 	, _shortcutSkipBackward(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaPrevious), this))
@@ -145,8 +147,6 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	}
 }
 
-#include <QShortcut>
-
 void MainWindow::init()
 {
 	// Init shortcuts
@@ -268,6 +268,25 @@ void MainWindow::setupActions()
 	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
 		if (ff == SettingsPrivate::FF_Menu) {
 			this->updateFonts(settingsPrivate->font(ff));
+		}
+	});
+
+	// Activate remote control server if toggled in settings
+	if (settingsPrivate->isRemoteControlEnabled()) {
+		_remoteControl = new RemoteControl(settingsPrivate->remoteControlPort(), this);
+		_remoteControl->startServer();
+	}
+	connect(settingsPrivate, &SettingsPrivate::remoteControlChanged, this, [=](bool enabled, uint port) {
+		qDebug() << Q_FUNC_INFO;
+		if (enabled) {
+			if (_remoteControl) {
+				_remoteControl->changeServerPort(port);
+			} else {
+				_remoteControl = new RemoteControl(port, this);
+				_remoteControl->startServer();
+			}
+		} else {
+			_remoteControl->deleteLater();
 		}
 	});
 }
