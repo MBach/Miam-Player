@@ -42,10 +42,11 @@ void RemoteControl::sendWelcomeToClient()
 	qDebug() << Q_FUNC_INFO;
 	QByteArray block;
 	QDataStream out(&block, QIODevice::WriteOnly);
-	out.setVersion(QDataStream::Qt_5_6);
-	out << "Hello from Miam-Player!";
+	out.setVersion(QDataStream::Qt_5_7);
+	out << QString("Hello from Miam-Player!");
 
 	QTcpSocket *connection = _tcpServer->nextPendingConnection();
 	connect(connection, &QAbstractSocket::disconnected, connection, &QObject::deleteLater);
 	connection->write(block);
+	connection->flush();
 }
