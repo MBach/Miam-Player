@@ -1,6 +1,8 @@
 #ifndef REMOTECONTROL_H
 #define REMOTECONTROL_H
 
+#include "mediaplayer.h"
+
 #include <QTcpServer>
 
 /**
@@ -11,23 +13,42 @@
 class RemoteControl : public QObject
 {
 	Q_OBJECT
+	Q_ENUMS(Command)
+
 private:
+	MediaPlayer *_mediaPlayer;
+
 	int _port;
 
 	QTcpServer *_tcpServer;
+	QTcpSocket *_tcpSocket;
 
 public:
-	explicit RemoteControl(int port, QObject *parent = 0);
+	enum Command : int {	CMD_Playback	= 0,
+							CMD_State		= 1,
+							CMD_Track		= 2,
+							CMD_Volume		= 3,
+							CMD_Connection	= 4,
+							CMD_Cover		= 5};
+
+	explicit RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent = 0);
 
 	virtual ~RemoteControl();
 
-	void startServer();
-
-public slots:
 	void changeServerPort(int port);
 
-	void sendWelcomeToClient();
+	void startServer();
 
+private slots:
+	void decodeResponseFromClient();
+
+	void initializeConnection();
+
+	void mediaPlayerStatedChanged(QMediaPlayer::State state);
+
+	void sendTrackInfos(const QString &track);
+
+	void sendVolume(qreal volume);
 };
 
 #endif // REMOTECONTROL_H

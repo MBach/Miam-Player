@@ -92,6 +92,8 @@ void MediaPlayer::setVolume(qreal v)
 	} else {
 		_localPlayer->audio()->setVolume(v);
 	}
+	qDebug() << Q_FUNC_INFO << "emit volumeChanged(" << v << ")";
+	emit volumeChanged(v);
 }
 
 void MediaPlayer::playMediaContent(const QMediaContent &mc)
@@ -115,6 +117,15 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 		}
 	}
 	this->setVolume(Settings::instance()->volume());
+}
+
+qreal MediaPlayer::volume() const
+{
+	if (_remotePlayer) {
+		return _remotePlayer->volume();
+	} else {
+		return _localPlayer->audio()->volume();
+	}
 }
 
 /** Current position in the media, percent-based. */

@@ -62,6 +62,11 @@ public:
 inline QDataStream & operator<<(QDataStream &out, const TrackDAO &track)
 {
 	out << track.uri();
+	out << track.artistAlbum();
+	out << track.album();
+	out << track.title();
+	out << track.trackNumber();
+
 	return out;
 }
 
@@ -71,6 +76,14 @@ inline QDataStream & operator>>(QDataStream &in, TrackDAO &track)
 	QString f;
 	in >> f;
 	track.setUri(f);
+	in >> f;
+	track.setArtistAlbum(f);
+	in >> f;
+	track.setAlbum(f);
+	in >> f;
+	track.setTitle(f);
+	in >> f;
+	track.setTrackNumber(f);
 	return in;
 }
 

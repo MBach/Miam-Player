@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
 	setupUi(this);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-
 	QActionGroup *actionGroup = new QActionGroup(this);
 	actionGroup->setObjectName("playbackActionGroup");
 	actionGroup->addAction(actionPlaybackSequential);
@@ -273,7 +272,7 @@ void MainWindow::setupActions()
 
 	// Activate remote control server if toggled in settings
 	if (settingsPrivate->isRemoteControlEnabled()) {
-		_remoteControl = new RemoteControl(settingsPrivate->remoteControlPort(), this);
+		_remoteControl = new RemoteControl(_mediaPlayer, settingsPrivate->remoteControlPort(), this);
 		_remoteControl->startServer();
 	}
 	connect(settingsPrivate, &SettingsPrivate::remoteControlChanged, this, [=](bool enabled, uint port) {
@@ -282,7 +281,7 @@ void MainWindow::setupActions()
 			if (_remoteControl) {
 				_remoteControl->changeServerPort(port);
 			} else {
-				_remoteControl = new RemoteControl(port, this);
+				_remoteControl = new RemoteControl(_mediaPlayer, port, this);
 				_remoteControl->startServer();
 			}
 		} else {

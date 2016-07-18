@@ -41,8 +41,14 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
+		mediaPlayer->blockSignals(true);
 		mediaPlayer->setVolume((qreal)value / 100.0);
+		mediaPlayer->blockSignals(false);
 	});
+	connect(mediaPlayer, &MediaPlayer::volumeChanged, this, [=](qreal v) {
+		volumeSlider->setValue(v * 100);
+	});
+
 	auto settings = Settings::instance();
 	volumeSlider->setValue(settings->volume() * 100);
 

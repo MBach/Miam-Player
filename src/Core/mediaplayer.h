@@ -61,6 +61,8 @@ public:
 	/** Play track directly in the player, without playlist. */
 	void playMediaContent(const QMediaContent &mc);
 
+	qreal volume() const;
+
 private:
 	/** Current position in the media, percent-based. */
 	float position() const;
@@ -103,6 +105,7 @@ signals:
 	void mediaStatusChanged(QMediaPlayer::MediaStatus);
 	void positionChanged(qint64 pos, qint64 duration);
 	void stateChanged(QMediaPlayer::State);
+	void volumeChanged(qreal v);
 };
 
 #endif // MEDIAPLAYER_H

@@ -135,6 +135,11 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
 		mediaPlayer->setVolume((qreal)value / 100.0);
 	});
+	connect(mediaPlayer, &MediaPlayer::volumeChanged, this, [=](qreal v) {
+		volumeSlider->blockSignals(true);
+		volumeSlider->setValue(v * 100);
+		volumeSlider->blockSignals(false);
+	});
 
 	connect(qApp, &QApplication::aboutToQuit, this, [=] {
 		settingsPrivate->setValue("leftTabsIndex", leftTabs->currentIndex());
