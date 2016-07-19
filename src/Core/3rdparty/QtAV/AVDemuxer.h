@@ -22,7 +22,6 @@
 #ifndef QAV_DEMUXER_H
 #define QAV_DEMUXER_H
 
-#include <QtAV/CommonTypes.h>
 #include <QtAV/AVError.h>
 #include <QtAV/Packet.h>
 #include <QtCore/QVariant>
@@ -31,7 +30,9 @@
 
 struct AVFormatContext;
 struct AVCodecContext;
+QT_BEGIN_NAMESPACE
 class QIODevice;
+QT_END_NAMESPACE
 // TODO: force codec name. clean code
 namespace QtAV {
 class AVError;
@@ -58,7 +59,6 @@ public:
     QIODevice* ioDevice() const;
     /// not null for QIODevice, custom protocols
     MediaIO* mediaIO() const;
-    QTAV_DEPRECATED MediaIO* input() const;
     /*!
      * \brief setMedia
      * \return whether the media source is changed

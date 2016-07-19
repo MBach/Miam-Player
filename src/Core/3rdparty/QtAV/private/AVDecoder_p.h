@@ -1,5 +1,5 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
+    QtAV:  Multimedia framework based on Qt and FFmpeg
     Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
@@ -22,11 +22,10 @@
 #ifndef QTAV_AVDECODER_P_H
 #define QTAV_AVDECODER_P_H
 
-#include <QtCore/QByteArray>
 #include <QtCore/QHash>
-#include <QtCore/QMetaType>
 #include <QtCore/QSharedPointer>
 #include <QtCore/QVector>
+#include "QtAV/QtAV_Global.h"
 #include "QtAV/private/AVCompat.h"
 
 namespace QtAV {
@@ -84,7 +83,7 @@ public:
             return "Unknow";
         return av_get_profile_name(c, profile);
     }
-    static const char* getProfileName(AVCodecContext* ctx) {
+    static const char* getProfileName(const AVCodecContext* ctx) {
         if (ctx->codec)
             return av_get_profile_name(ctx->codec, ctx->profile);
         return getProfileName(ctx->codec_id, ctx->profile);

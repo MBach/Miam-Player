@@ -1,8 +1,8 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) (2012-2016) Wang Bin <wbsecg1@gmail.com>
 
-*   This file is part of QtAV
+*   This file is part of QtAV (from 2015)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -60,16 +60,23 @@ public:
     QVariantHash outputOptions() const;
 
     /*!
+     * \brief setAsync
+     * Enable async encoding. Default is disabled.
+     */
+    void setAsync(bool value = true);
+    bool isAsync() const;
+    /*!
      * \brief createEncoder
      * Destroy old encoder and create a new one in filter chain. Filter has the ownership. You shall not manually open it. Transcoder will set the missing parameters open it.
      * \param name registered encoder name, for example "FFmpeg"
      * \return false if failed
      */
-    bool createVideoEncoder(const QString& name = QStringLiteral("FFmpeg"));
+    bool createVideoEncoder(const QString& name = QLatin1String("FFmpeg"));
     /*!
      * \brief encoder
      * Use this to set encoder properties and options.
      * If frameRate is not set, source frame rate will be set if it's valid, otherwise VideoEncoder::defaultFrameRate() will be used internally
+     * Do not call open()/close() manually
      * \return Encoder instance or null if createVideoEncoder failed
      */
     VideoEncoder* videoEncoder() const;
@@ -79,10 +86,11 @@ public:
      * \param name registered encoder name, for example "FFmpeg"
      * \return false if failed
      */
-    bool createAudioEncoder(const QString& name = QStringLiteral("FFmpeg"));
+    bool createAudioEncoder(const QString& name = QLatin1String("FFmpeg"));
     /*!
      * \brief encoder
-     * Use this to set encoder properties and options
+     * Use this to set encoder properties and options.
+     * Do not call open()/close() manually
      * \return Encoder instance or null if createAudioEncoder failed
      */
     AudioEncoder* audioEncoder() const;
@@ -110,6 +118,7 @@ Q_SIGNALS:
     void stopped();
     void paused(bool value);
     void startTimeChanged(qint64 ms);
+    void asyncChanged();
 
 public Q_SLOTS:
     void start();
@@ -131,8 +140,10 @@ private Q_SLOTS:
     void prepareMuxer();
     void writeAudio(const QtAV::Packet& packet);
     void writeVideo(const QtAV::Packet& packet);
+    void tryFinish();
 
 private:
+    void stopInternal();
     class Private;
     QScopedPointer<Private> d;
 };

@@ -34,15 +34,18 @@
  * Every public setter call it's virtual onSetXXX(...) which has default behavior.
  * While VideoOutput.onSetXXX(...) simply calls backend's setXXX(...) and return whether the result is desired.
  */
+QT_BEGIN_NAMESPACE
 class QWidget;
 class QWindow;
 class QGraphicsItem;
+QT_END_NAMESPACE
 
 namespace QtAV {
 
 typedef int VideoRendererId;
 extern Q_AV_EXPORT VideoRendererId VideoRendererId_OpenGLWindow;
 class Filter;
+class OpenGLVideo;
 class VideoFormat;
 class VideoRendererPrivate;
 class Q_AV_EXPORT VideoRenderer : public AVOutput
@@ -178,7 +181,6 @@ public:
      * \return default is 0. A QGraphicsItem subclass can return \a this
      */
     virtual QGraphicsItem* graphicsItem() { return 0; }
-
     /*!
      * \brief brightness, contrast, hue, saturation
      *  values range between -1.0 and 1.0, the default is 0.
@@ -197,14 +199,17 @@ public:
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor& c);
 
+    /*!
+     * \brief opengl
+     * Currently you can only use it to set custom shader OpenGLVideo.setUserShader()
+     */
+    virtual OpenGLVideo* opengl() const { return NULL;}
 protected:
     VideoRenderer(VideoRendererPrivate &d);
     //TODO: batch drawBackground(color, region)=>loop drawBackground(color,rect)
     virtual bool receiveFrame(const VideoFrame& frame) = 0;
     QRegion backgroundRegion() const;
-    QTAV_DEPRECATED virtual bool needUpdateBackground() const;
     virtual void drawBackground();
-    QTAV_DEPRECATED virtual bool needDrawFrame() const; //TODO: no virtual func. it's a solution for temporary
     //draw the current frame using the current paint engine. called by paintEvent()
     // TODO: parameter VideoFrame
     virtual void drawFrame() = 0; //You MUST reimplement this to display a frame. Other draw functions are not essential
@@ -251,6 +256,7 @@ private: // mainly used by VideoOutput class
     virtual bool onSetContrast(qreal contrast);
     virtual bool onSetHue(qreal hue);
     virtual bool onSetSaturation(qreal saturation);
+    virtual void onSetBackgroundColor(const QColor& color);
 private:
     template<class C>
     static VideoRenderer* create() {

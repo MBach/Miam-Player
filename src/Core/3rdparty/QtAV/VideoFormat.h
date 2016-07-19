@@ -1,5 +1,5 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
+    QtAV:  Multimedia framework based on Qt and FFmpeg
     Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
@@ -22,15 +22,20 @@
 #ifndef QTAV_VIDEOFORMAT_H
 #define QTAV_VIDEOFORMAT_H
 
-#include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
 #include <QtGui/QImage>
 #include <QtAV/QtAV_Global.h>
 
+QT_BEGIN_NAMESPACE
 class QDebug;
+QT_END_NAMESPACE
 namespace QtAV {
 class VideoFormatPrivate;
+/*!
+ * \brief The VideoFormat class
+ * Describes the layout of video data. Some properties like display aspect ratio, color space and color range, which describes how to display the video frame, should be in VideoFrame class.
++ */
 class Q_AV_EXPORT VideoFormat
 {
 public:

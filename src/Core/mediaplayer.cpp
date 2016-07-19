@@ -43,6 +43,7 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	connect(_localPlayer, &QtAV::AVPlayer::positionChanged, this, [=](qint64 pos) {
 		emit positionChanged(pos, _localPlayer->duration());
 	});
+	_localPlayer->audio()->setVolume(Settings::instance()->volume());
 
 	connect(this, &MediaPlayer::currentMediaChanged, this, [=] (const QString &uri) {
 		QWindow *w = QGuiApplication::topLevelWindows().first();

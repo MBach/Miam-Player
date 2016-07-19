@@ -73,17 +73,17 @@ inline QDataStream & operator<<(QDataStream &out, const TrackDAO &track)
 /** Overloaded to be able to use with QVariant. */
 inline QDataStream & operator>>(QDataStream &in, TrackDAO &track)
 {
-	QString f;
-	in >> f;
-	track.setUri(f);
-	in >> f;
-	track.setArtistAlbum(f);
-	in >> f;
-	track.setAlbum(f);
-	in >> f;
-	track.setTitle(f);
-	in >> f;
-	track.setTrackNumber(f);
+	QString uri, aa, a, ti, tn;
+	in >> uri;
+	track.setUri(uri);
+	in >> aa;
+	track.setArtistAlbum(aa);
+	in >> a;
+	track.setAlbum(a);
+	in >> ti;
+	track.setTitle(ti);
+	in >> tn;
+	track.setTrackNumber(tn);
 	return in;
 }
 

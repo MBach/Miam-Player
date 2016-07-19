@@ -1,8 +1,8 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2014-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
-*   This file is part of QtAV
+*   This file is part of QtAV (from 2014)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -22,9 +22,7 @@
 #ifndef QTAV_SURFACEINTEROP_H
 #define QTAV_SURFACEINTEROP_H
 
-#include <QtCore/QMetaType>
 #include <QtCore/QSharedPointer>
-#include <QtAV/CommonTypes.h>
 #include <QtAV/VideoFormat.h>
 
 namespace QtAV {
@@ -39,7 +37,7 @@ public:
      * \param type currently only support GLTextureSurface and HostMemorySurface for some decoders
      * \param fmt
      *   HostMemorySurface: must be a packed rgb format
-     * \param handle address of real handle
+     * \param handle address of real handle. handle value can be modified in map() and the caller (VideoShader for example) should manage the changes.
      *   GLTextureSurface: usually opengl texture. maybe other objects for some decoders in the feature
      *   HostMemorySurface: a VideoFrame ptr
      * \param plane
@@ -50,26 +48,16 @@ public:
         Q_UNUSED(fmt);
         Q_UNUSED(handle);
         Q_UNUSED(plane);
-        return NULL;
-    }
-    /*!
-     * \brief map
-     * Map all planes. Maybe better performance than map planes one by one
-     * \param handles Array of address of real handle. Ends up with NULL
-     */
-    virtual void** map(SurfaceType type, const VideoFormat& fmt, void** handles) {
-        Q_UNUSED(type);
-        Q_UNUSED(fmt);
-        Q_UNUSED(handles);
-        return NULL;
+        return 0;
     }
     // TODO: SurfaceType. unmap is currenty used by opengl rendering
     virtual void unmap(void* handle) { Q_UNUSED(handle);}
-    virtual bool unmap(void** handle) { Q_UNUSED(handle); return false;}
+    //virtual void unmap(void* handle, SurfaceType type) { Q_UNUSED(handle);} //for SourceSurfaceType
     /*!
      * \brief createHandle
-     * It is used by opengl renderer to create a texture when rendering frame from VDA decoder
-     * \return NULL if not used when for opengl rendering. handle if create here
+     * It is used by opengl renderer to create a texture when rendering frame from VDA/VideoToolbox decoder
+     * VideoSurfaceInterop does not have the ownership. VideoShader does
+     * \return NULL if not used for opengl rendering. handle if create here
      */
     virtual void* createHandle(void* handle, SurfaceType type, const VideoFormat &fmt, int plane, int planeWidth, int planeHeight) {
         Q_UNUSED(handle);

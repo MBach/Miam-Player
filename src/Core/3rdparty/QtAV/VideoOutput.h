@@ -1,8 +1,8 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2014-2016 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
-*   This file is part of QtAV
+*   This file is part of QtAV (from 2014)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -28,6 +28,10 @@
 namespace QtAV {
 
 class VideoOutputPrivate;
+/*!
+ * \brief The VideoOutput class
+ * A VideoRenderer wrapper with QObject features. If create VideoOutput without a given renderer id, QtAV will try to create a widget based renderer, and dynamically load QtAVWidgets module if it's not loaded.
+ */
 class Q_AV_EXPORT VideoOutput : public QObject, public VideoRenderer
 {
     DPTR_DECLARE_PRIVATE(VideoOutput)
@@ -67,7 +71,7 @@ public:
     QWindow* qwindow() Q_DECL_OVERRIDE Q_DECL_FINAL;
     QWidget* widget() Q_DECL_OVERRIDE Q_DECL_FINAL;
     QGraphicsItem* graphicsItem() Q_DECL_OVERRIDE Q_DECL_FINAL;
-
+    OpenGLVideo* opengl() const Q_DECL_OVERRIDE;
 Q_SIGNALS:
     void sourceAspectRatioChanged(qreal value) Q_DECL_OVERRIDE Q_DECL_FINAL;
     void regionOfInterestChanged() Q_DECL_OVERRIDE;
@@ -84,9 +88,7 @@ Q_SIGNALS:
 protected:
     bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
     bool receiveFrame(const VideoFrame& frame) Q_DECL_OVERRIDE;
-    bool needUpdateBackground() const Q_DECL_OVERRIDE;
     void drawBackground() Q_DECL_OVERRIDE;
-    bool needDrawFrame() const Q_DECL_OVERRIDE; //not important.
     void drawFrame() Q_DECL_OVERRIDE;
     void handlePaintEvent() Q_DECL_OVERRIDE;
 
@@ -106,6 +108,7 @@ private:
     virtual bool onSetContrast(qreal contrast) Q_DECL_OVERRIDE;
     virtual bool onSetHue(qreal hue) Q_DECL_OVERRIDE;
     virtual bool onSetSaturation(qreal saturation) Q_DECL_OVERRIDE;
+    virtual void onSetBackgroundColor(const QColor& color) Q_DECL_OVERRIDE;
     // from AVOutput
     virtual void setStatistics(Statistics* statistics) Q_DECL_OVERRIDE; //called by friend AVPlayer
     virtual bool onInstallFilter(Filter *filter, int index) Q_DECL_OVERRIDE;

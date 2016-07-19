@@ -88,7 +88,6 @@ void RemoteControl::initializeConnection()
 		_tcpSocket->deleteLater();
 	});
 	auto r = _tcpSocket->write(block);
-	_tcpSocket->flush();
 	qDebug() << Q_FUNC_INFO << "sizeof(CMD):" << sizeof(Command) << "cmd:connect, bytes written" << r;
 
 	connect(_tcpSocket, &QAbstractSocket::readyRead, this, &RemoteControl::decodeResponseFromClient);
@@ -119,7 +118,6 @@ void RemoteControl::mediaPlayerStatedChanged(QMediaPlayer::State state)
 		out << QByteArray("paused");
 	}
 	_tcpSocket->write(block);
-	_tcpSocket->flush();
 }
 
 #include <filehelper.h>
@@ -133,21 +131,21 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	SqlDatabase db;
 
 	// Send track info
-	FileHelper fh(track);
-	fh.artistAlbum();
-	fh.album();
-	fh.title();
-	QString trackInfo;
-	trackInfo.append("artistAlbum:%1:");
-
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
 	out.setVersion(QDataStream::Qt_5_7);
 	out << CMD_Track;
-	out << db.selectTrackByURI(track);
-	auto r = _tcpSocket->write(block);
-	_tcpSocket->flush();
-	qDebug() << Q_FUNC_INFO << "sizeof(CMD):" << sizeof(Command) << "cmd:track, bytes written" << r;
+	TrackDAO dao = db.selectTrackByURI(track);
+	//int daoSize = dao.uri().size() + dao.artistAlbum().size() + dao.album().size() + dao.title().size() + dao.trackNumber().size();
+	//out << daoSize;
+	//out << dao;
+	out << dao.uri();
+	out << dao.artistAlbum();
+	out << dao.album();
+	out << dao.title();
+	out << dao.trackNumber();
+	_tcpSocket->write(block);
+	qDebug() << Q_FUNC_INFO << "cmd:track, " << dao.uri() << dao.artistAlbum() << dao.album() << dao.title();
 
 	// Send cover if any
 	Cover *cover = db.selectCoverFromURI(track);
@@ -156,11 +154,12 @@ void RemoteControl::sendTrackInfos(const QString &track)
 		QDataStream out(&block, QIODevice::ReadWrite);
 		out.setVersion(QDataStream::Qt_5_7);
 		out << CMD_Cover;
-		QByteArray c(cover->byteArray());
+		QByteArray c;
+		c.append(cover->byteArray());
+		out << c.size();
 		out << c;
 		auto r = _tcpSocket->write(block);
-		_tcpSocket->flush();
-		qDebug() << Q_FUNC_INFO << "cmd:cover" << c.size() << ", bytes written" << r;
+		qDebug() << Q_FUNC_INFO << "cmd:cover, cover size:" << c.size() << ", bytes written" << r;
 	}
 }
 
@@ -175,9 +174,10 @@ void RemoteControl::sendVolume(qreal volume)
 	QDataStream out(&data, QIODevice::ReadWrite);
 	out << CMD_Volume;
 	QByteArray ba;
-	ba.append(reinterpret_cast<const char*>(&volume), sizeof(volume));
+	ba.append(QString::number(volume));
+	//QByteArray ba;
+	//ba.append(reinterpret_cast<const char*>(&volume), sizeof(volume));
 	out << ba;
 	auto r = _tcpSocket->write(data);
-	_tcpSocket->flush();
-	qDebug() << Q_FUNC_INFO << "sizeof(CMD):" << sizeof(Command) << "cmd:volume, bytes written" << r;
+	qDebug() << Q_FUNC_INFO << "sizeof(CMD):" << sizeof(Command) << "cmd:volume, bytes written" << r << ", volume:" << volume << ba.toStdString().data();
 }

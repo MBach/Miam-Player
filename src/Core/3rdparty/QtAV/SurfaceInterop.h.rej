@@ -1,0 +1,34 @@
+--- src/QtAV/SurfaceInterop.h
++++ src/QtAV/SurfaceInterop.h
+@@ -1,6 +1,6 @@
+ /******************************************************************************
+     QtAV:  Media play library based on Qt and FFmpeg
+-    Copyright (C) 2014 Wang Bin <wbsecg1@gmail.com>
++    Copyright (C) 2014-2015 Wang Bin <wbsecg1@gmail.com>
+ 
+ *   This file is part of QtAV
+ 
+@@ -50,10 +50,22 @@ public:
+         Q_UNUSED(fmt);
+         Q_UNUSED(handle);
+         Q_UNUSED(plane);
+-        return 0;
++        return NULL;
++    }
++    /*!
++     * \brief map
++     * Map all planes. Maybe better performance than map planes one by one
++     * \param handles Array of address of real handle. Ends up with NULL
++     */
++    virtual void** map(SurfaceType type, const VideoFormat& fmt, void** handles) {
++        Q_UNUSED(type);
++        Q_UNUSED(fmt);
++        Q_UNUSED(handles);
++        return NULL;
+     }
+     // TODO: SurfaceType. unmap is currenty used by opengl rendering
+     virtual void unmap(void* handle) { Q_UNUSED(handle);}
++    virtual bool unmap(void** handle) { Q_UNUSED(handle); return false;}
+     /*!
+      * \brief createHandle
+      * It is used by opengl renderer to create a texture when rendering frame from VDA decoder
