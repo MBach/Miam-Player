@@ -2,6 +2,7 @@
 
 #include <model/sqldatabase.h>
 #include <cover.h>
+#include <filehelper.h>
 #include <mediaplayer.h>
 
 #include <QDataStream>
@@ -64,10 +65,14 @@ void RemoteControl::decodeResponseFromClient()
 		}
 		break;
 	}
-	case CMD_Volume:
+	case CMD_Volume: {
 		qreal v = *reinterpret_cast<const qreal*>(value.data());
 		qDebug() << Q_FUNC_INFO << "CMD_Volume" << v;
 		_mediaPlayer->setVolume(v);
+		break;
+	}
+	case CMD_Playlists:
+		this->sendPlaylists();
 		break;
 	}
 }
@@ -120,7 +125,25 @@ void RemoteControl::mediaPlayerStatedChanged(QMediaPlayer::State state)
 	_tcpSocket->write(block);
 }
 
-#include <filehelper.h>
+void RemoteControl::sendPlaylists() const
+{
+	if (!_tcpSocket) {
+		return;
+	}
+	QByteArray block;
+	QDataStream out(&block, QIODevice::ReadWrite);
+	out.setVersion(QDataStream::Qt_5_7);
+	out << CMD_Playlists;
+
+	SqlDatabase db;
+	auto playlists = db.selectPlaylists();
+	out << playlists.size();
+	for (PlaylistDAO p : playlists) {
+		out << p.title();
+	}
+
+	_tcpSocket->write(block);
+}
 
 void RemoteControl::sendTrackInfos(const QString &track)
 {
@@ -148,7 +171,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	qDebug() << Q_FUNC_INFO << "cmd:track, " << dao.uri() << dao.artistAlbum() << dao.album() << dao.title();
 
 	// Send cover if any
-	Cover *cover = db.selectCoverFromURI(track);
+	/*Cover *cover = db.selectCoverFromURI(track);
 	if (cover) {
 		QByteArray block;
 		QDataStream out(&block, QIODevice::ReadWrite);
@@ -160,7 +183,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 		out << c;
 		auto r = _tcpSocket->write(block);
 		qDebug() << Q_FUNC_INFO << "cmd:cover, cover size:" << c.size() << ", bytes written" << r;
-	}
+	}*/
 }
 
 void RemoteControl::sendVolume(qreal volume)

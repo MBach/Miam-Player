@@ -29,7 +29,8 @@ public:
 							CMD_Track		= 2,
 							CMD_Volume		= 3,
 							CMD_Connection	= 4,
-							CMD_Cover		= 5};
+							CMD_Cover		= 5,
+							CMD_Playlists	= 6};
 
 	explicit RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent = 0);
 
@@ -45,6 +46,8 @@ private slots:
 	void initializeConnection();
 
 	void mediaPlayerStatedChanged(QMediaPlayer::State state);
+
+	void sendPlaylists() const;
 
 	void sendTrackInfos(const QString &track);
 
