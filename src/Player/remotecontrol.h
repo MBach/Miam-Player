@@ -24,13 +24,14 @@ private:
 	QTcpSocket *_tcpSocket;
 
 public:
-	enum Command : int {	CMD_Playback	= 0,
-							CMD_State		= 1,
-							CMD_Track		= 2,
-							CMD_Volume		= 3,
-							CMD_Connection	= 4,
-							CMD_Cover		= 5,
-							CMD_Playlists	= 6};
+	enum Command : int {	CMD_Playback		= 0,
+							CMD_State			= 1,
+							CMD_Track			= 2,
+							CMD_Volume			= 3,
+							CMD_Connection		= 4,
+							CMD_Cover			= 5,
+							CMD_ActivePlaylists	= 7,
+							CMD_AllPlaylists	= 6};
 
 	explicit RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent = 0);
 
@@ -47,7 +48,9 @@ private slots:
 
 	void mediaPlayerStatedChanged(QMediaPlayer::State state);
 
-	void sendPlaylists() const;
+	void sendActivePlaylists() const;
+
+	void sendAllPlaylists() const;
 
 	void sendTrackInfos(const QString &track);
 

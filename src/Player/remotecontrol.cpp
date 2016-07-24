@@ -71,8 +71,11 @@ void RemoteControl::decodeResponseFromClient()
 		_mediaPlayer->setVolume(v);
 		break;
 	}
-	case CMD_Playlists:
-		this->sendPlaylists();
+	case CMD_ActivePlaylists:
+		this->sendActivePlaylists();
+		break;
+	case CMD_AllPlaylists:
+		this->sendAllPlaylists();
 		break;
 	}
 }
@@ -125,7 +128,7 @@ void RemoteControl::mediaPlayerStatedChanged(QMediaPlayer::State state)
 	_tcpSocket->write(block);
 }
 
-void RemoteControl::sendPlaylists() const
+void RemoteControl::sendActivePlaylists() const
 {
 	if (!_tcpSocket) {
 		return;
@@ -133,7 +136,27 @@ void RemoteControl::sendPlaylists() const
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
 	out.setVersion(QDataStream::Qt_5_7);
-	out << CMD_Playlists;
+	out << CMD_ActivePlaylists;
+
+	/*SqlDatabase db;
+	auto playlists = db.selectPlaylists();
+	out << playlists.size();
+	for (PlaylistDAO p : playlists) {
+		out << p.title();
+	}*/
+
+	_tcpSocket->write(block);
+}
+
+void RemoteControl::sendAllPlaylists() const
+{
+	if (!_tcpSocket) {
+		return;
+	}
+	QByteArray block;
+	QDataStream out(&block, QIODevice::ReadWrite);
+	out.setVersion(QDataStream::Qt_5_7);
+	out << CMD_AllPlaylists;
 
 	SqlDatabase db;
 	auto playlists = db.selectPlaylists();
