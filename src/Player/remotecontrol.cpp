@@ -40,18 +40,12 @@ void RemoteControl::decodeResponseFromClient()
 {
 	QDataStream in;
 	in.setDevice(_tcpSocket);
-	in.setVersion(QDataStream::Qt_5_7);
-	in.startTransaction();
+	in.setVersion(QDataStream::Qt_5_6);
 
 	int command;
 	QByteArray value;
 	in >> command;
 	in >> value;
-
-	if (!in.commitTransaction()) {
-		qDebug() << Q_FUNC_INFO << "commitTransaction failed";
-		return;
-	}
 
 	switch (command) {
 	case CMD_Playback: {
@@ -85,7 +79,7 @@ void RemoteControl::initializeConnection()
 	qDebug() << Q_FUNC_INFO;
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_7);
+	out.setVersion(QDataStream::Qt_5_6);
 	out << CMD_Connection;
 	out << QByteArray("Hello from Miam-Player!");
 
@@ -116,7 +110,7 @@ void RemoteControl::mediaPlayerStatedChanged(QMediaPlayer::State state)
 	}
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_7);
+	out.setVersion(QDataStream::Qt_5_6);
 	out << CMD_State;
 	if (state == QMediaPlayer::PlayingState) {
 		qDebug() << "cmd:state:playing";
@@ -135,7 +129,7 @@ void RemoteControl::sendActivePlaylists() const
 	}
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_7);
+	out.setVersion(QDataStream::Qt_5_6);
 	out << CMD_ActivePlaylists;
 
 	/*SqlDatabase db;
@@ -155,7 +149,7 @@ void RemoteControl::sendAllPlaylists() const
 	}
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_7);
+	out.setVersion(QDataStream::Qt_5_6);
 	out << CMD_AllPlaylists;
 
 	SqlDatabase db;
@@ -179,7 +173,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	// Send track info
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_7);
+	out.setVersion(QDataStream::Qt_5_6);
 	out << CMD_Track;
 	TrackDAO dao = db.selectTrackByURI(track);
 	//int daoSize = dao.uri().size() + dao.artistAlbum().size() + dao.album().size() + dao.title().size() + dao.trackNumber().size();
@@ -198,7 +192,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	if (cover) {
 		QByteArray block;
 		QDataStream out(&block, QIODevice::ReadWrite);
-		out.setVersion(QDataStream::Qt_5_7);
+		out.setVersion(QDataStream::Qt_5_6);
 		out << CMD_Cover;
 		QByteArray c;
 		c.append(cover->byteArray());
