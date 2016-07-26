@@ -4,6 +4,7 @@
 #include "mediaplayer.h"
 
 #include <QTcpServer>
+#include <QUdpSocket>
 
 /**
  * \brief		The RemoteControl class is a class which allows client-side applications (like App on SmartPhones) to control the player.
@@ -22,6 +23,7 @@ private:
 
 	QTcpServer *_tcpServer;
 	QTcpSocket *_tcpSocket;
+	QUdpSocket *_udpSocket;
 
 public:
 	enum Command : int {	CMD_Playback		= 0,

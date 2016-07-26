@@ -6,6 +6,8 @@
 #include <mediaplayer.h>
 
 #include <QDataStream>
+#include <QHostInfo>
+#include <QNetworkInterface>
 #include <QTcpSocket>
 
 #include <QtDebug>
@@ -15,6 +17,7 @@ RemoteControl::RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent
 	, _mediaPlayer(mediaPlayer)
 	, _port(port)
 	, _tcpServer(new QTcpServer(this))
+	, _udpSocket(new QUdpSocket(this))
 {
 	connect(_tcpServer, &QTcpServer::newConnection, this, &RemoteControl::initializeConnection);
 }
@@ -31,16 +34,47 @@ void RemoteControl::changeServerPort(int port)
 	_tcpServer->listen(QHostAddress::Any, _port);
 }
 
+
 void RemoteControl::startServer()
 {
 	_tcpServer->listen(QHostAddress::Any, _port);
+	_udpSocket->bind(_port, QUdpSocket::ShareAddress);
+
+	connect(_udpSocket, &QUdpSocket::readyRead, this, [=]() {
+		qDebug() << Q_FUNC_INFO;
+		if (_udpSocket->hasPendingDatagrams()) {
+
+			QByteArray clientHost;
+			clientHost.resize(_udpSocket->pendingDatagramSize());
+			_udpSocket->readDatagram(clientHost.data(), clientHost.size());
+			QString client;
+			client = QString::fromUtf8(clientHost);
+			if (client.isEmpty()) {
+				return;
+			}
+			//_udpSocket->abort();
+
+			QString host;
+			for (const QHostAddress &address : QNetworkInterface::allAddresses()) {
+				if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
+					host = address.toString();
+					break;
+				}
+			}
+
+			QByteArray hostByteArray;
+			hostByteArray.append(host);
+			qDebug() << Q_FUNC_INFO << "sending server infos:" << host << "to client:" << client;
+			_udpSocket->writeDatagram(hostByteArray, QHostAddress(client), _port);
+		}
+	});
 }
 
 void RemoteControl::decodeResponseFromClient()
 {
 	QDataStream in;
 	in.setDevice(_tcpSocket);
-	in.setVersion(QDataStream::Qt_5_6);
+	in.setVersion(QDataStream::Qt_5_5);
 
 	int command;
 	QByteArray value;
@@ -79,9 +113,9 @@ void RemoteControl::initializeConnection()
 	qDebug() << Q_FUNC_INFO;
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_6);
+	out.setVersion(QDataStream::Qt_5_5);
 	out << CMD_Connection;
-	out << QByteArray("Hello from Miam-Player!");
+	out << QHostInfo::localHostName();
 
 	_tcpSocket = _tcpServer->nextPendingConnection();
 	connect(_tcpSocket, &QAbstractSocket::disconnected, this, [=]() {
@@ -110,7 +144,7 @@ void RemoteControl::mediaPlayerStatedChanged(QMediaPlayer::State state)
 	}
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_6);
+	out.setVersion(QDataStream::Qt_5_5);
 	out << CMD_State;
 	if (state == QMediaPlayer::PlayingState) {
 		qDebug() << "cmd:state:playing";
@@ -129,7 +163,7 @@ void RemoteControl::sendActivePlaylists() const
 	}
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_6);
+	out.setVersion(QDataStream::Qt_5_5);
 	out << CMD_ActivePlaylists;
 
 	/*SqlDatabase db;
@@ -149,7 +183,7 @@ void RemoteControl::sendAllPlaylists() const
 	}
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_6);
+	out.setVersion(QDataStream::Qt_5_5);
 	out << CMD_AllPlaylists;
 
 	SqlDatabase db;
@@ -173,7 +207,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	// Send track info
 	QByteArray block;
 	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_6);
+	out.setVersion(QDataStream::Qt_5_5);
 	out << CMD_Track;
 	TrackDAO dao = db.selectTrackByURI(track);
 	//int daoSize = dao.uri().size() + dao.artistAlbum().size() + dao.album().size() + dao.title().size() + dao.trackNumber().size();
@@ -192,7 +226,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	if (cover) {
 		QByteArray block;
 		QDataStream out(&block, QIODevice::ReadWrite);
-		out.setVersion(QDataStream::Qt_5_6);
+		out.setVersion(QDataStream::Qt_5_5);
 		out << CMD_Cover;
 		QByteArray c;
 		c.append(cover->byteArray());
