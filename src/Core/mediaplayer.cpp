@@ -75,6 +75,24 @@ void MediaPlayer::addRemotePlayer(IMediaPlayer *remotePlayer)
 	}
 }
 
+QString MediaPlayer::currentTrack() const
+{
+	if (_state == QMediaPlayer::PlayingState) {
+		if (_playlist) {
+			if (_remotePlayer) {
+				return _playlist->currentMedia().canonicalUrl().toString();
+			} else {
+				return _playlist->currentMedia().canonicalUrl().toLocalFile();
+			}
+		} else {
+			/// TODO Unique Library Mode
+			return QString();
+		}
+	} else {
+		return QString();
+	}
+}
+
 /** Current duration of the media, in ms. */
 qint64 MediaPlayer::duration()
 {

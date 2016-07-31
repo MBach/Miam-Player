@@ -37,6 +37,8 @@ public:
 
 	void addRemotePlayer(IMediaPlayer *remotePlayer);
 
+	QString currentTrack() const;
+
 	/** Current duration of the media, in ms. */
 	qint64 duration();
 
