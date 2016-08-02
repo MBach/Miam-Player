@@ -24,6 +24,7 @@ private:
 	QTcpServer *_tcpServer;
 	QTcpSocket *_tcpSocket;
 	QUdpSocket *_udpSocket;
+	QTimer *_timer;
 
 public:
 	enum Command : int {	CMD_Playback		= 0,
@@ -32,8 +33,9 @@ public:
 							CMD_Volume			= 3,
 							CMD_Connection		= 4,
 							CMD_Cover			= 5,
+							CMD_Position		= 6,
 							CMD_ActivePlaylists	= 7,
-							CMD_AllPlaylists	= 6};
+							CMD_AllPlaylists	= 8};
 
 	explicit RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent = 0);
 
@@ -53,6 +55,8 @@ private slots:
 	void sendActivePlaylists() const;
 
 	void sendAllPlaylists() const;
+
+	void sendPosition(qint64 pos, qint64 duration);
 
 	void sendTrackInfos(const QString &track);
 

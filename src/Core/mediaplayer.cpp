@@ -41,7 +41,9 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	});
 
 	connect(_localPlayer, &QtAV::AVPlayer::positionChanged, this, [=](qint64 pos) {
-		emit positionChanged(pos, _localPlayer->duration());
+		if (_state == QMediaPlayer::PlayingState) {
+			emit positionChanged(pos, _localPlayer->duration());
+		}
 	});
 	_localPlayer->audio()->setVolume(Settings::instance()->volume());
 

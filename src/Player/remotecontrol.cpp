@@ -8,6 +8,7 @@
 #include <QDataStream>
 #include <QHostInfo>
 #include <QNetworkInterface>
+#include <QTimer>
 #include <QTcpSocket>
 
 #include <QtDebug>
@@ -18,8 +19,11 @@ RemoteControl::RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent
 	, _port(port)
 	, _tcpServer(new QTcpServer(this))
 	, _udpSocket(new QUdpSocket(this))
+	, _timer(new QTimer(this))
 {
 	connect(_tcpServer, &QTcpServer::newConnection, this, &RemoteControl::initializeConnection);
+	_timer->setSingleShot(true);
+	_timer->setInterval(2000);
 }
 
 RemoteControl::~RemoteControl()
@@ -133,6 +137,7 @@ void RemoteControl::initializeConnection()
 	connect(_mediaPlayer, &MediaPlayer::volumeChanged, this, &RemoteControl::sendVolume);
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &RemoteControl::mediaPlayerStatedChanged);
 	connect(_mediaPlayer, &MediaPlayer::currentMediaChanged, this, &RemoteControl::sendTrackInfos);
+	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, &RemoteControl::sendPosition);
 
 	this->sendVolume(_mediaPlayer->volume());
 	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
@@ -201,6 +206,27 @@ void RemoteControl::sendAllPlaylists() const
 	}
 
 	_tcpSocket->write(block);
+}
+
+void RemoteControl::sendPosition(qint64 pos, qint64 duration)
+{
+	if (!_tcpSocket) {
+		return;
+	}
+	if (_timer->isActive()) {
+		return;
+	}
+	_timer->start();
+
+	QByteArray block;
+	QDataStream out(&block, QIODevice::ReadWrite);
+	out.setVersion(QDataStream::Qt_5_5);
+	out << CMD_Position;
+	out << pos;
+	out << duration;
+
+	_tcpSocket->write(block);
+	qDebug() << Q_FUNC_INFO << "cmd:position, " << pos << duration;
 }
 
 void RemoteControl::sendTrackInfos(const QString &track)
