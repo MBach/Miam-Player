@@ -23,7 +23,7 @@ RemoteControl::RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent
 {
 	connect(_tcpServer, &QTcpServer::newConnection, this, &RemoteControl::initializeConnection);
 	_timer->setSingleShot(true);
-	_timer->setInterval(2000);
+	_timer->setInterval(1000);
 }
 
 RemoteControl::~RemoteControl()
@@ -37,7 +37,6 @@ void RemoteControl::changeServerPort(int port)
 	_port = port;
 	_tcpServer->listen(QHostAddress::Any, _port);
 }
-
 
 void RemoteControl::startServer()
 {
@@ -95,6 +94,12 @@ void RemoteControl::decodeResponseFromClient()
 		} else if (string == "skip-forward") {
 			_mediaPlayer->skipForward();
 		}
+		break;
+	}
+	case CMD_Position: {
+		qreal p = QString::fromStdString(value.toStdString()).toFloat();
+		qDebug() << Q_FUNC_INFO << "CMD_Position" << p;
+		_mediaPlayer->seek(p);
 		break;
 	}
 	case CMD_Volume: {
@@ -248,8 +253,8 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	out << dao.album();
 	out << dao.title();
 	out << dao.trackNumber();
+	out << dao.rating();
 	_tcpSocket->write(block);
-	qDebug() << Q_FUNC_INFO << "cmd:track, " << dao.uri() << dao.artistAlbum() << dao.album() << dao.title();
 
 	// Send cover if any
 	Cover *cover = db.selectCoverFromURI(track);
