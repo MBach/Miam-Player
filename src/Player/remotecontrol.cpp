@@ -136,9 +136,9 @@ void RemoteControl::initializeConnection()
 	qDebug() << Q_FUNC_INFO << "sizeof(CMD):" << sizeof(Command) << "cmd:connect, bytes written" << r;
 
 	connect(_tcpSocket, &QAbstractSocket::readyRead, this, &RemoteControl::decodeResponseFromClient);
-	connect(_tcpSocket, &QTcpSocket::bytesWritten, this, [=](qint64 bytes) {
+	/*connect(_tcpSocket, &QTcpSocket::bytesWritten, this, [=](qint64 bytes) {
 		qDebug() << "QTcpSocket::bytesWritten" << bytes;
-	});
+	});*/
 	connect(_mediaPlayer, &MediaPlayer::volumeChanged, this, &RemoteControl::sendVolume);
 	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &RemoteControl::mediaPlayerStatedChanged);
 	connect(_mediaPlayer, &MediaPlayer::currentMediaChanged, this, &RemoteControl::sendTrackInfos);
@@ -231,7 +231,6 @@ void RemoteControl::sendPosition(qint64 pos, qint64 duration)
 	out << duration;
 
 	_tcpSocket->write(block);
-	qDebug() << Q_FUNC_INFO << "cmd:position, " << pos << duration;
 }
 
 void RemoteControl::sendTrackInfos(const QString &track)
@@ -257,7 +256,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 	_tcpSocket->write(block);
 
 	// Send cover if any
-	Cover *cover = db.selectCoverFromURI(track);
+	/*Cover *cover = db.selectCoverFromURI(track);
 	if (cover) {
 		QByteArray block;
 		QDataStream out(&block, QIODevice::ReadWrite);
@@ -270,7 +269,7 @@ void RemoteControl::sendTrackInfos(const QString &track)
 		out << c;
 		auto r = _tcpSocket->write(block);
 		qDebug() << Q_FUNC_INFO << "cmd:cover, cover size:" << c.size() << ", bytes written" << r;
-	}
+	}*/
 }
 
 void RemoteControl::sendVolume(qreal volume)
