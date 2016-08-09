@@ -2,7 +2,7 @@
 #define ABSTRACTVIEWPLAYLISTS_H
 
 #include <abstractview.h>
-#include <mediaplayercontrol.h>
+#include <abstractmediaplayercontrol.h>
 
 #include "miamtabplaylists_global.hpp"
 
@@ -15,7 +15,7 @@ class MIAMTABPLAYLISTS_LIBRARY AbstractViewPlaylists : public AbstractView
 {
 	Q_OBJECT
 public:
-	AbstractViewPlaylists(MediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
+	AbstractViewPlaylists(AbstractMediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
 		: AbstractView(mediaPlayerControl, parent) {}
 
 	virtual ~AbstractViewPlaylists() {}
@@ -24,6 +24,8 @@ public:
 
 	/** Open a new Dialog where one can add a folder to current playlist. */
 	virtual void openFolder(const QString &dir) const = 0;
+
+	virtual QList<MediaPlaylist*> playlists() const = 0;
 
 	virtual void saveCurrentPlaylists() = 0;
 

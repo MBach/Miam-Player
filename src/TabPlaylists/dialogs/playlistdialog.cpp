@@ -177,7 +177,7 @@ int PlaylistDialog::exec()
 	for (int i = 0; i < _playlists.count(); i++) {
 		Playlist *p = _playlists.at(i);
 		if (p && p->id() == 0 && !p->mediaPlaylist()->isEmpty()) {
-			QStandardItem *item = new QStandardItem(p->title());
+			QStandardItem *item = new QStandardItem(p->mediaPlaylist()->title());
 			_unsavedPlaylistModel->appendRow(item);
 			_unsaved.insert(item, p);
 		}
@@ -355,7 +355,7 @@ void PlaylistDialog::renameItem(QStandardItem *item)
 	if (item) {
 		item->setText(item->text().trimmed());
 		if (Playlist *p = _unsaved.value(item)) {
-			p->setTitle(item->text());
+			p->mediaPlaylist()->setTitle(item->text());
 			emit aboutToRenamePlaylist(p);
 		} else {
 			PlaylistDAO dao = _saved.value(item);

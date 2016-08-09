@@ -3,7 +3,7 @@
 
 #include "basicplugin.h"
 #include "mediaplayer.h"
-#include "mediaplayercontrol.h"
+#include "abstractmediaplayercontrol.h"
 
 class AbstractView;
 
@@ -24,7 +24,7 @@ public:
 
 	virtual AbstractView* instanciateView() { return nullptr; }
 
-	virtual void setMediaPlayerControl(MediaPlayerControl *) = 0;
+	virtual void setMediaPlayerControl(AbstractMediaPlayerControl *) = 0;
 
 	virtual QStringList extensions() const = 0;
 };

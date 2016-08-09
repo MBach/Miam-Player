@@ -73,13 +73,13 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 		this->play(index, QAbstractItemView::EnsureVisible);
 	});
 
-	connect(skipBackwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipBackward);
+	connect(skipBackwardButton, &MediaButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::skipBackward);
 	connect(seekBackwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::togglePlayback);
-	connect(stopButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::stop);
+	connect(playButton, &MediaButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::togglePlayback);
+	connect(stopButton, &MediaButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::stop);
 	connect(seekForwardButton, &MediaButton::clicked, mediaPlayer, &MediaPlayer::seekForward);
-	connect(skipForwardButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipForward);
-	connect(playbackModeButton, &MediaButton::clicked, _mediaPlayerControl, &MediaPlayerControl::toggleShuffle);
+	connect(skipForwardButton, &MediaButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::skipForward);
+	connect(playbackModeButton, &MediaButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::toggleShuffle);
 
 	connect(mediaPlayer, &MediaPlayer::stateChanged, this, [=](QMediaPlayer::State) {
 		seekSlider->update();

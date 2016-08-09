@@ -40,6 +40,8 @@ public:
 
 	virtual void openFolder(const QString &dir) const override;
 
+	virtual QList<MediaPlaylist *> playlists() const override;
+
 	virtual void saveCurrentPlaylists() override;
 
 	inline SearchDialog* searchDialog() const { return _searchDialog; }

@@ -1,7 +1,7 @@
 #include "viewplaylistsmediaplayercontrol.h"
 
 ViewPlaylistsMediaPlayerControl::ViewPlaylistsMediaPlayerControl(MediaPlayer *mediaPlayer, QObject *parent)
-	: MediaPlayerControl(mediaPlayer, parent)
+	: AbstractMediaPlayerControl(mediaPlayer, parent)
 {
 
 }

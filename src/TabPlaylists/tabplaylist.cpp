@@ -38,7 +38,7 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 
 	connect(tabBar, &TabBar::tabRenamed, this, [=](int index, const QString &text) {
 		Playlist *p = playlist(index);
-		p->setTitle(text);
+		p->mediaPlaylist()->setTitle(text);
 		/// FIXME
 		//this->setTabIcon(index, this->defaultIcon(QIcon::Normal));
 	});
@@ -99,7 +99,7 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 		QPoint mrcp = _contextMenu->property("mouseRightClickPos").toPoint();
 		int index = tabBar->tabAt(mrcp);
 		Playlist *p = this->playlist(index);
-		QString deleteMessage = tr("You're about to delete '%1'. Are you sure you want to continue?").arg(p->title());
+		QString deleteMessage = tr("You're about to delete '%1'. Are you sure you want to continue?").arg(p->mediaPlaylist()->title());
 		if (QMessageBox::Ok == QMessageBox::warning(this, tr("Warning"), deleteMessage, QMessageBox::Ok, QMessageBox::Cancel)) {
 			this->deletePlaylist(p->id());
 		}
@@ -200,7 +200,7 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 	QList<TrackDAO> tracks = db.selectPlaylistTracks(playlistId);
 	playlist->insertMedias(-1, tracks);
 	playlist->setId(playlistId);
-	playlist->setTitle(playlistDao.title());
+	playlist->mediaPlaylist()->setTitle(playlistDao.title());
 
 	//this->setTabIcon(index, defaultIcon(QIcon::Disabled));
 }
@@ -255,7 +255,7 @@ Playlist* TabPlaylist::addPlaylist()
 
 	// Then append a new empty playlist to the others
 	Playlist *p = new Playlist(_mediaPlayer, this);
-	p->setTitle(newPlaylistName);
+	p->mediaPlaylist()->setTitle(newPlaylistName);
 	p->installEventFilter(this);
 	if (!ba.isEmpty()) {
 		p->horizontalHeader()->restoreState(ba);
@@ -365,7 +365,7 @@ void TabPlaylist::renamePlaylist(Playlist *p)
 	for (int i = 0; i < playlists().count(); i++) {
 		Playlist *tmp = playlist(i);
 		if (tmp == p) {
-			this->setTabText(i, p->title());
+			this->setTabText(i, p->mediaPlaylist()->title());
 			//this->setTabIcon(i, this->defaultIcon(QIcon::Normal));
 			break;
 		}
@@ -377,7 +377,7 @@ void TabPlaylist::renameTab(const PlaylistDAO &dao)
 	for (int i = 0; i < playlists().count(); i++) {
 		Playlist *tmp = playlist(i);
 		if (tmp->id() == dao.id().toUInt()) {
-			tmp->setTitle(dao.title());
+			tmp->mediaPlaylist()->setTitle(dao.title());
 			this->setTabText(i, dao.title());
 			break;
 		}
@@ -438,7 +438,7 @@ void TabPlaylist::removeTabFromCloseButton(int index)
 		p->setHash(0);
 		p->setId(0);
 		tabBar()->setTabText(0, tr("Playlist %1").arg(1));
-		p->setTitle(tabBar()->tabText(0));
+		p->mediaPlaylist()->setTitle(tabBar()->tabText(0));
 		//this->setTabIcon(index, this->defaultIcon(QIcon::Disabled));
 	}
 }

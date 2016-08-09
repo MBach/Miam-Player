@@ -4,7 +4,7 @@
 #include "uniquelibrary.h"
 
 UniqueLibraryMediaPlayerControl::UniqueLibraryMediaPlayerControl(MediaPlayer *mediaPlayer, QWidget *parent)
-	: MediaPlayerControl(mediaPlayer, parent)
+	: AbstractMediaPlayerControl(mediaPlayer, parent)
 	, _uniqueLibrary(nullptr)
 {
 

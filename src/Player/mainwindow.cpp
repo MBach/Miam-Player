@@ -270,18 +270,14 @@ void MainWindow::setupActions()
 		}
 	});
 
-	// Activate remote control server if toggled in settings
-	if (settingsPrivate->isRemoteControlEnabled()) {
-		_remoteControl = new RemoteControl(_mediaPlayer, settingsPrivate->remoteControlPort(), this);
-		_remoteControl->startServer();
-	}
+
 	connect(settingsPrivate, &SettingsPrivate::remoteControlChanged, this, [=](bool enabled, uint port) {
 		qDebug() << Q_FUNC_INFO;
 		if (enabled) {
 			if (_remoteControl) {
 				_remoteControl->changeServerPort(port);
 			} else {
-				_remoteControl = new RemoteControl(_mediaPlayer, port, this);
+				_remoteControl = new RemoteControl(_currentView, port, this);
 				_remoteControl->startServer();
 			}
 		} else {
@@ -591,27 +587,33 @@ void MainWindow::activateView(QAction *menuAction)
 		this->setCentralWidget(_currentView);
 	}
 
+	// Activate remote control server if toggled in settings
+	if (settingsPrivate->isRemoteControlEnabled()) {
+		_remoteControl = new RemoteControl(_currentView, settingsPrivate->remoteControlPort(), this);
+		_remoteControl->startServer();
+	}
+
 	// Init default multimedia keys
 	_shortcutSkipBackward->disconnect();
 	_shortcutPlayPause->disconnect();
 	_shortcutStop->disconnect();
 	_shortcutSkipForward->disconnect();
-	connect(_shortcutSkipBackward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipBackward);
-	connect(_shortcutPlayPause, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::togglePlayback);
-	connect(_shortcutStop, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::stop);
-	connect(_shortcutSkipForward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipForward);
+	connect(_shortcutSkipBackward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::skipBackward);
+	connect(_shortcutPlayPause, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::togglePlayback);
+	connect(_shortcutStop, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::stop);
+	connect(_shortcutSkipForward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::skipForward);
 
 	QList<QAction*> multimediaActions = { actionSkipBackward, actionSeekBackward, actionPlay, actionStop, actionStopAfterCurrent, actionSeekForward, actionSkipForward };
 	for (QAction *action : multimediaActions) {
 		action->disconnect();
 	}
-	connect(actionSkipBackward, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipBackward);
+	connect(actionSkipBackward, &QAction::triggered, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::skipBackward);
 	connect(actionSeekBackward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekBackward);
-	connect(actionPlay, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::togglePlayback);
-	connect(actionStop, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::stop);
+	connect(actionPlay, &QAction::triggered, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::togglePlayback);
+	connect(actionStop, &QAction::triggered, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::stop);
 	connect(actionStopAfterCurrent, &QAction::triggered, _mediaPlayer, &MediaPlayer::stopAfterCurrent);
 	connect(actionSeekForward, &QAction::triggered, _mediaPlayer, &MediaPlayer::seekForward);
-	connect(actionSkipForward, &QAction::triggered, _currentView->mediaPlayerControl(), &MediaPlayerControl::skipForward);
+	connect(actionSkipForward, &QAction::triggered, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::skipForward);
 
 	// Basically, a music player provides a playlist feature or it doesn't.
 	// It implies a clean and separate way to display things, I suppose.

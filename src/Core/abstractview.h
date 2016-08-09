@@ -3,7 +3,7 @@
 
 #include "miamcore_global.h"
 #include "mediaplayer.h"
-#include "mediaplayercontrol.h"
+#include "abstractmediaplayercontrol.h"
 #include "settings.h"
 
 #include <QDir>
@@ -28,10 +28,10 @@ private:
 	AbstractView *_origin;
 
 protected:
-	MediaPlayerControl *_mediaPlayerControl;
+	AbstractMediaPlayerControl *_mediaPlayerControl;
 
 public:
-	AbstractView(MediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
+	AbstractView(AbstractMediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
 		: QWidget(parent)
 		, _origin(nullptr)
 		, _mediaPlayerControl(mediaPlayerControl) {}
@@ -47,11 +47,11 @@ public:
 
 	virtual QPair<QString, QObjectList> extensionPoints() const { return qMakePair(QString(), QObjectList()); }
 
-	inline MediaPlayerControl* mediaPlayerControl() const { return _mediaPlayerControl; }
+	inline AbstractMediaPlayerControl* mediaPlayerControl() const { return _mediaPlayerControl; }
 
 	virtual void setMusicSearchEngine(MusicSearchEngine *) {}
 
-	inline virtual void setMediaPlayerControl(MediaPlayerControl *mpc) { _mediaPlayerControl = mpc; }
+	inline virtual void setMediaPlayerControl(AbstractMediaPlayerControl *mpc) { _mediaPlayerControl = mpc; }
 
 	inline void setOrigin(AbstractView *origin) { _origin = origin; }
 	inline AbstractView* origin() const { return _origin; }

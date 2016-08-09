@@ -4,43 +4,45 @@
 #include <cover.h>
 #include <filehelper.h>
 #include <mediaplayer.h>
+#include <abstractviewplaylists.h>
 
 #include <QDataStream>
 #include <QHostInfo>
 #include <QNetworkInterface>
 #include <QTimer>
-#include <QTcpSocket>
+#include <QWebSocket>
 
 #include <QtDebug>
 
-RemoteControl::RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent)
+RemoteControl::RemoteControl(AbstractView *currentView, int port, QObject *parent)
 	: QObject(parent)
-	, _mediaPlayer(mediaPlayer)
+	, _currentView(currentView)
 	, _port(port)
-	, _tcpServer(new QTcpServer(this))
+	, _webSocketServer(new QWebSocketServer("Miam-Player WebSocket Server", QWebSocketServer::NonSecureMode, this))
 	, _udpSocket(new QUdpSocket(this))
 	, _timer(new QTimer(this))
 {
-	connect(_tcpServer, &QTcpServer::newConnection, this, &RemoteControl::initializeConnection);
+	connect(_webSocketServer, &QWebSocketServer::newConnection, this, &RemoteControl::initializeConnection);
 	_timer->setSingleShot(true);
 	_timer->setInterval(1000);
 }
 
 RemoteControl::~RemoteControl()
 {
-	_tcpServer->close();
+	_webSocketServer->close();
 }
 
 void RemoteControl::changeServerPort(int port)
 {
-	_tcpServer->close();
+	_webSocketServer->close();
 	_port = port;
-	_tcpServer->listen(QHostAddress::Any, _port);
+	_webSocketServer->listen();
 }
 
 void RemoteControl::startServer()
 {
-	_tcpServer->listen(QHostAddress::Any, _port);
+	auto b = _webSocketServer->listen(QHostAddress::Any, _port);
+	qDebug() << Q_FUNC_INFO << b;
 	_udpSocket->bind(_port, QUdpSocket::ShareAddress);
 
 	connect(_udpSocket, &QUdpSocket::readyRead, this, [=]() {
@@ -73,39 +75,40 @@ void RemoteControl::startServer()
 	});
 }
 
-void RemoteControl::decodeResponseFromClient()
+void RemoteControl::decodeResponseFromClient(const QString &message)
 {
-	QDataStream in;
-	in.setDevice(_tcpSocket);
-	in.setVersion(QDataStream::Qt_5_5);
+	if (message.isEmpty()) {
+		return;
+	}
 
-	int command;
-	QByteArray value;
-	in >> command;
-	in >> value;
+	QStringList args = message.split(QChar::Null);
+	if (args.count() < 2) {
+		return;
+	}
+
+	int command = args.first().toInt();
 
 	switch (command) {
 	case CMD_Playback: {
-		QString string = QString::fromStdString(value.toStdString());
-		if (string == "skip-backward") {
-			_mediaPlayer->skipBackward();
-		} else if (string == "play-pause") {
-			_mediaPlayer->togglePlayback();
-		} else if (string == "skip-forward") {
-			_mediaPlayer->skipForward();
+
+		QString actionControl = args.at(1);
+		if (actionControl == "skip-backward") {
+			_currentView->mediaPlayerControl()->skipBackward();
+		} else if (actionControl == "play-pause") {
+			_currentView->mediaPlayerControl()->togglePlayback();
+		} else if (actionControl == "skip-forward") {
+			_currentView->mediaPlayerControl()->skipForward();
 		}
 		break;
 	}
 	case CMD_Position: {
-		qreal p = QString::fromStdString(value.toStdString()).toFloat();
-		qDebug() << Q_FUNC_INFO << "CMD_Position" << p;
-		_mediaPlayer->seek(p);
+		qreal position = args.at(1).toFloat();
+		_currentView->mediaPlayerControl()->mediaPlayer()->seek(position);
 		break;
 	}
 	case CMD_Volume: {
-		qreal v = QString::fromStdString(value.toStdString()).toFloat();
-		qDebug() << Q_FUNC_INFO << "CMD_Volume" << v;
-		_mediaPlayer->setVolume(v);
+		qreal volume = args.at(1).toFloat();
+		_currentView->mediaPlayerControl()->mediaPlayer()->setVolume(volume);
 		break;
 	}
 	case CMD_ActivePlaylists:
@@ -114,108 +117,118 @@ void RemoteControl::decodeResponseFromClient()
 	case CMD_AllPlaylists:
 		this->sendAllPlaylists();
 		break;
+	case CMD_LoadActivePlaylist: {
+		int index = args.at(1).toInt();
+		this->sendActivePlaylist(index);
+		break;
+	}
 	}
 }
 
 void RemoteControl::initializeConnection()
 {
-	qDebug() << Q_FUNC_INFO;
-	QByteArray block;
-	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_5);
-	out << CMD_Connection;
-	out << QHostInfo::localHostName();
-
-	_tcpSocket = _tcpServer->nextPendingConnection();
-	connect(_tcpSocket, &QAbstractSocket::disconnected, this, [=]() {
-		this->disconnect(_tcpSocket);
-		_mediaPlayer->disconnect(this);
-		_tcpSocket->deleteLater();
+	_webSocket = _webSocketServer->nextPendingConnection();
+	connect(_webSocket, &QWebSocket::disconnected, this, [=]() {
+		this->disconnect(_webSocket);
+		_currentView->mediaPlayerControl()->mediaPlayer()->disconnect(this);
+		_webSocket->deleteLater();
 	});
-	auto r = _tcpSocket->write(block);
-	qDebug() << Q_FUNC_INFO << "sizeof(CMD):" << sizeof(Command) << "cmd:connect, bytes written" << r;
 
-	connect(_tcpSocket, &QAbstractSocket::readyRead, this, &RemoteControl::decodeResponseFromClient);
-	/*connect(_tcpSocket, &QTcpSocket::bytesWritten, this, [=](qint64 bytes) {
-		qDebug() << "QTcpSocket::bytesWritten" << bytes;
-	});*/
-	connect(_mediaPlayer, &MediaPlayer::volumeChanged, this, &RemoteControl::sendVolume);
-	connect(_mediaPlayer, &MediaPlayer::stateChanged, this, &RemoteControl::mediaPlayerStatedChanged);
-	connect(_mediaPlayer, &MediaPlayer::currentMediaChanged, this, &RemoteControl::sendTrackInfos);
-	connect(_mediaPlayer, &MediaPlayer::positionChanged, this, &RemoteControl::sendPosition);
+	QStringList args;
+	args << QString::number(CMD_Connection);
+	args << QHostInfo::localHostName();
+	_webSocket->sendTextMessage(args.join(QChar::Null));
 
-	this->sendVolume(_mediaPlayer->volume());
-	if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
-		this->sendTrackInfos(_mediaPlayer->currentTrack());
+	connect(_webSocket, &QWebSocket::textMessageReceived, this, &RemoteControl::decodeResponseFromClient);
+	connect(_currentView->mediaPlayerControl()->mediaPlayer(), &MediaPlayer::volumeChanged, this, &RemoteControl::sendVolume);
+	connect(_currentView->mediaPlayerControl()->mediaPlayer(), &MediaPlayer::stateChanged, this, &RemoteControl::mediaPlayerStatedChanged);
+	connect(_currentView->mediaPlayerControl()->mediaPlayer(), &MediaPlayer::currentMediaChanged, this, &RemoteControl::sendTrackInfos);
+	connect(_currentView->mediaPlayerControl()->mediaPlayer(), &MediaPlayer::positionChanged, this, &RemoteControl::sendPosition);
+
+	this->sendVolume(_currentView->mediaPlayerControl()->mediaPlayer()->volume());
+	if (_currentView->mediaPlayerControl()->mediaPlayer()->state() == QMediaPlayer::PlayingState) {
+		this->sendTrackInfos(_currentView->mediaPlayerControl()->mediaPlayer()->currentTrack());
 	}
 }
 
 void RemoteControl::mediaPlayerStatedChanged(QMediaPlayer::State state)
 {
-	if (!_tcpSocket) {
+	if (!_webSocket) {
 		return;
 	}
-	QByteArray block;
-	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_5);
-	out << CMD_State;
-	switch (state) {
-	case QMediaPlayer::PlayingState:
-		out << QString("playing");
-		break;
-	case QMediaPlayer::PausedState:
-		out << QString("paused");
-		break;
-	case QMediaPlayer::StoppedState:
-		out << QString("stopped");
-		break;
+	QStringList args;
+	args << QString::number(CMD_State);
+	args << QString::number(state);
+
+	_webSocket->sendTextMessage(args.join(QChar::Null));
+}
+
+void RemoteControl::sendActivePlaylist(int index)
+{
+	if (!_webSocket) {
+		return;
 	}
-	_tcpSocket->write(block);
+
+	QStringList args;
+	args << QString::number(CMD_LoadActivePlaylist);
+
+	if (_currentView && _currentView->viewProperty(Settings::VP_PlaylistFeature)) {
+		AbstractViewPlaylists *playlistsView = qobject_cast<AbstractViewPlaylists*>(_currentView);
+		MediaPlaylist *mp = playlistsView->playlists().at(index);
+
+		// Send track count first, then all tracks in a big "blob"
+		for (int i = 0; i < mp->mediaCount(); i++) {
+			FileHelper fh(mp->media(i));
+			//out << fh.title() << fh.trackNumber() << fh.album() << fh.artistAlbum() << fh.year() << QString::number(fh.rating());
+			/*tracks.append(fh.title());
+			tracks.append(fh.trackNumber());
+			tracks.append(fh.album());
+			tracks.append(fh.artistAlbum());
+			tracks.append(fh.year());
+			tracks.append(QString::number(fh.rating()));*/
+		}
+		//out << tracks.size();
+		//out << tracks;
+		_webSocket->sendTextMessage(args.join(QChar::Null));
+	}
 }
 
 void RemoteControl::sendActivePlaylists() const
 {
-	if (!_tcpSocket) {
+	if (!_webSocket) {
 		return;
 	}
-	QByteArray block;
-	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_5);
-	out << CMD_ActivePlaylists;
 
-	/*SqlDatabase db;
-	auto playlists = db.selectPlaylists();
-	out << playlists.size();
-	for (PlaylistDAO p : playlists) {
-		out << p.title();
-	}*/
+	QStringList args;
+	args << QString::number(CMD_ActivePlaylists);
 
-	_tcpSocket->write(block);
+	if (_currentView && _currentView->viewProperty(Settings::VP_PlaylistFeature)) {
+		AbstractViewPlaylists *playlistsView = qobject_cast<AbstractViewPlaylists*>(_currentView);
+		for (MediaPlaylist *mp : playlistsView->playlists()) {
+			args << mp->title();
+		}
+	}
+	_webSocket->sendTextMessage(args.join(QChar::Null));
 }
 
 void RemoteControl::sendAllPlaylists() const
 {
-	if (!_tcpSocket) {
+	if (!_webSocket) {
 		return;
 	}
-	QByteArray block;
-	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_5);
-	out << CMD_AllPlaylists;
 
-	SqlDatabase db;
-	auto playlists = db.selectPlaylists();
-	out << playlists.size();
-	for (PlaylistDAO p : playlists) {
-		out << p.title();
+	QStringList args;
+	args << QString::number(CMD_AllPlaylists);
+
+	for (PlaylistDAO p : SqlDatabase().selectPlaylists()) {
+		args << p.title();
 	}
-
-	_tcpSocket->write(block);
+	_webSocket->sendTextMessage(args.join(QChar::Null));
 }
 
 void RemoteControl::sendPosition(qint64 pos, qint64 duration)
 {
-	if (!_tcpSocket) {
+	if (!_webSocket) {
 		return;
 	}
 	if (_timer->isActive()) {
@@ -223,68 +236,42 @@ void RemoteControl::sendPosition(qint64 pos, qint64 duration)
 	}
 	_timer->start();
 
-	QByteArray block;
-	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_5);
-	out << CMD_Position;
-	out << pos;
-	out << duration;
-
-	_tcpSocket->write(block);
+	QStringList args = { QString::number(CMD_Position), QString::number(pos), QString::number(duration) };
+	_webSocket->sendTextMessage(args.join(QChar::Null));
 }
 
 void RemoteControl::sendTrackInfos(const QString &track)
 {
-	if (!_tcpSocket) {
+	if (!_webSocket) {
 		return;
 	}
 
-	SqlDatabase db;
+	QStringList args;
+	args << QString::number(CMD_Track);
 
-	// Send track info
-	QByteArray block;
-	QDataStream out(&block, QIODevice::ReadWrite);
-	out.setVersion(QDataStream::Qt_5_5);
-	out << CMD_Track;
+	SqlDatabase db;
 	TrackDAO dao = db.selectTrackByURI(track);
-	out << dao.uri();
-	out << dao.artistAlbum();
-	out << dao.album();
-	out << dao.title();
-	out << dao.trackNumber();
-	out << dao.rating();
-	_tcpSocket->write(block);
+	args << dao.uri();
+	args << dao.artistAlbum();
+	args << dao.album();
+	args << dao.title();
+	args << dao.trackNumber();
+	args << QString::number(dao.rating());
+	_webSocket->sendTextMessage(args.join(QChar::Null));
 
 	// Send cover if any
-	/*Cover *cover = db.selectCoverFromURI(track);
-	if (cover) {
-		QByteArray block;
-		QDataStream out(&block, QIODevice::ReadWrite);
-		out.setVersion(QDataStream::Qt_5_5);
-		out << CMD_Cover;
-		QByteArray c;
-		c.append(cover->byteArray());
-		// First, send cover size, then the byteArray (which also contains the size)
-		out << c.size();
-		out << c;
-		auto r = _tcpSocket->write(block);
-		qDebug() << Q_FUNC_INFO << "cmd:cover, cover size:" << c.size() << ", bytes written" << r;
-	}*/
+	if (Cover *cover = db.selectCoverFromURI(track)) {
+		_webSocket->sendBinaryMessage(cover->byteArray());
+	}
 }
 
 void RemoteControl::sendVolume(qreal volume)
 {
-	qDebug() << Q_FUNC_INFO << volume;
-	if (!_tcpSocket) {
+	if (!_webSocket) {
 		qDebug() << Q_FUNC_INFO << "Cannot send volume !";
 		return;
 	}
-	QByteArray data;
-	QDataStream out(&data, QIODevice::ReadWrite);
-	out << CMD_Volume;
-	QByteArray ba;
-	ba.append(QString::number(volume));
-	out << ba;
-	_tcpSocket->write(data);
-	qDebug() << Q_FUNC_INFO << "cmd:volume" << volume;
+
+	QStringList args = { QString::number(CMD_Volume), QString::number(volume) };
+	_webSocket->sendTextMessage(args.join(QChar::Null));
 }

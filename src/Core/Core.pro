@@ -129,7 +129,7 @@ HEADERS += interfaces/basicplugin.h \
     settingsprivate.h \
     starrating.h \
     treeview.h \
-    mediaplayercontrol.h
+    abstractmediaplayercontrol.h
 
 RESOURCES += core.qrc
 

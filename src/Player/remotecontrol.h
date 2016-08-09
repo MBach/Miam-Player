@@ -1,9 +1,9 @@
 #ifndef REMOTECONTROL_H
 #define REMOTECONTROL_H
 
-#include "mediaplayer.h"
+#include <abstractview.h>
 
-#include <QTcpServer>
+#include <QWebSocketServer>
 #include <QUdpSocket>
 
 /**
@@ -17,12 +17,15 @@ class RemoteControl : public QObject
 	Q_ENUMS(Command)
 
 private:
-	MediaPlayer *_mediaPlayer;
+	AbstractView *_currentView;
 
 	int _port;
 
-	QTcpServer *_tcpServer;
-	QTcpSocket *_tcpSocket;
+	//QTcpServer *_tcpServer;
+	//QTcpSocket *_tcpSocket;
+	QWebSocketServer *_webSocketServer;
+	QWebSocket *_webSocket;
+
 	QUdpSocket *_udpSocket;
 	QTimer *_timer;
 
@@ -35,9 +38,10 @@ public:
 							CMD_Cover			= 5,
 							CMD_Position		= 6,
 							CMD_ActivePlaylists	= 7,
-							CMD_AllPlaylists	= 8};
+							CMD_AllPlaylists	= 8,
+							CMD_LoadActivePlaylist	= 9};
 
-	explicit RemoteControl(MediaPlayer *mediaPlayer, int port, QObject *parent = 0);
+	explicit RemoteControl(AbstractView *currentView, int port, QObject *parent = 0);
 
 	virtual ~RemoteControl();
 
@@ -46,11 +50,13 @@ public:
 	void startServer();
 
 private slots:
-	void decodeResponseFromClient();
+	void decodeResponseFromClient(const QString &message);
 
 	void initializeConnection();
 
 	void mediaPlayerStatedChanged(QMediaPlayer::State state);
+
+	void sendActivePlaylist(int index);
 
 	void sendActivePlaylists() const;
 

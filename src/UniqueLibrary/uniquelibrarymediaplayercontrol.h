@@ -2,7 +2,7 @@
 #define UNIQUELIBRARYMEDIAPLAYERCONTROL_H
 
 #include <mediaplayer.h>
-#include <mediaplayercontrol.h>
+#include <abstractmediaplayercontrol.h>
 
 #include "miamuniquelibrary_global.hpp"
 
@@ -13,7 +13,7 @@ class UniqueLibrary;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class MIAMUNIQUELIBRARY_LIBRARY UniqueLibraryMediaPlayerControl : public MediaPlayerControl
+class MIAMUNIQUELIBRARY_LIBRARY UniqueLibraryMediaPlayerControl : public AbstractMediaPlayerControl
 {
 	Q_OBJECT
 private:

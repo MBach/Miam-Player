@@ -2,14 +2,14 @@
 #define VIEWPLAYLISTSMEDIAPLAYERCONTROL_H
 
 #include <mediaplayer.h>
-#include <mediaplayercontrol.h>
+#include <abstractmediaplayercontrol.h>
 
 /**
  * \brief		The ViewPlaylistsMediaPlayerControl class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class ViewPlaylistsMediaPlayerControl : public MediaPlayerControl
+class ViewPlaylistsMediaPlayerControl : public AbstractMediaPlayerControl
 {
 	Q_OBJECT
 public:

@@ -1,4 +1,4 @@
-QT += widgets multimedia sql
+QT += widgets multimedia sql websockets
 
 TEMPLATE = app
 

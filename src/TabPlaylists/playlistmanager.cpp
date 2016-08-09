@@ -72,7 +72,7 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 				}
 			}
 		}
-		playlist.setTitle(p->title());
+		playlist.setTitle(p->mediaPlaylist()->title());
 		playlist.setChecksum(QString::number(generateNewHash));
 
 		std::list<TrackDAO> tracks;

@@ -87,12 +87,12 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	// Media buttons
-	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipBackward);
+	connect(skipBackwardButton, &QAbstractButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::skipBackward);
 	connect(seekBackwardButton, &QAbstractButton::clicked, mediaPlayer, &MediaPlayer::seekBackward);
-	connect(playButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::togglePlayback);
-	connect(stopButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::stop);
+	connect(playButton, &QAbstractButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::togglePlayback);
+	connect(stopButton, &QAbstractButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::stop);
 	connect(seekForwardButton, &QAbstractButton::clicked, mediaPlayer, &MediaPlayer::seekForward);
-	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayerControl, &MediaPlayerControl::skipForward);
+	connect(skipForwardButton, &QAbstractButton::clicked, _mediaPlayerControl, &AbstractMediaPlayerControl::skipForward);
 
 	connect(filesystem, &FileSystemTreeView::folderChanged, addressBar, &AddressBar::init);
 	connect(addressBar, &AddressBar::aboutToChangePath, filesystem, &FileSystemTreeView::reloadWithNewPath);
@@ -332,6 +332,15 @@ void ViewPlaylists::openFolder(const QString &dir) const
 	if (Miam::showWarning(tr("playlist"), localTracks.count()) == QMessageBox::Ok) {
 		tabPlaylists->insertItemsToPlaylist(-1, localTracks);
 	}
+}
+
+QList<MediaPlaylist *> ViewPlaylists::playlists() const
+{
+	QList<MediaPlaylist*> result;
+	for (Playlist *p : tabPlaylists->playlists()) {
+		result.append(p->mediaPlaylist());
+	}
+	return result;
 }
 
 void ViewPlaylists::saveCurrentPlaylists()

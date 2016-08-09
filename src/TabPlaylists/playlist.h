@@ -43,8 +43,6 @@ private:
 
 	uint _id;
 
-	QString _title;
-
 	Q_ENUMS(Columns)
 
 public:
@@ -68,7 +66,6 @@ public:
 
 	inline uint id() const { return _id; }
 	bool isModified() const;
-	inline QString title() const { return _title; }
 
 	void insertMedias(int rowIndex, const QList<QMediaContent> &medias);
 
@@ -82,7 +79,6 @@ public:
 	inline uint hash() const { return _hash; }
 	inline void setHash(uint hash) { _hash = hash; }
 	inline void setId(uint id) { _id = id; }
-	inline void setTitle(const QString &title) { _title = title; }
 
 protected:
 

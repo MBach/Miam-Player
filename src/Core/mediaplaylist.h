@@ -19,9 +19,13 @@ class MIAMCORE_LIBRARY MediaPlaylist : public QMediaPlaylist
 private:
 	std::vector<int> _randomIndexes;
 	int _idx;
+	QString _title;
 
 public:
 	explicit MediaPlaylist(QObject *parent = nullptr);
+
+	inline void setTitle(const QString &title) { _title = title; }
+	inline QString title() const { return _title; }
 
 	void shuffle(int idx);
 
