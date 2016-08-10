@@ -7,6 +7,18 @@
         <source>No matching results were found</source>
         <translation>Aucun résultat correspondant n&apos;a été trouvé</translation>
     </message>
+    <message>
+        <source>tag editor</source>
+        <translation>éditeur de tags</translation>
+    </message>
+    <message>
+        <source>Send &apos;%1&apos; to the tag editor</source>
+        <translation>Envoyer &apos;%1&apos; à l&apos;éditeur de tags</translation>
+    </message>
+    <message>
+        <source>Send to tag editor</source>
+        <translation>Envoyer à l&apos;éditeur de tags</translation>
+    </message>
 </context>
 <context>
     <name>UniqueLibrary</name>

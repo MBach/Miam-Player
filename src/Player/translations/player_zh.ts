@@ -439,6 +439,22 @@
         <source>Reset</source>
         <translation>重置</translation>
     </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable remote control</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -720,6 +736,22 @@
     </message>
     <message>
         <source>Pin when scrolling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Text color is automatically adjusted from Background color, but you can override it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yes, let me change Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, adjust Text Color automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Selected text</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -12,12 +12,12 @@
 <context>
     <name>AddressBarLineEdit</name>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="70"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../filesystem/addressbarlineedit.cpp" line="59"/>
+        <location filename="../filesystem/addressbarlineedit.cpp" line="70"/>
         <source>Miam-Player cannot find « %1 ». Please check the name and retry.</source>
         <translation>Miam-Player не смог найти « %1 ». Проверьте, пожалуйста, имя и попытайтесь снова.</translation>
     </message>
@@ -70,6 +70,44 @@
     </message>
 </context>
 <context>
+    <name>CustomField</name>
+    <message>
+        <location filename="../customtags.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customtags.ui" line="22"/>
+        <source>Name in Header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customtags.ui" line="32"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customtags.ui" line="42"/>
+        <source>Alignment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customtags.ui" line="50"/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customtags.ui" line="55"/>
+        <source>Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customtags.ui" line="60"/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSystemTreeView</name>
     <message>
         <location filename="../filesystem/filesystemtreeview.cpp" line="34"/>
@@ -90,32 +128,32 @@
 <context>
     <name>Playlist</name>
     <message>
-        <location filename="../playlist.cpp" line="80"/>
+        <location filename="../playlist.cpp" line="79"/>
         <source>Remove from playlist</source>
         <translation>Удалить из списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="81"/>
+        <location filename="../playlist.cpp" line="80"/>
         <source>Edit tags</source>
         <translation>Изменить теги</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="83"/>
+        <location filename="../playlist.cpp" line="82"/>
         <source>in tag editor</source>
         <translation>в редакторе тегов</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="84"/>
+        <location filename="../playlist.cpp" line="83"/>
         <source>inline</source>
         <translation>встроенный</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="350"/>
+        <location filename="../playlist.cpp" line="349"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="480"/>
+        <location filename="../playlist.cpp" line="467"/>
         <source>This playlist is empty.
 Select or drop tracks from your library or any external location.</source>
         <translation>Этот список воспроизведения пуст.
@@ -213,7 +251,7 @@ Select a playlist to display the first 30 tracks.</source>
     <name>PlaylistHeaderView</name>
     <message>
         <location filename="../playlistheaderview.cpp" line="10"/>
-        <location filename="../playlistheaderview.cpp" line="102"/>
+        <location filename="../playlistheaderview.cpp" line="103"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
@@ -251,7 +289,7 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistManager</name>
     <message>
-        <location filename="../playlistmanager.cpp" line="61"/>
+        <location filename="../playlistmanager.cpp" line="60"/>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
         <translation>Точно такой же список воспроизведения уже есть в диспетчере списков воспроизведения (называется &apos;%1&apos;), поэтому невозможно добавить его повторно.</translation>
     </message>
@@ -268,17 +306,19 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlistmodel.cpp" line="70"/>
+        <location filename="../playlistmodel.cpp" line="80"/>
         <source>You cannot modify remote medias</source>
         <translation>Вы не можете изменять удалённые медиа-файлы</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="102"/>
+        <location filename="../playlistmodel.cpp" line="85"/>
+        <location filename="../playlistmodel.cpp" line="114"/>
         <source>Local</source>
         <translation>Локальный</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="104"/>
+        <location filename="../playlistmodel.cpp" line="87"/>
+        <location filename="../playlistmodel.cpp" line="116"/>
         <source>Local file</source>
         <translation>Локальный файл</translation>
     </message>
@@ -287,15 +327,19 @@ Select a playlist to display the first 30 tracks.</source>
     <name>SearchDialog</name>
     <message>
         <location filename="../searchdialog.ui" line="96"/>
-        <location filename="../dialogs/searchdialog.cpp" line="183"/>
-        <location filename="../dialogs/searchdialog.cpp" line="341"/>
+        <location filename="../dialogs/searchdialog.cpp" line="193"/>
+        <location filename="../dialogs/searchdialog.cpp" line="323"/>
         <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Найти больше результатов...&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../searchdialog.ui" line="384"/>
+        <location filename="../searchdialog.ui" line="414"/>
+        <source>Results are regrouped from:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Results are aggregated from:</source>
-        <translation>Результаты складываются из:</translation>
+        <translation type="vanished">Результаты складываются из:</translation>
     </message>
     <message>
         <location filename="../dialogs/searchdialog.cpp" line="22"/>
@@ -303,7 +347,7 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../dialogs/searchdialog.cpp" line="331"/>
+        <location filename="../dialogs/searchdialog.cpp" line="313"/>
         <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Посмотреть меньше результатов&lt;/a&gt;</translation>
     </message>
@@ -311,38 +355,38 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>TabPlaylist</name>
     <message>
-        <location filename="../tabplaylist.cpp" line="70"/>
+        <location filename="../tabplaylist.cpp" line="74"/>
         <source>Rename playlist</source>
         <translation>Переименовать список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="71"/>
+        <location filename="../tabplaylist.cpp" line="75"/>
         <source>Delete playlist...</source>
         <translation>Удалить список воспроизведения...</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="72"/>
+        <location filename="../tabplaylist.cpp" line="76"/>
         <source>Load background...</source>
         <translation>Загрузить фон...</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="73"/>
+        <location filename="../tabplaylist.cpp" line="77"/>
         <source>Clear background</source>
         <translation>Очистить фон</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="98"/>
+        <location filename="../tabplaylist.cpp" line="102"/>
         <source>You&apos;re about to delete &apos;%1&apos;. Are you sure you want to continue?</source>
         <translation>Вы собираетесь удалить «%1». Вы действительно хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="99"/>
+        <location filename="../tabplaylist.cpp" line="103"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="268"/>
-        <location filename="../tabplaylist.cpp" line="459"/>
+        <location filename="../tabplaylist.cpp" line="248"/>
+        <location filename="../tabplaylist.cpp" line="440"/>
         <source>Playlist %1</source>
         <translation>Список воспроизведения %1</translation>
     </message>
@@ -370,32 +414,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="252"/>
+        <location filename="../viewplaylists.cpp" line="262"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="318"/>
+        <location filename="../viewplaylists.cpp" line="332"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="400"/>
+        <location filename="../viewplaylists.cpp" line="423"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="412"/>
+        <location filename="../viewplaylists.cpp" line="435"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="414"/>
+        <location filename="../viewplaylists.cpp" line="437"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="439"/>
+        <location filename="../viewplaylists.cpp" line="462"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>

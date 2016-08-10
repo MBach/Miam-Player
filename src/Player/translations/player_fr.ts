@@ -439,6 +439,22 @@
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
+    <message>
+        <source>Advanced</source>
+        <translation>Avancés</translation>
+    </message>
+    <message>
+        <source>Remote control</source>
+        <translation>Contrôle à distance</translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation>Port</translation>
+    </message>
+    <message>
+        <source>Enable remote control</source>
+        <translation>Activer le contrôle à distance</translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -721,6 +737,22 @@
     <message>
         <source>Pin when scrolling</source>
         <translation>Épingler lors du défilement</translation>
+    </message>
+    <message>
+        <source>Text color is automatically adjusted from Background color, but you can override it</source>
+        <translation>La couleur du texte est automatiquement ajustée à partir de la couleur du fond, mais vous pouvez la surcharger</translation>
+    </message>
+    <message>
+        <source>Yes, let me change Text Color</source>
+        <translation>Oui, me laisser changer la couleur du Texte</translation>
+    </message>
+    <message>
+        <source>No, adjust Text Color automatically</source>
+        <translation>Non, ajuster automatiquement la couleur du Texte</translation>
+    </message>
+    <message>
+        <source>Selected text</source>
+        <translation>Texte sélectionné</translation>
     </message>
 </context>
 <context>

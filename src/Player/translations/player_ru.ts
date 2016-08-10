@@ -67,491 +67,511 @@
         <translation>Изменить общие настройки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="75"/>
+        <location filename="../customizeoptionsdialog.ui" line="72"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="84"/>
+        <location filename="../customizeoptionsdialog.ui" line="81"/>
         <source>Languages</source>
         <translation>Языки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="93"/>
+        <location filename="../customizeoptionsdialog.ui" line="90"/>
         <source>Shortcuts</source>
         <translation>Сочетание клавиш</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="102"/>
-        <location filename="../customizeoptionsdialog.ui" line="1625"/>
+        <location filename="../customizeoptionsdialog.ui" line="99"/>
+        <location filename="../customizeoptionsdialog.ui" line="1631"/>
         <source>Playback</source>
         <translation>Воспроизведение</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="111"/>
+        <location filename="../customizeoptionsdialog.ui" line="108"/>
         <source>Drag &amp; Drop</source>
         <translation>Перетаскивание</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="120"/>
+        <location filename="../customizeoptionsdialog.ui" line="126"/>
         <source>Plugins</source>
         <translation>Плагины</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="154"/>
+        <location filename="../customizeoptionsdialog.ui" line="160"/>
         <source>Where is your music?</source>
         <translation>Где ваша музыка?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="194"/>
+        <location filename="../customizeoptionsdialog.ui" line="200"/>
         <source>Add location...</source>
         <translation>Добавить расположение...</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="204"/>
+        <location filename="../customizeoptionsdialog.ui" line="210"/>
         <source>Delete selected location</source>
         <translation>Удалить выбранное расположение</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="238"/>
+        <location filename="../customizeoptionsdialog.ui" line="244"/>
         <source>File Explorer</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="244"/>
+        <location filename="../customizeoptionsdialog.ui" line="250"/>
         <source>Default folder</source>
         <translation>Начальная папка</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4099"/>
+        <location filename="../customizeoptionsdialog.ui" line="4105"/>
         <source>Currently under development</source>
         <translation>В разработке</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="267"/>
+        <location filename="../customizeoptionsdialog.ui" line="273"/>
         <source>Search bar</source>
         <translation>Строка поиска</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="278"/>
+        <location filename="../customizeoptionsdialog.ui" line="284"/>
         <source>What to do when typing text?</source>
         <translation>Что делать при наборе текста?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="287"/>
+        <location filename="../customizeoptionsdialog.ui" line="293"/>
         <source>Filter results and exclude everything else</source>
         <translation>Фильтровать результаты и исключать всё остальное</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="297"/>
+        <location filename="../customizeoptionsdialog.ui" line="303"/>
         <source>Highlight only matching text</source>
         <translation>Выделять только подходящий текст</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="344"/>
-        <location filename="../customizeoptionsdialog.ui" line="4153"/>
-        <location filename="../customizeoptionsdialog.ui" line="4198"/>
+        <location filename="../customizeoptionsdialog.ui" line="350"/>
+        <location filename="../customizeoptionsdialog.ui" line="4159"/>
+        <location filename="../customizeoptionsdialog.ui" line="4204"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="361"/>
-        <location filename="../customizeoptionsdialog.ui" line="4166"/>
-        <location filename="../customizeoptionsdialog.ui" line="4211"/>
+        <location filename="../customizeoptionsdialog.ui" line="367"/>
+        <location filename="../customizeoptionsdialog.ui" line="4172"/>
+        <location filename="../customizeoptionsdialog.ui" line="4217"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="321"/>
+        <location filename="../customizeoptionsdialog.ui" line="327"/>
         <source>Keep your library up to date</source>
         <translation>Поддерживать библиотеку в актуальном состоянии</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="332"/>
+        <location filename="../customizeoptionsdialog.ui" line="117"/>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizeoptionsdialog.ui" line="338"/>
         <source>Should I look for changes in your music folders? Your library will always be synchronized automatically.</source>
         <translation>Следить за изменениями в ваших папках с музыкой? Ваша библиотека всегда будет синхронизироваться автоматически.</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="396"/>
+        <location filename="../customizeoptionsdialog.ui" line="402"/>
         <source>Language of Miam Player</source>
         <translation>Язык Miam Player</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="444"/>
+        <location filename="../customizeoptionsdialog.ui" line="450"/>
         <source>Translation status: OK!</source>
         <comment>status</comment>
         <translation>Статус перевода: OK!</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="483"/>
+        <location filename="../customizeoptionsdialog.ui" line="489"/>
         <source>Menu &amp;&amp; Options</source>
         <translation>Меню и настройки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="545"/>
+        <location filename="../customizeoptionsdialog.ui" line="551"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="559"/>
+        <location filename="../customizeoptionsdialog.ui" line="565"/>
         <source>Open general options</source>
         <translation>Открыть общие настройки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="591"/>
+        <location filename="../customizeoptionsdialog.ui" line="597"/>
         <source>Open appearance</source>
         <translation>Открыть настройку внешнего вида</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="637"/>
+        <location filename="../customizeoptionsdialog.ui" line="643"/>
         <source>Rescan library</source>
         <translation>Пересканировать библиотеку</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="876"/>
+        <location filename="../customizeoptionsdialog.ui" line="882"/>
         <source>Open files...</source>
         <translation>Открыть файлы...</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="908"/>
+        <location filename="../customizeoptionsdialog.ui" line="914"/>
         <source>Open folders...</source>
         <translation>Открыть папки...</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="915"/>
+        <location filename="../customizeoptionsdialog.ui" line="921"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="979"/>
+        <location filename="../customizeoptionsdialog.ui" line="985"/>
         <source>Show Debug Dialog</source>
         <translation>Показать диалог отладки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1052"/>
+        <location filename="../customizeoptionsdialog.ui" line="1058"/>
         <source>View</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1117"/>
+        <location filename="../customizeoptionsdialog.ui" line="1123"/>
         <source>Add selected items to Tag Editor</source>
         <translation>Добавить выделенные элементы в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1177"/>
+        <location filename="../customizeoptionsdialog.ui" line="1183"/>
         <source>Show view Unique Library</source>
         <translation>Перейти в режим единой библиотеки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1275"/>
+        <location filename="../customizeoptionsdialog.ui" line="1281"/>
         <source>Show view Playlists</source>
         <translation>Перейти в режим списка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1310"/>
+        <location filename="../customizeoptionsdialog.ui" line="1316"/>
         <source>Switch to Library tab</source>
         <translation>Переключиться на вкладку библиотеки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1320"/>
+        <location filename="../customizeoptionsdialog.ui" line="1326"/>
         <source>Add selected items to current playlist</source>
         <translation>Добавить выделенные элементы в список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1330"/>
+        <location filename="../customizeoptionsdialog.ui" line="1336"/>
         <source>Switch to File Explorer tab</source>
         <translation>Переключиться на вкладку проводника</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1340"/>
+        <location filename="../customizeoptionsdialog.ui" line="1346"/>
         <source>Show view Tag Editor</source>
         <translation>Открыть редактор тегов</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1399"/>
+        <location filename="../customizeoptionsdialog.ui" line="1405"/>
         <source>Search</source>
         <translation>Искать</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1861"/>
+        <location filename="../customizeoptionsdialog.ui" line="1867"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="1992"/>
+        <location filename="../customizeoptionsdialog.ui" line="1998"/>
         <source>Skip backward</source>
         <translation>Перейти к предыдущему</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2018"/>
+        <location filename="../customizeoptionsdialog.ui" line="2024"/>
         <source>Normal</source>
         <translation>Нормальное</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2005"/>
+        <location filename="../customizeoptionsdialog.ui" line="2011"/>
         <source>Seek backward</source>
         <translation>Перемотать назад</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2350"/>
+        <location filename="../customizeoptionsdialog.ui" line="2356"/>
         <source>Increase volume</source>
         <translation>Увеличить громкость</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2431"/>
+        <location filename="../customizeoptionsdialog.ui" line="2437"/>
         <source>Repeat</source>
         <translation>Повторять</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2576"/>
+        <location filename="../customizeoptionsdialog.ui" line="2582"/>
         <source>Current item in loop</source>
         <translation>Текущий элемент циклично</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2620"/>
+        <location filename="../customizeoptionsdialog.ui" line="2626"/>
         <source>Mute</source>
         <translation>Отключить звук</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2695"/>
+        <location filename="../customizeoptionsdialog.ui" line="2701"/>
         <source>Skip forward</source>
         <translation>Перейти к следующему</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2898"/>
+        <location filename="../customizeoptionsdialog.ui" line="2904"/>
         <source>Shuffle</source>
         <translation>В случайном порядке</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2854"/>
+        <location filename="../customizeoptionsdialog.ui" line="2860"/>
         <source>Decrease volume</source>
         <translation>Уменьшить громкость</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2924"/>
+        <location filename="../customizeoptionsdialog.ui" line="2930"/>
         <source>Seek forward</source>
         <translation>Перемотать вперёд</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="2911"/>
+        <location filename="../customizeoptionsdialog.ui" line="2917"/>
         <source>Current item once</source>
         <translation>Текущий элемент только один раз</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3005"/>
+        <location filename="../customizeoptionsdialog.ui" line="3011"/>
         <source>Play / Pause</source>
         <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3519"/>
+        <location filename="../customizeoptionsdialog.ui" line="3525"/>
         <source>Playlist</source>
         <translation>Список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3525"/>
+        <location filename="../customizeoptionsdialog.ui" line="3531"/>
         <source>Move selected track down</source>
         <translation>Переместить выбранный трек вниз</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3532"/>
+        <location filename="../customizeoptionsdialog.ui" line="3538"/>
         <source>Move selected track up</source>
         <translation>Переместить выбранный трек вверх</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3552"/>
+        <location filename="../customizeoptionsdialog.ui" line="3558"/>
         <source>Open playlist manager...</source>
         <translation>Открыть управление списками воспроизведения...</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3622"/>
+        <location filename="../customizeoptionsdialog.ui" line="3628"/>
         <source>Remove selected tracks</source>
         <translation>Удалить выбранные треки</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3660"/>
+        <location filename="../customizeoptionsdialog.ui" line="3666"/>
         <source>Add a new playlist</source>
         <translation>Добавить новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3748"/>
+        <location filename="../customizeoptionsdialog.ui" line="3754"/>
         <source>Delete current playlist</source>
         <translation>Удалить текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3955"/>
+        <location filename="../customizeoptionsdialog.ui" line="3961"/>
         <source>Playback options</source>
         <translation>Настройка воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3961"/>
+        <location filename="../customizeoptionsdialog.ui" line="3967"/>
         <source>Seek time (forward or backward)</source>
         <translation>Перемотка (вперёд или назад)</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3984"/>
+        <location filename="../customizeoptionsdialog.ui" line="3990"/>
         <source>Playlists</source>
         <translation>Списки воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3998"/>
+        <location filename="../customizeoptionsdialog.ui" line="4004"/>
         <source>What should I do when you&apos;re closing a playlist?</source>
         <translation>Что делать, когда вы закрываете список воспроизведения?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4010"/>
+        <location filename="../customizeoptionsdialog.ui" line="4016"/>
         <source>Let me decide</source>
         <translation>Оставлять выбор за мной</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4023"/>
+        <location filename="../customizeoptionsdialog.ui" line="4029"/>
         <source>Save</source>
         <translation>Сохранить его</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4036"/>
+        <location filename="../customizeoptionsdialog.ui" line="4042"/>
         <source>Discard</source>
         <translation>Отказаться от закрытия</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4127"/>
+        <location filename="../customizeoptionsdialog.ui" line="4133"/>
         <source>Startup &amp;&amp; Exit</source>
         <translation>Запуск и выход</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4186"/>
+        <location filename="../customizeoptionsdialog.ui" line="4192"/>
         <source>Would you like to keep your playlists in memory before exiting?</source>
         <translation>Сохранять в памяти ваши списки воспроизведения перед выходом?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4138"/>
+        <location filename="../customizeoptionsdialog.ui" line="4144"/>
         <source>Would you like to restore existing playlists at startup?</source>
         <translation>Восстанавливать существующие списки воспроизведения при запуске?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3269"/>
+        <location filename="../customizeoptionsdialog.ui" line="3275"/>
         <source>Global</source>
         <translation>Общие</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3282"/>
+        <location filename="../customizeoptionsdialog.ui" line="3288"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="3295"/>
+        <location filename="../customizeoptionsdialog.ui" line="3301"/>
         <source>Reset</source>
         <translation>Сбросить</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4074"/>
+        <location filename="../customizeoptionsdialog.ui" line="4080"/>
         <source>What is the behaviour for columns?</source>
         <translation>Выберите поведение для столбцов.</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4086"/>
+        <location filename="../customizeoptionsdialog.ui" line="4092"/>
         <source>Resize columns to contents</source>
         <translation>Изменять ширину в соответствии с содержимым</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4102"/>
+        <location filename="../customizeoptionsdialog.ui" line="4108"/>
         <source>Keep all columns visible</source>
         <translation>Поддерживать видимость всех столбцов</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4226"/>
+        <location filename="../customizeoptionsdialog.ui" line="4232"/>
         <source>Note: unsaved playlists will be automatically saved, modified ones will be overwritten.</source>
         <translation>Внимание: несохранённые списки воспроизведения будут автоматически сохранены, изменённые будут перезаписаны.</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4274"/>
+        <location filename="../customizeoptionsdialog.ui" line="4280"/>
         <source>Drag and drop from external places</source>
         <translation>Перетаскивание из внешних источников</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4285"/>
+        <location filename="../customizeoptionsdialog.ui" line="4291"/>
         <source>What should I do when you&apos;re dropping here items from another application?</source>
         <translation>Что делать, когда вы перетаскиваете сюда элементы из других программ?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4295"/>
+        <location filename="../customizeoptionsdialog.ui" line="4301"/>
         <source>Open a Popup and ask how to proceed</source>
         <translation>Открыть всплывающее окно и спросить, что делать дальше</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4305"/>
+        <location filename="../customizeoptionsdialog.ui" line="4311"/>
         <source>Add folders to the library</source>
         <translation>Добавить папки в библиотеку</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4312"/>
+        <location filename="../customizeoptionsdialog.ui" line="4318"/>
         <source>Add folders to the current playlist</source>
         <translation>Добавить папки в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4319"/>
+        <location filename="../customizeoptionsdialog.ui" line="4325"/>
         <source>Note: tracks are automatically sent to the current playlist</source>
         <translation>Внимание: треки автоматически посылаются в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4329"/>
+        <location filename="../customizeoptionsdialog.ui" line="4335"/>
         <source>Drag and drop between two playlists</source>
         <translation>Перетаскивание треков между двумя списками воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4340"/>
+        <location filename="../customizeoptionsdialog.ui" line="4346"/>
         <source>What should I do when you&apos;re dragging tracks into another playlist?</source>
         <translation>Что делать, когда вы перетаскиваете треки в другой список воспроизведения?</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4352"/>
+        <location filename="../customizeoptionsdialog.ui" line="4358"/>
         <source>Just move them</source>
         <translation>Просто переместить их</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4362"/>
+        <location filename="../customizeoptionsdialog.ui" line="4368"/>
         <source>Copy tracks in the new playlist</source>
         <translation>Копировать треки в новый список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4395"/>
+        <location filename="../customizeoptionsdialog.ui" line="4397"/>
+        <source>Remote control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizeoptionsdialog.ui" line="4406"/>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizeoptionsdialog.ui" line="4429"/>
+        <source>Enable remote control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizeoptionsdialog.ui" line="4460"/>
         <source>Summary</source>
         <translation>Общее</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4426"/>
+        <location filename="../customizeoptionsdialog.ui" line="4491"/>
         <source>Name</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4431"/>
+        <location filename="../customizeoptionsdialog.ui" line="4496"/>
         <source>Loaded</source>
         <translation>Загружен</translation>
     </message>
     <message>
-        <location filename="../customizeoptionsdialog.ui" line="4436"/>
+        <location filename="../customizeoptionsdialog.ui" line="4501"/>
         <source>Version</source>
         <translation>Версия</translation>
     </message>
     <message>
         <location filename="../dialogs/customizeoptionsdialog.cpp" line="55"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="306"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="404"/>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="471"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="317"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="415"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="490"/>
         <source>Add some music locations here</source>
         <translation>Добавьте сюда несколько папок с музыкой</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="339"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="350"/>
         <source>Translation status: OK!</source>
         <translation>Статус перевода: OK!</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="341"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="352"/>
         <source>No translation is available for this language :(</source>
         <translation>Для этого языка перевод недоступен :(</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizeoptionsdialog.cpp" line="423"/>
+        <location filename="../dialogs/customizeoptionsdialog.cpp" line="434"/>
         <source>Select a location of your music</source>
         <translation>Укажите расположение вашей музыки</translation>
     </message>
@@ -564,240 +584,240 @@
         <translation>Настроить внешний вид</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="75"/>
+        <location filename="../customizetheme.ui" line="72"/>
         <source>Buttons &amp; Bars</source>
         <translation>Кнопки и строки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="90"/>
-        <location filename="../customizetheme.ui" line="1084"/>
+        <location filename="../customizetheme.ui" line="87"/>
+        <location filename="../customizetheme.ui" line="1081"/>
         <source>Fonts</source>
         <translation>Шрифты</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="102"/>
+        <location filename="../customizetheme.ui" line="99"/>
         <source>Colors</source>
         <translation>Цвета</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="114"/>
-        <location filename="../customizetheme.ui" line="1185"/>
+        <location filename="../customizetheme.ui" line="111"/>
+        <location filename="../customizetheme.ui" line="1178"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="126"/>
-        <location filename="../customizetheme.ui" line="1979"/>
+        <location filename="../customizetheme.ui" line="123"/>
+        <location filename="../customizetheme.ui" line="2125"/>
         <source>Tabs</source>
         <translation>Вкладки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="160"/>
+        <location filename="../customizetheme.ui" line="157"/>
         <source>Availables themes</source>
         <translation>Доступные темы</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="236"/>
+        <location filename="../customizetheme.ui" line="233"/>
         <source>Customize selected theme</source>
         <translation>Настроить выбранную тему</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="252"/>
+        <location filename="../customizetheme.ui" line="249"/>
         <source>Button list and their associated behaviour</source>
         <translation>Список кнопок и действий, связанных с ними</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="269"/>
+        <location filename="../customizetheme.ui" line="266"/>
         <source>You can customize every icon by clicking on the buttons</source>
         <translation>Вы можете настроить каждый значок, нажимая на кнопки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="325"/>
+        <location filename="../customizetheme.ui" line="322"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="494"/>
+        <location filename="../customizetheme.ui" line="491"/>
         <source>Skip backward</source>
         <translation>Перейти к предыдущему</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="507"/>
+        <location filename="../customizetheme.ui" line="504"/>
         <source>Seek forword</source>
         <translation>Перемотать вперёд</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="576"/>
+        <location filename="../customizetheme.ui" line="573"/>
         <source>Play / Pause</source>
         <translation>Воспроизведение / пауза</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="655"/>
+        <location filename="../customizetheme.ui" line="652"/>
         <source>Skip forward</source>
         <translation>Перейти к следующему</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="695"/>
+        <location filename="../customizetheme.ui" line="692"/>
         <source>Seek backbard</source>
         <translation>Перемотать назад</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="735"/>
+        <location filename="../customizetheme.ui" line="732"/>
         <source>Loop</source>
         <translation>Цикличный</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="805"/>
+        <location filename="../customizetheme.ui" line="802"/>
         <source>Playback Mode</source>
         <translation>Режим воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="834"/>
+        <location filename="../customizetheme.ui" line="831"/>
         <source>Sequential</source>
         <translation>Последовательный</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="850"/>
+        <location filename="../customizetheme.ui" line="847"/>
         <source>Current item once</source>
         <translation>Текущий элемент только один раз</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="866"/>
+        <location filename="../customizetheme.ui" line="863"/>
         <source>Current item in loop</source>
         <translation>Текущий элемент циклично</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="882"/>
+        <location filename="../customizetheme.ui" line="879"/>
         <source>Shuffle</source>
         <translation>В случайном порядке</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="926"/>
+        <location filename="../customizetheme.ui" line="923"/>
         <source>Media buttons</source>
         <translation>Мультимедийные кнопки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="932"/>
+        <location filename="../customizetheme.ui" line="929"/>
         <source>Button size</source>
         <translation>Размер кнопок</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="958"/>
+        <location filename="../customizetheme.ui" line="955"/>
         <source>Search bar</source>
         <translation>Строка поиска</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="969"/>
+        <location filename="../customizetheme.ui" line="966"/>
         <source>Should I show automatically an extended search area next to the search bar?</source>
         <translation>Показать автоматически расширенную зону поиска рядом с строкой поиска?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="978"/>
-        <location filename="../customizetheme.ui" line="1018"/>
-        <location filename="../customizetheme.ui" line="1238"/>
-        <location filename="../customizetheme.ui" line="1280"/>
-        <location filename="../customizetheme.ui" line="1513"/>
-        <location filename="../customizetheme.ui" line="1590"/>
-        <location filename="../customizetheme.ui" line="1697"/>
-        <location filename="../customizetheme.ui" line="1762"/>
-        <location filename="../customizetheme.ui" line="1846"/>
+        <location filename="../customizetheme.ui" line="975"/>
+        <location filename="../customizetheme.ui" line="1015"/>
+        <location filename="../customizetheme.ui" line="1231"/>
+        <location filename="../customizetheme.ui" line="1279"/>
+        <location filename="../customizetheme.ui" line="1659"/>
+        <location filename="../customizetheme.ui" line="1736"/>
+        <location filename="../customizetheme.ui" line="1843"/>
+        <location filename="../customizetheme.ui" line="1908"/>
+        <location filename="../customizetheme.ui" line="1992"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="988"/>
-        <location filename="../customizetheme.ui" line="1248"/>
-        <location filename="../customizetheme.ui" line="1529"/>
-        <location filename="../customizetheme.ui" line="1603"/>
-        <location filename="../customizetheme.ui" line="1713"/>
-        <location filename="../customizetheme.ui" line="1819"/>
-        <location filename="../customizetheme.ui" line="1868"/>
+        <location filename="../customizetheme.ui" line="985"/>
+        <location filename="../customizetheme.ui" line="1241"/>
+        <location filename="../customizetheme.ui" line="1675"/>
+        <location filename="../customizetheme.ui" line="1749"/>
+        <location filename="../customizetheme.ui" line="1859"/>
+        <location filename="../customizetheme.ui" line="1965"/>
+        <location filename="../customizetheme.ui" line="2014"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1000"/>
+        <location filename="../customizetheme.ui" line="997"/>
         <source>Volume bar</source>
         <translation>Строка громкости</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1011"/>
+        <location filename="../customizetheme.ui" line="1008"/>
         <source>Should I display the value in the upper left corner permanently?</source>
         <translation>Показывать значение в верхнем левом углу всё время?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1027"/>
+        <location filename="../customizetheme.ui" line="1024"/>
         <source>No, hide it after:</source>
         <translation>Нет, прятать его через:</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1090"/>
+        <location filename="../customizetheme.ui" line="1087"/>
         <source>Size</source>
         <translation>Размер</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1097"/>
+        <location filename="../customizetheme.ui" line="1094"/>
         <source>Font family</source>
         <translation>Семейство шрифтов</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1149"/>
+        <location filename="../customizetheme.ui" line="1144"/>
         <source>Playlist</source>
         <translation>Список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1156"/>
+        <location filename="../customizetheme.ui" line="1151"/>
         <source>Menus</source>
         <translation>Меню</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1218"/>
+        <location filename="../customizetheme.ui" line="1211"/>
         <source>Alternative colors</source>
         <translation>Чередующиеся цвета</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1229"/>
+        <location filename="../customizetheme.ui" line="1222"/>
         <source>Would you like to alternate colors in playlists?</source>
         <translation>Использовать чередование цветов строк в списке воспроизведения?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1260"/>
+        <location filename="../customizetheme.ui" line="1253"/>
         <source>Custom colors</source>
         <translation>Настроить цвета</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1271"/>
+        <location filename="../customizetheme.ui" line="1264"/>
         <source>Would you like to customize the colors of the player?</source>
         <translation>Вы хотите настроить цвета плеера?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1300"/>
+        <location filename="../customizetheme.ui" line="1302"/>
         <source>No, keep the colors provided by my Operating System</source>
         <translation>Нет, использовать цвета, предоставляемые моей операционной системой</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1361"/>
+        <location filename="../customizetheme.ui" line="1335"/>
         <source>Background for playlists and the library</source>
         <translation>Фон для списков воспроизведения и библиотеки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1371"/>
+        <location filename="../customizetheme.ui" line="1325"/>
         <source>Selected item</source>
         <translation>Выбранный элемент</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1394"/>
+        <location filename="../customizetheme.ui" line="1517"/>
         <source>Text</source>
         <translation>Текст</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1460"/>
+        <location filename="../customizetheme.ui" line="1603"/>
         <source>Library (tree)</source>
         <translation>Библиотека (дерево)</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1466"/>
-        <location filename="../customizetheme.ui" line="1903"/>
+        <location filename="../customizetheme.ui" line="1609"/>
+        <location filename="../customizetheme.ui" line="2049"/>
         <source>Artist and albums lists</source>
         <translation>Списки исполнителей и альбомов</translation>
     </message>
@@ -806,126 +826,147 @@
         <translation type="vanished">Показывать обложки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1477"/>
-        <location filename="../customizetheme.ui" line="1926"/>
+        <location filename="../customizetheme.ui" line="1620"/>
+        <location filename="../customizetheme.ui" line="2072"/>
         <source>Size of covers</source>
         <translation>Размер обложек</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1504"/>
+        <location filename="../customizetheme.ui" line="1650"/>
         <source>Should I display a large and faded cover when you&apos;re expanding an album?</source>
         <translation>Показывать большую полупрозрачную обложку, когда вы раскрываете альбом?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1745"/>
+        <location filename="../customizetheme.ui" line="1891"/>
         <source>Would you like to display stars in the library, left to the track name?</source>
         <translation>Отображать звёздочки в библиотеке слева от названия дорожки?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1831"/>
+        <location filename="../customizetheme.ui" line="1977"/>
         <source>Display star outline if there&apos;s no rating yet for a track</source>
         <translation>Показывать контуры звёздочек, даже если у дорожки нет рейтинга</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1897"/>
+        <location filename="../customizetheme.ui" line="2043"/>
         <source>Unique Library (list)</source>
         <translation>Единая библиотека (список)</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1919"/>
+        <location filename="../customizetheme.ui" line="2065"/>
         <source>Pin when scrolling</source>
         <translation>Закрепить при прокрутке</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1976"/>
+        <location filename="../customizetheme.ui" line="1276"/>
+        <location filename="../customizetheme.ui" line="1442"/>
+        <location filename="../customizetheme.ui" line="2122"/>
         <source>Currently under development</source>
         <translation>В разработке</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1539"/>
+        <location filename="../customizetheme.ui" line="1427"/>
+        <source>Text color is automatically adjusted from Background color, but you can override it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizetheme.ui" line="1445"/>
+        <source>Yes, let me change Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizetheme.ui" line="1471"/>
+        <source>No, adjust Text Color automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizetheme.ui" line="1491"/>
+        <source>Selected text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../customizetheme.ui" line="1685"/>
         <source>Opacity</source>
         <translation>Непрозрачность</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1564"/>
+        <location filename="../customizetheme.ui" line="1710"/>
         <source>Sorting the library</source>
         <translation>Сортировка библиотеки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1575"/>
+        <location filename="../customizetheme.ui" line="1721"/>
         <source>If there is an article at the beginning of an artist&apos;s name, should I ignore it?</source>
         <translation>Игнорировать артикль, стоящий перед именем исполнителся?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1587"/>
+        <location filename="../customizetheme.ui" line="1733"/>
         <source>This option will filter grammatical articles. For example, &quot;The Beatles&quot; will be treated as &quot;Beatles, the&quot;</source>
         <translation>Эта настройка будет фильтровать артикли. Например, &quot;The Beatles&quot; будет интерпретироваться как &quot;Beatles, the&quot;</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1633"/>
+        <location filename="../customizetheme.ui" line="1779"/>
         <source>&quot;The&quot; is very common English article, like in « The Beatles »</source>
         <translation>«The» — очень распространённый английский артикль, как в «The Beatles»</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1664"/>
+        <location filename="../customizetheme.ui" line="1810"/>
         <source>Do you want to display the article after the name?</source>
         <translation>Отображать артикль после названия?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1682"/>
+        <location filename="../customizetheme.ui" line="1828"/>
         <source>Example:  « The Beatles » will become « Beatles, the »</source>
         <translation>Пример: «The Beatles» станет «Beatles, the»</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1734"/>
+        <location filename="../customizetheme.ui" line="1880"/>
         <source>Manage favorites</source>
         <translation>Управление избранным</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1759"/>
-        <location filename="../customizetheme.ui" line="1843"/>
+        <location filename="../customizetheme.ui" line="1905"/>
+        <location filename="../customizetheme.ui" line="1989"/>
         <source>This option will always displays 5 stars, even if the track has not been rated yet</source>
         <translation>5 серых звёзд всегда будут видны, даже если трек не имеет рейтинга </translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1816"/>
-        <location filename="../customizetheme.ui" line="1865"/>
+        <location filename="../customizetheme.ui" line="1962"/>
+        <location filename="../customizetheme.ui" line="2011"/>
         <source>This option will never show 5 gray stars if the track has not been rated </source>
         <translation>5 серых звёзд не будут видны, если трек не имеет рейтинга </translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1990"/>
+        <location filename="../customizetheme.ui" line="2136"/>
         <source>What kind of shape do you want for displaying tabs?</source>
         <translation>Какую форму отображения использовать?</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1997"/>
+        <location filename="../customizetheme.ui" line="2143"/>
         <source>Rectangle</source>
         <translation>Прямоугольная</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="2007"/>
+        <location filename="../customizetheme.ui" line="2153"/>
         <source>Rounded tabs</source>
         <translation>Скруглённые вкладки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="2022"/>
+        <location filename="../customizetheme.ui" line="2168"/>
         <source>Overlap on other tabs with</source>
         <translation>Наложение на другие вкладки</translation>
     </message>
     <message>
-        <location filename="../customizetheme.ui" line="1933"/>
-        <location filename="../customizetheme.ui" line="2032"/>
+        <location filename="../customizetheme.ui" line="2079"/>
         <source>px</source>
         <translation>пикс</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizethemedialog.cpp" line="361"/>
+        <location filename="../dialogs/customizethemedialog.cpp" line="423"/>
         <source>Choose your custom icon</source>
         <translation>Выберите свой значок</translation>
     </message>
     <message>
-        <location filename="../dialogs/customizethemedialog.cpp" line="361"/>
+        <location filename="../dialogs/customizethemedialog.cpp" line="423"/>
         <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation>Изображения (*.jpg *.jpeg *.png)</translation>
     </message>
@@ -1353,7 +1394,7 @@
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="611"/>
+        <location filename="../mainwindow.cpp" line="646"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1363,7 +1404,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="612"/>
+        <location filename="../mainwindow.cpp" line="647"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1373,7 +1414,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="613"/>
+        <location filename="../mainwindow.cpp" line="648"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1383,62 +1424,62 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="282"/>
+        <location filename="../mainwindow.cpp" line="309"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="414"/>
+        <location filename="../mainwindow.cpp" line="441"/>
         <source>Directory to open.</source>
         <translation>Открыть папку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="414"/>
+        <location filename="../mainwindow.cpp" line="441"/>
         <source>dir</source>
         <translation>папка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="415"/>
+        <location filename="../mainwindow.cpp" line="442"/>
         <source>Medias are added into a new playlist.</source>
         <translation>Мультимеда-данные будут добавлены в новый список воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="416"/>
+        <location filename="../mainwindow.cpp" line="443"/>
         <source>Medias are sent to tag editor.</source>
         <translation>Мультимеда-данные будут добавлены в редактор тегов.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="417"/>
+        <location filename="../mainwindow.cpp" line="444"/>
         <source>Directory is sent to library.</source>
         <translation>Папка отправлена в библиотеку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="418"/>
+        <location filename="../mainwindow.cpp" line="445"/>
         <source>Play or pause track in active playlist.</source>
         <translation>Воспроизведение или пауза дорожки в активном списке воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="419"/>
+        <location filename="../mainwindow.cpp" line="446"/>
         <source>Stop playback.</source>
         <translation>Остановить воспроизведение.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="420"/>
+        <location filename="../mainwindow.cpp" line="447"/>
         <source>Play next track.</source>
         <translation>Воспроизвести следующую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="421"/>
+        <location filename="../mainwindow.cpp" line="448"/>
         <source>Play previous track.</source>
         <translation>Воспроизвести предыдущую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="422"/>
+        <location filename="../mainwindow.cpp" line="449"/>
         <source>Set volume of the player.</source>
         <translation>Установить громкость плеера.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="422"/>
+        <location filename="../mainwindow.cpp" line="449"/>
         <source>volume</source>
         <translation>громкость</translation>
     </message>
@@ -1475,7 +1516,7 @@ API изменился, и Вам нужно обновоить эти плаг�
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../mainwindow.cpp" line="411"/>
+        <location filename="../mainwindow.cpp" line="438"/>
         <source>Command line helper for Miam-Player</source>
         <translation>Справка по опциям командной строки Miam-Player</translation>
     </message>
@@ -1513,9 +1554,9 @@ API изменился, и Вам нужно обновоить эти плаг�
         <translation>Нажмите здесь, чтобы искать музыку вручную</translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="187"/>
-        <location filename="../quickstart.cpp" line="214"/>
-        <location filename="../quickstart.cpp" line="245"/>
+        <location filename="../quickstart.cpp" line="194"/>
+        <location filename="../quickstart.cpp" line="221"/>
+        <location filename="../quickstart.cpp" line="252"/>
         <source>%n elements</source>
         <translation>
             <numerusform>%n элемент</numerusform>
@@ -1524,7 +1565,7 @@ API изменился, и Вам нужно обновоить эти плаг�
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="192"/>
+        <location filename="../quickstart.cpp" line="199"/>
         <source>%n folders</source>
         <translation>
             <numerusform>%n папка</numerusform>
@@ -1533,12 +1574,12 @@ API изменился, и Вам нужно обновоить эти плаг�
         </translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="204"/>
+        <location filename="../quickstart.cpp" line="211"/>
         <source>Note: it&apos;s not possible to add your default location because 0 tracks where found</source>
         <translation>Внимание: невозможно добавить вашу системную папку для музыки, потому что в ней не было найдено треков</translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="242"/>
+        <location filename="../quickstart.cpp" line="249"/>
         <source>empty folder</source>
         <translation>пустая папка</translation>
     </message>
@@ -1728,18 +1769,18 @@ API изменился, и Вам нужно обновоить эти плаг�
     </message>
     <message>
         <location filename="../views/tageditor/tageditor.cpp" line="58"/>
-        <location filename="../views/tageditor/tageditor.cpp" line="575"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="567"/>
         <source>(Keep)</source>
         <translation>(Сохранить)</translation>
     </message>
     <message>
         <location filename="../views/tageditor/tageditor.cpp" line="59"/>
-        <location filename="../views/tageditor/tageditor.cpp" line="576"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="568"/>
         <source>(Delete)</source>
         <translation>(Удалить)</translation>
     </message>
     <message>
-        <location filename="../views/tageditor/tageditor.cpp" line="478"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="470"/>
         <source>(Incompatible tracks selected)</source>
         <translation>(Выбраны несовместимые треки)</translation>
     </message>

@@ -27,7 +27,7 @@
 <context>
     <name>LibraryItemDelegate</name>
     <message>
-        <location filename="../libraryitemdelegate.cpp" line="356"/>
+        <location filename="../libraryitemdelegate.cpp" line="346"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>
@@ -35,22 +35,22 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="374"/>
+        <location filename="../libraryitemmodel.cpp" line="379"/>
         <source>  Artists \ Albums</source>
         <translation>  Исполнители \ Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="377"/>
+        <location filename="../libraryitemmodel.cpp" line="382"/>
         <source>  Albums</source>
         <translation>  Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="380"/>
+        <location filename="../libraryitemmodel.cpp" line="385"/>
         <source>  Artists – Albums</source>
         <translation>  Исполнители – Альбомы</translation>
     </message>
     <message>
-        <location filename="../libraryitemmodel.cpp" line="383"/>
+        <location filename="../libraryitemmodel.cpp" line="388"/>
         <source>  Years</source>
         <translation>  Годы</translation>
     </message>
@@ -119,17 +119,17 @@
 <context>
     <name>LibraryTreeView</name>
     <message>
-        <location filename="../librarytreeview.cpp" line="38"/>
+        <location filename="../librarytreeview.cpp" line="39"/>
         <source>Send to the current playlist</source>
         <translation>Отправить в текущий список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="39"/>
+        <location filename="../librarytreeview.cpp" line="40"/>
         <source>Send to the tag editor</source>
         <translation>Отправить в редактор тегов</translation>
     </message>
     <message>
-        <location filename="../librarytreeview.cpp" line="259"/>
+        <location filename="../librarytreeview.cpp" line="274"/>
         <source>No matching results were found</source>
         <translation>Подходящих результатов не найдено</translation>
     </message>
@@ -137,7 +137,7 @@
 <context>
     <name>MiamItemDelegate</name>
     <message>
-        <location filename="../miamitemdelegate.cpp" line="83"/>
+        <location filename="../miamitemdelegate.cpp" line="81"/>
         <source>(empty)</source>
         <translation>(пусто)</translation>
     </message>
@@ -145,7 +145,7 @@
 <context>
     <name>MiamItemModel</name>
     <message>
-        <location filename="../miamitemmodel.cpp" line="67"/>
+        <location filename="../miamitemmodel.cpp" line="66"/>
         <source>Various</source>
         <translation>Разные</translation>
     </message>
@@ -153,7 +153,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../yearitem.cpp" line="7"/>
+        <location filename="../yearitem.cpp" line="6"/>
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>

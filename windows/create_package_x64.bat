@@ -35,9 +35,6 @@ echo f | xcopy %QTDIR%\translations\qt_ko.qm packages\org.miamplayer.core\data\t
 echo f | xcopy %QTDIR%\translations\qt_pt.qm packages\org.miamplayer.core\data\translations\qt_pt.qm /y/s
 echo f | xcopy %QTDIR%\translations\qt_ru.qm packages\org.miamplayer.core\data\translations\qt_ru.qm /y/s
 echo f | xcopy %QTDIR%\translations\qt_zh_CN.qm packages\org.miamplayer.core\data\translations\qt_zh_CN.qm /y/s
-copy %QTDIR%\bin\icudt54.dll packages\org.miamplayer.core\data\icudt54.dll
-copy %QTDIR%\bin\icuin54.dll packages\org.miamplayer.core\data\icuin54.dll
-copy %QTDIR%\bin\icuuc54.dll packages\org.miamplayer.core\data\icuuc54.dll
 copy %QTDIR%\bin\libEGL.dll packages\org.miamplayer.core\data\libEGL.dll
 copy %QTDIR%\bin\libGLESv2.dll packages\org.miamplayer.core\data\libGLESv2.dll
 copy %QTDIR%\bin\Qt5Core.dll packages\org.miamplayer.core\data\Qt5Core.dll
@@ -47,26 +44,27 @@ copy %QTDIR%\bin\Qt5MultimediaWidgets.dll packages\org.miamplayer.core\data\Qt5M
 copy %QTDIR%\bin\Qt5Network.dll packages\org.miamplayer.core\data\Qt5Network.dll
 copy %QTDIR%\bin\Qt5OpenGL.dll packages\org.miamplayer.core\data\Qt5OpenGL.dll
 copy %QTDIR%\bin\Qt5Sql.dll packages\org.miamplayer.core\data\Qt5Sql.dll
+copy %QTDIR%\bin\Qt5WebSockets.dll packages\org.miamplayer.core\data\Qt5WebSockets.dll
 copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
 rem set AcoustIDSRC="C:\dev\acoustid-plugin\lib\release"
 rem set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
-set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
+rem set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
 rem set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
 rem set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
-set MiniModeBuild="C:\dev\mini-mode-build\release"
+rem set MiniModeBuild="C:\dev\mini-mode-build\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 rem FIXME
 rem xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
 rem Chromaprint dependency isn't a plugin itself so it must be put next to FFMpeg
 rem copy %AcoustIDSRC%\chromaprint.dll packages\org.miamplayer.plugins.acoustid\data\chromaprint.dll
-xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
+rem xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
 rem xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 rem xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
-xcopy %MiniModeBuild%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
+rem xcopy %MiniModeBuild%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
 xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
 
 rem Deezer talks to the Internet with QtWebKit
@@ -81,8 +79,8 @@ rem delete data folders
 rmdir packages\org.qtav\data\ /s /q
 rmdir packages\org.miamplayer.core\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
-rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
+rem rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
-rmdir packages\org.miamplayer.plugins.minimode\data\ /s /q
+rem rmdir packages\org.miamplayer.plugins.minimode\data\ /s /q
 rmdir packages\org.miamplayer.plugins.windowstoolbar\data\ /s /q

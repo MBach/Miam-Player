@@ -439,6 +439,22 @@
         <source>Select a location of your music</source>
         <translation>Δίαλεξε μια τοποθεσία για την μουσική σου</translation>
     </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable remote control</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>CustomizeThemeDialog</name>
@@ -721,6 +737,22 @@
     <message>
         <source>Pictures (*.jpg *.jpeg *.png)</source>
         <translation>Εικόνες (*.jpg *.jpeg *.png)</translation>
+    </message>
+    <message>
+        <source>Text color is automatically adjusted from Background color, but you can override it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yes, let me change Text Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No, adjust Text Color automatically</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Selected text</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

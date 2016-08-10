@@ -7,6 +7,18 @@
         <source>No matching results were found</source>
         <translation>未找到匹配结果</translation>
     </message>
+    <message>
+        <source>tag editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send &apos;%1&apos; to the tag editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Send to tag editor</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>UniqueLibrary</name>

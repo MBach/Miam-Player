@@ -58,6 +58,37 @@
     </message>
 </context>
 <context>
+    <name>CustomField</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Name in Header</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alignment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FileSystemTreeView</name>
     <message>
         <source>Add &quot;%1&quot; to playlist</source>
@@ -238,7 +269,7 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <source>Results are aggregated from:</source>
-        <translation>Τα αποτελέσματα συγκεντρώνονται απο:</translation>
+        <translation type="vanished">Τα αποτελέσματα συγκεντρώνονται απο:</translation>
     </message>
     <message>
         <source>Library</source>
@@ -247,6 +278,10 @@ Select a playlist to display the first 30 tracks.</source>
     <message>
         <source>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Show less results&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#less&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Εμφάνιση λιγότερων αποτελεσμάτων&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Results are regrouped from:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
