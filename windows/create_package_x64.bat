@@ -15,7 +15,7 @@ mkdir packages\org.qtav\data\
 copy %MiamPlayerLibs%\*.dll packages\org.qtav\data\
 
 rem qt libraries
-set QTDIR="C:\Qt\Qt5.7.0\5.7\msvc2015_64"
+set QTDIR="C:\Qt\Qt5.7.1\5.7\msvc2015_64"
 echo f | xcopy %QTDIR%\plugins\bearer\qgenericbearer.dll packages\org.miamplayer.core\data\bearer\qgenericbearer.dll /y/s
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\qtmedia_audioengine.dll packages\org.miamplayer.core\data\mediaservice\qtmedia_audioengine.dll /y/s
