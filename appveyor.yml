@@ -1,0 +1,14 @@
+version: 0.8.1.{build}
+configuration: Release
+platform: x64
+
+environment:
+  QTDIR: C:\Qt\5.7\msvc2015_64
+  
+build_script:
+  - qmake miam-player.pro
+  - mingw32-make -j 8
+
+build:
+  parallel: true
+  verbosity: detailed
