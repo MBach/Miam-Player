@@ -1,17 +1,37 @@
 version: 0.8.1.{build}
+image: Visual Studio 2015
 configuration: Release
 platform: x64
+clone_folder: C:\dev\miam-player
+
+init:
+  - set vcarch=%arch%
+  - if "%arch%" == "x64" set vcarch=amd64
+  - if not %cc%==MinGW call "C:\Program Files (x86)\Microsoft Visual Studio %toolchain_version%.0\VC\vcvarsall.bat" %vcarch%
+  - echo NUMBER_OF_PROCESSORS=%NUMBER_OF_PROCESSORS%
+  - echo PROCESSOR_IDENTIFIER=%PROCESSOR_IDENTIFIER%
+  - echo QTDIR=%QTDIR%
 
 environment:
-  QTDIR: C:\Qt\5.7\msvc2015_64
-  
+  matrix:
+  - cc: VS2015
+    qt: 5.7
+    toolchain_version: 14
+    mode: release
+    QTDIR: C:\Qt\5.7\msvc2015
+
 install:
-  - set PATH=%PATH%;%QTDIR%\bin
+  - cmd: set PATH=%PATH%;%QTDIR%\bin
+
+cache:
+  - MIAM
+
+before_build:
+  - set PATH=%QTDIR%\bin;%PATH%
+  - if %cc%==MinGW set PATH=C:\Qt\Tools\mingw%toolchain_version%_32\bin;%PATH%
+  - echo PATH=%PATH%
 
 build_script:
-  - qmake miam-player.pro
-  - mingw32-make -j 8
+  - ..\tools\ci\win\build.bat
 
-build:
-  parallel: true
-  verbosity: detailed
+test: off
