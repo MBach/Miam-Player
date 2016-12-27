@@ -24,6 +24,8 @@ private:
 public:
 	explicit MediaPlaylist(QObject *parent = nullptr);
 
+	virtual ~MediaPlaylist();
+
 	inline void setTitle(const QString &title) { _title = title; }
 	inline QString title() const { return _title; }
 

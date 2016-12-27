@@ -28,6 +28,8 @@ private:
 public:
 	explicit PlaylistModel(QObject *parent);
 
+	virtual ~PlaylistModel();
+
 	enum Origin { RemoteMedia = Qt::UserRole + 1 };
 
 	/** Clear the content of playlist. */

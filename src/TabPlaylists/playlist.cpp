@@ -124,6 +124,14 @@ Playlist::Playlist(MediaPlayer *mediaPlayer, QWidget *parent)
 	this->hideColumn(COL_TRACK_DAO);
 }
 
+Playlist::~Playlist()
+{
+	if (_mediaPlayer->playlist() == this->mediaPlaylist()) {
+		_mediaPlayer->setPlaylist(nullptr);
+	}
+	_mediaPlayer = nullptr;
+}
+
 uint Playlist::generateNewHash() const
 {
 	if (_playlistModel->mediaPlaylist()->mediaCount() == 0) {

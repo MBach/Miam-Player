@@ -21,6 +21,9 @@ PlaylistModel::PlaylistModel(QObject *parent)
 	, _mediaPlaylist(new MediaPlaylist(this))
 {}
 
+PlaylistModel::~PlaylistModel()
+{}
+
 /** Clear the content of playlist. */
 void PlaylistModel::clear()
 {

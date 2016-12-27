@@ -58,6 +58,8 @@ public:
 
 	explicit Playlist(MediaPlayer *mediaPlayer, QWidget *parent = nullptr);
 
+	virtual ~Playlist();
+
 	inline MediaPlayer *mediaPlayer() const { return _mediaPlayer; }
 
 	inline MediaPlaylist *mediaPlaylist() const { return _playlistModel->mediaPlaylist(); }
