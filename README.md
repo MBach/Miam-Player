@@ -12,6 +12,7 @@ Miam-Player is a cross-platform open source music player
 * Read .mp3, .m4a (MP4), .flac, .ogg, .oga (OGG Vorbis), .asf, .ape (Monkey Audio), .opus and more!
 * Customize everything: User Interface, Covers, Shortcuts, Buttons, Themes
 * Read and edit metadata using [Taglib](http://taglib.github.io/)
+* A mini-mode which is a tribute to the good ol' Winamp _shade mode_: ![mini](http://www.miam-player.org/images/gallery/mini-mode.png)
 
 # Future work
 * Add [MPRIS](http://specifications.freedesktop.org/mpris-spec/latest/) implementation for Linux (Media Player Remote Interfacing Specification) to be able to control the player
@@ -24,7 +25,6 @@ Miam-Player is a cross-platform open source music player
 # Plugins
 A plugin system has been introduced to extend possibilites of the player. Five official plugins come with the installer for Windows:
 * Support thumbnails buttons to control the player, green progress bar when playing, overlay icon
-* A mini-mode which is a tribute to the good ol' Winamp _shade mode_: ![mini](http://www.miam-player.org/images/gallery/mini-mode.png)
 * Get missing covers by looking at [MusicBrainz'](https://musicbrainz.org/) repository
 * Shell explorer extension (up to 4 actions, like 'Send to current playlist')
 * Deezer plugin (technology preview): merge local and remote Artists / Albums: ![mini](http://miam-player.org/images/work-in-progress/deezer.png)
@@ -61,7 +61,7 @@ See the [wiki](http://www.miam-player.org/wiki/index.php?title=How-to-build-Miam
 
 ## Copyright info
 
-Copyright (C) 2012-2016 Matthieu Bachelier
+Copyright (C) 2012-2017 Matthieu Bachelier
 
 Miam-Player is free (libre) software. This means the complete player
 source code is available to public, anyone is welcome to research
