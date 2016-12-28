@@ -531,10 +531,6 @@
         <translation>Interpreten- und Albenlisten</translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="vanished">Cover anzeigen</translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation>Größe der Cover</translation>
     </message>
@@ -1164,6 +1160,17 @@
     </message>
     <message>
         <source>Current item in l&amp;oop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

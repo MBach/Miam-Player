@@ -5,7 +5,7 @@
 	<Description>Put a shortcut of Miam-Player in the Start Menu</Description>
 	<Description xml:lang="fr_fr">Placer un raccourci dans le Menu Démarrer</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2016-02-21</ReleaseDate>
+	<ReleaseDate>2016-12-28</ReleaseDate>
 	<Name>org.miamplayer.core.shortcuts.startmenu</Name>
 	<Default>script</Default>
 	<Script>installscript_shortcut_startmenu.js</Script>

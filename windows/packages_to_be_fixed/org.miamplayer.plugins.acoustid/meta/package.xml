@@ -4,7 +4,7 @@
 	<Description>This plugin is using AcoustID and Chromaprint projects to automatically find missing metadatas of your files (fingerprinting). This is a very powerful feature that will change how you manage tags in your library.</Description>
 	<Description xml:lang="fr_fr">Cette extension utilise les projets AcoustID et Chromaprint pour trouver automatiquement les métadonnées manquantes de vos fichiers (empreinte sonore). Cette une fonctionnalité très puissante qui va changer la façon dont vous gérez les tags de votre bibliothèque.</Description>
 	<Version>0.1</Version>
-	<ReleaseDate>2016-02-21</ReleaseDate>
+	<ReleaseDate>2016-12-28</ReleaseDate>
 	<Name>org.miamplayer.plugins.acoustid</Name>
 	<Default>false</Default>
 	<SortingPriority>14</SortingPriority>

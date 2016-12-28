@@ -11,5 +11,4 @@ SUBDIRS += \
 
 RESOURCES += \
     src/Player/mp.qrc \
-    src/Player/mp.qrc \
     src/TabPlaylists/mp.qrc

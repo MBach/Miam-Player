@@ -4,7 +4,7 @@
 	<Description>This C++ package is required for Miam-Player.</Description>
 	<Description xml:lang="fr_fr">Ce paquet C++ est obligatoire pour Miam-Player.</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2016-02-21</ReleaseDate>
+	<ReleaseDate>2016-12-28</ReleaseDate>
 	<Name>com.microsoft</Name>
 	<Default>script</Default>
 	<Script>installscript_vcredist.js</Script>

@@ -28,7 +28,9 @@ SOURCES += debug/logbrowser.cpp \
     tagbutton.cpp \
     taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
-    remotecontrol.cpp
+    remotecontrol.cpp \
+    minimodewidget.cpp \
+    minislider.cpp
 
 HEADERS += debug/logbrowser.h \
     debug/logbrowserdialog.h \
@@ -53,7 +55,9 @@ HEADERS += debug/logbrowser.h \
     tagbutton.h \
     taglineedit.h \
     tracksnotfoundmessagebox.h \
-    remotecontrol.h
+    remotecontrol.h \
+    minimodewidget.h \
+    minislider.h
 
 FORMS += customizeoptionsdialog.ui \
     customizetheme.ui \
@@ -62,10 +66,10 @@ FORMS += customizeoptionsdialog.ui \
     mainwindow.ui \
     quickstart.ui \
     tagconverter.ui \
-    tageditor.ui
+    tageditor.ui \
+    minimode.ui
 
 RESOURCES += player.qrc
-CONFIG += c++11
 win32 {
     OTHER_FILES += config/mp.rc
     RC_FILE += config/mp.rc
@@ -99,10 +103,10 @@ TRANSLATIONS = translations/player_ar.ts \
 CONFIG(debug, debug|release) {
     win32 {
 	LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
-	LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
-	LIBS += -L$$OUT_PWD/../Library/debug/ -lLibrary
-	LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lTabPlaylists
-	LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lUniqueLibrary
+        LIBS += -L$$OUT_PWD/../Core/debug/ -lmiam-core
+        LIBS += -L$$OUT_PWD/../Library/debug/ -lmiam-library
+        LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lmiam-tabplaylists
+        LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lmiam-uniquelibrary
 	QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
     }
     OBJECTS_DIR = debug/.obj
@@ -114,10 +118,10 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
     win32 {
 	LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
-	LIBS += -L$$OUT_PWD/../Core/release/ -lCore
-	LIBS += -L$$OUT_PWD/../Library/release/ -lLibrary
-	LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lTabPlaylists
-	LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lUniqueLibrary
+        LIBS += -L$$OUT_PWD/../Core/release/ -lmiam-core
+        LIBS += -L$$OUT_PWD/../Library/release/ -lmiam-library
+        LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lmiam-tabplaylists
+        LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lmiam-uniquelibrary
 	QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
     }
     OBJECTS_DIR = release/.obj

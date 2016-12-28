@@ -639,10 +639,6 @@
         <translation>Λίστες καλλιτεχνών και άλμπουμ</translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="vanished">Εμφάνιση εξωφύλλου</translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation>Μέγεθος εξωφύλλου</translation>
     </message>
@@ -1166,6 +1162,17 @@
             <numerusform>Μετακίνηση επιλεγμένων κομματίων &amp;κάτω</numerusform>
         </translation>
     </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>
@@ -1269,10 +1276,6 @@ The API has changed and you need to update these plugins too!</source>
     <message>
         <source>Disc</source>
         <translation>Δίσκος</translation>
-    </message>
-    <message>
-        <source>Artist Album</source>
-        <translation type="vanished">Καλλιτέχνης άλμπουμ</translation>
     </message>
     <message>
         <source>Title</source>

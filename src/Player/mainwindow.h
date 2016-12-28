@@ -8,6 +8,7 @@
 #include <qxt/qxtglobalshortcut.h>
 #include <abstractview.h>
 #include <mediaplayer.h>
+#include <minimodewidget.h>
 #include <uniquelibrary.h>
 
 #include "dialogs/customizeoptionsdialog.h"
@@ -32,11 +33,11 @@ private:
 	RemoteControl *_remoteControl;
 	AbstractView *_currentView;
 	TagEditor *_tagEditor;
+	MiniModeWidget *_mini;
 	QxtGlobalShortcut *_shortcutSkipBackward;
 	QxtGlobalShortcut *_shortcutStop;
 	QxtGlobalShortcut *_shortcutPlayPause;
 	QxtGlobalShortcut *_shortcutSkipForward;
-
 	QTranslator _translator;
 
 public:
@@ -59,6 +60,8 @@ public:
 
 	/** Update fonts for menu and context menus. */
 	void updateFonts(const QFont &font);
+
+	inline AbstractView* currentView() const { return _currentView; }
 
 protected:
 	/** Redefined to be able to retransltate User Interface at runtime. */
@@ -92,6 +95,8 @@ private slots:
 	void rescanLibrary();
 
 	void showTagEditor();
+
+	void switchToMiniPlayer();
 
 	void syncLibrary(const QStringList &oldLocations, const QStringList &newLocations);
 

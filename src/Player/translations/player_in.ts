@@ -1162,6 +1162,17 @@
         <source>Current item in l&amp;oop</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginManager</name>

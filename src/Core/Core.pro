@@ -12,14 +12,15 @@ DEFINES += MIAM_PLUGIN
 
 TEMPLATE = lib
 
+TARGET = miam-core
+
 win32 {
-    TARGET = Core
     CONFIG += dll
     CONFIG(debug, debug|release) {
-	LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -lQtAV1 -lUser32
+        LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag -lQtAV1 -lUser32
     }
     CONFIG(release, debug|release) {
-	LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -lQtAV1 -lUser32
+        LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag -lQtAV1 -lUser32
     }
 }
 
@@ -34,10 +35,7 @@ CONFIG(release, debug|release) {
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
 }
-CONFIG += c++11
-unix {
-    TARGET = miam-core
-}
+
 unix:!macx {
     QT += x11extras
     LIBS += -L$$OUT_PWD -L/usr/lib/x86_64-linux-gnu/ -ltag
@@ -58,6 +56,7 @@ macx {
 SOURCES += library/jumptowidget.cpp \
     mediabuttons/mediabutton.cpp \
     mediabuttons/playbackmodebutton.cpp \
+    mediabuttons/playbutton.cpp \
     mediabuttons/stopbutton.cpp \
     model/genericdao.cpp \
     model/playlistdao.cpp \
@@ -84,8 +83,7 @@ SOURCES += library/jumptowidget.cpp \
     settings.cpp \
     settingsprivate.cpp \
     starrating.cpp \
-    treeview.cpp \
-    mediabuttons/playbutton.cpp
+    treeview.cpp
 
 HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
@@ -110,6 +108,7 @@ HEADERS += interfaces/basicplugin.h \
     widgets/seekbar.h \
     widgets/timelabel.h \
     widgets/volumeslider.h \
+    abstractmediaplayercontrol.h \
     abstractsearchdialog.h \
     abstractview.h \
     cover.h \
@@ -128,8 +127,7 @@ HEADERS += interfaces/basicplugin.h \
     settings.h \
     settingsprivate.h \
     starrating.h \
-    treeview.h \
-    abstractmediaplayercontrol.h
+    treeview.h
 
 RESOURCES += core.qrc
 

@@ -531,10 +531,6 @@
         <translation>Liste des artistes et des albums</translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="vanished">Afficher les pochettes</translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation>Taille des prochettes</translation>
     </message>
@@ -1165,6 +1161,17 @@
     <message>
         <source>Current item in l&amp;oop</source>
         <translation>Une piste, toujours en bou&amp;cle</translation>
+    </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation>Activer le Mini-Player</translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
+        <translation>&lt;Aucune piste&gt;</translation>
     </message>
 </context>
 <context>

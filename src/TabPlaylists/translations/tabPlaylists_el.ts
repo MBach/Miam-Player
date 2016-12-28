@@ -127,9 +127,8 @@
     </message>
     <message>
         <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation>Αυτή η λίστα αναπαραγωγής είναι άδεια.
-Επέλεξε ή σύρε κομμάτια απο την βιβλιοθήκη ή απο εξωτερική τοποθεσία.</translation>
+Select or drop tracks and playlists from your library or any external location.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -266,10 +265,6 @@ Select a playlist to display the first 30 tracks.</source>
     <message>
         <source>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Search for more results...&lt;/a&gt;</source>
         <translation>&lt;a href=&apos;#more&apos; style=&apos;text-decoration: none; color:#3399FF;&apos;&gt;Αναζήτηση για περισσότερα αποτελέσματα...&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation type="vanished">Τα αποτελέσματα συγκεντρώνονται απο:</translation>
     </message>
     <message>
         <source>Library</source>

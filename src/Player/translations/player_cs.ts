@@ -531,10 +531,6 @@
         <translation>Seznamy umělců a alb</translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="vanished">Ukázat obaly</translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation>Velikost obalů</translation>
     </message>
@@ -1003,10 +999,6 @@
         <translation>Skočit &amp;vpřed</translation>
     </message>
     <message>
-        <source>&amp;Repeat</source>
-        <translation type="vanished">&amp;Opakovat</translation>
-    </message>
-    <message>
         <source>S&amp;huffle</source>
         <translation>Za&amp;míchat</translation>
     </message>
@@ -1041,10 +1033,6 @@
     <message>
         <source>&amp;Normal</source>
         <translation>&amp;Normální</translation>
-    </message>
-    <message>
-        <source>Current item in &amp;loop</source>
-        <translation type="vanished">Současnou položku pořád do&amp;kola</translation>
     </message>
     <message numerus="yes">
         <source>&amp;Remove selected tracks</source>
@@ -1176,6 +1164,17 @@
     <message>
         <source>Current item in l&amp;oop</source>
         <translation>Současnou položku pořád &amp;dokola</translation>
+    </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

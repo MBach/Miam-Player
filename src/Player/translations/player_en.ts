@@ -531,10 +531,6 @@
         <translation>Artist and albums lists</translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="vanished">Show covers</translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation>Size of covers</translation>
     </message>
@@ -1165,6 +1161,17 @@
     <message>
         <source>Current item in l&amp;oop</source>
         <translation>Current item in l&amp;oop</translation>
+    </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation>Switch to Mini-Player</translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
+        <translation>&lt;No track&gt;</translation>
     </message>
 </context>
 <context>

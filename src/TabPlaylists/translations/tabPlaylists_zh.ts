@@ -148,16 +148,15 @@
         <translation>内嵌</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="349"/>
+        <location filename="../playlist.cpp" line="357"/>
         <source>playlist</source>
         <translation>播放列表</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="467"/>
+        <location filename="../playlist.cpp" line="475"/>
         <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
-        <translation>该播放列表为空.
-从库或其他外表位置选择或拖放音频.</translation>
+Select or drop tracks and playlists from your library or any external location.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -213,35 +212,35 @@ Select or drop tracks from your library or any external location.</source>
         <translation>标题(艺术家 - 专辑)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="49"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="50"/>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>预览区域为空.
 选择一个播放列表以显示前30个音轨.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="199"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="244"/>
         <source>Export playlist</source>
         <translation>导出播放列表</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="244"/>
         <source>Playlist (*.m3u8)</source>
         <translation>播放列表(*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="297"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="347"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="296"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="346"/>
         <source>And more tracks...</source>
         <translation>更多音轨...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="392"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="391"/>
         <source>This playlist has changed</source>
         <translation>播放列表已改变</translation>
     </message>
@@ -288,14 +287,14 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistManager</name>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="197"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translation>
             <numerusform>你正要删除 %n 播放列表. 是否继续?</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../playlistmanager.cpp" line="60"/>
+        <location filename="../playlistmanager.cpp" line="106"/>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
         <translation>已存在相同的播放列表(%1), 无法再次添加.</translation>
     </message>
@@ -303,19 +302,19 @@ Select a playlist to display the first 30 tracks.</source>
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlistmodel.cpp" line="80"/>
+        <location filename="../playlistmodel.cpp" line="83"/>
         <source>You cannot modify remote medias</source>
         <translation>你午饭修改远程媒体</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="85"/>
-        <location filename="../playlistmodel.cpp" line="114"/>
+        <location filename="../playlistmodel.cpp" line="88"/>
+        <location filename="../playlistmodel.cpp" line="117"/>
         <source>Local</source>
         <translation>本地</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="87"/>
-        <location filename="../playlistmodel.cpp" line="116"/>
+        <location filename="../playlistmodel.cpp" line="90"/>
+        <location filename="../playlistmodel.cpp" line="119"/>
         <source>Local file</source>
         <translation>本地文件</translation>
     </message>
@@ -333,10 +332,6 @@ Select a playlist to display the first 30 tracks.</source>
         <location filename="../searchdialog.ui" line="414"/>
         <source>Results are regrouped from:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation type="vanished">结果总共:</translation>
     </message>
     <message>
         <location filename="../dialogs/searchdialog.cpp" line="22"/>
@@ -426,17 +421,17 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>音频文件</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="435"/>
+        <location filename="../viewplaylists.cpp" line="436"/>
         <source>Every file type (*)</source>
         <translation>所以文件类型 (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="437"/>
+        <location filename="../viewplaylists.cpp" line="438"/>
         <source>Choose some files to open</source>
         <translation>选择文件打开</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="462"/>
+        <location filename="../viewplaylists.cpp" line="477"/>
         <source>Choose a folder to open</source>
         <translation>选择文件夹打开</translation>
     </message>

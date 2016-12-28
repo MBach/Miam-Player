@@ -3,11 +3,11 @@
 rem core
 set MiamPlayerBuild="C:\dev\Miam-Player-build\src"
 mkdir packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\Core\release\Core.dll packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\Library\release\Library.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\Core\release\miam-core.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\Library\release\miam-library.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\Player\release\MiamPlayer.exe packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\TabPlaylists\release\TabPlaylists.dll packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\UniqueLibrary\release\UniqueLibrary.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\TabPlaylists\release\miam-tabplaylists.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\UniqueLibrary\release\miam-uniquelibrary.dll packages\org.miamplayer.core\data\
 
 rem 3rd party
 set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"
@@ -15,7 +15,7 @@ mkdir packages\org.qtav\data\
 copy %MiamPlayerLibs%\*.dll packages\org.qtav\data\
 
 rem qt libraries
-set QTDIR="C:\Qt\Qt5.7.1\5.7\msvc2015_64"
+set QTDIR="C:\Qt\Qt5.8.0\5.8\msvc2015_64"
 echo f | xcopy %QTDIR%\plugins\bearer\qgenericbearer.dll packages\org.miamplayer.core\data\bearer\qgenericbearer.dll /y/s
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\qtmedia_audioengine.dll packages\org.miamplayer.core\data\mediaservice\qtmedia_audioengine.dll /y/s
@@ -54,7 +54,6 @@ rem set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
 rem set CoverFetcherBuild="C:\dev\cover-fetcher-build\release"
 rem set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
 rem set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
-rem set MiniModeBuild="C:\dev\mini-mode-build\release"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 rem FIXME
@@ -64,7 +63,6 @@ rem copy %AcoustIDSRC%\chromaprint.dll packages\org.miamplayer.plugins.acoustid\
 rem xcopy %CoverFetcherBuild%\cover-fetcher.dll packages\org.miamplayer.plugins.coverfetcher\data\plugins\ /y/e
 rem xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 rem xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
-rem xcopy %MiniModeBuild%\mini-mode.dll packages\org.miamplayer.plugins.minimode\data\plugins\ /y/e
 xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
 
 rem Deezer talks to the Internet with QtWebKit
@@ -82,5 +80,4 @@ rem rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.coverfetcher\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
-rem rmdir packages\org.miamplayer.plugins.minimode\data\ /s /q
 rmdir packages\org.miamplayer.plugins.windowstoolbar\data\ /s /q

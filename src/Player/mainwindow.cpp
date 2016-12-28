@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 	, _remoteControl(nullptr)
 	, _currentView(nullptr)
 	, _tagEditor(nullptr)
+	, _mini(nullptr)
 	, _shortcutSkipBackward(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaPrevious), this))
 	, _shortcutStop(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaStop), this))
 	, _shortcutPlayPause(new QxtGlobalShortcut(QKeySequence(Qt::Key_MediaPlay), this))
@@ -184,6 +185,7 @@ void MainWindow::setupActions()
 	connect(viewModeGroup, &QActionGroup::triggered, this, &MainWindow::activateView);
 	actionViewPlaylists->setActionGroup(viewModeGroup);
 	actionViewUniqueLibrary->setActionGroup(viewModeGroup);
+	connect(actionMiniPlayer, &QAction::triggered, this, &MainWindow::switchToMiniPlayer);
 	connect(actionViewTagEditor, &QAction::triggered, this, &MainWindow::showTagEditor);
 
 	// Link user interface
@@ -770,6 +772,18 @@ void MainWindow::showTagEditor()
 			_tagEditor->deleteLater();
 			_tagEditor = nullptr;
 		}
+	}
+}
+
+void MainWindow::switchToMiniPlayer()
+{
+	if (_currentView) {
+		if (!_mini) {
+			_mini = new MiniModeWidget(this);
+			connect(_mini, &MiniModeWidget::destroyed, this, [=]() { _mini = nullptr; });
+		}
+		_mini->show();
+		this->hide();
 	}
 }
 

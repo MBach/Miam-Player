@@ -101,6 +101,7 @@
     <addaction name="actionViewPlaylists"/>
     <addaction name="actionViewUniqueLibrary"/>
     <addaction name="separator"/>
+    <addaction name="actionMiniPlayer"/>
     <addaction name="actionViewTagEditor"/>
    </widget>
    <addaction name="menuMenu"/>
@@ -397,6 +398,11 @@
    </property>
    <property name="text">
     <string>Hide menu bar</string>
+   </property>
+  </action>
+  <action name="actionMiniPlayer">
+   <property name="text">
+    <string>Switch to Mini-Player</string>
    </property>
   </action>
  </widget>

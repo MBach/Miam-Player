@@ -1,4 +1,4 @@
-QT += sql multimedia widgets
+QT      += sql multimedia widgets
 
 TEMPLATE = lib
 
@@ -39,31 +39,26 @@ HEADERS += albumitem.h \
     trackitem.h \
     yearitem.h
 
-FORMS += \
-    libraryorderdialog.ui
+FORMS += libraryorderdialog.ui
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore
+    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lmiam-core
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
     UI_DIR = $$PWD
 }
 
-CONFIG += c++11
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lCore
+    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lmiam-core
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
     UI_DIR = $$PWD
 }
-win32 {
-    TARGET = Library
-}
+TARGET = miam-library
 unix {
     LIBS += -L$$OUT_PWD/../Core/ -lmiam-core
-    TARGET = miam-library
 }
 unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/

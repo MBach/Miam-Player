@@ -5,7 +5,7 @@
 	<Description>This plugin adds a nice progress bar in the taskbar when playing music. There are also buttons in the thumbnails to control playback (play, stop, next, etc.).</Description>
 	<Description xml:lang="fr_fr">Cette extension ajoute une barre de progression lorsque de la musique est jouée. Dans la miniature se trouve aussi des boutons pour contrôler le lecteur (lecture, stop, suivant, etc.).</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2016-02-21</ReleaseDate>
+	<ReleaseDate>2016-12-28</ReleaseDate>
 	<Name>org.miamplayer.plugins.windowstoolbar</Name>
 	<Default>true</Default>
 	<SortingPriority>11</SortingPriority>

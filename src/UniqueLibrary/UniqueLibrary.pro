@@ -24,7 +24,7 @@ SOURCES += coveritem.cpp \
     uniquelibrarymediaplayercontrol.cpp
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lCore -L$$OUT_PWD/../Library/debug/ -lLibrary
+    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lmiam-core -L$$OUT_PWD/../Library/debug/ -lmiam-library
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -33,18 +33,17 @@ CONFIG(debug, debug|release) {
 
 CONFIG += c++11
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lCore -L$$OUT_PWD/../Library/release/ -lLibrary
+    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lmiam-core -L$$OUT_PWD/../Library/release/ -lmiam-library
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
     UI_DIR = $$PWD
 }
-win32 {
-    TARGET = UniqueLibrary
-}
+
+TARGET = miam-uniquelibrary
+
 unix {
     LIBS += -L$$OUT_PWD/../Core/ -lmiam-core -L$$OUT_PWD/../Library/ -lmiam-library
-    TARGET = miam-uniquelibrary
 }
 unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/

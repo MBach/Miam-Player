@@ -5,7 +5,7 @@
 	<Description>Plugins can greatly improve your experience of Miam-Player</Description>
 	<Description xml:lang="fr_fr">Les extensions peuvent grandement améliorer votre expérience de Miam-Player</Description>
 	<Version>1.0</Version>
-	<ReleaseDate>2016-02-21</ReleaseDate>
+	<ReleaseDate>2016-12-28</ReleaseDate>
 	<Name>org.miamplayer.plugins</Name>
 	<Default>true</Default>
 	<SortingPriority>98</SortingPriority>

@@ -148,16 +148,16 @@
         <translation>inline</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="349"/>
+        <location filename="../playlist.cpp" line="357"/>
         <source>playlist</source>
         <translation>playlist</translation>
     </message>
     <message>
-        <location filename="../playlist.cpp" line="467"/>
+        <location filename="../playlist.cpp" line="475"/>
         <source>This playlist is empty.
-Select or drop tracks from your library or any external location.</source>
+Select or drop tracks and playlists from your library or any external location.</source>
         <translation>This playlist is empty.
-Select or drop tracks from your library or any external location.</translation>
+Select or drop tracks and playlists from your library or any external location.</translation>
     </message>
 </context>
 <context>
@@ -213,35 +213,35 @@ Select or drop tracks from your library or any external location.</translation>
         <translation>Title (Artist - Album)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="49"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="50"/>
         <source>This preview area is empty.
 Select a playlist to display the first 30 tracks.</source>
         <translation>This preview area is empty.
 Select a playlist to display the first 30 tracks.</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="199"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
         <source>Warning</source>
         <translation>Warning</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="244"/>
         <source>Export playlist</source>
         <translation>Export playlist</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="245"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="244"/>
         <source>Playlist (*.m3u8)</source>
         <translation>Playlist (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="297"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="347"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="296"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="346"/>
         <source>And more tracks...</source>
         <translation>And more tracks...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="392"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="391"/>
         <source>This playlist has changed</source>
         <translation>This playlist has changed</translation>
     </message>
@@ -288,7 +288,7 @@ Select a playlist to display the first 30 tracks.</translation>
 <context>
     <name>PlaylistManager</name>
     <message numerus="yes">
-        <location filename="../dialogs/playlistdialog.cpp" line="198"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="197"/>
         <source>You&apos;re about to delete %n playlist. Are you sure you want to continue?</source>
         <translatorcomment>How many playlists does one want to remove?</translatorcomment>
         <translation>
@@ -297,7 +297,7 @@ Select a playlist to display the first 30 tracks.</translation>
         </translation>
     </message>
     <message>
-        <location filename="../playlistmanager.cpp" line="60"/>
+        <location filename="../playlistmanager.cpp" line="106"/>
         <source>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</source>
         <translation>There is exactly the same playlist in the Playlist Manager (known as &apos;%1&apos;), therefore it&apos;s not possible to add it twice.</translation>
     </message>
@@ -305,29 +305,25 @@ Select a playlist to display the first 30 tracks.</translation>
 <context>
     <name>PlaylistModel</name>
     <message>
-        <location filename="../playlistmodel.cpp" line="80"/>
+        <location filename="../playlistmodel.cpp" line="83"/>
         <source>You cannot modify remote medias</source>
         <translation>You cannot modify remote medias</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="85"/>
-        <location filename="../playlistmodel.cpp" line="114"/>
+        <location filename="../playlistmodel.cpp" line="88"/>
+        <location filename="../playlistmodel.cpp" line="117"/>
         <source>Local</source>
         <translation>Local</translation>
     </message>
     <message>
-        <location filename="../playlistmodel.cpp" line="87"/>
-        <location filename="../playlistmodel.cpp" line="116"/>
+        <location filename="../playlistmodel.cpp" line="90"/>
+        <location filename="../playlistmodel.cpp" line="119"/>
         <source>Local file</source>
         <translation>Local file</translation>
     </message>
 </context>
 <context>
     <name>SearchDialog</name>
-    <message>
-        <source>Results are aggregated from:</source>
-        <translation type="vanished">Results are aggregated from:</translation>
-    </message>
     <message>
         <location filename="../dialogs/searchdialog.cpp" line="22"/>
         <source>Library</source>
@@ -428,17 +424,17 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>Audio files</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="435"/>
+        <location filename="../viewplaylists.cpp" line="436"/>
         <source>Every file type (*)</source>
         <translation>Every file type (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="437"/>
+        <location filename="../viewplaylists.cpp" line="438"/>
         <source>Choose some files to open</source>
         <translation>Choose some files to open</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="462"/>
+        <location filename="../viewplaylists.cpp" line="477"/>
         <source>Choose a folder to open</source>
         <translation>Choose a folder to open</translation>
     </message>

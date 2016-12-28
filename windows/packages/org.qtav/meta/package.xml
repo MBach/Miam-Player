@@ -3,8 +3,8 @@
 	<DisplayName>QtAv</DisplayName>
 	<Description>QtAv is a multimedia playback framework based on Qt + FFmpeg.</Description>
 	<Description xml:lang="fr_fr">QtAv est un framework multimédia de lecture audio (et vidéo) basé sur Qt + FFmpeg.</Description>
-	<Version>1.9.0</Version>
-	<ReleaseDate>2016-02-21</ReleaseDate>
+	<Version>1.11.0</Version>
+	<ReleaseDate>2016-12-28</ReleaseDate>
 	<Name>org.qtav</Name>
 	<Licenses>
 		<License name="LGPL v2.1" file="lgpl-2.1.txt" />

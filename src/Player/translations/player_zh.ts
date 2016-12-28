@@ -531,10 +531,6 @@
         <translation>艺术家和专辑列表</translation>
     </message>
     <message>
-        <source>Show covers</source>
-        <translation type="vanished">显示封面</translation>
-    </message>
-    <message>
         <source>Size of covers</source>
         <translation>封面大小</translation>
     </message>
@@ -1162,6 +1158,17 @@
     <message>
         <source>Current item in l&amp;oop</source>
         <translation>重复当前(&amp;o)</translation>
+    </message>
+    <message>
+        <source>Switch to Mini-Player</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MiniMode</name>
+    <message>
+        <source>&lt;No track&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
