@@ -3,7 +3,10 @@
 #include <QFileInfo>
 #include <QRadioButton>
 
+#include "filehelper.h"
 #include "settingsprivate.h"
+
+#include <QtDebug>
 
 DragDropDialog::DragDropDialog(QWidget *parent) :
 	QDialog(parent)
@@ -19,6 +22,8 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 {
 	externalLocations.clear();
+	playlistLocations.clear();
+
 	if (!mimeData->hasUrls()) {
 		return false;
 	}
@@ -29,9 +34,8 @@ bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 	int maxDisplayedInLabel = 3;
 
 	labelHowToProceed->setText(_originalLabel);
-
-	for (int i = 0; i < urlList.size(); i++) {
-		QFileInfo fileInfo = urlList.at(i).toLocalFile();
+	for (QUrl url : urlList) {
+		QFileInfo fileInfo = url.toLocalFile();
 		if (fileInfo.isDir()) {
 			// Builds the label as a concatenation of folders' name
 			if (folders < maxDisplayedInLabel) {
@@ -40,9 +44,12 @@ bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 			}
 			externalLocations.append(fileInfo.absoluteFilePath());
 			onlyFiles = false;
-		} else if (fileInfo.isFile()){
-			externalLocations.append(fileInfo.absoluteFilePath());
-			onlyFiles = onlyFiles && true;
+		} else if (fileInfo.isFile()) {
+			if (FileHelper::suffixes(FileHelper::ET_Playlist).contains(fileInfo.suffix())) {
+				playlistLocations.append(fileInfo.absoluteFilePath());
+			} else {
+				externalLocations.append(fileInfo.absoluteFilePath());
+			}
 		}
 	}
 	if (newLabel.length() > 2) {

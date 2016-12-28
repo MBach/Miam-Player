@@ -144,7 +144,7 @@ bool FileHelper::init(const QString &filePath)
 		_fileType = EXT_UNKNOWN;
 	}
 	if (_file != nullptr) {
-		_isValid = true;
+		_isValid = _fileInfo.exists();
 		return true;
 	} else {
 		delete _file;
@@ -166,6 +166,7 @@ const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
 {
 	static QStringList standardSuffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg" << "opus";
 	static QStringList gameMusicEmuSuffixes = QStringList() << "ay" << "gbs" << "gym" << "hes" << "kss" << "nsf" << "nsfe" << "sap" << "spc" << "vgm" << "vgz";
+	static QStringList playlistSuffixes = QStringList() << "m3u" << "m3u8" << "xspf";
 	QStringList filters;
 	if (et & ET_Standard) {
 		if (withPrefix) {
@@ -183,6 +184,15 @@ const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
 			}
 		} else {
 			filters.append(gameMusicEmuSuffixes);
+		}
+	}
+	if (et & ET_Playlist) {
+		if (withPrefix) {
+			for (QString filter : playlistSuffixes) {
+				filters.append("*." + filter);
+			}
+		} else {
+			filters.append(playlistSuffixes);
 		}
 	}
 	return filters;

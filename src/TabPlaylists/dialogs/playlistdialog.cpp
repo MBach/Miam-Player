@@ -10,6 +10,7 @@
 
 #include <QDirIterator>
 #include <QFileDialog>
+#include <QLineEdit>
 #include <QRegularExpression>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -104,8 +105,6 @@ PlaylistDialog::PlaylistDialog(QWidget *parent)
 
 	connect(exportPlaylists, &QPushButton::clicked, this, &PlaylistDialog::exportSelectedPlaylist);
 }
-
-#include <QLineEdit>
 
 /** Add drag & drop processing. */
 bool PlaylistDialog::eventFilter(QObject *obj, QEvent *event)

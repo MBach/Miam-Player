@@ -430,8 +430,9 @@ void ViewPlaylists::openFiles()
 		lastOpenedLocation = settings->value("lastOpenedLocation").toString();
 	}
 
-	audioFiles.append(" (" + FileHelper::suffixes(FileHelper::ET_Standard, true).join(" ") + ")");
-	audioFiles.append(";;Game Music Emu (" + FileHelper::suffixes(FileHelper::ET_GameMusicEmu, true).join(" ") + ");;");
+	audioFiles.append(" (" + FileHelper::suffixes(FileHelper::ET_Standard, true).join(" ") + ");;");
+	audioFiles.append("Game Music Emu (" + FileHelper::suffixes(FileHelper::ET_GameMusicEmu, true).join(" ") + ");;");
+	audioFiles.append("Playlists (" + FileHelper::suffixes(FileHelper::ET_Playlist, true).join(" ") + ");;");
 	audioFiles.append(tr("Every file type (*)"));
 
 	QStringList files = QFileDialog::getOpenFileNames(this, tr("Choose some files to open"), lastOpenedLocation,
@@ -442,10 +443,24 @@ void ViewPlaylists::openFiles()
 		QFileInfo fileInfo(files.first());
 		settings->setValue("lastOpenedLocation", fileInfo.absolutePath());
 		QList<QUrl> tracks;
+		QStringList playlists;
 		for (QString file : files) {
-			tracks << QUrl::fromLocalFile(file);
+
+			QFileInfo fi(file);
+			if (FileHelper::suffixes(FileHelper::ET_Playlist).contains(fi.suffix())) {
+				playlists << file;
+			} else {
+				tracks << QUrl::fromLocalFile(file);
+			}
 		}
-		tabPlaylists->insertItemsToPlaylist(-1, tracks);
+		if (!tracks.isEmpty()) {
+			tabPlaylists->insertItemsToPlaylist(-1, tracks);
+		}
+		// Open every playlist file in new tab
+		if (!playlists.isEmpty()) {
+			this->openPlaylists(playlists);
+
+		}
 	}
 }
 
@@ -477,6 +492,22 @@ void ViewPlaylists::openPlaylistManager()
 	connect(playlistDialog, &PlaylistDialog::aboutToRenameTab, tabPlaylists, &TabPlaylist::renameTab);
 	connect(playlistDialog, &PlaylistDialog::aboutToSavePlaylist, tabPlaylists, &TabPlaylist::savePlaylist);
 	playlistDialog->exec();
+}
+
+void ViewPlaylists::openPlaylists(const QStringList &playlists)
+{
+	for (QString playlistFile : playlists) {
+		QFileInfo fi(playlistFile);
+		Playlist *p = nullptr;
+		if (tabPlaylists->currentPlayList()->mediaPlaylist()->isEmpty()) {
+			p = tabPlaylists->currentPlayList();
+		} else {
+			p = tabPlaylists->addPlaylist();
+		}
+		if (tabPlaylists->playlistManager()->loadPlaylist(p, fi)) {
+			tabPlaylists->renamePlaylist(p);
+		}
+	}
 }
 
 void ViewPlaylists::removeCurrentPlaylist()

@@ -85,6 +85,9 @@ public slots:
 	virtual void openPlaylistManager() override;
 
 	/** Redefined from AbstractViewPlaylists. */
+	virtual void openPlaylists(const QStringList &playlists) override;
+
+	/** Redefined from AbstractViewPlaylists. */
 	virtual void removeCurrentPlaylist() override;
 
 	/** Redefined from AbstractViewPlaylists. */

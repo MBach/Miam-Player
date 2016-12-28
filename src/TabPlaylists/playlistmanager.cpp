@@ -5,11 +5,57 @@
 #include <settingsprivate.h>
 #include "playlist.h"
 #include "tabplaylist.h"
+#include <QXmlStreamReader>
 
 PlaylistManager::PlaylistManager(TabPlaylist *parent)
 	: QObject(parent)
 	, _tabPlaylists(parent)
 {}
+
+bool PlaylistManager::loadPlaylist(Playlist *p, const QFileInfo &fileInfo)
+{
+	QList<QMediaContent> tracks;
+
+	QFile file(fileInfo.absoluteFilePath());
+	file.open(QFile::ReadOnly);
+
+	// M3U or M3U8 file format
+	if (fileInfo.suffix().startsWith("m3u")) {
+		QTextStream in(&file);
+		while (!in.atEnd()) {
+			QString line = in.readLine();
+			tracks << QMediaContent(QUrl(line));
+		}
+		if (!tracks.isEmpty()) {
+			p->mediaPlaylist()->setTitle(fileInfo.baseName());
+		}
+	} else {
+		// XSPF file format
+		QXmlStreamReader xml(file.readAll());
+		QString title;
+		while (!xml.atEnd() && !xml.hasError()) {
+			xml.readNext();
+			if (xml.tokenType() == QXmlStreamReader::StartElement) {
+				if (xml.name() == "title" && title.isEmpty()) {
+					title = xml.readElementText();
+				} else if (xml.name() == "location") {
+					tracks << QMediaContent(QUrl(xml.readElementText()));
+				}
+			}
+		}
+		if (!tracks.isEmpty()) {
+			if (title.isEmpty()) {
+				p->mediaPlaylist()->setTitle(fileInfo.baseName());
+			} else {
+				p->mediaPlaylist()->setTitle(title);
+			}
+		}
+	}
+	file.close();
+
+	p->insertMedias(-1, tracks);
+	return !tracks.isEmpty();
+}
 
 bool PlaylistManager::deletePlaylist(uint playlistId)
 {

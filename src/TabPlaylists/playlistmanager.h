@@ -2,6 +2,7 @@
 #define PLAYLISTMANAGER_H
 
 #include <QObject>
+#include <QFileInfo>
 #include "miamtabplaylists_global.hpp"
 
 /// Forward declarations
@@ -21,6 +22,8 @@ private:
 
 public:
 	explicit PlaylistManager(TabPlaylist *parent);
+
+	bool loadPlaylist(Playlist *p, const QFileInfo &fileInfo);
 
 public slots:
 	bool deletePlaylist(uint playlistId);

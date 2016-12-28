@@ -472,7 +472,7 @@ void Playlist::paintEvent(QPaintEvent *event)
 		source.translate(vp.width() / 2 - source.width() / 2,
 						 vp.height() / 2 - source.height() / 2);
 
-		p.drawText(source, tr("This playlist is empty.\nSelect or drop tracks from your library or any external location."), to);
+		p.drawText(source, tr("This playlist is empty.\nSelect or drop tracks and playlists from your library or any external location."), to);
 
 		if (this->property("dragFromTreeview").toBool()) {
 			p.setPen(QApplication::palette().highlight().color());

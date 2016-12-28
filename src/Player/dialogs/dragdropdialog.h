@@ -24,6 +24,7 @@ private:
 
 public:
 	QStringList externalLocations;
+	QStringList playlistLocations;
 
 	explicit DragDropDialog(QWidget *parent = nullptr);
 

@@ -56,9 +56,10 @@ public:
 	};
 
 	enum ExtensionType {
-		ET_Standard		= 0x1,
-		ET_GameMusicEmu	= 0x2,
-		ET_All			= ET_Standard | ET_GameMusicEmu
+		ET_Standard		= 1,
+		ET_GameMusicEmu	= 2,
+		ET_Playlist		= 4,
+		ET_All			= ET_Standard | ET_GameMusicEmu | ET_Playlist
 	};
 
 	enum TagKey {

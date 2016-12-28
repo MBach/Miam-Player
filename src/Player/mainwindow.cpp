@@ -124,6 +124,9 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 		}
 		if (viewPlaylists) {
 			viewPlaylists->addToPlaylist(urls);
+			if (!dragDropDialog.playlistLocations.isEmpty()) {
+				viewPlaylists->openPlaylists(dragDropDialog.playlistLocations);
+			}
 		}
 	} else {
 		QList<QDir> dirs;

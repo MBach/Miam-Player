@@ -46,6 +46,8 @@ public slots:
 
 	virtual void openPlaylistManager() = 0;
 
+	virtual void openPlaylists(const QStringList &playlists) = 0;
+
 	virtual void removeCurrentPlaylist() = 0;
 
 	virtual void removeSelectedTracks() = 0;
