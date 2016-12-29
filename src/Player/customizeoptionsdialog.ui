@@ -1733,7 +1733,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/sequential</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/sequential</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -1892,7 +1892,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/stop</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/stop</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -1929,7 +1929,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/play</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/play</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2049,7 +2049,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/skipBackward</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/skipBackward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2106,7 +2106,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/seekBackward</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/seekBackward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2412,7 +2412,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/itemOnce</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/itemOnce</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2462,7 +2462,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/repeat</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/repeat</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2499,7 +2499,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/shuffle</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/shuffle</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2536,7 +2536,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/itemLoop</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/itemLoop</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2835,7 +2835,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/skipForward</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/skipForward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -2986,7 +2986,7 @@
               <string notr="true"/>
              </property>
              <property name="pixmap">
-              <pixmap resource="../Core/core.qrc">:/player/oxygen/seekForward</pixmap>
+              <pixmap resource="../core/core.qrc">:/player/oxygen/seekForward</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -4523,7 +4523,7 @@
  </customwidgets>
  <resources>
   <include location="player.qrc"/>
-  <include location="../Core/core.qrc"/>
+  <include location="../core/core.qrc"/>
  </resources>
  <connections>
   <connection>

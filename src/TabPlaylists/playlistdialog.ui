@@ -14,7 +14,7 @@
    <string>Playlist Manager</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../Core/core.qrc">
+   <iconset resource="../core/core.qrc">
     <normaloff>:/icons/mp_win32</normaloff>:/icons/mp_win32</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -205,7 +205,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../Core/core.qrc"/>
+  <include location="../core/core.qrc"/>
  </resources>
  <connections/>
 </ui>

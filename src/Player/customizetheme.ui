@@ -167,7 +167,7 @@
               <string notr="true">Oxygen</string>
              </property>
              <property name="icon">
-              <iconset theme="oxygen" resource="../Core/core.qrc">
+              <iconset theme="oxygen" resource="../core/core.qrc">
                <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
              </property>
             </item>
@@ -176,7 +176,7 @@
               <string notr="true">Flat</string>
              </property>
              <property name="icon">
-              <iconset resource="../Core/core.qrc">
+              <iconset resource="../core/core.qrc">
                <normaloff>:/player/flat/play</normaloff>:/player/flat/play</iconset>
              </property>
             </item>
@@ -185,7 +185,7 @@
               <string notr="true">Fairytale</string>
              </property>
              <property name="icon">
-              <iconset theme="fairytale" resource="../Core/core.qrc">
+              <iconset theme="fairytale" resource="../core/core.qrc">
                <normaloff>:/player/fairytale/play</normaloff>:/player/fairytale/play</iconset>
              </property>
             </item>
@@ -194,7 +194,7 @@
               <string notr="true">Gnome</string>
              </property>
              <property name="icon">
-              <iconset theme="gnome" resource="../Core/core.qrc">
+              <iconset theme="gnome" resource="../core/core.qrc">
                <normaloff>:/player/gnome/play</normaloff>:/player/gnome/play</iconset>
              </property>
             </item>
@@ -203,7 +203,7 @@
               <string notr="true">Nuvola</string>
              </property>
              <property name="icon">
-              <iconset theme="nuvola" resource="../Core/core.qrc">
+              <iconset theme="nuvola" resource="../core/core.qrc">
                <normaloff>:/player/nuvola/play</normaloff>:/player/nuvola/play</iconset>
              </property>
             </item>
@@ -212,7 +212,7 @@
               <string notr="true">Tango</string>
              </property>
              <property name="icon">
-              <iconset theme="tango" resource="../Core/core.qrc">
+              <iconset theme="tango" resource="../core/core.qrc">
                <normaloff>:/player/tango/play</normaloff>:/player/tango/play</iconset>
              </property>
             </item>
@@ -221,7 +221,7 @@
               <string notr="true">Orange white pearls</string>
              </property>
              <property name="icon">
-              <iconset resource="../Core/core.qrc">
+              <iconset resource="../core/core.qrc">
                <normaloff>:/player/orangewhitepearls/play</normaloff>:/player/orangewhitepearls/play</iconset>
              </property>
             </item>
@@ -337,7 +337,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
                   </property>
                   <property name="iconSize">
@@ -396,7 +396,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
                   </property>
                   <property name="iconSize">
@@ -423,7 +423,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
                   </property>
                   <property name="iconSize">
@@ -450,7 +450,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
                   </property>
                   <property name="iconSize">
@@ -519,7 +519,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
                   </property>
                   <property name="iconSize">
@@ -604,7 +604,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
                   </property>
                   <property name="iconSize">
@@ -627,7 +627,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/pause</normaloff>:/player/oxygen/pause</iconset>
                   </property>
                   <property name="iconSize">
@@ -667,7 +667,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
                   </property>
                   <property name="iconSize">
@@ -707,7 +707,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/repeat</normaloff>:/player/oxygen/repeat</iconset>
                   </property>
                   <property name="iconSize">
@@ -750,7 +750,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/shuffle</normaloff>:/player/oxygen/shuffle</iconset>
                   </property>
                   <property name="iconSize">
@@ -777,7 +777,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/itemOnce</normaloff>:/player/oxygen/itemOnce</iconset>
                   </property>
                   <property name="iconSize">
@@ -897,7 +897,7 @@
                    <string notr="true"/>
                   </property>
                   <property name="icon">
-                   <iconset resource="../Core/core.qrc">
+                   <iconset resource="../core/core.qrc">
                     <normaloff>:/player/oxygen/itemLoop</normaloff>:/player/oxygen/itemLoop</iconset>
                   </property>
                   <property name="iconSize">
@@ -2291,7 +2291,7 @@
   <tabstop>overlapTabsSpinBox</tabstop>
  </tabstops>
  <resources>
-  <include location="../Core/core.qrc"/>
+  <include location="../core/core.qrc"/>
   <include location="player.qrc"/>
  </resources>
  <connections>

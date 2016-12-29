@@ -103,11 +103,11 @@ TRANSLATIONS = translations/player_ar.ts \
 CONFIG(debug, debug|release) {
     win32 {
 	LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
-        LIBS += -L$$OUT_PWD/../Core/debug/ -lmiam-core
-        LIBS += -L$$OUT_PWD/../Library/debug/ -lmiam-library
-        LIBS += -L$$OUT_PWD/../TabPlaylists/debug/ -lmiam-tabplaylists
-        LIBS += -L$$OUT_PWD/../UniqueLibrary/debug/ -lmiam-uniquelibrary
-	QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/debug/)
+        LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core
+        LIBS += -L$$OUT_PWD/../library/debug/ -lmiam-library
+        LIBS += -L$$OUT_PWD/../tabplaylists/debug/ -lmiam-tabplaylists
+        LIBS += -L$$OUT_PWD/../uniquelibrary/debug/ -lmiam-uniquelibrary
+        QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../core/mp.ico) $$shell_path($$OUT_PWD/debug/)
     }
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
@@ -118,11 +118,11 @@ CONFIG(debug, debug|release) {
 CONFIG(release, debug|release) {
     win32 {
 	LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
-        LIBS += -L$$OUT_PWD/../Core/release/ -lmiam-core
-        LIBS += -L$$OUT_PWD/../Library/release/ -lmiam-library
-        LIBS += -L$$OUT_PWD/../TabPlaylists/release/ -lmiam-tabplaylists
-        LIBS += -L$$OUT_PWD/../UniqueLibrary/release/ -lmiam-uniquelibrary
-	QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../Core/mp.ico) $$shell_path($$OUT_PWD/release/)
+        LIBS += -L$$OUT_PWD/../core/release/ -lmiam-core
+        LIBS += -L$$OUT_PWD/../library/release/ -lmiam-library
+        LIBS += -L$$OUT_PWD/../tabplaylists/release/ -lmiam-tabplaylists
+        LIBS += -L$$OUT_PWD/../uniquelibrary/release/ -lmiam-uniquelibrary
+        QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../core/mp.ico) $$shell_path($$OUT_PWD/release/)
     }
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
@@ -130,12 +130,12 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix {
-    LIBS += -L$$OUT_PWD/../Library/ -lmiam-library
-    LIBS += -L$$OUT_PWD/../TabPlaylists/ -lmiam-tabplaylists
-    LIBS += -L$$OUT_PWD/../UniqueLibrary/ -lmiam-uniquelibrary
+    LIBS += -L$$OUT_PWD/../library/ -lmiam-library
+    LIBS += -L$$OUT_PWD/../tabplaylists/ -lmiam-tabplaylists
+    LIBS += -L$$OUT_PWD/../uniquelibrary/ -lmiam-uniquelibrary
 }
 unix:!macx {
-    LIBS += -ltag -L$$OUT_PWD/../Core/ -lmiam-core
+    LIBS += -ltag -L$$OUT_PWD/../core/ -lmiam-core
     target.path = /usr/bin
     desktop.path = /usr/share/applications
     desktop.files = $$PWD/../../debian/usr/share/applications/miam-player.desktop
@@ -149,7 +149,7 @@ unix:!macx {
 	appdata
 }
 macx {
-    LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../Core/ -lmiam-core
+    LIBS += -L$$PWD/../../lib/osx/ -ltag -L$$OUT_PWD/../core/ -lmiam-core
     ICON = $$PWD/../../osx/MiamPlayer.icns
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     #1 create Framework and PlugIns directories
@@ -158,24 +158,24 @@ macx {
     QMAKE_POST_LINK += $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_MKDIR} $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/PlugIns/) && \
      $${QMAKE_COPY} $$shell_path($$PWD/../../lib/osx/libtag.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../Core/libmiam-core.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../Library/libmiam-library.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../TabPlaylists/libmiam-tabplaylists.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../UniqueLibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../core/libmiam-core.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../library/libmiam-library.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../tabplaylists/libmiam-tabplaylists.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../uniquelibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
 }
 
-3rdpartyDir  = $$PWD/../Core/3rdparty
+3rdpartyDir  = $$PWD/../core/3rdparty
 INCLUDEPATH += $$3rdpartyDir
 DEPENDPATH += $$3rdpartyDir
 
 INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views $$PWD/views/tageditor
-INCLUDEPATH += $$PWD/../Core
-INCLUDEPATH += $$PWD/../Library
-INCLUDEPATH += $$PWD/../TabPlaylists
-INCLUDEPATH += $$PWD/../UniqueLibrary
+INCLUDEPATH += $$PWD/../core
+INCLUDEPATH += $$PWD/../library
+INCLUDEPATH += $$PWD/../tabplaylists
+INCLUDEPATH += $$PWD/../uniquelibrary
 
 DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views $$PWD/views/tageditor
-DEPENDPATH += $$PWD/../Core
-DEPENDPATH += $$PWD/../Library
-DEPENDPATH += $$PWD/../TabPlaylists
-DEPENDPATH += $$PWD/../UniqueLibrary
+DEPENDPATH += $$PWD/../core
+DEPENDPATH += $$PWD/../library
+DEPENDPATH += $$PWD/../tabplaylists
+DEPENDPATH += $$PWD/../uniquelibrary

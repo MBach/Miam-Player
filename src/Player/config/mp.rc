@@ -1,8 +1,8 @@
-IDI_ICON1			    ICON	DISCARDABLE     "../../Core/mp.ico"
+IDI_ICON1			    ICON	DISCARDABLE     "../../core/mp.ico"
 // Executable version information.
 1 VERSIONINFO
  FILEVERSION 1,0,0,0
- PRODUCTVERSION 0,8,1,20160810
+ PRODUCTVERSION 0,8,1,20161229
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -20,10 +20,10 @@ BEGIN
 	    VALUE "CompanyName", "Matthieu BACHELIER"
 	    VALUE "FileDescription", "MiamPlayer"
 	    VALUE "InternalName", "MiamPlayer"
-	    VALUE "LegalCopyright", "Copyleft 2016 Matthieu BACHELIER"
+            VALUE "LegalCopyright", "Copyleft 2017 Matthieu BACHELIER"
 	    VALUE "OriginalFilename", "MiamPlayer.exe"
 	    VALUE "ProductName", "MiamPlayer"
-            VALUE "ProductVersion", "0.8.1.20160810"
+            VALUE "ProductVersion", "0.8.1.20161229"
 	END
     END
     BLOCK "VarFileInfo"

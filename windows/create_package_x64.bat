@@ -3,11 +3,11 @@
 rem core
 set MiamPlayerBuild="C:\dev\Miam-Player-build\src"
 mkdir packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\Core\release\miam-core.dll packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\Library\release\miam-library.dll packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\Player\release\MiamPlayer.exe packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\TabPlaylists\release\miam-tabplaylists.dll packages\org.miamplayer.core\data\
-copy %MiamPlayerBuild%\UniqueLibrary\release\miam-uniquelibrary.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\core\release\miam-core.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\library\release\miam-library.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\player\release\MiamPlayer.exe packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\tabplaylists\release\miam-tabplaylists.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\uniquelibrary\release\miam-uniquelibrary.dll packages\org.miamplayer.core\data\
 
 rem 3rd party
 set MiamPlayerLibs="C:\dev\Miam-Player\lib\release\win-x64"

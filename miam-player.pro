@@ -3,12 +3,12 @@ TEMPLATE = subdirs
 CONFIG += ordered warn_on qt debug_and_release
 
 SUBDIRS += \
-    src/Core \
-    src/Library \
-    src/TabPlaylists \
-    src/UniqueLibrary \
-    src/Player
+    src/core \
+    src/library \
+    src/tabplaylists \
+    src/uniquelibrary \
+    src/player
 
 RESOURCES += \
-    src/Player/mp.qrc \
-    src/TabPlaylists/mp.qrc
+    src/player/mp.qrc \
+    src/tabplaylists/mp.qrc

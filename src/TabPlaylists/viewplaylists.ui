@@ -323,7 +323,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/skipBackward</normaloff>:/player/oxygen/skipBackward</iconset>
            </property>
            <property name="iconSize">
@@ -349,7 +349,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/seekBackward</normaloff>:/player/oxygen/seekBackward</iconset>
            </property>
            <property name="iconSize">
@@ -375,7 +375,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/play</normaloff>:/player/oxygen/play</iconset>
            </property>
            <property name="iconSize">
@@ -401,7 +401,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/stop</normaloff>:/player/oxygen/stop</iconset>
            </property>
            <property name="iconSize">
@@ -427,7 +427,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/seekForward</normaloff>:/player/oxygen/seekForward</iconset>
            </property>
            <property name="iconSize">
@@ -453,7 +453,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/skipForward</normaloff>:/player/oxygen/skipForward</iconset>
            </property>
            <property name="iconSize">
@@ -479,7 +479,7 @@
             <string notr="true"/>
            </property>
            <property name="icon">
-            <iconset resource="../Core/core.qrc">
+            <iconset resource="../core/core.qrc">
              <normaloff>:/player/oxygen/sequential</normaloff>:/player/oxygen/sequential</iconset>
            </property>
            <property name="iconSize">
@@ -614,7 +614,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../Core/core.qrc"/>
+  <include location="../core/core.qrc"/>
   <include location="../Player/player.qrc"/>
  </resources>
  <connections/>

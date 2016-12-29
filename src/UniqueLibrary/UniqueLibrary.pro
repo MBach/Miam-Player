@@ -24,7 +24,7 @@ SOURCES += coveritem.cpp \
     uniquelibrarymediaplayercontrol.cpp
 
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/debug/ -lmiam-core -L$$OUT_PWD/../Library/debug/ -lmiam-library
+    win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -L$$OUT_PWD/../library/debug/ -lmiam-library
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -33,7 +33,7 @@ CONFIG(debug, debug|release) {
 
 CONFIG += c++11
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../Core/release/ -lmiam-core -L$$OUT_PWD/../Library/release/ -lmiam-library
+    win32: LIBS += -L$$OUT_PWD/../core/release/ -lmiam-core -L$$OUT_PWD/../library/release/ -lmiam-library
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
@@ -43,7 +43,7 @@ CONFIG(release, debug|release) {
 TARGET = miam-uniquelibrary
 
 unix {
-    LIBS += -L$$OUT_PWD/../Core/ -lmiam-core -L$$OUT_PWD/../Library/ -lmiam-library
+    LIBS += -L$$OUT_PWD/../core/ -lmiam-core -L$$OUT_PWD/../library/ -lmiam-library
 }
 unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/
@@ -54,24 +54,24 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
-INCLUDEPATH += $$PWD/../Core/ $$PWD/../Library/
-DEPENDPATH += $$PWD/../Core $$PWD/../Library/
+INCLUDEPATH += $$PWD/../core/ $$PWD/../library/
+DEPENDPATH += $$PWD/../core $$PWD/../library/
 
-RESOURCES += uniqueLibrary.qrc
+RESOURCES += uniquelibrary.qrc
 
-TRANSLATIONS = translations/uniqueLibrary_ar.ts \
-    translations/uniqueLibrary_cs.ts \
-    translations/uniqueLibrary_de.ts \
-    translations/uniqueLibrary_el.ts \
-    translations/uniqueLibrary_en.ts \
-    translations/uniqueLibrary_es.ts \
-    translations/uniqueLibrary_fr.ts \
-    translations/uniqueLibrary_in.ts \
-    translations/uniqueLibrary_it.ts \
-    translations/uniqueLibrary_ja.ts \
-    translations/uniqueLibrary_kr.ts \
-    translations/uniqueLibrary_pt.ts \
-    translations/uniqueLibrary_ru.ts \
-    translations/uniqueLibrary_th.ts \
-    translations/uniqueLibrary_vn.ts \
-    translations/uniqueLibrary_zh.ts
+TRANSLATIONS = translations/uniquelibrary_ar.ts \
+    translations/uniquelibrary_cs.ts \
+    translations/uniquelibrary_de.ts \
+    translations/uniquelibrary_el.ts \
+    translations/uniquelibrary_en.ts \
+    translations/uniquelibrary_es.ts \
+    translations/uniquelibrary_fr.ts \
+    translations/uniquelibrary_in.ts \
+    translations/uniquelibrary_it.ts \
+    translations/uniquelibrary_ja.ts \
+    translations/uniquelibrary_kr.ts \
+    translations/uniquelibrary_pt.ts \
+    translations/uniquelibrary_ru.ts \
+    translations/uniquelibrary_th.ts \
+    translations/uniquelibrary_vn.ts \
+    translations/uniquelibrary_zh.ts
