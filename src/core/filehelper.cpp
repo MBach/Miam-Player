@@ -162,7 +162,7 @@ FileHelper::~FileHelper()
 	}
 }
 
-const QStringList FileHelper::suffixes(ExtensionType et, bool withPrefix)
+const QStringList FileHelper::suffixes(FileHelper::ExtensionTypes et, bool withPrefix)
 {
 	static QStringList standardSuffixes = QStringList() << "ape" << "asf" << "flac" << "m4a" << "mp4" << "mpc" << "mp3" << "oga" << "ogg" << "opus";
 	static QStringList gameMusicEmuSuffixes = QStringList() << "ay" << "gbs" << "gym" << "hes" << "kss" << "nsf" << "nsfe" << "sap" << "spc" << "vgm" << "vgz";

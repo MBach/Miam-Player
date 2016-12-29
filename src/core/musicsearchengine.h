@@ -22,7 +22,9 @@ private:
 public:
 	static bool isScanning;
 
-	MusicSearchEngine(QObject *parent = nullptr);
+	explicit MusicSearchEngine(QObject *parent = nullptr);
+
+	virtual ~MusicSearchEngine();
 
 	//void setDelta(const QStringList &delta);
 

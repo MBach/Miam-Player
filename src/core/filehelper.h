@@ -40,27 +40,27 @@ private:
 	QFileInfo _fileInfo;
 
 	Q_ENUMS(Extension)
-	Q_ENUMS(ExtensionType)
 	Q_ENUMS(Field)
 
 public:
 	enum Extension {
-		EXT_UNKNOWN = -1,
 		EXT_APE		= 0,
 		EXT_ASF		= 1,
 		EXT_FLAC	= 2,
 		EXT_MP4		= 4,
 		EXT_MPC		= 5,
 		EXT_MP3		= 6,
-		EXT_OGG		= 7
+		EXT_OGG		= 7,
+		EXT_UNKNOWN = -1
 	};
 
 	enum ExtensionType {
-		ET_Standard		= 1,
-		ET_GameMusicEmu	= 2,
-		ET_Playlist		= 4,
+		ET_Standard		= 0x001,
+		ET_GameMusicEmu	= 0x002,
+		ET_Playlist		= 0x004,
 		ET_All			= ET_Standard | ET_GameMusicEmu | ET_Playlist
 	};
+	Q_DECLARE_FLAGS(ExtensionTypes, ExtensionType)
 
 	enum TagKey {
 		Artist
@@ -93,7 +93,7 @@ private:
 public:
 	virtual ~FileHelper();
 
-	static const QStringList suffixes(ExtensionType et = ET_Standard, bool withPrefix = false);
+	static const QStringList suffixes(FileHelper::ExtensionTypes et = FileHelper::ET_Standard, bool withPrefix = false);
 
 	/** Field ArtistAlbum if exists (in a compilation for example). */
 	QString artistAlbum() const;
@@ -154,5 +154,6 @@ private:
 
 /** Register this class to convert in QVariant. */
 Q_DECLARE_METATYPE(FileHelper::Field)
+Q_DECLARE_OPERATORS_FOR_FLAGS(FileHelper::ExtensionTypes)
 
 #endif // FILEHELPER_H

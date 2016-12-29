@@ -13,6 +13,7 @@
 #include "views/viewloader.h"
 #include "pluginmanager.h"
 
+#include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QShortcut>
 #include <QWindow>
@@ -254,14 +255,15 @@ void MainWindow::setupActions()
 
 	connect(settingsPrivate, &SettingsPrivate::monitorFileSystemChanged, this, [=](bool b) {
 		if (b) {
-			MusicSearchEngine *searchEngine = new MusicSearchEngine;
-			QThread *worker = new QThread;
-			searchEngine->moveToThread(worker);
-			connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::watchForChanges);
-			worker->start();
+			MusicSearchEngine *worker = new MusicSearchEngine;
+			QThread *thread = new QThread;
+			worker->moveToThread(thread);
+			connect(thread, &QThread::started, worker, &MusicSearchEngine::watchForChanges);
+			connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+			thread->start();
 
 			if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
-				_currentView->setMusicSearchEngine(searchEngine);
+				_currentView->setMusicSearchEngine(worker);
 			}
 			qDebug() << Q_FUNC_INFO << "create new instance of file system watcher";
 		} else {
@@ -414,6 +416,13 @@ void MainWindow::initQuickStart()
 	QuickStart *quickStart = new QuickStart(this);
 	quickStart->searchMultimediaFiles();
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
+	connect(quickStart, &QuickStart::destroyed, this, [=]() {
+		setCentralWidget(nullptr);
+		actionViewPlaylists->trigger();
+		int w = qApp->desktop()->screenGeometry().width() / 2;
+		int h = qApp->desktop()->screenGeometry().height() / 2;
+		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
+	});
 	this->setCentralWidget(quickStart);
 	this->menuBar()->hide();
 	this->resize(400, 500);
@@ -722,31 +731,31 @@ void MainWindow::rescanLibrary()
 	SqlDatabase db;
 	db.reset();
 
-	QThread *worker = new QThread;
-	MusicSearchEngine *searchEngine = new MusicSearchEngine;
-	searchEngine->moveToThread(worker);
-
-	connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
-	connect(searchEngine, &MusicSearchEngine::aboutToSearch, this, [=]() {
+	QThread *thread = new QThread;
+	MusicSearchEngine *worker = new MusicSearchEngine;
+	worker->moveToThread(thread);
+	connect(thread, &QThread::started, worker, &MusicSearchEngine::doSearch);
+	connect(worker, &MusicSearchEngine::aboutToSearch, this, [=]() {
 		menuView->setEnabled(false);
 		actionScanLibrary->setEnabled(false);
 	});
-	qDebug() << Q_FUNC_INFO;
 	if (_currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
-		_currentView->setMusicSearchEngine(searchEngine);
+		_currentView->setMusicSearchEngine(worker);
 	}
 	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
 		if (plugin && plugin->canInteractWithSearchEngine()) {
-			plugin->setMusicSearchEngine(searchEngine);
+			plugin->setMusicSearchEngine(worker);
 		}
 	}
-	connect(searchEngine, &MusicSearchEngine::searchHasEnded, worker, &QThread::deleteLater);
-	connect(searchEngine, &MusicSearchEngine::destroyed, this, [=]() {
+	connect(worker, &MusicSearchEngine::searchHasEnded, this, [=]() {
+		worker->deleteLater();
+		thread->quit();
 		menuView->setEnabled(true);
 		actionScanLibrary->setEnabled(true);
 	});
+	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
-	worker->start();
+	thread->start();
 }
 
 void MainWindow::showTagEditor()
@@ -810,17 +819,19 @@ void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList 
 		db.reset();
 	}
 
-	QThread *worker = new QThread;
-	MusicSearchEngine *searchEngine = new MusicSearchEngine;
+	QThread *thread = new QThread;
+	MusicSearchEngine *worker = new MusicSearchEngine;
 	//searchEngine->setDelta(newLocations);
-	searchEngine->moveToThread(worker);
-
-	connect(worker, &QThread::started, searchEngine, &MusicSearchEngine::doSearch);
-	connect(searchEngine, &MusicSearchEngine::searchHasEnded, worker, &QThread::deleteLater);
-	worker->start();
+	worker->moveToThread(thread);
+	connect(worker, &MusicSearchEngine::searchHasEnded, worker, &MusicSearchEngine::deleteLater);
+	connect(worker, &MusicSearchEngine::searchHasEnded, thread, &QThread::quit);
+	qDebug() << Q_FUNC_INFO;
+	connect(thread, &QThread::started, worker, &MusicSearchEngine::doSearch);
+	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+	thread->start();
 
 	if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
-		_currentView->setMusicSearchEngine(searchEngine);
+		_currentView->setMusicSearchEngine(worker);
 	}
 }
 

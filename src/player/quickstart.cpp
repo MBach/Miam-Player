@@ -85,13 +85,13 @@ void QuickStart::searchMultimediaFiles()
 		quickStartGroupBox->hide();
 		otherwiseLabel->hide();
 	} else {
-		QThread *worker = new QThread(this);
+		QThread *thread = new QThread;
 		_qsse = new QuickStartSearchEngine();
-		_qsse->moveToThread(worker);
+		_qsse->moveToThread(thread);
 		connect(_qsse, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
-		connect(worker, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
-		connect(worker, &QThread::finished, this, &QuickStart::insertFirstRow);
-		worker->start();
+		connect(thread, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
+		connect(thread, &QThread::finished, this, &QuickStart::insertFirstRow);
+		thread->start();
 	}
 }
 
@@ -154,8 +154,13 @@ void QuickStart::setCheckedFolders()
 			newLocations.append(musicLocation);
 		}
 	}
-	SettingsPrivate::instance()->setMusicLocations(newLocations);
+
+	auto settingsPrivate = SettingsPrivate::instance();
+	settingsPrivate->blockSignals(true);
+	settingsPrivate->setMusicLocations(newLocations);
+	settingsPrivate->blockSignals(false);
 	_mainWindow->menuBar()->show();
+	this->deleteLater();
 }
 
 /** Set only one location in the Library: the default music folder. */
@@ -163,8 +168,12 @@ void QuickStart::setDefaultFolder()
 {
 	QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
 	musicLocation = QDir::toNativeSeparators(musicLocation);
-	SettingsPrivate::instance()->setMusicLocations({ musicLocation });
+	auto settingsPrivate = SettingsPrivate::instance();
+	settingsPrivate->blockSignals(true);
+	settingsPrivate->setMusicLocations({ musicLocation });
+	settingsPrivate->blockSignals(false);
 	_mainWindow->menuBar()->show();
+	this->deleteLater();
 }
 
 /** Insert above other rows a new one with a Master checkbox to select/unselect all. */

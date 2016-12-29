@@ -29,6 +29,9 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent)
 	}
 }
 
+MusicSearchEngine::~MusicSearchEngine()
+{}
+
 /*void MusicSearchEngine::setDelta(const QStringList &delta)
 {
 	_delta = delta;
@@ -76,7 +79,7 @@ void MusicSearchEngine::doSearch()
 	QString coverPath;
 	QString lastFileScannedNextToCover;
 
-	QStringList suffixes = FileHelper::suffixes(FileHelper::ET_All);
+	QStringList suffixes = FileHelper::suffixes(FileHelper::ET_Standard | FileHelper::ET_GameMusicEmu);
 
 	SqlDatabase db;
 	db.transaction();
@@ -135,9 +138,8 @@ void MusicSearchEngine::doSearch()
 	//emit aboutToResyncRemoteSources();
 
 	MusicSearchEngine::isScanning = false;
-	emit searchHasEnded();
 
-	this->deleteLater();
+	emit searchHasEnded();
 }
 
 void MusicSearchEngine::watchForChanges()

@@ -632,7 +632,7 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 {
 	FileHelper fh(absFilePath);
 	if (!fh.isValid()) {
-		qDebug() << Q_FUNC_INFO << "file is not valid, won't be saved";
+		qDebug() << Q_FUNC_INFO << "file is not valid, won't be saved:" << absFilePath;
 		return;
 	}
 
