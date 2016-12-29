@@ -68,7 +68,7 @@ FORMS += customizeoptionsdialog.ui \
     tagconverter.ui \
     tageditor.ui \
     minimode.ui
-
+CONFIG += c++11
 RESOURCES += player.qrc
 win32 {
     OTHER_FILES += config/mp.rc
@@ -130,12 +130,12 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix {
+    LIBS += -ltag -L$$OUT_PWD/../core/ -lmiam-core
     LIBS += -L$$OUT_PWD/../library/ -lmiam-library
     LIBS += -L$$OUT_PWD/../tabplaylists/ -lmiam-tabplaylists
     LIBS += -L$$OUT_PWD/../uniquelibrary/ -lmiam-uniquelibrary
 }
 unix:!macx {
-    LIBS += -ltag -L$$OUT_PWD/../core/ -lmiam-core
     target.path = /usr/bin
     desktop.path = /usr/share/applications
     desktop.files = $$PWD/../../debian/usr/share/applications/miam-player.desktop

@@ -8,12 +8,12 @@ DEPENDPATH += $$3rdpartyDir $$3rdpartyDir/QtAV
 
 include(qxt/qxt.pri)
 
-DEFINES += MIAM_PLUGIN
+DEFINES += MIAMCORE_LIBRARY
 
 TEMPLATE = lib
 
 TARGET = miam-core
-
+CONFIG += c++11
 win32 {
     CONFIG += dll
     CONFIG(debug, debug|release) {

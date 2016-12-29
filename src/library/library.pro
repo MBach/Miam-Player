@@ -40,7 +40,7 @@ HEADERS += albumitem.h \
     yearitem.h
 
 FORMS += libraryorderdialog.ui
-
+CONFIG += c++11
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core
     OBJECTS_DIR = debug/.obj

@@ -22,7 +22,7 @@ SOURCES += coveritem.cpp \
     uniquelibraryitemmodel.cpp \
     uniquelibraryfilterproxymodel.cpp \
     uniquelibrarymediaplayercontrol.cpp
-
+CONFIG += c++11
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -L$$OUT_PWD/../library/debug/ -lmiam-library
     OBJECTS_DIR = debug/.obj
@@ -30,8 +30,6 @@ CONFIG(debug, debug|release) {
     RCC_DIR = debug/.rcc
     UI_DIR = $$PWD
 }
-
-CONFIG += c++11
 CONFIG(release, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../core/release/ -lmiam-core -L$$OUT_PWD/../library/release/ -lmiam-library
     OBJECTS_DIR = release/.obj

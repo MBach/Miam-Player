@@ -4,10 +4,11 @@
 #include <QtCore/qglobal.h>
 #include <QMessageBox>
 
-#ifdef MIAM_PLUGIN
-# define MIAMCORE_LIBRARY Q_DECL_EXPORT
+#if defined(MIAMCORE_LIBRARY)
+#undef MIAMCORE_LIBRARY
+#define MIAMCORE_LIBRARY Q_DECL_EXPORT
 #else
-# define MIAMCORE_LIBRARY Q_DECL_IMPORT
+#define MIAMCORE_LIBRARY Q_DECL_IMPORT
 #endif
 
 #if defined(Q_OS_OSX)
