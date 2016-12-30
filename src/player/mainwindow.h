@@ -92,8 +92,6 @@ private slots:
 
 	void bindShortcut(const QString&, const QKeySequence &keySequence);
 
-	void rescanLibrary();
-
 	void showTagEditor();
 
 	void switchToMiniPlayer();

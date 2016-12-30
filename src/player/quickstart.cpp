@@ -155,10 +155,7 @@ void QuickStart::setCheckedFolders()
 		}
 	}
 
-	auto settingsPrivate = SettingsPrivate::instance();
-	settingsPrivate->blockSignals(true);
-	settingsPrivate->setMusicLocations(newLocations);
-	settingsPrivate->blockSignals(false);
+	SettingsPrivate::instance()->setMusicLocations(newLocations);
 	_mainWindow->menuBar()->show();
 	this->deleteLater();
 }
@@ -168,10 +165,7 @@ void QuickStart::setDefaultFolder()
 {
 	QString musicLocation = defaultFolderTableWidget->item(0, 1)->data(Qt::DisplayRole).toString();
 	musicLocation = QDir::toNativeSeparators(musicLocation);
-	auto settingsPrivate = SettingsPrivate::instance();
-	settingsPrivate->blockSignals(true);
-	settingsPrivate->setMusicLocations({ musicLocation });
-	settingsPrivate->blockSignals(false);
+	SettingsPrivate::instance()->setMusicLocations({ musicLocation });
 	_mainWindow->menuBar()->show();
 	this->deleteLater();
 }

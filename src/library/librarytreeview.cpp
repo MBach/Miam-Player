@@ -96,7 +96,6 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 LibraryTreeView::~LibraryTreeView()
 {
 	this->disconnect();
-	qDebug() << Q_FUNC_INFO;
 }
 
 const QImage *LibraryTreeView::expandedCover(AlbumItem *album) const

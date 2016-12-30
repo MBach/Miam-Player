@@ -48,7 +48,6 @@ void MusicSearchEngine::setWatchForChanges(bool b)
 
 void MusicSearchEngine::doSearch()
 {
-	//qDebug() << Q_FUNC_INFO << "_delta" << _delta;
 	emit aboutToSearch();
 
 	MusicSearchEngine::isScanning = true;

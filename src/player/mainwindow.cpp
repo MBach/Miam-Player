@@ -180,6 +180,8 @@ void MainWindow::loadPlugins()
 /** Set up all actions and behaviour. */
 void MainWindow::setupActions()
 {
+	auto settingsPrivate = SettingsPrivate::instance();
+
 	// Adds a group where view mode are mutually exclusive
 	QActionGroup *viewModeGroup = new QActionGroup(this);
 	viewModeGroup->setObjectName("viewModeGroup");
@@ -206,17 +208,17 @@ void MainWindow::setupActions()
 		CustomizeThemeDialog *customizeThemeDialog = new CustomizeThemeDialog;
 		customizeThemeDialog->show();
 	});
-
 	connect(actionShowOptions, &QAction::triggered, this, &MainWindow::createCustomizeOptionsDialog);
 	connect(actionAboutQt, &QAction::triggered, &QApplication::aboutQt);
 	connect(actionHideMenuBar, &QAction::triggered, this, &MainWindow::toggleMenuBar);
-	connect(actionScanLibrary, &QAction::triggered, this, &MainWindow::rescanLibrary);
+	connect(actionScanLibrary, &QAction::triggered, this, [=]() {
+		this->syncLibrary(QStringList(), settingsPrivate->musicLocations());
+	});
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
 		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
 	});
 
 	// Load music
-	auto settingsPrivate = SettingsPrivate::instance();
 	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, &MainWindow::syncLibrary);
 
 	// Media buttons and their shortcuts
@@ -416,9 +418,8 @@ void MainWindow::initQuickStart()
 	QuickStart *quickStart = new QuickStart(this);
 	quickStart->searchMultimediaFiles();
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
-	connect(quickStart, &QuickStart::destroyed, this, [=]() {
-		setCentralWidget(nullptr);
-		actionViewPlaylists->trigger();
+	connect(quickStart, &QuickStart::destroyed, this, [this, &quickStart]() {
+		quickStart = nullptr;
 		int w = qApp->desktop()->screenGeometry().width() / 2;
 		int h = qApp->desktop()->screenGeometry().height() / 2;
 		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
@@ -558,11 +559,6 @@ void MainWindow::activateView(QAction *menuAction)
 	}
 	_currentView->installEventFilter(this);
 
-	// Trigger a rescan of the library is there's nothing to display
-	if (!_currentView->viewProperty(Settings::VP_HasTracksToDisplay)) {
-		this->rescanLibrary();
-	}
-
 	if (_currentView->viewProperty(Settings::VP_CanSendTracksToEditor)) {
 		connect(_currentView, &AbstractView::aboutToSendToTagEditor, this, [=](const QList<QUrl> &tracks) {
 			actionViewTagEditor->trigger();
@@ -570,9 +566,8 @@ void MainWindow::activateView(QAction *menuAction)
 		});
 	}
 
-	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
-
 	// First, clean the view (can be a QuickStart instance)
+	SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 	if (_currentView->viewProperty(Settings::VP_OwnWindow)) {
 		connect(_currentView->windowHandle(), &QWindow::visibleChanged, this, [=](bool b) {
 			if (!b) {
@@ -718,46 +713,6 @@ void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &key
 	}
 }
 
-void MainWindow::rescanLibrary()
-{
-	if (!_currentView) {
-		return;
-	}
-
-	if (_currentView->viewProperty(Settings::VP_SearchArea)) {
-		_currentView->setViewProperty(Settings::VP_SearchArea, true);
-	}
-
-	SqlDatabase db;
-	db.reset();
-
-	QThread *thread = new QThread;
-	MusicSearchEngine *worker = new MusicSearchEngine;
-	worker->moveToThread(thread);
-	connect(thread, &QThread::started, worker, &MusicSearchEngine::doSearch);
-	connect(worker, &MusicSearchEngine::aboutToSearch, this, [=]() {
-		menuView->setEnabled(false);
-		actionScanLibrary->setEnabled(false);
-	});
-	if (_currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
-		_currentView->setMusicSearchEngine(worker);
-	}
-	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
-		if (plugin && plugin->canInteractWithSearchEngine()) {
-			plugin->setMusicSearchEngine(worker);
-		}
-	}
-	connect(worker, &MusicSearchEngine::searchHasEnded, this, [=]() {
-		worker->deleteLater();
-		thread->quit();
-		menuView->setEnabled(true);
-		actionScanLibrary->setEnabled(true);
-	});
-	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-
-	thread->start();
-}
-
 void MainWindow::showTagEditor()
 {
 	if (actionViewTagEditor->isChecked()) {
@@ -798,9 +753,11 @@ void MainWindow::switchToMiniPlayer()
 
 void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList &newLocations)
 {
-	qDebug() << Q_FUNC_INFO << newLocations;
-	this->activateLastView();
+	if (!_currentView) {
+		this->activateView(actionViewPlaylists);
+	}
 	if (newLocations.isEmpty()) {
+		this->initQuickStart();
 		return;
 	}
 
@@ -821,18 +778,29 @@ void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList 
 
 	QThread *thread = new QThread;
 	MusicSearchEngine *worker = new MusicSearchEngine;
-	//searchEngine->setDelta(newLocations);
 	worker->moveToThread(thread);
-	connect(worker, &MusicSearchEngine::searchHasEnded, worker, &MusicSearchEngine::deleteLater);
-	connect(worker, &MusicSearchEngine::searchHasEnded, thread, &QThread::quit);
-	qDebug() << Q_FUNC_INFO;
-	connect(thread, &QThread::started, worker, &MusicSearchEngine::doSearch);
-	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-	thread->start();
-
-	if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
+	if (_currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
 		_currentView->setMusicSearchEngine(worker);
 	}
+	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
+		if (plugin && plugin->canInteractWithSearchEngine()) {
+			plugin->setMusicSearchEngine(worker);
+		}
+	}
+	//searchEngine->setDelta(newLocations);
+	connect(thread, &QThread::started, worker, &MusicSearchEngine::doSearch);
+	connect(worker, &MusicSearchEngine::aboutToSearch, this, [=]() {
+		menuView->setEnabled(false);
+		actionScanLibrary->setEnabled(false);
+	});
+	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+	connect(worker, &MusicSearchEngine::searchHasEnded, this, [=]() {
+		worker->deleteLater();
+		thread->quit();
+		menuView->setEnabled(true);
+		actionScanLibrary->setEnabled(true);
+	});
+	thread->start();
 }
 
 void MainWindow::toggleMenuBar(bool checked)
