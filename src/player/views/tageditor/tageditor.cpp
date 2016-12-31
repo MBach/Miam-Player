@@ -136,22 +136,26 @@ void TagEditor::changeEvent(QEvent *event)
 	}
 }
 
+/** Redefined to save geometry silently. */
 void TagEditor::closeEvent(QCloseEvent *event)
 {
 	SettingsPrivate::instance()->setValue("tagEditorGeometry", saveGeometry());
 	AbstractView::closeEvent(event);
 }
 
+/** Redefined. */
 void TagEditor::dragEnterEvent(QDragEnterEvent *event)
 {
 	event->acceptProposedAction();
 }
 
+/** Redefined. */
 void TagEditor::dragMoveEvent(QDragMoveEvent *event)
 {
 	event->acceptProposedAction();
 }
 
+/** Accepts dropping events by opening a new window. */
 void TagEditor::dropEvent(QDropEvent *event)
 {
 	QObject *source = event->source();
@@ -163,10 +167,16 @@ void TagEditor::dropEvent(QDropEvent *event)
 /** Redefined to filter context menu event for the cover album object. */
 bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 {
+	/// But why is it crashing without this?
+	if (event->type() == QEvent::ChildRemoved) {
+		return QWidget::eventFilter(obj, event);
+	}
+
 	/// TEST
 	if (obj == tagEditorWidget->viewport() && event->type() == QEvent::KeyRelease) {
 
 	}
+
 
 	if (obj == albumCover && event->type() == QEvent::ContextMenu) {
 		return tagEditorWidget->selectedItems().isEmpty();
@@ -180,11 +190,12 @@ bool TagEditor::eventFilter(QObject *obj, QEvent *event)
 	}
 }
 
+/** Save data in order to be able to rollback. */
 void TagEditor::buildCache()
 {
 	tagEditorWidget->blockSignals(true);
 
-	// Information in the table is split into columns, using column index
+	// Datas in the table are splitted into columns, using column index
 	// Column -> List of values ; [Col. Artist -> (AC/DC, Beatles, etc)]
 	for (int col = 0; col < tagEditorWidget->columnCount(); col++) {
 		for (int row = 0; row < tagEditorWidget->rowCount(); row++) {

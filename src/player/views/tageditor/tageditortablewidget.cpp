@@ -12,8 +12,8 @@
 
 #include <QtDebug>
 
-TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
-	QTableWidget(parent)
+TagEditorTableWidget::TagEditorTableWidget(QWidget *parent)
+	: QTableWidget(parent)
 {
 	this->setItemDelegate(new MiamStyledItemDelegate(this, false));
 	this->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -32,6 +32,10 @@ TagEditorTableWidget::TagEditorTableWidget(QWidget *parent) :
 	/*connect(this, &QTableWidget::cellChanged, this, [=](int row, int column) {
 		qDebug() << Q_FUNC_INFO << "row" << row << "column" << column;
 	});*/
+}
+
+TagEditorTableWidget::~TagEditorTableWidget()
+{
 
 }
 

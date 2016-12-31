@@ -53,20 +53,26 @@ public:
 	virtual bool viewProperty(Settings::ViewProperty vp) const override;
 
 protected:
+	/** Redefined to be able to retransltate User Interface at runtime. */
 	virtual void changeEvent(QEvent *event) override;
 
+	/** Redefined to save geometry silently. */
 	virtual void closeEvent(QCloseEvent *event) override;
 
+	/** Redefined. */
 	virtual void dragEnterEvent(QDragEnterEvent *event) override;
 
+	/** Redefined. */
 	virtual void dragMoveEvent(QDragMoveEvent *event) override;
 
+	/** Accepts dropping events by opening a new window. */
 	virtual void dropEvent(QDropEvent *event) override;
 
 	/** Redefined to filter context menu event for the cover album object. */
 	virtual bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
+	/** Save data in order to be able to rollback. */
 	void buildCache();
 
 	void clearCovers(QMap<int, Cover *> &coversToRemove);
