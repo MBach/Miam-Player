@@ -20,15 +20,16 @@ class DragDropDialog : public QDialog, public Ui::DragDropDialog
 {
 	Q_OBJECT
 private:
-	QString _originalLabel;
+	QStringList _externalLocations;
+	QStringList _playlistLocations;
 
 public:
-	QStringList externalLocations;
-	QStringList playlistLocations;
-
 	explicit DragDropDialog(QWidget *parent = nullptr);
 
 	bool setMimeData(const QMimeData *mimeData);
+
+	inline QStringList const externalLocations() const { return _externalLocations; }
+	inline QStringList const playlistLocations() const { return _playlistLocations; }
 
 private slots:
 	void addExternalFoldersToLibrary();

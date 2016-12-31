@@ -15,50 +15,43 @@ DragDropDialog::DragDropDialog(QWidget *parent) :
 
 	connect(toolButtonLibrary, &QToolButton::clicked, this, &DragDropDialog::addExternalFoldersToLibrary);
 	connect(toolButtonPlaylist, &QToolButton::clicked, this, &DragDropDialog::addExternalFoldersToPlaylist);
-
-	_originalLabel = labelHowToProceed->text();
 }
 
 bool DragDropDialog::setMimeData(const QMimeData *mimeData)
 {
-	externalLocations.clear();
-	playlistLocations.clear();
-
 	if (!mimeData->hasUrls()) {
 		return false;
 	}
 	bool onlyFiles = true;
 	QList<QUrl> urlList = mimeData->urls();
-	QString newLabel;
-	int folders = 0;
-	int maxDisplayedInLabel = 3;
+	QStringList folders;
 
-	labelHowToProceed->setText(_originalLabel);
 	for (QUrl url : urlList) {
 		QFileInfo fileInfo = url.toLocalFile();
 		if (fileInfo.isDir()) {
-			// Builds the label as a concatenation of folders' name
-			if (folders < maxDisplayedInLabel) {
-				newLabel.append(fileInfo.fileName()).append(", ");
-				folders++;
-			}
-			externalLocations.append(fileInfo.absoluteFilePath());
+			folders << fileInfo.fileName();
+			_externalLocations.append(QDir::toNativeSeparators(fileInfo.absoluteFilePath()));
 			onlyFiles = false;
 		} else if (fileInfo.isFile()) {
 			if (FileHelper::suffixes(FileHelper::ET_Playlist).contains(fileInfo.suffix())) {
-				playlistLocations.append(fileInfo.absoluteFilePath());
+				_playlistLocations.append(fileInfo.absoluteFilePath());
 			} else {
-				externalLocations.append(fileInfo.absoluteFilePath());
+				_externalLocations.append(fileInfo.absoluteFilePath());
 			}
 		}
 	}
-	if (newLabel.length() > 2) {
-		newLabel = newLabel.left(newLabel.length() - 2);
-		if (folders >= maxDisplayedInLabel) {
-			newLabel.append(", ... ");
+
+	// Builds the label as a concatenation of folders' name
+	QString newLabel;
+	if (folders.size() > 3) {
+		for (int i = 0; i < 3; i++) {
+			newLabel.append(folders.at(i)).append(", ");
 		}
-		labelHowToProceed->setText(labelHowToProceed->text().arg(newLabel));
+		newLabel.append("…");
+	} else {
+		newLabel = folders.join(", ");
 	}
+	labelHowToProceed->setText(labelHowToProceed->text().arg(newLabel));
 	return onlyFiles;
 }
 
@@ -68,7 +61,7 @@ void DragDropDialog::addExternalFoldersToLibrary()
 		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToLibrary);
 	}
 	QList<QDir> dirs;
-	for (QString dir : externalLocations) {
+	for (QString dir : _externalLocations) {
 		dirs << dir;
 	}
 	emit aboutToAddExtFoldersToLibrary(dirs);
@@ -81,7 +74,7 @@ void DragDropDialog::addExternalFoldersToPlaylist()
 		SettingsPrivate::instance()->setDragDropAction(SettingsPrivate::DD_AddToPlaylist);
 	}
 	QList<QDir> dirs;
-	for (QString dir : externalLocations) {
+	for (QString dir : _externalLocations) {
 		dirs << dir;
 	}
 	emit aboutToAddExtFoldersToPlaylist(dirs);

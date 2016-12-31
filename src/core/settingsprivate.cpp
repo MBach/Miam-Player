@@ -525,16 +525,17 @@ void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 	QStringList locations;
 	for (QDir d : dirs) {
 		if (!old.contains(QDir::toNativeSeparators(d.absolutePath()))) {
-			locations << d.absolutePath();
+			locations << QDir::toNativeSeparators(d.absolutePath());
 		} else {
-			qDebug() << Q_FUNC_INFO << old << "already contains" << d.absolutePath();
+			qDebug() << Q_FUNC_INFO << old << "already contains" << QDir::toNativeSeparators(d.absolutePath());
 		}
 	}
 	QStringList newLocations(old);
 	newLocations.append(locations);
-	setValue("musicLocations", newLocations);
-	qDebug() << Q_FUNC_INFO << newLocations;
-	emit musicLocationsHaveChanged(old, locations);
+	if (old.toSet() != newLocations.toSet()) {
+		setValue("musicLocations", newLocations);
+		emit musicLocationsHaveChanged(old, locations);
+	}
 }
 
 /** Sets an alternate background color for playlists. */

@@ -42,7 +42,7 @@ private:
 
 public slots:
 	/** Adds a external music locations in the library (Drag & Drop). */
-	void addMusicLocations(const QList<QDir> &dirs);
+	void addMusicLocations(const QList<QDir> &dirs, bool immediateRescan = true);
 
 private slots:
 	/** Application can be retranslated dynamically at runtime. */
@@ -63,7 +63,7 @@ private slots:
 	void toggleRemoteControl(bool enabled);
 
 	/** Check if music locations have changed in order to rescan the filesystem. */
-	void updateMusicLocations();
+	void updateMusicLocations(bool immediateRescan = true);
 
 signals:
 	void aboutToBindShortcut(const QString &objectName, const QKeySequence &keySequence);

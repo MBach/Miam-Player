@@ -133,7 +133,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	// Volume bar
 	connect(volumeSlider, &QSlider::valueChanged, this, [=](int value) {
-		qDebug() << Q_FUNC_INFO;
 		mediaPlayer->setVolume((qreal)value / 100.0);
 	});
 	connect(mediaPlayer, &MediaPlayer::volumeChanged, this, [=](qreal v) {

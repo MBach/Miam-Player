@@ -305,7 +305,7 @@ void CustomizeOptionsDialog::initShortcuts()
 }
 
 /** Adds a external music locations in the library (Drag & Drop). */
-void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
+void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs, bool immediateRescan)
 {
 	for (QDir musicLocation : dirs) {
 		QString path = musicLocation.absolutePath();
@@ -333,7 +333,7 @@ void CustomizeOptionsDialog::addMusicLocations(const QList<QDir> &dirs)
 		}
 	}
 
-	this->updateMusicLocations();
+	this->updateMusicLocations(immediateRescan);
 }
 
 /** Application can be retranslated dynamically at runtime. */
@@ -434,7 +434,7 @@ void CustomizeOptionsDialog::openLibraryDialog()
 	QString libraryPath = QFileDialog::getExistingDirectory(this, tr("Select a location of your music"),
 		QStandardPaths::standardLocations(QStandardPaths::MusicLocation).first(), QFileDialog::ShowDirsOnly);
 	if (!libraryPath.isEmpty()) {
-		this->addMusicLocations({ QDir(libraryPath) });
+		this->addMusicLocations({ QDir(libraryPath) }, false);
 	}
 }
 
@@ -479,7 +479,7 @@ void CustomizeOptionsDialog::toggleRemoteControl(bool enabled)
 }
 
 /** Check if music locations have changed in order to rescan the filesystem. */
-void CustomizeOptionsDialog::updateMusicLocations()
+void CustomizeOptionsDialog::updateMusicLocations(bool immediateRescan)
 {
 	SettingsPrivate *settings = SettingsPrivate::instance();
 	QStringList savedLocations = settings->musicLocations();
@@ -501,10 +501,6 @@ void CustomizeOptionsDialog::updateMusicLocations()
 	} else {
 		musicLocationsAreIdenticals = false;
 	}
-
-	qDebug() << Q_FUNC_INFO << "savedLocations" << savedLocations;
-	qDebug() << Q_FUNC_INFO << "newLocations" << newLocations;
-	qDebug() << Q_FUNC_INFO << "musicLocationsAreIdenticals" << musicLocationsAreIdenticals;
 
 	// Trigger the MainWindow (and then the SearchEngine) to restart a scan
 	if (!musicLocationsAreIdenticals) {
@@ -530,7 +526,9 @@ void CustomizeOptionsDialog::updateMusicLocations()
 		}
 		db.commit();
 
-		settings->setMusicLocations(newLocations);
-		settings->sync();
+		if (immediateRescan) {
+			settings->setMusicLocations(newLocations);
+			settings->sync();
+		}
 	}
 }

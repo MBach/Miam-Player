@@ -112,7 +112,7 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 	bool onlyFiles = dragDropDialog.setMimeData(event->mimeData());
 	if (onlyFiles) {
 		QStringList tracks;
-		for (QString file : dragDropDialog.externalLocations) {
+		for (QString file : dragDropDialog.externalLocations()) {
 			tracks << "file://" + file;
 		}
 		tracks.sort(Qt::CaseInsensitive);
@@ -126,13 +126,13 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 		}
 		if (viewPlaylists) {
 			viewPlaylists->addToPlaylist(urls);
-			if (!dragDropDialog.playlistLocations.isEmpty()) {
-				viewPlaylists->openPlaylists(dragDropDialog.playlistLocations);
+			if (!dragDropDialog.playlistLocations().isEmpty()) {
+				viewPlaylists->openPlaylists(dragDropDialog.playlistLocations());
 			}
 		}
 	} else {
 		QList<QDir> dirs;
-		for (QString location : dragDropDialog.externalLocations) {
+		for (QString location : dragDropDialog.externalLocations()) {
 			dirs << location;
 		}
 		switch (SettingsPrivate::instance()->dragDropAction()) {
