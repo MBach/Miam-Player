@@ -1,7 +1,4 @@
 version: 0.8.1.{build}
-image: Visual Studio 2015
-configuration: Release
-platform: x64
 clone_folder: C:\dev\miam-player
 
 init:
@@ -14,11 +11,12 @@ init:
 
 environment:
   matrix:
-  - cc: VS2015
+  - arch: x64
+    cc: VS2015
     qt: 5.7
     toolchain_version: 14
     mode: release
-    QTDIR: C:\Qt\5.7\msvc2015
+    QTDIR: C:\Qt\5.7\msvc2015_64
 
 install:
   - cmd: set PATH=%PATH%;%QTDIR%\bin
