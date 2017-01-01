@@ -164,6 +164,9 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	connect(this, &AbstractView::modelReloadRequested, this, [=]() {
 		library->model()->load();
+		for (Playlist *p : tabPlaylists->playlists()) {
+			p->model()->reload();
+		}
 	});
 
 	connect(settingsPrivate, &SettingsPrivate::languageAboutToChange, this, [=](const QString &newLanguage) {

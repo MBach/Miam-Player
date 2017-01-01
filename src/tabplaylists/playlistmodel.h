@@ -47,6 +47,8 @@ public:
 
 	inline MediaPlaylist* mediaPlaylist() const { return _mediaPlaylist; }
 
+	void reload();
+
 	void removeTrack(int row);
 
 private:

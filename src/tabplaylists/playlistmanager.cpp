@@ -121,13 +121,10 @@ uint PlaylistManager::savePlaylist(Playlist *p, bool isOverwriting, bool isExiti
 		playlist.setTitle(p->mediaPlaylist()->title());
 		playlist.setChecksum(QString::number(generateNewHash));
 
-		std::list<TrackDAO> tracks;
-		const QStandardItemModel *model = qobject_cast<const QStandardItemModel *>(p->model());
+		QStringList tracks;
 		for (int j = 0; j < p->mediaPlaylist()->mediaCount(); j++) {
 			// Eeach track has been saved in a hidden column into the playlist
-			/// FIXME
-			TrackDAO t = model->index(j, p->COL_TRACK_DAO).data().value<TrackDAO>();
-			tracks.push_back(std::move(t));
+			tracks << p->model()->index(j, p->COL_TRACK_DAO).data().toString();
 		}
 
 		id = db.insertIntoTablePlaylists(playlist, tracks, isOverwriting);

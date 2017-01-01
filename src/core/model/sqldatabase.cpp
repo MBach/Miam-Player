@@ -59,9 +59,7 @@ SqlDatabase::SqlDatabase(QObject *parent)
 
 		createDb.exec("CREATE TABLE IF NOT EXISTS playlists (id INTEGER PRIMARY KEY, title varchar(255), duration INTEGER, icon varchar(255), " \
 					  "host varchar(255), background varchar(255), checksum varchar(255))");
-		createDb.exec("CREATE TABLE IF NOT EXISTS playlistTracks (trackNumber INTEGER, title varchar(255), album varchar(255), length INTEGER, " \
-					  "artist varchar(255), rating INTEGER, year INTEGER, icon varchar(255), host varchar(255), id INTEGER, " \
-					  "url varchar(255), playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
+		createDb.exec("CREATE TABLE IF NOT EXISTS playlistTracks (uri varchar(255) PRIMARY KEY ASC, playlistId INTEGER, FOREIGN KEY(playlistId) REFERENCES playlists(id) ON DELETE CASCADE)");
 		/// TEST Monitor Filesystem
 		createDb.exec("CREATE TABLE IF NOT EXISTS filesystem (path VARCHAR(255) PRIMARY KEY ASC, " \
 					  "lastModified INTEGER);");
@@ -98,12 +96,14 @@ void SqlDatabase::init()
 	this->setPragmas();
 }
 
-uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting)
+uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const QStringList &tracks, bool isOverwriting)
 {
 	if (!isOpen()) {
 		open();
 		this->setPragmas();
 	}
+
+	qDebug() << Q_FUNC_INFO << tracks;
 
 	static std::uniform_int_distribution<uint> tt;
 	this->transaction();
@@ -138,7 +138,7 @@ uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const st
 	return id;
 }
 
-bool SqlDatabase::insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting)
+bool SqlDatabase::insertIntoTablePlaylistTracks(uint playlistId, const QStringList &tracks, bool isOverwriting)
 {
 	if (!isOpen()) {
 		open();
@@ -152,23 +152,13 @@ bool SqlDatabase::insertIntoTablePlaylistTracks(uint playlistId, const std::list
 		deleteTracks.addBindValue(playlistId);
 		deleteTracks.exec();
 	}
-	for (std::list<TrackDAO>::const_iterator it = tracks.cbegin(); it != tracks.cend(); ++it) {
-		TrackDAO track = *it;
+	/// TODO remote tracks?
+	for (QString track : tracks) {
 		QSqlQuery insert(*this);
-		insert.prepare("INSERT INTO playlistTracks (trackNumber, title, album, length, artist, rating, year, " \
-					   "icon, host, id, url, playlistId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		insert.addBindValue(track.trackNumber());
-		insert.addBindValue(track.title());
-		insert.addBindValue(track.album());
-		insert.addBindValue(track.length());
-		insert.addBindValue(track.artist());
-		insert.addBindValue(track.rating());
-		insert.addBindValue(track.year());
-		insert.addBindValue(track.icon());
-		insert.addBindValue(track.host());
-		insert.addBindValue(track.id());
-		insert.addBindValue(track.uri());
+		insert.prepare("INSERT INTO playlistTracks (uri, playlistId) VALUES (?, ?)");
+		insert.addBindValue(track);
 		insert.addBindValue(playlistId);
+
 		insert.exec();
 	}
 	this->commit();
@@ -319,33 +309,25 @@ Cover* SqlDatabase::selectCoverFromURI(const QString &uri)
 	return c;
 }
 
-QList<TrackDAO> SqlDatabase::selectPlaylistTracks(uint playlistID)
+QStringList SqlDatabase::selectPlaylistTracks(uint playlistID, bool withPrefix)
 {
 	if (!isOpen()) {
 		open();
 		this->setPragmas();
 	}
 
-	QList<TrackDAO> tracks;
+	QStringList tracks;
 	QSqlQuery results(*this);
-	results.prepare("SELECT trackNumber, title, album, length, artist, rating, year, icon, id, url FROM playlistTracks WHERE playlistId = ?");
+	results.prepare("SELECT uri FROM playlistTracks WHERE playlistId = ?");
 	results.addBindValue(playlistID);
 	if (results.exec()) {
 		while (results.next()) {
-			int i = -1;
 			QSqlRecord record = results.record();
-			TrackDAO track;
-			track.setTrackNumber(record.value(++i).toString());
-			track.setTitle(record.value(++i).toString());
-			track.setAlbum(record.value(++i).toString());
-			track.setLength(record.value(++i).toString());
-			track.setArtist(record.value(++i).toString());
-			track.setRating(record.value(++i).toInt());
-			track.setYear(record.value(++i).toString());
-			track.setIcon(record.value(++i).toString());
-			track.setId(record.value(++i).toString());
-			track.setUri(record.value(++i).toString());
-			tracks.append(std::move(track));
+			if (withPrefix) {
+				tracks << "file://" + record.value(0).toString();
+			} else {
+				tracks << record.value(0).toString();
+			}
 		}
 	}
 	return tracks;

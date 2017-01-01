@@ -1,11 +1,11 @@
 /***************************************************************************
-    copyright            : (C) 2002 - 2008 by Scott Wheeler
-    email                : wheeler@kde.org
+    copyright            : (C) 2015 by Urs Fleisch
+    email                : ufleisch@users.sourceforge.net
  ***************************************************************************/
 
 /***************************************************************************
  *   This library is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU Lesser General Public License version   *
+ *   it  under the terms of the GNU Lesser General Public License version  *
  *   2.1 as published by the Free Software Foundation.                     *
  *                                                                         *
  *   This library is distributed in the hope that it will be useful, but   *
@@ -23,48 +23,58 @@
  *   http://www.mozilla.org/MPL/                                           *
  ***************************************************************************/
 
-#ifndef TAGLIB_ID3V2SYNCHDATA_H
-#define TAGLIB_ID3V2SYNCHDATA_H
+#ifndef TAGLIB_PODCASTFRAME_H
+#define TAGLIB_PODCASTFRAME_H
 
-#include "tbytevector.h"
-#include "taglib.h"
+#include "id3v2frame.h"
+#include "taglib_export.h"
 
 namespace TagLib {
 
   namespace ID3v2 {
 
-    //! A few functions for ID3v2 synch safe integer conversion
-
+    //! ID3v2 podcast frame
     /*!
-     * In the ID3v2.4 standard most integer values are encoded as "synch safe"
-     * integers which are encoded in such a way that they will not give false
-     * MPEG syncs and confuse MPEG decoders.  This namespace provides some
-     * methods for converting to and from these values to ByteVectors for
-     * things rendering and parsing ID3v2 data.
+     * An implementation of ID3v2 podcast flag, a frame with four zero bytes.
      */
-
-    namespace SynchData
+    class TAGLIB_EXPORT PodcastFrame : public Frame
     {
+      friend class FrameFactory;
+
+    public:
       /*!
-       * This returns the unsigned integer value of \a data where \a data is a
-       * ByteVector that contains a \e synchsafe integer (Structure,
-       * <a href="id3v2-structure.html#6.2">6.2</a>).  The default \a length of
-       * 4 is used if another value is not specified.
+       * Construct a podcast frame.
        */
-      TAGLIB_EXPORT unsigned int toUInt(const ByteVector &data);
+      PodcastFrame();
 
       /*!
-       * Returns a 4 byte (32 bit) synchsafe integer based on \a value.
+       * Destroys this PodcastFrame instance.
        */
-      TAGLIB_EXPORT ByteVector fromUInt(unsigned int value);
+      virtual ~PodcastFrame();
 
       /*!
-       * Convert the data from unsynchronized data to its original format.
+       * Returns a null string.
        */
-      TAGLIB_EXPORT ByteVector decode(const ByteVector &input);
-    }
+      virtual String toString() const;
+
+    protected:
+      // Reimplementations.
+
+      virtual void parseFields(const ByteVector &data);
+      virtual ByteVector renderFields() const;
+
+    private:
+      /*!
+       * The constructor used by the FrameFactory.
+       */
+      PodcastFrame(const ByteVector &data, Header *h);
+      PodcastFrame(const PodcastFrame &);
+      PodcastFrame &operator=(const PodcastFrame &);
+
+      class PodcastFramePrivate;
+      PodcastFramePrivate *d;
+    };
 
   }
 }
-
 #endif

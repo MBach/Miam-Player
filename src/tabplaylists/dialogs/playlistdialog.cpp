@@ -254,9 +254,10 @@ void PlaylistDialog::exportSelectedPlaylist()
 		QFile f(newName);
 		if (f.open(QIODevice::ReadWrite | QIODevice::Text)) {
 			QTextStream stream(&f);
-			QList<TrackDAO> tracks = db.selectPlaylistTracks(playlistId);
-			for (TrackDAO t : tracks) {
-				stream << t.uri();
+			stream.setGenerateByteOrderMark(true);
+			stream.setCodec("UTF-8");
+			for (QString track : db.selectPlaylistTracks(playlistId, false)) {
+				stream << QDir::toNativeSeparators(track);
 				endl(stream);
 			}
 		}
@@ -284,11 +285,12 @@ void PlaylistDialog::populatePreviewFromSaved(const QItemSelection &, const QIte
 	this->clearPreview(!empty);
 	if (indexes.size() == 1) {
 		uint playlistId = _savedPlaylistModel->itemFromIndex(indexes.first())->data(PlaylistID).toUInt();
-		QList<TrackDAO> tracks = SqlDatabase().selectPlaylistTracks(playlistId);
+		QStringList tracks = SqlDatabase().selectPlaylistTracks(playlistId);
 		for (int i = 0; i < tracks.size(); i++) {
-			TrackDAO track = tracks.at(i);
+			QString track = tracks.at(i);
 			QTreeWidgetItem *item = new QTreeWidgetItem;
-			item->setText(0, QString("%1 (%2 - %3)").arg(track.title(), track.artist(), track.album()));
+			FileHelper fh(track);
+			item->setText(0, QString("%1 (%2 - %3)").arg(fh.title(), fh.artist(), fh.album()));
 			previewPlaylist->addTopLevelItem(item);
 
 			if (i + 1 == MAX_TRACKS_PREVIEW_AREA) {

@@ -82,6 +82,8 @@ public:
 	inline void setHash(uint hash) { _hash = hash; }
 	inline void setId(uint id) { _id = id; }
 
+	inline PlaylistModel *model() const { return _playlistModel; }
+
 protected:
 
 	/** Redefined to display a small context menu in the view. */

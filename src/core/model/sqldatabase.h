@@ -34,8 +34,8 @@ public:
 
 	void reset();
 
-	uint insertIntoTablePlaylists(const PlaylistDAO &playlist, const std::list<TrackDAO> &tracks, bool isOverwriting);
-	bool insertIntoTablePlaylistTracks(uint playlistId, const std::list<TrackDAO> &tracks, bool isOverwriting = false);
+	uint insertIntoTablePlaylists(const PlaylistDAO &playlist, const QStringList &tracks, bool isOverwriting);
+	bool insertIntoTablePlaylistTracks(uint playlistId, const QStringList &tracks, bool isOverwriting = false);
 	bool insertIntoTableTracks(const TrackDAO &track);
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
@@ -44,7 +44,7 @@ public:
 	void removeRecordsFromHost(const QString &host);
 
 	Cover *selectCoverFromURI(const QString &uri);
-	QList<TrackDAO> selectPlaylistTracks(uint playlistID);
+	QStringList selectPlaylistTracks(uint playlistID, bool withPrefix = true);
 	PlaylistDAO selectPlaylist(uint playlistId);
 	QList<PlaylistDAO> selectPlaylists();
 

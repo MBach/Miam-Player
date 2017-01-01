@@ -195,9 +195,12 @@ void TabPlaylist::loadPlaylist(uint playlistId)
 	}
 	playlist->setHash(playlistDao.checksum().toUInt());
 
-	/// Reload tracks from filesystem of remote location, do not use outdated or incomplete data from cache!
-	/// Use (host, id) or (uri)
-	QList<TrackDAO> tracks = db.selectPlaylistTracks(playlistId);
+	/// Reload tracks from filesystem
+	/// TODO: remote files!
+	QList<QMediaContent> tracks;
+	for (QString track : db.selectPlaylistTracks(playlistId)) {
+		tracks << QMediaContent(QUrl::fromLocalFile(track));
+	}
 	playlist->insertMedias(-1, tracks);
 	playlist->setId(playlistId);
 	playlist->mediaPlaylist()->setTitle(playlistDao.title());

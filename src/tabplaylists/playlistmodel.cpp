@@ -139,26 +139,12 @@ void PlaylistModel::insertMedia(int rowIndex, const FileHelper &fileHelper)
 			ratingItem->setData(false, RemoteMedia);
 		}
 		yearItem = new QStandardItem(fileHelper.year());
-
-
-		QString absPath = fileHelper.fileInfo().absoluteFilePath();
-		TrackDAO track;
-		track.setTrackNumber(fileHelper.trackNumber());
-		track.setTitle(fileHelper.title());
-		track.setAlbum(fileHelper.album());
-		track.setLength(fileHelper.length());
-		track.setArtist(fileHelper.artist());
-		track.setRating(fileHelper.rating());
-		track.setYear(fileHelper.year());
-		track.setId(QString::number(qHash(absPath)));
-		track.setUri(QUrl::fromLocalFile(absPath).toString());
-		trackDAO->setData(QVariant::fromValue(track), Qt::DisplayRole);
+		trackDAO->setData(fileHelper.fileInfo().absoluteFilePath(), Qt::DisplayRole);
 
 		trackItem->setTextAlignment(Qt::AlignCenter);
 		lengthItem->setTextAlignment(Qt::AlignCenter);
 		ratingItem->setTextAlignment(Qt::AlignCenter);
 		yearItem->setTextAlignment(Qt::AlignCenter);
-
 
 	} else {
 		trackItem = new QStandardItem;
@@ -212,35 +198,9 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	// Finally, reorder the inner QMediaPlaylist
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
 	currentPlayingTrack += mediasToMove.size();
-
-
-	//_mediaPlaylist->removeMedia(0, 4);
-
-	//_mediaPlaylist->removeMedia(0, 4);
-
-
-//	int offset = 0;
-//	for (QModelIndex selectedIndex : selectedIndexes) {
-//		int rowNumber = selectedIndex.row();
-//		if (rowNumber > currentPlayingTrack && currentPlayingTrack > insertPoint) {
-//			offset++;
-//		} else if (rowNumber < currentPlayingTrack && currentPlayingTrack < insertPoint) {
-//			offset--;
-//		} else if (currentPlayingTrack == rowNumber) {
-//			offset = -rowNumber;
-//		}
-//	}
-	//if (offset < 0) {
-		//_mediaPlaylist->setCurrentIndex(-offset);
-	//} else {
-	//	_mediaPlaylist->setCurrentIndex(currentPlayingTrack + offset);
-	//}
-
-	//_mediaPlaylist->setCurrentIndex(currentPlayingTrack);
 	_mediaPlaylist->blockSignals(false);
 
 	qDebug() << "currentPlayingTrack" << _mediaPlaylist->currentIndex() << currentPlayingTrack;
-
 
 	return rowsToHiglight;
 }
@@ -254,6 +214,35 @@ void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)
 		item->setFont(font);
 	}
 	QStandardItemModel::insertRow(row, items);
+}
+
+void PlaylistModel::reload()
+{
+	for (int row = 0; row < rowCount(); row++) {
+		QStandardItem *currentTrackItem = item(row, Playlist::COL_TRACK_DAO);
+		FileHelper fileHelper(currentTrackItem->data(Qt::DisplayRole).toString());
+
+		QString title;
+		if (fileHelper.title().isEmpty()) {
+			title = fileHelper.fileInfo().baseName();
+		} else {
+			title = fileHelper.title();
+		}
+
+		// Then, construct a new row with correct informations
+		item(row, Playlist::COL_TRACK_NUMBER)->setData(fileHelper.trackNumber(), Qt::DisplayRole);
+		item(row, Playlist::COL_TITLE)->setData(title, Qt::DisplayRole);
+		item(row, Playlist::COL_ALBUM)->setData(fileHelper.album(), Qt::DisplayRole);
+		item(row, Playlist::COL_LENGTH)->setData(fileHelper.length(), Qt::DisplayRole);
+		item(row, Playlist::COL_ARTIST)->setData(fileHelper.artist(), Qt::DisplayRole);
+		int rating = fileHelper.rating();
+		if (rating > 0) {
+			StarRating r(rating);
+			item(row, Playlist::COL_RATINGS)->setData(QVariant::fromValue(r), Qt::DisplayRole);
+			item(row, Playlist::COL_RATINGS)->setData(false, RemoteMedia);
+		}
+		item(row, Playlist::COL_YEAR)->setData(fileHelper.year(), Qt::DisplayRole);
+	}
 }
 
 void PlaylistModel::removeTrack(int row)
