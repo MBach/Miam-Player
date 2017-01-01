@@ -22,6 +22,8 @@ environment:
 
 install:
   - cmd: set PATH=%PATH%;%QTDIR%\bin
+  - mkdir build
+  - cd build
 
 cache:
   - MIAM
