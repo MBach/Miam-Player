@@ -1,0 +1,3 @@
+[submodule "src/plugins/windows-toolbar"]
+	path = src/plugins/windows-toolbar
+	url = https://github.com/MBach/windows-toolbar.git

@@ -7,6 +7,7 @@ SUBDIRS += \
     src/library \
     src/tabplaylists \
     src/uniquelibrary \
+    src/plugins \
     src/player
 
 RESOURCES += \
