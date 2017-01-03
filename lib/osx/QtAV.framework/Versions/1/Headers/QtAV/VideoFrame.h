@@ -1,6 +1,6 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -22,8 +22,6 @@
 #ifndef QTAV_VIDEOFRAME_H
 #define QTAV_VIDEOFRAME_H
 
-#include <QtAV/QtAV_Global.h>
-#include <QtAV/CommonTypes.h>
 #include <QtAV/Frame.h>
 #include <QtAV/VideoFormat.h>
 #include <QtCore/QSize>
@@ -52,17 +50,15 @@ public:
 
     VideoFrame();
     //must set planes and linesize manually if data is empty
+    // must set planes and linesize manually
     VideoFrame(int width, int height, const VideoFormat& format, const QByteArray& data = QByteArray());
-    //set planes and linesize manually or call init
-    QTAV_DEPRECATED VideoFrame(const QByteArray& data, int width, int height, const VideoFormat& format);
-    VideoFrame(const QVector<int>& textures, int width, int height, const VideoFormat& format);
-    VideoFrame(const QImage& image); // does not copy the image data
+    VideoFrame(const QImage& image);
     VideoFrame(const VideoFrame &other);
-    virtual ~VideoFrame();
+    ~VideoFrame();
 
     VideoFrame &operator =(const VideoFrame &other);
 
-    virtual int channelCount() const;
+    int channelCount() const Q_DECL_OVERRIDE;
     /*!
      * Deep copy. Given the format, width and height, plane addresses and line sizes.
      */
@@ -90,19 +86,24 @@ public:
     // TODO: pixel aspect ratio
     ColorSpace colorSpace() const;
     void setColorSpace(ColorSpace value);
-
-    // no padded bytes
+    ColorRange colorRange() const;
+    void setColorRange(ColorRange value);
+    /*!
+     * \brief effectiveBytesPerLine
+     * The plane bytes contains valid image data without padded data for alignment reason
+     */
     int effectiveBytesPerLine(int plane) const;
     /*!
      * \brief toImage
      * Return a QImage of current video frame, with given format, image size and region of interest.
+     * If VideoFrame is constructed from an QImage, the target format, size and roi are the same, then no data copy.
      * \param dstSize result image size
      * \param roi NOT implemented!
      */
     QImage toImage(QImage::Format fmt = QImage::Format_ARGB32, const QSize& dstSize = QSize(), const QRectF& roi = QRect()) const;
     /*!
      * \brief to
-     * The result frame data is always on host memory.
+     * The result frame data is always on host memory. If video frame data is already in host memory, and the target parameters are the same, then return the current frame.
      * \param pixfmt target pixel format
      * \param dstSize target frame size
      * \param roi interested region of source frame
@@ -117,6 +118,7 @@ public:
      * return the result handle or 0 if not supported
      */
     void* map(SurfaceType type, void* handle, int plane = 0);
+    void* map(SurfaceType type, void* handle, const VideoFormat& fmt, int plane = 0);
     void unmap(void* handle);
     /*!
      * \brief createInteropHandle
@@ -124,13 +126,6 @@ public:
      * \return null on error. otherwise return the input handle
      */
     void* createInteropHandle(void* handle, SurfaceType type, int plane);
-    //copy to host. Used if gpu filter not supported. To avoid copy too frequent, sort the filters first?
-    //bool mapToHost();
-    /*!
-       texture in FBO. we can use texture in FBO through filter pipeline then switch to window context to display
-       return -1 if no texture, not uploaded
-     */
-    int texture(int plane = 0) const; //TODO: remove
 };
 
 class ImageConverter;

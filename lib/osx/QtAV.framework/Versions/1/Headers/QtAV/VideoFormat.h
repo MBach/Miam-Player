@@ -1,6 +1,6 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -22,15 +22,20 @@
 #ifndef QTAV_VIDEOFORMAT_H
 #define QTAV_VIDEOFORMAT_H
 
-#include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QString>
 #include <QtGui/QImage>
 #include <QtAV/QtAV_Global.h>
 
+QT_BEGIN_NAMESPACE
 class QDebug;
+QT_END_NAMESPACE
 namespace QtAV {
 class VideoFormatPrivate;
+/*!
+ * \brief The VideoFormat class
+ * Describes the layout of video data. Some properties like display aspect ratio, color space and color range, which describes how to display the video frame, should be in VideoFrame class.
++ */
 class Q_AV_EXPORT VideoFormat
 {
 public:
@@ -127,6 +132,8 @@ public:
         Format_BGRA64, //native endian
         Format_BGRA64LE,
         Format_BGRA64BE,
+
+        Format_VYU, // for rgb422_apple texture, the layout is like rgb24: (v, y, u, )
         Format_User
     };
 
@@ -138,6 +145,7 @@ public:
     static QImage::Format imageFormatFromPixelFormat(PixelFormat format);
     static PixelFormat pixelFormatFromFFmpeg(int ff); //AVPixelFormat
     static int pixelFormatToFFmpeg(PixelFormat fmt);
+    static QVector<int> pixelFormatsFFmpeg();
 
     VideoFormat(PixelFormat format = Format_Invalid);
     VideoFormat(int formatFF);
@@ -190,7 +198,10 @@ public:
     int planeCount() const;
     /*!
      * https://wiki.videolan.org/YUV
+     * bytesPerPixel()
      *  YUV420P: 1pix = 4Y+U+V, (4*8+8+8)/4 = 12
+     * bytesPerPixel(plane) is different, for example
+     * uyvy422 bytesPerPixel(0) = 8+8+8 = 24, while bytesPerPixel() = (2*8+8+8)/2 = 16
      */
     int bitsPerPixel() const;
     /// nv12: 16 for uv plane

@@ -1,6 +1,6 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -40,19 +40,20 @@
 #include <QtAV/AudioFormat.h>
 #include <QtAV/AudioOutput.h>
 #include <QtAV/AudioResampler.h>
-#include <QtAV/AudioResamplerTypes.h>
 
 #include <QtAV/Filter.h>
 #include <QtAV/FilterContext.h>
+#include <QtAV/GLSLFilter.h>
 #include <QtAV/LibAVFilter.h>
 
 #include <QtAV/VideoShader.h>
 #include <QtAV/OpenGLVideo.h>
+#include <QtAV/ConvolutionShader.h>
+#include <QtAV/VideoShaderObject.h>
 
 #include <QtAV/VideoCapture.h>
 #include <QtAV/VideoEncoder.h>
 #include <QtAV/VideoDecoder.h>
-#include <QtAV/VideoDecoderTypes.h>
 #include <QtAV/VideoFormat.h>
 #include <QtAV/VideoFrame.h>
 #include <QtAV/VideoFrameExtractor.h>

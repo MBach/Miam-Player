@@ -1,6 +1,6 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -22,15 +22,18 @@
 #ifndef QTAV_AVPLAYER_H
 #define QTAV_AVPLAYER_H
 
+#include <limits>
 #include <QtCore/QHash>
 #include <QtCore/QScopedPointer>
 #include <QtAV/AudioOutput.h>
 #include <QtAV/AVClock.h>
 #include <QtAV/Statistics.h>
-#include <QtAV/VideoDecoderTypes.h>
+#include <QtAV/VideoDecoder.h>
 #include <QtAV/AVError.h>
 
+QT_BEGIN_NAMESPACE
 class QIODevice;
+QT_END_NAMESPACE
 
 namespace QtAV {
 
@@ -41,7 +44,21 @@ class Filter;
 class AudioFilter;
 class VideoFilter;
 class VideoCapture;
-
+/*!
+ * \brief The AVPlayer class
+ * Preload:
+ * \code
+ *  player->setFile(...);
+ *  player->load();
+ *  do some thing...
+ *  player->play();
+ * \endcode
+ * No preload:
+ * \code
+ *  player->setFile(...);
+ *  player->play();
+ * \endcode
+ */
 class Q_AV_EXPORT AVPlayer : public QObject
 {
     Q_OBJECT
@@ -63,8 +80,14 @@ class Q_AV_EXPORT AVPlayer : public QObject
     Q_PROPERTY(int contrast READ contrast WRITE setContrast NOTIFY contrastChanged)
     Q_PROPERTY(int saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
     Q_PROPERTY(State state READ state WRITE setState NOTIFY stateChanged)
+    Q_PROPERTY(QtAV::MediaStatus mediaStatus READ mediaStatus NOTIFY mediaStatusChanged)
+    Q_PROPERTY(QtAV::MediaEndAction mediaEndAction READ mediaEndAction WRITE setMediaEndAction NOTIFY mediaEndActionChanged)
     Q_ENUMS(State)
 public:
+    /*!
+     * \brief The State enum
+     * The playback state. It's different from MediaStatus. MediaStatus indicates media stream state
+     */
     enum State {
         StoppedState,
         PlayingState, /// Start to play if it was stopped, or resume if it was paused
@@ -77,7 +100,11 @@ public:
     explicit AVPlayer(QObject *parent = 0);
     ~AVPlayer();
 
-    //NOT const. This is the only way to access the clock.
+    /*!
+     * \brief masterClock
+     * setClockType() should call when playback started.
+     * \return
+     */
     AVClock* masterClock();
     // If path is different from previous one, the stream to play will be reset to default.
     /*!
@@ -89,34 +116,19 @@ public:
      */
     void setFile(const QString& path);
     QString file() const;
-    //QIODevice support
+    /*!
+     * \brief setIODevice
+     * Play media stream from QIODevice. AVPlayer does not take the ownership. You have to manage device lifetime.
+     */
     void setIODevice(QIODevice* device);
     /*!
      * \brief setInput
-     * AVPlayer's demuxer takes the ownership. Call it when player is stopped.
+     * Play media stream from custom MediaIO. AVPlayer's demuxer takes the ownership. Call it when player is stopped.
      */
     void setInput(MediaIO* in);
     MediaIO* input() const;
 
-    // force reload even if already loaded. otherwise only reopen codecs if necessary
-    QTAV_DEPRECATED bool load(const QString& path, bool reload = true); //deprecated
-    QTAV_DEPRECATED bool load(bool reload); //deprecated
-    //
     bool isLoaded() const;
-    /*!
-     * \brief load
-     * Load the current media set by setFile();. If already loaded, does nothing and return true.
-     * If async load, mediaStatus() becomes LoadingMedia and user should connect signal loaded()
-     * or mediaStatusChanged(QtAV::LoadedMedia) to a slot
-     * \return true if success or already loaded.
-     */
-    bool load(); //NOT implemented.
-    /*!
-     * \brief unload
-     * If the media is loading or loaded but not playing, unload it.
-     * Does nothing if isPlaying()
-     */
-    void unload(); //TODO: emit signal?
     /*!
      * \brief setAsyncLoad
      * async load is enabled by default
@@ -164,7 +176,6 @@ public:
      * If media stream is not a local file, stopPosition()==max value of qint64
      */
     qint64 stopPosition() const; //unit: ms
-    QTAV_DEPRECATED qreal positionF() const; //unit: s.
     qint64 position() const; //unit: ms
     //0: play once. N: play N+1 times. <0: infinity
     int repeat() const; //or repeatMax()?
@@ -230,20 +241,17 @@ public:
     int videoStreamCount() const;
     int subtitleStreamCount() const;
     /*!
-     * \brief capture and save current frame to "$HOME/.QtAV/filename_pts.png".
-     * To capture with custom configurations, such as name and dir, use
-     * VideoCapture api through AVPlayer::videoCapture()
-     * deprecated, use AVPlayer.videoCapture()->request() instead
-     * \return
+     * \brief videoCapture
+     * Capture the current frame using videoCapture()->capture()
+     * \sa VideoCapture
      */
-    QTAV_DEPRECATED bool captureVideo();
     VideoCapture *videoCapture() const;
-    /*
-     * replay without parsing the stream if it's already loaded. (not implemented)
-     * to force reload the stream, unload() then play()
+    //TODO: no replay, replay without parsing the stream if it's already loaded. (not implemented). to force reload the stream, unload() then play()
+    /*!
+     * \brief play
+     * If isAsyncLoad() is true (default), play() will return immediately. Signals started() and stateChanged() will be emitted if media is loaded and playback starts.
      */
-    //TODO: no replay
-    bool play(const QString& path);
+    void play(const QString& path);
     bool isPlaying() const;
     bool isPaused() const;
     /*!
@@ -305,13 +313,6 @@ public:
     qreal forcedFrameRate() const;
     //Statistics& statistics();
     const Statistics& statistics() const;
-    /*
-     * install the filter in AVThread. Filter will apply before rendering data
-     * return false if filter is already registered or audio/video thread is not ready(will install when ready)
-     */
-    QTAV_DEPRECATED bool installAudioFilter(Filter *filter);
-    QTAV_DEPRECATED bool installVideoFilter(Filter *filter);
-    QTAV_DEPRECATED bool uninstallFilter(Filter *filter);
     /*!
      * \brief installFilter
      * Insert a filter at position 'index' of current filter list.
@@ -336,7 +337,7 @@ public:
     /*!
      * \brief setVideoDecoderPriority
      * also can set in opt.priority
-     * \param names the video decoder name list in priority order. Name can be "FFmpeg", "CUDA", "DXVV", "VAAPI", "VDA", "VideoToolbox", case insensitive
+     * \param names the video decoder name list in priority order. Name can be "FFmpeg", "CUDA", "DXVA", "D3D11", "VAAPI", "VDA", "VideoToolbox", case insensitive
      */
     void setVideoDecoderPriority(const QStringList& names);
     QStringList videoDecoderPriority() const;
@@ -378,16 +379,37 @@ public:
     void setOptionsForVideoCodec(const QVariantHash& dict);
     QVariantHash optionsForVideoCodec() const;
 
+    /*!
+     * \brief mediaEndAction
+     * The action at the end of media or when playback is stopped. Default is quit threads and clear video renderers.
+     * If the flag MediaEndAction_KeepDisplay is set, the last video frame will keep displaying in video renderers.
+     * If MediaEndAction_Pause is set, you can still seek and resume the playback because no thread exits.
+     */
+    MediaEndAction mediaEndAction() const;
+    void setMediaEndAction(MediaEndAction value);
+
 public slots:
+    /*!
+     * \brief load
+     * Load the current media set by setFile(); Can be used to reload a media and call play() later. If already loaded, does nothing and return true.
+     * If async load, mediaStatus() becomes LoadingMedia and user should connect signal loaded()
+     * or mediaStatusChanged(QtAV::LoadedMedia) to a slot
+     * \return true if success or already loaded.
+     */
+    bool load();
+
     void togglePause();
     void pause(bool p = true);
     /*!
      * \brief play
-     * If media is not loaded, load()
+     * Load media and start playback. If current media is playing and media source is not changed, nothing to do. If media source is not changed, try to load (not in LoadingStatus or LoadedStatus) and start playback. If media source changed, reload and start playback.
      */
-    void play(); //replay
+    void play();
+    /*!
+     * \brief stop
+     * Stop playback. It blocks current thread until the playback is stopped. Will emit signal stopped(). startPosition(), stopPosition(), repeat() are reset
+     */
     void stop();
-    QTAV_DEPRECATED void playNextFrame(); //deprecated. use stepForward instead
     /*!
      * \brief stepForward
      * Play the next frame and pause
@@ -402,7 +424,7 @@ public slots:
     void setRelativeTimeMode(bool value);
     /*!
      * \brief setRepeat
-     *  repeat max times between startPosition() and endPosition()
+     *  Repeat max times between startPosition() and endPosition(). It's reset if playback is stopped.
      *  max==0: no repeat
      *  max<0: infinity. std::numeric_limits<int>::max();
      * \param max
@@ -416,24 +438,29 @@ public slots:
      *     player->setStartPosition();
      *     player->play("some video");
      * \endcode
-     *  pos < 0, equals duration()+pos
+     *  pos < 0: equals duration()+pos
      *  pos == 0, means start at the beginning of media stream
-     *  (may be not exactly equals 0, seek to demuxer.startPosition()/startTime())
-     *  pos > media end position: no effect
+     *  pos > media end position, or pos > normalized stopPosition(): undefined
      */
     void setStartPosition(qint64 pos);
     /*!
      * \brief stopPosition
-     *  pos = 0: mediaStopPosition()
+     *  pos > mediaStopPosition(): mediaStopPosition()
      *  pos < 0: duration() + pos
+     * With the default value, the playback will not stop until the end of media (including dynamically changed media duration, e.g. recording video)
      */
-    void setStopPosition(qint64 pos);
+    void setStopPosition(qint64 pos = std::numeric_limits<qint64>::max());
+    /*!
+     * \brief setTimeRange
+     * Set startPosition and stopPosition. Make sure start <= stop.
+     */
+    void setTimeRange(qint64 start, qint64 stop = std::numeric_limits<qint64>::max());
+
     bool isSeekable() const;
     /*!
      * \brief setPosition equals to seek(qreal)
      *  position < 0: 0
      * \param position in ms
-     *
      */
     void setPosition(qint64 position);
     void seek(qreal r); // r: [0, 1]
@@ -449,6 +476,12 @@ public slots:
      * Playback can start or resume only when the buffer is entirely filled.
      */
     qreal bufferProgress() const;
+    /*!
+     * \brief bufferSpeed
+     * Bytes/s
+     * \return 0 if not buffering. >= 0 if buffering
+     */
+    qreal bufferSpeed() const;
     /*!
      * \brief buffered
      * Current buffered value in msecs, bytes or packet count depending on bufferMode()
@@ -489,14 +522,20 @@ Q_SIGNALS:
     void sourceChanged();
     void loaded(); // == mediaStatusChanged(QtAV::LoadedMedia)
     void mediaStatusChanged(QtAV::MediaStatus status); //explictly use QtAV::MediaStatus
+    void mediaEndActionChanged(QtAV::MediaEndAction action);
     /*!
      * \brief durationChanged emit when media is loaded/unloaded
      */
     void durationChanged(qint64);
     void error(const QtAV::AVError& e); //explictly use QtAV::AVError in connection for Qt4 syntax
     void paused(bool p);
+    /*!
+     * \brief started
+     * Emitted when playback is started. Some functions that control playback should be called after playback is started, otherwise they won't work, e.g. setPosition(), pause(). stop() can be called at any time.
+     */
     void started();
     void stopped();
+    void stoppedAt(qint64 position);
     void stateChanged(QtAV::AVPlayer::State state);
     void speedChanged(qreal speed);
     void repeatChanged(int r);
@@ -504,7 +543,12 @@ Q_SIGNALS:
     void startPositionChanged(qint64 position);
     void stopPositionChanged(qint64 position);
     void seekableChanged();
-    void seekFinished();
+    /*!
+     * \brief seekFinished
+     * If there is a video stream currently playing, emitted when video seek is finished. If only an audio stream is playing, emitted when audio seek is finished. The position() is the master clock value, It can be very different from video timestamp at this time.
+     * \param position The video or audio timestamp when seek is finished
+     */
+    void seekFinished(qint64 position);
     void positionChanged(qint64 position);
     void interruptTimeoutChanged();
     void interruptOnTimeoutChanged();
@@ -531,7 +575,6 @@ Q_SIGNALS:
 private Q_SLOTS:
     void loadInternal(); // simply load
     void playInternal(); // simply play
-    void loadAndPlay();
     void stopFromDemuxerThread();
     void aboutToQuitApp();
     // start/stop notify timer in this thread. use QMetaObject::invokeMethod
@@ -539,15 +582,21 @@ private Q_SLOTS:
     void stopNotifyTimer();
     void onStarted();
     void updateMediaStatus(QtAV::MediaStatus status);
-    void onSeekFinished();
+    void onSeekFinished(qint64 value);
+    void tryClearVideoRenderers();
 protected:
     // TODO: set position check timer interval
     virtual void timerEvent(QTimerEvent *);
-
 private:
+    /*!
+     * \brief unload
+     * If the media is loading or loaded but not playing, unload it. Internall use only.
+     */
+    void unload(); //TODO: private. call in stop() if not load() by user? or always unload() in stop()?
+    qint64 normalizedPosition(qint64 pos);
     class Private;
     QScopedPointer<Private> d;
 };
-
 } //namespace QtAV
+Q_DECLARE_METATYPE(QtAV::AVPlayer::State)
 #endif // QTAV_AVPLAYER_H

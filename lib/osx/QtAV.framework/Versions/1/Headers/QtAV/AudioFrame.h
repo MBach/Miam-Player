@@ -1,6 +1,6 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -26,24 +26,18 @@
 #include <QtAV/AudioFormat.h>
 
 namespace QtAV {
-
 class AudioResampler;
 class AudioFramePrivate;
 class Q_AV_EXPORT AudioFrame : public Frame
 {
     Q_DECLARE_PRIVATE(AudioFrame)
 public:
-    /*!
-     * \brief AudioFrame
-     * construct an audio frame for the given format. An invalid format results in invalid frame.
-     */
-    AudioFrame(const AudioFormat& format = AudioFormat());
     //data must be complete
     /*!
      * \brief AudioFrame
      * construct an audio frame from a given buffer and format
      */
-    AudioFrame(const QByteArray& data, const AudioFormat& format);
+    AudioFrame(const AudioFormat& format = AudioFormat(), const QByteArray& data = QByteArray());
     AudioFrame(const AudioFrame &other);
     virtual ~AudioFrame();
     AudioFrame &operator =(const AudioFrame &other);
@@ -70,8 +64,14 @@ public:
     AudioFrame to(const AudioFormat& fmt) const;
     //AudioResamplerId
     void setAudioResampler(AudioResampler *conv); //TODO: remove
+    /*!
+        Returns the number of microseconds represented by \a bytes in this format.
+        Returns 0 if this format is not valid.
+        Note that some rounding may occur if \a bytes is not an exact multiple
+        of the number of bytes per frame.
+    */
+    qint64 duration() const;
 };
-
 } //namespace QtAV
-
+Q_DECLARE_METATYPE(QtAV::AudioFrame)
 #endif // QTAV_AUDIOFRAME_H

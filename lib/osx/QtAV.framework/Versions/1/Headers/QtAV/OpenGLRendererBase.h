@@ -1,8 +1,8 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2014-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
-*   This file is part of QtAV
+*   This file is part of QtAV (from 2014)
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -46,27 +46,27 @@ class Q_AV_EXPORT OpenGLRendererBase : public VideoRenderer
     DPTR_DECLARE_PRIVATE(OpenGLRendererBase)
 public:
     virtual ~OpenGLRendererBase();
-    virtual bool isSupported(VideoFormat::PixelFormat pixfmt) const;
+    bool isSupported(VideoFormat::PixelFormat pixfmt) const Q_DECL_OVERRIDE;
+    OpenGLVideo* opengl() const Q_DECL_OVERRIDE;
 protected:
-    virtual bool receiveFrame(const VideoFrame& frame);
-    virtual bool needUpdateBackground() const;
+    virtual bool receiveFrame(const VideoFrame& frame) Q_DECL_OVERRIDE;
     //called in paintEvent before drawFrame() when required
-    virtual void drawBackground();
+    virtual void drawBackground() Q_DECL_OVERRIDE;
     //draw the current frame using the current paint engine. called by paintEvent()
-    virtual void drawFrame();
+    virtual void drawFrame() Q_DECL_OVERRIDE;
     void onInitializeGL();
     void onPaintGL();
     void onResizeGL(int w, int h);
     void onResizeEvent(int w, int h);
     void onShowEvent();
 private:
-    virtual void onSetOutAspectRatioMode(OutAspectRatioMode mode);
-    virtual void onSetOutAspectRatio(qreal ratio);
-    virtual bool onSetOrientation(int value);
-    virtual bool onSetBrightness(qreal b);
-    virtual bool onSetContrast(qreal c);
-    virtual bool onSetHue(qreal h);
-    virtual bool onSetSaturation(qreal s);
+    void onSetOutAspectRatioMode(OutAspectRatioMode mode) Q_DECL_OVERRIDE;
+    void onSetOutAspectRatio(qreal ratio) Q_DECL_OVERRIDE;
+    bool onSetOrientation(int value) Q_DECL_OVERRIDE;
+    bool onSetBrightness(qreal b) Q_DECL_OVERRIDE;
+    bool onSetContrast(qreal c) Q_DECL_OVERRIDE;
+    bool onSetHue(qreal h) Q_DECL_OVERRIDE;
+    bool onSetSaturation(qreal s) Q_DECL_OVERRIDE;
 protected:
     OpenGLRendererBase(OpenGLRendererBasePrivate &d);
 };

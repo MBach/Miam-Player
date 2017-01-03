@@ -1,6 +1,6 @@
 /******************************************************************************
-    QtAV:  Media play library based on Qt and FFmpeg
-    Copyright (C) 2012-2015 Wang Bin <wbsecg1@gmail.com>
+    QtAV:  Multimedia framework based on Qt and FFmpeg
+    Copyright (C) 2012-2016 Wang Bin <wbsecg1@gmail.com>
 
 *   This file is part of QtAV
 
@@ -23,6 +23,7 @@
 #define QTAV_AVCLOCK_H
 
 #include <QtAV/QtAV_Global.h>
+#include <QtCore/QAtomicInt>
 #include <QtCore/QBasicTimer>
 #include <QtCore/QObject>
 #if QT_VERSION >= QT_VERSION_CHECK(4, 7, 0)
@@ -86,11 +87,29 @@ public:
     inline double videoTime() const;
     inline double delay() const; //playing audio spends some time
     inline void updateDelay(double delay);
+    inline qreal diff() const;
 
     void setSpeed(qreal speed);
     inline qreal speed() const;
 
     bool isPaused() const;
+
+    /*!
+     * \brief syncStart
+     * For internal use now
+     * Start to sync "count" objects. Call syncEndOnce(id) "count" times to end sync.
+     * \param count Number of objects to sync. Each one should call syncEndOnce(int id)
+     * \return an id
+     */
+    int syncStart(int count);
+    int syncId() const {return sync_id;}
+    /*!
+     * \brief syncEndOnce
+     * Decrease sync objects count if id is current sync id.
+     * \return true if sync is end for id or id is not current sync id
+     */
+    bool syncEndOnce(int id);
+
 signals:
     void paused(bool);
     void paused(); //equals to paused(true)
@@ -135,6 +154,8 @@ private:
     double last_pts;
     double avg_err; // average error of restart()
     mutable int nb_restarted;
+    QAtomicInt nb_sync;
+    int sync_id;
 };
 
 double AVClock::value() const
@@ -186,6 +207,11 @@ double AVClock::delay() const
 void AVClock::updateDelay(double delay)
 {
     delay_ = delay;
+}
+
+qreal AVClock::diff() const
+{
+    return value() - videoTime();
 }
 
 qreal AVClock::speed() const
