@@ -1,6 +1,7 @@
 [submodule "src/plugins/windows-toolbar"]
 	path = src/plugins/windows-toolbar
 	url = https://github.com/MBach/windows-toolbar.git
+	branch = master
 [submodule "src/plugins/Miam-Player-shell"]
 	path = src/plugins/Miam-Player-shell
 	url = https://github.com/MBach/Miam-Player-shell.git
@@ -13,6 +14,7 @@
 [submodule "src/plugins/deezer-plugin"]
 	path = src/plugins/deezer-plugin
 	url = https://github.com/MBach/deezer-plugin.git
+	branch = master
 [submodule "src/plugins/soundcloud-plugin"]
 	path = src/plugins/soundcloud-plugin
 	url = https://github.com/MBach/soundcloud-plugin.git
