@@ -518,11 +518,9 @@ void CustomizeOptionsDialog::updateMusicLocations(bool immediateRescan)
 		for (QString removedLocation : removedLocations) {
 			QSqlQuery syncDb(db);
 			syncDb.setForwardOnly(true);
-			syncDb.prepare("DELETE FROM tracks WHERE uri LIKE :path ");
+			syncDb.prepare("DELETE FROM cache WHERE uri LIKE :path ");
 			syncDb.bindValue(":path", QDir::fromNativeSeparators(removedLocation) + "%");
 			syncDb.exec();
-			syncDb.exec("DELETE FROM albums WHERE id NOT IN (SELECT DISTINCT albumId FROM tracks)");
-			syncDb.exec("DELETE FROM artists WHERE id NOT IN (SELECT DISTINCT artistId FROM tracks)");
 		}
 		db.commit();
 
