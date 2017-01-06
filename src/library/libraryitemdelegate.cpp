@@ -114,11 +114,18 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 		if (item->data(Miam::DF_InternalCover).toString().isEmpty()) {
 			QString coverPath = item->data(Miam::DF_CoverPath).toString();
 			if (!coverPath.isEmpty()) {
-				// qDebug() << Q_FUNC_INFO << "loading external cover from harddrive";
 				imageReader.setFileName(QDir::fromNativeSeparators(coverPath));
 				imageReader.setScaledSize(QSize(_coverSize, _coverSize));
-				item->setIcon(QPixmap::fromImage(imageReader.read()));
-				itemHasNoIcon = false;
+				QImage image = imageReader.read();
+				if (image.isNull()) {
+					itemHasNoIcon = true;
+					SqlDatabase db;
+					db.removeCoverForAlbum(false, item->data(Miam::DF_NormArtist).toString(), item->data(Miam::DF_NormAlbum).toString());
+					item->setData("", Miam::DF_CoverPath);
+				} else {
+					item->setIcon(QPixmap::fromImage(image));
+					itemHasNoIcon = false;
+				}
 			}
 		} else {
 			FileHelper fh(item->data(Miam::DF_InternalCover).toString());
@@ -133,8 +140,11 @@ void LibraryItemDelegate::drawAlbum(QPainter *painter, QStyleOptionViewItem &opt
 				//} else {
 				//	qDebug() << Q_FUNC_INFO << "couldn't load data into QPixmap";
 				}
-			//} else {
-			//	qDebug() << Q_FUNC_INFO << "couldn't extract inner cover";
+			} else {
+				// We couldn't extract inner cover: maybe the file was modified somewhere else
+				SqlDatabase db;
+				db.removeCoverForAlbum(true, item->data(Miam::DF_NormArtist).toString(), item->data(Miam::DF_NormAlbum).toString());
+				item->setData("", Miam::DF_InternalCover);
 			}
 		}
 	}

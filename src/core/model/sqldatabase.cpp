@@ -213,6 +213,24 @@ bool SqlDatabase::insertIntoTableTracks(const std::list<TrackDAO> &tracks)
 	return b;
 }
 
+void SqlDatabase::removeCoverForAlbum(bool internalCover, const QString &artistNorm, const QString &albumNorm)
+{
+	if (!isOpen()) {
+		open();
+		this->setPragmas();
+	}
+	QSqlQuery updateTrack(*this);
+	if (internalCover) {
+		updateTrack.prepare("UPDATE cache SET internalCover = NULL WHERE artistNormalized = ? AND albumNormalized = ?");
+	} else {
+		updateTrack.prepare("UPDATE cache SET cover = NULL WHERE artistNormalized = ? AND albumNormalized = ?");
+	}
+	updateTrack.addBindValue(artistNorm);
+	updateTrack.addBindValue(albumNorm);
+	bool b = updateTrack.exec();
+	qDebug() << Q_FUNC_INFO << "database was updated" << b;
+}
+
 bool SqlDatabase::removePlaylist(uint playlistId)
 {
 	if (!isOpen()) {

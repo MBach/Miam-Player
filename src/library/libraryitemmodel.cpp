@@ -76,6 +76,7 @@ void LibraryItemModel::load(const QString &)
 
 			ArtistItem *artistItem = new ArtistItem;
 			QString artistNormalized = r.value(artistNorm).toString();
+			QString albumNormalized = r.value(albumNorm).toString();
 			QString artist = r.value(3).toString();
 			QString aa = r.value(artistAlbum).toString();
 			artistItem->setText(aa);
@@ -116,6 +117,7 @@ void LibraryItemModel::load(const QString &)
 				albumItem->setData(r.value(albumNorm).toString(), Miam::DF_NormalizedString);
 			}
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
+			albumItem->setData(albumNormalized, Miam::DF_NormAlbum);
 			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
 
 			QString internalCoverPath = r.value(internalCover).toString();
@@ -155,6 +157,7 @@ void LibraryItemModel::load(const QString &)
 		while (q.next()) {
 			QSqlRecord r = q.record();
 			QString artistNormalized = r.value(artistNorm).toString();
+			QString albumNormalized = r.value(albumNorm).toString();
 
 			AlbumItem *albumItem = new AlbumItem;
 			albumItem->setText(r.value(album).toString());
@@ -164,6 +167,7 @@ void LibraryItemModel::load(const QString &)
 				albumItem->setData(r.value(albumNorm).toString(), Miam::DF_NormalizedString);
 			}
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
+			albumItem->setData(albumNormalized, Miam::DF_NormAlbum);
 			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
 			if (!r.value(internalCover).toString().isEmpty()) {
 				albumItem->setData(r.value(internalCover).toString(), Miam::DF_InternalCover);
@@ -202,6 +206,7 @@ void LibraryItemModel::load(const QString &)
 			albumItem->setText(r.value(artist).toString() + " – " + r.value(album).toString());
 			albumItem->setData(artistNormalized + "|" + albumNormalized, Miam::DF_NormalizedString);
 			albumItem->setData(artistNormalized, Miam::DF_NormArtist);
+			albumItem->setData(albumNormalized, Miam::DF_NormAlbum);
 			albumItem->setData(r.value(year).toString(), Miam::DF_Year);
 			albumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
 			albumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);
@@ -255,6 +260,7 @@ void LibraryItemModel::load(const QString &)
 			artistAlbumItem->setText(r.value(3).toString() + " – " + r.value(album).toString());
 			artistAlbumItem->setData(r.value(artistNorm).toString() + "|" + r.value(albumNorm).toString(), Miam::DF_NormalizedString);
 			artistAlbumItem->setData(r.value(artistNorm).toString(), Miam::DF_NormArtist);
+			artistAlbumItem->setData(r.value(albumNorm).toString(), Miam::DF_NormAlbum);
 			artistAlbumItem->setData(r.value(year).toString(), Miam::DF_Year);
 			artistAlbumItem->setData(r.value(cover).toString(), Miam::DF_CoverPath);
 			artistAlbumItem->setData(r.value(icon).toString(), Miam::DF_IconPath);

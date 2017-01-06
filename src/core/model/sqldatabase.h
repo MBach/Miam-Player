@@ -39,6 +39,7 @@ public:
 	bool insertIntoTableTracks(const TrackDAO &track);
 	bool insertIntoTableTracks(const std::list<TrackDAO> &tracks);
 
+	void removeCoverForAlbum(bool internalCover, const QString &artistNorm, const QString &albumNorm);
 	bool removePlaylist(uint playlistId);
 	void removePlaylistsFromHost(const QString &host);
 	void removeRecordsFromHost(const QString &host);
