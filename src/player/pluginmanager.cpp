@@ -238,6 +238,8 @@ void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteM
 
 void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
 {
+	tagEditorPlugin->setLocalPlayer(_mainWindow->mediaPlayer()->localPlayer());
+
 	// Instances of classes which can be extended at runtime
 	for (QObject *instance : _extensionPoints.values("TagEditor")) {
 		if (TagEditor *tagEditor = qobject_cast<TagEditor*>(instance)) {

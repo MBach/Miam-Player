@@ -65,6 +65,8 @@ public:
 
 	qreal volume() const;
 
+	QtAV::AVPlayer *localPlayer() const;
+
 private:
 	/** Current position in the media, percent-based. */
 	float position() const;

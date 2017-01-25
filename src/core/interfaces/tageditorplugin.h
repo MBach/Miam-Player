@@ -3,6 +3,7 @@
 
 #include "basicplugin.h"
 #include "model/selectedtracksmodel.h"
+#include "mediaplayer.h"
 
 #include <QHBoxLayout>
 #include <QStackedWidget>
@@ -16,10 +17,16 @@
 class MIAMCORE_LIBRARY TagEditorPlugin : public BasicPlugin
 {
 	Q_OBJECT
+private:
+	QtAV::AVPlayer *_localPlayer;
+
 public:
 	explicit TagEditorPlugin(QObject *parent = nullptr) : BasicPlugin(parent) {}
 
 	virtual ~TagEditorPlugin() {}
+
+	inline void setLocalPlayer(QtAV::AVPlayer *localPlayer) { _localPlayer = localPlayer; }
+	inline QtAV::AVPlayer *localPlayer() const { return _localPlayer; }
 
 	virtual void setSelectedTracksModel(SelectedTracksModel *selectedTracksModel) = 0;
 

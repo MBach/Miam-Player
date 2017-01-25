@@ -15,6 +15,11 @@
 
 #include <QtAV/AVPlayer.h>
 
+QtAV::AVPlayer *MediaPlayer::localPlayer() const
+{
+	return _localPlayer;
+}
+
 MediaPlayer::MediaPlayer(QObject *parent)
 	: QObject(parent)
 	, _playlist(nullptr)
