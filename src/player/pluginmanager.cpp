@@ -45,30 +45,31 @@ void PluginManager::init()
 		pluginPath = appDirPath.absolutePath();
 	}
 #endif
-	if (!pluginPath.isEmpty()) {
-		QDirIterator it(pluginPath);
-		SettingsPrivate *settings = SettingsPrivate::instance();
-		QMap<QString, PluginInfo> plugins = settings->plugins();
-		QStringList failedPlugins;
-		while (it.hasNext()) {
-			it.next();
-			if (QLibrary::isLibrary(it.fileName()) && !it.fileInfo().isSymLink()) {
-				// If plugin was recognized by the App at least once
-				if (plugins.contains(it.filePath())) {
-					PluginInfo pluginInfo = plugins.value(it.filePath());
-					if (pluginInfo.isEnabled() && !this->loadPlugin(it.filePath())) {
-						failedPlugins << it.fileName();
-					}
-				} else if (!this->loadPlugin(it.filePath())) {
+	if (pluginPath.isEmpty()) {
+		return;
+	}
+	QDirIterator it(pluginPath);
+	SettingsPrivate *settings = SettingsPrivate::instance();
+	QMap<QString, PluginInfo> plugins = settings->plugins();
+	QStringList failedPlugins;
+	while (it.hasNext()) {
+		it.next();
+		if (QLibrary::isLibrary(it.fileName()) && !it.fileInfo().isSymLink()) {
+			// If plugin was recognized by the App at least once
+			if (plugins.contains(it.filePath())) {
+				PluginInfo pluginInfo = plugins.value(it.filePath());
+				if (pluginInfo.isEnabled() && !this->loadPlugin(it.filePath())) {
 					failedPlugins << it.fileName();
 				}
+			} else if (!this->loadPlugin(it.filePath())) {
+				failedPlugins << it.fileName();
 			}
 		}
+	}
 
-		// If at least one plugin wasn't restored (API has changed for example)
-		if (!failedPlugins.isEmpty()) {
-			this->alertUser(failedPlugins);
-		}
+	// If at least one plugin wasn't restored (API has changed for example)
+	if (!failedPlugins.isEmpty()) {
+		this->alertUser(failedPlugins);
 	}
 }
 
@@ -128,6 +129,7 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 		} else if (RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
 			this->loadRemoteMediaPlayerPlugin(remoteMediaPlayerPlugin);
 		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
+			qDebug() << Q_FUNC_INFO;
 			this->loadTagEditorPlugin(tagEditorPlugin);
 		}
 	}
@@ -192,7 +194,7 @@ bool PluginManager::unloadPlugin(const QString &absFilePath)
 void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 {
 	// Each View Plugin can extend multiple instances
-	for (QString view : itemViewPlugin->classesToExtend()) {
+	/*for (QString view : itemViewPlugin->classesToExtend()) {
 
 		// Instances of classes which can be extended at runtime
 		for (QObject *instance : _extensionPoints.values(view)) {
@@ -212,7 +214,7 @@ void PluginManager::loadItemViewPlugin(ItemViewPlugin *itemViewPlugin)
 				itemViewPlugin->setSelectedTracksModel(view, selectedTracksModel);
 			}
 		}
-	}
+	}*/
 }
 
 void PluginManager::loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin)
@@ -239,6 +241,7 @@ void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteM
 void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
 {
 	tagEditorPlugin->setLocalPlayer(_mainWindow->mediaPlayer()->localPlayer());
+	qDebug() << Q_FUNC_INFO << tagEditorPlugin <<  _extensionPoints.keys();
 
 	// Instances of classes which can be extended at runtime
 	for (QObject *instance : _extensionPoints.values("TagEditor")) {

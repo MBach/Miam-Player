@@ -235,13 +235,13 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Liste de lecture (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="296"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="346"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="298"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="348"/>
         <source>And more tracks...</source>
         <translation>Et d&apos;autres pistes...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="391"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="393"/>
         <source>This playlist has changed</source>
         <translation>Cette liste de lecture a changé</translation>
     </message>
@@ -349,8 +349,8 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
 <context>
     <name>TabPlaylist</name>
     <message>
-        <location filename="../tabplaylist.cpp" line="248"/>
-        <location filename="../tabplaylist.cpp" line="440"/>
+        <location filename="../tabplaylist.cpp" line="251"/>
+        <location filename="../tabplaylist.cpp" line="443"/>
         <source>Playlist %1</source>
         <translation>Liste de lecture %1</translation>
     </message>
@@ -408,32 +408,32 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
         <translation>Explorateur de fichiers</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="262"/>
+        <location filename="../viewplaylists.cpp" line="264"/>
         <source>Your library is updating...</source>
         <translation>Votre bibliothèque se met à jour...</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="332"/>
+        <location filename="../viewplaylists.cpp" line="334"/>
         <source>playlist</source>
         <translation>liste de lecture</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="423"/>
+        <location filename="../viewplaylists.cpp" line="425"/>
         <source>Audio files</source>
         <translation>Fichiers audios</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="436"/>
+        <location filename="../viewplaylists.cpp" line="438"/>
         <source>Every file type (*)</source>
         <translation>Tous les fichiers (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="438"/>
+        <location filename="../viewplaylists.cpp" line="440"/>
         <source>Choose some files to open</source>
         <translation>Choisissez des fichiers à ouvrir</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="477"/>
+        <location filename="../viewplaylists.cpp" line="479"/>
         <source>Choose a folder to open</source>
         <translation>Choisissez un dossier à ouvrir</translation>
     </message>

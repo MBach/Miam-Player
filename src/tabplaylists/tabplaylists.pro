@@ -60,6 +60,7 @@ FORMS += closeplaylistpopup.ui \
     playlistdialog.ui \
     searchdialog.ui \
     viewplaylists.ui
+
 CONFIG += c++11
 CONFIG(debug, debug|release) {
     win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -L$$OUT_PWD/../library/debug/ -lmiam-library

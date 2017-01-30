@@ -28,9 +28,6 @@ public:
 
 	virtual bool canInteractWithSearchEngine() const { return false; }
 
-	/** This method can specify some classes to extend at runtime, like QMenu (for appending new items). */
-	virtual QStringList classesToExtend() { return QStringList(); }
-
 	virtual void cleanUpBeforeDestroy() {}
 
 	/** This Widget is instanciated in settings and appended to the list of plugin which can be customized at runtime. */

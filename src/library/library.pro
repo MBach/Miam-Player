@@ -42,7 +42,7 @@ HEADERS += albumitem.h \
 FORMS += libraryorderdialog.ui
 CONFIG += c++11
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core
+    win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -L$$OUT_PWD/../cover-fetcher/release/ -lmiam-coverfetcher
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc
@@ -50,7 +50,7 @@ CONFIG(debug, debug|release) {
 }
 
 CONFIG(release, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../core/release/ -lmiam-core
+    win32: LIBS += -L$$OUT_PWD/../core/release/ -lmiam-core -L$$OUT_PWD/../cover-fetcher/release/ -lmiam-coverfetcher
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
     RCC_DIR = release/.rcc
@@ -58,7 +58,7 @@ CONFIG(release, debug|release) {
 }
 TARGET = miam-library
 unix {
-    LIBS += -L$$OUT_PWD/../core/ -lmiam-core
+    LIBS += -L$$OUT_PWD/../core/ -lmiam-core -L$$OUT_PWD/../cover-fetcher/ -lmiam-coverfetcher
 }
 unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/
@@ -69,8 +69,8 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
-INCLUDEPATH += $$PWD/../core/
-DEPENDPATH += $$PWD/../core
+INCLUDEPATH += $$PWD/../core/ $$PWD/../cover-fetcher/
+DEPENDPATH += $$PWD/../core $$PWD/../cover-fetcher
 
 TRANSLATIONS = translations/library_ar.ts \
     translations/library_cs.ts \

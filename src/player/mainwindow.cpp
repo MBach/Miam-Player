@@ -724,12 +724,12 @@ void MainWindow::showTagEditor()
 			_tagEditor = nullptr;
 		}
 		_tagEditor = new TagEditor;
+		_pluginManager->registerExtensionPoint(_tagEditor->extensionPoints());
 		_tagEditor->setOrigin(_currentView);
 		_tagEditor->installEventFilter(this);
 		_tagEditor->show();
 		_tagEditor->activateWindow();
 
-		_pluginManager->registerExtensionPoint(_tagEditor->extensionPoints());
 	} else {
 		if (_tagEditor) {
 			_pluginManager->unregisterExtensionPoint(_tagEditor->extensionPoints().first);

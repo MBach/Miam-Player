@@ -235,13 +235,13 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Список воспроизведения (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="296"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="346"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="298"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="348"/>
         <source>And more tracks...</source>
         <translation>И больше треков...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="391"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="393"/>
         <source>This playlist has changed</source>
         <translation>Этот список воспроизведения изменился</translation>
     </message>
@@ -380,8 +380,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="248"/>
-        <location filename="../tabplaylist.cpp" line="440"/>
+        <location filename="../tabplaylist.cpp" line="251"/>
+        <location filename="../tabplaylist.cpp" line="443"/>
         <source>Playlist %1</source>
         <translation>Список воспроизведения %1</translation>
     </message>
@@ -409,32 +409,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Проводник</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="262"/>
+        <location filename="../viewplaylists.cpp" line="264"/>
         <source>Your library is updating...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="332"/>
+        <location filename="../viewplaylists.cpp" line="334"/>
         <source>playlist</source>
         <translation>список воспроизведения</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="423"/>
+        <location filename="../viewplaylists.cpp" line="425"/>
         <source>Audio files</source>
         <translation>Аудиофайлы</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="436"/>
+        <location filename="../viewplaylists.cpp" line="438"/>
         <source>Every file type (*)</source>
         <translation>Все типыфайлов (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="438"/>
+        <location filename="../viewplaylists.cpp" line="440"/>
         <source>Choose some files to open</source>
         <translation>Откройте несколько файлов</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="477"/>
+        <location filename="../viewplaylists.cpp" line="479"/>
         <source>Choose a folder to open</source>
         <translation>Откройте папку</translation>
     </message>

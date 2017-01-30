@@ -8,9 +8,6 @@
 [submodule "src/plugins/acoustid-plugin"]
 	path = src/plugins/acoustid-plugin
 	url = https://github.com/MBach/acoustid-plugin.git
-[submodule "src/plugins/cover-fetcher"]
-	path = src/plugins/cover-fetcher
-	url = https://github.com/MBach/cover-fetcher.git
 [submodule "src/plugins/deezer-plugin"]
 	path = src/plugins/deezer-plugin
 	url = https://github.com/MBach/deezer-plugin.git

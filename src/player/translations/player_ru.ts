@@ -1395,7 +1395,7 @@
         <translation>Показать отладочную информацию...</translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="651"/>
+        <location filename="../mainwindow.cpp" line="655"/>
         <source>&amp;Remove selected tracks</source>
         <comment>Number of tracks to remove</comment>
         <translation>
@@ -1405,7 +1405,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="652"/>
+        <location filename="../mainwindow.cpp" line="656"/>
         <source>Move selected tracks &amp;up</source>
         <comment>Move upward</comment>
         <translation>
@@ -1415,7 +1415,7 @@
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../mainwindow.cpp" line="653"/>
+        <location filename="../mainwindow.cpp" line="657"/>
         <source>Move selected tracks &amp;down</source>
         <comment>Move downward</comment>
         <translation>
@@ -1425,62 +1425,62 @@
         </translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="314"/>
+        <location filename="../mainwindow.cpp" line="318"/>
         <source>LTR</source>
         <translation>Слева направо</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="446"/>
+        <location filename="../mainwindow.cpp" line="456"/>
         <source>Directory to open.</source>
         <translation>Открыть папку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="446"/>
+        <location filename="../mainwindow.cpp" line="456"/>
         <source>dir</source>
         <translation>папка</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="447"/>
+        <location filename="../mainwindow.cpp" line="457"/>
         <source>Medias are added into a new playlist.</source>
         <translation>Мультимеда-данные будут добавлены в новый список воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="448"/>
+        <location filename="../mainwindow.cpp" line="458"/>
         <source>Medias are sent to tag editor.</source>
         <translation>Мультимеда-данные будут добавлены в редактор тегов.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="449"/>
+        <location filename="../mainwindow.cpp" line="459"/>
         <source>Directory is sent to library.</source>
         <translation>Папка отправлена в библиотеку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="450"/>
+        <location filename="../mainwindow.cpp" line="460"/>
         <source>Play or pause track in active playlist.</source>
         <translation>Воспроизведение или пауза дорожки в активном списке воспроизведения.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="451"/>
+        <location filename="../mainwindow.cpp" line="461"/>
         <source>Stop playback.</source>
         <translation>Остановить воспроизведение.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="452"/>
+        <location filename="../mainwindow.cpp" line="462"/>
         <source>Play next track.</source>
         <translation>Воспроизвести следующую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="453"/>
+        <location filename="../mainwindow.cpp" line="463"/>
         <source>Play previous track.</source>
         <translation>Воспроизвести предыдущую дорожку.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="454"/>
+        <location filename="../mainwindow.cpp" line="464"/>
         <source>Set volume of the player.</source>
         <translation>Установить громкость плеера.</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="454"/>
+        <location filename="../mainwindow.cpp" line="464"/>
         <source>volume</source>
         <translation>громкость</translation>
     </message>
@@ -1496,17 +1496,17 @@
 <context>
     <name>PluginManager</name>
     <message>
-        <location filename="../pluginmanager.cpp" line="79"/>
+        <location filename="../pluginmanager.cpp" line="80"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="../pluginmanager.cpp" line="82"/>
+        <location filename="../pluginmanager.cpp" line="83"/>
         <source>A plugin was found but was the player was unable to load it (file %1)</source>
         <translation>Был найден плагин, но плееру не удалось загрузить его (файл %1)</translation>
     </message>
     <message>
-        <location filename="../pluginmanager.cpp" line="84"/>
+        <location filename="../pluginmanager.cpp" line="85"/>
         <source>Some plugins were found but the player was unable to load them.
 
 The API has changed and you need to update these plugins too!</source>
@@ -1515,7 +1515,7 @@ The API has changed and you need to update these plugins too!</source>
 API изменился, и Вам нужно обновоить эти плагины тоже!</translation>
     </message>
     <message>
-        <location filename="../pluginmanager.cpp" line="85"/>
+        <location filename="../pluginmanager.cpp" line="86"/>
         <source>Incompatible plugins:
 </source>
         <translation>Несовместимые плагины:
@@ -1525,7 +1525,7 @@ API изменился, и Вам нужно обновоить эти плаг�
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../mainwindow.cpp" line="443"/>
+        <location filename="../mainwindow.cpp" line="453"/>
         <source>Command line helper for Miam-Player</source>
         <translation>Справка по опциям командной строки Miam-Player</translation>
     </message>
@@ -1563,9 +1563,9 @@ API изменился, и Вам нужно обновоить эти плаг�
         <translation>Нажмите здесь, чтобы искать музыку вручную</translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="194"/>
-        <location filename="../quickstart.cpp" line="221"/>
-        <location filename="../quickstart.cpp" line="252"/>
+        <location filename="../quickstart.cpp" line="197"/>
+        <location filename="../quickstart.cpp" line="224"/>
+        <location filename="../quickstart.cpp" line="255"/>
         <source>%n elements</source>
         <translation>
             <numerusform>%n элемент</numerusform>
@@ -1574,7 +1574,7 @@ API изменился, и Вам нужно обновоить эти плаг�
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../quickstart.cpp" line="199"/>
+        <location filename="../quickstart.cpp" line="202"/>
         <source>%n folders</source>
         <translation>
             <numerusform>%n папка</numerusform>
@@ -1583,12 +1583,12 @@ API изменился, и Вам нужно обновоить эти плаг�
         </translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="211"/>
+        <location filename="../quickstart.cpp" line="214"/>
         <source>Note: it&apos;s not possible to add your default location because 0 tracks where found</source>
         <translation>Внимание: невозможно добавить вашу системную папку для музыки, потому что в ней не было найдено треков</translation>
     </message>
     <message>
-        <location filename="../quickstart.cpp" line="249"/>
+        <location filename="../quickstart.cpp" line="252"/>
         <source>empty folder</source>
         <translation>пустая папка</translation>
     </message>
@@ -1778,18 +1778,18 @@ API изменился, и Вам нужно обновоить эти плаг�
     </message>
     <message>
         <location filename="../views/tageditor/tageditor.cpp" line="58"/>
-        <location filename="../views/tageditor/tageditor.cpp" line="567"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="578"/>
         <source>(Keep)</source>
         <translation>(Сохранить)</translation>
     </message>
     <message>
         <location filename="../views/tageditor/tageditor.cpp" line="59"/>
-        <location filename="../views/tageditor/tageditor.cpp" line="568"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="579"/>
         <source>(Delete)</source>
         <translation>(Удалить)</translation>
     </message>
     <message>
-        <location filename="../views/tageditor/tageditor.cpp" line="470"/>
+        <location filename="../views/tageditor/tageditor.cpp" line="481"/>
         <source>(Incompatible tracks selected)</source>
         <translation>(Выбраны несовместимые треки)</translation>
     </message>

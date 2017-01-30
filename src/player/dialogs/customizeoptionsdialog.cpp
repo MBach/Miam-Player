@@ -167,6 +167,28 @@ CustomizeOptionsDialog::CustomizeOptionsDialog(PluginManager *pluginManager, QWi
 	connect(remoteControlPortSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), settings, &SettingsPrivate::setRemoteControlPort);
 	connect(enableRemoteControlCheckBox, &QCheckBox::toggled, this, &CustomizeOptionsDialog::toggleRemoteControl);
 
+	bool integrateCoverToFiles = settings->value("providers/integrateCoverToFiles", true).toBool();
+	if (integrateCoverToFiles) {
+		radioButtonIntegrateCover->setChecked(true);
+	} else {
+		radioButtonDontIntegrate->setChecked(true);
+	}
+	connect(radioButtonIntegrateCover, &QRadioButton::toggled, this, [=](bool b) {
+		settings->setValue("providers/integrateCoverToFiles", b);
+	});
+
+	// Init providers
+	QList<QCheckBox*> providerList;
+	providerList << musicbrainzCheckBox << amazonCheckBox << discogsCheckBox << lastfmCheckBox;
+	for (QCheckBox *p : providerList) {
+		if (p->isEnabled()) {
+			p->setChecked(settings->value("providers/" + p->objectName(), true).toBool());
+			connect(p, &QCheckBox::toggled, this, [=](bool enabled) {
+				settings->setValue("providers/" + p->objectName(), enabled);
+			});
+		}
+	}
+
 	// Seventh panel: plugins
 	this->initPlugins();
 	connect(pluginSummaryTableWidget, &QTableWidget::itemChanged, this, &CustomizeOptionsDialog::togglePlugin);

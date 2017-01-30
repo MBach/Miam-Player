@@ -37,12 +37,12 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../miamcore_global.h" line="90"/>
+        <location filename="../miamcore_global.h" line="91"/>
         <source>There are more than 300 files to add to the %1 (%2 to add).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../miamcore_global.h" line="92"/>
+        <location filename="../miamcore_global.h" line="93"/>
         <source>Are you sure you want to continue? This might take some time.</source>
         <translation type="unfinished"></translation>
     </message>

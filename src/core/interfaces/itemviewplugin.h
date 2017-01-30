@@ -20,8 +20,6 @@ public:
 
 	virtual ~ItemViewPlugin() {}
 
-	virtual QStringList classesToExtend() = 0;
-
 	virtual bool hasSubMenu(const QString & /*view*/) const { return false; }
 
 	virtual QMenu * menu(const QString & /*view*/, QMenu * /*parent*/) { return nullptr; }

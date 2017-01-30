@@ -70,4 +70,10 @@
         <file alias="warning">config/icons/warning.png</file>
         <file alias="hexa">config/icons/hexa.png</file>
     </qresource>
+    <qresource prefix="/cover-fetcher-providers">
+        <file alias="amazon">config/cover-fetcher-providers/amazon_logo.png</file>
+        <file alias="discogs">config/cover-fetcher-providers/discogs_logo.png</file>
+        <file alias="lastfm">config/cover-fetcher-providers/lastfm_logo.png</file>
+        <file alias="musicbrainz">config/cover-fetcher-providers/musicBrainz_logo.png</file>
+    </qresource>
 </RCC>

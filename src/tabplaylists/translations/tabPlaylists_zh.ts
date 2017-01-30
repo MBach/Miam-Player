@@ -234,13 +234,13 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>播放列表(*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="296"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="346"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="298"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="348"/>
         <source>And more tracks...</source>
         <translation>更多音轨...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="391"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="393"/>
         <source>This playlist has changed</source>
         <translation>播放列表已改变</translation>
     </message>
@@ -377,8 +377,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../tabplaylist.cpp" line="248"/>
-        <location filename="../tabplaylist.cpp" line="440"/>
+        <location filename="../tabplaylist.cpp" line="251"/>
+        <location filename="../tabplaylist.cpp" line="443"/>
         <source>Playlist %1</source>
         <translation>播放列表%1</translation>
     </message>
@@ -406,32 +406,32 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>文件管理器</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="262"/>
+        <location filename="../viewplaylists.cpp" line="264"/>
         <source>Your library is updating...</source>
         <translation>正在更新你的库...</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="332"/>
+        <location filename="../viewplaylists.cpp" line="334"/>
         <source>playlist</source>
         <translation>播放列表</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="423"/>
+        <location filename="../viewplaylists.cpp" line="425"/>
         <source>Audio files</source>
         <translation>音频文件</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="436"/>
+        <location filename="../viewplaylists.cpp" line="438"/>
         <source>Every file type (*)</source>
         <translation>所以文件类型 (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="438"/>
+        <location filename="../viewplaylists.cpp" line="440"/>
         <source>Choose some files to open</source>
         <translation>选择文件打开</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="477"/>
+        <location filename="../viewplaylists.cpp" line="479"/>
         <source>Choose a folder to open</source>
         <translation>选择文件夹打开</translation>
     </message>

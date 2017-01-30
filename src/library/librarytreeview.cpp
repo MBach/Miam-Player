@@ -5,6 +5,9 @@
 #include <filehelper.h>
 #include <settings.h>
 #include <settingsprivate.h>
+
+#include <coverfetcher.h>
+
 #include "libraryfilterproxymodel.h"
 #include "libraryorderdialog.h"
 #include "libraryscrollbar.h"
@@ -38,9 +41,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 
 	QAction *actionSendToCurrentPlaylist = new QAction(tr("Send to the current playlist"), this);
 	QAction *actionOpenTagEditor = new QAction(tr("Send to the tag editor"), this);
+	QAction *actionFetchCovers = new QAction(tr("Fetch covers"), this);
 	properties->addAction(actionSendToCurrentPlaylist);
-	properties->addSeparator();
 	properties->addAction(actionOpenTagEditor);
+	properties->addAction(actionFetchCovers);
 
 	sortByColumn(0, Qt::AscendingOrder);
 	setTextElideMode(Qt::ElideRight);
@@ -50,6 +54,10 @@ LibraryTreeView::LibraryTreeView(QWidget *parent)
 	// Context menu
 	connect(actionSendToCurrentPlaylist, &QAction::triggered, this, &TreeView::appendToPlaylist);
 	connect(actionOpenTagEditor, &QAction::triggered, this, &TreeView::openTagEditor);
+	connect(actionFetchCovers, &QAction::triggered, this, [=]() {
+		CoverFetcher *coverFetcher = new CoverFetcher(this);
+		coverFetcher->fetch(this);
+	});
 
 	// Load album cover
 	connect(this, &QTreeView::expanded, this, &LibraryTreeView::setExpandedCover);

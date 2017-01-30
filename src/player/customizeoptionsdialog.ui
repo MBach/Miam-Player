@@ -482,7 +482,7 @@
             <x>0</x>
             <y>0</y>
             <width>292</width>
-            <height>285</height>
+            <height>269</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1050,8 +1050,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>208</width>
-            <height>540</height>
+            <width>181</width>
+            <height>538</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1623,8 +1623,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>338</width>
-            <height>528</height>
+            <width>311</width>
+            <height>500</height>
            </rect>
           </property>
           <attribute name="label">
@@ -3517,8 +3517,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>307</width>
-            <height>212</height>
+            <width>280</width>
+            <height>200</height>
            </rect>
           </property>
           <attribute name="label">
@@ -4434,6 +4434,149 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Remote covers</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_15">
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>When it's possible, incorporate the downloaded cover into the file?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="radioButtonIntegrateCover">
+              <property name="text">
+               <string>Yes</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_6</string>
+              </attribute>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="radioButtonDontIntegrate">
+              <property name="text">
+               <string>No</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_6</string>
+              </attribute>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Cover Art locations</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="musicbrainzCheckBox">
+            <property name="text">
+             <string>MusicBrainz</string>
+            </property>
+            <property name="icon">
+             <iconset resource="player.qrc">
+              <normaloff>:/cover-fetcher-providers/musicbrainz</normaloff>:/cover-fetcher-providers/musicbrainz</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>46</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="amazonCheckBox">
+            <property name="text">
+             <string>Amazon</string>
+            </property>
+            <property name="icon">
+             <iconset resource="player.qrc">
+              <normaloff>:/cover-fetcher-providers/amazon</normaloff>:/cover-fetcher-providers/amazon</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>87</width>
+              <height>32</height>
+             </size>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="discogsCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Discogs</string>
+            </property>
+            <property name="icon">
+             <iconset resource="player.qrc">
+              <normaloff>:/cover-fetcher-providers/discogs</normaloff>:/cover-fetcher-providers/discogs</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>89</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="lastfmCheckBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Last.FM</string>
+            </property>
+            <property name="icon">
+             <iconset resource="player.qrc">
+              <normaloff>:/cover-fetcher-providers/lastfm</normaloff>:/cover-fetcher-providers/lastfm</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>101</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -4545,9 +4688,10 @@
  </connections>
  <buttongroups>
   <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup_4"/>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_6"/>
+  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_4"/>
  </buttongroups>
 </ui>

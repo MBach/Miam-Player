@@ -235,13 +235,13 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>Playlist (*.m3u8)</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="296"/>
-        <location filename="../dialogs/playlistdialog.cpp" line="346"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="298"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="348"/>
         <source>And more tracks...</source>
         <translation>And more tracks...</translation>
     </message>
     <message>
-        <location filename="../dialogs/playlistdialog.cpp" line="391"/>
+        <location filename="../dialogs/playlistdialog.cpp" line="393"/>
         <source>This playlist has changed</source>
         <translation>This playlist has changed</translation>
     </message>
@@ -350,8 +350,8 @@ Select a playlist to display the first 30 tracks.</translation>
 <context>
     <name>TabPlaylist</name>
     <message>
-        <location filename="../tabplaylist.cpp" line="248"/>
-        <location filename="../tabplaylist.cpp" line="440"/>
+        <location filename="../tabplaylist.cpp" line="251"/>
+        <location filename="../tabplaylist.cpp" line="443"/>
         <source>Playlist %1</source>
         <translation>Playlist %1</translation>
     </message>
@@ -409,32 +409,32 @@ Select a playlist to display the first 30 tracks.</translation>
         <translation>File explorer</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="262"/>
+        <location filename="../viewplaylists.cpp" line="264"/>
         <source>Your library is updating...</source>
         <translation>Your library is updating...</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="332"/>
+        <location filename="../viewplaylists.cpp" line="334"/>
         <source>playlist</source>
         <translation>playlist</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="423"/>
+        <location filename="../viewplaylists.cpp" line="425"/>
         <source>Audio files</source>
         <translation>Audio files</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="436"/>
+        <location filename="../viewplaylists.cpp" line="438"/>
         <source>Every file type (*)</source>
         <translation>Every file type (*)</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="438"/>
+        <location filename="../viewplaylists.cpp" line="440"/>
         <source>Choose some files to open</source>
         <translation>Choose some files to open</translation>
     </message>
     <message>
-        <location filename="../viewplaylists.cpp" line="477"/>
+        <location filename="../viewplaylists.cpp" line="479"/>
         <source>Choose a folder to open</source>
         <translation>Choose a folder to open</translation>
     </message>
