@@ -56,39 +56,6 @@ CoverFetcher::~CoverFetcher()
 	qDeleteAll(_providers);
 }
 
-/** Generate UI in lazy loading mode. */
-/*QWidget *CoverFetcher::configPage()
-{
-	QWidget *widget = new QWidget;
-	_ui.setupUi(widget);
-	Settings *settings = Settings::instance();
-
-
-	// Init items at startup
-	QList<QCheckBox*> providerList;
-	providerList << _ui.musicbrainzCheckBox << _ui.amazonCheckBox << _ui.discogsCheckBox << _ui.lastfmCheckBox;
-	for (QCheckBox *p : providerList) {
-		p->setChecked(settings->value("providers/" + p->objectName()).toBool());
-		connect(p, &QCheckBox::toggled, this, [=](bool enabled) { this->manageProvider(enabled, p); });
-	}
-
-
-	return widget;
-}*/
-
-/*QAction * CoverFetcher::action(const QString &view, QMenu *parentMenu)
-{
-	QAction *action = new QAction(tr("Fetch covers"), parentMenu);
-	connect(action, &QAction::triggered, this, [=]() { this->fetch(_viewModels.value(view)); });
-	return action;
-}*/
-
-/*void CoverFetcher::setSelectedTracksModel(const QString &view, SelectedTracksModel *selectedTracksModel)
-{
-	qDebug() << Q_FUNC_INFO << view;
-	_viewModels.insert(view, selectedTracksModel);
-}*/
-
 /** Entry point. */
 void CoverFetcher::fetch(SelectedTracksModel *selectedTracksModel)
 {
