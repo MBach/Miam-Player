@@ -29,8 +29,8 @@ FetchDialog::FetchDialog(const QList<CoverArtProvider *> &providers, QWidget *pa
 	Settings *settings = Settings::instance();
 
 	// Setting the value will trigger valueChanged connected upthere on purpose
-	previewSizeSlider->setValue(settings->value("CoverFetcher/previewSizeSliderValue", 0).toInt());
-	restoreGeometry(settings->value("CoverFetcher/geometry").toByteArray());
+	previewSizeSlider->setValue(settings->value("providers/previewSizeSliderValue", 0).toInt());
+	restoreGeometry(settings->value("providers/geometry").toByteArray());
 
 	// Filter on apply button only
 	connect(buttonBox, &QDialogButtonBox::clicked, this, [=](QAbstractButton *button) {
@@ -52,7 +52,7 @@ FetchDialog::~FetchDialog()
 
 void FetchDialog::closeEvent(QCloseEvent *)
 {
-	Settings::instance()->setValue("CoverFetcher/geometry", saveGeometry());
+	Settings::instance()->setValue("providers/geometry", saveGeometry());
 }
 
 bool FetchDialog::copyCoverToFolder(Cover *cover, QString artistAlbum, QString album)
@@ -149,7 +149,7 @@ void FetchDialog::addCover(const QString &album, const QByteArray &coverByteArra
 
 void FetchDialog::applyChanges()
 {
-	bool integrateCoverToFiles = Settings::instance()->value("CoverFetcher/integrateCoverToFiles").toBool();
+	bool integrateCoverToFiles = Settings::instance()->value("providers/integrateCoverToFiles").toBool();
 
 	for (QGroupBox *gb : this->findChildren<QGroupBox*>()) {
 
@@ -186,8 +186,8 @@ void FetchDialog::updateCoverSize(int value)
 	}
 
 	Settings *settings = Settings::instance();
-	settings->setValue("CoverFetcher/coverValueSize", size);
-	settings->setValue("CoverFetcher/previewSizeSliderValue", value);
+	settings->setValue("providers/coverValueSize", size);
+	settings->setValue("providers/previewSizeSliderValue", value);
 	previewSizeValue->setText(QString(tr("%1px")).arg(size));
 	QSize iconSize(size, size);
 	for (QGroupBox *groupBox : this->findChildren<QGroupBox*>()) {
