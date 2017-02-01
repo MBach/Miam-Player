@@ -11,11 +11,6 @@ win32 {
     }
 }
 
-exists(acoustid-plugin/acoustid-plugin.pro) {
-    message( "acoustid-plugin added to the build." )
-    SUBDIRS += acoustid-plugin
-}
-
 exists(deezer-plugin/deezer-plugin.pro) {
     message( "deezer-plugin added to the build." )
     SUBDIRS += deezer-plugin

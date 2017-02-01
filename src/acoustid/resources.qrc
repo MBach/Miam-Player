@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/acoustid">
+        <file alias="magic">magic.png</file>
+        <file alias="delete">delete.png</file>
+    </qresource>
+</RCC>

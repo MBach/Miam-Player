@@ -1,0 +1,4 @@
+INCLUDEPATH += $$PWD/ $$PWD/libavutil/
+DEPENDPATH += $$PWD $$PWD/libavutil
+
+DEFINES += "USE_SWRESAMPLE=1"

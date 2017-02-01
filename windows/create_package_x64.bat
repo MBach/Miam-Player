@@ -3,6 +3,7 @@
 rem core
 set MiamPlayerBuild="C:\dev\Miam-Player-build\src"
 mkdir packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\acoustid\release\miam-acoustid.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\core\release\miam-core.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\cover-fetcher\release\miam-coverfetcher.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\library\release\miam-library.dll packages\org.miamplayer.core\data\
@@ -50,16 +51,11 @@ copy %QTDIR%\bin\Qt5Widgets.dll packages\org.miamplayer.core\data\Qt5Widgets.dll
 copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras.dll
 
 rem official plugins
-rem set AcoustIDSRC="C:\dev\acoustid-plugin\lib\release"
-rem set AcoustIDBuild="C:\dev\acoustid-plugin-build\release"
 rem set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
 rem set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
 set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 rem FIXME
-rem xcopy %AcoustIDBuild%\acoustid-plugin.dll packages\org.miamplayer.plugins.acoustid\data\plugins\ /y/e
-rem Chromaprint dependency isn't a plugin itself so it must be put next to FFMpeg
-rem copy %AcoustIDSRC%\chromaprint.dll packages\org.miamplayer.plugins.acoustid\data\chromaprint.dll
 rem xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 rem xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
 xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
@@ -75,7 +71,6 @@ binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p
 rem delete data folders
 rmdir packages\org.qtav\data\ /s /q
 rmdir packages\org.miamplayer.core\data\ /s /q
-rem rmdir packages\org.miamplayer.plugins.acoustid\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.deezer\data\ /s /q
 rem rmdir packages\org.miamplayer.plugins.miamplayershell\data\ /s /q
 rmdir packages\org.miamplayer.plugins.windowstoolbar\data\ /s /q
