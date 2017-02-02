@@ -37,7 +37,7 @@ using namespace QtAV;
 
 #include <QtDebug>
 
-QChromaprint::QChromaprint(AcoustIdPlugin *parent)
+QChromaprint::QChromaprint(AcoustId *parent)
 	: QObject(parent)
 	, _acoustId(parent)
 	, _maxLength(120)

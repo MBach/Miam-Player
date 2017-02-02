@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="rename">config/rename.png</file>
-        <file alias="save">config/save.png</file>
         <file alias="disc">config/disc.png</file>
         <file alias="drop-arrow">config/drop-arrow.png</file>
         <file alias="closeButton">config/closeButton.png</file>

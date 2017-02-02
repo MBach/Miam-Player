@@ -15,18 +15,12 @@ SOURCES += debug/logbrowser.cpp \
     dialogs/reflector.cpp \
     dialogs/starswidget.cpp \
     styling/miamstyle.cpp \
-    views/tageditor/albumcover.cpp \
-    views/tageditor/tagconverter.cpp \
-    views/tageditor/tageditor.cpp \
-    views/tageditor/tageditortablewidget.cpp \
     views/viewloader.cpp \
     columnutils.cpp \
     main.cpp \
     mainwindow.cpp \
     pluginmanager.cpp \
     quickstart.cpp \
-    tagbutton.cpp \
-    taglineedit.cpp \
     tracksnotfoundmessagebox.cpp \
     remotecontrol.cpp \
     minimodewidget.cpp \
@@ -43,17 +37,11 @@ HEADERS += debug/logbrowser.h \
     dialogs/reflector.h \
     dialogs/starswidget.h \
     styling/miamstyle.h \
-    views/tageditor/albumcover.h \
-    views/tageditor/tagconverter.h \
-    views/tageditor/tageditor.h \
-    views/tageditor/tageditortablewidget.h \
     views/viewloader.h \
     columnutils.h \
     mainwindow.h \
     pluginmanager.h \
     quickstart.h \
-    tagbutton.h \
-    taglineedit.h \
     tracksnotfoundmessagebox.h \
     remotecontrol.h \
     minimodewidget.h \
@@ -65,8 +53,6 @@ FORMS += customizeoptionsdialog.ui \
     equalizerdialog.ui \
     mainwindow.ui \
     quickstart.ui \
-    tagconverter.ui \
-    tageditor.ui \
     minimode.ui
 
 CONFIG += c++11
@@ -103,12 +89,14 @@ TRANSLATIONS = translations/player_ar.ts \
 
 CONFIG(debug, debug|release) {
     win32 {
-	LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
+        LIBS += -L$$PWD/../../lib/debug/win-x64/ -ltag
         LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core
         LIBS += -L$$OUT_PWD/../library/debug/ -lmiam-library
         LIBS += -L$$OUT_PWD/../tabplaylists/debug/ -lmiam-tabplaylists
         LIBS += -L$$OUT_PWD/../uniquelibrary/debug/ -lmiam-uniquelibrary
         LIBS += -L$$OUT_PWD/../cover-fetcher/debug/ -lmiam-coverfetcher
+        LIBS += -L$$OUT_PWD/../acoustid/debug/ -lmiam-acoustid
+        LIBS += -L$$OUT_PWD/../tageditor/debug/ -lmiam-tageditor
         QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../core/mp.ico) $$shell_path($$OUT_PWD/debug/)
     }
     OBJECTS_DIR = debug/.obj
@@ -119,12 +107,14 @@ CONFIG(debug, debug|release) {
 
 CONFIG(release, debug|release) {
     win32 {
-	LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
+        LIBS += -L$$PWD/../../lib/release/win-x64/ -ltag
         LIBS += -L$$OUT_PWD/../core/release/ -lmiam-core
         LIBS += -L$$OUT_PWD/../library/release/ -lmiam-library
         LIBS += -L$$OUT_PWD/../tabplaylists/release/ -lmiam-tabplaylists
         LIBS += -L$$OUT_PWD/../uniquelibrary/release/ -lmiam-uniquelibrary
         LIBS += -L$$OUT_PWD/../cover-fetcher/release/ -lmiam-coverfetcher
+        LIBS += -L$$OUT_PWD/../acoustid/release/ -lmiam-acoustid
+        LIBS += -L$$OUT_PWD/../tageditor/release/ -lmiam-tageditor
         QMAKE_POST_LINK += $${QMAKE_COPY} $$shell_path($$PWD/../core/mp.ico) $$shell_path($$OUT_PWD/release/)
     }
     OBJECTS_DIR = release/.obj
@@ -133,11 +123,13 @@ CONFIG(release, debug|release) {
     UI_DIR = $$PWD
 }
 unix {
-    LIBS += -ltag -L$$OUT_PWD/../core/ -lmiam-core
+    LIBS += -L$$OUT_PWD/../core/ -lmiam-core
     LIBS += -L$$OUT_PWD/../library/ -lmiam-library
     LIBS += -L$$OUT_PWD/../tabplaylists/ -lmiam-tabplaylists
     LIBS += -L$$OUT_PWD/../uniquelibrary/ -lmiam-uniquelibrary
     LIBS += -L$$OUT_PWD/../cover-fetcher/ -lmiam-coverfetcher
+    LIBS += -L$$OUT_PWD/../acoustid/ -lmiam-acoustid
+    LIBS += -L$$OUT_PWD/../tageditor/ -lmiam-tageditor
 }
 unix:!macx {
     target.path = /usr/bin
@@ -166,23 +158,28 @@ macx {
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../library/libmiam-library.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../tabplaylists/libmiam-tabplaylists.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
      $${QMAKE_COPY} $$shell_path($$OUT_PWD/../uniquelibrary/libmiam-uniquelibrary.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
-     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../cover-fetcher/libmiam-coverfetcher.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../cover-fetcher/libmiam-coverfetcher.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/) && \
+     $${QMAKE_COPY} $$shell_path($$OUT_PWD/../tageditor/libmiam-tageditor.*.dylib) $$shell_path($$OUT_PWD/MiamPlayer.app/Contents/Frameworks/)
 }
 
 3rdpartyDir  = $$PWD/../core/3rdparty
 INCLUDEPATH += $$3rdpartyDir
 DEPENDPATH += $$3rdpartyDir
 
-INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views $$PWD/views/tageditor
+INCLUDEPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views
 INCLUDEPATH += $$PWD/../core
 INCLUDEPATH += $$PWD/../library
 INCLUDEPATH += $$PWD/../tabplaylists
 INCLUDEPATH += $$PWD/../uniquelibrary
 INCLUDEPATH += $$PWD/../cover-fetcher
+INCLUDEPATH += $$PWD/../tageditor
+INCLUDEPATH += $$PWD/../acoustid
 
-DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views $$PWD/views/tageditor
+DEPENDPATH += $$PWD/dialogs $$PWD/filesystem $$PWD/playlists $$PWD/views
 DEPENDPATH += $$PWD/../core
 DEPENDPATH += $$PWD/../library
 DEPENDPATH += $$PWD/../tabplaylists
 DEPENDPATH += $$PWD/../uniquelibrary
 DEPENDPATH += $$PWD/../cover-fetcher
+DEPENDPATH += $$PWD/../tageditor
+DEPENDPATH += $$PWD/../acoustid

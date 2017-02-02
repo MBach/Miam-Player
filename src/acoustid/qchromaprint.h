@@ -6,7 +6,9 @@
 #include <QObject>
 #include <3rdparty/taglib/fileref.h>
 
-class AcoustIdPlugin;
+#include "miamacoustid_global.hpp"
+
+class AcoustId;
 
 /**
  * \brief		The QChromaprint class wraps the Chromaprint Library.
@@ -14,7 +16,7 @@ class AcoustIdPlugin;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class QChromaprint : public QObject
+class MIAMACOUSTID_LIBRARY QChromaprint : public QObject
 {
 	Q_OBJECT
 private:
@@ -33,10 +35,10 @@ private:
 	static bool g_raw;
 	static bool g_abs_ts;
 
-	AcoustIdPlugin *_acoustId;
+	AcoustId *_acoustId;
 
 public:
-	explicit QChromaprint(AcoustIdPlugin *parent);
+	explicit QChromaprint(AcoustId *parent);
 
 	virtual ~QChromaprint();
 

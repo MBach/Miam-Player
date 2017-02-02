@@ -1,4 +1,4 @@
-#ifndef COVERFETCHERPLUGIN_H
+#ifndef COVERFETCHER_H
 #define COVERFETCHER_H
 
 #include <model/selectedtracksmodel.h>

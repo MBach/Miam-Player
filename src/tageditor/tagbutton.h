@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QToolButton>
+#include "miamtageditor_global.hpp"
 
 /// Forward declaration
 class TagLineEdit;
@@ -14,7 +15,7 @@ class TagLineEdit;
  * \author		Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TagButton : public QWidget
+class MIAMTAGEDITOR_LIBRARY TagButton : public QWidget
 {
 	Q_OBJECT
 private:

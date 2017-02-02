@@ -4,12 +4,14 @@
 #include <QMap>
 #include <QObject>
 
+#include "miamacoustid_global.hpp"
+
 namespace MusicBrainz {
 
 /**
  * \brief The Artist class
  */
-class Artist : public QObject
+class MIAMACOUSTID_LIBRARY Artist : public QObject
 {
 	Q_OBJECT
 public:

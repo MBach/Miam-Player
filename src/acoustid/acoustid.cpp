@@ -1,29 +1,28 @@
 #include "acoustid.h"
-#include "acoustid.h"
 #include "settings.h"
 
 #include <QPushButton>
 
 #include <QtDebug>
 
-QString AcoustIdPlugin::_apiKey = "iocykM04";
-QString AcoustIdPlugin::_wsAcoustID = "http://api.acoustid.org/v2/lookup";
+QString AcoustId::_apiKey = "iocykM04";
+QString AcoustId::_wsAcoustID = "http://api.acoustid.org/v2/lookup";
 
-AcoustIdPlugin::AcoustIdPlugin()
-	: TagEditorPlugin()
+AcoustId::AcoustId(QObject *parent)
+	: QObject(parent)
 	, _requestPool(new RequestPool(this))
 	, _chromaprint(new QChromaprint(this))
 	, _matchingRecordsWidget(new MatchingRecordsWidget)
 	, _analyzeButton(nullptr)
-	, _tableWidget(nullptr)
+	//, _tableWidget(nullptr)
 {
 	connect(_requestPool, &RequestPool::releaseFound, _matchingRecordsWidget, &MatchingRecordsWidget::addRelease);
-	connect(this, &AcoustIdPlugin::tracksAnalyzed, _matchingRecordsWidget, &MatchingRecordsWidget::autoSelectFirstResult);
+	connect(this, &AcoustId::tracksAnalyzed, _matchingRecordsWidget, &MatchingRecordsWidget::autoSelectFirstResult);
 
 	connect(_matchingRecordsWidget, &MatchingRecordsWidget::releaseChanged, this, [=](const MusicBrainz::Release &release) {
 		qDebug() << Q_FUNC_INFO << "load release info for" << release.title << "and then update table";
 		qDebug() << Q_FUNC_INFO << "what are the tracks in tag editor?";
-		QModelIndexList list = _tableWidget->selectionModel()->selectedRows();
+		/*QModelIndexList list = _tableWidget->selectionModel()->selectedRows();
 		qDebug() << Q_FUNC_INFO << list;
 		for (int i = 0; i < list.count(); i++) {
 			QModelIndex index = list.at(i);
@@ -53,28 +52,23 @@ AcoustIdPlugin::AcoustIdPlugin()
 				year->setText(QString::number(release.year));
 				disc->setText(QString::number(release.disc));
 			}
-		}
+		}*/
 	});
 }
 
-AcoustIdPlugin::~AcoustIdPlugin()
+AcoustId::~AcoustId()
 {}
 
-void AcoustIdPlugin::setSelectedTracksModel(SelectedTracksModel *selectedTracksModel)
-{
-	_selectedTracksModel = selectedTracksModel;
-}
-
-void AcoustIdPlugin::setExtensibleLayout(QHBoxLayout *layout)
+/*void AcoustId::setExtensibleLayout(QHBoxLayout *layout)
 {
 	_analyzeButton = new QPushButton(QIcon(":/acoustid/magic"), tr("Analyze"));
 	_analyzeButton->setIconSize(QSize(24, 24));
 	_analyzeButton->setEnabled(false);
-	connect(_analyzeButton, &QPushButton::clicked, this, &AcoustIdPlugin::start);
+	connect(_analyzeButton, &QPushButton::clicked, this, &AcoustId::start);
 	layout->addWidget(_analyzeButton);
-}
+}*/
 
-void AcoustIdPlugin::setStackWidget(QStackedWidget *sw)
+/*void AcoustId::setStackWidget(QStackedWidget *sw)
 {
 	_stackedWidget = sw;
 
@@ -85,19 +79,19 @@ void AcoustIdPlugin::setStackWidget(QStackedWidget *sw)
 			sw->hide();
 		}
 	});
-}
+}*/
 
-void AcoustIdPlugin::setTagEditorWidget(QTableWidget *tableWidget)
+/*void AcoustId::setTagEditorWidget(QTableWidget *tableWidget)
 {
 	_tableWidget = tableWidget;
 	connect(tableWidget, &QTableWidget::itemSelectionChanged, this, [=]() {
 		_analyzeButton->setDisabled(tableWidget->selectionModel()->selectedIndexes().isEmpty());
 	});
-}
+}*/
 
-void AcoustIdPlugin::start()
+void AcoustId::start()
 {
-	if (!_selectedTracksModel->selectedTracks().isEmpty()) {
+	/*if (!_selectedTracksModel->selectedTracks().isEmpty()) {
 		_stackedWidget->setVisible(true);
 
 		QString appName = QCoreApplication::instance()->applicationName();
@@ -113,7 +107,7 @@ void AcoustIdPlugin::start()
 
 					QUrlQuery urlQuery;
 					urlQuery.addQueryItem("format", "json");
-					urlQuery.addQueryItem("client", AcoustIdPlugin::_apiKey);
+					urlQuery.addQueryItem("client", AcoustId::_apiKey);
 					urlQuery.addQueryItem("duration", QString::number(_chromaprint->duration()));
 					urlQuery.addQueryItem("meta", "recordings+releasegroups+releases+tracks");
 					//qDebug() << fingerprint;
@@ -128,5 +122,5 @@ void AcoustIdPlugin::start()
 				}
 			}
 		}
-	}
+	}*/
 }

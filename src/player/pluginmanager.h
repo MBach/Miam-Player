@@ -4,7 +4,6 @@
 #include <interfaces/itemviewplugin.h>
 #include <interfaces/mediaplayerplugin.h>
 #include <interfaces/remotemediaplayerplugin.h>
-#include <interfaces/tageditorplugin.h>
 
 #include <QDir>
 
@@ -65,7 +64,7 @@ private:
 	void loadItemViewPlugin(ItemViewPlugin *itemViewPlugin);
 	void loadMediaPlayerPlugin(MediaPlayerPlugin *mediaPlayerPlugin);
 	void loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin);
-	void loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin);
+	//void loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin);
 };
 
 #endif // PLUGINMANAGER_H

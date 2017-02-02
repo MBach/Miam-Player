@@ -9,6 +9,7 @@ copy %MiamPlayerBuild%\cover-fetcher\release\miam-coverfetcher.dll packages\org.
 copy %MiamPlayerBuild%\library\release\miam-library.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\player\release\MiamPlayer.exe packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\tabplaylists\release\miam-tabplaylists.dll packages\org.miamplayer.core\data\
+copy %MiamPlayerBuild%\tageditor\release\miam-tageditor.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\uniquelibrary\release\miam-uniquelibrary.dll packages\org.miamplayer.core\data\
 
 rem 3rd party
@@ -53,12 +54,11 @@ copy %QTDIR%\bin\Qt5WinExtras.dll packages\org.miamplayer.core\data\Qt5WinExtras
 rem official plugins
 rem set DeezerPluginBuild="C:\dev\deezer-plugin-build\release"
 rem set MiamPlayerShellBuild="C:\dev\Miam-Player-shell-build"
-set WindowsToolbarBuild="C:\dev\windows-toolbar-build\release"
 
 rem FIXME
 rem xcopy %MiamPlayerShellBuild%\MiamShell\release\MiamPlayerShell.dll packages\org.miamplayer.plugins.miamplayershell\data\ /y/e
 rem xcopy %MiamPlayerShellBuild%\MiamShellGui\release\MiamShellGui.dll packages\org.miamplayer.plugins.miamplayershell\data\plugins\ /y/e
-xcopy %WindowsToolbarBuild%\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
+xcopy %MiamPlayerBuild%\player\release\plugins\windows-toolbar.dll packages\org.miamplayer.plugins.windowstoolbar\data\plugins\ /y/e
 
 rem Deezer talks to the Internet with QtWebKit
 rem xcopy %DeezerPluginBuild%\deezer-plugin.dll packages\org.miamplayer.plugins.deezer\data\plugins\ /y/e

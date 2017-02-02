@@ -5,10 +5,10 @@
 #include <settingsprivate.h>
 #include <treeview.h>
 
-#include "pluginmanager.h"
-
 #include <taglib/tfile.h>
 #include <taglib/tpropertymap.h>
+
+#include <acoustid.h>
 
 #include <QDir>
 #include <QDirIterator>
@@ -33,10 +33,11 @@ QStringList TagEditor::genres = (QStringList() << "Blues" << "Classic Rock" << "
 TagEditor::TagEditor(QWidget *parent)
 	: AbstractView(nullptr, parent)
 	, SelectedTracksModel()
+	, _acoustId(new AcoustId(this))
 {
 	this->setWindowFlags(Qt::Window);
 	setupUi(this);
-	extensibleWidgetArea->setVisible(false);
+	stackedWidget->hide();
 
 	this->setAcceptDrops(true);
 
@@ -61,6 +62,7 @@ TagEditor::TagEditor(QWidget *parent)
 		combo->setProperty("column", _combos.key(combo));
 	}
 
+	connect(analyzePushButton, &QPushButton::clicked, _acoustId, &AcoustId::start);
 	connect(saveChangesButton, &QPushButton::clicked, this, &TagEditor::commitChanges);
 	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
 
@@ -90,13 +92,6 @@ void TagEditor::addDirectory(const QDir &dir)
 		}
 	}
 	this->addTracks(tracks);
-}
-
-QPair<QString, QObjectList> TagEditor::extensionPoints() const
-{
-	QObjectList tagEditorObjectList;
-	tagEditorObjectList << albumCover->contextMenu() << extensiblePushButtonArea << extensibleWidgetArea << tagEditorWidget;
-	return qMakePair(metaObject()->className(), tagEditorObjectList);
 }
 
 QList<QUrl> TagEditor::selectedTracks()

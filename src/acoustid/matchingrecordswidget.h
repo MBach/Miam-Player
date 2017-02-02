@@ -1,12 +1,13 @@
 #ifndef MATCHINGRECORDSWIDGET_H
 #define MATCHINGRECORDSWIDGET_H
 
+#include "miamacoustid_global.hpp"
 #include "mbrelease.h"
 #include <QWidget>
 
 #include "ui_matchingrecords.h"
 
-class MatchingRecordsWidget : public QWidget, public Ui::MatchingRecords
+class MIAMACOUSTID_LIBRARY MatchingRecordsWidget : public QWidget, public Ui::MatchingRecords
 {
 	Q_OBJECT
 private:

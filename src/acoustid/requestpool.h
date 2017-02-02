@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <QUrlQuery>
 
+#include "miamacoustid_global.hpp"
 #include "mbrelease.h"
 
 /**
@@ -14,7 +15,7 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class RequestPool : public QObject
+class MIAMACOUSTID_LIBRARY RequestPool : public QObject
 {
 	Q_OBJECT
 private:

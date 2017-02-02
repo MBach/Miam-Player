@@ -6,13 +6,14 @@
 
 #include <cover.h>
 #include <filehelper.h>
+#include "miamtageditor_global.hpp"
 
 /**
  * \brief		The TagEditorTableWidget class is a table where one can select lines in order to edit multiple tags.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TagEditorTableWidget : public QTableWidget
+class MIAMTAGEDITOR_LIBRARY TagEditorTableWidget : public QTableWidget
 {
 	Q_OBJECT
 private:

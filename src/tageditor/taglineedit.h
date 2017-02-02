@@ -1,15 +1,16 @@
 #ifndef TAGLINEEDIT_H
 #define TAGLINEEDIT_H
 
-#include "styling/lineedit.h"
+#include <styling/lineedit.h>
 #include "tagbutton.h"
+#include "miamtageditor_global.hpp"
 
 /**
  * \brief		The TagLineEdit class
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TagLineEdit : public LineEdit
+class MIAMTAGEDITOR_LIBRARY TagLineEdit : public LineEdit
 {
 	Q_OBJECT
 

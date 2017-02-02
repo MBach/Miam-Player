@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+#include "miamtageditor_global.hpp"
 #include "ui_tagconverter.h"
 
 /// Forward declaration
@@ -13,7 +14,7 @@ class TagEditorTableWidget;
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TagConverter : public QDialog, public Ui::TagConverter
+class MIAMTAGEDITOR_LIBRARY TagConverter : public QDialog, public Ui::TagConverter
 {
 	Q_OBJECT
 

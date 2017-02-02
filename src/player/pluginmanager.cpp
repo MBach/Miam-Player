@@ -128,10 +128,10 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
 		} else if (RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
 			this->loadRemoteMediaPlayerPlugin(remoteMediaPlayerPlugin);
-		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
+		} /*else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
 			qDebug() << Q_FUNC_INFO;
 			this->loadTagEditorPlugin(tagEditorPlugin);
-		}
+		}*/
 	}
 	return plugin != nullptr;
 }
@@ -151,9 +151,9 @@ void PluginManager::registerExtensionPoint(QPair<QString, QObjectList> ext)
 		}
 		if (ItemViewPlugin *itemViewPlugin = qobject_cast<ItemViewPlugin*>(plugin)) {
 			this->loadItemViewPlugin(itemViewPlugin);
-		} else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
+		}/* else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
 			this->loadTagEditorPlugin(tagEditorPlugin);
-		}
+		}*/
 	}
 }
 
@@ -238,6 +238,7 @@ void PluginManager::loadRemoteMediaPlayerPlugin(RemoteMediaPlayerPlugin *remoteM
 	_mainWindow->mediaPlayer()->addRemotePlayer(remoteMediaPlayerPlugin->player());
 }
 
+/*
 void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
 {
 	tagEditorPlugin->setLocalPlayer(_mainWindow->mediaPlayer()->localPlayer());
@@ -256,3 +257,4 @@ void PluginManager::loadTagEditorPlugin(TagEditorPlugin *tagEditorPlugin)
 		}
 	}
 }
+*/

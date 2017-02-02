@@ -4,13 +4,15 @@
 #include <model/selectedtracksmodel.h>
 #include <model/sqldatabase.h>
 #include <cover.h>
-#include "abstractview.h"
-#include "tagconverter.h"
+#include <abstractview.h>
 
+#include "tagconverter.h"
 #include "ui_tageditor.h"
 
 #include <QUrl>
 #include <QWidget>
+
+class AcoustId;
 
 /**
  * \brief		The TagEditor class is the main class for editing metadata inside this soft.
@@ -20,11 +22,12 @@
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class TagEditor : public AbstractView, public Ui::TagEditor, public SelectedTracksModel
+class MIAMTAGEDITOR_LIBRARY TagEditor : public AbstractView, public Ui::TagEditor, public SelectedTracksModel
 {
 	Q_OBJECT
-
 private:
+	AcoustId* _acoustId;
+
 	QMap<int, QComboBox*> _combos;
 
 	static QStringList genres;
@@ -41,8 +44,6 @@ public:
 	explicit TagEditor(QWidget *parent = nullptr);
 
 	void addDirectory(const QDir &dir);
-
-	virtual QPair<QString, QObjectList> extensionPoints() const override;
 
 	virtual QList<QUrl> selectedTracks() override;
 

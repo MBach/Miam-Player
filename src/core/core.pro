@@ -89,7 +89,6 @@ HEADERS += interfaces/basicplugin.h \
     interfaces/itemviewplugin.h \
     interfaces/mediaplayerplugin.h \
     interfaces/remotemediaplayerplugin.h \
-    interfaces/tageditorplugin.h \
     library/jumptowidget.h \
     mediabuttons/mediabutton.h \
     mediabuttons/playbackmodebutton.h \

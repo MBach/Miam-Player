@@ -18,7 +18,8 @@ HEADERS += \
     matchingrecordswidget.h \
     mbrelease.h \
     qchromaprint.h \
-    requestpool.h
+    requestpool.h \
+    miamacoustid_global.hpp
 
 FORMS += matchingrecords.ui
 
@@ -27,18 +28,16 @@ CONFIG  += dll c++11
 CONFIG(debug, debug|release) {
     win32 {
         LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -lQtAV1 -L$$PWD/../../lib/ -L$$PWD/../../lib/debug/win-x64 -ltag -lchromaprint -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lpostproc -lswresample -lswscale
-        QMAKE_POST_LINK=robocopy /IS $$PWD/lib/debug $$OUT_PWD/../../player/debug
     }
-    OBJECTS_DIR = release/.obj
-    MOC_DIR = release/.moc
-    RCC_DIR = release/.rcc
+    OBJECTS_DIR = debug/.obj
+    MOC_DIR = debug/.moc
+    RCC_DIR = debug/.rcc
     UI_DIR = $$PWD
 }
 
 CONFIG(release, debug|release) {
     win32 {
         LIBS += -L$$OUT_PWD/../core/release -lmiam-core -lQtAV1 -L$$PWD/../../lib/ -L$$PWD/../../lib/release/win-x64 -ltag -lchromaprint -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lpostproc -lswresample -lswscale
-        QMAKE_POST_LINK=robocopy /IS $$PWD/lib/release $$OUT_PWD/../../player/release
     }
     OBJECTS_DIR = release/.obj
     MOC_DIR = release/.moc
@@ -56,10 +55,8 @@ macx {
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 }
 
-INCLUDEPATH += chromaprint
+INCLUDEPATH += chromaprint/
 DEPENDPATH += chromaprint
 
 INCLUDEPATH += $$PWD/../core/ $$PWD/../core/3rdparty/ $$PWD/../core/3rdparty/QtAV/
 DEPENDPATH += $$PWD/../core $$PWD/../core/3rdparty $$PWD/../core/3rdparty/QtAV
-
-RESOURCES += resources.qrc

@@ -11,11 +11,11 @@
 #include <minimodewidget.h>
 #include <uniquelibrary.h>
 
+#include <tageditor.h>
 #include "dialogs/customizeoptionsdialog.h"
 #include "dialogs/playlistdialog.h"
 #include "pluginmanager.h"
 #include "remotecontrol.h"
-#include "views/tageditor/tageditor.h"
 
 #include "ui_mainwindow.h"
 

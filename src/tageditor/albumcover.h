@@ -3,14 +3,15 @@
 
 #include <QMenu>
 
-#include "cover.h"
+#include <cover.h>
+#include "miamtageditor_global.hpp"
 
 /**
  * \brief		The AlbumCover class is used to manipulate cover albums inside music files.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
-class AlbumCover : public QWidget
+class MIAMTAGEDITOR_LIBRARY AlbumCover : public QWidget
 {
 	Q_OBJECT
 private:

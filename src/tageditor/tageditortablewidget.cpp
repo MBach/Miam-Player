@@ -1,11 +1,10 @@
 #include "tageditortablewidget.h"
 
-#include <settings.h>
-#include <filehelper.h>
 #include <taglib/fileref.h>
-
-#include "../styling/miamstyleditemdelegate.h"
-#include "../treeview.h"
+#include <styling/miamstyleditemdelegate.h>
+#include <filehelper.h>
+#include <settings.h>
+#include <treeview.h>
 
 #include <QDir>
 #include <QScrollBar>
