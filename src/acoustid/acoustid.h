@@ -31,7 +31,7 @@ public:
 
 	virtual ~AcoustId();
 
-	void start();
+	void start(const QList<QUrl> &tracks);
 
 signals:
 	void releaseFound(const MusicBrainz::Release &);

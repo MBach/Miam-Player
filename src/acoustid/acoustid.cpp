@@ -89,38 +89,34 @@ AcoustId::~AcoustId()
 	});
 }*/
 
-void AcoustId::start()
+void AcoustId::start(const QList<QUrl> &tracks)
 {
-	/*if (!_selectedTracksModel->selectedTracks().isEmpty()) {
-		_stackedWidget->setVisible(true);
+	QString appName = QCoreApplication::instance()->applicationName();
+	QString appVersion = QCoreApplication::instance()->applicationVersion();
+	QString client = appName.append(appVersion);
 
-		QString appName = QCoreApplication::instance()->applicationName();
-		QString appVersion = QCoreApplication::instance()->applicationVersion();
-		QString client = appName.append(appVersion);
+	for (int i = 0; i < tracks.count(); i++) {
+		QString track = tracks.at(i).toLocalFile();
+		if (_chromaprint->start(track)) {
 
-		for (int i = 0; i < _selectedTracksModel->selectedTracks().count(); i++) {
-			QString track = _selectedTracksModel->selectedTracks().at(i).toLocalFile();
-			if (_chromaprint->start(track)) {
+			QString fingerprint = _chromaprint->fingerprint();
+			if (!fingerprint.isEmpty()) {
 
-				QString fingerprint = _chromaprint->fingerprint();
-				if (!fingerprint.isEmpty()) {
+				QUrlQuery urlQuery;
+				urlQuery.addQueryItem("format", "json");
+				urlQuery.addQueryItem("client", AcoustId::_apiKey);
+				urlQuery.addQueryItem("duration", QString::number(_chromaprint->duration()));
+				urlQuery.addQueryItem("meta", "recordings+releasegroups+releases+tracks");
+				//qDebug() << fingerprint;
+				urlQuery.addQueryItem("fingerprint", fingerprint);
 
-					QUrlQuery urlQuery;
-					urlQuery.addQueryItem("format", "json");
-					urlQuery.addQueryItem("client", AcoustId::_apiKey);
-					urlQuery.addQueryItem("duration", QString::number(_chromaprint->duration()));
-					urlQuery.addQueryItem("meta", "recordings+releasegroups+releases+tracks");
-					//qDebug() << fingerprint;
-					urlQuery.addQueryItem("fingerprint", fingerprint);
+				QNetworkRequest request(QUrl::fromEncoded(_wsAcoustID.toLatin1()));
+				request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+				//request.setRawHeader("Content-Encoding", "gzip");
+				request.setRawHeader("User-Agent", client.toLatin1());
 
-					QNetworkRequest request(QUrl::fromEncoded(_wsAcoustID.toLatin1()));
-					request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-					//request.setRawHeader("Content-Encoding", "gzip");
-					request.setRawHeader("User-Agent", client.toLatin1());
-
-					_requestPool->add(track, request, urlQuery, _chromaprint->duration());
-				}
+				_requestPool->add(track, request, urlQuery, _chromaprint->duration());
 			}
 		}
-	}*/
+	}
 }

@@ -62,7 +62,7 @@ TagEditor::TagEditor(QWidget *parent)
 		combo->setProperty("column", _combos.key(combo));
 	}
 
-	connect(analyzePushButton, &QPushButton::clicked, _acoustId, &AcoustId::start);
+	connect(analyzePushButton, &QPushButton::clicked, this, &TagEditor::autoFetchTags);
 	connect(saveChangesButton, &QPushButton::clicked, this, &TagEditor::commitChanges);
 	connect(cancelButton, &QPushButton::clicked, this, &TagEditor::rollbackChanges);
 
@@ -321,6 +321,14 @@ void TagEditor::applyCoverToAll(bool isForAll, Cover *cover)
 	}
 	saveChangesButton->setEnabled(true);
 	cancelButton->setEnabled(true);
+}
+
+void TagEditor::autoFetchTags()
+{
+	if (!selectedTracks().isEmpty()) {
+		//_stackedWidget->setVisible(true);
+		_acoustId->start(selectedTracks());
+	}
 }
 
 /** Saves all fields in the media. */

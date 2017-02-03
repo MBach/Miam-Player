@@ -67,6 +67,7 @@ QString QChromaprint::fingerprint() const
 	int r = chromaprint_get_fingerprint(_ctx, &fp);
 	if (r == 1) {
 		QString s(fp);
+		qDebug() << Q_FUNC_INFO << "decoded fingerprint" << s;
 		return s;
 	} else {
 		return QString();
@@ -173,6 +174,9 @@ int QChromaprint::processFile(const QString &file)
 		while (!data.isEmpty()) {
 			ao->play(QByteArray::fromRawData(data.constData(), qMin(data.size(), ao->bufferSize())));
 			data.remove(0, qMin(data.size(), ao->bufferSize()));
+		}*/
+		/*if (!chromaprint_feed(_ctx, frame_data, first_part_size * frame.samplesPerChannel())) {
+			qDebug() << "ERROR: Could not process audio data";
 		}*/
 	}
 

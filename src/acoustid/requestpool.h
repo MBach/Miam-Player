@@ -27,7 +27,7 @@ private:
 	QMap<QString, QNetworkReply*> _map;
 
 	/**
-	 * \brief	The Triplet class is a nested class to manipulate queries easily.
+	 * \brief	The Quadruplet class is a nested class to manipulate queries easily.
 	 */
 	class Quadruplet
 	{

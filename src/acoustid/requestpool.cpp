@@ -39,6 +39,7 @@ void RequestPool::add(const QString &track, const QNetworkRequest &request, cons
 			_timer->start(1000);
 		}
 	} else {
+		qDebug() << Q_FUNC_INFO << track << urlQuery.query() << trackDuration;
 		QNetworkReply* reply = _nam.post(request, urlQuery.query(QUrl::FullyEncoded).toUtf8());
 		reply->setProperty("duration", trackDuration);
 		reply->setProperty("track", track);

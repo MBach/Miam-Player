@@ -93,6 +93,8 @@ public slots:
 private slots:
 	void applyCoverToAll(bool isForAll, Cover *cover);
 
+	void autoFetchTags();
+
 	/** Saves all fields in the media. */
 	void commitChanges();
 
