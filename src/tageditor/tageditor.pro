@@ -41,8 +41,10 @@ CONFIG(release, debug|release) {
 
 TARGET      = miam-tageditor
 
-!macx {
+unix {
     LIBS += -L$$OUT_PWD/../core/ -lmiam-core -L$$OUT_PWD/../acoustid/ -lmiam-acoustid
+}
+unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/
     INSTALLS += target
 }
