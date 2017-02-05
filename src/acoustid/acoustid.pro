@@ -49,6 +49,8 @@ TARGET      = miam-acoustid
 
 !macx {
     LIBS += -L$$OUT_PWD/../core/ -lmiam-core -ltag -lchromaprint
+    target.path = /usr/lib$$LIB_SUFFIX/
+    INSTALLS += target
 }
 macx {
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
