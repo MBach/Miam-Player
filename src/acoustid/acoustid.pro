@@ -23,7 +23,7 @@ HEADERS += \
 
 FORMS += matchingrecords.ui
 
-CONFIG  += dll c++11
+CONFIG  +=  c++11
 
 CONFIG(debug, debug|release) {
     win32 {
@@ -46,9 +46,10 @@ CONFIG(release, debug|release) {
 }
 
 TARGET      = miam-acoustid
-
-!macx {
+unix {
     LIBS += -L$$OUT_PWD/../core/ -lmiam-core -ltag -lchromaprint
+}
+unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/
     INSTALLS += target
 }
