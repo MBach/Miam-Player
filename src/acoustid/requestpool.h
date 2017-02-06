@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QTimer>
 #include <QUrlQuery>
 
 #include "miamacoustid_global.hpp"
@@ -23,7 +22,7 @@ private:
 	static int _nbRequestsToAcoustIdServer;
 
 	QNetworkAccessManager _nam;
-	QTimer *_timer;
+	//QTimer *_timer;
 	QMap<QString, QNetworkReply*> _map;
 
 	/**

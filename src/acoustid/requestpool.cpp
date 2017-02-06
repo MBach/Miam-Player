@@ -12,11 +12,12 @@ int RequestPool::_maxRequestPerSecond = 3;
 int RequestPool::_nbRequestsToAcoustIdServer = 0;
 
 RequestPool::RequestPool(QObject *parent)
-	: QObject(parent), _timer(new QTimer(this))
+	: QObject(parent)
+	//, _timer(new QTimer(this))
 {
-	_timer->setSingleShot(true);
+	//_timer->setSingleShot(true);
 	connect(&_nam, &QNetworkAccessManager::finished, this, &RequestPool::dispatchReply);
-	connect(_timer, &QTimer::timeout, this, [=]() {
+	/*connect(_timer, &QTimer::timeout, this, [=]() {
 
 		int n = qMin(_pool.count(), _maxRequestPerSecond);
 		for (int i = 0; i < n; i++) {
@@ -27,17 +28,17 @@ RequestPool::RequestPool(QObject *parent)
 			qDebug() << "there are some requests remaining, restarting timer";
 			_timer->start(1000);
 		}
-	});
+	});*/
 }
 
 void RequestPool::add(const QString &track, const QNetworkRequest &request, const QUrlQuery &urlQuery, int trackDuration)
 {
 	if (_nbRequestsToAcoustIdServer > _maxRequestPerSecond) {
 		_pool << Quadruplet(track, request, urlQuery, trackDuration);
-		if (!_timer->isActive()) {
+		/*if (!_timer->isActive()) {
 			qDebug() << Q_FUNC_INFO << "too much requests, waiting for 1s";
 			_timer->start(1000);
-		}
+		}*/
 	} else {
 		qDebug() << Q_FUNC_INFO << track << urlQuery.query() << trackDuration;
 		QNetworkReply* reply = _nam.post(request, urlQuery.query(QUrl::FullyEncoded).toUtf8());

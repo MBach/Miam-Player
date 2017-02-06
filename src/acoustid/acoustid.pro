@@ -1,5 +1,4 @@
 QT          += core gui multimedia network sql widgets
-
 TEMPLATE    = lib
 include(chromaprint/chromaprint.pri)
 
@@ -47,7 +46,7 @@ CONFIG(release, debug|release) {
 
 TARGET      = miam-acoustid
 unix {
-    LIBS += -L$$OUT_PWD/../core/ -lmiam-core -ltag -lchromaprint
+    LIBS += -L$$OUT_PWD/../core/ -lmiam-core -lQtAV -ltag -lchromaprint
 }
 unix:!macx {
     target.path = /usr/lib$$LIB_SUFFIX/

@@ -4,7 +4,6 @@
 #include <chromaprint/chromaprint.h>
 
 #include <QObject>
-#include <3rdparty/taglib/fileref.h>
 
 #include "miamacoustid_global.hpp"
 
@@ -20,11 +19,9 @@ class MIAMACOUSTID_LIBRARY QChromaprint : public QObject
 {
 	Q_OBJECT
 private:
+	AcoustId *_acoustId;
 	uint _maxLength;
-
 	ChromaprintContext *_ctx;
-	// FFmpegAudioReader reader;
-
 	int _duration;
 
 	static int g_input_channels;
@@ -34,8 +31,6 @@ private:
 	static bool g_overlap;
 	static bool g_raw;
 	static bool g_abs_ts;
-
-	AcoustId *_acoustId;
 
 public:
 	explicit QChromaprint(AcoustId *parent);
