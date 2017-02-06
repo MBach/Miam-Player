@@ -117,6 +117,8 @@ void AcoustId::start(const QList<QUrl> &tracks)
 
 				_requestPool->add(track, request, urlQuery, _chromaprint->duration());
 			}
+		} else {
+			qDebug() << Q_FUNC_INFO << "something was KO when calculating fingerprint";
 		}
 	}
 }
