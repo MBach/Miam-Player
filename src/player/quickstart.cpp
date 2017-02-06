@@ -3,6 +3,7 @@
 #include <model/sqldatabase.h>
 #include <columnutils.h>
 #include <filehelper.h>
+#include <quickstartsearchengine.h>
 #include <scrollbar.h>
 #include <settingsprivate.h>
 
@@ -22,7 +23,6 @@ QuickStart::QuickStart(QMainWindow *parent)
 	: QWidget(parent)
 	, _totalMusicFiles(0)
 	, _worker(nullptr)
-	, _qsse(nullptr)
 	, _mainWindow(parent)
 {
 	setupUi(this);
@@ -86,11 +86,18 @@ void QuickStart::searchMultimediaFiles()
 		otherwiseLabel->hide();
 	} else {
 		QThread *thread = new QThread;
-		_qsse = new QuickStartSearchEngine();
-		_qsse->moveToThread(thread);
-		connect(_qsse, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
-		connect(thread, &QThread::started, _qsse, &QuickStartSearchEngine::doSearch);
-		connect(thread, &QThread::finished, this, &QuickStart::insertFirstRow);
+		QuickStartSearchEngine *worker = new QuickStartSearchEngine;
+		worker->moveToThread(thread);
+		connect(worker, &QuickStartSearchEngine::folderScanned, this, &QuickStart::insertRow);
+		connect(thread, &QThread::started, worker, &QuickStartSearchEngine::doSearch);
+		connect(thread, &QThread::finished, this, [=]() {
+			this->insertFirstRow();
+			thread->deleteLater();
+		});
+		connect(worker, &QuickStartSearchEngine::quickSearchHasEnded, this, [=]() {
+			worker->deleteLater();
+			thread->quit();
+		});
 		thread->start();
 	}
 }
@@ -231,9 +238,6 @@ void QuickStart::insertFirstRow()
 	quickStartApplyButton->setEnabled(true);
 
 	_totalMusicFiles = 0;
-
-	_qsse->deleteLater();
-	sender()->deleteLater();
 }
 
 /** Insert a row with a checkbox with folder's name and the number of files in this folder. */

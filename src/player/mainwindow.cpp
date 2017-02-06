@@ -418,8 +418,7 @@ void MainWindow::initQuickStart()
 	QuickStart *quickStart = new QuickStart(this);
 	quickStart->searchMultimediaFiles();
 	connect(quickStart->commandLinkButtonLibrary, &QAbstractButton::clicked, this, &MainWindow::createCustomizeOptionsDialog);
-	connect(quickStart, &QuickStart::destroyed, this, [this, &quickStart]() {
-		quickStart = nullptr;
+	connect(quickStart, &QuickStart::destroyed, this, [=]() {
 		int w = qApp->desktop()->screenGeometry().width() / 2;
 		int h = qApp->desktop()->screenGeometry().height() / 2;
 		this->move(w - frameGeometry().width() / 2, h - frameGeometry().height() / 2);
@@ -548,6 +547,8 @@ void MainWindow::processArgs(const QStringList &args)
 
 void MainWindow::activateView(QAction *menuAction)
 {
+	qDebug() << Q_FUNC_INFO;
+
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
 	_currentView = v.load(_currentView, menuAction->objectName());

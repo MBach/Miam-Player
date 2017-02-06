@@ -27,5 +27,5 @@ void QuickStartSearchEngine::doSearch()
 		}
 		emit folderScanned(fileInfo, musicFiles);
 	}
-	this->thread()->quit();
+	emit quickSearchHasEnded();
 }

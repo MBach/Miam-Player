@@ -5,8 +5,6 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include <quickstartsearchengine.h>
-
 #include "ui_quickstart.h"
 
 /**
@@ -29,7 +27,6 @@ private:
 	int _totalMusicFiles;
 
 	QThread *_worker;
-	QuickStartSearchEngine *_qsse;
 
 	QMainWindow *_mainWindow;
 

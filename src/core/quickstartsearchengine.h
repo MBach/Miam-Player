@@ -21,6 +21,7 @@ public slots:
 
 signals:
 	void folderScanned(const QFileInfo &, int);
+	void quickSearchHasEnded();
 };
 
 #endif // QUICKSTARTSEARCHENGINE_H
