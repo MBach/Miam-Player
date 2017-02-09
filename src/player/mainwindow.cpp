@@ -547,8 +547,6 @@ void MainWindow::processArgs(const QStringList &args)
 
 void MainWindow::activateView(QAction *menuAction)
 {
-	qDebug() << Q_FUNC_INFO;
-
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
 	_currentView = v.load(_currentView, menuAction->objectName());
@@ -698,6 +696,7 @@ void MainWindow::activateView(QAction *menuAction)
 	});
 
 	settingsPrivate->setValue("lastActiveView", menuAction->objectName());
+	_currentView->loadModel();
 }
 
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
@@ -755,7 +754,7 @@ void MainWindow::switchToMiniPlayer()
 void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList &newLocations)
 {
 	if (!_currentView) {
-		this->activateView(actionViewPlaylists);
+		this->activateLastView();
 	}
 	if (newLocations.isEmpty()) {
 		this->initQuickStart();
@@ -779,7 +778,6 @@ void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList 
 
 	QThread *thread = new QThread;
 	MusicSearchEngine *worker = new MusicSearchEngine;
-	worker->moveToThread(thread);
 	if (_currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
 		_currentView->setMusicSearchEngine(worker);
 	}
@@ -788,7 +786,8 @@ void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList 
 			plugin->setMusicSearchEngine(worker);
 		}
 	}
-	//searchEngine->setDelta(newLocations);
+
+	worker->moveToThread(thread);
 	connect(thread, &QThread::started, worker, &MusicSearchEngine::doSearch);
 	connect(worker, &MusicSearchEngine::aboutToSearch, this, [=]() {
 		menuView->setEnabled(false);
@@ -796,11 +795,14 @@ void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList 
 	});
 	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 	connect(worker, &MusicSearchEngine::searchHasEnded, this, [=]() {
+		qDebug() << "MainWindow -> searchHasEnded";
 		worker->deleteLater();
 		thread->quit();
 		menuView->setEnabled(true);
 		actionScanLibrary->setEnabled(true);
+		_currentView->loadModel();
 	});
+
 	thread->start();
 }
 

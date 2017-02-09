@@ -30,7 +30,7 @@ private:
 public:
 	explicit SqlDatabase(QObject *parent = nullptr);
 
-	~SqlDatabase();
+	virtual ~SqlDatabase();
 
 	void reset();
 

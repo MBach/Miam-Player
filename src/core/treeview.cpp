@@ -9,16 +9,15 @@
 
 #include <QtDebug>
 
-TreeView::TreeView(QWidget *parent) :
-	QTreeView(parent), SelectedTracksModel()
+TreeView::TreeView(QWidget *parent)
+	: QTreeView(parent)
+	, SelectedTracksModel()
 {
 	this->setAttribute(Qt::WA_MacShowFocusRect, false);
 }
 
 TreeView::~TreeView()
-{
-
-}
+{}
 
 QList<QUrl> TreeView::selectedTracks()
 {

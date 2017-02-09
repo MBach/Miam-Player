@@ -32,11 +32,6 @@ MusicSearchEngine::MusicSearchEngine(QObject *parent)
 MusicSearchEngine::~MusicSearchEngine()
 {}
 
-/*void MusicSearchEngine::setDelta(const QStringList &delta)
-{
-	_delta = delta;
-}*/
-
 void MusicSearchEngine::setWatchForChanges(bool b)
 {
 	if (b) {
@@ -52,8 +47,6 @@ void MusicSearchEngine::doSearch()
 
 	MusicSearchEngine::isScanning = true;
 	QList<QDir> locations;
-	//QStringList pathsToSearch = _delta.isEmpty() ? SettingsPrivate::instance()->musicLocations() : _delta;
-	//for (QString musicPath : pathsToSearch) {
 	for (QString musicPath : SettingsPrivate::instance()->musicLocations()) {
 		QDir location(musicPath);
 		location.setFilter(QDir::AllDirs | QDir::Files | QDir::Hidden | QDir::NoDotAndDotDot);
@@ -102,8 +95,6 @@ void MusicSearchEngine::doSearch()
 			} else if (qFileInfo.suffix().toLower() == "jpg" || qFileInfo.suffix().toLower() == "png") {
 				if (atLeastOneAudioFileWasFound) {
 					coverPath = qFileInfo.absoluteFilePath();
-					//db.saveCoverRef(coverPath, lastFileScannedNextToCover);
-					//coverPath.clear();
 				} else if (isNewDirectory) {
 					coverPath = qFileInfo.absoluteFilePath();
 				}
@@ -181,7 +172,6 @@ void MusicSearchEngine::watchForChanges()
 	}
 
 	if (!newFoldersToAddInLibrary.isEmpty()) {
-		//_delta = newFoldersToAddInLibrary;
 		this->doSearch();
 	}
 

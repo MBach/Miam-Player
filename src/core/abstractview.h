@@ -31,7 +31,7 @@ protected:
 	AbstractMediaPlayerControl *_mediaPlayerControl;
 
 public:
-	AbstractView(AbstractMediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
+	explicit AbstractView(AbstractMediaPlayerControl *mediaPlayerControl, QWidget *parent = nullptr)
 		: QWidget(parent)
 		, _origin(nullptr)
 		, _mediaPlayerControl(mediaPlayerControl) {}
@@ -46,6 +46,8 @@ public:
 	virtual void bindShortcut(const QString & /*objectName*/, const QKeySequence & /*keySequence*/) {}
 
 	virtual QPair<QString, QObjectList> extensionPoints() const { return qMakePair(QString(), QObjectList()); }
+
+	virtual void loadModel() {}
 
 	inline AbstractMediaPlayerControl* mediaPlayerControl() const { return _mediaPlayerControl; }
 

@@ -38,6 +38,8 @@ public:
 
 	virtual QPair<QString, QObjectList> extensionPoints() const override;
 
+	virtual void loadModel() override;
+
 	virtual void openFolder(const QString &dir) const override;
 
 	virtual QList<MediaPlaylist *> playlists() const override;

@@ -105,6 +105,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 		searchBar->setText(QString());
 		_searchDialog->clear();
 		library->scrollToTop();
+		qDebug() << "ViewPlaylists -> lambda reload";
 		library->model()->load();
 		this->update();
 	};
@@ -163,6 +164,7 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	connect(this, &AbstractView::modelReloadRequested, this, [=]() {
+		qDebug() << "AbstractView::modelReloadRequested";
 		library->model()->load();
 		for (Playlist *p : tabPlaylists->playlists()) {
 			p->model()->reload();
@@ -210,8 +212,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 			filesystem->openTagEditor();
 		}
 	});
-
-	library->model()->load();
 }
 
 ViewPlaylists::~ViewPlaylists()
@@ -246,6 +246,11 @@ QPair<QString, QObjectList> ViewPlaylists::extensionPoints() const
 	return qMakePair(library->metaObject()->className(), libraryObjectList);
 }
 
+void ViewPlaylists::loadModel()
+{
+	emit modelReloadRequested();
+}
+
 int ViewPlaylists::selectedTracksInCurrentPlaylist() const
 {
 	return tabPlaylists->currentPlayList()->selectionModel()->selectedRows().count();
@@ -257,7 +262,8 @@ void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 		QVBoxLayout *vbox = new QVBoxLayout;
 		vbox->setMargin(0);
 
-		PaintableWidget *paintable = new PaintableWidget(library);
+		PaintableWidget *paintable = new PaintableWidget(this);
+		paintable->setObjectName("paintable");
 		paintable->setHalfTopBorder(false);
 		paintable->setFrameBorder(false, true, true, false);
 		QVBoxLayout *vbox2 = new QVBoxLayout;
@@ -267,6 +273,7 @@ void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 
 		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Expanding, QSizePolicy::Expanding));
 		vbox->addWidget(paintable);
+		vbox->setObjectName("YO");
 		library->setLayout(vbox);
 	});
 
@@ -277,17 +284,14 @@ void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 	});
 
 	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, [=]() {
-		auto l = library->layout();
-		while (!l->isEmpty()) {
-			if (QLayoutItem *i = l->takeAt(0)) {
-				if (QWidget *w = i->widget()) {
-					delete w;
-				}
-				delete i;
+		if (library->layout()) {
+			delete library->layout();
+		}
+		foreach (QWidget *w, library->findChildren<QWidget*>()) {
+			if (w && w->objectName() == "paintable") {
+				delete w;
 			}
 		}
-		delete library->layout();
-		library->model()->load();
 	});
 }
 

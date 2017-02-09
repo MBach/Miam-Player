@@ -37,7 +37,7 @@ TableView::TableView(QWidget *parent)
 	vBoxLayout->setContentsMargins(0, 0, 0, 0);
 	QLabel *artist = new QLabel(_artistHeader);
 	artist->setContentsMargins(0, 0, 0, 0);
-	artist->setText("Test");
+	artist->setText("");
 	vBoxLayout->addWidget(artist);
 	_artistHeader->setContentsMargins(0, 0, 0, 0);
 	_artistHeader->setLayout(vBoxLayout);

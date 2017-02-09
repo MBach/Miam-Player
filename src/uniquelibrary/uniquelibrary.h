@@ -35,6 +35,8 @@ public:
 
 	inline QStandardItem* currentTrack() const { return _currentTrack; }
 
+	virtual void loadModel() override;
+
 	inline UniqueLibraryFilterProxyModel* proxy() const { return _proxy; }
 
 	inline QModelIndexList* randomHistoryList() const { return _randomHistoryList; }

@@ -156,6 +156,12 @@ UniqueLibrary::~UniqueLibrary()
 	this->disconnect();
 }
 
+void UniqueLibrary::loadModel()
+{
+	uniqueTable->model()->load();
+	uniqueTable->adjust();
+}
+
 bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
 {
 	switch (vp) {
@@ -226,7 +232,8 @@ void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 		vbox->setMargin(0);
 		vbox->addSpacerItem(new QSpacerItem(1, 1, QSizePolicy::Preferred, QSizePolicy::Expanding));
 
-		PaintableWidget *paintable = new PaintableWidget(uniqueTable);
+		PaintableWidget *paintable = new PaintableWidget(this);
+		paintable->setObjectName("paintable");
 		paintable->setHalfTopBorder(false);
 		paintable->setFrameBorder(false, true, false, false);
 		vbox->addWidget(paintable);
@@ -244,7 +251,7 @@ void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 	});
 
 	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, [=]() {
-		auto l = uniqueTable->layout();
+		/*auto l = uniqueTable->layout();
 		while (!l->isEmpty()) {
 			if (QLayoutItem *i = l->takeAt(0)) {
 				if (QWidget *w = i->widget()) {
@@ -255,7 +262,16 @@ void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 		}
 		delete uniqueTable->layout();
 		uniqueTable->model()->load();
-		uniqueTable->adjust();
+		uniqueTable->adjust();*/
+
+		if (uniqueTable->layout()) {
+			delete uniqueTable->layout();
+		}
+		foreach (QWidget *w, uniqueTable->findChildren<QWidget*>()) {
+			if (w && w->objectName() == "paintable") {
+				delete w;
+			}
+		}
 	});
 }
 
