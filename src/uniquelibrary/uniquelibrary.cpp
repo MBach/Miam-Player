@@ -125,20 +125,6 @@ UniqueLibrary::UniqueLibrary(MediaPlayer *mediaPlayer, QWidget *parent)
 
 	uniqueTable->setFocus();
 
-	if (!settingsPrivate->value("uniqueLibraryLastPlayed").isNull()) {
-		int track = settingsPrivate->value("uniqueLibraryLastPlayed").toInt();
-		QModelIndex lastPlayed = uniqueTable->model()->index(track, 1);
-		if (lastPlayed.isValid()) {
-			QModelIndex p = uniqueTable->model()->proxy()->mapFromSource(lastPlayed);
-			QStandardItem *trackItem = uniqueTable->model()->itemFromIndex(lastPlayed);
-			if (p.isValid() && trackItem != nullptr) {
-				_currentTrack = trackItem;
-				uniqueTable->setCurrentIndex(p);
-				uniqueTable->scrollTo(p, QAbstractItemView::PositionAtCenter);
-			}
-		}
-	}
-
 	connect(qApp, &QApplication::aboutToQuit, this, [=]() {
 		if (_currentTrack) {
 			settingsPrivate->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
@@ -161,6 +147,21 @@ void UniqueLibrary::loadModel()
 {
 	uniqueTable->model()->load();
 	uniqueTable->adjust();
+
+	auto settingsPrivate = SettingsPrivate::instance();
+	if (!settingsPrivate->value("uniqueLibraryLastPlayed").isNull()) {
+		int track = settingsPrivate->value("uniqueLibraryLastPlayed").toInt();
+		QModelIndex lastPlayed = uniqueTable->model()->index(track, 1);
+		if (lastPlayed.isValid()) {
+			QModelIndex p = uniqueTable->model()->proxy()->mapFromSource(lastPlayed);
+			QStandardItem *trackItem = uniqueTable->model()->itemFromIndex(lastPlayed);
+			if (p.isValid() && trackItem != nullptr) {
+				_currentTrack = trackItem;
+				uniqueTable->setCurrentIndex(p);
+				uniqueTable->scrollTo(p, QAbstractItemView::PositionAtCenter);
+			}
+		}
+	}
 }
 
 bool UniqueLibrary::viewProperty(Settings::ViewProperty vp) const
