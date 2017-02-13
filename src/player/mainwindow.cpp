@@ -204,32 +204,6 @@ void MainWindow::setupActions()
 	// Load music
 	connect(settingsPrivate, &SettingsPrivate::musicLocationsHaveChanged, this, &MainWindow::syncLibrary);
 
-	// Media buttons and their shortcuts
-	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
-
-		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
-		actionSeekBackward->setEnabled(isPlaying);
-		actionStop->setEnabled(isPlaying);
-		actionStopAfterCurrent->setEnabled(isPlaying);
-		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
-		actionSeekForward->setEnabled(isPlaying);
-
-		bool notEmpty = false;
-		if (_mediaPlayer->playlist()) {
-			notEmpty = !_mediaPlayer->playlist()->isEmpty();
-
-			QMediaPlaylist::PlaybackMode mode = _mediaPlayer->playlist()->playbackMode();
-			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
-			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
-			QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
-			action->setChecked(true);
-		}
-
-		actionSkipBackward->setEnabled(notEmpty);
-		actionPlay->setEnabled(notEmpty);
-		actionSkipForward->setEnabled(notEmpty);
-	});
-
 	connect(actionShowEqualizer, &QAction::triggered, this, [=]() {
 		EqualizerDialog *equalizerDialog = new EqualizerDialog(_mediaPlayer, this);
 		equalizerDialog->show();
@@ -261,7 +235,6 @@ void MainWindow::setupActions()
 			this->updateFonts(settingsPrivate->font(ff));
 		}
 	});
-
 
 	connect(settingsPrivate, &SettingsPrivate::remoteControlChanged, this, [=](bool enabled, uint port) {
 		qDebug() << Q_FUNC_INFO;
@@ -589,6 +562,36 @@ void MainWindow::activateView(QAction *menuAction)
 	connect(_shortcutStop, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::stop);
 	connect(_shortcutSkipForward, &QxtGlobalShortcut::activated, _currentView->mediaPlayerControl(), &AbstractMediaPlayerControl::skipForward);
 
+	// Link media buttons and their shortcuts
+	menuPlayback->disconnect();
+	connect(menuPlayback, &QMenu::aboutToShow, this, [=]() {
+
+		bool isPlaying = (_mediaPlayer->state() == QMediaPlayer::PlayingState || _mediaPlayer->state() == QMediaPlayer::PausedState);
+		actionSeekBackward->setEnabled(isPlaying);
+		actionStop->setEnabled(isPlaying);
+		actionStopAfterCurrent->setEnabled(isPlaying);
+		actionStopAfterCurrent->setChecked(_mediaPlayer->isStopAfterCurrent());
+		actionSeekForward->setEnabled(isPlaying);
+
+		if (_currentView->viewProperty(Settings::VP_PlaylistFeature)) {
+			bool notEmpty = false;
+			if (_mediaPlayer->playlist()) {
+				notEmpty = !_mediaPlayer->playlist()->isEmpty();
+
+				QMediaPlaylist::PlaybackMode mode = _mediaPlayer->playlist()->playbackMode();
+				const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
+				QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
+				QAction *action = findChild<QAction*>(QString("actionPlayback").append(metaEnum.valueToKey(mode)));
+				action->setChecked(true);
+			}
+			actionSkipBackward->setEnabled(notEmpty);
+			actionPlay->setEnabled(notEmpty);
+			actionSkipForward->setEnabled(notEmpty);
+		} else {
+			qDebug() << Q_FUNC_INFO << "playback mode to set";
+		}
+	});
+
 	QList<QAction*> multimediaActions = { actionSkipBackward, actionSeekBackward, actionPlay, actionStop, actionStopAfterCurrent, actionSeekForward, actionSkipForward };
 	for (QAction *action : multimediaActions) {
 		action->disconnect();
@@ -618,7 +621,6 @@ void MainWindow::activateView(QAction *menuAction)
 	actionPlaybackCurrentItemInLoop->setEnabled(b);
 	if (b) {
 		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
-		qDebug() << Q_FUNC_INFO;
 		connect(actionOpenFiles, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFiles);
 		connect(actionOpenFolder, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFolderPopup);
 		connect(actionAddPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::addPlaylist);
@@ -681,7 +683,6 @@ void MainWindow::activateView(QAction *menuAction)
 void MainWindow::bindShortcut(const QString &objectName, const QKeySequence &keySequence)
 {
 	QAction *action = findChild<QAction*>("action" + objectName.left(1).toUpper() + objectName.mid(1));
-	qDebug() << Q_FUNC_INFO << "action" + objectName.left(1).toUpper() + objectName.mid(1) << keySequence;
 	// Connect actions first
 	if (action) {
 		action->setShortcut(keySequence);
