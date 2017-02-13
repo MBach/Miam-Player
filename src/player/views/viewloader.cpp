@@ -7,12 +7,23 @@ ViewLoader::ViewLoader(MediaPlayer *mediaPlayer, PluginManager *pluginManager, Q
 	: _mediaPlayer(mediaPlayer)
 	, _pluginManager(pluginManager)
 	, _parent(parent)
-{
-
-}
+{}
 
 AbstractView* ViewLoader::load(AbstractView *currentView, const QString &menuAction)
 {
+	// Check if we really need to load the view, maybe one has misclicked!
+	if (currentView != nullptr && menuAction == "actionViewPlaylists") {
+		ViewPlaylists *vp = dynamic_cast<ViewPlaylists*>(currentView);
+		if (vp && vp == currentView) {
+			return currentView;
+		}
+	} else if (currentView != nullptr && menuAction == "actionViewUniqueLibrary") {
+		UniqueLibrary *ul = dynamic_cast<UniqueLibrary*>(currentView);
+		if (ul && ul == currentView) {
+			return currentView;
+		}
+	}
+	// Loading can start
 	if (currentView) {
 		QPair<QString, QObjectList> extensions = currentView->extensionPoints();
 		_pluginManager->unregisterExtensionPoint(extensions.first);

@@ -36,13 +36,13 @@ MainWindow::MainWindow(QWidget *parent)
 	setupUi(this);
 	actionPlay->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
 	actionStop->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
-	QActionGroup *actionGroup = new QActionGroup(this);
-	actionGroup->setObjectName("playbackActionGroup");
-	actionGroup->addAction(actionPlaybackSequential);
-	actionGroup->addAction(actionPlaybackRandom);
-	actionGroup->addAction(actionPlaybackLoop);
-	actionGroup->addAction(actionPlaybackCurrentItemOnce);
-	actionGroup->addAction(actionPlaybackCurrentItemInLoop);
+	QActionGroup *playbackActionGroup = new QActionGroup(this);
+	playbackActionGroup->setObjectName("playbackActionGroup");
+	playbackActionGroup->addAction(actionPlaybackSequential);
+	playbackActionGroup->addAction(actionPlaybackRandom);
+	playbackActionGroup->addAction(actionPlaybackLoop);
+	playbackActionGroup->addAction(actionPlaybackCurrentItemOnce);
+	playbackActionGroup->addAction(actionPlaybackCurrentItemInLoop);
 
 	this->setAcceptDrops(true);
 #ifndef Q_OS_MAC
@@ -500,7 +500,12 @@ void MainWindow::activateView(QAction *menuAction)
 {
 	// User a Helper to load views depending on which classes are attached to the QAction
 	ViewLoader v(_mediaPlayer, _pluginManager, this);
-	_currentView = v.load(_currentView, menuAction->objectName());
+	auto view = v.load(_currentView, menuAction->objectName());
+	if (_currentView == view) {
+		return;
+	} else {
+		_currentView = view;
+	}
 
 	if (!_currentView) {
 		qDebug() << Q_FUNC_INFO << menuAction->objectName() << "couldn't load it's attached view";
@@ -589,6 +594,11 @@ void MainWindow::activateView(QAction *menuAction)
 			actionSkipForward->setEnabled(notEmpty);
 		} else {
 			qDebug() << Q_FUNC_INFO << "playback mode to set";
+			if (_currentView->mediaPlayerControl()->isInShuffleState()) {
+				actionPlaybackRandom->setChecked(true);
+			} else {
+				actionPlaybackSequential->setChecked(true);
+			}
 		}
 	});
 
@@ -614,7 +624,7 @@ void MainWindow::activateView(QAction *menuAction)
 	actionOpenFiles->setEnabled(b);
 	actionOpenFolder->setEnabled(b);
 
-	QActionGroup *actionGroup = this->findChild<QActionGroup*>("playbackActionGroup");
+	QActionGroup *playbackActionGroup = this->findChild<QActionGroup*>("playbackActionGroup");
 
 	actionPlaybackLoop->setEnabled(b);
 	actionPlaybackCurrentItemOnce->setEnabled(b);
@@ -638,7 +648,8 @@ void MainWindow::activateView(QAction *menuAction)
 			}
 		});
 
-		connect(actionGroup, &QActionGroup::triggered, this, [=](QAction *action) {
+		playbackActionGroup->disconnect();
+		connect(playbackActionGroup, &QActionGroup::triggered, this, [=](QAction *action) {
 			const QMetaObject &mo = QMediaPlaylist::staticMetaObject;
 			QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator("PlaybackMode"));
 			int mode = metaEnum.keyToValue(action->property("PlaybackMode").toString().toStdString().c_str());
@@ -656,11 +667,15 @@ void MainWindow::activateView(QAction *menuAction)
 		actionAddPlaylist->disconnect();
 		actionDeleteCurrentPlaylist->disconnect();
 		menuPlaylist->disconnect();
-		actionGroup->disconnect();
+		playbackActionGroup->disconnect();
 		actionRemoveSelectedTracks->disconnect();
 		actionMoveTracksUp->disconnect();
 		actionMoveTracksDown->disconnect();
 		actionOpenPlaylistManager->disconnect();
+
+		connect(playbackActionGroup, &QActionGroup::triggered, this, [=](QAction *action) {
+			_currentView->mediaPlayerControl()->toggleShuffle(action != actionPlaybackSequential);
+		});
 	}
 
 	connect(actionIncreaseVolume, &QAction::triggered, _currentView, &AbstractView::volumeSliderIncrease);

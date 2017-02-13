@@ -161,7 +161,6 @@ void PluginManager::unregisterExtensionPoint(const QString &ext)
 {
 	for (QObject *instance : _extensionPoints.values(ext)) {
 		if (instance) {
-			qDebug() << Q_FUNC_INFO << "about to delete" << instance << "for" << ext;
 			instance->deleteLater();
 		}
 	}
