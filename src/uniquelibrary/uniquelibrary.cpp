@@ -137,8 +137,7 @@ UniqueLibrary::~UniqueLibrary()
 	disconnect(_mediaPlayerControl->mediaPlayer(), &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
 	_mediaPlayerControl->mediaPlayer()->stop();
 	if (_currentTrack) {
-		qDebug() << _currentTrack << _currentTrack->row();
-		//SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
+		SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
 	}
 	this->disconnect();
 }

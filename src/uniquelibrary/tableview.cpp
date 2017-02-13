@@ -267,7 +267,7 @@ void TableView::jumpTo(const QString &letter)
 {
 	SqlDatabase db;
 	QSqlQuery firstArtist(db);
-	firstArtist.prepare("SELECT artist FROM cache WHERE artist LIKE ? ORDER BY artist COLLATE NOCASE LIMIT ?");
+	firstArtist.prepare("SELECT DISTINCT artistAlbum FROM cache WHERE artistAlbum LIKE ? ORDER BY artistAlbum COLLATE NOCASE LIMIT ?");
 	firstArtist.addBindValue(letter + "%");
 	firstArtist.addBindValue(_skipCount);
 	if (firstArtist.exec() && firstArtist.last()) {
