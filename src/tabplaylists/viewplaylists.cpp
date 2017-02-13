@@ -105,7 +105,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 		searchBar->setText(QString());
 		_searchDialog->clear();
 		library->scrollToTop();
-		qDebug() << "ViewPlaylists -> lambda reload";
 		library->model()->load();
 		this->update();
 	};
@@ -137,7 +136,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 		mediaPlayer->setVolume((qreal)value / 100.0);
 	});
 	connect(mediaPlayer, &MediaPlayer::volumeChanged, this, [=](qreal v) {
-		qDebug() << Q_FUNC_INFO;
 		volumeSlider->blockSignals(true);
 		volumeSlider->setValue(v * 100);
 		volumeSlider->blockSignals(false);
@@ -164,7 +162,6 @@ ViewPlaylists::ViewPlaylists(MediaPlayer *mediaPlayer, QWidget *parent)
 	});
 
 	connect(this, &AbstractView::modelReloadRequested, this, [=]() {
-		qDebug() << "AbstractView::modelReloadRequested";
 		library->model()->load();
 		for (Playlist *p : tabPlaylists->playlists()) {
 			p->model()->reload();
@@ -287,10 +284,8 @@ void ViewPlaylists::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 		if (library->layout()) {
 			delete library->layout();
 		}
-		foreach (QWidget *w, library->findChildren<QWidget*>()) {
-			if (w && w->objectName() == "paintable") {
-				delete w;
-			}
+		if (PaintableWidget *w = findChild<PaintableWidget*>("paintable")) {
+			w->deleteLater();
 		}
 	});
 }

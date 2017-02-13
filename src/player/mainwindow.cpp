@@ -78,16 +78,14 @@ void MainWindow::activateLastView()
 		// Find the last active view and connect database to it
 		SettingsPrivate *settingsPrivate = SettingsPrivate::instance();
 		QString actionViewName = settingsPrivate->value("lastActiveView", "actionViewPlaylists").toString();
-		QAction *defaultActionView = nullptr;
-		for (QAction *actionView : menuView->actions()) {
-			if (actionView->objectName() == actionViewName) {
-				defaultActionView = actionView;
-				actionView->trigger();
-				break;
+		QAction *action = this->findChild<QAction*>(actionViewName);
+		if (action) {
+			if (action->isCheckable()) {
+				action->setChecked(true);
 			}
-		}
-		// If no action was triggered, despite an entry in settings, it means some plugin was activated once, but now we couldn't find it
-		if (defaultActionView == nullptr) {
+			this->activateView(action);
+		} else {
+			// If no action was triggered, despite an entry in settings, it means some plugin was activated once, but now we couldn't find it
 			actionViewPlaylists->trigger();
 		}
 	}
@@ -153,22 +151,7 @@ void MainWindow::dispatchDrop(QDropEvent *event)
 
 void MainWindow::init()
 {
-	// Init shortcuts
-	Settings *settings = Settings::instance();
-	QMapIterator<QString, QVariant> it(settings->shortcuts());
-
-	while (it.hasNext()) {
-		it.next();
-
-		QShortcut *s = new QShortcut(this);
-		s->setObjectName("action" + it.key().left(1).toUpper() + it.key().mid(1));
-		s->setKey(it.value().value<QKeySequence>());
-	}
-
-	if (menuBar()->isVisible()) {
-		this->toggleMenuBar(true);
-	}
-
+	this->toggleMenuBar(SettingsPrivate::instance()->value("isMenuHidden").toBool());
 	this->setupActions();
 }
 
@@ -367,14 +350,14 @@ bool MainWindow::event(QEvent *e)
 			if (keyEvent->key() == Qt::Key_Alt) {
 				qDebug() << Q_FUNC_INFO << "Alt was pressed";
 				this->setProperty("altKey", true);
-				this->toggleShortcutsOnMenuBar(true);
+				this->toggleMenuBar(false);
 				// Reactivate shortcuts on the menuBar
 
-				QMapIterator<QString, QVariant> it(Settings::instance()->shortcuts());
+				/*QMapIterator<QString, QVariant> it(Settings::instance()->shortcuts());
 				while (it.hasNext()) {
 					it.next();
 					this->bindShortcut(it.key(), it.value().value<QKeySequence>());
-				}
+				}*/
 
 			} else {
 				this->setProperty("altKey", false);
@@ -426,11 +409,6 @@ void MainWindow::initQuickStart()
 	this->setCentralWidget(quickStart);
 	this->menuBar()->hide();
 	this->resize(400, 500);
-}
-
-void MainWindow::toggleShortcutsOnMenuBar(bool enabled)
-{
-	qDebug() << Q_FUNC_INFO << enabled;
 }
 
 void MainWindow::createCustomizeOptionsDialog()
@@ -640,6 +618,7 @@ void MainWindow::activateView(QAction *menuAction)
 	actionPlaybackCurrentItemInLoop->setEnabled(b);
 	if (b) {
 		AbstractViewPlaylists *viewPlaylists = static_cast<AbstractViewPlaylists*>(_currentView);
+		qDebug() << Q_FUNC_INFO;
 		connect(actionOpenFiles, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFiles);
 		connect(actionOpenFolder, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::openFolderPopup);
 		connect(actionAddPlaylist, &QAction::triggered, viewPlaylists, &AbstractViewPlaylists::addPlaylist);
@@ -808,7 +787,33 @@ void MainWindow::syncLibrary(const QStringList &oldLocations, const QStringList 
 
 void MainWindow::toggleMenuBar(bool checked)
 {
+	auto settings = Settings::instance();
+	auto settingsPrivate = SettingsPrivate::instance();
+	settingsPrivate->setValue("isMenuHidden", checked);
 	menuBar()->setVisible(!checked);
-	SettingsPrivate::instance()->setValue("isMenuHidden", checked);
-	this->toggleShortcutsOnMenuBar(!checked);
+
+	// Attach shortcuts to visible menu or "invisible" handler
+	qDeleteAll(_menuShortcuts);
+	_menuShortcuts.clear();
+
+	QMapIterator<QString, QVariant> it(settings->shortcuts());
+	while (it.hasNext()) {
+		it.next();
+
+		QKeySequence sequence = settingsPrivate->shortcut(it.key());
+		QString actionName = "action" + it.key().left(1).toUpper() + it.key().mid(1);
+		QAction *action = this->findChild<QAction*>(actionName);
+		if (!action) {
+			continue;
+		}
+		if (checked) {
+			QShortcut *s = new QShortcut(sequence, this);
+			s->setObjectName(actionName);
+
+			connect(s, &QShortcut::activated, action, &QAction::trigger);
+			_menuShortcuts.insert(s);
+		} else {
+			action->setShortcut(sequence);
+		}
+	}
 }

@@ -157,6 +157,7 @@ void Settings::initShortcuts()
 		shortcuts.insert("moveTracksDown", "Maj+Down");
 		shortcuts.insert("removeSelectedTracks", "Delete");
 		setValue("shortcuts", shortcuts);
+		setValue("defaultShortcuts", shortcuts);
 	}
 }
 

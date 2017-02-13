@@ -478,8 +478,7 @@ void SettingsPrivate::setShortcut(const QString &objectName, const QKeySequence 
 
 QKeySequence SettingsPrivate::shortcut(const QString &objectName) const
 {
-	QMap<QString, QVariant> shortcuts = value("shortcuts").toMap();
-	return QKeySequence(shortcuts.value(objectName).toString());
+	return QKeySequence(value("shortcuts").toMap().value(objectName).toString());
 }
 
 int SettingsPrivate::volumeBarHideAfter() const

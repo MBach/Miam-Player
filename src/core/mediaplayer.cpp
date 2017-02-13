@@ -118,7 +118,6 @@ void MediaPlayer::setVolume(qreal v)
 	} else {
 		_localPlayer->audio()->setVolume(v);
 	}
-	qDebug() << Q_FUNC_INFO << "emit volumeChanged(" << v << ")";
 	emit volumeChanged(v);
 }
 

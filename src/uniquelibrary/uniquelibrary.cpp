@@ -151,7 +151,8 @@ UniqueLibrary::~UniqueLibrary()
 	disconnect(_mediaPlayerControl->mediaPlayer(), &MediaPlayer::positionChanged, seekSlider, &SeekBar::setPosition);
 	_mediaPlayerControl->mediaPlayer()->stop();
 	if (_currentTrack) {
-		SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
+		qDebug() << _currentTrack << _currentTrack->row();
+		//SettingsPrivate::instance()->setValue("uniqueLibraryLastPlayed", _currentTrack->row());
 	}
 	this->disconnect();
 }
@@ -251,26 +252,11 @@ void UniqueLibrary::setMusicSearchEngine(MusicSearchEngine *musicSearchEngine)
 	});
 
 	connect(musicSearchEngine, &MusicSearchEngine::searchHasEnded, this, [=]() {
-		/*auto l = uniqueTable->layout();
-		while (!l->isEmpty()) {
-			if (QLayoutItem *i = l->takeAt(0)) {
-				if (QWidget *w = i->widget()) {
-					delete w;
-				}
-				delete i;
-			}
-		}
-		delete uniqueTable->layout();
-		uniqueTable->model()->load();
-		uniqueTable->adjust();*/
-
 		if (uniqueTable->layout()) {
 			delete uniqueTable->layout();
 		}
-		foreach (QWidget *w, uniqueTable->findChildren<QWidget*>()) {
-			if (w && w->objectName() == "paintable") {
-				delete w;
-			}
+		if (PaintableWidget *w = findChild<PaintableWidget*>("paintable")) {
+			w->deleteLater();
 		}
 	});
 }

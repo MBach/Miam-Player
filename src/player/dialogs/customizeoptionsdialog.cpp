@@ -291,11 +291,10 @@ void CustomizeOptionsDialog::initPlugins()
 void CustomizeOptionsDialog::initShortcuts()
 {
 	Settings *settings = Settings::instance();
-	QMap<QKeySequenceEdit *, QKeySequence> *defaultShortcuts = new QMap<QKeySequenceEdit *, QKeySequence>();
 	QMap<QString, QVariant> shortcutMap = settings->shortcuts();
+	QMap<QString, QVariant> defaultShortcutMap = settings->value("defaultShortcuts").toMap();
 	for (QKeySequenceEdit *shortcut : shortcutsToolBox->findChildren<QKeySequenceEdit*>()) {
 		QKeySequence sequence = shortcut->keySequence();
-		defaultShortcuts->insert(shortcut, sequence);
 
 		// Init shortcuts: override default shortcuts with existing ones in settings
 		QString shortCutName = shortcut->objectName();
@@ -320,7 +319,8 @@ void CustomizeOptionsDialog::initShortcuts()
 			emit shortcut->editingFinished();
 		});
 		connect(reset, &QPushButton::clicked, this, [=]() {
-			shortcut->setKeySequence(defaultShortcuts->value(shortcut));
+			qDebug() << Q_FUNC_INFO << shortcut->objectName() << QKeySequence(defaultShortcutMap.value(shortcut->objectName()).toString());
+			shortcut->setKeySequence(QKeySequence(defaultShortcutMap.value(shortcut->objectName()).toString()));
 			emit shortcut->editingFinished();
 		});
 	}

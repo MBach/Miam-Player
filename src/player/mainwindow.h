@@ -3,6 +3,7 @@
 
 #include <QCommandLineParser>
 #include <QMainWindow>
+#include <QShortcut>
 #include <QStack>
 
 #include <qxt/qxtglobalshortcut.h>
@@ -39,6 +40,7 @@ private:
 	QxtGlobalShortcut *_shortcutPlayPause;
 	QxtGlobalShortcut *_shortcutSkipForward;
 	QTranslator _translator;
+	QSet<QShortcut*> _menuShortcuts;
 
 public:
 	explicit MainWindow(QWidget *parent = nullptr);
@@ -79,8 +81,6 @@ protected:
 
 private:
 	void initQuickStart();
-
-	void toggleShortcutsOnMenuBar(bool enabled);
 
 public slots:
 	void createCustomizeOptionsDialog();
