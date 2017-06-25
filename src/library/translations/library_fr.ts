@@ -16,8 +16,8 @@
         <translation>Année</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>Artiste \ Album</translation>
+        <source>Artist / Album</source>
+        <translation>Artiste / Album</translation>
     </message>
 </context>
 <context>
@@ -30,8 +30,8 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation>Artistes \ Albums</translation>
+        <source>  Artists / Albums</source>
+        <translation>Artistes / Albums</translation>
     </message>
     <message>
         <source>  Albums</source>
@@ -53,8 +53,8 @@
         <translation>Sélectionnez le mode d&apos;affichage de votre bibliothèque</translation>
     </message>
     <message>
-        <source>Artists \ Albums</source>
-        <translation>Artistes \ Albums</translation>
+        <source>Artists / Albums</source>
+        <translation>Artistes / Albums</translation>
     </message>
     <message>
         <source>Artist</source>

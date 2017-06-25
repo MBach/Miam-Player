@@ -77,7 +77,7 @@ void LibraryHeader::paintEvent(QPaintEvent *)
 		break;
 	case SettingsPrivate::IP_Artists:
 	default:
-		header = tr("Artist \\ Album");
+		header = tr("Artist / Album");
 		break;
 	}
 

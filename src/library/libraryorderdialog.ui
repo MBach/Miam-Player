@@ -54,7 +54,7 @@
        </property>
        <column>
         <property name="text">
-         <string>Artists \ Albums</string>
+         <string>Artists / Albums</string>
         </property>
        </column>
        <item>

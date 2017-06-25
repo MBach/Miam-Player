@@ -7,7 +7,7 @@
 
 /**
  * \brief		The LibraryOrderDialog class displays a small popup which allows one to change the hierarchy
- * \details     Four modes are built-in: Artist \ Album \ Tracks ; Artist - Album \ Tracks ; Album \ Tracks ; Year \ Artist - Album \ Tracks.
+ * \details     Four modes are built-in: Artist / Album / Tracks ; Artist - Album / Tracks ; Album / Tracks ; Year / Artist - Album / Tracks.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */
