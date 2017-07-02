@@ -321,8 +321,8 @@ Select a playlist to display the first 30 tracks.</source>
         <translation>Αναζήτηση...</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>Καλλιτέχνης \ Άλμπουμ</translation>
+        <source>Artist / Album</source>
+        <translation>Καλλιτέχνης / Άλμπουμ</translation>
     </message>
     <message>
         <source>File explorer</source>

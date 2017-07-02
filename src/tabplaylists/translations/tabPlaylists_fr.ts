@@ -399,8 +399,8 @@ Sélectionnez une liste de lecture pour afficher ses 30 premières pistes.</tran
     </message>
     <message>
         <location filename="../viewplaylists.ui" line="118"/>
-        <source>Artist \ Album</source>
-        <translation>Artiste \ Album</translation>
+        <source>Artist / Album</source>
+        <translation>Artiste / Album</translation>
     </message>
     <message>
         <location filename="../viewplaylists.ui" line="188"/>

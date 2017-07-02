@@ -16,7 +16,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
+        <source>Artist / Album</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -30,7 +30,7 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <source>  Artists \ Albums</source>
+        <source>  Artists / Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -53,7 +53,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Artists \ Albums</source>
+        <source>Artists / Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

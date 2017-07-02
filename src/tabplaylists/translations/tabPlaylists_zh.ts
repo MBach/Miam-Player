@@ -397,8 +397,8 @@ Select a playlist to display the first 30 tracks.</source>
     </message>
     <message>
         <location filename="../viewplaylists.ui" line="118"/>
-        <source>Artist \ Album</source>
-        <translation>艺术家 \ 专辑</translation>
+        <source>Artist / Album</source>
+        <translation>艺术家 / 专辑</translation>
     </message>
     <message>
         <location filename="../viewplaylists.ui" line="188"/>

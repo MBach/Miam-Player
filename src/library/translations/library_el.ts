@@ -16,8 +16,8 @@
         <translation>Έτος</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
-        <translation>Καλλιτέχνης \ Άλμπουμ</translation>
+        <source>Artist / Album</source>
+        <translation>Καλλιτέχνης / Άλμπουμ</translation>
     </message>
 </context>
 <context>
@@ -30,8 +30,8 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation>  Καλλιτέχνες \ Άλμπουμς</translation>
+        <source>  Artists / Albums</source>
+        <translation>  Καλλιτέχνες / Άλμπουμς</translation>
     </message>
     <message>
         <source>  Albums</source>
@@ -53,8 +53,8 @@
         <translation>Επέλεξε πως θα εμφανίζεται η βιβλιοθήκη σου</translation>
     </message>
     <message>
-        <source>Artists \ Albums</source>
-        <translation>Καλλιτέχνες \ Άλμπουμς</translation>
+        <source>Artists / Albums</source>
+        <translation>Καλλιτέχνες / Άλμπουμς</translation>
     </message>
     <message>
         <source>Artist</source>

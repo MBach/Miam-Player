@@ -20,8 +20,8 @@
     </message>
     <message>
         <location filename="../libraryheader.cpp" line="80"/>
-        <source>Artist \ Album</source>
-        <translation>Исполнитель \ Альбом</translation>
+        <source>Artist / Album</source>
+        <translation>Исполнитель / Альбом</translation>
     </message>
 </context>
 <context>
@@ -36,8 +36,8 @@
     <name>LibraryItemModel</name>
     <message>
         <location filename="../libraryitemmodel.cpp" line="385"/>
-        <source>  Artists \ Albums</source>
-        <translation>  Исполнители \ Альбомы</translation>
+        <source>  Artists / Albums</source>
+        <translation>  Исполнители / Альбомы</translation>
     </message>
     <message>
         <location filename="../libraryitemmodel.cpp" line="388"/>
@@ -64,8 +64,8 @@
     </message>
     <message>
         <location filename="../libraryorderdialog.ui" line="57"/>
-        <source>Artists \ Albums</source>
-        <translation>Исполнители \ Альбомы</translation>
+        <source>Artists / Albums</source>
+        <translation>Исполнители / Альбомы</translation>
     </message>
     <message>
         <location filename="../libraryorderdialog.ui" line="62"/>

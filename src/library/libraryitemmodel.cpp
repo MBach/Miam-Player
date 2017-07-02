@@ -382,7 +382,7 @@ void LibraryItemModel::reset()
 	this->deleteCache();
 	switch (SettingsPrivate::instance()->insertPolicy()) {
 	case SettingsPrivate::IP_Artists:
-		horizontalHeaderItem(0)->setText(tr("  Artists \\ Albums"));
+		horizontalHeaderItem(0)->setText(tr("  Artists / Albums"));
 		break;
 	case SettingsPrivate::IP_Albums:
 		horizontalHeaderItem(0)->setText(tr("  Albums"));

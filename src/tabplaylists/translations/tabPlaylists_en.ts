@@ -400,8 +400,8 @@ Select a playlist to display the first 30 tracks.</translation>
     </message>
     <message>
         <location filename="../viewplaylists.ui" line="118"/>
-        <source>Artist \ Album</source>
-        <translation>Artist \ Album</translation>
+        <source>Artist / Album</source>
+        <translation>Artist / Album</translation>
     </message>
     <message>
         <location filename="../viewplaylists.ui" line="188"/>

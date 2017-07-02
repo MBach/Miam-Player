@@ -29,7 +29,7 @@ class YearItem;
 
 /**
  * \brief		The LibraryTreeView class is displaying tracks in a tree.
- * \details     Multiple hierarchies can be chosen by one with a right click on the header: Artist \ Album \ Track, Year \ Artist - Album, etc.
+ * \details     Multiple hierarchies can be chosen by one with a right click on the header: Artist / Album / Track, Year / Artist - Album, etc.
  * \author      Matthieu Bachelier
  * \copyright   GNU General Public License v3
  */

@@ -12,7 +12,7 @@
         <translation>年份</translation>
     </message>
     <message>
-        <source>Artist \ Album</source>
+        <source>Artist / Album</source>
         <translation>艺术家\专辑</translation>
     </message>
     <message>
@@ -30,8 +30,8 @@
 <context>
     <name>LibraryItemModel</name>
     <message>
-        <source>  Artists \ Albums</source>
-        <translation>  艺术家 \ 专辑</translation>
+        <source>  Artists / Albums</source>
+        <translation>  艺术家 / 专辑</translation>
     </message>
     <message>
         <source>  Albums</source>
@@ -53,8 +53,8 @@
         <translation>选择如何显示库</translation>
     </message>
     <message>
-        <source>Artists \ Albums</source>
-        <translation>艺术家 \ 专辑</translation>
+        <source>Artists / Albums</source>
+        <translation>艺术家 / 专辑</translation>
     </message>
     <message>
         <source>Artist</source>
