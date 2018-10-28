@@ -60,7 +60,7 @@ See the [wiki](https://github.com/MBach/Miam-Player/wiki) for more details.
 
 ## Copyright info
 
-Copyright (C) 2012-2017 Matthieu Bachelier
+Copyright (C) 2012-2018 Matthieu Bachelier
 
 Miam-Player is free (libre) software. This means the complete player
 source code is available to public, anyone is welcome to research
