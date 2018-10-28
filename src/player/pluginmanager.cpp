@@ -128,10 +128,7 @@ bool PluginManager::loadPlugin(const QString &pluginAbsPath)
 			this->loadMediaPlayerPlugin(mediaPlayerPlugin);
 		} else if (RemoteMediaPlayerPlugin *remoteMediaPlayerPlugin = qobject_cast<RemoteMediaPlayerPlugin*>(plugin)) {
 			this->loadRemoteMediaPlayerPlugin(remoteMediaPlayerPlugin);
-		} /*else if (TagEditorPlugin *tagEditorPlugin = qobject_cast<TagEditorPlugin*>(plugin)) {
-			qDebug() << Q_FUNC_INFO;
-			this->loadTagEditorPlugin(tagEditorPlugin);
-		}*/
+        }
 	}
 	return plugin != nullptr;
 }

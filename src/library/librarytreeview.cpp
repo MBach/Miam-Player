@@ -151,19 +151,15 @@ void LibraryTreeView::setExpandedCover(const QModelIndex &index)
 {
 	QStandardItem *item = _libraryModel->itemFromIndex(_proxyModel->mapToSource(index));
 	if (item->type() == Miam::IT_Album && Settings::instance()->isCoverBelowTracksEnabled()) {
-		qDebug() << Q_FUNC_INFO;
 		QImage *image = nullptr;
 		AlbumItem *albumItem = static_cast<AlbumItem*>(item);
 		if (albumItem->data(Miam::DF_InternalCover).toString().isEmpty()) {
 
 			QString coverPath = albumItem->data(Miam::DF_CoverPath).toString();
-			qDebug() << Q_FUNC_INFO << "loading external cover" << coverPath;
 			if (!coverPath.isEmpty()) {
 				image = new QImage(coverPath);
 			}
 		} else {
-			qDebug() << Q_FUNC_INFO << "loading internal cover";
-
 			FileHelper fh(albumItem->data(Miam::DF_InternalCover).toString());
 			std::unique_ptr<Cover> cover(fh.extractCover());
 			if (cover) {
@@ -212,7 +208,6 @@ void LibraryTreeView::scrollToLetter(const QString &letter)
 void LibraryTreeView::updateSelectedTracks()
 {
 	/// Like the tagEditor, it's easier to proceed with complete clean/rebuild from dabatase
-	qDebug() << Q_FUNC_INFO;
 	model()->load();
 }
 

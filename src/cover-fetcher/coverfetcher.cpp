@@ -103,7 +103,7 @@ void CoverFetcher::fetch(SelectedTracksModel *selectedTracksModel)
 			QUrl url = cp->query(artistAlbum, album);
 			QNetworkRequest request(url);
 			request.setAttribute(QNetworkRequest::User, CoverArtProvider::FO_Search);
-			request.setHeader(QNetworkRequest::UserAgentHeader, "MiamPlayer/0.8.1 ( https://www.miam-player.org/ )" );
+            request.setHeader(QNetworkRequest::UserAgentHeader, "MiamPlayer/0.9.0 ( https://github.com/MBach/Miam-Player )" );
 			QNetworkReply *n = _manager->get(request);
 			n->setProperty("type", cp->type());
 			n->setProperty("requestType", CoverArtProvider::FO_Search);

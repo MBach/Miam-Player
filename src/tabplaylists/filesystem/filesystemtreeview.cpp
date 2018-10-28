@@ -46,7 +46,6 @@ void FileSystemTreeView::findAll(const QModelIndex &index, QList<QUrl> *tracks) 
 	if (fileInfo.isFile()) {
 		files << fileInfo.absoluteFilePath();
 	} else {
-		qDebug() << Q_FUNC_INFO;
 		QDirIterator dirIterator(fileInfo.absoluteFilePath(), QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 		while (dirIterator.hasNext()) {
 			QString entry = dirIterator.next();
@@ -212,9 +211,7 @@ void FileSystemTreeView::reloadWithNewPath(const QDir &path)
 }
 
 void FileSystemTreeView::updateSelectedTracks()
-{
-	qDebug() << Q_FUNC_INFO << "not yet implemented";
-}
+{}
 
 /** Get the folder which is the target of one's double-click. */
 void FileSystemTreeView::convertIndex(const QModelIndex &index)

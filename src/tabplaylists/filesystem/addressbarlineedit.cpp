@@ -45,7 +45,6 @@ void AddressBarLineEdit::focusOutEvent(QFocusEvent *e)
 
 void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 {
-	qDebug() << Q_FUNC_INFO;
 	switch (e->key()) {
 	case Qt::Key_Escape:{
 			if (_directoryList) {
@@ -57,7 +56,6 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 		break;
 	case Qt::Key_Enter:
 	case Qt::Key_Return:{
-			qDebug() << Q_FUNC_INFO << "enter pressed" << this->text();
 			QFileInfo fileInfo(this->text());
 			if (fileInfo.isDir()) {
 				if (_directoryList) {
@@ -66,7 +64,6 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 				emit aboutToReloadAddressBar(fileInfo.absoluteFilePath());
 				return;
 			} else {
-				qDebug() << Q_FUNC_INFO << "dir not recognized";
 				QMessageBox::critical(this, tr("Error"), QString(tr("Miam-Player cannot find « %1 ». Please check the name and retry.")).arg(this->text()));
 				return;
 			}
@@ -74,7 +71,6 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 		break;
 	case Qt::Key_Backspace:{
 			// Detect when separator was eaten
-			qDebug() << Q_FUNC_INFO << "About to process backspace on:" << this->text();
 			if (this->text().endsWith(QDir::separator())) {
 				QLineEdit::keyPressEvent(e);
 				if (_directoryList) {
@@ -114,7 +110,6 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 				if (QFileInfo::exists(this->text())) {
 					QFileInfo fileInfo(this->text());
 					if (fileInfo.isDir()) {
-						qDebug() << "separator was detected" << fileInfo.absoluteFilePath();
 						if (_directoryList == nullptr) {
 							_directoryList = new AddressBarDirectoryList(fileInfo.absoluteFilePath(), parentWidget()->parentWidget());
 							_directoryList->show();
@@ -124,7 +119,6 @@ void AddressBarLineEdit::keyPressEvent(QKeyEvent *e)
 								emit aboutToReloadAddressBar(item->text());
 							});
 						} else {
-							qDebug() << "dir list already opened, updating" << fileInfo.absoluteFilePath();
 							_directoryList->cd(fileInfo.absoluteFilePath());
 						}
 					}

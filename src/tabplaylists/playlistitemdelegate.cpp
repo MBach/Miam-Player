@@ -23,7 +23,6 @@ PlaylistItemDelegate::PlaylistItemDelegate(Playlist *playlist)
 /** Redefined. */
 QWidget* PlaylistItemDelegate::createEditor(QWidget *p, const QStyleOptionViewItem &, const QModelIndex &index) const
 {
-	qDebug() << Q_FUNC_INFO;
 	StarEditor *editor = new StarEditor(index, p);
 	connect(editor, &StarEditor::editFinished, this, &PlaylistItemDelegate::commitAndClose);
 	return editor;

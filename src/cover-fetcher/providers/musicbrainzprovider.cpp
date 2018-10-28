@@ -76,7 +76,7 @@ void MusicBrainzProvider::fetchReleases(const QString &album, const QByteArray &
 			/// FIXME: find a way to get the 500px thumbnail and to automatically download the large one after
 			QUrl url = this->album(it.value());
 			QNetworkRequest request(url);
-			request.setHeader(QNetworkRequest::UserAgentHeader, "MiamPlayer/0.8.1 ( http://www.miam-player.org/ )" );
+            request.setHeader(QNetworkRequest::UserAgentHeader, "MiamPlayer/0.9.0 ( https://github.com/MBach/Miam-Player )" );
 			QNetworkReply *reply = _manager->get(request);
 			reply->setProperty("type", this->type());
 			reply->setProperty("requestType", FO_DownloadCover);

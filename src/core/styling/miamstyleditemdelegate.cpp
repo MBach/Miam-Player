@@ -55,7 +55,6 @@ void MiamStyledItemDelegate::paint(QPainter *p, const QStyleOptionViewItem &opt,
 			p->drawLine(o.rect.x(), o.rect.y() + o.rect.height(), o.rect.x() + o.rect.width(), o.rect.y() + o.rect.height());
 		}
 	} else {
-		//qDebug() << Q_FUNC_INFO << o.text;
 		style->drawPrimitive(QStyle::PE_PanelItemViewItem, &o, p, o.widget);
 	}
 	p->restore();

@@ -42,11 +42,9 @@ void RemoteControl::changeServerPort(int port)
 void RemoteControl::startServer()
 {
 	auto b = _webSocketServer->listen(QHostAddress::Any, _port);
-	qDebug() << Q_FUNC_INFO << b;
 	_udpSocket->bind(_port, QUdpSocket::ShareAddress);
 
 	connect(_udpSocket, &QUdpSocket::readyRead, this, [=]() {
-		qDebug() << Q_FUNC_INFO;
 		if (_udpSocket->hasPendingDatagrams()) {
 
 			QByteArray clientHost;
@@ -69,7 +67,6 @@ void RemoteControl::startServer()
 
 			QByteArray hostByteArray;
 			hostByteArray.append(host);
-			qDebug() << Q_FUNC_INFO << "sending server infos:" << host << "to client:" << client;
 			_udpSocket->writeDatagram(hostByteArray, QHostAddress(client), _port);
 		}
 	});
@@ -268,7 +265,6 @@ void RemoteControl::sendTrackInfos(const QString &track)
 void RemoteControl::sendVolume(qreal volume)
 {
 	if (!_webSocket) {
-		qDebug() << Q_FUNC_INFO << "Cannot send volume !";
 		return;
 	}
 

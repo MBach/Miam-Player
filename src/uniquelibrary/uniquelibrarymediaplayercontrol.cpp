@@ -108,7 +108,6 @@ void UniqueLibraryMediaPlayerControl::togglePlayback()
 void UniqueLibraryMediaPlayerControl::toggleShuffle(bool checked)
 {
 	_uniqueLibrary->playbackModeButton->setChecked(checked);
-	qDebug() << Q_FUNC_INFO << checked;
 	SettingsPrivate::instance()->setValue("uniqueLibraryIsInShuffleState", checked);
 	if (!checked) {
 		_uniqueLibrary->randomHistoryList()->clear();

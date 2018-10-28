@@ -84,7 +84,6 @@ AbstractView* ViewLoader::loadFromPlugin(AbstractView *currentView, const QStrin
 	if (dep.isEmpty()) {
 		return view;
 	}
-	qDebug() << Q_FUNC_INFO << "No built-in view was found for this action. Was it from an external plugin?";
 	for (BasicPlugin *plugin : _pluginManager->loadedPlugins().values()) {
 		if (plugin->name() != menuAction) {
 			continue;

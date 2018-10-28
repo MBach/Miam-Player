@@ -29,19 +29,16 @@ MediaPlayer::MediaPlayer(QObject *parent)
 	, _stopAfterCurrent(false)
 {
 	connect(_localPlayer, &QtAV::AVPlayer::stopped, this, [=]() {
-		//qDebug() << "QtAV::AVPlayer::stopped";
 		this->setState(QMediaPlayer::StoppedState);
 	});
 
 	connect(_localPlayer, &QtAV::AVPlayer::loaded, this, [=]() {
-		//qDebug() << "QtAV::AVPlayer::loaded";
 		_localPlayer->audio()->setVolume(Settings::instance()->volume());
 		emit currentMediaChanged(_localPlayer->file());
 		this->setState(QMediaPlayer::PlayingState);
 	});
 
 	connect(_localPlayer, &QtAV::AVPlayer::paused, this, [=](bool) {
-		//qDebug() << "QtAV::AVPlayer::paused" << b;
 		this->setState(QMediaPlayer::PausedState);
 	});
 
@@ -133,13 +130,9 @@ void MediaPlayer::playMediaContent(const QMediaContent &mc)
 	} else {
 		// Find remote player attached to mediaContent
 		_remotePlayer = _remotePlayers.value(mc.canonicalUrl().host());
-		qDebug() << Q_FUNC_INFO << "about to play remote track" << mc.canonicalUrl().host() << _remotePlayer;
 		if (_remotePlayer) {
-			qDebug() << Q_FUNC_INFO << "about to play remote track" << mc.canonicalUrl();
 			_remotePlayer->play(mc.canonicalUrl());
-		} else {
-			qDebug() << Q_FUNC_INFO << "couldn't get remote player for" << mc.canonicalUrl();
-		}
+        }
 	}
 	this->setVolume(Settings::instance()->volume());
 }
@@ -248,7 +241,6 @@ void MediaPlayer::seekForward()
 
 void MediaPlayer::skipBackward()
 {
-	qDebug() << Q_FUNC_INFO << playlist();
 	if (!_playlist) {
 		return;
 	}
@@ -289,12 +281,10 @@ void MediaPlayer::play()
 {
 	// Check if it's possible to play tracks first
 	if (!_playlist) {
-		qDebug() << Q_FUNC_INFO << "no playlist!";
 		return;
 	}
 	QMediaContent mc = _playlist->media(_playlist->currentIndex());
 	if (mc.isNull()) {
-		qDebug() << Q_FUNC_INFO << "media content is null!";
 		return;
 	}
 	this->playMediaContent(mc);
@@ -316,9 +306,7 @@ void MediaPlayer::stop()
 /** Activate or desactive audio output. */
 void MediaPlayer::toggleMute() const
 {
-	if (_remotePlayer) {
-		qDebug() << Q_FUNC_INFO << "not yet implemented for remote players";
-	} else {
+    if (!_remotePlayer) {
 		_localPlayer->audio()->setMute(!_localPlayer->audio()->isMute());
 	}
 }

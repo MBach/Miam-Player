@@ -18,7 +18,6 @@ bool ViewPlaylistsMediaPlayerControl::isInShuffleState() const
 /** Forward action to MediaPlayer. */
 void ViewPlaylistsMediaPlayerControl::skipBackward()
 {
-	qDebug() << Q_FUNC_INFO << mediaPlayer();
 	if (mediaPlayer()) {
 		mediaPlayer()->skipBackward();
 	}

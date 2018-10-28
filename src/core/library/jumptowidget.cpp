@@ -53,7 +53,6 @@ bool JumpToWidget::eventFilter(QObject *obj, QEvent *event)
 
 QSize JumpToWidget::sizeHint() const
 {
-	//qDebug() << Q_FUNC_INFO << QSize(20, _view->height());
 	return QSize(20, _view->height());
 }
 

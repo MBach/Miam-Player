@@ -235,9 +235,6 @@ void AddressBarButton::paintEvent(QPaintEvent *)
 			QRect indicatorArrow(_arrowRect.x() + w + 1, _arrowRect.y() + h, w, h);
 
 			o.rect = indicatorArrow;
-			//qDebug() << Q_FUNC_INFO << o.rect << _arrowRect;
-			//p.drawRect(o.rect);
-
 			p.setRenderHint(QPainter::Antialiasing);
 
 			p.save();

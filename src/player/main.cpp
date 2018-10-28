@@ -5,7 +5,7 @@
 
 #define COMPANY "MmeMiamMiam"
 #define SOFT "MiamPlayer"
-#define VERSION "0.8.1"
+#define VERSION "0.9.0"
 
 #include <settingsprivate.h>
 #include "styling/miamstyle.h"

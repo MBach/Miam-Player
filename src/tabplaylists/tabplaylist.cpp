@@ -9,6 +9,7 @@
 #include "cornerwidget.h"
 
 #include <QDirIterator>
+#include <QHeaderView>
 
 /** Default constructor. */
 TabPlaylist::TabPlaylist(QWidget *parent)
@@ -26,7 +27,6 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	connect(this, &QTabWidget::currentChanged, this, [=](int index) {
 		Playlist *p = playlist(index);
 		QMediaPlaylist::PlaybackMode m = p->mediaPlaylist()->playbackMode();
-		qDebug() << Q_FUNC_INFO << index << p << m;
 		emit updatePlaybackModeButton(m);
 	});
 
@@ -106,11 +106,8 @@ TabPlaylist::TabPlaylist(QWidget *parent)
 	});
 
 	// Add the possibility to draw a custom background for every playlist
-	connect(loadBackground, &QAction::triggered, this, [=]() {
-		qDebug() << Q_FUNC_INFO << "Load background not implemented yet";
-	});
-	//this->setAcceptDrops(false);
-
+    //connect(loadBackground, &QAction::triggered, this, [=]() {
+    //});
 	CornerWidget *corner = new CornerWidget(this);
 	this->setCornerWidget(corner, Qt::TopRightCorner);
 	connect(corner, &CornerWidget::innerButtonClicked, this, &TabPlaylist::addPlaylist);
@@ -412,7 +409,6 @@ void TabPlaylist::deletePlaylist(uint playlistId)
 
 void TabPlaylist::changeCurrentPlaylistPlaybackMode(QMediaPlaylist::PlaybackMode mode)
 {
-	qDebug() << Q_FUNC_INFO << mode << this->currentPlayList();
 	this->currentPlayList()->mediaPlaylist()->setPlaybackMode(mode);
 }
 

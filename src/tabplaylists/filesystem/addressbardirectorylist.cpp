@@ -39,7 +39,6 @@ void AddressBarDirectoryList::cdUp(const QString &path)
 
 void AddressBarDirectoryList::filterItems(const QString &path)
 {
-	//qDebug() << Q_FUNC_INFO << path;
 	QDir d(path);
 	if (_dir == d) {
 		this->clear();

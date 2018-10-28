@@ -135,7 +135,6 @@ void MusicSearchEngine::doSearch()
 void MusicSearchEngine::watchForChanges()
 {
 	if (isScanning) {
-		qDebug() << Q_FUNC_INFO << "the filesystem is already being analyzed by another process";
 		return;
 	}
 
@@ -177,7 +176,6 @@ void MusicSearchEngine::watchForChanges()
 
 	// Process in reverse mode to clean cache: from database file and check if entry exists in database
 	QSqlQuery cache("SELECT * FROM filesystem", db);
-	qDebug() << Q_FUNC_INFO << "SELECT * FROM filesystem";
 	cache.setForwardOnly(true);
 	if (cache.exec()) {
 		QStringList oldLocations;

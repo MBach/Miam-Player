@@ -198,7 +198,7 @@ void MainWindow::setupActions()
 		this->syncLibrary(QStringList(), settingsPrivate->musicLocations());
 	});
 	connect(actionShowHelp, &QAction::triggered, this, [=]() {
-		QDesktopServices::openUrl(QUrl("http://miam-player.org/wiki/index.php"));
+        QDesktopServices::openUrl(QUrl("https://github.com/MBach/Miam-Player/wiki"));
 	});
 
 	// Load music
@@ -224,10 +224,7 @@ void MainWindow::setupActions()
 			if (_currentView && _currentView->viewProperty(Settings::VP_HasAreaForRescan)) {
 				_currentView->setMusicSearchEngine(worker);
 			}
-			qDebug() << Q_FUNC_INFO << "create new instance of file system watcher";
-		} else {
-			qDebug() << Q_FUNC_INFO << "delete any instance of file system watcher";
-		}
+        }
 	});
 
 	connect(settingsPrivate, &SettingsPrivate::fontHasChanged, this, [=](SettingsPrivate::FontFamily ff) {
@@ -237,7 +234,6 @@ void MainWindow::setupActions()
 	});
 
 	connect(settingsPrivate, &SettingsPrivate::remoteControlChanged, this, [=](bool enabled, uint port) {
-		qDebug() << Q_FUNC_INFO;
 		if (enabled) {
 			if (_remoteControl) {
 				_remoteControl->changeServerPort(port);
@@ -321,7 +317,6 @@ bool MainWindow::event(QEvent *e)
 		if (!this->menuBar()->isVisible()) {
 			QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
 			if (keyEvent->key() == Qt::Key_Alt) {
-				qDebug() << Q_FUNC_INFO << "Alt was pressed";
 				this->setProperty("altKey", true);
 				this->toggleMenuBar(false);
 				// Reactivate shortcuts on the menuBar
@@ -339,7 +334,6 @@ bool MainWindow::event(QEvent *e)
 	} else if (e->type() == QEvent::KeyRelease) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(e);
 		if (this->property("altKey").toBool() && keyEvent->key() == Qt::Key_Alt) {
-			qDebug() << Q_FUNC_INFO << "Alt was released";
 			this->menuBar()->show();
 			this->menuBar()->setFocus();
 			this->setProperty("altKey", false);

@@ -1,7 +1,7 @@
 @echo off
 
 rem core
-set MiamPlayerBuild="C:\dev\Miam-Player-build\src"
+set MiamPlayerBuild="C:\dev\build-miam-player-Desktop_Qt_5_11_1_MSVC2017_64bit-Release\src"
 mkdir packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\acoustid\release\miam-acoustid.dll packages\org.miamplayer.core\data\
 copy %MiamPlayerBuild%\core\release\miam-core.dll packages\org.miamplayer.core\data\
@@ -18,7 +18,7 @@ mkdir packages\org.qtav\data\
 copy %MiamPlayerLibs%\*.dll packages\org.qtav\data\
 
 rem qt libraries
-set QTDIR="C:\Qt\Qt5.8.0\5.8\msvc2015_64"
+set QTDIR="C:\Qt\5.11.1\msvc2017_64"
 echo f | xcopy %QTDIR%\plugins\bearer\qgenericbearer.dll packages\org.miamplayer.core\data\bearer\qgenericbearer.dll /y/s
 echo f | xcopy %QTDIR%\plugins\imageformats\qjpeg.dll packages\org.miamplayer.core\data\imageformats\qjpeg.dll /y/s
 echo f | xcopy %QTDIR%\plugins\mediaservice\qtmedia_audioengine.dll packages\org.miamplayer.core\data\mediaservice\qtmedia_audioengine.dll /y/s
@@ -66,7 +66,7 @@ rem copy %QTDIR%\bin\Qt5WebEngine.dll packages\org.miamplayer.plugins.deezer\dat
 rem copy %QTDIR%\bin\Qt5WebEngineCore.dll packages\org.miamplayer.plugins.deezer\data\Qt5WebEngineCore.dll
 
 rem create the final package
-binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.8.1.exe
+binarycreator --offline-only -c config/config.xml -r resources/additional.qrc -p packages MiamPlayer-0.9.0.exe
 
 rem delete data folders
 rmdir packages\org.qtav\data\ /s /q

@@ -297,7 +297,6 @@ void Playlist::dropEvent(QDropEvent *event)
 			int c = -1;
 			if (_mediaPlayer->state() == QMediaPlayer::PlayingState) {
 				c = _mediaPlayer->playlist()->currentIndex();
-				qDebug() << Q_FUNC_INFO << "we should also change highlighted track" << c << row;
 			}
 			QList<QStandardItem*> rowsToHighlight = _playlistModel->internalMove(indexAt(event->pos()), selectionModel()->selectedRows());
 			// Highlight rows that were just moved
@@ -307,13 +306,6 @@ void Playlist::dropEvent(QDropEvent *event)
 					selectionModel()->select(index, QItemSelectionModel::Select);
 				}
 			}
-			/*if (c >= 0) {
-				//_playlistModel->mediaPlaylist()->removeMedia(0, 4);
-
-				for (int i = 0; i < _playlistModel->mediaPlaylist()->mediaCount(); i++) {
-
-				}
-			}*/
 		} else if (target && target != this) {
 			// If the drop occurs at the end of the playlist, indexAt is invalid
 			if (row == -1) {
@@ -338,11 +330,9 @@ void Playlist::dropEvent(QDropEvent *event)
 			}
 		}
 	} else if (source == cornerWidget()) {
-		qDebug() << Q_FUNC_INFO << "Drop on corner widget not yet implemented";
 		event->ignore();
 		return;
 	} else if (source == nullptr) {
-		qDebug() << Q_FUNC_INFO << "No source, passing the drop event to parent";
 		event->ignore();
 		return;
 	} else {

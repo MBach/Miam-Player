@@ -159,7 +159,6 @@ QString TagConverter::generatePattern(TagLineEdit *lineEdit) const
 		QString substitution =  ':' + QString::number(tag->column());
 		pattern.replace(tag->position(), tag->spaceCount(), substitution);
 	}
-	qDebug() << Q_FUNC_INFO << lineEdit->text() << "pattern" << pattern;
 	return pattern;
 }
 

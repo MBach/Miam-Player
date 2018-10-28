@@ -217,7 +217,6 @@ QString FileHelper::artistAlbum() const
 		}
 		break;
 	case EXT_ASF:
-		qDebug() << Q_FUNC_INFO << "Not yet implemented for ASF file";
 		break;
 	case EXT_FLAC:
 		artAlb = this->extractFlacFeature("ALBUMARTIST");
@@ -248,8 +247,6 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 		break;
 	}
 	case EXT_MPC:
-		//mpcFile = static_cast<MPC::File*>(f);
-		qDebug() << Q_FUNC_INFO << "Not implemented for MPC";
 		break;
 	case EXT_MP3:{
 		TagLib::MPEG::File *mpegFile = static_cast<TagLib::MPEG::File*>(_file);
@@ -264,7 +261,7 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 			tif->setText(artistAlbum.toStdString().data());
 			tag->addFrame(tif);
 		} else if (mpegFile->hasID3v1Tag()) {
-			qDebug() << Q_FUNC_INFO << "Not implemented for ID3v1Tag";
+
 		}
 		break;
 	}
@@ -272,13 +269,10 @@ void FileHelper::setArtistAlbum(const QString &artistAlbum)
 		TagLib::Ogg::XiphComment *xiphComment = static_cast<TagLib::Ogg::XiphComment*>(_file->tag());
 		if (xiphComment) {
 			xiphComment->addField("ALBUMARTIST", artistAlbum.toStdString().data());
-		} else {
-			qDebug() << Q_FUNC_INFO << "Not implemented for this OGG file";
-		}
+        }
 		break;
 	}
 	default:
-		qDebug() << Q_FUNC_INFO << "Not implemented for this type of file";
 		break;
 	}
 }

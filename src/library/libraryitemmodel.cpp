@@ -96,7 +96,6 @@ void LibraryItemModel::load(const QString &)
 
 			// Add artist
 			if (_artists.contains(artistItem->hash())) {
-				//qDebug() << "hash found:" << artistItem->hash() << "for" << artistItem->text() ;
 				auto it = _artists.find(artistItem->hash());
 				delete artistItem;
 				artistItem = (*it);

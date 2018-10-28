@@ -42,7 +42,7 @@ HEADERS += albumitem.h \
 FORMS += libraryorderdialog.ui
 CONFIG += c++11
 CONFIG(debug, debug|release) {
-    win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -L$$OUT_PWD/../cover-fetcher/release/ -lmiam-coverfetcher
+    win32: LIBS += -L$$OUT_PWD/../core/debug/ -lmiam-core -L$$OUT_PWD/../cover-fetcher/debug/ -lmiam-coverfetcher
     OBJECTS_DIR = debug/.obj
     MOC_DIR = debug/.moc
     RCC_DIR = debug/.rcc

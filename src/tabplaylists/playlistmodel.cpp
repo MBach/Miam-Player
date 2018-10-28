@@ -44,7 +44,6 @@ bool PlaylistModel::insertMedias(int rowIndex, const QList<QMediaContent> &track
 					this->insertMedia(rowIndex++, f);
 				}
 			} else {
-				qDebug() << Q_FUNC_INFO << track.canonicalUrl();
 				TrackDAO t = db.selectTrackByURI(track.canonicalUrl().toString());
 				this->createLine(rowIndex++, t);
 			}
@@ -172,16 +171,12 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	QList<QList<QStandardItem*>> removedRows;
 	_mediaPlaylist->blockSignals(true);
 	int currentPlayingTrack = _mediaPlaylist->currentIndex();
-	qDebug() << "currentPlayingTrack" << currentPlayingTrack;
-
-
 	for (QModelIndex selectedIndex : selectedIndexes) {
 		int rowNumber = selectedIndex.row();
 		QList<QStandardItem*> row = this->takeRow(rowNumber);
 		rowsToHiglight << row.at(0);
 		removedRows.append(row);
 		mediasToMove.prepend(_mediaPlaylist->media(rowNumber));
-		qDebug() << "removing from playlist" << rowNumber << row.at(1)->text();
 		_mediaPlaylist->removeMedia(rowNumber);
 		currentPlayingTrack--;
 	}
@@ -198,11 +193,8 @@ QList<QStandardItem*> PlaylistModel::internalMove(QModelIndex dest, QModelIndexL
 	// Finally, reorder the inner QMediaPlaylist
 	_mediaPlaylist->insertMedia(insertPoint, mediasToMove);
 	currentPlayingTrack += mediasToMove.size();
-	_mediaPlaylist->blockSignals(false);
-
-	qDebug() << "currentPlayingTrack" << _mediaPlaylist->currentIndex() << currentPlayingTrack;
-
-	return rowsToHiglight;
+    _mediaPlaylist->blockSignals(false);
+    return rowsToHiglight;
 }
 
 void PlaylistModel::insertRow(int row, const QList<QStandardItem*> &items)

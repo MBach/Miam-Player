@@ -277,7 +277,6 @@ void CustomizeThemeDialog::setupActions()
 
 	// Change big cover opacity
 	connect(radioButtonEnableBigCover, &QRadioButton::toggled, [=](bool b) {
-		qDebug() << Q_FUNC_INFO;
 		settings->setCoverBelowTracksEnabled(b);
 		labelBigCoverOpacity->setEnabled(b);
 		spinBoxBigCoverOpacity->setEnabled(b);
@@ -486,7 +485,6 @@ void CustomizeThemeDialog::showColorDialog()
 
 void CustomizeThemeDialog::toggleCustomColors(bool enabled)
 {
-	qDebug() << Q_FUNC_INFO << enabled;
 	this->toggleCustomColorsGridLayout(customColorsGridLayout, enabled);
 
 	labelOverrideTextColor->setEnabled(enabled);
@@ -503,8 +501,6 @@ void CustomizeThemeDialog::toggleCustomColors(bool enabled)
 
 void CustomizeThemeDialog::toggleCustomTextColors(bool enabled)
 {
-	qDebug() << Q_FUNC_INFO << enabled;
-
 	this->toggleCustomColorsGridLayout(customTextColorsGridLayout, enabled);
 	this->toggleCustomColorsReflector(fontColorWidget, selectedFontColorWidget, enabled);
 }

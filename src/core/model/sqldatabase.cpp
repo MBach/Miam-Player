@@ -103,8 +103,6 @@ uint SqlDatabase::insertIntoTablePlaylists(const PlaylistDAO &playlist, const QS
 		this->setPragmas();
 	}
 
-	qDebug() << Q_FUNC_INFO << tracks;
-
 	static std::uniform_int_distribution<uint> tt;
 	this->transaction();
 	uint id = 0;
@@ -513,7 +511,6 @@ void SqlDatabase::updateTrack(const QString &absFilePath)
 {
 	FileHelper fh(absFilePath);
 	if (!fh.isValid()) {
-		qDebug() << Q_FUNC_INFO << "file is not valid, won't be updated";
 		return;
 	}
 
@@ -569,8 +566,6 @@ void SqlDatabase::updateTracks(const QStringList &oldPaths, const QStringList &n
 	transaction();
 	Q_ASSERT(oldPaths.size() == newPaths.size());
 
-	//qDebug() << Q_FUNC_INFO << "oldPaths" << oldPaths;
-	//qDebug() << Q_FUNC_INFO << "newPaths" << newPaths;
 	for (int i = 0; i < newPaths.size(); i++) {
 		QString newPath = newPaths.at(i);
 		QString oldPath = oldPaths.at(i);
@@ -632,7 +627,6 @@ void SqlDatabase::saveFileRef(const QString &absFilePath)
 {
 	FileHelper fh(absFilePath);
 	if (!fh.isValid()) {
-		qDebug() << Q_FUNC_INFO << "file is not valid, won't be saved:" << absFilePath;
 		return;
 	}
 

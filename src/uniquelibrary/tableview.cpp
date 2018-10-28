@@ -95,7 +95,6 @@ TableView::TableView(QWidget *parent)
 bool TableView::eventFilter(QObject *obj, QEvent *event)
 {
 	if (event->type() == QEvent::ShowToParent) {
-		qDebug() << Q_FUNC_INFO << "so what?";
 		//QShowEvent *showEvent = static_cast<QShowEvent*>(event);
 		_artistHeader->setMinimumWidth(this->width());
 	} else if (event->type() == QEvent::ShortcutOverride) {

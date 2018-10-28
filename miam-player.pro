@@ -12,6 +12,6 @@ SUBDIRS += src/core \
     src/tageditor \
     src/player
 
-RESOURCES += src/player/mp.qrc \
-    src/tabplaylists/mp.qrc \
-    src/tageditor/player.qrc
+RESOURCES += src/player/player.qrc \
+    src/tabplaylists/tabPlaylists.qrc \
+    src/tageditor/tageditor.qrc

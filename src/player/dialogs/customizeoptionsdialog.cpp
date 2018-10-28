@@ -319,7 +319,6 @@ void CustomizeOptionsDialog::initShortcuts()
 			emit shortcut->editingFinished();
 		});
 		connect(reset, &QPushButton::clicked, this, [=]() {
-			qDebug() << Q_FUNC_INFO << shortcut->objectName() << QKeySequence(defaultShortcutMap.value(shortcut->objectName()).toString());
 			shortcut->setKeySequence(QKeySequence(defaultShortcutMap.value(shortcut->objectName()).toString()));
 			emit shortcut->editingFinished();
 		});
@@ -494,7 +493,6 @@ void CustomizeOptionsDialog::togglePlugin(QTableWidgetItem *item)
 
 void CustomizeOptionsDialog::toggleRemoteControl(bool enabled)
 {
-	qDebug() << Q_FUNC_INFO;
 	remoteControlLabelPort->setEnabled(enabled);
 	remoteControlPortSpinBox->setEnabled(enabled);
 	SettingsPrivate::instance()->setRemoteControlEnabled(enabled);

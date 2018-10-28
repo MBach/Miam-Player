@@ -32,9 +32,6 @@ void MiamStyle::drawScrollBar(QPainter *p, const QWidget *widget) const
 	QRect addLineRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarAddLine, sc);
 	QRect sliderRect = QApplication::style()->subControlRect(QStyle::CC_ScrollBar, &scrollbar, QStyle::SC_ScrollBarSlider, sc);
 
-	//qDebug() << subLineRect << sliderRect << addLineRect;
-
-
 	if (sc->orientation() == Qt::Vertical) {
 		subLineRect.adjust(0, 0, -1, 0);
 		addLineRect.adjust(0, 0, -1, 0);
@@ -173,14 +170,9 @@ QRect MiamStyle::subElementRect(SubElement element, const QStyleOption *option, 
 		if (widget && widget->objectName() == "tabBar") {
 			const QStyleOptionTab *sot = qstyleoption_cast<const QStyleOptionTab*>(option);
 			QStyleOptionTab tab = *sot;
-			//qDebug() << Q_FUNC_INFO << element << r;
 			if (element == SE_TabBarTabText) {
-				//tab.rect.setX(tab.rect.x() + 20);
-				//qDebug() << "SE_TabBarTabText" << sot->rect;
-
 				return sot->rect;
 			} else if (element == SE_CheckBoxContents) {
-				//qDebug() << "SE_CheckBoxContents" << sot->rect;
 				return sot->rect;
 			}
 		}
@@ -419,7 +411,6 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 		QRect tabCloseRect(0, 0, tabHeight, tabHeight);
 #endif
 
-		//qDebug() << Q_FUNC_INFO << tabWdidth;
 		QFileSelector fs;
 		if (opt->state.testFlag(State_MouseOver)) {
 			tabClosePixmap.load(fs.select(":/icons/config/close_tabs_hover.png"));
@@ -438,7 +429,6 @@ void MiamStyle::drawPrimitive(PrimitiveElement element, const QStyleOption *opt,
 
 		QTransform t;
 		float ratio = opt->rect.width() / 4.0;
-		//qDebug() << "ratio" << ratio << opt->rect << opt->fontMetrics.height();
 		t.scale(ratio, ratio);
 
 		QPolygonF arrow;

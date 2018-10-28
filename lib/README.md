@@ -5,8 +5,8 @@ I know these files shouldn't belong here. But it keeps things way more simple to
 
 These files are used for compiling subproject `MiamCore`. You can also rebuild these files for Windows/OSX if you wish.
 
-###Folders *debug* and *release* (x64 only)
-- Files for Windows. Built with MSVC2013
+###Folders *release* (x64 only)
+- Files for Windows. Built with MSVC2015-MSVC2017
 
 ###Folder *osx*
 - Contains only `libtag.dylib`

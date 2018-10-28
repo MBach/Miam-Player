@@ -525,9 +525,7 @@ void SettingsPrivate::addMusicLocations(const QList<QDir> &dirs)
 	for (QDir d : dirs) {
 		if (!old.contains(QDir::toNativeSeparators(d.absolutePath()))) {
 			locations << QDir::toNativeSeparators(d.absolutePath());
-		} else {
-			qDebug() << Q_FUNC_INFO << old << "already contains" << QDir::toNativeSeparators(d.absolutePath());
-		}
+        }
 	}
 	QStringList newLocations(old);
 	newLocations.append(locations);

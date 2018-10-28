@@ -385,7 +385,6 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 
 		int pm = style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, &o, this);
 		QRect rText(o.rect.x() + pm * 2, o.rect.y(), o.rect.width() - 2 * pm, o.rect.height());
-		//qDebug() << Q_FUNC_INFO << i << rText;
 		p.drawText(rText, Qt::AlignLeft | Qt::AlignVCenter, o.text);
 
 		// Icon
@@ -397,7 +396,6 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 
 		int vpm = style()->pixelMetric(QStyle::PM_TabCloseIndicatorHeight);
 		QRect iconRect = style()->subElementRect(QStyle::SE_CheckBoxContents, &o, this);
-		//qDebug() << Q_FUNC_INFO << iconRect;
 		iconRect.translate(rText.right(), 0);
 		int w = style()->pixelMetric(QStyle::PM_TabBarIconSize);
 		iconRect.setWidth(w);
@@ -407,9 +405,6 @@ void TabBar::paintRoundedTabs(QStylePainter &p)
 
 		QRect r2(o.rect.x() + o.rect.width() - w - dist / 2, o.rect.y() + (o.rect.height() - w) / 2,
 				 w, w);
-
-		//qDebug() << Q_FUNC_INFO << i << o.state;
-		//qDebug() << Q_FUNC_INFO << i << o.state.testFlag(QStyle::State_Active) << o.state.testFlag(QStyle::State_On);
 
 		o.icon.paint(&p, r2, Qt::AlignLeft | Qt::AlignVCenter);
 		//p.drawPixmap(r2, QPixmap(":/icons/playlistIcon"));

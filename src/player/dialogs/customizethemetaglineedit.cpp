@@ -42,6 +42,5 @@ bool CustomizeThemeTagLineEdit::eventFilter(QObject *obj, QEvent *event)
 void CustomizeThemeTagLineEdit::closeTagButton(TagButton *t)
 {
 	TagLineEdit::closeTagButton(t);
-	qDebug() << Q_FUNC_INFO << this->toStringList();
 	emit taglistHasChanged(this->toStringList());
 }

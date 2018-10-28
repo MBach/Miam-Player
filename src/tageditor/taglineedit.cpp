@@ -4,7 +4,7 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include <QStylePainter>
-#include <QStyleOptionFrameV3>
+#include <QStyleOptionFrame>
 
 #include <QtDebug>
 
@@ -131,7 +131,6 @@ void TagLineEdit::keyPressEvent(QKeyEvent *event)
 		QString k = event->text();
 		int w = fontMetrics().width(k);
 		if (event->key() == Qt::Key_Delete) {
-			qDebug() << Q_FUNC_INFO << "Key_Delete";
 			w = -w;
 		}
 		for (TagButton *t : _tags) {
@@ -153,12 +152,10 @@ void TagLineEdit::mousePressEvent(QMouseEvent *event)
 			if (r.x() + r.width() / 2 >= event->pos().x()) {
 				while (r.contains(cursorRect().center()) && cursorPosition() > 0) {
 					cursorBackward(false);
-					//qDebug() << "cursorBackward" << "pos" << t->position() << "spaces" << t->spaceCount();
 				}
 			} else {
 				while (r.contains(cursorRect().center()) && cursorPosition() < text().length()) {
 					cursorForward(false);
-					//qDebug() << "cursorForward" << "pos" << t->position() << "spaces" << t->spaceCount();
 				}
 			}
 			break;
@@ -172,7 +169,7 @@ void TagLineEdit::paintEvent(QPaintEvent *)
 	QStylePainter p(this);
 
 	// Draw frame
-	QStyleOptionFrameV3 frame;
+    QStyleOptionFrame frame;
 	this->initStyleOption(&frame);
 	QPalette palette = QApplication::palette();
 	p.setPen(palette.mid().color());

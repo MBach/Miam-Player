@@ -101,7 +101,6 @@ void AddressBar::paintEvent(QPaintEvent *)
 
 void AddressBar::resizeEvent(QResizeEvent *event)
 {
-	//qDebug() << Q_FUNC_INFO << event->oldSize().width() << event->size().width();
 	static const int arrowRectWidth = 15;
 	static const int margin = 5;
 
@@ -136,9 +135,7 @@ void AddressBar::resizeEvent(QResizeEvent *event)
 				if (_hBoxLayout->count() == 3) {
 					// Keep at least one button, and resize it to the minimum size
 					if (button->width() > 70) {
-						qDebug() << Q_FUNC_INFO << "we should reduce size" << button->minimumSizeHint();
 						int actualTextWidth = fontMetrics().width(button->text());
-						qDebug() << Q_FUNC_INFO << "text width" << actualTextWidth << button->text() << button->path();
 						button->setText(fontMetrics().elidedText(button->text(), Qt::ElideRight, actualTextWidth - 5));
 					}
 				} else {

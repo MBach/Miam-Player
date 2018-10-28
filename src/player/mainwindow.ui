@@ -22,7 +22,7 @@
      <x>0</x>
      <y>0</y>
      <width>439</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -66,8 +66,6 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionShowHelp"/>
-    <addaction name="actionCheckNewRelease"/>
-    <addaction name="separator"/>
     <addaction name="actionAboutQt"/>
     <addaction name="actionShowDebug"/>
    </widget>
@@ -407,6 +405,7 @@
   </action>
  </widget>
  <resources>
+  <include location="player.qrc"/>
   <include location="player.qrc"/>
  </resources>
  <connections/>
