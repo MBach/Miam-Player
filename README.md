@@ -4,22 +4,21 @@
 [![License][license-img]][license]
 
 Miam-Player is a cross-platform open source music player
-![general overview](http://www.miam-player.org/images/gallery/general_overview.png)
-![list mode overview](http://www.miam-player.org/images/gallery/unique_library_mode.png)
+![general overview](https://mbach.github.io/Miam-Player/screenshots/general_overview.png)
+![list mode overview](https://mbach.github.io/Miam-Player/screenshots/unique_library_mode.png)
 
 # What's inside?
 * Fast and reliable
 * Read .mp3, .m4a (MP4), .flac, .ogg, .oga (OGG Vorbis), .asf, .ape (Monkey Audio), .opus and more!
 * Customize everything: User Interface, Covers, Shortcuts, Buttons, Themes
-* Read and edit metadata using [Taglib](http://taglib.github.io/)
-* A mini-mode which is a tribute to the good ol' Winamp _shade mode_: ![mini](http://www.miam-player.org/images/gallery/mini-mode.png)
+* Read and edit metadata using [Taglib](https://taglib.github.io/)
+* A mini-mode which is a tribute to the good ol' Winamp _shade mode_: ![mini](https://mbach.github.io/Miam-Player/screenshots/mini-mode.png)
 
 # Future work
-* Add [MPRIS](http://specifications.freedesktop.org/mpris-spec/latest/) implementation for Linux (Media Player Remote Interfacing Specification) to be able to control the player
+* Add [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/) implementation for Linux (Media Player Remote Interfacing Specification) to be able to control the player
 * 10-band equalizer
-* Add [projectM](http://projectm.sourceforge.net/) support for amazing visualizations
+* Add [projectM](https://github.com/projectM-visualizer/projectm) support for amazing visualizations
 * A spotify / jamendo plugin to stream music
-![equalizer](http://miam-player.org/images/work-in-progress/equalizer.png)
 * High DPI support (for OSX first)
 
 # Plugins
@@ -27,7 +26,7 @@ A plugin system has been introduced to extend possibilites of the player. Five o
 * Support thumbnails buttons to control the player, green progress bar when playing, overlay icon
 * Get missing covers by looking at [MusicBrainz'](https://musicbrainz.org/) repository
 * Shell explorer extension (up to 4 actions, like 'Send to current playlist')
-* Deezer plugin (technology preview): merge local and remote Artists / Albums: ![mini](http://miam-player.org/images/work-in-progress/deezer.png)
+* Deezer plugin (technology preview): merge local and remote Artists / Albums
 
 ## Binaries and source code
 
@@ -51,13 +50,13 @@ Master branch is _not always_ stable but should work on all supported platforms.
 ## Requirements
 
 Miam-Player can be built with any common compiler (g++, clang, MSVC, MinGW).
-Build files are generated using [QMake](http://doc.qt.io/qt-5/qmake-manual.html).
+Build files are generated using [QMake](https://doc.qt.io/qt-5/qmake-manual.html).
 
-If you feel brave to write a [CMake](http://www.cmake.org/) configuration, please contribute!
+If you feel brave to write a [CMake](https://www.cmake.org/) configuration, please contribute!
 
 You need to build dependencies first: QtAV and TagLib. Pre-built libraries are provided for Windows and OSX in this repository.
 
-See the [wiki](http://www.miam-player.org/wiki/index.php?title=How-to-build-Miam-Player) for more details.
+See the [wiki](https://github.com/MBach/Miam-Player/wiki) for more details.
 
 ## Copyright info
 
@@ -73,7 +72,7 @@ GNU General Public License version 3.0 as published by the
 Free Software Foundation and appearing in the file LICENSE
 
 
-[web]: http://www.miam-player.org
+[web]: https://github.com/MBach/Miam-Player
 [release]: https://github.com/MBach/Miam-Player/releases
 [license]: https://github.com/MBach/Miam-Player/blob/master/LICENSE
 
