@@ -8,3 +8,7 @@ HEADERS += \
     qxt/qxtglobal.h \
     qxt/qxtglobalshortcut.h \
     qxt/qxtglobalshortcut_p.h
+
+unix:!macx {
+    LIBS += -lX11
+}
