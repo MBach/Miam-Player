@@ -19,7 +19,7 @@
 #ifndef AVUTIL_PARSEUTILS_H
 #define AVUTIL_PARSEUTILS_H
 
-#include <time.h>
+#include "avutil_time.h"
 
 #include "rational.h"
 
