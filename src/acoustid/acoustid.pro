@@ -1,6 +1,10 @@
 QT          += core gui multimedia network sql widgets
 TEMPLATE    = lib
-include(chromaprint/chromaprint.pri)
+
+# Use system headers on Unix
+win32 {
+    include(chromaprint/chromaprint.pri)
+}
 
 DEFINES += MIAMACOUSTID_LIBRARY
 

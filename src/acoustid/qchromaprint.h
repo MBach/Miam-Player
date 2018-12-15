@@ -1,7 +1,7 @@
 #ifndef QCHROMAPRINT_H
 #define QCHROMAPRINT_H
 
-#include <chromaprint/chromaprint.h>
+#include <chromaprint.h>
 
 #include <QObject>
 
